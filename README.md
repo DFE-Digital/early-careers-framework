@@ -13,7 +13,7 @@
 
 1. Run `bundle install` to install the gem dependencies
 2. Run `yarn` to install node dependencies
-3. Set your database password and user in a newly-created `.env` file
+3. Create `.env` file - copy `.env.template`. Set your database password and user in the `.env` file
 4. Run `bin/rails db:setup` to set up the database development and test schemas, and seed with test data
 5. Run `bundle exec rails server` to launch the app on http://localhost:3000
 6. Run `./bin/webpack-dev-server` in a separate shell for faster compilation of assets
