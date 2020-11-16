@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/DFE-Digital/govuk-rails-boilerplate.svg?branch=master)](https://travis-ci.com/DFE-Digital/govuk-rails-boilerplate)
 
-# GOV.UK Rails Boilerplate
+# Early careers framework
 
 ## Prerequisites
 
