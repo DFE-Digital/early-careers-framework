@@ -1,0 +1,12 @@
+# used to mount the local dev folder as the containers workdir for development
+version: "3.6"
+services:
+  web:
+    volumes:
+      - ${APP_ROOT_FOLDER:-.}:/app
+      # do not mount these below local files/folders into the container
+      - /app/public
+    environment:
+      - RAILS_ENV=development
+      - AUTHORISED_HOSTS=localhost
+      - SHA=development
