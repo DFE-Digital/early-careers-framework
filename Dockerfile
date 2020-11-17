@@ -8,11 +8,10 @@ ARG BASE_RUBY_IMAGE_WITH_GEMS_AND_NODE_MODULES=early-careers-framework-gems-node
 FROM ${BASE_RUBY_IMAGE} AS install-gems-node-modules
 
 ARG BUILD_DEPS="git gcc libc-dev make nodejs yarn postgresql-dev build-base libxml2-dev libxslt-dev ttf-ubuntu-font-family"
-ENV WKHTMLTOPDF_GEM=wkhtmltopdf-binary-edge-alpine
 
 WORKDIR /app
 
-COPY Gemfile Gemfile.lock package.json yarn.lock ./
+COPY Gemfile Gemfile.lock package.json yarn.lock .ruby-version ./
 
 RUN apk -U upgrade && \
     apk add --update --no-cache --virtual .gem-installdeps $BUILD_DEPS && \
@@ -35,8 +34,7 @@ RUN apk -U upgrade && \
 # published as dfedigital/early-careers-framework-gems-node-modules
 FROM ${BASE_RUBY_IMAGE} AS early-careers-framework-gems-node-modules
 
-ENV WKHTMLTOPDF_GEM=wkhtmltopdf-binary-edge-alpine \
-    RAILS_ENV=production \
+ENV RAILS_ENV=production \
     GOVUK_NOTIFY_API_KEY=TestKey \
     AUTHORISED_HOSTS=127.0.0.1 \
     SECRET_KEY_BASE=TestKey \
@@ -69,8 +67,7 @@ RUN yarn jest --passWithNoTests && \
 FROM ${BASE_RUBY_IMAGE} AS production
 
 ARG VERSION
-ENV WKHTMLTOPDF_GEM=wkhtmltopdf-binary-edge-alpine \
-    RAILS_ENV=production \
+ENV RAILS_ENV=production \
     GOVUK_NOTIFY_API_KEY=TestKey \
     AUTHORISED_HOSTS=127.0.0.1 \
     SECRET_KEY_BASE=TestKey \
