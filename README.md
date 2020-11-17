@@ -8,8 +8,11 @@
 - PostgreSQL
 - NodeJS 12.13.x
 - Yarn 1.12.x
+- Docker
 
 ## Setting up the app in development
+
+### Without docker
 
 1. Run `bundle install` to install the gem dependencies
 2. Run `yarn` to install node dependencies
@@ -17,6 +20,14 @@
 4. Run `bin/rails db:setup` to set up the database development and test schemas, and seed with test data
 5. Run `bundle exec rails server` to launch the app on http://localhost:3000
 6. Run `./bin/webpack-dev-server` in a separate shell for faster compilation of assets
+
+### With docker
+1. Run `docker-compose build` to build the web image
+2. Run `docker-compose run --rm web bundle exec rake db:setup` to setup the database
+3. Run `docker-compose up` to start the service
+
+It should be possible to run just the database from docker, if you want to.
+Check docker-compose file for username and password to put in your `.env` file.
 
 ## Whats included in this boilerplate?
 
