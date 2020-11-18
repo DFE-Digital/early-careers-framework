@@ -6,17 +6,21 @@
   <% end %>
   <%= form.govuk_text_field :name %>
 
-  <%= form.govuk_date_field :opened,
-                            legend: { text: "Enter the date the school was opened" },
-                            hint: { text: "For example, 31 3 1980" }
+  <%= form.govuk_date_field(
+        :opened,
+        legend: { text: "Enter the date the school was opened" },
+        hint: { text: "For example, 31 3 1980" }
+      )
   %>
 
-  <%= form.govuk_collection_radio_buttons :school_type,
-                                          School::SCHOOL_TYPES,
-                                          ->(option) { option },
-                                          ->(option) { option },
-                                          legend: { text: "What type of school is it?" }
+  <%= form.govuk_collection_radio_buttons(
+        :school_type,
+        School::SCHOOL_TYPES,
+        ->(option) { option },
+        ->(option) { option },
+        legend: { text: "What type of school is it?" }
+      )
   %>
 
-  <%= form.submit %>
+  <%= form.govuk_submit "Create school" %>
 <% end %>
