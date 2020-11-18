@@ -14,16 +14,17 @@ class SchoolsController < ApplicationController
     if @school&.save
       redirect_to @school
     else
-      render "new"
+      render :new
     end
   end
 
-  private
+private
+
   def validate_opened_date
     unless Date.valid_date?(*opened_date_parts)
-      @school = School.new
+      @school = School.new(params.require(:school).permit(:name, :school_type))
       @school.errors.add(:opened, 'date validation error text goes here')
-      render "new"
+      render :new
     end
   end
 
