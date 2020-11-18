@@ -63,3 +63,7 @@ end
 
 # do not rely on host’s timezone data, which can be inconsistent
 gem "tzinfo-data"
+
+gem 'wdm', '>= 0.1.0' if Gem.win_platform?
+
+gem "govuk_design_system_formbuilder", "~> 2.1"
