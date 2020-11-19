@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 2020_11_16_191346) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "name", null: false
-    t.date "opened"
+    t.date "opened_at"
     t.string "school_type"
   end
 
