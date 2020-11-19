@@ -1,0 +1,25 @@
+name: Run linter
+
+on:
+  push:
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1.4.4
+        with:
+          node-version: '12'
+      - name: Yarn install
+        run: npm i -g yarn && yarn
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@9bc07a3af02ce5950e977cab8b77210dc3178328
+        with:
+          ruby-version: 2.7.1
+      - name: Install dependencies
+        run: bundle install
+      - name: Lint ruby
+        run: rubocop
