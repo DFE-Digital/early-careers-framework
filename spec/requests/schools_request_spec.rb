@@ -1,13 +1,14 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe "Schools", type: :request do
 
-  describe "Creating a school" do
-    it "successfully creates a school" do
-      # Given
-      expected_name = "Test School"
-      expected_date = Date.new(2020, 1, 2)
+  describe "Creating a school - POST /schools" do
+    let(:expected_name) { "Test School" }
+    let(:expected_date) { Date.new(2020, 1, 2) }
+    let(:expected_school_type) { "Primary" }
 
+
+    it "successfully creates a school" do
       # When
       post "/schools", params: { school: {
         name: expected_name,
@@ -23,11 +24,6 @@ RSpec.describe "Schools", type: :request do
     end
 
     it "successfully creates a school with a type" do
-      # Given
-      expected_name = "Test School 2"
-      expected_date = Date.new(2020, 1, 3)
-      expected_school_type = "Primary"
-
       expect {
         # When
         post "/schools", params: { school:
