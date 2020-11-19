@@ -61,5 +61,5 @@ group :test do
   gem "webdrivers", "~> 4.4"
 end
 
-# do not rely on host’s timezone data, which can be inconsistent
+# do not rely on host's timezone data, which can be inconsistent
 gem "tzinfo-data"
