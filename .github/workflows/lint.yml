@@ -22,4 +22,4 @@ jobs:
       - name: Install dependencies
         run: bundle install
       - name: Lint ruby
-        run: rubocop
+        run: rake lint:ruby
