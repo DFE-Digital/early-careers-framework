@@ -6,4 +6,10 @@ RSpec.feature "View pages", type: :feature do
 
     expect(page).to have_text("Lorem")
   end
+
+  scenario "Navigate to supplier dashboard" do
+    visit "/supplier_dashboard"
+
+    expect(page).to have_text("Admin dashboard for Upwards Learning")
+  end
 end
