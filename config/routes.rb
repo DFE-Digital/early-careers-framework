@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   get "/pages/:page", to: "pages#show"
 
-  resources :schools
+  resources :schools, only: %i[show new create]
 
   get "/404", to: "errors#not_found", via: :all
   get "/422", to: "errors#unprocessable_entity", via: :all
