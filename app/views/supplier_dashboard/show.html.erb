@@ -1,0 +1,73 @@
+<% content_for :title, "Supplier dashboard" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-l">Admin dashboard for Upwards Learning</h1>
+    <div class="govuk-tabs" data-module="govuk-tabs">
+      <h2 class="govuk-tabs__title">
+        Contents
+      </h2>
+      <ul class="govuk-tabs__list">
+        <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+          <a class="govuk-tabs__tab" href="#schools">Schools</a>
+        </li>
+        <li class="govuk-tabs__list-item">
+          <a class="govuk-tabs__tab" href="#delivery-partners">Delivery Partners</a>
+        </li>
+        <li class="govuk-tabs__list-item">
+          <a class="govuk-tabs__tab" href="#manage-account">Manage Account</a>
+        </li>
+        <li class="govuk-tabs__list-item">
+          <a class="govuk-tabs__tab" href="#sign-out">Sign-out</a>
+        </li>
+      </ul>
+
+      <div id="schools" class="govuk-tabs__panel">
+        <h2 class="govuk-heading-m">Invite Schools</h2>
+        <p>Find schools or groups of schools to invite individually or bulk-invite. Alternatively you can upload your
+          own
+          selected group of schools to invite.</p>
+
+        <a href="/it-two-b/find-schools" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
+          Invite Schools
+        </a>
+        <a href="/upload" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
+          Upload School group
+        </a>
+
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+        <h2 class="govuk-heading-m">Pending invites sent to schools</h2>
+        <p>View schools you have invited to join your programme.</p>
+
+        <a href="/pending" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
+          View invited schools
+        </a>
+
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+        <h2 class="govuk-heading-m">Our confirmed schools</h2>
+        <p>List of schools that have confirmed they are joining your programme.</p>
+
+        <a href="/schools" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
+          View confirmed schools
+        </a>
+      </div>
+
+      <div id="delivery-partners" class="govuk-tabs__panel govuk-tabs__panel--hidden">
+        <h2 class="govuk-heading-m">Delivery partners</h2>
+        <p>Coming soon!</p>
+      </div>
+
+      <div id="manage-account" class="govuk-tabs__panel govuk-tabs__panel--hidden">
+        <h2 class="govuk-heading-m">Manage account</h2>
+        <p>Coming soon!</p>
+      </div>
+
+      <div id="sign-out" class="govuk-tabs__panel govuk-tabs__panel--hidden">
+        <h2 class="govuk-heading-m">Sign out</h2>
+        <p>Coming soon!</p>
+      </div>
+    </div>
+  </div>
+</div>
