@@ -74,6 +74,8 @@
     </div>
 
     <div class="govuk-width-container">
+      <%= yield(:before_content) %>
+
       <main class="govuk-main-wrapper govuk-body" id="main-content" role="main">
         <%= yield %>
       </main>
