@@ -1,5 +1,3 @@
 class SupplierDashboardController < ApplicationController
-  def show
-    render "pages/supplier_dashboard"
-  end
+  def show; end
 end
