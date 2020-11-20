@@ -1,5 +1,3 @@
-<% content_for :title, "Supplier dashboard" %>
-
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <h1 class="govuk-heading-l">Admin dashboard for Upwards Learning</h1>
@@ -24,34 +22,27 @@
 
       <div id="schools" class="govuk-tabs__panel">
         <h2 class="govuk-heading-m">Invite Schools</h2>
-        <p>Find schools or groups of schools to invite individually or bulk-invite. Alternatively you can upload your
-          own
-          selected group of schools to invite.</p>
+        <p>
+          Find schools or groups of schools to invite individually or bulk-invite.
+          Alternatively you can upload your own selected group of schools to invite.
+        </p>
 
-        <a href="/it-two-b/find-schools" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
-          Invite Schools
-        </a>
-        <a href="/upload" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
-          Upload School group
-        </a>
+        <%= govuk_button_link_to "Invite Schools", invite_schools_path %>
+        <%= govuk_button_link_to "Upload School group", "/upload" %>
 
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
         <h2 class="govuk-heading-m">Pending invites sent to schools</h2>
         <p>View schools you have invited to join your programme.</p>
 
-        <a href="/pending" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
-          View invited schools
-        </a>
+        <%= govuk_button_link_to "View invited schools", "/pending" %>
 
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
         <h2 class="govuk-heading-m">Our confirmed schools</h2>
         <p>List of schools that have confirmed they are joining your programme.</p>
 
-        <a href="/schools" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
-          View confirmed schools
-        </a>
+        <%= govuk_button_link_to "View confirmed schools", "/schools" %>
       </div>
 
       <div id="delivery-partners" class="govuk-tabs__panel govuk-tabs__panel--hidden">
