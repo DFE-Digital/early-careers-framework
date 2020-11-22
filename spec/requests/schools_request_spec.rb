@@ -2,6 +2,16 @@ require "rails_helper"
 
 RSpec.describe "Schools", type: :request do
 
+  describe "GET /schools/new" do
+    before do
+      get '/schools/new'
+    end
+
+    it 'renders the correct view' do
+      expect(response).to render_template :new
+    end
+  end
+
   describe "Creating a school - POST /schools" do
     let(:expected_name) { "Test School" }
     let(:expected_date) { Date.new(2020, 1, 2) }

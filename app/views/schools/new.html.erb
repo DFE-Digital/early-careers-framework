@@ -1,6 +1,6 @@
 <h1 class="govuk-heading-xl">New school</h1>
 
-<%= form_with model: @school ||= School.new, url: schools_path, local: true do |form| %>
+<%= form_with model: @school, url: schools_path, local: true do |form| %>
   <% if @school&.errors&.any? %>
     <%= form.govuk_error_summary %>
   <% end %>
