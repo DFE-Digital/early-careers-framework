@@ -1,6 +1,6 @@
 <% content_for :before_content, govuk_back_link_to(supplier_dashboard_path, 'Back to dashboard') %>
 
-<%= form_with model: @find_school_form, url: invite_schools_path, method: :post do |f| %>
+<%= form_with model: @find_school_form, url: school_invites_path, method: :post do |f| %>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <%= f.govuk_radio_buttons_fieldset(

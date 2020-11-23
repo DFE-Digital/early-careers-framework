@@ -1,4 +1,4 @@
-class InviteSchoolsController < ApplicationController
+class SchoolInvitesController < ApplicationController
   def show
     @find_school_form = FindSchoolForm.new
   end
