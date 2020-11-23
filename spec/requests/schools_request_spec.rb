@@ -88,7 +88,7 @@ RSpec.describe "Schools", type: :request do
     end
 
     [
-      [2020, 2, 30],
+      [2020, 2, 32],
       [2020, 1, 32],
     ].each do |invalid_date|
       it "will not create a school with an invalid opened_at date: #{invalid_date}" do
