@@ -59,8 +59,8 @@ end
 
 group :test do
   gem "rails-controller-testing"
+  gem "shoulda-matchers", "~> 4.4"
   gem "webdrivers", "~> 4.4"
-  gem "rails-controller-testing"
 end
 
 # do not rely on host’s timezone data, which can be inconsistent
