@@ -21,6 +21,8 @@ jobs:
           ruby-version: 2.7.1
       - name: Install dependencies
         run: bundle install
+      - name: Create mail log file
+        run: mkdir log && touch log/mail.log
       - name: Lint ruby
         env:
           GOVUK_NOTIFY_API_KEY: Test
