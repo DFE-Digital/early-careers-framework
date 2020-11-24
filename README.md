@@ -29,6 +29,11 @@
 It should be possible to run just the database from docker, if you want to.
 Check docker-compose file for username and password to put in your `.env` file.
 
+### Govuk Notify
+Register on [GOV.UK Notify](https://www.notifications.service.gov.uk). 
+Ask someone from the team to add you to our service.
+Generate an api key for yourself and set it in your `.env` file.
+
 ## Whats included in this boilerplate?
 
 - Rails 6.0 with Webpacker
