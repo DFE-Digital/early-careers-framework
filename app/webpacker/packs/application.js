@@ -1,6 +1,7 @@
-require.context('govuk-frontend/govuk/assets');
+/* eslint-disable import/first */
+require.context("govuk-frontend/govuk/assets");
 
-import '../styles/application.scss';
-import { initAll } from 'govuk-frontend';
+import "../styles/application.scss";
+import { initAll } from "govuk-frontend";
 
 initAll();
