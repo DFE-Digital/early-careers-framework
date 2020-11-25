@@ -25,5 +25,4 @@ class FindSchoolForm
   def uses_geography?
     search_type == "geography"
   end
-
 end
