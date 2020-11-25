@@ -7,6 +7,8 @@ on:
 
 jobs:
   lint:
+    env:
+      GOVUK_NOTIFY_API_KEY: Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -21,6 +23,8 @@ jobs:
           ruby-version: 2.7.1
       - name: Install dependencies
         run: bundle install
+      - name: Create mail log file
+        run: mkdir log && touch log/mail.log
       - name: Lint ruby
         run: bundle exec rake lint:ruby
       - name: Lint SCSS

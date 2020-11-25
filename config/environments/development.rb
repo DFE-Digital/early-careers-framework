@@ -12,6 +12,22 @@ Rails.application.configure do
   # Show full error reports.
   config.consider_all_requests_local = true
 
+  # Do not care if the mailer cannot send.
+  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.perform_caching = false
+  config.action_mailer.delivery_method = :notify
+  config.action_mailer.notify_settings = {
+    api_key: ENV.fetch("GOVUK_NOTIFY_API_KEY"),
+  }
+  config.action_mailer.logger = Logger.new("log/mail.log", formatter: proc { |_, _, _, msg|
+    if msg =~ /quoted-printable/
+      message = Mail::Message.new(msg)
+      "\nTo: #{message.to}\n\n#{message.decoded}\n\n"
+    else
+      "\n#{msg}"
+    end
+  })
+
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
   if Rails.root.join("tmp/caching-dev.txt").exist?
