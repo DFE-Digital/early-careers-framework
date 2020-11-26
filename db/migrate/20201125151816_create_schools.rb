@@ -1,6 +1,6 @@
 class CreateSchools < ActiveRecord::Migration[6.0]
   def change
-    create_table :schools do |t|
+    create_table :schools, id: :uuid do |t|
       t.timestamps
       t.column :urn, :string, null: false
       t.column :name, :string, null: false

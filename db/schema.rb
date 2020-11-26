@@ -15,29 +15,29 @@ ActiveRecord::Schema.define(version: 2020_11_25_155842) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "lead_providers", force: :cascade do |t|
+  create_table "lead_providers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "name", null: false
   end
 
-  create_table "networks", force: :cascade do |t|
+  create_table "networks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "name", null: false
   end
 
-  create_table "partnerships", force: :cascade do |t|
+  create_table "partnerships", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "school_id", null: false
-    t.bigint "lead_provider_id", null: false
+    t.uuid "school_id", null: false
+    t.uuid "lead_provider_id", null: false
     t.datetime "confirmed_at"
     t.index ["lead_provider_id"], name: "index_partnerships_on_lead_provider_id"
     t.index ["school_id"], name: "index_partnerships_on_school_id"
   end
 
-  create_table "schools", force: :cascade do |t|
+  create_table "schools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "urn", null: false
@@ -47,7 +47,7 @@ ActiveRecord::Schema.define(version: 2020_11_25_155842) do
     t.integer "capacity"
     t.boolean "high_pupil_premium", default: false, null: false
     t.boolean "is_rural", default: false, null: false
-    t.bigint "network_id"
+    t.uuid "network_id"
     t.index ["high_pupil_premium"], name: "index_schools_on_high_pupil_premium", where: "high_pupil_premium"
     t.index ["is_rural"], name: "index_schools_on_is_rural", where: "is_rural"
     t.index ["name"], name: "index_schools_on_name"
