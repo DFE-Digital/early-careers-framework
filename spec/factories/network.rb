@@ -3,4 +3,3 @@ FactoryBot.define do
     name  { "School network" }
   end
 end
-
