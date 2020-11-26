@@ -3,11 +3,11 @@ class Partnership < ApplicationRecord
   belongs_to :lead_provider
 
   def confirmed?
-    !confirmed.nil?
+    confirmed_at.present?
   end
 
   def confirm
-    self.confirmed = Date.current
+    self.confirmed_at = Time.zone.now
     save!
   end
 end

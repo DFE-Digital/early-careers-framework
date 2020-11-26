@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(version: 2020_11_25_155842) do
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "school_id", null: false
     t.bigint "lead_provider_id", null: false
-    t.date "confirmed"
+    t.datetime "confirmed_at"
     t.index ["lead_provider_id"], name: "index_partnerships_on_lead_provider_id"
     t.index ["school_id"], name: "index_partnerships_on_school_id"
   end
