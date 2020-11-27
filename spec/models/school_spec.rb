@@ -8,11 +8,7 @@ RSpec.describe School, type: :model do
       }.to change { School.count }.by(1)
     end
 
-    it "can have a partnership" do
-      school = School.create!(urn: "TEST URN", name: "Test school", address: "Test Address")
-      partnership = FactoryBot.create(:partnership_with_provider, school: school)
-
-      expect(school.lead_provider).to eq(partnership.lead_provider)
-    end
+    it { is_expected.to have_one(:partnership) }
+    it { is_expected.to have_one(:lead_provider).through(:partnership) }
   end
 end
