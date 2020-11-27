@@ -29,7 +29,7 @@
 It should be possible to run just the database from docker, if you want to.
 Check docker-compose file for username and password to put in your `.env` file.
 
-If you want to seed the database you can either run `db:drop` and `run:setup` tasks with your preferred method,
+If you want to seed the database you can either run `db:drop` and `db:setup` tasks with your preferred method,
 or `db:seed`. 
 
 ### Govuk Notify
