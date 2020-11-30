@@ -26,7 +26,7 @@ jobs:
       - name: Create mail log file
         run: mkdir log && touch log/mail.log
       - name: Lint ruby
-        run: bundle exec rake lint:ruby
+        run: rubocop
       - name: Lint SCSS
         run: bundle exec rake lint:scss
       - name: Lint JS
