@@ -42,11 +42,16 @@ ActiveRecord::Schema.define(version: 2020_11_25_155842) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "urn", null: false
     t.string "name", null: false
-    t.string "address", null: false
     t.string "school_type"
     t.integer "capacity"
     t.boolean "high_pupil_premium", default: false, null: false
     t.boolean "is_rural", default: false, null: false
+    t.string "address_line1", null: false
+    t.string "address_line2"
+    t.string "address_line3"
+    t.string "address_line4"
+    t.string "country", null: false
+    t.string "postcode", null: false
     t.uuid "network_id"
     t.index ["high_pupil_premium"], name: "index_schools_on_high_pupil_premium", where: "high_pupil_premium"
     t.index ["is_rural"], name: "index_schools_on_is_rural", where: "is_rural"
