@@ -1,4 +1,14 @@
 Rails.application.routes.draw do
+  devise_for :users, controllers: {
+    sessions: 'users/sessions'#,
+    # registrations: 'users/registrations'
+  }
+
+  devise_scope :user do
+    get 'email_confirmation', to: 'users/sessions#redirect_from_magic_link'
+    post 'sign_in_with_token', to: 'users/sessions#sign_in_with_token'
+  end
+
   get "/pages/:page", to: "pages#show"
 
   resource :supplier_dashboard, controller: :supplier_dashboard, only: :show
