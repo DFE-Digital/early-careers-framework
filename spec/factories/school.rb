@@ -2,6 +2,8 @@ FactoryBot.define do
   factory :school do
     urn { "TEST URN" }
     name  { "Test school" }
-    address { "Test address" }
+    address_line1 { "Test address" }
+    country { "England" }
+    postcode { "AA1 1AA" }
   end
 end
