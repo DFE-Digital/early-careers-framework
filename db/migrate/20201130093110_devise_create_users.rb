@@ -19,6 +19,7 @@ class DeviseCreateUsers < ActiveRecord::Migration[6.0]
 
       ## Trackable
       t.datetime :last_sign_in_at
+      t.datetime :current_sign_in_at
 
       ## Confirmable
       t.string   :confirmation_token

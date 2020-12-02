@@ -1,4 +1,7 @@
+require 'byebug'
 class UserMailer < ApplicationMailer
+  default from: "from@example.com"
+
   def validate_email(user, url)
     @user = user
     @url  = url

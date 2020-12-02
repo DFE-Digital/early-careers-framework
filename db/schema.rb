@@ -69,6 +69,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_213556) do
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
     t.datetime "last_sign_in_at"
+    t.datetime "current_sign_in_at"
     t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
