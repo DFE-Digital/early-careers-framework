@@ -10,11 +10,12 @@ module Devise
 
           if user&.update(
             login_token: SecureRandom.hex(10),
-            login_token_valid_until: Time.now + 60.minutes)
+            login_token_valid_until: 60.minutes.from_now)
 
             url = Rails.application.routes.url_helpers.email_confirmation_url(
               login_token: user.login_token,
-              host: Rails.application.config.domain)
+              host: Rails.application.config.domain,
+            )
 
             UserMailer.validate_email(user, url).deliver_now
             fail!("An email was sent to you with a magic link.")

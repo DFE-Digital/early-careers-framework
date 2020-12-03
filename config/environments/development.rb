@@ -12,19 +12,15 @@ Rails.application.configure do
   # Show full error reports.
   config.consider_all_requests_local = true
 
-  # Do not care if the mailer cannot send.
-  # config.action_mailer.raise_delivery_errors = false
-  # config.action_mailer.perform_caching = false
-  # config.action_mailer.delivery_method = :notify
-  # config.action_mailer.notify_settings = {
-  #   api_key: ENV.fetch("GOVUK_NOTIFY_API_KEY"),
-  # }
-
-  config.domain = "http://localhost:3000"
-
+  config.domain = ENV["DOMAIN"]
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.delivery_method = :letter_opener
+
+  config.action_mailer.notify_settings = {
+    api_key: ENV.fetch("GOVUK_NOTIFY_API_KEY"),
+  }
+  # config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.delivery_method = :notify
   config.action_mailer.perform_deliveries = true
   config.action_mailer.perform_caching = false
   config.action_mailer.default_url_options = { host: config.domain }
@@ -61,7 +57,7 @@ Rails.application.configure do
 
   # Raise an error on page load if there are pending migrations.
   config.active_record.migration_error = :page_load
-  
+
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
 
