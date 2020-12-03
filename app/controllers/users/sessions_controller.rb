@@ -6,7 +6,7 @@ class Users::SessionsController < Devise::SessionsController
 
     if user.present?
       user.update!(login_token: nil, login_token_valid_until: 1.year.ago)
-      bypass_sign_in(user, scope: :user)
+      sign_in(user, scope: :user)
       redirect_to dashboard_path
     else
       flash[:alert] = "There was an error while logging you in. Please enter your email again."
