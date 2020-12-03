@@ -1,16 +1,15 @@
-<h2>Resend unlock instructions</h2>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h2 class="govuk-heading-l">Resend unlock instructions</h2>
 
-<%= form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post }) do |f| %>
-  <%= render "users/shared/error_messages", resource: resource %>
+    <%= form_for(resource, as: resource_name, url: unlock_path(resource_name), html: {method: :post}) do |f| %>
+      <%= f.govuk_error_summary %>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+      <%= f.govuk_email_field :email, autocomplete: "email" %>
+
+      <%= f.govuk_submit "Resend unlock instructions" %>
+    <% end %>
+
+    <%= render "users/shared/links" %>
   </div>
-
-  <div class="actions">
-    <%= f.submit "Resend unlock instructions" %>
-  </div>
-<% end %>
-
-<%= render "users/shared/links" %>
+</div>

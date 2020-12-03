@@ -1,13 +1,14 @@
-<h2>Log in</h2>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h2 class="govuk-heading-l">Log in</h2>
 
-<%= form_tag('/sign_in_with_token') do %>
-  <div class="field">
-    <%= hidden_field_tag :login_token, @login_token %>
+    <%= form_tag('/sign_in_with_token') do %>
+      <div class="field">
+        <%= hidden_field_tag :login_token, @login_token %>
+      </div>
+      <%= submit_tag "Log in", class: "govuk-button" %>
+    <% end %>
+
+    <%= render "users/shared/links" %>
   </div>
-
-  <div class="actions">
-    <%= submit_tag "Log in" %>
-  </div>
-<% end %>
-
-<%= render "users/shared/links" %>
+</div>

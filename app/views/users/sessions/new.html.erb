@@ -1,21 +1,19 @@
-<h2>Log in</h2>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h2 class="govuk-heading-l">Log in</h2>
 
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+      <div class='govuk-form-group'>
+        <%= f.govuk_email_field :email, autocomplete: "email" %>
+
+        <% if devise_mapping.rememberable? %>
+          <%= f.govuk_check_box :remember_me, true, label: {text: "Remember me"} %>
+        <% end %>
+      </div>
+
+      <%= f.govuk_submit "Log in" %>
+    <% end %>
+
+    <%= render "users/shared/links" %>
   </div>
-
-  <% if devise_mapping.rememberable? %>
-    <div class="field">
-      <%= f.check_box :remember_me %>
-      <%= f.label :remember_me %>
-    </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit "Log in" %>
-  </div>
-<% end %>
-
-<%= render "users/shared/links" %>
+</div>
