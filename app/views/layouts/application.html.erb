@@ -77,6 +77,15 @@
       <%= yield(:before_content) %>
 
       <main class="govuk-main-wrapper govuk-body" id="main-content" role="main">
+        <% flash.each do |type, msg| %>
+        <div class="govuk-success-summary" aria-labelledby="success-message" tabindex="-1" role="alert">
+          <div class="govuk-success-summary__title">
+            <h2 class="govuk-heading-m" id="success-message">
+              <%= msg %>
+            </h2>
+          </div>
+        </div>
+        <% end %>
         <%= yield %>
       </main>
     </div>

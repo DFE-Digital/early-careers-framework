@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Users::SessionsController < Devise::SessionsController
   def sign_in_with_token
     user = User.find_by(login_token: params[:login_token])
