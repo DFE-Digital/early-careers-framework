@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   get "/pages/:page", to: "pages#show"
+  get "check" => "application#check"
 
   resource :supplier_dashboard, controller: :supplier_dashboard, only: :show
   resource :school_invites, only: %i[show create]
