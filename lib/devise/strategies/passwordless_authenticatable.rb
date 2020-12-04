@@ -17,7 +17,7 @@ module Devise
               host: Rails.application.config.domain,
             )
 
-            UserMailer.validate_email(user, url).deliver_now
+            UserMailer.sign_in_email(user, url).deliver_now
             fail!("An email was sent to you with a magic link.")
           end
         end
