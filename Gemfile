@@ -66,6 +66,7 @@ group :development do
 end
 
 group :test do
+  gem "faker"
   gem "rails-controller-testing"
   gem "shoulda-matchers", "~> 4.4"
   gem "webdrivers", "~> 4.4"
