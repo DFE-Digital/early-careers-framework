@@ -33,5 +33,5 @@ resource cloudfoundry_app web_app {
 resource cloudfoundry_route web_app_route {
   domain   = data.cloudfoundry_domain.cloudapps_digital.id
   space    = data.cloudfoundry_space.space.id
-  hostname = "ecf-sandbox" // TODO: local.web_app_name
+  hostname = local.web_app_name
 }

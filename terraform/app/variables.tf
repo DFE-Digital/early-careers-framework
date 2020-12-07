@@ -10,7 +10,7 @@ variable paas_password {
 }
 
 variable paas_app_docker_image {
-  default = "ethanecf/ecf:1"
+  default = ""
 }
 
 variable paas_app_start_timeout {
@@ -84,9 +84,15 @@ variable paas_worker_app_memory {
   default = 512
 }
 
-locals {
-  paas_app_env_values  = yamldecode(file("${path.module}/../workspace-variables/${var.app_environment}_app_env.yml"))
-  is_production        = var.environment == "production"
-  service_name         = "ecf"
+variable secret_paas_app_env_values {
+  default = ""
+}
 
+locals {
+  paas_app_env_values = merge(
+    yamldecode(file("${path.module}/../workspace-variables/${var.app_environment}_app_env.yml")),
+    var.secret_paas_app_env_values
+  )
+  is_production = var.environment == "production"
+  service_name = "ecf"
 }
