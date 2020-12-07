@@ -1,3 +1,6 @@
+### Terraform setup
+Instruction on setting up the Terraform CLI can be found on [their website](https://www.terraform.io/downloads.html)
+
 ### Creating a new Terraform environment
 If we want to create a new long term environment, we need to create a new backing store for state.
 
