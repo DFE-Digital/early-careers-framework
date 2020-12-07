@@ -20,7 +20,7 @@ To tail logs (view them as they are generated)
 ### Get access to the database
 You will need to have the `psql` command on your path for this to work. 
 For a Debian/Ubuntu based system, this can be achieved with `sudo apt-get install postgresql-client-12`
-On mac, installing through homebrew with `brew install postgres` is easiest.
+On mac, installing through homebrew with `brew install postgres` is probably easiest. Alternative instructions [here](https://www.postgresql.org/download/macosx/).
 
 The first time you try this, you will need to install the conduit plugin:
 
