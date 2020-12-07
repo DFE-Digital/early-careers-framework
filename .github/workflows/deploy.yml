@@ -4,31 +4,69 @@ on:
   push:
     branches:
       - develop
+      - ECF-20-github-deploy-action
+    paths-ignore:
+      - 'documentation/**'
+      - 'terraform/common/**'
+
+env:
+  DOCKERHUB_REPOSITORY: dfedigital/early-careers-framework-dev
 
 jobs:
+  turnstyle:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 20
+    steps:
+      - uses: softprops/turnstyle@v1
+        name: Check workflow concurrency
+        with:
+          poll-interval-seconds: 20
+          same-branch-only: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   deploy:
-    env:
-      GOVUK_NOTIFY_API_KEY: Test
-    runs-on: ubuntu-latest
+    name: build docker image and deploy
+    needs: turnstyle
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1.4.4
-        with:
-          node-version: '12'
-      - name: Yarn install
-        run: npm i -g yarn && yarn
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@9bc07a3af02ce5950e977cab8b77210dc3178328
-        with:
-          ruby-version: 2.7.1
-      - name: Install dependencies
-        run: bundle install
-      - uses: citizen-of-planet-earth/cf-cli-action@master
-          with:
-            cf_api: https://api.london.cloud.service.gov.uk
-            cf_username: ${{ secrets.CF_USER }}
-            cf_password: ${{ secrets.CF_PASSWORD }}
-            cf_org: dfe-ecf
-            cf_space: early-careers-framework-dev
-            command: push -f manifest.yml
+        name: Checkout Code
 
+      - name: Pin Terraform version
+        uses: hashicorp/setup-terraform@v1.2.1
+        with:
+          terraform_version: 0.13.4
+
+      - name: Set environment variables
+        id: set_env_vars
+        run: |
+          echo "TAG=${{ github.sha }}" >> $GITHUB_ENV
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push docker image from builder target
+        uses: docker/build-push-action@v2
+        with:
+          build-args: BUILDKIT_INLINE_CACHE=1
+          cache-from: |
+            ${{ env.DOCKERHUB_REPOSITORY }}:builder-develop
+          push: true
+          tags: ${{ env.DOCKERHUB_REPOSITORY }}:builder-develop
+          target: builder
+
+      - name: Trigger Deploy App Workflow for dev
+        uses: benc-uk/workflow-dispatch@v1.1
+        with:
+          workflow: Deploy App to Environment
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          inputs: '{"environment": "dev", "tag": "${{ env.TAG }}"}'
