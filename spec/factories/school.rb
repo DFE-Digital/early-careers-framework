@@ -2,8 +2,8 @@ FactoryBot.define do
   factory :school do
     urn { "TEST URN" }
     name  { "Test school" }
-    address_line1 { "Test address" }
     country { "England" }
-    postcode { "AA1 1AA" }
+    postcode { Faker::Address.postcode }
+    address_line1 { Faker::Address.street_address }
   end
 end

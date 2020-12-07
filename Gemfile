@@ -6,6 +6,8 @@ ruby File.read(".ruby-version").chomp
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem "rails", "~> 6.0.3"
 
+gem "devise"
+
 # Use postgresql as the database for Active Record
 gem "pg", ">= 0.18", "< 2.0"
 
@@ -63,6 +65,7 @@ group :development do
 end
 
 group :test do
+  gem "faker"
   gem "rails-controller-testing"
   gem "shoulda-matchers", "~> 4.4"
   gem "webdrivers", "~> 4.4"
