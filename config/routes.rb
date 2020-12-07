@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   end
 
   get "/pages/:page", to: "pages#show"
+  get "check" => "application#check"
 
   resource :dashboard, controller: :dashboard, only: :show
   resource :supplier_dashboard, controller: :supplier_dashboard, only: :show

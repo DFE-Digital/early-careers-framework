@@ -67,8 +67,6 @@ ActiveRecord::Schema.define(version: 2020_11_30_093110) do
     t.string "encrypted_password", default: "", null: false
     t.string "login_token"
     t.datetime "login_token_valid_until"
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
     t.datetime "last_sign_in_at"
     t.datetime "current_sign_in_at"
@@ -82,7 +80,6 @@ ActiveRecord::Schema.define(version: 2020_11_30_093110) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "partnerships", "lead_providers"
