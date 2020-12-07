@@ -12,10 +12,8 @@ RSpec.describe UserMailer, type: :mailer do
 
   describe "#sign_in_email" do
     it "renders the right headers and content" do
-      expect(mail.subject).to eq("Sign in into ECF")
       expect(mail.to).to eq([user.email])
-      expect(mail.from).to eq(["from@example.com"])
-      expect(mail.body.encoded).to include(sign_in_link)
+      expect(mail.from).to eq(["mail@example.com"])
     end
   end
 end
