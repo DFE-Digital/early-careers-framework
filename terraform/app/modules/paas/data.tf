@@ -1,5 +1,5 @@
 data cloudfoundry_org org {
-  name = "dfe-ecf"
+  name = "dfe-teacher-services"
 }
 
 data cloudfoundry_space space {

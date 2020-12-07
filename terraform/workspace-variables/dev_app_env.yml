@@ -6,4 +6,4 @@ RAILS_MAX_THREADS: 5
 RAILS_SERVE_STATIC_FILES: true
 SERVICE_TYPE: web
 DATABASE_URL: postgres://postgres@localhost:5432
-DOMAIN: https://ecf-sandbox.london.cloudapps.digital
+DOMAIN: https://ecf-dev.london.cloudapps.digital
