@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# stash unstaged changes
+git diff > unstaged.diff
+git apply -R unstaged.diff
+
+# Lint, fix, store exit code, and stage modifications
+rubocop --fail-fast --auto-correct --except Layout/EndOfLine
+RUBOCOP_EXIT_CODE="$?"
+yarn run eslint --max-warnings 0 --fix app/**/*.js
+ESLINT_EXIT_CODE="$?"
+((EXIT_CODE = RUBOCOP_EXIT_CODE ** 2 + ESLINT_EXIT_CODE ** 2))
+
+git add --update
+
+
+# Pop the unstaged changes
+git apply unstaged.diff
+rm unstaged.diff
+
+exit "$EXIT_CODE"
