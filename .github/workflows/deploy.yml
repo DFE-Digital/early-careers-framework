@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - develop
-      - ECF-20-github-deploy-action
     paths-ignore:
       - 'documentation/**'
       - 'terraform/common/**'
