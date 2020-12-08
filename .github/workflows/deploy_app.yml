@@ -1,14 +1,20 @@
 name: Deploy App to Environment
-
 on:
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: Environment
-        required: true
-      tag:
-        description: Docker tag
-        required: true
+  push:
+    branches:
+      - ECF-20-github-deploy-action
+    paths-ignore:
+      - 'documentation/**'
+      - 'terraform/common/**'
+#on:
+#  workflow_dispatch:
+#    inputs:
+#      environment:
+#        description: Environment
+#        required: true
+#      tag:
+#        description: Docker tag
+#        required: true
 
 env:
   DOCKERHUB_REPOSITORY: dfedigital/early-careers-framework-dev
