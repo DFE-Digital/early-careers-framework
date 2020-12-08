@@ -17,10 +17,10 @@ Devise.setup do |config|
   config.secret_key = Rails.application.secrets.secret_key_base
 
   # Configure the class responsible to send e-mails.
-  # config.mailer = "UserMailer"
+  config.mailer = "UserMailer"
 
   # Configure the parent class responsible to send e-mails.
-  # config.parent_mailer = "Mail::Notify::Mailer"
+  config.parent_mailer = "Mail::Notify::Mailer"
 
   # ==> ORM configuration
   # Load and configure the ORM. Supports :active_record (default) and
