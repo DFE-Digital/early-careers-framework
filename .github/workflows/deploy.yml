@@ -61,7 +61,7 @@ jobs:
           cache-from: |
             ${{ env.DOCKERHUB_REPOSITORY }}:develop
           push: true
-          tags:
+          tags: |
             ${{ env.DOCKERHUB_REPOSITORY }}:${{ env.TAG }}
             ${{ env.DOCKERHUB_REPOSITORY }}:develop
           target: builder
