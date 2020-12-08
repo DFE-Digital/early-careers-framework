@@ -77,6 +77,3 @@ jobs:
           cd terraform/app
           terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-7f2ca242-9929-4662-a79c-c454ea56ea7b"
           terraform apply -input=false -auto-approve -var-file ../workspace-variables/dev.tfvars -var='secret_paas_app_env_values={"GOVUK_NOTIFY_API_KEY":"${{ secrets.GOVUK_NOTIFY_DEV_API_KEY }}","SECRET_KEY_BASE":"${{secrets.SECRET_DEV_KEY_BASE}}"}'
-        with:
-          timeoutSeconds: 300
-          intervalSeconds: 15
