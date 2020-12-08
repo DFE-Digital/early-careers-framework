@@ -1,0 +1,75 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - develop
+    paths-ignore:
+      - 'documentation/**'
+      - 'terraform/common/**'
+
+env:
+  DOCKERHUB_REPOSITORY: dfedigital/early-careers-framework-dev
+
+jobs:
+  turnstyle:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 20
+    steps:
+      - uses: softprops/turnstyle@v1
+        name: Check workflow concurrency
+        with:
+          poll-interval-seconds: 20
+          same-branch-only: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  deploy:
+    name: build docker image and deploy
+    needs: turnstyle
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        name: Checkout Code
+
+      - name: Pin Terraform version
+        uses: hashicorp/setup-terraform@v1.2.1
+        with:
+          terraform_version: 0.14.0
+
+      - name: Set environment variables
+        id: set_env_vars
+        run:
+          echo "TAG=${{ github.sha }}" >> $GITHUB_ENV
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_DEV_PASSWORD }}
+
+      - name: Build and push docker image from builder target
+        uses: docker/build-push-action@v2
+        with:
+          build-args: BUILDKIT_INLINE_CACHE=1
+          cache-from:
+            ${{ env.DOCKERHUB_REPOSITORY }}:develop
+          push: true
+          tags: |
+            ${{ env.DOCKERHUB_REPOSITORY }}:${{ env.TAG }}
+            ${{ env.DOCKERHUB_REPOSITORY }}:develop
+          target: production
+
+      - name: Deploy to dev
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TF_VAR_paas_user: ${{ secrets.GOVPAAS_DEV_USERNAME }}
+          TF_VAR_paas_password: ${{ secrets.GOVPAAS_DEV_PASSWORD }}
+        run: |
+          export TF_VAR_paas_app_docker_image=${{ env.DOCKERHUB_REPOSITORY }}:develop
+          cd terraform/app
+          terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-7f2ca242-9929-4662-a79c-c454ea56ea7b"
+          terraform apply -input=false -auto-approve -var-file ../workspace-variables/dev.tfvars -var='secret_paas_app_env_values={"GOVUK_NOTIFY_API_KEY":"${{ secrets.GOVUK_NOTIFY_DEV_API_KEY }}","SECRET_KEY_BASE":"${{secrets.SECRET_DEV_KEY_BASE}}"}'
