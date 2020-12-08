@@ -75,7 +75,7 @@ jobs:
         run: |
           export TF_VAR_paas_app_docker_image=${{ env.DOCKERHUB_REPOSITORY }}:${{ env.TAG }}
           cd terraform/app
-          terraform init -reconfigure -input=false -backend-config="bucket=dfe-ecf-terraform-state-dev"
+          terraform init -reconfigure -input=false -backend-config="bucket=dfe-ecf-terraform-state-dev" -backend-config="access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" -backend-config="secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
           terraform workspace select dev || terraform workspace new dev
           terraform apply -var-file ../workspace-variables/dev.tfvars -auto-approve -input=false
           terraform apply -var-file ../workspace-variables/dev.tfvars -var='secret_paas_app_env_values={"GOVUK_NOTIFY_API_KEY":"${{ secrets.GOVUK_NOTIFY_DEV_API_KEY }}","SECRET_KEY_BASE":"${{secrets.SECRET_DEV_KEY_BASE}}"}'
