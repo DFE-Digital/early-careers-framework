@@ -72,4 +72,4 @@ jobs:
           export TF_VAR_paas_app_docker_image=${{ env.DOCKERHUB_REPOSITORY }}:develop
           cd terraform/app
           terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-7f2ca242-9929-4662-a79c-c454ea56ea7b"
-          terraform apply -input=false -auto-approve -var-file ../workspace-variables/dev.tfvars -var='secret_paas_app_env_values={"GOVUK_NOTIFY_API_KEY":"${{ secrets.GOVUK_NOTIFY_DEV_API_KEY }}","SECRET_KEY_BASE":"${{secrets.SECRET_DEV_KEY_BASE}}"}'
+          terraform apply -input=false -auto-approve -var-file ../workspace-variables/dev.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_DEV}}"}'
