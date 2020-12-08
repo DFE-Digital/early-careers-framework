@@ -58,25 +58,20 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           build-args: BUILDKIT_INLINE_CACHE=1
-          cache-from: |
-            ${{ env.DOCKERHUB_REPOSITORY }}:builder-develop
           push: true
-          tags: ${{ env.DOCKERHUB_REPOSITORY }}:builder-develop
+          tags:
+            ${{ env.DOCKERHUB_REPOSITORY }}:${{ env.TAG }}
           target: builder
 
-      - name: Trigger Deploy App Workflow for dev
-        uses: benc-uk/workflow-dispatch@v1.1
-        with:
-          workflow: Deploy App to Environment
-          token: ${{ secrets.PERSONAL_TOKEN }}
-          inputs: '{"environment": "dev", "tag": "${{ env.TAG }}"}'
-
-      - name: Wait for Deploy App Workflow for staging
-        id: wait_for_deploy_app_staging
-        uses: fountainhead/action-wait-for-check@v1.0.0
-        with:
-          token: ${{ secrets.PERSONAL_TOKEN }}
-          checkName: Deploy app to environment # Job name within workflow
-          ref: ${{ github.ref }}
-          timeoutSeconds: 300
-          intervalSeconds: 15
+      - name: Deploy to environment
+          env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            TF_VAR_paas_user: ${{ secrets.GOVPAAS_DEV_USERNAME }}
+            TF_VAR_paas_password: ${{ secrets.GOVPAAS_DEV_PASSWORD }}
+          run: |
+            export TF_VAR_paas_app_docker_image=${{ env.DOCKERHUB_REPOSITORY }}:${{ env.TAG }}
+            cd terraform/app
+            terraform init -reconfigure -input=false ${{ env.BACKEND_CONFIG }}
+            terraform workspace select dev || terraform workspace new dev
+            terraform apply -var-file ../workspace-variables/${{ env.VAR_FILE }}.tfvars -auto-approve -input=false
