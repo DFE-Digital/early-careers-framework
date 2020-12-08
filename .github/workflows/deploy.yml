@@ -67,6 +67,6 @@ jobs:
       - name: Trigger Deploy App Workflow for dev
         uses: benc-uk/workflow-dispatch@v1.1
         with:
-          workflow: Deploy App to Environment
+          workflow: Deploy App to Environment # Workflow name
           token: ${{ secrets.PERSONAL_TOKEN }}
           inputs: '{"environment": "dev", "tag": "${{ env.TAG }}"}'
