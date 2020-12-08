@@ -43,8 +43,8 @@ jobs:
           AWS_REGION: eu-west-2
         run: |
           gem install aws-sdk-ssm --no-document
-          bin/run-in-env -t /teaching-vacancies/${{ env.PARAMETER_STORE_ENVIRONMENT }} -o quiet \
-            && echo Data in /teaching-vacancies/${{ env.PARAMETER_STORE_ENVIRONMENT }} looks valid
+          bin/run-in-env -t /early-careers-framework/${{ env.PARAMETER_STORE_ENVIRONMENT }} -o quiet \
+            && echo Data in /early-careers-framework/${{ env.PARAMETER_STORE_ENVIRONMENT }} looks valid
 
       - name: Deploy to environment
         env:
