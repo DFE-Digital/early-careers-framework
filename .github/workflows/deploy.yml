@@ -58,12 +58,15 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           build-args: BUILDKIT_INLINE_CACHE=1
+          cache-from: |
+            ${{ env.DOCKERHUB_REPOSITORY }}:develop
           push: true
           tags:
             ${{ env.DOCKERHUB_REPOSITORY }}:${{ env.TAG }}
+            ${{ env.DOCKERHUB_REPOSITORY }}:develop
           target: builder
 
-      - name: Deploy to environment
+      - name: Deploy to dev
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -72,7 +75,7 @@ jobs:
         run: |
           export TF_VAR_paas_app_docker_image=${{ env.DOCKERHUB_REPOSITORY }}:${{ env.TAG }}
           cd terraform/app
-          terraform init -reconfigure -input=false
+          terraform init -reconfigure -input=false -backend-config="bucket=dfe-ecf-terraform-state-dev"
           terraform workspace select dev || terraform workspace new dev
           terraform apply -var-file ../workspace-variables/dev.tfvars -auto-approve -input=false
           terraform apply -var-file ../workspace-variables/dev.tfvars -var='secret_paas_app_env_values={"GOVUK_NOTIFY_API_KEY":"${{ secrets.GOVUK_NOTIFY_DEV_API_KEY }}","SECRET_KEY_BASE":"${{secrets.SECRET_DEV_KEY_BASE}}"}'
