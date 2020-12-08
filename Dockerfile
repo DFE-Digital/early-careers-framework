@@ -4,7 +4,7 @@ ARG BASE_RUBY_IMAGE=ruby:2.7.1-alpine
 # building all layers above it if a value is not specidied during the build
 ARG BASE_RUBY_IMAGE_WITH_GEMS_AND_NODE_MODULES=early-careers-framework-gems-node-modules
 
-# Stage 1: Dwnload gems and node modules.
+# Stage 1: Download gems and node modules.
 FROM ${BASE_RUBY_IMAGE} AS builder
 
 ARG BUILD_DEPS="git gcc libc-dev make nodejs yarn postgresql-dev build-base libxml2-dev libxslt-dev ttf-ubuntu-font-family"
