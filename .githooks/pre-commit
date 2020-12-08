@@ -5,9 +5,12 @@ git diff > unstaged.diff
 git apply -R unstaged.diff
 
 # Lint, fix, store exit code, and stage modifications
-git ls-files -m | xargs ls -1 2>/dev/null | grep '\.rb$' | xargs rubocop --fail-fast --auto-correct --except Layout/EndOfLine
+CHANGED_RUBY_FILES=$(git diff --name-only --cached | xargs ls -1 2>/dev/null | grep '\.rb$')
+# Exclude Layout/EndOfLine because of Windows weirdness with core.autocrlf. This will be checked on github
+if [[ -n "$CHANGED_RUBY_FILES" ]]; then rubocop --fail-fast --auto-correct --except Layout/EndOfLine "$CHANGED_RUBY_FILES"; fi
 RUBOCOP_EXIT_CODE="$?"
-yarn run eslint --max-warnings 0 --fix app/**/*.js
+CHANGED_JS_FILES=$(git diff --name-only --cached | xargs ls -1 2>/dev/null | grep '\.js$')
+if [[ -n "$CHANGED_JS_FILES" ]]; then yarn run eslint --max-warnings 0 --fix "$CHANGED_JS_FILES"; fi
 ESLINT_EXIT_CODE="$?"
 ((EXIT_CODE = RUBOCOP_EXIT_CODE ** 2 + ESLINT_EXIT_CODE ** 2))
 
