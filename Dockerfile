@@ -4,8 +4,8 @@ ARG BASE_RUBY_IMAGE=ruby:2.7.1-alpine
 # building all layers above it if a value is not specidied during the build
 ARG BASE_RUBY_IMAGE_WITH_GEMS_AND_NODE_MODULES=early-careers-framework-gems-node-modules
 
-# Stage 1: install-gems-node-modules, download gems and node modules.
-FROM ${BASE_RUBY_IMAGE} AS install-gems-node-modules
+# Stage 1: Dwnload gems and node modules.
+FROM ${BASE_RUBY_IMAGE} AS builder
 
 ARG BUILD_DEPS="git gcc libc-dev make nodejs yarn postgresql-dev build-base libxml2-dev libxslt-dev ttf-ubuntu-font-family"
 
@@ -45,8 +45,8 @@ RUN apk -U upgrade && \
     echo "Europe/London" > /etc/timezone && \
     cp /usr/share/zoneinfo/Europe/London /etc/localtime
 
-COPY --from=install-gems-node-modules /app /app
-COPY --from=install-gems-node-modules /usr/local/bundle/ /usr/local/bundle/
+COPY --from=builder /app /app
+COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
 
 # Stage 3: assets-precompile, precomple assets and remove compile dependencies.
 FROM ${BASE_RUBY_IMAGE_WITH_GEMS_AND_NODE_MODULES} AS assets-precompile
