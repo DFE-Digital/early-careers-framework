@@ -1,4 +1,3 @@
-require 'byebug'
 class UserMailer < ApplicationMailer
   SIGN_IN_EMAIL_TEMPLATE = "7ab8db5b-9842-4bc3-8dbb-f590a3198d9e".freeze
   EMAIL_CONFIRMATION_TEMPLATE = "50059d26-c65d-4e88-831a-8bfb9f4116cd".freeze
@@ -16,12 +15,12 @@ class UserMailer < ApplicationMailer
     )
   end
 
-  def confirmation_instructions(user, token, options={})
+  def confirmation_instructions(user, token, _options = {})
     confirmation_url = Rails.application.routes.url_helpers.user_confirmation_url(
       confirmation_token: token,
       host: Rails.application.config.domain,
     )
-  
+
     template_mail(
       EMAIL_CONFIRMATION_TEMPLATE,
       to: user.email,
