@@ -78,7 +78,7 @@ test:
   <<: *default
   compile: true
 
-production:
+production: &production
   <<: *default
 
   # Production depends on precompilation of packs prior to booting for performance.
@@ -86,3 +86,9 @@ production:
 
   # Cache manifest.json for performance
   cache_manifest: true
+
+deployed_development:
+  <<: *production
+
+staging:
+  <<: *production
