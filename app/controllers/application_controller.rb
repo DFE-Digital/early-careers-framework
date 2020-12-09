@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   def check
-    render json: { status: "OK", version: ENV["SHA"] }, status: :ok
+    render json: { status: "OK", version: ENV["SHA"], environment: Rails.env }, status: :ok
   end
 
 protected
