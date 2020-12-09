@@ -82,4 +82,4 @@ platform :mswin, :mingw, :x64_mingw do
   gem "wdm", ">= 0.1.0"
 end
 
-gem "govspeak"
+gem "govspeak", :git => 'git://github.com/alphagov/govspeak.git'
