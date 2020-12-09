@@ -37,6 +37,9 @@ Register on [GOV.UK Notify](https://www.notifications.service.gov.uk).
 Ask someone from the team to add you to our service.
 Generate an api key for yourself and set it in your `.env` file.
 
+### Set up git hooks
+Run `git config core.hooksPath .githooks` to use the included git hooks.
+
 ## Whats included in this boilerplate?
 
 - Rails 6.0 with Webpacker
