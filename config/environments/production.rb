@@ -16,7 +16,7 @@ Rails.application.configure do
 
   # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
   # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
-  config.require_master_key = true
+  config.require_master_key = true unless ENV["IGNORE_SECRETS_FOR_BUILD"]
 
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
@@ -54,9 +54,11 @@ Rails.application.configure do
   config.domain = ENV["DOMAIN"]
   config.action_mailer.perform_caching = false
   config.action_mailer.delivery_method = :notify
-  config.action_mailer.notify_settings = {
-    api_key: ENV.fetch("GOVUK_NOTIFY_API_KEY"),
-  }
+  unless ENV["IGNORE_SECRETS_FOR_BUILD"]
+    config.action_mailer.notify_settings = {
+      api_key: Rails.application.credentials.GOVUK_NOTIFY_API_KEY,
+    }
+  end
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
