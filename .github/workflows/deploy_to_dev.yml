@@ -1,0 +1,23 @@
+name: Deploy to Dev
+
+on:
+  push:
+    branches:
+      - develop
+      - ecf-tech-33_terraform-staging
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: setup-inputs
+        run: |
+          INPUTS='${{ format('{{"environment": "dev", "ref": "{0}"}}', github.sha) }}'
+          echo "INPUTS=${INPUTS}" >> $GITHUB_ENV
+
+      - name: trigger-deploy
+        uses: benc-uk/workflow-dispatch@v1.1
+        with:
+          workflow: Deploy to Environment # Workflow name
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          inputs: ${{ env.INPUTS }}

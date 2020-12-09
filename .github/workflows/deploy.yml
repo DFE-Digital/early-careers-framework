@@ -71,20 +71,20 @@ jobs:
           target: production
 
       - name: Deploy to dev
-        if: ${{ github.event.inputs.environment == "dev" }}
+        if: ${{ github.event.inputs.environment == 'dev' }}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           TF_VAR_paas_user: ${{ secrets.GOVPAAS_DEV_USERNAME }}
           TF_VAR_paas_password: ${{ secrets.GOVPAAS_DEV_PASSWORD }}
         run: |
-          export TF_VAR_paas_app_docker_image=${{ env.DOCKERHUB_REPOSITORY }}:develop
+          export TF_VAR_paas_app_docker_image=${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ github.event.inputs.environment }}:${{ github.event.inputs.environment }}
           cd terraform/app
           terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-7f2ca242-9929-4662-a79c-c454ea56ea7b"
           terraform apply -input=false -auto-approve -var-file ../workspace-variables/dev.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_DEV}}"}'
 
       - name: Deploy to staging
-        if: ${{ github.event.inputs.environment == "staging" }}
+        if: ${{ github.event.inputs.environment == 'staging' }}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_STAGING }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_STAGING }}
