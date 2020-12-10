@@ -1,9 +1,8 @@
-name: Deploy to Dev
-
+name: Create Review App
 on:
-  push:
-    branches:
-      - develop
+  pull_request:
+    branches: [ develop ]
+    types: [opened, synchronize]
     paths-ignore:
       - 'documentation/**'
 
@@ -13,7 +12,7 @@ jobs:
     steps:
       - name: setup-inputs
         run: |
-          INPUTS='${{ format('{{"environment": "dev", "ref": "{0}"}}', github.sha) }}'
+          INPUTS='${{ format('{{"environment": "review-pr-{0}", "ref": "{1}"}}',  github.event.number, github.sha) }}'
           echo "INPUTS=${INPUTS}" >> $GITHUB_ENV
 
       - name: trigger-deploy
@@ -22,6 +21,7 @@ jobs:
           workflow: Deploy to Environment # Workflow name, in deploy.yml
           token: ${{ secrets.PERSONAL_TOKEN }}
           inputs: ${{ env.INPUTS }}
+          ref: ${{ github.event.pull_request.head.ref || github.ref }}
 
       - name: Wait for Deploy App Workflow
         id: wait_for_deploy_app
@@ -32,3 +32,11 @@ jobs:
           checkName: build docker image and deploy # Job name within workflow
           timeoutSeconds: 600
           intervalSeconds: 15
+
+      - name: comment on PR
+        uses: unsplash/comment-on-pr@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: "Created review app at https://ecf-review-pr-${{ github.event.number }}.london.cloudapps.digital"
+          check_for_duplicate_msg: true

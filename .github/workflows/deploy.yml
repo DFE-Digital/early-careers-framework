@@ -56,18 +56,56 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_DEV_PASSWORD }}
 
+      - name: Set dockerhub repo
+        run: |
+          ENVIRONMENT=${{ github.event.inputs.environment }}
+          if [[ "$ENVIRONMENT" == *"review"* ]]; then DOCKERHUB_ENV=dev; else DOCKERHUB_ENV=$ENVIRONMENT; fi
+          echo "DOCKERHUB_ENV=$DOCKERHUB_ENV" >> $GITHUB_ENV
+
       - name: Build and push docker image from builder target
+        uses: docker/build-push-action@v2
+        with:
+          build-args: BUILDKIT_INLINE_CACHE=1
+          cache-from: |
+            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:builder
+          push: true
+          tags: ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:builder
+          target: builder
+
+      - name: Build and push docker image from early-careers-framework-gems-node-modules target
+        uses: docker/build-push-action@v2
+        with:
+          build-args: BUILDKIT_INLINE_CACHE=1
+          cache-from: |
+            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:gems-node-modules
+          push: true
+          tags: ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:gems-node-modules
+          target: early-careers-framework-gems-node-modules
+
+      - name: Build and push docker image from assets-precompile target
+        uses: docker/build-push-action@v2
+        with:
+          build-args: BUILDKIT_INLINE_CACHE=1
+          cache-from: |
+            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:assets-precompile
+          push: true
+          tags: ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:assets-precompile
+          target: assets-precompile
+
+      - name: Build and push docker image from production target
         uses: docker/build-push-action@v2
         with:
           build-args: |
             BUILDKIT_INLINE_CACHE=1
             VERSION=${{ env.TAG }}
-          cache-from:
-            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ github.event.inputs.environment }}:${{ github.event.inputs.environment }}
+          cache-from: |
+            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:${{ github.event.inputs.environment }}
+            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:latest
           push: true
           tags: |
-            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ github.event.inputs.environment }}:${{ env.TAG }}
-            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ github.event.inputs.environment }}:${{ github.event.inputs.environment }}
+            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:${{ env.TAG }}
+            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:${{ github.event.inputs.environment }}
+            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:latest
           target: production
 
       - name: Deploy to dev
@@ -78,10 +116,23 @@ jobs:
           TF_VAR_paas_user: ${{ secrets.GOVPAAS_DEV_USERNAME }}
           TF_VAR_paas_password: ${{ secrets.GOVPAAS_DEV_PASSWORD }}
         run: |
-          export TF_VAR_paas_app_docker_image=${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ github.event.inputs.environment }}:${{ env.TAG }}
+          export TF_VAR_paas_app_docker_image=${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:${{ env.TAG }}
           cd terraform/app
           terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-7f2ca242-9929-4662-a79c-c454ea56ea7b"
           terraform apply -input=false -auto-approve -var-file ../workspace-variables/dev.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_DEV}}"}'
+
+      - name: Deploy review app to dev
+        if: ${{ startsWith(github.event.inputs.environment, 'review') }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TF_VAR_paas_user: ${{ secrets.GOVPAAS_DEV_USERNAME }}
+          TF_VAR_paas_password: ${{ secrets.GOVPAAS_DEV_PASSWORD }}
+        run: |
+          export TF_VAR_paas_app_docker_image=${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:${{ env.TAG }}
+          cd terraform/app
+          terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-7f2ca242-9929-4662-a79c-c454ea56ea7b" -backend-config="key=${{ github.event.inputs.environment }}/terraform.tfstate"
+          terraform apply -input=false -auto-approve -var-file ../workspace-variables/review.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_DEV}}"}' -var='environment=${{github.event.inputs.environment}}'
 
       - name: Deploy to staging
         if: ${{ github.event.inputs.environment == 'staging' }}
@@ -91,7 +142,7 @@ jobs:
           TF_VAR_paas_user: ${{ secrets.GOVPAAS_STAG_USERNAME }}
           TF_VAR_paas_password: ${{ secrets.GOVPAAS_STAG_PASSWORD }}
         run: |
-          export TF_VAR_paas_app_docker_image=${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ github.event.inputs.environment }}:${{ env.TAG }}
+          export TF_VAR_paas_app_docker_image=${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:${{ env.TAG }}
           cd terraform/app
           terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-e2123d0b-d394-4594-8056-315300e7d8a8"
           terraform apply -input=false -auto-approve -var-file ../workspace-variables/staging.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_STAGING}}"}'
