@@ -40,6 +40,10 @@ Generate an api key for yourself and set it in your `.env` file.
 ### Set up git hooks
 Run `git config core.hooksPath .githooks` to use the included git hooks.
 
+### Test displaying markdown with govspeak 
+Run your app locally. Go to http://localhost:3000/govspeak_test. Enter your markdown into the text area,
+click "See preview". Voila!
+
 ## Whats included in this boilerplate?
 
 - Rails 6.0 with Webpacker
