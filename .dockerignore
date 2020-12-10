@@ -5,3 +5,5 @@
 .idea/*
 /storage/*
 /terraform/*
+.github/*
+.githooks/*
