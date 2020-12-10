@@ -81,3 +81,5 @@ gem "govuk_design_system_formbuilder", "~> 2.1"
 platform :mswin, :mingw, :x64_mingw do
   gem "wdm", ">= 0.1.0"
 end
+
+gem "govspeak", git: "https://github.com/alphagov/govspeak.git"

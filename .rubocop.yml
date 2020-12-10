@@ -11,3 +11,11 @@ AllCops:
 
 Style/FrozenStringLiteralComment:
   Enabled: true
+
+Rails/UnknownEnv:
+  Environments:
+    - production
+    - development
+    - test
+    - deployed_development
+    - staging

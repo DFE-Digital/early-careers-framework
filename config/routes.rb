@@ -21,5 +21,10 @@ Rails.application.routes.draw do
   get "/422", to: "errors#unprocessable_entity", via: :all
   get "/500", to: "errors#internal_server_error", via: :all
 
+  if Rails.env.development? || Rails.env.deployed_development?
+    get "/govspeak_test", to: "govspeak_test#show"
+    post "/govspeak_test", to: "govspeak_test#preview"
+  end
+
   root to: "pages#home"
 end
