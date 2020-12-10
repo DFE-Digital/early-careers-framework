@@ -21,15 +21,22 @@ jobs:
           workflow: Deploy to Environment # Workflow name, in deploy.yml
           token: ${{ secrets.PERSONAL_TOKEN }}
           inputs: ${{ env.INPUTS }}
-          ref: ${{ github.event.pull_request.head.ref }}
+          ref: ${{ github.event.pull_request.head.ref || github.ref }}
 
-  example:
-    name: sample comment
-    runs-on: ubuntu-latest
-    steps:
-      - name: comment PR
+      - name: Wait for Deploy App Workflow
+        id: wait_for_deploy_app
+        uses: fountainhead/action-wait-for-check@v1.0.0
+        with:
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          ref: ${{ github.event.pull_request.head.sha || github.ref }}
+          checkName: build docker image and deploy # Job name within workflow
+          timeoutSeconds: 600
+          intervalSeconds: 15
+
+      - name: comment on PR
         uses: unsplash/comment-on-pr@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: "Creating review app at https://ecf-review-pr-${{ github.event.number }}.london.cloudapps.digital"
+          msg: "Created review app at https://ecf-review-pr-${{ github.event.number }}.london.cloudapps.digital"
+          check_for_duplicate_msg: true
