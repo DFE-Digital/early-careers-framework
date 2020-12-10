@@ -72,6 +72,26 @@ jobs:
           tags: ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:builder
           target: builder
 
+      - name: Build and push docker image from early-careers-framework-gems-node-modules target
+        uses: docker/build-push-action@v2
+        with:
+          build-args: BUILDKIT_INLINE_CACHE=1
+          cache-from: |
+            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:gems-node-modules
+          push: true
+          tags: ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:gems-node-modules
+          target: early-careers-framework-gems-node-modules
+
+      - name: Build and push docker image from assets-precompile target
+        uses: docker/build-push-action@v2
+        with:
+          build-args: BUILDKIT_INLINE_CACHE=1
+          cache-from: |
+            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:assets-precompile
+          push: true
+          tags: ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:assets-precompile
+          target: assets-precompile
+
       - name: Build and push docker image from production target
         uses: docker/build-push-action@v2
         with:
