@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - 'documentation/**'
 
 jobs:
   deploy:
@@ -17,6 +19,6 @@ jobs:
       - name: trigger-deploy
         uses: benc-uk/workflow-dispatch@v1.1
         with:
-          workflow: Deploy to Environment # Workflow name
+          workflow: Deploy to Environment # Workflow name, in deploy.yml
           token: ${{ secrets.PERSONAL_TOKEN }}
           inputs: ${{ env.INPUTS }}
