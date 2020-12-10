@@ -21,6 +21,7 @@ jobs:
           workflow: Deploy to Environment # Workflow name, in deploy.yml
           token: ${{ secrets.PERSONAL_TOKEN }}
           inputs: ${{ env.INPUTS }}
+          ref: ${{ github.event.pull_request.head.ref }}
 
   example:
     name: sample comment
