@@ -35,10 +35,9 @@ RUN apk -U upgrade && \
 FROM ${BASE_RUBY_IMAGE} AS early-careers-framework-gems-node-modules
 
 ENV RAILS_ENV=production \
-    GOVUK_NOTIFY_API_KEY=TestKey \
     AUTHORISED_HOSTS=127.0.0.1 \
     SECRET_KEY_BASE=TestKey \
-    GOVUK_NOTIFY_CALLBACK_API_KEY=TestKey
+    IGNORE_SECRETS_FOR_BUILD=1
 
 RUN apk -U upgrade && \
     apk add --update --no-cache nodejs yarn tzdata libpq libxml2 libxslt graphviz && \

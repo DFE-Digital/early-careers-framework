@@ -24,4 +24,4 @@ You should be able to see the bucket_name, aws_access_key_id and aws_secret_acce
 ```terraform init -backend-config="bucket=<bucket_name>" -backend-config="access_key=<aws_access_key_id>" -backend-config="secret_key=<aws_secret_access_key>"```
 
 ### Running Terraform apply
-```terraform apply --var-file=... -var='secret_paas_app_env_values={"GOVUK_NOTIFY_API_KEY":"...","SECRET_KEY_BASE":"..."}' -var='paas_user=...' -var='paas_password=...' -var='paas_app_docker_image=...'```
+```terraform apply --var-file=... -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"..."}' -var='paas_user=...' -var='paas_password=...' -var='paas_app_docker_image=...'```

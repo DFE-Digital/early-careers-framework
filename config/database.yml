@@ -20,6 +20,14 @@ test:
   variables:
     idle_in_transaction_session_timeout: 0
 
+deployed_development:
+  <<: *default
+  sslmode: require
+
+staging:
+  <<: *default
+  sslmode: require
+
 production:
   <<: *default
   sslmode: require
