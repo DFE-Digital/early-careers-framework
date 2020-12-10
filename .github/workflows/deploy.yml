@@ -65,15 +65,27 @@ jobs:
       - name: Build and push docker image from builder target
         uses: docker/build-push-action@v2
         with:
+          build-args: BUILDKIT_INLINE_CACHE=1
+          cache-from: |
+            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:builder
+          push: true
+          tags: ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:builder
+          target: builder
+
+      - name: Build and push docker image from production target
+        uses: docker/build-push-action@v2
+        with:
           build-args: |
             BUILDKIT_INLINE_CACHE=1
             VERSION=${{ env.TAG }}
-          cache-from:
+          cache-from: |
             ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:${{ github.event.inputs.environment }}
+            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:latest
           push: true
           tags: |
             ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:${{ env.TAG }}
             ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:${{ github.event.inputs.environment }}
+            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:latest
           target: production
 
       - name: Deploy to dev
