@@ -2,7 +2,7 @@
   <div class="govuk-grid-column-full">
     <h1 class="govuk-heading-l">Govspeak dev test</h1>
     <%= form_with url: '/govspeak_test', method: :post do |f| %>
-      <%= f.govuk_text_area :preview_string %>
+      <%= f.govuk_text_area :preview_string, label: { text: "Markdown string to preview" } %>
       <%= f.govuk_submit "See preview" %>
     <% end %>
     <%= @content.html_safe %>
