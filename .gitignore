@@ -42,3 +42,6 @@ terraform.tfstate.d/
 .terraform.tfstate.lock.info
 .terraform.lock.hcl
 tokens
+
+# Rails secrets
+/config/credentials/*.key

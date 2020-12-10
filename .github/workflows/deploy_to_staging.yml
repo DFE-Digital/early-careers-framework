@@ -1,0 +1,22 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: setup-inputs
+        run: |
+          INPUTS='${{ format('{{"environment": "staging", "ref": "{0}"}}', github.sha) }}'
+          echo "INPUTS=${INPUTS}" >> $GITHUB_ENV
+
+      - name: trigger-deploy
+        uses: benc-uk/workflow-dispatch@v1.1
+        with:
+          workflow: Deploy to Environment # Workflow name
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          inputs: ${{ env.INPUTS }}
