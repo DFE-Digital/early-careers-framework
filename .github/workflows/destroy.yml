@@ -14,10 +14,10 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           TF_VAR_paas_user: ${{ secrets.GOVPAAS_DEV_USERNAME }}
           TF_VAR_paas_password: ${{ secrets.GOVPAAS_DEV_PASSWORD }}
-          run: |
-            cd terraform/app
-            terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-7f2ca242-9929-4662-a79c-c454ea56ea7b" -backend-config="key=review-pr-${{ github.event.number }}/terraform.tfstate"
-            terraform destroy -auto-approve -var-file ../workspace-variables/review.tfvars
+        run: |
+          cd terraform/app
+          terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-7f2ca242-9929-4662-a79c-c454ea56ea7b" -backend-config="key=review-pr-${{ github.event.number }}/terraform.tfstate"
+          terraform destroy -auto-approve -var-file ../workspace-variables/review.tfvars
 
   cleanup:
     runs-on: ubuntu-20.04
