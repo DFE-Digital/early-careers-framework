@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreatePartnerships < ActiveRecord::Migration[6.0]
   def change
     create_table :partnerships, id: :uuid do |t|

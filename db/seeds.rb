@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # TODO: Remove network and school seeding when we have a way of getting them from GIAS
 unless Network.first
   network = Network.create!(name: "Test school network")
