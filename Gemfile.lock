@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/alphagov/govspeak.git
+  remote: https://github.com/alphagov/govspeak.git
   revision: 79a6c9a99b32ee661ad41818a44c3aae10f57829
   specs:
     govspeak (6.5.10)
