@@ -25,7 +25,7 @@ jobs:
         run: |
           cd terraform/app
           terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-7f2ca242-9929-4662-a79c-c454ea56ea7b" -backend-config="key=review-pr-${{ github.event.number }}/terraform.tfstate"
-          terraform destroy -auto-approve -var-file ../workspace-variables/review.tfvars
+          terraform destroy -input=false -auto-approve -var-file ../workspace-variables/review.tfvars -var='environment=${{github.event.inputs.environment}}'
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
