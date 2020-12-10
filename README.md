@@ -70,6 +70,9 @@ or
 bundle exec scss-lint app/webpacker/styles
 ```
 
+## Review apps
+Review apps are automatically created when a PR is opened. A link to the app will be posted on the review.
+
 ## Deploying on GOV.UK PaaS
 
 ### Prerequisites
