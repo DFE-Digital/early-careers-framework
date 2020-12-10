@@ -8,3 +8,6 @@ AllCops:
     - 'node_modules/**/*'
     - 'bin/**/*'
     - 'db/schema.rb'
+
+Style/FrozenStringLiteralComment:
+  Enabled: true

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "devise/strategies/authenticatable"
 require_relative "../../../app/mailers/user_mailer"
 

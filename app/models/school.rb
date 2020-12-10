@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class School < ApplicationRecord
   belongs_to :network, optional: true
   has_one :partnership

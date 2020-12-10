@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ViewHelper
   def govuk_link_to(body, url, html_options = {}, &_block)
     html_options[:class] = prepend_css_class("govuk-link", html_options[:class])

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :cf do
   desc "Only run on the first application instance"
   task on_first_instance: :environment do

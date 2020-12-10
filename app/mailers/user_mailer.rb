@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class UserMailer < ApplicationMailer
-  SIGN_IN_EMAIL_TEMPLATE = "7ab8db5b-9842-4bc3-8dbb-f590a3198d9e".freeze
-  EMAIL_CONFIRMATION_TEMPLATE = "50059d26-c65d-4e88-831a-8bfb9f4116cd".freeze
+  SIGN_IN_EMAIL_TEMPLATE = "7ab8db5b-9842-4bc3-8dbb-f590a3198d9e"
+  EMAIL_CONFIRMATION_TEMPLATE = "50059d26-c65d-4e88-831a-8bfb9f4116cd"
 
   def sign_in_email(user, url)
     template_mail(
