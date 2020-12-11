@@ -243,7 +243,7 @@ Devise.setup do |config|
   # config.navigational_formats = ['*/*', :html]
 
   # The default HTTP method used to sign out a resource. Default is :delete.
-  config.sign_out_via = :delete
+  config.sign_out_via = :get
   config.scoped_views = true
 
   Devise.add_module(:passwordless_authenticatable, {
