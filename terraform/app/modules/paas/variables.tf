@@ -39,7 +39,11 @@ variable web_app_start_command {
 
 locals {
 
-  app_env_domain  = { "DOMAIN" = "ecf-${var.environment}.london.cloudapps.digital" }
+  app_env_domain  = {
+    "DOMAIN" = "ecf-${var.environment}.london.cloudapps.digital"
+    "GOVUK_APP_DOMAIN" = "ecf-${var.environment}.london.cloudapps.digital"
+    "GOVUK_WEBSITE_ROOT" = "ecf-${var.environment}.london.cloudapps.digital"
+  }
   app_environment = merge(
     local.app_env_domain,
     var.app_env_values #Because of merge order, if present, the value of DOMAIN in .tfvars will overwrite app_env_domain
