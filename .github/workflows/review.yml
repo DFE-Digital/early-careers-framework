@@ -33,6 +33,10 @@ jobs:
           timeoutSeconds: 600
           intervalSeconds: 15
 
+      - name: Fail if child job fails
+        if: ${{ steps.wait_for_deploy_app.outputs.conclusion != 'success' }}
+        run: exit 1
+
       - name: comment on PR
         uses: unsplash/comment-on-pr@master
         env:
