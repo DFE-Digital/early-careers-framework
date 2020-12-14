@@ -1,0 +1,2 @@
+class InductionCoordinatorProfile < ApplicationRecord
+end

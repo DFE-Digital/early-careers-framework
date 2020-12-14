@@ -1,0 +1,7 @@
+class CreateInductionProfilesSchoolsJoinTable < ActiveRecord::Migration[6.0]
+  def change
+    create_join_table :induction_coordinator_profiles, :schools, column_options: { type: :uuid } do |t|
+      t.timestamps null: false
+    end
+  end
+end

@@ -1,0 +1,9 @@
+<p> Please confirm the school details below</p>
+
+<div>Name:<%= @school.name %></div>
+<div><%= @school.address_line1 %></div>
+<div><%= @school.address_line2 %></div>
+<div><%= @school.address_line3 %></div>
+<div><%= @school.postcode %></div>
+
+<%= govuk_button_link_to "Confirm", new_user_registration_path %>

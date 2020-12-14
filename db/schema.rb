@@ -10,11 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_30_093110) do
+ActiveRecord::Schema.define(version: 2020_12_14_154950) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+
+  create_table "induction_coordinator_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_induction_coordinator_profiles_on_user_id"
+  end
+
+  create_table "induction_coordinator_profiles_schools", id: false, force: :cascade do |t|
+    t.uuid "induction_coordinator_profile_id", null: false
+    t.uuid "school_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "lead_providers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
@@ -54,6 +68,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_093110) do
     t.string "country", null: false
     t.string "postcode", null: false
     t.uuid "network_id"
+    t.string "domain", default: "education.go.uk", null: false
     t.index ["high_pupil_premium"], name: "index_schools_on_high_pupil_premium", where: "high_pupil_premium"
     t.index ["is_rural"], name: "index_schools_on_is_rural", where: "is_rural"
     t.index ["name"], name: "index_schools_on_name"
@@ -83,6 +98,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_093110) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "induction_coordinator_profiles", "users"
   add_foreign_key "partnerships", "lead_providers"
   add_foreign_key "partnerships", "schools"
   add_foreign_key "schools", "networks"
