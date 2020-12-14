@@ -4,9 +4,14 @@ Rails.application.routes.draw do
   devise_for :users, controllers: {
     sessions: "users/sessions",
   }
-  get "/school_confirmation", to: "users/registrations#confirm_school"
-  get "/check_registration_email", to: "users/registrations#start_registration"
-  post "/check_registration_email", to: "users/registrations#check_registration_email"
+
+  as :user do
+    get "/induction_coordinator/registration/school_confirmation", to: "users/induction_coordinators/registrations#confirm_school"
+    get "/induction_coordinator/registration/check_email", to: "users/induction_coordinators/registrations#start_registration"
+    post "/induction_coordinator/registration/check_email", to: "users/induction_coordinators/registrations#check_registration_email"
+    get "/induction_coordinator/registration/register", to: "users/induction_coordinators/registrations#new"
+    post "/induction_coordinator/registration/register", to: "users/induction_coordinators/registrations#create"
+  end
 
   devise_scope :user do
     get "email_confirmation", to: "users/sessions#redirect_from_magic_link"
