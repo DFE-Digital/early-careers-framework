@@ -12,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_201_215_111_206) do
+ActiveRecord::Schema.define(version: 20_201_214_154_950) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -55,20 +55,6 @@ ActiveRecord::Schema.define(version: 20_201_215_111_206) do
     t.index %w[school_id], name: "index_partnerships_on_school_id"
   end
 
-  create_table "school_domains", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.string "domain", null: false
-    t.index %w[domain], name: "index_school_domains_on_domain", unique: true
-  end
-
-  create_table "school_domains_schools", id: false, force: :cascade do |t|
-    t.uuid "school_domain_id", null: false
-    t.uuid "school_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
   create_table "schools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -85,6 +71,7 @@ ActiveRecord::Schema.define(version: 20_201_215_111_206) do
     t.string "country", null: false
     t.string "postcode", null: false
     t.uuid "network_id"
+    t.string "domains", default: [], null: false, array: true
     t.index %w[high_pupil_premium], name: "index_schools_on_high_pupil_premium", where: "high_pupil_premium"
     t.index %w[is_rural], name: "index_schools_on_is_rural", where: "is_rural"
     t.index %w[name], name: "index_schools_on_name"
