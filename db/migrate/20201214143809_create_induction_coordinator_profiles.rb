@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateInductionCoordinatorProfiles < ActiveRecord::Migration[6.0]
   def change
     create_table :induction_coordinator_profiles, id: :uuid do |t|
