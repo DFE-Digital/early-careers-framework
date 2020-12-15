@@ -4,29 +4,39 @@ class Users::InductionCoordinators::RegistrationsController < Devise::Registrati
   def start_registration; end
 
   def confirm_school
-    @school = School.find params["school_id"]
+    @schools = School.where(id: params["school_ids"])
     @email = params["email"]
   end
 
   def check_registration_email
-    email = params["induction_coordinator_profile"]["email"]
+    @email = params["induction_coordinator_profile"]["email"]
 
-    @user = User.find_by(email: email)
+    @user = User.find_by(email: @email)
 
     if @user
       flash[:notice] = "You already have an account. Sign in"
-      redirect_to controller: "/users/sessions", action: :new, email: email
+      redirect_to controller: "/users/sessions", action: :new, email: @email
     else
-      domain = email.split("@")[1]
-      @school = School.find_by(domain: domain)
+      domain = @email.split("@")[1]
+      @schools = School.joins(:school_domains).where(school_domains: { domain: domain })
 
-      if @school && @school.induction_coordinator_profiles.none?
-        redirect_to controller: "users/induction_coordinators/registrations", action: :confirm_school, school_id: @school, email: email
-      elsif @school
-        redirect_to root_path, alert: "Someone from your school has already signed up"
+      if @schools.any?
+        tmp
       else
         redirect_to induction_coordinator_registration_check_email_path, alert: "No schools matched your email"
       end
+    end
+  end
+
+  def tmp
+    unclaimed_schools = @schools.filter { |school| school.induction_coordinator_profiles.none }
+
+    if unclaimed_schools.one?
+      redirect_to controller: "users/induction_coordinators/registrations", action: :confirm_school, school_ids: unclaimed_schools.first, email: @email
+    elsif unclaimed_schools.any?
+      redirect_to controller: "users/induction_coordinators/registrations", action: :confirm_school, school_ids: unclaimed_schools, email: @email
+    else
+      redirect_to root_path, alert: "Someone from your school has already signed up"
     end
   end
 

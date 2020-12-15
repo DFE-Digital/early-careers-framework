@@ -1,0 +1,29 @@
+<% @school = @schools.first %>
+<h2 class="govuk-heading-l">Confirm your school</h2>
+<p>We have found the following matching school, please check the details carefully:</p>
+
+<table class="govuk-table">
+  <tbody class="govuk-table__body">
+  <tr class="govuk-table__row">
+    <th scope="row" class="govuk-table__header">Name</th>
+    <td class="govuk-table__cell"><%= @school.name %></td>
+  </tr>
+  <tr class="govuk-table__row">
+    <th scope="row" class="govuk-table__header">Address</th>
+    <td class="govuk-table__cell">
+      <%= @school.address_line1 %>
+      <br/>
+      <%= @school.address_line2 %>
+      <br/>
+      <%= @school.address_line3 %>
+      <br/>
+      <%= @school.address_line4 %>
+      <br/>
+      <%= @school.postcode %>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<%= govuk_button_link_to "Confirm", induction_coordinator_registration_register_path(email: @email, school_id: @school) %>
+<%= govuk_button_link_to "No, change details", induction_coordinator_registration_check_email_path, class: "govuk-button--secondary" %>
