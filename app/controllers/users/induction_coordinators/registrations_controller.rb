@@ -31,9 +31,7 @@ class Users::InductionCoordinators::RegistrationsController < Devise::Registrati
   def handle_matching_schools
     unclaimed_schools = @schools.filter { |school| school.induction_coordinator_profiles.none? }
 
-    if unclaimed_schools.one?
-      redirect_to controller: "users/induction_coordinators/registrations", action: :confirm_school, school_ids: unclaimed_schools.first, email: @email
-    elsif unclaimed_schools.any?
+    if unclaimed_schools.any?
       redirect_to controller: "users/induction_coordinators/registrations", action: :confirm_school, school_ids: unclaimed_schools, email: @email
     else
       redirect_to root_path, alert: "Someone from your school has already signed up"

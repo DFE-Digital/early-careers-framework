@@ -2,8 +2,8 @@
 
 FactoryBot.define do
   factory :school do
-    urn { Faker::Number.decimal_part(digits: 7).to_s }
-    name  { "Test school" }
+    urn { Faker::Number.unique.decimal_part(digits: 7).to_s }
+    name  { Faker::University.name }
     country { "England" }
     postcode { Faker::Address.postcode }
     address_line1 { Faker::Address.street_address }
