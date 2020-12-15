@@ -14,13 +14,16 @@ class Users::InductionCoordinators::RegistrationsController < Devise::Registrati
     @user = User.find_by(email: email)
 
     if @user
-      redirect_to new_user_session_path, notice: "You already have an account. Sign in"
+      flash[:notice] = "You already have an account. Sign in"
+      redirect_to controller: "/users/sessions", action: :new, email: email
     else
       domain = email.split("@")[1]
       @school = School.find_by(domain: domain)
 
       if @school && @school.induction_coordinator_profiles.none?
         redirect_to controller: "users/induction_coordinators/registrations", action: :confirm_school, school_id: @school, email: email
+      elsif @school
+        redirect_to root_path, alert: "Someone from your school has already signed up"
       else
         redirect_to induction_coordinator_registration_check_email_path, alert: "No schools matched your email"
       end
