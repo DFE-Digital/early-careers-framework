@@ -18,18 +18,18 @@ class Users::InductionCoordinators::RegistrationsController < Devise::Registrati
       redirect_to controller: "/users/sessions", action: :new, email: @email
     else
       domain = @email.split("@")[1]
-      @schools = School.joins(:school_domains).where(school_domains: { domain: domain })
+      @schools = School.where("'#{domain}' = ANY (domains)")
 
       if @schools.any?
-        tmp
+        handle_matching_schools
       else
         redirect_to induction_coordinator_registration_check_email_path, alert: "No schools matched your email"
       end
     end
   end
 
-  def tmp
-    unclaimed_schools = @schools.filter { |school| school.induction_coordinator_profiles.none }
+  def handle_matching_schools
+    unclaimed_schools = @schools.filter { |school| school.induction_coordinator_profiles.none? }
 
     if unclaimed_schools.one?
       redirect_to controller: "users/induction_coordinators/registrations", action: :confirm_school, school_ids: unclaimed_schools.first, email: @email
