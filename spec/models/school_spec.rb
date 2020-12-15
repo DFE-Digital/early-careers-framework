@@ -12,5 +12,7 @@ RSpec.describe School, type: :model do
 
     it { is_expected.to have_one(:partnership) }
     it { is_expected.to have_one(:lead_provider).through(:partnership) }
+    it { is_expected.to have_and_belong_to_many(:induction_coordinator_profiles) }
+    it { is_expected.to have_and_belong_to_many(:school_domains) }
   end
 end
