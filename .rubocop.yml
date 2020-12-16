@@ -13,6 +13,9 @@ AllCops:
 Style/FrozenStringLiteralComment:
   Enabled: true
 
+Layout/EndOfLine:
+  EnforcedStyle: lf
+
 Rails/UnknownEnv:
   Environments:
     - production
