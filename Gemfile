@@ -6,7 +6,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby File.read(".ruby-version").chomp
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 6.0.3"
+gem "rails", "~> 6.1.0"
 
 gem "devise"
 
@@ -35,6 +35,18 @@ gem "listen", ">= 3.0.5", "< 3.4"
 
 # GOV.UK Notify
 gem "mail-notify"
+
+# do not rely on host's timezone data, which can be inconsistent
+gem "tzinfo-data"
+
+gem "govuk_design_system_formbuilder", "~> 2.1"
+
+platform :mswin, :mingw, :x64_mingw do
+  gem "wdm", ">= 0.1.0"
+end
+
+gem "govspeak", git: "https://github.com/alphagov/govspeak.git"
+gem "govuk_publishing_components"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -72,14 +84,3 @@ group :test do
   gem "shoulda-matchers", "~> 4.4"
   gem "webdrivers", "~> 4.4"
 end
-
-# do not rely on host's timezone data, which can be inconsistent
-gem "tzinfo-data"
-
-gem "govuk_design_system_formbuilder", "~> 2.1"
-
-platform :mswin, :mingw, :x64_mingw do
-  gem "wdm", ">= 0.1.0"
-end
-
-gem "govspeak", git: "https://github.com/alphagov/govspeak.git"

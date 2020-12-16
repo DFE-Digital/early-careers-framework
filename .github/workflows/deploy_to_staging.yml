@@ -30,7 +30,7 @@ jobs:
           token: ${{ secrets.PERSONAL_TOKEN }}
           ref: ${{ github.event.pull_request.head.sha || github.ref }}
           checkName: build docker image and deploy # Job name within workflow
-          timeoutSeconds: 600
+          timeoutSeconds: 900
           intervalSeconds: 15
 
       - name: Fail if child job fails
