@@ -16,7 +16,7 @@ RSpec.describe "Users::InductionCoordinators::Registrations /register", type: :r
   end
 
   describe "POST /induction_coordinator/registration/register" do
-    it "redirects to dashboard on successful login" do
+    it "redirects to dashboard on successful user creation" do
       # When
       post "/induction_coordinator/registration/register", params: { user: {
         first_name: first_name,
