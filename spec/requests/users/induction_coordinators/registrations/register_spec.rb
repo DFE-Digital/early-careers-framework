@@ -75,5 +75,36 @@ RSpec.describe "Users::InductionCoordinators::Registrations /register", type: :r
 
       expect(created_user.induction_coordinator_profile.schools).to include(school)
     end
+
+    it "returns bad request when the email does not match the school" do
+      expect {
+        post "/induction_coordinator/registration/register", params: { user: {
+          first_name: first_name,
+          last_name: last_name,
+          email: "email@differentdomain.com",
+          school_id: school.id,
+        } }
+      }.to raise_error(ActionController::BadRequest)
+    end
+
+    it "returns bad request when the email is missing" do
+      expect {
+        post "/induction_coordinator/registration/register", params: { user: {
+          first_name: first_name,
+          last_name: last_name,
+          school_id: school.id,
+        } }
+      }.to raise_error(ActionController::BadRequest)
+    end
+
+    it "returns bad request when the school_id is missing" do
+      expect {
+        post "/induction_coordinator/registration/register", params: { user: {
+          first_name: first_name,
+          last_name: last_name,
+          email: email,
+        } }
+      }.to raise_error(ActionController::BadRequest)
+    end
   end
 end

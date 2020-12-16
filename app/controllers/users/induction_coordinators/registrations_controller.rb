@@ -17,8 +17,7 @@ class Users::InductionCoordinators::RegistrationsController < Devise::Registrati
       flash[:notice] = "You already have an account. Sign in"
       redirect_to controller: "/users/sessions", action: :new, email: @email
     else
-      domain = @email.split("@")[1]
-      @schools = School.where("'#{domain}' = ANY (domains)")
+      @schools = School.where("'#{email_domain}' = ANY (domains)")
 
       if @schools.any?
         handle_matching_schools
@@ -47,15 +46,29 @@ class Users::InductionCoordinators::RegistrationsController < Devise::Registrati
   end
 
   def create
-    school = School.find(params[:user][:school_id])
-    super do
-      if resource.persisted?
-        profile = InductionCoordinatorProfile.create!(user: resource, schools: [school])
+    validate_creation_parameters
+    ActiveRecord::Base.transaction do
+      super do
+        if resource.persisted?
+          InductionCoordinatorProfile.create!(user: resource, schools: [@school])
+        end
       end
-    rescue StandardError => e
-      profile&.destroy!
-      resource&.destroy!
-      raise e
     end
+  end
+
+private
+
+  def email_domain
+    @email.split("@")[1]
+  end
+
+  def validate_creation_parameters
+    @school = School.find(params[:user][:school_id])
+    @email = params[:user][:email]
+
+    raise ActionController::BadRequest if @email.nil?
+    raise ActionController::BadRequest unless @school.domains.include?(email_domain)
+  rescue ActiveRecord::RecordNotFound
+    raise ActionController::BadRequest
   end
 end
