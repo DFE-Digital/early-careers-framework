@@ -27,16 +27,6 @@ class Users::InductionCoordinators::RegistrationsController < Devise::Registrati
     end
   end
 
-  def handle_matching_schools
-    unclaimed_schools = @schools.filter { |school| school.induction_coordinator_profiles.none? }
-
-    if unclaimed_schools.any?
-      redirect_to controller: "users/induction_coordinators/registrations", action: :confirm_school, school_ids: unclaimed_schools, email: @email
-    else
-      redirect_to root_path, alert: "Someone from your school has already signed up"
-    end
-  end
-
   def new
     @email = params[:email]
     @school = School.find(params[:school_id])
@@ -60,6 +50,16 @@ private
 
   def email_domain
     @email.split("@")[1]
+  end
+
+  def handle_matching_schools
+    unclaimed_schools = @schools.filter { |school| school.induction_coordinator_profiles.none? }
+
+    if unclaimed_schools.any?
+      redirect_to controller: "users/induction_coordinators/registrations", action: :confirm_school, school_ids: unclaimed_schools, email: @email
+    else
+      redirect_to root_path, alert: "Someone from your school has already signed up"
+    end
   end
 
   def validate_creation_parameters
