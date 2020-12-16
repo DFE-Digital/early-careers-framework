@@ -16,7 +16,9 @@ RSpec.describe "Users::InductionCoordinators::Registrations /register", type: :r
   end
 
   describe "POST /induction_coordinator/registration/register" do
-    it "redirects to dashboard on successful user creation" do
+    let(:notice) { "A message with a confirmation link has been sent to your email address. Please follow the link to activate your account." }
+
+    it "redirects to homepage on successful user creation" do
       # When
       post "/induction_coordinator/registration/register", params: { user: {
         first_name: first_name,
@@ -27,6 +29,7 @@ RSpec.describe "Users::InductionCoordinators::Registrations /register", type: :r
 
       # Then
       expect(response).to redirect_to(root_path)
+      expect(flash[:notice]).to eq notice
     end
 
     it "creates a user with the correct details" do
