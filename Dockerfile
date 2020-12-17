@@ -34,11 +34,6 @@ RUN apk -U upgrade && \
 # published as dfedigital/early-careers-framework-gems-node-modules
 FROM ${BASE_RUBY_IMAGE} AS early-careers-framework-gems-node-modules
 
-ENV RAILS_ENV=production \
-    AUTHORISED_HOSTS=127.0.0.1 \
-    SECRET_KEY_BASE=TestKey \
-    IGNORE_SECRETS_FOR_BUILD=1
-
 RUN apk -U upgrade && \
     apk add --update --no-cache nodejs yarn tzdata libpq libxml2 libxslt graphviz && \
     echo "Europe/London" > /etc/timezone && \
@@ -51,7 +46,11 @@ COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
 FROM ${BASE_RUBY_IMAGE_WITH_GEMS_AND_NODE_MODULES} AS assets-precompile
 
 ENV GOVUK_APP_DOMAIN="http://localhost:3000" \
-    GOVUK_WEBSITE_ROOT="http://localhost:3000"
+    GOVUK_WEBSITE_ROOT="http://localhost:3000" \
+    RAILS_ENV=production \
+    AUTHORISED_HOSTS=127.0.0.1 \
+    SECRET_KEY_BASE=TestKey \
+    IGNORE_SECRETS_FOR_BUILD=1
 
 WORKDIR /app
 COPY . .
@@ -69,11 +68,7 @@ RUN yarn jest --passWithNoTests && \
 FROM ${BASE_RUBY_IMAGE} AS production
 
 ARG VERSION
-ENV RAILS_ENV=production \
-    GOVUK_NOTIFY_API_KEY=TestKey \
-    AUTHORISED_HOSTS=127.0.0.1 \
-    SECRET_KEY_BASE=TestKey \
-    GOVUK_NOTIFY_CALLBACK_API_KEY=TestKey \
+ENV AUTHORISED_HOSTS=127.0.0.1 \
     SHA=${VERSION}
 
 RUN apk -U upgrade && \

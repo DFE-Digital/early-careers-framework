@@ -381,7 +381,6 @@ DEPENDENCIES
   foreman
   govspeak!
   govuk_design_system_formbuilder (~> 2.1)
-  govuk_publishing_components
   listen (>= 3.0.5, < 3.4)
   mail-notify
   pg (>= 0.18, < 2.0)
