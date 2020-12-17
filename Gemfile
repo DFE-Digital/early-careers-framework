@@ -46,7 +46,6 @@ platform :mswin, :mingw, :x64_mingw do
 end
 
 gem "govspeak", git: "https://github.com/alphagov/govspeak.git"
-gem "govuk_publishing_components"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
