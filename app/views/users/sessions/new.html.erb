@@ -4,7 +4,7 @@
 
     <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
       <div class='govuk-form-group'>
-        <%= f.govuk_email_field :email, autocomplete: "email" %>
+        <%= f.govuk_email_field :email, autocomplete: "email", value: @email %>
 
         <% if devise_mapping.rememberable? %>
           <%= f.govuk_check_box :remember_me, true, label: {text: "Remember me"} %>

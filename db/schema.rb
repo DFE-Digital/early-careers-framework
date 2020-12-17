@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,11 +12,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_30_093110) do
-
+ActiveRecord::Schema.define(version: 20_201_214_154_950) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+
+  create_table "induction_coordinator_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index %w[user_id], name: "index_induction_coordinator_profiles_on_user_id"
+  end
+
+  create_table "induction_coordinator_profiles_schools", id: false, force: :cascade do |t|
+    t.uuid "induction_coordinator_profile_id", null: false
+    t.uuid "school_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index %w[induction_coordinator_profile_id], name: "index_icp_schools_on_icp"
+    t.index %w[school_id], name: "index_icp_schools_on_schools"
+  end
 
   create_table "lead_providers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
@@ -34,8 +51,8 @@ ActiveRecord::Schema.define(version: 2020_11_30_093110) do
     t.uuid "school_id", null: false
     t.uuid "lead_provider_id", null: false
     t.datetime "confirmed_at"
-    t.index ["lead_provider_id"], name: "index_partnerships_on_lead_provider_id"
-    t.index ["school_id"], name: "index_partnerships_on_school_id"
+    t.index %w[lead_provider_id], name: "index_partnerships_on_lead_provider_id"
+    t.index %w[school_id], name: "index_partnerships_on_school_id"
   end
 
   create_table "schools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -54,11 +71,12 @@ ActiveRecord::Schema.define(version: 2020_11_30_093110) do
     t.string "country", null: false
     t.string "postcode", null: false
     t.uuid "network_id"
-    t.index ["high_pupil_premium"], name: "index_schools_on_high_pupil_premium", where: "high_pupil_premium"
-    t.index ["is_rural"], name: "index_schools_on_is_rural", where: "is_rural"
-    t.index ["name"], name: "index_schools_on_name"
-    t.index ["network_id"], name: "index_schools_on_network_id"
-    t.index ["urn"], name: "index_schools_on_urn", unique: true
+    t.string "domains", default: [], null: false, array: true
+    t.index %w[high_pupil_premium], name: "index_schools_on_high_pupil_premium", where: "high_pupil_premium"
+    t.index %w[is_rural], name: "index_schools_on_is_rural", where: "is_rural"
+    t.index %w[name], name: "index_schools_on_name"
+    t.index %w[network_id], name: "index_schools_on_network_id"
+    t.index %w[urn], name: "index_schools_on_urn", unique: true
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -79,10 +97,11 @@ ActiveRecord::Schema.define(version: 2020_11_30_093110) do
     t.datetime "confirmation_sent_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
-    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index %w[confirmation_token], name: "index_users_on_confirmation_token", unique: true
+    t.index %w[email], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "induction_coordinator_profiles", "users"
   add_foreign_key "partnerships", "lead_providers"
   add_foreign_key "partnerships", "schools"
   add_foreign_key "schools", "networks"
