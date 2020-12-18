@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 
-class Users::InductionCoordinators::RegistrationsController < Devise::RegistrationsController
-  def start_registration; end
+class Users::InductionCoordinatorRegistrationsController < Devise::RegistrationsController
+  def start_registration
+    render "users/registrations/induction_coordinators/start_registration"
+  end
 
   def confirm_school
     @schools = School.where(id: params["school_ids"])
     @email = params["email"]
+    render "users/registrations/induction_coordinators/confirm_school"
   end
 
-  def check_registration_email
+  def check_email
     @email = params["induction_coordinator_profile"]["email"]
-
     @user = User.find_by(email: @email)
 
     if @user
@@ -22,7 +24,7 @@ class Users::InductionCoordinators::RegistrationsController < Devise::Registrati
       if @schools.any?
         handle_matching_schools
       else
-        redirect_to induction_coordinator_registration_check_email_path, alert: "No schools matched your email"
+        redirect_to induction_coordinators_registrations_check_email_path, alert: "No schools matched your email"
       end
     end
   end
@@ -31,7 +33,7 @@ class Users::InductionCoordinators::RegistrationsController < Devise::Registrati
     @email = params[:email]
     @school = School.find(params[:school_id])
     super do
-      render "users/induction_coordinators/registrations/new" and return
+      render "users/registrations/induction_coordinators/new" and return
     end
   end
 
@@ -56,7 +58,7 @@ private
     unclaimed_schools = @schools.filter { |school| school.induction_coordinator_profiles.none? }
 
     if unclaimed_schools.any?
-      redirect_to controller: "users/induction_coordinators/registrations", action: :confirm_school, school_ids: unclaimed_schools, email: @email
+      redirect_to controller: "users/induction_coordinator_registrations", action: :confirm_school, school_ids: unclaimed_schools, email: @email
     else
       redirect_to root_path, alert: "Someone from your school has already signed up"
     end

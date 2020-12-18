@@ -14,7 +14,7 @@ module Devise
             login_token: SecureRandom.hex(10),
             login_token_valid_until: 60.minutes.from_now)
 
-            url = Rails.application.routes.url_helpers.email_confirmation_url(
+            url = Rails.application.routes.url_helpers.users_confirm_sign_in_url(
               login_token: user.login_token,
               host: Rails.application.config.domain,
             )

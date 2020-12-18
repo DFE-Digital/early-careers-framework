@@ -1,21 +1,21 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  devise_for :users, controllers: {
+  devise_for :users, skip: :registrations, controllers: {
     sessions: "users/sessions",
   }
 
   devise_scope :user do
-    get "email_confirmation", to: "users/sessions#redirect_from_magic_link"
-    post "sign_in_with_token", to: "users/sessions#sign_in_with_token"
+    get "/users/confirm_sign_in", to: "users/sessions#redirect_from_magic_link"
+    post "/users/sign_in_with_token", to: "users/sessions#sign_in_with_token"
 
-    namespace :induction_coordinator do
-      namespace :registration do
-        get "school_confirmation", to: "/users/induction_coordinators/registrations#confirm_school"
-        get "check_email", to: "/users/induction_coordinators/registrations#start_registration"
-        post "check_email", to: "/users/induction_coordinators/registrations#check_registration_email"
-        get "register", to: "/users/induction_coordinators/registrations#new"
-        post "register", to: "/users/induction_coordinators/registrations#create"
+    namespace :induction_coordinators do
+      namespace :registrations do
+        get "confirm_school", to: "/users/induction_coordinator_registrations#confirm_school"
+        get "check_email", to: "/users/induction_coordinator_registrations#start_registration"
+        post "check_email", to: "/users/induction_coordinator_registrations#check_email"
+        get "register", to: "/users/induction_coordinator_registrations#new"
+        post "register", to: "/users/induction_coordinator_registrations#create"
       end
     end
   end
