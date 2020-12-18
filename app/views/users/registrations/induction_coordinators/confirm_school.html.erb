@@ -1,0 +1,5 @@
+<% if @schools.one? %>
+  <%= render "users/registrations/induction_coordinators/single_school" %>
+<% else %>
+  <%= render "users/registrations/induction_coordinators/multiple_schools" %>
+<% end %>

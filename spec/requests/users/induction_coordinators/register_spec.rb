@@ -2,15 +2,15 @@
 
 require "rails_helper"
 
-RSpec.describe "Users::InductionCoordinators::Registrations /register", type: :request do
+RSpec.describe "Users::InductionCoordinatorRegistrations /register", type: :request do
   let(:school) { FactoryBot.create(:school) }
   let(:first_name) { Faker::Name.first_name }
   let(:last_name) { Faker::Name.last_name }
   let(:email) { Faker::Internet.email(domain: school.domains.first) }
 
-  describe "GET /induction_coordinator/registration/register" do
+  describe "GET /induction_coordinators/registrations/register" do
     it "renders the correct template" do
-      get "/induction_coordinator/registration/register", params: { school_id: school.id }
+      get "/induction_coordinators/registrations/register", params: { school_id: school.id }
       expect(response).to render_template(:new)
     end
   end
@@ -20,7 +20,7 @@ RSpec.describe "Users::InductionCoordinators::Registrations /register", type: :r
 
     it "redirects to homepage on successful user creation" do
       # When
-      post "/induction_coordinator/registration/register", params: { user: {
+      post "/induction_coordinators/registrations/register", params: { user: {
         first_name: first_name,
         last_name: last_name,
         email: email,
@@ -34,7 +34,7 @@ RSpec.describe "Users::InductionCoordinators::Registrations /register", type: :r
 
     it "creates a user with the correct details" do
       # When
-      post "/induction_coordinator/registration/register", params: { user: {
+      post "/induction_coordinators/registrations/register", params: { user: {
         first_name: first_name,
         last_name: last_name,
         email: email,
@@ -51,7 +51,7 @@ RSpec.describe "Users::InductionCoordinators::Registrations /register", type: :r
 
     it "creates an induction coordinator profile for the user" do
       # When
-      post "/induction_coordinator/registration/register", params: { user: {
+      post "/induction_coordinators/registrations/register", params: { user: {
         first_name: first_name,
         last_name: last_name,
         email: email,
@@ -66,7 +66,7 @@ RSpec.describe "Users::InductionCoordinators::Registrations /register", type: :r
 
     it "makes the user the induction coordinator for the school" do
       # When
-      post "/induction_coordinator/registration/register", params: { user: {
+      post "/induction_coordinators/registrations/register", params: { user: {
         first_name: first_name,
         last_name: last_name,
         email: email,
@@ -81,7 +81,7 @@ RSpec.describe "Users::InductionCoordinators::Registrations /register", type: :r
 
     it "returns bad request when the email does not match the school" do
       expect {
-        post "/induction_coordinator/registration/register", params: { user: {
+        post "/induction_coordinators/registrations/register", params: { user: {
           first_name: first_name,
           last_name: last_name,
           email: "email@differentdomain.com",
@@ -92,7 +92,7 @@ RSpec.describe "Users::InductionCoordinators::Registrations /register", type: :r
 
     it "returns bad request when the email is missing" do
       expect {
-        post "/induction_coordinator/registration/register", params: { user: {
+        post "/induction_coordinators/registrations/register", params: { user: {
           first_name: first_name,
           last_name: last_name,
           school_id: school.id,
@@ -102,7 +102,7 @@ RSpec.describe "Users::InductionCoordinators::Registrations /register", type: :r
 
     it "returns bad request when the school_id is missing" do
       expect {
-        post "/induction_coordinator/registration/register", params: { user: {
+        post "/induction_coordinators/registrations/register", params: { user: {
           first_name: first_name,
           last_name: last_name,
           email: email,
