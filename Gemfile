@@ -8,7 +8,7 @@ ruby File.read(".ruby-version").chomp
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem "rails", "~> 6.1.0"
 
-gem "devise"
+gem "devise", ">= 4.7.3"
 
 # Use postgresql as the database for Active Record
 gem "pg", ">= 0.18", "< 2.0"
@@ -17,7 +17,7 @@ gem "pg", ">= 0.18", "< 2.0"
 gem "puma", "~> 5.0"
 
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
-gem "webpacker"
+gem "webpacker", ">= 5.2.1"
 
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
@@ -29,17 +29,17 @@ gem "bootsnap", ">= 1.1.0", require: false
 gem "foreman"
 
 # Canonical meta tag
-gem "canonical-rails"
+gem "canonical-rails", ">= 0.2.10"
 
 gem "listen", ">= 3.0.5", "< 3.4"
 
 # GOV.UK Notify
-gem "mail-notify"
+gem "mail-notify", ">= 1.0.3"
 
 # do not rely on host's timezone data, which can be inconsistent
 gem "tzinfo-data"
 
-gem "govuk_design_system_formbuilder", "~> 2.1"
+gem "govuk_design_system_formbuilder", "~> 2.1", ">= 2.1.5"
 
 platform :mswin, :mingw, :x64_mingw do
   gem "wdm", ">= 0.1.0"
@@ -61,16 +61,16 @@ group :development, :test do
   # Testing framework
   gem "rspec-rails", "~> 4.0.1"
   # Adds support for Capybara system testing and selenium driver
-  gem "capybara", "~> 3.33"
+  gem "capybara", "~> 3.34", ">= 3.34.0"
 
-  gem "dotenv-rails"
+  gem "dotenv-rails", ">= 2.7.6"
 
-  gem "factory_bot_rails"
+  gem "factory_bot_rails", ">= 6.1.0"
 end
 
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
-  gem "web-console", ">= 3.3.0"
+  gem "web-console", ">= 4.1.0"
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem "spring"
@@ -79,7 +79,7 @@ end
 
 group :test do
   gem "faker"
-  gem "rails-controller-testing"
+  gem "rails-controller-testing", ">= 1.0.5"
   gem "shoulda-matchers", "~> 4.4"
-  gem "webdrivers", "~> 4.4"
+  gem "webdrivers", "~> 4.4", ">= 4.4.1"
 end
