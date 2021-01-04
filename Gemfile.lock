@@ -372,22 +372,22 @@ PLATFORMS
 DEPENDENCIES
   bootsnap (>= 1.1.0)
   byebug
-  canonical-rails
-  capybara (~> 3.33)
-  devise
-  dotenv-rails
-  factory_bot_rails
+  canonical-rails (>= 0.2.10)
+  capybara (~> 3.34, >= 3.34.0)
+  devise (>= 4.7.3)
+  dotenv-rails (>= 2.7.6)
+  factory_bot_rails (>= 6.1.0)
   faker
   foreman
   govspeak!
-  govuk_design_system_formbuilder (~> 2.1)
+  govuk_design_system_formbuilder (~> 2.1, >= 2.1.5)
   listen (>= 3.0.5, < 3.4)
-  mail-notify
+  mail-notify (>= 1.0.3)
   pg (>= 0.18, < 2.0)
   pry-byebug
   puma (~> 5.0)
   rails (~> 6.1.0)
-  rails-controller-testing
+  rails-controller-testing (>= 1.0.5)
   rspec-rails (~> 4.0.1)
   rubocop-govuk
   scss_lint-govuk
@@ -396,9 +396,9 @@ DEPENDENCIES
   spring-watcher-listen (~> 2.0.0)
   tzinfo-data
   wdm (>= 0.1.0)
-  web-console (>= 3.3.0)
-  webdrivers (~> 4.4)
-  webpacker
+  web-console (>= 4.1.0)
+  webdrivers (~> 4.4, >= 4.4.1)
+  webpacker (>= 5.2.1)
 
 RUBY VERSION
    ruby 2.7.1p83
