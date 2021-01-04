@@ -11,11 +11,11 @@ Rails.application.routes.draw do
 
     namespace :induction_coordinators do
       namespace :registrations do
-        get "confirm_school", to: "/users/induction_coordinator_registrations#confirm_school"
-        get "check_email", to: "/users/induction_coordinator_registrations#start_registration"
-        post "check_email", to: "/users/induction_coordinator_registrations#check_email"
-        get "register", to: "/users/induction_coordinator_registrations#new"
-        post "register", to: "/users/induction_coordinator_registrations#create"
+        get "confirm_school", to: "/users/registrations#confirm_school"
+        get "check_email", to: "/users/registrations#start_registration"
+        post "check_email", to: "/users/registrations#check_email"
+        get "register", to: "/users/registrations#new"
+        post "register", to: "/users/registrations#create"
       end
     end
   end

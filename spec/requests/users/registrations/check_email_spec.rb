@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Users::InductionCoordinatorRegistrations /check_email", type: :request do
+RSpec.describe "Users::Registrations /check_email", type: :request do
   let(:school) { FactoryBot.create(:school) }
   let(:email) { Faker::Internet.email(domain: school.domains.first) }
 
@@ -53,8 +53,8 @@ RSpec.describe "Users::InductionCoordinatorRegistrations /check_email", type: :r
       # Then
       expect(response.redirect_url).to include(induction_coordinators_registrations_confirm_school_path)
       follow_redirect!
-      expect(response.body).to include(school.name)
-      expect(response.body).to include(second_school.name)
+      expect(response.body).to include(CGI.escapeHTML(school.name))
+      expect(response.body).to include(CGI.escapeHTML(second_school.name))
     end
   end
 end

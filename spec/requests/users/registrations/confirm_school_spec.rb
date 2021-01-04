@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Users::InductionCoordinatorRegistrations /school_confirmation", type: :request do
+RSpec.describe "Users::Registrations /school_confirmation", type: :request do
   let(:school) { FactoryBot.create(:school) }
 
   describe "GET /induction_coordinators/registrations/confirm_school" do

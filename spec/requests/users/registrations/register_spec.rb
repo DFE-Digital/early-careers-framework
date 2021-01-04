@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Users::InductionCoordinatorRegistrations /register", type: :request do
+RSpec.describe "Users::Registrations /register", type: :request do
   let(:school) { FactoryBot.create(:school) }
   let(:first_name) { Faker::Name.first_name }
   let(:last_name) { Faker::Name.last_name }

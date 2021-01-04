@@ -1,14 +1,11 @@
 # frozen_string_literal: true
 
-class Users::InductionCoordinatorRegistrationsController < Devise::RegistrationsController
-  def start_registration
-    render "users/registrations/induction_coordinators/start_registration"
-  end
+class Users::RegistrationsController < Devise::RegistrationsController
+  def start_registration; end
 
   def confirm_school
     @schools = School.where(id: params["school_ids"])
     @email = params["email"]
-    render "users/registrations/induction_coordinators/confirm_school"
   end
 
   def check_email
@@ -32,9 +29,7 @@ class Users::InductionCoordinatorRegistrationsController < Devise::Registrations
   def new
     @email = params[:email]
     @school = School.find(params[:school_id])
-    super do
-      render "users/registrations/induction_coordinators/new" and return
-    end
+    super
   end
 
   def create
@@ -58,7 +53,7 @@ private
     unclaimed_schools = @schools.filter { |school| school.induction_coordinator_profiles.none? }
 
     if unclaimed_schools.any?
-      redirect_to controller: "users/induction_coordinator_registrations", action: :confirm_school, school_ids: unclaimed_schools, email: @email
+      redirect_to controller: "users/registrations", action: :confirm_school, school_ids: unclaimed_schools, email: @email
     else
       redirect_to root_path, alert: "Someone from your school has already signed up"
     end
