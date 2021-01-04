@@ -36,7 +36,7 @@ RSpec.describe "Users::Registrations /check_email", type: :request do
       # Then
       expect(response.redirect_url).to include(induction_coordinators_registrations_confirm_school_path)
       follow_redirect!
-      expect(response.body).to include(school.name)
+      expect(response.body).to include(CGI.escapeHTML(school.name))
     end
 
     it "redirect to the school confirmation page when there are two matching schools" do
