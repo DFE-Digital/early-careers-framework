@@ -45,3 +45,5 @@ tokens
 
 # Rails secrets
 /config/credentials/*.key
+
+/coverage/
