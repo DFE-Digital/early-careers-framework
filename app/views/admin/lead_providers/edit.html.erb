@@ -1,0 +1,9 @@
+<%= form_for @lead_provider, url: admin_lead_provider_path(@lead_provider) do |f| %>
+  <%= f.govuk_text_field(
+        :name,
+        label: { text: 'Lead Provider name' })
+  %>
+  <%= f.govuk_submit "Update" %>
+<% end %>
+<%= govuk_back_link text: 'Back', href: admin_lead_providers_path %>
+

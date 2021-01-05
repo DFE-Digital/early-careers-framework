@@ -23,6 +23,10 @@ Rails.application.routes.draw do
   resource :supplier_dashboard, controller: :supplier_dashboard, only: :show
   resource :school_invites, only: %i[show create]
 
+  namespace :admin do
+    resources :lead_providers, only: %i[index edit update create new]
+  end
+
   get "/404", to: "errors#not_found", via: :all
   get "/422", to: "errors#unprocessable_entity", via: :all
   get "/500", to: "errors#internal_server_error", via: :all
