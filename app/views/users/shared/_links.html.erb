@@ -3,7 +3,7 @@
 <% end %>
 
 <%- if devise_mapping.registerable? && controller_name != 'registrations' %>
-  <%= govuk_link_to "Sign up", new_registration_path(resource_name) %><br />
+  <%= govuk_link_to "Sign up", root_path %><br />
 <% end %>
 
 <%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>

@@ -9,7 +9,7 @@ RSpec.describe UserMailer, type: :mailer do
     let(:sign_in_email) { UserMailer.sign_in_email(user, sign_in_link) }
 
     let(:sign_in_link) do
-      Rails.application.routes.url_helpers.email_confirmation_url(
+      Rails.application.routes.url_helpers.users_confirm_sign_in_url(
         login_token: user.login_token, host: Rails.application.config.domain,
       )
     end
