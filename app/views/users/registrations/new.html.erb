@@ -2,18 +2,21 @@
   <div class="govuk-grid-column-two-thirds">
     <h2 class="govuk-heading-l">Sign up</h2>
 
-    <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+    <%= form_for(resource, as: resource_name, url: users_register_path) do |f| %>
       <%= f.govuk_error_summary %>
 
-      <%= f.govuk_email_field :email, autocomplete: "email" %>
+      <%= f.govuk_email_field :email, autocomplete: "email", value: @email, readonly: true %>
 
-      <%= f.govuk_text_field :first_name %>
+      <%= f.govuk_text_field :school_name, label: { text: "School name" }, value: @school.name, readonly: true %>
 
-      <%= f.govuk_text_field :last_name %>
+      <%= f.hidden_field :school_id, value: @school.id %>
+
+      <%= f.govuk_text_field :first_name, label: { text: "First name" } %>
+
+      <%= f.govuk_text_field :last_name, label: { text: "Last name" } %>
 
       <%= f.govuk_submit "Sign up" %>
     <% end %>
 
-    <%= render "users/shared/links" %>
   </div>
 </div>

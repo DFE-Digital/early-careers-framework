@@ -2,7 +2,7 @@
   <div class="govuk-grid-column-two-thirds">
     <h2 class="govuk-heading-l">Log in</h2>
 
-    <%= form_tag(sign_in_with_token_path) do %>
+    <%= form_tag(users_sign_in_with_token_path) do %>
       <div class="field">
         <%= hidden_field_tag :login_token, @login_token %>
       </div>
