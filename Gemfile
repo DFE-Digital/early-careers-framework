@@ -39,6 +39,7 @@ gem "mail-notify", ">= 1.0.3"
 # do not rely on host's timezone data, which can be inconsistent
 gem "tzinfo-data"
 
+gem "govuk-components"
 gem "govuk_design_system_formbuilder", "~> 2.1", ">= 2.1.5"
 
 gem "govuk_publishing_components"
