@@ -10,6 +10,12 @@ class Admin::LeadProvidersController < ApplicationController
   end
 
   def create
+    if params[:lead_provider][:name].blank?
+      @lead_provider = LeadProvider.new
+      @lead_provider.errors.add(:name, "Enter a name")
+      render :new and return
+    end
+
     @lead_provider = LeadProvider.new(name: params.dig(:lead_provider, :name))
 
     if @lead_provider.save
