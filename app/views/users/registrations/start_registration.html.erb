@@ -3,7 +3,7 @@
     <h2 class="govuk-heading-l">Register as the induction coordinator for your school</h2>
     <p>In order to register, we need your email address</p>
 
-    <%= form_for(:induction_coordinator_profile, url: induction_coordinators_registrations_check_email_path) do |f| %>
+    <%= form_for(:induction_coordinator_profile, url: users_check_email_path) do |f| %>
 
       <%= f.govuk_email_field(
             :email,

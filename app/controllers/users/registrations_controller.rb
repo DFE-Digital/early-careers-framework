@@ -21,7 +21,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       if @schools.any?
         handle_matching_schools
       else
-        redirect_to induction_coordinators_registrations_check_email_path, alert: "No schools matched your email"
+        redirect_to users_check_email_path, alert: "No schools matched your email"
       end
     end
   end

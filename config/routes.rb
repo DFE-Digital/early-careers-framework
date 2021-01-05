@@ -8,16 +8,11 @@ Rails.application.routes.draw do
   devise_scope :user do
     get "/users/confirm_sign_in", to: "users/sessions#redirect_from_magic_link"
     post "/users/sign_in_with_token", to: "users/sessions#sign_in_with_token"
-
-    namespace :induction_coordinators do
-      namespace :registrations do
-        get "confirm_school", to: "/users/registrations#confirm_school"
-        get "check_email", to: "/users/registrations#start_registration"
-        post "check_email", to: "/users/registrations#check_email"
-        get "register", to: "/users/registrations#new"
-        post "register", to: "/users/registrations#create"
-      end
-    end
+    get "/users/confirm_school", to: "users/registrations#confirm_school"
+    get "/users/check_email", to: "users/registrations#start_registration"
+    post "/users/check_email", to: "users/registrations#check_email"
+    get "/users/register", to: "users/registrations#new"
+    post "/users/register", to: "users/registrations#create"
   end
 
   get "/pages/:page", to: "pages#show"

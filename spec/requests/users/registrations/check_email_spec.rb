@@ -6,22 +6,22 @@ RSpec.describe "Users::Registrations /check_email", type: :request do
   let(:school) { FactoryBot.create(:school) }
   let(:email) { Faker::Internet.email(domain: school.domains.first) }
 
-  describe "GET /induction_coordinators/registrations/check_email" do
+  describe "GET /users/check_email" do
     it "renders the correct template" do
-      get "/induction_coordinators/registrations/check_email"
+      get "/users/check_email"
       expect(response).to render_template(:start_registration)
     end
   end
 
-  describe "POST /induction_coordinators/registrations/check_email" do
+  describe "POST /users/check_email" do
     it "displays a warning when no schools are found" do
       # When
-      post "/induction_coordinators/registrations/check_email", params: { induction_coordinator_profile: {
+      post "/users/check_email", params: { induction_coordinator_profile: {
         email: "something@random.com",
       } }
 
       # Then
-      expect(response).to redirect_to(:induction_coordinators_registrations_check_email)
+      expect(response).to redirect_to(:users_check_email)
       follow_redirect!
       expect(response).to render_template(:start_registration)
       expect(response.body).to include("No schools matched your email")
@@ -29,12 +29,12 @@ RSpec.describe "Users::Registrations /check_email", type: :request do
 
     it "redirect to the school confirmation page when there is one matching school" do
       # When
-      post "/induction_coordinators/registrations/check_email", params: { induction_coordinator_profile: {
+      post "/users/check_email", params: { induction_coordinator_profile: {
         email: email,
       } }
 
       # Then
-      expect(response.redirect_url).to include(induction_coordinators_registrations_confirm_school_path)
+      expect(response.redirect_url).to include(users_confirm_school_path)
       follow_redirect!
       expect(response.body).to include(CGI.escapeHTML(school.name))
     end
@@ -46,12 +46,12 @@ RSpec.describe "Users::Registrations /check_email", type: :request do
       second_school.save!
 
       # When
-      post "/induction_coordinators/registrations/check_email", params: { induction_coordinator_profile: {
+      post "/users/check_email", params: { induction_coordinator_profile: {
         email: email,
       } }
 
       # Then
-      expect(response.redirect_url).to include(induction_coordinators_registrations_confirm_school_path)
+      expect(response.redirect_url).to include(users_confirm_school_path)
       follow_redirect!
       expect(response.body).to include(CGI.escapeHTML(school.name))
       expect(response.body).to include(CGI.escapeHTML(second_school.name))
