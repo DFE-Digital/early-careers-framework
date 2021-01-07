@@ -16,6 +16,8 @@
     <%= favicon_link_tag asset_pack_path('media/images/govuk-apple-touch-icon-180x180.png'), rel: 'apple-touch-icon', type: 'image/png', size: '180x180' %>
     <%= stylesheet_pack_tag 'application', media: 'all' %>
     <%= javascript_pack_tag 'application', defer: true %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
   </head>
 
   <body class="govuk-template__body ">
@@ -47,11 +49,11 @@
             <ul id="navigation" class="govuk-header__navigation " aria-label="Top Level Navigation">
               <% if user_signed_in? %>
               <li class="govuk-header__navigation-item">
-                <%= link_to "Logout", destroy_user_session_path, class: "govuk-header__link" %>       
+                <%= link_to "Logout", destroy_user_session_path, class: "govuk-header__link" %>
               </li>
               <% else %>
               <li class="govuk-header__navigation-item govuk-header__navigation-item--active">
-                <%= link_to "Login", new_user_session_path, class: "govuk-header__link" %> 
+                <%= link_to "Login", new_user_session_path, class: "govuk-header__link" %>
               </li>
               <% end %>
               <li class="govuk-header__navigation-item">
