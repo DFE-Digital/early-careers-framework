@@ -14,6 +14,11 @@ RSpec.describe User, type: :model do
     it { is_expected.to validate_presence_of(:email) }
   end
 
+  describe "associations" do
+    it { is_expected.to have_one(:induction_coordinator_profile) }
+    it { is_expected.to have_one(:lead_provider_profile) }
+  end
+
   describe "#password_required?" do
     subject { build(:user) }
     it "is expected to be false" do

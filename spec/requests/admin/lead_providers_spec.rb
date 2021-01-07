@@ -88,7 +88,7 @@ RSpec.describe "Admin::LeadProviders", type: :request do
       get "/admin/lead_providers/#{lead_provider.id}/edit"
 
       # Then
-      expect(response.body).to include(lead_provider.name)
+      expect(response.body).to include(CGI.escapeHTML(lead_provider.name))
     end
   end
 
