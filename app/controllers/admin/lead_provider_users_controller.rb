@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Admin::LeadProviderUsersController < ApplicationController
+class Admin::LeadProviderUsersController < Admin::BaseController
   before_action :set_lead_provider
 
   def index

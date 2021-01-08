@@ -19,11 +19,11 @@ Rails.application.routes.draw do
   get "check" => "application#check"
 
   resource :dashboard, controller: :dashboard, only: :show
-  resource :admin_dashboard, controller: :admin_dashboard, only: :show
   resource :supplier_dashboard, controller: :supplier_dashboard, only: :show
   resource :school_invites, only: %i[show create]
 
   namespace :admin do
+    resource :dashboard, controller: :dashboard, only: :show
     resources :lead_providers, only: %i[index edit update create new]
 
     scope "lead_providers/:lead_provider" do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AdminDashboardController < ApplicationController
+class Admin::DashboardController < Admin::BaseController
   before_action :authenticate_user!
 
   def show; end

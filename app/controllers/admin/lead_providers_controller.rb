@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Admin::LeadProvidersController < ApplicationController
+class Admin::LeadProvidersController < Admin::BaseController
   def index
     @lead_providers = LeadProvider.all
   end
