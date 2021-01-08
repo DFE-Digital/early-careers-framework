@@ -14,7 +14,7 @@ unless LeadProvider.first
   LeadProvider.create!(name: "Test Lead Provider")
 end
 
-unless AdminProfile.first
+unless AdminProfile.first || Rails.env.production?
   user = User.find_or_create_by!(email: "ecf@mailinator.com") do |u|
     u.first_name = "Admin"
     u.last_name = "User"
