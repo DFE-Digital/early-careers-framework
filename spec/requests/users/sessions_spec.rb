@@ -19,6 +19,15 @@ RSpec.describe "Users::Sessions", type: :request do
       expect(response).to redirect_to(dashboard_path)
     end
 
+    context "when user is an admin" do
+      before { create(:admin_profile, user: user) }
+
+      it "redirects to sign_in page" do
+        post "/users/sign_in_with_token", params: { login_token: user.login_token }
+        expect(response).to redirect_to(admin_dashboard_path)
+      end
+    end
+
     context "when the login_token has expired" do
       before { user.update(login_token_valid_until: 2.days.ago) }
 
