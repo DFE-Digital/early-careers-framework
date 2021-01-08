@@ -5,3 +5,16 @@
 @import 'govuk_publishing_components/components/layout-header';
 @import 'govuk_publishing_components/components/govspeak';
 @import 'govuk_publishing_components/components/textarea';
+
+// Proof of concept that our styling takes priority
+.gem-c-govspeak {
+  table {
+    td,
+    th {
+      padding: 10px 20px;
+    }
+    td:last-child {
+      padding-right: 0;
+    }
+  }
+}
