@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   get "check" => "application#check"
 
   resource :dashboard, controller: :dashboard, only: :show
+  resource :admin_dashboard, controller: :admin_dashboard, only: :show
   resource :supplier_dashboard, controller: :supplier_dashboard, only: :show
   resource :school_invites, only: %i[show create]
 

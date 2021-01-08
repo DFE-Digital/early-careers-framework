@@ -12,7 +12,7 @@ class Users::SessionsController < Devise::SessionsController
     if user.present? && Time.zone.now < user.login_token_valid_until
       user.update!(login_token: nil, login_token_valid_until: 1.year.ago)
       sign_in(user, scope: :user)
-      redirect_to dashboard_path
+      redirect_to helpers.profile_dashboard_url(user)
     else
       flash[:alert] = "There was an error while logging you in. Please enter your email again."
       redirect_to new_user_session_path
