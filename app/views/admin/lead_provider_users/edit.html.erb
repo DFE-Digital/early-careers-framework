@@ -1,0 +1,15 @@
+<%= form_for @user, url: admin_lead_provider_user_path do |f| %>
+  <%= f.govuk_text_field(
+        :first_name,
+        label: { text: 'First name' })
+  %>
+  <%= f.govuk_text_field(
+        :last_name,
+        label: { text: 'Last name' })
+  %>
+  <%= f.govuk_email_field(
+        :email,
+        label: { text: 'Email' })
+  %>
+  <%= f.govuk_submit "Update" %>
+<% end %>

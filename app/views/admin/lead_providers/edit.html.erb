@@ -5,5 +5,8 @@
   %>
   <%= f.govuk_submit "Update" %>
 <% end %>
+
+<%= govuk_link_to "Users", admin_lead_provider_users_path(@lead_provider) %>
+
 <%= govuk_back_link text: 'Back', href: admin_lead_providers_path %>
 

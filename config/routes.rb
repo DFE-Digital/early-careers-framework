@@ -25,6 +25,10 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resources :lead_providers, only: %i[index edit update create new]
+
+    scope "lead_providers/:lead_provider" do
+      resources :lead_provider_users, path: "/users"
+    end
   end
 
   get "/404", to: "errors#not_found", via: :all
