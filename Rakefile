@@ -7,4 +7,4 @@ require_relative "config/application"
 
 Rails.application.load_tasks
 
-task default: %i[assets:precompile spec lint:ruby lint:scss]
+task default: %i[spec lint:ruby lint:scss]
