@@ -41,6 +41,9 @@ gem "tzinfo-data"
 
 gem "govuk_design_system_formbuilder", "~> 2.1", ">= 2.1.5"
 
+gem "govuk_publishing_components"
+gem "sass-rails"
+
 platform :mswin, :mingw, :x64_mingw do
   gem "wdm", ">= 0.1.0"
 end

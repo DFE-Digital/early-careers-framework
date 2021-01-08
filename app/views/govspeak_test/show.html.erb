@@ -5,6 +5,8 @@
       <%= f.govuk_text_area :preview_string, label: { text: "Markdown string to preview" }, rows: 10, value: @preview_string %>
       <%= f.govuk_submit "See preview" %>
     <% end %>
-    <%= @content.html_safe %>
+    <div class="gem-c-govspeak govuk-govspeak ">
+      <%= @content.html_safe %>
+    </div>
   </div>
 </div>
