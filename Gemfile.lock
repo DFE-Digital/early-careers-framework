@@ -315,6 +315,8 @@ GEM
       sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.4.0)
       ffi (~> 1.9)
+    sassc (2.4.0-x64-mingw32)
+      ffi (~> 1.9)
     sassc-rails (2.1.2)
       railties (>= 4.0.0)
       sassc (>= 2.0)
@@ -395,7 +397,7 @@ DEPENDENCIES
   foreman
   govspeak!
   govuk_design_system_formbuilder (~> 2.1, >= 2.1.5)
-  govuk_publishing_components
+  govuk_publishing_components (>= 23.11.0)
   listen (>= 3.0.5, < 3.4)
   mail-notify (>= 1.0.3)
   pg (>= 0.18, < 2.0)
@@ -405,7 +407,7 @@ DEPENDENCIES
   rails-controller-testing (>= 1.0.5)
   rspec-rails (~> 4.0.1)
   rubocop-govuk
-  sass-rails
+  sass-rails (>= 6.0.0)
   scss_lint-govuk
   shoulda-matchers (~> 4.4)
   spring
