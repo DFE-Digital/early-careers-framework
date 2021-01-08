@@ -9,9 +9,23 @@ RSpec.describe User, type: :model do
   end
 
   describe "validations" do
-    it { is_expected.to validate_presence_of(:first_name) }
-    it { is_expected.to validate_presence_of(:last_name) }
-    it { is_expected.to validate_presence_of(:email) }
+    subject { FactoryBot.create(:user) }
+    it { is_expected.to validate_presence_of(:first_name).with_message("Enter a first name") }
+    it { is_expected.to validate_presence_of(:last_name).with_message("Enter a last name") }
+    it { is_expected.to validate_presence_of(:email).with_message("Enter an email") }
+    it {
+      is_expected.to validate_uniqueness_of(:email)
+                       .case_insensitive
+                       .with_message("This email address is already in use")
+    }
+
+    it "rejects an invalid email" do
+      user = FactoryBot.create(:user)
+      user.email = "invalid"
+
+      expect(user.valid?).to be_falsey
+      expect(user.errors.full_messages[0]).to include("Enter a valid email address")
+    end
   end
 
   describe "associations" do
