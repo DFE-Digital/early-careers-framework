@@ -66,6 +66,5 @@ Rails.application.configure do
 
   # Set a css_compressor so sassc-rails does not overwrite the compressor when running the tests
   config.assets.css_compressor = nil
-
   config.sass.style = :compressed
 end
