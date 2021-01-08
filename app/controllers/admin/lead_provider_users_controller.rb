@@ -4,7 +4,7 @@ class Admin::LeadProviderUsersController < ApplicationController
   before_action :set_lead_provider
 
   def index
-    @users = User.joins(:lead_provider_profile).where(lead_provider_profiles: { lead_provider: @lead_provider })
+    @users = @lead_provider.users
   end
 
   def new
