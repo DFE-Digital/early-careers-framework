@@ -84,6 +84,7 @@ end
 
 group :test do
   gem "faker"
+  gem 'pundit-matchers', '~> 1.6.0'
   gem "rails-controller-testing", ">= 1.0.5"
   gem "shoulda-matchers", "~> 4.4"
   gem "simplecov"
