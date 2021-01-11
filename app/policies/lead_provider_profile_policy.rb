@@ -1,18 +1,12 @@
 # frozen_string_literal: true
 
-class LeadProviderPolicy < ApplicationPolicy
+class LeadProviderProfilePolicy < ApplicationPolicy
   def create?
     admin_only
   end
 
   def update?
     admin_only
-  end
-
-  def permitted_attributes
-    if user.admin?
-      :name
-    end
   end
 
   class Scope < Scope

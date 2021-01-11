@@ -3,5 +3,6 @@
 FactoryBot.define do
   factory :lead_provider_profile do
     user
+    lead_provider
   end
 end

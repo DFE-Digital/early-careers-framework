@@ -52,4 +52,12 @@ class ApplicationPolicy
       scope.all
     end
   end
+
+private
+
+  def admin_only
+    return true if user.admin?
+
+    false
+  end
 end

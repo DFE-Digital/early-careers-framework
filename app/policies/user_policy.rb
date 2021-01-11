@@ -2,15 +2,11 @@
 
 class UserPolicy < ApplicationPolicy
   def create?
-    return true if user.admin?
-
-    false
+    admin_only
   end
 
   def update?
-    return true if user.admin?
-
-    false
+    admin_only
   end
 
   def permitted_attributes

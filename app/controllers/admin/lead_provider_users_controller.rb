@@ -17,6 +17,7 @@ class Admin::LeadProviderUsersController < Admin::BaseController
   def create
     @user = User.new(permitted_attributes(User))
     authorize @user
+    authorize LeadProviderProfile
 
     ActiveRecord::Base.transaction do
       @user.save!
