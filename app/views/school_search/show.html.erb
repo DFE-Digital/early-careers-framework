@@ -1,0 +1,91 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-three-quarters">
+    <h1 class="govuk-heading-xl">Find schools</h1>
+    <p>Use our search and filters to find schools you want to recruit.</p>
+  </div>
+</div>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-third">
+    <div style="width: 100%; height: 100%; background-color: #dee0e2; padding: 8px;">
+      <%= form_with model: @search_schools_form, url: school_search_path, method: :post do |f| %>
+        <h2 class="govuk-heading-m">Filter Schools</h2>
+
+        <%= f.govuk_submit "Apply filters", classes: "govuk-button govuk-!-margin-bottom-0" %>
+        <p><a href="?" id="clear-filters">Clear filters</a></p>
+
+        <%= f.govuk_text_field(
+              :school_name,
+              value: @search_schools_form.school_name,
+              label: {text: "School name or group", class: "govuk-label govuk-label--s"}) %>
+
+        <%= f.govuk_text_field(
+              :location,
+              label: {text: "Location", class: "govuk-label govuk-label--s"},
+              hint: {text: "Enter a postcode, town or region"}) %>
+
+        <%= f.govuk_fieldset legend: {text: 'Search distance', class: "govuk-hint"} do %>
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+              <%= f.govuk_collection_select(
+                    :search_distance,
+                    [OpenStruct.new(value: 50), OpenStruct.new(value: 20)],
+                    :value,
+                    :value,
+                    label: {text: "Number of units", hidden: true},
+                    html_options: {style: "width: 100%;"}) %>
+            </div>
+            <div class="govuk-grid-column-one-half">
+              <%= f.govuk_collection_select(
+                    :search_distance_unit,
+                    [OpenStruct.new(id: 1, name: 'miles')],
+                    :id,
+                    :name,
+                    label: {text: "Type of units", hidden: true},
+                    html_options: {style: "width: 100%;"}) %>
+            </div>
+          </div>
+        <% end %>
+
+        <%= f.govuk_collection_check_boxes(
+              :characteristics,
+              [OpenStruct.new(id: :pupil_premium_above_40, name: 'Pupil premium above 40%'),
+               OpenStruct.new(id: :top_20_remote_areas, name: 'Located in top 20% most remote areas')],
+              :id,
+              :name,
+              legend: {text: "Characteristic", class: "govuk-fieldset__legend govuk-fieldset__legend--s"}) %>
+
+        <%= f.govuk_collection_check_boxes(
+              :partnership,
+              [OpenStruct.new(
+                id: :partnered_with_another_provider, name: 'Show schools partnered with another provider')],
+              :id,
+              :name,
+              legend: {text: "Partnership Status", class: "govuk-fieldset__legend govuk-fieldset__legend--s"}) %>
+      <% end %>
+    </div>
+  </div>
+  <div class="govuk-grid-column-two-thirds">
+    <div id="school-results">
+      <% @schools.each do |school| %>
+        <div class="card">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+              <h3 class="govuk-heading-m"><%= school.name %></h3>
+            </div>
+            <div class="govuk-grid-column-one-half">
+              <!-- TODO: if school is linked to other provider than current one, show a tag here -->
+            </div>
+          </div>
+          <p><%= school.full_address %></p>
+          <p>URN: <%= school.urn %></p>
+          <% if school.network %>
+            <p>School group: <%= school.network.name %></p>
+          <% end %>
+          <p>Phase/Type: <%= school.school_type %></p>
+          <!-- TODO: Add school url -->
+          <hr>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
