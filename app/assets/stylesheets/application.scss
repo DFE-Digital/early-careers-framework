@@ -6,6 +6,8 @@
 @import 'govuk_publishing_components/components/govspeak';
 @import 'govuk_publishing_components/components/textarea';
 
+@import './govspeak/highlights';
+
 // Proof of concept that our styling takes priority
 .gem-c-govspeak {
   table {
