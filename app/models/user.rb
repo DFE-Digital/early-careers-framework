@@ -13,7 +13,7 @@ class User < ApplicationRecord
   validates :email, presence: true
 
   def admin?
-    admin_profile.presence
+    admin_profile.present?
   end
 
   def password_required?
