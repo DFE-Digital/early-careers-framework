@@ -1,0 +1,25 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: edit_admin_lead_provider_path(@lead_provider)) %>
+
+<h1>Users for <%= @lead_provider.name %></h1>
+<table class="govuk-table">
+  <thead>
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">First name</th>
+      <th scope="col" class="govuk-table__header">Last name</th>
+      <th scope="col" class="govuk-table__header">Email</th>
+      <th scope="col" class="govuk-table__header"></th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    <% @users.each do |user| %>
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell"><%= user.first_name %></td>
+        <td class="govuk-table__cell"><%= user.last_name %></td>
+        <td class="govuk-table__cell"><%= user.email %></td>
+        <td class="govuk-table__cell"><%= link_to "edit", edit_admin_lead_provider_user_path(@lead_provider, user) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= govuk_link_to "Add", new_admin_lead_provider_user_url, button: true %>

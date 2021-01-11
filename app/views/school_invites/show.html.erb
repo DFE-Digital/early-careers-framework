@@ -1,5 +1,4 @@
-<% content_for :before_content, govuk_back_link_to(supplier_dashboard_path, 'Back to dashboard') %>
-
+<% content_for :before_content, govuk_back_link(text: 'Back to dashboard', href: supplier_dashboard_path) %>
 <%= form_with model: @find_school_form, url: school_invites_path, method: :post do |f| %>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
