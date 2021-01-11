@@ -12,11 +12,7 @@ class Admin::LeadProviderUsersController < Admin::BaseController
   end
 
   def create
-    @user = User.new(
-      first_name: params.dig(:user, :first_name),
-      last_name: params.dig(:user, :last_name),
-      email: params.dig(:user, :email),
-    )
+    @user = User.new(user_params)
 
     ActiveRecord::Base.transaction do
       @user.save!
@@ -29,13 +25,13 @@ class Admin::LeadProviderUsersController < Admin::BaseController
   end
 
   def edit
-    @user = User.find(params[:id])
+    @user = @lead_provider.users.find(params[:id])
   end
 
   def update
-    @user = User.find(params[:id])
+    @user = @lead_provider.users.find(params[:id])
 
-    if @user.update(params.require(:user).permit(%i[first_name last_name email]))
+    if @user.update(user_params)
       redirect_to admin_lead_provider_users_path
     else
       render :edit
@@ -46,5 +42,9 @@ private
 
   def set_lead_provider
     @lead_provider = LeadProvider.find(params[:lead_provider])
+  end
+
+  def user_params
+    params.require(:user).permit(:first_name, :last_name, :email)
   end
 end
