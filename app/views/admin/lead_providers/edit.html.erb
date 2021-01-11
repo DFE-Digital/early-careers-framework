@@ -1,3 +1,5 @@
+<% content_for :before_content, govuk_back_link(text: 'Back', href: admin_lead_providers_path) %>
+
 <%= form_for @lead_provider, url: admin_lead_provider_path(@lead_provider) do |f| %>
   <%= f.govuk_text_field(
         :name,
@@ -7,6 +9,4 @@
 <% end %>
 
 <%= govuk_link_to "Manage users", admin_lead_provider_users_path(@lead_provider) %>
-<br />
-<%= govuk_back_link text: 'Back', href: admin_lead_providers_path %>
-
+<br/>

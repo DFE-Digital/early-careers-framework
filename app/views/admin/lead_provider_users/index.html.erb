@@ -1,3 +1,5 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: edit_admin_lead_provider_path(@lead_provider)) %>
+
 <h1>Users for <%= @lead_provider.name %></h1>
 <table class="govuk-table">
   <thead>
@@ -9,7 +11,7 @@
   </tr>
   </thead>
   <tbody class="govuk-table__body">
-<% @users.each do |user| %>
+  <% @users.each do |user| %>
     <tr class="govuk-table__row">
       <td class="govuk-table__cell"><%= user.first_name %></td>
       <td class="govuk-table__cell"><%= user.last_name %></td>
@@ -21,5 +23,4 @@
 </table>
 
 <%= govuk_link_to "Add", new_admin_lead_provider_user_url, button: true %>
-<br />
-<%= govuk_back_link text: "Back", href: edit_admin_lead_provider_path(@lead_provider) %>
+<br/>

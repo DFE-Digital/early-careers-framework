@@ -1,6 +1,6 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: admin_lead_provider_users_path(@lead_provider)) %>
+
 <%= form_for @user, url: admin_lead_provider_users_path do |f| %>
   <%= render "form_fields", locals={f: f} %>
   <%= f.govuk_submit "Create" %>
 <% end %>
-
-<%= govuk_back_link text: "Back", href: admin_lead_provider_users_path(@lead_provider) %>

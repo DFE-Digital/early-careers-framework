@@ -1,3 +1,5 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: admin_dashboard_path) %>
+
 <table class="govuk-table">
   <caption class="govuk-table__caption">Lead Providers</caption>
   <tbody class="govuk-table__body">
@@ -11,6 +13,4 @@
 </table>
 
 <%= govuk_link_to "Add", new_admin_lead_provider_path, button: true %>
-<br />
-<%= govuk_back_link text: "Back", href: admin_dashboard_path %>
-
+<br/>
