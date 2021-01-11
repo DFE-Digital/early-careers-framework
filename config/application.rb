@@ -34,6 +34,7 @@ module GovukRailsBoilerplate
     # the framework and any gems in your application.
 
     config.exceptions_app = routes
+    config.action_dispatch.rescue_responses["Pundit::NotAuthorizedError"] = :forbidden
 
     config.middleware.use Rack::Deflater
   end
