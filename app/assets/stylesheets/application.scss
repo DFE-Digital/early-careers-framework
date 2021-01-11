@@ -7,21 +7,5 @@
 @import "govuk_publishing_components/components/textarea";
 
 @import "./govspeak/highlights";
-
-// Proof of concept that our styling takes priority
-.gem-c-govspeak {
-  table {
-    td,
-    th {
-      padding: 10px 20px;
-    }
-    td:last-child {
-      padding-right: 0;
-    }
-  }
-  .call-to-action {
-    background-color: #fff;
-    border-style: dashed;
-    border-radius: 9px;
-  }
-}
+@import "./govspeak/call-to-action";
+@import "./govspeak/tables";
