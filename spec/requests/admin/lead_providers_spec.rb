@@ -6,6 +6,11 @@ RSpec.describe "Admin::LeadProviders", type: :request do
   let(:lead_provider) { FactoryBot.create(:lead_provider) }
   let(:lead_provider_name) { Faker::Company.name }
 
+  before do
+    admin_user = create(:admin_profile).user
+    sign_in admin_user
+  end
+
   describe "GET /admin/lead_providers" do
     it "renders the correct template" do
       # When

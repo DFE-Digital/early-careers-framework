@@ -9,6 +9,11 @@ RSpec.describe "Admin::LeadProviderUsers", type: :request do
   let(:last_name) { Faker::Name.last_name }
   let(:email) { Faker::Internet.email }
 
+  before do
+    admin_user = create(:admin_profile).user
+    sign_in admin_user
+  end
+
   describe "GET /admin/lead_providers/:id/users" do
     it "renders the correct template" do
       # When
