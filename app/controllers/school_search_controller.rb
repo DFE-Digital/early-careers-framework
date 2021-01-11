@@ -4,7 +4,7 @@ require "govspeak"
 
 class SchoolSearchController < ApplicationController
   def show
-    @search_schools_form = SearchSchoolsForm.new(*form_params_show)
+    @search_schools_form = SchoolSearchForm.new(*form_params_show)
     @schools = @search_schools_form.find_schools
   end
 
