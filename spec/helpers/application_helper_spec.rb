@@ -8,7 +8,7 @@ RSpec.describe ApplicationHelper, type: :helper do
 
   describe "#profile_dashboard_url" do
     it "returns the dashboard url for the user profile" do
-      expect(helper.profile_dashboard_url(user)).to eq("http://test.host/admin_dashboard")
+      expect(helper.profile_dashboard_url(user)).to eq("http://test.host/admin/dashboard")
     end
   end
 end

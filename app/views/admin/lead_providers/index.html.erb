@@ -1,0 +1,15 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: admin_dashboard_path) %>
+
+<table class="govuk-table">
+  <caption class="govuk-table__caption">Lead Providers</caption>
+  <tbody class="govuk-table__body">
+    <% @lead_providers.each do |lead_provider| %>
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell"><%= lead_provider.name %></td>
+        <td class="govuk-table__cell"><%= link_to "edit", edit_admin_lead_provider_path(lead_provider) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= govuk_link_to "Add", new_admin_lead_provider_path, button: true %>

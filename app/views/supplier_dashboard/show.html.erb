@@ -27,22 +27,22 @@
           Alternatively you can upload your own selected group of schools to invite.
         </p>
 
-        <%= govuk_button_link_to "Invite Schools", school_invites_path %>
-        <%= govuk_button_link_to "Upload School group", "/upload" %>
+        <%= govuk_link_to "Invite Schools", school_invites_path, button: true %>
+        <%= govuk_link_to "Upload School group", "/upload", button: true %>
 
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
         <h2 class="govuk-heading-m">Pending invites sent to schools</h2>
         <p>View schools you have invited to join your programme.</p>
 
-        <%= govuk_button_link_to "View invited schools", "/pending" %>
+        <%= govuk_link_to "View invited schools", "/pending", button: true %>
 
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
         <h2 class="govuk-heading-m">Our confirmed schools</h2>
         <p>List of schools that have confirmed they are joining your programme.</p>
 
-        <%= govuk_button_link_to "View confirmed schools", "/schools" %>
+        <%= govuk_link_to "View confirmed schools", "/schools", button: true %>
       </div>
 
       <div id="delivery-partners" class="govuk-tabs__panel govuk-tabs__panel--hidden">

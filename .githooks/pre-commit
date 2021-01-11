@@ -8,7 +8,7 @@ git apply -R unstaged.diff
 CHANGED_RUBY_FILES=$(git diff --name-only --cached | xargs ls -1 2>/dev/null | grep '\.rb$')
 
 echo "$CHANGED_RUBY_FILES"
-if [[ -n "$CHANGED_RUBY_FILES" ]]; then echo "$CHANGED_RUBY_FILES" | xargs rubocop --fail-fast --auto-correct ; fi
+if [[ -n "$CHANGED_RUBY_FILES" ]]; then echo "$CHANGED_RUBY_FILES" | xargs rubocop --force-exclusion --fail-fast --auto-correct ; fi
 RUBOCOP_EXIT_CODE="$?"
 CHANGED_JS_FILES=$(git diff --name-only --cached | xargs ls -1 2>/dev/null | grep '\.js$')
 if [[ -n "$CHANGED_JS_FILES" ]]; then echo "$CHANGED_JS_FILES" | xargs yarn run eslint --max-warnings 0 --fix ; fi

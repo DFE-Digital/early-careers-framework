@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_05_230905) do
+ActiveRecord::Schema.define(version: 2021_01_07_094059) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -37,6 +37,15 @@ ActiveRecord::Schema.define(version: 2021_01_05_230905) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["induction_coordinator_profile_id"], name: "index_icp_schools_on_icp"
     t.index ["school_id"], name: "index_icp_schools_on_schools"
+  end
+
+  create_table "lead_provider_profiles", force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "lead_provider_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["lead_provider_id"], name: "index_lead_provider_profiles_on_lead_provider_id"
+    t.index ["user_id"], name: "index_lead_provider_profiles_on_user_id"
   end
 
   create_table "lead_providers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -109,6 +118,8 @@ ActiveRecord::Schema.define(version: 2021_01_05_230905) do
 
   add_foreign_key "admin_profiles", "users"
   add_foreign_key "induction_coordinator_profiles", "users"
+  add_foreign_key "lead_provider_profiles", "lead_providers"
+  add_foreign_key "lead_provider_profiles", "users"
   add_foreign_key "partnerships", "lead_providers"
   add_foreign_key "partnerships", "schools"
   add_foreign_key "schools", "networks"
