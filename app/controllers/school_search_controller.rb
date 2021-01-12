@@ -2,8 +2,8 @@
 
 class SchoolSearchController < ApplicationController
   def show
-    @search_schools_form = SchoolSearchForm.new(*form_params_show)
-    @schools = @search_schools_form.find_schools
+    @school_search_form = SchoolSearchForm.new(*form_params_show)
+    @schools = @school_search_form.find_schools
   end
 
   def create
@@ -13,14 +13,14 @@ class SchoolSearchController < ApplicationController
 private
 
   def form_params_show
-    params.permit(*search_schools_params)
+    params.permit(*school_search_params)
   end
 
   def form_params_post
-    params.require(:search_schools_form).permit(*search_schools_params)
+    params.require(:school_search_form).permit(*school_search_params)
   end
 
-  def search_schools_params
+  def school_search_params
     [
       :school_name,
       :location,

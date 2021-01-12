@@ -9,7 +9,7 @@ RSpec.describe "Search schools", type: :request do
   end
 
   it "redirects to the school search page with appropriate query params when given a post request" do
-    post "/school-search", params: { search_schools_form: { school_name: "" } }
+    post "/school-search", params: { school_search_form: { school_name: "" } }
     expect(response).to redirect_to(school_search_path(school_name: ""))
   end
 end
