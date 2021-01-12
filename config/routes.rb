@@ -40,5 +40,7 @@ Rails.application.routes.draw do
     post "/govspeak_test", to: "govspeak_test#preview"
   end
 
+  resource :school_search, only: %i[show create], path: "school-search", controller: :school_search
+
   root to: "pages#home"
 end
