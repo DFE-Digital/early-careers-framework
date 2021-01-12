@@ -69,6 +69,7 @@
   </div>
   <div class="govuk-grid-column-two-thirds">
     <div id="school-results">
+      <h2 class="govuk-heading-m"><%= @schools.count %> results found</h2>
       <% @schools.each do |school| %>
         <div class="card">
           <div class="govuk-grid-row">
@@ -76,7 +77,11 @@
               <h3 class="govuk-heading-m"><%= school.name %></h3>
             </div>
             <div class="govuk-grid-column-one-half">
-              <!-- TODO: if school is linked to other provider than current one, show a tag here -->
+              <% if @lead_provider && school.lead_provider && (school.lead_provider != @lead_provider) %>
+                <strong class="govuk-tag tag-right">
+                  Other provider
+                </strong>
+              <% end %>
             </div>
           </div>
           <p><%= school.full_address %></p>
@@ -89,6 +94,7 @@
           <hr>
         </div>
       <% end %>
+      <%= paginate @schools %>
     </div>
   </div>
 </div>
