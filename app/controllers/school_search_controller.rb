@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "govspeak"
-
 class SchoolSearchController < ApplicationController
   def show
     @search_schools_form = SchoolSearchForm.new(*form_params_show)
