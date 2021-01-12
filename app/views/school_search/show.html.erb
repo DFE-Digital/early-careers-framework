@@ -69,9 +69,7 @@
   </div>
   <div class="govuk-grid-column-two-thirds">
     <div id="school-results">
-      <% if @schools.count == 0 %>
-        <h2 class="govuk-heading-m">No schools matching filters found!</h2>
-      <% end %>
+      <h2 class="govuk-heading-m"><%= @schools.count %> results found</h2>
       <% @schools.each do |school| %>
         <div class="card">
           <div class="govuk-grid-row">
