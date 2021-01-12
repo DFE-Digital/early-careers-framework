@@ -1,20 +1,11 @@
-@import 'govuk_publishing_components/govuk_frontend_support';
-@import 'govuk_publishing_components/component_support';
-@import 'govuk_publishing_components/components/button';
-@import 'govuk_publishing_components/components/file-upload';
-@import 'govuk_publishing_components/components/layout-header';
-@import 'govuk_publishing_components/components/govspeak';
-@import 'govuk_publishing_components/components/textarea';
+@import "govuk_publishing_components/govuk_frontend_support";
+@import "govuk_publishing_components/component_support";
+@import "govuk_publishing_components/components/button";
+@import "govuk_publishing_components/components/file-upload";
+@import "govuk_publishing_components/components/layout-header";
+@import "govuk_publishing_components/components/govspeak";
+@import "govuk_publishing_components/components/textarea";
 
-// Proof of concept that our styling takes priority
-.gem-c-govspeak {
-  table {
-    td,
-    th {
-      padding: 10px 20px;
-    }
-    td:last-child {
-      padding-right: 0;
-    }
-  }
-}
+@import "./govspeak/highlights";
+@import "./govspeak/call-to-action";
+@import "./govspeak/tables";
