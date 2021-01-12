@@ -3,7 +3,7 @@
 class SchoolSearchController < ApplicationController
   def show
     @school_search_form = SchoolSearchForm.new(*form_params_show)
-    @schools = @school_search_form.find_schools
+    @schools = @school_search_form.find_schools(params[:page])
   end
 
   def create
