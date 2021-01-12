@@ -12,14 +12,14 @@ RSpec.describe SchoolSearchForm, type: :model, with_audited: true do
 
     it "finds schools that include lowercase part of name" do
       form = SchoolSearchForm.new(school_name: "test")
-      schools = form.find_schools
+      schools = form.find_schools(1)
       expect(schools.count).to eq(1)
       expect(schools.first.name).to eq("Test school one")
     end
 
     it "finds all schools with empty query" do
       form = SchoolSearchForm.new(school_name: "")
-      schools = form.find_schools
+      schools = form.find_schools(1)
       expect(schools.count).to eq(3)
     end
   end

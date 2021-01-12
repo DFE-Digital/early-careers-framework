@@ -9,6 +9,7 @@ ruby File.read(".ruby-version").chomp
 gem "rails", "~> 6.1.0"
 
 gem "devise", ">= 4.7.3"
+gem "kaminari", ">= 1.2.0"
 
 # Use postgresql as the database for Active Record
 gem "pg", ">= 0.18", "< 2.0"
@@ -41,7 +42,6 @@ gem "tzinfo-data"
 
 gem "govuk-components", ">= 1.0.0"
 gem "govuk_design_system_formbuilder", "~> 2.1", ">= 2.1.5"
-
 gem "govuk_publishing_components", ">= 23.11.0"
 gem "sass-rails", ">= 6.0.0"
 
