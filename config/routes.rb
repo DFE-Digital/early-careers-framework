@@ -18,10 +18,6 @@ Rails.application.routes.draw do
   get "/pages/:page", to: "pages#show"
   get "check" => "application#check"
 
-  # authenticated :user do
-  #   root to: "dashboard#show", as: :authenticated_root
-  # end
-
   resource :dashboard, controller: :dashboard, only: :show
   resource :supplier_dashboard, controller: :supplier_dashboard, only: :show
   resource :school_invites, only: %i[show create]
@@ -33,8 +29,6 @@ Rails.application.routes.draw do
     scope "lead_providers/:lead_provider" do
       resources :lead_provider_users, path: "/users"
     end
-
-    root to: "admin/dashboard#show", as: :admin_authenticated_root
   end
 
   get "/404", to: "errors#not_found", via: :all

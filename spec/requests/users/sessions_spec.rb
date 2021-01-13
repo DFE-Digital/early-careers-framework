@@ -5,6 +5,16 @@ require "rails_helper"
 RSpec.describe "Users::Sessions", type: :request do
   let(:user) { create(:user) }
 
+  describe "POST /users/sign_in" do
+    context "when email doesn't match any user" do
+      let(:email) { Faker::Internet.email }
+      it "renders the correct template" do
+        post "/users/sign_in", params: { user: { email: email } }
+        expect(response).to render_template(:email_not_found)
+      end
+    end
+  end
+
   describe "GET /users/confirm_sign_in" do
     it "renders the correct template" do
       get "/users/confirm_sign_in?login_token=#{user.login_token}"

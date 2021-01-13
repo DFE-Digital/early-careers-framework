@@ -10,7 +10,7 @@ class Users::SessionsController < Devise::SessionsController
 
   def create
     super
-  rescue EmailNotFoundError => e
+  rescue EmailNotFoundError
     render :email_not_found
   end
 
