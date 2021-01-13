@@ -20,7 +20,9 @@ module Devise
             )
 
             UserMailer.sign_in_email(user, url).deliver_now
-            fail!("An email was sent to you with a magic link.")
+            fail!("Follow the instructions in your email to continue.")
+          else
+            raise Users::SessionsController::EmailNotFoundError
           end
         end
       end
