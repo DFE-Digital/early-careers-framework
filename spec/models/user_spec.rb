@@ -41,8 +41,7 @@ RSpec.describe User, type: :model do
 
   describe "#admin?" do
     it "is expected to be true when the user has an admin profile" do
-      user = create(:admin_profile).user
-      create(:admin_profile, user: user)
+      user = create(:user, :admin)
 
       expect(user.admin?).to be true
     end

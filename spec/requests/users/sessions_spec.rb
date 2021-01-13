@@ -20,7 +20,7 @@ RSpec.describe "Users::Sessions", type: :request do
     end
 
     context "when user is an admin" do
-      before { create(:admin_profile, user: user) }
+      let(:user) { create(:user, :admin) }
 
       it "redirects to sign_in page" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }

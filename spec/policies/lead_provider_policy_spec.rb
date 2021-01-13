@@ -8,7 +8,7 @@ RSpec.describe LeadProviderPolicy, type: :policy do
   let(:lead_provider) { create(:lead_provider) }
 
   context "being an admin" do
-    let(:user) { create(:admin_profile).user }
+    let(:user) { create(:user, :admin) }
 
     it { is_expected.to permit_new_and_create_actions }
     it { is_expected.to permit_edit_and_update_actions }

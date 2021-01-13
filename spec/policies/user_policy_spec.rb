@@ -8,7 +8,7 @@ RSpec.describe UserPolicy, type: :policy do
   let(:user_under_test) { create(:user) }
 
   context "being an admin" do
-    let(:acting_user) { create(:admin_profile).user }
+    let(:acting_user) { create(:user, :admin) }
 
     it { is_expected.to permit_new_and_create_actions }
     it { is_expected.to permit_edit_and_update_actions }
