@@ -1,9 +1,17 @@
 # frozen_string_literal: true
 
 class Users::SessionsController < Devise::SessionsController
+  class EmailNotFoundError < StandardError; end
+
   def new
     @email = params[:email]
     super
+  end
+
+  def create
+    super
+  rescue EmailNotFoundError
+    render :email_not_found
   end
 
   def sign_in_with_token
