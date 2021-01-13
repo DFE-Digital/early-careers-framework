@@ -2,17 +2,22 @@
 
 class Admin::LeadProviderUsersController < Admin::BaseController
   before_action :set_lead_provider
+  skip_after_action :verify_authorized, only: :index
+  skip_after_action :verify_policy_scoped, except: :index
 
   def index
-    @users = @lead_provider.users
+    @users = policy_scope(@lead_provider.users)
   end
 
   def new
     @user = User.new
+    authorize @user
   end
 
   def create
-    @user = User.new(user_params)
+    @user = User.new(permitted_attributes(User))
+    authorize @user
+    authorize LeadProviderProfile
 
     ActiveRecord::Base.transaction do
       @user.save!
@@ -26,12 +31,14 @@ class Admin::LeadProviderUsersController < Admin::BaseController
 
   def edit
     @user = @lead_provider.users.find(params[:id])
+    authorize @user
   end
 
   def update
     @user = @lead_provider.users.find(params[:id])
+    authorize @user
 
-    if @user.update(user_params)
+    if @user.update(permitted_attributes(@user))
       redirect_to admin_lead_provider_users_path
     else
       render :edit
@@ -42,9 +49,5 @@ private
 
   def set_lead_provider
     @lead_provider = LeadProvider.find(params[:lead_provider])
-  end
-
-  def user_params
-    params.require(:user).permit(:first_name, :last_name, :email)
   end
 end

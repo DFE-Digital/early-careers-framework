@@ -4,13 +4,13 @@ require "rails_helper"
 
 RSpec.describe "Admin::LeadProviderUsers", type: :request do
   let(:lead_provider) { FactoryBot.create(:lead_provider) }
-  let(:user) { FactoryBot.create(:lead_provider_profile, lead_provider: lead_provider).user }
+  let(:user) { FactoryBot.create(:user, lead_provider: lead_provider) }
   let(:first_name) { Faker::Name.first_name }
   let(:last_name) { Faker::Name.last_name }
   let(:email) { Faker::Internet.email }
 
   before do
-    admin_user = create(:admin_profile).user
+    admin_user = create(:user, :admin)
     sign_in admin_user
   end
 

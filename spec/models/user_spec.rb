@@ -38,4 +38,18 @@ RSpec.describe User, type: :model do
       expect(subject.password_required?).to be false
     end
   end
+
+  describe "#admin?" do
+    it "is expected to be true when the user has an admin profile" do
+      user = create(:user, :admin)
+
+      expect(user.admin?).to be true
+    end
+
+    it "is expected to be false when the user does not have an admin profile" do
+      user = create(:user)
+
+      expect(user.admin?).to be false
+    end
+  end
 end

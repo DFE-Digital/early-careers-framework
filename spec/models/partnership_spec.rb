@@ -8,7 +8,7 @@ RSpec.describe Partnership, type: :model do
       school: FactoryBot.create(:school),
       lead_provider: FactoryBot.create(:lead_provider),
     )
-    expect(partnership.confirmed?).to be_falsey
+    expect(partnership.confirmed?).to be false
   end
 
   it "can be confirmed" do
@@ -18,9 +18,9 @@ RSpec.describe Partnership, type: :model do
     )
 
     partnership.confirm
-    expect(partnership.confirmed?).to be_truthy
+    expect(partnership.confirmed?).to be true
 
     database_partnership = Partnership.first
-    expect(database_partnership.confirmed?).to be_truthy
+    expect(database_partnership.confirmed?).to be true
   end
 end

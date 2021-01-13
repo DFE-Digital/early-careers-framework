@@ -10,6 +10,7 @@ gem "rails", "~> 6.1.0"
 
 gem "devise", ">= 4.7.3"
 gem "kaminari", ">= 1.2.0"
+gem "pundit"
 
 # Use postgresql as the database for Active Record
 gem "pg", ">= 0.18", "< 2.0"
@@ -83,6 +84,7 @@ end
 
 group :test do
   gem "faker"
+  gem "pundit-matchers", "~> 1.6.0"
   gem "rails-controller-testing", ">= 1.0.5"
   gem "shoulda-matchers", "~> 4.4"
   gem "simplecov"

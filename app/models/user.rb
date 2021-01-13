@@ -12,6 +12,10 @@ class User < ApplicationRecord
   validates :last_name, presence: { message: "Enter a last name" }
   validates :email, presence: true
 
+  def admin?
+    admin_profile.present?
+  end
+
   def password_required?
     false
   end
