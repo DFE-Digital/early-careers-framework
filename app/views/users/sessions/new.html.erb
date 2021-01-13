@@ -3,7 +3,7 @@
   <h1 class="govuk-heading-m">Sign in with your email address</h1>
     <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
       <div class='govuk-form-group'>
-        <%= f.govuk_email_field :email, label: { text: '' }, autocomplete: "email", value: @email %>
+        <%= f.govuk_email_field :email, label: { text: "Email", hidden: true }, autocomplete: "email", value: @email %>
 
         <% if devise_mapping.rememberable? %>
           <%= f.govuk_check_box :remember_me, true, label: {text: "Remember me"} %>
