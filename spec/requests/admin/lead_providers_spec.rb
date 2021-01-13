@@ -7,7 +7,7 @@ RSpec.describe "Admin::LeadProviders", type: :request do
   let(:lead_provider_name) { Faker::Company.name }
 
   before do
-    admin_user = create(:admin_profile).user
+    admin_user = create(:user, :admin)
     sign_in admin_user
   end
 
