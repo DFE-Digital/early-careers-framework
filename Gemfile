@@ -50,7 +50,7 @@ platform :mswin, :mingw, :x64_mingw do
   gem "wdm", ">= 0.1.0"
 end
 
-gem "govspeak", git: "https://github.com/DFE-Digital/ecf-govspeak.git", ref: "1b56c44"
+gem "govspeak", git: "https://github.com/DFE-Digital/ecf-govspeak.git", ref: "114c888"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
