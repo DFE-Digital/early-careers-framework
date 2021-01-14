@@ -79,6 +79,8 @@ GEM
       zeitwerk (~> 2.3)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
+    ar-uuid (0.2.1)
+      activerecord
     ast (2.4.1)
     bcrypt (3.1.16)
     bindex (0.8.1)
@@ -405,6 +407,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  ar-uuid (~> 0.2.1)
   bootsnap (>= 1.1.0)
   byebug
   canonical-rails (>= 0.2.10)

@@ -15,6 +15,9 @@ gem "pundit"
 # Use postgresql as the database for Active Record
 gem "pg", ">= 0.18", "< 2.0"
 
+# Use UUIDs as db primary key by default
+gem "ar-uuid", "~> 0.2.1"
+
 # Use Puma as the app server
 gem "puma", "~> 5.0"
 
