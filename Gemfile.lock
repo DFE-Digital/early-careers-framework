@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/DFE-Digital/ecf-govspeak.git
-  revision: 525899621ee1f11e6fa7c5a28299757f6cbd91c7
-  ref: 5258996
+  revision: 114c88830b6641a24687d78fa52cd020def2c69a
+  ref: 114c888
   specs:
     govspeak (6.5.10)
       actionview (>= 5.0, < 7)
@@ -319,7 +319,7 @@ GEM
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.2)
     rubyzip (2.3.0)
-    sanitize (5.2.2)
+    sanitize (5.2.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.8.0)
       nokogumbo (~> 2.0)
