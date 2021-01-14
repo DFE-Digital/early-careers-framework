@@ -18,5 +18,6 @@
     <% end %>
   </tbody>
 </table>
+<%= govuk_paginate @suppliers %>
 
 <%= govuk_link_to "Add", new_admin_supplier_path, button: true %>
