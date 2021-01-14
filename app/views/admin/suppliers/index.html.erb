@@ -9,10 +9,11 @@
     </tr>
   </thead>
   <tbody class="govuk-table__body">
-    <% @lead_providers.each do |lead_provider| %>
+    <% @suppliers.each do |supplier| %>
       <tr class="govuk-table__row">
-        <td class="govuk-table__cell"><%= lead_provider.name %></td>
-        <td class="govuk-table__cell"><%= link_to "edit", edit_admin_lead_provider_path(lead_provider) %></td>
+        <td class="govuk-table__cell"><%= supplier.name %></td>
+        <td class="govuk-table__cell"><%= supplier.model_name.human %></td>
+        <td class="govuk-table__cell"><%= link_to "edit", edit_admin_supplier_path(supplier) %></td>
       </tr>
     <% end %>
   </tbody>

@@ -3,5 +3,9 @@
 require "rails_helper"
 
 RSpec.describe Cohort, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it "can be created" do
+    expect {
+      Cohort.create(start_year: 2021)
+    }.to change { Cohort.count }.by(1)
+  end
 end
