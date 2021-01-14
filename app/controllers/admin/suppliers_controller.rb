@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Admin::LeadProvidersController < Admin::BaseController
+class Admin::SuppliersController < Admin::BaseController
   skip_after_action :verify_authorized, only: :index
   skip_after_action :verify_policy_scoped, except: :index
 
@@ -18,7 +18,7 @@ class Admin::LeadProvidersController < Admin::BaseController
     authorize @lead_provider
 
     if @lead_provider.save
-      redirect_to admin_lead_providers_path
+      redirect_to admin_suppliers_path
     else
       render :new
     end
@@ -34,7 +34,7 @@ class Admin::LeadProvidersController < Admin::BaseController
     authorize @lead_provider
 
     if @lead_provider.update(permitted_attributes(@lead_provider))
-      redirect_to admin_lead_providers_path
+      redirect_to admin_suppliers_path
     else
       render :edit
     end

@@ -1,7 +1,13 @@
 <% content_for :before_content, govuk_back_link(text: "Back", href: admin_dashboard_path) %>
 
 <table class="govuk-table">
-  <caption class="govuk-table__caption">Lead Providers</caption>
+  <thead>
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Supplier</th>
+      <th scope="col" class="govuk-table__header">Supplier type</th>
+      <th scope="col" class="govuk-table__header"></th>
+    </tr>
+  </thead>
   <tbody class="govuk-table__body">
     <% @lead_providers.each do |lead_provider| %>
       <tr class="govuk-table__row">
@@ -12,4 +18,4 @@
   </tbody>
 </table>
 
-<%= govuk_link_to "Add", new_admin_lead_provider_path, button: true %>
+<%= govuk_link_to "Add", new_admin_supplier_path, button: true %>

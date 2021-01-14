@@ -24,7 +24,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resource :dashboard, controller: :dashboard, only: :show
-    resources :lead_providers, only: %i[index edit update create new]
+    resources :suppliers, only: %i[index edit update create new]
 
     scope "lead_providers/:lead_provider" do
       resources :lead_provider_users, path: "/users"

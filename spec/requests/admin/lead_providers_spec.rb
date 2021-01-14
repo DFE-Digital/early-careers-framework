@@ -11,30 +11,30 @@ RSpec.describe "Admin::LeadProviders", type: :request do
     sign_in admin_user
   end
 
-  describe "GET /admin/lead_providers" do
+  describe "GET /admin/suppliers" do
     it "renders the correct template" do
       # When
-      get "/admin/lead_providers"
+      get "/admin/suppliers"
 
       # Then
       expect(response).to render_template(:index)
     end
   end
 
-  describe "POST /admin/lead_providers" do
+  describe "POST /admin/suppliers" do
     it "redirects to the list of providers on success" do
       # When
-      post "/admin/lead_providers", params: { lead_provider: {
+      post "/admin/suppliers", params: { lead_provider: {
         name: lead_provider_name,
       } }
 
       # Then
-      expect(response).to redirect_to("/admin/lead_providers")
+      expect(response).to redirect_to("/admin/suppliers")
     end
 
     it "creates a new lead provider" do
       expect {
-        post "/admin/lead_providers", params: { lead_provider: {
+        post "/admin/suppliers", params: { lead_provider: {
           name: lead_provider_name,
         } }
       }.to change { LeadProvider.count }.by(1)
@@ -42,7 +42,7 @@ RSpec.describe "Admin::LeadProviders", type: :request do
 
     it "creates a lead provider with the correct name" do
       # When
-      post "/admin/lead_providers", params: { lead_provider: {
+      post "/admin/suppliers", params: { lead_provider: {
         name: lead_provider_name,
       } }
 
@@ -52,7 +52,7 @@ RSpec.describe "Admin::LeadProviders", type: :request do
 
     it "does not create a lead provider when the name is empty" do
       expect {
-        post "/admin/lead_providers", params: { lead_provider: {
+        post "/admin/suppliers", params: { lead_provider: {
           name: "",
         } }
       }.not_to(change { LeadProvider.count })
@@ -60,7 +60,7 @@ RSpec.describe "Admin::LeadProviders", type: :request do
 
     it "shows an error message when the name is empty" do
       # When
-      post "/admin/lead_providers", params: { lead_provider: {
+      post "/admin/suppliers", params: { lead_provider: {
         name: "",
       } }
 
@@ -69,20 +69,20 @@ RSpec.describe "Admin::LeadProviders", type: :request do
     end
   end
 
-  describe "GET /admin/lead_providers/new" do
+  describe "GET /admin/suppliers/new" do
     it "renders the correct template" do
       # When
-      get "/admin/lead_providers/new"
+      get "/admin/suppliers/new"
 
       # Then
       expect(response).to render_template(:new)
     end
   end
 
-  describe "GET /admin/lead_providers/:id/edit" do
+  describe "GET /admin/suppliers/:id/edit" do
     it "renders the correct template" do
       # When
-      get "/admin/lead_providers/#{lead_provider.id}/edit"
+      get "/admin/suppliers/#{lead_provider.id}/edit"
 
       # Then
       expect(response).to render_template(:edit)
@@ -90,26 +90,26 @@ RSpec.describe "Admin::LeadProviders", type: :request do
 
     it "displays the current name of the lead provider" do
       # When
-      get "/admin/lead_providers/#{lead_provider.id}/edit"
+      get "/admin/suppliers/#{lead_provider.id}/edit"
 
       # Then
       expect(response.body).to include(CGI.escapeHTML(lead_provider.name))
     end
   end
 
-  describe "PUT /admin/lead_providers/:id" do
+  describe "PUT /admin/suppliers/:id" do
     it "redirects to the list of lead providers" do
       # When
-      put "/admin/lead_providers/#{lead_provider.id}", params: { lead_provider: {
+      put "/admin/suppliers/#{lead_provider.id}", params: { lead_provider: {
         name: lead_provider_name,
       } }
 
       # Then
-      expect(response).to redirect_to("/admin/lead_providers")
+      expect(response).to redirect_to("/admin/suppliers")
     end
     it "updates the name of an existing lead provider" do
       # When
-      put "/admin/lead_providers/#{lead_provider.id}", params: { lead_provider: {
+      put "/admin/suppliers/#{lead_provider.id}", params: { lead_provider: {
         name: lead_provider_name,
       } }
 
@@ -122,7 +122,7 @@ RSpec.describe "Admin::LeadProviders", type: :request do
       previous_name = lead_provider.name
 
       # When
-      put "/admin/lead_providers/#{lead_provider.id}", params: { lead_provider: {
+      put "/admin/suppliers/#{lead_provider.id}", params: { lead_provider: {
         name: "",
       } }
 
@@ -132,7 +132,7 @@ RSpec.describe "Admin::LeadProviders", type: :request do
 
     it "displays an error message when the name is blank" do
       # When
-      put "/admin/lead_providers/#{lead_provider.id}", params: { lead_provider: {
+      put "/admin/suppliers/#{lead_provider.id}", params: { lead_provider: {
         name: "",
       } }
 
