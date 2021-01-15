@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/DFE-Digital/ecf-govspeak.git
-  revision: 114c88830b6641a24687d78fa52cd020def2c69a
-  ref: 114c888
+  revision: e7637cd2f6d0f1338b4e92e868bf7d9fe8cbf796
+  ref: e7637cd
   specs:
-    govspeak (6.5.10)
+    govspeak (6.6.0)
       actionview (>= 5.0, < 7)
       addressable (>= 2.3.8, < 3)
       govuk_publishing_components (>= 23)
