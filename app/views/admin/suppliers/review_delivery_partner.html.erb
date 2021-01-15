@@ -1,0 +1,64 @@
+<% content_for :before_content, govuk_back_link(
+  text: 'Back',
+  href: admin_new_delivery_partner_lps_path)
+%>
+
+
+
+<h1 class="govuk-heading-l">Confirm these details</h1>
+
+
+<dl class="govuk-summary-list govuk-!-margin-bottom-9">
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Name
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= @delivery_partner_form.name %>
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <%= govuk_link_to new_admin_supplier_path(continue: true), class: "govuk-link--no-visited-state" do %>
+        Change<span class="govuk-visually-hidden"> name</span>
+      <% end %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Type
+    </dt>
+    <dd class="govuk-summary-list__value">
+      Delivery Partner
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <%= govuk_link_to admin_new_supplier_type_path, class: "govuk-link--no-visited-state" do %>
+        Change<span class="govuk-visually-hidden"> supplier type</span>
+      <% end %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Working with
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <% @delivery_partner_form.chosen_provider_relationships.group_by{|r| r.lead_provider}.each do |lps_to_relationships| %>
+      <strong><%= lps_to_relationships.first.name %></strong>
+        <br/>
+        In cohort(s) <%= lps_to_relationships.second.map{ |relationship| relationship.cohort.display_name}.join(", ") %>
+        <br/>
+      <% end %>
+
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <%= govuk_link_to admin_new_delivery_partner_lps_path, class: "govuk-link--no-visited-state" do %>
+        Change<span class="govuk-visually-hidden"> lead providers and cohorts</span>
+      <% end %>
+    </dd>
+  </div>
+</dl>
+
+
+
+<%= form_for :confirmation, url: admin_create_delivery_partner_path, method: :post do |f| %>
+  <%= f.hidden_field :answers_checked, value: true %>
+  <%= f.govuk_submit "Create supplier" %>
+<% end %>

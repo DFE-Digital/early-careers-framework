@@ -25,6 +25,31 @@ Rails.application.routes.draw do
   namespace :admin do
     resource :dashboard, controller: :dashboard, only: :show
     resources :suppliers, only: %i[index edit update create new]
+    scope "suppliers/new" do
+      post "/", controller: :suppliers, action: :receive_new, as: :new_supplier
+      get "supplier-type", controller: :suppliers, action: :new_supplier_type, as: :new_supplier_type
+      post "supplier-type", controller: :suppliers, action: :receive_new_supplier_type
+
+      scope "lead-provider" do
+        get "choose-cip", controller: :suppliers, action: :choose_cip, as: :new_lead_provider_cip
+        post "choose-cip", controller: :suppliers, action: :receive_cip
+        get "choose-cohorts", controller: :suppliers, action: :choose_cohorts, as: :new_lead_provider_cohorts
+        post "choose-cohorts", controller: :suppliers, action: :receive_cohorts
+        get "review", controller: :suppliers, action: :review_lead_provider, as: :new_lead_provider_review
+        post "/", controller: :suppliers, action: :create_lead_provider, as: :create_lead_provider
+        get "success", controller: :suppliers, action: :lead_provider_success, as: :new_lead_provider_success
+      end
+
+      scope "delivery-partner" do
+        get "choose-lps", controller: :suppliers, action: :choose_lead_providers, as: :new_delivery_partner_lps
+        post "choose-lps", controller: :suppliers, action: :receive_lead_providers
+        get "review", controller: :suppliers, action: :review_delivery_partner, as: :new_delivery_partner_review
+        post "/", controller: :suppliers, action: :create_delivery_partner, as: :create_delivery_partner
+        get "success", controller: :suppliers, action: :delivery_partner_success, as: :new_delivery_partner_success
+      end
+
+      post "/supplier-details", controller: :suppliers, action: :new_supplier_details
+    end
 
     scope "lead_providers/:lead_provider" do
       resources :lead_provider_users, path: "/users"

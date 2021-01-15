@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_13_152902) do
+ActiveRecord::Schema.define(version: 2021_01_15_120245) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -23,10 +23,25 @@ ActiveRecord::Schema.define(version: 2021_01_13_152902) do
     t.index ["user_id"], name: "index_admin_profiles_on_user_id"
   end
 
+  create_table "cips", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "cohorts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "start_year", limit: 2, null: false
+  end
+
+  create_table "cohorts_lead_providers", id: false, force: :cascade do |t|
+    t.uuid "lead_provider_id", null: false
+    t.uuid "cohort_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["cohort_id", "lead_provider_id"], name: "index_cohorts_lead_providers_on_cohort_id_and_lead_provider_id"
+    t.index ["lead_provider_id", "cohort_id"], name: "index_cohorts_lead_providers_on_lead_provider_id_and_cohort_id"
   end
 
   create_table "delivery_partners", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -51,7 +66,18 @@ ActiveRecord::Schema.define(version: 2021_01_13_152902) do
     t.index ["school_id"], name: "index_icp_schools_on_schools"
   end
 
-  create_table "lead_provider_profiles", force: :cascade do |t|
+  create_table "lead_provider_cips", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "lead_provider_id", null: false
+    t.uuid "cohort_id", null: false
+    t.uuid "cip_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["cip_id"], name: "index_lead_provider_cips_on_cip_id"
+    t.index ["cohort_id"], name: "index_lead_provider_cips_on_cohort_id"
+    t.index ["lead_provider_id"], name: "index_lead_provider_cips_on_lead_provider_id"
+  end
+
+  create_table "lead_provider_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "lead_provider_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -140,7 +166,12 @@ ActiveRecord::Schema.define(version: 2021_01_13_152902) do
   end
 
   add_foreign_key "admin_profiles", "users"
+  add_foreign_key "cohorts_lead_providers", "cohorts"
+  add_foreign_key "cohorts_lead_providers", "lead_providers"
   add_foreign_key "induction_coordinator_profiles", "users"
+  add_foreign_key "lead_provider_cips", "cips"
+  add_foreign_key "lead_provider_cips", "cohorts"
+  add_foreign_key "lead_provider_cips", "lead_providers"
   add_foreign_key "lead_provider_profiles", "lead_providers"
   add_foreign_key "lead_provider_profiles", "users"
   add_foreign_key "partnerships", "lead_providers"

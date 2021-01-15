@@ -21,3 +21,15 @@ unless AdminProfile.first || Rails.env.production?
   end
   AdminProfile.create!(user: user)
 end
+
+unless Cohort.first
+  Cohort.create!(start_year: 2021)
+  Cohort.create!(start_year: 2022)
+end
+
+unless Cip.first
+  Cip.create!(name: "Ambition Institute")
+  Cip.create!(name: "Education Development Trust")
+  Cip.create!(name: "Teach First")
+  Cip.create!(name: "UCL")
+end

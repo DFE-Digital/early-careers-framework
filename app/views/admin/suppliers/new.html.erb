@@ -1,9 +1,11 @@
 <% content_for :before_content, govuk_back_link(text: 'Back', href: admin_suppliers_path) %>
 
-<%= form_for @lead_provider, url: admin_suppliers_path do |f| %>
+<%= @value %>
+<%= form_with model: @new_supplier_form, url: admin_new_supplier_path, method: :post do |f| %>
   <%= f.govuk_text_field(
         :name,
-        label: { text: 'Lead Provider name' })
+        width: 'three-quarters',
+        label:  -> {tag.h1('Supplier name', class: "govuk-heading-l")})
   %>
-  <%= f.govuk_submit "Create" %>
+  <%= f.govuk_submit "Continue" %>
 <% end %>
