@@ -15,6 +15,8 @@ RSpec.describe CourseModule, type: :model do
 
   describe "associations" do
     it { is_expected.to belong_to(:course_year) }
+    it { is_expected.to have_one(:next_module) }
+    it { is_expected.to belong_to(:previous_module).optional }
     it { is_expected.to have_many(:course_lessons) }
   end
 

@@ -27,7 +27,7 @@ ActiveRecord::Schema.define(version: 2021_01_18_102533) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "title", null: false
-    t.string "content", null: false
+    t.text "content", null: false
     t.uuid "next_lesson_id"
     t.uuid "previous_lesson_id"
     t.uuid "course_module_id", null: false
@@ -40,12 +40,12 @@ ActiveRecord::Schema.define(version: 2021_01_18_102533) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "title", null: false
-    t.string "content", null: false
-    t.uuid "course_modules_id"
+    t.text "content", null: false
+    t.uuid "next_module_id"
     t.uuid "previous_module_id"
     t.uuid "course_year_id", null: false
-    t.index ["course_modules_id"], name: "index_course_modules_on_course_modules_id"
     t.index ["course_year_id"], name: "index_course_modules_on_course_year_id"
+    t.index ["next_module_id"], name: "index_course_modules_on_next_module_id"
     t.index ["previous_module_id"], name: "index_course_modules_on_previous_module_id"
   end
 
@@ -54,7 +54,7 @@ ActiveRecord::Schema.define(version: 2021_01_18_102533) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "is_year_one", null: false
     t.string "title", null: false
-    t.string "content", null: false
+    t.text "content", null: false
     t.uuid "lead_provider_id", null: false
     t.index ["lead_provider_id"], name: "index_course_years_on_lead_provider_id"
   end
@@ -156,7 +156,7 @@ ActiveRecord::Schema.define(version: 2021_01_18_102533) do
   add_foreign_key "course_lessons", "course_lessons", column: "next_lesson_id"
   add_foreign_key "course_lessons", "course_lessons", column: "previous_lesson_id"
   add_foreign_key "course_lessons", "course_modules"
-  add_foreign_key "course_modules", "course_modules", column: "course_modules_id"
+  add_foreign_key "course_modules", "course_modules", column: "next_module_id"
   add_foreign_key "course_modules", "course_modules", column: "previous_module_id"
   add_foreign_key "course_modules", "course_years"
   add_foreign_key "course_years", "lead_providers"
