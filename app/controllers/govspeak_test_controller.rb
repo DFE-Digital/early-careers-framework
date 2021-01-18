@@ -10,7 +10,7 @@ class GovspeakTestController < ApplicationController
 
   def preview
     @preview_string = params[:preview_string]
-    @content = Govspeak::Document.new(@preview_string).to_html
+    @content = Govspeak::Document.new(@preview_string, options: { allow_extra_quotes: true }).to_html
     render :show
   end
 end
