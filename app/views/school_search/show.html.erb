@@ -10,22 +10,18 @@
     <div style="width: 100%; height: 100%; background-color: #dee0e2; padding: 8px;">
       <%= form_with model: @school_search_form, url: school_search_path, method: :post do |f| %>
         <h2 class="govuk-heading-m">Filter Schools</h2>
-
         <%= f.govuk_submit "Apply filters", classes: "govuk-button govuk-!-margin-bottom-0" %>
         <p>
           <%= govuk_link_to "Clear filters", "?" %>
         </p>
-
         <%= f.govuk_text_field(
               :school_name,
               value: @school_search_form.school_name,
               label: {text: "School name or group", class: "govuk-label govuk-label--s"}) %>
-
         <%= f.govuk_text_field(
               :location,
               label: {text: "Location", class: "govuk-label govuk-label--s"},
               hint: {text: "Enter a postcode, town or region"}) %>
-
         <%= f.govuk_fieldset legend: {text: 'Search distance', class: "govuk-hint"} do %>
           <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
@@ -48,7 +44,6 @@
             </div>
           </div>
         <% end %>
-
         <%= f.govuk_collection_check_boxes(
               :characteristics,
               [OpenStruct.new(id: :pupil_premium_above_40, name: 'Pupil premium above 40%'),
@@ -56,14 +51,15 @@
               :id,
               :name,
               legend: {text: "Characteristic", class: "govuk-fieldset__legend govuk-fieldset__legend--s"}) %>
-
-        <%= f.govuk_collection_check_boxes(
+        <% if @lead_provider%>
+          <%= f.govuk_collection_check_boxes(
               :partnership,
               [OpenStruct.new(
                 id: :partnered_with_another_provider, name: 'Show schools partnered with another provider')],
               :id,
               :name,
               legend: {text: "Partnership Status", class: "govuk-fieldset__legend govuk-fieldset__legend--s"}) %>
+        <% end %>
       <% end %>
     </div>
   </div>
