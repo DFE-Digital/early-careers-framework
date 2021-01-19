@@ -13,3 +13,15 @@ Dir[Rails.root.join("db/seeds/cip_ambition.rb")].each { |seed| load seed }
 Dir[Rails.root.join("db/seeds/cip_edt.rb")].each { |seed| load seed }
 Dir[Rails.root.join("db/seeds/cip_teachfirst.rb")].each { |seed| load seed }
 Dir[Rails.root.join("db/seeds/cip_ucl.rb")].each { |seed| load seed }
+
+unless Cohort.first
+  Cohort.create!(start_year: 2021)
+  Cohort.create!(start_year: 2022)
+end
+
+unless Cip.first
+  Cip.create!(name: "Ambition Institute")
+  Cip.create!(name: "Education Development Trust")
+  Cip.create!(name: "Teach First")
+  Cip.create!(name: "UCL")
+end
