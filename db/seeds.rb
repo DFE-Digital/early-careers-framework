@@ -15,7 +15,7 @@ unless LeadProvider.first
 end
 
 # TODO: Remove this when we have a way of adding partnerships
-unless Partnership.first
+unless Partnership.first || Rails.env.production?
   Partnership.create!(school: School.first, lead_provider: LeadProvider.first)
 end
 

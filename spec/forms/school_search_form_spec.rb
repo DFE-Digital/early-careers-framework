@@ -39,13 +39,24 @@ RSpec.describe SchoolSearchForm, type: :model, with_audited: true do
     it "finds schools that have a partnership" do
       school = schools[2]
       lead_provider = FactoryBot.create(:lead_provider)
-      partnership = FactoryBot.create(:partnership, school: school, lead_provider: lead_provider)
+      Partnership.create!(school: school, lead_provider: lead_provider)
 
       form = SchoolSearchForm.new(partnership: ["", "partnered_with_another_provider"])
       search_result = form.find_schools(1)
 
       expect(search_result.first.name).to eql(school.name)
       expect(search_result.count).to eq(1)
+    end
+
+    it "filters schools by name and partnership status" do
+      school = schools[2]
+      lead_provider = FactoryBot.create(:lead_provider)
+      Partnership.create!(school: school, lead_provider: lead_provider)
+
+      form = SchoolSearchForm.new(school_name: "Test school one", partnership: ["", "partnered_with_another_provider"])
+      search_result = form.find_schools(1)
+
+      expect(search_result.count).to eq(0)
     end
   end
 end
