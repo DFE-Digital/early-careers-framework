@@ -24,7 +24,12 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resource :dashboard, controller: :dashboard, only: :show
-    resources :suppliers, only: %i[index]
+    resources :suppliers, only: %i[index new]
+    scope "suppliers/new" do
+      post "/", controller: :suppliers, action: :receive_new, as: :new_supplier
+      get "supplier-type", controller: :suppliers, action: :new_supplier_type, as: :new_supplier_type
+      post "supplier-type", controller: :suppliers, action: :receive_new_supplier_type
+    end
   end
 
   get "/403", to: "errors#forbidden", via: :all
