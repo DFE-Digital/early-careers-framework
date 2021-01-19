@@ -1,0 +1,26 @@
+<% content_for :before_content, govuk_breadcrumbs(breadcrumbs: {
+  "Dashboard" => admin_dashboard_path,
+  "Manage suppliers" => nil
+}) %>
+<h1 class="govuk-heading-l">Manage suppliers</h1>
+<%= govuk_link_to "Add a new supplier", "#", button: true %>
+
+<table class="govuk-table">
+  <thead>
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Supplier</th>
+      <th scope="col" class="govuk-table__header">Supplier type</th>
+      <th scope="col" class="govuk-table__header"></th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    <% @suppliers.each do |supplier| %>
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell"><%= govuk_link_to supplier.name, "#" %></td>
+        <td class="govuk-table__cell"><%= supplier.model_name.human %></td>
+        <td class="govuk-table__cell"><%= link_to "Edit", "#" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= govuk_paginate @suppliers %>
