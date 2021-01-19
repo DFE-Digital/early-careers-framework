@@ -1,143 +1,137 @@
 # frozen_string_literal: true
 
 require "rails_helper"
+include NewSupplierHelper
 
 RSpec.describe "Admin::LeadProviders", type: :request do
-  let(:lead_provider) { FactoryBot.create(:lead_provider) }
   let(:lead_provider_name) { Faker::Company.name }
+  let(:cip) { create(:cip) }
+  let(:cohort) { create(:cohort) }
 
   before do
     admin_user = create(:user, :admin)
     sign_in admin_user
   end
 
-  describe "GET /admin/lead_providers" do
+  describe "GET /admin/suppliers/new/lead-provider/choose-cip" do
     it "renders the correct template" do
       # When
-      get "/admin/lead_providers"
+      get "/admin/suppliers/new/lead-provider/choose-cip"
 
       # Then
-      expect(response).to render_template(:index)
+      expect(response).to render_template(:choose_cip)
     end
   end
 
-  describe "POST /admin/lead_providers" do
-    it "redirects to the list of providers on success" do
-      # When
-      post "/admin/lead_providers", params: { lead_provider: {
-        name: lead_provider_name,
-      } }
+  describe "POST /admin/suppliers/new/lead-provider/choose-cip" do
+    before do
+      given_I_have_chosen_supplier_name(lead_provider_name)
+      given_I_have_chosen_lead_provider_type
+    end
+
+    it "redirects to the cohorts page" do
+      when_I_choose_a_cip(cip)
 
       # Then
-      expect(response).to redirect_to("/admin/lead_providers")
+      expect(response).to redirect_to("/admin/suppliers/new/lead-provider/choose-cohorts")
+    end
+
+    it "sets the correct CIP" do
+      when_I_choose_a_cip(cip)
+
+      # Then
+      given_I_have_chosen_cohorts([cohort])
+      given_I_have_confirmed_my_lead_provider_choices
+
+      new_lead_provider = LeadProvider.order(:created_at).last
+      expect(new_lead_provider.cips).to contain_exactly(cip)
+    end
+
+    it "displays an error when no cip is selected" do
+      # When
+      get "/admin/suppliers/new/lead-provider/choose-cip"
+      post "/admin/suppliers/new/lead-provider/choose-cip", params: { lead_provider_form: {} }
+
+      # Then
+      expect(response).to render_template(:choose_cip)
+      expect(response.body).to include("Choose one")
+    end
+  end
+
+  describe "GET /admin/suppliers/new/lead-provider/choose-cohorts" do
+    it "renders the correct template" do
+      # When
+      get "/admin/suppliers/new/lead-provider/choose-cohorts"
+
+      # Then
+      expect(response).to render_template(:choose_cohorts)
+    end
+  end
+
+  describe "POST /admin/suppliers/new/lead-provider/choose-cohorts" do
+    before do
+      given_I_have_chosen_supplier_name(lead_provider_name)
+      given_I_have_chosen_lead_provider_type
+      given_I_have_chosen_cip(cip)
+    end
+
+    it "redirects to the review page" do
+      when_I_choose_cohorts([cohort])
+
+      # Then
+      expect(response).to redirect_to("/admin/suppliers/new/lead-provider/review")
+    end
+
+    it "displays an error when no cohorts are selected" do
+      # When
+      get "/admin/suppliers/new/lead-provider/choose-cohorts"
+      post "/admin/suppliers/new/lead-provider/choose-cohorts", params: { lead_provider_form: {} }
+
+      # Then
+      expect(response).to render_template(:choose_cohorts)
+      expect(response.body).to include("Choose one or more")
+    end
+
+    it "sets the correct cohorts" do
+      when_I_choose_cohorts([cohort])
+
+      # Then
+      given_I_have_confirmed_my_lead_provider_choices
+
+      new_lead_provider = LeadProvider.order(:created_at).last
+      expect(new_lead_provider.cohorts).to contain_exactly(cohort)
+    end
+  end
+
+  describe "POST /admin/suppliers/new/lead_provider" do
+    before do
+      given_I_have_chosen_supplier_name(lead_provider_name)
+      given_I_have_chosen_lead_provider_type
+      given_I_have_chosen_cip(cip)
+      given_I_have_chosen_cohorts([cohort])
+    end
+
+    it "redirects to the success message on success" do
+      # When
+      when_I_confirm_my_lead_provider_choices
+
+      # Then
+      new_lead_provider = LeadProvider.order(:created_at).last
+      expect(response).to redirect_to("/admin/suppliers/new/lead-provider/success?lead_provider=#{new_lead_provider.id}")
     end
 
     it "creates a new lead provider" do
       expect {
-        post "/admin/lead_providers", params: { lead_provider: {
-          name: lead_provider_name,
-        } }
+        when_I_confirm_my_lead_provider_choices
       }.to change { LeadProvider.count }.by(1)
     end
 
     it "creates a lead provider with the correct name" do
       # When
-      post "/admin/lead_providers", params: { lead_provider: {
-        name: lead_provider_name,
-      } }
+      when_I_confirm_my_lead_provider_choices
 
       # Then
       expect(LeadProvider.find_by_name(lead_provider_name)).not_to be_nil
-    end
-
-    it "does not create a lead provider when the name is empty" do
-      expect {
-        post "/admin/lead_providers", params: { lead_provider: {
-          name: "",
-        } }
-      }.not_to(change { LeadProvider.count })
-    end
-
-    it "shows an error message when the name is empty" do
-      # When
-      post "/admin/lead_providers", params: { lead_provider: {
-        name: "",
-      } }
-
-      # Then
-      expect(response.body).to include("Enter a name")
-    end
-  end
-
-  describe "GET /admin/lead_providers/new" do
-    it "renders the correct template" do
-      # When
-      get "/admin/lead_providers/new"
-
-      # Then
-      expect(response).to render_template(:new)
-    end
-  end
-
-  describe "GET /admin/lead_providers/:id/edit" do
-    it "renders the correct template" do
-      # When
-      get "/admin/lead_providers/#{lead_provider.id}/edit"
-
-      # Then
-      expect(response).to render_template(:edit)
-    end
-
-    it "displays the current name of the lead provider" do
-      # When
-      get "/admin/lead_providers/#{lead_provider.id}/edit"
-
-      # Then
-      expect(response.body).to include(CGI.escapeHTML(lead_provider.name))
-    end
-  end
-
-  describe "PUT /admin/lead_providers/:id" do
-    it "redirects to the list of lead providers" do
-      # When
-      put "/admin/lead_providers/#{lead_provider.id}", params: { lead_provider: {
-        name: lead_provider_name,
-      } }
-
-      # Then
-      expect(response).to redirect_to("/admin/lead_providers")
-    end
-    it "updates the name of an existing lead provider" do
-      # When
-      put "/admin/lead_providers/#{lead_provider.id}", params: { lead_provider: {
-        name: lead_provider_name,
-      } }
-
-      # Then
-      expect(LeadProvider.find(lead_provider.id).name).to eq(lead_provider_name)
-    end
-
-    it "does not update the name of the lead provider when the new name is blank" do
-      # Given
-      previous_name = lead_provider.name
-
-      # When
-      put "/admin/lead_providers/#{lead_provider.id}", params: { lead_provider: {
-        name: "",
-      } }
-
-      # Then
-      expect(LeadProvider.find(lead_provider.id).name).to eq(previous_name)
-    end
-
-    it "displays an error message when the name is blank" do
-      # When
-      put "/admin/lead_providers/#{lead_provider.id}", params: { lead_provider: {
-        name: "",
-      } }
-
-      # Then
-      expect(response.body).to include("Enter a name")
     end
   end
 end
