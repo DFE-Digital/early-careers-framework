@@ -1,35 +1,39 @@
 # frozen_string_literal: true
 
 class Users::RegistrationsController < Devise::RegistrationsController
+  def info; end
+
   def start_registration; end
 
-  def confirm_school
-    @schools = School.where(id: params["school_ids"])
-    @email = params["email"]
+  def new
+    @user = User.new
   end
 
+  # def confirm_school
+  #   @schools = School.where(id: params["school_ids"])
+  #   @email = params["email"]
+  # end
+
   def check_email
+    @urn = params["induction_coordinator_profile"]["school_urn"]
     @email = params["induction_coordinator_profile"]["email"]
     @user = User.find_by(email: @email)
 
     if @user
-      flash[:notice] = "You already have an account. Sign in"
+      flash[:notice] = "This email address already has an account. Sign in."
       redirect_to controller: "/users/sessions", action: :new, email: @email
     else
-      @schools = School.where("'#{email_domain}' = ANY (domains)")
+      @school = School.where(urn: @urn).where("'#{email_domain}' = ANY (domains)").first
+      @user = User.new(email: @email)
 
-      if @schools.any?
-        handle_matching_schools
+      if @school
+        render :school_not_eligible and return if !@school&.eligible?
+        render :confirm_school and return if @school.not_registered?
       else
-        redirect_to users_check_email_path, alert: "No schools matched your email"
+        flash.now[:alert] = "Your details did not match any schools."
+        render :start_registration
       end
     end
-  end
-
-  def new
-    @email = params[:email]
-    @school = School.find(params[:school_id])
-    super
   end
 
   def create
@@ -49,15 +53,15 @@ private
     @email.split("@")[1]
   end
 
-  def handle_matching_schools
-    unclaimed_schools = @schools.filter { |school| school.induction_coordinator_profiles.none? }
+  # def handle_matching_schools
+  #   unclaimed_schools = @schools.filter { |school| school.induction_coordinator_profiles.none? }
 
-    if unclaimed_schools.any?
-      redirect_to controller: "users/registrations", action: :confirm_school, school_ids: unclaimed_schools, email: @email
-    else
-      redirect_to root_path, alert: "Someone from your school has already signed up"
-    end
-  end
+  #   if unclaimed_schools.any?
+      
+  #   else
+  #     redirect_to root_path, alert: "Someone from your school has already signed up"
+  #   end
+  # end
 
   def validate_creation_parameters
     @school = School.find(params[:user][:school_id])

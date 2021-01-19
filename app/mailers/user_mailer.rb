@@ -11,7 +11,7 @@ class UserMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        first_name: user.first_name.capitalize,
+        first_name: user.full_name.titleize,
         sign_in_url: url,
       },
     )
@@ -29,7 +29,7 @@ class UserMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        first_name: user.first_name.capitalize,
+        first_name: user.full_name.capitalize,
         confirmation_url: confirmation_url,
       },
     )

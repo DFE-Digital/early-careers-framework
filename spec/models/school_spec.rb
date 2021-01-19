@@ -15,6 +15,9 @@ RSpec.describe School, type: :model do
     it { is_expected.to have_and_belong_to_many(:induction_coordinator_profiles) }
   end
 
+  describe "#not_registered?" do
+  end
+
   describe "School#full_address" do
     let(:address_line1) { Faker::Address.street_address }
     let(:address_line2) { Faker::Address.secondary_address }

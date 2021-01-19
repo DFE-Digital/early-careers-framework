@@ -8,8 +8,7 @@ class User < ApplicationRecord
   has_one :admin_profile
   has_one :lead_provider, through: :lead_provider_profile
 
-  validates :first_name, presence: { message: "Enter a first name" }
-  validates :last_name, presence: { message: "Enter a last name" }
+  validates :full_name, presence: { message: "Enter your full name" }
   validates :email, presence: true
 
   def admin?

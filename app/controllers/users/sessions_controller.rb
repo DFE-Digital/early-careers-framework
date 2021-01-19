@@ -3,11 +3,6 @@
 class Users::SessionsController < Devise::SessionsController
   class EmailNotFoundError < StandardError; end
 
-  def new
-    @email = params[:email]
-    super
-  end
-
   def create
     super
   rescue EmailNotFoundError

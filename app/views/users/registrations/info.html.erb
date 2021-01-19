@@ -1,7 +1,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h2 class="govuk-heading-l">Your school has not registered</h2>
+    <h2 class="govuk-heading-l">Before you start</h2>
     <p>You must be responsible for running your induction programme to register your school.</p>
-    <%= govuk_link_to "Register your school", users_information_path(email: params[:user][:email]), button: true %>
+    <%= govuk_link_to "Continue", users_new_path(email: params[:email]), button: true %>
   </div>
 </div>

@@ -6,6 +6,6 @@ RSpec.feature "View pages", type: :feature do
   scenario "Navigate to home" do
     visit "/pages/home"
 
-    expect(page).to have_text("Homepage")
+    expect(page).to have_text("Professional development for new teachers")
   end
 end
