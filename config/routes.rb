@@ -8,11 +8,8 @@ Rails.application.routes.draw do
   devise_scope :user do
     get "/users/confirm_sign_in", to: "users/sessions#redirect_from_magic_link"
     post "/users/sign_in_with_token", to: "users/sessions#sign_in_with_token"
-    get "/users/confirm_school", to: "users/registrations#confirm_school"
-    get "/users/check_email", to: "users/registrations#start_registration"
     get "/users/new", to: "users/registrations#new"
     post "/users/check_email", to: "users/registrations#check_email"
-    get "/users/register", to: "users/registrations#new"
     post "/users/register", to: "users/registrations#create"
     get "/users/information", to: "users/registrations#info"
   end

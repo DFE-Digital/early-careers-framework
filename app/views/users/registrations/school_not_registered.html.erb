@@ -15,7 +15,7 @@
 
   <%= f.hidden_field :school_id, value: @school.id %>
   <%= f.hidden_field :email, value: @user.email %>
-  <%= f.govuk_text_field :full_name, label: { text: "Your full name", class: "govuk-label govuk-label--s" } %>
+  <%= f.govuk_text_field :full_name, label: { text: "Your full name", class: "govuk-label govuk-label--s", width: "three-quarters" } %>
 
   <%= f.govuk_submit "Continue" %>
 <% end %>

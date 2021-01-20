@@ -5,13 +5,14 @@
     <%= form_for(:induction_coordinator_profile, url: users_check_email_path) do |f| %>
       <%= f.govuk_text_field(
             :school_urn,
+            value: @urn,
             hint: { text: "6 digit number", class: "govuk-hint" },
             label: { text: "Your school's Unique Reference Number (URN)", class: "govuk-label govuk-label--s" })
       %>
-      <p>><%= govuk_link_to " Find my URN", "#", class: "govuk-link" %></p>
+      <p>><%= govuk_link_to "Find my URN", "#", class: "govuk-link" %></p>
       <%= f.govuk_email_field(
             :email,
-            autocomplete: "email",
+            value: @email,
             label: { text: "Your school email address", class: "govuk-label govuk-label--s" })
       %>
 

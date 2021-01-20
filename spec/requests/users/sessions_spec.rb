@@ -6,6 +6,13 @@ RSpec.describe "Users::Sessions", type: :request do
   let(:user) { create(:user) }
 
   describe "POST /users/sign_in" do
+    context "when sign in email has been sent" do
+      it "renders the correct template" do
+        post "/users/sign_in", params: { user: { email: user.email } }
+        expect(response).to render_template(:login_email_sent)
+      end
+    end
+
     context "when email doesn't match any user" do
       let(:email) { Faker::Internet.email }
       it "renders the correct template" do

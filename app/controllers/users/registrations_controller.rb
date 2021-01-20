@@ -9,11 +9,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
     @user = User.new
   end
 
-  # def confirm_school
-  #   @schools = School.where(id: params["school_ids"])
-  #   @email = params["email"]
-  # end
-
   def check_email
     @urn = params["induction_coordinator_profile"]["school_urn"]
     @email = params["induction_coordinator_profile"]["email"]
@@ -27,8 +22,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
       @user = User.new(email: @email)
 
       if @school
-        render :school_not_eligible and return if !@school&.eligible?
-        render :confirm_school and return if @school.not_registered?
+        render :school_not_eligible and return if !@school.eligible?
+        render :school_not_registered and return if @school.not_registered?
+        render :school_fully_registered and return if @school.fully_registered?
+        render :school_partially_registered and return if @school.partially_registered?
       else
         flash.now[:alert] = "Your details did not match any schools."
         render :start_registration
@@ -52,16 +49,6 @@ private
   def email_domain
     @email.split("@")[1]
   end
-
-  # def handle_matching_schools
-  #   unclaimed_schools = @schools.filter { |school| school.induction_coordinator_profiles.none? }
-
-  #   if unclaimed_schools.any?
-      
-  #   else
-  #     redirect_to root_path, alert: "Someone from your school has already signed up"
-  #   end
-  # end
 
   def validate_creation_parameters
     @school = School.find(params[:user][:school_id])
