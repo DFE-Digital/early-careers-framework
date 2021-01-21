@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RemoveFirstNameFromUsers < ActiveRecord::Migration[6.1]
+class RemoveLastNameFromUsers < ActiveRecord::Migration[6.1]
   def change
     remove_column :users, :last_name, if_exists: true
   end
