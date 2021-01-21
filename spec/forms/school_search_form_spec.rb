@@ -41,7 +41,7 @@ RSpec.describe SchoolSearchForm, type: :model, with_audited: true do
       lead_provider = FactoryBot.create(:lead_provider)
       Partnership.create!(school: school, lead_provider: lead_provider)
 
-      form = SchoolSearchForm.new(partnership: ["", "partnered_with_another_provider"])
+      form = SchoolSearchForm.new(partnership: ["", "in_a_partnership"])
       search_result = form.find_schools(1)
 
       expect(search_result.first.name).to eql(school.name)
@@ -53,7 +53,7 @@ RSpec.describe SchoolSearchForm, type: :model, with_audited: true do
       lead_provider = FactoryBot.create(:lead_provider)
       Partnership.create!(school: school, lead_provider: lead_provider)
 
-      form = SchoolSearchForm.new(school_name: "Test school one", partnership: ["", "partnered_with_another_provider"])
+      form = SchoolSearchForm.new(school_name: "Test school one", partnership: ["", "in_a_partnership"])
       search_result = form.find_schools(1)
 
       expect(search_result.count).to eq(0)

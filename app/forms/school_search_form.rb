@@ -20,6 +20,6 @@ class SchoolSearchForm
 private
 
   def filter_by_partnership_status
-    partnership&.include? "partnered_with_another_provider"
+    partnership&.include? "in_a_partnership"
   end
 end

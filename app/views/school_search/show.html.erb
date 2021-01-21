@@ -55,7 +55,7 @@
           <%= f.govuk_collection_check_boxes(
               :partnership,
               [OpenStruct.new(
-                id: :partnered_with_another_provider, name: 'Show schools partnered with another provider')],
+                id: :in_a_partnership, name: 'Schools in a partnership')],
               :id,
               :name,
               legend: {text: "Partnership Status", class: "govuk-fieldset__legend govuk-fieldset__legend--s"}) %>
