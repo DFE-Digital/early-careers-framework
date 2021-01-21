@@ -14,6 +14,11 @@ unless LeadProvider.first
   LeadProvider.create!(name: "Test Lead Provider")
 end
 
+# TODO: Remove this when we have a way of adding partnerships
+unless Partnership.first || Rails.env.production?
+  Partnership.create!(school: School.first, lead_provider: LeadProvider.first)
+end
+
 unless AdminProfile.first || Rails.env.production?
   user = User.find_or_create_by!(email: "ecf@mailinator.com") do |u|
     u.full_name = "Admin User"
