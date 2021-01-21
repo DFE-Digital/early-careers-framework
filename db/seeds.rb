@@ -16,16 +16,7 @@ end
 
 unless AdminProfile.first || Rails.env.production?
   user = User.find_or_create_by!(email: "ecf@mailinator.com") do |u|
-    u.first_name = "Admin"
-    u.last_name = "User"
+    u.full_name = "Admin User"
   end
   AdminProfile.create!(user: user)
-end
-
-unless CourseYear.first || Rails.env.production?
-  course_year = CourseYear.create!(
-    lead_provider: LeadProvider.first, is_year_one: true, title: "Test title", content: "Test **content**",
-  )
-  course_module = CourseModule.create!(course_year: course_year, title: "Test title", content: "Test **content**")
-  CourseLesson.create!(course_module: course_module, title: "Test title", content: "Test **content**")
 end

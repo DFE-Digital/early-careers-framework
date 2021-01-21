@@ -4,8 +4,7 @@ require "rails_helper"
 
 RSpec.describe "Users::Registrations /register", type: :request do
   let(:school) { FactoryBot.create(:school) }
-  let(:first_name) { Faker::Name.first_name }
-  let(:last_name) { Faker::Name.last_name }
+  let(:full_name) { Faker::Name.name }
   let(:email) { Faker::Internet.email(domain: school.domains.first) }
 
   describe "GET /users/register" do
@@ -21,8 +20,7 @@ RSpec.describe "Users::Registrations /register", type: :request do
     it "redirects to homepage on successful user creation" do
       # When
       post "/users/register", params: { user: {
-        first_name: first_name,
-        last_name: last_name,
+        full_name: full_name,
         email: email,
         school_id: school.id,
       } }
@@ -35,8 +33,7 @@ RSpec.describe "Users::Registrations /register", type: :request do
     it "creates a user with the correct details" do
       # When
       post "/users/register", params: { user: {
-        first_name: first_name,
-        last_name: last_name,
+        full_name: full_name,
         email: email,
         school_id: school.id,
       } }
@@ -45,15 +42,13 @@ RSpec.describe "Users::Registrations /register", type: :request do
       created_user = User.find_by_email(email)
 
       expect(created_user).not_to be_nil
-      expect(created_user.first_name).to eq(first_name)
-      expect(created_user.last_name).to eq(last_name)
+      expect(created_user.full_name).to eq(full_name)
     end
 
     it "creates an induction coordinator profile for the user" do
       # When
       post "/users/register", params: { user: {
-        first_name: first_name,
-        last_name: last_name,
+        full_name: full_name,
         email: email,
         school_id: school.id,
       } }
@@ -67,8 +62,7 @@ RSpec.describe "Users::Registrations /register", type: :request do
     it "makes the user the induction coordinator for the school" do
       # When
       post "/users/register", params: { user: {
-        first_name: first_name,
-        last_name: last_name,
+        full_name: full_name,
         email: email,
         school_id: school.id,
       } }
@@ -82,8 +76,7 @@ RSpec.describe "Users::Registrations /register", type: :request do
     it "returns bad request when the email does not match the school" do
       expect {
         post "/users/register", params: { user: {
-          first_name: first_name,
-          last_name: last_name,
+          full_name: full_name,
           email: "email@differentdomain.com",
           school_id: school.id,
         } }
@@ -93,8 +86,7 @@ RSpec.describe "Users::Registrations /register", type: :request do
     it "returns bad request when the email is missing" do
       expect {
         post "/users/register", params: { user: {
-          first_name: first_name,
-          last_name: last_name,
+          full_name: full_name,
           school_id: school.id,
         } }
       }.to raise_error(ActionController::BadRequest)
@@ -103,8 +95,7 @@ RSpec.describe "Users::Registrations /register", type: :request do
     it "returns bad request when the school_id is missing" do
       expect {
         post "/users/register", params: { user: {
-          first_name: first_name,
-          last_name: last_name,
+          full_name: full_name,
           email: email,
         } }
       }.to raise_error(ActionController::BadRequest)
