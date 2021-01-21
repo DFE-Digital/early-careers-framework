@@ -12,14 +12,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def check_email
     @urn = params["induction_coordinator_profile"]["school_urn"]
     @email = params["induction_coordinator_profile"]["email"]
-    @user = User.find_by(email: @email)
+    @user = User.find_or_initialize_by(email: @email)
 
     if @user
       flash[:notice] = "This email address already has an account. Sign in."
       redirect_to controller: "/users/sessions", action: :new, email: @email
     else
       @school = School.where(urn: @urn).where("'#{email_domain}' = ANY (domains)").first
-      @user = User.new(email: @email)
 
       if @school
         render :school_not_eligible and return if !@school.eligible?
