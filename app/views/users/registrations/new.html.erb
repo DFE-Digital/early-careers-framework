@@ -11,9 +11,7 @@
 
       <%= f.hidden_field :school_id, value: @school.id %>
 
-      <%= f.govuk_text_field :first_name, label: { text: "First name" } %>
-
-      <%= f.govuk_text_field :last_name, label: { text: "Last name" } %>
+      <%= f.govuk_text_field :full_name, label: { text: "Full name" } %>
 
       <%= f.govuk_submit "Sign up" %>
     <% end %>
