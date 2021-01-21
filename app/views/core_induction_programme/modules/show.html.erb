@@ -1,19 +1,25 @@
-<h1>module page</h1>
-<div class="govuk-grid-column-two-thirds">
-  <div id="course-results">
-    <% @modules.each do |mod| %>
-      <div class="card">
-        <div class="govuk-grid-row">
-          <h1> <%= mod.title %>
-            <div class="govuk-grid-column-two-third">
-              <% @lessons.each do |lesson| %>
-                <% if lesson.course_module.title == mod.title %>
-                  <%= link_to lesson.title, cip_years_modules_lessons_url(lesson) %>
-                <%end %>
-              <%end%>
-            </div>
-          </div>
-        </div>
-      <% end %>
+<main class="govuk-main-wrapper dfe-main-wrapper" id="main-content" role="main">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <article>
+        <% @modules.each do |mod| %>
+          <ol class="app-task-list">
+            <h3 class="govuk-heading-m"> <%= mod.title %></h3>
+            <li>
+              <p><strong>Topic materials</strong></p>
+              <ul class="app-task-list__items">
+                <% mod.course_lessons.each do |lesson| %>
+                  <li class="app-task-list__item">
+                    <span><a class="govuk-link">
+                        <%= link_to lesson.title, cip_years_modules_lessons_url(lesson) %>
+                      </a></span>
+                    <strong class="govuk-tag app-task-list__tag"><%= ["complete", "in progress", "not_started"].sample%></strong>
+                  </li>
+                <%end%>
+              </ul>
+            </li>
+          </ol>
+        <% end %>
+      </article>
     </div>
   </div>

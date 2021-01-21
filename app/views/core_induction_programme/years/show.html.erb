@@ -1,15 +1,14 @@
-<h1>years page</h1>
-<div class="govuk-grid-column-two-thirds">
-  <div id="course-results">
-    <% @course_years.each do |course| %>
-      <%= course.title %>
-      <div class="card">
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-one-half">
+<main class="govuk-main-wrapper dfe-main-wrapper" id="main-content" role="main">
+  <article>
+    <div id="course-results">
+      <% @course_years.each do |course| %>
+        <h1 class="entry-title"><%= course.title %></h1>
+        <div class="card">
+          <div class="govuk-grid-row">
             <p><%= link_to "Go to self-directed study materials", cip_years_modules_url(course) %></p>
           </div>
         </div>
-      </div>
-    <% end %>
+      <% end %>
+    </div>
   </div>
-</div>
+</article>
