@@ -5,8 +5,7 @@ require "rails_helper"
 RSpec.describe "Admin::LeadProviderUsers", type: :request do
   let(:lead_provider) { FactoryBot.create(:lead_provider) }
   let(:user) { FactoryBot.create(:user, lead_provider: lead_provider) }
-  let(:first_name) { Faker::Name.first_name }
-  let(:last_name) { Faker::Name.last_name }
+  let(:full_name) { Faker::Name.name }
   let(:email) { Faker::Internet.email }
 
   before do
@@ -28,8 +27,7 @@ RSpec.describe "Admin::LeadProviderUsers", type: :request do
     it "redirects to the list of users on success" do
       # When
       post "/admin/lead_providers/#{lead_provider.id}/users", params: { user: {
-        first_name: "First",
-        last_name: "Last",
+        full_name: "First Last",
         email: "first.last@email.com",
       } }
 
@@ -40,8 +38,7 @@ RSpec.describe "Admin::LeadProviderUsers", type: :request do
     it "creates a new user" do
       expect {
         post "/admin/lead_providers/#{lead_provider.id}/users", params: { user: {
-          first_name: first_name,
-          last_name: last_name,
+          full_name: full_name,
           email: email,
         } }
       }.to change { User.count }.by(1)
@@ -50,33 +47,20 @@ RSpec.describe "Admin::LeadProviderUsers", type: :request do
     it "creates a user with the correct details" do
       # When
       post "/admin/lead_providers/#{lead_provider.id}/users", params: { user: {
-        first_name: first_name,
-        last_name: last_name,
+        full_name: full_name,
         email: email,
       } }
 
       # Then
       new_user = User.find_by_email(email)
       expect(new_user).not_to be_nil
-      expect(new_user.first_name).to eq(first_name)
-      expect(new_user.last_name).to eq(last_name)
+      expect(new_user.full_name).to eq(full_name)
     end
 
-    it "does not create a user when the first name is empty" do
+    it "does not create a user when the full name is empty" do
       expect {
         post "/admin/lead_providers/#{lead_provider.id}/users", params: { user: {
-          first_name: "",
-          last_name: last_name,
-          email: email,
-        } }
-      }.not_to(change { User.count })
-    end
-
-    it "does not create a user when the last name is empty" do
-      expect {
-        post "/admin/lead_providers/#{lead_provider.id}/users", params: { user: {
-          first_name: first_name,
-          last_name: "",
+          full_name: "",
           email: email,
         } }
       }.not_to(change { User.count })
@@ -85,23 +69,21 @@ RSpec.describe "Admin::LeadProviderUsers", type: :request do
     it "does not create a user when the email is empty" do
       expect {
         post "/admin/lead_providers/#{lead_provider.id}/users", params: { user: {
-          first_name: first_name,
-          last_name: last_name,
+          full_name: full_name,
           email: "",
         } }
       }.not_to(change { User.count })
     end
 
-    it "shows an error message when the first name is empty" do
+    it "shows an error message when the full name is empty" do
       # When
       post "/admin/lead_providers/#{lead_provider.id}/users", params: { user: {
-        first_name: "",
-        last_name: last_name,
+        full_name: "",
         email: email,
       } }
 
       # Then
-      expect(response.body).to include("Enter a first name")
+      expect(response.body).to include("Enter your full name")
     end
   end
 
@@ -129,7 +111,7 @@ RSpec.describe "Admin::LeadProviderUsers", type: :request do
       get "/admin/lead_providers/#{lead_provider.id}/users/#{user.id}/edit"
 
       # Then
-      expect(response.body).to include(CGI.escapeHTML(user.first_name))
+      expect(response.body).to include(CGI.escapeHTML(user.full_name))
     end
   end
 
@@ -137,8 +119,7 @@ RSpec.describe "Admin::LeadProviderUsers", type: :request do
     it "redirects to the list of lead providers" do
       # When
       put "/admin/lead_providers/#{lead_provider.id}/users/#{user.id}", params: { user: {
-        first_name: first_name,
-        last_name: user.last_name,
+        full_name: user.full_name,
         email: user.email,
       } }
 
@@ -149,40 +130,37 @@ RSpec.describe "Admin::LeadProviderUsers", type: :request do
     it "updates the name of an existing user" do
       # When
       put "/admin/lead_providers/#{lead_provider.id}/users/#{user.id}", params: { user: {
-        first_name: first_name,
-        last_name: user.last_name,
+        full_name: full_name,
         email: user.email,
       } }
 
       # Then
-      expect(User.find(user.id).first_name).to eq(first_name)
+      expect(user.reload.full_name).to eq(full_name)
     end
 
     it "does not update the name of the user when the new first name is blank" do
       # Given
-      previous_name = user.first_name
+      previous_name = user.full_name
 
       # When
       put "/admin/lead_providers/#{lead_provider.id}/users/#{user.id}", params: { user: {
-        first_name: "",
-        last_name: user.last_name,
+        full_name: "",
         email: user.email,
       } }
 
       # Then
-      expect(User.find(user.id).first_name).to eq(previous_name)
+      expect(User.find(user.id).full_name).to eq(previous_name)
     end
 
     it "displays an error message when the name is blank" do
       # When
       put "/admin/lead_providers/#{lead_provider.id}/users/#{user.id}", params: { user: {
-        first_name: "",
-        last_name: user.last_name,
+        full_name: "",
         email: user.email,
       } }
 
       # Then
-      expect(response.body).to include("Enter a first name")
+      expect(response.body).to include("Enter your full name")
     end
   end
 end

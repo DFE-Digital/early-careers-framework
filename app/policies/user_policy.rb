@@ -11,7 +11,7 @@ class UserPolicy < ApplicationPolicy
 
   def permitted_attributes
     if user.admin?
-      %i[first_name last_name email]
+      %i[full_name email]
     end
   end
 

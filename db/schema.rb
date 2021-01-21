@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_18_102533) do
+ActiveRecord::Schema.define(version: 2021_01_19_093554) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -123,6 +123,7 @@ ActiveRecord::Schema.define(version: 2021_01_18_102533) do
     t.string "postcode", null: false
     t.uuid "network_id"
     t.string "domains", default: [], null: false, array: true
+    t.boolean "eligible", default: true, null: false
     t.index ["high_pupil_premium"], name: "index_schools_on_high_pupil_premium", where: "high_pupil_premium"
     t.index ["is_rural"], name: "index_schools_on_is_rural", where: "is_rural"
     t.index ["name"], name: "index_schools_on_name"
@@ -131,8 +132,7 @@ ActiveRecord::Schema.define(version: 2021_01_18_102533) do
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "first_name", null: false
-    t.string "last_name", null: false
+    t.string "full_name", null: false
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "login_token"
