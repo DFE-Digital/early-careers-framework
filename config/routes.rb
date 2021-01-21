@@ -43,5 +43,13 @@ Rails.application.routes.draw do
 
   resource :school_search, only: %i[show create], path: "school-search", controller: :school_search
 
+  resource :core_induction_programme, controller: :core_induction_programme, only: :show, as: "cip", path: "/cip" do
+    resource :years, controller: "core_induction_programme/years", only: :show, path: "/:id" do
+      resource :modules, controller: "core_induction_programme/modules", only: :show, path: "/:id" do
+        resource :lessons, controller: "core_induction_programme/lessons", only: :show, path: "/:id"
+      end
+    end
+  end
+
   root to: "pages#home"
 end

@@ -1,0 +1,14 @@
+<h1> this is the CIP page</h1>
+<div class="govuk-grid-column-two-thirds">
+  <div id="course-results">
+    <% @lead_providers.each do |lp| %>
+      <div class="card">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-third">
+            <p><%= link_to lp.name, cip_years_url(lp) %></p>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+<h1>module page</h1>
+<div class="govuk-grid-column-two-thirds">
+  <div id="course-results">
+    <% @modules.each do |mod| %>
+      <div class="card">
+        <div class="govuk-grid-row">
+          <h1> <%= mod.title %>
+            <div class="govuk-grid-column-two-third">
+              <% @lessons.each do |lesson| %>
+                <% if lesson.course_module.title == mod.title %>
+                  <%= link_to lesson.title, cip_years_modules_lessons_url(lesson) %>
+                <%end %>
+              <%end%>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
