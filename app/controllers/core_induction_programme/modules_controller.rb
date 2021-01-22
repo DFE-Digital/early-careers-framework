@@ -2,6 +2,6 @@
 
 class CoreInductionProgramme::ModulesController < ApplicationController
   def show
-    @modules = CourseModule.where(course_year: params[:id]).includes(:course_lessons)
+    @module = CourseModule.includes(:course_lessons).find(params[:module_id])
   end
 end

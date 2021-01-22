@@ -1,25 +1,25 @@
-<main class="govuk-main-wrapper dfe-main-wrapper" id="main-content" role="main">
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <article>
-        <% @modules.each do |mod| %>
-          <ol class="app-task-list">
-            <h3 class="govuk-heading-m"> <%= mod.title %></h3>
-            <li>
-              <p><strong>Topic materials</strong></p>
-              <ul class="app-task-list__items">
-                <% mod.course_lessons.each do |lesson| %>
-                  <li class="app-task-list__item">
-                    <span><a class="govuk-link">
-                        <%= link_to lesson.title, cip_years_modules_lessons_url(lesson) %>
-                      </a></span>
-                    <strong class="govuk-tag app-task-list__tag"><%= ["complete", "in progress", "not_started"].sample%></strong>
-                  </li>
-                <%end%>
-              </ul>
-            </li>
-          </ol>
-        <% end %>
-      </article>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l"> <%= @module.title %></h1>
+
+    <div class="gem-c-govspeak govuk-govspeak ">
+      <%= @module.content_in_html.html_safe %>
     </div>
+
+    <ol class="app-task-list">
+      <li>
+        <p><strong>Topic materials</strong></p>
+        <ul class="app-task-list__items">
+          <% @module.course_lessons.each do |lesson| %>
+            <li class="app-task-list__item">
+              <span>
+                  <%= govuk_link_to lesson.title, cip_years_modules_lessons_url(@module.course_year, @module, lesson) %>
+              </span>
+              <strong class="govuk-tag app-task-list__tag">complete</strong>
+            </li>
+          <%end%>
+        </ul>
+      </li>
+    </ol>
   </div>
+</div>
