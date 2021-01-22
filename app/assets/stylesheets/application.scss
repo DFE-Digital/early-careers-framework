@@ -11,23 +11,3 @@
 @import "./govspeak/highlights";
 @import "./govspeak/quote";
 @import "./govspeak/tables";
-
-.app-task-list {
-  list-style: none;
-}
-
-.app-task-list__items {
-  padding-left: 30px;
-  margin-bottom: 60px;
-  list-style: none;
-}
-
-.app-task-list__tag {
-  float: right;
-}
-.app-task-list__item {
-  border-bottom: 1px solid #b1b4b6;
-  margin-bottom: 0;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
