@@ -1,23 +1,23 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-l"> <%= @module.title %></h1>
+    <h1 class="govuk-heading-l"> <%= @course_module.title %></h1>
 
     <div class="gem-c-govspeak govuk-govspeak ">
-      <%= @module.content_in_html.html_safe %>
+      <%= @course_module.content_in_html.html_safe %>
     </div>
 
     <ol class="app-task-list">
       <li>
         <p><strong>Topic materials</strong></p>
         <ul class="app-task-list__items">
-          <% @module.course_lessons.each do |lesson| %>
+          <% @course_module.course_lessons.each do |lesson| %>
             <li class="app-task-list__item">
               <span>
-                  <%= govuk_link_to lesson.title, cip_years_modules_lessons_url(@module.course_year, @module, lesson) %>
+                  <%= govuk_link_to lesson.title, cip_years_modules_lessons_url(@course_module.course_year, @course_module, lesson) %>
               </span>
               <strong class="govuk-tag app-task-list__tag">complete</strong>
             </li>
-          <%end%>
+          <% end %>
         </ul>
       </li>
     </ol>

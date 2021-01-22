@@ -2,6 +2,6 @@
 
 class CoreInductionProgramme::LessonsController < ApplicationController
   def show
-    @lesson = CourseLesson.find(params[:lesson_id])
+    @course_lesson = CourseLesson.find(params[:lesson_id])
   end
 end
