@@ -1,35 +1,33 @@
-<div class="govuk-width-container">
-  <h2>What is the early career framework?</h2>
-  <p>The early career framework (ECF) was designed to make sure early career teachers focus on learning the things that make the most difference in the classroom and their professional practice.</p>
-  <p>The core induction programmes include high-quality development materials, underpinned by the ECF, which will support early career teachers to develop the essential knowledge and skills to set them up for a successful and fulfilling career in teaching.</p>
-  <p>Schools have an opportunity to take advantage of the benefits of the ECF early by using the core induction programmes published here, in whichever way that best suits them and their early career teachers.</p>
-  <h2>ECF core induction programme suppliers</h2>
-  <p>The Department for Education has selected four expert teacher training providers who have each developed their own core induction programme based on the ECF:</p>
-  <ul>
-    <li>Ambition Institute</li>
-    <li>Education Development Trust</li>
-    <li>Teach First</li>
-    <li>UCL Early Career Teacher Consortium</li>
-  </ul>
-  <p>Each set of materials cover the five core areas of the ECF:</p>
-  <ul>
-    <li>behaviour management</li>
-    <li>pedagogy</li>
-    <li>curriculum</li>
-    <li>assessment</li>
-    <li>professional behaviours</li>
-  </ul>
-  <p>Although structured differently, each programme contains approximately the same amount of self-study material in terms of hours covered.</p>
-  <p>Schools can use or draw upon any of four core induction programmes published here in whichever way is most beneficial to them and their early career teachers.</p>
-  <p>You can read more about these suppliers on their own websites or in the course descriptions below.</p>
-</div>
-<div class="home-tier home-tier--suppliers">
-  <div class="govuk-width-container">
-    <h2>Suppliers</h2>
-    <% @lead_providers.each do |lp| %>
-      <div class="card">
-        <p><%= link_to lp.name, cip_years_url(lp) %></p>
-      </div>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-xl">What is the early career framework?</h1>
+    <p>The early career framework (ECF) was designed to make sure early career teachers focus on learning the things that make the most difference in the classroom and their professional practice.</p>
+    <p>The core induction programmes include high-quality development materials, underpinned by the ECF, which will support early career teachers to develop the essential knowledge and skills to set them up for a successful and fulfilling career in teaching.</p>
+    <p>Schools have an opportunity to take advantage of the benefits of the ECF early by using the core induction programmes published here, in whichever way that best suits them and their early career teachers.</p>
+
+    <h2 class="govuk-heading-l">ECF core induction programme suppliers</h2>
+    <p>The Department for Education has selected four expert teacher training providers who have each developed their own core induction programme based on the ECF:</p>
+    <ul>
+      <li>Ambition Institute</li>
+      <li>Education Development Trust</li>
+      <li>Teach First</li>
+      <li>UCL Early Career Teacher Consortium</li>
+    </ul>
+    <p>Each set of materials cover the five core areas of the ECF:</p>
+    <ul>
+      <li>behaviour management</li>
+      <li>pedagogy</li>
+      <li>curriculum</li>
+      <li>assessment</li>
+      <li>professional behaviours</li>
+    </ul>
+    <p>Although structured differently, each programme contains approximately the same amount of self-study material in terms of hours covered.</p>
+    <p>Schools can use or draw upon any of four core induction programmes published here in whichever way is most beneficial to them and their early career teachers.</p>
+    <p>You can read more about these suppliers on their own websites or in the course descriptions below.</p>
+
+    <h2 class="govuk-heading-l">Years</h2>
+    <% @course_years.each do |course_year| %>
+        <p><%= govuk_link_to course_year.title, cip_years_url(course_year) %></p>
     <% end %>
   </div>
 </div>

@@ -2,6 +2,6 @@
 
 class CoreInductionProgrammeController < ApplicationController
   def show
-    @lead_providers = LeadProvider.all
+    @course_years = CourseYear.all
   end
 end
