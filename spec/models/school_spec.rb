@@ -16,6 +16,69 @@ RSpec.describe School, type: :model do
   end
 
   describe "#not_registered?" do
+    let(:school) { create(:school) }
+    it "returns true if no one has registered the school" do
+      expect(school.not_registered?).to be true
+    end
+
+    context "when school has an induction coordinator" do
+      let(:user) { create(:user, confirmed_at: 1.day.ago) }
+      let!(:coordinator) { create(:induction_coordinator_profile, user: user, schools: [school]) }
+
+      it "returns false" do
+        expect(school.not_registered?).to be false
+      end
+    end
+  end
+
+  describe "#fully_registered?" do
+    let(:school) { create(:school) }
+    it "returns false if no one has registered the school" do
+      expect(school.fully_registered?).to be false
+    end
+
+    context "when school has an unconfirmed induction coordinator" do
+      let(:user) { create(:user, confirmed_at: nil) }
+      let!(:coordinator) { create(:induction_coordinator_profile, user: user, schools: [school]) }
+
+      it "returns false" do
+        expect(school.fully_registered?).to be false
+      end
+    end
+
+    context "when school has a confirmed induction coordinator" do
+      let(:user) { create(:user, confirmed_at: 1.day.ago) }
+      let!(:coordinator) { create(:induction_coordinator_profile, user: user, schools: [school]) }
+
+      it "returns true" do
+        expect(school.fully_registered?).to be true
+      end
+    end
+  end
+
+  describe "#partially_registered?" do
+    let(:school) { create(:school) }
+    it "returns false if no one has registered the school" do
+      expect(school.partially_registered?).to be false
+    end
+
+    context "when school has an unconfirmed induction coordinator" do
+      let(:user) { create(:user, confirmed_at: nil) }
+      let!(:coordinator) { create(:induction_coordinator_profile, user: user, schools: [school]) }
+
+      it "returns false if no one has registered a school" do
+        expect(school.partially_registered?).to be true
+      end
+    end
+
+    context "when school has a confirmed induction coordinator" do
+      let(:user) { create(:user, confirmed_at: 1.day.ago) }
+      let!(:coordinator) { create(:induction_coordinator_profile, user: user, schools: [school]) }
+
+      it "returns false if no one has registered a school" do
+        expect(school.partially_registered?).to be false
+      end
+    end
   end
 
   describe "School#full_address" do
