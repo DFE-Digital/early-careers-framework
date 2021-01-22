@@ -1,6 +1,6 @@
 # UNPROCESSABLE: ucl
 # ==================================================
-uclucltwo_understanding_teachers_as_role_models = CourseYear.create!(
+uclucltwo_understanding_teachers_as_role_models = CourseYear.find_or_create_by!(
     version: CURRENT_CIP_VERSION, lead_provider: LeadProvider.first, is_year_one: true, title: "Self-directed study materials",
     content: <<~MultilineString
 Any topics not listed below are for mentors or part of the Full Induction Programme only.
@@ -156,7 +156,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelstwo_understanding_teachers_as_role_models = CourseModule.create!(
+uclucltwo_understanding_teachers_as_role_modelstwo_understanding_teachers_as_role_models = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: uclucltwo_understanding_teachers_as_role_models, title: "1: Enabling pupil learning", previous_module: nil,
     content: <<~MultilineString
 Module 1 of the ECF addresses Teachers’ Standard 1: Set high expectations and Teachers’ Standard 7: Manage behaviour effectively.
@@ -173,7 +173,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelstwo_understanding_teachers_as_role_modelsunderstanding_teachers_as_role_models = CourseLesson.create!(
+uclucltwo_understanding_teachers_as_role_modelstwo_understanding_teachers_as_role_modelsunderstanding_teachers_as_role_models = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: uclucltwo_understanding_teachers_as_role_modelstwo_understanding_teachers_as_role_models, title: "2: Understanding teachers as role models", previous_lesson: nil,
     content: <<~MultilineString
 ## Session Elements
@@ -375,7 +375,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelstwo_understanding_teachers_as_role_modelsthree_establishing_the_learning_environment = CourseLesson.create!(
+uclucltwo_understanding_teachers_as_role_modelstwo_understanding_teachers_as_role_modelsthree_establishing_the_learning_environment = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: uclucltwo_understanding_teachers_as_role_modelstwo_understanding_teachers_as_role_models, title: "3: Establishing the learning environment", previous_lesson: uclucltwo_understanding_teachers_as_role_modelstwo_understanding_teachers_as_role_modelsunderstanding_teachers_as_role_models,
     content: <<~MultilineString
 ## Session Elements
@@ -638,7 +638,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelstwo_understanding_teachers_as_role_modelsfive_understanding_pupils_as_learners = CourseLesson.create!(
+uclucltwo_understanding_teachers_as_role_modelstwo_understanding_teachers_as_role_modelsfive_understanding_pupils_as_learners = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: uclucltwo_understanding_teachers_as_role_modelstwo_understanding_teachers_as_role_models, title: "5: Understanding pupils as learners", previous_lesson: uclucltwo_understanding_teachers_as_role_modelstwo_understanding_teachers_as_role_modelsthree_establishing_the_learning_environment,
     content: <<~MultilineString
 ## Session Elements
@@ -807,7 +807,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelstwo_understanding_teachers_as_role_modelssix_managing_behaviour = CourseLesson.create!(
+uclucltwo_understanding_teachers_as_role_modelstwo_understanding_teachers_as_role_modelssix_managing_behaviour = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: uclucltwo_understanding_teachers_as_role_modelstwo_understanding_teachers_as_role_models, title: "6: Managing behaviour", previous_lesson: uclucltwo_understanding_teachers_as_role_modelstwo_understanding_teachers_as_role_modelsfive_understanding_pupils_as_learners,
     content: <<~MultilineString
 ## Session Elements
@@ -1003,7 +1003,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelstwo_engaging_pupils_in_learning = CourseModule.create!(
+uclucltwo_understanding_teachers_as_role_modelstwo_engaging_pupils_in_learning = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: uclucltwo_understanding_teachers_as_role_models, title: "2: Engaging pupils in learning", previous_module: uclucltwo_understanding_teachers_as_role_modelstwo_understanding_teachers_as_role_models,
     content: <<~MultilineString
 Module 2 of the ECF addresses Teachers’ Standards 2 and 3: Promote good
@@ -1022,7 +1022,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogy = CourseModule.create!(
+uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogy = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: uclucltwo_understanding_teachers_as_role_models, title: "3: Developing quality pedagogy", previous_module: uclucltwo_understanding_teachers_as_role_modelstwo_engaging_pupils_in_learning,
     content: <<~MultilineString
 Module 3 of the ECF addresses Teachers’ Standard 4: Plan and teach well structured lessons and Standard 5: Adapt teaching.
@@ -1039,7 +1039,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelsfour_making_productive_use_of_assessment = CourseModule.create!(
+uclucltwo_understanding_teachers_as_role_modelsfour_making_productive_use_of_assessment = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: uclucltwo_understanding_teachers_as_role_models, title: "4: Making productive use of assessment", previous_module: uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogy,
     content: <<~MultilineString
 Module 4 of the ECF addresses Teachers’ Standard 6: Make accurate and productive use of assessment.
@@ -1057,7 +1057,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelsfive_fulfilling_professional_responsibilities = CourseModule.create!(
+uclucltwo_understanding_teachers_as_role_modelsfive_fulfilling_professional_responsibilities = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: uclucltwo_understanding_teachers_as_role_models, title: "5: Fulfilling professional responsibilities", previous_module: uclucltwo_understanding_teachers_as_role_modelsfour_making_productive_use_of_assessment,
     content: <<~MultilineString
 Module 5 of the ECF addresses Teachers’ Standard 8: Fulfil wider professional responsibilities.
@@ -1074,7 +1074,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelssix_enabling_pupil_learning = CourseModule.create!(
+uclucltwo_understanding_teachers_as_role_modelssix_enabling_pupil_learning = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: uclucltwo_understanding_teachers_as_role_models, title: "6: Enabling pupil learning", previous_module: uclucltwo_understanding_teachers_as_role_modelsfive_fulfilling_professional_responsibilities,
     content: <<~MultilineString
 Module 6 of the ECF addresses Teachers’ Standards 1 (Set high expectations) & 7 (Manage behaviour effectively). It is a continuation of Module 1 from the first year of this programme.
@@ -1092,7 +1092,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelsseven_engaging_pupils_in_learning = CourseModule.create!(
+uclucltwo_understanding_teachers_as_role_modelsseven_engaging_pupils_in_learning = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: uclucltwo_understanding_teachers_as_role_models, title: "7: Engaging pupils in learning", previous_module: uclucltwo_understanding_teachers_as_role_modelssix_enabling_pupil_learning,
     content: <<~MultilineString
 Module 7 of the ECF is designed around an inquiry into Engaging Pupils in Learning, and addresses Teachers’ Standards 2 (Promote good progress) & 3 (Demonstrate good subject and curriculum knowledge). It is a continuation of Module 2 from the first year of this programme.
@@ -1109,7 +1109,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelseight_developing_quality_pedagogy_and_making_productive_use_of_assessment = CourseModule.create!(
+uclucltwo_understanding_teachers_as_role_modelseight_developing_quality_pedagogy_and_making_productive_use_of_assessment = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: uclucltwo_understanding_teachers_as_role_models, title: "8: Developing quality pedagogy and making productive use of assessment", previous_module: uclucltwo_understanding_teachers_as_role_modelsseven_engaging_pupils_in_learning,
     content: <<~MultilineString
 Module 8 of the ECF is designed around an inquiry into Developing quality pedagogy (Standard 4 and Standard 5) and making productive use of assessment (Standard 6). It is a continuation of Modules 3 and 4 from the first year of this programme.
@@ -1127,7 +1127,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelstwo_engaging_pupils_in_learningtwo_prior_knowledge_memory_and_misconceptions = CourseLesson.create!(
+uclucltwo_understanding_teachers_as_role_modelstwo_engaging_pupils_in_learningtwo_prior_knowledge_memory_and_misconceptions = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: uclucltwo_understanding_teachers_as_role_modelstwo_engaging_pupils_in_learning, title: "2: Prior knowledge, memory and misconceptions", previous_lesson: uclucltwo_understanding_teachers_as_role_modelstwo_understanding_teachers_as_role_modelssix_managing_behaviour,
     content: <<~MultilineString
 ## Session Elements
@@ -1288,7 +1288,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelstwo_engaging_pupils_in_learningthree_literacy_and_learning = CourseLesson.create!(
+uclucltwo_understanding_teachers_as_role_modelstwo_engaging_pupils_in_learningthree_literacy_and_learning = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: uclucltwo_understanding_teachers_as_role_modelstwo_engaging_pupils_in_learning, title: "3: Literacy and learning", previous_lesson: uclucltwo_understanding_teachers_as_role_modelstwo_engaging_pupils_in_learningtwo_prior_knowledge_memory_and_misconceptions,
     content: <<~MultilineString
 ## Session Elements
@@ -1448,7 +1448,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelstwo_engaging_pupils_in_learningfour_consolidation_of_learning = CourseLesson.create!(
+uclucltwo_understanding_teachers_as_role_modelstwo_engaging_pupils_in_learningfour_consolidation_of_learning = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: uclucltwo_understanding_teachers_as_role_modelstwo_engaging_pupils_in_learning, title: "4: Consolidation of learning", previous_lesson: uclucltwo_understanding_teachers_as_role_modelstwo_engaging_pupils_in_learningthree_literacy_and_learning,
     content: <<~MultilineString
 ## Session Elements
@@ -1562,7 +1562,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelstwo_engaging_pupils_in_learningfive_curriculum_and_subject_knowledge = CourseLesson.create!(
+uclucltwo_understanding_teachers_as_role_modelstwo_engaging_pupils_in_learningfive_curriculum_and_subject_knowledge = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: uclucltwo_understanding_teachers_as_role_modelstwo_engaging_pupils_in_learning, title: "5: Curriculum and subject knowledge", previous_lesson: uclucltwo_understanding_teachers_as_role_modelstwo_engaging_pupils_in_learningfour_consolidation_of_learning,
     content: <<~MultilineString
 ## Session Elements
@@ -1797,7 +1797,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogytwo_implementing_effective_modelling = CourseLesson.create!(
+uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogytwo_implementing_effective_modelling = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogy, title: "2: Implementing effective modelling", previous_lesson: uclucltwo_understanding_teachers_as_role_modelstwo_engaging_pupils_in_learningfive_curriculum_and_subject_knowledge,
     content: <<~MultilineString
 ## Session Elements
@@ -1983,7 +1983,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogythree_introducing_new_material_in_steps_using_exposition_and_questioning = CourseLesson.create!(
+uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogythree_introducing_new_material_in_steps_using_exposition_and_questioning = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogy, title: "3: Introducing new material in steps using exposition and questioning", previous_lesson: uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogytwo_implementing_effective_modelling,
     content: <<~MultilineString
 ## Session Elements
@@ -2214,7 +2214,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogyfour_modelling_metacognitive_strategies = CourseLesson.create!(
+uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogyfour_modelling_metacognitive_strategies = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogy, title: "4: Modelling metacognitive strategies", previous_lesson: uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogythree_introducing_new_material_in_steps_using_exposition_and_questioning,
     content: <<~MultilineString
 ## Session Elements
@@ -2390,7 +2390,7 @@ MultilineString
 
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogyfive_developing_high_quality_classroom_talk = CourseLesson.create!(
+uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogyfive_developing_high_quality_classroom_talk = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogy, title: "5: Developing high-quality classroom talk", previous_lesson: uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogyfour_modelling_metacognitive_strategies,
     content: <<~MultilineString
 ## Session Elements
@@ -2602,7 +2602,7 @@ MultilineString
 
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogyeight_using_groupings_to_support_specific_needs = CourseLesson.create!(
+uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogyeight_using_groupings_to_support_specific_needs = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogy, title: "8: Using groupings to support specific needs", previous_lesson: uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogyfive_developing_high_quality_classroom_talk,
     content: <<~MultilineString
 ## Session Elements
@@ -2771,7 +2771,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogynine_building_on_pupils_prior_knowledge_through_formative_assessment = CourseLesson.create!(
+uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogynine_building_on_pupils_prior_knowledge_through_formative_assessment = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogy, title: "9: Building on pupils' prior knowledge through formative assessment", previous_lesson: uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogyeight_using_groupings_to_support_specific_needs,
     content: <<~MultilineString
 ## Session Elements
@@ -2963,7 +2963,7 @@ MultilineString
 
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogyone_zero_making_new_concepts_accessible_through_targeted_support = CourseLesson.create!(
+uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogyone_zero_making_new_concepts_accessible_through_targeted_support = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogy, title: "10: Making new concepts accessible through targeted support", previous_lesson: uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogynine_building_on_pupils_prior_knowledge_through_formative_assessment,
     content: <<~MultilineString
 ## Session Elements
@@ -3108,7 +3108,7 @@ MultilineString
 
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogyone_one_meeting_individual_needs_and_balancing_workload = CourseLesson.create!(
+uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogyone_one_meeting_individual_needs_and_balancing_workload = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogy, title: "11: Meeting individual needs and balancing workload", previous_lesson: uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogyone_zero_making_new_concepts_accessible_through_targeted_support,
     content: <<~MultilineString
 ## Session Elements
@@ -3259,7 +3259,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelsfour_making_productive_use_of_assessmentone_fundamental_principles_of_effective_assessment_one_ = CourseLesson.create!(
+uclucltwo_understanding_teachers_as_role_modelsfour_making_productive_use_of_assessmentone_fundamental_principles_of_effective_assessment_one_ = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: uclucltwo_understanding_teachers_as_role_modelsfour_making_productive_use_of_assessment, title: "1: Fundamental principles of effective assessment (1)", previous_lesson: uclucltwo_understanding_teachers_as_role_modelsthree_developing_quality_pedagogyone_one_meeting_individual_needs_and_balancing_workload,
     content: <<~MultilineString
 ## Session Elements
@@ -3447,7 +3447,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelsfour_making_productive_use_of_assessmentthree_applying_good_assessment_practice_in_the_classroom = CourseLesson.create!(
+uclucltwo_understanding_teachers_as_role_modelsfour_making_productive_use_of_assessmentthree_applying_good_assessment_practice_in_the_classroom = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: uclucltwo_understanding_teachers_as_role_modelsfour_making_productive_use_of_assessment, title: "3: Applying good assessment practice in the classroom", previous_lesson: uclucltwo_understanding_teachers_as_role_modelsfour_making_productive_use_of_assessmentone_fundamental_principles_of_effective_assessment_one_,
     content: <<~MultilineString
 ## Session Elements
@@ -3692,7 +3692,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelsfour_making_productive_use_of_assessmentfour_giving_high_quality_feedback = CourseLesson.create!(
+uclucltwo_understanding_teachers_as_role_modelsfour_making_productive_use_of_assessmentfour_giving_high_quality_feedback = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: uclucltwo_understanding_teachers_as_role_modelsfour_making_productive_use_of_assessment, title: "4: Giving high-quality feedback", previous_lesson: uclucltwo_understanding_teachers_as_role_modelsfour_making_productive_use_of_assessmentthree_applying_good_assessment_practice_in_the_classroom,
     content: <<~MultilineString
 ## Session Elements
@@ -3961,7 +3961,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelsfour_making_productive_use_of_assessmentfive_planning_effective_and_manageable_marking_and_feedback = CourseLesson.create!(
+uclucltwo_understanding_teachers_as_role_modelsfour_making_productive_use_of_assessmentfive_planning_effective_and_manageable_marking_and_feedback = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: uclucltwo_understanding_teachers_as_role_modelsfour_making_productive_use_of_assessment, title: "5: Planning effective and manageable marking and feedback", previous_lesson: uclucltwo_understanding_teachers_as_role_modelsfour_making_productive_use_of_assessmentfour_giving_high_quality_feedback,
     content: <<~MultilineString
 ## Session Elements
@@ -4146,7 +4146,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelsfive_fulfilling_professional_responsibilitiessix_revisiting_professional_development = CourseLesson.create!(
+uclucltwo_understanding_teachers_as_role_modelsfive_fulfilling_professional_responsibilitiessix_revisiting_professional_development = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: uclucltwo_understanding_teachers_as_role_modelsfive_fulfilling_professional_responsibilities, title: "6: Revisiting professional development", previous_lesson: uclucltwo_understanding_teachers_as_role_modelsfour_making_productive_use_of_assessmentfive_planning_effective_and_manageable_marking_and_feedback,
     content: <<~MultilineString
 ## Session Elements
@@ -4286,7 +4286,7 @@ MultilineString
 # ==================================================
 # UNPROCESSABLE: uclsample_page_trashed
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelssix_enabling_pupil_learningthree_what_is_evidence_telling_us_about_the_effects_upon_their_pupils_of_how_the_ect_sets_high_expectations_and_manages_behaviour_effectively = CourseLesson.create!(
+uclucltwo_understanding_teachers_as_role_modelssix_enabling_pupil_learningthree_what_is_evidence_telling_us_about_the_effects_upon_their_pupils_of_how_the_ect_sets_high_expectations_and_manages_behaviour_effectively = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: uclucltwo_understanding_teachers_as_role_modelssix_enabling_pupil_learning, title: "3: What is evidence telling us about the effects upon their pupils of how the ECT sets high expectations and manages behaviour effectively?", previous_lesson: uclucltwo_understanding_teachers_as_role_modelsfive_fulfilling_professional_responsibilitiessix_revisiting_professional_development,
     content: <<~MultilineString
 ## Session Elements
@@ -4564,7 +4564,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelsseven_engaging_pupils_in_learningthree_in_their_focus_area_what_impact_is_the_ect_having_on_their_pupils = CourseLesson.create!(
+uclucltwo_understanding_teachers_as_role_modelsseven_engaging_pupils_in_learningthree_in_their_focus_area_what_impact_is_the_ect_having_on_their_pupils = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: uclucltwo_understanding_teachers_as_role_modelsseven_engaging_pupils_in_learning, title: "3: In their focus area, what impact is the ECT having on their pupils?", previous_lesson: uclucltwo_understanding_teachers_as_role_modelssix_enabling_pupil_learningthree_what_is_evidence_telling_us_about_the_effects_upon_their_pupils_of_how_the_ect_sets_high_expectations_and_manages_behaviour_effectively,
     content: <<~MultilineString
 ## Session Elements
@@ -4831,7 +4831,7 @@ In that meeting, you will discuss with your mentor any alteration to your practi
 MultilineString
 )
 
-uclucltwo_understanding_teachers_as_role_modelseight_developing_quality_pedagogy_and_making_productive_use_of_assessmenteight_developing_quality_pedagogy_and_making_productive_use_of_assessment_two_ = CourseLesson.create!(
+uclucltwo_understanding_teachers_as_role_modelseight_developing_quality_pedagogy_and_making_productive_use_of_assessmenteight_developing_quality_pedagogy_and_making_productive_use_of_assessment_two_ = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: uclucltwo_understanding_teachers_as_role_modelseight_developing_quality_pedagogy_and_making_productive_use_of_assessment, title: "2: What is evidence telling us about the effects upon their pupils of the ECT’s practice in relation to Standards 4, 5 and 6?", previous_lesson: uclucltwo_understanding_teachers_as_role_modelsseven_engaging_pupils_in_learningthree_in_their_focus_area_what_impact_is_the_ect_having_on_their_pupils,
     content: <<~MultilineString
 ## Session Elements
@@ -5297,7 +5297,7 @@ MultilineString
 
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelseight_developing_quality_pedagogy_and_making_productive_use_of_assessmenteight_what_is_evidence_telling_us_about_the_effects_upon_their_pupils_of_the_ects_practice_in_relation_to_standards_four_five_and_six_ = CourseLesson.create!(
+uclucltwo_understanding_teachers_as_role_modelseight_developing_quality_pedagogy_and_making_productive_use_of_assessmenteight_what_is_evidence_telling_us_about_the_effects_upon_their_pupils_of_the_ects_practice_in_relation_to_standards_four_five_and_six_ = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: uclucltwo_understanding_teachers_as_role_modelseight_developing_quality_pedagogy_and_making_productive_use_of_assessment, title: "8: What is evidence telling us about the effects upon their pupils of the ECT’s practice in relation to Standards 4, 5 and 6?", previous_lesson: uclucltwo_understanding_teachers_as_role_modelseight_developing_quality_pedagogy_and_making_productive_use_of_assessmenteight_developing_quality_pedagogy_and_making_productive_use_of_assessment_two_,
     content: <<~MultilineString
 ## Session Elements
@@ -5760,7 +5760,7 @@ MultilineString
 )
 
 # ==================================================
-uclucltwo_understanding_teachers_as_role_modelseight_developing_quality_pedagogy_and_making_productive_use_of_assessmentone_three_the_impacts_upon_the_ect_of_their_inquiry = CourseLesson.create!(
+uclucltwo_understanding_teachers_as_role_modelseight_developing_quality_pedagogy_and_making_productive_use_of_assessmentone_three_the_impacts_upon_the_ect_of_their_inquiry = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: uclucltwo_understanding_teachers_as_role_modelseight_developing_quality_pedagogy_and_making_productive_use_of_assessment, title: "13: The impacts upon the ECT of their inquiry", previous_lesson: uclucltwo_understanding_teachers_as_role_modelseight_developing_quality_pedagogy_and_making_productive_use_of_assessmenteight_what_is_evidence_telling_us_about_the_effects_upon_their_pupils_of_the_ects_practice_in_relation_to_standards_four_five_and_six_,
     content: <<~MultilineString
 ## Session Elements
@@ -6274,7 +6274,7 @@ MultilineString
 # ==================================================
 
 # ==================================================
-ucluclmentor_materials = CourseModule.create!(
+ucluclmentor_materials = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: uclucltwo_understanding_teachers_as_role_models, title: "Mentor materials", previous_module: nil,
     content: <<~MultilineString
 Use the links below to download PDFs for mentor content. Where topics are not listed below see the Module Summaries listed under ECF Leads on the [UCL Early Career Teacher Consortium homepage](http://www.early-career-framework.education.gov.uk/ucl/).
@@ -6285,7 +6285,7 @@ MultilineString
 # ==================================================
 # UNPROCESSABLE: ucluclmentor_materials_two_trashed
 # ==================================================
-uclucltraining_materials = CourseModule.create!(
+uclucltraining_materials = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: uclucltwo_understanding_teachers_as_role_models, title: "Training materials", previous_module: nil,
     content: <<~MultilineString
 Use the links below to download PDFs for training content.

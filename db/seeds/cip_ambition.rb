@@ -1,4 +1,4 @@
-ambition = CourseYear.create!(
+ambition = CourseYear.find_or_create_by!(
     version: CURRENT_CIP_VERSION, lead_provider: LeadProvider.first, is_year_one: true, title: "Ambition Institute",
     content: <<~MultilineString
 Welcome to Ambition Institute’s Early Career Teachers programme. This programme has been designed to help teachers early in their career to keep getting better in the most accessible way possible.
@@ -275,7 +275,7 @@ MultilineString
 # ==================================================
 # UNPROCESSABLE:
 # ==================================================
-one_behaviour = CourseModule.create!(
+one_behaviour = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: ambition, title: "1. Behaviour", previous_module: nil,
     content: <<~MultilineString
 Welcome to the Behaviour strand of the programme. This strand is composed of 12 modules and has been designed to last roughly a term. It is best completed during your first term as an NQT – typically the autumn term.
@@ -292,7 +292,7 @@ MultilineString
 )
 
 # ==================================================
-two_instruction = CourseModule.create!(
+two_instruction = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: ambition, title: "2. Instruction", previous_module: one_behaviour,
     content: <<~MultilineString
 Welcome to the Instruction strand of the programme. This strand is composed of 12 modules and has been designed to last roughly a term. It is best completed during your second term as an NQT – typically the spring term.
@@ -310,7 +310,7 @@ MultilineString
 )
 
 # ==================================================
-three_subject = CourseModule.create!(
+three_subject = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: ambition, title: "3. Subject", previous_module: two_instruction,
     content: <<~MultilineString
 Welcome to the Subject strand of the programme. This strand invites you to consider their planning and assessment through the lens of the subject or phase that you work in. It explores evidence and practice in curriculum and assessment in ways that will be of benefit now but will also be useful as you progress through your career.
@@ -328,7 +328,7 @@ MultilineString
 )
 
 # ==================================================
-one_behaviourone_strand_fundamentals_and_contracting = CourseLesson.create!(
+one_behaviourone_strand_fundamentals_and_contracting = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: one_behaviour, title: "1. Strand overview and contracting", previous_lesson: nil,
     content: <<~MultilineString
 $YoutubeVideo(https://www.youtube.com/watch?v=EpjSlCJtPLo&list=PL4IuMlmijgAfTwwEiZmMp28Eaf66S3a1R&index=2&t=0s)$EndYoutubeVideo
@@ -658,7 +658,7 @@ MultilineString
 )
 
 # ==================================================
-one_behaviourtwo_routines = CourseLesson.create!(
+one_behaviourtwo_routines = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: one_behaviour, title: "2. Routines", previous_lesson: one_behaviourone_strand_fundamentals_and_contracting,
     content: <<~MultilineString
 $YoutubeVideo(https://youtu.be/lWdabi1Km2U?list=PL4IuMlmijgAfTwwEiZmMp28Eaf66S3a1R)$EndYoutubeVideo
@@ -932,7 +932,7 @@ MultilineString
 )
 
 # ==================================================
-one_behaviourthree_instructions = CourseLesson.create!(
+one_behaviourthree_instructions = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: one_behaviour, title: "3. Instructions", previous_lesson: one_behaviourtwo_routines,
     content: <<~MultilineString
 $YoutubeVideo(https://youtu.be/6SM-4WmXhSc?list=PL4IuMlmijgAfTwwEiZmMp28Eaf66S3a1R)$EndYoutubeVideo
@@ -1178,7 +1178,7 @@ MultilineString
 )
 
 # ==================================================
-one_behaviourfour_directing_attention = CourseLesson.create!(
+one_behaviourfour_directing_attention = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: one_behaviour, title: "4. Directing attention", previous_lesson: one_behaviourthree_instructions,
     content: <<~MultilineString
 The final version of this video will be available from spring 2021, as the publication of this programme was fast-tracked in response to disruptions to this year’s initial teacher training.
@@ -1436,7 +1436,7 @@ MultilineString
 )
 
 # ==================================================
-one_behaviourfive_low_level_disruption = CourseLesson.create!(
+one_behaviourfive_low_level_disruption = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: one_behaviour, title: "5. Low-level disruption", previous_lesson: one_behaviourfour_directing_attention,
     content: <<~MultilineString
 $YoutubeVideo(https://youtu.be/gebOYHdS8ZI?list=PL4IuMlmijgAfTwwEiZmMp28Eaf66S3a1R)$EndYoutubeVideo
@@ -1713,7 +1713,7 @@ MultilineString
 )
 
 # ==================================================
-one_behavioursix_consistency = CourseLesson.create!(
+one_behavioursix_consistency = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: one_behaviour, title: "6. Consistency", previous_lesson: one_behaviourfive_low_level_disruption,
     content: <<~MultilineString
 $YoutubeVideo(https://youtu.be/VXmlZYepobM?list=PL4IuMlmijgAfTwwEiZmMp28Eaf66S3a1R)$EndYoutubeVideo
@@ -2013,7 +2013,7 @@ MultilineString
 )
 
 # ==================================================
-one_behaviourseven_positive_learning_environment = CourseLesson.create!(
+one_behaviourseven_positive_learning_environment = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: one_behaviour, title: "7. Positive learning environment", previous_lesson: one_behavioursix_consistency,
     content: <<~MultilineString
 $YoutubeVideo(https://youtu.be/clQadkPPyy0)$EndYoutubeVideo
@@ -2376,7 +2376,7 @@ MultilineString
 )
 
 # ==================================================
-one_behavioureight_structured_support_of_learning = CourseLesson.create!(
+one_behavioureight_structured_support_of_learning = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: one_behaviour, title: "8. Structured support of learning", previous_lesson: one_behaviourseven_positive_learning_environment,
     content: <<~MultilineString
 $YoutubeVideo(https://youtu.be/wwwLmWUSmz8)$EndYoutubeVideo
@@ -2689,7 +2689,7 @@ MultilineString
 )
 
 # ==================================================
-one_behaviournine_challenge = CourseLesson.create!(
+one_behaviournine_challenge = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: one_behaviour, title: "9. Challenge", previous_lesson: one_behavioureight_structured_support_of_learning,
     content: <<~MultilineString
 $YoutubeVideo(https://youtu.be/dIATol2i5yY)$EndYoutubeVideo
@@ -3043,7 +3043,7 @@ MultilineString
 )
 
 # ==================================================
-one_behaviourone_zero_independent_practice = CourseLesson.create!(
+one_behaviourone_zero_independent_practice = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: one_behaviour, title: "10. Independent practice", previous_lesson: one_behaviournine_challenge,
     content: <<~MultilineString
 $YoutubeVideo(https://youtu.be/akOyC9epHEY)$EndYoutubeVideo
@@ -3458,7 +3458,7 @@ MultilineString
 )
 
 # ==================================================
-one_behaviourone_one_pairs_and_groups = CourseLesson.create!(
+one_behaviourone_one_pairs_and_groups = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: one_behaviour, title: "11. Pairs and groups", previous_lesson: one_behaviourone_zero_independent_practice,
     content: <<~MultilineString
 $YoutubeVideo(https://youtu.be/n94O-Si3ljU)$EndYoutubeVideo
@@ -3946,7 +3946,7 @@ MultilineString
 )
 
 # ==================================================
-one_behaviourone_two_upholding_high_expectations = CourseLesson.create!(
+one_behaviourone_two_upholding_high_expectations = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: one_behaviour, title: "12. Upholding high expectations", previous_lesson: one_behaviourone_one_pairs_and_groups,
     content: <<~MultilineString
 $YoutubeVideo(https://youtu.be/jYQvRpkKEeY)$EndYoutubeVideo
@@ -4271,7 +4271,7 @@ MultilineString
 )
 
 # ==================================================
-two_instructionone_strand_fundamentals_and_re_contracting = CourseLesson.create!(
+two_instructionone_strand_fundamentals_and_re_contracting = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: two_instruction, title: "1. Strand fundamentals and (re)contracting", previous_lesson: one_behaviourone_two_upholding_high_expectations,
     content: <<~MultilineString
 The final version of this video will be available from spring 2021, as the publication of this programme was fast-tracked in response to disruptions to this year’s initial teacher training.
@@ -4637,7 +4637,7 @@ MultilineString
 )
 
 # ==================================================
-two_instructiontwo_identifying_learning_content = CourseLesson.create!(
+two_instructiontwo_identifying_learning_content = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: two_instruction, title: "2. Identifying learning content", previous_lesson: two_instructionone_strand_fundamentals_and_re_contracting,
     content: <<~MultilineString
 The final version of this video will be available from spring 2021, as the publication of this programme was fast-tracked in response to disruptions to this year’s initial teacher training.
@@ -4976,7 +4976,7 @@ MultilineString
 )
 
 # ==================================================
-two_instructionthree_instruction_for_memory = CourseLesson.create!(
+two_instructionthree_instruction_for_memory = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: two_instruction, title: "3. Instruction for memory", previous_lesson: two_instructiontwo_identifying_learning_content,
     content: <<~MultilineString
 The final version of this video will be available from spring 2021, as the publication of this programme was fast-tracked in response to disruptions to this year’s initial teacher training.
@@ -5307,7 +5307,7 @@ MultilineString
 )
 
 # ==================================================
-two_instructionfour_prior_knowledge = CourseLesson.create!(
+two_instructionfour_prior_knowledge = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: two_instruction, title: "4. Prior knowledge", previous_lesson: two_instructionthree_instruction_for_memory,
     content: <<~MultilineString
 The final version of this video will be available from spring 2021, as the publication of this programme was fast-tracked in response to disruptions to this year’s initial teacher training.
@@ -5575,7 +5575,7 @@ MultilineString
 )
 
 # ==================================================
-two_instructionfive_teacher_exposition = CourseLesson.create!(
+two_instructionfive_teacher_exposition = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: two_instruction, title: "5. Teacher exposition", previous_lesson: two_instructionfour_prior_knowledge,
     content: <<~MultilineString
 The final version of this video will be available from spring 2021, as the publication of this programme was fast-tracked in response to disruptions to this year’s initial teacher training.
@@ -5902,7 +5902,7 @@ MultilineString
 )
 
 # ==================================================
-two_instructionsix_adapting_teaching = CourseLesson.create!(
+two_instructionsix_adapting_teaching = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: two_instruction, title: "6. Adapting teaching", previous_lesson: two_instructionfive_teacher_exposition,
     content: <<~MultilineString
 The final version of this video will be available from spring 2021, as the publication of this programme was fast-tracked in response to disruptions to this year’s initial teacher training.
@@ -6276,7 +6276,7 @@ MultilineString
 )
 
 # ==================================================
-two_instructionseven_practice_challenge_and_success = CourseLesson.create!(
+two_instructionseven_practice_challenge_and_success = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: two_instruction, title: "7. Practice, challenge and success", previous_lesson: two_instructionsix_adapting_teaching,
     content: <<~MultilineString
 The final version of this video will be available from spring 2021, as the publication of this programme was fast-tracked in response to disruptions to this year’s initial teacher training.
@@ -6578,7 +6578,7 @@ MultilineString
 )
 
 # ==================================================
-two_instructioneight_explicit_learning = CourseLesson.create!(
+two_instructioneight_explicit_learning = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: two_instruction, title: "8. Explicit learning", previous_lesson: two_instructionseven_practice_challenge_and_success,
     content: <<~MultilineString
 The final version of this video will be available from spring 2021, as the publication of this programme was fast-tracked in response to disruptions to this year’s initial teacher training.
@@ -6915,7 +6915,7 @@ MultilineString
 )
 
 # ==================================================
-two_instructionnine_scaffolding = CourseLesson.create!(
+two_instructionnine_scaffolding = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: two_instruction, title: "9. Scaffolding", previous_lesson: two_instructioneight_explicit_learning,
     content: <<~MultilineString
 The final version of this video will be available from spring 2021, as the publication of this programme was fast-tracked in response to disruptions to this year’s initial teacher training.
@@ -7235,7 +7235,7 @@ MultilineString
 )
 
 # ==================================================
-two_instructionone_zero_questioning = CourseLesson.create!(
+two_instructionone_zero_questioning = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: two_instruction, title: "10. Questioning", previous_lesson: two_instructionnine_scaffolding,
     content: <<~MultilineString
 The final version of this video will be available from spring 2021, as the publication of this programme was fast-tracked in response to disruptions to this year’s initial teacher training.
@@ -7560,7 +7560,7 @@ MultilineString
 )
 
 # ==================================================
-two_instructionone_one_classroom_talk = CourseLesson.create!(
+two_instructionone_one_classroom_talk = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: two_instruction, title: "11. Classroom talk", previous_lesson: two_instructionone_zero_questioning,
     content: <<~MultilineString
 The final version of this video will be available from spring 2021, as the publication of this programme was fast-tracked in response to disruptions to this year’s initial teacher training.
@@ -7874,7 +7874,7 @@ MultilineString
 )
 
 # ==================================================
-two_instructionfeedback = CourseLesson.create!(
+two_instructionfeedback = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: two_instruction, title: "12. Feedback", previous_lesson: two_instructionone_one_classroom_talk,
     content: <<~MultilineString
 The final version of this video will be available from spring 2021, as the publication of this programme was fast-tracked in response to disruptions to this year’s initial teacher training.
@@ -8167,7 +8167,7 @@ MultilineString
 )
 
 # ==================================================
-three_subjectone_strand_fundamentals_and_re_contracting = CourseLesson.create!(
+three_subjectone_strand_fundamentals_and_re_contracting = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: three_subject, title: "1. Strand fundamentals and re-contracting", previous_lesson: two_instructionfeedback,
     content: <<~MultilineString
 The final version of this video will be available from spring 2021, as the publication of this programme was fast-tracked in response to disruptions to this year’s initial teacher training.
@@ -8431,7 +8431,7 @@ MultilineString
 )
 
 # ==================================================
-three_subjecttwo_planning_backwards_from_learning_goals = CourseLesson.create!(
+three_subjecttwo_planning_backwards_from_learning_goals = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: three_subject, title: "2. Planning backwards from learning goals", previous_lesson: three_subjectone_strand_fundamentals_and_re_contracting,
     content: <<~MultilineString
 The final version of this video will be available from spring 2021, as the publication of this programme was fast-tracked in response to disruptions to this year’s initial teacher training.
@@ -8853,7 +8853,7 @@ MultilineString
 )
 
 # ==================================================
-three_subjectthree_types_of_knowledge = CourseLesson.create!(
+three_subjectthree_types_of_knowledge = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: three_subject, title: "3. Types of knowledge", previous_lesson: three_subjecttwo_planning_backwards_from_learning_goals,
     content: <<~MultilineString
 The final version of this video will be available from spring 2021, as the publication of this programme was fast-tracked in response to disruptions to this year’s initial teacher training.
@@ -9256,7 +9256,7 @@ MultilineString
 )
 
 # ==================================================
-three_subjectfour_gaps_and_misconceptions = CourseLesson.create!(
+three_subjectfour_gaps_and_misconceptions = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: three_subject, title: "4. Gaps and misconceptions", previous_lesson: three_subjectthree_types_of_knowledge,
     content: <<~MultilineString
 The final version of this video will be available from spring 2021, as the publication of this programme was fast-tracked in response to disruptions to this year’s initial teacher training.
@@ -9499,7 +9499,7 @@ MultilineString
 )
 
 # ==================================================
-three_subjectfive_acquisition_before_application = CourseLesson.create!(
+three_subjectfive_acquisition_before_application = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: three_subject, title: "5. Acquisition before application", previous_lesson: three_subjectfour_gaps_and_misconceptions,
     content: <<~MultilineString
 The final version of this video will be available from spring 2021, as the publication of this programme was fast-tracked in response to disruptions to this year’s initial teacher training.
@@ -9828,7 +9828,7 @@ MultilineString
 )
 
 # ==================================================
-three_subjectsix_promoting_deep_learning = CourseLesson.create!(
+three_subjectsix_promoting_deep_learning = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: three_subject, title: "6. Promoting deep learning", previous_lesson: three_subjectfive_acquisition_before_application,
     content: <<~MultilineString
 The final version of this video will be available from spring 2021, as the publication of this programme was fast-tracked in response to disruptions to this year’s initial teacher training.
@@ -10084,7 +10084,7 @@ MultilineString
 )
 
 # ==================================================
-three_subjectseven_developing_pupils_literacy = CourseLesson.create!(
+three_subjectseven_developing_pupils_literacy = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: three_subject, title: "7. Developing pupils' literacy", previous_lesson: three_subjectsix_promoting_deep_learning,
     content: <<~MultilineString
 The final version of this video will be available from spring 2021, as the publication of this programme was fast-tracked in response to disruptions to this year’s initial teacher training.
@@ -10358,7 +10358,7 @@ MultilineString
 )
 
 # ==================================================
-three_subjecteight_sharing_academic_expectations = CourseLesson.create!(
+three_subjecteight_sharing_academic_expectations = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: three_subject, title: "8. Sharing academic expectations", previous_lesson: three_subjectseven_developing_pupils_literacy,
     content: <<~MultilineString
 The final version of this video will be available from spring 2021, as the publication of this programme was fast-tracked in response to disruptions to this year’s initial teacher training.
@@ -10591,7 +10591,7 @@ MultilineString
 )
 
 # ==================================================
-three_subjectnine_assessing_for_formative_purposes = CourseLesson.create!(
+three_subjectnine_assessing_for_formative_purposes = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: three_subject, title: "9. Assessing for formative purposes", previous_lesson: three_subjecteight_sharing_academic_expectations,
     content: <<~MultilineString
 The final version of this video will be available from spring 2021, as the publication of this programme was fast-tracked in response to disruptions to this year’s initial teacher training.
@@ -10876,7 +10876,7 @@ MultilineString
 )
 
 # ==================================================
-three_subjectone_zero_examining_pupils_responses = CourseLesson.create!(
+three_subjectone_zero_examining_pupils_responses = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: three_subject, title: "10. Examining pupils' responses", previous_lesson: three_subjectnine_assessing_for_formative_purposes,
     content: <<~MultilineString
 The final version of this video will be available from spring 2021, as the publication of this programme was fast-tracked in response to disruptions to this year’s initial teacher training.
@@ -11109,7 +11109,7 @@ MultilineString
 )
 
 # ==================================================
-three_subjectone_one_adapting_lessons_to_meet_pupils_needs = CourseLesson.create!(
+three_subjectone_one_adapting_lessons_to_meet_pupils_needs = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: three_subject, title: "11. Adapting lessons to meet pupils needs", previous_lesson: three_subjectone_zero_examining_pupils_responses,
     content: <<~MultilineString
 The final version of this video will be available from spring 2021, as the publication of this programme was fast-tracked in response to disruptions to this year’s initial teacher training.
@@ -11406,7 +11406,7 @@ MultilineString
 )
 
 # ==================================================
-three_subjectfeedback = CourseLesson.create!(
+three_subjectfeedback = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: three_subject, title: "12. Feedback", previous_lesson: three_subjectone_one_adapting_lessons_to_meet_pupils_needs,
     content: <<~MultilineString
 The final version of this video will be available from spring 2021, as the publication of this programme was fast-tracked in response to disruptions to this year’s initial teacher training.
@@ -11678,7 +11678,7 @@ MultilineString
 )
 
 # ==================================================
-ambitionambition_instituteintroduction = CourseModule.create!(
+ambitionambition_instituteintroduction = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: ambition, title: "Introduction to the Early Career Teacher self-directed study materials", previous_module: nil,
     content: <<~MultilineString
 This page describes the structure of the programme and explains how you can make the most of your study.

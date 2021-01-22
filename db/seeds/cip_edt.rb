@@ -1,6 +1,6 @@
 # UNPROCESSABLE: edt
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materials = CourseYear.create!(
+edtedt_early_career_frameworkself_directed_study_materials = CourseYear.find_or_create_by!(
     version: CURRENT_CIP_VERSION, lead_provider: LeadProvider.first, is_year_one: true, title: "Self-directed study materials",
     content: <<~MultilineString
 ## Welcome
@@ -352,7 +352,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learning = CourseModule.create!(
+edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learning = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: edtedt_early_career_frameworkself_directed_study_materials, title: "1: Establishing a positive climate for learning", previous_module: nil,
     content: <<~MultilineString
 ## Time commitment
@@ -385,7 +385,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognition = CourseModule.create!(
+edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognition = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: edtedt_early_career_frameworkself_directed_study_materials, title: "2: How pupils learn ‒ memory and cognition", previous_module: edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learning,
     content: <<~MultilineString
 ## Time commitment
@@ -416,7 +416,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learningone_one_what_you_will_learn_and_video_introduction_to_the_block = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learningone_one_what_you_will_learn_and_video_introduction_to_the_block = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learning, title: "1.1: What you will learn, and video introduction to the Block", previous_lesson: nil,
     content: <<~MultilineString
 ## 1.1a: What you will learn
@@ -576,7 +576,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learningone_two_understanding_the_evidence_the_importance_of_expectations_routines_and_relationships = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learningone_two_understanding_the_evidence_the_importance_of_expectations_routines_and_relationships = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learning, title: "1.2: Understanding the evidence: The importance of expectations, routines and relationships", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learningone_one_what_you_will_learn_and_video_introduction_to_the_block,
     content: <<~MultilineString
 ## 1.2a
@@ -1190,7 +1190,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learningone_three_learning_about_classroom_routines = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learningone_three_learning_about_classroom_routines = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learning, title: "1.3: Learning about… classroom routines", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learningone_two_understanding_the_evidence_the_importance_of_expectations_routines_and_relationships,
     content: <<~MultilineString
 ## Time allocation
@@ -1627,7 +1627,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learningone_four_learning_about_maintaining_consistently_high_behavioural_expectations = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learningone_four_learning_about_maintaining_consistently_high_behavioural_expectations = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learning, title: "1.4: Learning about… Maintaining consistently high behavioural expectations", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learningone_three_learning_about_classroom_routines,
     content: <<~MultilineString
 ## Time allocation
@@ -1934,7 +1934,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learningone_five_developing_your_teaching_your_role_in_establishing_positive_behaviour = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learningone_five_developing_your_teaching_your_role_in_establishing_positive_behaviour = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learning, title: "1.5: Developing your teaching – your role in establishing positive behaviour", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learningone_four_learning_about_maintaining_consistently_high_behavioural_expectations,
     content: <<~MultilineString
 ## Time allocation
@@ -2212,7 +2212,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learningone_six_observations = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learningone_six_observations = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learning, title: "1.6: Observations", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learningone_five_developing_your_teaching_your_role_in_establishing_positive_behaviour,
     content: <<~MultilineString
 ## Time allocation
@@ -2311,7 +2311,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learningone_seven_reflecting_on_learning = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learningone_seven_reflecting_on_learning = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learning, title: "1.7: Reflecting on learning", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learningone_six_observations,
     content: <<~MultilineString
 ## Time allocation
@@ -2336,7 +2336,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adapting = CourseModule.create!(
+edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adapting = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: edtedt_early_career_frameworkself_directed_study_materials, title: "3: Developing effective classroom practice ‒ teaching and adapting", previous_module: edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognition,
     content: <<~MultilineString
 ## Time commitment
@@ -2367,7 +2367,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledge = CourseModule.create!(
+edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledge = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: edtedt_early_career_frameworkself_directed_study_materials, title: "4: The importance of subject and curriculum knowledge", previous_module: edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adapting,
     content: <<~MultilineString
 ## Time commitment
@@ -2410,7 +2410,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioning = CourseModule.create!(
+edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioning = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: edtedt_early_career_frameworkself_directed_study_materials, title: "5: Assessment, feedback and questioning", previous_module: edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledge,
     content: <<~MultilineString
 ## Time commitment
@@ -2443,7 +2443,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialssix_a_people_profession = CourseModule.create!(
+edtedt_early_career_frameworkself_directed_study_materialssix_a_people_profession = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: edtedt_early_career_frameworkself_directed_study_materials, title: "6: A people profession", previous_module: edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioning,
     content: <<~MultilineString
 ## Time commitment
@@ -2482,7 +2482,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsseven_embedding_a_positive_climate_for_learning = CourseModule.create!(
+edtedt_early_career_frameworkself_directed_study_materialsseven_embedding_a_positive_climate_for_learning = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: edtedt_early_career_frameworkself_directed_study_materials, title: "7: Embedding a positive climate for learning", previous_module: edtedt_early_career_frameworkself_directed_study_materialssix_a_people_profession,
     content: <<~MultilineString
 ## Time commitment
@@ -2519,7 +2519,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialseight_how_pupils_learn_making_it_stick = CourseModule.create!(
+edtedt_early_career_frameworkself_directed_study_materialseight_how_pupils_learn_making_it_stick = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: edtedt_early_career_frameworkself_directed_study_materials, title: "8: How pupils learn – making it stick", previous_module: edtedt_early_career_frameworkself_directed_study_materialsseven_embedding_a_positive_climate_for_learning,
     content: <<~MultilineString
 ## Time commitment
@@ -2550,7 +2550,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsnine_enhancing_classroom_practice_etwo_eight_zero_nine_two_grouping_and_tailoring = CourseModule.create!(
+edtedt_early_career_frameworkself_directed_study_materialsnine_enhancing_classroom_practice_etwo_eight_zero_nine_two_grouping_and_tailoring = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: edtedt_early_career_frameworkself_directed_study_materials, title: "9: Enhancing classroom practice ‒ grouping and tailoring", previous_module: edtedt_early_career_frameworkself_directed_study_materialseight_how_pupils_learn_making_it_stick,
     content: <<~MultilineString
 ## Time commitment
@@ -2579,7 +2579,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsone_zero_revisiting_the_importance_of_subject_and_curriculum_knowledge = CourseModule.create!(
+edtedt_early_career_frameworkself_directed_study_materialsone_zero_revisiting_the_importance_of_subject_and_curriculum_knowledge = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: edtedt_early_career_frameworkself_directed_study_materials, title: "10: Revisiting the importance of subject and curriculum knowledge", previous_module: edtedt_early_career_frameworkself_directed_study_materialsnine_enhancing_classroom_practice_etwo_eight_zero_nine_two_grouping_and_tailoring,
     content: <<~MultilineString
 ## Time commitment
@@ -2621,7 +2621,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsone_one_deepening_assessment_feedback_and_questioning = CourseModule.create!(
+edtedt_early_career_frameworkself_directed_study_materialsone_one_deepening_assessment_feedback_and_questioning = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: edtedt_early_career_frameworkself_directed_study_materials, title: "11: Deepening assessment, feedback and questioning", previous_module: edtedt_early_career_frameworkself_directed_study_materialsone_zero_revisiting_the_importance_of_subject_and_curriculum_knowledge,
     content: <<~MultilineString
 ## Time commitment
@@ -2650,7 +2650,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognitiontwo_one_what_you_will_learn_and_video_introduction_to_the_block = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognitiontwo_one_what_you_will_learn_and_video_introduction_to_the_block = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognition, title: "2.1: What you will learn, and video introduction to the Block", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsestablishing_a_positive_climate_for_learningone_seven_reflecting_on_learning,
     content: <<~MultilineString
 ## 2.1a: What you will learn
@@ -2892,7 +2892,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognitiontwo_two_understanding_the_evidence = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognitiontwo_two_understanding_the_evidence = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognition, title: "2.2: Understanding the evidence", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognitiontwo_one_what_you_will_learn_and_video_introduction_to_the_block,
     content: <<~MultilineString
 ## Time allocation
@@ -3384,7 +3384,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognitiontwo_three_learning_about_prior_knowledge_misconceptions_and_worked_examples = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognitiontwo_three_learning_about_prior_knowledge_misconceptions_and_worked_examples = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognition, title: "2.3: Learning about... prior knowledge, misconceptions and worked examples", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognitiontwo_two_understanding_the_evidence,
     content: <<~MultilineString
 ## Time allocation
@@ -3571,7 +3571,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognitiontwo_four_developing_your_teaching = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognitiontwo_four_developing_your_teaching = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognition, title: "2.4: Developing your teaching", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognitiontwo_three_learning_about_prior_knowledge_misconceptions_and_worked_examples,
     content: <<~MultilineString
 ## Time allocation
@@ -3714,7 +3714,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognitiontwo_five_improving_your_teaching_lesson_observations = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognitiontwo_five_improving_your_teaching_lesson_observations = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognition, title: "2.5: Improving your teaching – lesson observations", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognitiontwo_four_developing_your_teaching,
     content: <<~MultilineString
 ## Time allocation
@@ -3820,7 +3820,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognitiontwo_six_reflecting_on_learning = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognitiontwo_six_reflecting_on_learning = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognition, title: "2.6: Reflecting on learning", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognitiontwo_five_improving_your_teaching_lesson_observations,
     content: <<~MultilineString
 ## Time allocation
@@ -3845,7 +3845,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adaptingthree_one_what_you_will_learn_and_video_introduction_to_the_block = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adaptingthree_one_what_you_will_learn_and_video_introduction_to_the_block = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adapting, title: "3.1: What you will learn, and video introduction to the Block", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialshow_pupils_learn_etwo_eight_zero_nine_two_memory_and_cognitiontwo_six_reflecting_on_learning,
     content: <<~MultilineString
 ## 3.1a: What you will learn
@@ -3971,7 +3971,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adaptingthree_two_understanding_the_evidence_one_effective_teaching = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adaptingthree_two_understanding_the_evidence_one_effective_teaching = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adapting, title: "3.2: Understanding the evidence 1: effective teaching", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adaptingthree_one_what_you_will_learn_and_video_introduction_to_the_block,
     content: <<~MultilineString
 ## Time allocation
@@ -4694,7 +4694,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adaptingthree_three_understanding_the_evidence_two_metacognition_and_teaching = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adaptingthree_three_understanding_the_evidence_two_metacognition_and_teaching = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adapting, title: "3.3: Understanding the evidence 2: metacognition and teaching", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adaptingthree_two_understanding_the_evidence_one_effective_teaching,
     content: <<~MultilineString
 ## Time allocation
@@ -4828,7 +4828,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adaptingthree_four_learning_about_adaptive_teaching = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adaptingthree_four_learning_about_adaptive_teaching = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adapting, title: "3.4: Learning about adaptive teaching", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adaptingthree_three_understanding_the_evidence_two_metacognition_and_teaching,
     content: <<~MultilineString
 ## Time allocation
@@ -5025,7 +5025,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adaptingthree_five_developing_your_teaching = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adaptingthree_five_developing_your_teaching = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adapting, title: "3.5: Developing your teaching", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adaptingthree_four_learning_about_adaptive_teaching,
     content: <<~MultilineString
 ## Time allocation
@@ -5371,7 +5371,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adaptingthree_six_improving_your_teaching_lesson_observations = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adaptingthree_six_improving_your_teaching_lesson_observations = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adapting, title: "3.6: Improving your teaching: lesson observations", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adaptingthree_five_developing_your_teaching,
     content: <<~MultilineString
 ## Time allocation
@@ -5480,7 +5480,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adaptingthree_seven_reflecting_on_learning = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adaptingthree_seven_reflecting_on_learning = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adapting, title: "3.7: Reflecting on learning", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adaptingthree_six_improving_your_teaching_lesson_observations,
     content: <<~MultilineString
 ## **Time allocation**
@@ -5505,7 +5505,7 @@ MultilineString
 
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledgefour_one_what_you_will_learn_and_video_introduction_to_the_block_two_ = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledgefour_one_what_you_will_learn_and_video_introduction_to_the_block_two_ = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledge, title: "4.1: What you will learn, and video introduction to the Block", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsthree_developing_effective_classroom_practice_etwo_eight_zero_nine_two_teaching_and_adaptingthree_seven_reflecting_on_learning,
     content: <<~MultilineString
 ## 4.1a: What you will learn
@@ -5620,7 +5620,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledgefour_two_understanding_the_evidence = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledgefour_two_understanding_the_evidence = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledge, title: "4.2: Understanding the evidence", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledgefour_one_what_you_will_learn_and_video_introduction_to_the_block_two_,
     content: <<~MultilineString
 ## Time allocation
@@ -5943,7 +5943,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledgefour_three_learning_about_literacy = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledgefour_three_learning_about_literacy = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledge, title: "4.3: Learning about literacy", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledgefour_two_understanding_the_evidence,
     content: <<~MultilineString
 ## Time allocation
@@ -6482,7 +6482,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledgefour_four_developing_your_teaching = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledgefour_four_developing_your_teaching = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledge, title: "4.4: Developing your teaching", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledgefour_three_learning_about_literacy,
     content: <<~MultilineString
 ## Time allocation
@@ -6814,7 +6814,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledgefour_five_improving_your_teaching_lesson_observations = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledgefour_five_improving_your_teaching_lesson_observations = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledge, title: "4.5: Improving your teaching – lesson observations", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledgefour_four_developing_your_teaching,
     content: <<~MultilineString
 ## **Time allocation**
@@ -6906,7 +6906,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledgefour_six_reflecting_on_learning = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledgefour_six_reflecting_on_learning = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledge, title: "4.6: Reflecting on learning", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledgefour_five_improving_your_teaching_lesson_observations,
     content: <<~MultilineString
 ## Time allocation
@@ -6936,7 +6936,7 @@ MultilineString
 
 
 
-edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioningfive_one_what_you_will_learn_and_video_introduction_to_the_block_two_two_ = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioningfive_one_what_you_will_learn_and_video_introduction_to_the_block_two_two_ = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioning, title: "5.1: What you will learn, and video introduction to the Block", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsfour_the_importance_of_subject_and_curriculum_knowledgefour_six_reflecting_on_learning,
     content: <<~MultilineString
 ## 5.1a: What you will learn
@@ -7030,7 +7030,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioningfive_two_understanding_the_evidence = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioningfive_two_understanding_the_evidence = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioning, title: "5.2: Understanding the evidence", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioningfive_one_what_you_will_learn_and_video_introduction_to_the_block_two_two_,
     content: <<~MultilineString
 ## Time allocation
@@ -7731,7 +7731,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioningfive_three_learning_about_questioning_and_high_quality_classroom_talk = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioningfive_three_learning_about_questioning_and_high_quality_classroom_talk = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioning, title: "5.3: Learning about questioning and high-quality classroom talk", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioningfive_two_understanding_the_evidence,
     content: <<~MultilineString
 ## Time allocation
@@ -8201,7 +8201,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioningfive_four_developing_your_teaching_assessment_and_questioning = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioningfive_four_developing_your_teaching_assessment_and_questioning = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioning, title: "5.4: Developing your teaching - Assessment and questioning", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioningfive_three_learning_about_questioning_and_high_quality_classroom_talk,
     content: <<~MultilineString
 ## Time allocation
@@ -8476,7 +8476,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioningfive_five_improving_your_teaching_lesson_observations = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioningfive_five_improving_your_teaching_lesson_observations = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioning, title: "5.5: Improving your teaching: lesson observations", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioningfive_four_developing_your_teaching_assessment_and_questioning,
     content: <<~MultilineString
 ## Time allocation
@@ -8593,7 +8593,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioningfive_six_reflecting_on_learning = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioningfive_six_reflecting_on_learning = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioning, title: "5.6: Reflecting on learning", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioningfive_five_improving_your_teaching_lesson_observations,
     content: <<~MultilineString
 ## Time allocation
@@ -8622,7 +8622,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialssix_a_people_professionsix_one_what_you_will_learn_and_video_introduction_to_the_block_two_ = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialssix_a_people_professionsix_one_what_you_will_learn_and_video_introduction_to_the_block_two_ = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialssix_a_people_profession, title: "6.1: What you will learn, and video introduction to the Block", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsfive_assessment_feedback_and_questioningfive_six_reflecting_on_learning,
     content: <<~MultilineString
 ## 6.1a: What you will learn
@@ -8715,7 +8715,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialssix_a_people_professionsix_two_understanding_the_evidence_a_people_profession = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialssix_a_people_professionsix_two_understanding_the_evidence_a_people_profession = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialssix_a_people_profession, title: "6.2: Understanding the evidence: A people profession", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialssix_a_people_professionsix_one_what_you_will_learn_and_video_introduction_to_the_block_two_,
     content: <<~MultilineString
 ## **Time allocation**
@@ -9256,7 +9256,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialssix_a_people_professionsix_three_effective_professional_relationships = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialssix_a_people_professionsix_three_effective_professional_relationships = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialssix_a_people_profession, title: "6.3: Effective professional relationships", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialssix_a_people_professionsix_two_understanding_the_evidence_a_people_profession,
     content: <<~MultilineString
 ## Time allocation
@@ -9381,7 +9381,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialssix_a_people_professionsix_four_working_with_the_senco = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialssix_a_people_professionsix_four_working_with_the_senco = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialssix_a_people_profession, title: "6.4: Working with the SENCO", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialssix_a_people_professionsix_three_effective_professional_relationships,
     content: <<~MultilineString
 ## Time allocation
@@ -9655,7 +9655,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialssix_a_people_professionsix_five_working_effectively_with_teaching_assistants = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialssix_a_people_professionsix_five_working_effectively_with_teaching_assistants = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialssix_a_people_profession, title: "6.5: Working effectively with teaching assistants", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialssix_a_people_professionsix_four_working_with_the_senco,
     content: <<~MultilineString
 ## Time allocation
@@ -9707,7 +9707,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialssix_a_people_professionsix_six_observations = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialssix_a_people_professionsix_six_observations = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialssix_a_people_profession, title: "6.6: Observations", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialssix_a_people_professionsix_five_working_effectively_with_teaching_assistants,
     content: <<~MultilineString
 ## Time allocation
@@ -9772,7 +9772,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialssix_a_people_professionsix_seven_reflecting_on_learning = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialssix_a_people_professionsix_seven_reflecting_on_learning = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialssix_a_people_profession, title: "6.7: Reflecting on learning", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialssix_a_people_professionsix_six_observations,
     content: <<~MultilineString
 ## Time allocation
@@ -9801,7 +9801,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsseven_embedding_a_positive_climate_for_learningseven_one_what_you_will_learn_and_video_introduction_to_the_block = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsseven_embedding_a_positive_climate_for_learningseven_one_what_you_will_learn_and_video_introduction_to_the_block = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsseven_embedding_a_positive_climate_for_learning, title: "7.1: What you will learn, and video introduction to the Block", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialssix_a_people_professionsix_seven_reflecting_on_learning,
     content: <<~MultilineString
 ## 7.1a: What you will learn
@@ -9898,7 +9898,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsseven_embedding_a_positive_climate_for_learningseven_two_understanding_the_evidence_pupil_motivation = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsseven_embedding_a_positive_climate_for_learningseven_two_understanding_the_evidence_pupil_motivation = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsseven_embedding_a_positive_climate_for_learning, title: "7.3: Developing your teaching – supporting pupils to achieve with challenging content", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsseven_embedding_a_positive_climate_for_learningseven_one_what_you_will_learn_and_video_introduction_to_the_block,
     content: <<~MultilineString
 ## Time allocation
@@ -10012,7 +10012,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsseven_embedding_a_positive_climate_for_learningseven_three_developing_your_teaching_supporting_pupils_to_achieve_with_challenging_content = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsseven_embedding_a_positive_climate_for_learningseven_three_developing_your_teaching_supporting_pupils_to_achieve_with_challenging_content = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsseven_embedding_a_positive_climate_for_learning, title: "7.2: Understanding the evidence: Pupil motivation", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsseven_embedding_a_positive_climate_for_learningseven_two_understanding_the_evidence_pupil_motivation,
     content: <<~MultilineString
 ## Time allocation
@@ -10343,7 +10343,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsseven_embedding_a_positive_climate_for_learningseven_four_reflecting_on_learning = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsseven_embedding_a_positive_climate_for_learningseven_four_reflecting_on_learning = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsseven_embedding_a_positive_climate_for_learning, title: "7.4: Reflecting on learning", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsseven_embedding_a_positive_climate_for_learningseven_three_developing_your_teaching_supporting_pupils_to_achieve_with_challenging_content,
     content: <<~MultilineString
 ## Time allocation
@@ -10372,7 +10372,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialseight_how_pupils_learn_making_it_stickeight_one_what_you_will_learn_and_video_introduction_to_the_block = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialseight_how_pupils_learn_making_it_stickeight_one_what_you_will_learn_and_video_introduction_to_the_block = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialseight_how_pupils_learn_making_it_stick, title: "8.1: What you will learn, and video introduction to the Block", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsseven_embedding_a_positive_climate_for_learningseven_four_reflecting_on_learning,
     content: <<~MultilineString
 ## 8.1a: What you will learn
@@ -10563,7 +10563,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialseight_how_pupils_learn_making_it_stickeight_two_understanding_the_evidence = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialseight_how_pupils_learn_making_it_stickeight_two_understanding_the_evidence = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialseight_how_pupils_learn_making_it_stick, title: "8.2: Understanding the evidence", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialseight_how_pupils_learn_making_it_stickeight_one_what_you_will_learn_and_video_introduction_to_the_block,
     content: <<~MultilineString
 ## Time allocation
@@ -11067,7 +11067,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialseight_how_pupils_learn_making_it_stickeight_three_developing_your_teaching = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialseight_how_pupils_learn_making_it_stickeight_three_developing_your_teaching = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialseight_how_pupils_learn_making_it_stick, title: "8.3: Developing your teaching", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialseight_how_pupils_learn_making_it_stickeight_two_understanding_the_evidence,
     content: <<~MultilineString
 ## Time allocation
@@ -11153,7 +11153,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialseight_how_pupils_learn_making_it_stickeight_four_reflecting_on_learning = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialseight_how_pupils_learn_making_it_stickeight_four_reflecting_on_learning = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialseight_how_pupils_learn_making_it_stick, title: "8.4: Reflecting on learning", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialseight_how_pupils_learn_making_it_stickeight_three_developing_your_teaching,
     content: <<~MultilineString
 ## Time allocation
@@ -11182,7 +11182,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsnine_enhancing_classroom_practice_etwo_eight_zero_nine_two_grouping_and_tailoringnine_one_what_you_will_learn_and_video_introduction_to_the_block = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsnine_enhancing_classroom_practice_etwo_eight_zero_nine_two_grouping_and_tailoringnine_one_what_you_will_learn_and_video_introduction_to_the_block = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsnine_enhancing_classroom_practice_etwo_eight_zero_nine_two_grouping_and_tailoring, title: "9.1: What you will learn, and video introduction to the Block", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialseight_how_pupils_learn_making_it_stickeight_four_reflecting_on_learning,
     content: <<~MultilineString
 ## 9.1a: What you will learn
@@ -11328,7 +11328,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsnine_enhancing_classroom_practice_etwo_eight_zero_nine_two_grouping_and_tailoringnine_two_understanding_the_evidence = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsnine_enhancing_classroom_practice_etwo_eight_zero_nine_two_grouping_and_tailoringnine_two_understanding_the_evidence = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsnine_enhancing_classroom_practice_etwo_eight_zero_nine_two_grouping_and_tailoring, title: "9.2: Understanding the evidence", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsnine_enhancing_classroom_practice_etwo_eight_zero_nine_two_grouping_and_tailoringnine_one_what_you_will_learn_and_video_introduction_to_the_block,
     content: <<~MultilineString
 ## **Time allocation**
@@ -11771,7 +11771,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsnine_enhancing_classroom_practice_etwo_eight_zero_nine_two_grouping_and_tailoringnine_three_developing_your_teaching = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsnine_enhancing_classroom_practice_etwo_eight_zero_nine_two_grouping_and_tailoringnine_three_developing_your_teaching = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsnine_enhancing_classroom_practice_etwo_eight_zero_nine_two_grouping_and_tailoring, title: "9.3: Developing your teaching", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsnine_enhancing_classroom_practice_etwo_eight_zero_nine_two_grouping_and_tailoringnine_two_understanding_the_evidence,
     content: <<~MultilineString
 ## Time allocation
@@ -11863,7 +11863,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsnine_enhancing_classroom_practice_etwo_eight_zero_nine_two_grouping_and_tailoringnine_four_reflecting_on_learning = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsnine_enhancing_classroom_practice_etwo_eight_zero_nine_two_grouping_and_tailoringnine_four_reflecting_on_learning = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsnine_enhancing_classroom_practice_etwo_eight_zero_nine_two_grouping_and_tailoring, title: "9.4: Reflecting on learning", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsnine_enhancing_classroom_practice_etwo_eight_zero_nine_two_grouping_and_tailoringnine_three_developing_your_teaching,
     content: <<~MultilineString
 ## Time allocation
@@ -11892,7 +11892,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsone_zero_revisiting_the_importance_of_subject_and_curriculum_knowledgeone_zero_one_what_you_will_learn_and_video_introduction_to_the_block = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsone_zero_revisiting_the_importance_of_subject_and_curriculum_knowledgeone_zero_one_what_you_will_learn_and_video_introduction_to_the_block = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsone_zero_revisiting_the_importance_of_subject_and_curriculum_knowledge, title: "10.1: What you will learn, and video introduction to the Block", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsnine_enhancing_classroom_practice_etwo_eight_zero_nine_two_grouping_and_tailoringnine_four_reflecting_on_learning,
     content: <<~MultilineString
 ## 10.1a: What you will learn
@@ -11988,7 +11988,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsone_zero_revisiting_the_importance_of_subject_and_curriculum_knowledgeone_zero_two_curriculum_design_around_the_big_ideas = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsone_zero_revisiting_the_importance_of_subject_and_curriculum_knowledgeone_zero_two_curriculum_design_around_the_big_ideas = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsone_zero_revisiting_the_importance_of_subject_and_curriculum_knowledge, title: "10.2: Curriculum design around the big ideas", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsone_zero_revisiting_the_importance_of_subject_and_curriculum_knowledgeone_zero_one_what_you_will_learn_and_video_introduction_to_the_block,
     content: <<~MultilineString
 ## **Time allocation**
@@ -12282,7 +12282,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsone_zero_revisiting_the_importance_of_subject_and_curriculum_knowledgeone_zero_three_developing_your_teaching = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsone_zero_revisiting_the_importance_of_subject_and_curriculum_knowledgeone_zero_three_developing_your_teaching = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsone_zero_revisiting_the_importance_of_subject_and_curriculum_knowledge, title: "10.3: Developing your teaching", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsone_zero_revisiting_the_importance_of_subject_and_curriculum_knowledgeone_zero_two_curriculum_design_around_the_big_ideas,
     content: <<~MultilineString
 ## Time allocation
@@ -12330,7 +12330,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsone_zero_revisiting_the_importance_of_subject_and_curriculum_knowledgeone_zero_four_reflecting_on_learning = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsone_zero_revisiting_the_importance_of_subject_and_curriculum_knowledgeone_zero_four_reflecting_on_learning = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsone_zero_revisiting_the_importance_of_subject_and_curriculum_knowledge, title: "10.4: Reflecting on learning", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsone_zero_revisiting_the_importance_of_subject_and_curriculum_knowledgeone_zero_three_developing_your_teaching,
     content: <<~MultilineString
 ## **Time allocation**
@@ -12359,7 +12359,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsone_one_deepening_assessment_feedback_and_questioningone_one_one_what_you_will_learn_and_video_introduction_to_the_block = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsone_one_deepening_assessment_feedback_and_questioningone_one_one_what_you_will_learn_and_video_introduction_to_the_block = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsone_one_deepening_assessment_feedback_and_questioning, title: "11.1: What you will learn, and video introduction to the Block", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsone_zero_revisiting_the_importance_of_subject_and_curriculum_knowledgeone_zero_four_reflecting_on_learning,
     content: <<~MultilineString
 ## 11.1a: What you will learn
@@ -12476,7 +12476,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsone_one_deepening_assessment_feedback_and_questioningone_one_two_understanding_the_evidence = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsone_one_deepening_assessment_feedback_and_questioningone_one_two_understanding_the_evidence = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsone_one_deepening_assessment_feedback_and_questioning, title: "11.2: Understanding the evidence", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsone_one_deepening_assessment_feedback_and_questioningone_one_one_what_you_will_learn_and_video_introduction_to_the_block,
     content: <<~MultilineString
 ## **Time allocation**
@@ -12666,7 +12666,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsone_one_deepening_assessment_feedback_and_questioningone_one_three_learning_about_developing_efficient_and_effective_approaches_to_assessment = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsone_one_deepening_assessment_feedback_and_questioningone_one_three_learning_about_developing_efficient_and_effective_approaches_to_assessment = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsone_one_deepening_assessment_feedback_and_questioning, title: "11.3: Learning about developing efficient and effective approaches to assessment", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsone_one_deepening_assessment_feedback_and_questioningone_one_two_understanding_the_evidence,
     content: <<~MultilineString
 ## Time allocation
@@ -12798,7 +12798,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsone_one_deepening_assessment_feedback_and_questioningone_one_four_developing_your_teaching = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsone_one_deepening_assessment_feedback_and_questioningone_one_four_developing_your_teaching = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsone_one_deepening_assessment_feedback_and_questioning, title: "11.4: Developing your teaching", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsone_one_deepening_assessment_feedback_and_questioningone_one_three_learning_about_developing_efficient_and_effective_approaches_to_assessment,
     content: <<~MultilineString
 ## **Time allocation**
@@ -12940,7 +12940,7 @@ MultilineString
 )
 
 # ==================================================
-edtedt_early_career_frameworkself_directed_study_materialsone_one_deepening_assessment_feedback_and_questioningone_one_five_reflecting_on_learning = CourseLesson.create!(
+edtedt_early_career_frameworkself_directed_study_materialsone_one_deepening_assessment_feedback_and_questioningone_one_five_reflecting_on_learning = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: edtedt_early_career_frameworkself_directed_study_materialsone_one_deepening_assessment_feedback_and_questioning, title: "11.5: Reflecting on learning", previous_lesson: edtedt_early_career_frameworkself_directed_study_materialsone_one_deepening_assessment_feedback_and_questioningone_one_four_developing_your_teaching,
     content: <<~MultilineString
 ## **Time allocation**
@@ -12987,7 +12987,7 @@ MultilineString
 # ==================================================
 # UNPROCESSABLE: edttraining_trashedjulia_trashed
 # ==================================================
-edtedt_early_career_frameworkmentor_materials = CourseModule.create!(
+edtedt_early_career_frameworkmentor_materials = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: edtedt_early_career_frameworkself_directed_study_materials, title: "Mentor materials", previous_module: nil,
     content: <<~MultilineString
 Use the links below to download PDFs for mentor content and mentor handouts.

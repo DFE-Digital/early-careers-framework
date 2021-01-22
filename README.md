@@ -96,3 +96,9 @@ Review apps are automatically created when a PR is opened. A link to the app wil
 Check the file `manifest.yml` for customisation of name (you may need to change it as there could be a conflict on that name), buildpacks and eventual services (PostgreSQL needs to be [set up](https://docs.cloud.service.gov.uk/deploying_services/postgresql/)).
 
 The app should be available at https://govuk-rails-boilerplate.london.cloudapps.digital
+
+### Seeding cip content / anything else
+
+1. Make sure you are ok with the content in seed files to be created in your db.
+2. Run `cf login -a api.london.cloud.service.gov.uk -u USERNAME`, `USERNAME` is your personal GOV.UK PaaS account email address
+3. Run `cf run-task ecf-dev "cd .. && cd app && ../usr/local/bundle/bin/bundle exec rails db:seed"` to start the task.
