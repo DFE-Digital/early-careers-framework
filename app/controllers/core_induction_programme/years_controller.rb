@@ -2,6 +2,6 @@
 
 class CoreInductionProgramme::YearsController < ApplicationController
   def show
-    @course_years = CourseYear.where(lead_provider: params[:id])
+    @course_year = CourseYear.includes(:course_modules).find(params[:year_id])
   end
 end
