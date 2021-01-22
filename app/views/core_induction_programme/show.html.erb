@@ -26,8 +26,12 @@
     <p>You can read more about these suppliers on their own websites or in the course descriptions below.</p>
 
     <h2 class="govuk-heading-l">Years</h2>
-    <% @course_years.each do |course_year| %>
+    <% if @course_years.any? %>
+      <% @course_years.each do |course_year| %>
         <p><%= govuk_link_to course_year.title, cip_years_url(course_year) %></p>
+      <% end %>
+    <% else %>
+      <p>No course years were found!</p>
     <% end %>
   </div>
 </div>

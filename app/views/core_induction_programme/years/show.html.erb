@@ -3,10 +3,14 @@
     <h1 class="govuk-heading-l"><%= @course_year.title %></h1>
 
     <h2 class="govuk-heading-l">Modules</h2>
-    <% @course_year.course_modules.each do |course_module| %>
-      <p>
-        <%= govuk_link_to course_module.title, cip_years_modules_url(@course_year, course_module) %>
-      </p>
+    <% if @course_year.course_modules.any? %>
+      <% @course_year.course_modules.each do |course_year| %>
+        <p>
+          <%= govuk_link_to course_module.title, cip_years_modules_url(@course_year, course_module) %>
+        </p>
+      <% end %>
+    <% else %>
+      <p>No course modules were found!</p>
     <% end %>
 
     <div class="gem-c-govspeak govuk-govspeak ">

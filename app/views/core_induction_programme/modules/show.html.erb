@@ -10,13 +10,17 @@
       <li>
         <p><strong>Topic materials</strong></p>
         <ul class="app-task-list__items">
-          <% @course_module.course_lessons.each do |lesson| %>
-            <li class="app-task-list__item">
-              <span>
-                  <%= govuk_link_to lesson.title, cip_years_modules_lessons_url(@course_module.course_year, @course_module, lesson) %>
-              </span>
-              <strong class="govuk-tag app-task-list__tag">complete</strong>
-            </li>
+          <% if @course_module.course_lessons.any? %>
+            <% @course_module.course_lessons.each do |lesson| %>
+              <li class="app-task-list__item">
+                <span>
+                    <%= govuk_link_to lesson.title, cip_years_modules_lessons_url(@course_module.course_year, @course_module, lesson) %>
+                </span>
+                <strong class="govuk-tag app-task-list__tag">complete</strong>
+              </li>
+            <% end %>
+          <% else %>
+            <p>No course lessons were found!</p>
           <% end %>
         </ul>
       </li>
