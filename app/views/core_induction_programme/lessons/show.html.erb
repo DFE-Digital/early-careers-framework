@@ -3,7 +3,7 @@
     <h1 class="govuk-heading-l"> <%= @course_lesson.title %></h1>
 
     <div class="gem-c-govspeak govuk-govspeak ">
-      <%= @course_lesson.content_in_html.html_safe %>
+      <%= @course_lesson.content_to_html.html_safe %>
     </div>
 
   </div>
