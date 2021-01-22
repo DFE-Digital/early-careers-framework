@@ -4,7 +4,7 @@
 
 Dir[Rails.root.join("db/seeds/dummy_structures.rb")].each { |seed| load seed }
 
-CURRENT_CIP_VERSION = 2
+CURRENT_CIP_VERSION = 3
 CourseLesson.where("version < ?", CURRENT_CIP_VERSION).delete_all
 CourseModule.where("version < ?", CURRENT_CIP_VERSION).delete_all
 CourseYear.where("version < ?", CURRENT_CIP_VERSION).delete_all

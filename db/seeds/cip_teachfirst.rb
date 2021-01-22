@@ -1,6 +1,6 @@
 # UNPROCESSABLE: teachfirst
 # ==================================================
-teachfirstteach_firstself_directed_study_material = CourseYear.create!(
+teachfirstteach_firstself_directed_study_material = CourseYear.find_or_create_by!(
     version: CURRENT_CIP_VERSION, lead_provider: LeadProvider.first, is_year_one: true, title: "Self-directed study material",
     content: <<~MultilineString
 The online study materials consist of six modules. You will complete one module per half-term in your first year of the programme. Each module has been broken down into weekly sessions to provide you with research informed, bitesize information on best practice.
@@ -188,7 +188,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environment = CourseModule.create!(
+teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environment = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: teachfirstteach_firstself_directed_study_material, title: "1: How can you create an effective learning environment?", previous_module: nil,
     content: <<~MultilineString
 ## Module Overview
@@ -284,7 +284,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialtwo_how_do_pupils_learn = CourseModule.create!(
+teachfirstteach_firstself_directed_study_materialtwo_how_do_pupils_learn = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: teachfirstteach_firstself_directed_study_material, title: "2: How do pupils learn?", previous_module: teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environment,
     content: <<~MultilineString
 ## Module Overview
@@ -313,7 +313,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialthree_what_makes_classroom_practice_effective = CourseModule.create!(
+teachfirstteach_firstself_directed_study_materialthree_what_makes_classroom_practice_effective = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: teachfirstteach_firstself_directed_study_material, title: "3: What makes classroom practice effective?", previous_module: teachfirstteach_firstself_directed_study_materialtwo_how_do_pupils_learn,
     content: <<~MultilineString
 ## Introduction
@@ -415,7 +415,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effect = CourseModule.create!(
+teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effect = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: teachfirstteach_firstself_directed_study_material, title: "4: How can you use assessment and feedback to greatest effect?", previous_module: teachfirstteach_firstself_directed_study_materialthree_what_makes_classroom_practice_effective,
     content: <<~MultilineString
 ## Session 1: Introduction
@@ -445,7 +445,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeed = CourseModule.create!(
+teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeed = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: teachfirstteach_firstself_directed_study_material, title: "5: How can you support all pupils to succeed?", previous_module: teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effect,
     content: <<~MultilineString
 ## Introduction
@@ -516,7 +516,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialsix_how_to_design_a_coherent_curriculum = CourseModule.create!(
+teachfirstteach_firstself_directed_study_materialsix_how_to_design_a_coherent_curriculum = CourseModule.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_year: teachfirstteach_firstself_directed_study_material, title: "6: How to design a coherent curriculum", previous_module: teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeed,
     content: <<~MultilineString
 ## Module overview
@@ -554,7 +554,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environmentone_establishing_effective_routines_five_one_minutes = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environmentone_establishing_effective_routines_five_one_minutes = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environment, title: "1. Establishing effective routines", previous_lesson: nil,
     content: <<~MultilineString
 This session will take **approximately 51 minutes** to complete.
@@ -1270,7 +1270,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environmenttwo_creating_a_positive_and_respectful_classroom_environment_three_zero_minutes = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environmenttwo_creating_a_positive_and_respectful_classroom_environment_three_zero_minutes = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environment, title: "2. Creating a positive and respectful classroom environment", previous_lesson: teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environmentone_establishing_effective_routines_five_one_minutes,
     content: <<~MultilineString
 This session will take **approximately 30 minutes** to complete.
@@ -1611,7 +1611,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environmentthree_addressing_low_level_behaviour_four_zero_minutes = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environmentthree_addressing_low_level_behaviour_four_zero_minutes = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environment, title: "3. Addressing low-level behaviour", previous_lesson: teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environmenttwo_creating_a_positive_and_respectful_classroom_environment_three_zero_minutes,
     content: <<~MultilineString
 This session will take **approximately 40 minutes** to complete.
@@ -1961,7 +1961,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environmentfour_addressing_persistent_and_challenging_behaviour_five_zero_minutes = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environmentfour_addressing_persistent_and_challenging_behaviour_five_zero_minutes = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environment, title: "4. Addressing persistent and challenging behaviour", previous_lesson: teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environmentthree_addressing_low_level_behaviour_four_zero_minutes,
     content: <<~MultilineString
 This session will take **approximately 50 minutes** to complete.
@@ -2471,7 +2471,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environmentfive_developing_pupils_intrinsic_motivation_four_zero_minutes = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environmentfive_developing_pupils_intrinsic_motivation_four_zero_minutes = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environment, title: "5. Developing pupils’ intrinsic motivation", previous_lesson: teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environmentfour_addressing_persistent_and_challenging_behaviour_five_zero_minutes,
     content: <<~MultilineString
 This session will take **approximately 40 minutes** to complete.
@@ -2821,7 +2821,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environmentsix_holding_high_expectations_and_maintaining_engagement_five_zero_minutes = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environmentsix_holding_high_expectations_and_maintaining_engagement_five_zero_minutes = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environment, title: "6. Holding high expectations and maintaining engagement", previous_lesson: teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environmentfive_developing_pupils_intrinsic_motivation_four_zero_minutes,
     content: <<~MultilineString
 This session will take **approximately 50 minutes** to complete.
@@ -3248,7 +3248,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialtwo_how_do_pupils_learnone_the_working_and_long_term_memory_five_five_minutes = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialtwo_how_do_pupils_learnone_the_working_and_long_term_memory_five_five_minutes = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialtwo_how_do_pupils_learn, title: "1. The working and long-term memory", previous_lesson: teachfirstteach_firstself_directed_study_materialone_how_can_you_create_an_effective_learning_environmentsix_holding_high_expectations_and_maintaining_engagement_five_zero_minutes,
     content: <<~MultilineString
 This session will take **approximately 55 minutes** to complete.
@@ -3490,7 +3490,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialtwo_how_do_pupils_learntwo_considering_how_to_introduce_new_knowledge_to_pupils_six_zero_minutes = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialtwo_how_do_pupils_learntwo_considering_how_to_introduce_new_knowledge_to_pupils_six_zero_minutes = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialtwo_how_do_pupils_learn, title: "2. Considering how to introduce new knowledge to pupils", previous_lesson: teachfirstteach_firstself_directed_study_materialtwo_how_do_pupils_learnone_the_working_and_long_term_memory_five_five_minutes,
     content: <<~MultilineString
 This session will take **approximately** **60 minutes** to complete.
@@ -3673,7 +3673,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialtwo_how_do_pupils_learnthree_using_worked_and_partially_completed_examples_four_five_minutes = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialtwo_how_do_pupils_learnthree_using_worked_and_partially_completed_examples_four_five_minutes = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialtwo_how_do_pupils_learn, title: "3. Using worked and partially completed examples", previous_lesson: teachfirstteach_firstself_directed_study_materialtwo_how_do_pupils_learntwo_considering_how_to_introduce_new_knowledge_to_pupils_six_zero_minutes,
     content: <<~MultilineString
 This session will take **approximately 45 minutes** to complete.
@@ -3932,7 +3932,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialtwo_how_do_pupils_learnfour_helping_pupils_remember_eight_zero_minutes = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialtwo_how_do_pupils_learnfour_helping_pupils_remember_eight_zero_minutes = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialtwo_how_do_pupils_learn, title: "4. Helping pupils remember", previous_lesson: teachfirstteach_firstself_directed_study_materialtwo_how_do_pupils_learnthree_using_worked_and_partially_completed_examples_four_five_minutes,
     content: <<~MultilineString
 This session will take **approximately 80 minutes** to complete.
@@ -4164,7 +4164,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialtwo_how_do_pupils_learnfive_introduction_to_metacognition_one_five_minutes = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialtwo_how_do_pupils_learnfive_introduction_to_metacognition_one_five_minutes = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialtwo_how_do_pupils_learn, title: "5. Introduction to Metacognition", previous_lesson: teachfirstteach_firstself_directed_study_materialtwo_how_do_pupils_learnfour_helping_pupils_remember_eight_zero_minutes,
     content: <<~MultilineString
 This session will take **approximately 15 minutes** to complete.
@@ -4347,7 +4347,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialthree_what_makes_classroom_practice_effectiveone_review_of_previous_learning_one_five_minutes = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialthree_what_makes_classroom_practice_effectiveone_review_of_previous_learning_one_five_minutes = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialthree_what_makes_classroom_practice_effective, title: "1. Review of previous learning", previous_lesson: teachfirstteach_firstself_directed_study_materialtwo_how_do_pupils_learnfive_introduction_to_metacognition_one_five_minutes,
     content: <<~MultilineString
 This session will take **approximately 15 minutes** to complete.
@@ -4466,7 +4466,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialthree_what_makes_classroom_practice_effectivetwo_explanations_and_modelling_six_five_mins = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialthree_what_makes_classroom_practice_effectivetwo_explanations_and_modelling_six_five_mins = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialthree_what_makes_classroom_practice_effective, title: "2. Explanations and Modelling", previous_lesson: teachfirstteach_firstself_directed_study_materialthree_what_makes_classroom_practice_effectiveone_review_of_previous_learning_one_five_minutes,
     content: <<~MultilineString
 This session will take **approximately 65 minutes** to complete.
@@ -4972,7 +4972,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialthree_what_makes_classroom_practice_effectivethree_guided_practice_six_zero_mins = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialthree_what_makes_classroom_practice_effectivethree_guided_practice_six_zero_mins = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialthree_what_makes_classroom_practice_effective, title: "3. Guided Practice", previous_lesson: teachfirstteach_firstself_directed_study_materialthree_what_makes_classroom_practice_effectivetwo_explanations_and_modelling_six_five_mins,
     content: <<~MultilineString
 This session will take **approximately 60 minutes** to complete.
@@ -5279,7 +5279,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialthree_what_makes_classroom_practice_effectivefour_independent_practice_six_zero_mins = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialthree_what_makes_classroom_practice_effectivefour_independent_practice_six_zero_mins = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialthree_what_makes_classroom_practice_effective, title: "4. Independent Practice", previous_lesson: teachfirstteach_firstself_directed_study_materialthree_what_makes_classroom_practice_effectivethree_guided_practice_six_zero_mins,
     content: <<~MultilineString
 This session will take **approximately 60 minutes** to complete.
@@ -5898,7 +5898,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialthree_what_makes_classroom_practice_effectivefive_questioning_six_zero_mins = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialthree_what_makes_classroom_practice_effectivefive_questioning_six_zero_mins = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialthree_what_makes_classroom_practice_effective, title: "5. Questioning", previous_lesson: teachfirstteach_firstself_directed_study_materialthree_what_makes_classroom_practice_effectivefour_independent_practice_six_zero_mins,
     content: <<~MultilineString
 This session will take **approximately 60 minutes** to complete.
@@ -6558,7 +6558,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effectone_what_makes_assessment_effective_five_zero_mins = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effectone_what_makes_assessment_effective_five_zero_mins = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effect, title: "1. What Makes Assessment Effective?", previous_lesson: teachfirstteach_firstself_directed_study_materialthree_what_makes_classroom_practice_effectivefive_questioning_six_zero_mins,
     content: <<~MultilineString
 This session will take **approximately 50 minutes** to complete.
@@ -6801,7 +6801,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effecttwo_planning_for_effective_assessment_five_zero_mins = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effecttwo_planning_for_effective_assessment_five_zero_mins = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effect, title: "2. Planning for Effective Assessment", previous_lesson: teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effectone_what_makes_assessment_effective_five_zero_mins,
     content: <<~MultilineString
 This session will take **approximately 50 minutes** to complete.
@@ -7149,7 +7149,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effectthree_monitoring_misconceptions_four_five_mins = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effectthree_monitoring_misconceptions_four_five_mins = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effect, title: "3. Monitoring Misconceptions", previous_lesson: teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effecttwo_planning_for_effective_assessment_five_zero_mins,
     content: <<~MultilineString
 This session will take **approximately 45 minutes** to complete.
@@ -7351,7 +7351,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effectfour_making_feedback_purposeful_and_manageable_part_one_five_five_mins = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effectfour_making_feedback_purposeful_and_manageable_part_one_five_five_mins = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effect, title: "4. Making Feedback Purposeful and Manageable, Part 1: What does effective feedback look like?", previous_lesson: teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effectthree_monitoring_misconceptions_four_five_mins,
     content: <<~MultilineString
 This session will take **approximately 55 minutes** to complete.
@@ -7777,7 +7777,7 @@ MultilineString
 # ==================================================
 # UNPROCESSABLE: teachfirstsample_page_trashedcharlotte_trashed
 # ==================================================
-teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effectfive_making_feedback_purposeful_and_manageable_part_two_three_five_mins = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effectfive_making_feedback_purposeful_and_manageable_part_two_three_five_mins = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effect, title: "5. Making Feedback Purposeful and Manageable, Part 2: Effective peer and self-assessment", previous_lesson: teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effectfour_making_feedback_purposeful_and_manageable_part_one_five_five_mins,
     content: <<~MultilineString
 This session will take **approximately 35 minutes** to complete.
@@ -8065,7 +8065,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effectsix_summative_assessment_three_zero_mins = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effectsix_summative_assessment_three_zero_mins = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effect, title: "6. Summative Assessment", previous_lesson: teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effectfive_making_feedback_purposeful_and_manageable_part_two_three_five_mins,
     content: <<~MultilineString
 This session will take **approximately 30 minutes** to complete.
@@ -8260,7 +8260,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeedone_supporting_all_pupils_to_access_the_curriculum_developing_high_quality_oral_language_four_two_minutes = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeedone_supporting_all_pupils_to_access_the_curriculum_developing_high_quality_oral_language_four_two_minutes = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeed, title: "1. Supporting all pupils to access the curriculum - developing high-quality oral language", previous_lesson: teachfirstteach_firstself_directed_study_materialfour_how_can_you_use_assessment_and_feedback_to_greatest_effectsix_summative_assessment_three_zero_mins,
     content: <<~MultilineString
 This session will take **approximately 42 minutes** to complete.
@@ -8719,7 +8719,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeedtwo_supporting_all_pupils_to_access_the_curriculum_developing_reading_and_writing_four_five_minutes = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeedtwo_supporting_all_pupils_to_access_the_curriculum_developing_reading_and_writing_four_five_minutes = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeed, title: "2. Supporting all pupils to access the curriculum - developing reading and writing", previous_lesson: teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeedone_supporting_all_pupils_to_access_the_curriculum_developing_high_quality_oral_language_four_two_minutes,
     content: <<~MultilineString
 This session will take **approximately 45 minutes** to complete.
@@ -9121,7 +9121,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeedthree_further_developing_prior_knowledge_three_five_minutes = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeedthree_further_developing_prior_knowledge_three_five_minutes = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeed, title: "3. Further developing prior knowledge", previous_lesson: teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeedtwo_supporting_all_pupils_to_access_the_curriculum_developing_reading_and_writing_four_five_minutes,
     content: <<~MultilineString
 This session will take **approximately 35 minutes** to complete.
@@ -9380,7 +9380,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeedfour_providing_additional_scaffolds_six_zero_minutes = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeedfour_providing_additional_scaffolds_six_zero_minutes = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeed, title: "4. Providing additional scaffolds", previous_lesson: teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeedthree_further_developing_prior_knowledge_three_five_minutes,
     content: <<~MultilineString
 This session will take **approximately 60 minutes** to complete.
@@ -10086,7 +10086,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeedfive_the_send_code_of_practice_three_zero_minutes = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeedfive_the_send_code_of_practice_three_zero_minutes = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeed, title: "5. The SEND code of practice", previous_lesson: teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeedfour_providing_additional_scaffolds_six_zero_minutes,
     content: <<~MultilineString
 This session will take **approximately 30 minutes** to complete.
@@ -10421,7 +10421,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeedsix_teaching_pupils_who_require_a_greater_level_of_support_five_zero_minutes = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeedsix_teaching_pupils_who_require_a_greater_level_of_support_five_zero_minutes = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeed, title: "6. Teaching pupils who require a greater level of support", previous_lesson: teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeedfive_the_send_code_of_practice_three_zero_minutes,
     content: <<~MultilineString
 This session will take **approximately 50 minutes** to complete.
@@ -11533,7 +11533,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialsix_how_to_design_a_coherent_curriculumone_what_is_the_purpose_of_a_curriculum_two_five_mins = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialsix_how_to_design_a_coherent_curriculumone_what_is_the_purpose_of_a_curriculum_two_five_mins = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialsix_how_to_design_a_coherent_curriculum, title: "1. What is the purpose of a curriculum?", previous_lesson: teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeedsix_teaching_pupils_who_require_a_greater_level_of_support_five_zero_minutes,
     content: <<~MultilineString
 This session will take **approximately 25 minutes** to complete.
@@ -11761,7 +11761,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialsix_how_to_design_a_coherent_curriculumtwo_identifying_concepts_knowledge_and_skills_five_zero_mins = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialsix_how_to_design_a_coherent_curriculumtwo_identifying_concepts_knowledge_and_skills_five_zero_mins = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialsix_how_to_design_a_coherent_curriculum, title: "2. Identifying concepts, knowledge and skills", previous_lesson: teachfirstteach_firstself_directed_study_materialsix_how_to_design_a_coherent_curriculumone_what_is_the_purpose_of_a_curriculum_two_five_mins,
     content: <<~MultilineString
 This session will take **approximately 50 minutes** to complete.
@@ -12142,7 +12142,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialsix_how_to_design_a_coherent_curriculumthree_sequencing_teaching_and_learning_five_five_mins = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialsix_how_to_design_a_coherent_curriculumthree_sequencing_teaching_and_learning_five_five_mins = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialsix_how_to_design_a_coherent_curriculum, title: "3. Sequencing teaching and learning", previous_lesson: teachfirstteach_firstself_directed_study_materialsix_how_to_design_a_coherent_curriculumtwo_identifying_concepts_knowledge_and_skills_five_zero_mins,
     content: <<~MultilineString
 This session will take **approximately 55 minutes** to complete.
@@ -12387,7 +12387,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialsix_how_to_design_a_coherent_curriculumfour_helping_pupils_master_important_concepts_knowledge_and_skills_part_one_four_five_mins = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialsix_how_to_design_a_coherent_curriculumfour_helping_pupils_master_important_concepts_knowledge_and_skills_part_one_four_five_mins = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialsix_how_to_design_a_coherent_curriculum, title: "4. Helping pupils master important concepts, knowledge and skills – Part 1", previous_lesson: teachfirstteach_firstself_directed_study_materialsix_how_to_design_a_coherent_curriculumthree_sequencing_teaching_and_learning_five_five_mins,
     content: <<~MultilineString
 This session will take **approximately 45 minutes** to complete.
@@ -12591,7 +12591,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialsix_how_to_design_a_coherent_curriculumfive_helping_pupils_master_important_concepts_knowledge_and_skills_part_two_three_five_mins = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialsix_how_to_design_a_coherent_curriculumfive_helping_pupils_master_important_concepts_knowledge_and_skills_part_two_three_five_mins = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialsix_how_to_design_a_coherent_curriculum, title: "5. Helping pupils master important concepts, knowledge and skills – Part 2", previous_lesson: teachfirstteach_firstself_directed_study_materialsix_how_to_design_a_coherent_curriculumfour_helping_pupils_master_important_concepts_knowledge_and_skills_part_one_four_five_mins,
     content: <<~MultilineString
 This session will take **approximately 35 minutes** to complete.
@@ -12766,7 +12766,7 @@ MultilineString
 )
 
 # ==================================================
-teachfirstteach_firstself_directed_study_materialsix_how_to_design_a_coherent_curriculumsix_supporting_pupils_to_build_increasingly_complex_mental_models_six_zero_mins = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialsix_how_to_design_a_coherent_curriculumsix_supporting_pupils_to_build_increasingly_complex_mental_models_six_zero_mins = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialsix_how_to_design_a_coherent_curriculum, title: "6. Supporting pupils to build increasingly complex mental models", previous_lesson: teachfirstteach_firstself_directed_study_materialsix_how_to_design_a_coherent_curriculumfive_helping_pupils_master_important_concepts_knowledge_and_skills_part_two_three_five_mins,
     content: <<~MultilineString
 This session will take **approximately 60 minutes** to complete.
@@ -13095,7 +13095,7 @@ MultilineString
 # ==================================================
 # UNPROCESSABLE: teachfirstteach_firstself_directed_study_materialthree_what_makes_classroom_practice_effectivetwo_explanations_and_modelling_six_five_minsmodule_three_session_two_quiz
 # ==================================================
-teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeedfive_the_send_code_of_practice_three_zero_minutesmodule_five_session_three_further_developing_prior_knowledge = CourseLesson.create!(
+teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeedfive_the_send_code_of_practice_three_zero_minutesmodule_five_session_three_further_developing_prior_knowledge = CourseLesson.find_or_create_by!(
     version: CURRENT_CIP_VERSION, course_module: teachfirstteach_firstself_directed_study_materialfive_how_can_you_support_all_pupils_to_succeed, title: "Module 5 Session 3 Further developing prior knowledge", previous_lesson: nil,
     content: <<~MultilineString
 <!-- wp:gravityforms/form {"formId":"4","title":false,"description":false} /-->
