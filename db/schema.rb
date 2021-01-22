@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_19_093554) do
+ActiveRecord::Schema.define(version: 2021_01_22_115553) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 2021_01_19_093554) do
     t.uuid "next_lesson_id"
     t.uuid "previous_lesson_id"
     t.uuid "course_module_id", null: false
+    t.integer "version", default: 1, null: false
     t.index ["course_module_id"], name: "index_course_lessons_on_course_module_id"
     t.index ["next_lesson_id"], name: "index_course_lessons_on_next_lesson_id"
     t.index ["previous_lesson_id"], name: "index_course_lessons_on_previous_lesson_id"
@@ -44,6 +45,7 @@ ActiveRecord::Schema.define(version: 2021_01_19_093554) do
     t.uuid "next_module_id"
     t.uuid "previous_module_id"
     t.uuid "course_year_id", null: false
+    t.integer "version", default: 1, null: false
     t.index ["course_year_id"], name: "index_course_modules_on_course_year_id"
     t.index ["next_module_id"], name: "index_course_modules_on_next_module_id"
     t.index ["previous_module_id"], name: "index_course_modules_on_previous_module_id"
@@ -56,6 +58,7 @@ ActiveRecord::Schema.define(version: 2021_01_19_093554) do
     t.string "title", null: false
     t.text "content", null: false
     t.uuid "lead_provider_id", null: false
+    t.integer "version", default: 1, null: false
     t.index ["lead_provider_id"], name: "index_course_years_on_lead_provider_id"
   end
 
