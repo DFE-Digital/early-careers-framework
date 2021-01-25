@@ -8,7 +8,7 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
     if resource.errors.empty?
       render :confirmed
     else
-      respond_with_navigational(resource.errors, status: :unprocessable_entity){ render :new }
+      respond_with_navigational(resource.errors, status: :unprocessable_entity) { render :new }
     end
   end
 end

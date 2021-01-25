@@ -7,16 +7,7 @@ RSpec.describe "Users::Registrations /register", type: :request do
   let(:full_name) { Faker::Name.name }
   let(:email) { Faker::Internet.email(domain: school.domains.first) }
 
-  describe "GET /users/register" do
-    it "renders the correct template" do
-      get "/users/register", params: { school_id: school.id }
-      expect(response).to render_template(:new)
-    end
-  end
-
   describe "POST /users/register" do
-    let(:notice) { "A message with a confirmation link has been sent to your email address. Please follow the link to activate your account." }
-
     it "redirects to homepage on successful user creation" do
       # When
       post "/users/register", params: { user: {
@@ -26,8 +17,7 @@ RSpec.describe "Users::Registrations /register", type: :request do
       } }
 
       # Then
-      expect(response).to redirect_to(root_path)
-      expect(flash[:notice]).to eq notice
+      expect(response).to render_template(:verification_email_sent)
     end
 
     it "creates a user with the correct details" do

@@ -3,8 +3,6 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   def info; end
 
-  def start_registration; end
-
   def new
     @user = User.new
   end
@@ -17,9 +15,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
     render :user_already_registered and return if @user.persisted?
     render_start_registration and return if @school.nil?
-    render :school_not_eligible and return if !@school.eligible?
+    render :school_not_eligible and return unless @school.eligible?
     render :school_not_registered and return if @school.not_registered?
     render :school_fully_registered and return if @school.fully_registered?
+
     render :school_partially_registered if @school.partially_registered?
   end
 

@@ -2,7 +2,7 @@
   <div class="govuk-grid-column-two-thirds">
     <h2 class="govuk-heading-l">Register your school</h2>
 
-    <%= form_for(:induction_coordinator_profile, url: users_check_email_path) do |f| %>
+    <%= form_for(:induction_coordinator_profile, url: users_check_details_path) do |f| %>
       <%= f.govuk_text_field(
             :school_urn,
             value: @urn,

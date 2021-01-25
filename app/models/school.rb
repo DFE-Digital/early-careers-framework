@@ -19,10 +19,10 @@ class School < ApplicationRecord
   end
 
   def fully_registered?
-    induction_coordinator_profiles.
-      joins(:user).
-      where.not(users: { confirmed_at: nil }).
-      any?
+    induction_coordinator_profiles
+      .joins(:user)
+      .where.not(users: { confirmed_at: nil })
+      .any?
   end
 
   def not_registered?
@@ -32,9 +32,9 @@ class School < ApplicationRecord
   def partially_registered?
     return false if not_registered?
 
-    induction_coordinator_profiles.
-      joins(:user).
-      where.not(users: { confirmed_at: nil }).
-      none?
+    induction_coordinator_profiles
+      .joins(:user)
+      .where.not(users: { confirmed_at: nil })
+      .none?
   end
 end
