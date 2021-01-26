@@ -40,15 +40,15 @@ class Admin::SuppliersController < Admin::BaseController
   end
 
   def receive_new_supplier_type
-    @new_supplier_form = NewSupplierForm.new(session[:new_supplier_form])
-    @new_supplier_form.type = params.dig(:new_supplier_form, :type)
+    new_form_params = session[:new_supplier_form].merge(params.require(:new_supplier_form).permit(:type))
+    @new_supplier_form = NewSupplierForm.new(new_form_params)
 
     unless @new_supplier_form.valid?(:type)
       skip_authorization
       render :new_supplier_type and return
     end
 
-    session[:new_supplier_form].merge!({ type: @new_supplier_form.type })
+    session[:new_supplier_form] = new_form_params
 
     case @new_supplier_form.type
     when "lead_provider"

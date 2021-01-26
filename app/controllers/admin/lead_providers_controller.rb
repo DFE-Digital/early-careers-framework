@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Admin::LeadProvidersController < Admin::BaseController
-  skip_after_action :verify_authorized
+  before_action :show, only: %i[show_schools show_users show_details show_dps]
+
   skip_after_action :verify_policy_scoped
 
   def choose_cip
@@ -58,8 +59,6 @@ class Admin::LeadProvidersController < Admin::BaseController
     lead_provider = lead_provider_form.save!
 
     redirect_to admin_new_lead_provider_success_path(lead_provider: lead_provider)
-  rescue ActiveRecord::RecordInvalid
-    raise ActionController::ActionControllerError
   end
 
   def success
@@ -81,21 +80,13 @@ class Admin::LeadProvidersController < Admin::BaseController
     authorize @lead_provider, :edit?
   end
 
-  def show_details
-    show
-  end
+  def show_details; end
 
-  def show_users
-    show
-  end
+  def show_users; end
 
-  def show_dps
-    show
-  end
+  def show_dps; end
 
-  def show_schools
-    show
-  end
+  def show_schools; end
 
 private
 

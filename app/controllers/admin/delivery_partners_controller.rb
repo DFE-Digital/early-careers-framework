@@ -1,19 +1,15 @@
 # frozen_string_literal: true
 
 class Admin::DeliveryPartnersController < Admin::BaseController
-  skip_after_action :verify_authorized
+  before_action :show, only: %i[show_users show_lps show_schools]
+
   skip_after_action :verify_policy_scoped
 
   def choose_lead_providers
     authorize DeliveryPartner, :create?
 
     new_supplier_form = NewSupplierForm.new(session[:new_supplier_form])
-    if session[:delivery_partner_form].nil?
-      session[:delivery_partner_form] = { name: new_supplier_form.name }
-    else
-      session[:delivery_partner_form].merge!({ name: new_supplier_form.name })
-    end
-
+    session[:delivery_partner_form] = (session[:delivery_partner_form] || {}).merge({ name: new_supplier_form.name })
     @delivery_partner_form = DeliveryPartnerForm.new(session[:delivery_partner_form])
   end
 
@@ -23,9 +19,7 @@ class Admin::DeliveryPartnersController < Admin::BaseController
     @delivery_partner_form = DeliveryPartnerForm.new(session[:delivery_partner_form])
     @delivery_partner_form.populate_provider_relationships(params)
 
-    unless @delivery_partner_form.valid?
-      render :choose_lead_providers and return
-    end
+    render :choose_lead_providers and return unless @delivery_partner_form.valid?
 
     session[:delivery_partner_form].merge!(
       {
@@ -48,8 +42,6 @@ class Admin::DeliveryPartnersController < Admin::BaseController
     delivery_partner = delivery_partner_form.save!
 
     redirect_to admin_new_delivery_partner_success_path(delivery_partner: delivery_partner)
-  rescue ActiveRecord::RecordInvalid
-    render :'errors/internal_server_error'
   end
 
   def delivery_partner_success
@@ -61,17 +53,11 @@ class Admin::DeliveryPartnersController < Admin::BaseController
     @delivery_partner = DeliveryPartner.find(params[:delivery_partner])
   end
 
-  def show_users
-    show
-  end
+  def show_users; end
 
-  def show_lps
-    show
-  end
+  def show_lps; end
 
-  def show_schools
-    show
-  end
+  def show_schools; end
 
 private
 
