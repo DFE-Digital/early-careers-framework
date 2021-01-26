@@ -47,7 +47,12 @@ gem "tzinfo-data"
 gem "govuk-components", ">= 1.0.0"
 gem "govuk_design_system_formbuilder", "~> 2.1", ">= 2.1.5"
 gem "govuk_publishing_components", ">= 23.11.0"
+gem "httpclient"
 gem "sass-rails", ">= 6.0.0"
+
+# Database based asynchronous priority queue system
+gem "delayed_cron_job"
+gem "delayed_job_active_record"
 
 platform :mswin, :mingw, :x64_mingw do
   gem "wdm", ">= 0.1.0"
@@ -92,4 +97,5 @@ group :test do
   gem "shoulda-matchers", "~> 4.4"
   gem "simplecov"
   gem "webdrivers", "~> 4.4", ">= 4.4.1"
+  gem "webmock"
 end

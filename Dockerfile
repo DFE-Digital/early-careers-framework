@@ -47,6 +47,7 @@ FROM ${BASE_RUBY_IMAGE_WITH_GEMS_AND_NODE_MODULES} AS assets-precompile
 
 ENV GOVUK_APP_DOMAIN="http://localhost:3000" \
     GOVUK_WEBSITE_ROOT="http://localhost:3000" \
+    GIAS_API_ROOT="https://ea-edubase-api-prod.azurewebsites.net" \
     RAILS_ENV=production \
     AUTHORISED_HOSTS=127.0.0.1 \
     SECRET_KEY_BASE=TestKey \
