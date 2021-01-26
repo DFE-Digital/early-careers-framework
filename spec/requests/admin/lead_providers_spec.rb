@@ -5,7 +5,7 @@ include NewSupplierHelper
 
 RSpec.describe "Admin::LeadProviders", type: :request do
   let(:lead_provider_name) { Faker::Company.name }
-  let(:cip) { create(:cip) }
+  let(:cip) { create(:core_induction_programme) }
   let(:cohort) { create(:cohort) }
 
   before do
@@ -44,7 +44,7 @@ RSpec.describe "Admin::LeadProviders", type: :request do
       given_I_have_confirmed_my_lead_provider_choices
 
       new_lead_provider = LeadProvider.order(:created_at).last
-      expect(new_lead_provider.cips).to contain_exactly(cip)
+      expect(new_lead_provider.core_induction_programmes).to contain_exactly(cip)
     end
 
     it "displays an error when no cip is selected" do

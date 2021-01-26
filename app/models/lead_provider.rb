@@ -9,7 +9,7 @@ class LeadProvider < ApplicationRecord
   has_many :delivery_partners, through: :provider_relationships
   has_and_belongs_to_many :cohorts
   has_many :lead_provider_cips
-  has_many :cips, through: :lead_provider_cips
+  has_many :core_induction_programmes, through: :lead_provider_cips
   has_many :course_years
 
   validates :name, presence: { message: "Enter a name" }

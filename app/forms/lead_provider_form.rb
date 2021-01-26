@@ -8,7 +8,7 @@ class LeadProviderForm
   validates :cohorts, presence: { message: "Choose one or more" }, on: :cohorts
 
   def available_cips
-    Cip.all
+    CoreInductionProgramme.all
   end
 
   def available_cohorts
@@ -25,11 +25,11 @@ class LeadProviderForm
   end
 
   def chosen_cip
-    Cip.find(cip)
+    CoreInductionProgramme.find(cip)
   end
 
   def chosen_cip_name
-    Cip.find(cip).name
+    CoreInductionProgramme.find(cip).name
   end
 
   def save!
@@ -38,7 +38,7 @@ class LeadProviderForm
     ActiveRecord::Base.transaction do
       lead_provider.save!
       chosen_cohorts.each do |cohort|
-        LeadProviderCip.create!(cohort: cohort, cip: chosen_cip, lead_provider: lead_provider)
+        LeadProviderCip.create!(cohort: cohort, core_induction_programme: chosen_cip, lead_provider: lead_provider)
       end
     end
 
