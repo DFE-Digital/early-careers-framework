@@ -20,42 +20,19 @@ class Admin::DeliveryPartnersController < Admin::BaseController
   def receive_lead_providers
     authorize DeliveryPartner, :create?
 
-    provider_relationships = []
-    # Ensure all selected lead providers have at least one selected cohort
-    chosen_lead_providers = params.dig(:delivery_partner_form, :lead_providers)&.keep_if(&:present?)
+    @delivery_partner_form = DeliveryPartnerForm.new(session[:delivery_partner_form])
+    @delivery_partner_form.populate_provider_relationships(params)
 
-    unless chosen_lead_providers&.any?
-      @delivery_partner_form = DeliveryPartnerForm.new(session[:delivery_partner_form])
-      @delivery_partner_form.errors.add(:lead_providers, :blank, message: "Choose at least one")
+    unless @delivery_partner_form.valid?
       render :choose_lead_providers and return
     end
 
-    chosen_lead_providers.each do |lead_provider|
-      chosen_cohorts = params.dig(
-        :delivery_partner_form,
-        lead_provider.to_sym,
-        :cohorts,
-      )&.keep_if(&:present?)
-
-      unless chosen_cohorts&.any?
-        @delivery_partner_form = DeliveryPartnerForm.new(session[:delivery_partner_form])
-        @delivery_partner_form.errors.add(:lead_providers, :blank, message: "Choose at least one cohort for every selected lead provider")
-        # rubocop:disable Lint/NonLocalExitFromIterator
-        render :choose_lead_providers and return
-        # rubocop:enable Lint/NonLocalExitFromIterator
-      end
-
-      chosen_cohorts.each do |cohort|
-        provider_relationships.push ProviderRelationship.new(
-          cohort: Cohort.find(cohort),
-          lead_provider: LeadProvider.find(lead_provider),
-        )
-      end
-    end
-
-    delivery_partner_form = DeliveryPartnerForm.new(session[:delivery_partner_form])
-    delivery_partner_form.provider_relationships = provider_relationships
-    session[:delivery_partner_form] = delivery_partner_form
+    session[:delivery_partner_form].merge!(
+      {
+        lead_providers: @delivery_partner_form.lead_providers,
+        provider_relationships: @delivery_partner_form.provider_relationships,
+      },
+    )
     redirect_to admin_new_delivery_partner_review_path
   end
 
