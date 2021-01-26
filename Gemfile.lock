@@ -151,6 +151,7 @@ GEM
       rouge
       sprockets (< 4)
     htmlentities (4.3.4)
+    httpclient (2.8.3)
     i18n (1.8.7)
       concurrent-ruby (~> 1.0)
     jwt (2.2.2)
@@ -421,6 +422,7 @@ DEPENDENCIES
   govuk-components (>= 1.0.0)
   govuk_design_system_formbuilder (~> 2.1, >= 2.1.5)
   govuk_publishing_components (>= 23.11.0)
+  httpclient
   kaminari (>= 1.2.0)
   listen (>= 3.0.5, < 3.4)
   mail-notify (>= 1.0.3)

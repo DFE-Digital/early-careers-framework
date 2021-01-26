@@ -47,6 +47,7 @@ gem "tzinfo-data"
 gem "govuk-components", ">= 1.0.0"
 gem "govuk_design_system_formbuilder", "~> 2.1", ">= 2.1.5"
 gem "govuk_publishing_components", ">= 23.11.0"
+gem "httpclient"
 gem "sass-rails", ">= 6.0.0"
 
 platform :mswin, :mingw, :x64_mingw do
