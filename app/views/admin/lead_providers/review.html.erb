@@ -3,10 +3,7 @@
   href: admin_new_lead_provider_cohorts_path)
 %>
 
-
-
 <h1 class="govuk-heading-l">Confirm these details</h1>
-
 
 <dl class="govuk-summary-list govuk-!-margin-bottom-9">
   <div class="govuk-summary-list__row">
@@ -63,8 +60,6 @@
     </dd>
   </div>
 </dl>
-
-
 
 <%= form_for :confirmation, url: admin_create_lead_provider_path, method: :post do |f| %>
   <%= f.hidden_field :answers_checked, value: true %>

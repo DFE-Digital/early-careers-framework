@@ -4,8 +4,6 @@
 %>
 
 <%= form_with model: @lead_provider_form, url: admin_new_lead_provider_cohorts_path, method: :post do |f| %>
-
-
   <%= f.govuk_collection_check_boxes(
         :cohorts,
         @lead_provider_form.available_cohorts,
