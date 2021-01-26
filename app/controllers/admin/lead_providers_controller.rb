@@ -8,25 +8,21 @@ class Admin::LeadProvidersController < Admin::BaseController
     authorize LeadProvider, :create?
 
     new_supplier_form = NewSupplierForm.new(session[:new_supplier_form])
-    if session[:lead_provider_form].nil?
-      session[:lead_provider_form] = { name: new_supplier_form.name }
-    else
-      session[:lead_provider_form].merge!({ name: new_supplier_form.name })
-    end
-
+    session[:lead_provider_form] = (session[:lead_provider_form] || {}).merge({ name: new_supplier_form.name })
     @lead_provider_form = LeadProviderForm.new(session[:lead_provider_form])
   end
 
   def receive_cip
     authorize LeadProvider, :create?
 
-    if params.dig(:lead_provider_form, :cip).blank?
-      @lead_provider_form = LeadProviderForm.new
-      @lead_provider_form.errors.add(:cip, :blank, message: "Choose one")
+    @lead_provider_form = LeadProviderForm.new(session[:lead_provider_form])
+    @lead_provider_form.cip = params.dig(:lead_provider_form, :cip)
+
+    unless @lead_provider_form.valid?(:cip)
       render :choose_cip and return
     end
 
-    session[:lead_provider_form].merge!(params.require(:lead_provider_form).permit(:cip))
+    session[:lead_provider_form].merge!({ cip: @lead_provider_form.cip })
     redirect_to admin_new_lead_provider_cohorts_path
   end
 
@@ -37,16 +33,15 @@ class Admin::LeadProvidersController < Admin::BaseController
 
   def receive_cohorts
     authorize LeadProvider, :create?
-    cohorts = params.dig(:lead_provider_form, :cohorts)
-                &.keep_if(&:present?)
 
-    if cohorts.blank?
-      @lead_provider_form = LeadProviderForm.new
-      @lead_provider_form.errors.add(:cohorts, :blank, message: "Choose one or more")
+    @lead_provider_form = LeadProviderForm.new(session[:lead_provider_form])
+    @lead_provider_form.cohorts = params.dig(:lead_provider_form, :cohorts)&.keep_if(&:present?)
+
+    unless @lead_provider_form.valid?(:cohorts)
       render :choose_cohorts and return
     end
 
-    session[:lead_provider_form].merge!({ cohorts: cohorts })
+    session[:lead_provider_form].merge!({ cohorts: @lead_provider_form.cohorts })
     redirect_to admin_new_lead_provider_review_path
   end
 

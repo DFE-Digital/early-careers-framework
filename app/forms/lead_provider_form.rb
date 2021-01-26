@@ -4,6 +4,8 @@ class LeadProviderForm
   include ActiveModel::Model
 
   attr_accessor :name, :cip, :cohorts
+  validates :cip, presence: { message: "Choose one" }, on: :cip
+  validates :cohorts, presence: { message: "Choose one or more" }, on: :cohorts
 
   def available_cips
     Cip.all
