@@ -16,7 +16,7 @@ private
 
   def gias_schools_csv_url
     date_string = Time.zone.now.strftime("%Y%m%d")
-    "https://ea-edubase-api-prod.azurewebsites.net/edubase/downloads/public/edubasealldata#{date_string}.csv"
+    "#{Rails.application.config.gias_api_root}/edubase/downloads/public/edubasealldata#{date_string}.csv"
   end
 
   def schools_data_file
@@ -34,7 +34,7 @@ private
     school.address_line4 = row.fetch("County (name)")
     school.country = row.fetch("Country (name)")
     school.postcode = row.fetch("Postcode")
-    dummy_domain = row.fetch("SchoolWebsite").split(/\./, 2).second.remove("/")
+    dummy_domain = row.fetch("SchoolWebsite").split(/\./, 2).second&.remove("/")
     school.domains = [dummy_domain]
     school
   end
