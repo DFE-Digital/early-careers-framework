@@ -1,12 +1,9 @@
 <% content_for :before_content, govuk_back_link(
-  text: 'Back',
+  text: "Back",
   href: admin_new_delivery_partner_lps_path)
 %>
 
-
-
 <h1 class="govuk-heading-l">Confirm these details</h1>
-
 
 <dl class="govuk-summary-list govuk-!-margin-bottom-9">
   <div class="govuk-summary-list__row">
@@ -40,10 +37,10 @@
       Working with
     </dt>
     <dd class="govuk-summary-list__value">
-      <% @delivery_partner_form.chosen_provider_relationships.group_by{|r| r.lead_provider}.each do |lps_to_relationships| %>
-      <strong><%= lps_to_relationships.first.name %></strong>
+      <% @delivery_partner_form.display_lead_provider_details.each do |lead_provider| %>
+      <strong><%= lead_provider[:name] %></strong>
         <br/>
-        In cohort(s) <%= lps_to_relationships.second.map{ |relationship| relationship.cohort.display_name}.join(", ") %>
+        In cohort(s) <%= lead_provider[:chosen_cohorts] %>
         <br/>
       <% end %>
 
@@ -55,8 +52,6 @@
     </dd>
   </div>
 </dl>
-
-
 
 <%= form_for :confirmation, url: admin_create_delivery_partner_path, method: :post do |f| %>
   <%= f.hidden_field :answers_checked, value: true %>

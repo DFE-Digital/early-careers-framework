@@ -1,5 +1,5 @@
 <% content_for :before_content, govuk_back_link(
-  text: 'Back',
+  text: "Back",
   href: admin_new_lead_provider_cohorts_path)
 %>
 
@@ -14,7 +14,7 @@
       Name
     </dt>
     <dd class="govuk-summary-list__value">
-<%= @lead_provider_form.name %>
+      <%= @lead_provider_form.name %>
     </dd>
     <dd class="govuk-summary-list__actions">
       <%= govuk_link_to new_admin_supplier_path(continue: true), class: "govuk-link--no-visited-state" do %>
@@ -40,7 +40,7 @@
       Course
     </dt>
     <dd class="govuk-summary-list__value">
-      <%= @lead_provider_form.chosen_cip_name %>
+      <%= @lead_provider_form.chosen_cip.name %>
     </dd>
     <dd class="govuk-summary-list__actions">
       <%= govuk_link_to admin_new_lead_provider_cip_path, class: "govuk-link--no-visited-state" do %>
