@@ -41,7 +41,7 @@ RSpec.describe SchoolDataImporter do
         expect(imported_school.address_line4).to eql("South Yorkshire")
         expect(imported_school.country).to eql("")
         expect(imported_school.postcode).to eql("S36 7BX")
-        expect(imported_school.domains).to eql(["penistone-gs.uk/"])
+        expect(imported_school.domains).to eql(["penistone-gs.uk"])
       end
 
       it "correctly handles any Latin1 encoded characters in the data file" do
