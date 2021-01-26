@@ -52,19 +52,12 @@ class Admin::LeadProvidersController < Admin::BaseController
   end
 
   def create
-    @lead_provider_form = LeadProviderForm.new(session[:lead_provider_form])
+    authorize LeadProvider, :create?
 
-    @lead_provider = LeadProvider.new(name: @lead_provider_form.name, cohorts: @lead_provider_form.chosen_cohorts)
-    authorize @lead_provider, :create?
+    lead_provider_form = LeadProviderForm.new(session[:lead_provider_form])
+    lead_provider = lead_provider_form.save!
 
-    ActiveRecord::Base.transaction do
-      @lead_provider.save!
-      @lead_provider_form.chosen_cohorts.each do |cohort|
-        LeadProviderCip.create!(cohort: cohort, cip: @lead_provider_form.chosen_cip, lead_provider: @lead_provider)
-      end
-    end
-
-    redirect_to admin_new_lead_provider_success_path(lead_provider: @lead_provider)
+    redirect_to admin_new_lead_provider_success_path(lead_provider: lead_provider)
   rescue ActiveRecord::RecordInvalid
     raise ActionController::ActionControllerError
   end

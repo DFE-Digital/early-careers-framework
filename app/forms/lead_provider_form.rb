@@ -31,4 +31,17 @@ class LeadProviderForm
   def chosen_cip_name
     Cip.find(cip).name
   end
+
+  def save!
+    lead_provider = LeadProvider.new(name: name, cohorts: chosen_cohorts)
+
+    ActiveRecord::Base.transaction do
+      lead_provider.save!
+      chosen_cohorts.each do |cohort|
+        LeadProviderCip.create!(cohort: cohort, cip: chosen_cip, lead_provider: lead_provider)
+      end
+    end
+
+    lead_provider
+  end
 end

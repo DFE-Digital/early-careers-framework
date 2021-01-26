@@ -53,6 +53,20 @@ class DeliveryPartnerForm
     end
   end
 
+  def save!
+    delivery_partner = DeliveryPartner.new(name: name)
+
+    ActiveRecord::Base.transaction do
+      delivery_partner.save!
+      chosen_provider_relationships.each do |provider_relationship|
+        provider_relationship.delivery_partner = delivery_partner
+        provider_relationship.save!
+      end
+    end
+
+    delivery_partner
+  end
+
 private
 
   def lead_providers_and_cohorts_validation

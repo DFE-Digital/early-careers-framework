@@ -45,15 +45,7 @@ class Admin::DeliveryPartnersController < Admin::BaseController
     authorize DeliveryPartner, :create?
 
     delivery_partner_form = DeliveryPartnerForm.new(session[:delivery_partner_form])
-    delivery_partner = DeliveryPartner.new(name: delivery_partner_form.name)
-
-    ActiveRecord::Base.transaction do
-      delivery_partner.save!
-      delivery_partner_form.chosen_provider_relationships.each do |provider_relationship|
-        provider_relationship.delivery_partner = delivery_partner
-        provider_relationship.save!
-      end
-    end
+    delivery_partner = delivery_partner_form.save!
 
     redirect_to admin_new_delivery_partner_success_path(delivery_partner: delivery_partner)
   rescue ActiveRecord::RecordInvalid
