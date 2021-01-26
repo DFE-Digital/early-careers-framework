@@ -9,6 +9,8 @@ FROM ${BASE_RUBY_IMAGE} AS builder
 
 ARG BUILD_DEPS="git gcc libc-dev make nodejs yarn postgresql-dev build-base libxml2-dev libxslt-dev ttf-ubuntu-font-family"
 
+RUN mkdir log && touch log/mail.log
+
 WORKDIR /app
 
 COPY Gemfile Gemfile.lock package.json yarn.lock .ruby-version ./
@@ -22,7 +24,7 @@ RUN apk -U upgrade && \
     bundler -v && \
     bundle config set no-cache 'true' && \
     bundle config set no-binstubs 'true' && \
-    bundle --retry=5 --jobs=4 --without=development && \
+    bundle --retry=5 --jobs=4 && \
     yarn install --check-files && \
     apk del .gem-installdeps && \
     rm -rf /usr/local/bundle/cache && \
