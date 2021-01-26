@@ -4,6 +4,8 @@ class NewSupplierForm
   include ActiveModel::Model
 
   attr_accessor :name, :type
+  validates :name, presence: { message: "Enter a name" }, on: :name
+  validates :type, presence: { message: "Choose one" }, on: :type
 
   def supplier_types
     [OpenStruct.new(id: "lead_provider", name: "Lead provider", hint: "A top level training provider who has been awarded a contract."),

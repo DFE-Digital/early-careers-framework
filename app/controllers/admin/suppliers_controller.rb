@@ -26,18 +26,11 @@ class Admin::SuppliersController < Admin::BaseController
 
   def receive_new
     skip_authorization
-    if params.dig(:new_supplier_form, :name).blank?
-      @new_supplier_form = NewSupplierForm.new
-      @new_supplier_form.errors.add(:name, :blank, message: "Enter a name")
-      render :new and return
-    end
+    @new_supplier_form = NewSupplierForm.new(params.require(:new_supplier_form).permit(:name))
 
-    if session[:new_supplier_form]
-      session[:new_supplier_form].merge!(params.require(:new_supplier_form).permit(:name))
-    else
-      session[:new_supplier_form] = NewSupplierForm.new(params.require(:new_supplier_form).permit(:name))
-    end
+    render :new and return unless @new_supplier_form.valid?(:name)
 
+    session[:new_supplier_form] = (session[:new_supplier_form] || {}).merge({ name: @new_supplier_form.name })
     redirect_to admin_new_supplier_type_path
   end
 
@@ -47,17 +40,17 @@ class Admin::SuppliersController < Admin::BaseController
   end
 
   def receive_new_supplier_type
-    supplier_type = params.dig(:new_supplier_form, :type)
-    if supplier_type.blank?
+    @new_supplier_form = NewSupplierForm.new(session[:new_supplier_form])
+    @new_supplier_form.type = params.dig(:new_supplier_form, :type)
+
+    unless @new_supplier_form.valid?(:type)
       skip_authorization
-      @new_supplier_form = NewSupplierForm.new
-      @new_supplier_form.errors.add(:type, :blank, message: "Choose one")
       render :new_supplier_type and return
     end
 
-    session[:new_supplier_form].merge!(params.require(:new_supplier_form).permit(:type))
+    session[:new_supplier_form].merge!({ type: @new_supplier_form.type })
 
-    case supplier_type
+    case @new_supplier_form.type
     when "lead_provider"
       authorize LeadProvider, :create?
       redirect_to admin_new_lead_provider_cip_path
