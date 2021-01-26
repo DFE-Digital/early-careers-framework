@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class School < ApplicationRecord
-  paginates_per 3
   belongs_to :network, optional: true
   has_one :partnership
   has_one :lead_provider, through: :partnership
