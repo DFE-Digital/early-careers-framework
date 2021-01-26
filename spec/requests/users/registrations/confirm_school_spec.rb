@@ -27,8 +27,8 @@ RSpec.describe "Users::Registrations /school_confirmation", type: :request do
     it "displays the names of all the passed schools" do
       second_school = FactoryBot.create(:school)
       get "/users/confirm_school", params: { school_ids: [school.id, second_school.id] }
-      expect(response.body).to include(school.name)
-      expect(response.body).to include(second_school.name)
+      expect(response.body).to include(CGI.escapeHTML(school.name))
+      expect(response.body).to include(CGI.escapeHTML(second_school.name))
     end
   end
 end
