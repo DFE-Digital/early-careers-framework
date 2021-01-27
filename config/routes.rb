@@ -84,7 +84,8 @@ Rails.application.routes.draw do
 
   resource :school_search, only: %i[show create], path: "school-search", controller: :school_search
 
-  resource :core_induction_programme, controller: :core_induction_programme, only: :show, as: "cip", path: "/core_induction_programme" do
+  resource :core_induction_programme, controller: :core_induction_programme, only: :show, as: "cip", path: "/core-induction-programme" do
+    get "download-export", to: "core_induction_programme#download_export", as: "download_export"
     resource :years, controller: "core_induction_programme/years", only: :show, path: "/:year_id" do
       resource :modules, controller: "core_induction_programme/modules", only: :show, path: "/:module_id" do
         resource :lessons, controller: "core_induction_programme/lessons", only: :show, path: "/:lesson_id"

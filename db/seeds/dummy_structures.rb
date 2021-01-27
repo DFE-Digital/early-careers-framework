@@ -32,3 +32,8 @@ unless CoreInductionProgramme.first
   CoreInductionProgramme.create!(name: "Teach First")
   CoreInductionProgramme.create!(name: "UCL")
 end
+
+unless Cohort.first
+  Cohort.create!(start_year: 2021)
+  Cohort.create!(start_year: 2022)
+end

@@ -44,11 +44,13 @@ gem "mail-notify", ">= 1.0.3"
 # do not rely on host's timezone data, which can be inconsistent
 gem "tzinfo-data"
 
+gem "activerecord-import"
 gem "govuk-components", ">= 1.0.0"
 gem "govuk_design_system_formbuilder", "~> 2.1", ">= 2.1.5"
 gem "govuk_publishing_components", ">= 23.11.0"
 gem "httpclient"
 gem "sass-rails", ">= 6.0.0"
+gem "seed_dump"
 
 # Database based asynchronous priority queue system
 gem "delayed_cron_job"
