@@ -4,15 +4,11 @@
     <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
       <div class="govuk-form-group">
         <%= f.govuk_email_field :email, label: { text: "Email", hidden: true } %>
-
-        <% if devise_mapping.rememberable? %>
-          <%= f.govuk_check_box :remember_me, true, label: {text: "Remember me"} %>
-        <% end %>
       </div>
 
       <%= f.govuk_submit "Sign in" %>
     <% end %>
 
-    <%= render "users/shared/links" %>
+    <%= govuk_link_to "Register your school", users_information_path %>
   </div>
 </div>

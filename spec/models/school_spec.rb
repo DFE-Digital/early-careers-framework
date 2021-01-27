@@ -66,7 +66,7 @@ RSpec.describe School, type: :model do
       let(:user) { create(:user, confirmed_at: nil) }
       let!(:coordinator) { create(:induction_coordinator_profile, user: user, schools: [school]) }
 
-      it "returns false if no one has registered a school" do
+      it "returns true" do
         expect(school.partially_registered?).to be true
       end
     end

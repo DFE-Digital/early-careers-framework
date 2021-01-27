@@ -30,11 +30,6 @@ class School < ApplicationRecord
   end
 
   def partially_registered?
-    return false if not_registered?
-
-    induction_coordinator_profiles
-      .joins(:user)
-      .where.not(users: { confirmed_at: nil })
-      .none?
+    !(fully_registered? || not_registered?)
   end
 end

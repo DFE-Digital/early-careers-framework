@@ -8,7 +8,7 @@ RSpec.describe "Users::Registrations /register", type: :request do
   let(:email) { Faker::Internet.email(domain: school.domains.first) }
 
   describe "POST /users/register" do
-    it "redirects to homepage on successful user creation" do
+    it "renders :verification_email_sent" do
       # When
       post "/users/register", params: { user: {
         full_name: full_name,

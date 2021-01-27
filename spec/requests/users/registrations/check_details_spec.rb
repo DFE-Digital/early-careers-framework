@@ -7,7 +7,7 @@ RSpec.describe "Users::Registrations /check-details", type: :request do
   let(:email) { Faker::Internet.email(domain: school.domains.first) }
 
   describe "POST /users/check_email" do
-    it "renders correct template when no schools are found" do
+    it "renders :start_registration when no schools are found" do
       # When
       post "/users/check-details", params: { induction_coordinator_profile: {
         email: "something@random.com", school_urn: "urn101"
@@ -17,7 +17,7 @@ RSpec.describe "Users::Registrations /check-details", type: :request do
       expect(response).to render_template(:start_registration)
     end
 
-    it "renders the correct template when there is a matching school" do
+    it "renders :school_not_registered when school has not been claimed" do
       # When
       post "/users/check-details", params: { induction_coordinator_profile: {
         email: email, school_urn: school.urn
@@ -31,7 +31,7 @@ RSpec.describe "Users::Registrations /check-details", type: :request do
 
     context "when the user is already registered" do
       before { create(:user, email: email) }
-      it "renders the correct template" do
+      it "renders :user_already_registered" do
         # When
         post "/users/check-details", params: { induction_coordinator_profile: {
           email: email, school_urn: school.urn
@@ -45,7 +45,7 @@ RSpec.describe "Users::Registrations /check-details", type: :request do
 
     context "when the school is ineligible for the core induction programme" do
       before { school.update(eligible: false) }
-      it "renders the correct template" do
+      it "renders :school_not_eligible" do
         # When
         post "/users/check-details", params: { induction_coordinator_profile: {
           email: email, school_urn: school.urn
@@ -61,7 +61,7 @@ RSpec.describe "Users::Registrations /check-details", type: :request do
       let(:user) { create(:user, confirmed_at: 2.days.ago) }
       let!(:coordinator) { create(:induction_coordinator_profile, user: user, schools: [school]) }
 
-      it "renders the correct template" do
+      it "renders :school_fully_registered" do
         # When
         post "/users/check-details", params: { induction_coordinator_profile: {
           email: email, school_urn: school.urn
@@ -76,7 +76,7 @@ RSpec.describe "Users::Registrations /check-details", type: :request do
       let(:user) { create(:user, confirmed_at: nil) }
       let!(:coordinator) { create(:induction_coordinator_profile, user: user, schools: [school]) }
 
-      it "renders the correct template" do
+      it "renders :school_partially_registered" do
         # When
         post "/users/check-details", params: { induction_coordinator_profile: {
           email: email, school_urn: school.urn
