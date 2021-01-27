@@ -9,7 +9,9 @@ services:
   redis:
     image: redis:alpine
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: early-careers-framework
     ports:
       - "3000:3000"
