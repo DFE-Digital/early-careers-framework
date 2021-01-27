@@ -1,5 +1,8 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
+    <% if @current_user&.admin_profile %>
+      <%= govuk_link_to "Download export", download_export_cip_path %>
+    <% end %>
     <h1 class="govuk-heading-xl">What is the early career framework?</h1>
     <p>The early career framework (ECF) was designed to make sure early career teachers focus on learning the things that make the most difference in the classroom and their professional practice.</p>
     <p>The core induction programmes include high-quality development materials, underpinned by the ECF, which will support early career teachers to develop the essential knowledge and skills to set them up for a successful and fulfilling career in teaching.</p>

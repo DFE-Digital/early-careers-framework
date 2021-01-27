@@ -7,4 +7,9 @@ RSpec.describe "Core Induction Programme", type: :request do
     get "/core_induction_programme"
     expect(response).to render_template(:show)
   end
+
+  it "redirects to cip path when user is not admin" do
+    get "/core-induction-programme/download-export"
+    expect(response).to redirect_to(cip_path)
+  end
 end
