@@ -15,6 +15,7 @@ Dir[Rails.root.join("spec/support/**/*.rb")].sort.each { |f| require f }
 require "devise"
 require "pundit/rspec"
 require "pundit/matchers"
+require "support/new_supplier_helper"
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
 # run as spec files by default. This means that files in spec/support that end

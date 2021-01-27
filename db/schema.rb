@@ -23,6 +23,27 @@ ActiveRecord::Schema.define(version: 2021_01_26_103901) do
     t.index ["user_id"], name: "index_admin_profiles_on_user_id"
   end
 
+  create_table "cohorts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "start_year", limit: 2, null: false
+  end
+
+  create_table "cohorts_lead_providers", id: false, force: :cascade do |t|
+    t.uuid "lead_provider_id", null: false
+    t.uuid "cohort_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["cohort_id", "lead_provider_id"], name: "index_cohorts_lead_providers_on_cohort_id_and_lead_provider_id"
+    t.index ["lead_provider_id", "cohort_id"], name: "index_cohorts_lead_providers_on_lead_provider_id_and_cohort_id"
+  end
+
+  create_table "core_induction_programmes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "course_lessons", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -78,6 +99,12 @@ ActiveRecord::Schema.define(version: 2021_01_26_103901) do
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
+  create_table "delivery_partners", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "name", null: false
+  end
+
   create_table "induction_coordinator_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -92,6 +119,17 @@ ActiveRecord::Schema.define(version: 2021_01_26_103901) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["induction_coordinator_profile_id"], name: "index_icp_schools_on_icp"
     t.index ["school_id"], name: "index_icp_schools_on_schools"
+  end
+
+  create_table "lead_provider_cips", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "lead_provider_id", null: false
+    t.uuid "cohort_id", null: false
+    t.uuid "core_induction_programme_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["cohort_id"], name: "index_lead_provider_cips_on_cohort_id"
+    t.index ["core_induction_programme_id"], name: "index_lead_provider_cips_on_core_induction_programme_id"
+    t.index ["lead_provider_id"], name: "index_lead_provider_cips_on_lead_provider_id"
   end
 
   create_table "lead_provider_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -123,6 +161,17 @@ ActiveRecord::Schema.define(version: 2021_01_26_103901) do
     t.datetime "confirmed_at"
     t.index ["lead_provider_id"], name: "index_partnerships_on_lead_provider_id"
     t.index ["school_id"], name: "index_partnerships_on_school_id"
+  end
+
+  create_table "provider_relationships", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "lead_provider_id", null: false
+    t.uuid "delivery_partner_id", null: false
+    t.uuid "cohort_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["cohort_id"], name: "index_provider_relationships_on_cohort_id"
+    t.index ["delivery_partner_id"], name: "index_provider_relationships_on_delivery_partner_id"
+    t.index ["lead_provider_id"], name: "index_provider_relationships_on_lead_provider_id"
   end
 
   create_table "schools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -172,6 +221,8 @@ ActiveRecord::Schema.define(version: 2021_01_26_103901) do
   end
 
   add_foreign_key "admin_profiles", "users"
+  add_foreign_key "cohorts_lead_providers", "cohorts"
+  add_foreign_key "cohorts_lead_providers", "lead_providers"
   add_foreign_key "course_lessons", "course_lessons", column: "next_lesson_id"
   add_foreign_key "course_lessons", "course_lessons", column: "previous_lesson_id"
   add_foreign_key "course_lessons", "course_modules"
@@ -180,9 +231,15 @@ ActiveRecord::Schema.define(version: 2021_01_26_103901) do
   add_foreign_key "course_modules", "course_years"
   add_foreign_key "course_years", "lead_providers"
   add_foreign_key "induction_coordinator_profiles", "users"
+  add_foreign_key "lead_provider_cips", "cohorts"
+  add_foreign_key "lead_provider_cips", "core_induction_programmes"
+  add_foreign_key "lead_provider_cips", "lead_providers"
   add_foreign_key "lead_provider_profiles", "lead_providers"
   add_foreign_key "lead_provider_profiles", "users"
   add_foreign_key "partnerships", "lead_providers"
   add_foreign_key "partnerships", "schools"
+  add_foreign_key "provider_relationships", "cohorts"
+  add_foreign_key "provider_relationships", "delivery_partners"
+  add_foreign_key "provider_relationships", "lead_providers"
   add_foreign_key "schools", "networks"
 end
