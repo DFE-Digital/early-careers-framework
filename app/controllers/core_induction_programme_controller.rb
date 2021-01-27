@@ -6,15 +6,15 @@ class CoreInductionProgrammeController < ApplicationController
   end
 
   def download_export
-    unless @current_user&.admin?
+    if @current_user&.admin?
+      system "bundle exec rake cip_seed_dump"
+      send_file(
+        Rails.root.join("db/seeds/cip_seed_dump.rb"),
+        filename: "cip_seed_dump.rb",
+        type: "text/plain",
+      )
+    else
       redirect_to cip_path
     end
-
-    system "bundle exec rake cip_seed_dump"
-    send_file(
-      Rails.root.join("db/seeds/cip_seed_dump.rb"),
-      filename: "cip_seed_dump.rb",
-      type: "text/plain",
-    )
   end
 end
