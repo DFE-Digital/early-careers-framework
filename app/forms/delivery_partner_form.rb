@@ -7,7 +7,7 @@ class DeliveryPartnerForm
   validate :lead_providers_and_cohorts_validation
 
   def available_lead_providers
-    LeadProvider.includes(:cohorts).select { |lead_provider| lead_provider.cohorts.any? }
+    LeadProvider.joins(:cohorts).includes(:cohorts).select { |lead_provider| lead_provider.cohorts.any? }
   end
 
   def chosen_provider_relationships
@@ -29,13 +29,10 @@ class DeliveryPartnerForm
   end
 
   def populate_provider_relationships(params)
-    self.lead_providers = []
     self.provider_relationships = []
 
     lead_provider_ids = params.dig(:delivery_partner_form, :lead_providers)&.keep_if(&:present?)
-    lead_provider_ids.each do |lead_provider_id|
-      lead_providers.push(LeadProvider.find(lead_provider_id))
-    end
+    self.lead_providers = LeadProvider.find(lead_provider_ids)
 
     lead_providers.each do |lead_provider|
       chosen_cohorts = params.dig(
