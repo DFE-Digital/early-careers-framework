@@ -13,6 +13,7 @@ RSpec.describe LeadProvider, type: :model do
     it { is_expected.to have_many(:partnerships) }
     it { is_expected.to have_many(:schools).through(:partnerships) }
     it { is_expected.to have_many(:lead_provider_profiles) }
+    it { is_expected.to have_many(:users).through(:lead_provider_profiles) }
     it { is_expected.to have_many(:provider_relationships) }
     it { is_expected.to have_many(:delivery_partners).through(:provider_relationships) }
   end

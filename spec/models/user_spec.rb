@@ -6,6 +6,10 @@ RSpec.describe User, type: :model do
   describe "associations" do
     it { is_expected.to have_one(:admin_profile) }
     it { is_expected.to have_one(:induction_coordinator_profile) }
+    it { is_expected.to have_one(:lead_provider_profile) }
+    it { is_expected.to have_one(:delivery_partner_profile) }
+    it { is_expected.to have_one(:lead_provider).through(:lead_provider_profile) }
+    it { is_expected.to have_one(:delivery_partner).through(:delivery_partner_profile) }
   end
 
   describe "validations" do
@@ -24,11 +28,6 @@ RSpec.describe User, type: :model do
       expect(user.valid?).to be_falsey
       expect(user.errors.full_messages[0]).to include("Enter a valid email address")
     end
-  end
-
-  describe "associations" do
-    it { is_expected.to have_one(:induction_coordinator_profile) }
-    it { is_expected.to have_one(:lead_provider_profile) }
   end
 
   describe "#password_required?" do
