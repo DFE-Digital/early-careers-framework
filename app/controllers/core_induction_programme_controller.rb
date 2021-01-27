@@ -6,7 +6,7 @@ class CoreInductionProgrammeController < ApplicationController
   end
 
   def download_export
-    unless @current_user&.admin_profile
+    unless @current_user&.admin?
       redirect_to cip_path and return
     end
 
