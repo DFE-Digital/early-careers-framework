@@ -9,8 +9,6 @@ FROM ${BASE_RUBY_IMAGE} AS builder
 
 ARG BUILD_DEPS="git gcc libc-dev make nodejs yarn postgresql-dev build-base libxml2-dev libxslt-dev ttf-ubuntu-font-family"
 
-RUN mkdir log && touch log/mail.log
-
 WORKDIR /app
 
 COPY Gemfile Gemfile.lock package.json yarn.lock .ruby-version ./
