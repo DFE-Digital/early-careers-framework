@@ -7,7 +7,7 @@ class CoreInductionProgrammeController < ApplicationController
 
   def download_export
     unless @current_user&.admin?
-      redirect_to cip_path and return
+      redirect_to cip_path
     end
 
     system "bundle exec rake cip_seed_dump"
