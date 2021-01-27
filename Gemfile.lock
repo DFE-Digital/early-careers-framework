@@ -64,6 +64,8 @@ GEM
     activerecord (6.1.1)
       activemodel (= 6.1.1)
       activesupport (= 6.1.1)
+    activerecord-import (1.0.7)
+      activerecord (>= 3.2)
     activestorage (6.1.1)
       actionpack (= 6.1.1)
       activejob (= 6.1.1)
@@ -352,6 +354,9 @@ GEM
       sass (~> 3.5, >= 3.5.5)
     scss_lint-govuk (0.2.0)
       scss_lint
+    seed_dump (3.3.1)
+      activerecord (>= 4)
+      activesupport (>= 4)
     selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
@@ -421,6 +426,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord-import
   ar-uuid (~> 0.2.1)
   bootsnap (>= 1.1.0)
   byebug
@@ -452,6 +458,7 @@ DEPENDENCIES
   rubocop-govuk
   sass-rails (>= 6.0.0)
   scss_lint-govuk
+  seed_dump
   shoulda-matchers (~> 4.4)
   simplecov
   spring
