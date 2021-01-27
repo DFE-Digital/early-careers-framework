@@ -4,12 +4,8 @@
 
 Dir[Rails.root.join("db/seeds/dummy_structures.rb")].each { |seed| load seed }
 
-CURRENT_CIP_VERSION = 3
-CourseLesson.where("version < ?", CURRENT_CIP_VERSION).delete_all
-CourseModule.where("version < ?", CURRENT_CIP_VERSION).delete_all
-CourseYear.where("version < ?", CURRENT_CIP_VERSION).delete_all
+CourseLesson.delete_all
+CourseModule.delete_all
+CourseYear.delete_all
 
-Dir[Rails.root.join("db/seeds/cip_ambition.rb")].each { |seed| load seed }
-Dir[Rails.root.join("db/seeds/cip_edt.rb")].each { |seed| load seed }
-Dir[Rails.root.join("db/seeds/cip_teachfirst.rb")].each { |seed| load seed }
-Dir[Rails.root.join("db/seeds/cip_ucl.rb")].each { |seed| load seed }
+Dir[Rails.root.join("db/seeds/cip_seed.rb")].each { |seed| load seed }

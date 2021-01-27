@@ -2,6 +2,9 @@
 version: "3.6"
 services:
   web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     volumes:
       - ${APP_ROOT_FOLDER:-.}:/app
       # do not mount these below local files/folders into the container

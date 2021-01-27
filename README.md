@@ -22,9 +22,15 @@
 6. Run `./bin/webpack-dev-server` in a separate shell for faster compilation of assets
 
 ### With docker
-1. Run `docker-compose build` to build the web image
-2. Run `docker-compose run --rm web bundle exec rake db:setup` to setup the database
-3. Run `docker-compose up` to start the service
+
+There is a separate Dockerfile for local development. It isn't (currently) very
+widely used - if it doesn't work, make sure any recently changes to Dockerfile
+have been applied to Dockerfile.dev where appropriate.
+
+1. Create `.env` file - copy `.env.template`. Set your database password and user from the docker-compose file in the `.env` file
+2. Run `docker-compose build` to build the web image
+3. Run `docker-compose run --rm web bundle exec rake db:setup` to setup the database
+4. Run `docker-compose up` to start the service
 
 It should be possible to run just the database from docker, if you want to.
 Check docker-compose file for username and password to put in your `.env` file.
@@ -97,8 +103,18 @@ Check the file `manifest.yml` for customisation of name (you may need to change 
 
 The app should be available at https://govuk-rails-boilerplate.london.cloudapps.digital
 
+## Dealing with cip content
+
 ### Seeding cip content / anything else
 
 1. Make sure you are ok with the content in seed files to be created in your db.
 2. Run `cf login -a api.london.cloud.service.gov.uk -u USERNAME`, `USERNAME` is your personal GOV.UK PaaS account email address
 3. Run `cf run-task ecf-dev "cd .. && cd app && ../usr/local/bundle/bin/bundle exec rails db:seed"` to start the task.
+
+### Updating cip content from changes on an app
+
+1. Download the file to your machine - log in as admin, go to cip page, press the button to download content.
+1. Copy the file or its contents into `cip_seed.rb`.
+1. Add an option `on_duplicate_key_ignore` to lead providers, think carefully which ones from seed dump are needed.
+1. Commit, push, run seeding job from above in the deployed app.
+

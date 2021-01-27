@@ -1,0 +1,67 @@
+<% content_for :before_content, govuk_back_link(
+  text: "Back",
+  href: admin_new_lead_provider_cohorts_path)
+%>
+
+<h1 class="govuk-heading-l">Confirm these details</h1>
+
+<dl class="govuk-summary-list govuk-!-margin-bottom-9">
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Name
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= @lead_provider_form.name %>
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <%= govuk_link_to new_admin_supplier_path(continue: true), class: "govuk-link--no-visited-state" do %>
+        Change<span class="govuk-visually-hidden"> name</span>
+      <% end %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Type
+    </dt>
+    <dd class="govuk-summary-list__value">
+      Lead Provider
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <%= govuk_link_to admin_new_supplier_type_path, class: "govuk-link--no-visited-state" do %>
+        Change<span class="govuk-visually-hidden"> supplier type</span>
+      <% end %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Course
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= @lead_provider_form.chosen_cip.name %>
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <%= govuk_link_to admin_new_lead_provider_cip_path, class: "govuk-link--no-visited-state" do %>
+        Change<span class="govuk-visually-hidden"> course</span>
+      <% end %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Cohort(s)
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= @lead_provider_form.chosen_cohort_names %>
+
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <%= govuk_link_to admin_new_lead_provider_cohorts_path, class: "govuk-link--no-visited-state" do %>
+        Change<span class="govuk-visually-hidden"> cohorts</span>
+      <% end %>
+    </dd>
+  </div>
+</dl>
+
+<%= form_for :confirmation, url: admin_create_lead_provider_path, method: :post do |f| %>
+  <%= f.hidden_field :answers_checked, value: true %>
+  <%= f.govuk_submit "Create supplier" %>
+<% end %>
