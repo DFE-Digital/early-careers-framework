@@ -19,6 +19,8 @@ RSpec.describe "Core Induction Programme", type: :request do
 
     get "/core-induction-programme/download-export"
     expect(response.body).to include("CourseYear.import(")
-    response.header["Content-Type"].should eql "text/plain"
+    expect(response.body).to include("CourseModule.import(")
+    expect(response.body).to include("CourseLesson.import(")
+    expect(response.header["Content-Type"]).to eql "text/plain"
   end
 end

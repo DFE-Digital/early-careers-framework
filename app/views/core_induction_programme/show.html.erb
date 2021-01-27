@@ -1,6 +1,6 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <% if @current_user.admin? %>
+    <% if @current_user&.admin? %>
       <%= govuk_link_to "Download export", download_export_cip_path %>
     <% end %>
     <h1 class="govuk-heading-xl">What is the early career framework?</h1>

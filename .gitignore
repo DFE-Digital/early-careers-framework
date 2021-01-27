@@ -47,4 +47,3 @@ tokens
 /config/credentials/*.key
 
 /coverage/
-/db/seeds/cip_seed_dump.rb
