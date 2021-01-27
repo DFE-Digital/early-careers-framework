@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class LeadProviderPolicy < ApplicationPolicy
+class DeliveryPartnerPolicy < ApplicationPolicy
   def show?
     admin_only
   end

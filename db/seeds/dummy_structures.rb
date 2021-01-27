@@ -25,3 +25,10 @@ unless AdminProfile.first || Rails.env.production?
   end
   AdminProfile.create!(user: user)
 end
+
+unless CoreInductionProgramme.first
+  CoreInductionProgramme.create!(name: "Ambition Institute")
+  CoreInductionProgramme.create!(name: "Education Development Trust")
+  CoreInductionProgramme.create!(name: "Teach First")
+  CoreInductionProgramme.create!(name: "UCL")
+end
