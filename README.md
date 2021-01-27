@@ -22,9 +22,15 @@
 6. Run `./bin/webpack-dev-server` in a separate shell for faster compilation of assets
 
 ### With docker
-1. Run `docker-compose build` to build the web image
-2. Run `docker-compose run --rm web bundle exec rake db:setup` to setup the database
-3. Run `docker-compose up` to start the service
+
+There is a separate Dockerfile for local development. It isn't (currently) very
+widely used - if it doesn't work, make sure any recently changes to Dockerfile
+have been applied to Dockerfile.dev where appropriate.
+
+1. Create `.env` file - copy `.env.template`. Set your database password and user from the docker-compose file in the `.env` file
+2. Run `docker-compose build` to build the web image
+3. Run `docker-compose run --rm web bundle exec rake db:setup` to setup the database
+4. Run `docker-compose up` to start the service
 
 It should be possible to run just the database from docker, if you want to.
 Check docker-compose file for username and password to put in your `.env` file.
