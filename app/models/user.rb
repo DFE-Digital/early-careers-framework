@@ -17,6 +17,10 @@ class User < ApplicationRecord
     admin_profile.present?
   end
 
+  def supplier_name
+    lead_provider&.name || delivery_partner&.name
+  end
+
   def password_required?
     false
   end

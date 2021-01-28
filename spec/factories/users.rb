@@ -13,7 +13,11 @@ FactoryBot.define do
     end
 
     trait :lead_provider do
-      lead_provider_profile { lead_provider }
+      lead_provider_profile
+    end
+
+    trait :delivery_partner do
+      delivery_partner_profile
     end
   end
 end

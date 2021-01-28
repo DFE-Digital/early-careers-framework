@@ -50,4 +50,24 @@ RSpec.describe User, type: :model do
       expect(user.admin?).to be false
     end
   end
+
+  describe "#supplier_name" do
+    it "returns the correct lead provider name" do
+      user = create(:user, :lead_provider)
+
+      expect(user.supplier_name).to eq user.lead_provider.name
+    end
+
+    it "returns the correct delivery partner name" do
+      user = create(:user, :delivery_partner)
+
+      expect(user.supplier_name).to eq user.delivery_partner.name
+    end
+
+    it "returns nil when the user doesn't belong to a supplier" do
+      user = create(:user)
+
+      expect(user.supplier_name).to be_nil
+    end
+  end
 end
