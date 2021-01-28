@@ -20,7 +20,7 @@ module Devise
             )
 
             UserMailer.sign_in_email(user, url).deliver_now
-            fail!("Follow the instructions in your email to continue.")
+            raise Users::SessionsController::LoginIncompleteError
           else
             raise Users::SessionsController::EmailNotFoundError
           end
