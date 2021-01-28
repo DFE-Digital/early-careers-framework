@@ -88,7 +88,11 @@ Rails.application.routes.draw do
     get "download-export", to: "core_induction_programme#download_export", as: "download_export"
     resource :years, controller: "core_induction_programme/years", only: :show, path: "/:year_id" do
       resource :modules, controller: "core_induction_programme/modules", only: :show, path: "/:module_id" do
-        resource :lessons, controller: "core_induction_programme/lessons", only: :show, path: "/:lesson_id"
+        resource :lessons, controller: "core_induction_programme/lessons", only: %i[show edit update], path: "/:lesson_id" do
+          member do
+            put "edit"
+          end
+        end
       end
     end
   end
