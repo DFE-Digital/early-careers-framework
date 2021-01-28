@@ -1,8 +1,5 @@
-<% content_for :before_content, govuk_breadcrumbs(breadcrumbs: {
-  "Dashboard" => admin_dashboard_path,
-  "Manage suppliers" => nil
-}) %>
-<h1 class="govuk-heading-l">Manage suppliers</h1>
+<%= render "layout", locals={page: "suppliers"} %>
+
 <%= govuk_link_to "Add a new supplier", new_admin_supplier_path, button: true %>
 
 <table class="govuk-table">

@@ -7,4 +7,8 @@
   &.page-tab__selected {
     border-bottom: solid govuk-colour("blue") 4px;
   }
+
+  a {
+    text-decoration: none;
+  }
 }
