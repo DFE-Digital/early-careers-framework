@@ -16,4 +16,19 @@ class School < ApplicationRecord
     ADDRESS
     address.squeeze("\n")
   end
+
+  def fully_registered?
+    induction_coordinator_profiles
+      .joins(:user)
+      .where.not(users: { confirmed_at: nil })
+      .any?
+  end
+
+  def not_registered?
+    induction_coordinator_profiles.none?
+  end
+
+  def partially_registered?
+    !(fully_registered? || not_registered?)
+  end
 end

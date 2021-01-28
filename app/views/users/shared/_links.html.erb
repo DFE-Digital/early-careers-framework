@@ -3,7 +3,7 @@
 <% end %>
 
 <%- if devise_mapping.registerable? && controller_name != 'registrations' %>
-  <%= govuk_link_to "Register your school", users_check_email_path %><br />
+  <%= govuk_link_to "Register your school", users_information_path %><br />
 <% end %>
 
 <%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>
