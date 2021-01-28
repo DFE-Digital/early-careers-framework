@@ -24,7 +24,6 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resources :suppliers, only: %i[index new]
-    resources :supplier_users, only: :index, path: "suppliers/users"
     scope "suppliers/new" do
       post "/", controller: :suppliers, action: :receive_new, as: :new_supplier
       get "supplier-type", controller: :suppliers, action: :new_supplier_type, as: :new_supplier_type
@@ -69,6 +68,11 @@ Rails.application.routes.draw do
       post "/", controller: :delivery_partners, action: :update_delivery_partner, as: :update_delivery_partner
 
       resources :lead_provider_users, path: "/users"
+    end
+
+    resources :supplier_users, only: %i[index new], path: "suppliers/users"
+    scope "suppliers/users/new" do
+      post "/", controller: :supplier_users, action: :receive_supplier
     end
   end
 
