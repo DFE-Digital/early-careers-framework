@@ -1,0 +1,20 @@
+<% content_for :before_content, govuk_back_link(
+  text: "Back",
+  href: new_admin_supplier_user_path(continue: true))
+%>
+
+<h1 class="govuk-heading-l">New user for <%= @supplier_user_form.chosen_supplier.name %></h1>
+
+<%= form_with model: @supplier_user_form, url: admin_new_supplier_user_details_path, method: :post do |f| %>
+  <%= f.govuk_text_field(
+        :full_name,
+        label: { text: "Full name" })
+  %>
+
+  <%= f.govuk_email_field(
+        :email,
+        label: { text: "Email" })
+  %>
+
+  <%= f.govuk_submit "Continue" %>
+<% end %>

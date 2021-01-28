@@ -70,9 +70,12 @@ Rails.application.routes.draw do
       resources :lead_provider_users, path: "/users"
     end
 
-    resources :supplier_users, only: %i[index new], path: "suppliers/users"
+    resources :supplier_users, only: %i[index new create], path: "suppliers/users"
     scope "suppliers/users/new" do
       post "/", controller: :supplier_users, action: :receive_supplier
+      get "user-details", controller: :supplier_users, action: :user_details, as: :new_supplier_user_details
+      post "user-details", controller: :supplier_users, action: :receive_user_details
+      get "review", controller: :supplier_users, action: :review, as: :new_supplier_user_review
     end
   end
 
