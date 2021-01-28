@@ -17,12 +17,4 @@ class CourseLessonPolicy < ApplicationPolicy
   def update?
     admin_only
   end
-
-private
-
-  def admin_only
-    return true if user&.admin?
-
-    false
-  end
 end

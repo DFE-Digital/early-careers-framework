@@ -56,7 +56,7 @@ class ApplicationPolicy
 private
 
   def admin_only
-    return true if user.admin?
+    return true if user&.admin?
 
     false
   end
