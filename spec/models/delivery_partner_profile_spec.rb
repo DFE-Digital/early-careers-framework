@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe LeadProviderProfile, type: :model do
+RSpec.describe DeliveryPartnerProfile, type: :model do
   describe "associations" do
     it { is_expected.to belong_to(:user) }
     it { is_expected.to belong_to(:delivery_partner) }

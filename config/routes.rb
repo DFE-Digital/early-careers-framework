@@ -23,7 +23,6 @@ Rails.application.routes.draw do
   resource :school_invites, only: %i[show create]
 
   namespace :admin do
-    resource :dashboard, controller: :dashboard, only: :show
     resources :suppliers, only: %i[index new]
     scope "suppliers/new" do
       post "/", controller: :suppliers, action: :receive_new, as: :new_supplier
