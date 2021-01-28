@@ -3,14 +3,15 @@
 require "govspeak"
 
 class GovspeakTestController < ApplicationController
+  include GovspeakHelper
   def show
-    @content = Govspeak::Document.new("").to_html
+    @content = content_to_html("")
     @preview_string = ""
   end
 
   def preview
     @preview_string = params[:preview_string]
-    @content = Govspeak::Document.new(@preview_string, options: { allow_extra_quotes: true }).to_html
+    @content = content_to_html(@preview_string)
     render :show
   end
 end
