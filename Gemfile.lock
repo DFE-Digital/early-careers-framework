@@ -64,6 +64,8 @@ GEM
     activerecord (6.1.1)
       activemodel (= 6.1.1)
       activesupport (= 6.1.1)
+    activerecord-import (1.0.7)
+      activerecord (>= 3.2)
     activestorage (6.1.1)
       actionpack (= 6.1.1)
       activejob (= 6.1.1)
@@ -101,7 +103,15 @@ GEM
     childprocess (3.0.0)
     coderay (1.1.3)
     concurrent-ruby (1.1.7)
+    crack (0.4.4)
     crass (1.0.6)
+    delayed_cron_job (0.7.4)
+      delayed_job (>= 4.1)
+    delayed_job (4.1.9)
+      activesupport (>= 3.0, < 6.2)
+    delayed_job_active_record (4.1.5)
+      activerecord (>= 3.0, < 6.2)
+      delayed_job (>= 3.0, < 5)
     devise (4.7.3)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -150,7 +160,9 @@ GEM
       rails (>= 5.0.0.1)
       rouge
       sprockets (< 4)
+    hashdiff (1.0.1)
     htmlentities (4.3.4)
+    httpclient (2.8.3)
     i18n (1.8.7)
       concurrent-ruby (~> 1.0)
     jwt (2.2.2)
@@ -342,6 +354,9 @@ GEM
       sass (~> 3.5, >= 3.5.5)
     scss_lint-govuk (0.2.0)
       scss_lint
+    seed_dump (3.3.1)
+      activerecord (>= 4)
+      activesupport (>= 4)
     selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
@@ -391,6 +406,10 @@ GEM
       nokogiri (~> 1.6)
       rubyzip (>= 1.3.0)
       selenium-webdriver (>= 3.0, < 4.0)
+    webmock (3.10.0)
+      addressable (>= 2.3.6)
+      crack (>= 0.3.2)
+      hashdiff (>= 0.4.0, < 2.0.0)
     webpacker (5.2.1)
       activesupport (>= 5.2)
       rack-proxy (>= 0.6.1)
@@ -407,11 +426,14 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord-import
   ar-uuid (~> 0.2.1)
   bootsnap (>= 1.1.0)
   byebug
   canonical-rails (>= 0.2.10)
   capybara (~> 3.34, >= 3.34.0)
+  delayed_cron_job
+  delayed_job_active_record
   devise (>= 4.7.3)
   dotenv-rails (>= 2.7.6)
   factory_bot_rails (>= 6.1.0)
@@ -421,6 +443,7 @@ DEPENDENCIES
   govuk-components (>= 1.0.0)
   govuk_design_system_formbuilder (~> 2.1, >= 2.1.5)
   govuk_publishing_components (>= 23.11.0)
+  httpclient
   kaminari (>= 1.2.0)
   listen (>= 3.0.5, < 3.4)
   mail-notify (>= 1.0.3)
@@ -435,6 +458,7 @@ DEPENDENCIES
   rubocop-govuk
   sass-rails (>= 6.0.0)
   scss_lint-govuk
+  seed_dump
   shoulda-matchers (~> 4.4)
   simplecov
   spring
@@ -443,6 +467,7 @@ DEPENDENCIES
   wdm (>= 0.1.0)
   web-console (>= 4.1.0)
   webdrivers (~> 4.4, >= 4.4.1)
+  webmock
   webpacker (>= 5.2.1)
 
 RUBY VERSION

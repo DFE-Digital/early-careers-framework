@@ -1,7 +1,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h2 class="govuk-heading-l">You do not have an account</h2>
-    <p>Your school may not be registered. </p>
-    <%= govuk_link_to "Register your school", users_check_email_path %>
+    <h2 class="govuk-heading-l">Your school has not registered</h2>
+    <p>You must be responsible for running your induction programme to register your school.</p>
+    <%= govuk_link_to "Register your school", users_information_path, button: true %>
   </div>
 </div>

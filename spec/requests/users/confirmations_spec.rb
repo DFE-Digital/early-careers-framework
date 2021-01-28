@@ -10,13 +10,10 @@ RSpec.describe "Users::Confirmations", type: :request do
   end
 
   describe "GET /users/confirmation" do
-    let(:flash_notice) { "Your email address has been successfully confirmed." }
-
     it "confirms the account" do
       get "/users/confirmation?confirmation_token=#{confirmation_token}"
       expect(user.reload.confirmed?).to be true
-      expect(flash[:notice]).to eq flash_notice
-      expect(response).to redirect_to(user_session_path)
+      expect(response).to render_template(:confirmed)
     end
   end
 end

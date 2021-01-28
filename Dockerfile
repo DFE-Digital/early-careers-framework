@@ -22,7 +22,7 @@ RUN apk -U upgrade && \
     bundler -v && \
     bundle config set no-cache 'true' && \
     bundle config set no-binstubs 'true' && \
-    bundle --retry=5 --jobs=4 --without=development && \
+    bundle --retry=5 --jobs=4 --without=development test && \
     yarn install --check-files && \
     apk del .gem-installdeps && \
     rm -rf /usr/local/bundle/cache && \
@@ -47,6 +47,7 @@ FROM ${BASE_RUBY_IMAGE_WITH_GEMS_AND_NODE_MODULES} AS assets-precompile
 
 ENV GOVUK_APP_DOMAIN="http://localhost:3000" \
     GOVUK_WEBSITE_ROOT="http://localhost:3000" \
+    GIAS_API_ROOT="https://ea-edubase-api-prod.azurewebsites.net" \
     RAILS_ENV=production \
     AUTHORISED_HOSTS=127.0.0.1 \
     SECRET_KEY_BASE=TestKey \

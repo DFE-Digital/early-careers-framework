@@ -56,6 +56,7 @@ Rails.application.configure do
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "govuk_rails_boilerplate_production"
   config.domain = ENV["DOMAIN"]
+  config.gias_api_root = ENV["GIAS_API_ROOT"]
   config.action_mailer.perform_caching = false
   config.action_mailer.delivery_method = :notify
   unless ENV["IGNORE_SECRETS_FOR_BUILD"]

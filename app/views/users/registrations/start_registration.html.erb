@@ -1,18 +1,22 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h2 class="govuk-heading-l">Register as the induction coordinator for your school</h2>
-    <p>In order to register, we need your email address</p>
+    <h2 class="govuk-heading-l">Register your school</h2>
 
-    <%= form_for(:induction_coordinator_profile, url: users_check_email_path) do |f| %>
-
+    <%= form_for(:induction_coordinator_profile, url: users_check_details_path) do |f| %>
+      <%= f.govuk_text_field(
+            :school_urn,
+            value: @urn,
+            hint: { text: "6 digit number", class: "govuk-hint" },
+            label: { text: "Your school's Unique Reference Number (URN)", class: "govuk-label govuk-label--s" })
+      %>
+      <p>><%= govuk_link_to "Find my URN", "#", class: "govuk-link" %></p>
       <%= f.govuk_email_field(
             :email,
-            label: { text: "Email address" },
-            hint: { text: "This should be the email address provided by your school" },
-            autocomplete: "email")
+            value: @email,
+            label: { text: "Your school email address", class: "govuk-label govuk-label--s" })
       %>
 
-      <%= f.govuk_submit "Sign up" %>
+      <%= f.govuk_submit "Continue" %>
     <% end %>
 
   </div>

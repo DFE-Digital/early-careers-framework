@@ -1,45 +1,36 @@
 # frozen_string_literal: true
 
 class Users::RegistrationsController < Devise::RegistrationsController
-  def start_registration; end
-
-  def confirm_school
-    @schools = School.where(id: params["school_ids"])
-    @email = params["email"]
-  end
-
-  def check_email
-    @email = params["induction_coordinator_profile"]["email"]
-    @user = User.find_by(email: @email)
-
-    if @user
-      flash[:notice] = "You already have an account. Sign in"
-      redirect_to controller: "/users/sessions", action: :new, email: @email
-    else
-      @schools = School.where("'#{email_domain}' = ANY (domains)")
-
-      if @schools.any?
-        handle_matching_schools
-      else
-        redirect_to users_check_email_path, alert: "No schools matched your email"
-      end
-    end
-  end
+  def info; end
 
   def new
-    @email = params[:email]
-    @school = School.find(params[:school_id])
-    super
+    @user = User.new
+  end
+
+  def check_details
+    @urn = params["induction_coordinator_profile"]["school_urn"]
+    @email = params["induction_coordinator_profile"]["email"]
+    @user = User.find_or_initialize_by(email: @email)
+    @school = School.where(urn: @urn).where("'#{email_domain}' = ANY (domains)").first
+
+    render :user_already_registered and return if @user.persisted?
+    render_start_registration and return if @school.nil?
+    render :school_not_eligible and return unless @school.eligible?
+    render :school_not_registered and return if @school.not_registered?
+    render :school_fully_registered and return if @school.fully_registered?
+
+    render :school_partially_registered if @school.partially_registered?
   end
 
   def create
     validate_creation_parameters
+    build_resource(sign_up_params)
+
     ActiveRecord::Base.transaction do
-      super do
-        if resource.persisted?
-          InductionCoordinatorProfile.create!(user: resource, schools: [@school])
-        end
-      end
+      resource.save!
+      InductionCoordinatorProfile.create!(user: resource, schools: [@school])
+      expire_data_after_sign_in!
+      render :verification_email_sent
     end
   end
 
@@ -49,23 +40,17 @@ private
     @email.split("@")[1]
   end
 
-  def handle_matching_schools
-    unclaimed_schools = @schools.filter { |school| school.induction_coordinator_profiles.none? }
-
-    if unclaimed_schools.any?
-      redirect_to controller: "users/registrations", action: :confirm_school, school_ids: unclaimed_schools, email: @email
-    else
-      redirect_to root_path, alert: "Someone from your school has already signed up"
-    end
+  def render_start_registration
+    flash.now[:alert] = "Your details did not match any schools."
+    render :start_registration
   end
 
   def validate_creation_parameters
-    @school = School.find(params[:user][:school_id])
+    @school = School.find_by(id: params[:user][:school_id])
     @email = params[:user][:email]
 
-    raise ActionController::BadRequest if @email.nil?
+    raise ActionController::BadRequest if @email.blank?
+    raise ActionController::BadRequest if @school.blank?
     raise ActionController::BadRequest unless @school.domains.include?(email_domain)
-  rescue ActiveRecord::RecordNotFound
-    raise ActionController::BadRequest
   end
 end

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class School < ApplicationRecord
-  paginates_per 3
   belongs_to :network, optional: true
   has_one :partnership
   has_one :lead_provider, through: :partnership
@@ -16,5 +15,20 @@ class School < ApplicationRecord
       #{postcode}
     ADDRESS
     address.squeeze("\n")
+  end
+
+  def fully_registered?
+    induction_coordinator_profiles
+      .joins(:user)
+      .where.not(users: { confirmed_at: nil })
+      .any?
+  end
+
+  def not_registered?
+    induction_coordinator_profiles.none?
+  end
+
+  def partially_registered?
+    !(fully_registered? || not_registered?)
   end
 end
