@@ -24,9 +24,28 @@ private
   end
 
   def row_to_school(row)
+    local_authority = LocalAuthority.find_or_initialize_by(code: row.fetch("LA (code)"))
+    local_authority.name = row.fetch("LA (name)")
+    local_authority.save!
+
+    local_authority_district = LocalAuthorityDistrict.find_or_initialize_by(code: row.fetch("DistrictAdministrative (code)"))
+    local_authority_district.name = row.fetch("DistrictAdministrative (name)")
+    local_authority_district.save!
+
+    # Not in public gias extract?
+    # network = Network.find_or_initialize_by(group_uid: row.fetch("Group UID"))
+    # network.group_type = row.fetch("Group Type")
+    # network.group_type_code = row.fetch("Group Type (code)")
+    # network.group_id = row.fetch("Group ID")
+    # network.group_uid = row.fetch("Group UID")
+    # network.name = row.fetch("Group Name")
+
     school = School.find_or_initialize_by(urn: row.fetch("URN"))
+    school.local_authority = local_authority
+    school.local_authority_district = local_authority_district
     school.name = row.fetch("EstablishmentName")
-    school.school_type = row.fetch("TypeOfEstablishment (code)").to_i
+    school.school_type_code = row.fetch("TypeOfEstablishment (code)")
+    school.school_type_name = row.fetch("TypeOfEstablishment (name)")
     school.capacity = row.fetch("SchoolCapacity").to_i
     school.address_line1 = row.fetch("Street")
     school.address_line2 = row.fetch("Locality")
@@ -34,8 +53,18 @@ private
     school.address_line4 = row.fetch("County (name)")
     school.country = row.fetch("Country (name)")
     school.postcode = row.fetch("Postcode")
+    school.ukprn = row.fetch("UKPRN")
+    school.previous_school_urn = row.fetch("EstablishmentName")
+    school.school_phase_type = row.fetch("PhaseOfEducation (code)")
+    school.school_phase_name = row.fetch("PhaseOfEducation (name)")
+    school.school_website = row.fetch("SchoolWebsite")
+    school.school_status_code = row.fetch("EstablishmentStatus (code)")
+    school.school_status_name = row.fetch("EstablishmentStatus (code)")
+
     dummy_domain = row.fetch("SchoolWebsite").split(/\./, 2).second&.remove("/")
     school.domains = [dummy_domain]
+    school.primary_contact_email = "main.email@#{dummy_domain}"
+    school.secondary_contact_email = "secondary.email@#{dummy_domain}"
     school
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_26_103901) do
+ActiveRecord::Schema.define(version: 2021_01_28_134938) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(version: 2021_01_26_103901) do
   end
 
   create_table "core_induction_programmes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -147,10 +147,31 @@ ActiveRecord::Schema.define(version: 2021_01_26_103901) do
     t.string "name", null: false
   end
 
+  create_table "local_authorities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "code"
+    t.string "name"
+    t.index ["code"], name: "index_local_authorities_on_code", unique: true
+  end
+
+  create_table "local_authority_districts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "code"
+    t.string "name"
+    t.index ["code"], name: "index_local_authority_districts_on_code", unique: true
+  end
+
   create_table "networks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "name", null: false
+    t.string "group_type"
+    t.string "group_type_code"
+    t.string "group_id"
+    t.string "group_uid"
+    t.string "secondary_contact_email"
   end
 
   create_table "partnerships", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -179,7 +200,7 @@ ActiveRecord::Schema.define(version: 2021_01_26_103901) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "urn", null: false
     t.string "name", null: false
-    t.string "school_type"
+    t.string "school_type_code"
     t.integer "capacity"
     t.boolean "high_pupil_premium", default: false, null: false
     t.boolean "is_rural", default: false, null: false
@@ -192,8 +213,22 @@ ActiveRecord::Schema.define(version: 2021_01_26_103901) do
     t.uuid "network_id"
     t.string "domains", default: [], null: false, array: true
     t.boolean "eligible", default: true, null: false
+    t.uuid "local_authority_district_id"
+    t.uuid "local_authority_id"
+    t.string "school_type_name"
+    t.string "ukprn"
+    t.string "previous_school_urn"
+    t.string "school_phase_type"
+    t.string "school_phase_name"
+    t.string "school_website"
+    t.string "school_status_code"
+    t.string "school_status_name"
+    t.string "primary_contact_email"
+    t.string "secondary_contact_email"
     t.index ["high_pupil_premium"], name: "index_schools_on_high_pupil_premium", where: "high_pupil_premium"
     t.index ["is_rural"], name: "index_schools_on_is_rural", where: "is_rural"
+    t.index ["local_authority_district_id"], name: "index_schools_on_local_authority_district_id"
+    t.index ["local_authority_id"], name: "index_schools_on_local_authority_id"
     t.index ["name"], name: "index_schools_on_name"
     t.index ["network_id"], name: "index_schools_on_network_id"
     t.index ["urn"], name: "index_schools_on_urn", unique: true
@@ -241,5 +276,7 @@ ActiveRecord::Schema.define(version: 2021_01_26_103901) do
   add_foreign_key "provider_relationships", "cohorts"
   add_foreign_key "provider_relationships", "delivery_partners"
   add_foreign_key "provider_relationships", "lead_providers"
+  add_foreign_key "schools", "local_authorities"
+  add_foreign_key "schools", "local_authority_districts"
   add_foreign_key "schools", "networks"
 end
