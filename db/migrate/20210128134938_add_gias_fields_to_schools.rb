@@ -31,7 +31,6 @@ class AddGiasFieldsToSchools < ActiveRecord::Migration[6.1]
       t.string :school_website
       t.string :school_status_code
       t.string :school_status_name
-      t.string :primary_contact_email
       t.string :secondary_contact_email
     end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_28_134938) do
+ActiveRecord::Schema.define(version: 2021_01_28_143531) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -223,8 +223,8 @@ ActiveRecord::Schema.define(version: 2021_01_28_134938) do
     t.string "school_website"
     t.string "school_status_code"
     t.string "school_status_name"
-    t.string "primary_contact_email"
     t.string "secondary_contact_email"
+    t.string "primary_contact_email"
     t.index ["high_pupil_premium"], name: "index_schools_on_high_pupil_premium", where: "high_pupil_premium"
     t.index ["is_rural"], name: "index_schools_on_is_rural", where: "is_rural"
     t.index ["local_authority_district_id"], name: "index_schools_on_local_authority_district_id"
