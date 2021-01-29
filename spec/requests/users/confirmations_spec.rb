@@ -27,5 +27,15 @@ RSpec.describe "Users::Confirmations", type: :request do
 
       get "/users/confirmation?confirmation_token=#{confirmation_token}"
     end
+
+    context "when school primary contact email equals induction coordinator email" do
+      before { user.update(email: school.primary_contact_email) }
+
+      it "does not notify the school primary contact" do
+        expect(UserMailer).not_to receive(:primary_contact_notification).with(user, school)
+
+        get "/users/confirmation?confirmation_token=#{confirmation_token}"
+      end
+    end
   end
 end

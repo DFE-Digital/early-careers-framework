@@ -17,6 +17,9 @@ private
 
   def notify_school_primary_contact
     school = resource.induction_coordinator_profile.schools.first
-    UserMailer.primary_contact_notification(resource, school)
+
+    if school.primary_contact_email != resource.email
+      UserMailer.primary_contact_notification(resource, school)
+    end
   end
 end
