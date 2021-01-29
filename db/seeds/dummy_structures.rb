@@ -26,13 +26,6 @@ unless AdminProfile.first || Rails.env.production?
   AdminProfile.create!(user: user)
 end
 
-unless CoreInductionProgramme.first
-  CoreInductionProgramme.create!(name: "Ambition Institute")
-  CoreInductionProgramme.create!(name: "Education Development Trust")
-  CoreInductionProgramme.create!(name: "Teach First")
-  CoreInductionProgramme.create!(name: "UCL")
-end
-
 unless Cohort.first
   Cohort.create!(start_year: 2021)
   Cohort.create!(start_year: 2022)

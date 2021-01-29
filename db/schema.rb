@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_28_143531) do
+ActiveRecord::Schema.define(version: 2021_01_29_133823) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(version: 2021_01_28_143531) do
   end
 
   create_table "core_induction_programmes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -78,9 +78,9 @@ ActiveRecord::Schema.define(version: 2021_01_28_143531) do
     t.boolean "is_year_one", null: false
     t.string "title", null: false
     t.text "content", null: false
-    t.uuid "lead_provider_id", null: false
     t.integer "version", default: 1, null: false
-    t.index ["lead_provider_id"], name: "index_course_years_on_lead_provider_id"
+    t.uuid "core_induction_programme_id"
+    t.index ["core_induction_programme_id"], name: "index_course_years_on_core_induction_programme_id"
   end
 
   create_table "delayed_jobs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -230,7 +230,7 @@ ActiveRecord::Schema.define(version: 2021_01_28_143531) do
   add_foreign_key "course_modules", "course_modules", column: "next_module_id"
   add_foreign_key "course_modules", "course_modules", column: "previous_module_id"
   add_foreign_key "course_modules", "course_years"
-  add_foreign_key "course_years", "lead_providers"
+  add_foreign_key "course_years", "core_induction_programmes"
   add_foreign_key "induction_coordinator_profiles", "users"
   add_foreign_key "lead_provider_cips", "cohorts"
   add_foreign_key "lead_provider_cips", "core_induction_programmes"
