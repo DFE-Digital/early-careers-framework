@@ -6,9 +6,17 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
     self.resource = resource_class.confirm_by_token(params[:confirmation_token])
 
     if resource.errors.empty?
+      notify_school_primary_contact
       render :confirmed
     else
       respond_with_navigational(resource.errors, status: :unprocessable_entity) { render :new }
     end
+  end
+
+private
+
+  def notify_school_primary_contact
+    school = resource.induction_coordinator_profile.schools.first
+    UserMailer.primary_contact_notification(resource, school)
   end
 end
