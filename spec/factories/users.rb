@@ -12,6 +12,10 @@ FactoryBot.define do
       admin_profile
     end
 
+    trait :induction_coordinator do
+      induction_coordinator_profile
+    end
+
     trait :lead_provider do
       lead_provider_profile { lead_provider }
     end

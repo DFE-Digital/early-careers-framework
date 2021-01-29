@@ -15,6 +15,10 @@ class User < ApplicationRecord
     admin_profile.present?
   end
 
+  def induction_coordinator?
+    induction_coordinator_profile.present?
+  end
+
   def password_required?
     false
   end

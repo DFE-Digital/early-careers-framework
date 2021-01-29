@@ -36,4 +36,18 @@ RSpec.describe UserMailer, type: :mailer do
       expect(confirmation_email.from).to eq(["mail@example.com"])
     end
   end
+
+  describe "#primary_contact_notification" do
+    let(:school) { create(:school) }
+    let(:coordinator) { create(:user) }
+
+    let(:notification_email) do
+      UserMailer.primary_contact_notification(coordinator, school)
+    end
+
+    it "renders the right headers" do
+      expect(notification_email.from).to eq(["mail@example.com"])
+      expect(notification_email.to).to eq([school.primary_contact_email])
+    end
+  end
 end
