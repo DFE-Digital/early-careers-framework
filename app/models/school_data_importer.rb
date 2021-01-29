@@ -61,7 +61,7 @@ private
     school.school_status_code = row.fetch("EstablishmentStatus (code)")
     school.school_status_name = row.fetch("EstablishmentStatus (name)")
 
-    dummy_domain = row.fetch("SchoolWebsite").split(/\./, 2).second&.remove("/")
+    dummy_domain = Addressable::URI.parse(row.fetch("SchoolWebsite"))&.domain
 
     school.domains = [dummy_domain]
     school.primary_contact_email = "main.email@#{dummy_domain}"
