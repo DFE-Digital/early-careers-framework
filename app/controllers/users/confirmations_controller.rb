@@ -16,6 +16,8 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
 private
 
   def notify_school_primary_contact
+    return unless resource.induction_coordinator?
+
     school = resource.induction_coordinator_profile.schools.first
 
     if school.primary_contact_email != resource.email
