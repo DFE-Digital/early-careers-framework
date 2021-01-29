@@ -76,6 +76,7 @@ Rails.application.routes.draw do
       get "user-details", controller: :supplier_users, action: :user_details, as: :new_supplier_user_details
       post "user-details", controller: :supplier_users, action: :receive_user_details
       get "review", controller: :supplier_users, action: :review, as: :new_supplier_user_review
+      get "success", controller: :supplier_users, action: :success, as: :new_supplier_user_success
     end
   end
 

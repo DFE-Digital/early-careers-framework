@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class UserPolicy < ApplicationPolicy
+  def show?
+    admin_only
+  end
+
   def create?
     admin_only
   end
