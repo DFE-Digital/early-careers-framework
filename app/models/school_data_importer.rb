@@ -25,20 +25,20 @@ private
 
   def row_to_school(row)
     local_authority = LocalAuthority.find_or_initialize_by(code: row.fetch("LA (code)"))
-    local_authority.name = row.fetch("LA (name)")
+    row_local_authority_name = row.fetch("LA (name)")
+    if local_authority.persisted? && local_authority.name != row_local_authority_name
+      Rails.logger.info "LA name change in school import. Old name: #{local_authority.name}, New name: #{row_local_authority_name}"
+    end
+    local_authority.name = row_local_authority_name
     local_authority.save!
 
     local_authority_district = LocalAuthorityDistrict.find_or_initialize_by(code: row.fetch("DistrictAdministrative (code)"))
-    local_authority_district.name = row.fetch("DistrictAdministrative (name)")
+    row_lad_name = row.fetch("DistrictAdministrative (name)")
+    if local_authority_district.persisted? && local_authority_district.name != row_lad_name
+      Rails.logger.info "LA name change in school import. Old name: #{local_authority_district.name}, New name: #{row_lad_name}"
+    end
+    local_authority_district.name = row_lad_name
     local_authority_district.save!
-
-    # Not in public gias extract?
-    # network = Network.find_or_initialize_by(group_uid: row.fetch("Group UID"))
-    # network.group_type = row.fetch("Group Type")
-    # network.group_type_code = row.fetch("Group Type (code)")
-    # network.group_id = row.fetch("Group ID")
-    # network.group_uid = row.fetch("Group UID")
-    # network.name = row.fetch("Group Name")
 
     school = School.find_or_initialize_by(urn: row.fetch("URN"))
     school.local_authority = local_authority
@@ -54,14 +54,15 @@ private
     school.country = row.fetch("Country (name)")
     school.postcode = row.fetch("Postcode")
     school.ukprn = row.fetch("UKPRN")
-    school.previous_school_urn = row.fetch("EstablishmentName")
+    school.previous_school_urn = row.fetch("PreviousEstablishmentNumber")
     school.school_phase_type = row.fetch("PhaseOfEducation (code)")
     school.school_phase_name = row.fetch("PhaseOfEducation (name)")
     school.school_website = row.fetch("SchoolWebsite")
     school.school_status_code = row.fetch("EstablishmentStatus (code)")
-    school.school_status_name = row.fetch("EstablishmentStatus (code)")
+    school.school_status_name = row.fetch("EstablishmentStatus (name)")
 
-    dummy_domain = row.fetch("SchoolWebsite").split(/\./, 2).second&.remove("/")
+    dummy_domain = Addressable::URI.parse(row.fetch("SchoolWebsite"))&.host
+
     school.domains = [dummy_domain]
     school.primary_contact_email = "main.email@#{dummy_domain}"
     school.secondary_contact_email = "secondary.email@#{dummy_domain}"

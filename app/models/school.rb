@@ -2,6 +2,8 @@
 
 class School < ApplicationRecord
   belongs_to :network, optional: true
+
+  # TODO: Register and Partner 150: Handle schools changing LAs and LADs
   belongs_to :local_authority_district, optional: true
   belongs_to :local_authority, optional: true
   has_one :partnership
