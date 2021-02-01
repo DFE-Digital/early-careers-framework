@@ -7,7 +7,8 @@ class CoreInductionProgrammeController < ApplicationController
 
   def download_export
     if @current_user&.admin?
-      system "bundle exec rake cip_seed_dump"
+      CoreInductionProgrammeExporter.new.run
+
       send_file(
         Rails.root.join("db/seeds/cip_seed_dump.rb"),
         filename: "cip_seed_dump.rb",

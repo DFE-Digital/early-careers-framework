@@ -23,14 +23,8 @@ unless AdminProfile.first || Rails.env.production?
   user = User.find_or_create_by!(email: "ecf@mailinator.com") do |u|
     u.full_name = "Admin User"
   end
+  user.confirm
   AdminProfile.create!(user: user)
-end
-
-unless CoreInductionProgramme.first
-  CoreInductionProgramme.create!(name: "Ambition Institute")
-  CoreInductionProgramme.create!(name: "Education Development Trust")
-  CoreInductionProgramme.create!(name: "Teach First")
-  CoreInductionProgramme.create!(name: "UCL")
 end
 
 unless Cohort.first

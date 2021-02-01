@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class CourseYear < ApplicationRecord
-  belongs_to :lead_provider
-  has_many :course_modules
+  belongs_to :core_induction_programme, optional: true
+  has_many :course_modules, dependent: :delete_all
 
   validates :title, presence: { message: "Enter a title" }
   validates :content, presence: { message: "Enter content" }
