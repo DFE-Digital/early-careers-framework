@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+require "rake"
+
+Rake::Task.clear
+GovukRailsBoilerplate::Application.load_tasks
+
 class CoreInductionProgrammeController < ApplicationController
   def show
     @course_years = CourseYear.all
@@ -7,7 +12,7 @@ class CoreInductionProgrammeController < ApplicationController
 
   def download_export
     if @current_user&.admin?
-      system "bundle exec rake cip_seed_dump"
+      Rake::Task[:cip_seed_dump].invoke
       send_file(
         Rails.root.join("db/seeds/cip_seed_dump.rb"),
         filename: "cip_seed_dump.rb",
