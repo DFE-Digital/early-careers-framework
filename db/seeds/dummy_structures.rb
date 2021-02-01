@@ -23,6 +23,7 @@ unless AdminProfile.first || Rails.env.production?
   user = User.find_or_create_by!(email: "ecf@mailinator.com") do |u|
     u.full_name = "Admin User"
   end
+  user.confirm
   AdminProfile.create!(user: user)
 end
 
