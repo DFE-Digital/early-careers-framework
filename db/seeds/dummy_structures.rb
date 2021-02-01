@@ -22,20 +22,21 @@ end
 if Rails.env.deployed_development? && User.none?
   user = User.find_or_create_by!(email: "admin@example.com") do |u|
     u.full_name = "Admin User"
+    u.confirmed_at = Time.zone.now.utc
   end
-  user.confirm
   AdminProfile.create!(user: user)
 
   user = User.find_or_create_by!(email: "lead-provider@example.com") do |u|
     u.full_name = "Lp User"
+    u.confirmed_at = Time.zone.now.utc
   end
   user.confirm
   LeadProviderProfile.create!(user: user, lead_provider: LeadProvider.first)
 
   user = User.find_or_create_by!(email: "school-leader@example.com") do |u|
     u.full_name = "School Leader User"
+    u.confirmed_at = Time.zone.now.utc
   end
-  user.confirm
   InductionCoordinatorProfile.create!(user: user, schools: [School.first])
 end
 
