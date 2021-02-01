@@ -7,33 +7,7 @@ class CoreInductionProgrammeController < ApplicationController
 
   def download_export
     if @current_user&.admin?
-      SeedDump.dump(
-        CoreInductionProgramme,
-        file: "db/seeds/cip_seed_dump.rb",
-        exclude: %i[created_at updated_at],
-        import: true,
-      )
-      SeedDump.dump(
-        CourseYear.all,
-        file: "db/seeds/cip_seed_dump.rb",
-        exclude: %i[created_at updated_at],
-        import: true,
-        append: true,
-      )
-      SeedDump.dump(
-        CourseModule.all,
-        file: "db/seeds/cip_seed_dump.rb",
-        exclude: %i[created_at updated_at],
-        import: true,
-        append: true,
-      )
-      SeedDump.dump(
-        CourseLesson.all,
-        file: "db/seeds/cip_seed_dump.rb",
-        exclude: %i[created_at updated_at],
-        import: true,
-        append: true,
-      )
+      CoreInductionProgrammeExporter.new.run
 
       send_file(
         Rails.root.join("db/seeds/cip_seed_dump.rb"),
