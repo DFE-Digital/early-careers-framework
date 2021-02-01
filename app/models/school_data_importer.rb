@@ -24,21 +24,8 @@ private
   end
 
   def row_to_school(row)
-    local_authority = LocalAuthority.find_or_initialize_by(code: row.fetch("LA (code)"))
-    row_local_authority_name = row.fetch("LA (name)")
-    if local_authority.persisted? && local_authority.name != row_local_authority_name
-      Rails.logger.info "LA name change in school import. Old name: #{local_authority.name}, New name: #{row_local_authority_name}"
-    end
-    local_authority.name = row_local_authority_name
-    local_authority.save!
-
-    local_authority_district = LocalAuthorityDistrict.find_or_initialize_by(code: row.fetch("DistrictAdministrative (code)"))
-    row_lad_name = row.fetch("DistrictAdministrative (name)")
-    if local_authority_district.persisted? && local_authority_district.name != row_lad_name
-      Rails.logger.info "LA name change in school import. Old name: #{local_authority_district.name}, New name: #{row_lad_name}"
-    end
-    local_authority_district.name = row_lad_name
-    local_authority_district.save!
+    local_authority = row_to_local_authority(row)
+    local_authority_district = row_to_lad(row)
 
     school = School.find_or_initialize_by(urn: row.fetch("URN"))
     school.local_authority = local_authority
@@ -61,11 +48,37 @@ private
     school.school_status_code = row.fetch("EstablishmentStatus (code)")
     school.school_status_name = row.fetch("EstablishmentStatus (name)")
 
-    dummy_domain = Addressable::URI.parse(row.fetch("SchoolWebsite"))&.domain
+    dummy_domain = Addressable::URI.parse(school.school_website)&.domain
 
     school.domains = [dummy_domain]
     school.primary_contact_email = "main.email@#{dummy_domain}"
     school.secondary_contact_email = "secondary.email@#{dummy_domain}"
     school
+  end
+
+  def row_to_local_authority(row)
+    local_authority = LocalAuthority.find_or_initialize_by(code: row.fetch("LA (code)"))
+    row_local_authority_name = row.fetch("LA (name)")
+
+    if local_authority.persisted? && local_authority.name != row_local_authority_name
+      Rails.logger.info "LA name change in school import. Old name: #{local_authority.name}, New name: #{row_local_authority_name}"
+    end
+
+    local_authority.name = row_local_authority_name
+    local_authority.save!
+    local_authority
+  end
+
+  def row_to_lad(row)
+    local_authority_district = LocalAuthorityDistrict.find_or_initialize_by(code: row.fetch("DistrictAdministrative (code)"))
+    row_lad_name = row.fetch("DistrictAdministrative (name)")
+
+    if local_authority_district.persisted? && local_authority_district.name != row_lad_name
+      Rails.logger.info "LA name change in school import. Old name: #{local_authority_district.name}, New name: #{row_lad_name}"
+    end
+
+    local_authority_district.name = row_lad_name
+    local_authority_district.save!
+    local_authority_district
   end
 end
