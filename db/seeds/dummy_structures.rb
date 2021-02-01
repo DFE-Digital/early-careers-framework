@@ -19,12 +19,24 @@ unless Partnership.first || Rails.env.production?
   Partnership.create!(school: School.first, lead_provider: LeadProvider.first)
 end
 
-unless AdminProfile.first || Rails.env.production?
-  user = User.find_or_create_by!(email: "ecf@mailinator.com") do |u|
+if Rails.env.deployed_development? && User.none?
+  user = User.find_or_create_by!(email: "admin@example.com") do |u|
     u.full_name = "Admin User"
   end
   user.confirm
   AdminProfile.create!(user: user)
+
+  user = User.find_or_create_by!(email: "lead-provider@example.com") do |u|
+    u.full_name = "Lp User"
+  end
+  user.confirm
+  LeadProviderProfile.create!(user: user, lead_provider: LeadProvider.first)
+
+  user = User.find_or_create_by!(email: "school-leader@example.com") do |u|
+    u.full_name = "School Leader User"
+  end
+  user.confirm
+  InductionCoordinatorProfile.create!(user: user, schools: [School.first])
 end
 
 unless Cohort.first

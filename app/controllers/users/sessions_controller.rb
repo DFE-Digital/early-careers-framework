@@ -1,11 +1,19 @@
 # frozen_string_literal: true
 
 class Users::SessionsController < Devise::SessionsController
+  include ApplicationHelper
+
   class EmailNotFoundError < StandardError; end
   class LoginIncompleteError < StandardError; end
 
   def create
-    super
+    if Rails.env.development? || Rails.env.deployed_development?
+      user = User.find_by_email(params.dig(:user, :email))
+      sign_in(user, scope: :user)
+      redirect_to profile_dashboard_url(user)
+    else
+      super
+    end
   rescue LoginIncompleteError
     render :login_email_sent
   rescue EmailNotFoundError
