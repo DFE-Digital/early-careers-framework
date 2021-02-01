@@ -8,6 +8,8 @@ FactoryBot.define do
     postcode { Faker::Address.postcode }
     address_line1 { Faker::Address.street_address }
     domains { [Faker::Internet.domain_name] }
+    local_authority
+    local_authority_district
     primary_contact_email { Faker::Internet.email(domain: domains[0]) }
   end
 end

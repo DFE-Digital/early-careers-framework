@@ -33,7 +33,7 @@ RSpec.describe SchoolDataImporter do
 
         imported_school = School.find_by(urn: 106_653)
         expect(imported_school.name).to eql("Penistone Grammar School")
-        expect(imported_school.school_type).to eql("1")
+        expect(imported_school.school_type_code).to eql("01")
         expect(imported_school.capacity).to eql(1700)
         expect(imported_school.address_line1).to eql("Huddersfield Road")
         expect(imported_school.address_line2).to eql("Penistone")
