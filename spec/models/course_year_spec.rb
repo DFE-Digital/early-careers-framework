@@ -9,13 +9,12 @@ RSpec.describe CourseYear, type: :model do
         title: "Test Course year",
         content: "No content",
         is_year_one: false,
-        lead_provider: FactoryBot.create(:lead_provider),
       )
     }.to change { CourseYear.count }.by(1)
   end
 
   describe "associations" do
-    it { is_expected.to belong_to(:lead_provider) }
+    it { is_expected.to belong_to(:core_induction_programme).optional }
     it { is_expected.to have_many(:course_modules) }
   end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_27_121159) do
+ActiveRecord::Schema.define(version: 2021_01_29_133823) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(version: 2021_01_27_121159) do
   end
 
   create_table "core_induction_programmes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -78,9 +78,9 @@ ActiveRecord::Schema.define(version: 2021_01_27_121159) do
     t.boolean "is_year_one", null: false
     t.string "title", null: false
     t.text "content", null: false
-    t.uuid "lead_provider_id", null: false
     t.integer "version", default: 1, null: false
-    t.index ["lead_provider_id"], name: "index_course_years_on_lead_provider_id"
+    t.uuid "core_induction_programme_id"
+    t.index ["core_induction_programme_id"], name: "index_course_years_on_core_induction_programme_id"
   end
 
   create_table "delayed_jobs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -201,6 +201,7 @@ ActiveRecord::Schema.define(version: 2021_01_27_121159) do
     t.uuid "network_id"
     t.string "domains", default: [], null: false, array: true
     t.boolean "eligible", default: true, null: false
+    t.string "primary_contact_email"
     t.index ["high_pupil_premium"], name: "index_schools_on_high_pupil_premium", where: "high_pupil_premium"
     t.index ["is_rural"], name: "index_schools_on_is_rural", where: "is_rural"
     t.index ["name"], name: "index_schools_on_name"
@@ -238,7 +239,7 @@ ActiveRecord::Schema.define(version: 2021_01_27_121159) do
   add_foreign_key "course_modules", "course_modules", column: "next_module_id"
   add_foreign_key "course_modules", "course_modules", column: "previous_module_id"
   add_foreign_key "course_modules", "course_years"
-  add_foreign_key "course_years", "lead_providers"
+  add_foreign_key "course_years", "core_induction_programmes"
   add_foreign_key "delivery_partner_profiles", "delivery_partners"
   add_foreign_key "delivery_partner_profiles", "users"
   add_foreign_key "induction_coordinator_profiles", "users"

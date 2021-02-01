@@ -21,6 +21,10 @@ class User < ApplicationRecord
     lead_provider&.name || delivery_partner&.name
   end
 
+  def induction_coordinator?
+    induction_coordinator_profile.present?
+  end
+
   def password_required?
     false
   end

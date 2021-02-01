@@ -70,4 +70,18 @@ RSpec.describe User, type: :model do
       expect(user.supplier_name).to be_nil
     end
   end
+
+  describe "#induction_coordinator?" do
+    it "is expected to be true when the user has an induction coordinator profile" do
+      user = create(:user, :induction_coordinator)
+
+      expect(user.induction_coordinator?).to be true
+    end
+
+    it "is expected to be false when the user does not have an induction coordinator profile" do
+      user = create(:user)
+
+      expect(user.induction_coordinator?).to be false
+    end
+  end
 end
