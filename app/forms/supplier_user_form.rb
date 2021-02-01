@@ -8,6 +8,7 @@ class SupplierUserForm
   validates :supplier, presence: { message: "Select one" }, on: :supplier
   validates :full_name, presence: { message: "Enter a name" }, on: :details
   validates :email, presence: { message: "Enter email" }, on: :details
+  validate :email_not_taken, on: :details
 
   def attributes
     { "full_name" => nil, "email" => nil, "supplier" => nil }
@@ -34,5 +35,11 @@ class SupplierUserForm
       profile.save!
     end
     @user
+  end
+
+private
+
+  def email_not_taken
+    errors.add(:email, :unique, message: "There is already a user with this email address") if User.find_by(email: email)
   end
 end
