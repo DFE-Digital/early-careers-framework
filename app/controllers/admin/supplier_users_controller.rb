@@ -2,16 +2,14 @@
 
 class Admin::SupplierUsersController < Admin::BaseController
   skip_after_action :verify_authorized, only: :index
-  skip_after_action :verify_policy_scoped, except: :index
+  skip_after_action :verify_policy_scoped
 
   before_action :set_suppliers, only: %i[new receive_supplier]
   before_action :form_from_session, only: %i[user_details review create success]
 
   def index
-    lead_providers = policy_scope(LeadProvider).joins(:users).includes(:users)
-    delivery_partners = policy_scope(DeliveryPartner).joins(:users).includes(:users)
-    sorted_users = (lead_providers + delivery_partners).flat_map(&:users).sort_by(&:full_name)
-    @users = Kaminari.paginate_array(sorted_users).page(params[:page]).per(20)
+    sorted_users = (User.for_lead_provider.with_supplier + User.for_delivery_partner.with_supplier).sort_by(&:full_name)
+    @users = Kaminari.paginate_array(sorted_users).page(params[:page]).per(1)
     @page = @users.current_page
     @total_pages = @users.total_pages
   end
