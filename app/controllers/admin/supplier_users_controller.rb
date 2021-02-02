@@ -9,7 +9,7 @@ class Admin::SupplierUsersController < Admin::BaseController
 
   def index
     sorted_users = (User.for_lead_provider.with_supplier + User.for_delivery_partner.with_supplier).sort_by(&:full_name)
-    @users = Kaminari.paginate_array(sorted_users).page(params[:page]).per(1)
+    @users = Kaminari.paginate_array(sorted_users).page(params[:page]).per(20)
     @page = @users.current_page
     @total_pages = @users.total_pages
   end
