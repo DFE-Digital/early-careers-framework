@@ -18,7 +18,7 @@ class CoreInductionProgramme::ModulesController < ApplicationController
   def update
     if params[:commit] == "Save changes"
       @course_module.update!(content: params[:module_preview])
-      redirect_to cip_years_modules_url
+      redirect_to cip_year_module_url
     else
       @module_preview = params[:module_preview]
       @html_content = content_to_html(@module_preview)
@@ -29,7 +29,7 @@ class CoreInductionProgramme::ModulesController < ApplicationController
 private
 
   def load_and_authorize_course_module
-    @course_module = CourseModule.find(params[:module_id])
+    @course_module = CourseModule.find(params[:id])
     authorize @course_module
   end
 end
