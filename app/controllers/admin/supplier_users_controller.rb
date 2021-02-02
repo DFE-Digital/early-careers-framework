@@ -60,6 +60,11 @@ class Admin::SupplierUsersController < Admin::BaseController
 
   def create
     authorize User
+    if @supplier_user_form.chosen_supplier.instance_of?(LeadProvider)
+      authorize LeadProviderProfile
+    else
+      authorize DeliveryPartnerProfile
+    end
     user = @supplier_user_form.save!
     redirect_to admin_new_supplier_user_success_path(user_id: user.id)
   end
