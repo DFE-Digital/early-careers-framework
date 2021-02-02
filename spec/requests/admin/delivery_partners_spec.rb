@@ -14,7 +14,7 @@ RSpec.describe "Admin::DeliveryPartners", type: :request do
   end
 
   describe "GET /admin/suppliers/new/delivery-partner/choose-lps" do
-    it "renders the correct template" do
+    it "renders the choose_lead_providers template" do
       # When
       get "/admin/suppliers/new/delivery-partner/choose-lps"
 

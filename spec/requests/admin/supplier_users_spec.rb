@@ -14,7 +14,7 @@ RSpec.describe "Admin::SupplierUsers", type: :request do
   end
 
   describe "GET /admin/suppliers/users" do
-    it "renders the correct template" do
+    it "renders the index template" do
       get "/admin/suppliers/users"
 
       expect(response).to render_template(:index)
@@ -22,7 +22,7 @@ RSpec.describe "Admin::SupplierUsers", type: :request do
   end
 
   describe "GET /admin/suppliers/users/new" do
-    it "renders the correct template" do
+    it "renders the new template" do
       get "/admin/suppliers/users/new"
 
       expect(response).to render_template(:new)
@@ -66,7 +66,7 @@ RSpec.describe "Admin::SupplierUsers", type: :request do
   end
 
   describe "GET /admin/suppliers/users/new/user-details" do
-    it "renders the correct template" do
+    it "renders the user_details template" do
       given_i_have_chosen_a_supplier(lead_provider)
 
       # When
@@ -122,7 +122,7 @@ RSpec.describe "Admin::SupplierUsers", type: :request do
       given_i_have_entered_user_details(full_name, email)
     end
 
-    it "renders the correct template" do
+    it "renders the review template" do
       get "/admin/suppliers/users/new/review"
 
       expect(response).to render_template(:review)
