@@ -90,5 +90,24 @@ RSpec.describe "Users::Registrations /register", type: :request do
         } }
       }.to raise_error(ActionController::BadRequest)
     end
+
+    context "when school has old unconfirmed registrations" do
+      let(:user) { create(:user, confirmed_at: nil) }
+      let!(:coordinator) { create(:induction_coordinator_profile, user: user, schools: [school]) }
+      let(:created_user) { User.find_by_email(email) }
+
+      before { user.update(confirmation_sent_at: 2.days.ago) }
+
+      it "registers new induction coordinator and removes the old coordinator profiles" do
+        post "/users/register", params: { user: {
+          full_name: full_name,
+          email: email,
+          school_id: school.id,
+        } }
+
+        expect(school.reload.induction_coordinator_profiles).to include created_user.induction_coordinator_profile
+        expect(school.induction_coordinator_profiles).not_to include user.reload.induction_coordinator_profile
+      end
+    end
   end
 end
