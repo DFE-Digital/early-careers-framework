@@ -11,7 +11,7 @@ class SupplierUserForm
   validate :email_not_taken, on: :details
 
   def attributes
-    { "full_name" => nil, "email" => nil, "supplier" => nil }
+    { full_name: nil, email: nil, supplier: nil }
   end
 
   def chosen_supplier
@@ -25,16 +25,17 @@ class SupplierUserForm
                 DeliveryPartnerProfile.new(delivery_partner: chosen_supplier)
               end
 
-    ActiveRecord::Base.transaction do
-      @user = User.create!(
+    user = ActiveRecord::Base.transaction do
+      user = User.create!(
         full_name: full_name,
         email: email,
         confirmed_at: Time.zone.now.utc, # Skip confirmation email
       )
-      profile.user = @user
+      profile.user = user
       profile.save!
+      user
     end
-    @user
+    user
   end
 
 private
