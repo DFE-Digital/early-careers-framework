@@ -16,10 +16,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
     render :user_already_registered and return if @user.persisted?
     render_start_registration and return if @school.nil?
     render :school_not_eligible and return unless @school.eligible?
-    render :school_not_registered and return if @school.not_registered?
     render :school_fully_registered and return if @school.fully_registered?
+    render :school_partially_registered and return if @school.partially_registered?
 
-    render :school_partially_registered if @school.partially_registered?
+    render :school_not_registered
   end
 
   def create
@@ -28,6 +28,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
     ActiveRecord::Base.transaction do
       resource.save!
+      @school.induction_coordinator_profiles.destroy_all
       InductionCoordinatorProfile.create!(user: resource, schools: [@school])
       expire_data_after_sign_in!
       render :verification_email_sent
@@ -52,5 +53,7 @@ private
     raise ActionController::BadRequest if @email.blank?
     raise ActionController::BadRequest if @school.blank?
     raise ActionController::BadRequest unless @school.domains.include?(email_domain)
+    raise ActionController::BadRequest if @school.fully_registered?
+    raise ActionController::BadRequest if @school.partially_registered?
   end
 end
