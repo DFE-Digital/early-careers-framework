@@ -6,7 +6,7 @@ RSpec.describe "Users::Registrations /check-details", type: :request do
   let(:school) { FactoryBot.create(:school) }
   let(:email) { Faker::Internet.email(domain: school.domains.first) }
 
-  describe "POST /users/check_email" do
+  describe "POST /users/check-details" do
     it "renders :start_registration when no schools are found" do
       # When
       post "/users/check-details", params: { induction_coordinator_profile: {
