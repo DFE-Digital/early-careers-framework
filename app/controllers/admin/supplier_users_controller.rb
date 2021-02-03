@@ -72,7 +72,7 @@ class Admin::SupplierUsersController < Admin::BaseController
   def success
     @user = User.find(params[:user_id])
     authorize @user, :show?
-    @supplier = @supplier_user_form.chosen_supplier.name
+    @supplier_name = @supplier_user_form.chosen_supplier.name
 
     session.delete(:supplier_user_form)
   end
