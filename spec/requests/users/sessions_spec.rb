@@ -7,7 +7,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
   describe "POST /users/sign_in" do
     context "when sign in email has been sent" do
-      it "renders the correct template" do
+      it "renders the login_email_sent template" do
         post "/users/sign_in", params: { user: { email: user.email } }
         expect(response).to render_template(:login_email_sent)
       end
@@ -15,7 +15,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
     context "when email doesn't match any user" do
       let(:email) { Faker::Internet.email }
-      it "renders the correct template" do
+      it "renders the email_not_found template" do
         post "/users/sign_in", params: { user: { email: email } }
         expect(response).to render_template(:email_not_found)
       end
@@ -23,7 +23,7 @@ RSpec.describe "Users::Sessions", type: :request do
   end
 
   describe "GET /users/confirm_sign_in" do
-    it "renders the correct template" do
+    it "renders the redirect_from_magic_link template" do
       get "/users/confirm_sign_in?login_token=#{user.login_token}"
       expect(assigns(:login_token)).to eq(user.login_token)
       expect(response).to render_template(:redirect_from_magic_link)
@@ -41,7 +41,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
       it "redirects to sign_in page" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }
-        expect(response).to redirect_to(admin_dashboard_path)
+        expect(response).to redirect_to(admin_suppliers_path)
       end
     end
 

@@ -1,0 +1,4 @@
+<%= govuk_panel title: "User added", body: nil %>
+<p><%= @user.full_name %> has been added to <%= @supplier_name %>. They have been sent an email.</p>
+<p>Back to <%= govuk_link_to "manage suppliers", admin_suppliers_path %></p>
+<%= govuk_link_to "Add another user", new_admin_supplier_user_path, button: true %>
