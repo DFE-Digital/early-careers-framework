@@ -37,5 +37,7 @@ module GovukRailsBoilerplate
     config.action_dispatch.rescue_responses["Pundit::NotAuthorizedError"] = :forbidden
 
     config.middleware.use Rack::Deflater
+
+    config.assets.enabled = false
   end
 end

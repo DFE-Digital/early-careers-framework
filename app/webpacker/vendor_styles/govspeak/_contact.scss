@@ -1,0 +1,51 @@
+// Govspeak contact
+// https://components.publishing.service.gov.uk/component-guide/govspeak/contact
+//
+// Support:
+// - alphagov/whitehall: ✔︎
+// - alphagov/govspeak: ✔︎
+
+// stylelint-disable max-nesting-depth
+
+.gem-c-govspeak {
+  // .address is used by the `$A` markdown pattern
+  .address,
+  .contact {
+    border-left: 1px solid govuk-colour("mid-grey", $legacy: "grey-2");
+    padding-left: govuk-spacing(3);
+    margin-bottom: govuk-spacing(6);
+    margin-top: govuk-spacing(6);
+  }
+
+  .contact {
+    @include govuk-clearfix;
+    position: relative;
+
+    .content {
+      float: none;
+      width: 100%;
+
+      h3 {
+        @include govuk-font($size: 19, $weight: bold);
+        margin-bottom: 5px;
+      }
+
+      .email-url-number {
+        .email {
+          word-wrap: break-word;
+        }
+
+        span {
+          display: block;
+        }
+      }
+
+      .comments {
+        @include govuk-font($size: 16);
+        @include govuk-media-query($from: tablet) {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}

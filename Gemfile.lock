@@ -442,7 +442,6 @@ DEPENDENCIES
   govspeak!
   govuk-components (>= 1.0.0)
   govuk_design_system_formbuilder (~> 2.1, >= 2.1.5)
-  govuk_publishing_components (>= 23.11.0)
   httpclient
   kaminari (>= 1.2.0)
   listen (>= 3.0.5, < 3.4)
