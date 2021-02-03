@@ -99,6 +99,15 @@ ActiveRecord::Schema.define(version: 2021_01_29_133823) do
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
+  create_table "delivery_partner_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "delivery_partner_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["delivery_partner_id"], name: "index_delivery_partner_profiles_on_delivery_partner_id"
+    t.index ["user_id"], name: "index_delivery_partner_profiles_on_user_id"
+  end
+
   create_table "delivery_partners", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -265,6 +274,8 @@ ActiveRecord::Schema.define(version: 2021_01_29_133823) do
   add_foreign_key "course_modules", "course_modules", column: "previous_module_id"
   add_foreign_key "course_modules", "course_years"
   add_foreign_key "course_years", "core_induction_programmes"
+  add_foreign_key "delivery_partner_profiles", "delivery_partners"
+  add_foreign_key "delivery_partner_profiles", "users"
   add_foreign_key "induction_coordinator_profiles", "users"
   add_foreign_key "lead_provider_cips", "cohorts"
   add_foreign_key "lead_provider_cips", "core_induction_programmes"

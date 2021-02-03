@@ -1,0 +1,53 @@
+<% content_for :before_content, govuk_back_link(
+  text: "Back",
+  href: admin_new_supplier_user_details_path)
+%>
+
+<h1 class="govuk-heading-l">Confirm details of new user</h1>
+
+<dl class="govuk-summary-list govuk-!-margin-bottom-9">
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Name
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= @supplier_user_form.full_name %>
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <%= govuk_link_to admin_new_supplier_user_details_path, class: "govuk-link--no-visited-state" do %>
+        Change<span class="govuk-visually-hidden"> name</span>
+      <% end %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Email
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= @supplier_user_form.email %>
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <%= govuk_link_to admin_new_supplier_user_details_path, class: "govuk-link--no-visited-state" do %>
+        Change<span class="govuk-visually-hidden"> email</span>
+      <% end %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Organisation
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= @supplier_user_form.chosen_supplier.name %>
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <%= govuk_link_to new_admin_supplier_user_path(continue: true), class: "govuk-link--no-visited-state" do %>
+        Change<span class="govuk-visually-hidden"> organisation</span>
+      <% end %>
+    </dd>
+  </div>
+</dl>
+
+<%= form_for :confirmation, url: admin_supplier_users_path, method: :post do |f| %>
+  <%= f.hidden_field :answers_checked, value: true %>
+  <%= f.govuk_submit "Create user" %>
+<% end %>

@@ -14,7 +14,7 @@ RSpec.describe "Admin::LeadProviders", type: :request do
   end
 
   describe "GET /admin/suppliers/new/lead-provider/choose-cip" do
-    it "renders the correct template" do
+    it "renders the choose_cip template" do
       # When
       get "/admin/suppliers/new/lead-provider/choose-cip"
 
@@ -59,7 +59,7 @@ RSpec.describe "Admin::LeadProviders", type: :request do
   end
 
   describe "GET /admin/suppliers/new/lead-provider/choose-cohorts" do
-    it "renders the correct template" do
+    it "renders the choose_cohorts template" do
       # When
       get "/admin/suppliers/new/lead-provider/choose-cohorts"
 

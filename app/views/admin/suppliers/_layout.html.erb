@@ -1,0 +1,14 @@
+<h1 class="govuk-heading-l">Suppliers</h1>
+<div class="page-tab-container">
+  <div class="page-tab govuk-!-margin-right-8 <%= "page-tab__selected" if page == "suppliers" %>">
+    <%= govuk_link_to admin_suppliers_path do %>
+      All suppliers <%= "<span class='govuk-visually-hidden'>Current page</span>".html_safe if page == "suppliers" %>
+    <% end %>
+  </div>
+  <div class="page-tab govuk-!-margin-right-8 <%= "page-tab__selected" if page == "users" %>">
+    <%= govuk_link_to admin_supplier_users_path do %>
+      All users <%= "<span class='govuk-visually-hidden'>Current page</span>".html_safe if page == "users" %>
+    <% end %>
+  </div>
+</div>
+<hr class="govuk-!-margin-top-0"/>

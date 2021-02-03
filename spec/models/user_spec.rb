@@ -6,6 +6,10 @@ RSpec.describe User, type: :model do
   describe "associations" do
     it { is_expected.to have_one(:admin_profile) }
     it { is_expected.to have_one(:induction_coordinator_profile) }
+    it { is_expected.to have_one(:lead_provider_profile) }
+    it { is_expected.to have_one(:delivery_partner_profile) }
+    it { is_expected.to have_one(:lead_provider).through(:lead_provider_profile) }
+    it { is_expected.to have_one(:delivery_partner).through(:delivery_partner_profile) }
   end
 
   describe "validations" do
@@ -26,11 +30,6 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe "associations" do
-    it { is_expected.to have_one(:induction_coordinator_profile) }
-    it { is_expected.to have_one(:lead_provider_profile) }
-  end
-
   describe "#password_required?" do
     subject { build(:user) }
     it "is expected to be false" do
@@ -49,6 +48,26 @@ RSpec.describe User, type: :model do
       user = create(:user)
 
       expect(user.admin?).to be false
+    end
+  end
+
+  describe "#supplier_name" do
+    it "returns the correct lead provider name" do
+      user = create(:user, :lead_provider)
+
+      expect(user.supplier_name).to eq user.lead_provider.name
+    end
+
+    it "returns the correct delivery partner name" do
+      user = create(:user, :delivery_partner)
+
+      expect(user.supplier_name).to eq user.delivery_partner.name
+    end
+
+    it "returns nil when the user doesn't belong to a supplier" do
+      user = create(:user)
+
+      expect(user.supplier_name).to be_nil
     end
   end
 

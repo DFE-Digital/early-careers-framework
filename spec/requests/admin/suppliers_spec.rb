@@ -13,7 +13,7 @@ RSpec.describe "Admin::Suppliers", type: :request do
   end
 
   describe "GET /admin/suppliers/new" do
-    it "renders the correct template" do
+    it "renders the new template" do
       get "/admin/suppliers/new"
 
       expect(response).to render_template(:new)
@@ -47,7 +47,7 @@ RSpec.describe "Admin::Suppliers", type: :request do
   end
 
   describe "GET /admin/suppliers/new/supplier-type" do
-    it "renders the correct template" do
+    it "renders the new_supplier_type template" do
       given_I_have_chosen_supplier_name(supplier_name)
 
       # When

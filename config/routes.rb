@@ -23,7 +23,6 @@ Rails.application.routes.draw do
   resource :school_invites, only: %i[show create]
 
   namespace :admin do
-    resource :dashboard, controller: :dashboard, only: :show
     resources :suppliers, only: %i[index new]
     scope "suppliers/new" do
       post "/", controller: :suppliers, action: :receive_new, as: :new_supplier
@@ -69,6 +68,15 @@ Rails.application.routes.draw do
       post "/", controller: :delivery_partners, action: :update_delivery_partner, as: :update_delivery_partner
 
       resources :lead_provider_users, path: "/users"
+    end
+
+    resources :supplier_users, only: %i[index new create], path: "suppliers/users"
+    scope "suppliers/users/new" do
+      post "/", controller: :supplier_users, action: :receive_supplier
+      get "user-details", controller: :supplier_users, action: :user_details, as: :new_supplier_user_details
+      post "user-details", controller: :supplier_users, action: :receive_user_details
+      get "review", controller: :supplier_users, action: :review, as: :new_supplier_user_review
+      get "success", controller: :supplier_users, action: :success, as: :new_supplier_user_success
     end
   end
 
