@@ -48,7 +48,6 @@ gem "activerecord-import"
 gem "govuk-components", ">= 1.0.0"
 gem "govuk_design_system_formbuilder", "~> 2.1", ">= 2.1.5"
 gem "httpclient"
-gem "sass-rails", ">= 6.0.0"
 gem "seed_dump"
 
 # Database based asynchronous priority queue system
