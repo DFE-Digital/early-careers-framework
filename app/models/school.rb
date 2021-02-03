@@ -12,6 +12,9 @@ class School < ApplicationRecord
   has_one :lead_provider, through: :partnership
   has_and_belongs_to_many :induction_coordinator_profiles
 
+  has_many :early_career_teacher_profiles
+  has_many :early_career_teachers, through: :early_career_teacher_profiles, source: :user
+
   def full_address
     address = <<~ADDRESS
       #{address_line1}

@@ -31,3 +31,11 @@ unless Cohort.first
   Cohort.create!(start_year: 2021)
   Cohort.create!(start_year: 2022)
 end
+
+unless EarlyCareerTeacherProfile.first
+  user = User.find_or_create_by!(email: "early-career-teacher@example.com") do |u|
+    u.full_name = "Joe Bloggs"
+    u.confirmed_at = Time.zone.now.utc
+  end
+  EarlyCareerTeacherProfile.create!(user: user, school: School.first, cohort: Cohort.first, core_induction_programme: CoreInductionProgramme.first)
+end

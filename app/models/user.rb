@@ -7,6 +7,7 @@ class User < ApplicationRecord
   has_one :lead_provider_profile
   has_one :delivery_partner_profile
   has_one :admin_profile
+  has_one :early_career_teacher_profile
   has_one :lead_provider, through: :lead_provider_profile
   has_one :delivery_partner, through: :delivery_partner_profile
 
@@ -23,6 +24,10 @@ class User < ApplicationRecord
 
   def induction_coordinator?
     induction_coordinator_profile.present?
+  end
+
+  def early_career_teacher?
+    early_career_teacher_profile.present?
   end
 
   def password_required?
