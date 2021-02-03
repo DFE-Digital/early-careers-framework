@@ -21,11 +21,9 @@ RSpec.describe "Core Induction Programme Lesson", type: :request do
         expect(response).to render_template(:edit)
       end
     end
-
-    describe "PUT /core-induction-programme/years/:years/modules/:modules/lessons/:lessons/edit" do
+    describe "PUT /core-induction-programme/years/:years/modules/:modules/lessons/:lessons" do
       it "renders a preview of changes to lesson" do
-        put "#{course_lesson_url}/edit"
-
+        put course_lesson_url, params: { commit: "See preview", lesson_preview: "Extra content" }
         expect(response).to render_template(:edit)
       end
     end

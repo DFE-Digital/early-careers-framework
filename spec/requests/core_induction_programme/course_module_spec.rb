@@ -11,25 +11,21 @@ RSpec.describe "Core Induction Programme Module", type: :request do
       admin_user = create(:user, :admin)
       sign_in admin_user
     end
-
     describe "GET /core-induction-programme/years/:years_id/modules/module_id" do
       it "renders the cip module page" do
         get course_module_url
         expect(response).to render_template(:show)
       end
     end
-
     describe "GET /core-induction-programme/years/:years_id/modules/module_id/edit" do
       it "renders the cip module edit page" do
         get "#{course_module_url}/edit"
         expect(response).to render_template(:edit)
       end
     end
-
-    describe "PUT /core-induction-programme/years/:years_id/modules/module_id/edit" do
+    describe "PUT /core-induction-programme/years/:years_id/modules/module_id" do
       it "renders a preview of changes to module" do
-        put "#{course_module_url}/edit"
-
+        put course_module_url, params: { commit: "See preview", module_preview: "Extra content" }
         expect(response).to render_template(:edit)
       end
     end
@@ -40,6 +36,7 @@ RSpec.describe "Core Induction Programme Module", type: :request do
       end
     end
   end
+
   describe "when a non-admin user is logged in" do
     before do
       user = create(:user)
