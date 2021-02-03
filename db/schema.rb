@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_29_133823) do
+ActiveRecord::Schema.define(version: 2021_02_02_093613) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -112,6 +112,19 @@ ActiveRecord::Schema.define(version: 2021_01_29_133823) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "name", null: false
+  end
+
+  create_table "early_career_teacher_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "school_id", null: false
+    t.uuid "core_induction_programme_id"
+    t.uuid "cohort_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["cohort_id"], name: "index_early_career_teacher_profiles_on_cohort_id"
+    t.index ["core_induction_programme_id"], name: "index_ect_profiles_on_core_induction_programme_id"
+    t.index ["school_id"], name: "index_early_career_teacher_profiles_on_school_id"
+    t.index ["user_id"], name: "index_early_career_teacher_profiles_on_user_id"
   end
 
   create_table "induction_coordinator_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -276,6 +289,10 @@ ActiveRecord::Schema.define(version: 2021_01_29_133823) do
   add_foreign_key "course_years", "core_induction_programmes"
   add_foreign_key "delivery_partner_profiles", "delivery_partners"
   add_foreign_key "delivery_partner_profiles", "users"
+  add_foreign_key "early_career_teacher_profiles", "cohorts"
+  add_foreign_key "early_career_teacher_profiles", "core_induction_programmes"
+  add_foreign_key "early_career_teacher_profiles", "schools"
+  add_foreign_key "early_career_teacher_profiles", "users"
   add_foreign_key "induction_coordinator_profiles", "users"
   add_foreign_key "lead_provider_cips", "cohorts"
   add_foreign_key "lead_provider_cips", "core_induction_programmes"

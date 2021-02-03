@@ -10,6 +10,7 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_one(:delivery_partner_profile) }
     it { is_expected.to have_one(:lead_provider).through(:lead_provider_profile) }
     it { is_expected.to have_one(:delivery_partner).through(:delivery_partner_profile) }
+    it { is_expected.to have_one(:early_career_teacher_profile) }
   end
 
   describe "validations" do
@@ -82,6 +83,20 @@ RSpec.describe User, type: :model do
       user = create(:user)
 
       expect(user.induction_coordinator?).to be false
+    end
+  end
+
+  describe "#early_career_teacher?" do
+    it "is expected to be true when the user has an early career teacher profile" do
+      user = create(:user, :early_career_teacher)
+
+      expect(user.early_career_teacher?).to be true
+    end
+
+    it "is expected to be false when the user does not have an early career teacher profile" do
+      user = create(:user)
+
+      expect(user.early_career_teacher?).to be false
     end
   end
 end

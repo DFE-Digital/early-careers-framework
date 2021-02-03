@@ -23,5 +23,9 @@ FactoryBot.define do
     trait :delivery_partner do
       delivery_partner_profile
     end
+
+    trait :early_career_teacher do
+      early_career_teacher_profile
+    end
   end
 end
