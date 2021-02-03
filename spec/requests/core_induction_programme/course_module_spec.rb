@@ -27,12 +27,15 @@ RSpec.describe "Core Induction Programme Module", type: :request do
       it "renders a preview of changes to module" do
         put course_module_url, params: { commit: "See preview", module_preview: "Extra content" }
         expect(response).to render_template(:edit)
+        expect(response.body).to include("Extra content")
       end
     end
     describe "PUT /core-induction-programme/years/:years_id/modules/module_id" do
       it "redirects to the module page when saving content" do
-        put course_module_url, params: { commit: "Save changes", module_preview: course_module.content }
+        put course_module_url, params: { commit: "Save changes", module_preview: "Adding new content" }
         expect(response).to redirect_to(course_module_url)
+        get course_module_url
+        expect(response.body).to include("Adding new content")
       end
     end
   end
