@@ -18,6 +18,7 @@ class CoreInductionProgramme::LessonsController < ApplicationController
   def update
     if params[:commit] == "Save changes"
       @course_lesson.update!(content: params[:lesson_preview])
+      flash[:success] = "Your changes have been saved"
       redirect_to cip_year_module_lesson_url
     else
       @lesson_preview = params[:lesson_preview]
