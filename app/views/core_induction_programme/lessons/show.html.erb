@@ -1,7 +1,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <% if policy(@course_lesson).edit? %>
-      <%= link_to "Edit lesson content", edit_cip_years_modules_lessons_url(@course_lesson), class: "govuk-button" %>
+      <%= link_to "Edit lesson content", edit_cip_year_module_lesson_url(@course_lesson), class: "govuk-button" %>
     <% end %>
     <h1 class="govuk-heading-l"> <%= @course_lesson.title %></h1>
     <div class="gem-c-govspeak govuk-govspeak ">
