@@ -87,15 +87,9 @@ Rails.application.routes.draw do
   resource :core_induction_programme, controller: :core_induction_programme, only: :show, as: "cip", path: "/core-induction-programme" do
     get "download-export", to: "core_induction_programme#download_export", as: "download_export"
 
-    concern :editable do
-      member do
-        put "edit"
-      end
-    end
-
-    resources :years, controller: "core_induction_programme/years", concerns: [:editable], only: :show do
-      resources :modules, controller: "core_induction_programme/modules", concerns: [:editable], only: %i[show edit update] do
-        resources :lessons, controller: "core_induction_programme/lessons", concerns: [:editable], only: %i[show edit update]
+    resources :years, controller: "core_induction_programme/years", only: :show do
+      resources :modules, controller: "core_induction_programme/modules", only: %i[show edit update] do
+        resources :lessons, controller: "core_induction_programme/lessons", only: %i[show edit update]
       end
     end
   end
