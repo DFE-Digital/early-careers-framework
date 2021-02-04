@@ -1,0 +1,35 @@
+@import "../vendor_styles/govspeak/advisory";
+@import "../vendor_styles/govspeak/attachment";
+@import "../vendor_styles/govspeak/button";
+@import "../vendor_styles/govspeak/call-to-action";
+@import "../vendor_styles/govspeak/charts";
+@import "../vendor_styles/govspeak/contact";
+@import "../vendor_styles/govspeak/example";
+@import "../vendor_styles/govspeak/footnotes";
+@import "../vendor_styles/govspeak/form-download";
+@import "../vendor_styles/govspeak/fraction";
+@import "../vendor_styles/govspeak/highlight-answer";
+@import "../vendor_styles/govspeak/images";
+@import "../vendor_styles/govspeak/information-callout";
+@import "../vendor_styles/govspeak/legislative-list";
+@import "../vendor_styles/govspeak/media-player";
+@import "../vendor_styles/govspeak/place";
+@import "../vendor_styles/govspeak/stat-headline";
+@import "../vendor_styles/govspeak/steps";
+@import "../vendor_styles/govspeak/summary";
+@import "../vendor_styles/govspeak/tables";
+@import "../vendor_styles/govspeak/typography";
+@import "../vendor_styles/govspeak/warning-callout";
+
+@import "./govspeak/accordion";
+@import "./govspeak/call-to-action";
+@import "./govspeak/highlights";
+@import "./govspeak/quote";
+@import "./govspeak/tables";
+
+.gem-c-govspeak {
+  &.direction-rtl {
+    direction: rtl;
+    text-align: start;
+  }
+}

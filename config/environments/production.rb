@@ -117,8 +117,4 @@ Rails.application.configure do
   # config.active_record.database_selector = { delay: 2.seconds }
   # config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
-
-  # Set a css_compressor so sassc-rails does not overwrite the compressor when running the tests
-  config.assets.css_compressor = nil
-  config.sass.style = :compressed
 end
