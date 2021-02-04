@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_02_093613) do
+ActiveRecord::Schema.define(version: 2021_02_02_134141) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(version: 2021_02_02_093613) do
   end
 
   create_table "core_induction_programmes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name", null: false
+    t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -217,6 +217,16 @@ ActiveRecord::Schema.define(version: 2021_02_02_093613) do
     t.index ["lead_provider_id"], name: "index_provider_relationships_on_lead_provider_id"
   end
 
+  create_table "pupil_premium_eligibilities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "school_id", null: false
+    t.integer "start_year", limit: 2, null: false
+    t.float "percent_primary_pupils_eligible", null: false
+    t.float "percent_secondary_pupils_eligible", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["school_id"], name: "index_pupil_premium_eligibilities_on_school_id"
+  end
+
   create_table "schools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -235,6 +245,7 @@ ActiveRecord::Schema.define(version: 2021_02_02_093613) do
     t.uuid "network_id"
     t.string "domains", default: [], null: false, array: true
     t.boolean "eligible", default: true, null: false
+    t.string "primary_contact_email"
     t.uuid "local_authority_district_id"
     t.uuid "local_authority_id"
     t.string "school_type_name"
@@ -246,7 +257,6 @@ ActiveRecord::Schema.define(version: 2021_02_02_093613) do
     t.string "school_status_code"
     t.string "school_status_name"
     t.string "secondary_contact_email"
-    t.string "primary_contact_email"
     t.index ["high_pupil_premium"], name: "index_schools_on_high_pupil_premium", where: "high_pupil_premium"
     t.index ["is_rural"], name: "index_schools_on_is_rural", where: "is_rural"
     t.index ["local_authority_district_id"], name: "index_schools_on_local_authority_district_id"
@@ -304,6 +314,7 @@ ActiveRecord::Schema.define(version: 2021_02_02_093613) do
   add_foreign_key "provider_relationships", "cohorts"
   add_foreign_key "provider_relationships", "delivery_partners"
   add_foreign_key "provider_relationships", "lead_providers"
+  add_foreign_key "pupil_premium_eligibilities", "schools"
   add_foreign_key "schools", "local_authorities"
   add_foreign_key "schools", "local_authority_districts"
   add_foreign_key "schools", "networks"

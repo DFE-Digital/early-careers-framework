@@ -10,6 +10,7 @@ class School < ApplicationRecord
   belongs_to :local_authority, optional: true
   has_one :partnership
   has_one :lead_provider, through: :partnership
+  has_many :pupil_premium_eligibilities
   has_and_belongs_to_many :induction_coordinator_profiles
 
   has_many :early_career_teacher_profiles
