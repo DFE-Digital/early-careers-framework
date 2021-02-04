@@ -10,6 +10,10 @@ class ApplicationController < ActionController::Base
     render json: { status: "OK", version: ENV["SHA"], environment: Rails.env }, status: :ok
   end
 
+  def after_sign_in_path_for(user)
+    helpers.profile_dashboard_url(user)
+  end
+
 protected
 
   def configure_permitted_parameters
