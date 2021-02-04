@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(version: 2021_02_02_093613) do
   end
 
   create_table "core_induction_programmes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
