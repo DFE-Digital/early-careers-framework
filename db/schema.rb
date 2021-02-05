@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_02_134141) do
+ActiveRecord::Schema.define(version: 2021_02_04_101901) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -49,12 +49,10 @@ ActiveRecord::Schema.define(version: 2021_02_02_134141) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "title", null: false
     t.text "content", null: false
-    t.uuid "next_lesson_id"
     t.uuid "previous_lesson_id"
     t.uuid "course_module_id", null: false
     t.integer "version", default: 1, null: false
     t.index ["course_module_id"], name: "index_course_lessons_on_course_module_id"
-    t.index ["next_lesson_id"], name: "index_course_lessons_on_next_lesson_id"
     t.index ["previous_lesson_id"], name: "index_course_lessons_on_previous_lesson_id"
   end
 
@@ -63,12 +61,10 @@ ActiveRecord::Schema.define(version: 2021_02_02_134141) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "title", null: false
     t.text "content", null: false
-    t.uuid "next_module_id"
     t.uuid "previous_module_id"
     t.uuid "course_year_id", null: false
     t.integer "version", default: 1, null: false
     t.index ["course_year_id"], name: "index_course_modules_on_course_year_id"
-    t.index ["next_module_id"], name: "index_course_modules_on_next_module_id"
     t.index ["previous_module_id"], name: "index_course_modules_on_previous_module_id"
   end
 
@@ -290,10 +286,8 @@ ActiveRecord::Schema.define(version: 2021_02_02_134141) do
   add_foreign_key "admin_profiles", "users"
   add_foreign_key "cohorts_lead_providers", "cohorts"
   add_foreign_key "cohorts_lead_providers", "lead_providers"
-  add_foreign_key "course_lessons", "course_lessons", column: "next_lesson_id"
   add_foreign_key "course_lessons", "course_lessons", column: "previous_lesson_id"
   add_foreign_key "course_lessons", "course_modules"
-  add_foreign_key "course_modules", "course_modules", column: "next_module_id"
   add_foreign_key "course_modules", "course_modules", column: "previous_module_id"
   add_foreign_key "course_modules", "course_years"
   add_foreign_key "course_years", "core_induction_programmes"
