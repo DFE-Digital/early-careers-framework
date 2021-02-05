@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for(user)
-    helpers.profile_dashboard_url(user)
+    stored_location_for(user) || helpers.profile_dashboard_url(user)
   end
 
 protected
