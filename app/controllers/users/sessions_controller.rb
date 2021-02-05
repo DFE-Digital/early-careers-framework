@@ -6,14 +6,12 @@ class Users::SessionsController < Devise::SessionsController
   class EmailNotFoundError < StandardError; end
   class LoginIncompleteError < StandardError; end
 
+  TEST_USERS = %w[admin@example.com lead-provider@example.com school-leader@example.com].freeze
+
+  before_action :mock_login, only: :create, if: -> { Rails.env.development? || Rails.env.deployed_development? }
+
   def create
-    if Rails.env.development? || Rails.env.deployed_development?
-      user = User.find_by_email(params.dig(:user, :email))
-      sign_in(user, scope: :user)
-      redirect_to profile_dashboard_url(user)
-    else
-      super
-    end
+    super
   rescue LoginIncompleteError
     render :login_email_sent
   rescue EmailNotFoundError
@@ -35,5 +33,16 @@ class Users::SessionsController < Devise::SessionsController
 
   def redirect_from_magic_link
     @login_token = params[:login_token] if params[:login_token].present?
+  end
+
+private
+
+  def mock_login
+    email = params.dig(:user, :email)
+    return unless TEST_USERS.include?(email)
+
+    user = User.find_by_email(email)
+    sign_in(user, scope: :user)
+    redirect_to profile_dashboard_url(user)
   end
 end
