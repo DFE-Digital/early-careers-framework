@@ -2,7 +2,8 @@
   <div class="govuk-grid-column-full">
     <h1 class="govuk-heading-l">User dashboard</h1>
     <p class="govuk-body"> You are logged in</p>
-    <% if @current_user.lead_provider_profile %>
+
+    <% if @current_user.lead_provider_admin? %>
       <%= govuk_link_to "Go to school search", school_search_path %>
     <% end %>
   </div>
