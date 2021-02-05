@@ -25,4 +25,23 @@ RSpec.describe CourseModule, type: :model do
     it { is_expected.to validate_presence_of(:title).with_message("Enter a title") }
     it { is_expected.to validate_presence_of(:content).with_message("Enter content") }
   end
+
+  describe "course_lessons" do
+    it "returns lessons in order after they get updated" do
+      course_module = FactoryBot.create(:course_module)
+      course_lesson_one = FactoryBot.create(:course_lesson, title: "One", course_module: course_module)
+      course_lesson_two = FactoryBot.create(:course_lesson, title: "Two", course_module: course_module)
+      course_lesson_three = FactoryBot.create(:course_lesson, title: "Three", course_module: course_module)
+      course_lesson_four = FactoryBot.create(:course_lesson, title: "Four", course_module: course_module)
+
+      course_lesson_two.update!(previous_lesson: course_lesson_one)
+      course_lesson_four.update!(previous_lesson: course_lesson_two)
+      course_lesson_three.update!(previous_lesson: course_lesson_four)
+
+      expected_lessons_with_order = [course_lesson_one, course_lesson_two, course_lesson_four, course_lesson_three]
+      course_module.course_lessons.zip(expected_lessons_with_order).each do |actual, expected|
+        expect(actual).to eq(expected)
+      end
+    end
+  end
 end

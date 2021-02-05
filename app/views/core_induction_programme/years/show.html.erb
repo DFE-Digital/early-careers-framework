@@ -5,14 +5,12 @@
     <% end %>
     <h1 class="govuk-heading-l"><%= @course_year.title %></h1>
     <h2 class="govuk-heading-l">Modules</h2>
-    <% if @course_year.course_modules.any? %>
-      <% @course_year.course_modules.each do |course_module| %>
-        <p>
-          <%= govuk_link_to course_module.title, cip_year_module_url(@course_year, course_module) %>
-        </p>
-      <% end %>
-    <% else %>
-      <p>No course modules were found!</p>
+    <% if @course_year.course_modules.each do |course_module| %>
+      <p>
+        <%= govuk_link_to course_module.title, cip_year_module_url(@course_year, course_module) %>
+      </p>
+    <% end.empty? %>
+    <p>No course modules were found!</p>
     <% end %>
     <div class="gem-c-govspeak govuk-govspeak ">
       <%= @course_year.content_to_html.html_safe %>
