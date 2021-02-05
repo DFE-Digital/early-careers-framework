@@ -43,6 +43,27 @@ class School < ApplicationRecord
       &.any?
   end
 
+  def pupil_premium_uplift?(start_year)
+    pupil_premium_eligibilities.find_by(start_year: start_year)&.uplift? || false
+  end
+
+  scope :with_pupil_premium_uplift, lambda { |start_year|
+    query = <<~QUERY
+      pupil_premium_eligibilities.start_year = ?
+      AND (
+        pupil_premium_eligibilities.percent_primary_pupils_eligible >= ?
+        OR pupil_premium_eligibilities.percent_secondary_pupils_eligible >= ?
+      )
+    QUERY
+    joins(:pupil_premium_eligibilities)
+      .where(
+        query,
+        start_year,
+        PupilPremiumEligibility::THRESHOLD_PERCENTAGE,
+        PupilPremiumEligibility::THRESHOLD_PERCENTAGE,
+      )
+  }
+
 private
 
   def unconfirmed_induction_coordinators
