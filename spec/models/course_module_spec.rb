@@ -34,16 +34,13 @@ RSpec.describe CourseModule, type: :model do
       course_lesson_three = FactoryBot.create(:course_lesson, title: "Three", course_module: course_module)
       course_lesson_four = FactoryBot.create(:course_lesson, title: "Four", course_module: course_module)
 
-      course_lesson_two.previous_lesson = course_lesson_one
-      course_lesson_four.previous_lesson = course_lesson_two
-      course_lesson_three.previous_lesson = course_lesson_four
-      course_lesson_two.save!
-      course_lesson_three.save!
-      course_lesson_four.save!
+      course_lesson_two.update!(previous_lesson: course_lesson_one)
+      course_lesson_four.update!(previous_lesson: course_lesson_two)
+      course_lesson_three.update!(previous_lesson: course_lesson_four)
 
       expected_lessons_with_order = [course_lesson_one, course_lesson_two, course_lesson_four, course_lesson_three]
-      expected_lessons_with_order.zip(course_module.course_lessons).each do |expected, actual|
-        expect(expected).to eq(actual)
+      course_module.course_lessons.zip(expected_lessons_with_order).each do |actual, expected|
+        expect(actual).to eq(expected)
       end
     end
   end
