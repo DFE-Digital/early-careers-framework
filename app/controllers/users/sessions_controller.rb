@@ -34,13 +34,13 @@ private
   def ensure_login_token_valid
     @user = User.find_by(login_token: params[:login_token])
 
-    if @user.blank? || login_token_expired
+    if @user.blank? || login_token_expired?
       flash[:alert] = "There was an error while logging you in. Please enter your email again."
       redirect_to new_user_session_path
     end
   end
 
-  def login_token_expired
+  def login_token_expired?
     Time.zone.now > @user.login_token_valid_until
   end
 end
