@@ -51,22 +51,24 @@ RSpec.describe "Users::Sessions", type: :request do
       get "/users/confirm_sign_in?login_token=aaaaaaaaaa"
 
       expect(response).to redirect_to "/users/sign_in"
+      expect(flash[:alert]).to eq "There was an error while logging you in. Please enter your email again."
     end
 
     context "when the token has expired" do
       before { user.update!(login_token_valid_until: 1.hour.ago) }
 
-      it "redirects to sign in when the token has expired" do
+      it "redirects to sign in" do
         get "/users/confirm_sign_in?login_token=#{user.login_token}"
 
         expect(response).to redirect_to "/users/sign_in"
+        expect(flash[:alert]).to eq "There was an error while logging you in. Please enter your email again."
       end
     end
 
     context "when already signed in" do
       before { sign_in user }
 
-      it "redirects to the dashboard when already signed in" do
+      it "redirects to the dashboard" do
         get "/users/confirm_sign_in?login_token=aaaaaaaaaa"
 
         expect(response).to redirect_to "/dashboard"
