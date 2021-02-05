@@ -169,4 +169,14 @@ RSpec.describe School, type: :model do
       end
     end
   end
+
+  describe "scope :with_pupil_premium_uplift" do
+    let(:uplifted_school) { create(:school, :pupil_premium_uplift) }
+    let(:not_uplifted_school) { create(:school, pupil_premium_eligibilities: [build(:pupil_premium_eligibility, :not_eligible)]) }
+
+    it "returns uplifted schools" do
+      expect(School.with_pupil_premium_uplift(2021)).to include(uplifted_school)
+      expect(School.with_pupil_premium_uplift(2021)).not_to include(not_uplifted_school)
+    end
+  end
 end

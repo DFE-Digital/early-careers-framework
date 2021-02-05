@@ -73,4 +73,14 @@ RSpec.describe PupilPremiumEligibility, type: :model do
       expect(pupil_premium_eligibility.uplift?).to be false
     end
   end
+
+  describe "scope :only_with_uplift" do
+    let(:uplifted_school) { create(:school, :pupil_premium_uplift) }
+    let(:not_uplifted_school) { create(:school, pupil_premium_eligibilities: [build(:pupil_premium_eligibility, :not_eligible)]) }
+
+    it "returns uplifted eligibilities" do
+      expect(PupilPremiumEligibility.only_with_uplift(2021)).to include(uplifted_school.pupil_premium_eligibilities.first)
+      expect(PupilPremiumEligibility.only_with_uplift(2021)).not_to include(not_uplifted_school.pupil_premium_eligibilities.first)
+    end
+  end
 end
