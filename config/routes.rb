@@ -15,6 +15,12 @@ Rails.application.routes.draw do
     post "/users/check-details", to: "users/registrations#check_details", as: :users_check_details
   end
 
+  resources :school_registrations do
+    collection do
+      get "/academic-year", as: :school_registrations_academic_year
+    end
+  end
+
   get "/pages/:page", to: "pages#show"
   get "check" => "application#check"
 
