@@ -48,20 +48,8 @@ class School < ApplicationRecord
   end
 
   scope :with_pupil_premium_uplift, lambda { |start_year|
-    query = <<~QUERY
-      pupil_premium_eligibilities.start_year = ?
-      AND (
-        pupil_premium_eligibilities.percent_primary_pupils_eligible >= ?
-        OR pupil_premium_eligibilities.percent_secondary_pupils_eligible >= ?
-      )
-    QUERY
     joins(:pupil_premium_eligibilities)
-      .where(
-        query,
-        start_year,
-        PupilPremiumEligibility::THRESHOLD_PERCENTAGE,
-        PupilPremiumEligibility::THRESHOLD_PERCENTAGE,
-      )
+      .merge(PupilPremiumEligibility.only_with_uplift(start_year))
   }
 
 private
