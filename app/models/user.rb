@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
-  devise :database_authenticatable, :registerable, :trackable,
-         :rememberable, :validatable, :confirmable, :passwordless_authenticatable
+  devise :registerable, :trackable, :rememberable, :confirmable, :passwordless_authenticatable
+
   has_one :induction_coordinator_profile
   has_one :lead_provider_profile
   has_one :delivery_partner_profile
@@ -12,7 +12,7 @@ class User < ApplicationRecord
   has_one :delivery_partner, through: :delivery_partner_profile
 
   validates :full_name, presence: { message: "Enter your full name" }
-  validates :email, presence: true
+  validates :email, presence: true, uniqueness: true, format: { with: Devise.email_regexp }
 
   def admin?
     admin_profile.present?
@@ -26,12 +26,12 @@ class User < ApplicationRecord
     induction_coordinator_profile.present?
   end
 
-  def early_career_teacher?
-    early_career_teacher_profile.present?
+  def lead_provider_admin?
+    lead_provider_profile.present?
   end
 
-  def password_required?
-    false
+  def early_career_teacher?
+    early_career_teacher_profile.present?
   end
 
   scope :for_lead_provider, -> { joins(:lead_provider) }
