@@ -17,7 +17,7 @@ Rails.application.routes.draw do
 
   resources :school_registrations do
     collection do
-      get "/academic-year", as: :school_registrations_academic_year
+      get "academic-year", to: "school_registrations#academic_year", as: :academic_year
     end
   end
 

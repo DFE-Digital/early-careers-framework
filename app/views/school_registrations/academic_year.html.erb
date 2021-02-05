@@ -1,15 +1,21 @@
-<% content_for :before_content, govuk_back_link(
-  text: "Back",
-  href: user_information_path)
-%>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
 
-<%= form_with model: @school, url: school_academic_year_path, method: :post do |f| %>
-  <%= f.govuk_collection_radio_buttons(
-        :schools,
-        @options,
-        :id,
-        :name,
-        legend: -> { tag.h1("Do you think you'll be training any early career teachers in the 2021/22 academic year?" , class: "govuk-heading-l") }
-      ) %>
-  <%= f.govuk_submit "Continue" %>
-<% end %>
+  <% content_for :before_content, govuk_back_link(
+    text: "Back",
+    href: users_information_path)
+  %>
+
+  <%= form_with model: @school, url: academic_year_school_registrations_path, method: :post do |f| %>
+    <%= f.govuk_collection_radio_buttons(
+          :schools,
+          @options,
+          :id,
+          :name,
+          legend: -> { tag.h1("Do you think you'll be training any early career teachers in the 2021/22 academic year?" , class: "govuk-heading-l") }
+        ) %>
+    <%= f.govuk_submit "Continue" %>
+  <% end %>
+
+  </div>
+</div>
