@@ -49,8 +49,6 @@ private
     Time.zone.now > @user.login_token_valid_until
   end
 
-private
-
   def mock_login
     email = params.dig(:user, :email)
     return unless TEST_USERS.include?(email)
