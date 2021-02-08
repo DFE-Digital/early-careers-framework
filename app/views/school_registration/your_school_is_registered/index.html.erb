@@ -1,1 +1,10 @@
-your_school_is_registered
+<div class="govuk-grid-row">
+  <div class="confirmed-banner govuk-grid-column-full-width">
+    <%= govuk_panel title: "Your school is now registered", body: nil %>
+  </div>
+  <div class="govuk-grid-column-two-thirds">
+    <p class="govuk-body govuk-!-margin-top-6">You can use your email address to sign in at any time. No password required.</p>
+    <p class="govuk-body govuk-!-margin-bottom-6">Continue to your account for more guidance and next steps.</p>
+    <%= govuk_link_to "Continue", dashboard_path, button: true %>
+  </div>
+</div>
