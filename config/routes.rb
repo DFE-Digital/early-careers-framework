@@ -45,6 +45,7 @@ Rails.application.routes.draw do
     resources :welcome, only: %i[index]
     resources :your_school_is_registered, only: %i[index]
     resources :before_you_start, only: %i[index]
+    resources :school_not_eligible, only: %i[index]
   end
 
   namespace :admin do
