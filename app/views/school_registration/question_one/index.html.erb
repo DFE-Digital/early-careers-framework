@@ -1,1 +1,22 @@
-question_one
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+  <% content_for :before_content, govuk_back_link(
+    text: "Back",
+    href: users_information_path)
+  %>
+
+  <%= form_with model: @school, url: "/", method: :post do |f| %>
+    <%= f.govuk_collection_radio_buttons(
+          :schools,
+          @options,
+          :id,
+          :name,
+          legend: -> { tag.h1("Do you think you'll be training any early career teachers in the 2021/22 academic year?" , class: "govuk-heading-l") }
+        ) %>
+    <%= f.govuk_submit "Continue" %>
+  <% end %>
+
+  </div>
+</div>
+
