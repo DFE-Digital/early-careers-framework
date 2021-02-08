@@ -93,17 +93,17 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe "#lead_provider_admin?" do
+  describe "#lead_provider?" do
     it "is expected to be true when the user has a lead provider profile" do
       user = create(:user, :lead_provider)
 
-      expect(user.lead_provider_admin?).to be true
+      expect(user.lead_provider?).to be true
     end
 
     it "is expected to be false when the user does not have a lead provider profile" do
       user = create(:user)
 
-      expect(user.lead_provider_admin?).to be false
+      expect(user.lead_provider?).to be false
     end
   end
 end
