@@ -1,1 +1,21 @@
-Enter URN
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <% content_for :before_content, govuk_back_link(
+      text: "Back",
+      href: users_information_path)
+    %>
+
+    <h2 class="govuk-heading-l">What is your school Unique Reference Number</h2>
+
+    <%= form_for(:school, url: users_check_details_path) do |f| %>
+      <%= f.govuk_text_field(
+            :school_urn,
+            value: @urn,
+            hint: { text: "This is a 6 digit number. Not sure? Search for your school on our register.", class: "govuk-hint" },
+      %>
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+
+  </div>
+</div>
+
