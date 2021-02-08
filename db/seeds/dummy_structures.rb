@@ -30,7 +30,6 @@ if Rails.env.deployed_development? && User.none?
     u.full_name = "Lp User"
     u.confirmed_at = Time.zone.now.utc
   end
-  user.confirm
   LeadProviderProfile.create!(user: user, lead_provider: LeadProvider.first)
 
   user = User.find_or_create_by!(email: "school-leader@example.com") do |u|
