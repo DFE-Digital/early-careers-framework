@@ -11,6 +11,7 @@ RSpec.describe "Core Induction Programme Lesson", type: :request do
       admin_user = create(:user, :admin)
       sign_in admin_user
     end
+
     describe "GET /core-induction-programme/years/:years/modules/:modules/lessons/:lessons" do
       it "renders the cip lesson page" do
         get course_lesson_url
@@ -21,19 +22,26 @@ RSpec.describe "Core Induction Programme Lesson", type: :request do
         expect(response).to render_template(:edit)
       end
     end
+
     describe "PUT /core-induction-programme/years/:years/modules/:modules/lessons/:lessons" do
       it "renders a preview of changes to lesson" do
-        put course_lesson_url, params: { commit: "See preview", lesson_preview: "Extra content" }
+        put course_lesson_url, params: { commit: "See preview", content: "Extra content" }
         expect(response).to render_template(:edit)
         expect(response.body).to include("Extra content")
+        course_lesson.reload
+        expect(course_lesson.content).not_to include("Extra content")
       end
-    end
-    describe "PUT /core-induction-programme/years/:years/modules/:modules/lessons/:lessons" do
       it "redirects to the lesson page when saving content" do
-        put course_lesson_url, params: { commit: "Save changes", lesson_preview: "Adding new content" }
+        put course_lesson_url, params: { commit: "Save changes", content: "Adding new content" }
         expect(response).to redirect_to(course_lesson_url)
         get course_lesson_url
         expect(response.body).to include("Adding new content")
+      end
+      it "redirects to the lesson page when saving title" do
+        put course_lesson_url, params: { commit: "Save changes", title: "New title" }
+        expect(response).to redirect_to(course_lesson_url)
+        get course_lesson_url
+        expect(response.body).to include("New title")
       end
     end
   end
@@ -43,12 +51,14 @@ RSpec.describe "Core Induction Programme Lesson", type: :request do
       user = create(:user)
       sign_in user
     end
+
     describe "GET /core-induction-programme/years/:years/modules/:modules/:lessons" do
       it "renders the cip lesson page" do
         get course_lesson_url
         expect(response).to render_template(:show)
       end
     end
+
     describe "GET /core-induction-programme/years/:years/modules/:modules/lessons/:lessons/edit" do
       it "redirects to the sign in page" do
         expect { get "#{course_lesson_url}/edit" }.to raise_error Pundit::NotAuthorizedError
@@ -63,15 +73,17 @@ RSpec.describe "Core Induction Programme Lesson", type: :request do
         expect(response).to render_template(:show)
       end
     end
+
     describe "GET /core-induction-programme/years/:years/modules/:modules/lessons/:lessons/edit" do
       it "redirects to the sign in page" do
         get "#{course_lesson_url}/edit"
         expect(response).to redirect_to("/users/sign_in")
       end
     end
+
     describe "PUT /core-induction-programme/years/:years/modules/:modules/lessons/:lessons" do
       it "redirects to the sign in page" do
-        put course_lesson_url, params: { commit: "Save changes", lesson_preview: course_lesson.content }
+        put course_lesson_url, params: { commit: "Save changes", content: course_lesson.content }
         expect(response).to redirect_to("/users/sign_in")
       end
     end
