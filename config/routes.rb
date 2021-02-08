@@ -23,7 +23,6 @@ Rails.application.routes.draw do
   resource :school_invites, only: %i[show create]
 
   namespace :admin do
-    resource :dashboard, controller: :dashboard, only: :show
     resources :suppliers, only: %i[index new]
     scope "suppliers/new" do
       post "/", controller: :suppliers, action: :receive_new, as: :new_supplier
@@ -70,6 +69,15 @@ Rails.application.routes.draw do
 
       resources :lead_provider_users, path: "/users"
     end
+
+    resources :supplier_users, only: %i[index new create], path: "suppliers/users"
+    scope "suppliers/users/new" do
+      post "/", controller: :supplier_users, action: :receive_supplier
+      get "user-details", controller: :supplier_users, action: :user_details, as: :new_supplier_user_details
+      post "user-details", controller: :supplier_users, action: :receive_user_details
+      get "review", controller: :supplier_users, action: :review, as: :new_supplier_user_review
+      get "success", controller: :supplier_users, action: :success, as: :new_supplier_user_success
+    end
   end
 
   get "/403", to: "errors#forbidden", via: :all
@@ -86,13 +94,10 @@ Rails.application.routes.draw do
 
   resource :core_induction_programme, controller: :core_induction_programme, only: :show, as: "cip", path: "/core-induction-programme" do
     get "download-export", to: "core_induction_programme#download_export", as: "download_export"
-    resource :years, controller: "core_induction_programme/years", only: :show, path: "/:year_id" do
-      resource :modules, controller: "core_induction_programme/modules", only: :show, path: "/:module_id" do
-        resource :lessons, controller: "core_induction_programme/lessons", only: %i[show edit update], path: "/:lesson_id" do
-          member do
-            put "edit"
-          end
-        end
+
+    resources :years, controller: "core_induction_programme/years", only: %i[show edit update] do
+      resources :modules, controller: "core_induction_programme/modules", only: %i[show edit update] do
+        resources :lessons, controller: "core_induction_programme/lessons", only: %i[show edit update]
       end
     end
   end

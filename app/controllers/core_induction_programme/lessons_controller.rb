@@ -18,7 +18,8 @@ class CoreInductionProgramme::LessonsController < ApplicationController
   def update
     if params[:commit] == "Save changes"
       @course_lesson.update!(content: params[:lesson_preview])
-      redirect_to cip_years_modules_lessons_url
+      flash[:success] = "Your changes have been saved"
+      redirect_to cip_year_module_lesson_url
     else
       @lesson_preview = params[:lesson_preview]
       @html_content = content_to_html(@lesson_preview)
@@ -29,7 +30,7 @@ class CoreInductionProgramme::LessonsController < ApplicationController
 private
 
   def load_and_authorize_course_lesson
-    @course_lesson = CourseLesson.find(params[:lesson_id])
+    @course_lesson = CourseLesson.find(params[:id])
     authorize @course_lesson
   end
 end

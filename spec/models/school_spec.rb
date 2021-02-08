@@ -6,13 +6,23 @@ RSpec.describe School, type: :model do
   describe "School" do
     it "can be created" do
       expect {
-        School.create(urn: "TEST_URN_2", name: "Test school two", address_line1: "Test address London", country: "England", postcode: "TEST2")
+        School.create(
+          urn: "TEST_URN_2",
+          name: "Test school two",
+          address_line1: "Test address London",
+          country: "England",
+          postcode: "TEST2",
+          local_authority: FactoryBot.create(:local_authority),
+          local_authority_district: FactoryBot.create(:local_authority_district),
+        )
       }.to change { School.count }.by(1)
     end
 
     it { is_expected.to have_one(:partnership) }
     it { is_expected.to have_one(:lead_provider).through(:partnership) }
     it { is_expected.to have_and_belong_to_many(:induction_coordinator_profiles) }
+    it { is_expected.to have_many(:early_career_teacher_profiles) }
+    it { is_expected.to have_many(:early_career_teachers).through(:early_career_teacher_profiles) }
   end
 
   describe "#not_registered?" do
@@ -62,12 +72,23 @@ RSpec.describe School, type: :model do
       expect(school.partially_registered?).to be false
     end
 
-    context "when school has an unconfirmed induction coordinator" do
-      let(:user) { create(:user, confirmed_at: nil) }
+    context "when school has an unconfirmed induction coordinator in the last 24 hours" do
+      let(:user) { create(:user, confirmed_at: nil, confirmation_sent_at: 2.hours.ago) }
       let!(:coordinator) { create(:induction_coordinator_profile, user: user, schools: [school]) }
 
       it "returns true" do
         expect(school.partially_registered?).to be true
+      end
+    end
+
+    context "when unconfirmed induction coordinator was emailed more than 24 hours ago" do
+      let(:user) { create(:user, confirmed_at: nil) }
+      let!(:coordinator) { create(:induction_coordinator_profile, user: user, schools: [school]) }
+
+      before { user.update(confirmation_sent_at: 2.days.ago) }
+
+      it "returns false" do
+        expect(school.partially_registered?).to be false
       end
     end
 

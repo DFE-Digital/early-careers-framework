@@ -1651,6 +1651,13 @@ accepts@~1.3.4, accepts@~1.3.5, accepts@~1.3.7:
     mime-types "~2.1.24"
     negotiator "0.6.2"
 
+accessible-autocomplete@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/accessible-autocomplete/-/accessible-autocomplete-2.0.3.tgz#3ed8d529b227b77e99ab509eec5d2c8d1b8bea8b"
+  integrity sha512-bUswBs/mDH17dUFRAJMTtcGafJ++w1YLPPFjdfJj3lnuBsLpByAw2gmr8qxXX8oc7tzoKS3Ay5FKOPM+WMBxIw==
+  dependencies:
+    preact "^8.3.1"
+
 acorn-globals@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/acorn-globals/-/acorn-globals-6.0.0.tgz#46cdd39f0f8ff08a876619b55f5ac8a6dc770b45"
@@ -4499,10 +4506,10 @@ globule@^1.0.0:
     lodash "~4.17.10"
     minimatch "~3.0.2"
 
-govuk-frontend@^3.10.0:
-  version "3.10.1"
-  resolved "https://registry.yarnpkg.com/govuk-frontend/-/govuk-frontend-3.10.1.tgz#db3e97bf90fd068e55b637c0c7fe1c7a5a2d9b04"
-  integrity sha512-2x6B0jV1pTx4Alxm3MY222BfIQpg+ctUYaUzyBjmNkisWKdRmCP61oyFXklZgqXMjvaN+oo3rRbAALrxFTeeig==
+govuk-frontend@^3.10.2:
+  version "3.10.2"
+  resolved "https://registry.yarnpkg.com/govuk-frontend/-/govuk-frontend-3.10.2.tgz#6589401e4adad1ab1dc340a18057ec88c9435a84"
+  integrity sha512-MpMymgLsKoMw40MggZ0XLCAj1FY5N2s8Pf3aQR+k0cZOsegjLsnejxNfEB9qEl9jcma2fiiVcvsEZ+Ipo+Oo2g==
 
 graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2:
   version "4.2.3"
@@ -7988,6 +7995,11 @@ postcss@^7.0.32:
     chalk "^2.4.2"
     source-map "^0.6.1"
     supports-color "^6.1.0"
+
+preact@^8.3.1:
+  version "8.5.3"
+  resolved "https://registry.yarnpkg.com/preact/-/preact-8.5.3.tgz#78c2a5562fcecb1fed1d0055fa4ac1e27bde17c1"
+  integrity sha512-O3kKP+1YdgqHOFsZF2a9JVdtqD+RPzCQc3rP+Ualf7V6rmRDchZ9MJbiGTT7LuyqFKZqlHSOyO/oMFmI2lVTsw==
 
 prelude-ls@^1.2.1:
   version "1.2.1"

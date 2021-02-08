@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_29_133823) do
+ActiveRecord::Schema.define(version: 2021_02_04_101901) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -49,12 +49,10 @@ ActiveRecord::Schema.define(version: 2021_01_29_133823) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "title", null: false
     t.text "content", null: false
-    t.uuid "next_lesson_id"
     t.uuid "previous_lesson_id"
     t.uuid "course_module_id", null: false
     t.integer "version", default: 1, null: false
     t.index ["course_module_id"], name: "index_course_lessons_on_course_module_id"
-    t.index ["next_lesson_id"], name: "index_course_lessons_on_next_lesson_id"
     t.index ["previous_lesson_id"], name: "index_course_lessons_on_previous_lesson_id"
   end
 
@@ -63,12 +61,10 @@ ActiveRecord::Schema.define(version: 2021_01_29_133823) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "title", null: false
     t.text "content", null: false
-    t.uuid "next_module_id"
     t.uuid "previous_module_id"
     t.uuid "course_year_id", null: false
     t.integer "version", default: 1, null: false
     t.index ["course_year_id"], name: "index_course_modules_on_course_year_id"
-    t.index ["next_module_id"], name: "index_course_modules_on_next_module_id"
     t.index ["previous_module_id"], name: "index_course_modules_on_previous_module_id"
   end
 
@@ -99,10 +95,32 @@ ActiveRecord::Schema.define(version: 2021_01_29_133823) do
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
+  create_table "delivery_partner_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "delivery_partner_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["delivery_partner_id"], name: "index_delivery_partner_profiles_on_delivery_partner_id"
+    t.index ["user_id"], name: "index_delivery_partner_profiles_on_user_id"
+  end
+
   create_table "delivery_partners", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "name", null: false
+  end
+
+  create_table "early_career_teacher_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "school_id", null: false
+    t.uuid "core_induction_programme_id"
+    t.uuid "cohort_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["cohort_id"], name: "index_early_career_teacher_profiles_on_cohort_id"
+    t.index ["core_induction_programme_id"], name: "index_ect_profiles_on_core_induction_programme_id"
+    t.index ["school_id"], name: "index_early_career_teacher_profiles_on_school_id"
+    t.index ["user_id"], name: "index_early_career_teacher_profiles_on_user_id"
   end
 
   create_table "induction_coordinator_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -147,10 +165,31 @@ ActiveRecord::Schema.define(version: 2021_01_29_133823) do
     t.string "name", null: false
   end
 
+  create_table "local_authorities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "code"
+    t.string "name"
+    t.index ["code"], name: "index_local_authorities_on_code", unique: true
+  end
+
+  create_table "local_authority_districts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "code"
+    t.string "name"
+    t.index ["code"], name: "index_local_authority_districts_on_code", unique: true
+  end
+
   create_table "networks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "name", null: false
+    t.string "group_type"
+    t.string "group_type_code"
+    t.string "group_id"
+    t.string "group_uid"
+    t.string "secondary_contact_email"
   end
 
   create_table "partnerships", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -179,7 +218,7 @@ ActiveRecord::Schema.define(version: 2021_01_29_133823) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "urn", null: false
     t.string "name", null: false
-    t.string "school_type"
+    t.string "school_type_code"
     t.integer "capacity"
     t.boolean "high_pupil_premium", default: false, null: false
     t.boolean "is_rural", default: false, null: false
@@ -192,9 +231,22 @@ ActiveRecord::Schema.define(version: 2021_01_29_133823) do
     t.uuid "network_id"
     t.string "domains", default: [], null: false, array: true
     t.boolean "eligible", default: true, null: false
+    t.uuid "local_authority_district_id"
+    t.uuid "local_authority_id"
+    t.string "school_type_name"
+    t.string "ukprn"
+    t.string "previous_school_urn"
+    t.string "school_phase_type"
+    t.string "school_phase_name"
+    t.string "school_website"
+    t.string "school_status_code"
+    t.string "school_status_name"
+    t.string "secondary_contact_email"
     t.string "primary_contact_email"
     t.index ["high_pupil_premium"], name: "index_schools_on_high_pupil_premium", where: "high_pupil_premium"
     t.index ["is_rural"], name: "index_schools_on_is_rural", where: "is_rural"
+    t.index ["local_authority_district_id"], name: "index_schools_on_local_authority_district_id"
+    t.index ["local_authority_id"], name: "index_schools_on_local_authority_id"
     t.index ["name"], name: "index_schools_on_name"
     t.index ["network_id"], name: "index_schools_on_network_id"
     t.index ["urn"], name: "index_schools_on_urn", unique: true
@@ -224,13 +276,17 @@ ActiveRecord::Schema.define(version: 2021_01_29_133823) do
   add_foreign_key "admin_profiles", "users"
   add_foreign_key "cohorts_lead_providers", "cohorts"
   add_foreign_key "cohorts_lead_providers", "lead_providers"
-  add_foreign_key "course_lessons", "course_lessons", column: "next_lesson_id"
   add_foreign_key "course_lessons", "course_lessons", column: "previous_lesson_id"
   add_foreign_key "course_lessons", "course_modules"
-  add_foreign_key "course_modules", "course_modules", column: "next_module_id"
   add_foreign_key "course_modules", "course_modules", column: "previous_module_id"
   add_foreign_key "course_modules", "course_years"
   add_foreign_key "course_years", "core_induction_programmes"
+  add_foreign_key "delivery_partner_profiles", "delivery_partners"
+  add_foreign_key "delivery_partner_profiles", "users"
+  add_foreign_key "early_career_teacher_profiles", "cohorts"
+  add_foreign_key "early_career_teacher_profiles", "core_induction_programmes"
+  add_foreign_key "early_career_teacher_profiles", "schools"
+  add_foreign_key "early_career_teacher_profiles", "users"
   add_foreign_key "induction_coordinator_profiles", "users"
   add_foreign_key "lead_provider_cips", "cohorts"
   add_foreign_key "lead_provider_cips", "core_induction_programmes"
@@ -242,5 +298,7 @@ ActiveRecord::Schema.define(version: 2021_01_29_133823) do
   add_foreign_key "provider_relationships", "cohorts"
   add_foreign_key "provider_relationships", "delivery_partners"
   add_foreign_key "provider_relationships", "lead_providers"
+  add_foreign_key "schools", "local_authorities"
+  add_foreign_key "schools", "local_authority_districts"
   add_foreign_key "schools", "networks"
 end

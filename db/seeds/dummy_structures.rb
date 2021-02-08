@@ -2,11 +2,11 @@
 
 # TODO: Remove network and school seeding when we have a way of getting them from GIAS
 unless Network.first
+  local_authority = LocalAuthority.create!(code: "TEST01", name: "Test local authority")
+  local_authority_district = LocalAuthorityDistrict.create!(code: "TEST01", name: "Test local authority")
   network = Network.create!(name: "Test school network")
-  School.create!(urn: "TEST_URN_1", name: "Test school one", address_line1: "Test address", country: "England", postcode: "TEST1", network: network, domains: %w[testschool1.sch.uk network.com digital.education.gov.uk])
-  School.create!(urn: "TEST_URN_2", name: "Test school two", address_line1: "Test address London", country: "England", postcode: "TEST2", network: network, domains: %w[testschool2.sch.uk network.com digital.education.gov.uk])
-  School.create!(urn: "TEST_URN_3", name: "Test school three", address_line1: "Test address Oxford", country: "England", postcode: "TEST3", domains: ["testschool3.sch.uk"])
-  School.create!(urn: "TEST_URN_4", name: "Test school four", address_line1: "Test address Newcastle", country: "England", postcode: "TEST4", domains: ["testschool4.sch.uk"])
+  School.create!(urn: "TEST_URN_1", name: "Test school one", address_line1: "Test address", country: "England", postcode: "TEST1", network: network, domains: %w[testschool1.sch.uk network.com digital.education.gov.uk], local_authority: local_authority, local_authority_district: local_authority_district)
+  School.create!(urn: "TEST_URN_2", name: "Test school two", address_line1: "Test address London", country: "England", postcode: "TEST2", network: network, domains: %w[testschool2.sch.uk network.com digital.education.gov.uk], local_authority: local_authority, local_authority_district: local_authority_district)
 end
 
 # TODO: Remove this when we have a way of adding lead providers, or expand to include all of them
@@ -42,4 +42,12 @@ end
 unless Cohort.first
   Cohort.create!(start_year: 2021)
   Cohort.create!(start_year: 2022)
+end
+
+unless EarlyCareerTeacherProfile.first
+  user = User.find_or_create_by!(email: "early-career-teacher@example.com") do |u|
+    u.full_name = "Joe Bloggs"
+    u.confirmed_at = Time.zone.now.utc
+  end
+  EarlyCareerTeacherProfile.create!(user: user, school: School.first, cohort: Cohort.first, core_induction_programme: CoreInductionProgramme.first)
 end

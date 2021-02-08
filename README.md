@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/DFE-Digital/govuk-rails-boilerplate.svg?branch=master)](https://travis-ci.com/DFE-Digital/govuk-rails-boilerplate)
+![Tests](https://github.com/DFE-Digital/early-careers-framework/workflows/Test/badge.svg)
 
 # Early careers framework
 

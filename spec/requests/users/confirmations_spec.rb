@@ -20,6 +20,7 @@ RSpec.describe "Users::Confirmations", type: :request do
       get "/users/confirmation?confirmation_token=#{confirmation_token}"
       expect(user.reload.confirmed?).to be true
       expect(response).to render_template(:confirmed)
+      expect(user.sign_in_count).to eq 1
     end
 
     it "notifies the school primary contact" do

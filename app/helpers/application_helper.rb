@@ -3,7 +3,7 @@
 module ApplicationHelper
   def profile_dashboard_url(user)
     if user.admin_profile
-      admin_dashboard_url
+      admin_suppliers_url
     else
       dashboard_url
     end
