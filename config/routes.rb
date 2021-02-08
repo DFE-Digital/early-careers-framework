@@ -44,6 +44,7 @@ Rails.application.routes.draw do
     resources :verify_your_email, only: %i[index]
     resources :welcome, only: %i[index]
     resources :your_school_is_registered, only: %i[index]
+    resources :before_you_start, only: %i[index]
   end
 
   namespace :admin do
