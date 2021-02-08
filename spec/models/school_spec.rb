@@ -23,7 +23,7 @@ RSpec.describe School, type: :model do
     it { is_expected.to have_and_belong_to_many(:induction_coordinator_profiles) }
     it { is_expected.to have_many(:early_career_teacher_profiles) }
     it { is_expected.to have_many(:early_career_teachers).through(:early_career_teacher_profiles) }
-    it { is_expected.to have_many(:pupil_premium_eligibilities) }
+    it { is_expected.to have_many(:pupil_premiums) }
   end
 
   describe "#not_registered?" do
@@ -154,7 +154,7 @@ RSpec.describe School, type: :model do
     end
 
     context "it has a pupil premium record with less than 40%" do
-      let(:school) { create(:school, pupil_premium_eligibilities: [build(:pupil_premium_eligibility, :not_eligible)]) }
+      let(:school) { create(:school, pupil_premiums: [build(:pupil_premium, :not_eligible)]) }
 
       it "returns false" do
         expect(school.pupil_premium_uplift?(2021)).to be false
@@ -172,7 +172,7 @@ RSpec.describe School, type: :model do
 
   describe "scope :with_pupil_premium_uplift" do
     let(:uplifted_school) { create(:school, :pupil_premium_uplift) }
-    let(:not_uplifted_school) { create(:school, pupil_premium_eligibilities: [build(:pupil_premium_eligibility, :not_eligible)]) }
+    let(:not_uplifted_school) { create(:school, pupil_premiums: [build(:pupil_premium, :not_eligible)]) }
 
     it "returns uplifted schools" do
       expect(School.with_pupil_premium_uplift(2021)).to include(uplifted_school)

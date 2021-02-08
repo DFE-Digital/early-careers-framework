@@ -20,41 +20,40 @@ RSpec.describe PupilPremiumImporter do
     end
 
     it "Adds pupil premium eligibility records to schools" do
-      expect(School.first.pupil_premium_eligibilities.first).to be_present
+      expect(School.first.pupil_premiums.first).to be_present
     end
 
     it "Sets the correct pupil premium values" do
-      eligibility = School.find_by(urn: 100_006).pupil_premium_eligibilities.first
+      eligibility = School.find_by(urn: 100_006).pupil_premiums.first
 
-      expect(eligibility.percent_primary_pupils_eligible).to be 0.0
-      expect(eligibility.percent_secondary_pupils_eligible).to be 81.1
+      expect(eligibility.total_pupils).to be 53
+      expect(eligibility.eligible_pupils).to be 43
     end
 
     it "sets the correct year on the record" do
-      expect(School.first.pupil_premium_eligibilities.first.start_year).to be start_year
+      expect(School.first.pupil_premiums.first.start_year).to be start_year
     end
 
     it "only creates one record per year" do
       pupil_premium_importer.run
 
-      expect(School.first.pupil_premium_eligibilities.count).to be 1
+      expect(School.first.pupil_premiums.count).to be 1
     end
 
     it "updates existing records" do
-      old_record = School.find_by(urn: 100_006).pupil_premium_eligibilities.first
-      old_record.percent_primary_pupils_eligible = 25.0
-      old_record.save!
+      old_record = School.find_by(urn: 100_006).pupil_premiums.first
+      old_record.update!(eligible_pupils: 25)
 
       pupil_premium_importer.run
 
-      new_record = School.find_by(urn: 100_006).pupil_premium_eligibilities.first
-      expect(new_record.percent_primary_pupils_eligible).to be 0.0
+      new_record = School.find_by(urn: 100_006).pupil_premiums.first
+      expect(new_record.eligible_pupils).to be 43
     end
 
     it "creates a new record for additional years" do
       PupilPremiumImporter.new(Logger.new($stdout), 2022, example_csv_file).run
 
-      expect(School.first.pupil_premium_eligibilities.count).to be 2
+      expect(School.first.pupil_premiums.count).to be 2
     end
   end
 end

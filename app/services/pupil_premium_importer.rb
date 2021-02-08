@@ -3,7 +3,11 @@
 require "csv"
 
 class PupilPremiumImporter
-  def initialize(logger, start_year = Time.zone.now.year, source_file = "")
+  attr_reader :logger
+  attr_reader :start_year
+  attr_reader :source_file
+
+  def initialize(logger, start_year = Time.zone.now.year, source_file = nil)
     @logger = logger
     @start_year = start_year
     @source_file = source_file
@@ -18,17 +22,20 @@ class PupilPremiumImporter
 private
 
   def data_file
-    @source_file || __dir__ + "/../../data/pupil_premium.csv"
+    source_file || Rails.root.join("data/pupil_premium.csv")
   end
 
   def update_school_premium(row)
     urn = row.fetch("URN")
     school = School.find_by(urn: urn)
-    @logger.info "Could not find school with URN #{urn}" and return unless school
+    logger.info "Could not find school with URN #{urn}" and return unless school
 
-    pupil_premium_eligibility = PupilPremiumEligibility.find_or_initialize_by(school: school, start_year: @start_year)
-    pupil_premium_eligibility.percent_primary_pupils_eligible = row.fetch("Percentage of Primary pupils eligible for the Deprivation Pupil Premium")
-    pupil_premium_eligibility.percent_secondary_pupils_eligible = row.fetch("Percentage of Secondary pupils eligible for the Deprivation Pupil Premium")
-    pupil_premium_eligibility.save!
+    total_pupils = row.fetch("Number of pupils on roll (7)")
+    eligible_pupils = row.fetch("Total number of pupils eligible for the Deprivation Pupil Premium")
+
+    pupil_premium = PupilPremium.find_or_initialize_by(school: school, start_year: start_year)
+    pupil_premium.total_pupils = total_pupils
+    pupil_premium.eligible_pupils = eligible_pupils
+    pupil_premium.save!
   end
 end
