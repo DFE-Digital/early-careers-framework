@@ -28,6 +28,24 @@ Rails.application.routes.draw do
   resource :supplier_dashboard, controller: :supplier_dashboard, only: :show
   resource :school_invites, only: %i[show create]
 
+  namespace :school_registration do
+    root to: 'start#new'
+    resources :enter_urn, only: %i[index]
+    resources :no_decision_no_registration, only: %i[index]
+    resources :no_participants_no_registration, only: %i[index]
+    resources :question_one, only: %i[index]
+    resources :question_two, only: %i[index]
+    resources :school_already_claimed, only: %i[index]
+    resources :school_eligable, only: %i[index]
+    resources :school_elligable_with_error, only: %i[index]
+    resources :school_needs_to_complete_registration, only: %i[index]
+    resources :sign_in, only: %i[index]
+    resources :start, only: %i[index]
+    resources :verify_your_email, only: %i[index]
+    resources :welcome, only: %i[index]
+    resources :your_school_is_registered, only: %i[index]
+  end
+
   namespace :admin do
     resources :suppliers, only: %i[index new]
     scope "suppliers/new" do
