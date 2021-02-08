@@ -29,7 +29,7 @@ Rails.application.routes.draw do
   resource :school_invites, only: %i[show create]
 
   namespace :school_registration do
-    root to: 'start#new'
+    root to: 'start#index'
     resources :enter_urn, only: %i[index]
     resources :no_decision_no_registration, only: %i[index]
     resources :no_participants_no_registration, only: %i[index]

@@ -1,4 +1,4 @@
-class SchoolRegistration::NoDecisionNoRegistration < ApplicationController
+class SchoolRegistration::NoDecisionNoRegistrationController < ApplicationController
   def index
 
   end
