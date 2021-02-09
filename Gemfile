@@ -49,6 +49,7 @@ gem "govuk-components", ">= 1.0.0"
 gem "govuk_design_system_formbuilder", "~> 2.1", ">= 2.1.5"
 gem "httpclient"
 gem "seed_dump"
+gem "view_component", require: "view_component/engine"
 
 # Database based asynchronous priority queue system
 gem "delayed_cron_job"
