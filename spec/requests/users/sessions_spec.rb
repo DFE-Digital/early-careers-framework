@@ -77,9 +77,40 @@ RSpec.describe "Users::Sessions", type: :request do
   end
 
   describe "POST /users/sign_in_with_token" do
-    it "redirects to dashboard on successful login" do
-      post "/users/sign_in_with_token", params: { login_token: user.login_token }
-      expect(response).to redirect_to(dashboard_path)
+    context "when user is an ECT" do
+      let(:user) { create(:user, :early_career_teacher) }
+
+      it "redirects to dashboard on successful login" do
+        post "/users/sign_in_with_token", params: { login_token: user.login_token }
+        expect(response).to redirect_to(dashboard_path)
+      end
+    end
+
+    context "when user is an induction coordinator" do
+      let(:user) { create(:user, :induction_coordinator) }
+
+      it "redirects to dashboard on successful login" do
+        post "/users/sign_in_with_token", params: { login_token: user.login_token }
+        expect(response).to redirect_to(dashboard_path)
+      end
+    end
+
+    context "when user is a lead provider" do
+      let(:user) { create(:user, :lead_provider) }
+
+      it "redirects to dashboard on successful login" do
+        post "/users/sign_in_with_token", params: { login_token: user.login_token }
+        expect(response).to redirect_to(dashboard_path)
+      end
+    end
+
+    context "when user is an delivery partner" do
+      let(:user) { create(:user, :delivery_partner) }
+
+      it "redirects to dashboard on successful login" do
+        post "/users/sign_in_with_token", params: { login_token: user.login_token }
+        expect(response).to redirect_to(dashboard_path)
+      end
     end
 
     context "when user is an admin" do

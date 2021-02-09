@@ -6,7 +6,7 @@ class Users::SessionsController < Devise::SessionsController
   class EmailNotFoundError < StandardError; end
   class LoginIncompleteError < StandardError; end
 
-  TEST_USERS = %w[admin@example.com lead-provider@example.com school-leader@example.com].freeze
+  TEST_USERS = %w[admin@example.com lead-provider@example.com school-leader@example.com early-career-teacher@example.com].freeze
 
   before_action :mock_login, only: :create, if: -> { Rails.env.development? || Rails.env.deployed_development? }
   before_action :redirect_to_dashboard, only: %i[sign_in_with_token redirect_from_magic_link]
