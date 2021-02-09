@@ -1,0 +1,12 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-l">Govspeak dev test</h1>
+    <%= form_with url: '/govspeak_test', method: :post do |f| %>
+      <%= f.govuk_text_area :preview_string, label: { text: "Markdown string to preview" }, rows: 10, value: @preview_string %>
+      <%= f.govuk_submit "See preview" %>
+    <% end %>
+    <div class="gem-c-govspeak govuk-govspeak ">
+      <%= @content.html_safe %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+@import "~govuk-frontend/govuk/components/button/button";
+
+// stylelint-disable scss/at-extend-no-missing-placeholder
+.gem-c-govspeak {
+  .gem-c-button {
+    @extend .govuk-button;
+  }
+
+  .govuk-button--start {
+    @extend .govuk-button--start;
+  }
+}

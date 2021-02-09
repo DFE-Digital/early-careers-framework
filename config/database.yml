@@ -1,0 +1,33 @@
+default: &default
+  adapter: postgresql
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  variables:
+    statement_timeout: 10000
+    idle_in_transaction_session_timeout: 10000
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
+  host: <%= ENV['DB_HOSTNAME'] %>
+  port: <%= ENV['DB_PORT'] %>
+  database: <%= ENV['DB_DATABASE'] %>
+
+development:
+  <<: *default
+  database: 'early_careers_framework_development'
+
+test:
+  <<: *default
+  database: 'early_careers_framework_test'
+  variables:
+    idle_in_transaction_session_timeout: 0
+
+deployed_development:
+  <<: *default
+  sslmode: require
+
+staging:
+  <<: *default
+  sslmode: require
+
+production:
+  <<: *default
+  sslmode: require

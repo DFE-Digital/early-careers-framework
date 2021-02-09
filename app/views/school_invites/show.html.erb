@@ -1,0 +1,34 @@
+<% content_for :before_content, govuk_back_link(text: 'Back to dashboard', href: supplier_dashboard_path) %>
+<%= form_with model: @find_school_form, url: school_invites_path, method: :post do |f| %>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <%= f.govuk_radio_buttons_fieldset(
+        :search_type,
+        legend: {text: "Find schools to invite", class: "govuk-fieldset__legend--l"},
+        hint: {text: "You can invite schools individually or in a group. Select which type of search you want"}
+      ) do %>
+        <%= f.govuk_radio_button :search_type, 'name_url_postcode', label: {text: "By school name, URN or postcode"} do %>
+          <%= f.govuk_text_field :name_url_postcode, label: {text: "Start entering the name, URN or postcode"} %>
+        <% end %>
+
+        <%= f.govuk_radio_button :search_type, 'local_authority', label: {text: "By local authority"} do %>
+          <%= f.govuk_text_field :local_authority, label: {text: "Start entering the name of the local authority"} %>
+        <% end %>
+
+        <%= f.govuk_radio_button :search_type, 'network', label: {text: "By network - e.g a name of a trust, trust sponsor, or teaching school hub"} do %>
+          <%= f.govuk_text_field :network, label: {text: "Start entering the name of the network"} %>
+        <% end %>
+
+        <%= f.govuk_radio_button :search_type, 'geography', label: {text: "By geography"} do %>
+          <%= f.govuk_text_field :geography, label: {text: "Start entering the postcode or place name"} %>
+        <% end %>
+
+        <%= f.govuk_radio_divider %>
+
+        <%= f.govuk_radio_button :search_type, 'all', label: {text: "Search all schools"} %>
+      <% end %>
+
+      <%= f.govuk_submit "Search" %>
+    </div>
+  </div>
+<% end %>

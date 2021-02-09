@@ -1,0 +1,10 @@
+/log/*
+/tmp/*
+/node_modules
+*.log
+.idea/*
+/storage/*
+/terraform/*
+.github/*
+.githooks/*
+/coverage/*

@@ -1,0 +1,28 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <% if policy(@course_module).edit? %>
+      <%= link_to "Edit module content", edit_cip_year_module_url(@course_module), class: "govuk-button" %>
+    <% end %>
+    <h1 class="govuk-heading-l"> <%= @course_module.title %></h1>
+    <div class="gem-c-govspeak govuk-govspeak ">
+      <%= @course_module.content_to_html.html_safe %>
+    </div>
+    <ol class="app-task-list">
+      <li>
+        <p><strong>Topic materials</strong></p>
+        <ul class="app-task-list__items">
+          <% if @course_module.course_lessons.each do |lesson| %>
+            <li class="app-task-list__item">
+              <span>
+                <%= govuk_link_to lesson.title, cip_year_module_lesson_path(@course_module.course_year, @course_module, lesson) %>
+              </span>
+              <strong class="govuk-tag app-task-list__tag">complete</strong>
+            </li>
+          <% end.empty? %>
+          <p>No course lessons were found!</p>
+          <% end %>
+        </ul>
+      </li>
+    </ol>
+  </div>
+</div>

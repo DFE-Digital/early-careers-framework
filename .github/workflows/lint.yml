@@ -1,0 +1,31 @@
+name: Run linter
+
+on:
+  push:
+
+jobs:
+  lint:
+    env:
+      GOVUK_NOTIFY_API_KEY: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1.4.4
+        with:
+          node-version: '12'
+      - name: Yarn install
+        run: npm i -g yarn && yarn
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@9bc07a3af02ce5950e977cab8b77210dc3178328
+        with:
+          ruby-version: 2.7.1
+      - name: Install dependencies
+        run: bundle install
+      - name: Create mail log file
+        run: mkdir log && touch log/mail.log
+      - name: Lint ruby
+        run: rubocop
+      - name: Lint SCSS
+        run: bundle exec rake lint:scss
+      - name: Lint JS
+        run: yarn run eslint --max-warnings 0 app/**/*.js

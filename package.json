@@ -1,0 +1,30 @@
+{
+  "name": "early-careers-framework",
+  "private": true,
+  "engines": {
+    "node": "12.x",
+    "yarn": "^1.22.0"
+  },
+  "dependencies": {
+    "@rails/webpacker": "^5.2.1",
+    "accessible-autocomplete": "^2.0.3",
+    "govuk-frontend": "^3.10.2",
+    "serialize-javascript": "^5.0.1",
+    "set-value": "^3.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.13.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "jest": "^26.6.3",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "scripts": {
+    "test": "jest --passWithNoTests"
+  },
+  "jest": {
+    "roots": [
+      "app"
+    ]
+  }
+}

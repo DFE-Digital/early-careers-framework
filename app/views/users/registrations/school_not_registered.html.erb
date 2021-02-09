@@ -1,0 +1,26 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h2 class="govuk-heading-l">Confirm details</h2>
+    <h3 class="govuk-heading-m">Your school</h3>
+    <div class="govuk-heading-s"><%= @school.name %></div>
+    <div>URN: <%= @school.urn %></div>
+    <p class="govuk-body">
+      <%= @school.address_line1 %>
+      <%= @school.address_line2 %>
+      <%= @school.address_line3 %>
+      <%= @school.address_line4 %>
+      <%= @school.postcode %>
+    </p>
+
+    <%= form_for(resource, as: resource_name, url: users_register_path) do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <%= f.hidden_field :school_id, value: @school.id %>
+      <%= f.hidden_field :email, value: @user.email %>
+      <%= f.govuk_text_field :full_name, label: { text: "Your full name", class: "govuk-label govuk-label--s", width: "three-quarters" } %>
+
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+
+  </div>
+</div>

@@ -1,0 +1,20 @@
+@function frontend-font-url($filename) {
+  @return url("~assets/fonts/" + $filename);
+}
+
+@function frontend-image-url($filename) {
+  @return url("~assets/images/" + $filename);
+}
+
+$govuk-font-url-function: frontend-font-url;
+$govuk-image-url-function: frontend-image-url;
+
+@import "~govuk-frontend/govuk/all";
+@import "school_search";
+@import "registration";
+@import "app_task_list";
+@import "pagination";
+@import "page-tabs";
+@import "~accessible-autocomplete";
+
+@import "govspeak";
