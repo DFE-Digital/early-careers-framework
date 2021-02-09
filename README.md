@@ -115,6 +115,6 @@ The app should be available at https://govuk-rails-boilerplate.london.cloudapps.
 
 1. Download the file to your machine - log in as admin, go to cip page, press the button to download content.
 1. Copy the file or its contents into `cip_seed.rb`.
-1. Add an option `on_duplicate_key_ignore` to lead providers, think carefully which ones from seed dump are needed.
+1. Add an option `on_duplicate_key_ignore` to CIPs, think carefully which ones from seed dump are needed.
 1. Commit, push, run seeding job from above in the deployed app.
 

@@ -3,6 +3,5 @@
 FactoryBot.define do
   factory :early_career_teacher_profile do
     user
-    school
   end
 end

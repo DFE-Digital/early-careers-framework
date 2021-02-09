@@ -16,14 +16,6 @@ FactoryBot.define do
       induction_coordinator_profile
     end
 
-    trait :lead_provider do
-      lead_provider_profile
-    end
-
-    trait :delivery_partner do
-      delivery_partner_profile
-    end
-
     trait :early_career_teacher do
       early_career_teacher_profile
     end
