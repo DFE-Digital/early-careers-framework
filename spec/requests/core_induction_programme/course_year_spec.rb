@@ -34,12 +34,14 @@ RSpec.describe "Core Induction Programme Year", type: :request do
         course_year.reload
         expect(course_year.content).not_to include("Extra content")
       end
+
       it "redirects to the year page and updates content when saving changes" do
         put course_year_url, params: { commit: "Save changes", content: "Adding new content" }
         expect(response).to redirect_to(course_year_url)
         get course_year_url
         expect(response.body).to include("Adding new content")
       end
+
       it "redirects to the year page when saving title" do
         put course_year_url, params: { commit: "Save changes", title: "New title" }
         expect(response).to redirect_to(course_year_url)

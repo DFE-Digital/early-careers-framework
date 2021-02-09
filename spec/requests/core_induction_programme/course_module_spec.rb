@@ -34,12 +34,14 @@ RSpec.describe "Core Induction Programme Module", type: :request do
         course_module.reload
         expect(course_module.content).not_to include("Extra content")
       end
+
       it "redirects to the module page when saving content" do
         put course_module_url, params: { commit: "Save changes", content: "Adding new content" }
         expect(response).to redirect_to(course_module_url)
         get course_module_url
         expect(response.body).to include("Adding new content")
       end
+
       it "redirects to the module page when saving title" do
         put course_module_url, params: { commit: "Save changes", title: "New title" }
         expect(response).to redirect_to(course_module_url)

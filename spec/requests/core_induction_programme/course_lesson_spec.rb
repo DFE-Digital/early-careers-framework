@@ -17,6 +17,7 @@ RSpec.describe "Core Induction Programme Lesson", type: :request do
         get course_lesson_url
         expect(response).to render_template(:show)
       end
+
       it "renders the cip edit lesson page" do
         get "#{course_lesson_url}/edit"
         expect(response).to render_template(:edit)
@@ -31,12 +32,14 @@ RSpec.describe "Core Induction Programme Lesson", type: :request do
         course_lesson.reload
         expect(course_lesson.content).not_to include("Extra content")
       end
+
       it "redirects to the lesson page when saving content" do
         put course_lesson_url, params: { commit: "Save changes", content: "Adding new content" }
         expect(response).to redirect_to(course_lesson_url)
         get course_lesson_url
         expect(response.body).to include("Adding new content")
       end
+
       it "redirects to the lesson page when saving title" do
         put course_lesson_url, params: { commit: "Save changes", title: "New title" }
         expect(response).to redirect_to(course_lesson_url)
