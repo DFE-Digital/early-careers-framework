@@ -72,7 +72,7 @@ jobs:
           tags: ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:builder
           target: builder
 
-      - name: Build and push docker image from engage-and-learn-gems-node-modules target
+      - name: Build and push docker image from early-careers-framework-gems-node-modules target
         uses: docker/build-push-action@v2
         with:
           build-args: BUILDKIT_INLINE_CACHE=1
@@ -80,7 +80,7 @@ jobs:
             ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:gems-node-modules
           push: true
           tags: ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:gems-node-modules
-          target: engage-and-learn-gems-node-modules
+          target: early-careers-framework-gems-node-modules
 
       - name: Build and push docker image from assets-precompile target
         uses: docker/build-push-action@v2
@@ -118,7 +118,7 @@ jobs:
         run: |
           export TF_VAR_paas_app_docker_image=${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:${{ env.TAG }}
           cd terraform/app
-          terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-583f04ed-cc98-4c9d-b633-a3a6fa3785b5"
+          terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-7f2ca242-9929-4662-a79c-c454ea56ea7b"
           terraform apply -input=false -auto-approve -var-file ../workspace-variables/dev.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_DEV}}"}'
 
       - name: Deploy review app to dev
@@ -131,7 +131,7 @@ jobs:
         run: |
           export TF_VAR_paas_app_docker_image=${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:${{ env.TAG }}
           cd terraform/app
-          terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-583f04ed-cc98-4c9d-b633-a3a6fa3785b5" -backend-config="key=${{ github.event.inputs.environment }}/terraform.tfstate"
+          terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-7f2ca242-9929-4662-a79c-c454ea56ea7b" -backend-config="key=${{ github.event.inputs.environment }}/terraform.tfstate"
           terraform apply -input=false -auto-approve -var-file ../workspace-variables/review.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_DEV}}"}' -var='environment=${{github.event.inputs.environment}}'
 
       - name: Deploy to staging
@@ -144,5 +144,5 @@ jobs:
         run: |
           export TF_VAR_paas_app_docker_image=${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:${{ env.TAG }}
           cd terraform/app
-          terraform init -reconfigure -input=false -backend-config="bucket=TODO"
+          terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-e2123d0b-d394-4594-8056-315300e7d8a8"
           terraform apply -input=false -auto-approve -var-file ../workspace-variables/staging.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_STAGING}}"}'

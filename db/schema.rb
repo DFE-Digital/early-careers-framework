@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_04_101901) do
+ActiveRecord::Schema.define(version: 2021_02_05_133627) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -255,7 +255,6 @@ ActiveRecord::Schema.define(version: 2021_02_04_101901) do
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "full_name", null: false
     t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
     t.string "login_token"
     t.datetime "login_token_valid_until"
     t.datetime "remember_created_at"
