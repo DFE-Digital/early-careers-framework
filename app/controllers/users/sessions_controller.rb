@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Users::SessionsController < Devise::SessionsController
-  include ApplicationHelper
-
   class EmailNotFoundError < StandardError; end
   class LoginIncompleteError < StandardError; end
 
@@ -33,7 +31,7 @@ class Users::SessionsController < Devise::SessionsController
 private
 
   def redirect_to_dashboard
-    redirect_to helpers.profile_dashboard_url(current_user) if current_user.present?
+    redirect_to dashboard_url if current_user.present?
   end
 
   def ensure_login_token_valid
@@ -55,6 +53,6 @@ private
 
     user = User.find_by_email(email)
     sign_in(user, scope: :user)
-    redirect_to profile_dashboard_url(user)
+    redirect_to dashboard_url
   end
 end
