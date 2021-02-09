@@ -1,8 +1,8 @@
 # To use or update to a ruby version, change {BASE_RUBY_IMAGE}
 ARG BASE_RUBY_IMAGE=ruby:2.7.1-alpine
-# BASE_RUBY_IMAGE_WITH_GEMS_AND_NODE_MODULES will default to early-careers-framework-gems-node-modules
+# BASE_RUBY_IMAGE_WITH_GEMS_AND_NODE_MODULES will default to engage-and-learn-gems-node-modules
 # building all layers above it if a value is not specidied during the build
-ARG BASE_RUBY_IMAGE_WITH_GEMS_AND_NODE_MODULES=early-careers-framework-gems-node-modules
+ARG BASE_RUBY_IMAGE_WITH_GEMS_AND_NODE_MODULES=engage-and-learn-gems-node-modules
 
 # Stage 1: Download gems and node modules.
 FROM ${BASE_RUBY_IMAGE} AS builder
@@ -30,9 +30,9 @@ RUN apk -U upgrade && \
     find /usr/local/bundle/gems -name "*.h" -delete && \
     find /usr/local/bundle/gems -name "*.o" -delete
 
-# Stage 2: early-careers-framework-gems-node-modules, reduce size of gems-node-modules and only keep required files.
-# published as dfedigital/early-careers-framework-gems-node-modules
-FROM ${BASE_RUBY_IMAGE} AS early-careers-framework-gems-node-modules
+# Stage 2: engage-and-learn-gems-node-modules, reduce size of gems-node-modules and only keep required files.
+# published as dfedigital/engage-and-learn-gems-node-modules
+FROM ${BASE_RUBY_IMAGE} AS engage-and-learn-gems-node-modules
 
 RUN apk -U upgrade && \
     apk add --update --no-cache nodejs yarn tzdata libpq libxml2 libxslt graphviz && \

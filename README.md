@@ -1,4 +1,4 @@
-![Tests](https://github.com/DFE-Digital/early-careers-framework/workflows/Test/badge.svg)
+![Tests](https://github.com/DFE-Digital/engage-and-learn/workflows/Test/badge.svg)
 
 # Early careers framework
 
@@ -109,7 +109,7 @@ The app should be available at https://govuk-rails-boilerplate.london.cloudapps.
 
 1. Make sure you are ok with the content in seed files to be created in your db.
 2. Run `cf login -a api.london.cloud.service.gov.uk -u USERNAME`, `USERNAME` is your personal GOV.UK PaaS account email address
-3. Run `cf run-task ecf-dev "cd .. && cd app && ../usr/local/bundle/bin/bundle exec rails db:seed"` to start the task.
+3. Run `cf run-task ecf-engage-and-learn-dev "cd .. && cd app && ../usr/local/bundle/bin/bundle exec rails db:seed"` to start the task.
 
 ### Updating cip content from changes on an app
 

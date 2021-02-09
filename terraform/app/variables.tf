@@ -88,5 +88,5 @@ locals {
     var.secret_paas_app_env_values
   )
   is_production = var.environment == "production"
-  service_name = "ecf"
+  service_name = "ecf-engage-and-learn"
 }
