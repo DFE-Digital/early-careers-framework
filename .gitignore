@@ -47,3 +47,5 @@ tokens
 /config/credentials/*.key
 
 /coverage/
+
+/config/credentials/deployed_development.key
