@@ -1,15 +1,20 @@
-< Back
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+  <% content_for :before_content, govuk_back_link(
+    text: "Back",
+    href: users_information_path)
+  %>
 
-Sign in
+    <h2 class="govuk-heading-l">Sign in</h2>
+    <%= form_for(:user, url: "/") do |f| %>
+      <div class="govuk-form-group">
+        <%= f.govuk_email_field :email, label: { text: "Email address" } %>
+      </div>
 
-[INPUT TEXTFIELD]
-
-Email address
-
-Sign in
-
-Register your school
-
-Problems signing in
-
-Contact us: ecf-support@digital.education.gov.uk
+      <%= f.govuk_submit "Sign in" %>
+    <% end %>
+    <%= govuk_link_to "Register your school", users_information_path %>
+    <p class="govuk-!-margin-bottom-0 govuk-!-margin-top-15"><strong>Problems signing in</strong></p>
+    <p class="govuk-!-margin-top-1">Contact us: <%= mail_to "ecf-support@digital.education.gov.uk" %> </p>
+  </div>
+</div>
