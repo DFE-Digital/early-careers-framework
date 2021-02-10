@@ -30,8 +30,8 @@ private
     school = School.find_by(urn: urn)
     logger.info "Could not find school with URN #{urn}" and return unless school
 
-    total_pupils = row.fetch("Number of pupils on roll (7)")
-    eligible_pupils = row.fetch("Total number of pupils eligible for the Deprivation Pupil Premium")
+    total_pupils = row.fetch("Number of pupils on roll (7)").delete(",").to_i
+    eligible_pupils = row.fetch("Total number of pupils eligible for the Deprivation Pupil Premium").delete(",").to_i
 
     pupil_premium = PupilPremium.find_or_initialize_by(school: school, start_year: start_year)
     pupil_premium.total_pupils = total_pupils

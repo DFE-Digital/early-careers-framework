@@ -11,7 +11,7 @@ class PupilPremium < ApplicationRecord
 
   scope :only_with_uplift, lambda { |start_year|
     where(start_year: start_year)
-      .where("(CAST(eligible_pupils AS float) / CAST(total_pupils AS float)) * 100 >= ?", THRESHOLD_PERCENTAGE)
+      .where("total_pupils > 0 AND (CAST(eligible_pupils AS float) / total_pupils) * 100 >= ?", THRESHOLD_PERCENTAGE)
   }
 
 private

@@ -12,6 +12,7 @@ RSpec.describe PupilPremiumImporter do
     create(:school, urn: 100_000)
     create(:school, urn: 100_006)
     create(:school, urn: 100_007)
+    create(:school, urn: 124_856)
   end
 
   describe "#run" do
@@ -28,6 +29,12 @@ RSpec.describe PupilPremiumImporter do
 
       expect(eligibility.total_pupils).to be 53
       expect(eligibility.eligible_pupils).to be 43
+    end
+
+    it "handles commas in values correctly" do
+      eligibility = School.find_by(urn: 124_856).pupil_premiums.first
+
+      expect(eligibility.total_pupils).to be 1151
     end
 
     it "sets the correct year on the record" do
