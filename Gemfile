@@ -44,11 +44,9 @@ gem "mail-notify", ">= 1.0.3"
 # do not rely on host's timezone data, which can be inconsistent
 gem "tzinfo-data"
 
-gem "activerecord-import"
 gem "govuk-components", ">= 1.0.0"
 gem "govuk_design_system_formbuilder", "~> 2.1", ">= 2.1.5"
 gem "httpclient"
-gem "seed_dump"
 gem "view_component", require: "view_component/engine"
 
 # Database based asynchronous priority queue system
