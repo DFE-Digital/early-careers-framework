@@ -7,7 +7,7 @@ namespace :schools_data do
   task import: :environment do
     logger = Logger.new($stdout)
     logger.info "Importing schools data, this may take a couple minutes..."
-    SchoolDataImporter.new.run
+    SchoolDataImporter.new(logger).run
     logger.info "Schools data import complete!"
   end
 end

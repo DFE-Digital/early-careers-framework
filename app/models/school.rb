@@ -10,6 +10,7 @@ class School < ApplicationRecord
   belongs_to :local_authority, optional: true
   has_one :partnership
   has_one :lead_provider, through: :partnership
+  has_many :pupil_premiums
   has_and_belongs_to_many :induction_coordinator_profiles
 
   has_many :early_career_teacher_profiles
@@ -41,6 +42,15 @@ class School < ApplicationRecord
       &.where("users.confirmation_sent_at > ?", CONFIRMATION_WINDOW.hours.ago)
       &.any?
   end
+
+  def pupil_premium_uplift?(start_year)
+    pupil_premiums.find_by(start_year: start_year)&.uplift? || false
+  end
+
+  scope :with_pupil_premium_uplift, lambda { |start_year|
+    joins(:pupil_premiums)
+      .merge(PupilPremium.only_with_uplift(start_year))
+  }
 
 private
 

@@ -4,6 +4,12 @@ require "file_download"
 require "csv"
 
 class SchoolDataImporter
+  attr_reader :logger
+
+  def initialize(logger)
+    @logger = logger
+  end
+
   # TODO: Register and Partner 147: Figure out how exactly we want to handle school updating
   def run
     CSV.foreach(schools_data_file.path, headers: true, encoding: "ISO-8859-1:UTF-8") do |row|
@@ -61,7 +67,7 @@ private
     row_local_authority_name = row.fetch("LA (name)")
 
     if local_authority.persisted? && local_authority.name != row_local_authority_name
-      Rails.logger.info "LA name change in school import. Old name: #{local_authority.name}, New name: #{row_local_authority_name}"
+      logger.info "LA name change in school import. Old name: #{local_authority.name}, New name: #{row_local_authority_name}"
     end
 
     local_authority.name = row_local_authority_name
@@ -74,7 +80,7 @@ private
     row_lad_name = row.fetch("DistrictAdministrative (name)")
 
     if local_authority_district.persisted? && local_authority_district.name != row_lad_name
-      Rails.logger.info "LA name change in school import. Old name: #{local_authority_district.name}, New name: #{row_lad_name}"
+      logger.info "LA name change in school import. Old name: #{local_authority_district.name}, New name: #{row_lad_name}"
     end
 
     local_authority_district.name = row_lad_name

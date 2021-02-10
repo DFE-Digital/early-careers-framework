@@ -213,6 +213,16 @@ ActiveRecord::Schema.define(version: 2021_02_05_133627) do
     t.index ["lead_provider_id"], name: "index_provider_relationships_on_lead_provider_id"
   end
 
+  create_table "pupil_premiums", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "school_id", null: false
+    t.integer "start_year", limit: 2, null: false
+    t.integer "total_pupils", null: false
+    t.integer "eligible_pupils", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["school_id"], name: "index_pupil_premiums_on_school_id"
+  end
+
   create_table "schools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -297,6 +307,7 @@ ActiveRecord::Schema.define(version: 2021_02_05_133627) do
   add_foreign_key "provider_relationships", "cohorts"
   add_foreign_key "provider_relationships", "delivery_partners"
   add_foreign_key "provider_relationships", "lead_providers"
+  add_foreign_key "pupil_premiums", "schools"
   add_foreign_key "schools", "local_authorities"
   add_foreign_key "schools", "local_authority_districts"
   add_foreign_key "schools", "networks"

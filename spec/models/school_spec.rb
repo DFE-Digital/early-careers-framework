@@ -23,6 +23,7 @@ RSpec.describe School, type: :model do
     it { is_expected.to have_and_belong_to_many(:induction_coordinator_profiles) }
     it { is_expected.to have_many(:early_career_teacher_profiles) }
     it { is_expected.to have_many(:early_career_teachers).through(:early_career_teacher_profiles) }
+    it { is_expected.to have_many(:pupil_premiums) }
   end
 
   describe "#not_registered?" do
@@ -102,7 +103,7 @@ RSpec.describe School, type: :model do
     end
   end
 
-  describe "School#full_address" do
+  describe "#full_address" do
     let(:address_line1) { Faker::Address.street_address }
     let(:address_line2) { Faker::Address.secondary_address }
     let(:address_line3) { Faker::Address.city }
@@ -141,6 +142,41 @@ RSpec.describe School, type: :model do
         #{postcode}
       ADDR
       expect(school.full_address).to eq(expected_address)
+    end
+  end
+
+  describe "#pupil_premium_uplift?" do
+    context "it has no pupil premium eligibility record" do
+      let(:school) { create(:school) }
+      it "returns false" do
+        expect(school.pupil_premium_uplift?(2021)).to be false
+      end
+    end
+
+    context "it has a pupil premium record with less than 40%" do
+      let(:school) { create(:school, pupil_premiums: [build(:pupil_premium, :not_eligible)]) }
+
+      it "returns false" do
+        expect(school.pupil_premium_uplift?(2021)).to be false
+      end
+    end
+
+    context "it has a pupil premium record with greater than 40%" do
+      let(:school) { create(:school, :pupil_premium_uplift) }
+
+      it "returns true" do
+        expect(school.pupil_premium_uplift?(2021)).to be true
+      end
+    end
+  end
+
+  describe "scope :with_pupil_premium_uplift" do
+    let(:uplifted_school) { create(:school, :pupil_premium_uplift) }
+    let(:not_uplifted_school) { create(:school, pupil_premiums: [build(:pupil_premium, :not_eligible)]) }
+
+    it "returns uplifted schools" do
+      expect(School.with_pupil_premium_uplift(2021)).to include(uplifted_school)
+      expect(School.with_pupil_premium_uplift(2021)).not_to include(not_uplifted_school)
     end
   end
 end
