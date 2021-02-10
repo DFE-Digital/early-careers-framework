@@ -3,13 +3,13 @@
 
   <% content_for :before_content, govuk_back_link(
     text: "Back",
-    href: new_user_session_path)
+    href: registrations_question_one_path)
   %>
 
-  <%= form_with url: registrations_question_one_path, method: :post do |f| %>
+  <%= form_with url: registrations_question_two_path, method: :post do |f| %>
     <%= f.govuk_collection_radio_buttons(
           :answer, @options, :id, :name,
-          legend: -> { tag.h1("Do you think you'll be training any early career teachers in the 2021/22 academic year?" , class: "govuk-heading-l") }
+          legend: -> { tag.h1("Do you know how you want to run your induction programme?" , class: "govuk-heading-l") }
         ) %>
     <%= f.govuk_submit "Continue" %>
   <% end %>

@@ -25,10 +25,12 @@ Rails.application.routes.draw do
   namespace :registrations do
     root to: "start#index"
     resource :account_not_found, only: :show, controller: :account_not_found, path: "/account-not-found"
-    resource :question_one, only: :show, controller: :question_one, path: "/question-one"
+    resource :question_one, only: %i[show create], controller: :question_one, path: "/question-one"
+    resource :question_two, only: %i[show create], controller: :question_two, path: "/question-two"
+    resource :no_decision, only: :show, controller: :no_decision, path: "/no-decision"
+    resource :no_participants, only: :show, controller: :no_participants, path: "/no-participants"
 
     # resources :enter_urn, only: %i[index]
-    # resources :no_decision_no_registration, only: %i[index]
     # resources :no_participants_no_registration, only: %i[index]
     # resources :question_two, only: %i[index]
     # resources :school_already_claimed, only: %i[index]
