@@ -2,12 +2,13 @@
   <div class="govuk-grid-column-full">
     <h1 class="govuk-heading-l">Content change preview</h1>
     <%= form_with url: cip_year_path, method: :put do |f| %>
-      <%= f.govuk_text_area :year_preview, label: { text: "Markdown string for course year content" }, rows: 10, value: @year_preview %>
+      <%= f.govuk_text_field :title, label: { text: "Year title" }, value: @course_year.title %>
+      <%= f.govuk_text_area :content, label: { text: "Markdown string for course year content" }, rows: 10, value: @course_year.content %>
       <%= f.govuk_submit "See preview" %>
       <%= f.govuk_submit "Save changes" %>
     <% end %>
     <div class="gem-c-govspeak govuk-govspeak ">
-      <%= @html_content.html_safe %>
+      <%= @course_year.content_to_html.html_safe %>
     </div>
   </div>
 </div>
