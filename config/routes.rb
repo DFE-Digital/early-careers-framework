@@ -39,7 +39,6 @@ Rails.application.routes.draw do
     resources :school_eligable, only: %i[index]
     resources :school_elligable_with_error, only: %i[index]
     resources :school_needs_to_complete_registration, only: %i[index]
-    resources :sign_in, only: %i[index]
     resources :start, only: %i[index]
     resources :verify_your_email, only: %i[index]
     resources :welcome, only: %i[index]

@@ -1,5 +1,10 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+  <% content_for :before_content, govuk_back_link(
+    text: "Back",
+    href: users_information_path)
+  %>
+
     <h2 class="govuk-heading-l">Sign in</h2>
     <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
       <div class="govuk-form-group">
@@ -8,10 +13,8 @@
 
       <%= f.govuk_submit "Sign in" %>
     <% end %>
-
     <%= govuk_link_to "Register your school", users_information_path %>
-    <br/>
-    <h2 class="govuk-heading-s">Problems signing in</h2>
-    <p>Contact us: <%= mail_to "ecf-support@digital.education.gov.uk" %> </p>
+    <p class="govuk-!-margin-bottom-0 govuk-!-margin-top-15"><strong>Problems signing in</strong></p>
+    <p class="govuk-!-margin-top-1">Contact us: <%= mail_to "ecf-support@digital.education.gov.uk" %> </p>
   </div>
 </div>
