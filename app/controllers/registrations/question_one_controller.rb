@@ -1,8 +1,5 @@
-# frozen_string_literal: true
-
-class SchoolRegistrationsController < ApplicationController
-
-  def academic_year
+class Registrations::QuestionOneController < ApplicationController
+  def show
     @school = School.new
     @options = [
       OpenStruct.new(id: 1, name: "Yes"),

@@ -3,7 +3,7 @@
 
   <% content_for :before_content, govuk_back_link(
     text: "Back",
-    href: users_information_path)
+    href: new_user_session_path)
   %>
 
   <%= form_with model: @school, url: "/", method: :post do |f| %>

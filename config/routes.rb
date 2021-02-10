@@ -15,12 +15,6 @@ Rails.application.routes.draw do
     post "/users/check-details", to: "users/registrations#check_details", as: :users_check_details
   end
 
-  resources :school_registrations do
-    collection do
-      get "academic-year", to: "school_registrations#academic_year", as: :academic_year
-    end
-  end
-
   get "/pages/:page", to: "pages#show"
   get "check" => "application#check"
 
@@ -28,26 +22,47 @@ Rails.application.routes.draw do
   resource :supplier_dashboard, controller: :supplier_dashboard, only: :show
   resource :school_invites, only: %i[show create]
 
-  namespace :school_registration do
-    root to: 'start#index'
-    resources :enter_urn, only: %i[index]
-    resources :no_decision_no_registration, only: %i[index]
-    resources :no_participants_no_registration, only: %i[index]
-    resources :question_one, only: %i[index]
-    resources :question_two, only: %i[index]
-    resources :school_already_claimed, only: %i[index]
-    resources :school_eligable, only: %i[index]
-    resources :school_elligable_with_error, only: %i[index]
-    resources :school_needs_to_complete_registration, only: %i[index]
-    resources :start, only: %i[index]
-    resources :verify_your_email, only: %i[index]
-    resources :welcome, only: %i[index]
-    resources :your_school_is_registered, only: %i[index]
-    resources :before_you_start, only: %i[index]
-    resources :school_not_eligible, only: %i[index]
-    resources :confirm_your_details, only: %i[index]
-    resources :confirm_your_details_with_error, only: %i[index]
+  namespace :registrations do
+    root to: "start#index"
+    resource :account_not_found, only: :show, controller: :account_not_found, path: "/account-not-found"
+    resource :question_one, only: :show, controller: :question_one, path: "/question-one"
+
+    # resources :enter_urn, only: %i[index]
+    # resources :no_decision_no_registration, only: %i[index]
+    # resources :no_participants_no_registration, only: %i[index]
+    # resources :question_two, only: %i[index]
+    # resources :school_already_claimed, only: %i[index]
+    # resources :school_eligable, only: %i[index]
+    # resources :school_elligable_with_error, only: %i[index]
+    # resources :school_needs_to_complete_registration, only: %i[index]
+    # resources :verify_your_email, only: %i[index]
+    # resources :welcome, only: %i[index]
+    # resources :your_school_is_registered, only: %i[index]
+    # resources :school_not_eligible, only: %i[index]
+    # resources :confirm_your_details, only: %i[index]
+    # resources :confirm_your_details_with_error, only: %i[index]
   end
+  # renamed to just registrations
+  # namespace :school_registration do
+  #   root to: 'start#index'
+  #   resources :enter_urn, only: %i[index]
+  #   resources :no_decision_no_registration, only: %i[index]
+  #   resources :no_participants_no_registration, only: %i[index]
+  #   resources :question_one, only: %i[index]
+  #   resources :question_two, only: %i[index]
+  #   resources :school_already_claimed, only: %i[index]
+  #   resources :school_eligable, only: %i[index]
+  #   resources :school_elligable_with_error, only: %i[index]
+  #   resources :school_needs_to_complete_registration, only: %i[index]
+  #   resources :start, only: %i[index]
+  #   resources :verify_your_email, only: %i[index]
+  #   resources :welcome, only: %i[index]
+  #   resources :your_school_is_registered, only: %i[index]
+  #   resources :before_you_start, only: %i[index]
+  #   resources :school_not_eligible, only: %i[index]
+  #   resources :confirm_your_details, only: %i[index]
+  #   resources :confirm_your_details_with_error, only: %i[index]
+  # end
 
   namespace :admin do
     resources :suppliers, only: %i[index new]
@@ -129,5 +144,5 @@ Rails.application.routes.draw do
     end
   end
 
-  root to: "pages#home"
+  root to: "registrations/start#index"
 end
