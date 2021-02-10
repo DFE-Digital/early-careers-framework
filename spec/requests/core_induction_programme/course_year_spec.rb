@@ -11,31 +11,42 @@ RSpec.describe "Core Induction Programme Year", type: :request do
       admin_user = create(:user, :admin)
       sign_in admin_user
     end
+
     describe "GET /core-induction-programe/years/years_id" do
       it "renders the cip year page" do
         get course_year_url
         expect(response).to render_template(:show)
       end
     end
+
     describe "GET /core-induction-programme/years/years_id/edit" do
       it "render the cip years edit page" do
         get "#{course_year_url}/edit"
         expect(response).to render_template(:edit)
       end
     end
+
     describe "PUT /core-induction-programme/years/years_id" do
       it "renders a preview of changes to a year" do
-        put course_year_url, params: { commit: "See preview", year_preview: "Extra content" }
+        put course_year_url, params: { commit: "See preview", content: "Extra content" }
         expect(response).to render_template(:edit)
         expect(response.body).to include("Extra content")
+        course_year.reload
+        expect(course_year.content).not_to include("Extra content")
       end
-    end
-    describe "PUT /core-induction-programme/years/years_id" do
+
       it "redirects to the year page and updates content when saving changes" do
-        put course_year_url, params: { commit: "Save changes", year_preview: "Adding new content" }
+        put course_year_url, params: { commit: "Save changes", content: "Adding new content" }
         expect(response).to redirect_to(course_year_url)
         get course_year_url
         expect(response.body).to include("Adding new content")
+      end
+
+      it "redirects to the year page when saving title" do
+        put course_year_url, params: { commit: "Save changes", title: "New title" }
+        expect(response).to redirect_to(course_year_url)
+        get course_year_url
+        expect(response.body).to include("New title")
       end
     end
   end
@@ -45,12 +56,14 @@ RSpec.describe "Core Induction Programme Year", type: :request do
       user = create(:user)
       sign_in user
     end
+
     describe "GET /core-induction-programme/years/years_id" do
       it "renders the cip year page" do
         get course_year_url
         expect(response).to render_template(:show)
       end
     end
+
     describe "GET /core-induction-programme/years/years_id/edit" do
       it "raises an error when trying to access edit page" do
         expect { get "#{course_year_url}/edit" }.to raise_error Pundit::NotAuthorizedError
@@ -65,12 +78,14 @@ RSpec.describe "Core Induction Programme Year", type: :request do
         expect(response).to render_template(:show)
       end
     end
+
     describe "GET /core-induction-programme/years/years_id/edit" do
       it "redirects to the sign in page" do
         get "#{course_year_url}/edit"
         expect(response).to redirect_to("/users/sign_in")
       end
     end
+
     describe "PUT /core-induction-programme/years/years_id" do
       it "redirects to the sign in page" do
         put course_year_url, params: { commit: "Save changes", year_preview: course_year.content }
