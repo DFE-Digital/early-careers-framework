@@ -4,7 +4,7 @@ require "rails_helper"
 require "csv"
 
 RSpec.describe SchoolDataImporter do
-  let(:school_data_importer) { SchoolDataImporter.new }
+  let(:school_data_importer) { SchoolDataImporter.new(Logger.new($stdout)) }
   let(:example_csv_file) { File.open("spec/fixtures/files/example_schools_data.csv") }
 
   describe "#run" do
