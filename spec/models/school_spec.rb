@@ -12,18 +12,22 @@ RSpec.describe School, type: :model do
           address_line1: "Test address London",
           country: "England",
           postcode: "TEST2",
-          local_authority: FactoryBot.create(:local_authority),
-          local_authority_district: FactoryBot.create(:local_authority_district),
         )
       }.to change { School.count }.by(1)
     end
+  end
 
+  describe "associations" do
     it { is_expected.to have_one(:partnership) }
     it { is_expected.to have_one(:lead_provider).through(:partnership) }
     it { is_expected.to have_and_belong_to_many(:induction_coordinator_profiles) }
     it { is_expected.to have_many(:early_career_teacher_profiles) }
     it { is_expected.to have_many(:early_career_teachers).through(:early_career_teacher_profiles) }
     it { is_expected.to have_many(:pupil_premiums) }
+    it { is_expected.to have_many(:school_local_authorities) }
+    it { is_expected.to have_many(:local_authorities).through(:school_local_authorities) }
+    it { is_expected.to have_many(:school_local_authority_districts) }
+    it { is_expected.to have_many(:local_authority_districts).through(:school_local_authority_districts) }
   end
 
   describe "#not_registered?" do
