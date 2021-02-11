@@ -8,7 +8,7 @@ class Registrations::QuestionTwoController < ApplicationController
 
   def create
     if params[:answer] == "1"
-      redirect_to :registrations_question_two
+      redirect_to :registrations_school_profile
     else
       redirect_to :registrations_no_decision
     end

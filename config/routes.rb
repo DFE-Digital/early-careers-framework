@@ -29,6 +29,9 @@ Rails.application.routes.draw do
     resource :question_two, only: %i[show create], controller: :question_two, path: "/question-two"
     resource :no_decision, only: :show, controller: :no_decision, path: "/no-decision"
     resource :no_participants, only: :show, controller: :no_participants, path: "/no-participants"
+    resource :school_profile, only: %i[show create], controller: :school_profile, path: "/school-profile"
+    resource :user_profile, only: %i[new create], controller: :user_profile, path: "/user-profile"
+
 
     # resources :enter_urn, only: %i[index]
     # resources :no_participants_no_registration, only: %i[index]
