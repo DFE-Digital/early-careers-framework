@@ -52,11 +52,6 @@ RSpec.describe CourseLessonProgress, type: :model do
         )
         expect(lesson_one_progress_duplicate).not_to be_valid
       end
-
-      it "creates a second course lesson progress record" do
-        create(:course_lesson_progress, early_career_teacher_profile: teacher, course_lesson: lesson_two)
-        expect(teacher.course_lesson_progresses.count).to eql(2)
-      end
     end
   end
 end
