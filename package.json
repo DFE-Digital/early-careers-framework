@@ -13,6 +13,7 @@
     "set-value": "^3.0.2"
   },
   "devDependencies": {
+    "cypress": "^6.4.0",
     "eslint": "^7.13.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
@@ -20,7 +21,9 @@
     "webpack-dev-server": "^3.11.0"
   },
   "scripts": {
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests",
+    "cypress:open": "cypress open --project ./spec",
+    "cypress:run": "cypress run --project ./spec"
   },
   "jest": {
     "roots": [

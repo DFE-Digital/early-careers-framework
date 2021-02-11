@@ -8,6 +8,11 @@ FactoryBot.define do
     confirmed_at { 1.hour.ago }
     login_token_valid_until { 1.hour.from_now }
 
+    # this shouldn't be needed: https://github.com/shakacode/cypress-on-rails/pull/43
+    trait 'admin' do
+      admin_profile
+    end
+
     trait :admin do
       admin_profile
     end
