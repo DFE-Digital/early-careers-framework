@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_05_133627) do
+ActiveRecord::Schema.define(version: 2021_02_10_111857) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -42,41 +42,6 @@ ActiveRecord::Schema.define(version: 2021_02_05_133627) do
     t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-  end
-
-  create_table "course_lessons", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.string "title", null: false
-    t.text "content", null: false
-    t.uuid "previous_lesson_id"
-    t.uuid "course_module_id", null: false
-    t.integer "version", default: 1, null: false
-    t.index ["course_module_id"], name: "index_course_lessons_on_course_module_id"
-    t.index ["previous_lesson_id"], name: "index_course_lessons_on_previous_lesson_id"
-  end
-
-  create_table "course_modules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.string "title", null: false
-    t.text "content", null: false
-    t.uuid "previous_module_id"
-    t.uuid "course_year_id", null: false
-    t.integer "version", default: 1, null: false
-    t.index ["course_year_id"], name: "index_course_modules_on_course_year_id"
-    t.index ["previous_module_id"], name: "index_course_modules_on_previous_module_id"
-  end
-
-  create_table "course_years", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.boolean "is_year_one", null: false
-    t.string "title", null: false
-    t.text "content", null: false
-    t.integer "version", default: 1, null: false
-    t.uuid "core_induction_programme_id"
-    t.index ["core_induction_programme_id"], name: "index_course_years_on_core_induction_programme_id"
   end
 
   create_table "delayed_jobs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -285,11 +250,6 @@ ActiveRecord::Schema.define(version: 2021_02_05_133627) do
   add_foreign_key "admin_profiles", "users"
   add_foreign_key "cohorts_lead_providers", "cohorts"
   add_foreign_key "cohorts_lead_providers", "lead_providers"
-  add_foreign_key "course_lessons", "course_lessons", column: "previous_lesson_id"
-  add_foreign_key "course_lessons", "course_modules"
-  add_foreign_key "course_modules", "course_modules", column: "previous_module_id"
-  add_foreign_key "course_modules", "course_years"
-  add_foreign_key "course_years", "core_induction_programmes"
   add_foreign_key "delivery_partner_profiles", "delivery_partners"
   add_foreign_key "delivery_partner_profiles", "users"
   add_foreign_key "early_career_teacher_profiles", "cohorts"
