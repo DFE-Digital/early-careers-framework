@@ -44,11 +44,9 @@ gem "mail-notify", ">= 1.0.3"
 # do not rely on host's timezone data, which can be inconsistent
 gem "tzinfo-data"
 
-gem "activerecord-import"
 gem "govuk-components", ">= 1.0.0"
 gem "govuk_design_system_formbuilder", "~> 2.1", ">= 2.1.5"
 gem "httpclient"
-gem "seed_dump"
 gem "view_component", require: "view_component/engine"
 
 # Database based asynchronous priority queue system
@@ -58,8 +56,6 @@ gem "delayed_job_active_record"
 platform :mswin, :mingw, :x64_mingw do
   gem "wdm", ">= 0.1.0"
 end
-
-gem "govspeak", git: "https://github.com/DFE-Digital/ecf-govspeak.git", ref: "b1922aa"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

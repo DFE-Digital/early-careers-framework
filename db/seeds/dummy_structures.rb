@@ -24,6 +24,13 @@ unless Cohort.first
   Cohort.create!(start_year: 2022)
 end
 
+if CoreInductionProgramme.none?
+  CoreInductionProgramme.create!(name: "Ambition Institute")
+  CoreInductionProgramme.create!(name: "Education Development Trust")
+  CoreInductionProgramme.create!(name: "Teach First")
+  CoreInductionProgramme.create!(name: "UCL")
+end
+
 if Rails.env.development? || Rails.env.deployed_development?
   if AdminProfile.none?
     user = User.find_or_create_by!(email: "admin@example.com") do |u|
