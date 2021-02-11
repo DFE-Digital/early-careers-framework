@@ -41,8 +41,7 @@ RSpec.describe CourseLessonProgress, type: :model do
       end
 
       it "can not assign an invalid status to a course lesson progress" do
-        lesson_one_progress.progress = "part way through"
-        expect(lesson_one_progress).not_to be_valid
+        expect { lesson_one_progress.progress = "part_way_through" }.to raise_error ArgumentError
       end
 
       it "does not allow the same lesson record progress to be added twice" do
