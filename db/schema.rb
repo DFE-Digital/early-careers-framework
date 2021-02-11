@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_09_163654) do
+ActiveRecord::Schema.define(version: 2021_02_10_120844) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -33,6 +33,17 @@ ActiveRecord::Schema.define(version: 2021_02_09_163654) do
     t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "course_lesson_progresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "progress", default: "not_started"
+    t.uuid "early_career_teacher_profile_id", null: false
+    t.uuid "course_lesson_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["course_lesson_id", "early_career_teacher_profile_id"], name: "idx_cl_progresses_on_cl_id_and_ect_profile_id", unique: true
+    t.index ["course_lesson_id"], name: "idx_course_lesson_progresses_on_course_lesson_id"
+    t.index ["early_career_teacher_profile_id"], name: "idx_course_lesson_progresses_on_ect_profile_id"
   end
 
   create_table "course_lessons", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -125,6 +136,8 @@ ActiveRecord::Schema.define(version: 2021_02_09_163654) do
   end
 
   add_foreign_key "admin_profiles", "users"
+  add_foreign_key "course_lesson_progresses", "course_lessons"
+  add_foreign_key "course_lesson_progresses", "early_career_teacher_profiles"
   add_foreign_key "course_lessons", "course_lessons", column: "previous_lesson_id"
   add_foreign_key "course_lessons", "course_modules"
   add_foreign_key "course_modules", "course_modules", column: "previous_module_id"
