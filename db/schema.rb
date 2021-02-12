@@ -217,8 +217,6 @@ ActiveRecord::Schema.define(version: 2021_02_10_111857) do
     t.string "name", null: false
     t.string "school_type_code"
     t.integer "capacity"
-    t.boolean "high_pupil_premium", default: false, null: false
-    t.boolean "is_rural", default: false, null: false
     t.string "address_line1", null: false
     t.string "address_line2"
     t.string "address_line3"
@@ -227,9 +225,6 @@ ActiveRecord::Schema.define(version: 2021_02_10_111857) do
     t.string "postcode", null: false
     t.uuid "network_id"
     t.string "domains", default: [], null: false, array: true
-    t.boolean "eligible", default: true, null: false
-    t.uuid "local_authority_district_id"
-    t.uuid "local_authority_id"
     t.string "school_type_name"
     t.string "ukprn"
     t.string "previous_school_urn"
@@ -240,10 +235,6 @@ ActiveRecord::Schema.define(version: 2021_02_10_111857) do
     t.string "school_status_name"
     t.string "secondary_contact_email"
     t.string "primary_contact_email"
-    t.index ["high_pupil_premium"], name: "index_schools_on_high_pupil_premium", where: "high_pupil_premium"
-    t.index ["is_rural"], name: "index_schools_on_is_rural", where: "is_rural"
-    t.index ["local_authority_district_id"], name: "index_schools_on_local_authority_district_id"
-    t.index ["local_authority_id"], name: "index_schools_on_local_authority_id"
     t.index ["name"], name: "index_schools_on_name"
     t.index ["network_id"], name: "index_schools_on_network_id"
     t.index ["urn"], name: "index_schools_on_urn", unique: true
@@ -294,7 +285,5 @@ ActiveRecord::Schema.define(version: 2021_02_10_111857) do
   add_foreign_key "school_local_authorities", "schools"
   add_foreign_key "school_local_authority_districts", "local_authority_districts"
   add_foreign_key "school_local_authority_districts", "schools"
-  add_foreign_key "schools", "local_authorities"
-  add_foreign_key "schools", "local_authority_districts"
   add_foreign_key "schools", "networks"
 end
