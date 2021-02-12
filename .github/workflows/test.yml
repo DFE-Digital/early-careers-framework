@@ -66,6 +66,13 @@ jobs:
       - name: Run tests
         run: bundle exec rspec
 
+      - name: Run Cypress
+        uses: cypress-io/github-action@v2
+        with:
+          start: bin/rails server -e test -p 5017
+          wait-on: 'http://localhost://5017'
+          env: port=5017
+
   frontend-tests:
     name: Run frontend JS unit tests
 
