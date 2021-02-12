@@ -31,11 +31,8 @@ Rails.application.routes.draw do
     resource :no_participants, only: :show, controller: :no_participants, path: "/no-participants"
     resource :school_profile, only: %i[show create], controller: :school_profile, path: "/school-profile"
     resource :user_profile, only: %i[new create], controller: :user_profile, path: "/user-profile"
+    resource :verification_sent, only: :show, controller: :verification_sent, path: "/verification-sent"
 
-
-    # resources :enter_urn, only: %i[index]
-    # resources :no_participants_no_registration, only: %i[index]
-    # resources :question_two, only: %i[index]
     # resources :school_already_claimed, only: %i[index]
     # resources :school_eligable, only: %i[index]
     # resources :school_elligable_with_error, only: %i[index]
@@ -47,27 +44,6 @@ Rails.application.routes.draw do
     # resources :confirm_your_details, only: %i[index]
     # resources :confirm_your_details_with_error, only: %i[index]
   end
-  # renamed to just registrations
-  # namespace :school_registration do
-  #   root to: 'start#index'
-  #   resources :enter_urn, only: %i[index]
-  #   resources :no_decision_no_registration, only: %i[index]
-  #   resources :no_participants_no_registration, only: %i[index]
-  #   resources :question_one, only: %i[index]
-  #   resources :question_two, only: %i[index]
-  #   resources :school_already_claimed, only: %i[index]
-  #   resources :school_eligable, only: %i[index]
-  #   resources :school_elligable_with_error, only: %i[index]
-  #   resources :school_needs_to_complete_registration, only: %i[index]
-  #   resources :start, only: %i[index]
-  #   resources :verify_your_email, only: %i[index]
-  #   resources :welcome, only: %i[index]
-  #   resources :your_school_is_registered, only: %i[index]
-  #   resources :before_you_start, only: %i[index]
-  #   resources :school_not_eligible, only: %i[index]
-  #   resources :confirm_your_details, only: %i[index]
-  #   resources :confirm_your_details_with_error, only: %i[index]
-  # end
 
   namespace :admin do
     resources :suppliers, only: %i[index new]
