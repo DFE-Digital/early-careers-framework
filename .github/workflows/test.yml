@@ -69,7 +69,7 @@ jobs:
       - name: Run Cypress
         uses: cypress-io/github-action@v2
         with:
-          start: bin/rails server -e test -p 5017
+          start: bundle exec rails server -e test -p 5017
           wait-on: 'http://localhost:5017/'
           env: port=5017
 
