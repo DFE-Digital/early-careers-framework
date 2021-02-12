@@ -3,6 +3,10 @@ describe("Example tests", () => {
     cy.app("clean");
   });
 
+  after(() => {
+    cy.app("clean");
+  });
+
   // This is an example of a failing test - skipping because it takes a while to run
   it.skip("should be viewable when logged out", () => {
     cy.appFactories([["create", "course_lesson"]]);
