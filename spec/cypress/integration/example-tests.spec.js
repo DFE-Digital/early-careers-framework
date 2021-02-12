@@ -1,4 +1,4 @@
-describe("Example tests", function () {
+describe("Example tests", () => {
   beforeEach(() => {
     cy.app("clean");
   });
@@ -47,19 +47,19 @@ describe("Example tests", function () {
 
     cy.get("#navigation").contains("Core Induction Programme").click();
 
-    cy.contains('Download export').should('not.exist');
+    cy.contains("Download export").should("not.exist");
 
-    cy.contains('Test Course year').click();
+    cy.contains("Test Course year").click();
 
-    cy.contains('Edit year content').should('not.exist');
+    cy.contains("Edit year content").should("not.exist");
 
-    cy.contains('Test Course module').click();
+    cy.contains("Test Course module").click();
 
-    cy.contains('Edit module content').should('not.exist');
+    cy.contains("Edit module content").should("not.exist");
 
-    cy.contains('Test Course lesson').click();
+    cy.contains("Test Course lesson").click();
 
-    cy.contains('Edit lesson content').should('not.exist');
+    cy.contains("Edit lesson content").should("not.exist");
   });
 
   it("should be editable when logged in as admin user", () => {
@@ -81,41 +81,41 @@ describe("Example tests", function () {
 
     cy.get("#navigation").contains("Core Induction Programme").click();
 
-    cy.get('.govuk-button').contains('Download export');
+    cy.get(".govuk-button").contains("Download export");
 
-    cy.contains('Test Course year').click();
+    cy.contains("Test Course year").click();
 
-    cy.get('.govuk-button').contains('Edit year content');
+    cy.get(".govuk-button").contains("Edit year content");
 
-    cy.contains('Test Course module').click();
+    cy.contains("Test Course module").click();
 
-    cy.get('.govuk-button').contains('Edit module content');
+    cy.get(".govuk-button").contains("Edit module content");
 
-    cy.contains('Test Course lesson').click();
+    cy.contains("Test Course lesson").click();
 
-    cy.get('.govuk-button').contains('Edit lesson content').click();
+    cy.get(".govuk-button").contains("Edit lesson content").click();
 
-    const testText = 'Some test content in cypress'
-    cy.get('#lesson-preview-field').clear().type(testText);
+    const testText = "Some test content in cypress";
+    cy.get("#lesson-preview-field").clear().type(testText);
 
-    cy.contains('See preview').click();
+    cy.contains("See preview").click();
 
-    cy.get('.govuk-govspeak').should('contain', testText);
-    cy.contains('Your changes have been saved').should('not.exist');
+    cy.get(".govuk-govspeak").should("contain", testText);
+    cy.contains("Your changes have been saved").should("not.exist");
 
-    cy.contains('Save changes').click();
+    cy.contains("Save changes").click();
 
-    cy.get('.govuk-govspeak').should('contain', testText);
-    cy.contains('Your changes have been saved');
+    cy.get(".govuk-govspeak").should("contain", testText);
+    cy.contains("Your changes have been saved");
   });
 
-  it('accessible autocomoplete', () => {
-    cy.visit('https://alphagov.github.io/accessible-autocomplete/examples/');
+  xit("accessible autocomoplete", () => {
+    cy.visit("https://alphagov.github.io/accessible-autocomplete/examples/");
 
-    cy.get('#autocomplete-default').type('United');
+    cy.get("#autocomplete-default").type("United");
 
-    cy.get('.autocomplete__menu').contains('United Kingdom').click();
+    cy.get(".autocomplete__menu").contains("United Kingdom").click();
 
-    cy.get('#autocomplete-default').should('value', 'United Kingdom');
+    cy.get("#autocomplete-default").should("value", "United Kingdom");
   });
 });
