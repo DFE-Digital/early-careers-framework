@@ -50,6 +50,7 @@ gem "httpclient"
 gem "view_component", require: "view_component/engine"
 
 # Database based asynchronous priority queue system
+gem "daemons"
 gem "delayed_cron_job"
 gem "delayed_job_active_record"
 
