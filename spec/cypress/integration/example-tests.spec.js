@@ -37,12 +37,9 @@ describe("Example tests", () => {
     cy.appFactories([
       ["create", "user"],
       ["create", "course_lesson"],
-    ]);
-
-    // @todo appFactories returns this
-    cy.appEval("User.last").then((res) => {
-      Cypress.config("user", res);
-      cy.visit(`/users/confirm_sign_in?login_token=${res.login_token}`);
+    ]).then(([user]) => {
+      Cypress.config("user", user);
+      cy.visit(`/users/confirm_sign_in?login_token=${user.login_token}`);
     });
 
     cy.get('[action="/users/sign_in_with_token"] [name="commit"]').click();
@@ -70,12 +67,9 @@ describe("Example tests", () => {
     cy.appFactories([
       ["create", "user", "admin"],
       ["create", "course_lesson"],
-    ]);
-
-    // @todo appFactories returns this
-    cy.appEval("User.last").then((res) => {
-      Cypress.config("user", res);
-      cy.visit(`/users/confirm_sign_in?login_token=${res.login_token}`);
+    ]).then(([user]) => {
+      Cypress.config("user", user);
+      cy.visit(`/users/confirm_sign_in?login_token=${user.login_token}`);
     });
 
     cy.get('[action="/users/sign_in_with_token"] [name="commit"]').click();

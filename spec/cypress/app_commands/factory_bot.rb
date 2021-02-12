@@ -2,13 +2,14 @@ Array.wrap(command_options).map do |factory_options|
   factory_method = factory_options.shift
   begin
     logger.debug "running #{factory_method}, #{factory_options}"
-    CypressOnRails::SmartFactoryWrapper.public_send(factory_method, *factory_options)
 
     CypressOnRails::SmartFactoryWrapper.configure(
       always_reload: !Rails.configuration.cache_classes,
       factory: FactoryBot,
       files: Dir['./spec/factories/**/*.rb']
     )
+
+    CypressOnRails::SmartFactoryWrapper.public_send(factory_method, *factory_options)
   rescue => e
     logger.error "#{e.class}: #{e.message}"
     logger.error e.backtrace.join("\n")
