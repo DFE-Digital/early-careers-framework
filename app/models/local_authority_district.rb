@@ -3,5 +3,13 @@
 class LocalAuthorityDistrict < ApplicationRecord
   has_many :school_local_authority_districts
   has_many :schools, through: :school_local_authority_districts
-  has_many :sparse_districts
+  has_many :district_sparsities
+
+  def sparse?(year = nil)
+    if year.nil?
+      district_sparsities.latest.any?
+    else
+      district_sparsities.for_year(year).any?
+    end
+  end
 end

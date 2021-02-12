@@ -174,6 +174,43 @@ RSpec.describe School, type: :model do
     end
   end
 
+  describe "#sparsity_uplift?" do
+    context "it is part of a sparse district" do
+      let(:school) { create(:school, :sparsity_uplift) }
+
+      it "returns true" do
+        expect(school.sparsity_uplift?).to be true
+      end
+    end
+
+    context "it is part of a not sparse district" do
+      let(:school) { create(:school) }
+
+      it "returns false" do
+        expect(school.sparsity_uplift?).to be false
+      end
+    end
+
+    context "it is part of a previously sparse district" do
+      let(:formerly_sparse_district) do
+        build(:local_authority_district, district_sparsities: [build(:district_sparsity, start_year: 2020, end_year: 2021)])
+      end
+      let(:school) do
+        create(:school, school_local_authority_districts: [
+          build(:school_local_authority_district, local_authority_district: formerly_sparse_district),
+        ])
+      end
+
+      it "returns false" do
+        expect(school.sparsity_uplift?).to be false
+      end
+
+      it "returns true for the year the school was sparse" do
+        expect(school.sparsity_uplift?(2020)).to be true
+      end
+    end
+  end
+
   describe "scope :with_pupil_premium_uplift" do
     let(:uplifted_school) { create(:school, :pupil_premium_uplift) }
     let(:not_uplifted_school) { create(:school, pupil_premiums: [build(:pupil_premium, :not_eligible)]) }
