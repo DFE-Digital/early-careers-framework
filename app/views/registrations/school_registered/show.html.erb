@@ -1,0 +1,11 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <% content_for :before_content, govuk_back_link(
+      text: "Back",
+      href: registrations_school_profile_path)
+    %>
+    <h2 class="govuk-heading-l">Your school has already registered</h2>
+    <p>You or one of your collegues has already registered your school.</p>
+    <%= govuk_link_to "Sign in", new_user_session_path, button: true %>
+  </div>
+</div>

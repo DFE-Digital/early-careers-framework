@@ -29,7 +29,7 @@ class Registrations::SchoolProfileController < ApplicationController
     if !@school.eligible?
       redirect_to :registrations_school_not_eligible
     elsif @school.fully_registered?
-      redirect_to :registrations_school_already_registered
+      redirect_to :registrations_school_registered
     elsif @school.partially_registered?
       redirect_to :registrations_school_not_confirmed
     else

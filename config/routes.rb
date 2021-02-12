@@ -33,15 +33,10 @@ Rails.application.routes.draw do
     resource :user_profile, only: %i[new create], controller: :user_profile, path: "/user-profile"
     resource :verification_sent, only: :show, controller: :verification_sent, path: "/verification-sent"
     resource :school_not_eligible, only: :show, controller: :school_not_eligible, path: "/school-not-eligible"
-
-    # resources :school_already_claimed, only: %i[index]
-    # resources :school_eligable, only: %i[index]
-    # resources :school_elligable_with_error, only: %i[index]
-    # resources :school_needs_to_complete_registration, only: %i[index]
-    # resources :verify_your_email, only: %i[index]
-    # resources :welcome, only: %i[index]
+    resource :school_registered, only: :show, controller: :school_registered, path: "/school-registered"
+    resource :school_not_confirmed, only: :show, controller: :school_not_confirmed, path: "/school-not-confirmed"
+    
     # resources :your_school_is_registered, only: %i[index]
-    # resources :school_not_eligible, only: %i[index]
     # resources :confirm_your_details, only: %i[index]
     # resources :confirm_your_details_with_error, only: %i[index]
   end
