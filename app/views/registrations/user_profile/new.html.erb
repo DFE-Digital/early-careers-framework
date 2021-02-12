@@ -44,20 +44,22 @@
 
       <%= f.govuk_text_field(
             :full_name,
+            width: 20,
             label: { 
               text: "Full name",
-              class: "govuk-label govuk-label--m",
-              width: "govuk-input--width-20" })
+              class: "govuk-label govuk-label--m"
+            })
       %>
 
       <%= f.govuk_email_field(
             :email,
             autocomplete: "email",
             hint: { text: "If you need other colleagues to sign in, use an email you can all access." },
+            width: 20,
             label: { 
               text: "Your school email address",
-              class: "govuk-label govuk-label--m",
-              width: "govuk-input--width-20" })
+              class: "govuk-label govuk-label--m"
+            })
       %>
 
       <%= f.govuk_submit "Continue" %>

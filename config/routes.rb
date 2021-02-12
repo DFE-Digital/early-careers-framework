@@ -32,6 +32,7 @@ Rails.application.routes.draw do
     resource :school_profile, only: %i[show create], controller: :school_profile, path: "/school-profile"
     resource :user_profile, only: %i[new create], controller: :user_profile, path: "/user-profile"
     resource :verification_sent, only: :show, controller: :verification_sent, path: "/verification-sent"
+    resource :school_not_eligible, only: :show, controller: :school_not_eligible, path: "/school-not-eligible"
 
     # resources :school_already_claimed, only: %i[index]
     # resources :school_eligable, only: %i[index]
