@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Registrations::UserProfileController < Registrations::SchoolProfileController
   before_action :load_school
   before_action :check_school_available, only: :create
@@ -18,7 +20,7 @@ class Registrations::UserProfileController < Registrations::SchoolProfileControl
     end
   end
 
-  private
+private
 
   def user_params
     params.require(:user).permit(:email, :full_name)

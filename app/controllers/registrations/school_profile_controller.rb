@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Registrations::SchoolProfileController < ApplicationController
   def show
     @school_profile_form = SchoolProfileForm.new
@@ -14,7 +16,7 @@ class Registrations::SchoolProfileController < ApplicationController
     end
   end
 
-  private
+private
 
   def school_params
     params.require(:school).permit(:urn)

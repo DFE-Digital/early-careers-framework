@@ -8,7 +8,7 @@ class SchoolProfileForm
   validates :urn, presence: { message: "Enter a school URN" }, on: :urn
   validate :urn_matches_school
 
-  private
+private
 
   def urn_matches_school
     school = School.find_by(urn: urn)
