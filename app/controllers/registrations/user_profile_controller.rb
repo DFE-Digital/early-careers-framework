@@ -1,4 +1,4 @@
-class Registrations::UserProfileController < ApplicationController
+class Registrations::UserProfileController < Registrations::SchoolProfileController
   before_action :load_school
   before_action :check_school_available, only: :create
 
@@ -8,7 +8,9 @@ class Registrations::UserProfileController < ApplicationController
 
   def create
     ActiveRecord::Base.transaction do
-      @user = User.create!(user_params)
+      @user = User.find_or_create_by!(email: user_params[:email]) do |user|
+        user.full_name = user_params[:full_name]
+      end
       @school.induction_coordinator_profiles.destroy_all
       InductionCoordinatorProfile.create!(user: @user, schools: [@school])
       session.delete(:school_id)
@@ -23,17 +25,7 @@ class Registrations::UserProfileController < ApplicationController
   end
 
   def load_school
-    @school = School.find_by(id: session[:school_id])
+    @school = School.find_by(urn: session[:school_urn])
     raise ActionController::BadRequest if @school.nil?
-  end
-
-  def check_school_available
-    if !@school.eligible?
-      redirect_to :registrations_school_not_eligible
-    elsif @school.fully_registered?
-      redirect_to :registrations_school_already_registered
-    elsif @school.partially_registered?
-      redirect_to :registrations_school_not_confirmed
-    end
   end
 end

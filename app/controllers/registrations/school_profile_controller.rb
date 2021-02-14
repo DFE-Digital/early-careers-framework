@@ -8,7 +8,7 @@ class Registrations::SchoolProfileController < ApplicationController
 
     if @school_profile_form.valid?
       load_school
-      check_school_available  
+      redirect
     else
       render :show
     end
@@ -21,19 +21,21 @@ class Registrations::SchoolProfileController < ApplicationController
   end
 
   def load_school
+    session["school_urn"] = school_params[:urn]
     @school = School.find_by(urn: school_params[:urn])
-    session["school_id"] = @school.id
   end
 
-  def check_school_available
+  def redirect
     if !@school.eligible?
       redirect_to :registrations_school_not_eligible
     elsif @school.fully_registered?
       redirect_to :registrations_school_registered
     elsif @school.partially_registered?
       redirect_to :registrations_school_not_confirmed
-    else
+    elsif controller_name == "school_profile"
       redirect_to :new_registrations_user_profile
     end
   end
+
+  alias_method :check_school_available, :redirect
 end

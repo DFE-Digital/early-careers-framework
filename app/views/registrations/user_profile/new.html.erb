@@ -29,10 +29,10 @@
           Address
         </dt>
         <dd class="govuk-summary-list__value">
-          <%= @school.address_line1 %>, <br>
-          <%= @school.address_line2 %>, <br>
-          <%= @school.address_line3 %>, <br>
-          <%= @school.address_line4 %>, <br>
+          <%= @school.address_line1 %> <br>
+          <%= @school.address_line2 %> <br>
+          <%= @school.address_line3 %> <br>
+          <%= @school.address_line4 %> <br>
           <%= @school.postcode %>
         </dd>
       </div>
@@ -56,7 +56,7 @@
             autocomplete: "email",
             hint: { text: "If you need other colleagues to sign in, use an email you can all access." },
             width: 20,
-            label: { 
+            label: {
               text: "Your school email address",
               class: "govuk-label govuk-label--m"
             })

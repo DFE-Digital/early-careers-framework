@@ -35,10 +35,6 @@ Rails.application.routes.draw do
     resource :school_not_eligible, only: :show, controller: :school_not_eligible, path: "/school-not-eligible"
     resource :school_registered, only: :show, controller: :school_registered, path: "/school-registered"
     resource :school_not_confirmed, only: :show, controller: :school_not_confirmed, path: "/school-not-confirmed"
-    
-    # resources :your_school_is_registered, only: %i[index]
-    # resources :confirm_your_details, only: %i[index]
-    # resources :confirm_your_details_with_error, only: %i[index]
   end
 
   namespace :admin do
