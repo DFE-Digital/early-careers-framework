@@ -3,6 +3,7 @@
 class CoreInductionProgramme::YearsController < ApplicationController
   include Pundit
   include GovspeakHelper
+  include CipBreadcrumbHelper
 
   after_action :verify_authorized, except: :show
   before_action :authenticate_user!, except: :show
