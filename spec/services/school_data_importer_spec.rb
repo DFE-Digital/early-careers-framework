@@ -4,7 +4,7 @@ require "rails_helper"
 require "csv"
 
 RSpec.describe SchoolDataImporter do
-  let(:school_data_importer) { SchoolDataImporter.new(Logger.new($stdout)) }
+  let(:school_data_importer) { SchoolDataImporter.new(Logger.new($stdout), 2021) }
   let(:example_csv_file) { File.open("spec/fixtures/files/example_schools_data.csv") }
 
   describe "#run" do
@@ -59,6 +59,40 @@ RSpec.describe SchoolDataImporter do
           existing_school.reload
 
           expect(existing_school.name).to eql("Penistone Grammar School")
+        end
+      end
+
+      context "when the school belongs to a different local authority" do
+        let!(:existing_school) do
+          create(:school, urn: 106_653, name: "Penistone Secondary School", school_local_authorities: [
+            build(:school_local_authority, local_authority: build(:local_authority), start_year: 2019),
+          ])
+        end
+
+        it "updates the local authority" do
+          school_data_importer.run
+          existing_school.reload
+
+          expect(existing_school.school_local_authorities.count).to be 2
+          expect(existing_school.school_local_authorities.where(end_year: nil).count).to be 1
+          expect(existing_school.school_local_authorities.where(end_year: 2021).count).to be 1
+        end
+      end
+
+      context "when the school belongs to a different local authority district" do
+        let!(:existing_school) do
+          create(:school, urn: 106_653, name: "Penistone Secondary School", school_local_authority_districts: [
+            build(:school_local_authority_district, local_authority_district: build(:local_authority_district), start_year: 2019),
+          ])
+        end
+
+        it "updates the local authority district" do
+          school_data_importer.run
+          existing_school.reload
+
+          expect(existing_school.school_local_authority_districts.count).to be 2
+          expect(existing_school.school_local_authority_districts.where(end_year: nil).count).to be 1
+          expect(existing_school.school_local_authority_districts.where(end_year: 2021).count).to be 1
         end
       end
     end

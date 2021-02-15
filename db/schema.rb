@@ -188,6 +188,28 @@ ActiveRecord::Schema.define(version: 2021_02_10_111857) do
     t.index ["school_id"], name: "index_pupil_premiums_on_school_id"
   end
 
+  create_table "school_local_authorities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "school_id", null: false
+    t.uuid "local_authority_id", null: false
+    t.integer "start_year", limit: 2, null: false
+    t.integer "end_year", limit: 2
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["local_authority_id"], name: "index_school_local_authorities_on_local_authority_id"
+    t.index ["school_id"], name: "index_school_local_authorities_on_school_id"
+  end
+
+  create_table "school_local_authority_districts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "school_id", null: false
+    t.uuid "local_authority_district_id", null: false
+    t.integer "start_year", limit: 2, null: false
+    t.integer "end_year", limit: 2
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["local_authority_district_id"], name: "index_schools_lads_on_lad_id"
+    t.index ["school_id"], name: "index_school_local_authority_districts_on_school_id"
+  end
+
   create_table "schools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -268,6 +290,10 @@ ActiveRecord::Schema.define(version: 2021_02_10_111857) do
   add_foreign_key "provider_relationships", "delivery_partners"
   add_foreign_key "provider_relationships", "lead_providers"
   add_foreign_key "pupil_premiums", "schools"
+  add_foreign_key "school_local_authorities", "local_authorities"
+  add_foreign_key "school_local_authorities", "schools"
+  add_foreign_key "school_local_authority_districts", "local_authority_districts"
+  add_foreign_key "school_local_authority_districts", "schools"
   add_foreign_key "schools", "local_authorities"
   add_foreign_key "schools", "local_authority_districts"
   add_foreign_key "schools", "networks"
