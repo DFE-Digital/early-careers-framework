@@ -46,11 +46,11 @@ class School < ApplicationRecord
   end
 
   def local_authority
-    school_local_authorities.find_by(end_year: nil)&.local_authority
+    school_local_authorities.latest.first&.local_authority
   end
 
   def local_authority_district
-    school_local_authority_districts.find_by(end_year: nil)&.local_authority_district
+    school_local_authority_districts.latest.first&.local_authority_district
   end
 
   def pupil_premium_uplift?(start_year)
