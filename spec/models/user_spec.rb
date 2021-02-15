@@ -31,13 +31,6 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe "#password_required?" do
-    subject { build(:user) }
-    it "is expected to be false" do
-      expect(subject.password_required?).to be false
-    end
-  end
-
   describe "#admin?" do
     it "is expected to be true when the user has an admin profile" do
       user = create(:user, :admin)
@@ -97,6 +90,20 @@ RSpec.describe User, type: :model do
       user = create(:user)
 
       expect(user.early_career_teacher?).to be false
+    end
+  end
+
+  describe "#lead_provider?" do
+    it "is expected to be true when the user has a lead provider profile" do
+      user = create(:user, :lead_provider)
+
+      expect(user.lead_provider?).to be true
+    end
+
+    it "is expected to be false when the user does not have a lead provider profile" do
+      user = create(:user)
+
+      expect(user.lead_provider?).to be false
     end
   end
 end
