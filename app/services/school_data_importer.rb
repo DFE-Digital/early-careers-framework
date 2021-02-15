@@ -95,7 +95,7 @@ private
 
     if school_local_authority.new_record?
       school_local_authority.start_year = start_year
-      SchoolLocalAuthority.find_by(school: school, end_year: nil)&.update!(end_year: start_year)
+      SchoolLocalAuthority.latest.find_by(school: school)&.update!(end_year: start_year)
     end
 
     school_local_authority.save!
@@ -109,7 +109,7 @@ private
 
     if school_lad.new_record?
       school_lad.start_year = start_year
-      SchoolLocalAuthorityDistrict.find_by(school: school, end_year: nil)&.update!(end_year: start_year)
+      SchoolLocalAuthorityDistrict.latest.find_by(school: school)&.update!(end_year: start_year)
     end
 
     school_lad.save!
