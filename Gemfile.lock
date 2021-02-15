@@ -67,6 +67,7 @@ GEM
     ast (2.4.1)
     bcrypt (3.1.16)
     bindex (0.8.1)
+    blueprinter (0.25.2)
     bootsnap (1.5.1)
       msgpack (~> 1.0)
     builder (3.2.4)
@@ -350,6 +351,7 @@ PLATFORMS
 
 DEPENDENCIES
   ar-uuid (~> 0.2.1)
+  blueprinter
   bootsnap (>= 1.1.0)
   byebug
   canonical-rails (>= 0.2.11)

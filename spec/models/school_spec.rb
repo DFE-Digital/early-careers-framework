@@ -179,4 +179,17 @@ RSpec.describe School, type: :model do
       expect(School.with_pupil_premium_uplift(2021)).not_to include(not_uplifted_school)
     end
   end
+
+  describe "School.search_by_name_or_urn" do
+    let!(:school_1) { create(:school, name: "foooschool", urn: "666666") }
+    let!(:school_2) { create(:school, name: "barschool", urn: "99999") }
+
+    it "searches correctly by partial urn" do
+      expect(School.search_by_name_or_urn("foo").first).eql?(school_1)
+    end
+
+    it "searches correctly by partial name" do
+      expect(School.search_by_name_or_urn("999").first).eql?(school_2)
+    end
+  end
 end
