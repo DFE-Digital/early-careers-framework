@@ -34,15 +34,8 @@ describe("Example tests", () => {
   });
 
   it("should not be editable when logged in as non-admin user", () => {
-    cy.appFactories([
-      ["create", "user"],
-      ["create", "course_lesson"],
-    ]).then(([user]) => {
-      Cypress.config("user", user);
-      cy.visit(`/users/confirm_sign_in?login_token=${user.login_token}`);
-    });
-
-    cy.get('[action="/users/sign_in_with_token"] [name="commit"]').click();
+    cy.appFactories([["create", "course_lesson"]]);
+    cy.login();
 
     cy.get("h1").should("contain", "User dashboard");
 
@@ -64,17 +57,9 @@ describe("Example tests", () => {
   });
 
   it("should be editable when logged in as admin user", () => {
-    cy.appFactories([
-      ["create", "user", "admin"],
-      ["create", "course_lesson"],
-    ]).then(([user]) => {
-      Cypress.config("user", user);
-      cy.visit(`/users/confirm_sign_in?login_token=${user.login_token}`);
-    });
+    cy.appFactories([["create", "course_lesson"]]);
+    cy.login("admin")
 
-    cy.get('[action="/users/sign_in_with_token"] [name="commit"]').click();
-
-    // Sometimes factorybot fails to create an admin user and this fails
     cy.get("h1").should("contain", "Suppliers");
 
     cy.get("#navigation").contains("Core Induction Programme").click();
