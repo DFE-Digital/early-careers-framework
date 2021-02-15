@@ -21,50 +21,35 @@ describe("Meta test helper tests", () => {
   it("should have factory_bot helper functions", () => {
     cy.app("clean");
 
-    cy.appFactories([["create", "course_lesson"]]).as("courseLesson");
+    cy.appFactories([["create", "lead_provider"]]).as("leadProvider");
 
-    cy.login();
+    cy.login('admin');
 
-    cy.visit("/core-induction-programme");
-
-    cy.get('[href*="/core-induction-programme/years"]')
-      .contains("Test Course year")
-      .click();
-
-    cy.get('[href*="/modules/"]').contains("Test Course module").click();
-
-    cy.get("@courseLesson").then(([course]) => {
-      cy.url().should("contain", `/modules/${course.course_module_id}`);
+    cy.get('@leadProvider').should(([provider]) => {
+      expect(provider.name).to.equal('Lead Provider');
     });
 
-    cy.get('[href*="/lessons/"]').contains("Test Course lesson").click();
-
-    cy.get("@courseLesson").then(([course]) => {
-      cy.url().should("contain", `/lessons/${course.id}`);
-    });
-
-    cy.get("h1").should("contain", "Test Course lesson");
-    cy.get(".govuk-govspeak").should("contain", "No content");
+    // @todo this test needs fleshing out when there's more functionality
+    cy.get('.govuk-link').contains('Lead Provider');
   });
 
   it("should have a cleanable database", () => {
     cy.app("clean");
 
     cy.appFactories([
-      ["create", "course_lesson"],
-      ["create", "course_lesson"],
-      ["create", "course_lesson"],
+      ["create", "lead_provider"],
+      ["create", "lead_provider"],
+      ["create", "lead_provider"],
     ]);
 
-    cy.visit("/core-induction-programme");
+    cy.login('admin');
 
-    cy.get('.govuk-link:contains("Test Course year")').should("have.length", 3);
+    cy.get('.govuk-link:contains("Lead Provider")').should("have.length", 3);
 
     cy.app("clean");
 
-    cy.reload();
+    cy.login('admin');
 
-    cy.get('.govuk-link:contains("Test Course year")').should("have.length", 0);
-    cy.contains('No course years were found!');
+    cy.get('.govuk-link:contains("Lead Provider")').should("have.length", 0);
   });
 });

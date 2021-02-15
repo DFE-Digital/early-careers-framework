@@ -33,7 +33,7 @@ describe("Example tests", () => {
     cy.get("a").contains("Test Course lesson").click();
   });
 
-  it("should not be editable when logged in as non-admin user", () => {
+  it.skip("should not be editable when logged in as non-admin user", () => {
     cy.appFactories([["create", "course_lesson"]]);
     cy.login();
 
@@ -56,7 +56,7 @@ describe("Example tests", () => {
     cy.contains("Edit lesson content").should("not.exist");
   });
 
-  it("should be editable when logged in as admin user", () => {
+  it.skip("should be editable when logged in as admin user", () => {
     cy.appFactories([["create", "course_lesson"]]);
     cy.login("admin")
 
