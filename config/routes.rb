@@ -102,19 +102,5 @@ Rails.application.routes.draw do
 
   resource :school_search, only: %i[show create], path: "school-search", controller: :school_search
 
-<<<<<<< HEAD
-  resource :core_induction_programme, controller: :core_induction_programme, only: :show, as: "cip", path: "/core-induction-programme" do
-    get "download-export", to: "core_induction_programme#download_export", as: "download_export"
-
-    resources :years, controller: "core_induction_programme/years", only: %i[show edit update] do
-      resources :modules, controller: "core_induction_programme/modules", only: %i[show edit update] do
-        resources :lessons, controller: "core_induction_programme/lessons", only: %i[show edit update]
-      end
-    end
-  end
-
-  root to: "registrations/start#index"
-=======
-  root to: "pages#home"
->>>>>>> develop
+  root "registrations/start#index"
 end
