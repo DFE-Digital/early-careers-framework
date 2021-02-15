@@ -1,5 +1,4 @@
 import accessibleAutocomplete from "accessible-autocomplete";
-import "whatwg-fetch";
 
 const element = document.querySelector("#school-search-form-autocomplete");
 const id = "school-search-form-input";
