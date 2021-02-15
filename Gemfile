@@ -6,7 +6,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby File.read(".ruby-version").chomp
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 6.1.0"
+gem "rails", "~> 6.1.2", ">= 6.1.2.1"
 
 gem "devise", ">= 4.7.3"
 gem "kaminari", ">= 1.2.0"
@@ -34,7 +34,7 @@ gem "bootsnap", ">= 1.1.0", require: false
 gem "foreman"
 
 # Canonical meta tag
-gem "canonical-rails", ">= 0.2.10"
+gem "canonical-rails", ">= 0.2.11"
 
 gem "listen", ">= 3.0.5", "< 3.4"
 
@@ -44,7 +44,7 @@ gem "mail-notify", ">= 1.0.3"
 # do not rely on host's timezone data, which can be inconsistent
 gem "tzinfo-data"
 
-gem "govuk-components", ">= 1.0.0"
+gem "govuk-components", ">= 1.0.2"
 gem "govuk_design_system_formbuilder", "~> 2.1", ">= 2.1.5"
 gem "httpclient"
 gem "view_component", require: "view_component/engine"
