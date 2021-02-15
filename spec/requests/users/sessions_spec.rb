@@ -5,6 +5,24 @@ require "rails_helper"
 RSpec.describe "Users::Sessions", type: :request do
   let(:user) { create(:user) }
 
+  describe "GET /users/sign_in" do
+    it "renders the sign in page" do
+      get "/users/sign_in"
+
+      expect(response).to render_template(:new)
+    end
+
+    context "when already signed in" do
+      before { sign_in user }
+
+      it "redirects to the dashboard" do
+        get "/users/sign_in"
+
+        expect(response).to redirect_to "/dashboard"
+      end
+    end
+  end
+
   describe "POST /users/sign_in" do
     context "when sign in email has been sent" do
       it "renders the login_email_sent template" do
@@ -28,12 +46,71 @@ RSpec.describe "Users::Sessions", type: :request do
       expect(assigns(:login_token)).to eq(user.login_token)
       expect(response).to render_template(:redirect_from_magic_link)
     end
+
+    it "redirects to sign in when the token doesn't match" do
+      get "/users/confirm_sign_in?login_token=aaaaaaaaaa"
+
+      expect(response).to redirect_to "/users/sign_in"
+      expect(flash[:alert]).to eq "There was an error while logging you in. Please enter your email again."
+    end
+
+    context "when the token has expired" do
+      before { user.update!(login_token_valid_until: 1.hour.ago) }
+
+      it "redirects to sign in" do
+        get "/users/confirm_sign_in?login_token=#{user.login_token}"
+
+        expect(response).to redirect_to "/users/sign_in"
+        expect(flash[:alert]).to eq "There was an error while logging you in. Please enter your email again."
+      end
+    end
+
+    context "when already signed in" do
+      before { sign_in user }
+
+      it "redirects to the dashboard" do
+        get "/users/confirm_sign_in?login_token=aaaaaaaaaa"
+
+        expect(response).to redirect_to "/dashboard"
+      end
+    end
   end
 
   describe "POST /users/sign_in_with_token" do
-    it "redirects to dashboard on successful login" do
-      post "/users/sign_in_with_token", params: { login_token: user.login_token }
-      expect(response).to redirect_to(dashboard_path)
+    context "when user is an ECT" do
+      let(:user) { create(:user, :early_career_teacher) }
+
+      it "redirects to dashboard on successful login" do
+        post "/users/sign_in_with_token", params: { login_token: user.login_token }
+        expect(response).to redirect_to(dashboard_path)
+      end
+    end
+
+    context "when user is an induction coordinator" do
+      let(:user) { create(:user, :induction_coordinator) }
+
+      it "redirects to dashboard on successful login" do
+        post "/users/sign_in_with_token", params: { login_token: user.login_token }
+        expect(response).to redirect_to(dashboard_path)
+      end
+    end
+
+    context "when user is a lead provider" do
+      let(:user) { create(:user, :lead_provider) }
+
+      it "redirects to dashboard on successful login" do
+        post "/users/sign_in_with_token", params: { login_token: user.login_token }
+        expect(response).to redirect_to(dashboard_path)
+      end
+    end
+
+    context "when user is an delivery partner" do
+      let(:user) { create(:user, :delivery_partner) }
+
+      it "redirects to dashboard on successful login" do
+        post "/users/sign_in_with_token", params: { login_token: user.login_token }
+        expect(response).to redirect_to(dashboard_path)
+      end
     end
 
     context "when user is an admin" do

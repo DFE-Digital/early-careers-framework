@@ -1,5 +1,28 @@
 #!/bin/bash
 
+# Find an object to check against
+if git rev-parse --verify HEAD >/dev/null 2>&1
+then
+    # If we have a commit, use it
+    against=HEAD
+else
+    # If we don't, diff against empty object
+    against=4b825dc642cb6eb9a060e54bf8d69288fbee4904
+fi
+
+# Redirect output to stderr.
+exec 1>&2
+
+# Check changed files for an AWS keys
+KEY_ID=$(git diff --cached --name-only -z $against | xargs -0 cat | perl -nle'print $& if m{(?<![A-Z0-9])[A-Z0-9]{20}(?![A-Z0-9])}')
+KEY=$(git diff --cached --name-only -z $against | xargs -0 cat | perl -nle'print $& if m{(?<![A-Z0-9])[A-Z0-9]{20}(?![A-Z0-9])}')
+
+if [ "$KEY_ID" != "" -o "$KEY" != "" ]; then
+    echo "Found patterns for AWS_ACCESS_KEY_ID/AWS_SECRET_ACCESS_KEY"
+    echo "Please check your code and remove API keys."
+    exit 1
+fi
+
 # stash unstaged changes
 git diff > unstaged.diff
 git apply -R unstaged.diff
@@ -16,7 +39,6 @@ ESLINT_EXIT_CODE="$?"
 ((EXIT_CODE = RUBOCOP_EXIT_CODE ** 2 + ESLINT_EXIT_CODE ** 2))
 
 git add --update
-
 
 # Pop the unstaged changes
 git apply unstaged.diff

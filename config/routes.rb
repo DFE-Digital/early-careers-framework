@@ -100,13 +100,9 @@ Rails.application.routes.draw do
   get "/422", to: "errors#unprocessable_entity", via: :all
   get "/500", to: "errors#internal_server_error", via: :all
 
-  if Rails.env.development? || Rails.env.deployed_development?
-    get "/govspeak_test", to: "govspeak_test#show"
-    post "/govspeak_test", to: "govspeak_test#preview"
-  end
-
   resource :school_search, only: %i[show create], path: "school-search", controller: :school_search
 
+<<<<<<< HEAD
   resource :core_induction_programme, controller: :core_induction_programme, only: :show, as: "cip", path: "/core-induction-programme" do
     get "download-export", to: "core_induction_programme#download_export", as: "download_export"
 
@@ -118,4 +114,7 @@ Rails.application.routes.draw do
   end
 
   root to: "registrations/start#index"
+=======
+  root to: "pages#home"
+>>>>>>> develop
 end

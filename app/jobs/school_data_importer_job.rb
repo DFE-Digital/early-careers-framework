@@ -7,6 +7,6 @@ class SchoolDataImporterJob < CronJob
 
   def perform
     Rails.logger.info "Importing school data..."
-    SchoolDataImporter.new.run
+    SchoolDataImporter.new(logger: Rails.logger).run
   end
 end
