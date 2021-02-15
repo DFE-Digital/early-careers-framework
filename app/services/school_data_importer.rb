@@ -5,16 +5,22 @@ require "csv"
 
 class SchoolDataImporter
   attr_reader :logger
+  attr_reader :start_year
 
-  def initialize(logger)
+  def initialize(logger, start_year = Time.zone.now.year)
     @logger = logger
+    @start_year = start_year
   end
 
   # TODO: Register and Partner 147: Figure out how exactly we want to handle school updating
   def run
     CSV.foreach(schools_data_file.path, headers: true, encoding: "ISO-8859-1:UTF-8") do |row|
       school = row_to_school(row)
-      school.save!
+      local_authority = row_to_local_authority(row)
+      local_authority_district = row_to_lad(row)
+
+      link_school_to_local_authority(school, local_authority)
+      link_school_to_lad(school, local_authority_district)
     end
   end
 
@@ -30,12 +36,7 @@ private
   end
 
   def row_to_school(row)
-    local_authority = row_to_local_authority(row)
-    local_authority_district = row_to_lad(row)
-
     school = School.find_or_initialize_by(urn: row.fetch("URN"))
-    school.local_authority = local_authority
-    school.local_authority_district = local_authority_district
     school.name = row.fetch("EstablishmentName")
     school.school_type_code = row.fetch("TypeOfEstablishment (code)")
     school.school_type_name = row.fetch("TypeOfEstablishment (name)")
@@ -59,6 +60,7 @@ private
     school.domains = [dummy_domain]
     school.primary_contact_email = "main.email@#{dummy_domain}"
     school.secondary_contact_email = "secondary.email@#{dummy_domain}"
+    school.save!
     school
   end
 
@@ -86,5 +88,30 @@ private
     local_authority_district.name = row_lad_name
     local_authority_district.save!
     local_authority_district
+  end
+
+  def link_school_to_local_authority(school, local_authority)
+    school_local_authority = SchoolLocalAuthority.find_or_initialize_by(school: school, local_authority: local_authority)
+
+    if school_local_authority.new_record?
+      school_local_authority.start_year = start_year
+      SchoolLocalAuthority.latest.find_by(school: school)&.update!(end_year: start_year)
+    end
+
+    school_local_authority.save!
+  end
+
+  def link_school_to_lad(school, lad)
+    school_lad = SchoolLocalAuthorityDistrict.find_or_initialize_by(
+      school: school,
+      local_authority_district: lad,
+    )
+
+    if school_lad.new_record?
+      school_lad.start_year = start_year
+      SchoolLocalAuthorityDistrict.latest.find_by(school: school)&.update!(end_year: start_year)
+    end
+
+    school_lad.save!
   end
 end

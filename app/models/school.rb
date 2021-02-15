@@ -5,9 +5,11 @@ class School < ApplicationRecord
 
   belongs_to :network, optional: true
 
-  # TODO: Register and Partner 150: Handle schools changing LAs and LADs
-  belongs_to :local_authority_district, optional: true
-  belongs_to :local_authority, optional: true
+  has_many :school_local_authorities
+  has_many :local_authorities, through: :school_local_authorities
+  has_many :school_local_authority_districts
+  has_many :local_authority_districts, through: :school_local_authority_districts
+
   has_one :partnership
   has_one :lead_provider, through: :partnership
   has_many :pupil_premiums
@@ -41,6 +43,14 @@ class School < ApplicationRecord
     unconfirmed_induction_coordinators
       &.where("users.confirmation_sent_at > ?", CONFIRMATION_WINDOW.hours.ago)
       &.any?
+  end
+
+  def local_authority
+    school_local_authorities.latest.first&.local_authority
+  end
+
+  def local_authority_district
+    school_local_authority_districts.latest.first&.local_authority_district
   end
 
   def pupil_premium_uplift?(start_year)
