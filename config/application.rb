@@ -37,6 +37,10 @@ module GovukRailsBoilerplate
       require_dependency(c)
     end
 
+    Dir.glob(Rails.root + "app/serializers/**/*_serializer*.rb").each do |c|
+      require_dependency(c)
+    end
+
     config.exceptions_app = routes
     config.action_dispatch.rescue_responses["Pundit::NotAuthorizedError"] = :forbidden
 
