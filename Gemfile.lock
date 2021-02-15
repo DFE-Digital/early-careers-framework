@@ -350,6 +350,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  addressable
   ar-uuid (~> 0.2.1)
   bootsnap (>= 1.1.0)
   byebug
