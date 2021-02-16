@@ -10,6 +10,7 @@ RSpec.describe SchoolSerializer do
 
     it "outputs correctly formatted serialized school" do
       expected_json_string = "{\"id\":\"#{school.id}\",\"full_address_formatted\":\"52634 Gloria Circle, Pagac Extensions, SE23 1SA\",\"name\":\"Western Armstrong\"}"
+
       expect(serialized_school).to eq expected_json_string
     end
   end
