@@ -14,10 +14,12 @@
         <p>
           <%= govuk_link_to "Clear filters", "?" %>
         </p>
-        <%= f.govuk_text_field(
-              :school_name,
-              value: @school_search_form.school_name,
-              label: {text: "School name or group", class: "govuk-label govuk-label--s"}) %>
+
+        <div class="govuk-form-group">
+          <label for="school-search-form-school-name-field" class="govuk-label govuk-label--s school-search-label">School name or group</label>
+          <div id="school-search-form-autocomplete" class="autocomplete-wrapper"></div>
+        </div>
+
         <%= f.govuk_text_field(
               :location,
               label: {text: "Location", class: "govuk-label govuk-label--s"},

@@ -22,6 +22,10 @@ Rails.application.routes.draw do
   resource :supplier_dashboard, controller: :supplier_dashboard, only: :show
   resource :school_invites, only: %i[show create]
 
+  namespace :api do
+    resources :school_search, only: %i[index]
+  end
+
   namespace :admin do
     resources :suppliers, only: %i[index new]
     scope "suppliers/new" do
