@@ -45,6 +45,11 @@ class School < ApplicationRecord
       &.any?
   end
 
+  def eligible?
+    # TODO: ECF-RP-130 - implement eligibility
+    true
+  end
+
   def local_authority
     school_local_authorities.latest.first&.local_authority
   end

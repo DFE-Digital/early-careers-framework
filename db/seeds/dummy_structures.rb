@@ -11,6 +11,8 @@ unless School.first
   SchoolLocalAuthority.find_or_create_by!(school: school2, local_authority: local_authority, start_year: Time.zone.now.year)
   SchoolLocalAuthorityDistrict.find_or_create_by!(school: school1, local_authority_district: local_authority_district, start_year: Time.zone.now.year)
   SchoolLocalAuthorityDistrict.find_or_create_by!(school: school2, local_authority_district: local_authority_district, start_year: Time.zone.now.year)
+
+  SchoolDataImporter.new(Rails.logger).delay.run
 end
 
 # TODO: Remove this when we have a way of adding lead providers, or expand to include all of them

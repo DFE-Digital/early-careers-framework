@@ -44,7 +44,8 @@ RSpec.describe "Users::Registrations /check-details", type: :request do
     end
 
     context "when the school is ineligible for the core induction programme" do
-      before { school.update(eligible: false) }
+      # TODO: ECF-RP-130 - update when eligiblity is implemented
+      before { allow_any_instance_of(School).to receive(:eligible?).and_return(false) }
       it "renders :school_not_eligible" do
         # When
         post "/users/check-details", params: { induction_coordinator_profile: {
