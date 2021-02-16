@@ -1,6 +1,6 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: new_user_session_path) %>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-  <% content_for :before_content, govuk_back_link(text: "Back", href: new_user_session_path) %>
   <%= form_with url: registrations_question_one_path, method: :post do |f| %>
     <%= f.govuk_collection_radio_buttons(
           :answer, @options, :id, :name,

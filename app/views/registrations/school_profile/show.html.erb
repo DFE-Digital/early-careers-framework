@@ -1,6 +1,6 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: registrations_question_two_path) %>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <% content_for :before_content, govuk_back_link(text: "Back", href: registrations_question_two_path) %>
     <h2 class="govuk-heading-l">What is your school Unique Reference Number(URN)?</h2>
     <%= form_for(:school, model: @school_profile_form, url: registrations_school_profile_path) do |f| %>
       <label class="govuk-hint">
