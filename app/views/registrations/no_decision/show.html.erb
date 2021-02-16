@@ -1,12 +1,10 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-  <% content_for :before_content, govuk_back_link(
-    text: "Back",
-    href: registrations_question_two_path)
-  %>
+    <% content_for :before_content, govuk_back_link(text: "Back", href: registrations_question_two_path) %>
     <h1 class="govuk-heading-l">You can register later</h1>
-    <p class="govuk-body">See our guidance for <a href="#">schools choosing an induction programme</a>.</p>
-    <p class="govuk-body">You can register when you are ready to confirm details about your induction programme.</p>
-    <p class="govuk-body">You must register by <span class="govuk-!-font-weight-bold">30 September</span> to start your induction programme.</p>
+    <!-- TODO: Update external link for guidance -->
+    <p>See our guidance for <a href="#">schools choosing an induction programme</a>.</p>
+    <p>You can register when you are ready to confirm details about your induction programme.</p>
+    <p>You must register by <span class="govuk-!-font-weight-bold">30 September</span> to start your induction programme.</p>
   </div>
 </div>
