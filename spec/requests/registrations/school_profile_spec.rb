@@ -24,7 +24,9 @@ RSpec.describe "Registrations::SchoolProfile", type: :request do
     end
 
     context "when the school is ineligible" do
-      before { school.update(eligible: false) }
+      before do
+        allow_any_instance_of(School).to receive(:eligible?).and_return(false)
+      end
 
       it "redirects to the school-not-eligible page" do
         post "/registrations/school-profile", params: { school: {
