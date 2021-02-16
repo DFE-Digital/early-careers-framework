@@ -8,5 +8,17 @@
     <div class="gem-c-govspeak govuk-govspeak ">
       <%= @course_lesson.content_to_html.html_safe %>
     </div>
+
+    <% if policy(@course_lesson).set_progress? %>
+      <%= form_with url: cip_year_module_lesson_progress_path(lesson_id: @course_lesson.id), method: :put do |f| %>
+        <%= f.govuk_collection_check_boxes(
+              :progress,
+              [OpenStruct.new(id: :complete, name: "I feel confident that I've read and understood this session")],
+              :id,
+              :name,
+              legend: {text: "That's the end of this session"}) %>
+        <%= f.govuk_submit "Complete session" %>
+      <% end %>
+    <% end %>
   </div>
 </div>

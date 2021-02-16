@@ -12,12 +12,12 @@
       <li>
         <p><strong>Topic materials</strong></p>
         <ul class="app-task-list__items">
-          <% if @course_module.course_lessons.each do |lesson| %>
+          <% if @course_lessons_with_progress.each do |lesson| %>
             <li class="app-task-list__item">
               <span>
                 <%= govuk_link_to lesson.title, cip_year_module_lesson_path(@course_module.course_year, @course_module, lesson) %>
               </span>
-              <strong class="govuk-tag app-task-list__tag">complete</strong>
+              <%= render ProgressLabelComponent.new progress: lesson.progress %>
             </li>
           <% end.empty? %>
           <p>No course lessons were found!</p>

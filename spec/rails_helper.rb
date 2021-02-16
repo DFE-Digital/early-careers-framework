@@ -15,6 +15,8 @@ Dir[Rails.root.join("spec/support/**/*.rb")].sort.each { |f| require f }
 require "devise"
 require "pundit/rspec"
 require "pundit/matchers"
+require "view_component/test_helpers"
+
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
 # run as spec files by default. This means that files in spec/support that end
@@ -80,6 +82,7 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include ActiveSupport::Testing::TimeHelpers
   config.include ActiveJob::TestHelper
+  config.include ViewComponent::TestHelpers, type: :component
 
   config.before :each do
     clear_enqueued_jobs

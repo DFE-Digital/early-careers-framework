@@ -5,11 +5,16 @@ class CoreInductionProgramme::LessonsController < ApplicationController
   include GovspeakHelper
   include CipBreadcrumbHelper
 
-  after_action :verify_authorized, except: :show
+  after_action :verify_authorized
   before_action :authenticate_user!, except: :show
   before_action :load_course_lesson
 
-  def show; end
+  def show
+    if @current_user&.early_career_teacher?
+      progress = CourseLessonProgress.find_or_create_by!(early_career_teacher_profile: @current_user.early_career_teacher_profile, course_lesson: @course_lesson)
+      progress.in_progress! if progress.not_started?
+    end
+  end
 
   def edit; end
 

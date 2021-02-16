@@ -16,4 +16,15 @@ class CourseModule < ApplicationRecord
   def content_to_html
     Govspeak::Document.new(content, options: { allow_extra_quotes: true }).to_html
   end
+
+  def lessons_with_progress(user)
+    ect_profile = user&.early_career_teacher_profile
+    return course_lessons unless ect_profile
+
+    user_progresses = CourseLessonProgress.where(early_career_teacher_profile: ect_profile, course_lesson: course_lessons).includes(:course_lesson)
+    course_lessons.map do |lesson|
+      lesson.progress = user_progresses.find { |progress| progress.course_lesson == lesson }&.progress || "not_started"
+      lesson
+    end
+  end
 end

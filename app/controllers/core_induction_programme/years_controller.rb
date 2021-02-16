@@ -5,7 +5,7 @@ class CoreInductionProgramme::YearsController < ApplicationController
   include GovspeakHelper
   include CipBreadcrumbHelper
 
-  after_action :verify_authorized, except: :show
+  after_action :verify_authorized
   before_action :authenticate_user!, except: :show
   before_action :load_course_year
 

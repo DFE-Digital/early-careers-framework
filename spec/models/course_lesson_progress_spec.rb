@@ -35,7 +35,7 @@ RSpec.describe CourseLessonProgress, type: :model do
       end
 
       it "updates a single lesson record" do
-        lesson_one_progress.update!(progress: "complete")
+        lesson_one_progress.complete!
         completed_lesson = teacher.course_lesson_progresses.find_by(course_lesson_id: lesson_one)
         expect(completed_lesson[:progress]).to eql("complete")
       end

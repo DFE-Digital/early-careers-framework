@@ -17,4 +17,8 @@ class CourseLessonPolicy < ApplicationPolicy
   def update?
     admin_only
   end
+
+  def set_progress?
+    user&.early_career_teacher?
+  end
 end

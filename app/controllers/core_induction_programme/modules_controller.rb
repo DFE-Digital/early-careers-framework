@@ -5,7 +5,7 @@ class CoreInductionProgramme::ModulesController < ApplicationController
   include GovspeakHelper
   include CipBreadcrumbHelper
 
-  after_action :verify_authorized, except: :show
+  after_action :verify_authorized
   before_action :authenticate_user!, except: :show
   before_action :load_course_module
 
@@ -29,6 +29,7 @@ private
     @course_module = CourseModule.find(params[:id])
     authorize @course_module
     @course_module.assign_attributes(course_module_params)
+    @course_lessons_with_progress = @course_module.lessons_with_progress @current_user
   end
 
   def course_module_params
