@@ -44,18 +44,24 @@ gem "mail-notify", ">= 1.0.3"
 # do not rely on host's timezone data, which can be inconsistent
 gem "tzinfo-data"
 
+# serialization gem that offers more features than active model serializer
+gem "blueprinter"
+
 gem "govuk-components", ">= 1.0.2"
 gem "govuk_design_system_formbuilder", "~> 2.1", ">= 2.1.5"
 gem "httpclient"
 gem "view_component", require: "view_component/engine"
 
 # Database based asynchronous priority queue system
+gem "daemons"
 gem "delayed_cron_job"
 gem "delayed_job_active_record"
 
 platform :mswin, :mingw, :x64_mingw do
   gem "wdm", ">= 0.1.0"
 end
+
+gem "addressable"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

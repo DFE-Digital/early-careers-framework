@@ -188,6 +188,28 @@ ActiveRecord::Schema.define(version: 2021_02_10_111857) do
     t.index ["school_id"], name: "index_pupil_premiums_on_school_id"
   end
 
+  create_table "school_local_authorities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "school_id", null: false
+    t.uuid "local_authority_id", null: false
+    t.integer "start_year", limit: 2, null: false
+    t.integer "end_year", limit: 2
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["local_authority_id"], name: "index_school_local_authorities_on_local_authority_id"
+    t.index ["school_id"], name: "index_school_local_authorities_on_school_id"
+  end
+
+  create_table "school_local_authority_districts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "school_id", null: false
+    t.uuid "local_authority_district_id", null: false
+    t.integer "start_year", limit: 2, null: false
+    t.integer "end_year", limit: 2
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["local_authority_district_id"], name: "index_schools_lads_on_lad_id"
+    t.index ["school_id"], name: "index_school_local_authority_districts_on_school_id"
+  end
+
   create_table "schools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -195,8 +217,6 @@ ActiveRecord::Schema.define(version: 2021_02_10_111857) do
     t.string "name", null: false
     t.string "school_type_code"
     t.integer "capacity"
-    t.boolean "high_pupil_premium", default: false, null: false
-    t.boolean "is_rural", default: false, null: false
     t.string "address_line1", null: false
     t.string "address_line2"
     t.string "address_line3"
@@ -205,9 +225,6 @@ ActiveRecord::Schema.define(version: 2021_02_10_111857) do
     t.string "postcode", null: false
     t.uuid "network_id"
     t.string "domains", default: [], null: false, array: true
-    t.boolean "eligible", default: true, null: false
-    t.uuid "local_authority_district_id"
-    t.uuid "local_authority_id"
     t.string "school_type_name"
     t.string "ukprn"
     t.string "previous_school_urn"
@@ -218,10 +235,6 @@ ActiveRecord::Schema.define(version: 2021_02_10_111857) do
     t.string "school_status_name"
     t.string "secondary_contact_email"
     t.string "primary_contact_email"
-    t.index ["high_pupil_premium"], name: "index_schools_on_high_pupil_premium", where: "high_pupil_premium"
-    t.index ["is_rural"], name: "index_schools_on_is_rural", where: "is_rural"
-    t.index ["local_authority_district_id"], name: "index_schools_on_local_authority_district_id"
-    t.index ["local_authority_id"], name: "index_schools_on_local_authority_id"
     t.index ["name"], name: "index_schools_on_name"
     t.index ["network_id"], name: "index_schools_on_network_id"
     t.index ["urn"], name: "index_schools_on_urn", unique: true
@@ -268,7 +281,9 @@ ActiveRecord::Schema.define(version: 2021_02_10_111857) do
   add_foreign_key "provider_relationships", "delivery_partners"
   add_foreign_key "provider_relationships", "lead_providers"
   add_foreign_key "pupil_premiums", "schools"
-  add_foreign_key "schools", "local_authorities"
-  add_foreign_key "schools", "local_authority_districts"
+  add_foreign_key "school_local_authorities", "local_authorities"
+  add_foreign_key "school_local_authorities", "schools"
+  add_foreign_key "school_local_authority_districts", "local_authority_districts"
+  add_foreign_key "school_local_authority_districts", "schools"
   add_foreign_key "schools", "networks"
 end

@@ -12,18 +12,22 @@ RSpec.describe School, type: :model do
           address_line1: "Test address London",
           country: "England",
           postcode: "TEST2",
-          local_authority: FactoryBot.create(:local_authority),
-          local_authority_district: FactoryBot.create(:local_authority_district),
         )
       }.to change { School.count }.by(1)
     end
+  end
 
+  describe "associations" do
     it { is_expected.to have_one(:partnership) }
     it { is_expected.to have_one(:lead_provider).through(:partnership) }
     it { is_expected.to have_and_belong_to_many(:induction_coordinator_profiles) }
     it { is_expected.to have_many(:early_career_teacher_profiles) }
     it { is_expected.to have_many(:early_career_teachers).through(:early_career_teacher_profiles) }
     it { is_expected.to have_many(:pupil_premiums) }
+    it { is_expected.to have_many(:school_local_authorities) }
+    it { is_expected.to have_many(:local_authorities).through(:school_local_authorities) }
+    it { is_expected.to have_many(:school_local_authority_districts) }
+    it { is_expected.to have_many(:local_authority_districts).through(:school_local_authority_districts) }
   end
 
   describe "#not_registered?" do
@@ -177,6 +181,19 @@ RSpec.describe School, type: :model do
     it "returns uplifted schools" do
       expect(School.with_pupil_premium_uplift(2021)).to include(uplifted_school)
       expect(School.with_pupil_premium_uplift(2021)).not_to include(not_uplifted_school)
+    end
+  end
+
+  describe "School.search_by_name_or_urn" do
+    let!(:school_1) { create(:school, name: "foooschool", urn: "666666") }
+    let!(:school_2) { create(:school, name: "barschool", urn: "99999") }
+
+    it "searches correctly by partial urn" do
+      expect(School.search_by_name_or_urn("foo").first).eql?(school_1)
+    end
+
+    it "searches correctly by partial name" do
+      expect(School.search_by_name_or_urn("999").first).eql?(school_2)
     end
   end
 end
