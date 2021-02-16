@@ -19,8 +19,6 @@ describe("Meta test helper tests", () => {
   });
 
   it("should have factory_bot helper functions", () => {
-    cy.app("clean");
-
     cy.appFactories([["create", "lead_provider"]]).as("leadProvider");
 
     cy.login('admin');
@@ -34,8 +32,6 @@ describe("Meta test helper tests", () => {
   });
 
   it("should have a cleanable database", () => {
-    cy.app("clean");
-
     cy.appFactories([
       ["create", "lead_provider"],
       ["create", "lead_provider"],
@@ -48,6 +44,12 @@ describe("Meta test helper tests", () => {
 
     cy.app("clean");
 
+    cy.login('admin');
+
+    cy.get('.govuk-link:contains("Lead Provider")').should("have.length", 0);
+  });
+
+  it("should start with a clean database", () => {
     cy.login('admin');
 
     cy.get('.govuk-link:contains("Lead Provider")').should("have.length", 0);
