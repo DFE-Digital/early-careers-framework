@@ -8,6 +8,9 @@ class User < ApplicationRecord
   has_one :admin_profile
 
   has_one :early_career_teacher_profile
+
+  has_one :mentor_profile
+
   has_one :core_induction_programme, through: :early_career_teacher_profile
   has_many :course_years, through: :core_induction_programme
 
@@ -24,5 +27,9 @@ class User < ApplicationRecord
 
   def early_career_teacher?
     early_career_teacher_profile.present?
+  end
+
+  def mentor?
+    mentor_profile.present?
   end
 end

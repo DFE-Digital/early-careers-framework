@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_10_120844) do
+ActiveRecord::Schema.define(version: 2021_02_15_121631) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -103,8 +103,10 @@ ActiveRecord::Schema.define(version: 2021_02_10_120844) do
     t.uuid "cohort_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.uuid "mentor_profile_id"
     t.index ["cohort_id"], name: "index_early_career_teacher_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_ect_profiles_on_core_induction_programme_id"
+    t.index ["mentor_profile_id"], name: "index_early_career_teacher_profiles_on_mentor_profile_id"
     t.index ["user_id"], name: "index_early_career_teacher_profiles_on_user_id"
   end
 
@@ -113,6 +115,13 @@ ActiveRecord::Schema.define(version: 2021_02_10_120844) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_induction_coordinator_profiles_on_user_id"
+  end
+
+  create_table "mentor_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_mentor_profiles_on_user_id"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -145,6 +154,8 @@ ActiveRecord::Schema.define(version: 2021_02_10_120844) do
   add_foreign_key "course_years", "core_induction_programmes"
   add_foreign_key "early_career_teacher_profiles", "cohorts"
   add_foreign_key "early_career_teacher_profiles", "core_induction_programmes"
+  add_foreign_key "early_career_teacher_profiles", "mentor_profiles"
   add_foreign_key "early_career_teacher_profiles", "users"
   add_foreign_key "induction_coordinator_profiles", "users"
+  add_foreign_key "mentor_profiles", "users"
 end

@@ -9,15 +9,19 @@ FactoryBot.define do
     login_token_valid_until { 1.hour.from_now }
 
     trait :admin do
-      admin_profile
+      admin_profile { build(:admin_profile) }
     end
 
     trait :induction_coordinator do
-      induction_coordinator_profile
+      induction_coordinator_profile { build(:induction_coordinator_profile) }
     end
 
     trait :early_career_teacher do
-      early_career_teacher_profile
+      early_career_teacher_profile { build(:early_career_teacher_profile) }
+    end
+
+    trait :mentor do
+      mentor_profile { build(:mentor_profile) }
     end
   end
 end
