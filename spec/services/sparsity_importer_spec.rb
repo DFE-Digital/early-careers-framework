@@ -45,6 +45,12 @@ RSpec.describe PupilPremiumImporter do
       expect(LocalAuthorityDistrict.find_by(code: "E07000026").district_sparsities.count).to be 1
     end
 
+    it "does not update start_year for additional years" do
+      SparsityImporter.new(Logger.new($stdout), start_year + 1, example_csv_file).run
+
+      expect(LocalAuthorityDistrict.find_by(code: "E07000026").district_sparsities.first.start_year).to be start_year
+    end
+
     it "sets the end year for districts which are no longer sparse" do
       previously_sparse_lad = LocalAuthorityDistrict.find_by(code: "E11111111")
       DistrictSparsity.create!(start_year: start_year - 1, local_authority_district: previously_sparse_lad)

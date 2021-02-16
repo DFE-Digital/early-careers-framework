@@ -16,14 +16,13 @@ class SparsityImporter
   def run
     DistrictSparsity.where(start_year: start_year).destroy_all
 
-    @previous_district_sparsities = DistrictSparsity.latest.to_a
-
-    CSV.foreach(data_file, headers: true, encoding: "ISO-8859-1:UTF-8") do |row|
-      new_district = update_lad_sparsity(row)
-      @previous_district_sparsities.delete_if { |old_district| old_district.local_authority_district == new_district.local_authority_district }
+    latest_sparse_districts.each do |lad_code|
+      update_lad_sparsity(lad_code)
     end
 
-    @previous_district_sparsities.each { |district_sparsity| district_sparsity.update!(end_year: start_year) }
+    districts_no_longer_sparse.each do |district_sparsity|
+      district_sparsity.update!(end_year: start_year)
+    end
   end
 
 private
@@ -32,8 +31,7 @@ private
     source_file || Rails.root.join("data/sparse_lads.csv")
   end
 
-  def update_lad_sparsity(row)
-    lad_code = row.fetch("LAD_CODE")
+  def update_lad_sparsity(lad_code)
     lad = LocalAuthorityDistrict.find_by(code: lad_code)
     logger.info "Could not find lad with code #{lad_code}" and return unless lad
 
@@ -41,5 +39,16 @@ private
     district_sparsity.start_year ||= start_year
     district_sparsity.save!
     district_sparsity
+  end
+
+  def districts_no_longer_sparse
+    DistrictSparsity.latest
+                    .joins(:local_authority_district)
+                    .where.not(local_authority_district: { code: latest_sparse_districts })
+  end
+
+  def latest_sparse_districts
+    @csv ||= CSV.read(data_file, headers: true, encoding: "ISO-8859-1:UTF-8")
+    @csv["LAD_CODE"]
   end
 end

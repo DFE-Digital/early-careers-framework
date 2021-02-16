@@ -249,7 +249,7 @@ RSpec.describe School, type: :model do
       expect(School.with_sparsity_uplift(2020)).to include(previously_sparse_school)
     end
   end
-  
+
   describe "School.search_by_name_or_urn" do
     let!(:school_1) { create(:school, name: "foooschool", urn: "666666") }
     let!(:school_2) { create(:school, name: "barschool", urn: "99999") }
