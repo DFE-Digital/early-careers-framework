@@ -17,15 +17,17 @@ function suggest(query, populateResults) {
     .then((data) => populateResults(data));
 }
 
-accessibleAutocomplete({
-  element,
-  id,
-  source: suggest,
-  showNoOptionsFound: false,
-  minLength: 1,
-  name: "school_search_form[school_name]",
-  templates: {
-    inputValue: inputValueTemplate,
-    suggestion: suggestionTemplate,
-  },
-});
+if (element) {
+  accessibleAutocomplete({
+    element,
+    id,
+    source: suggest,
+    showNoOptionsFound: false,
+    minLength: 1,
+    name: "school_search_form[school_name]",
+    templates: {
+      inputValue: inputValueTemplate,
+      suggestion: suggestionTemplate,
+    },
+  });
+}
