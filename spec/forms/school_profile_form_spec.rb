@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe SchoolProfileForm, type: :model, with_audited: true do
+RSpec.describe SchoolProfileForm, type: :model do
   describe "validations" do
     it { is_expected.to validate_presence_of(:urn).with_message("Enter a school URN") }
 

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe FindSchoolForm, type: :model, with_audited: true do
+RSpec.describe FindSchoolForm, type: :model do
   describe "validations" do
     it { is_expected.to validate_presence_of(:search_type).with_message("Please select an option") }
     [

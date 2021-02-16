@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe SchoolSearchForm, type: :model, with_audited: true do
+RSpec.describe SchoolSearchForm, type: :model do
   describe "find_schools" do
     let!(:schools) do
       [create(:school, name: "Test school one", urn: "1234567"),
