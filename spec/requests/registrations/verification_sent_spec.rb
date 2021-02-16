@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Registrations::VerificationSent", type: :request do 
+RSpec.describe "Registrations::VerificationSent", type: :request do
   describe "GET /registrations/verification-sent" do
     it "renders the show template" do
       get "/registrations/verification-sent"

@@ -9,15 +9,18 @@ class Registrations::UserProfileController < Registrations::SchoolProfileControl
   end
 
   def create
+    @user = User.new(user_params)
+
     ActiveRecord::Base.transaction do
-      @user = User.find_or_create_by!(email: user_params[:email]) do |user|
-        user.full_name = user_params[:full_name]
-      end
+      @user.save!
       @school.induction_coordinator_profiles.destroy_all
       InductionCoordinatorProfile.create!(user: @user, schools: [@school])
-      session.delete(:school_id)
-      redirect_to :registrations_verification_sent
     end
+
+    session.delete(:school_id)
+    redirect_to :registrations_verification_sent
+  rescue ActiveRecord::RecordInvalid
+    render :new
   end
 
 private
