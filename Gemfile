@@ -76,6 +76,7 @@ group :development, :test do
 
   # Testing framework
   gem "rspec-rails", "~> 4.0.1"
+
   gem "cypress-on-rails", "~> 1.0"
   gem "database_cleaner-active_record"
 
