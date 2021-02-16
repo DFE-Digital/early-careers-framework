@@ -1,0 +1,16 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+  <% content_for :before_content, govuk_back_link(
+    text: "Back",
+    href: new_user_session_path)
+  %>
+
+    <h1 class="govuk-heading-l">You do not have an account</h1>
+    <h2 class="govuk-heading-m">School coordinators or leads</h2>
+    <p class="govuk-!-margin-top-25">If you are responsible for running induction, <%= govuk_link_to "Register your school", registrations_question_one_path %>.</p>
+    <h2 class="govuk-heading-m">New teachers</h2>
+    <p class="govuk-!-margin-top-25">You will be registered by your school before induction starts. Contact your school coordinator.</p>
+    <h2 class="govuk-heading-m">Training providers</h2>
+    <p class="govuk-!-margin-top-25">The Department of Education creates your account.<br>Contact: <%= mail_to "ecf-support@digital.education.gov.uk" %></p>
+  </div>
+</div>
