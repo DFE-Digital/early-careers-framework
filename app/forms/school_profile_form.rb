@@ -6,7 +6,6 @@ class SchoolProfileForm
   attr_accessor :urn
 
   validates :urn, presence: { message: "Enter a school URN" }
-
   validate :urn_matches_school
 
 private
