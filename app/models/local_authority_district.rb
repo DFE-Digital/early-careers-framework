@@ -12,4 +12,9 @@ class LocalAuthorityDistrict < ApplicationRecord
       district_sparsities.for_year(year).any?
     end
   end
+
+  scope :only_with_uplift, lambda { |year|
+    joins(:district_sparsities)
+      .merge(DistrictSparsity.for_year(year))
+  }
 end

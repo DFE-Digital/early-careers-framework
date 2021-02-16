@@ -212,12 +212,41 @@ RSpec.describe School, type: :model do
   end
 
   describe "scope :with_pupil_premium_uplift" do
-    let(:uplifted_school) { create(:school, :pupil_premium_uplift) }
-    let(:not_uplifted_school) { create(:school, pupil_premiums: [build(:pupil_premium, :not_eligible)]) }
+    let!(:uplifted_school) { create(:school, :pupil_premium_uplift) }
+    let!(:not_uplifted_school) { create(:school, pupil_premiums: [build(:pupil_premium, :not_eligible)]) }
 
     it "returns uplifted schools" do
       expect(School.with_pupil_premium_uplift(2021)).to include(uplifted_school)
       expect(School.with_pupil_premium_uplift(2021)).not_to include(not_uplifted_school)
+    end
+  end
+
+  describe "scope :with_sparsity_uplift" do
+    let!(:sparse_school) { create(:school, :sparsity_uplift) }
+    let(:previously_sparse_district) do
+      build(:local_authority_district, district_sparsities: [build(:district_sparsity, start_year: 2020, end_year: 2021)])
+    end
+    let!(:previously_sparse_school) do
+      create(:school, school_local_authority_districts: [
+        build(:school_local_authority_district, local_authority_district: previously_sparse_district),
+      ])
+    end
+    let!(:not_sparse_school) { create(:school) }
+
+    it "includes sparse schools" do
+      expect(School.with_sparsity_uplift(2021)).to include(sparse_school)
+    end
+
+    it "does not include previously sparse schools" do
+      expect(School.with_sparsity_uplift(2021)).not_to include(previously_sparse_school)
+    end
+
+    it "does not include not sparse schools" do
+      expect(School.with_sparsity_uplift(2021)).not_to include(not_sparse_school)
+    end
+
+    it "includes previously sparse schools for the correct year" do
+      expect(School.with_sparsity_uplift(2020)).to include(previously_sparse_school)
     end
   end
 end

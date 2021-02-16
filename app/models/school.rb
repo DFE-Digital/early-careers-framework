@@ -71,6 +71,11 @@ class School < ApplicationRecord
       .merge(PupilPremium.only_with_uplift(start_year))
   }
 
+  scope :with_sparsity_uplift, lambda { |year|
+    joins(:school_local_authority_districts, :local_authority_districts)
+      .merge(LocalAuthorityDistrict.only_with_uplift(year))
+  }
+
 private
 
   def unconfirmed_induction_coordinators
