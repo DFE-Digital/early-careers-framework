@@ -1,0 +1,64 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: registrations_school_profile_path) %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h2 class="govuk-heading-l">Confirm your details</h2>
+    <h3 class="govuk-heading-m">School</h3>
+    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          School
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @school.name %>
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          URN
+        </dt>
+        <dd class="govuk-summary-list__value">
+        <%= @school.urn %>
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Address
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @school.address_line1 %> <br>
+          <%= @school.address_line2 %> <br>
+          <%= @school.address_line3 %> <br>
+          <%= @school.address_line4 %> <br>
+          <%= @school.postcode %>
+        </dd>
+      </div>
+    </dl>
+
+    <%= form_for(@user, url: registrations_user_profile_path) do |f| %>
+      <%= f.govuk_error_summary %>
+      <%= f.hidden_field :school_id, value: @school.id %>
+
+      <%= f.govuk_text_field(
+            :full_name,
+            width: 20,
+            label: { 
+              text: "Full name",
+              class: "govuk-label govuk-label--m"
+            })
+      %>
+
+      <%= f.govuk_email_field(
+            :email,
+            autocomplete: "email",
+            hint: { text: "If you need other colleagues to sign in, use an email you can all access." },
+            width: 20,
+            label: {
+              text: "Your school email address",
+              class: "govuk-label govuk-label--m"
+            })
+      %>
+
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>
