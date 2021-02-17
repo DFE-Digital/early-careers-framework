@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_10_111857) do
+ActiveRecord::Schema.define(version: 2021_02_12_163441) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -73,6 +73,15 @@ ActiveRecord::Schema.define(version: 2021_02_10_111857) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "name", null: false
+  end
+
+  create_table "district_sparsities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "local_authority_district_id", null: false
+    t.integer "start_year", limit: 2, null: false
+    t.integer "end_year", limit: 2
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["local_authority_district_id"], name: "index_district_sparsities_on_local_authority_district_id"
   end
 
   create_table "early_career_teacher_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -265,6 +274,7 @@ ActiveRecord::Schema.define(version: 2021_02_10_111857) do
   add_foreign_key "cohorts_lead_providers", "lead_providers"
   add_foreign_key "delivery_partner_profiles", "delivery_partners"
   add_foreign_key "delivery_partner_profiles", "users"
+  add_foreign_key "district_sparsities", "local_authority_districts"
   add_foreign_key "early_career_teacher_profiles", "cohorts"
   add_foreign_key "early_career_teacher_profiles", "core_induction_programmes"
   add_foreign_key "early_career_teacher_profiles", "schools"
