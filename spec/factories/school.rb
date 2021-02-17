@@ -13,5 +13,9 @@ FactoryBot.define do
     trait :pupil_premium_uplift do
       pupil_premiums { [build(:pupil_premium, :eligible)] }
     end
+
+    trait :sparsity_uplift do
+      school_local_authority_districts { [build(:school_local_authority_district, :sparse)] }
+    end
   end
 end

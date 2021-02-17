@@ -66,9 +66,18 @@ class School < ApplicationRecord
     pupil_premiums.find_by(start_year: start_year)&.uplift? || false
   end
 
+  def sparsity_uplift?(year = nil)
+    local_authority_district&.sparse?(year) || false
+  end
+
   scope :with_pupil_premium_uplift, lambda { |start_year|
     joins(:pupil_premiums)
       .merge(PupilPremium.only_with_uplift(start_year))
+  }
+
+  scope :with_sparsity_uplift, lambda { |year|
+    joins(:school_local_authority_districts, :local_authority_districts)
+      .merge(LocalAuthorityDistrict.only_with_uplift(year))
   }
 
 private
