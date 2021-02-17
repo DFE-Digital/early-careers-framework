@@ -26,6 +26,21 @@ Rails.application.routes.draw do
     resources :school_search, only: %i[index]
   end
 
+  namespace :registrations do
+    root to: "start#index"
+    resource :account_not_found, only: :show, controller: :account_not_found, path: "/account-not-found"
+    resource :question_one, only: %i[show create], controller: :question_one, path: "/question-one"
+    resource :question_two, only: %i[show create], controller: :question_two, path: "/question-two"
+    resource :no_decision, only: :show, controller: :no_decision, path: "/no-decision"
+    resource :no_participants, only: :show, controller: :no_participants, path: "/no-participants"
+    resource :school_profile, only: %i[show create], controller: :school_profile, path: "/school-profile"
+    resource :user_profile, only: %i[new create], controller: :user_profile, path: "/user-profile"
+    resource :verification_sent, only: :show, controller: :verification_sent, path: "/verification-sent"
+    resource :school_not_eligible, only: :show, controller: :school_not_eligible, path: "/school-not-eligible"
+    resource :school_registered, only: :show, controller: :school_registered, path: "/school-registered"
+    resource :school_not_confirmed, only: :show, controller: :school_not_confirmed, path: "/school-not-confirmed"
+  end
+
   namespace :admin do
     resources :suppliers, only: %i[index new]
     scope "suppliers/new" do
@@ -91,5 +106,5 @@ Rails.application.routes.draw do
 
   resource :school_search, only: %i[show create], path: "school-search", controller: :school_search
 
-  root to: "pages#home"
+  root "registrations/start#index"
 end
