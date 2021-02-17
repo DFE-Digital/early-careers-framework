@@ -35,7 +35,7 @@ RSpec.describe "Users::Sessions", type: :request do
       let(:email) { Faker::Internet.email }
       it "renders the email_not_found template" do
         post "/users/sign_in", params: { user: { email: email } }
-        expect(response).to render_template(:email_not_found)
+        expect(response).to redirect_to(registrations_account_not_found_path)
       end
     end
   end
