@@ -14,14 +14,19 @@
     "whatwg-fetch": "^3.5.0"
   },
   "devDependencies": {
+    "cypress": "^6.5.0",
+    "cypress-intellij-reporter": "^0.0.6",
     "eslint": "^7.13.0",
     "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-cypress": "^2.11.2",
     "eslint-plugin-import": "^2.22.1",
     "jest": "^26.6.3",
     "webpack-dev-server": "^3.11.0"
   },
   "scripts": {
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests",
+    "cypress:open": "cypress open --project ./spec",
+    "cypress:run": "cypress run --project ./spec"
   },
   "jest": {
     "roots": [
