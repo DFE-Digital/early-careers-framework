@@ -16,7 +16,7 @@ RSpec.describe "Registrations::SchoolProfile", type: :request do
     let(:urn) { school.urn }
 
     it "redirects to user-profile if the urn is valid" do
-      post "/registrations/school-profile", params: { school: {
+      post "/registrations/school-profile", params: { school_profile_form: {
         urn: urn,
       } }
 
@@ -29,7 +29,7 @@ RSpec.describe "Registrations::SchoolProfile", type: :request do
       end
 
       it "redirects to the school-not-eligible page" do
-        post "/registrations/school-profile", params: { school: {
+        post "/registrations/school-profile", params: { school_profile_form: {
           urn: urn,
         } }
 
@@ -45,7 +45,7 @@ RSpec.describe "Registrations::SchoolProfile", type: :request do
       end
 
       it "redirects to school-registered" do
-        post "/registrations/school-profile", params: { school: {
+        post "/registrations/school-profile", params: { school_profile_form: {
           urn: urn,
         } }
 
@@ -60,7 +60,7 @@ RSpec.describe "Registrations::SchoolProfile", type: :request do
       end
 
       it "redirects to school-not-confimed" do
-        post "/registrations/school-profile", params: { school: {
+        post "/registrations/school-profile", params: { school_profile_form: {
           urn: urn,
         } }
 
@@ -68,12 +68,24 @@ RSpec.describe "Registrations::SchoolProfile", type: :request do
       end
     end
 
-    context "when the school urn is invalid" do
-      it "redirects to the school-not-eligible page" do
-        post "/registrations/school-profile", params: { school: {
-          urn: "098765",
+    context "when the school urn does not match a school" do
+      it "renders an error message" do
+        post "/registrations/school-profile", params: { school_profile_form: {
+          urn: "980567",
         } }
 
+        expect(response.body).to include("No school matched that URN")
+        expect(response).to render_template("registrations/school_profile/show")
+      end
+    end
+
+    context "when the school urn is missing" do
+      it "renders an error message" do
+        post "/registrations/school-profile", params: { school_profile_form: {
+          urn: "",
+        } }
+
+        expect(response.body).to include("Enter a school URN")
         expect(response).to render_template("registrations/school_profile/show")
       end
     end

@@ -41,6 +41,19 @@ RSpec.describe "Registrations::UserProfile", type: :request do
             full_name: full_name,
           } }
         }.not_to(change { User.count })
+        expect(response.body).to include("Enter an email")
+        expect(response).to render_template("registrations/user_profile/new")
+      end
+    end
+
+    context "when full name is missing" do
+      it "does not create the user" do
+        expect {
+          post "/registrations/user-profile", params: { user: {
+            email: email,
+          } }
+        }.not_to(change { User.count })
+        expect(response.body).to include("Enter your full name")
         expect(response).to render_template("registrations/user_profile/new")
       end
     end

@@ -19,7 +19,7 @@ class Registrations::SchoolProfileController < ApplicationController
 private
 
   def school_params
-    params.require(:school).permit(:urn)
+    params.require(:school_profile_form).permit(:urn)
   end
 
   def load_school
