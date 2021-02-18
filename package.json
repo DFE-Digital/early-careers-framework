@@ -17,15 +17,18 @@
     "cypress-intellij-reporter": "^0.0.6",
     "eslint": "^7.13.0",
     "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-cypress": "^2.11.2",
     "eslint-plugin-import": "^2.22.1",
     "jest": "^26.6.3",
+    "prettier": "^2.2.1",
     "webpack-dev-server": "^3.11.0"
   },
   "scripts": {
     "test": "jest --passWithNoTests",
     "cypress:open": "cypress open --project ./spec",
-    "cypress:run": "cypress run --project ./spec"
+    "cypress:run": "cypress run --project ./spec",
+    "lint": "eslint --max-warnings 0 '{app,spec}/**/*.js' && prettier --check '{app,spec}/**/*.js'"
   },
   "jest": {
     "roots": [
