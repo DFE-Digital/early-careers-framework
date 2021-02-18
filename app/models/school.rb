@@ -18,8 +18,16 @@ class School < ApplicationRecord
   has_many :early_career_teacher_profiles
   has_many :early_career_teachers, through: :early_career_teacher_profiles, source: :user
 
+  scope :with_name, lambda { |search_key|
+    School.where("name ILIKE ?", "%#{search_key}%")
+  }
+
+  scope :with_urn, lambda { |search_key|
+    School.where("urn ILIKE ?", "%#{search_key}%")
+  }
+
   scope :search_by_name_or_urn, lambda { |search_key|
-    where("urn ILIKE ?", "%#{search_key}%").or(School.where("name ILIKE ?", "%#{search_key}%"))
+    with_name(search_key).or(with_urn(search_key))
   }
 
   def full_address
