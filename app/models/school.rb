@@ -71,13 +71,11 @@ class School < ApplicationRecord
   end
 
   scope :with_pupil_premium_uplift, lambda { |start_year|
-    joins(:pupil_premiums)
-      .merge(PupilPremium.only_with_uplift(start_year))
+    where(pupil_premiums: PupilPremium.only_with_uplift(start_year))
   }
 
   scope :with_sparsity_uplift, lambda { |year|
-    joins(:school_local_authority_districts, :local_authority_districts)
-      .merge(LocalAuthorityDistrict.only_with_uplift(year))
+    where("id IN (:ids)", ids: LocalAuthorityDistrict.only_with_uplift(year).joins(:schools).select("schools.id"))
   }
 
 private

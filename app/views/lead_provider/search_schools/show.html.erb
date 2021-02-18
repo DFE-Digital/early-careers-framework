@@ -1,0 +1,44 @@
+<% content_for :before_content, govuk_back_link(text: 'Back to dashboard', href: supplier_dashboard_path) %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-three-quarters">
+    <h1 class="govuk-heading-xl">Find schools</h1>
+    <p>Use our search and filters to find schools you want to recruit.</p>
+  </div>
+</div>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-third">
+    <div style="width: 100%; height: 100%; background-color: #dee0e2; padding: 8px;">
+      <%= render "filters" %>
+    </div>
+  </div>
+  <div class="govuk-grid-column-two-thirds">
+    <div id="school-results">
+      <h2 class="govuk-heading-m"><%= @schools.total_count %> results found</h2>
+      <% @schools.each do |school| %>
+        <div class="card">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+              <h3 class="govuk-heading-m"><%= school.name %></h3>
+            </div>
+            <div class="govuk-grid-column-one-half">
+              <% if @lead_provider && school.lead_provider && (school.lead_provider != @lead_provider) %>
+                <strong class="govuk-tag tag-right">
+                  Other provider
+                </strong>
+              <% end %>
+            </div>
+          </div>
+          <p><%= school.full_address %></p>
+          <p>URN: <%= school.urn %></p>
+          <% if school.network %>
+            <p>School group: <%= school.network.name %></p>
+          <% end %>
+          <p>Phase/Type: <%= school.school_type_name %></p>
+          <!-- TODO: Add school url -->
+          <hr>
+        </div>
+      <% end %>
+      <%= paginate @schools %>
+    </div>
+  </div>
+</div>
