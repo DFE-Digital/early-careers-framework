@@ -1,0 +1,26 @@
+<%= render PrimaryNavComponent.new do |c| %>
+  <%= c.nav_item(path: lead_provider_dashboard_path) do %>
+    Overview
+  <% end %>
+  <%= c.nav_item(path: lead_provider_schools_path) do %>
+    Schools
+  <% end %>
+<% end %>
+
+<h1><%= @current_user.lead_provider.name %></h1>
+<div>
+  <%= govuk_link_to "Find and add schools", "#" %>
+</div>
+<% @cohorts.each do |cohort| %>
+  <div>
+    <%= govuk_link_to "Check your schools for #{cohort.start_year}", "#" %>
+  </div>
+<% end %>
+
+<br/>
+<% @cohorts.each do |cohort| %>
+  <h2><%= cohort.start_year %> participant recruitment</h2>
+  <p>300 participant target</p>
+  <p>77 recruited participants</p>
+  <p>34 partnerships with schools</p>
+<% end %>

@@ -99,6 +99,12 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :lead_provider, path: "lead-provider" do
+    resource :dashboard, controller: :dashboard, only: :show
+    resources :schools, only: %i[index show]
+    resource :search_schools, only: %i[show create], path: "search-schools"
+  end
+
   get "/403", to: "errors#forbidden", via: :all
   get "/404", to: "errors#not_found", via: :all
   get "/422", to: "errors#unprocessable_entity", via: :all
