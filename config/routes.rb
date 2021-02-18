@@ -26,6 +26,10 @@ Rails.application.routes.draw do
     resources :school_search, only: %i[index]
   end
 
+  namespace :demo do
+    resources :school_search, only: %i[index]
+  end
+
   namespace :registrations do
     root to: "start#index"
     resource :account_not_found, only: :show, controller: :account_not_found, path: "/account-not-found"
