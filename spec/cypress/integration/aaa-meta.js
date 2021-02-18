@@ -30,14 +30,14 @@ describe("Meta test helper tests", () => {
 
     cy.get('[href*="/modules/"]').contains("Test Course module").click();
 
-    cy.get("@courseLesson").then(([course]) => {
-      cy.url().should("contain", `/modules/${course.course_module_id}`);
+    cy.get("@courseLesson").then(([lesson]) => {
+      cy.url().should("contain", `/modules/${lesson.course_module_id}`);
     });
 
     cy.get('[href*="/lessons/"]').contains("Test Course lesson").click();
 
-    cy.get("@courseLesson").then(([course]) => {
-      cy.url().should("contain", `/lessons/${course.id}`);
+    cy.get("@courseLesson").then(([lesson]) => {
+      cy.url().should("contain", `/lessons/${lesson.id}`);
     });
 
     cy.get("h1").should("contain", "Test Course lesson");
