@@ -8,8 +8,8 @@ function inputValueTemplate(result) {
 
 function suggestionTemplate(result) {
   return (
-    result
-    && `<strong>${result.name}</strong> (${result.full_address_formatted})`
+    result &&
+    `<strong>${result.name}</strong> (${result.full_address_formatted})`
   );
 }
 

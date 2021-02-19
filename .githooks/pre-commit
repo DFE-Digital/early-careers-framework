@@ -33,7 +33,8 @@ CHANGED_RUBY_FILES=$(git diff --name-only --cached | xargs ls -1 2>/dev/null | g
 echo "$CHANGED_RUBY_FILES"
 if [[ -n "$CHANGED_RUBY_FILES" ]]; then echo "$CHANGED_RUBY_FILES" | xargs rubocop --force-exclusion --fail-fast --auto-correct ; fi
 RUBOCOP_EXIT_CODE="$?"
-CHANGED_JS_FILES=$(git diff --name-only --cached | xargs ls -1 2>/dev/null | grep '\.js$')
+CHANGED_JS_FILES=$(git diff --name-only --cached | xargs ls -1 2>/dev/null | grep 'app\|spec' | grep '\.js$')
+if [[ -n "$CHANGED_JS_FILES" ]]; then echo "$CHANGED_JS_FILES" | xargs yarn run prettier --write ; fi
 if [[ -n "$CHANGED_JS_FILES" ]]; then echo "$CHANGED_JS_FILES" | xargs yarn run eslint --max-warnings 0 --fix ; fi
 ESLINT_EXIT_CODE="$?"
 ((EXIT_CODE = RUBOCOP_EXIT_CODE ** 2 + ESLINT_EXIT_CODE ** 2))
