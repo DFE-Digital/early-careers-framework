@@ -1,6 +1,6 @@
 <% content_for :before_content, govuk_breadcrumbs(breadcrumbs: {
   "Schools" => lead_provider_schools_path,
-  "Find and add schools" => lead_provider_filter_schools_path,
+  "Find and add schools" => nil,
   "Search results" => nil,
 }) %>
 
@@ -39,7 +39,7 @@
               <tr class="govuk-table__row">
                 <td class="govuk-table__cell"><%= school.name %></td>
                 <td class="govuk-table__cell">Abbey Academies Trust</td>
-                <td class="govuk-table__cell"><%= school.local_authority.name %></td>
+                <td class="govuk-table__cell"><%= school.local_authority&.name %></td>
                 <td class="govuk-table__cell"></td>
 
                 <td class="govuk-table__cell">
