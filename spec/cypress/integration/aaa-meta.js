@@ -18,7 +18,9 @@ describe("Meta test helper tests", () => {
   it("should have factory_bot helper functions", () => {
     cy.app("clean");
 
-    cy.appFactories([["create", "course_lesson"]]).as("courseLesson");
+    cy.appFactories([["create", "course_lesson", "with_lesson_part"]]).as(
+      "courseLesson"
+    );
 
     cy.login();
 

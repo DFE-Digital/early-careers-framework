@@ -8,22 +8,37 @@ class CoreInductionProgrammeExporter
       exclude: %i[created_at updated_at],
       import: true,
     )
+
+    years = CourseYear.order(:created_at)
     SeedDump.dump(
-      CourseYear.all,
+      years,
       file: "db/seeds/cip_seed_dump.rb",
       exclude: %i[created_at updated_at],
       import: true,
       append: true,
     )
+
+    modules = years.map(&:course_modules_in_order).flatten
     SeedDump.dump(
-      CourseModule.all,
+      modules,
       file: "db/seeds/cip_seed_dump.rb",
       exclude: %i[created_at updated_at],
       import: true,
       append: true,
     )
+
+    lessons = modules.map(&:course_lessons_in_order).flatten
     SeedDump.dump(
-      CourseLesson.all,
+      lessons,
+      file: "db/seeds/cip_seed_dump.rb",
+      exclude: %i[created_at updated_at],
+      import: true,
+      append: true,
+    )
+
+    parts = lessons.map(&:course_lesson_parts_in_order).flatten
+    SeedDump.dump(
+      parts,
       file: "db/seeds/cip_seed_dump.rb",
       exclude: %i[created_at updated_at],
       import: true,

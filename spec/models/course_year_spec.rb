@@ -21,7 +21,9 @@ RSpec.describe CourseYear, type: :model do
   describe "validations" do
     subject { FactoryBot.create(:course_year) }
     it { is_expected.to validate_presence_of(:title).with_message("Enter a title") }
+    it { is_expected.to validate_length_of(:title).is_at_most(255) }
     it { is_expected.to validate_presence_of(:content).with_message("Enter content") }
+    it { is_expected.to validate_length_of(:content).is_at_most(100_000) }
   end
 
   describe "course_modules" do
@@ -37,7 +39,7 @@ RSpec.describe CourseYear, type: :model do
       course_module_three.update!(previous_module: course_module_four)
 
       expected_lessons_with_order = [course_module_one, course_module_two, course_module_four, course_module_three]
-      course_year.course_modules.zip(expected_lessons_with_order).each do |actual, expected|
+      course_year.course_modules_in_order.zip(expected_lessons_with_order).each do |actual, expected|
         expect(actual).to eq(expected)
       end
     end

@@ -7,7 +7,6 @@ RSpec.describe CourseLesson, type: :model do
     expect {
       CourseLesson.create(
         title: "Test Course lesson",
-        content: "No content",
         course_module: FactoryBot.create(:course_module),
       )
     }.to change { CourseLesson.count }.by(1)
@@ -17,11 +16,12 @@ RSpec.describe CourseLesson, type: :model do
     it { is_expected.to belong_to(:course_module) }
     it { is_expected.to have_one(:next_lesson) }
     it { is_expected.to belong_to(:previous_lesson).optional }
+    it { is_expected.to have_many(:course_lesson_parts) }
   end
 
   describe "validations" do
     subject { FactoryBot.create(:course_lesson) }
     it { is_expected.to validate_presence_of(:title).with_message("Enter a title") }
-    it { is_expected.to validate_presence_of(:content).with_message("Enter content") }
+    it { is_expected.to validate_length_of(:title).is_at_most(255) }
   end
 end

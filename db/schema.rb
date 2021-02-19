@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_15_121631) do
+ActiveRecord::Schema.define(version: 2021_02_18_143611) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -35,6 +35,17 @@ ActiveRecord::Schema.define(version: 2021_02_15_121631) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "course_lesson_parts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "title", null: false
+    t.text "content", null: false
+    t.uuid "previous_lesson_part_id"
+    t.uuid "course_lesson_id", null: false
+    t.index ["course_lesson_id"], name: "index_course_lesson_parts_on_course_lesson_id"
+    t.index ["previous_lesson_part_id"], name: "index_course_lesson_parts_on_previous_lesson_part_id"
+  end
+
   create_table "course_lesson_progresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "progress", default: "not_started"
     t.uuid "early_career_teacher_profile_id", null: false
@@ -50,7 +61,6 @@ ActiveRecord::Schema.define(version: 2021_02_15_121631) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "title", null: false
-    t.text "content", null: false
     t.uuid "previous_lesson_id"
     t.uuid "course_module_id", null: false
     t.integer "version", default: 1, null: false
@@ -145,6 +155,8 @@ ActiveRecord::Schema.define(version: 2021_02_15_121631) do
   end
 
   add_foreign_key "admin_profiles", "users"
+  add_foreign_key "course_lesson_parts", "course_lesson_parts", column: "previous_lesson_part_id"
+  add_foreign_key "course_lesson_parts", "course_lessons"
   add_foreign_key "course_lesson_progresses", "course_lessons"
   add_foreign_key "course_lesson_progresses", "early_career_teacher_profiles"
   add_foreign_key "course_lessons", "course_lessons", column: "previous_lesson_id"

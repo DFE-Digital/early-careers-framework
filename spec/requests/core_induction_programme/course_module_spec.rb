@@ -88,7 +88,7 @@ RSpec.describe "Core Induction Programme Module", type: :request do
 
     describe "PUT /core-induction-programme/years/:years_id/modules/module_id" do
       it "redirects to the sign in page" do
-        put course_module_url, params: { commit: "Save changes", module_preview: course_module.content }
+        put course_module_url, params: { commit: "Save changes", content: course_module.content }
         expect(response).to redirect_to("/users/sign_in")
       end
     end

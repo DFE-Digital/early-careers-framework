@@ -2,23 +2,9 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <% if policy(@course_lesson).edit? %>
-      <%= link_to "Edit lesson content", edit_cip_year_module_lesson_url(@course_lesson), class: "govuk-button" %>
+      <%= link_to "Edit lesson", edit_cip_year_module_lesson_path(id: @course_lesson.id), class: "govuk-button" %>
     <% end %>
-    <h1 class="govuk-heading-l"> <%= @course_lesson.title %></h1>
-    <div class="gem-c-govspeak govuk-govspeak ">
-      <%= @course_lesson.content_to_html.html_safe %>
-    </div>
-
-    <% if policy(@course_lesson).set_progress? %>
-      <%= form_with url: cip_year_module_lesson_progress_path(lesson_id: @course_lesson.id), method: :put do |f| %>
-        <%= f.govuk_collection_check_boxes(
-              :progress,
-              [OpenStruct.new(id: :complete, name: "I feel confident that I've read and understood this session")],
-              :id,
-              :name,
-              legend: {text: "That's the end of this session"}) %>
-        <%= f.govuk_submit "Complete session" %>
-      <% end %>
-    <% end %>
+    <h1 class="govuk-heading-xl"> <%= @course_lesson.title %></h1>
+    <p>This lesson has no content!</p>
   </div>
 </div>

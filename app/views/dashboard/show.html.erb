@@ -6,7 +6,7 @@
       <h2 class="govuk-heading-l">Your Core Induction Programme</h2>
       <% @current_user.course_years.each do |course_year| %>
         <h2 class="govuk-heading-l"><%= course_year.title %></h2>
-        <% course_year.course_modules.each do |course_module| %>
+        <% course_year.course_modules_in_order.each do |course_module| %>
           <li class="app-task-list__item">
             <span>
               <%= govuk_link_to course_module.title, cip_year_module_path(course_module.course_year, course_module) %>
