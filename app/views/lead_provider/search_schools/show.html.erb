@@ -1,7 +1,12 @@
-<% content_for :before_content, govuk_back_link(text: 'Back to dashboard', href: supplier_dashboard_path) %>
+<% content_for :before_content, govuk_breadcrumbs(breadcrumbs: {
+  "Schools" => lead_provider_schools_path,
+  "Find and add schools" => lead_provider_filter_schools_path,
+  "Search results" => nil,
+}) %>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-three-quarters">
-    <h1 class="govuk-heading-xl">Find schools</h1>
+    <h1 class="govuk-heading-xl">Search results</h1>
     <p>Use our search and filters to find schools you want to recruit.</p>
   </div>
 </div>
@@ -14,30 +19,41 @@
   <div class="govuk-grid-column-two-thirds">
     <div id="school-results">
       <h2 class="govuk-heading-m"><%= @schools.total_count %> results found</h2>
-      <% @schools.each do |school| %>
-        <div class="card">
-          <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-half">
-              <h3 class="govuk-heading-m"><%= school.name %></h3>
-            </div>
-            <div class="govuk-grid-column-one-half">
-              <% if @lead_provider && school.lead_provider && (school.lead_provider != @lead_provider) %>
-                <strong class="govuk-tag tag-right">
-                  Other provider
-                </strong>
-              <% end %>
-            </div>
-          </div>
-          <p><%= school.full_address %></p>
-          <p>URN: <%= school.urn %></p>
-          <% if school.network %>
-            <p>School group: <%= school.network.name %></p>
-          <% end %>
-          <p>Phase/Type: <%= school.school_type_name %></p>
-          <!-- TODO: Add school url -->
-          <hr>
-        </div>
+
+
+      <%= form_for @schools.first, url: lead_provider_search_schools_path do |f| %>
+
+
+        <table class="govuk-table">
+          <thead>
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">School</th>
+              <th scope="col" class="govuk-table__header">Group/network</th>
+              <th scope="col" class="govuk-table__header">Local authority</th>
+              <th scope="col" class="govuk-table__header">Status</th>
+              <th scope="col" class="govuk-table__header"><span class="js-only">BOX</span></th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <% @schools.each do |school| %>
+              <tr class="govuk-table__row">
+                <td class="govuk-table__cell"><%= school.name %></td>
+                <td class="govuk-table__cell">Abbey Academies Trust</td>
+                <td class="govuk-table__cell"><%= school.local_authority.name %></td>
+                <td class="govuk-table__cell"></td>
+
+                <td class="govuk-table__cell">
+                  <div class="govuk-checkboxes--small">
+                    <%= f.govuk_check_box :id, school.id, 0, label: -> { tag.span("select #{school.name}", class: "govuk-visually-hidden") } %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
       <% end %>
+
+
       <%= paginate @schools %>
     </div>
   </div>

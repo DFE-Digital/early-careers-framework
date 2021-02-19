@@ -6,7 +6,7 @@ class SchoolSearchForm
   CHARACTERISTICS = [OpenStruct.new(id: "pupil_premium_above_40", name: "Pupil premium above 40%"),
                      OpenStruct.new(id: "top_20_remote_areas", name: "Located in top 20% most remote areas")].freeze
 
-  attr_accessor :school_name, :location, :search_distance, :search_distance_unit, :characteristics, :partnership
+  attr_accessor :school_name, :location, :search_distance, :search_distance_unit, :characteristics, :partnership, :search_type
 
   def find_schools(page)
     schools = School.where("schools.name ILIKE ? OR schools.urn ILIKE ?", "%#{school_name || ''}%", "%#{school_name || ''}%")

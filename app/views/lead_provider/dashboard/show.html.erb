@@ -1,15 +1,6 @@
-<%= render PrimaryNavComponent.new do |c| %>
-  <%= c.nav_item(path: lead_provider_dashboard_path) do %>
-    Overview
-  <% end %>
-  <%= c.nav_item(path: lead_provider_schools_path) do %>
-    Schools
-  <% end %>
-<% end %>
-
 <h1><%= @current_user.lead_provider.name %></h1>
 <div>
-  <%= govuk_link_to "Find and add schools", "#" %>
+  <%= govuk_link_to "Find and add schools", lead_provider_schools_path %>
 </div>
 <% @cohorts.each do |cohort| %>
   <div>
