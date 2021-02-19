@@ -11,6 +11,7 @@ class School < ApplicationRecord
   has_many :local_authority_districts, through: :school_local_authority_districts
 
   has_one :partnership
+  has_many :school_cohorts
   has_one :lead_provider, through: :partnership
   has_many :pupil_premiums
   has_and_belongs_to_many :induction_coordinator_profiles
