@@ -7,6 +7,7 @@ class LeadProvider::SearchSchoolsController < LeadProvider::BaseController
 
     @school_search_form = SchoolSearchForm.new(*form_params_show)
     @schools = @school_search_form.find_schools(params[:page])
+    @partnership_form = PartnershipForm.new
   end
 
   def create

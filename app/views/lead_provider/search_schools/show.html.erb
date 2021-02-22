@@ -21,7 +21,15 @@
       <h2 class="govuk-heading-m"><%= @schools.total_count %> results found</h2>
 
 
-      <%= form_for @schools.first, url: lead_provider_search_schools_path do |f| %>
+      <%= form_for @partnership_form, url: lead_provider_search_schools_path do |f| %>
+        <%= f.govuk_submit "Add partnerships", classes: "partnerships-submit" %>
+        <%= govuk_link_to(
+              "Remove all schools",
+              "#",
+              button: true,
+              class: "govuk-!-display-none govuk-button--secondary",
+              id: "clear-button")
+        %>
 
 
         <table class="govuk-table">
@@ -44,7 +52,7 @@
 
                 <td class="govuk-table__cell">
                   <div class="govuk-checkboxes--small">
-                    <%= f.govuk_check_box :id, school.id, 0, label: -> { tag.span("select #{school.name}", class: "govuk-visually-hidden") } %>
+                    <%= f.govuk_check_box :schools, school.id, 0, label: -> { tag.span("select #{school.name}", class: "govuk-visually-hidden") } %>
                   </div>
                 </td>
               </tr>

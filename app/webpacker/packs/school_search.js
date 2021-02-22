@@ -50,7 +50,72 @@ function getCheckedSchools() {
   return [];
 }
 
-const editSchoolFormEl = document.querySelector("form.edit_school");
+function getSubmitButton() {
+  return document.querySelector(".partnerships-submit");
+}
+
+function getClearButton() {
+  return document.querySelector("#clear-button");
+}
+
+function schoolCount(numberSchools) {
+  return `${numberSchools} school${numberSchools === 1 ? "" : "s"}`;
+}
+
+function updateButtons(checkedSchools) {
+  const submitButton = getSubmitButton();
+  const clearButton = getClearButton();
+
+  if (checkedSchools.length === 0) {
+    submitButton.disabled = true;
+    submitButton.value = "Add partnerships";
+    clearButton.classList.add("govuk-!-display-none");
+  } else {
+    submitButton.disabled = false;
+    submitButton.value = `Add partnerships with ${schoolCount(
+      checkedSchools.length
+    )}`;
+    clearButton.classList.remove("govuk-!-display-none");
+    clearButton.innerText = `Remove all ${schoolCount(checkedSchools.length)}`;
+  }
+}
+
+const editSchoolFormEl = document.querySelector("form.new_partnership_form");
+
+const onCheckboxClicked = (event) => {
+  const { target } = event;
+
+  if (target.name !== "partnership_form[schools][]") {
+    return;
+  }
+
+  const checkedSchools = getCheckedSchools();
+
+  if (target.checked) {
+    checkedSchools.push(target.value);
+  } else if (checkedSchools.includes(target.value)) {
+    checkedSchools.splice(checkedSchools.indexOf(target.value), 1);
+  }
+
+  updateButtons(checkedSchools);
+
+  const checkedSchoolsString = JSON.stringify(checkedSchools);
+  sessionStorage.setItem("school-search-checked", checkedSchoolsString);
+};
+
+function clearCheckedSchools() {
+  const checkedSchools = getCheckedSchools();
+  checkedSchools.forEach((id) => {
+    const checkboxEl = document.querySelector(`[value="${id}"]`);
+    if (checkboxEl?.type === "hidden") {
+      checkboxEl.parentElement.removeChild(checkboxEl);
+    } else if (checkboxEl) {
+      checkboxEl.checked = false;
+    }
+    sessionStorage.setItem("school-search-checked", "[]");
+    updateButtons([]);
+  });
+}
 
 if (editSchoolFormEl) {
   const initialData = getCheckedSchools();
@@ -65,28 +130,18 @@ if (editSchoolFormEl) {
 
       hiddenInputEl.type = "hidden";
       hiddenInputEl.value = id;
-      hiddenInputEl.name = "school[id][]";
+      hiddenInputEl.name = "partnership_form[schools][]";
 
       editSchoolFormEl.appendChild(hiddenInputEl);
     }
   });
 
-  editSchoolFormEl.addEventListener("input", (e) => {
-    const { target } = e;
+  updateButtons(initialData);
 
-    if (target.name !== "school[id][]") {
-      return;
-    }
+  editSchoolFormEl.addEventListener("input", onCheckboxClicked);
 
-    const checkedSchools = getCheckedSchools();
-
-    if (target.checked) {
-      checkedSchools.push(target.value);
-    } else if (checkedSchools.includes(target.value)) {
-      checkedSchools.splice(checkedSchools.indexOf(target.value), 1);
-    }
-
-    const checkedSchoolsString = JSON.stringify(checkedSchools);
-    sessionStorage.setItem("school-search-checked", checkedSchoolsString);
+  getClearButton()?.addEventListener("click", (event) => {
+    event.preventDefault();
+    clearCheckedSchools();
   });
 }
