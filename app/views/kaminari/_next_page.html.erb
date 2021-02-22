@@ -8,6 +8,6 @@
 -%>
 <span class="ecf-page-link ecf-page-link__next">
   <% unless current_page.last? %>
-    <%= govuk_link_to "Next &#8594;".html_safe, url, rel: 'next', remote: remote, style: "float: right;" %>
+    <%= govuk_link_to "Next &#8594;".html_safe, url, rel: "next", remote: remote, style: "float: right;", "aria-label": "Next page" %>
   <% end %>
 </span>

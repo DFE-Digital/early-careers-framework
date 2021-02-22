@@ -9,8 +9,12 @@
 -%>
 <span class="page<%= ' current' if page.current? %>">
   <% if page.current? %>
-    <span><%= page %></span>
+    <span aria-current="true">
+      <span class="govuk-visually-hidden">Current page, page</span> <%= page %>
+    </span>
   <% else %>
-    <%= govuk_link_to page, url, remote: remote, rel: page.rel %>
+    <%= govuk_link_to url, remote: remote, rel: page.rel do %>
+      <span class="govuk-visually-hidden">Go to page</span> <%= page %><!--
+    --><% end %>
   <% end %>
 </span>
