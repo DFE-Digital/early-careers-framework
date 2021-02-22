@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SchoolCohort < ApplicationRecord
-  enum induction_programme_status: {
+  enum induction_programme_choice: {
     funded_training_provider: "funded_training_provider",
     free_development_materials: "free_development_materials",
     design_our_own: "design_our_own",

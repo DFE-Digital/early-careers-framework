@@ -198,7 +198,7 @@ ActiveRecord::Schema.define(version: 2021_02_18_175518) do
   end
 
   create_table "school_cohorts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "induction_programme_status", default: "not_yet_known", null: false
+    t.string "induction_programme_choice", default: "not_yet_known", null: false
     t.uuid "school_id", null: false
     t.uuid "cohort_id", null: false
     t.datetime "created_at", precision: 6, null: false

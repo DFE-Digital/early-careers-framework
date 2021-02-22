@@ -15,13 +15,18 @@ class InductionProgrammeChoicesController < ApplicationController
 
   def create
     @cohort = Cohort.find_or_create_by!(start_year: 2021)
-    @school = User.first.induction_coordinator_profile.schools.first
+    @school = current_user.induction_coordinator_profile.schools.first
 
-    SchoolCohort.create!(
+    @school_cohort = SchoolCohort.create!(
       cohort: @cohort, school: @school,
-      induction_programme_status: params[:choice]
+      induction_programme_choice: params[:choice]
     )
-    redirect_to induction_programme_choices_path, notice: "Succesfully saved"
+
+    if @school_cohort.not_yet_known?
+      redirect_to :registrations_learn_options
+    else
+      redirect_to induction_programme_choices_path, notice: "Succesfully saved"
+    end
   end
 
 private
