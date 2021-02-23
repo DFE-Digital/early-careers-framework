@@ -1,39 +1,3 @@
-import accessibleAutocomplete from "accessible-autocomplete";
-
-const searchEl = document.querySelector("#school-search-form-autocomplete");
-
-function inputValueTemplate(result) {
-  return result && result.name;
-}
-
-function suggestionTemplate(result) {
-  return (
-    result &&
-    `<strong>${result.name}</strong> (${result.full_address_formatted})`
-  );
-}
-
-function suggest(query, populateResults) {
-  fetch(`/api/school_search?search_key=${query}`)
-    .then((response) => response.json())
-    .then((data) => populateResults(data));
-}
-
-if (searchEl) {
-  accessibleAutocomplete({
-    element: searchEl,
-    id: "school-search-form-input",
-    source: suggest,
-    showNoOptionsFound: false,
-    minLength: 1,
-    name: "school_search_form[school_name]",
-    templates: {
-      inputValue: inputValueTemplate,
-      suggestion: suggestionTemplate,
-    },
-  });
-}
-
 function getCheckedSchools() {
   const checkedSchools = sessionStorage.getItem("school-search-checked");
   if (checkedSchools) {

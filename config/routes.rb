@@ -24,6 +24,8 @@ Rails.application.routes.draw do
 
   namespace :api do
     resources :school_search, only: %i[index]
+    resources :local_authority_search, only: %i[index]
+    resources :network_search, only: %i[index]
   end
 
   namespace :demo do
@@ -106,6 +108,7 @@ Rails.application.routes.draw do
   namespace :lead_provider, path: "lead-provider" do
     resource :dashboard, controller: :dashboard, only: :show
     resources :schools, only: %i[index show]
+    resource :filter_schools, only: :show, path: "filter-schools"
     resource :search_schools, only: %i[show create], path: "search-schools"
     resource :confirm_partnerships, only: :create, path: "confirm-partnerships"
   end
@@ -114,8 +117,6 @@ Rails.application.routes.draw do
   get "/404", to: "errors#not_found", via: :all
   get "/422", to: "errors#unprocessable_entity", via: :all
   get "/500", to: "errors#internal_server_error", via: :all
-
-  resource :school_search, only: %i[show create], path: "school-search", controller: :school_search
 
   root "registrations/start#index"
 end

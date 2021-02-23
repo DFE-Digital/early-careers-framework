@@ -7,7 +7,7 @@
 
   <%= f.govuk_text_field(
         :school_name,
-        label: {text: "School name or group", class: "govuk-label govuk-label--s"}) %>
+        label: { text: "School name or group", class: "govuk-label govuk-label--s" }) %>
   <%= f.govuk_text_field(
         :location,
         label: { text: "Location", class: "govuk-label govuk-label--s" },
@@ -40,12 +40,10 @@
         :id,
         :name,
         legend: { text: "Characteristic", class: "govuk-fieldset__legend govuk-fieldset__legend--s" }) %>
-  <% if @lead_provider %>
-    <%= f.govuk_collection_check_boxes(
-          :partnership,
-          [OpenStruct.new(id: :in_a_partnership, name: "Show schools in a partnership")],
-          :id,
-          :name,
-          legend: { text: "Partnership Status", class: "govuk-fieldset__legend govuk-fieldset__legend--s" }) %>
-  <% end %>
+  <%= f.govuk_collection_check_boxes(
+        :partnership,
+        [OpenStruct.new(id: "in_a_partnership", name: "Show schools in a partnership")],
+        :id,
+        :name,
+        legend: { text: "Partnership Status", class: "govuk-fieldset__legend govuk-fieldset__legend--s" }) %>
 <% end %>
