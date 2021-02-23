@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_12_163441) do
+ActiveRecord::Schema.define(version: 2021_02_18_175518) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -197,6 +197,16 @@ ActiveRecord::Schema.define(version: 2021_02_12_163441) do
     t.index ["school_id"], name: "index_pupil_premiums_on_school_id"
   end
 
+  create_table "school_cohorts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "induction_programme_choice", default: "not_yet_known", null: false
+    t.uuid "school_id", null: false
+    t.uuid "cohort_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["cohort_id"], name: "index_school_cohorts_on_cohort_id"
+    t.index ["school_id"], name: "index_school_cohorts_on_school_id"
+  end
+
   create_table "school_local_authorities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "school_id", null: false
     t.uuid "local_authority_id", null: false
@@ -291,6 +301,8 @@ ActiveRecord::Schema.define(version: 2021_02_12_163441) do
   add_foreign_key "provider_relationships", "delivery_partners"
   add_foreign_key "provider_relationships", "lead_providers"
   add_foreign_key "pupil_premiums", "schools"
+  add_foreign_key "school_cohorts", "cohorts"
+  add_foreign_key "school_cohorts", "schools"
   add_foreign_key "school_local_authorities", "local_authorities"
   add_foreign_key "school_local_authorities", "schools"
   add_foreign_key "school_local_authority_districts", "local_authority_districts"

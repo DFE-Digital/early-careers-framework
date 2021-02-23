@@ -26,6 +26,8 @@ Rails.application.routes.draw do
     resources :school_search, only: %i[index]
   end
 
+  resource :induction_programme_choices, only: %i[show create], path: "/induction-programme-choices"
+
   namespace :demo do
     resources :school_search, only: %i[index]
   end
@@ -36,6 +38,7 @@ Rails.application.routes.draw do
     resource :question_one, only: %i[show create], controller: :question_one, path: "/question-one"
     resource :question_two, only: %i[show create], controller: :question_two, path: "/question-two"
     resource :no_decision, only: :show, controller: :no_decision, path: "/no-decision"
+    resource :learn_options, only: :show, controller: :learn_options, path: "/learn-options"
     resource :no_participants, only: :show, controller: :no_participants, path: "/no-participants"
     resource :school_profile, only: %i[show create], controller: :school_profile, path: "/school-profile"
     resource :user_profile, only: %i[new create], controller: :user_profile, path: "/user-profile"
