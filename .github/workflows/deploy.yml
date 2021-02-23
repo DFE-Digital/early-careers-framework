@@ -67,9 +67,9 @@ jobs:
         with:
           build-args: BUILDKIT_INLINE_CACHE=1
           cache-from: |
-            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:builder
+            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:engage-and-learn-builder
           push: true
-          tags: ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:builder
+          tags: ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:engage-and-learn-builder
           target: builder
 
       - name: Build and push docker image from engage-and-learn-gems-node-modules target
@@ -77,9 +77,9 @@ jobs:
         with:
           build-args: BUILDKIT_INLINE_CACHE=1
           cache-from: |
-            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:gems-node-modules
+            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:engage-and-learn-gems-node-modules
           push: true
-          tags: ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:gems-node-modules
+          tags: ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:engage-and-learn-gems-node-modules
           target: engage-and-learn-gems-node-modules
 
       - name: Build and push docker image from assets-precompile target
@@ -87,9 +87,9 @@ jobs:
         with:
           build-args: BUILDKIT_INLINE_CACHE=1
           cache-from: |
-            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:assets-precompile
+            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:engage-and-learn-assets-precompile
           push: true
-          tags: ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:assets-precompile
+          tags: ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:engage-and-learn-assets-precompile
           target: assets-precompile
 
       - name: Build and push docker image from production target
@@ -99,13 +99,13 @@ jobs:
             BUILDKIT_INLINE_CACHE=1
             VERSION=${{ env.TAG }}
           cache-from: |
-            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:${{ github.event.inputs.environment }}
-            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:latest
+            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:engage-and-learn-${{ github.event.inputs.environment }}
+            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:engage-and-learn-latest
           push: true
           tags: |
-            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:${{ env.TAG }}
-            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:${{ github.event.inputs.environment }}
-            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:latest
+            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:engage-and-learn-${{ env.TAG }}
+            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:engage-and-learn-${{ github.event.inputs.environment }}
+            ${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:engage-and-learn-latest
           target: production
 
       - name: Deploy to dev
@@ -116,7 +116,7 @@ jobs:
           TF_VAR_paas_user: ${{ secrets.GOVPAAS_DEV_USERNAME }}
           TF_VAR_paas_password: ${{ secrets.GOVPAAS_DEV_PASSWORD }}
         run: |
-          export TF_VAR_paas_app_docker_image=${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:${{ env.TAG }}
+          export TF_VAR_paas_app_docker_image=${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:engage-and-learn-${{ env.TAG }}
           cd terraform/app
           terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-583f04ed-cc98-4c9d-b633-a3a6fa3785b5"
           terraform apply -input=false -auto-approve -var-file ../workspace-variables/dev.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_DEV}}"}'
@@ -129,7 +129,7 @@ jobs:
           TF_VAR_paas_user: ${{ secrets.GOVPAAS_DEV_USERNAME }}
           TF_VAR_paas_password: ${{ secrets.GOVPAAS_DEV_PASSWORD }}
         run: |
-          export TF_VAR_paas_app_docker_image=${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:${{ env.TAG }}
+          export TF_VAR_paas_app_docker_image=${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:engage-and-learn-${{ env.TAG }}
           cd terraform/app
           terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-583f04ed-cc98-4c9d-b633-a3a6fa3785b5" -backend-config="key=${{ github.event.inputs.environment }}/terraform.tfstate"
           terraform apply -input=false -auto-approve -var-file ../workspace-variables/review.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_DEV}}"}' -var='environment=${{github.event.inputs.environment}}'
@@ -142,7 +142,7 @@ jobs:
           TF_VAR_paas_user: ${{ secrets.GOVPAAS_STAG_USERNAME }}
           TF_VAR_paas_password: ${{ secrets.GOVPAAS_STAG_PASSWORD }}
         run: |
-          export TF_VAR_paas_app_docker_image=${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:${{ env.TAG }}
+          export TF_VAR_paas_app_docker_image=${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:engage-and-learn-${{ env.TAG }}
           cd terraform/app
           terraform init -reconfigure -input=false -backend-config="bucket=TODO"
           terraform apply -input=false -auto-approve -var-file ../workspace-variables/staging.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_STAGING}}"}'
