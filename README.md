@@ -1,4 +1,4 @@
-![Tests](https://github.com/DFE-Digital/engage-and-learn/workflows/Test/badge.svg)
+![Tests](https://github.com/DFE-Digital/ecf-engage-and-learn/workflows/Test/badge.svg)
 
 # Early careers framework
 
