@@ -107,6 +107,7 @@ Rails.application.routes.draw do
     resource :dashboard, controller: :dashboard, only: :show
     resources :schools, only: %i[index show]
     resource :search_schools, only: %i[show create], path: "search-schools"
+    resource :confirm_partnerships, only: :create, path: "confirm-partnerships"
   end
 
   get "/403", to: "errors#forbidden", via: :all
