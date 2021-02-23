@@ -39,3 +39,37 @@ Cypress.Commands.add("logout", () => {
 
   cy.location("pathname").should("eq", "/");
 });
+
+Cypress.Commands.add("visitYear", (courseYear) => {
+  cy.visit(`/core-induction-programme/years/${courseYear.id}`);
+  cy.get("h1").should("contain", courseYear.title);
+});
+
+Cypress.Commands.add("visitModule", (courseModule) => {
+  cy.visit(
+    `/core-induction-programme/years/${courseModule.course_year_id}/modules/${courseModule.id}`
+  );
+  cy.get("h1").should("contain", courseModule.title);
+});
+
+Cypress.Commands.add("visitLesson", (courseLesson) => {
+  cy.appEval(
+    `CourseModule.find_by(id: "${courseLesson.course_module_id}")`
+  ).then((courseModule) => {
+    cy.visit(
+      `/core-induction-programme/years/${courseModule.course_year_id}/modules/${courseModule.id}/lessons/${courseLesson.id}`
+    );
+    cy.get("h1").should("contain", courseLesson.title);
+  });
+});
+
+Cypress.Commands.add("visitModuleOfLesson", (courseLesson) => {
+  cy.appEval(
+    `CourseModule.find_by(id: "${courseLesson.course_module_id}")`
+  ).then((courseModule) => {
+    cy.visit(
+      `/core-induction-programme/years/${courseModule.course_year_id}/modules/${courseModule.id}`
+    );
+    cy.get("h1").should("contain", courseModule.title);
+  });
+});

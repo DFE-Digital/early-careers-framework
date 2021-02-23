@@ -24,26 +24,16 @@ describe("Meta test helper tests", () => {
 
     cy.login();
 
-    cy.visit("/core-induction-programme");
-
-    cy.get('[href*="/core-induction-programme/years"]')
-      .contains("Test Course year")
-      .click();
-
-    cy.get('[href*="/modules/"]').contains("Test Course module").click();
-
     cy.get("@courseLesson").then(([lesson]) => {
+      cy.visitModuleOfLesson(lesson);
       cy.url().should("contain", `/modules/${lesson.course_module_id}`);
     });
 
-    cy.get('[href*="/lessons/"]').contains("Test Course lesson").click();
-
     cy.get("@courseLesson").then(([lesson]) => {
+      cy.visitLesson(lesson);
       cy.url().should("contain", `/lessons/${lesson.id}`);
+      cy.get(".govuk-govspeak").should("contain", "No content");
     });
-
-    cy.get("h1").should("contain", "Test Course lesson");
-    cy.get(".govuk-govspeak").should("contain", "No content");
   });
 
   it("should have a cleanable database", () => {
