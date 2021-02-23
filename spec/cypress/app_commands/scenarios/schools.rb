@@ -5,5 +5,16 @@
   # specified below the new ones
   Faker::UniqueGenerator.clear
   Faker::Config.random = Random.new(n)
-  FactoryBot.create(:school)
+
+  traits = []
+
+  if Faker::Boolean.boolean(true_ratio: 0.2)
+    traits.push(:pupil_premium_uplift)
+  end
+
+  if Faker::Boolean.boolean(true_ratio: 0.2)
+    # traits.push(:sparsity_uplift)
+  end
+
+  FactoryBot.create(:school, *traits)
 end

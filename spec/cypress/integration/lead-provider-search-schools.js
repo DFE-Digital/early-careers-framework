@@ -6,7 +6,35 @@ describe("Lead provider search schools page", () => {
     sessionStorage.clear();
   });
 
-  it("should supporting searching for and adding partnerships", () => {
+  it("should support searching for schools", () => {
+    cy.login("admin");
+
+    cy.visit("/lead-provider/search-schools");
+
+    cy.get("h2").should("contain", "49 results found");
+
+    cy.get('[name="school_search_form[school_name]"]').type("east{enter}");
+
+    cy.get("h2").should("contain", "14 results found");
+
+    cy.contains("Clear filters").click();
+
+    cy.get("h2").should("contain", "49 results found");
+
+    cy.get(
+      '[type="checkbox"][name="school_search_form[characteristics][]"][value="pupil_premium_above_40"]'
+    ).click();
+
+    cy.contains("Apply filters").click();
+
+    cy.get("h2").should("contain", "10 results found");
+
+    cy.get('[name="school_search_form[school_name]"]').type("east{enter}");
+
+    cy.get("h2").should("contain", "3 results found");
+  });
+
+  it("should support adding partnerships", () => {
     cy.login("admin");
 
     // Unfiltered schools - first page
@@ -63,7 +91,7 @@ describe("Lead provider search schools page", () => {
       "checkboxes"
     );
 
-    cy.get("@checkboxes").eq(7).should("not.be.checked").click();
+    cy.get("@checkboxes").eq(4).should("not.be.checked").click();
     cy.get("@checkboxes").eq(14).should("not.be.checked").click();
 
     cy.get(".partnerships-submit")
@@ -79,8 +107,8 @@ describe("Lead provider search schools page", () => {
       "checkboxes"
     );
 
-    cy.get("@checkboxes").eq(0).should("be.checked").click();
-    cy.get("@checkboxes").eq(1).should("not.be.checked").click();
+    cy.get("@checkboxes").eq(0).should("not.be.checked").click();
+    cy.get("@checkboxes").eq(1).should("be.checked").click();
     cy.get("@checkboxes").eq(2).should("not.be.checked").click();
     cy.get("@checkboxes").eq(4).should("not.be.checked").click();
 
