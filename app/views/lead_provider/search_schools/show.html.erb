@@ -22,13 +22,17 @@
 
 
       <%= form_for @partnership_form, url: lead_provider_search_schools_path do |f| %>
-        <%= f.govuk_submit "Add partnerships", classes: "partnerships-submit" %>
+        <%= f.govuk_submit(
+              "Add partnerships",
+              classes: "partnerships-submit")
+        %>
         <%= govuk_link_to(
               "Remove all schools",
               "#",
               button: true,
               class: "govuk-!-display-none govuk-button--secondary",
-              id: "clear-button")
+              id: "clear-button",
+              'data-cy': 'partnerships-clear')
         %>
 
 

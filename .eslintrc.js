@@ -17,5 +17,6 @@ module.exports = {
   },
   rules: {
     "import/no-commonjs": ["error"],
+    "no-plusplus": ["off"]
   },
 };
