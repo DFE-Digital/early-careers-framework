@@ -14,7 +14,7 @@ class InductionProgrammeChoicesController < ApplicationController
   end
 
   def create
-    @cohort = Cohort.find_or_create_by!(start_year: 2021)
+    @cohort = Cohort.find_or_create_by!(start_year: ENV["CURRENT_COHORT"])
     @school = current_user.induction_coordinator_profile.schools.first
 
     @school_cohort = SchoolCohort.create!(
