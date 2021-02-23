@@ -6,15 +6,26 @@
     <% end %>
     <h1 class="govuk-heading-l"><%= @course_year.title %></h1>
     <h2 class="govuk-heading-l">Modules</h2>
-    <% if @course_year.course_modules_in_order.each do |course_module| %>
-      <p>
-        <%= govuk_link_to course_module.title, cip_year_module_url(@course_year, course_module) %>
-      </p>
-    <% end.empty? %>
-    <p>No course modules were found!</p>
-    <% end %>
     <div class="gem-c-govspeak govuk-govspeak ">
       <%= @course_year.content_to_html.html_safe %>
     </div>
+    <ol class="app-task-list">
+      <li>
+        <p><strong>Topic materials</strong></p>
+        <ul class="app-task-list__items">
+          <% @course_modules_with_progress.each do |course_module| %>
+            <li class="app-task-list__item">
+              <span>
+                <%= govuk_link_to course_module.title, cip_year_module_url(@course_year, course_module) %>
+              </span>
+              <%= render ProgressLabelComponent.new progress: course_module.progress %>
+            </li>
+          <% end %>
+          <% if @course_modules_with_progress.empty?%>
+            <p>No course modules were found!</p>
+          <% end %>
+        </ul>
+      </li>
+    </ol>
   </div>
 </div>

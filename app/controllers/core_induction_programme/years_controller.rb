@@ -29,6 +29,7 @@ private
     @course_year = CourseYear.find(params[:id])
     authorize @course_year
     @course_year.assign_attributes(course_year_params)
+    @course_modules_with_progress = @course_year.modules_with_progress @current_user
   end
 
   def course_year_params
