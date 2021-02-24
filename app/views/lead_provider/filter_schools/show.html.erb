@@ -9,9 +9,9 @@
 
   <%= f.govuk_radio_buttons_fieldset(:search_type, legend: { size: 'm', text: 'Search by:' }) do %>
     <%= f.govuk_radio_button :search_type, 'school_name', label: { text: 'Name or URN' }, link_errors: true do %>
-      <noscript>
+      <div class="no-js">
         <%= f.govuk_text_field :school_name, width: "one-third", label: { text: "Enter name or URN" } %>
-      </noscript>
+      </div>
       <div class="js-only">
         <label for="autocomplete-school-name-field" class="govuk-label govuk-label--s school-search-label">
           School name or URN
@@ -22,9 +22,9 @@
       <%= f.govuk_check_box :partnership, :in_a_partnership, 0, label: { text: "Include schools already in a partnership" } %>
     <% end %>
     <%= f.govuk_radio_button :search_type, 'location', label: { text: 'Location' } do %>
-      <noscript>
+      <div class="no-js">
         <%= f.govuk_text_field :location, width: "one-third", label: { text: "Enter location" } %>
-      </noscript>
+      </div>
       <div class="js-only">
         <label for="autocomplete-location-field" class="govuk-label govuk-label--s school-search-label">
           Enter location
@@ -35,9 +35,9 @@
       <%= f.govuk_check_box :partnership, :in_a_partnership, 0, label: { text: "Include schools already in a partnership" } %>
     <% end %>
     <%= f.govuk_radio_button :search_type, 'local_authority', label: { text: 'Local authority' } do %>
-      <noscript>
+      <div class="no-js">
         <%= f.govuk_text_field :location, width: "one-third", label: { text: "Enter local authority name" } %>
-      </noscript>
+      </div>
       <div class="js-only">
         <label for="autocomplete-local-authority-name-field" class="govuk-label govuk-label--s school-search-label">
           School name or group
@@ -48,14 +48,14 @@
       <%= f.govuk_check_box :partnership, :in_a_partnership, 0, label: { text: "Include schools already in a partnership" } %>
     <% end %>
     <%= f.govuk_radio_button :search_type, 'network', label: { text: 'MAT / network' } do %>
-      <noscript>
+      <div class="no-js">
         <%= f.govuk_text_field(
-              :location,
-              width: "one-third",
-              label: { text: "Enter name" },
-              hint: { text: "You can search for academy trusts and sponsors, local authority maintained school federations and trusts" })
+          :location,
+          width: "one-third",
+          label: { text: "Enter name" },
+          hint: { text: "You can search for academy trusts and sponsors, local authority maintained school federations and trusts" })
         %>
-      </noscript>
+      </div>
       <div class="js-only">
         <label for="autocomplete-network-name-field" class="govuk-label govuk-label--s school-search-label">
           School name or group

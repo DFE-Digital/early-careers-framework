@@ -1,9 +1,59 @@
-describe("Lead provider search schools page", () => {
+describe("Lead provider schools", () => {
   beforeEach(() => {
     cy.appScenario("schools");
 
     // Not sure why cypress isn't doing this…
     sessionStorage.clear();
+  });
+
+  it.only("should have an initial filter schools page", () => {
+    cy.login("admin");
+
+    cy.visit("/lead-provider/filter-schools");
+
+    cy.get("#school-autocomplete").should("not.be.visible");
+    cy.get("#location-autocomplete").should("not.be.visible");
+
+    cy.get(
+      'label[for="school-search-form-search-type-location-field"]'
+    ).click();
+
+    cy.get("#school-autocomplete").should("not.be.visible");
+    cy.get("#location-autocomplete").should("be.visible");
+
+    cy.get(
+      'label[for="school-search-form-search-type-school-name-field"]'
+    ).click();
+
+    cy.get("#school-autocomplete").should("be.visible");
+    cy.get("#location-autocomplete").should("not.be.visible");
+
+    cy.get('#school-autocomplete [type="text"]').type("East");
+
+    // @todo replace this with a visual test
+    cy.contains("East Orn").should("be.visible");
+
+    cy.get('.new_school_search_form [type="submit"]').click();
+
+    cy.get("h2").should("contain", "14 results found");
+    cy.get('[name="school_search_form[school_name]"]').should(
+      "have.value",
+      "East"
+    );
+
+    cy.go("back");
+
+    cy.get('[for="school-search-form-search-type-all-field"]').click();
+    cy.get(
+      'label[for="school-search-form-partnership-in-a-partnership-field"]:visible'
+    ).click();
+
+    cy.get('.new_school_search_form [type="submit"]').click();
+
+    cy.get("h2").should("contain", "49 results found");
+    cy.get("#school-search-form-partnership-in-a-partnership-field").should(
+      "be.checked"
+    );
   });
 
   it("should support searching for schools", () => {

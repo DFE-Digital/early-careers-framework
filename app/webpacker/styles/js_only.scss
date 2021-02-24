@@ -1,3 +1,7 @@
 body:not(.js-enabled) .js-only {
   display: none;
 }
+
+body.js-enabled .no-js {
+  display: none;
+}
