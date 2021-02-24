@@ -1,3 +1,5 @@
+const editSchoolFormEl = document.querySelector(".js-partnerships-form");
+
 function getCheckedSchools() {
   const checkedSchools = sessionStorage.getItem("school-search-checked");
   if (checkedSchools) {
@@ -14,17 +16,8 @@ function getCheckedSchools() {
   return [];
 }
 
-function getSubmitButton() {
-  return document.querySelector(".js-partnerships-submit");
-}
-
-function getClearButton() {
-  return document.querySelector(".js-partnerships-clear");
-}
-
-function schoolCount(numberSchools) {
-  return `${numberSchools} school${numberSchools === 1 ? "" : "s"}`;
-}
+const getSubmitButton = () => document.querySelector(".js-partnerships-submit");
+const getClearButton = () => document.querySelector(".js-partnerships-clear");
 
 function updateButtons(checkedSchools) {
   const submitButton = getSubmitButton();
@@ -35,20 +28,18 @@ function updateButtons(checkedSchools) {
     submitButton.value = "Add partnerships";
     clearButton.classList.add("govuk-!-display-none");
   } else {
+    const schoolCount = `${checkedSchools.length} school${
+      checkedSchools.length === 1 ? "" : "s"
+    }`;
+
     submitButton.disabled = false;
-    submitButton.value = `Add partnerships with ${schoolCount(
-      checkedSchools.length
-    )}`;
+    submitButton.value = `Add partnerships with ${schoolCount}`;
     clearButton.classList.remove("govuk-!-display-none");
-    clearButton.innerText = `Remove all ${schoolCount(checkedSchools.length)}`;
+    clearButton.innerText = `Remove all ${schoolCount}`;
   }
 }
 
-const editSchoolFormEl = document.querySelector(".js-partnerships-form");
-
-const onCheckboxClicked = (event) => {
-  const { target } = event;
-
+const onCheckboxClicked = ({ target }) => {
   if (target.name !== "partnership_form[schools][]") {
     return;
   }
@@ -70,15 +61,16 @@ const onCheckboxClicked = (event) => {
 function clearCheckedSchools() {
   const checkedSchools = getCheckedSchools();
   checkedSchools.forEach((id) => {
-    const checkboxEl = document.querySelector(`[value="${id}"]`);
+    const checkboxEl = editSchoolFormEl.querySelector(`[value="${id}"]`);
     if (checkboxEl?.type === "hidden") {
       checkboxEl.parentElement.removeChild(checkboxEl);
     } else if (checkboxEl) {
       checkboxEl.checked = false;
     }
-    sessionStorage.setItem("school-search-checked", "[]");
-    updateButtons([]);
   });
+
+  sessionStorage.setItem("school-search-checked", "[]");
+  updateButtons([]);
 }
 
 if (editSchoolFormEl) {
