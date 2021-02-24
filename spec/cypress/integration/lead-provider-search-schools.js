@@ -6,7 +6,7 @@ describe("Lead provider schools", () => {
     sessionStorage.clear();
   });
 
-  it.only("should have an initial filter schools page", () => {
+  it("should have an initial filter schools page", () => {
     cy.login("admin");
 
     cy.visit("/lead-provider/filter-schools");
