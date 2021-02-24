@@ -51,11 +51,11 @@ function getCheckedSchools() {
 }
 
 function getSubmitButton() {
-  return document.querySelector(".partnerships-submit");
+  return document.querySelector(".js-partnerships-submit");
 }
 
 function getClearButton() {
-  return document.querySelector("#clear-button");
+  return document.querySelector(".js-partnerships-clear");
 }
 
 function schoolCount(numberSchools) {
@@ -80,7 +80,7 @@ function updateButtons(checkedSchools) {
   }
 }
 
-const editSchoolFormEl = document.querySelector("form.new_partnership_form");
+const editSchoolFormEl = document.querySelector(".js-partnerships-form");
 
 const onCheckboxClicked = (event) => {
   const { target } = event;

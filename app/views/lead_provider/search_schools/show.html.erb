@@ -21,18 +21,19 @@
       <h2 class="govuk-heading-m"><%= @schools.total_count %> results found</h2>
 
 
-      <%= form_for @partnership_form, url: lead_provider_confirm_partnerships_path do |f| %>
+      <%= form_for(
+            @partnership_form,
+            url: lead_provider_confirm_partnerships_path,
+            html: { class: "js-partnerships-form" }) do |f| %>
         <%= f.govuk_submit(
               "Add partnerships",
-              classes: "partnerships-submit")
+              classes: "js-partnerships-submit")
         %>
         <%= govuk_link_to(
               "Remove all schools",
               "#",
               button: true,
-              class: "govuk-!-display-none govuk-button--secondary",
-              id: "clear-button",
-              'data-cy': 'partnerships-clear')
+              class: "js-partnerships-clear govuk-!-display-none govuk-button--secondary")
         %>
 
 

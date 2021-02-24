@@ -42,8 +42,8 @@ describe("Lead provider search schools page", () => {
 
     cy.contains("49 results found");
 
-    cy.get(".partnerships-submit").as("submit").should("be.disabled");
-    cy.get('[data-cy="partnerships-clear"]').should("not.be.visible");
+    cy.get(".js-partnerships-submit").as("submit").should("be.disabled");
+    cy.get(".js-partnerships-clear").should("not.be.visible");
 
     cy.get('[type="checkbox"][name="partnership_form[schools][]"]').as(
       "checkboxes"
@@ -57,21 +57,15 @@ describe("Lead provider search schools page", () => {
       .should("contain", "Add partnerships with 3 schools")
       .should("not.be.disabled");
 
-    cy.get('[data-cy="partnerships-clear"]').should(
-      "contain",
-      "Remove all 3 schools"
-    );
+    cy.get(".js-partnerships-clear").should("contain", "Remove all 3 schools");
 
     cy.reload();
 
-    cy.get(".partnerships-submit")
+    cy.get(".js-partnerships-submit")
       .should("contain", "Add partnerships with 3 schools")
       .should("not.be.disabled");
 
-    cy.get('[data-cy="partnerships-clear"]').should(
-      "contain",
-      "Remove all 3 schools"
-    );
+    cy.get(".js-partnerships-clear").should("contain", "Remove all 3 schools");
 
     cy.get('[type="checkbox"][name="partnership_form[schools][]"]').as(
       "checkboxes"
@@ -94,7 +88,7 @@ describe("Lead provider search schools page", () => {
     cy.get("@checkboxes").eq(4).should("not.be.checked").click();
     cy.get("@checkboxes").eq(14).should("not.be.checked").click();
 
-    cy.get(".partnerships-submit")
+    cy.get(".js-partnerships-submit")
       .should("contain", "Add partnerships with 5 schools")
       .should("not.be.disabled");
 
@@ -112,9 +106,12 @@ describe("Lead provider search schools page", () => {
     cy.get("@checkboxes").eq(2).should("not.be.checked").click();
     cy.get("@checkboxes").eq(4).should("not.be.checked").click();
 
-    cy.get(".partnerships-submit")
+    cy.get(".js-partnerships-submit")
       .should("contain", "Add partnerships with 7 schools")
-      .should("not.be.disabled");
+      .should("not.be.disabled")
+      .click();
+
+    cy.get("h1").contains("Add partnerships with these 7 schools");
   });
 
   it("should support removing all schools", () => {
@@ -133,12 +130,12 @@ describe("Lead provider search schools page", () => {
     cy.get("@checkboxes").eq(9).click();
     cy.get("@checkboxes").eq(16).click();
 
-    cy.get(".partnerships-submit")
+    cy.get(".js-partnerships-submit")
       .as("submit")
       .should("contain", "Add partnerships with 3 schools")
       .should("not.be.disabled");
 
-    cy.get('[data-cy="partnerships-clear"]')
+    cy.get(".js-partnerships-clear")
       .as("clear")
       .should("contain", "Remove all 3 schools")
       .click();
