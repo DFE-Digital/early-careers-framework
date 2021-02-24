@@ -1,28 +1,34 @@
-<h1>Add partnerships with these <%= @schools.count %> schools</h1>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
 
-<p>Only add partnerships with schools you have fully recruited (for example, you have signed a contract with them).</p>
-<p>Schools will be notified.</p>
+    <h1>Add partnerships with these <%= @schools.count %> schools</h1>
 
-<table class="govuk-table">
-  <thead>
-    <tr class="govuk-table__row">
-      <th scope="col" class="govuk-table__header">School</th>
-      <th scope="col" class="govuk-table__header">Group/network</th>
-      <th scope="col" class="govuk-table__header">Local authority</th>
-    </tr>
-  </thead>
-  <tbody class="govuk-table__body">
-    <% @schools.each do |school| %>
-      <tr class="govuk-table__row">
-        <td class="govuk-table__cell"><%= school.name %></td>
-        <td class="govuk-table__cell">Abbey Academies Trust</td>
-        <td class="govuk-table__cell"><%= school.local_authority&.name %></td>
-      </tr>
+    <p>Only add partnerships with schools you have fully recruited (for example, you have signed a contract with
+      them).</p>
+    <p>Schools will be notified.</p>
+
+    <table class="govuk-table">
+      <thead>
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">School</th>
+          <th scope="col" class="govuk-table__header">Group/network</th>
+          <th scope="col" class="govuk-table__header">Local authority</th>
+        </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+        <% @schools.each do |school| %>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell"><%= school.name %></td>
+            <td class="govuk-table__cell">Abbey Academies Trust</td>
+            <td class="govuk-table__cell"><%= school.local_authority&.name %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <%= form_for @partnership_form, url: lead_provider_confirm_partnerships_path(partnership_form: @partnership_form) do |f| %>
+      <%= f.govuk_submit "Confirm" %>
     <% end %>
-  </tbody>
-</table>
-
-<%= form_for @partnership_form, url: lead_provider_confirm_partnerships_path(partnership_form: @partnership_form) do |f| %>
-<%= f.govuk_submit "Confirm" %>
-<% end %>
-<%= govuk_link_to "Change schools", lead_provider_search_schools_path, button: true, class: "govuk-button--secondary" %>
+    <%= govuk_link_to "Change schools", lead_provider_search_schools_path, button: true, class: "govuk-button--secondary" %>
+  </div>
+</div>

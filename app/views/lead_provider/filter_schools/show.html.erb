@@ -1,0 +1,74 @@
+<% content_for :before_content, govuk_breadcrumbs(breadcrumbs: {
+  "Schools" => lead_provider_schools_path,
+  "Find and add schools" => nil,
+}) %>
+
+<h1 class="govuk-heading-xl">Find and add schools</h1>
+
+<%= form_for @school_search_form, url: lead_provider_search_schools_path, method: :post do |f| %>
+
+  <%= f.govuk_radio_buttons_fieldset(:search_type, legend: { size: 'm', text: 'Search by:' }) do %>
+    <%= f.govuk_radio_button :search_type, 'school_name', label: { text: 'Name or URN' }, link_errors: true do %>
+      <noscript>
+        <%= f.govuk_text_field :school_name, width: "one-third", label: { text: "Enter name or URN" } %>
+      </noscript>
+      <div class="js-only">
+        <label for="autocomplete-school-name-field" class="govuk-label govuk-label--s school-search-label">
+          School name or URN
+        </label>
+        <div id="school-autocomplete" class="autocomplete-wrapper" data-input-name="school_search_form[school_name]"></div>
+      </div>
+      <br/>
+      <%= f.govuk_check_box :partnership, :in_a_partnership, 0, label: { text: "Include schools already in a partnership" } %>
+    <% end %>
+    <%= f.govuk_radio_button :search_type, 'location', label: { text: 'Location' } do %>
+      <noscript>
+        <%= f.govuk_text_field :location, width: "one-third", label: { text: "Enter location" } %>
+      </noscript>
+      <div class="js-only">
+        <label for="autocomplete-location-field" class="govuk-label govuk-label--s school-search-label">
+          Enter location
+        </label>
+        <div id="location-autocomplete" class="autocomplete-wrapper" data-input-name="school_search_form[location]"></div>
+      </div>
+      <br/>
+      <%= f.govuk_check_box :partnership, :in_a_partnership, 0, label: { text: "Include schools already in a partnership" } %>
+    <% end %>
+    <%= f.govuk_radio_button :search_type, 'local_authority', label: { text: 'Local authority' } do %>
+      <noscript>
+        <%= f.govuk_text_field :location, width: "one-third", label: { text: "Enter local authority name" } %>
+      </noscript>
+      <div class="js-only">
+        <label for="autocomplete-local-authority-name-field" class="govuk-label govuk-label--s school-search-label">
+          School name or group
+        </label>
+        <div id="local-authority-autocomplete" class="autocomplete-wrapper" data-input-name="school_search_form[local_authority_name]"></div>
+      </div>
+      <br/>
+      <%= f.govuk_check_box :partnership, :in_a_partnership, 0, label: { text: "Include schools already in a partnership" } %>
+    <% end %>
+    <%= f.govuk_radio_button :search_type, 'network', label: { text: 'MAT / network' } do %>
+      <noscript>
+        <%= f.govuk_text_field(
+              :location,
+              width: "one-third",
+              label: { text: "Enter name" },
+              hint: { text: "You can search for academy trusts and sponsors, local authority maintained school federations and trusts" })
+        %>
+      </noscript>
+      <div class="js-only">
+        <label for="autocomplete-network-name-field" class="govuk-label govuk-label--s school-search-label">
+          School name or group
+        </label>
+        <div id="network-autocomplete" class="autocomplete-wrapper" data-input-name="school_search_form[network_name]"></div>
+      </div>
+      <br/>
+      <%= f.govuk_check_box :partnership, :in_a_partnership, 0, label: { text: "Include schools already in a partnership" } %>
+    <% end %>
+    <%= f.govuk_radio_divider %>
+    <%= f.govuk_radio_button :search_type, 'all', label: { text: 'All schools' } do %>
+      <%= f.govuk_check_box :partnership, :in_a_partnership, 0, label: { text: "Include schools already in a partnership" } %>
+    <% end %>
+  <% end %>
+  <%= f.govuk_submit "Search" %>
+<% end %>
