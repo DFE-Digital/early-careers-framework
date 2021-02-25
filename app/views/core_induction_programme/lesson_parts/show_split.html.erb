@@ -1,0 +1,57 @@
+<% content_for :outside_container do %>
+<div class="govuk-width-container govuk-main-wrapper govuk-body">
+  <%= govuk_breadcrumbs breadcrumbs: course_lesson_breadcrumbs(@current_user, @course_lesson_part.course_lesson) %>
+  <h1 class="govuk-heading-l">Split lesson part</h1>
+  <ul>
+    <li>
+      The part on the left hand side is the one you are splitting (current).
+    </li>
+    <li>
+      The part on the right is the new part.
+    </li>
+    <li>
+      If current part is not last, the new part will be inserted between the current part and the next part.
+    </li>
+    <li>
+      If the current part is last, the new part will become last.
+    </li>
+  </ul>
+</div>
+
+<main class="govuk-body outside-content-wrapper" id="main-content" role="main">
+  <%= form_with model: @split_lesson_part_form, url: cip_year_module_lesson_part_split_path, method: :post do |f| %>
+    <%= f.govuk_error_summary %>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        <%= f.govuk_text_field :title, label: { text: "Current part title" } %>
+        <%= f.govuk_text_area :content, label: { text: "Current part content" }, rows: 10 %>
+      </div>
+
+      <div class="govuk-grid-column-one-half">
+      <%= f.govuk_text_field :new_title, label: { text: "New part title" } %>
+        <%= f.govuk_text_area :new_content, label: { text: "New part content" }, rows: 10 %>
+      </div>
+    </div>
+
+    <%= f.govuk_submit "See preview" %>
+    <%= f.govuk_submit "Save changes" %>
+  <% end %>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <h2 class="govuk-heading-l"><%= @split_lesson_part_form.title %></h2>
+      <div class="gem-c-govspeak govuk-govspeak ">
+        <%= content_to_html(@split_lesson_part_form.content).html_safe %>
+      </div>
+    </div>
+
+    <div class="govuk-grid-column-one-half">
+      <h2 class="govuk-heading-l"><%= @split_lesson_part_form.new_title %></h2>
+      <div class="gem-c-govspeak govuk-govspeak ">
+        <%= content_to_html(@split_lesson_part_form.new_content).html_safe %>
+      </div>
+    </div>
+  </div>
+</main>
+<% end %>

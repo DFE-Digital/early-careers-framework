@@ -8,6 +8,9 @@
     <% if policy(@course_lesson_part).edit? %>
       <%= link_to "Edit lesson content", edit_cip_year_module_lesson_part_path(@course_lesson_part), class: "govuk-button" %>
     <% end %>
+    <% if policy(@course_lesson_part).show_split? %>
+      <%= link_to "Split lesson content", cip_year_module_lesson_part_split_path(part_id: @course_lesson_part.id), class: "govuk-button" %>
+    <% end %>
 
     <h1 class="govuk-heading-xl"> <%= @course_lesson_part.course_lesson.title %></h1>
     <h2 class="govuk-heading-l"> <%= @course_lesson_part.title %></h2>

@@ -10,23 +10,31 @@ RSpec.describe CourseLessonPartPolicy, type: :policy do
     let(:user) { create(:user, :admin) }
     it { is_expected.to permit_action(:show) }
     it { is_expected.to permit_edit_and_update_actions }
+    it { is_expected.to permit_action(:show_split) }
+    it { is_expected.to permit_action(:split) }
   end
 
   context "trying to edit as user" do
     let(:user) { create(:user) }
     it { is_expected.to permit_action(:show) }
     it { is_expected.to forbid_edit_and_update_actions }
+    it { is_expected.to forbid_action(:show_split) }
+    it { is_expected.to forbid_action(:split) }
   end
 
   context "trying to edit as ECT" do
     let(:user) { create(:user, :early_career_teacher) }
     it { is_expected.to permit_action(:show) }
     it { is_expected.to forbid_edit_and_update_actions }
+    it { is_expected.to forbid_action(:show_split) }
+    it { is_expected.to forbid_action(:split) }
   end
 
   context "being a visitor" do
     let(:user) { nil }
     it { is_expected.to permit_action(:show) }
     it { is_expected.to forbid_edit_and_update_actions }
+    it { is_expected.to forbid_action(:show_split) }
+    it { is_expected.to forbid_action(:split) }
   end
 end

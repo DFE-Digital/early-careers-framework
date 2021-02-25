@@ -35,7 +35,10 @@ Rails.application.routes.draw do
     resources :years, controller: "core_induction_programme/years", only: %i[show edit update] do
       resources :modules, controller: "core_induction_programme/modules", only: %i[show edit update] do
         resources :lessons, controller: "core_induction_programme/lessons", only: %i[show edit update] do
-          resources :parts, controller: "core_induction_programme/lesson_parts", only: %i[show edit update]
+          resources :parts, controller: "core_induction_programme/lesson_parts", only: %i[show edit update] do
+            get "split", to: "core_induction_programme/lesson_parts#show_split", as: "split"
+            post "split", to: "core_induction_programme/lesson_parts#split"
+          end
           resource :progress, controller: "core_induction_programme/progress", only: %i[update]
         end
       end

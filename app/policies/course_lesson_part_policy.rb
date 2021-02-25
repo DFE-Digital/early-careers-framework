@@ -17,4 +17,12 @@ class CourseLessonPartPolicy < ApplicationPolicy
   def update?
     admin_only
   end
+
+  def show_split?
+    edit?
+  end
+
+  def split?
+    update?
+  end
 end
