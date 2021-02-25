@@ -3,6 +3,7 @@
 class Partnership < ApplicationRecord
   belongs_to :school
   belongs_to :lead_provider
+  belongs_to :cohort
 
   def confirmed?
     confirmed_at.present?

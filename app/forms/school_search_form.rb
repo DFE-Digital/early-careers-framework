@@ -18,7 +18,7 @@ class SchoolSearchForm
 
   def find_schools(page)
     schools = School.where("schools.name ILIKE ? OR schools.urn ILIKE ?", "%#{school_name || ''}%", "%#{school_name || ''}%")
-                    .includes(:network, :lead_provider)
+                    .includes(:network, :lead_providers)
 
     schools = schools.where.not(id: Partnership.pluck(:school_id)) unless filter_by_partnership_status
 

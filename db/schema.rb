@@ -10,11 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_12_163441) do
+ActiveRecord::Schema.define(version: 2021_02_25_144802) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+  enable_extension "postgis"
 
   create_table "admin_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
@@ -172,9 +173,14 @@ ActiveRecord::Schema.define(version: 2021_02_12_163441) do
     t.uuid "school_id", null: false
     t.uuid "lead_provider_id", null: false
     t.datetime "confirmed_at"
+    t.uuid "cohort_id", default: "f7ae64ef-a13f-4aea-951b-64e6ce9af7e5", null: false
+    t.index ["cohort_id"], name: "index_partnerships_on_cohort_id"
     t.index ["lead_provider_id"], name: "index_partnerships_on_lead_provider_id"
     t.index ["school_id"], name: "index_partnerships_on_school_id"
   end
+
+# Could not dump table "postcodes" because of following StandardError
+#   Unknown type 'geography(Point,4326)' for column 'long_lat'
 
   create_table "provider_relationships", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "lead_provider_id", null: false
@@ -249,6 +255,14 @@ ActiveRecord::Schema.define(version: 2021_02_12_163441) do
     t.index ["urn"], name: "index_schools_on_urn", unique: true
   end
 
+  create_table "spatial_ref_sys", primary_key: "srid", id: :integer, default: nil, force: :cascade do |t|
+    t.string "auth_name", limit: 256
+    t.integer "auth_srid"
+    t.string "srtext", limit: 2048
+    t.string "proj4text", limit: 2048
+    t.check_constraint "(srid > 0) AND (srid <= 998999)", name: "spatial_ref_sys_srid_check"
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "full_name", null: false
     t.string "email", default: "", null: false
@@ -285,6 +299,7 @@ ActiveRecord::Schema.define(version: 2021_02_12_163441) do
   add_foreign_key "lead_provider_cips", "lead_providers"
   add_foreign_key "lead_provider_profiles", "lead_providers"
   add_foreign_key "lead_provider_profiles", "users"
+  add_foreign_key "partnerships", "cohorts"
   add_foreign_key "partnerships", "lead_providers"
   add_foreign_key "partnerships", "schools"
   add_foreign_key "provider_relationships", "cohorts"

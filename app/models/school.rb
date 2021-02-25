@@ -10,8 +10,8 @@ class School < ApplicationRecord
   has_many :school_local_authority_districts
   has_many :local_authority_districts, through: :school_local_authority_districts
 
-  has_one :partnership
-  has_one :lead_provider, through: :partnership
+  has_many :partnerships
+  has_many :lead_providers, through: :partnerships
   has_many :pupil_premiums
   has_and_belongs_to_many :induction_coordinator_profiles
 
@@ -66,6 +66,14 @@ class School < ApplicationRecord
     # TODO: ECF-RP-130 - implement eligibility
     true
   end
+
+  def lead_provider(year)
+    partnerships.joins(%i[lead_provider cohort]).find_by(cohorts: { start_year: year })&.lead_provider
+  end
+
+  scope :unpartnered, lambda { |year|
+    where.not(id: Partnership.joins(:cohort).where(cohorts: { start_year: year }).pluck(:school_id))
+  }
 
   def local_authority
     school_local_authorities.latest.first&.local_authority
