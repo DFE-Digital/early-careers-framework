@@ -44,7 +44,16 @@
               <th scope="col" class="govuk-table__header">Group/network</th>
               <th scope="col" class="govuk-table__header">Local authority</th>
               <th scope="col" class="govuk-table__header">Status</th>
-              <th scope="col" class="govuk-table__header"><span class="js-only">BOX</span></th>
+              <th scope="col" class="govuk-table__header">
+                <span class="js-only govuk-checkboxes--small">
+                  <%= f.govuk_check_box(
+                        :select_all,
+                        0,
+                        0,
+                        multiple: false,
+                        label: -> { tag.span("select all schools", class: "govuk-visually-hidden") }) %>
+                </span>
+              </th>
             </tr>
           </thead>
           <tbody class="govuk-table__body">

@@ -17,6 +17,7 @@ module.exports = {
   },
   rules: {
     "import/no-commonjs": ["error"],
+    "no-param-reassign": ["error", { "props": false }],
     "no-plusplus": ["off"]
   },
 };

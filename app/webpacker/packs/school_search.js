@@ -4,32 +4,49 @@ function getCheckedSchools() {
   const checkedSchools = sessionStorage.getItem("school-search-checked");
   if (checkedSchools) {
     try {
-      return JSON.parse(checkedSchools);
+      return new Set(JSON.parse(checkedSchools));
     } catch (err) {
       // @todo is there a way of monitoring this?
       // eslint-disable-next-line no-console
       console.warn("Error getting saved data", err);
-      return [];
+      return new Set();
     }
   }
 
-  return [];
+  return new Set();
 }
 
-const getSubmitButton = () => document.querySelector(".js-partnerships-submit");
-const getClearButton = () => document.querySelector(".js-partnerships-clear");
+function setCheckedSchools(checkedSchools) {
+  const checkedSchoolsString = JSON.stringify(Array.from(checkedSchools));
+  sessionStorage.setItem("school-search-checked", checkedSchoolsString);
+}
+
+const getSubmitButton = () =>
+  editSchoolFormEl.querySelector(".js-partnerships-submit");
+const getClearButton = () =>
+  editSchoolFormEl.querySelector(".js-partnerships-clear");
+const getSelectAll = () =>
+  editSchoolFormEl.querySelector(
+    "input[name='partnership_form[select_all]'][type='checkbox']"
+  );
+const getCheckboxes = () =>
+  Array.from(
+    editSchoolFormEl.querySelectorAll(
+      "input[name='partnership_form[schools][]'][type='checkbox']"
+    )
+  );
 
 function updateButtons(checkedSchools) {
   const submitButton = getSubmitButton();
   const clearButton = getClearButton();
 
-  if (checkedSchools.length === 0) {
+  if (checkedSchools.size === 0) {
     submitButton.disabled = true;
     submitButton.value = "Add partnerships";
     clearButton.classList.add("govuk-!-display-none");
   } else {
-    const schoolCount = `${checkedSchools.length} school${
-      checkedSchools.length === 1 ? "" : "s"
+    const schoolCount = `${checkedSchools.size} school${
+      checkedSchools.size === 1 ? "" : "s"
     }`;
 
     submitButton.disabled = false;
@@ -39,23 +56,43 @@ function updateButtons(checkedSchools) {
   }
 }
 
+function updateSelectAll() {
+  const selectAll = getSelectAll();
+  const allChecked = getCheckboxes().every((checkbox) => checkbox.checked);
+  selectAll.checked = !!allChecked;
+}
+
+function updateButtonsAndSelectAll(checkedSchools) {
+  updateButtons(checkedSchools);
+  updateSelectAll();
+}
+
+const storeCheckboxState = (target) => {
+  const checkedSchools = getCheckedSchools();
+
+  if (target.checked) {
+    checkedSchools.add(target.value);
+  } else {
+    checkedSchools.delete(target.value);
+  }
+  setCheckedSchools(checkedSchools);
+  return checkedSchools;
+};
+
 const onCheckboxClicked = ({ target }) => {
   if (target.name !== "partnership_form[schools][]") {
     return;
   }
+  const checkedSchools = storeCheckboxState(target);
+  updateButtonsAndSelectAll(checkedSchools);
+};
 
-  const checkedSchools = getCheckedSchools();
-
-  if (target.checked) {
-    checkedSchools.push(target.value);
-  } else if (checkedSchools.includes(target.value)) {
-    checkedSchools.splice(checkedSchools.indexOf(target.value), 1);
-  }
-
-  updateButtons(checkedSchools);
-
-  const checkedSchoolsString = JSON.stringify(checkedSchools);
-  sessionStorage.setItem("school-search-checked", checkedSchoolsString);
+const onSelectAllClicked = ({ target }) => {
+  getCheckboxes().forEach((checkbox) => {
+    checkbox.checked = target.checked;
+    storeCheckboxState(checkbox);
+  });
+  updateButtons(getCheckedSchools());
 };
 
 function clearCheckedSchools() {
@@ -69,35 +106,42 @@ function clearCheckedSchools() {
     }
   });
 
-  sessionStorage.setItem("school-search-checked", "[]");
-  updateButtons([]);
+  setCheckedSchools(new Set());
+  updateButtonsAndSelectAll(new Set());
 }
 
-if (editSchoolFormEl) {
-  const initialData = getCheckedSchools();
+try {
+  if (editSchoolFormEl) {
+    const initialData = getCheckedSchools();
 
-  initialData.forEach((id) => {
-    const checkboxEl = document.querySelector(`[value="${id}"]`);
+    initialData.forEach((id) => {
+      const checkboxEl = document.querySelector(`[value="${id}"]`);
 
-    if (checkboxEl) {
-      checkboxEl.checked = true;
-    } else {
-      const hiddenInputEl = document.createElement("input");
+      if (checkboxEl) {
+        checkboxEl.checked = true;
+      } else {
+        const hiddenInputEl = document.createElement("input");
 
-      hiddenInputEl.type = "hidden";
-      hiddenInputEl.value = id;
-      hiddenInputEl.name = "partnership_form[schools][]";
+        hiddenInputEl.type = "hidden";
+        hiddenInputEl.value = id;
+        hiddenInputEl.name = "partnership_form[schools][]";
 
-      editSchoolFormEl.appendChild(hiddenInputEl);
-    }
-  });
+        editSchoolFormEl.appendChild(hiddenInputEl);
+      }
+    });
 
-  updateButtons(initialData);
+    updateButtonsAndSelectAll(initialData);
 
-  editSchoolFormEl.addEventListener("input", onCheckboxClicked);
+    editSchoolFormEl.addEventListener("click", onCheckboxClicked);
+    getSelectAll().addEventListener("click", onSelectAllClicked);
 
-  getClearButton()?.addEventListener("click", (event) => {
-    event.preventDefault();
-    clearCheckedSchools();
-  });
+    getClearButton()?.addEventListener("click", (event) => {
+      event.preventDefault();
+      clearCheckedSchools();
+    });
+  }
+} catch (e) {
+  // @TODO: monitoring
+  // eslint-disable-next-line no-console
+  console.error(e);
 }
