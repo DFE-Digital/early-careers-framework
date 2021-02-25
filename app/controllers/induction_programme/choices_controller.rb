@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class InductionProgrammeChoicesController < ApplicationController
+class InductionProgramme::ChoicesController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_induction_coordinator
 
@@ -26,7 +26,7 @@ class InductionProgrammeChoicesController < ApplicationController
     if @school_cohort.not_yet_known?
       redirect_to :registrations_learn_options
     else
-      redirect_to induction_programme_choices_path, notice: "Succesfully saved"
+      redirect_to choices_path, notice: "Succesfully saved"
     end
   end
 
