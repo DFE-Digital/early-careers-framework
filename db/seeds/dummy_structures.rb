@@ -1,31 +1,8 @@
 # frozen_string_literal: true
 
-# TODO: Remove network and school seeding when we have a way of getting them from GIAS
-unless School.first
-  local_authority = LocalAuthority.find_or_create_by!(code: "TEST01", name: "Test local authority")
-  local_authority_district = LocalAuthorityDistrict.find_or_create_by!(code: "TEST01", name: "Test local authority")
-  network = Network.find_or_create_by!(name: "Test school network")
-  school1 = School.find_or_create_by!(urn: "TEST_URN_1", name: "Test school one", address_line1: "Test address", country: "England", postcode: "TEST1", network: network, domains: %w[testschool1.sch.uk network.com digital.education.gov.uk])
-  school2 = School.find_or_create_by!(urn: "TEST_URN_2", name: "Test school two", address_line1: "Test address London", country: "England", postcode: "TEST2", network: network, domains: %w[testschool2.sch.uk network.com digital.education.gov.uk])
-  SchoolLocalAuthority.find_or_create_by!(school: school1, local_authority: local_authority, start_year: Time.zone.now.year)
-  SchoolLocalAuthority.find_or_create_by!(school: school2, local_authority: local_authority, start_year: Time.zone.now.year)
-  SchoolLocalAuthorityDistrict.find_or_create_by!(school: school1, local_authority_district: local_authority_district, start_year: Time.zone.now.year)
-  SchoolLocalAuthorityDistrict.find_or_create_by!(school: school2, local_authority_district: local_authority_district, start_year: Time.zone.now.year)
+SchoolDataImporter.new(Rails.logger).delay.run
 
-  SchoolDataImporter.new(Rails.logger).delay.run
-end
-
-# TODO: Remove this when we have a way of adding lead providers, or expand to include all of them
-unless LeadProvider.first
-  LeadProvider.create!(name: "Test Lead Provider")
-end
-
-# TODO: Remove this when we have a way of adding partnerships
-unless Partnership.first || Rails.env.production?
-  Partnership.create!(school: School.first, lead_provider: LeadProvider.first)
-end
-
-unless Cohort.first
+if Cohort.none?
   Cohort.create!(start_year: 2021)
   Cohort.create!(start_year: 2022)
 end
