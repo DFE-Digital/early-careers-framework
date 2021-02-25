@@ -12,7 +12,7 @@
 </div>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-one-third">
-      <%= render "filters" %>
+    <%= render "filters" %>
   </div>
   <div class="govuk-grid-column-two-thirds">
     <div id="school-results">
@@ -59,17 +59,25 @@
               <tr class="govuk-table__row">
                 <td class="govuk-table__cell">
                   <%= school.name %>
-                  <%= "<br/><span class='govuk-body-s'>Pupil premium above 40%</span>".html_safe if  school.pupil_premium_uplift?(2021) %>
-                  <%= "<br/><span class='govuk-body-s'>Located in remote area</span>".html_safe if  school.sparsity_uplift?(2021) %>
+                  <%= "<br/><span class='govuk-body-s'>Pupil premium above 40%</span>".html_safe if school.pupil_premium_uplift?(@school_search_form.year) %>
+                  <%= "<br/><span class='govuk-body-s'>Located in remote area</span>".html_safe if school.sparsity_uplift?(@school_search_form.year) %>
                 </td>
                 <td class="govuk-table__cell"><%= school.network&.name || "<span class='govuk-visually-hidden'>No network</span>".html_safe %></td>
                 <td class="govuk-table__cell"><%= school.local_authority&.name %></td>
-                <td class="govuk-table__cell"></td>
+                <td class="govuk-table__cell">
+                  <% if school.lead_provider(@school_search_form.year).present? %>
+                    <span class="govuk-tag tag-right">
+                      In a partnership
+                    </span>
+                  <% end %>
+                </td>
 
                 <td class="govuk-table__cell">
-                  <div class="govuk-checkboxes--small">
-                    <%= f.govuk_check_box :schools, school.id, 0, label: -> { tag.span("select #{school.name}", class: "govuk-visually-hidden") } %>
-                  </div>
+                  <% if school.lead_provider(@school_search_form.year).nil? %>
+                    <div class="govuk-checkboxes--small">
+                      <%= f.govuk_check_box :schools, school.id, 0, label: -> { tag.span("select #{school.name}", class: "govuk-visually-hidden") } %>
+                    </div>
+                  <% end %>
                 </td>
               </tr>
             <% end %>

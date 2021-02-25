@@ -20,18 +20,18 @@ class SchoolSearchForm
     schools = School.where("schools.name ILIKE ? OR schools.urn ILIKE ?", "%#{school_name || ''}%", "%#{school_name || ''}%")
                     .includes(:network, :lead_providers)
 
-    schools = schools.where.not(id: Partnership.pluck(:school_id)) unless filter_by_partnership_status
+    schools = schools.unpartnered(year) unless show_partnered?
 
     schools = schools.with_local_authority(local_authorities) if local_authorities&.reject(&:blank?)&.any?
 
     schools = schools.where(network: networks) if networks&.reject(&:blank?)&.any?
 
-    if pp && sparse
-      schools = schools.with_pupil_premium_uplift(2021).or(schools.with_sparsity_uplift(2021))
-    elsif pp
-      schools = schools.with_pupil_premium_uplift(2021)
-    elsif sparse
-      schools = schools.with_sparsity_uplift(2021)
+    if only_pupil_premium? && only_sparse?
+      schools = schools.with_pupil_premium_uplift(year).or(schools.with_sparsity_uplift(year))
+    elsif only_pupil_premium?
+      schools = schools.with_pupil_premium_uplift(year)
+    elsif only_sparse?
+      schools = schools.with_sparsity_uplift(year)
     end
 
     schools.page(page)
@@ -45,17 +45,22 @@ class SchoolSearchForm
     Network.all
   end
 
+  def year
+    # @TODO
+    2021
+  end
+
 private
 
-  def filter_by_partnership_status
+  def show_partnered?
     partnership&.include? "in_a_partnership"
   end
 
-  def pp
+  def only_pupil_premium?
     characteristics&.include? "pupil_premium_above_40"
   end
 
-  def sparse
+  def only_sparse?
     characteristics&.include? "top_20_remote_areas"
   end
 end
