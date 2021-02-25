@@ -12,9 +12,7 @@
 </div>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-one-third">
-    <div style="width: 100%; height: 100%; background-color: #dee0e2; padding: 8px;">
       <%= render "filters" %>
-    </div>
   </div>
   <div class="govuk-grid-column-two-thirds">
     <div id="school-results">
@@ -59,8 +57,12 @@
           <tbody class="govuk-table__body">
             <% @schools.each do |school| %>
               <tr class="govuk-table__row">
-                <td class="govuk-table__cell"><%= school.name %></td>
-                <td class="govuk-table__cell">Abbey Academies Trust</td>
+                <td class="govuk-table__cell">
+                  <%= school.name %>
+                  <%= "<br/><span class='govuk-body-s'>Pupil premium above 40%</span>".html_safe if  school.pupil_premium_uplift?(2021) %>
+                  <%= "<br/><span class='govuk-body-s'>Located in remote area</span>".html_safe if  school.sparsity_uplift?(2021) %>
+                </td>
+                <td class="govuk-table__cell"><%= school.network&.name || "<span class='govuk-visually-hidden'>No network</span>".html_safe %></td>
                 <td class="govuk-table__cell"><%= school.local_authority&.name %></td>
                 <td class="govuk-table__cell"></td>
 

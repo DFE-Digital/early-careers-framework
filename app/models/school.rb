@@ -30,6 +30,11 @@ class School < ApplicationRecord
     with_name_like(search_key).or(with_urn_like(search_key))
   }
 
+  scope :with_local_authority, lambda { |local_authority|
+    joins(%i[school_local_authorities local_authorities])
+      .where(school_local_authorities: { end_year: nil }, local_authorities: local_authority)
+  }
+
   def full_address
     address = <<~ADDRESS
       #{address_line1}

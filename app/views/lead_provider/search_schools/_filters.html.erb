@@ -8,42 +8,71 @@
   <%= f.govuk_text_field(
         :school_name,
         label: { text: "School name or group", class: "govuk-label govuk-label--s" }) %>
-  <%= f.govuk_text_field(
-        :location,
-        label: { text: "Location", class: "govuk-label govuk-label--s" },
-        hint: { text: "Enter a postcode, town or region" }) %>
-  <%= f.govuk_fieldset legend: { text: 'Search distance', class: "govuk-hint" } do %>
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">
-        <%= f.govuk_collection_select(
-              :search_distance,
-              [OpenStruct.new(value: 50), OpenStruct.new(value: 20)],
-              :value,
-              :value,
-              label: { text: "Number of units", hidden: true },
-              html_options: { style: "width: 100%;" }) %>
-      </div>
-      <div class="govuk-grid-column-one-half">
-        <%= f.govuk_collection_select(
-              :search_distance_unit,
-              [OpenStruct.new(id: 1, name: 'miles')],
-              :id,
-              :name,
-              label: { text: "Type of units", hidden: true },
-              html_options: { style: "width: 100%;" }) %>
-      </div>
+
+  <div class="filter-box">
+    <%= f.govuk_collection_check_boxes(
+          :characteristics,
+          SchoolSearchForm::CHARACTERISTICS,
+          :id,
+          :name,
+          legend: { text: "Characteristic", class: "govuk-fieldset__legend govuk-fieldset__legend--s" }) %>
+  </div>
+  <div class="filter-box">
+    <%= f.govuk_collection_check_boxes(
+          :partnership,
+          [OpenStruct.new(id: "in_a_partnership", name: "Show schools in a partnership")],
+          :id,
+          :name,
+          legend: { text: "Partnership Status", class: "govuk-fieldset__legend govuk-fieldset__legend--s" }) %>
+  </div>
+  <div class="filter-box">
+    <div style="max-height: 320px; min-height: 200px; overflow-y: scroll">
+      <%= f.govuk_collection_check_boxes(
+    :local_authorities,
+    @school_search_form.local_authority_options,
+    :id,
+    :name,
+    small: true,
+    legend: { text: "Local Authority", class: "govuk-fieldset__legend govuk-fieldset__legend--s" }) %>
     </div>
-  <% end %>
-  <%= f.govuk_collection_check_boxes(
-        :characteristics,
-        SchoolSearchForm::CHARACTERISTICS,
-        :id,
-        :name,
-        legend: { text: "Characteristic", class: "govuk-fieldset__legend govuk-fieldset__legend--s" }) %>
-  <%= f.govuk_collection_check_boxes(
-        :partnership,
-        [OpenStruct.new(id: "in_a_partnership", name: "Show schools in a partnership")],
-        :id,
-        :name,
-        legend: { text: "Partnership Status", class: "govuk-fieldset__legend govuk-fieldset__legend--s" }) %>
+  </div>
+  <div class="filter-box">
+    <div style="max-height: 320px; min-height: 200px; overflow-y: scroll">
+      <%= f.govuk_collection_check_boxes(
+    :networks,
+    @school_search_form.network_options,
+    :id,
+    :name,
+    small: true,
+    legend: { text: "MAT/network", class: "govuk-fieldset__legend govuk-fieldset__legend--s" }) %>
+    </div>
+  </div>
+  <div class="filter-box">
+    <%= f.govuk_text_field(
+          :location,
+          label: { text: "Location", class: "govuk-label govuk-label--s" },
+          hint: { text: "Enter a postcode, town or region" }) %>
+    <%= f.govuk_fieldset legend: { text: 'Search distance', class: "govuk-hint" } do %>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+          <%= f.govuk_collection_select(
+                :search_distance,
+                [OpenStruct.new(value: 50), OpenStruct.new(value: 20)],
+                :value,
+                :value,
+                label: { text: "Number of units", hidden: true },
+                html_options: { style: "width: 100%;" }) %>
+        </div>
+        <div class="govuk-grid-column-one-half">
+          <%= f.govuk_collection_select(
+                :search_distance_unit,
+                [OpenStruct.new(id: 1, name: 'miles')],
+                :id,
+                :name,
+                label: { text: "Type of units", hidden: true },
+                html_options: { style: "width: 100%;" }) %>
+        </div>
+      </div>
+    <% end %>
+  </div>
 <% end %>

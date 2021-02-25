@@ -35,6 +35,8 @@ private
       :search_distance_unit,
       characteristics: [],
       partnership: [],
+      local_authorities: [],
+      networks: [],
     ]
   end
 
