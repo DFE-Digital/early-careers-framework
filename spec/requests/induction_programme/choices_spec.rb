@@ -33,5 +33,10 @@ RSpec.describe "InductionProgramme::Choices", type: :request do
       post "/induction-programme/choices", params: { choice: "not_yet_known" }
       expect(response).to redirect_to(:registrations_learn_options)
     end
+
+    it "redirects to /induction-programme/choices if the choice is full_induction_programme" do
+      post "/induction-programme/choices", params: { choice: "full_induction_programme" }
+      expect(response).to redirect_to(:estimates)
+    end
   end
 end
