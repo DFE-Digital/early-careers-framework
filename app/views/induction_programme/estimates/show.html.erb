@@ -1,0 +1,30 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: choices_path) %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h2 class="govuk-heading-l">Estimated numbers of participants starting in 2021</h2>
+    <%= form_with(model: @school_cohort_form, url: estimates_path) do |f| %>
+      <%= f.govuk_error_summary %>
+      <%= f.govuk_text_field(
+          :estimated_teacher_count,
+          width: 20,
+          link_errors: true,
+          label: {
+            text: "Number of ECTs",
+            class: "govuk-label govuk-label--m"
+          }
+      ) %>
+
+      <%= f.govuk_text_field(
+          :estimated_mentor_count,
+          width: 20,
+          link_errors: true,
+          label: {
+            text: "Number of mentors",
+            class: "govuk-label govuk-label--m"
+          }
+      ) %>
+
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

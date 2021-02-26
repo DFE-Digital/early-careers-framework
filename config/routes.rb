@@ -26,7 +26,10 @@ Rails.application.routes.draw do
     resources :school_search, only: %i[index]
   end
 
-  resource :induction_programme_choices, only: %i[show create], path: "/induction-programme-choices"
+  scope path: "induction-programme", module: :induction_programme do
+    resource :estimates, only: %i[show create]
+    resource :choices, only: %i[show create]
+  end
 
   namespace :demo do
     resources :school_search, only: %i[index]
