@@ -21,17 +21,18 @@ private
   def school_cohort
     @school_cohort ||= begin
       # TODO: Register and Partner 262: Figure out how to update current year
-      @cohort = Cohort.find_by(start_year: 2021)
-      @school = current_user.induction_coordinator_profile.schools.first
-      SchoolCohort.find_or_create_by!(cohort: @cohort, school: @school)
+      cohort = Cohort.find_by(start_year: 2021)
+      school = current_user.induction_coordinator_profile.schools.first
+      SchoolCohort.find_or_create_by!(cohort: cohort, school: school)
     end
   end
 
   def cohort_estimates
-    params.require(:school_cohort_form)
-          .permit(
-            :estimated_teacher_count,
-            :estimated_mentor_count,
-          )
+    params
+      .require(:school_cohort_form)
+      .permit(
+        :estimated_teacher_count,
+        :estimated_mentor_count,
+      )
   end
 end
