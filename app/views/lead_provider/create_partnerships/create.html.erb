@@ -1,0 +1,14 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= govuk_panel title: "You have added partnerships with #{@schools.count} school#{@schools.count === 1 ? "" : "s"}", body: nil %>
+    <h2 class="govuk-heading-l">What happens next</h2>
+    <ul>
+      <li>we will notify the schools and remind them to add their early career teachers and mentors</li>
+      <li>you can check your schools to make sure they have done this and follow up if need be. This will ensure you are
+        paid in time for your participants
+      </li>
+    </ul>
+    <%= govuk_link_to "Add more schools", lead_provider_filter_schools_path, button: true %>
+    <%= govuk_link_to "Check your schools", "#", button: true, class: "govuk-button--secondary" %>
+  </div>
+</div>

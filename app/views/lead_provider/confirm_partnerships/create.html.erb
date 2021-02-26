@@ -19,15 +19,18 @@
         <% @schools.each do |school| %>
           <tr class="govuk-table__row">
             <td class="govuk-table__cell"><%= school.name %></td>
-            <td class="govuk-table__cell">Abbey Academies Trust</td>
+            <td class="govuk-table__cell"><%= school.network&.name || "<span class='govuk-visually-hidden'>No network</span>".html_safe %></td>
             <td class="govuk-table__cell"><%= school.local_authority&.name %></td>
           </tr>
         <% end %>
       </tbody>
     </table>
 
-    <%= form_for @partnership_form, url: lead_provider_confirm_partnerships_path(partnership_form: @partnership_form) do |f| %>
+    <%= form_for @partnership_form, url: lead_provider_create_partnerships_path(partnership_form: @partnership_form) do |f| %>
       <%= f.govuk_submit "Confirm" %>
+      <% @partnership_form.schools.each do |school| %>
+        <%= f.hidden_field :schools, value: school, multiple: true %>
+      <% end %>
     <% end %>
     <%= govuk_link_to "Change schools", lead_provider_search_schools_path, button: true, class: "govuk-button--secondary" %>
   </div>

@@ -71,6 +71,10 @@ class School < ApplicationRecord
     partnerships.joins(%i[lead_provider cohort]).find_by(cohorts: { start_year: year })&.lead_provider
   end
 
+  scope :partnered, lambda { |year|
+    where(id: Partnership.joins(:cohort).where(cohorts: { start_year: year }).pluck(:school_id))
+  }
+
   scope :unpartnered, lambda { |year|
     where.not(id: Partnership.joins(:cohort).where(cohorts: { start_year: year }).pluck(:school_id))
   }
