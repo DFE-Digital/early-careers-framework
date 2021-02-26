@@ -1,13 +1,10 @@
 # frozen_string_literal: true
 
-class InductionProgrammeChoicesController < ApplicationController
-  before_action :authenticate_user!
-  before_action :ensure_induction_coordinator
-
+class InductionProgramme::ChoicesController < InductionProgramme::BaseController
   def show
     @programme_choices = [
-      OpenStruct.new(id: "funded_training_provider", name: "Use a training provider funded by the Department for Education"),
-      OpenStruct.new(id: "free_development_materials", name: "Use the free development materials"),
+      OpenStruct.new(id: "full_induction_programme", name: "Use a training provider funded by the Department for Education"),
+      OpenStruct.new(id: "core_induction_programme", name: "Use the free development materials"),
       OpenStruct.new(id: "design_our_own", name: "Design your own induction based on the Early Career Framework"),
       OpenStruct.new(id: "not_yet_known", name: "I don't know yet"),
     ]
@@ -25,14 +22,10 @@ class InductionProgrammeChoicesController < ApplicationController
 
     if @school_cohort.not_yet_known?
       redirect_to :registrations_learn_options
+    elsif @school_cohort.full_induction_programme?
+      redirect_to estimates_path
     else
-      redirect_to induction_programme_choices_path, notice: "Succesfully saved"
+      redirect_to choices_path, notice: "Succesfully saved"
     end
-  end
-
-private
-
-  def ensure_induction_coordinator
-    raise Pundit::NotAuthorizedError, "Forbidden" unless current_user.induction_coordinator?
   end
 end
