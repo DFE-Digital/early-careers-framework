@@ -21,13 +21,20 @@
 
     <% if policy(@course_lesson_part.course_lesson).set_progress? %>
       <%= form_with url: cip_year_module_lesson_progress_path(lesson_id: @course_lesson_part.course_lesson.id), method: :put do |f| %>
-        <%= f.govuk_collection_check_boxes(
+        <%= f.govuk_collection_radio_buttons(
               :progress,
-              [OpenStruct.new(id: :complete, name: "I feel confident that I've read and understood this session")],
+              [
+                OpenStruct.new(id: :complete, name: "I feel confident that I’ve read and understood this session"),
+                OpenStruct.new(id: :in_progress, name: "I would like more time on this session and will revisit"),
+                OpenStruct.new(id: :discussion_needed, name: "There are sections that I don’t understand and would like to discuss with my mentor"),
+              ],
               :id,
               :name,
               legend: {text: "That's the end of this session"}) %>
-        <%= f.govuk_submit "Complete session" %>
+
+        <p class="govuk-body">Once you click End Session your reflections will be able to view via the self study dashboard. Your mentor will also be able to access these ahead of your weekly meetings also.</p>
+
+        <%= f.govuk_submit "End session" %>
       <% end %>
     <% end %>
 

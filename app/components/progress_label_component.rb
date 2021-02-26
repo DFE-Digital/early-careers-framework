@@ -14,6 +14,8 @@ private
       "govuk-tag--grey"
     when "in_progress"
       "govuk-tag--blue"
+    when "discussion_needed"
+      "govuk-tag--orange"
     else
       ""
     end

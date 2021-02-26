@@ -4,6 +4,7 @@ class CourseLessonProgress < ApplicationRecord
   enum progress: {
     not_started: "not_started",
     in_progress: "in_progress",
+    discussion_needed: "discussion_needed",
     complete: "complete",
   }
 

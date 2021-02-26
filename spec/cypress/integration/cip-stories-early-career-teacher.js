@@ -54,16 +54,27 @@ describe("ECT user interaction with Core Induction Programme", () => {
 
     cy.get("@courseLesson").then(([lesson]) => {
       cy.visitModuleOfLesson(lesson);
-      cy.contains("strong.govuk-tag", "not started");
-
-      cy.visitLesson(lesson);
-      cy.visitModuleOfLesson(lesson);
-      cy.contains("strong.govuk-tag", "in progress");
-
-      cy.visitLesson(lesson);
-      cy.get('[type="checkbox"]').check();
-      cy.get("form").submit();
-      cy.contains("strong.govuk-tag", "complete");
     });
+
+    cy.contains(".govuk-tag", "not started");
+
+    cy.contains("Test Course lesson").click();
+    cy.go("back");
+    cy.contains(".govuk-tag", "in progress");
+
+    cy.contains("Test Course lesson").click();
+    cy.get('[for="progress-discussion-needed-field"]').click();
+    cy.get('[name="commit"]').contains("End session").click();
+    cy.contains(".govuk-tag", "discussion needed");
+
+    cy.contains("Test Course lesson").click();
+    cy.get('[for="progress-in-progress-field"]').click();
+    cy.get('[name="commit"]').contains("End session").click();
+    cy.contains(".govuk-tag", "in progress");
+
+    cy.contains("Test Course lesson").click();
+    cy.get('[for="progress-complete-field"]').click();
+    cy.get('[name="commit"]').contains("End session").click();
+    cy.contains(".govuk-tag", "complete");
   });
 });
