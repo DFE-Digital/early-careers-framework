@@ -4,6 +4,13 @@
     <% if policy(@course_lesson).edit? %>
       <%= link_to "Edit lesson", edit_cip_year_module_lesson_path(id: @course_lesson.id), class: "govuk-button" %>
     <% end %>
+
+    <% if @course_lesson.completion_time_in_minutes %>
+      <h2 class="govuk-heading-m govuk-!-margin-bottom-8">
+        Duration: <%= @course_lesson.duration_in_minutes_in_words %>
+      </h2>
+    <% end %>
+
     <h1 class="govuk-heading-xl"> <%= @course_lesson.title %></h1>
     <p>This lesson has no content!</p>
   </div>

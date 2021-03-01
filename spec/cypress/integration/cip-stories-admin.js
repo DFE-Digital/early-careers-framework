@@ -60,7 +60,7 @@ describe("Admin user interaction with Core Induction Programme", () => {
       cy.get("a.govuk-button").contains("Edit lesson").click();
 
       cy.get("h1").should("contain", "Edit lesson");
-      cy.get("input[name='title']").type("New title");
+      cy.get("input[name='course_lesson[title]']").type("New title");
       cy.contains("Save changes").click();
 
       cy.get("h1").should("contain", "New title");

@@ -14,9 +14,12 @@
         <ul class="app-task-list__items">
           <% if @course_lessons_with_progress.each do |lesson| %>
             <li class="app-task-list__item">
-              <span>
+              <div>
                 <%= govuk_link_to lesson.title, cip_year_module_lesson_path(@course_module.course_year, @course_module, lesson) %>
-              </span>
+                <% if lesson.completion_time_in_minutes %>
+                  <p>Duration: <%= lesson.duration_in_minutes_in_words %></p>
+                <% end %>
+              </div>
               <%= render ProgressLabelComponent.new progress: lesson.progress %>
             </li>
           <% end.empty? %>

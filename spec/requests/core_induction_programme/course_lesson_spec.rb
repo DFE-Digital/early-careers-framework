@@ -38,10 +38,23 @@ RSpec.describe "Core Induction Programme Lesson", type: :request do
 
     describe "PUT /core-induction-programme/years/:years/modules/:modules/lessons/:lessons" do
       it "redirects to the lesson page when saving title" do
-        put course_lesson_url, params: { commit: "Save changes", title: "New title" }
+        put course_lesson_url, params: { course_lesson: { commit: "Save changes", title: "New title" } }
         expect(response).to redirect_to(course_lesson_url)
         get course_lesson_url
         expect(response.body).to include("New title")
+      end
+
+      it "redirects to the lesson page when saving minutes" do
+        put course_lesson_url, params: { course_lesson: { commit: "Save changes", completion_time_in_minutes: 80 } }
+        expect(response).to redirect_to(course_lesson_url)
+        get course_lesson_url
+        expect(response.body).to include("Duration: 1 hour 20 minutes")
+      end
+
+      it "renders the error page with an error when an invalid number is inputted" do
+        put course_lesson_url, params: { course_lesson: { commit: "Save changes", completion_time_in_minutes: -10 } }
+        expect(response).to render_template(:edit)
+        expect(response.body).to include("Enter a number greater than 0")
       end
     end
   end

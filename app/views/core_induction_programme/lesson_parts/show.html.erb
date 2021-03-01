@@ -12,10 +12,15 @@
       <%= link_to "Split lesson content", cip_year_module_lesson_part_split_path(part_id: @course_lesson_part.id), class: "govuk-button" %>
     <% end %>
 
-    <h1 class="govuk-heading-xl"> <%= @course_lesson_part.course_lesson.title %></h1>
-    <h2 class="govuk-heading-l"> <%= @course_lesson_part.title %></h2>
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-4"> <%= @course_lesson_part.course_lesson.title %></h1>
+    <% if @course_lesson_part.course_lesson.completion_time_in_minutes %>
+      <h2 class="govuk-caption-m govuk-!-margin-bottom-8">
+        Duration: <%= @course_lesson_part.course_lesson.duration_in_minutes_in_words %>
+      </h2>
+    <% end %>
 
-    <div class="gem-c-govspeak govuk-govspeak ">
+    <h2 class="govuk-heading-l"> <%= @course_lesson_part.title %></h2>
+    <div class="gem-c-govspeak govuk-govspeak">
       <%= @course_lesson_part.content_to_html.html_safe %>
     </div>
 
@@ -31,12 +36,9 @@
               :id,
               :name,
               legend: {text: "That's the end of this session"}) %>
-
         <p class="govuk-body">Once you click End Session your reflections will be able to view via the self study dashboard. Your mentor will also be able to access these ahead of your weekly meetings also.</p>
-
         <%= f.govuk_submit "End session" %>
       <% end %>
     <% end %>
-
   </div>
 </div>

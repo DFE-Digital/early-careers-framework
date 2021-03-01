@@ -2,8 +2,14 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <h1 class="govuk-heading-l">Edit lesson</h1>
-    <%= form_with url: cip_year_module_lesson_path, method: :put do |f| %>
+    <%= form_with model: @course_lesson, url: cip_year_module_lesson_path, method: :put do |f| %>
+      <%= f.govuk_error_summary %>
       <%= f.govuk_text_field :title, label: { text: "Lesson title" }, value: @course_lesson.title %>
+      <%= f.govuk_number_field(
+            :completion_time_in_minutes,
+            label: { text: "Time in minutes"},
+            width: 4, hint: { text: " For example, 90"},
+            value: @course_lesson.completion_time_in_minutes) %>
       <%= f.govuk_submit "Save changes" %>
     <% end %>
   </div>
