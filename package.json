@@ -8,6 +8,8 @@
   "dependencies": {
     "@rails/webpacker": "^5.2.1",
     "accessible-autocomplete": "^2.0.3",
+    "axe-core": "^4.1.2",
+    "cypress-axe": "^0.12.2",
     "govuk-frontend": "^3.10.2",
     "serialize-javascript": "^5.0.1",
     "set-value": "^3.0.2",
