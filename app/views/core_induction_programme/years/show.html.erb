@@ -2,7 +2,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <% if policy(@course_year).edit? %>
-      <%= link_to "Edit year content", edit_cip_year_url(@course_year), class: "govuk-button" %>
+      <%= govuk_link_to "Edit year content", edit_cip_year_url(@course_year), button: true %>
     <% end %>
     <h1 class="govuk-heading-l"><%= @course_year.title %></h1>
     <h2 class="govuk-heading-l">Modules</h2>

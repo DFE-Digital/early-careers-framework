@@ -2,7 +2,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <% if policy(@course_module).edit? %>
-      <%= link_to "Edit module content", edit_cip_year_module_url(@course_module), class: "govuk-button" %>
+      <%= govuk_link_to "Edit module content", edit_cip_year_module_url(@course_module), button: true%>
     <% end %>
     <h1 class="govuk-heading-l"> <%= @course_module.title %></h1>
     <div class="gem-c-govspeak govuk-govspeak ">

@@ -1,0 +1,12 @@
+<li class="step-by-step-navigation__item step-by-step-navigation__item--previous">
+  <%= govuk_link_to(@url, class: "step-by-step-navigation__link") do %>
+    <span class="step-by-step-navigation__link-title">
+      <span class="step-by-step-navigation__previous-link-icon"></span>
+      <span class="step-by-step-navigation__link-text">
+        Previous
+      </span>
+    </span>
+    <span class="step-by-step-navigation__link-divider visually-hidden">:</span>
+    <span class="step-by-step-navigation__link-label"><%= @text %></span>
+  <% end %>
+</li>

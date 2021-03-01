@@ -2,20 +2,33 @@
 <div class="govuk-width-container govuk-main-wrapper govuk-body">
   <%= govuk_breadcrumbs breadcrumbs: course_lesson_breadcrumbs(@current_user, @course_lesson_part.course_lesson) %>
   <h1 class="govuk-heading-l">Split lesson part</h1>
-  <ul>
-    <li>
-      The part on the left hand side is the one you are splitting (current).
-    </li>
-    <li>
-      The part on the right is the new part.
-    </li>
-    <li>
-      If current part is not last, the new part will be inserted between the current part and the next part.
-    </li>
-    <li>
-      If the current part is last, the new part will become last.
-    </li>
+
+  <p class="govuk-body govuk-!-font-size-19 govuk-!-margin-bottom-2">Contents</p>
+
+  <ul class="govuk-list">
+    <% @course_lesson_part.course_lesson.course_lesson_parts_in_order.each do |part| %>
+      <li class="govuk-list--bullet">
+        <% if part == @course_lesson_part %>
+          <span><%= part.title %></span>
+        <% else %>
+          <%= govuk_link_to part.title, cip_year_module_lesson_part_split_path(part_id: part.id) %>
+        <% end %>
+      </li>
+    <% end %>
   </ul>
+
+  <p>
+    The first part is the one you are splitting (current).
+  </p>
+  <p>
+    The second part is the new part.
+  </p>
+  <p>
+    If current part is not last, the new part will be inserted between the current part and the next part.
+  </p>
+  <p>
+    If the current part is last, the new part will become last.
+  </p>
 </div>
 
 <main class="govuk-body outside-content-wrapper" id="main-content" role="main">
