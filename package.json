@@ -13,7 +13,9 @@
     "set-value": "^3.0.2"
   },
   "devDependencies": {
+    "axe-core": "^4.1.2",
     "cypress": "^6.5.0",
+    "cypress-axe": "^0.12.2",
     "cypress-intellij-reporter": "^0.0.6",
     "eslint": "^7.13.0",
     "eslint-config-airbnb-base": "^14.2.1",

@@ -13,9 +13,6 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-// Import commands.js using ES2015 syntax:
+import "./axe";
 import "./commands";
 import "./on-rails";
-
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
