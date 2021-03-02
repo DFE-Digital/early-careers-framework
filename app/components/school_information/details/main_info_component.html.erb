@@ -1,0 +1,37 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-m govuk-!-margin-bottom-2">
+      School information
+    </h1>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          URN
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @school.urn %>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Local authority
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Essex
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          School contact
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <a href="#"><%= @school.primary_contact_email %></a>
+        </dd>
+      </div>
+
+    </dl>
+  </div>
+</div>

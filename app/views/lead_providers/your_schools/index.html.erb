@@ -1,0 +1,15 @@
+<%= render ::SchoolInformation::YourSchools::HeadingComponent.new %>
+
+<%= render ::SchoolInformation::YourSchools::NavigationComponent.new(cohorts: @cohorts, selected_cohort: @selected_cohort) %>
+
+<%= render ::SchoolInformation::YourSchools::ParticipantsComponent.new %>
+
+<div class="govuk-grid-row govuk-!-margin-bottom-3">
+  <div class="govuk-grid-column-two-thirds">
+    <p class="govuk-body">See which schools have added their early career teachers and mentors.</p>
+  </div>
+</div>
+
+<%= render ::SchoolInformation::YourSchools::ParticipantsSchoolSearchComponent.new(schools: @schools, selected_cohort: @selected_cohort, school_search_form: @school_search_form) %>
+
+

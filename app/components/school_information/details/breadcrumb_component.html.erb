@@ -1,0 +1,16 @@
+<div class="govuk-breadcrumbs">
+  <ol class="govuk-breadcrumbs__list">
+
+    <li class="govuk-breadcrumbs__list-item">
+      <%= govuk_link_to lead_providers_your_schools_path, class: "govuk-breadcrumbs__link" do %>
+        Schools
+      <% end %>
+    </li>
+
+    <li class="govuk-breadcrumbs__list-item">
+      <%= govuk_link_to lead_providers_your_schools_path(selected_cohort_id: @selected_cohort.id), class: "govuk-breadcrumbs__link" do %>
+        <%= @selected_cohort.start_year %> cohort
+      <% end %>
+    </li>
+  </ol>
+</div>

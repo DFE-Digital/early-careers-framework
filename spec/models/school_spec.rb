@@ -18,8 +18,8 @@ RSpec.describe School, type: :model do
   end
 
   describe "associations" do
-    it { is_expected.to have_one(:partnership) }
-    it { is_expected.to have_one(:lead_provider).through(:partnership) }
+    it { is_expected.to have_many(:partnerships) }
+    it { is_expected.to have_many(:lead_providers).through(:partnerships) }
     it { is_expected.to have_and_belong_to_many(:induction_coordinator_profiles) }
     it { is_expected.to have_many(:early_career_teacher_profiles) }
     it { is_expected.to have_many(:early_career_teachers).through(:early_career_teacher_profiles) }

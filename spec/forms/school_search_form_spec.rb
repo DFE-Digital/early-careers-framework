@@ -39,7 +39,8 @@ RSpec.describe SchoolSearchForm, type: :model do
     it "finds schools that have a partnership" do
       school = schools[2]
       lead_provider = FactoryBot.create(:lead_provider)
-      Partnership.create!(school: school, lead_provider: lead_provider)
+      cohort = FactoryBot.create(:cohort, start_year: 2021)
+      Partnership.create!(school: school, lead_provider: lead_provider, cohort: cohort)
 
       form = SchoolSearchForm.new(partnership: ["", "in_a_partnership"])
       search_result = form.find_schools(1)
@@ -51,7 +52,8 @@ RSpec.describe SchoolSearchForm, type: :model do
     it "filters schools by name and partnership status" do
       school = schools[2]
       lead_provider = FactoryBot.create(:lead_provider)
-      Partnership.create!(school: school, lead_provider: lead_provider)
+      cohort = FactoryBot.create(:cohort, start_year: 2021)
+      Partnership.create!(school: school, lead_provider: lead_provider, cohort: cohort)
 
       form = SchoolSearchForm.new(school_name: "Test school one", partnership: ["", "in_a_partnership"])
       search_result = form.find_schools(1)

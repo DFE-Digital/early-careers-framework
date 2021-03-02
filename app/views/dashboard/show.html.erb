@@ -1,11 +1,29 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <h1 class="govuk-heading-l">User dashboard</h1>
-    <p class="govuk-body"> You are logged in</p>
+
 
     <% if @current_user.lead_provider? %>
-      <%= govuk_link_to "Go to school search", school_search_path %>
-    <% end %>
 
+      <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">
+          <%= @lead_provider.name %>
+        </h1>
+        <div class="index-group index-group-lead-provider">
+          <h2 class="govuk-heading-m">
+            <%= govuk_link_to "Find and add schools", lead_providers_your_schools_path %>
+          </h2>
+          <p class="govuk-body">Search for schools you want to recruit and add schools you have partnered with.</p>
+        </div>
+        <div class="index-group index-group-lead-provider">
+          <h2 class="govuk-heading-m">
+            <%= govuk_link_to "Check your schools for 2021", lead_providers_your_schools_path %>
+          </h2>
+          <p class="govuk-body">See which schools have added their early career teachers and mentors.</p>
+        </div>
+      </div>
+    <% else %>
+      <h1 class="govuk-heading-l">User dashboard</h1>
+      <p class="govuk-body"> You are logged in</p>
+    <% end %>
   </div>
 </div>

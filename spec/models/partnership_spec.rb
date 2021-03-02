@@ -3,24 +3,5 @@
 require "rails_helper"
 
 RSpec.describe Partnership, type: :model do
-  it "can be unconfirmed" do
-    partnership = Partnership.create!(
-      school: FactoryBot.create(:school),
-      lead_provider: FactoryBot.create(:lead_provider),
-    )
-    expect(partnership.confirmed?).to be false
-  end
 
-  it "can be confirmed" do
-    partnership = Partnership.create!(
-      school: FactoryBot.create(:school),
-      lead_provider: FactoryBot.create(:lead_provider),
-    )
-
-    partnership.confirm
-    expect(partnership.confirmed?).to be true
-
-    database_partnership = Partnership.first
-    expect(database_partnership.confirmed?).to be true
-  end
 end

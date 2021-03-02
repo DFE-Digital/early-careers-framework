@@ -1,0 +1,17 @@
+<nav class="hmcts-sub-navigation" aria-label="Sub navigation">
+  <ul class="hmcts-sub-navigation__list">
+    <% @cohorts.each do |cohort| %>
+      <li class="hmcts-sub-navigation__item">
+        <% if cohort == @selected_cohort %>
+          <%= govuk_link_to lead_providers_your_schools_path(selected_cohort_id: cohort.id), class: "hmcts-sub-navigation__link govuk-link--no-visited-state", 'aria-current' => 'page'  do %>
+            <%= cohort.start_year %> cohort
+          <% end %>
+        <% else %>
+          <%= govuk_link_to lead_providers_your_schools_path(selected_cohort_id: cohort.id), class: "hmcts-sub-navigation__link govuk-link--no-visited-state" do %>
+            <%= cohort.start_year %> cohort
+          <% end %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</nav>
