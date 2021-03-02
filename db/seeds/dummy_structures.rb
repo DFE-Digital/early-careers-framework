@@ -15,7 +15,7 @@ unless School.first
   SchoolDataImporter.new(Rails.logger).delay.run
 end
 
-# TODO: Remove this when we have a way of adding lead providers,or expand to include all of them
+# TODO: Remove this when we have a way of adding lead providers, or expand to include all of them
 unless LeadProvider.first
   LeadProvider.create!(name: "Test Lead Provider")
 end
