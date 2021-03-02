@@ -20,14 +20,14 @@ unless LeadProvider.first
   LeadProvider.create!(name: "Test Lead Provider")
 end
 
-# TODO: Remove this when we have a way of adding partnerships
-unless Partnership.first || Rails.env.production?
-  Partnership.create!(school: School.first, lead_provider: LeadProvider.first)
-end
-
 if Cohort.none?
   Cohort.create!(start_year: 2021)
   Cohort.create!(start_year: 2022)
+end
+
+# TODO: Remove this when we have a way of adding partnerships
+unless Partnership.first || Rails.env.production?
+  Partnership.create!(school: School.first, lead_provider: LeadProvider.first, cohort: Cohort.find_by(start_year: 2021))
 end
 
 if CoreInductionProgramme.none?
