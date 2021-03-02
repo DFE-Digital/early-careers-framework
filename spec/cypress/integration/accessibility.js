@@ -36,7 +36,10 @@ describe("Accessibility", () => {
     cy.checkA11y();
 
     cy.get('[action="/users/sign_in_with_token"] [name="commit"]').click();
-    cy.get("h1").should("contain", "User dashboard");
+    cy.get("@userData").then((user) => {
+      cy.get("h1").should("contain", `Hi ${user.full_name}`);
+    });
+
     cy.checkA11y();
   });
 

@@ -54,7 +54,7 @@
       <% end %>
     <% end %>
 
-    <nav class="step-by-step-navigation" role="navigation">
+    <nav class="step-by-step-navigation" role="navigation" aria-label="Lesson Part Navigation">
       <ul class="step-by-step-navigation__list">
         <% if @course_lesson_part.previous_lesson_part %>
           <%= render NavigationPreviousComponent.new(

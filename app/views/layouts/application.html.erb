@@ -43,7 +43,7 @@
         <div class="govuk-header__content">
           <%= govuk_link_to "Early careers framework", "/", class: "govuk-header__link govuk-header__link--service-name" %>
           <button type="button" role="button" data-module="govuk-button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">Menu</button>
-          <nav>
+          <nav aria-label="Page Navigation">
             <ul id="navigation" class="govuk-header__navigation " aria-label="Top Level Navigation">
               <% if user_signed_in? %>
               <li class="govuk-header__navigation-item">
