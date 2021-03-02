@@ -7,12 +7,10 @@ module LeadProviders
     before_action :authenticate_user!
     before_action :ensure_lead_provider_or_admin
 
-    private
+  private
 
     def ensure_lead_provider_or_admin
       raise Pundit::NotAuthorizedError, "Forbidden" unless current_user&.admin? || current_user&.lead_provider?
     end
-
   end
 end
-

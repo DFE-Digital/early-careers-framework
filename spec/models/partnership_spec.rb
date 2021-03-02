@@ -3,5 +3,4 @@
 require "rails_helper"
 
 RSpec.describe Partnership, type: :model do
-
 end

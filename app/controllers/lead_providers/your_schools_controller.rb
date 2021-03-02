@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module LeadProviders
   class YourSchoolsController < ::LeadProviders::BaseController
     before_action :set_lead_provider
@@ -50,4 +51,3 @@ module LeadProviders
     end
   end
 end
-
