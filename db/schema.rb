@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_10_111857) do
+ActiveRecord::Schema.define(version: 2021_03_02_031917) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -73,6 +73,15 @@ ActiveRecord::Schema.define(version: 2021_02_10_111857) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "name", null: false
+  end
+
+  create_table "district_sparsities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "local_authority_district_id", null: false
+    t.integer "start_year", limit: 2, null: false
+    t.integer "end_year", limit: 2
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["local_authority_district_id"], name: "index_district_sparsities_on_local_authority_district_id"
   end
 
   create_table "early_career_teacher_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -162,7 +171,8 @@ ActiveRecord::Schema.define(version: 2021_02_10_111857) do
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "school_id", null: false
     t.uuid "lead_provider_id", null: false
-    t.datetime "confirmed_at"
+    t.uuid "cohort_id", default: "84eeb96d-d8bf-4587-af9b-6d43e0d89dc8", null: false
+    t.index ["cohort_id"], name: "index_partnerships_on_cohort_id"
     t.index ["lead_provider_id"], name: "index_partnerships_on_lead_provider_id"
     t.index ["school_id"], name: "index_partnerships_on_school_id"
   end
@@ -277,6 +287,7 @@ ActiveRecord::Schema.define(version: 2021_02_10_111857) do
   add_foreign_key "cohorts_lead_providers", "lead_providers"
   add_foreign_key "delivery_partner_profiles", "delivery_partners"
   add_foreign_key "delivery_partner_profiles", "users"
+  add_foreign_key "district_sparsities", "local_authority_districts"
   add_foreign_key "early_career_teacher_profiles", "cohorts"
   add_foreign_key "early_career_teacher_profiles", "core_induction_programmes"
   add_foreign_key "early_career_teacher_profiles", "schools"
@@ -287,6 +298,7 @@ ActiveRecord::Schema.define(version: 2021_02_10_111857) do
   add_foreign_key "lead_provider_cips", "lead_providers"
   add_foreign_key "lead_provider_profiles", "lead_providers"
   add_foreign_key "lead_provider_profiles", "users"
+  add_foreign_key "partnerships", "cohorts"
   add_foreign_key "partnerships", "lead_providers"
   add_foreign_key "partnerships", "schools"
   add_foreign_key "provider_relationships", "cohorts"
