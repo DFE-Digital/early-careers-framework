@@ -171,7 +171,7 @@ ActiveRecord::Schema.define(version: 2021_03_02_031917) do
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "school_id", null: false
     t.uuid "lead_provider_id", null: false
-    t.uuid "cohort_id", default: "84eeb96d-d8bf-4587-af9b-6d43e0d89dc8", null: false
+    t.uuid "cohort_id", default: "8dd4aa56-4955-48f3-8ed4-41aa942c7a09", null: false
     t.index ["cohort_id"], name: "index_partnerships_on_cohort_id"
     t.index ["lead_provider_id"], name: "index_partnerships_on_lead_provider_id"
     t.index ["school_id"], name: "index_partnerships_on_school_id"
