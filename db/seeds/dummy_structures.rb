@@ -26,6 +26,13 @@ if Cohort.none?
   Cohort.find_or_create_by!(start_year: 2022)
 end
 
+test_lead_provider = LeadProvider.find_by(name: "Test Lead Provider")
+
+if test_lead_provider
+  test_lead_provider.cohorts = Cohort.all
+  test_lead_provider.save
+end
+
 # TODO: Remove this when we have a way of adding partnerships
 unless Partnership.first || Rails.env.production?
   Partnership.find_or_create_by!(school: School.first, lead_provider: LeadProvider.first, cohort: Cohort.find_by(start_year: 2021))

@@ -5,7 +5,7 @@ module LeadProviders
     before_action :set_lead_provider
 
     def index
-      @cohorts ||= Cohort.where(start_year: [2021, 2022])
+      @cohorts ||= @lead_provider.cohorts
       @selected_cohort = if params[:selected_cohort_id]
                            Cohort.find(params[:selected_cohort_id])
                          else
