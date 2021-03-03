@@ -1,3 +1,8 @@
+<%= content_for :before_content, govuk_breadcrumbs(breadcrumbs: {
+  "Dashboard" => dashboard_path,
+  "Your Schools" => nil
+}) %>
+
 <%= render ::SchoolInformation::YourSchools::HeadingComponent.new %>
 <%= render ::SchoolInformation::YourSchools::NavigationComponent.new(cohorts: @cohorts, selected_cohort: @selected_cohort) %>
 <%= render ::SchoolInformation::YourSchools::ParticipantsComponent.new %>
