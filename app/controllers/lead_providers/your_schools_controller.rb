@@ -9,7 +9,7 @@ module LeadProviders
       @selected_cohort = if params[:selected_cohort_id]
                            Cohort.find(params[:selected_cohort_id])
                          else
-                           Cohort.find_by(start_year: 2021)
+                           Cohort.find_by(start_year: Date.today.year)
                          end
 
       @school_search_form = SchoolSearchForm.new(*form_params_index)

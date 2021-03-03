@@ -11,30 +11,31 @@ unless School.first
   SchoolLocalAuthority.find_or_create_by!(school: school2, local_authority: local_authority, start_year: Time.zone.now.year)
   SchoolLocalAuthorityDistrict.find_or_create_by!(school: school1, local_authority_district: local_authority_district, start_year: Time.zone.now.year)
   SchoolLocalAuthorityDistrict.find_or_create_by!(school: school2, local_authority_district: local_authority_district, start_year: Time.zone.now.year)
-
   SchoolDataImporter.new(Rails.logger).delay.run
 end
 
+
+
 # TODO: Remove this when we have a way of adding lead providers, or expand to include all of them
 unless LeadProvider.first
-  LeadProvider.create!(name: "Test Lead Provider")
+  LeadProvider.find_or_create_by!(name: "Test Lead Provider")
 end
 
 if Cohort.none?
-  Cohort.create!(start_year: 2021)
-  Cohort.create!(start_year: 2022)
+  Cohort.find_or_create_by!(start_year: 2021)
+  Cohort.find_or_create_by!(start_year: 2022)
 end
 
 # TODO: Remove this when we have a way of adding partnerships
 unless Partnership.first || Rails.env.production?
-  Partnership.create!(school: School.first, lead_provider: LeadProvider.first, cohort: Cohort.find_by(start_year: 2021))
+  Partnership.find_or_create_by!(school: School.first, lead_provider: LeadProvider.first, cohort: Cohort.find_by(start_year: 2021))
 end
 
 if CoreInductionProgramme.none?
-  CoreInductionProgramme.create!(name: "Ambition Institute")
-  CoreInductionProgramme.create!(name: "Education Development Trust")
-  CoreInductionProgramme.create!(name: "Teach First")
-  CoreInductionProgramme.create!(name: "UCL")
+  CoreInductionProgramme.find_or_create_by!(name: "Ambition Institute")
+  CoreInductionProgramme.find_or_create_by!(name: "Education Development Trust")
+  CoreInductionProgramme.find_or_create_by!(name: "Teach First")
+  CoreInductionProgramme.find_or_create_by!(name: "UCL")
 end
 
 if Rails.env.development? || Rails.env.deployed_development?
