@@ -17,7 +17,8 @@ class SchoolSearchForm
                 :search_type,
                 :cohort_year,
                 :lead_provider_id,
-                :selected_cohort_id
+                :selected_cohort_id,
+                :in_school_partnership
 
   def find_schools(page)
     schools = School.where("schools.name ILIKE ? OR schools.urn ILIKE ?", "%#{school_name || ''}%", "%#{school_name || ''}%")
@@ -25,7 +26,7 @@ class SchoolSearchForm
 
     schools = schools.unpartnered(year) unless show_partnered?
 
-    schools = schools.partnered(year) if show_partnered?
+    schools = schools.partnered(year) if in_school_partnership
 
     schools = schools.partnered_with_lead_provider(lead_provider_id) if lead_provider_id
 

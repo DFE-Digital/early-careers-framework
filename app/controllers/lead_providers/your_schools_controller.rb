@@ -15,7 +15,7 @@ module LeadProviders
       @school_search_form = SchoolSearchForm.new(*form_params_index)
       @school_search_form.cohort_year = @selected_cohort.start_year
       @school_search_form.lead_provider_id = @lead_provider.id
-      @school_search_form.partnership = "in_a_partnership"
+      @school_search_form.with_school_partnerships = "in_a_partnership"
 
       @schools = @school_search_form.find_schools(params[:page])
     end
