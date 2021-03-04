@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_25_081103) do
+ActiveRecord::Schema.define(version: 2021_03_02_031917) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -171,7 +171,8 @@ ActiveRecord::Schema.define(version: 2021_02_25_081103) do
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "school_id", null: false
     t.uuid "lead_provider_id", null: false
-    t.datetime "confirmed_at"
+    t.uuid "cohort_id", default: "f85b3d42-9f6e-41e2-a014-0a09caea7e93", null: false
+    t.index ["cohort_id"], name: "index_partnerships_on_cohort_id"
     t.index ["lead_provider_id"], name: "index_partnerships_on_lead_provider_id"
     t.index ["school_id"], name: "index_partnerships_on_school_id"
   end
@@ -297,6 +298,7 @@ ActiveRecord::Schema.define(version: 2021_02_25_081103) do
   add_foreign_key "lead_provider_cips", "lead_providers"
   add_foreign_key "lead_provider_profiles", "lead_providers"
   add_foreign_key "lead_provider_profiles", "users"
+  add_foreign_key "partnerships", "cohorts"
   add_foreign_key "partnerships", "lead_providers"
   add_foreign_key "partnerships", "schools"
   add_foreign_key "provider_relationships", "cohorts"

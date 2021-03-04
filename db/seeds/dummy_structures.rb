@@ -11,30 +11,36 @@ unless School.first
   SchoolLocalAuthority.find_or_create_by!(school: school2, local_authority: local_authority, start_year: Time.zone.now.year)
   SchoolLocalAuthorityDistrict.find_or_create_by!(school: school1, local_authority_district: local_authority_district, start_year: Time.zone.now.year)
   SchoolLocalAuthorityDistrict.find_or_create_by!(school: school2, local_authority_district: local_authority_district, start_year: Time.zone.now.year)
-
   SchoolDataImporter.new(Rails.logger).delay.run
 end
 
 # TODO: Remove this when we have a way of adding lead providers, or expand to include all of them
 unless LeadProvider.first
-  LeadProvider.create!(name: "Test Lead Provider")
+  LeadProvider.find_or_create_by!(name: "Test Lead Provider")
+end
+
+if Cohort.none?
+  Cohort.find_or_create_by!(start_year: 2021)
+  Cohort.find_or_create_by!(start_year: 2022)
+end
+
+test_lead_provider = LeadProvider.find_by(name: "Test Lead Provider")
+
+if test_lead_provider
+  test_lead_provider.cohorts = Cohort.all
+  test_lead_provider.save!
 end
 
 # TODO: Remove this when we have a way of adding partnerships
 unless Partnership.first || Rails.env.production?
-  Partnership.create!(school: School.first, lead_provider: LeadProvider.first)
-end
-
-unless Cohort.first
-  Cohort.create!(start_year: 2021)
-  Cohort.create!(start_year: 2022)
+  Partnership.find_or_create_by!(school: School.first, lead_provider: LeadProvider.first, cohort: Cohort.find_by(start_year: 2021))
 end
 
 if CoreInductionProgramme.none?
-  CoreInductionProgramme.create!(name: "Ambition Institute")
-  CoreInductionProgramme.create!(name: "Education Development Trust")
-  CoreInductionProgramme.create!(name: "Teach First")
-  CoreInductionProgramme.create!(name: "UCL")
+  CoreInductionProgramme.find_or_create_by!(name: "Ambition Institute")
+  CoreInductionProgramme.find_or_create_by!(name: "Education Development Trust")
+  CoreInductionProgramme.find_or_create_by!(name: "Teach First")
+  CoreInductionProgramme.find_or_create_by!(name: "UCL")
 end
 
 if Rails.env.development? || Rails.env.deployed_development?
@@ -49,6 +55,18 @@ if Rails.env.development? || Rails.env.deployed_development?
     u.confirmed_at = Time.zone.now.utc
   end
   LeadProviderProfile.find_or_create_by!(user: user, lead_provider: LeadProvider.first)
+
+  school_urns_twenty_twenty_one = %w[136089 105448 128702 113280 138229 143094 140667 127834 146786 113199 126346 133936 132971 107126 102887 102418 129369 140980 116848 112236]
+
+  School.where(urn: school_urns_twenty_twenty_one).each do |school|
+    Partnership.find_or_create_by!(school: school, lead_provider: LeadProvider.first, cohort: Cohort.find_or_create_by!(start_year: 2021))
+  end
+
+  school_urns_twenty_twenty_two = %w[119378 134847 113870 127979 144744 121499 147505 105626 402027 100173]
+
+  School.where(urn: school_urns_twenty_twenty_two).each do |school|
+    Partnership.find_or_create_by!(school: school, lead_provider: LeadProvider.first, cohort: Cohort.find_or_create_by!(start_year: 2022))
+  end
 
   user = User.find_or_create_by!(email: "school-leader@example.com") do |u|
     u.full_name = "School Leader User"

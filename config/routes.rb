@@ -51,6 +51,11 @@ Rails.application.routes.draw do
     resource :school_not_confirmed, only: :show, controller: :school_not_confirmed, path: "/school-not-confirmed"
   end
 
+  namespace :lead_providers do
+    resources :your_schools, only: %i[index create]
+    resources :school_details, only: %i[show]
+  end
+
   namespace :admin do
     resources :suppliers, only: %i[index new]
     scope "suppliers/new" do

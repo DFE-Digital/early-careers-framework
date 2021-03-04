@@ -10,9 +10,9 @@ class School < ApplicationRecord
   has_many :school_local_authority_districts
   has_many :local_authority_districts, through: :school_local_authority_districts
 
-  has_one :partnership
+  has_many :partnerships
+  has_many :lead_providers, through: :partnerships
   has_many :school_cohorts
-  has_one :lead_provider, through: :partnership
   has_many :pupil_premiums
   has_and_belongs_to_many :induction_coordinator_profiles
 
@@ -30,6 +30,27 @@ class School < ApplicationRecord
   scope :search_by_name_or_urn, lambda { |search_key|
     with_name_like(search_key).or(with_urn_like(search_key))
   }
+
+  scope :with_local_authority, lambda { |local_authority|
+    joins(%i[school_local_authorities local_authorities])
+      .where(school_local_authorities: { end_year: nil }, local_authorities: local_authority)
+  }
+
+  scope :partnered, lambda { |year|
+    where(id: Partnership.joins(:cohort).where(cohorts: { start_year: year }).pluck(:school_id))
+  }
+
+  scope :partnered_with_lead_provider, lambda { |lead_provider_id|
+    where(id: Partnership.where(lead_provider_id: lead_provider_id).pluck(:school_id))
+  }
+
+  scope :unpartnered, lambda { |year|
+    where.not(id: Partnership.joins(:cohort).where(cohorts: { start_year: year }).pluck(:school_id))
+  }
+
+  def lead_provider(year)
+    partnerships.joins(%i[lead_provider cohort]).find_by(cohorts: { start_year: year })&.lead_provider
+  end
 
   def full_address
     address = <<~ADDRESS
