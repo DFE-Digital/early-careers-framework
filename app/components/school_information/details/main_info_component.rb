@@ -2,7 +2,7 @@
 
 module SchoolInformation
   module Details
-    class MainInfoComponent < ViewComponent::Base
+    class MainInfoComponent < BaseComponent
       def initialize(school:)
         @school = school
       end

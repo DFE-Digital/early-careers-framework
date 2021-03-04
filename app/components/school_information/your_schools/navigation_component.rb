@@ -2,7 +2,7 @@
 
 module SchoolInformation
   module YourSchools
-    class NavigationComponent < ViewComponent::Base
+    class NavigationComponent < BaseComponent
       def initialize(cohorts:, selected_cohort:)
         @cohorts = cohorts
         @selected_cohort = selected_cohort

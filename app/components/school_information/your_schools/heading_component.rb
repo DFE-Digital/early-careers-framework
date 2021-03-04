@@ -2,7 +2,7 @@
 
 module SchoolInformation
   module YourSchools
-    class HeadingComponent < ViewComponent::Base
+    class HeadingComponent < BaseComponent
     end
   end
 end

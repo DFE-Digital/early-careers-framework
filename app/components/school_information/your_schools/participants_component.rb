@@ -2,7 +2,7 @@
 
 module SchoolInformation
   module YourSchools
-    class ParticipantsComponent < ViewComponent::Base
+    class ParticipantsComponent < BaseComponent
     end
   end
 end

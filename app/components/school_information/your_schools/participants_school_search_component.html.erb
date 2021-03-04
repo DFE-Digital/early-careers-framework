@@ -1,5 +1,5 @@
 <div class="govuk-grid-row">
-  <%= form_with model: @school_search_form, url: lead_providers_your_schools_path, builder: GOVUKDesignSystemFormBuilder::FormBuilder, method: :post do |f| %>
+  <%= component_form_with model: @school_search_form, url: lead_providers_your_schools_path, method: :post do |f| %>
     <div class="govuk-grid-column-one-quarter index-group">
       <div class="govuk-form-group govuk-!-margin-bottom-0">
         <%= f.govuk_text_field :school_name, class: 'govuk-input govuk-!-margin-bottom-3', label: { text: "Search your schools", class: 'govuk-label govuk-label--s' } %>

@@ -2,7 +2,7 @@
 
 module SchoolInformation
   module Details
-    class BreadcrumbComponent < ViewComponent::Base
+    class BreadcrumbComponent < BaseComponent
       def initialize(selected_cohort:)
         @selected_cohort = selected_cohort
       end

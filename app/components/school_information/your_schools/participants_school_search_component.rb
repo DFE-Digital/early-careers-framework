@@ -2,7 +2,7 @@
 
 module SchoolInformation
   module YourSchools
-    class ParticipantsSchoolSearchComponent < ViewComponent::Base
+    class ParticipantsSchoolSearchComponent < BaseComponent
       def initialize(schools:, selected_cohort:, school_search_form:)
         @schools = schools
         @selected_cohort = selected_cohort
