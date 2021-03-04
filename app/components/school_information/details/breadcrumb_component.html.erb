@@ -1,0 +1,4 @@
+<%= content_for :before_content, govuk_breadcrumbs(breadcrumbs: {
+  "Schools" => lead_providers_your_schools_path,
+  "#{@selected_cohort.start_year} cohort" => lead_providers_your_schools_path(selected_cohort_id: @selected_cohort.id)
+}) %>

@@ -1,0 +1,24 @@
+<%= content_for :before_content, govuk_breadcrumbs(breadcrumbs: {
+  "Dashboard" => dashboard_path,
+  "Your Schools" => nil
+}) %>
+
+<%= render ::SchoolInformation::YourSchools::HeadingComponent.new %>
+
+<%= render TabsComponent.new do |c| %>
+  <% @cohorts.each do |cohort| %>
+    <%= c.tab(path: lead_providers_your_schools_path(selected_cohort_id: cohort.id)) do %>
+      <%= cohort.start_year %> cohort
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= render ::SchoolInformation::YourSchools::ParticipantsComponent.new %>
+
+<div class="govuk-grid-row govuk-!-margin-bottom-3">
+  <div class="govuk-grid-column-two-thirds">
+    <p class="govuk-body">See which schools have added their early career teachers and mentors.</p>
+  </div>
+</div>
+
+<%= render ::SchoolInformation::YourSchools::ParticipantsSchoolSearchComponent.new(schools: @schools, selected_cohort: @selected_cohort, school_search_form: @school_search_form) %>

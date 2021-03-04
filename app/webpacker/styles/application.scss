@@ -15,4 +15,6 @@ $govuk-image-url-function: frontend-image-url;
 @import "app_task_list";
 @import "pagination";
 @import "page-tabs";
+@import "lead_providers/dashboard_numbers";
+@import "lead_providers/index_group";
 @import "~accessible-autocomplete";

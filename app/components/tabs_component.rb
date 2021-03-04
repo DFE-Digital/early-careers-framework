@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-class TabsComponent < ViewComponent::Base
+class TabsComponent < BaseComponent
   include ViewComponent::SlotableV2
 
   renders_many :tabs, "TabComponent"
 
-  class TabComponent < ViewComponent::Base
+  class TabComponent < BaseComponent
     attr_reader :path
 
     def initialize(path:)
