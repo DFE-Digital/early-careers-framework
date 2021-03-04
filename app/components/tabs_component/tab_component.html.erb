@@ -1,5 +1,5 @@
-<li class="hmcts-sub-navigation__item">
-  <%= govuk_link_to path, class: "hmcts-sub-navigation__link govuk-link--no-visited-state", "aria-current" => (current_page?(path) ? 'page' : nil) do %>
+<li class="page-tab-sub-navigation__item">
+  <%= govuk_link_to path, class: "page-tab-sub-navigation__link govuk-link--no-visited-state", "aria-current" => (current_page?(path) ? 'page' : nil) do %>
     <%= content %> <%= "<span class='govuk-visually-hidden'>Current page</span>".html_safe if current_page?(path) %>
   <% end %>
 </li>
