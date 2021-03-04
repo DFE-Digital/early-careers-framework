@@ -11,7 +11,7 @@ RSpec.describe "Admin::Administrators::Administrators", type: :request do
     sign_in user
   end
 
-  describe "#show" do
+  describe "GET /admin/administrators/new/confirm" do
     it "renders the confirmation template" do
       get "/admin/administrators/new/confirm", params: {
         full_name: name,
