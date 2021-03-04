@@ -42,7 +42,6 @@ RSpec.describe SchoolSearchForm, type: :model do
       cohort = FactoryBot.create(:cohort, start_year: 2021)
       Partnership.create!(school: school, lead_provider: lead_provider, cohort: cohort)
 
-      # byebug
       form = SchoolSearchForm.new(partnership: ["", "in_a_partnership"])
       search_result = form.find_schools(1)
 
