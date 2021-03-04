@@ -13,7 +13,7 @@ module Admin
       def new
         authorize AdminProfile
 
-        @user = User.new
+        @user = User.new(full_name: params[:full_name], email: params[:email])
         authorize @user
       end
 
