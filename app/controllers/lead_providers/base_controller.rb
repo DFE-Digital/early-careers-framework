@@ -10,7 +10,9 @@ module LeadProviders
   private
 
     def ensure_lead_provider_or_admin
-      raise Pundit::NotAuthorizedError, "Forbidden" unless current_user&.admin? || current_user&.lead_provider?
+      return if current_user&.admin? || current_user&.lead_provider?
+
+      raise Pundit::NotAuthorizedError, "Forbidden"
     end
   end
 end
