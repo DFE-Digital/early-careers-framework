@@ -81,6 +81,7 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include ActiveSupport::Testing::TimeHelpers
   config.include ActiveJob::TestHelper
+  config.include ViewComponent::TestHelpers, type: :component
 
   config.before :each do
     clear_enqueued_jobs
