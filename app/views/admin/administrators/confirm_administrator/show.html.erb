@@ -1,0 +1,6 @@
+<%= @user.full_name %>
+<%= @user.email %>
+
+<%= form_for @user, url: admin_administrators_success_path do |f| %>
+<%= f.govuk_submit "Create administrator user" %>
+<% end %>
