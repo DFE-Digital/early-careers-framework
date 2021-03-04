@@ -14,8 +14,6 @@ unless School.first
   SchoolDataImporter.new(Rails.logger).delay.run
 end
 
-
-
 # TODO: Remove this when we have a way of adding lead providers, or expand to include all of them
 unless LeadProvider.first
   LeadProvider.find_or_create_by!(name: "Test Lead Provider")
@@ -30,7 +28,7 @@ test_lead_provider = LeadProvider.find_by(name: "Test Lead Provider")
 
 if test_lead_provider
   test_lead_provider.cohorts = Cohort.all
-  test_lead_provider.save
+  test_lead_provider.save!
 end
 
 # TODO: Remove this when we have a way of adding partnerships
