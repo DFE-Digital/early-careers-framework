@@ -1,0 +1,13 @@
+<% content_for :before_content do %>
+  <%= render PrimaryNavComponent.new do |c| %>
+    <%= c.nav_item(path: "/admin/suppliers") do %>
+      Suppliers
+    <% end %>
+    <%= c.nav_item(path: "/admin/administrators") do %>
+      Administrators
+    <% end %>
+  <% end %>
+
+  <%= yield(:after_nav) %>
+<% end %>
+<%= render template: 'layouts/application' %>

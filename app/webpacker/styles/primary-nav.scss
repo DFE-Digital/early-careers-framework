@@ -1,0 +1,19 @@
+.primary-nav-container {
+  display: flex;
+  flex-direction: row;
+  background-color: govuk-colour("mid-grey");
+  height: 4vh;
+  padding-left: 4px;
+}
+
+.nav-item {
+  @include govuk-typography-responsive($size: 27);
+
+  &.nav-item__selected {
+    border-bottom: solid govuk-colour("blue") 4px;
+  }
+
+  a {
+    text-decoration: none;
+  }
+}
