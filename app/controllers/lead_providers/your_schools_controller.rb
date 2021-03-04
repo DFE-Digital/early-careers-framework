@@ -33,11 +33,11 @@ module LeadProviders
     end
 
     def school_search_params
-      [
-        :school_name,
-        :cohort_year,
-        :lead_provider_id,
-        :selected_cohort_id,
+      %i[
+        school_name
+        cohort_year
+        lead_provider_id
+        selected_cohort_id
       ]
     end
 
