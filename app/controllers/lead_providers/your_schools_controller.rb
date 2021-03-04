@@ -35,14 +35,9 @@ module LeadProviders
     def school_search_params
       [
         :school_name,
-        :location,
-        :search_distance,
-        :search_distance_unit,
         :cohort_year,
         :lead_provider_id,
         :selected_cohort_id,
-        characteristics: [],
-        partnership: [],
       ]
     end
 
