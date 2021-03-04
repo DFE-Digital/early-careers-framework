@@ -1,0 +1,16 @@
+.dashboard-numbers {
+  background: #f3f2f1;
+  padding: 1.5em;
+  margin-bottom: 1.5em;
+}
+.dashboard-numbers p {
+  margin-bottom: 0;
+  padding: 0;
+}
+
+.dashboard-numbers.key-number {
+  background: #1d70b8;
+}
+.dashboard-numbers.key-number p {
+  color: #FFF;
+}
