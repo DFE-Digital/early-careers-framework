@@ -10,7 +10,6 @@ RSpec.describe School, type: :model do
           urn: "TEST_URN_2",
           name: "Test school two",
           address_line1: "Test address London",
-          country: "England",
           postcode: "TEST2",
         )
       }.to change { School.count }.by(1)
@@ -112,7 +111,6 @@ RSpec.describe School, type: :model do
     let(:address_line1) { Faker::Address.street_address }
     let(:address_line2) { Faker::Address.secondary_address }
     let(:address_line3) { Faker::Address.city }
-    let(:address_line4) { Faker::Address.state }
     let(:postcode) { Faker::Address.postcode }
 
     it "returns every line of the address" do
@@ -121,7 +119,6 @@ RSpec.describe School, type: :model do
         address_line1: address_line1,
         address_line2: address_line2,
         address_line3: address_line3,
-        address_line4: address_line4,
         postcode: postcode,
       )
 
@@ -129,7 +126,6 @@ RSpec.describe School, type: :model do
         #{address_line1}
         #{address_line2}
         #{address_line3}
-        #{address_line4}
         #{postcode}
       ADDR
       expect(school.full_address).to eq(expected_address)
