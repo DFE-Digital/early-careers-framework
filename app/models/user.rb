@@ -42,4 +42,5 @@ class User < ApplicationRecord
   scope :for_lead_provider, -> { joins(:lead_provider) }
   scope :for_delivery_partner, -> { joins(:delivery_partner) }
   scope :with_supplier, -> { includes(:lead_provider, :delivery_partner) }
+  scope :admins, -> { joins(:admin_profile) }
 end

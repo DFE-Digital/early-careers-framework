@@ -7,7 +7,7 @@ module Admin
       skip_after_action :verify_policy_scoped, except: :index
 
       def index
-        @administrators = policy_scope(AdminProfile)&.map(&:user) # TODO: make more efficient
+        @administrators = policy_scope(User).admins
       end
 
       def new
