@@ -28,7 +28,7 @@
           School contact
         </dt>
         <dd class="govuk-summary-list__value">
-          <a href="#"><%= @school.primary_contact_email %></a>
+          <%= mail_to @school.primary_contact_email %>
         </dd>
       </div>
 
