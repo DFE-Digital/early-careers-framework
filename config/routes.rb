@@ -99,6 +99,10 @@ Rails.application.routes.draw do
         get "success", controller: :supplier_users, action: :success, as: :new_supplier_user_success
       end
     end
+
+    namespace :administrators do
+      resources :administrators, only: %i[index], path: "/"
+    end
   end
 
   get "/403", to: "errors#forbidden", via: :all
