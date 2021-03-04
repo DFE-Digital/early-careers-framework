@@ -10,29 +10,37 @@
     </div>
   <% end %>
 
-  <div class="govuk-grid-column-three-quarters">
-    <table class="govuk-table">
-      <thead class="govuk-table__head">
-        <tr class="govuk-table__row">
-          <th scope="col" class="govuk-table__header">Name</th>
-          <th scope="col" class="govuk-table__header">MAT / Network</th>
-          <th scope="col" class="govuk-table__header govuk-table__header--numeric"><%= @selected_cohort.start_year %>
-            participants
-          </th>
-        </tr>
-      </thead>
-      <tbody class="govuk-table__body">
-        <% @schools.each do |school| %>
+  <% if @schools.empty? %>
+    <div class="govuk-grid-column-three-quarters">
+      <p>There are currently no partnered schools</p>
+    </div>
+  <% else %>
+    <div class="govuk-grid-column-three-quarters">
+      <table class="govuk-table">
+        <thead class="govuk-table__head">
           <tr class="govuk-table__row">
-            <td class="govuk-table__cell">
-              <%= govuk_link_to lead_providers_school_detail_path(school.id, selected_cohort_id: @selected_cohort.id), class: "govuk-link--no-visited-state" do %>
-                <%= school.name %>
-              <% end %>
-            <td class="govuk-table__cell"><%= school.network&.name %></td>
-            <td class="govuk-table__cell govuk-table__cell--numeric">8</td>
+            <th scope="col" class="govuk-table__header">Name</th>
+            <th scope="col" class="govuk-table__header">MAT / Network</th>
+            <th scope="col" class="govuk-table__header govuk-table__header--numeric"><%= @selected_cohort.start_year %>
+              participants
+            </th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
+        </thead>
+        <tbody class="govuk-table__body">
+          <% @schools.each do |school| %>
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell">
+                <%= govuk_link_to lead_providers_school_detail_path(school.id, selected_cohort_id: @selected_cohort.id), class: "govuk-link--no-visited-state" do %>
+                  <%= school.name %>
+                <% end %>
+              <td class="govuk-table__cell"><%= school.network&.name %></td>
+              <td class="govuk-table__cell govuk-table__cell--numeric">8</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+
+
 </div>
