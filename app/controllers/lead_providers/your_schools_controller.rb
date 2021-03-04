@@ -7,9 +7,9 @@ module LeadProviders
     def index
       @cohorts ||= @lead_provider.cohorts
       @selected_cohort = if params[:selected_cohort_id]
-                           Cohort.find(params[:selected_cohort_id])
+                           @lead_provider.cohorts.find(params[:selected_cohort_id])
                          else
-                           Cohort.find_by(start_year: Time.zone.today.year)
+                           @lead_provider.cohorts.find_by(start_year: Time.zone.today.year)
                          end
 
       @school_search_form = SchoolSearchForm.new(*form_params_index)
