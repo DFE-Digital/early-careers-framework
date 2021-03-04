@@ -16,6 +16,17 @@ module Admin
         @user = User.new
         authorize @user
       end
+
+      def create
+        authorize AdminProfile
+        @user = User.new(params.require(:user).permit(:full_name, :email))
+
+        if @user.invalid?
+          render :new and return
+        end
+
+        redirect_to admin_administrators_confirm_administrator_path(full_name: @user.full_name, email: @user.email)
+      end
     end
   end
 end

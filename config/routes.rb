@@ -101,7 +101,8 @@ Rails.application.routes.draw do
     end
 
     namespace :administrators do
-      resources :administrators, only: %i[index new], path: "/"
+      resources :administrators, only: %i[index new create], path: "/"
+      resource :confirm_administrator, only: :show, path: "/new/confirm"
     end
   end
 
