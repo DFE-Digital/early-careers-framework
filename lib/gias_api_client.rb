@@ -27,8 +27,8 @@ private
 
     # We need to write the zip file to disk rather than read it from a buffer because of this:
     # https://github.com/rubyzip/rubyzip#notice-about-zipinputstream
-    zipfile = Tempfile.new(encoding: "UTF-8")
-    zipfile.write(data.force_encoding("UTF-8"))
+    zipfile = Tempfile.new(encoding: "ASCII-8BIT")
+    zipfile.write(data.force_encoding("ASCII-8BIT"))
     zipfile.close
     Zip::File.open(zipfile) do |zip_contents|
       zip_contents.each do |file|
