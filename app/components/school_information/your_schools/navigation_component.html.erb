@@ -2,7 +2,7 @@
   <ul class="hmcts-sub-navigation__list">
     <% @cohorts.each do |cohort| %>
       <li class="hmcts-sub-navigation__item">
-        <%= govuk_link_to lead_providers_your_schools_path(selected_cohort_id: cohort.id), class: "hmcts-sub-navigation__link govuk-link--no-visited-state", 'aria-current' => (cohort == @selected_cohort ? 'page' : nil) do %>
+        <%= govuk_link_to lead_providers_your_schools_path(selected_cohort_id: cohort.id), class: "hmcts-sub-navigation__link govuk-link--no-visited-state", "aria-current" => (cohort == @selected_cohort ? 'page' : nil) do %>
           <%= cohort.start_year %> cohort
         <% end %>
       </li>
