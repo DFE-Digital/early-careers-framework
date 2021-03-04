@@ -1,0 +1,22 @@
+<% content_for :before_content, govuk_back_link(
+  text: "Back",
+  href: admin_administrators_administrators_path)
+%>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Create a new administrator user</h1>
+    <p class="govuk-body">This should be someone from the Department for Education</p>
+    <%= form_for User.new, url: admin_administrators_administrators_path, method: :post do |f| %>
+      <%= f.govuk_text_field(
+            :full_name,
+            label: { text: "Full name" })
+      %>
+      <%= f.govuk_email_field(
+            :email,
+            label: { text: "Email" })
+      %>
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

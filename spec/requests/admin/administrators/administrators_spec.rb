@@ -14,4 +14,11 @@ RSpec.describe "Admin::Administrators::Administrators", type: :request do
       expect(response).to render_template("admin/administrators/administrators/index")
     end
   end
+
+  describe "GET /admin/administrators/new" do
+    it "renders the new tempalate" do
+      get "/admin/administrators/new"
+      expect(response).to render_template("admin/administrators/administrators/new")
+    end
+  end
 end
