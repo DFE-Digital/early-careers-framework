@@ -6,10 +6,10 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby File.read(".ruby-version").chomp
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 6.1.0"
+gem "rails", "~> 6.1.2", ">= 6.1.2.1"
 
 gem "devise", ">= 4.7.3"
-gem "kaminari", ">= 1.2.0"
+gem "kaminari", ">= 1.2.1"
 gem "pundit"
 
 # Use postgresql as the database for Active Record
@@ -34,7 +34,7 @@ gem "bootsnap", ">= 1.1.0", require: false
 gem "foreman"
 
 # Canonical meta tag
-gem "canonical-rails", ">= 0.2.10"
+gem "canonical-rails", ">= 0.2.11"
 
 gem "listen", ">= 3.0.5", "< 3.4"
 
@@ -44,15 +44,15 @@ gem "mail-notify", ">= 1.0.3"
 # do not rely on host's timezone data, which can be inconsistent
 gem "tzinfo-data"
 
-gem "activerecord-import"
-gem "govuk-components", ">= 1.0.0"
+gem "activerecord-import", ">= 1.0.7"
+gem "govuk-components", ">= 1.0.2"
 gem "govuk_design_system_formbuilder", "~> 2.1", ">= 2.1.5"
 gem "httpclient"
-gem "seed_dump"
+gem "seed_dump", ">= 3.3.1"
 
 # Database based asynchronous priority queue system
 gem "delayed_cron_job"
-gem "delayed_job_active_record"
+gem "delayed_job_active_record", ">= 4.1.5"
 
 platform :mswin, :mingw, :x64_mingw do
   gem "wdm", ">= 0.1.0"
@@ -72,10 +72,10 @@ group :development, :test do
   gem "pry-byebug"
 
   # Testing framework
-  gem "rspec-rails", "~> 4.0.1"
+  gem "rspec-rails", "~> 4.0.2"
 
   gem "cypress-on-rails", "~> 1.0"
-  gem "database_cleaner-active_record"
+  gem "database_cleaner-active_record", ">= 2.0.0"
 
   gem "dotenv-rails", ">= 2.7.6"
 
