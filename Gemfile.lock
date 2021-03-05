@@ -386,7 +386,7 @@ DEPENDENCIES
   foreman
   govuk-components (>= 1.0.2)
   govuk_design_system_formbuilder (~> 2.1, >= 2.1.5)
-  httpclient
+  httpclient (~> 2.8, >= 2.8.3)
   kaminari (>= 1.2.0)
   listen (>= 3.0.5, < 3.4)
   mail-notify (>= 1.0.3)
@@ -399,7 +399,8 @@ DEPENDENCIES
   rails-controller-testing (>= 1.0.5)
   rspec-rails (~> 4.0.1)
   rubocop-govuk
-  savon
+  rubyzip (~> 2.3, >= 2.3.0)
+  savon (~> 2.12, >= 2.12.1)
   scss_lint-govuk
   shoulda-matchers (~> 4.4)
   simplecov

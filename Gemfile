@@ -52,8 +52,9 @@ gem "govuk_design_system_formbuilder", "~> 2.1", ">= 2.1.5"
 gem "view_component", require: "view_component/engine"
 
 # Fetching from APIs
-gem "httpclient"
-gem "savon"
+gem "httpclient", "~> 2.8", ">= 2.8.3"
+gem "rubyzip", "~> 2.3", ">= 2.3.0"
+gem "savon", "~> 2.12", ">= 2.12.1"
 
 # Database based asynchronous priority queue system
 gem "daemons"
