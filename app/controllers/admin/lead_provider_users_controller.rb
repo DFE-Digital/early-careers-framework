@@ -2,8 +2,8 @@
 
 class Admin::LeadProviderUsersController < Admin::BaseController
   skip_after_action :verify_policy_scoped
-  before_action :load_lead_provider, only: %i[edit update]
-  before_action :load_lead_provider_user, only: %i[edit update]
+  before_action :load_lead_provider
+  before_action :load_lead_provider_user
 
   def edit
     authorize User
@@ -12,7 +12,7 @@ class Admin::LeadProviderUsersController < Admin::BaseController
   def update
     authorize User
 
-    if @lead_provider_user.update(user_params)
+    if @lead_provider_user.update(permitted_attributes(@lead_provider_user))
       redirect_to :admin_supplier_users, notice: "Changes saved successfully"
     else
       render :edit
@@ -27,9 +27,5 @@ private
 
   def load_lead_provider_user
     @lead_provider_user = User.find(params[:id])
-  end
-
-  def user_params
-    params.require(:user).permit(:full_name, :email)
   end
 end
