@@ -24,22 +24,30 @@ RSpec.describe "Admin::Administrators::Administrators", type: :request do
       expect(response).to render_template("admin/administrators/administrators/new")
     end
 
-    it "prefills fields" do
-      get "/admin/administrators/new?email=#{CGI.escape(email)}&full_name=#{CGI.escape(name)}"
+    it "prefills fields when passed the continue parameter" do
+      given_i_have_previously_submitted_values(name, email)
+
+      get "/admin/administrators/new?continue=true"
 
       expect(response.body).to include(CGI.escapeHTML(email))
       expect(response.body).to include(CGI.escapeHTML(name))
     end
+
+    it "clears fields when not passed the continue parameter" do
+      given_i_have_previously_submitted_values(name, email)
+
+      get "/admin/administrators/new"
+
+      expect(response.body).not_to include(CGI.escapeHTML(email))
+      expect(response.body).not_to include(CGI.escapeHTML(name))
+    end
   end
 
   describe "POST /admin/administrators" do
-    it "redirects to the confirmation page" do
-      post "/admin/administrators", params: { user: {
-        full_name: name,
-        email: email,
-      } }
+    it "renders the confirmation template" do
+      given_i_have_previously_submitted_values(name, email)
 
-      expect(response).to redirect_to("/admin/administrators/new/confirm?email=#{CGI.escape(email)}&full_name=#{CGI.escape(name)}")
+      expect(response).to render_template("admin/administrators/administrators/create")
     end
 
     it "shows an error when a field is blank" do
@@ -50,5 +58,14 @@ RSpec.describe "Admin::Administrators::Administrators", type: :request do
       expect(response).to render_template("admin/administrators/administrators/new")
       expect(response.body).to include("Enter an email")
     end
+  end
+
+private
+
+  def given_i_have_previously_submitted_values(name, email)
+    post "/admin/administrators", params: { user: {
+      full_name: name,
+      email: email,
+    } }
   end
 end

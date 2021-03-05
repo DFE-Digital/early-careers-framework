@@ -1,6 +1,6 @@
 <% content_for :before_content, govuk_back_link(
   text: "Back",
-  href: new_admin_administrators_administrator_path(full_name: @user.full_name, email: @user.email))
+  href: new_admin_administrators_administrator_path(continue: true))
 %>
 
 <div class="govuk-grid-row">
@@ -17,7 +17,7 @@
         </dd>
         <dd class="govuk-summary-list__actions">
           <%= govuk_link_to(
-                new_admin_administrators_administrator_path(full_name: @user.full_name, email: @user.email),
+                new_admin_administrators_administrator_path(continue: true),
                 class: "govuk-link--no-visited-state",
               ) do %>
             Change<span class="govuk-visually-hidden"> name</span>
@@ -33,7 +33,7 @@
         </dd>
         <dd class="govuk-summary-list__actions">
           <%= govuk_link_to(
-                new_admin_administrators_administrator_path(full_name: @user.full_name, email: @user.email),
+                new_admin_administrators_administrator_path(continue: true),
                 class: "govuk-link--no-visited-state",
               ) do %>
           Change<span class="govuk-visually-hidden"> email</span>

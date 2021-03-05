@@ -20,10 +20,7 @@ describe("Admin user creating another admin user", () => {
     cy.get("input[name='user[email]']").type(email);
     cy.get(".govuk-button").contains("Continue").click();
 
-    cy.location("pathname").should(
-      "equal",
-      "/admin/administrators/new/confirm"
-    );
+    cy.get("h1").should("equal", "Confirm these details");
     cy.get("main").should("contain", fullName);
     cy.get("main").should("contain", email);
     cy.get("input.govuk-button").contains("Create administrator user").click();
