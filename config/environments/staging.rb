@@ -56,7 +56,12 @@ Rails.application.configure do
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "govuk_rails_boilerplate_production"
   config.domain = ENV["DOMAIN"]
-  config.gias_api_root = ENV["GIAS_API_ROOT"]
+
+  config.gias_api_schema = ENV["GIAS_API_SCHEMA"]
+  config.gias_extract_id = ENV["GIAS_EXTRACT_ID"]
+  config.gias_api_user = ENV["GIAS_API_USER"]
+  config.gias_api_password = Rails.application.credentials.GIAS_API_PASSWORD
+
   config.action_mailer.perform_caching = false
   config.action_mailer.delivery_method = :notify
   config.action_mailer.notify_settings = {

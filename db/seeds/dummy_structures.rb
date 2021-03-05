@@ -1,17 +1,10 @@
 # frozen_string_literal: true
 
-# TODO: Remove network and school seeding when we have a way of getting them from GIAS
-unless School.first
-  local_authority = LocalAuthority.find_or_create_by!(code: "TEST01", name: "Test local authority")
-  local_authority_district = LocalAuthorityDistrict.find_or_create_by!(code: "TEST01", name: "Test local authority")
-  network = Network.find_or_create_by!(name: "Test school network")
-  school1 = School.find_or_create_by!(urn: "TEST_URN_1", name: "Test school one", address_line1: "Test address", country: "England", postcode: "TEST1", network: network, domains: %w[testschool1.sch.uk network.com digital.education.gov.uk])
-  school2 = School.find_or_create_by!(urn: "TEST_URN_2", name: "Test school two", address_line1: "Test address London", country: "England", postcode: "TEST2", network: network, domains: %w[testschool2.sch.uk network.com digital.education.gov.uk])
-  SchoolLocalAuthority.find_or_create_by!(school: school1, local_authority: local_authority, start_year: Time.zone.now.year)
-  SchoolLocalAuthority.find_or_create_by!(school: school2, local_authority: local_authority, start_year: Time.zone.now.year)
-  SchoolLocalAuthorityDistrict.find_or_create_by!(school: school1, local_authority_district: local_authority_district, start_year: Time.zone.now.year)
-  SchoolLocalAuthorityDistrict.find_or_create_by!(school: school2, local_authority_district: local_authority_district, start_year: Time.zone.now.year)
-  SchoolDataImporter.new(Rails.logger).delay.run
+SchoolDataImporter.new(Rails.logger).delay.run
+
+if Cohort.none?
+  Cohort.find_or_create_by!(start_year: 2021)
+  Cohort.find_or_create_by!(start_year: 2022)
 end
 
 # TODO: Remove this when we have a way of adding lead providers, or expand to include all of them
@@ -19,21 +12,11 @@ unless LeadProvider.first
   LeadProvider.find_or_create_by!(name: "Test Lead Provider")
 end
 
-if Cohort.none?
-  Cohort.find_or_create_by!(start_year: 2021)
-  Cohort.find_or_create_by!(start_year: 2022)
-end
-
 test_lead_provider = LeadProvider.find_by(name: "Test Lead Provider")
 
 if test_lead_provider
   test_lead_provider.cohorts = Cohort.all
   test_lead_provider.save!
-end
-
-# TODO: Remove this when we have a way of adding partnerships
-unless Partnership.first || Rails.env.production?
-  Partnership.find_or_create_by!(school: School.first, lead_provider: LeadProvider.first, cohort: Cohort.find_by(start_year: 2021))
 end
 
 if CoreInductionProgramme.none?
@@ -72,11 +55,15 @@ if Rails.env.development? || Rails.env.deployed_development?
     u.full_name = "School Leader User"
     u.confirmed_at = Time.zone.now.utc
   end
-  InductionCoordinatorProfile.joins(:schools).find_or_create_by!(user: user, schools: [School.first])
+  if School.any?
+    InductionCoordinatorProfile.joins(:schools).find_or_create_by!(user: user, schools: [School.first])
+  end
 
   user = User.find_or_create_by!(email: "early-career-teacher@example.com") do |u|
     u.full_name = "ECT User"
     u.confirmed_at = Time.zone.now.utc
   end
-  EarlyCareerTeacherProfile.find_or_create_by!(user: user, school: School.first, cohort: Cohort.first, core_induction_programme: CoreInductionProgramme.first)
+  if School.any?
+    EarlyCareerTeacherProfile.find_or_create_by!(user: user, school: School.first, cohort: Cohort.first, core_induction_programme: CoreInductionProgramme.first)
+  end
 end

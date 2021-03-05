@@ -49,8 +49,12 @@ gem "blueprinter"
 
 gem "govuk-components", ">= 1.0.2"
 gem "govuk_design_system_formbuilder", "~> 2.1", ">= 2.1.5"
-gem "httpclient"
 gem "view_component", require: "view_component/engine"
+
+# Fetching from APIs
+gem "httpclient", "~> 2.8", ">= 2.8.3"
+gem "rubyzip", "~> 2.3", ">= 2.3.0"
+gem "savon", "~> 2.12", ">= 2.12.1"
 
 # Database based asynchronous priority queue system
 gem "daemons"
@@ -60,8 +64,6 @@ gem "delayed_job_active_record"
 platform :mswin, :mingw, :x64_mingw do
   gem "wdm", ">= 0.1.0"
 end
-
-gem "addressable"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

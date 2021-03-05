@@ -238,18 +238,14 @@ ActiveRecord::Schema.define(version: 2021_03_02_031917) do
     t.string "urn", null: false
     t.string "name", null: false
     t.string "school_type_code"
-    t.integer "capacity"
     t.string "address_line1", null: false
     t.string "address_line2"
     t.string "address_line3"
-    t.string "address_line4"
-    t.string "country", null: false
     t.string "postcode", null: false
     t.uuid "network_id"
     t.string "domains", default: [], null: false, array: true
     t.string "school_type_name"
     t.string "ukprn"
-    t.string "previous_school_urn"
     t.string "school_phase_type"
     t.string "school_phase_name"
     t.string "school_website"

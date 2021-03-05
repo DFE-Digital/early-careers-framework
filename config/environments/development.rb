@@ -17,7 +17,12 @@ Rails.application.configure do
   config.consider_all_requests_local = true
 
   config.domain = ENV["DOMAIN"]
-  config.gias_api_root = ENV["GIAS_API_ROOT"]
+
+  config.gias_api_schema = ENV["GIAS_API_SCHEMA"]
+  config.gias_extract_id = ENV["GIAS_EXTRACT_ID"]
+  config.gias_api_user = ENV["GIAS_API_USER"]
+  config.gias_api_password = ENV["GIAS_API_PASSWORD"]
+
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
 

@@ -1,0 +1,245 @@
+HTTP/1.1 200 OK
+Keep-Alive: timeout=20
+Transfer-Encoding: chunked
+Content-Type: text/xml
+Last-Modified: Tue, 26 Jan 2021 10:39:42 GMT
+Vary: accept-encoding
+Set-Cookie: JSESSIONID=C77EE17A8E7C67C25BD0788EDF66FA26; Path=/edubase; Secure; HttpOnly
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-Content-Security-Policy: script-src 'self'
+X-Powered-By: ASP.NET
+Date: Tue, 02 Mar 2021 14:09:58 GMT
+
+<?xml version="1.0" encoding="UTF-8"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy" xmlns:tns="http://ws.edubase.texunatech.com" xmlns:wsoma="http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://ws.edubase.texunatech.com" xsi:schemaLocation="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/ws-securitypolicy.xsd                  http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization   http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization/optimizedmimeserialization-policy.xsd">
+
+    <wsp:Policy wsu:Id="AttachmentsPolicy">
+        <wsoma:OptimizedMimeSerialization/>
+    </wsp:Policy>
+
+    <wsp:Policy wsu:Id="SecurityPolicy">
+        <wsp:All>
+            <sp:TransportBinding>
+                <wsp:Policy>
+                    <sp:TransportToken>
+                        <wsp:Policy>
+                            <sp:HttpsToken RequireClientCertificate="false"/>
+                        </wsp:Policy>
+                    </sp:TransportToken>
+                    <sp:AlgorithmSuite>
+                        <wsp:Policy>
+                            <sp:Basic256/>
+                        </wsp:Policy>
+                    </sp:AlgorithmSuite>
+                    <sp:IncludeTimestamp/>
+                </wsp:Policy>
+            </sp:TransportBinding>
+            <sp:SignedSupportingTokens>
+                <wsp:Policy>
+                    <sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+                        <wsp:Policy>
+                            <sp:WssUsernameToken10/>
+                        </wsp:Policy>
+                    </sp:UsernameToken>
+                </wsp:Policy>
+            </sp:SignedSupportingTokens>
+        </wsp:All>
+    </wsp:Policy>
+
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+            <xs:import namespace="http://ws.edubase.texunatech.com" schemaLocation="messages.xsd"/>
+        </xs:schema>
+    </wsdl:types>
+
+    <wsdl:message name="GetEstablishmentInput">
+        <wsdl:part element="tns:GetEstablishment" name="parameters"/>
+    </wsdl:message>
+    <wsdl:message name="GetEstablishmentOutput">
+        <wsdl:part element="tns:GetEstablishmentResponse" name="parameters"/>
+    </wsdl:message>
+
+    <wsdl:message name="ValidationFaultMessage">
+        <wsdl:part element="tns:ValidationFault" name="detail"/>
+    </wsdl:message>
+    <wsdl:message name="GetExtractInput">
+        <wsdl:part element="tns:GetExtract" name="parameters"/>
+    </wsdl:message>
+    <wsdl:message name="GetExtractOutput">
+        <wsdl:part element="tns:GetExtractResponse" name="parameters"/>
+    </wsdl:message>
+    <wsdl:message name="GetGroupExtractInput">
+        <wsdl:part element="tns:GetGroupExtract" name="parameters"/>
+    </wsdl:message>
+    <wsdl:message name="GetGroupExtractOutput">
+        <wsdl:part element="tns:GetGroupExtractResponse" name="parameters"/>
+    </wsdl:message>
+    <wsdl:message name="GetReportInput">
+        <wsdl:part element="tns:GetReport" name="parameters"/>
+    </wsdl:message>
+    <wsdl:message name="GetReportOutput">
+        <wsdl:part element="tns:GetReportResponse" name="parameters"/>
+    </wsdl:message>
+    <wsdl:message name="FindEstablishmentsInput">
+        <wsdl:part element="tns:FindEstablishments" name="parameters"/>
+    </wsdl:message>
+    <wsdl:message name="FindEstablishmentsOutput">
+        <wsdl:part element="tns:FindEstablishmentsResponse" name="parameters"/>
+    </wsdl:message>
+
+    <wsdl:portType name="Edubase">
+        <wsdl:documentation>
+            <summary>
+                Provides access to Edubase
+            </summary>
+        </wsdl:documentation>
+
+        <wsdl:operation name="GetEstablishment">
+            <wsdl:documentation>
+                <summary>
+                    Gets establishment by URN
+                </summary>
+            </wsdl:documentation>
+            <wsdl:input message="tns:GetEstablishmentInput"/>
+            <wsdl:output message="tns:GetEstablishmentOutput"/>
+            <wsdl:fault message="tns:ValidationFaultMessage" name="ValidationFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="FindEstablishments">
+            <wsdl:documentation>
+                <summary>
+                    Find establishments
+                </summary>
+            </wsdl:documentation>
+            <wsdl:input message="tns:FindEstablishmentsInput"/>
+            <wsdl:output message="tns:FindEstablishmentsOutput"/>
+            <wsdl:fault message="tns:ValidationFaultMessage" name="ValidationFault"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:portType name="EdubaseFileManager">
+        <wsdl:documentation>
+            <summary>
+                Used to download Edubase files. Optimized for large data transfer                      
+            </summary>
+        </wsdl:documentation>
+
+        <wsdl:operation name="GetExtract">
+            <wsdl:documentation>
+                <summary>
+                    Gets extract data by id
+                </summary>
+            </wsdl:documentation>
+            <wsdl:input message="tns:GetExtractInput"/>
+            <wsdl:output message="tns:GetExtractOutput"/>
+            <wsdl:fault message="tns:ValidationFaultMessage" name="ValidationFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetGroupExtract">
+            <wsdl:documentation>
+                <summary>
+                    Gets group extract
+                </summary>
+            </wsdl:documentation>
+            <wsdl:input message="tns:GetGroupExtractInput"/>
+            <wsdl:output message="tns:GetGroupExtractOutput"/>
+            <wsdl:fault message="tns:ValidationFaultMessage" name="ValidationFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetReport">
+            <wsdl:documentation>
+                <summary>
+                    Gets report
+                </summary>
+            </wsdl:documentation>
+            <wsdl:input message="tns:GetReportInput"/>
+            <wsdl:output message="tns:GetReportOutput"/>
+            <wsdl:fault message="tns:ValidationFaultMessage" name="ValidationFault"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="EdubaseSoap11" type="tns:Edubase">
+        <wsp:PolicyReference URI="#SecurityPolicy" wsdl:required="true"/>
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+        <wsdl:operation name="GetEstablishment">
+            <soap:operation soapAction="http://ws.edubase.texunatech.com/GetEstablishment" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ValidationFault">
+                <soap:fault name="ValidationFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+
+        <wsdl:operation name="FindEstablishments">
+            <soap:operation soapAction="http://ws.edubase.texunatech.com/FindEstablishments" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ValidationFault">
+                <soap:fault name="ValidationFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        
+    </wsdl:binding>
+
+    <wsdl:binding name="EdubaseFileManagerSoap11" type="tns:EdubaseFileManager">
+        <wsp:PolicyReference URI="#SecurityPolicy" wsdl:required="true"/>
+        <wsp:PolicyReference URI="#AttachmentsPolicy" wsdl:required="true"/>
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="GetExtract">
+            <soap:operation soapAction="http://ws.edubase.texunatech.com/GetExtract" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ValidationFault">
+                <soap:fault name="ValidationFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="GetGroupExtract">
+            <soap:operation soapAction="http://ws.edubase.texunatech.com/GetGroupExtract" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ValidationFault">
+                <soap:fault name="ValidationFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="GetReport">
+            <soap:operation soapAction="http://ws.edubase.texunatech.com/GetReport" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ValidationFault">
+                <soap:fault name="ValidationFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>   
+
+    <wsdl:service name="EdubaseService">
+        <wsdl:documentation>
+            EduBase web service
+        </wsdl:documentation>
+        <wsdl:port binding="tns:EdubaseSoap11" name="EdubaseSoap11">
+            <soap:address location="https://ea-edubase-api-prod.azurewebsites.net/edubase/service"/>
+        </wsdl:port>
+        <wsdl:port binding="tns:EdubaseFileManagerSoap11" name="EdubaseFileManagerSoap11">
+            <soap:address location="https://ea-edubase-api-prod.azurewebsites.net/edubase/service"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

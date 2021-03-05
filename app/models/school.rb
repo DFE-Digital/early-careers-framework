@@ -57,7 +57,6 @@ class School < ApplicationRecord
       #{address_line1}
       #{address_line2}
       #{address_line3}
-      #{address_line4}
       #{postcode}
     ADDRESS
     address.squeeze("\n")
