@@ -3,8 +3,6 @@
 module Admin
   module Suppliers
     class DeliveryPartnersController < Admin::BaseController
-      before_action :show, only: %i[show_users show_lps show_schools]
-
       skip_after_action :verify_policy_scoped
 
       def choose_lead_providers
@@ -55,17 +53,9 @@ module Admin
         @delivery_partner = DeliveryPartner.find(params[:delivery_partner])
       end
 
-      def show_users; end
-
-      def show_lps; end
-
-      def show_schools; end
-
-    private
-
       def show
-        @delivery_partner = DeliveryPartner.find(params[:delivery_partner])
-        authorize @delivery_partner, :show?
+        @delivery_partner = DeliveryPartner.find(params[:id])
+        authorize @delivery_partner
       end
     end
   end

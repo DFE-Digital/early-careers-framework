@@ -7,6 +7,7 @@ RSpec.describe "Admin::DeliveryPartners", type: :request do
   let(:delivery_partner_name) { Faker::Company.name }
   let(:cohort) { create(:cohort) }
   let(:lead_provider) { create(:lead_provider, cohorts: [cohort]) }
+  let(:delivery_partner) { create(:delivery_partner) }
 
   before do
     admin_user = create(:user, :admin)
@@ -109,6 +110,13 @@ RSpec.describe "Admin::DeliveryPartners", type: :request do
 
       # Then
       expect(DeliveryPartner.find_by_name(delivery_partner_name)).not_to be_nil
+    end
+  end
+
+  describe "GET /admin/suppliers/delivery-partners/{delivery_partner.id}" do
+    it "renders the show template" do
+      get "/admin/suppliers/delivery-partners/#{delivery_partner.id}"
+      expect(response).to render_template("admin/suppliers/delivery_partners/show")
     end
   end
 end
