@@ -3,7 +3,7 @@
 require "rails_helper"
 include NewSupplierHelper
 
-RSpec.describe "Admin::DeliveryPartners", type: :request do
+RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
   let(:delivery_partner_name) { Faker::Company.name }
   let(:cohort) { create(:cohort) }
   let(:lead_provider) { create(:lead_provider, cohorts: [cohort]) }
@@ -117,6 +117,15 @@ RSpec.describe "Admin::DeliveryPartners", type: :request do
     it "renders the show template" do
       get "/admin/suppliers/delivery-partners/#{delivery_partner.id}"
       expect(response).to render_template("admin/suppliers/delivery_partners/show")
+      expect(response.body).to include(CGI.escapeHTML(delivery_partner.name))
+    end
+  end
+
+  describe "GET /admin/suppliers/delivery-partners/{delivery_partner.id}/delete" do
+    it "render the delete template" do
+      get "/admin/suppliers/delivery-partners/#{delivery_partner.id}/delete"
+      expect(response).to render_template("admin/suppliers/delivery_partners/delete")
+      expect(response.body).to include(CGI.escapeHTML(delivery_partner.name))
     end
   end
 end

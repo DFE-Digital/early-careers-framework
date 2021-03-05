@@ -57,6 +57,15 @@ module Admin
         @delivery_partner = DeliveryPartner.find(params[:id])
         authorize @delivery_partner
       end
+
+      def delete
+        @delivery_partner = DeliveryPartner.find(params[:id])
+        authorize @delivery_partner, :destroy?
+      end
+
+      # def destroy
+      #
+      # end
     end
   end
 end
