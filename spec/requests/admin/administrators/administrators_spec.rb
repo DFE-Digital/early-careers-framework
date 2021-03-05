@@ -23,6 +23,13 @@ RSpec.describe "Admin::Administrators::Administrators", type: :request do
       get "/admin/administrators/new"
       expect(response).to render_template("admin/administrators/administrators/new")
     end
+
+    it "prefills fields" do
+      get "/admin/administrators/new?email=#{CGI.escape(email)}&full_name=#{CGI.escape(name)}"
+
+      expect(response.body).to include(CGI.escapeHTML(email))
+      expect(response.body).to include(CGI.escapeHTML(name))
+    end
   end
 
   describe "POST /admin/administrators" do

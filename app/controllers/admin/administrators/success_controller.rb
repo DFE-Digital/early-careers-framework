@@ -6,7 +6,7 @@ module Admin
       skip_after_action :verify_policy_scoped
 
       def create
-        user = User.new(params.require(:user).permit(:full_name, :email))
+        user = User.new(create_user_params)
         user.confirm
 
         authorize user
@@ -16,6 +16,12 @@ module Admin
           user.save!
           AdminProfile.create!(user: user)
         end
+      end
+
+    private
+
+      def create_user_params
+        params.require(:user).permit(:full_name, :email)
       end
     end
   end

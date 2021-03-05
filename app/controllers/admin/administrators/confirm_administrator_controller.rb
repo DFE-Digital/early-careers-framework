@@ -7,7 +7,13 @@ module Admin
 
       def show
         authorize AdminProfile, :create?
-        @user = User.new(full_name: params.require(:full_name), email: params.require(:email))
+        @user = User.new(show_user_params)
+      end
+
+    private
+
+      def show_user_params
+        { full_name: params.require(:full_name), email: params.require(:email) }
       end
     end
   end

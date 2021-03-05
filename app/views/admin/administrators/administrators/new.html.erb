@@ -13,9 +13,7 @@
             :full_name,
             label: { text: "Full name" })
       %>
-      <%= f.govuk_email_field(
-            :email,
-            label: { text: "Email" })
+      <%= f.govuk_email_field(:email)
       %>
       <%= f.govuk_submit "Continue" %>
     <% end %>
