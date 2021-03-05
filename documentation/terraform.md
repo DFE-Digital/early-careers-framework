@@ -17,11 +17,11 @@ To create the access key, run
 
 To view the access key:
 
-```cf service-key dfe-ecf-engage-and-learn-terraform-state-dev terraform-state-key-dev```
+```cf service-key dfe-ecf-engage-and-learn-terraform-state-<env> terraform-state-key-<env>```
 
 You should be able to see the bucket_name, aws_access_key_id and aws_secret_access_key. With these values, run
 
-```terraform init -backend-config="bucket=dfe-ecf-engage-and-learn-terraform-state-dev" -backend-config="access_key=<aws_access_key_id>" -backend-config="secret_key=<aws_secret_access_key>"```
+```terraform init -backend-config="bucket=dfe-ecf-engage-and-learn-terraform-state-<env>" -backend-config="access_key=<aws_access_key_id>" -backend-config="secret_key=<aws_secret_access_key>"```
 
 ### Running Terraform apply
 ```terraform apply --var-file=... -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"..."}' -var='paas_user=...' -var='paas_password=...' -var='paas_app_docker_image=...'```

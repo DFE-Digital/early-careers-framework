@@ -52,3 +52,5 @@ tokens
 
 /spec/cypress/videos
 /spec/cypress/screenshots
+
+/config/credentials/staging.key

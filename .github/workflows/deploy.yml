@@ -144,5 +144,5 @@ jobs:
         run: |
           export TF_VAR_paas_app_docker_image=${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:engage-and-learn-${{ env.TAG }}
           cd terraform/app
-          terraform init -reconfigure -input=false -backend-config="bucket=TODO"
+          terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-9a67a82f-6b33-426e-bb6c-d51e738d7984"
           terraform apply -input=false -auto-approve -var-file ../workspace-variables/staging.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_STAGING}}"}'
