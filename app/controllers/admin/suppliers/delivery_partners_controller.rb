@@ -63,9 +63,13 @@ module Admin
         authorize @delivery_partner, :destroy?
       end
 
-      # def destroy
-      #
-      # end
+      def destroy
+        delivery_partner = DeliveryPartner.find(params[:id])
+        authorize delivery_partner
+
+        delivery_partner.discard!
+        redirect_to admin_suppliers_path
+      end
     end
   end
 end

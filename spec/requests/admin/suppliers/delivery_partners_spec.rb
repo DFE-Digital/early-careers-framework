@@ -128,4 +128,20 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
       expect(response.body).to include(CGI.escapeHTML(delivery_partner.name))
     end
   end
+
+  describe "DELETE /admin/suppliers/delivery-partners/{delivery_partner.id}" do
+    it "marks the delivery partner as deleted" do
+      delete "/admin/suppliers/delivery-partners/#{delivery_partner.id}"
+
+      delivery_partner.reload
+      expect(delivery_partner.discarded?).to be true
+    end
+
+    it "redirects to the suppliers path" do
+      delete "/admin/suppliers/delivery-partners/#{delivery_partner.id}"
+
+      expect(response).to redirect_to("/admin/suppliers")
+      expect(response.body).not_to include(CGI.escapeHTML(delivery_partner.name))
+    end
+  end
 end
