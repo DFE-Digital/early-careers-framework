@@ -1,9 +1,9 @@
 <% content_for :before_content, govuk_back_link(
   text: "Back",
-  href: admin_new_supplier_type_path)
+  href: supplier_type_admin_suppliers_path)
 %>
 
-<%= form_with model: @delivery_partner_form, url: admin_new_delivery_partner_lps_path, method: :post do |f| %>
+<%= form_with model: @delivery_partner_form, url: choose_lps_admin_delivery_partners_path, method: :post do |f| %>
 
   <%= f.govuk_check_boxes_fieldset(
     :lead_providers,
