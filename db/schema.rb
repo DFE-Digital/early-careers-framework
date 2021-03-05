@@ -64,6 +64,8 @@ ActiveRecord::Schema.define(version: 2021_03_08_161408) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "name", null: false
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_delivery_partners_on_discarded_at"
   end
 
   create_table "district_sparsities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
