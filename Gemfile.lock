@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/DFE-Digital/ecf-govspeak.git
-  revision: b1922aa10ebc001121c9a296daa01a663726bf22
-  ref: b1922aa
+  revision: 3334d4b911c4a4c71965b885583abcd726b2d202
+  ref: 3334d4b
   specs:
     govspeak (6.6.0)
       actionview (>= 5.0, < 7)
@@ -134,7 +134,7 @@ GEM
       faraday-net_http (~> 1.0)
       multipart-post (>= 1.2, < 3)
       ruby2_keywords
-    faraday-net_http (1.0.0)
+    faraday-net_http (1.0.1)
     ffi (1.14.2)
     foreman (0.87.2)
     globalid (0.4.2)
@@ -142,7 +142,7 @@ GEM
     govuk-components (1.0.2)
       rails (>= 6.0)
       view_component (>= 2.22.1, < 2.25.0)
-    govuk_app_config (2.8.2)
+    govuk_app_config (2.8.4)
       logstasher (>= 1.2.2, < 2.2.0)
       sentry-raven (~> 3.1.1)
       statsd-ruby (~> 1.5.0)
@@ -151,7 +151,7 @@ GEM
       actionview (~> 6.1.0, >= 6.1)
       activemodel (~> 6.1.0, >= 6.1)
       activesupport (~> 6.1.0, >= 6.1)
-    govuk_publishing_components (23.12.1)
+    govuk_publishing_components (24.4.0)
       govuk_app_config
       kramdown
       plek
@@ -327,7 +327,7 @@ GEM
     rubocop-rspec (1.42.0)
       rubocop (>= 0.87.0)
     ruby-progressbar (1.11.0)
-    ruby2_keywords (0.0.2)
+    ruby2_keywords (0.0.4)
     rubyzip (2.3.0)
     sanitize (5.2.3)
       crass (~> 1.0.2)

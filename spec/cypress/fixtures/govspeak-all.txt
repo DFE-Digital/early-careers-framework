@@ -1,0 +1,191 @@
+## Test govspeak document
+
+### Native markdown
+
+Test paragraph
+
+> Test blockquote
+
+Text with **bold**, *italic*, a [link](https://www.gov.uk/), and `inline code`.
+
+* unordered
+* list
+
+1. ordered
+1. list
+
+    code block
+    with code
+
+### Information callout
+
+^This is an information callout^
+
+### Warning callout
+
+%This is a warning callout%
+
+### Example callout
+
+$E
+**Example**: Open the pod bay doors
+$E
+
+### Statistic headline
+
+{stat-headline}
+*13.8bn* years since the big bang
+{/stat-headline}
+
+### Contact
+
+$C
+**Student Finance England**
+**Telephone:** 0845 300 50 90
+**Minicom:** 0845 604 44 34
+$C
+
+### Address
+
+$A
+Hercules House
+Hercules Road
+London SE1 7DU
+$A
+
+### Downloads
+
+$D
+[An example form download link](http://example.com/ "Example form")
+
+Something about this form download
+$D
+
+### Place
+
+$P
+This is a place
+$P
+
+
+### Information
+
+$I
+This is information
+$I
+
+### Additional information
+
+$AI
+This is additional information
+$AI
+
+### Call to action
+
+$CTA
+This is a call to action
+$CTA
+
+### Summary
+
+$!
+This is a summary
+$!
+
+### External link
+
+x[External Report](https://example.com/report)x
+
+### Steps
+
+s1. numbers
+s2. to the start
+s3. of your list
+
+
+### Legislative lists
+
+$LegislativeList
+* 1. Item 1
+* 2. Item 2
+  * a) Item 2a
+  * b) Item 2b
+    * i. Item 2 b i
+    * ii. Item 2 b ii
+* 3. Item 3
+$EndLegislativeList
+(to indent, add 2 spaces)
+
+### Priority  lists
+
+$PriorityList:3
+- Item 1
+- Item 2
+- Item 3
+- Item 4
+- Item 5
+
+### Devolved content
+
+:england:content goes here:england:
+:scotland:content goes here:scotland:
+:london:content goes here:london:
+:wales:content goes here:wales:
+:northern-ireland:content goes here:northern-ireland:
+:england-wales:content goes here:england-wales:
+
+### Table
+
+|               |# Column header one |# Column header two |
+|---------------|--------------------|--------------------|
+|# Row header 1 | Content #1         | Content #2         |
+|# Row header 1 | Content #3         | Content #4         |
+
+### Bar chart
+
+|col|
+|---|
+|val|
+{barchart}
+
+### Button
+
+{button}[Continue](https://gov.uk/random){/button}
+
+### Accordion component
+
+$Accordion
+$Heading
+Heading
+$EndHeading
+$Summary
+Summary
+$EndSummary
+$Content
+Content
+$EndContent
+$Heading
+Heading
+$EndHeading
+$Summary
+Summary
+$EndSummary
+$Content
+Content
+$EndContent
+$EndAccordion
+
+### Youtube video
+
+$YoutubeVideo[Youtube title](https://www.youtube.com/watch?v=EpjSlCJtPLo&list=PL4IuMlmijgAfTwwEiZmMp28Eaf66S3a1R&index=2&t=0s)$EndYoutubeVideo
+
+### Figure
+
+$Figure
+$Alt
+Example of the part-whole model using the number 28. The number 20 has already been added to the lower left field, the lower right field is blank ready to be filled in.
+$EndAlt
+$URL https://www.early-career-framework.education.gov.uk/teachfirst/wp-content/uploads/sites/4/2020/08/Part-whole-model.jpg $EndURL
+$Caption Figure 1: Part-whole model.
+$EndCaption
+$EndFigure
