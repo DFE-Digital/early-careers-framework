@@ -82,6 +82,7 @@ RSpec.configure do |config|
   config.include ActiveSupport::Testing::TimeHelpers
   config.include ActiveJob::TestHelper
   config.include ViewComponent::TestHelpers, type: :component
+  config.include Rails.application.routes.url_helpers
 
   config.before :each do
     clear_enqueued_jobs
