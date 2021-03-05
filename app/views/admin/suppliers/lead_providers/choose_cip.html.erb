@@ -1,9 +1,9 @@
 <% content_for :before_content, govuk_back_link(
   text: "Back",
-  href: admin_new_supplier_type_path)
+  href: supplier_type_admin_suppliers_path)
 %>
 
-<%= form_with model: @lead_provider_form, url: admin_new_lead_provider_cip_path, method: :post do |f| %>
+<%= form_with model: @lead_provider_form, url: choose_cip_admin_lead_providers_path, method: :post do |f| %>
   <%= f.govuk_collection_radio_buttons(
         :cip,
         @lead_provider_form.available_cips,
