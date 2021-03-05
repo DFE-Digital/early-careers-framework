@@ -2,12 +2,13 @@
   display: flex;
   flex-direction: row;
   background-color: govuk-colour("mid-grey");
-  height: 4vh;
+  height: 2.5rem;
   padding-left: 4px;
 }
 
 .nav-item {
   @include govuk-typography-responsive($size: 27);
+  padding-top: 0.25rem;
 
   &.nav-item__selected {
     border-bottom: solid govuk-colour("blue") 4px;
