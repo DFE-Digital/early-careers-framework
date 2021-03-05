@@ -43,7 +43,7 @@ describe("ECT user interaction with Core Induction Programme", () => {
     cy.get("@courseLesson").then(([lesson]) => {
       cy.visitLesson(lesson);
       cy.get("h2").should("contain", "Title");
-      cy.contains("a.govuk-button", "Edit lesson content").should("not.exist");
+      cy.contains("a.govuk-button", "Edit lesson part").should("not.exist");
     });
   });
 

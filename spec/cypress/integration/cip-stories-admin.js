@@ -75,7 +75,7 @@ describe("Admin user interaction with Core Induction Programme", () => {
     cy.get("@courseLesson").then(([lesson]) => {
       cy.visitLesson(lesson);
       cy.get("h2").should("contain", "Title");
-      cy.get("a.govuk-button").contains("Edit lesson content").click();
+      cy.get("a.govuk-button").contains("Edit lesson part").click();
 
       cy.get("h1").should("contain", "Content change preview");
       cy.get("input[name='title']").type("New title");
@@ -85,7 +85,7 @@ describe("Admin user interaction with Core Induction Programme", () => {
       cy.visitLesson(lesson);
       cy.get("h2").should("contain", "Title");
 
-      cy.get("a.govuk-button").contains("Edit lesson content").click();
+      cy.get("a.govuk-button").contains("Edit lesson part").click();
       cy.get("input[name='title']").type("New title");
       cy.contains("Save changes").click();
 

@@ -6,10 +6,10 @@
       <%= govuk_link_to "Edit lesson", edit_cip_year_module_lesson_path(id: @course_lesson_part.course_lesson.id), button: true %>
     <% end %>
     <% if policy(@course_lesson_part).edit? %>
-      <%= govuk_link_to "Edit lesson content", edit_cip_year_module_lesson_part_path(@course_lesson_part), button: true %>
+      <%= govuk_link_to "Edit lesson part", edit_cip_year_module_lesson_part_path(@course_lesson_part), button: true %>
     <% end %>
     <% if policy(@course_lesson_part).show_split? %>
-      <%= govuk_link_to "Split lesson content", cip_year_module_lesson_part_split_path(part_id: @course_lesson_part.id), button: true %>
+      <%= govuk_link_to "Split lesson part", cip_year_module_lesson_part_split_path(part_id: @course_lesson_part.id), button: true %>
     <% end %>
 
     <h1 class="govuk-heading-xl govuk-!-margin-bottom-4"> <%= @course_lesson_part.course_lesson.title %></h1>
