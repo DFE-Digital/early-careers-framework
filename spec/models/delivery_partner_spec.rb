@@ -12,7 +12,5 @@ RSpec.describe DeliveryPartner, type: :model do
   describe "associations" do
     it { is_expected.to have_many(:provider_relationships) }
     it { is_expected.to have_many(:lead_providers).through(:provider_relationships) }
-    it { is_expected.to have_many(:delivery_partner_profiles) }
-    it { is_expected.to have_many(:users).through(:delivery_partner_profiles) }
   end
 end
