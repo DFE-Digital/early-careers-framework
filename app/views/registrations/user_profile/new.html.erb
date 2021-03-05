@@ -28,7 +28,6 @@
           <%= @school.address_line1 %> <br>
           <%= @school.address_line2 %> <br>
           <%= @school.address_line3 %> <br>
-          <%= @school.address_line4 %> <br>
           <%= @school.postcode %>
         </dd>
       </div>
@@ -41,7 +40,7 @@
       <%= f.govuk_text_field(
             :full_name,
             width: 20,
-            label: { 
+            label: {
               text: "Full name",
               class: "govuk-label govuk-label--m"
             })
