@@ -9,10 +9,6 @@ Rails.application.routes.draw do
   devise_scope :user do
     get "/users/confirm_sign_in", to: "users/sessions#redirect_from_magic_link"
     post "/users/sign_in_with_token", to: "users/sessions#sign_in_with_token"
-    get "/users/new", to: "users/registrations#new"
-    post "/users/register", to: "users/registrations#create"
-    get "/users/information", to: "users/registrations#info"
-    post "/users/check-details", to: "users/registrations#check_details", as: :users_check_details
   end
 
   get "/pages/:page", to: "pages#show"
@@ -89,7 +85,6 @@ Rails.application.routes.draw do
           end
         end
       end
-
       resources :supplier_users, only: %i[index new create], path: "users"
       scope "users/new" do
         post "/", controller: :supplier_users, action: :receive_supplier
@@ -98,6 +93,9 @@ Rails.application.routes.draw do
         get "review", controller: :supplier_users, action: :review, as: :new_supplier_user_review
         get "success", controller: :supplier_users, action: :success, as: :new_supplier_user_success
       end
+    end
+    scope module: "lead_providers", path: "lead-providers" do
+      resources :lead_provider_users, only: %i[edit update], path: "users"
     end
   end
 
