@@ -100,9 +100,12 @@ Rails.application.routes.draw do
       end
     end
 
-    namespace :administrators do
-      resources :administrators, only: %i[index new create], path: "/"
-      resource :success, controller: :success, only: :create, path: "/new/success"
+    scope :administrators, module: "administrators" do
+      resources :administrators, only: %i[index new create], path: "/" do
+        collection do
+          post "new/success", action: :success, as: :success
+        end
+      end
     end
   end
 

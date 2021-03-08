@@ -34,6 +34,20 @@ module Admin
         session[:administrator_user] = @user
       end
 
+      def success
+        user = User.new(permitted_attributes(User))
+        user.confirm
+
+        authorize user, :create?
+        authorize AdminProfile, :create?
+
+        ActiveRecord::Base.transaction do
+          user.save!
+          AdminProfile.create!(user: user)
+        end
+        session.delete(:administrator_user)
+      end
+
     private
 
       def user_from_session

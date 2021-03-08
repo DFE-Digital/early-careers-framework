@@ -1,6 +1,6 @@
 <% content_for :before_content, govuk_back_link(
   text: "Back",
-  href: new_admin_administrators_administrator_path(continue: true))
+  href: new_admin_administrator_path(continue: true))
 %>
 
 <div class="govuk-grid-row">
@@ -17,7 +17,7 @@
         </dd>
         <dd class="govuk-summary-list__actions">
           <%= govuk_link_to(
-                new_admin_administrators_administrator_path(continue: true),
+                new_admin_administrator_path(continue: true),
                 class: "govuk-link--no-visited-state",
               ) do %>
             Change<span class="govuk-visually-hidden"> name</span>
@@ -33,7 +33,7 @@
         </dd>
         <dd class="govuk-summary-list__actions">
           <%= govuk_link_to(
-                new_admin_administrators_administrator_path(continue: true),
+                new_admin_administrator_path(continue: true),
                 class: "govuk-link--no-visited-state",
               ) do %>
           Change<span class="govuk-visually-hidden"> email</span>
@@ -42,7 +42,7 @@
       </div>
     </dl>
 
-    <%= form_for @user, url: admin_administrators_success_path, method: :post do |f| %>
+    <%= form_for @user, url: success_admin_administrators_path, method: :post do |f| %>
       <%= f.hidden_field :full_name %>
       <%= f.hidden_field :email %>
       <%= f.govuk_submit "Create administrator user" %>
