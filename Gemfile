@@ -61,6 +61,9 @@ gem "daemons"
 gem "delayed_cron_job"
 gem "delayed_job_active_record"
 
+# Soft delete
+gem "discard", "~> 1.2", ">= 1.2.0"
+
 platform :mswin, :mingw, :x64_mingw do
   gem "wdm", ">= 0.1.0"
 end
