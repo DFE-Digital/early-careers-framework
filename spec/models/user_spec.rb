@@ -7,9 +7,7 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_one(:admin_profile) }
     it { is_expected.to have_one(:induction_coordinator_profile) }
     it { is_expected.to have_one(:lead_provider_profile) }
-    it { is_expected.to have_one(:delivery_partner_profile) }
     it { is_expected.to have_one(:lead_provider).through(:lead_provider_profile) }
-    it { is_expected.to have_one(:delivery_partner).through(:delivery_partner_profile) }
     it { is_expected.to have_one(:early_career_teacher_profile) }
   end
 
@@ -50,12 +48,6 @@ RSpec.describe User, type: :model do
       user = create(:user, :lead_provider)
 
       expect(user.supplier_name).to eq user.lead_provider.name
-    end
-
-    it "returns the correct delivery partner name" do
-      user = create(:user, :delivery_partner)
-
-      expect(user.supplier_name).to eq user.delivery_partner.name
     end
 
     it "returns nil when the user doesn't belong to a supplier" do

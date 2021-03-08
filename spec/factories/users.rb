@@ -20,10 +20,6 @@ FactoryBot.define do
       lead_provider_profile { build(:lead_provider_profile) }
     end
 
-    trait :delivery_partner do
-      delivery_partner_profile { build(:delivery_partner_profile) }
-    end
-
     trait :early_career_teacher do
       early_career_teacher_profile { build(:early_career_teacher_profile) }
     end

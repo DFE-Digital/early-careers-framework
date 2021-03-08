@@ -4,7 +4,6 @@ require "rails_helper"
 
 RSpec.describe "Admin::SupplierUsers", type: :request do
   let(:lead_provider) { create(:lead_provider) }
-  let(:delivery_partner) { create(:delivery_partner) }
   let(:full_name) { Faker::Name.name }
   let(:email) { Faker::Internet.email }
 
@@ -30,7 +29,7 @@ RSpec.describe "Admin::SupplierUsers", type: :request do
   end
 
   describe "POST /admin/suppliers/new" do
-    it "redirects to the supplier type page" do
+    it "redirects to the user details page" do
       when_i_choose_a_supplier(lead_provider)
 
       expect(response).to redirect_to("/admin/suppliers/users/new/user-details")
@@ -44,16 +43,6 @@ RSpec.describe "Admin::SupplierUsers", type: :request do
       given_i_have_confirmed_my_choices
 
       expect(User.find_by_email(email).lead_provider).to eq lead_provider
-    end
-
-    it "Sets the correct delivery partner" do
-      when_i_choose_a_supplier(delivery_partner)
-
-      # Then
-      given_i_have_entered_user_details(full_name, email)
-      given_i_have_confirmed_my_choices
-
-      expect(User.find_by_email(email).delivery_partner).to eq delivery_partner
     end
 
     it "Shows an error if no supplier is chosen" do
@@ -153,14 +142,6 @@ RSpec.describe "Admin::SupplierUsers", type: :request do
       expect {
         when_i_confirm_my_choices
       }.to change { LeadProviderProfile.count }.by(1)
-    end
-
-    it "creates a new delivery partner profile" do
-      expect {
-        given_i_have_chosen_a_supplier(delivery_partner)
-        given_i_have_entered_user_details(full_name, email)
-        when_i_confirm_my_choices
-      }.to change { DeliveryPartnerProfile.count }.by(1)
     end
   end
 

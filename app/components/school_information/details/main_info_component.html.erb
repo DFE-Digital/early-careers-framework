@@ -19,7 +19,11 @@
           Local authority
         </dt>
         <dd class="govuk-summary-list__value">
-          Essex
+          <% if @school.local_authority %>
+            <%= @school.local_authority.name %>
+          <% else %>
+            No local authority assigned
+          <% end %>
         </dd>
       </div>
 
@@ -28,7 +32,7 @@
           School contact
         </dt>
         <dd class="govuk-summary-list__value">
-<!--          TODO: This will need to be updated after talks with Ethan and Michal-->
+<!--         TODO: This will need to be updated after talks with Ethan and Michal-->
           <%= mail_to 'induction_coordinator@school.com' %>
         </dd>
       </div>
