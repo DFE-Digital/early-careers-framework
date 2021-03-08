@@ -17,7 +17,8 @@ class DeliveryPartnerForm
   def chosen_provider_relationships
     provider_relationship_hashes
       &.map { |value| JSON.parse(value) }
-      &.map { |relationship_params| ProviderRelationship.new(relationship_params) }
+      &.filter { |relationship_params| lead_providers.include?(relationship_params["lead_provider_id"]) }
+      &.map { |relationship_params| ProviderRelationship.find_or_initialize_by(relationship_params) }
   end
 
   def display_lead_provider_details
@@ -47,6 +48,19 @@ class DeliveryPartnerForm
     end
 
     delivery_partner
+  end
+
+  def update!(delivery_partner)
+    delivery_partner.name = name
+    ActiveRecord::Base.transaction do
+      delivery_partner.save!
+      chosen_provider_relationships.each do |provider_relationship|
+        provider_relationship.delivery_partner = delivery_partner
+        provider_relationship.save!
+      end
+
+      delivery_partner.provider_relationships.where.not(id: chosen_provider_relationships).discard_all!
+    end
   end
 
 private

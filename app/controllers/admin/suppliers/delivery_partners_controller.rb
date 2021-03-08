@@ -3,7 +3,7 @@
 module Admin
   module Suppliers
     class DeliveryPartnersController < Admin::BaseController
-      before_action :set_delivery_partner, only: %i[show delete edit destroy]
+      before_action :set_delivery_partner, only: %i[show delete edit update destroy]
       skip_after_action :verify_policy_scoped
 
       # region create
@@ -75,6 +75,18 @@ module Admin
             DeliveryPartnerForm.provider_relationship_value(relationship.lead_provider, relationship.cohort)
           end,
         )
+      end
+
+      def update
+        authorize @delivery_partner
+
+        @delivery_partner_form = DeliveryPartnerForm.new(params.require(:delivery_partner_form).permit(:name))
+        @delivery_partner_form.populate_provider_relationships(params)
+
+        render :edit and return unless @delivery_partner_form.valid?
+
+        @delivery_partner_form.update!(@delivery_partner)
+        redirect_to admin_delivery_partner_path(@delivery_partner)
       end
 
       def destroy

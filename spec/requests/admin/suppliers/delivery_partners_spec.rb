@@ -137,6 +137,60 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
     end
   end
 
+  describe "PATCH /admin/suppliers/delivery-partners/{delivery_partner.id}" do
+    it "redirects to the suppliers page" do
+      patch "/admin/suppliers/delivery-partners/#{delivery_partner.id}", params: { delivery_partner_form: {
+        name: delivery_partner.name,
+        lead_providers: [lead_provider.id],
+        provider_relationship_hashes: [DeliveryPartnerForm.provider_relationship_value(lead_provider, cohort)],
+      } }
+
+      expect(response).to redirect_to("/admin/suppliers/delivery-partners/#{delivery_partner.id}")
+      follow_redirect!
+      expect(response.body).to include(CGI.escapeHTML(delivery_partner.name))
+    end
+
+    it "update the name of the delivery partner" do
+      old_name = delivery_partner.name
+      new_name = Faker::Name.name
+      patch "/admin/suppliers/delivery-partners/#{delivery_partner.id}", params: { delivery_partner_form: {
+        name: new_name,
+        lead_providers: [lead_provider.id],
+        provider_relationship_hashes: [DeliveryPartnerForm.provider_relationship_value(lead_provider, cohort)],
+      } }
+
+      delivery_partner.reload
+      expect(delivery_partner.name).to eq new_name
+      follow_redirect!
+      expect(response.body).to include(CGI.escapeHTML(new_name))
+      expect(response.body).not_to include(CGI.escapeHTML(old_name))
+    end
+
+    it "updates provider relationships" do
+      old_cohort = create(:cohort)
+      old_lead_provider = create(:lead_provider, cohorts: [old_cohort])
+      ProviderRelationship.create!(delivery_partner: delivery_partner, lead_provider: old_lead_provider, cohort: old_cohort)
+      ProviderRelationship.create!(delivery_partner: delivery_partner, lead_provider: lead_provider, cohort: old_cohort)
+
+      patch "/admin/suppliers/delivery-partners/#{delivery_partner.id}", params: { delivery_partner_form: {
+        name: delivery_partner.name,
+        lead_providers: [lead_provider.id],
+        provider_relationship_hashes: [
+          # simulate someone unchecking the lead provider without unchecking the nested cohort
+          DeliveryPartnerForm.provider_relationship_value(old_lead_provider, old_cohort),
+          DeliveryPartnerForm.provider_relationship_value(lead_provider, cohort),
+        ],
+      } }
+
+      delivery_partner.reload
+      expect(delivery_partner.provider_relationships.find_by(lead_provider: old_lead_provider)).to be_nil
+      expect(delivery_partner.provider_relationships.with_discarded.find_by(lead_provider: old_lead_provider)).not_to be_nil
+      expect(delivery_partner.provider_relationships.find_by(lead_provider: lead_provider, cohort: old_cohort)).to be_nil
+      expect(delivery_partner.provider_relationships.with_discarded.find_by(lead_provider: lead_provider, cohort: old_cohort)).not_to be_nil
+      expect(delivery_partner.provider_relationships.find_by(lead_provider: lead_provider, cohort: cohort)).not_to be_nil
+    end
+  end
+
   describe "DELETE /admin/suppliers/delivery-partners/{delivery_partner.id}" do
     it "marks the delivery partner as deleted" do
       delete "/admin/suppliers/delivery-partners/#{delivery_partner.id}"
@@ -145,7 +199,7 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
       expect(delivery_partner.discarded?).to be true
     end
 
-    it "redirects to the suppliers path" do
+    it "redirects to the suppliers page" do
       delete "/admin/suppliers/delivery-partners/#{delivery_partner.id}"
 
       expect(response).to redirect_to("/admin/suppliers")

@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
-class DeliveryPartner < ApplicationRecord
-  include Discard::Model
-  default_scope -> { kept }
-
+class DeliveryPartner < DiscardableRecord
   has_many :provider_relationships
   has_many :lead_providers, through: :provider_relationships
 

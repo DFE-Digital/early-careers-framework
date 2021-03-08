@@ -94,7 +94,7 @@ Rails.application.routes.draw do
         get "success", controller: :supplier_users, action: :success, as: :new_supplier_user_success
       end
 
-      resources :delivery_partners, only: %i[show edit destroy], path: "delivery-partners" do
+      resources :delivery_partners, only: %i[show edit update destroy], path: "delivery-partners" do
         member do
           get "delete", action: :delete
         end
