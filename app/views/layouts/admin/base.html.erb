@@ -1,0 +1,11 @@
+<% content_for :nav_bar do %>
+  <%= render PrimaryNavComponent.new do |component| %>
+    <%= component.nav_item(path: "/admin/suppliers") do %>
+      Suppliers
+    <% end %>
+    <%= component.nav_item(path: "/admin/administrators") do %>
+      Administrators
+    <% end %>
+  <% end %>
+<% end %>
+<%= render template: 'layouts/application' %>

@@ -1,0 +1,5 @@
+<div class="nav-item govuk-!-margin-right-8 <%= "nav-item__selected" if current_section?(path) %>">
+  <%= govuk_link_to path, class: "govuk-link--no-visited-state" do %>
+    <%= content %> <%= "<span class='govuk-visually-hidden'>Current page</span>".html_safe if current_section?(path) %>
+  <% end %>
+</div>

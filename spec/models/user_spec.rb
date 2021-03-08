@@ -13,7 +13,7 @@ RSpec.describe User, type: :model do
 
   describe "validations" do
     subject { FactoryBot.create(:user) }
-    it { is_expected.to validate_presence_of(:full_name).with_message("Enter your full name") }
+    it { is_expected.to validate_presence_of(:full_name).with_message("Enter a full name") }
     it { is_expected.to validate_presence_of(:email).with_message("Enter an email") }
     it {
       is_expected.to validate_uniqueness_of(:email)
