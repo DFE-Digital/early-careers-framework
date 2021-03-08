@@ -39,3 +39,7 @@ Cypress.Commands.add("logout", () => {
 
   cy.location("pathname").should("eq", "/");
 });
+
+Cypress.Commands.add("clickBackLink", () => {
+  cy.get(".govuk-back-link").click();
+});
