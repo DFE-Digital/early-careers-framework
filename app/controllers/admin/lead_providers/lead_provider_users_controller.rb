@@ -7,11 +7,11 @@ module Admin
       before_action :load_lead_provider_user
 
       def edit
-        authorize User
+        authorize @lead_provider_user
       end
 
       def update
-        authorize User
+        authorize @lead_provider_user
 
         if @lead_provider_user.update(permitted_attributes(@lead_provider_user))
           redirect_to :admin_supplier_users, notice: "Changes saved successfully"
