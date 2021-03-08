@@ -44,15 +44,15 @@ RSpec.describe "Admin::Administrators::Administrators", type: :request do
     end
   end
 
-  describe "POST /admin/administrators" do
+  describe "POST /admin/administrators/new/confirm" do
     it "renders the confirmation template" do
       given_i_have_previously_submitted_values(name, email)
 
-      expect(response).to render_template("admin/administrators/administrators/create")
+      expect(response).to render_template("admin/administrators/administrators/confirm")
     end
 
     it "shows an error when a field is blank" do
-      post "/admin/administrators", params: { user: {
+      post "/admin/administrators/new/confirm", params: { user: {
         full_name: name,
         email: "",
       } }
@@ -61,7 +61,7 @@ RSpec.describe "Admin::Administrators::Administrators", type: :request do
     end
   end
 
-  describe "POST /admin/administrators/new/success" do
+  describe "POST /admin/administrators" do
     it "creates a new user" do
       expect { create_new_user }.to change { User.count }.by 1
     end
@@ -85,21 +85,21 @@ RSpec.describe "Admin::Administrators::Administrators", type: :request do
     it "renders a success message" do
       given_a_user_is_created
 
-      expect(response).to render_template("admin/administrators/administrators/success")
+      expect(response).to render_template("admin/administrators/administrators/create")
     end
   end
 
 private
 
   def given_i_have_previously_submitted_values(name, email)
-    post "/admin/administrators", params: { user: {
+    post "/admin/administrators/new/confirm", params: { user: {
       full_name: name,
       email: email,
     } }
   end
 
   def create_new_user
-    post "/admin/administrators/new/success", params: { user: {
+    post "/admin/administrators", params: { user: {
       full_name: name,
       email: email,
     } }

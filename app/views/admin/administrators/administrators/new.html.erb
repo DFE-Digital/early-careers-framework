@@ -7,7 +7,7 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">Create a new administrator user</h1>
     <p class="govuk-body">This should be someone from the Department for Education</p>
-    <%= form_for @user, url: admin_administrators_path, method: :post do |f| %>
+    <%= form_for @user, url: confirm_admin_administrators_path, method: :post do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_text_field(:full_name, label: { text: "Full name" }) %>
       <%= f.govuk_email_field(:email) %>

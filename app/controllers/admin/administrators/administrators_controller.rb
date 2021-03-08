@@ -23,9 +23,11 @@ module Admin
         authorize @user
       end
 
-      def create
-        authorize AdminProfile
+      def confirm
         @user = User.new(permitted_attributes(User))
+
+        authorize @user, :create?
+        authorize AdminProfile, :create?
 
         if @user.invalid?
           render :new and return
@@ -34,12 +36,12 @@ module Admin
         session[:administrator_user] = @user
       end
 
-      def success
+      def create
         user = User.new(permitted_attributes(User))
         user.confirm
 
-        authorize user, :create?
-        authorize AdminProfile, :create?
+        authorize user
+        authorize AdminProfile
 
         ActiveRecord::Base.transaction do
           user.save!
