@@ -121,6 +121,14 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
     end
   end
 
+  describe "GET /admin/suppliers/delivery-partners/{delivery_partner.id}/edit" do
+    it "renders the edit template" do
+      get "/admin/suppliers/delivery-partners/#{delivery_partner.id}/edit"
+      expect(response).to render_template("admin/suppliers/delivery_partners/edit")
+      expect(response.body).to include(CGI.escapeHTML(delivery_partner.name))
+    end
+  end
+
   describe "GET /admin/suppliers/delivery-partners/{delivery_partner.id}/delete" do
     it "render the delete template" do
       get "/admin/suppliers/delivery-partners/#{delivery_partner.id}/delete"

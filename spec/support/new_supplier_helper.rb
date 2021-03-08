@@ -41,7 +41,10 @@ module NewSupplierHelper
     get "/admin/suppliers/new/delivery-partner/choose-lps"
     post "/admin/suppliers/new/delivery-partner/choose-lps", params: { delivery_partner_form: {
       lead_providers: lead_providers.map(&:id),
-    }.merge(Hash[cohorts.map { |key, value| [key.id.to_sym, { cohorts: value.map(&:id) }] }]) }
+      provider_relationship_hashes: cohorts.flat_map do |lead_provider, lp_cohorts|
+        lp_cohorts.map { |cohort| DeliveryPartnerForm.provider_relationship_value(lead_provider, cohort) }
+      end,
+    } }
   end
 
   alias_method :given_I_have_chosen_lps_and_cohorts, :when_I_choose_lps_and_cohorts

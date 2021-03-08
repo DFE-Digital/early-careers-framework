@@ -3,8 +3,10 @@
 module Admin
   module Suppliers
     class DeliveryPartnersController < Admin::BaseController
+      before_action :set_delivery_partner, only: %i[show delete edit destroy]
       skip_after_action :verify_policy_scoped
 
+      # region create
       def choose_lead_providers
         authorize DeliveryPartner, :create?
 
@@ -24,7 +26,7 @@ module Admin
         session[:delivery_partner_form].merge!(
           {
             lead_providers: @delivery_partner_form.lead_providers,
-            provider_relationships: @delivery_partner_form.provider_relationships,
+            provider_relationship_hashes: @delivery_partner_form.provider_relationship_hashes,
           },
         )
         redirect_to review_admin_delivery_partners_path
@@ -53,22 +55,39 @@ module Admin
         @delivery_partner = DeliveryPartner.find(params[:delivery_partner])
       end
 
+      # endregion
+
       def show
-        @delivery_partner = DeliveryPartner.find(params[:id])
         authorize @delivery_partner
       end
 
       def delete
-        @delivery_partner = DeliveryPartner.find(params[:id])
         authorize @delivery_partner, :destroy?
       end
 
-      def destroy
-        delivery_partner = DeliveryPartner.find(params[:id])
-        authorize delivery_partner
+      def edit
+        authorize @delivery_partner
 
-        delivery_partner.discard!
+        @delivery_partner_form = DeliveryPartnerForm.new(
+          name: @delivery_partner.name,
+          lead_providers: @delivery_partner.lead_providers.map(&:id),
+          provider_relationship_hashes: @delivery_partner.provider_relationships.map do |relationship|
+            DeliveryPartnerForm.provider_relationship_value(relationship.lead_provider, relationship.cohort)
+          end,
+        )
+      end
+
+      def destroy
+        authorize @delivery_partner
+
+        @delivery_partner.discard!
         redirect_to admin_suppliers_path
+      end
+
+    private
+
+      def set_delivery_partner
+        @delivery_partner = DeliveryPartner.find(params[:id])
       end
     end
   end
