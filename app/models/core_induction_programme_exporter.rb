@@ -9,7 +9,7 @@ class CoreInductionProgrammeExporter
       import: true,
     )
 
-    years = CourseYear.order(:created_at)
+    years = CourseYear.order(:title)
     SeedDump.dump(
       years,
       file: "db/seeds/cip_seed_dump.rb",
