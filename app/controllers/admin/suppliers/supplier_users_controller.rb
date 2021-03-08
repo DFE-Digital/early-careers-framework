@@ -10,7 +10,7 @@ module Admin
       before_action :form_from_session, only: %i[user_details review create success]
 
       def index
-        sorted_users = (User.for_lead_provider.with_supplier + User.for_delivery_partner.with_supplier).sort_by(&:full_name)
+        sorted_users = User.for_lead_provider.sort_by(&:full_name)
         @users = Kaminari.paginate_array(sorted_users).page(params[:page]).per(20)
         @page = @users.current_page
         @total_pages = @users.total_pages
@@ -62,11 +62,8 @@ module Admin
 
       def create
         authorize User
-        if @supplier_user_form.chosen_supplier.instance_of?(LeadProvider)
-          authorize LeadProviderProfile
-        else
-          authorize DeliveryPartnerProfile
-        end
+        authorize LeadProviderProfile
+
         user = @supplier_user_form.save!
         redirect_to admin_new_supplier_user_success_path(user_id: user.id)
       end
@@ -84,9 +81,7 @@ module Admin
       def set_suppliers
         @supplier_user_form = SupplierUserForm.new
 
-        lead_providers = policy_scope(LeadProvider)
-        delivery_partners = policy_scope(DeliveryPartner)
-        @suppliers = (lead_providers + delivery_partners).sort_by(&:name)
+        @suppliers = policy_scope(LeadProvider).sort_by(&:name)
       end
 
       def form_from_session

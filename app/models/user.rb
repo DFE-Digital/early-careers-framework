@@ -8,9 +8,6 @@ class User < ApplicationRecord
   has_one :lead_provider_profile
   has_one :lead_provider, through: :lead_provider_profile
 
-  has_one :delivery_partner_profile
-  has_one :delivery_partner, through: :delivery_partner_profile
-
   has_one :admin_profile
 
   has_one :early_career_teacher_profile
@@ -24,7 +21,7 @@ class User < ApplicationRecord
   end
 
   def supplier_name
-    lead_provider&.name || delivery_partner&.name
+    lead_provider&.name
   end
 
   def induction_coordinator?
@@ -39,7 +36,5 @@ class User < ApplicationRecord
     early_career_teacher_profile.present?
   end
 
-  scope :for_lead_provider, -> { joins(:lead_provider) }
-  scope :for_delivery_partner, -> { joins(:delivery_partner) }
-  scope :with_supplier, -> { includes(:lead_provider, :delivery_partner) }
+  scope :for_lead_provider, -> { includes(:lead_provider).joins(:lead_provider) }
 end
