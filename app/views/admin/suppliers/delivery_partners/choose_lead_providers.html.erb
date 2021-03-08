@@ -1,6 +1,6 @@
 <% content_for :before_content, govuk_back_link(
   text: "Back",
-  href: supplier_type_admin_suppliers_path)
+  href: supplier_type_admin_new_supplier_index_path)
 %>
 
 <%= form_with model: @delivery_partner_form, url: choose_lps_admin_delivery_partners_path, method: :post do |f| %>
