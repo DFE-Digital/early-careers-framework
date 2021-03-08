@@ -53,6 +53,30 @@ RSpec.describe "Core Induction Programme Lesson Part", type: :request do
       end
     end
 
+    describe "DELETE /core-induction-programme/years/:years_id/modules/:module_id/lessons/:lesson_id/parts/:part_id" do
+      it "deletes a course lesson part and redirects to a course lesson" do
+        post "#{course_lesson_part_url}/split", params: {
+          commit: "Save changes",
+          split_lesson_part_form: {
+            title: "Updated title one",
+            content: "Updated content",
+            new_title: "Title two",
+            new_content: "Content two",
+          },
+        }
+        delete course_lesson_part_url, params: { id: course_lesson.course_lesson_parts[1].id }
+
+        course_lesson_url = "/core-induction-programme/years/#{course_year.id}/modules/#{course_module.id}/lessons/#{course_lesson.id}"
+
+        expect(CourseLessonPart.count).to eq(1)
+        expect(response).to redirect_to(course_lesson_url)
+      end
+
+      it "raises an authorization error when there is 1 course lesson part" do
+        expect { delete course_lesson_part_url, params: { id: course_lesson.course_lesson_parts[0].id } }.to raise_error Pundit::NotAuthorizedError
+      end
+    end
+
     describe "GET /core-induction-programme/years/:years_id/modules/:module_id/lessons/:lesson_id/parts/:part_id/split" do
       it "renders the cip lesson part split page" do
         get "#{course_lesson_part_url}/split"
@@ -121,6 +145,18 @@ RSpec.describe "Core Induction Programme Lesson Part", type: :request do
         expect(course_lesson_part.next_lesson_part.next_lesson_part.content).to eq "Content two"
       end
     end
+
+    describe "GET /core-induction-programme/years/:years_id/modules/:module_id/lessons/:lesson_id/parts/:part_id/show_delete" do
+      it "renders the cip lesson part show_delete page when there is > 1 course lesson part" do
+        FactoryBot.create(:course_lesson_part, course_lesson: course_lesson)
+        get "#{course_lesson_part_url}/show_delete"
+        expect(response).to render_template(:show_delete)
+      end
+
+      it "raises an authorization error when there is 1 course lesson part" do
+        expect { get "#{course_lesson_part_url}/show_delete" }.to raise_error Pundit::NotAuthorizedError
+      end
+    end
   end
 
   describe "when a non-admin user is logged in" do
@@ -136,21 +172,33 @@ RSpec.describe "Core Induction Programme Lesson Part", type: :request do
       end
     end
 
+    describe "DELETE /core-induction-programme/years/:years_id/modules/:module_id/lessons/:lesson_id/parts/:part_id" do
+      it "raises an authorization error" do
+        expect { delete course_lesson_part_url }.to raise_error Pundit::NotAuthorizedError
+      end
+    end
+
     describe "GET /core-induction-programme/years/:years_id/modules/:module_id/lessons/:lesson_id/parts/:part_id/edit" do
-      it "redirects to the sign in page" do
+      it "raises an authorization error" do
         expect { get "#{course_lesson_part_url}/edit" }.to raise_error Pundit::NotAuthorizedError
       end
     end
 
     describe "GET /core-induction-programme/years/:years_id/modules/:module_id/lessons/:lesson_id/parts/:part_id/split" do
-      it "redirects to the sign in page" do
+      it "raises an authorization error" do
         expect { get "#{course_lesson_part_url}/split" }.to raise_error Pundit::NotAuthorizedError
       end
     end
 
     describe "POST /core-induction-programme/years/:years_id/modules/:module_id/lessons/:lesson_id/parts/:part_id/split" do
-      it "redirects to the sign in page" do
+      it "raises an authorization error" do
         expect { post "#{course_lesson_part_url}/split" }.to raise_error Pundit::NotAuthorizedError
+      end
+    end
+
+    describe "GET /core-induction-programme/years/:years_id/modules/:module_id/lessons/:lesson_id/parts/:part_id/show_delete" do
+      it "raises an authorization error" do
+        expect { get "#{course_lesson_part_url}/show_delete" }.to raise_error Pundit::NotAuthorizedError
       end
     end
   end
@@ -187,6 +235,20 @@ RSpec.describe "Core Induction Programme Lesson Part", type: :request do
     describe "POST /core-induction-programme/years/:years_id/modules/:module_id/lessons/:lesson_id/parts/:part_id/split" do
       it "redirects to the sign in page" do
         post "#{course_lesson_part_url}/split"
+        expect(response).to redirect_to("/users/sign_in")
+      end
+    end
+
+    describe "GET /core-induction-programme/years/:years_id/modules/:module_id/lessons/:lesson_id/parts/:part_id/show_delete" do
+      it "redirects to the sign in page" do
+        get "#{course_lesson_part_url}/show_delete"
+        expect(response).to redirect_to("/users/sign_in")
+      end
+    end
+
+    describe "DELETE /core-induction-programme/years/:years_id/modules/:module_id/lessons/:lesson_id/parts/:part_id" do
+      it "redirects to the sign page" do
+        delete course_lesson_part_url
         expect(response).to redirect_to("/users/sign_in")
       end
     end

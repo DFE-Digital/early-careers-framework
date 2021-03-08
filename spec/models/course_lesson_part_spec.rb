@@ -13,9 +13,14 @@ RSpec.describe CourseLessonPart, type: :model do
     }.to change { CourseLessonPart.count }.by(1)
   end
 
+  it "can be deleted" do
+    course_lesson_part = FactoryBot.create(:course_lesson_part)
+    expect { course_lesson_part.destroy }.to change { CourseLessonPart.count }.by(-1)
+  end
+
   describe "associations" do
     it { is_expected.to belong_to(:course_lesson) }
-    it { is_expected.to have_one(:next_lesson_part) }
+    it { is_expected.to have_one(:next_lesson_part).dependent(:nullify) }
     it { is_expected.to belong_to(:previous_lesson_part).optional }
   end
 

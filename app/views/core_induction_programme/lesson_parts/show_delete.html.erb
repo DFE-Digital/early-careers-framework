@@ -1,0 +1,17 @@
+<%= govuk_breadcrumbs breadcrumbs: course_lesson_breadcrumbs(@current_user, @course_lesson_part.course_lesson) %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h2>Confirm you would like to remove <i><%= @course_lesson_part.title %></i> from <%= @course_lesson_part.course_lesson.title %>.</h2>
+    <div class="govuk-warning-text">
+      <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+      <div class="govuk-warning-text__text">This lesson part can not be retrieved once it has been deleted.</div>
+    </div>
+    <p>You can return to <b><%= @course_lesson_part.course_lesson.title %></b> without making any changes by clicking cancel</p>
+    <div class="govuk-button-group">
+      <%= form_with url: cip_year_module_lesson_part_path(id: @course_lesson_part.id), method: :delete do |f| %>
+        <%= f.govuk_submit "Delete", warning: true %>
+        <%= govuk_link_to "Cancel", cip_year_module_lesson_part_path(id: @course_lesson_part.id), class: "govuk-!-margin-top-2"%>
+      <% end %>
+    </div>
+  </div>
+</div>

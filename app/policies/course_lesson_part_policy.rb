@@ -25,4 +25,12 @@ class CourseLessonPartPolicy < ApplicationPolicy
   def split?
     update?
   end
+
+  def show_delete?
+    destroy?
+  end
+
+  def destroy?
+    update? && @record.course_lesson.course_lesson_parts.length > 1
+  end
 end

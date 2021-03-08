@@ -11,6 +11,9 @@
     <% if policy(@course_lesson_part).show_split? %>
       <%= govuk_link_to "Split lesson part", cip_year_module_lesson_part_split_path(part_id: @course_lesson_part.id), button: true %>
     <% end %>
+    <% if policy(@course_lesson_part).show_delete? %>
+      <%= govuk_link_to "Delete lesson part", cip_year_module_lesson_part_show_delete_path(part_id: @course_lesson_part.id), button: true, class: "govuk-button--secondary"  %>
+    <% end %>
 
     <h1 class="govuk-heading-xl govuk-!-margin-bottom-4"> <%= @course_lesson_part.course_lesson.title %></h1>
     <% if @course_lesson_part.course_lesson.completion_time_in_minutes %>

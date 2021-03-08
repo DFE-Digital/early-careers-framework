@@ -48,6 +48,15 @@ class CoreInductionProgramme::LessonPartsController < ApplicationController
     render action: "show_split"
   end
 
+  def show_delete; end
+
+  def destroy
+    @course_lesson_part = CourseLessonPart.find(params[:id])
+    lesson = @course_lesson_part.course_lesson
+    @course_lesson_part.destroy!
+    redirect_to cip_year_module_lesson_path(id: lesson.id)
+  end
+
 private
 
   def load_course_lesson_part
