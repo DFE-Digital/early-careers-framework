@@ -15,15 +15,11 @@ class SupplierUserForm
   end
 
   def chosen_supplier
-    LeadProvider.find_by(id: supplier) || DeliveryPartner.find_by(id: supplier)
+    LeadProvider.find_by(id: supplier)
   end
 
   def save!
-    profile = if chosen_supplier.instance_of?(LeadProvider)
-                LeadProviderProfile.new(lead_provider: chosen_supplier)
-              else
-                DeliveryPartnerProfile.new(delivery_partner: chosen_supplier)
-              end
+    profile = LeadProviderProfile.new(lead_provider: chosen_supplier)
 
     user = ActiveRecord::Base.transaction do
       user = User.create!(

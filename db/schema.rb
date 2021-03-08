@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_02_031917) do
+ActiveRecord::Schema.define(version: 2021_03_05_144821) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -58,15 +58,6 @@ ActiveRecord::Schema.define(version: 2021_03_02_031917) do
     t.datetime "updated_at", precision: 6
     t.string "cron"
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
-  end
-
-  create_table "delivery_partner_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "user_id", null: false
-    t.uuid "delivery_partner_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["delivery_partner_id"], name: "index_delivery_partner_profiles_on_delivery_partner_id"
-    t.index ["user_id"], name: "index_delivery_partner_profiles_on_user_id"
   end
 
   create_table "delivery_partners", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -171,7 +162,7 @@ ActiveRecord::Schema.define(version: 2021_03_02_031917) do
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "school_id", null: false
     t.uuid "lead_provider_id", null: false
-    t.uuid "cohort_id", default: "f85b3d42-9f6e-41e2-a014-0a09caea7e93", null: false
+    t.uuid "cohort_id", default: "cfc2f3d1-c585-4949-bbc2-5cb164d84727", null: false
     t.index ["cohort_id"], name: "index_partnerships_on_cohort_id"
     t.index ["lead_provider_id"], name: "index_partnerships_on_lead_provider_id"
     t.index ["school_id"], name: "index_partnerships_on_school_id"
@@ -281,8 +272,6 @@ ActiveRecord::Schema.define(version: 2021_03_02_031917) do
   add_foreign_key "admin_profiles", "users"
   add_foreign_key "cohorts_lead_providers", "cohorts"
   add_foreign_key "cohorts_lead_providers", "lead_providers"
-  add_foreign_key "delivery_partner_profiles", "delivery_partners"
-  add_foreign_key "delivery_partner_profiles", "users"
   add_foreign_key "district_sparsities", "local_authority_districts"
   add_foreign_key "early_career_teacher_profiles", "cohorts"
   add_foreign_key "early_career_teacher_profiles", "core_induction_programmes"
