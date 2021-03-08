@@ -4,16 +4,17 @@ class User < ApplicationRecord
   devise :registerable, :trackable, :confirmable, :passwordless_authenticatable
 
   has_one :induction_coordinator_profile
-
   has_one :lead_provider_profile
   has_one :lead_provider, through: :lead_provider_profile
-
   has_one :admin_profile
-
   has_one :early_career_teacher_profile
   has_one :core_induction_programme, through: :early_career_teacher_profile
 
+  include Discard::Model
+  default_scope -> { kept }
+
   validates :full_name, presence: { message: "Enter a full name" }
+  validates :full_name, presence: { message: "Enter your full name" }
   validates :email, presence: true, uniqueness: true, format: { with: Devise.email_regexp }
 
   def admin?
