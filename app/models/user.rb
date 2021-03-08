@@ -13,7 +13,7 @@ class User < ApplicationRecord
   has_one :early_career_teacher_profile
   has_one :core_induction_programme, through: :early_career_teacher_profile
 
-  validates :full_name, presence: { message: "Enter your full name" }
+  validates :full_name, presence: { message: "Enter a full name" }
   validates :email, presence: true, uniqueness: true, format: { with: Devise.email_regexp }
 
   def admin?
@@ -37,4 +37,5 @@ class User < ApplicationRecord
   end
 
   scope :for_lead_provider, -> { includes(:lead_provider).joins(:lead_provider) }
+  scope :admins, -> { joins(:admin_profile) }
 end

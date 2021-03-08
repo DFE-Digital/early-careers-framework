@@ -5,9 +5,9 @@
 
 <%= render ::SchoolInformation::YourSchools::HeadingComponent.new %>
 
-<%= render TabsComponent.new do |c| %>
+<%= render TabsComponent.new do |component| %>
   <% @cohorts.each do |cohort| %>
-    <%= c.tab(path: lead_providers_your_schools_path(selected_cohort_id: cohort.id)) do %>
+    <%= component.tab(path: lead_providers_your_schools_path(selected_cohort_id: cohort.id)) do %>
       <%= cohort.start_year %> cohort
     <% end %>
   <% end %>

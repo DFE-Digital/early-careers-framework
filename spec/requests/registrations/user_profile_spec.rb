@@ -53,7 +53,7 @@ RSpec.describe "Registrations::UserProfile", type: :request do
             email: email,
           } }
         }.not_to(change { User.count })
-        expect(response.body).to include("Enter your full name")
+        expect(response.body).to include("Enter a full name")
         expect(response).to render_template("registrations/user_profile/new")
       end
     end

@@ -94,6 +94,15 @@ Rails.application.routes.draw do
         get "success", controller: :supplier_users, action: :success, as: :new_supplier_user_success
       end
     end
+
+    scope :administrators, module: "administrators" do
+      resources :administrators, only: %i[index new create], path: "/" do
+        collection do
+          post "new/confirm", action: :confirm, as: :confirm
+        end
+      end
+    end
+
     scope module: "lead_providers", path: "lead-providers" do
       resources :lead_provider_users, only: %i[edit update], path: "users"
     end
