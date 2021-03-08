@@ -1,10 +1,10 @@
 <h1 class="govuk-heading-l">Suppliers</h1>
 
-<%= render TabsComponent.new do |c| %>
-  <%= c.tab(path: admin_suppliers_path) do %>
+<%= render TabsComponent.new do |component| %>
+  <%= component.tab(path: admin_suppliers_path) do %>
     All suppliers
   <% end %>
-  <%= c.tab(path: admin_supplier_users_path) do %>
+  <%= component.tab(path: admin_supplier_users_path) do %>
     All users
   <% end %>
 <% end %>

@@ -1,9 +1,9 @@
 <% content_for :nav_bar do %>
-  <%= render PrimaryNavComponent.new do |c| %>
-    <%= c.nav_item(path: "/admin/suppliers") do %>
+  <%= render PrimaryNavComponent.new do |component| %>
+    <%= component.nav_item(path: "/admin/suppliers") do %>
       Suppliers
     <% end %>
-    <%= c.nav_item(path: "/admin/administrators") do %>
+    <%= component.nav_item(path: "/admin/administrators") do %>
       Administrators
     <% end %>
   <% end %>
