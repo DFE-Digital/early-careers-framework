@@ -2,4 +2,7 @@
 
 class AdminProfile < ApplicationRecord
   belongs_to :user
+
+  include Discard::Model
+  default_scope -> { kept }
 end

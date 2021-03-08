@@ -3,4 +3,7 @@
 class InductionCoordinatorProfile < ApplicationRecord
   belongs_to :user
   has_and_belongs_to_many :schools
+
+  include Discard::Model
+  default_scope -> { kept }
 end
