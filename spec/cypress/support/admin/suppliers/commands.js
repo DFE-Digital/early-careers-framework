@@ -1,22 +1,20 @@
-Cypress.Commands.add("logout", () => {
-  cy.get("#navigation").contains("Logout").click();
-
-  cy.location("pathname").should("eq", "/");
+Cypress.Commands.add("clickCreateSupplierButton", () => {
+  cy.get(".govuk-button").contains("Add a new supplier").click();
 });
 
 Cypress.Commands.add("chooseSupplierName", (deliveryPartnerName) => {
   cy.get("input[type=text]").type(deliveryPartnerName);
-  cy.get(".govuk-button").click();
+  cy.clickCommitButton();
 });
 
 Cypress.Commands.add("chooseDeliveryPartnerType", () => {
   cy.get("[type=radio]").check("delivery_partner");
-  cy.get(".govuk-button").click();
+  cy.clickCommitButton();
 });
 
 Cypress.Commands.add("chooseLeadProviderType", () => {
   cy.get("[type=radio]").check("lead_provider");
-  cy.get(".govuk-button").click();
+  cy.clickCommitButton();
 });
 
 Cypress.Commands.add("chooseFirstLeadProviderAndCohort", () => {
@@ -26,36 +24,40 @@ Cypress.Commands.add("chooseFirstLeadProviderAndCohort", () => {
   cy.get(
     "[name='delivery_partner_form[provider_relationship_hashes][]'][type=checkbox]"
   ).check();
-  cy.get(".govuk-button").click();
+  cy.clickCommitButton();
 });
 
-Cypress.Commands.add("chooseFirstCIP", () => {
+Cypress.Commands.add("chooseFirstCIPForLeadProvider", () => {
   cy.get("input[name='lead_provider_form[cip]'][type=radio]").check();
-  cy.get(".govuk-button").click();
+  cy.clickCommitButton();
 });
 
-Cypress.Commands.add("chooseFirstCohort", () => {
+Cypress.Commands.add("chooseFirstCohortForLeadProvider", () => {
   cy.get("input[name='lead_provider_form[cohorts][]'][type=checkbox]").check();
-  cy.get(".govuk-button").click();
+  cy.clickCommitButton();
 });
 
 Cypress.Commands.add("confirmCreateSupplier", () => {
-  cy.get(".govuk-button").click();
+  cy.clickCommitButton();
+});
+
+Cypress.Commands.add("clickCreateSupplierUserButton", () => {
+  cy.get(".govuk-button").contains("Add a new user").click();
 });
 
 Cypress.Commands.add("confirmCreateSupplierUser", () => {
-  cy.get(".govuk-button").click();
+  cy.clickCommitButton();
 });
 
 Cypress.Commands.add("chooseLeadProviderName", () => {
   cy.appEval(`LeadProvider.first.name`).then((leadProviderName) => {
     cy.get("input[type=text]").type(leadProviderName);
-    cy.get(".govuk-button").click();
+    cy.clickCommitButton();
   });
 });
 
-Cypress.Commands.add("chooseNameAndEmail", (name, email) => {
+Cypress.Commands.add("chooseNameAndEmailForLeadProviderUser", (name, email) => {
   cy.get("input[name='supplier_user_form[full_name]'").type(name);
   cy.get("input[name='supplier_user_form[email]'").type(email);
-  cy.get(".govuk-button").click();
+  cy.clickCommitButton();
 });

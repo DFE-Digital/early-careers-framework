@@ -13,7 +13,7 @@ describe("Admin user creating delivery partner", () => {
     const deliveryPartnerName = "New delivery partner";
 
     cy.visit("/admin/suppliers");
-    cy.get(".govuk-button").contains("Add a new supplier").click();
+    cy.clickCreateSupplierButton();
 
     cy.location("pathname").should("equal", "/admin/suppliers/new");
     cy.chooseSupplierName(deliveryPartnerName);
@@ -68,17 +68,17 @@ describe("Admin user creating delivery partner", () => {
     const deliveryPartnerName = "New delivery partner";
 
     cy.visit("/admin/suppliers");
-    cy.get(".govuk-button").contains("Add a new supplier").click();
+    cy.clickCreateSupplierButton();
 
     cy.chooseSupplierName(deliveryPartnerName);
     cy.clickBackLink();
     cy.get("input[type=text]").should("have.value", deliveryPartnerName);
-    cy.get(".govuk-button").click();
+    cy.clickCommitButton();
 
     cy.chooseDeliveryPartnerType();
     cy.clickBackLink();
     cy.get("input[type=radio][value=delivery_partner]").should("be.checked");
-    cy.get(".govuk-button").click();
+    cy.clickCommitButton();
 
     cy.chooseFirstLeadProviderAndCohort();
     cy.clickBackLink();
@@ -88,7 +88,7 @@ describe("Admin user creating delivery partner", () => {
     cy.get(
       "[name='delivery_partner_form[provider_relationship_hashes][]'][type=checkbox]"
     ).should("be.checked");
-    cy.get(".govuk-button").click();
+    cy.clickCommitButton();
 
     cy.get("main").should("contain", deliveryPartnerName);
     cy.appEval(`LeadProvider.first.name`).then((leadProviderName) =>
@@ -118,7 +118,7 @@ describe("Admin user creating delivery partner", () => {
     const deliveryPartnerName = "New delivery partner";
 
     cy.visit("/admin/suppliers");
-    cy.get(".govuk-button").contains("Add a new supplier").click();
+    cy.clickCreateSupplierButton();
 
     cy.chooseSupplierName("wrong name");
     cy.chooseDeliveryPartnerType();
@@ -127,8 +127,8 @@ describe("Admin user creating delivery partner", () => {
     cy.get("a").contains("Change name").click();
     cy.chooseSupplierName(`{selectall}${deliveryPartnerName}`);
 
-    cy.get(".govuk-button").click();
-    cy.get(".govuk-button").click();
+    cy.clickCommitButton();
+    cy.clickCommitButton();
     cy.confirmCreateSupplier();
 
     cy.location("pathname").should(

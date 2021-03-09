@@ -14,7 +14,7 @@ describe("Admin user creating lead provider user", () => {
     const userEmail = "j.s@example.com";
 
     cy.visit("/admin/suppliers/users");
-    cy.get(".govuk-button").click();
+    cy.clickCreateSupplierUserButton();
 
     cy.location("pathname").should("equal", "/admin/suppliers/users/new");
     cy.chooseLeadProviderName();
@@ -23,7 +23,7 @@ describe("Admin user creating lead provider user", () => {
       "equal",
       "/admin/suppliers/users/new/user-details"
     );
-    cy.chooseNameAndEmail(userName, userEmail);
+    cy.chooseNameAndEmailForLeadProviderUser(userName, userEmail);
 
     cy.location("pathname").should(
       "equal",
@@ -63,16 +63,16 @@ describe("Admin user creating lead provider user", () => {
     const userEmail = "j.s@example.com";
 
     cy.visit("/admin/suppliers/users");
-    cy.get(".govuk-button").click();
+    cy.clickCreateSupplierUserButton();
 
     cy.chooseLeadProviderName();
     cy.clickBackLink();
     cy.appEval(`LeadProvider.first.name`).then((leadProviderName) => {
       cy.get("input[type=text]").should("have.value", leadProviderName);
-      cy.get(".govuk-button").click();
+      cy.clickCommitButton();
     });
 
-    cy.chooseNameAndEmail(userName, userEmail);
+    cy.chooseNameAndEmailForLeadProviderUser(userName, userEmail);
     cy.clickBackLink();
     cy.get("input[name='supplier_user_form[full_name]'").should(
       "have.value",
@@ -82,7 +82,7 @@ describe("Admin user creating lead provider user", () => {
       "have.value",
       userEmail
     );
-    cy.get(".govuk-button").click();
+    cy.clickCommitButton();
 
     cy.confirmCreateSupplierUser();
 
@@ -111,13 +111,16 @@ describe("Admin user creating lead provider user", () => {
     const userEmail = "j.s@example.com";
 
     cy.visit("/admin/suppliers/users");
-    cy.get(".govuk-button").click();
+    cy.clickCreateSupplierUserButton();
 
     cy.chooseLeadProviderName();
-    cy.chooseNameAndEmail("wrongName", userEmail);
+    cy.chooseNameAndEmailForLeadProviderUser("wrongName", userEmail);
 
     cy.get("a").contains("Change name").click();
-    cy.chooseNameAndEmail(`{selectall}${userName}`, `{selectall}${userEmail}`);
+    cy.chooseNameAndEmailForLeadProviderUser(
+      `{selectall}${userName}`,
+      `{selectall}${userEmail}`
+    );
 
     cy.confirmCreateSupplierUser();
 

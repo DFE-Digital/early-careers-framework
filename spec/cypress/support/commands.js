@@ -43,3 +43,7 @@ Cypress.Commands.add("logout", () => {
 Cypress.Commands.add("clickBackLink", () => {
   cy.get(".govuk-back-link").click();
 });
+
+Cypress.Commands.add("clickCommitButton", () => {
+  cy.get("[name=commit]").click();
+});

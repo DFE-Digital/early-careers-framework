@@ -3,7 +3,7 @@ describe("Admin user editing delivery partner", () => {
     cy.login("admin");
   });
 
-  it("should create a new delivery partner", () => {
+  it("should update a delivery partner", () => {
     cy.appScenario("admin/suppliers/manage_delivery_partner");
     const newName = "New delivery partner";
 
@@ -25,7 +25,7 @@ describe("Admin user editing delivery partner", () => {
       cy.get("[name='delivery_partner_form[name]']").type(
         `{selectall}${newName}`
       );
-      cy.get(".govuk-button").click();
+      cy.clickCommitButton();
 
       cy.location("pathname").should(
         "contain",
@@ -55,7 +55,7 @@ describe("Admin user editing delivery partner", () => {
         cy.get(
           `[name='delivery_partner_form[lead_providers][]'][value=${leadProviderId}]`
         ).uncheck();
-        cy.get(".govuk-button").click();
+        cy.clickCommitButton();
 
         cy.appEval(`LeadProvider.find("${leadProviderId}")`).then(
           (leadProviderName) => {

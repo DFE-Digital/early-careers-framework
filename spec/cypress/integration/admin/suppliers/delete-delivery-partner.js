@@ -3,7 +3,7 @@ describe("Admin user deleting delivery partner", () => {
     cy.login("admin");
   });
 
-  it("should create a new delivery partner", () => {
+  it("should delete a new delivery partner", () => {
     cy.appScenario("admin/suppliers/manage_delivery_partner");
 
     cy.visit("/admin/suppliers");

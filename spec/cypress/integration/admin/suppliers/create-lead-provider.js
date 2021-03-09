@@ -13,7 +13,7 @@ describe("Admin user creating lead provider", () => {
     const leadProviderName = "New lead provider";
 
     cy.visit("/admin/suppliers");
-    cy.get(".govuk-button").contains("Add a new supplier").click();
+    cy.clickCreateSupplierButton();
 
     cy.location("pathname").should("equal", "/admin/suppliers/new");
     cy.chooseSupplierName(leadProviderName);
@@ -32,13 +32,13 @@ describe("Admin user creating lead provider", () => {
       "have.length",
       1
     );
-    cy.chooseFirstCIP();
+    cy.chooseFirstCIPForLeadProvider();
 
     cy.location("pathname").should(
       "equal",
       "/admin/suppliers/new/lead-provider/choose-cohorts"
     );
-    cy.chooseFirstCohort();
+    cy.chooseFirstCohortForLeadProvider();
 
     cy.location("pathname").should(
       "equal",
@@ -72,31 +72,31 @@ describe("Admin user creating lead provider", () => {
     const leadProviderName = "New lead provider";
 
     cy.visit("/admin/suppliers");
-    cy.get(".govuk-button").contains("Add a new supplier").click();
+    cy.clickCreateSupplierButton();
 
     cy.chooseSupplierName(leadProviderName);
     cy.clickBackLink();
     cy.get("input[type=text]").should("have.value", leadProviderName);
-    cy.get(".govuk-button").click();
+    cy.clickCommitButton();
 
     cy.chooseLeadProviderType();
     cy.clickBackLink();
     cy.get("input[type=radio][value=lead_provider]").should("be.checked");
-    cy.get(".govuk-button").click();
+    cy.clickCommitButton();
 
-    cy.chooseFirstCIP();
+    cy.chooseFirstCIPForLeadProvider();
     cy.clickBackLink();
     cy.get("input[name='lead_provider_form[cip]'][type=radio]").should(
       "be.checked"
     );
-    cy.get(".govuk-button").click();
+    cy.clickCommitButton();
 
-    cy.chooseFirstCohort();
+    cy.chooseFirstCohortForLeadProvider();
     cy.clickBackLink();
     cy.get("input[name='lead_provider_form[cohorts][]'][type=checkbox]").should(
       "be.checked"
     );
-    cy.get(".govuk-button").click();
+    cy.clickCommitButton();
 
     cy.get("main").should("contain", leadProviderName);
     cy.appEval(`CoreInductionProgramme.first.name`).then((cipName) =>
@@ -122,19 +122,19 @@ describe("Admin user creating lead provider", () => {
     const leadProviderName = "New lead provider";
 
     cy.visit("/admin/suppliers");
-    cy.get(".govuk-button").contains("Add a new supplier").click();
+    cy.clickCreateSupplierButton();
 
     cy.chooseSupplierName("wrong name");
     cy.chooseLeadProviderType();
-    cy.chooseFirstCIP();
-    cy.chooseFirstCohort();
+    cy.chooseFirstCIPForLeadProvider();
+    cy.chooseFirstCohortForLeadProvider();
 
     cy.get("a").contains("Change name").click();
     cy.chooseSupplierName(`{selectall}${leadProviderName}`);
 
-    cy.get(".govuk-button").click();
-    cy.get(".govuk-button").click();
-    cy.get(".govuk-button").click();
+    cy.clickCommitButton();
+    cy.clickCommitButton();
+    cy.clickCommitButton();
     cy.confirmCreateSupplier();
 
     cy.location("pathname").should(
