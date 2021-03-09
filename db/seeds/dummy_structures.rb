@@ -5,7 +5,7 @@ unless Cohort.first
   Cohort.create!(start_year: 2022)
 end
 
-if Rails.env.development? || Rails.env.deployed_development?
+unless Rails.env.production?
   if AdminProfile.none?
     user = User.find_or_create_by!(email: "admin@example.com") do |u|
       u.full_name = "Admin User"

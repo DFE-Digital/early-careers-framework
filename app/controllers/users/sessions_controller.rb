@@ -6,7 +6,7 @@ class Users::SessionsController < Devise::SessionsController
 
   TEST_USERS = %w[admin@example.com early-career-teacher@example.com mentor@example.com].freeze
 
-  before_action :mock_login, only: :create, if: -> { Rails.env.development? || Rails.env.deployed_development? }
+  before_action :mock_login, only: :create, unless: -> { Rails.env.production? }
   before_action :redirect_to_dashboard, only: %i[sign_in_with_token redirect_from_magic_link]
   before_action :ensure_login_token_valid, only: %i[sign_in_with_token redirect_from_magic_link]
 
