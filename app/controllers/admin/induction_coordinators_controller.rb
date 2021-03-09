@@ -11,11 +11,11 @@ module Admin
     end
 
     def edit
-      authorize User
+      authorize @induction_coordinator
     end
 
     def update
-      authorize User
+      authorize @induction_coordinator
 
       if @induction_coordinator.update(permitted_attributes(@induction_coordinator))
         redirect_to :admin_induction_coordinators, notice: "Changes saved successfully"

@@ -23,7 +23,7 @@ RSpec.describe "Admin::InductionCoodinators", type: :request do
   end
 
   describe "GET /admin/induction-coordinators/:id/edit" do
-    it "renders the index template" do
+    it "renders the edit template" do
       get "/admin/induction-coordinators/#{induction_coordinator.id}/edit"
 
       expect(response.body).to include("Edit user details")
@@ -31,7 +31,7 @@ RSpec.describe "Admin::InductionCoodinators", type: :request do
     end
   end
 
-  describe "PATCH /admin/induction-coordinatorsrs/:id" do
+  describe "PATCH /admin/induction-coordinators/:id" do
     let(:email) { "user@example.com" }
 
     it "updates the user and redirects to users page" do
