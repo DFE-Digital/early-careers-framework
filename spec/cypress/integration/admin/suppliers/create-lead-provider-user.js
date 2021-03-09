@@ -105,7 +105,7 @@ describe("Admin user creating lead provider user", () => {
     ).then((result) => expect(result).to.equal(true));
   });
 
-  it.only("allows changing name choice", () => {
+  it("allows changing name choice", () => {
     cy.appScenario("admin/suppliers/create_supplier");
     const userName = "John Smith";
     const userEmail = "j.s@example.com";
