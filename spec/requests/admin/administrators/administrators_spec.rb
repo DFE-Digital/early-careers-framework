@@ -89,6 +89,40 @@ RSpec.describe "Admin::Administrators::Administrators", type: :request do
     end
   end
 
+  let(:admin_profile) { create(:admin_profile) }
+  let(:admin) { admin_profile.user }
+
+  describe "GET /admin/administrators/:id/edit" do
+    it "renders the edit template" do
+      get "/admin/administrators/#{admin.id}/edit"
+
+      expect(response).to render_template("admin/administrators/administrators/edit")
+    end
+  end
+
+  describe "PATCH /admin/administrators/:id" do
+    it "updates the user and redirects to administrators page" do
+      patch "/admin/administrators/#{admin.id}", params: {
+        user: { email: email },
+      }
+
+      expect(admin.reload.email).to eq email
+      expect(response).to redirect_to(:admin_administrators)
+      expect(flash[:notice]).to eq "Changes saved successfully"
+    end
+
+    context "when the user params are invalid" do
+      it "renders error messages" do
+        patch "/admin/administrators/#{admin.id}", params: {
+          user: { email: nil },
+        }
+
+        expect(response.body).to include("Enter an email")
+        expect(response).to render_template("admin/administrators/administrators/edit")
+      end
+    end
+  end
+
 private
 
   def given_i_have_previously_submitted_values(name, email)

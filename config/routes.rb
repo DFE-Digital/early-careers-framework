@@ -96,7 +96,7 @@ Rails.application.routes.draw do
     end
 
     scope :administrators, module: "administrators" do
-      resources :administrators, only: %i[index new create], path: "/" do
+      resources :administrators, only: %i[index new create edit update], path: "/" do
         collection do
           post "new/confirm", action: :confirm, as: :confirm
         end
