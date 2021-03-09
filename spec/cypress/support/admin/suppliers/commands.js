@@ -42,3 +42,20 @@ Cypress.Commands.add("chooseFirstCohort", () => {
 Cypress.Commands.add("confirmCreateSupplier", () => {
   cy.get(".govuk-button").click();
 });
+
+Cypress.Commands.add("confirmCreateSupplierUser", () => {
+  cy.get(".govuk-button").click();
+});
+
+Cypress.Commands.add("chooseLeadProviderName", () => {
+  cy.appEval(`LeadProvider.first.name`).then((leadProviderName) => {
+    cy.get("input[type=text]").type(leadProviderName);
+    cy.get(".govuk-button").click();
+  });
+});
+
+Cypress.Commands.add("chooseNameAndEmail", (name, email) => {
+  cy.get("input[name='supplier_user_form[full_name]'").type(name);
+  cy.get("input[name='supplier_user_form[email]'").type(email);
+  cy.get(".govuk-button").click();
+});
