@@ -97,7 +97,7 @@ Rails.application.routes.draw do
     scope module: "lead_providers", path: "lead-providers" do
       resources :lead_provider_users, only: %i[edit update], path: "users"
     end
-    resources :induction_coordinators, only: %i[edit update], path: "induction-coordinators"
+    resources :induction_coordinators, only: %i[index edit update], path: "induction-coordinators"
   end
 
   get "/403", to: "errors#forbidden", via: :all

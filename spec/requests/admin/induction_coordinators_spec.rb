@@ -11,7 +11,18 @@ RSpec.describe "Admin::InductionCoodinators", type: :request do
     sign_in admin_user
   end
 
-  describe "GET /admin/induction_coordinators/:id/edit" do
+  describe "GET /admin/induction-coordinators" do
+    before { induction_coordinator }
+
+    it "renders the index template" do
+      get "/admin/induction-coordinators"
+      expect(response).to render_template("admin/induction_coordinators/index")
+      expect(response.body).to include(CGI.escapeHTML(induction_coordinator.email))
+      expect(response.body).to include(CGI.escapeHTML(induction_coordinator.full_name))
+    end
+  end
+
+  describe "GET /admin/induction-coordinators/:id/edit" do
     it "renders the index template" do
       get "/admin/induction-coordinators/#{induction_coordinator.id}/edit"
 
@@ -29,7 +40,7 @@ RSpec.describe "Admin::InductionCoodinators", type: :request do
       }
 
       expect(induction_coordinator.reload.email).to eq email
-      expect(response).to redirect_to(:admin_supplier_users)
+      expect(response).to redirect_to(:admin_induction_coordinators)
       expect(flash[:notice]).to eq "Changes saved successfully"
     end
 
