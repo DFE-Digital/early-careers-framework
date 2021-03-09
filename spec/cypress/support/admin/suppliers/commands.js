@@ -14,6 +14,11 @@ Cypress.Commands.add("chooseDeliveryPartnerType", () => {
   cy.get(".govuk-button").click();
 });
 
+Cypress.Commands.add("chooseLeadProviderType", () => {
+  cy.get("[type=radio]").check("lead_provider");
+  cy.get(".govuk-button").click();
+});
+
 Cypress.Commands.add("chooseFirstLeadProviderAndCohort", () => {
   cy.get(
     "[name='delivery_partner_form[lead_providers][]'][type=checkbox]"
@@ -21,6 +26,16 @@ Cypress.Commands.add("chooseFirstLeadProviderAndCohort", () => {
   cy.get(
     "[name='delivery_partner_form[provider_relationship_hashes][]'][type=checkbox]"
   ).check();
+  cy.get(".govuk-button").click();
+});
+
+Cypress.Commands.add("chooseFirstCIP", () => {
+  cy.get("input[name='lead_provider_form[cip]'][type=radio]").check();
+  cy.get(".govuk-button").click();
+});
+
+Cypress.Commands.add("chooseFirstCohort", () => {
+  cy.get("input[name='lead_provider_form[cohorts][]'][type=checkbox]").check();
   cy.get(".govuk-button").click();
 });
 

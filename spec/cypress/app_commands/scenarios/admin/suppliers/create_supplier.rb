@@ -2,3 +2,4 @@
 
 cohort = FactoryBot.create(:cohort)
 FactoryBot.create(:lead_provider, cohorts: [cohort])
+FactoryBot.create(:core_induction_programme)

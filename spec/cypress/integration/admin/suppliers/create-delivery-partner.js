@@ -9,7 +9,7 @@ describe("Admin user creating delivery partner", () => {
   });
 
   it("should create a new delivery partner", () => {
-    cy.appScenario("admin/suppliers/create_delivery_partner");
+    cy.appScenario("admin/suppliers/create_supplier");
     const deliveryPartnerName = "New delivery partner";
 
     cy.visit("/admin/suppliers");
@@ -64,7 +64,7 @@ describe("Admin user creating delivery partner", () => {
   });
 
   it("remembers previous choices", () => {
-    cy.appScenario("admin/suppliers/create_delivery_partner");
+    cy.appScenario("admin/suppliers/create_supplier");
     const deliveryPartnerName = "New delivery partner";
 
     cy.visit("/admin/suppliers");
@@ -114,7 +114,7 @@ describe("Admin user creating delivery partner", () => {
   });
 
   it("allows changing name choice", () => {
-    cy.appScenario("admin/suppliers/create_delivery_partner");
+    cy.appScenario("admin/suppliers/create_supplier");
     const deliveryPartnerName = "New delivery partner";
 
     cy.visit("/admin/suppliers");
