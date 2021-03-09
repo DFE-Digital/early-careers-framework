@@ -10,13 +10,9 @@ module Admin
       @induction_coordinators = policy_scope(User).induction_coordinators
     end
 
-    def edit
-      authorize @induction_coordinator
-    end
+    def edit; end
 
     def update
-      authorize @induction_coordinator
-
       if @induction_coordinator.update(permitted_attributes(@induction_coordinator))
         redirect_to :admin_induction_coordinators, notice: "Changes saved successfully"
       else
@@ -28,6 +24,7 @@ module Admin
 
     def load_induction_coordinator
       @induction_coordinator = User.find(params[:id])
+      authorize @induction_coordinator
     end
   end
 end

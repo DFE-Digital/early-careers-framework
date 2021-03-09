@@ -6,13 +6,9 @@ module Admin
       skip_after_action :verify_policy_scoped
       before_action :load_lead_provider_user
 
-      def edit
-        authorize @lead_provider_user
-      end
+      def edit; end
 
       def update
-        authorize @lead_provider_user
-
         if @lead_provider_user.update(permitted_attributes(@lead_provider_user))
           redirect_to :admin_supplier_users, notice: "Changes saved successfully"
         else
@@ -24,6 +20,7 @@ module Admin
 
       def load_lead_provider_user
         @lead_provider_user = User.find(params[:id])
+        authorize @lead_provider_user
       end
     end
   end
