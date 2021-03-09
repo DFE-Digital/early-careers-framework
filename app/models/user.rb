@@ -36,6 +36,7 @@ class User < ApplicationRecord
     early_career_teacher_profile.present?
   end
 
+  scope :induction_coordinators, -> { joins(:induction_coordinator_profile) }
   scope :for_lead_provider, -> { includes(:lead_provider).joins(:lead_provider) }
   scope :admins, -> { joins(:admin_profile) }
 end
