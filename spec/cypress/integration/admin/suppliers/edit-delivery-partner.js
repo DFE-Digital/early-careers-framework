@@ -41,4 +41,28 @@ describe("Admin user editing delivery partner", () => {
       ).then((result) => expect(result).to.equal(false));
     });
   });
+
+  it("removes a lead provider when unchecked", () => {
+    cy.appScenario("admin/suppliers/manage_delivery_partner");
+
+    cy.visit("/admin/suppliers");
+    cy.appEval(`DeliveryPartner.first.name`).then((deliveryPartnerName) => {
+      cy.get("a").contains(deliveryPartnerName).click();
+
+      cy.get(".govuk-button").contains("Edit").click();
+
+      cy.appEval(`LeadProvider.first.id`).then((leadProviderId) => {
+        cy.get(
+          `[name='delivery_partner_form[lead_providers][]'][value=${leadProviderId}]`
+        ).uncheck();
+        cy.get(".govuk-button").click();
+
+        cy.appEval(`LeadProvider.find("${leadProviderId}")`).then(
+          (leadProviderName) => {
+            cy.get("main").should("not.contain", leadProviderName);
+          }
+        );
+      });
+    });
+  });
 });

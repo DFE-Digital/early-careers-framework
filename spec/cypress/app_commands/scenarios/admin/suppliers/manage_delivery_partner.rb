@@ -4,3 +4,6 @@ delivery_partner = FactoryBot.create(:delivery_partner)
 cohort = FactoryBot.create(:cohort)
 lead_provider = FactoryBot.create(:lead_provider, cohorts: [cohort])
 ProviderRelationship.create!(delivery_partner: delivery_partner, lead_provider: lead_provider, cohort: cohort)
+
+lead_provider2 = FactoryBot.create(:lead_provider, cohorts: [cohort])
+ProviderRelationship.create!(delivery_partner: delivery_partner, lead_provider: lead_provider2, cohort: cohort)
