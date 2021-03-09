@@ -46,5 +46,15 @@ RSpec.describe CourseLesson, type: :model do
       @course_lesson.completion_time_in_minutes = 122
       expect(@course_lesson.duration_in_minutes_in_words).to eql("2 hours 2 minutes")
     end
+
+    it "returns only the hour when there is 0 minutes" do
+      @course_lesson.completion_time_in_minutes = 60
+      expect(@course_lesson.duration_in_minutes_in_words).to eql("1 hour")
+    end
+
+    it "returns hours pluralized and only the hours when there is 0 minutes" do
+      @course_lesson.completion_time_in_minutes = 120
+      expect(@course_lesson.duration_in_minutes_in_words).to eql("2 hours")
+    end
   end
 end

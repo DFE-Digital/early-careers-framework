@@ -30,8 +30,10 @@ class CourseLesson < ApplicationRecord
     hour_string = "hour".pluralize(number_of_hours)
     minute_string = "minute".pluralize(number_of_minutes)
 
-    if number_of_hours.positive?
+    if number_of_hours.positive? && number_of_minutes.positive?
       "#{number_of_hours} #{hour_string} #{number_of_minutes} #{minute_string}"
+    elsif number_of_hours.positive?
+      "#{number_of_hours} #{hour_string}"
     else
       "#{number_of_minutes} #{minute_string}"
     end
