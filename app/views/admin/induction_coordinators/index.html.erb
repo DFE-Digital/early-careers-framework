@@ -1,0 +1,21 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">Induction coordinators</h1>
+    <table class="govuk-table">
+      <thead>
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">Name</th>
+          <th scope="col" class="govuk-table__header">Email address</th>
+        </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+        <% @induction_coordinators.each do |induction_coordinator| %>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell"><%= govuk_link_to induction_coordinator.full_name, admin_edit_user_path(induction_coordinator) %></td>
+            <td class="govuk-table__cell"><%= induction_coordinator.email %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <div>
+</div>
