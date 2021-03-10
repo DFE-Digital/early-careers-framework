@@ -12,6 +12,7 @@ RSpec.describe LeadProviderPolicy, type: :policy do
 
     it { is_expected.to permit_new_and_create_actions }
     it { is_expected.to permit_edit_and_update_actions }
+    it { is_expected.to forbid_action(:destroy) }
   end
 
   context "not being an admin" do
@@ -19,5 +20,6 @@ RSpec.describe LeadProviderPolicy, type: :policy do
 
     it { is_expected.to forbid_new_and_create_actions }
     it { is_expected.to forbid_edit_and_update_actions }
+    it { is_expected.to forbid_action(:destroy) }
   end
 end

@@ -1,0 +1,14 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: admin_delivery_partner_path(@delivery_partner)) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Edit <%= @delivery_partner.name %></h1>
+
+    <%= form_for @delivery_partner_form, url: admin_delivery_partner_path(@delivery_partner), method: :patch do |f| %>
+
+      <%= f.govuk_text_field :name, label: { size: "m" } %>
+      <%= render "lead_providers_cohorts", locals = { f: f } %>
+      <%= f.govuk_submit "Save" %>
+    <% end %>
+  </div>
+</div>

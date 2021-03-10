@@ -13,6 +13,10 @@ class DeliveryPartnerPolicy < ApplicationPolicy
     admin_only
   end
 
+  def destroy?
+    admin_only
+  end
+
   def permitted_attributes
     if user.admin?
       :name

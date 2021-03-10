@@ -3,7 +3,7 @@
   href: new_admin_supplier_path(continue: true))
 %>
 
-<%= form_with model: @new_supplier_form, url: supplier_type_admin_suppliers_path, method: :post do |f| %>
+<%= form_with model: @new_supplier_form, url: supplier_type_admin_new_supplier_index_path, method: :post do |f| %>
 
   <%= f.govuk_collection_radio_buttons(
         :type,

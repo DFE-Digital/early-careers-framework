@@ -56,7 +56,7 @@ Rails.application.routes.draw do
     scope :suppliers, module: "suppliers" do
       resources :suppliers, only: %i[index new], path: "/"
       scope "new" do
-        resources :suppliers, only: :create, path: "/" do
+        resources :suppliers, only: :create, path: "/", as: "new_supplier" do
           collection do
             get "supplier-type", action: :new_supplier_type
             post "supplier-type", action: :receive_new_supplier_type
@@ -92,6 +92,12 @@ Rails.application.routes.draw do
         post "user-details", controller: :supplier_users, action: :receive_user_details
         get "review", controller: :supplier_users, action: :review, as: :new_supplier_user_review
         get "success", controller: :supplier_users, action: :success, as: :new_supplier_user_success
+      end
+
+      resources :delivery_partners, only: %i[show edit update destroy], path: "delivery-partners" do
+        member do
+          get "delete", action: :delete
+        end
       end
     end
 
