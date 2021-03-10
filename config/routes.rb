@@ -86,7 +86,7 @@ Rails.application.routes.draw do
         resources :lead_provider_users, only: %i[edit update], path: "users"
       end
     end
-    scope :profiles, module: 'profiles' do
+    scope :profiles, module: "profiles" do
       root to: "users#index"
       resources :users, only: %i[index], path: "/"
       resources :admin_profiles, only: %i[index show destroy]
