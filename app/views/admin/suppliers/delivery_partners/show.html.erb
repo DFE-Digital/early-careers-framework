@@ -3,12 +3,12 @@
 <h1 class="govuk-heading-xl"><%= @delivery_partner.name %></h1>
 <h2 class="govuk-heading-m">Lead Providers</h2>
 <ul>
-<% @delivery_partner.lead_providers.uniq.each do |lead_provider| %>
-  <li><%= lead_provider.name %></li>
+  <% @delivery_partner.lead_providers.uniq.each do |lead_provider| %>
+    <li><%= lead_provider.name %></li>
     <% @delivery_partner.cohorts_with_provider(lead_provider).each do |cohort| %>
-    <%= cohort.display_name %>
-      <% end %>
-<% end %>
+      <%= cohort.display_name %>
+    <% end %>
+  <% end %>
 </ul>
 
 <%= govuk_link_to "Edit", edit_admin_delivery_partner_path(@delivery_partner), button: true %>
