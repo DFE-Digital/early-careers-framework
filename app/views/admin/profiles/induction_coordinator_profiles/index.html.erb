@@ -23,7 +23,7 @@
       <tr class="govuk-table__row">
         <td class="govuk-table__cell"><%= induction_coordinator_profile.user.full_name %></td>
         <td class="govuk-table__cell"><%= induction_coordinator_profile.user.email %></td>
-        <td class="govuk-table__cell"><%= govuk_link_to "Delete User", admin_induction_coordinator_profile_path(induction_coordinator_profile.id), button: true %></td>
+        <td class="govuk-table__cell"><%= govuk_link_to "Delete User", admin_induction_coordinator_profile_path(induction_coordinator_profile.id), button: true, class: 'govuk-button--warning' %></td>
       </tr>
     <% end %>
   </tbody>
