@@ -9,7 +9,7 @@ class InductionCoordinatorProfilePolicy < ApplicationPolicy
     admin_only
   end
 
-  def delete?
+  def destroy?
     admin_only
   end
 

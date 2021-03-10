@@ -18,9 +18,10 @@ module Admin
         @lead_provider_profile = LeadProviderProfile.find(params[:id])
       end
 
-      def delete
-        authorize LeadProviderProfile, :delete?
+      def destroy
+        authorize LeadProviderProfile, :destroy?
         LeadProviderProfile.find(params[:id])
+        redirect_to admin_lead_provider_profiles_path
       end
     end
   end
