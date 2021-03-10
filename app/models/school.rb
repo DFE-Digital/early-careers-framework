@@ -2,6 +2,8 @@
 
 class School < ApplicationRecord
   CONFIRMATION_WINDOW = 24
+  ELIGIBLE_TYPE_CODES = [1, 2, 3, 5, 6, 7, 8, 12, 14, 15, 18, 28, 31, 32, 33, 34, 35, 36, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48].freeze
+  ELIGIBLE_STATUS_CODES = [1, 3].freeze
 
   belongs_to :network, optional: true
 
@@ -18,6 +20,10 @@ class School < ApplicationRecord
 
   has_many :early_career_teacher_profiles
   has_many :early_career_teachers, through: :early_career_teacher_profiles, source: :user
+
+  default_scope -> { eligible }
+
+  scope :eligible, -> { open.eligible_establishment_type.in_england }
 
   scope :with_name_like, lambda { |search_key|
     School.where("name ILIKE ?", "%#{search_key}%")
@@ -79,8 +85,7 @@ class School < ApplicationRecord
   end
 
   def eligible?
-    # TODO: ECF-RP-130 - implement eligibility
-    true
+    eligible_establishment_type? && open? && in_england?
   end
 
   def local_authority
@@ -110,6 +115,22 @@ class School < ApplicationRecord
   }
 
 private
+
+  def open?
+    ELIGIBLE_STATUS_CODES.include?(school_status_code)
+  end
+
+  def eligible_establishment_type?
+    ELIGIBLE_TYPE_CODES.include?(school_type_code)
+  end
+
+  def in_england?
+    administrative_district_code.match?(/^[Ee].*/)
+  end
+
+  scope :open, -> { where(school_status_code: ELIGIBLE_STATUS_CODES) }
+  scope :eligible_establishment_type, -> { where(school_type_code: ELIGIBLE_TYPE_CODES) }
+  scope :in_england, -> { where("administrative_district_code ILIKE 'E%'") }
 
   def unconfirmed_induction_coordinators
     induction_coordinator_profiles

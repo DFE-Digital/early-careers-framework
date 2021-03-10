@@ -8,6 +8,9 @@ FactoryBot.define do
     address_line1 { Faker::Address.street_address }
     domains { [Faker::Internet.domain_name] }
     primary_contact_email { Faker::Internet.email }
+    school_status_code { 1 }
+    school_type_code { 1 }
+    administrative_district_code { "E123" }
 
     trait :pupil_premium_uplift do
       pupil_premiums { [build(:pupil_premium, :eligible)] }
