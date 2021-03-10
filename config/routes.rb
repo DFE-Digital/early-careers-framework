@@ -100,6 +100,13 @@ Rails.application.routes.draw do
         end
       end
     end
+    scope :profiles, module: 'profiles' do
+      root to: "users#index"
+      resources :users, only: %i[index], path: "/"
+      resources :admin_profiles, only: %i[index show destroy]
+      resources :induction_coordinator_profiles, only: %i[index show destroy]
+      resources :lead_provider_profiles, only: %i[index show destroy]
+    end
 
     scope :administrators, module: "administrators" do
       resources :administrators, only: %i[index new create edit update], path: "/" do

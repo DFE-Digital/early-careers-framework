@@ -1,0 +1,32 @@
+<%= render TabsComponent.new do |c| %>
+  <%= c.tab(path: admin_admin_profiles_path) do %>
+    Admin Profiles
+  <% end %>
+  <%= c.tab(path: admin_induction_coordinator_profiles_path) do %>
+    Induction Coordinators Profiles
+  <% end %>
+  <%= c.tab(path: admin_lead_provider_profiles_path) do %>
+    Lead Providers Profiles
+  <% end %>
+<% end %>
+
+<table class="govuk-table">
+  <thead>
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Full Name</th>
+      <th scope="col" class="govuk-table__header">Email</th>
+      <th scope="col" class="govuk-table__header">Delete</th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    <% @admin_profiles.each do |admin_profile| %>
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell"><%= admin_profile.user.full_name %></td>
+        <td class="govuk-table__cell"><%= admin_profile.user.email %></td>
+        <td class="govuk-table__cell"><%= govuk_link_to "Delete User", admin_admin_profile_path(admin_profile.id), button: true %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= govuk_paginate @admin_profiles %>
+

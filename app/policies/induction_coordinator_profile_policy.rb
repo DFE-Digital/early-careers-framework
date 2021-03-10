@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AdminProfilePolicy < ApplicationPolicy
+class InductionCoordinatorProfilePolicy < ApplicationPolicy
   def show?
     admin_only
   end
@@ -9,19 +9,13 @@ class AdminProfilePolicy < ApplicationPolicy
     admin_only
   end
 
-  def destroy?
-    admin_only
-  end
-
-  def create?
+  def delete?
     admin_only
   end
 
   class Scope < Scope
     def resolve
-      return scope.kept if user.admin?
-
-      scope.none
+      scope.kept
     end
   end
 end

@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
 class LeadProviderProfilePolicy < ApplicationPolicy
+  def index?
+    admin_only
+  end
+
+  def show?
+    admin_only
+  end
+
   def create?
     admin_only
   end
@@ -11,7 +19,7 @@ class LeadProviderProfilePolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      scope.all
+      scope.kept
     end
   end
 end
