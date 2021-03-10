@@ -3,42 +3,42 @@
   "Delete Admin Profile" => nil
 }) %>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-m govuk-!-margin-bottom-2">
-      Delete Admin Profile
-    </h1>
+<%= form_for :confirmation, url: admin_admin_profile_path(@admin_profile), method: :delete do |f| %>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-m govuk-!-margin-bottom-2">
+        Delete Admin Profile
+      </h1>
 
-    <dl class="govuk-summary-list">
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Name
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <%= @admin_profile.user.full_name %>
-        </dd>
-      </div>
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Name
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <%= @admin_profile.user.full_name %>
+          </dd>
+        </div>
 
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Email
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <%= @admin_profile.user.email %>
-        </dd>
-      </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Email
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <%= @admin_profile.user.email %>
+          </dd>
+        </div>
 
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Delete Profile
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <%= link_to 'Delete', admin_admin_profile_path(@admin_profile.id), method: :delete%>
-          <%#= link_to 'Destroy', admin_admin_profile_path(@admin_profile.id), :method => :delete %>
-          <%#= link_to "Delete", admin_admin_profile_path(@admin_profile.id), class: 'govuk-button', data: { confirm: 'Are you sure?' },action: :destroy, method: :delete %>
-        </dd>
-      </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Delete Profile
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <%= f.govuk_submit "Delete Profile", classes: "govuk-button--warning" %>
+          </dd>
+        </div>
 
-    </dl>
+      </dl>
+    </div>
   </div>
-</div>
+<% end %>

@@ -17,6 +17,12 @@ class AdminProfilePolicy < ApplicationPolicy
     admin_only
   end
 
+  def permitted_attributes
+    if user.admin?
+      :id
+    end
+  end
+
   class Scope < Scope
     def resolve
       return scope.kept if user.admin?

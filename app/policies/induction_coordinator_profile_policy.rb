@@ -13,9 +13,17 @@ class InductionCoordinatorProfilePolicy < ApplicationPolicy
     admin_only
   end
 
+  def permitted_attributes
+    if user.admin?
+      :id
+    end
+  end
+
   class Scope < Scope
     def resolve
-      scope.kept
+      return scope.kept if user.admin?
+
+      scope.none
     end
   end
 end

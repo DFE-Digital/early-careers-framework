@@ -3,7 +3,7 @@
 module Admin
   module Profiles
     class InductionCoordinatorProfilesController < Admin::BaseController
-      skip_after_action :verify_policy_scoped, only: %i[show delete]
+      skip_after_action :verify_policy_scoped, only: %i[show destroy]
 
       def index
         authorize InductionCoordinatorProfile, :index?
