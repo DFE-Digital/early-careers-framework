@@ -36,18 +36,20 @@ private
   def row_to_school(row)
     school = School.find_or_initialize_by(urn: row.fetch("URN"))
     school.name = row.fetch("EstablishmentName")
-    school.school_type_code = row.fetch("TypeOfEstablishment (code)")
+    school.school_type_code = row.fetch("TypeOfEstablishment (code)").to_i
     school.school_type_name = row.fetch("TypeOfEstablishment (name)")
     school.address_line1 = row.fetch("Street")
     school.address_line2 = row.fetch("Locality")
     school.address_line3 = row.fetch("Town")
     school.postcode = row.fetch("Postcode")
     school.ukprn = row.fetch("UKPRN")
-    school.school_phase_type = row.fetch("PhaseOfEducation (code)")
+    school.school_phase_type = row.fetch("PhaseOfEducation (code)").to_i
     school.school_phase_name = row.fetch("PhaseOfEducation (name)")
     school.school_website = row.fetch("SchoolWebsite")
-    school.school_status_code = row.fetch("EstablishmentStatus (code)")
+    school.school_status_code = row.fetch("EstablishmentStatus (code)").to_i
     school.school_status_name = row.fetch("EstablishmentStatus (name)")
+    school.administrative_district_code = row.fetch("DistrictAdministrative (code)")
+    school.administrative_district_name = row.fetch("DistrictAdministrative (name)")
     school.primary_contact_email = row.fetch("MainEmail")
     school.secondary_contact_email = row.fetch("AlternativeEmail")
     school.save!

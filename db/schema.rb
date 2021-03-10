@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_08_182253) do
+ActiveRecord::Schema.define(version: 2021_03_09_192722) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -232,7 +232,7 @@ ActiveRecord::Schema.define(version: 2021_03_08_182253) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "urn", null: false
     t.string "name", null: false
-    t.string "school_type_code"
+    t.integer "school_type_code"
     t.string "address_line1", null: false
     t.string "address_line2"
     t.string "address_line3"
@@ -241,13 +241,15 @@ ActiveRecord::Schema.define(version: 2021_03_08_182253) do
     t.string "domains", default: [], null: false, array: true
     t.string "school_type_name"
     t.string "ukprn"
-    t.string "school_phase_type"
+    t.integer "school_phase_type"
     t.string "school_phase_name"
     t.string "school_website"
-    t.string "school_status_code"
+    t.integer "school_status_code"
     t.string "school_status_name"
     t.string "secondary_contact_email"
     t.string "primary_contact_email"
+    t.string "administrative_district_code"
+    t.string "administrative_district_name"
     t.index ["name"], name: "index_schools_on_name"
     t.index ["network_id"], name: "index_schools_on_network_id"
     t.index ["urn"], name: "index_schools_on_urn", unique: true
