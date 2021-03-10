@@ -6,7 +6,6 @@ module Admin
       before_action :set_delivery_partner, only: %i[show delete edit update destroy]
       skip_after_action :verify_policy_scoped
 
-      # region create
       def choose_lead_providers
         authorize DeliveryPartner, :create?
 
@@ -54,8 +53,6 @@ module Admin
 
         @delivery_partner = DeliveryPartner.find(params[:delivery_partner])
       end
-
-      # endregion
 
       def show
         authorize @delivery_partner
