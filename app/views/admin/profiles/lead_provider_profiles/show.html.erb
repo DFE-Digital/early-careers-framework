@@ -3,6 +3,7 @@
   "Delete Lead Provider Profile" => nil
 }) %>
 
+<%= form_for :confirmation, url: admin_lead_provider_profile_path(@lead_provider_profile), method: :delete do |f| %>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-m govuk-!-margin-bottom-2">
@@ -33,10 +34,11 @@
           Delete User
         </dt>
         <dd class="govuk-summary-list__value">
-          <%= link_to "Delete", admin_lead_provider_profile_path(@lead_provider_profile.id), class: 'govuk-button', action: :destroy, method_name: :delete %>
+          <%= f.govuk_submit "Delete Profile", classes: "govuk-button--warning" %>
         </dd>
       </div>
 
     </dl>
   </div>
 </div>
+<% end %>

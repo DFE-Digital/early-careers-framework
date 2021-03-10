@@ -19,12 +19,7 @@ module Admin
         @admin_profile = AdminProfile.find(params[:id])
       end
 
-      def delete
-        byebug
-      end
-
       def destroy
-        byebug
         authorize AdminProfile, :destroy?
         AdminProfile.find(params[:id]).discard!
         redirect_to admin_admin_profiles_path
