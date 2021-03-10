@@ -142,7 +142,7 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
       patch "/admin/suppliers/delivery-partners/#{delivery_partner.id}", params: { delivery_partner_form: {
         name: delivery_partner.name,
         lead_providers: [lead_provider.id],
-        provider_relationship_hashes: [DeliveryPartnerForm.provider_relationship_value(lead_provider, cohort)],
+        provider_relationship_hashes: [provider_relationship_value(lead_provider, cohort)],
       } }
 
       expect(response).to redirect_to("/admin/suppliers/delivery-partners/#{delivery_partner.id}")
@@ -156,7 +156,7 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
       patch "/admin/suppliers/delivery-partners/#{delivery_partner.id}", params: { delivery_partner_form: {
         name: new_name,
         lead_providers: [lead_provider.id],
-        provider_relationship_hashes: [DeliveryPartnerForm.provider_relationship_value(lead_provider, cohort)],
+        provider_relationship_hashes: [provider_relationship_value(lead_provider, cohort)],
       } }
 
       delivery_partner.reload
@@ -177,8 +177,8 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
         lead_providers: [lead_provider.id],
         provider_relationship_hashes: [
           # simulate someone unchecking the lead provider without unchecking the nested cohort
-          DeliveryPartnerForm.provider_relationship_value(old_lead_provider, old_cohort),
-          DeliveryPartnerForm.provider_relationship_value(lead_provider, cohort),
+          provider_relationship_value(old_lead_provider, old_cohort),
+          provider_relationship_value(lead_provider, cohort),
         ],
       } }
 

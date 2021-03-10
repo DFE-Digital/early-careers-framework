@@ -42,7 +42,7 @@ module NewSupplierHelper
     post "/admin/suppliers/new/delivery-partner/choose-lps", params: { delivery_partner_form: {
       lead_providers: lead_providers.map(&:id),
       provider_relationship_hashes: cohorts.flat_map do |lead_provider, lp_cohorts|
-        lp_cohorts.map { |cohort| DeliveryPartnerForm.provider_relationship_value(lead_provider, cohort) }
+        lp_cohorts.map { |cohort| provider_relationship_value(lead_provider, cohort) }
       end,
     } }
   end
@@ -61,4 +61,8 @@ module NewSupplierHelper
 
   alias_method :given_I_have_confirmed_my_lead_provider_choices, :when_I_confirm_my_lead_provider_choices
   # rubocop:enable Naming/MethodName
+
+  def provider_relationship_value(lead_provider, cohort)
+    "{\"lead_provider_id\": \"#{lead_provider.id}\", \"cohort_id\": \"#{cohort.id}\"}"
+  end
 end
