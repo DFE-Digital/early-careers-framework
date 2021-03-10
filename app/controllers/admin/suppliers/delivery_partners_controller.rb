@@ -3,8 +3,7 @@
 module Admin
   module Suppliers
     class DeliveryPartnersController < Admin::BaseController
-      before_action :show, only: %i[show_users show_lps show_schools]
-
+      before_action :set_delivery_partner, only: %i[show delete edit update destroy]
       skip_after_action :verify_policy_scoped
 
       def choose_lead_providers
@@ -25,8 +24,8 @@ module Admin
 
         session[:delivery_partner_form].merge!(
           {
-            lead_providers: @delivery_partner_form.lead_providers,
-            provider_relationships: @delivery_partner_form.provider_relationships,
+            lead_provider_ids: @delivery_partner_form.lead_provider_ids,
+            provider_relationship_hashes: @delivery_partner_form.provider_relationship_hashes,
           },
         )
         redirect_to review_admin_delivery_partners_path
@@ -55,17 +54,49 @@ module Admin
         @delivery_partner = DeliveryPartner.find(params[:delivery_partner])
       end
 
-      def show_users; end
+      def show
+        authorize @delivery_partner
+      end
 
-      def show_lps; end
+      def delete
+        authorize @delivery_partner, :destroy?
+      end
 
-      def show_schools; end
+      def edit
+        authorize @delivery_partner
+
+        @delivery_partner_form = DeliveryPartnerForm.new(
+          name: @delivery_partner.name,
+          lead_provider_ids: @delivery_partner.lead_providers.map(&:id),
+          provider_relationship_hashes: @delivery_partner.provider_relationships.map do |relationship|
+            DeliveryPartnerForm.provider_relationship_value(relationship.lead_provider, relationship.cohort)
+          end,
+        )
+      end
+
+      def update
+        authorize @delivery_partner
+
+        @delivery_partner_form = DeliveryPartnerForm.new(params.require(:delivery_partner_form).permit(:name))
+        @delivery_partner_form.populate_provider_relationships(params)
+
+        render :edit and return unless @delivery_partner_form.valid?
+
+        @delivery_partner_form.update!(@delivery_partner)
+        redirect_to admin_delivery_partner_path(@delivery_partner)
+      end
+
+      def destroy
+        authorize @delivery_partner
+
+        @delivery_partner.discard!
+        redirect_to admin_suppliers_path
+      end
 
     private
 
-      def show
-        @delivery_partner = DeliveryPartner.find(params[:delivery_partner])
-        authorize @delivery_partner, :show?
+      def set_delivery_partner
+        @delivery_partner = DeliveryPartner.find(params[:id])
       end
     end
   end

@@ -27,7 +27,7 @@
       Lead Provider
     </dd>
     <dd class="govuk-summary-list__actions">
-      <%= govuk_link_to supplier_type_admin_suppliers_path, class: "govuk-link--no-visited-state" do %>
+      <%= govuk_link_to supplier_type_admin_new_supplier_index_path, class: "govuk-link--no-visited-state" do %>
         Change<span class="govuk-visually-hidden"> supplier type</span>
       <% end %>
     </dd>
@@ -61,7 +61,7 @@
   </div>
 </dl>
 
-<%= form_for :confirmation, url: admin_create_lead_provider_path, method: :post do |f| %>
+<%= form_for :confirmation, url: admin_lead_providers_path, method: :post do |f| %>
   <%= f.hidden_field :answers_checked, value: true %>
   <%= f.govuk_submit "Create supplier" %>
 <% end %>

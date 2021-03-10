@@ -16,3 +16,4 @@
 import "./axe";
 import "./commands";
 import "./on-rails";
+import "./admin/suppliers/commands";

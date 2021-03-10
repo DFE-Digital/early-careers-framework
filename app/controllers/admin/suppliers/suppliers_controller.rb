@@ -33,7 +33,7 @@ module Admin
         render :new and return unless @new_supplier_form.valid?(:name)
 
         session[:new_supplier_form] = (session[:new_supplier_form] || {}).merge({ name: @new_supplier_form.name })
-        redirect_to supplier_type_admin_suppliers_path
+        redirect_to supplier_type_admin_new_supplier_index_path
       end
 
       def new_supplier_type

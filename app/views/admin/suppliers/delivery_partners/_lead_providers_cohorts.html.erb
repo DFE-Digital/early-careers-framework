@@ -1,0 +1,29 @@
+<%= f.govuk_check_boxes_fieldset(
+  :lead_provider_ids,
+  legend: { text: "Which lead providers and cohorts are #{@delivery_partner_form.name} working with?", size: "m" },
+  hint: -> { tag.p do
+    concat(tag.span "If your lead provider isn't here you need to ")
+    concat(govuk_link_to("add them", new_admin_supplier_path))
+    concat(".")
+  end
+  }
+) do %>
+  <% @delivery_partner_form.available_lead_providers.each do |lead_provider| %>
+    <%= f.govuk_check_box :lead_provider_ids, lead_provider.id, label: { text: lead_provider.name }, link_errors: true do %>
+      <%= f.govuk_check_boxes_fieldset(
+        :provider_relationship_hashes,
+        legend: { hidden: true },
+        hint: { text: "What cohort/academic year are they working with?" },
+        ) do %>
+        <% lead_provider.cohorts.each do |cohort| %>
+          <%= f.govuk_check_box(
+                :provider_relationship_hashes,
+                DeliveryPartnerForm.provider_relationship_value(lead_provider, cohort),
+                label: { text: cohort.display_name },
+                link_errors: true)
+          %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

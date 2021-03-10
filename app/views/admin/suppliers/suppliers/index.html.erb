@@ -13,7 +13,7 @@
   <tbody class="govuk-table__body">
     <% @suppliers.each do |supplier| %>
       <tr class="govuk-table__row">
-        <td class="govuk-table__cell"><%= govuk_link_to supplier.name, "#" %></td>
+        <td class="govuk-table__cell"><%= govuk_link_to supplier.name, supplier_link(supplier) %></td>
         <td class="govuk-table__cell"><%= supplier.model_name.human %></td>
         <td class="govuk-table__cell"><%= link_to "Edit", "#" %></td>
       </tr>
