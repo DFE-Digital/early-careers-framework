@@ -40,7 +40,7 @@ module NewSupplierHelper
   def when_I_choose_lps_and_cohorts(lead_providers, cohorts)
     get "/admin/suppliers/new/delivery-partner/choose-lps"
     post "/admin/suppliers/new/delivery-partner/choose-lps", params: { delivery_partner_form: {
-      lead_providers: lead_providers.map(&:id),
+      lead_provider_ids: lead_providers.map(&:id),
       provider_relationship_hashes: cohorts.flat_map do |lead_provider, lp_cohorts|
         lp_cohorts.map { |cohort| provider_relationship_value(lead_provider, cohort) }
       end,

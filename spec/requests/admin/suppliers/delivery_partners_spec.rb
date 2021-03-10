@@ -130,7 +130,7 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
   end
 
   describe "GET /admin/suppliers/delivery-partners/{delivery_partner.id}/delete" do
-    it "render the delete template" do
+    it "renders the delete template" do
       get "/admin/suppliers/delivery-partners/#{delivery_partner.id}/delete"
       expect(response).to render_template("admin/suppliers/delivery_partners/delete")
       expect(response.body).to include(CGI.escapeHTML(delivery_partner.name))
@@ -141,7 +141,7 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
     it "redirects to the suppliers page" do
       patch "/admin/suppliers/delivery-partners/#{delivery_partner.id}", params: { delivery_partner_form: {
         name: delivery_partner.name,
-        lead_providers: [lead_provider.id],
+        lead_provider_ids: [lead_provider.id],
         provider_relationship_hashes: [provider_relationship_value(lead_provider, cohort)],
       } }
 
@@ -155,7 +155,7 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
       new_name = Faker::Name.name
       patch "/admin/suppliers/delivery-partners/#{delivery_partner.id}", params: { delivery_partner_form: {
         name: new_name,
-        lead_providers: [lead_provider.id],
+        lead_provider_ids: [lead_provider.id],
         provider_relationship_hashes: [provider_relationship_value(lead_provider, cohort)],
       } }
 
@@ -174,7 +174,7 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
 
       patch "/admin/suppliers/delivery-partners/#{delivery_partner.id}", params: { delivery_partner_form: {
         name: delivery_partner.name,
-        lead_providers: [lead_provider.id],
+        lead_provider_ids: [lead_provider.id],
         provider_relationship_hashes: [
           # simulate someone unchecking the lead provider without unchecking the nested cohort
           provider_relationship_value(old_lead_provider, old_cohort),

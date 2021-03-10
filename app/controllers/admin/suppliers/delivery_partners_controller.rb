@@ -25,7 +25,7 @@ module Admin
 
         session[:delivery_partner_form].merge!(
           {
-            lead_providers: @delivery_partner_form.lead_providers,
+            lead_provider_ids: @delivery_partner_form.lead_provider_ids,
             provider_relationship_hashes: @delivery_partner_form.provider_relationship_hashes,
           },
         )
@@ -70,7 +70,7 @@ module Admin
 
         @delivery_partner_form = DeliveryPartnerForm.new(
           name: @delivery_partner.name,
-          lead_providers: @delivery_partner.lead_providers.map(&:id),
+          lead_provider_ids: @delivery_partner.lead_providers.map(&:id),
           provider_relationship_hashes: @delivery_partner.provider_relationships.map do |relationship|
             DeliveryPartnerForm.provider_relationship_value(relationship.lead_provider, relationship.cohort)
           end,
