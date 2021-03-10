@@ -6,6 +6,7 @@
         <tr class="govuk-table__row">
           <th scope="col" class="govuk-table__header">Name</th>
           <th scope="col" class="govuk-table__header">Email address</th>
+          <th scope="col" class="govuk-table__header">School</th>
         </tr>
       </thead>
       <tbody class="govuk-table__body">
@@ -13,9 +14,10 @@
           <tr class="govuk-table__row">
             <td class="govuk-table__cell"><%= govuk_link_to induction_coordinator.full_name, admin_edit_user_path(induction_coordinator) %></td>
             <td class="govuk-table__cell"><%= induction_coordinator.email %></td>
+            <td class="govuk-table__cell"><%= induction_coordinator.induction_coordinator_profile.schools.map(&:name).join(", ") %></td>
           </tr>
         <% end %>
       </tbody>
     </table>
-  <div>
+  </div>
 </div>
