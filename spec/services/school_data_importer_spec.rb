@@ -28,13 +28,18 @@ RSpec.describe SchoolDataImporter do
 
         imported_school = School.find_by(urn: 20_001)
         expect(imported_school.name).to eql("The Starship Children's Centre")
-        expect(imported_school.school_type_code).to eql("47")
+        expect(imported_school.school_type_code).to eql(47)
         expect(imported_school.address_line1).to eql("Bar Hill Primary School")
         expect(imported_school.address_line2).to be_nil
         expect(imported_school.address_line3).to eql("Bar Hill")
         expect(imported_school.postcode).to eql("CB23 8DY")
         expect(imported_school.primary_contact_email).to eql("1@example.com")
         expect(imported_school.secondary_contact_email).to eql("2@example.com")
+        expect(imported_school.administrative_district_code).to eql("E07000012")
+        expect(imported_school.administrative_district_name).to eql("South Cambridgeshire")
+        expect(imported_school.school_phase_type).to eql(0)
+        expect(imported_school.school_phase_name).to eql("Not applicable")
+        expect(imported_school.school_status_code).to eql(1)
       end
 
       it "correctly handles any Latin1 encoded characters in the data file" do

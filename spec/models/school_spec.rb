@@ -11,6 +11,9 @@ RSpec.describe School, type: :model do
           name: "Test school two",
           address_line1: "Test address London",
           postcode: "TEST2",
+          school_status_code: 1,
+          school_type_code: 1,
+          administrative_district_code: "E123",
         )
       }.to change { School.count }.by(1)
     end
@@ -28,6 +31,55 @@ RSpec.describe School, type: :model do
     it { is_expected.to have_many(:local_authorities).through(:school_local_authorities) }
     it { is_expected.to have_many(:school_local_authority_districts) }
     it { is_expected.to have_many(:local_authority_districts).through(:school_local_authority_districts) }
+  end
+
+  describe "eligibility" do
+    let!(:open_school) { create(:school, school_status_code: 1) }
+    let!(:closed_school) { create(:school, school_status_code: 2) }
+    let!(:eligible_school_type) { create(:school, school_type_code: 1) }
+    let!(:ineligible_school_type) { create(:school, school_type_code: 56) }
+    let!(:english_school) { create(:school, administrative_district_code: "E123") }
+    let!(:welsh_school) { create(:school, administrative_district_code: "W123") }
+    describe "#eligible?" do
+      it "should be true for open schools" do
+        expect(open_school.eligible?).to be true
+      end
+
+      it "should be false for closed schools" do
+        expect(closed_school.eligible?).to be false
+      end
+
+      it "should be true for eligible establishment types" do
+        expect(eligible_school_type.eligible?).to be true
+      end
+
+      it "should be false for ineligible establishment types" do
+        expect(ineligible_school_type.eligible?).to be false
+      end
+
+      it "should be true for schools in England" do
+        expect(english_school.eligible?).to be true
+      end
+
+      it "should be false for schools not in England" do
+        expect(welsh_school.eligible?).to be false
+      end
+    end
+
+    describe "scope eligible" do
+      let(:eligible_school) { open_school }
+      let(:ineligible_school) { closed_school }
+
+      it "should be the default scope" do
+        expect(School.all).to include(eligible_school)
+        expect(School.all).not_to include(ineligible_school)
+      end
+
+      it "should only include eligible schools" do
+        expect(School.all).to include(open_school, eligible_school_type, english_school)
+        expect(School.all).not_to include(closed_school, ineligible_school_type, welsh_school)
+      end
+    end
   end
 
   describe "#not_registered?" do
