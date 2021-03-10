@@ -99,6 +99,10 @@ Rails.application.routes.draw do
           get "delete", action: :delete
         end
       end
+
+      scope path: "lead-providers" do
+        resources :lead_provider_users, only: %i[edit update], path: "users"
+      end
     end
 
     scope :administrators, module: "administrators" do
@@ -109,9 +113,6 @@ Rails.application.routes.draw do
       end
     end
 
-    scope module: "lead_providers", path: "lead-providers" do
-      resources :lead_provider_users, only: %i[edit update], path: "users"
-    end
     resources :induction_coordinators, only: %i[index edit update], path: "induction-coordinators"
   end
 
