@@ -17,6 +17,7 @@ Rails.application.routes.draw do
 
   get "check" => "application#check"
 
+  resource :cookies, only: %i[show update]
   resource :dashboard, controller: :dashboard, only: :show
 
   get "/403", to: "errors#forbidden", via: :all
