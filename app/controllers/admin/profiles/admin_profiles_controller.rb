@@ -3,7 +3,7 @@
 module Admin
   module Profiles
     class AdminProfilesController < Admin::BaseController
-      skip_after_action :verify_policy_scoped, only: %i[show delete destroy]
+      skip_after_action :verify_policy_scoped, only: %i[show destroy]
       skip_after_action :verify_authorized
 
       def index

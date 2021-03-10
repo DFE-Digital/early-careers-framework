@@ -20,6 +20,7 @@ class LeadProviderProfilePolicy < ApplicationPolicy
   def update?
     admin_only
   end
+
   def permitted_attributes
     if user.admin?
       :id
