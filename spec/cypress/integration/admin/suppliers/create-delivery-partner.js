@@ -1,4 +1,7 @@
 describe("Admin user creating delivery partner", () => {
+  const leadProviderName = "Lead Provider 1";
+  const cohortName = "2021 to 2023";
+
   beforeEach(() => {
     cy.login("admin");
   });
@@ -41,12 +44,9 @@ describe("Admin user creating delivery partner", () => {
       "/admin/suppliers/new/delivery-partner/review"
     );
     cy.get("main").should("contain", deliveryPartnerName);
-    cy.appEval(`LeadProvider.first.name`).then((leadProviderName) =>
-      cy.get("main").should("contain", leadProviderName)
-    );
-    cy.appEval(
-      `LeadProvider.first.cohorts.first.display_name`
-    ).then((cohortName) => cy.get("main").should("contain", cohortName));
+    cy.get("main").should("contain", leadProviderName);
+
+    cy.get("main").should("contain", cohortName);
     cy.confirmCreateSupplier();
 
     cy.location("pathname").should(
@@ -57,10 +57,6 @@ describe("Admin user creating delivery partner", () => {
 
     cy.location("pathname").should("equal", "/admin/suppliers");
     cy.get("main").should("contain", deliveryPartnerName);
-
-    cy.appEval(
-      `DeliveryPartner.find_by(name: "${deliveryPartnerName}").present?`
-    ).then((result) => expect(result).to.equal(true));
   });
 
   it("remembers previous choices", () => {
@@ -91,12 +87,9 @@ describe("Admin user creating delivery partner", () => {
     cy.clickCommitButton();
 
     cy.get("main").should("contain", deliveryPartnerName);
-    cy.appEval(`LeadProvider.first.name`).then((leadProviderName) =>
-      cy.get("main").should("contain", leadProviderName)
-    );
-    cy.appEval(
-      `LeadProvider.first.cohorts.first.display_name`
-    ).then((cohortName) => cy.get("main").should("contain", cohortName));
+    cy.get("main").should("contain", leadProviderName);
+
+    cy.get("main").should("contain", cohortName);
     cy.confirmCreateSupplier();
 
     cy.location("pathname").should(
@@ -107,10 +100,6 @@ describe("Admin user creating delivery partner", () => {
 
     cy.location("pathname").should("equal", "/admin/suppliers");
     cy.get("main").should("contain", deliveryPartnerName);
-
-    cy.appEval(
-      `DeliveryPartner.find_by(name: "${deliveryPartnerName}").present?`
-    ).then((result) => expect(result).to.equal(true));
   });
 
   it("allows changing name choice", () => {
@@ -139,9 +128,5 @@ describe("Admin user creating delivery partner", () => {
 
     cy.location("pathname").should("equal", "/admin/suppliers");
     cy.get("main").should("contain", deliveryPartnerName);
-
-    cy.appEval(
-      `DeliveryPartner.find_by(name: "${deliveryPartnerName}").present?`
-    ).then((result) => expect(result).to.equal(true));
   });
 });

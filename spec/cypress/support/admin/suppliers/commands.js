@@ -49,11 +49,9 @@ Cypress.Commands.add("confirmCreateSupplierUser", () => {
   cy.clickCommitButton();
 });
 
-Cypress.Commands.add("chooseLeadProviderName", () => {
-  cy.appEval(`LeadProvider.first.name`).then((leadProviderName) => {
-    cy.get("input[type=text]").type(leadProviderName);
-    cy.clickCommitButton();
-  });
+Cypress.Commands.add("chooseLeadProviderName", (leadProviderName) => {
+  cy.get("input[type=text]").type(leadProviderName);
+  cy.clickCommitButton();
 });
 
 Cypress.Commands.add("chooseNameAndEmailForLeadProviderUser", (name, email) => {

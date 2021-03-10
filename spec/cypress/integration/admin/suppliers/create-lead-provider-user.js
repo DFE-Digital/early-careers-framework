@@ -1,4 +1,6 @@
 describe("Admin user creating lead provider user", () => {
+  const leadProviderName = "Lead Provider 1";
+
   beforeEach(() => {
     cy.login("admin");
   });
@@ -17,7 +19,7 @@ describe("Admin user creating lead provider user", () => {
     cy.clickCreateSupplierUserButton();
 
     cy.location("pathname").should("equal", "/admin/suppliers/users/new");
-    cy.chooseLeadProviderName();
+    cy.chooseLeadProviderName(leadProviderName);
 
     cy.location("pathname").should(
       "equal",
@@ -45,16 +47,7 @@ describe("Admin user creating lead provider user", () => {
     cy.location("pathname").should("equal", "/admin/suppliers/users");
     cy.get("main").should("contain", userName);
     cy.get("main").should("contain", userEmail);
-    cy.appEval(`LeadProvider.first.name`).then((leadProviderName) =>
-      cy.get("main").should("contain", leadProviderName)
-    );
-
-    cy.appEval(`User.find_by(email: "${userEmail}").present?`).then((result) =>
-      expect(result).to.equal(true)
-    );
-    cy.appEval(
-      `User.find_by(email: "${userEmail}").lead_provider.present?`
-    ).then((result) => expect(result).to.equal(true));
+    cy.get("main").should("contain", leadProviderName);
   });
 
   it("remembers previous choices", () => {
@@ -65,12 +58,10 @@ describe("Admin user creating lead provider user", () => {
     cy.visit("/admin/suppliers/users");
     cy.clickCreateSupplierUserButton();
 
-    cy.chooseLeadProviderName();
+    cy.chooseLeadProviderName(leadProviderName);
     cy.clickBackLink();
-    cy.appEval(`LeadProvider.first.name`).then((leadProviderName) => {
-      cy.get("input[type=text]").should("have.value", leadProviderName);
-      cy.clickCommitButton();
-    });
+    cy.get("input[type=text]").should("have.value", leadProviderName);
+    cy.clickCommitButton();
 
     cy.chooseNameAndEmailForLeadProviderUser(userName, userEmail);
     cy.clickBackLink();
@@ -93,16 +84,7 @@ describe("Admin user creating lead provider user", () => {
     cy.location("pathname").should("equal", "/admin/suppliers/users");
     cy.get("main").should("contain", userName);
     cy.get("main").should("contain", userEmail);
-    cy.appEval(`LeadProvider.first.name`).then((leadProviderName) =>
-      cy.get("main").should("contain", leadProviderName)
-    );
-
-    cy.appEval(`User.find_by(email: "${userEmail}").present?`).then((result) =>
-      expect(result).to.equal(true)
-    );
-    cy.appEval(
-      `User.find_by(email: "${userEmail}").lead_provider.present?`
-    ).then((result) => expect(result).to.equal(true));
+    cy.get("main").should("contain", leadProviderName);
   });
 
   it("allows changing name choice", () => {
@@ -113,7 +95,7 @@ describe("Admin user creating lead provider user", () => {
     cy.visit("/admin/suppliers/users");
     cy.clickCreateSupplierUserButton();
 
-    cy.chooseLeadProviderName();
+    cy.chooseLeadProviderName(leadProviderName);
     cy.chooseNameAndEmailForLeadProviderUser("wrongName", userEmail);
 
     cy.get("a").contains("Change name").click();
@@ -131,15 +113,6 @@ describe("Admin user creating lead provider user", () => {
     cy.location("pathname").should("equal", "/admin/suppliers/users");
     cy.get("main").should("contain", userName);
     cy.get("main").should("contain", userEmail);
-    cy.appEval(`LeadProvider.first.name`).then((leadProviderName) =>
-      cy.get("main").should("contain", leadProviderName)
-    );
-
-    cy.appEval(`User.find_by(email: "${userEmail}").present?`).then((result) =>
-      expect(result).to.equal(true)
-    );
-    cy.appEval(`User.find_by(email: "${userEmail}").full_name`).then((result) =>
-      expect(result).to.equal(userName)
-    );
+    cy.get("main").should("contain", leadProviderName);
   });
 });

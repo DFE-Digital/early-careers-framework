@@ -1,4 +1,7 @@
 describe("Admin user creating lead provider", () => {
+  const cohortName = "2021 to 2023";
+  const cipName = "CIP 1";
+
   beforeEach(() => {
     cy.login("admin");
   });
@@ -45,12 +48,8 @@ describe("Admin user creating lead provider", () => {
       "/admin/suppliers/new/lead-provider/review"
     );
     cy.get("main").should("contain", leadProviderName);
-    cy.appEval(`CoreInductionProgramme.first.name`).then((cipName) =>
-      cy.get("main").should("contain", cipName)
-    );
-    cy.appEval(
-      `LeadProvider.first.cohorts.first.display_name`
-    ).then((cohortName) => cy.get("main").should("contain", cohortName));
+    cy.get("main").should("contain", cipName);
+    cy.get("main").should("contain", cohortName);
     cy.confirmCreateSupplier();
 
     cy.location("pathname").should(
@@ -61,10 +60,6 @@ describe("Admin user creating lead provider", () => {
 
     cy.location("pathname").should("equal", "/admin/suppliers");
     cy.get("main").should("contain", leadProviderName);
-
-    cy.appEval(
-      `LeadProvider.find_by(name: "${leadProviderName}").present?`
-    ).then((result) => expect(result).to.equal(true));
   });
 
   it("remembers previous choices", () => {
@@ -99,22 +94,15 @@ describe("Admin user creating lead provider", () => {
     cy.clickCommitButton();
 
     cy.get("main").should("contain", leadProviderName);
-    cy.appEval(`CoreInductionProgramme.first.name`).then((cipName) =>
-      cy.get("main").should("contain", cipName)
-    );
-    cy.appEval(
-      `LeadProvider.first.cohorts.first.display_name`
-    ).then((cohortName) => cy.get("main").should("contain", cohortName));
+    cy.get("main").should("contain", cipName);
+
+    cy.get("main").should("contain", cohortName);
     cy.confirmCreateSupplier();
 
     cy.get("a").contains("manage suppliers").click();
 
     cy.location("pathname").should("equal", "/admin/suppliers");
     cy.get("main").should("contain", leadProviderName);
-
-    cy.appEval(
-      `LeadProvider.find_by(name: "${leadProviderName}").present?`
-    ).then((result) => expect(result).to.equal(true));
   });
 
   it("allows changing name choice", () => {
@@ -145,9 +133,5 @@ describe("Admin user creating lead provider", () => {
 
     cy.location("pathname").should("equal", "/admin/suppliers");
     cy.get("main").should("contain", leadProviderName);
-
-    cy.appEval(
-      `LeadProvider.find_by(name: "${leadProviderName}").present?`
-    ).then((result) => expect(result).to.equal(true));
   });
 });
