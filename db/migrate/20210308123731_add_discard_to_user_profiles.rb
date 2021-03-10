@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddDiscardToUserProfiles < ActiveRecord::Migration[6.1]
   def change
     add_column :lead_provider_profiles, :discarded_at, :datetime

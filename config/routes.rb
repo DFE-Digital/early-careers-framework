@@ -100,7 +100,7 @@ Rails.application.routes.draw do
         end
       end
     end
-    scope :profiles, module: 'profiles' do
+    scope :profiles, module: "profiles" do
       root to: "users#index"
       resources :users, only: %i[index], path: "/"
       resources :admin_profiles, only: %i[index show destroy]

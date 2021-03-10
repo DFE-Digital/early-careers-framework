@@ -3,12 +3,12 @@
 module Admin
   module Profiles
     class InductionCoordinatorProfilesController < Admin::BaseController
-      skip_after_action :verify_policy_scoped, only: [:show, :delete]
+      skip_after_action :verify_policy_scoped, only: %i[show delete]
 
       def index
         authorize InductionCoordinatorProfile, :index?
         induction_coordinator_profiles = policy_scope(InductionCoordinatorProfile)
-        @induction_coordinator_profiles  = Kaminari.paginate_array(induction_coordinator_profiles).page(params[:page]).per(20)
+        @induction_coordinator_profiles = Kaminari.paginate_array(induction_coordinator_profiles).page(params[:page]).per(20)
         @page = @induction_coordinator_profiles.current_page
         @total_pages = @induction_coordinator_profiles.total_pages
       end
