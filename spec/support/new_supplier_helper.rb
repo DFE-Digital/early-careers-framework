@@ -63,6 +63,6 @@ module NewSupplierHelper
   # rubocop:enable Naming/MethodName
 
   def provider_relationship_value(lead_provider, cohort)
-    "{\"lead_provider_id\": \"#{lead_provider.id}\", \"cohort_id\": \"#{cohort.id}\"}"
+    { "lead_provider_id" => lead_provider.id, "cohort_id" => cohort.id }.to_json
   end
 end
