@@ -33,7 +33,7 @@
           Delete User
         </dt>
         <dd class="govuk-summary-list__value">
-          <%= govuk_link_to "Delete", admin_lead_provider_profile_path(@lead_provider_profile.id), button: true, action_name: :delete %>
+          <%= link_to "Delete", admin_lead_provider_profile_path(@lead_provider_profile.id), class: 'govuk-button', action: :destroy, method_name: :delete %>
         </dd>
       </div>
 

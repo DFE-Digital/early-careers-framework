@@ -18,9 +18,10 @@ module Admin
         @induction_coordinator_profile = InductionCoordinatorProfile.find(params[:id])
       end
 
-      def delete
-        authorize InductionCoordinatorProfile, :delete?
+      def destroy
+        authorize InductionCoordinatorProfile, :destroy?
         InductionCoordinatorProfile.find(params[:id]).discard!
+        redirect_to admin_induction_coordinator_profiles_path
       end
     end
   end

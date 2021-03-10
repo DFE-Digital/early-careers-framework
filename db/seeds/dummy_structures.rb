@@ -33,6 +33,18 @@ if Rails.env.development? || Rails.env.deployed_development?
   end
   AdminProfile.find_or_create_by!(user: user)
 
+  user = User.find_or_create_by!(email: "second-admin@example.com") do |u|
+    u.full_name = "Second Admin User"
+    u.confirmed_at = Time.zone.now.utc
+  end
+  AdminProfile.find_or_create_by!(user: user)
+
+  user = User.find_or_create_by!(email: "second-lead-provider@example.com") do |u|
+    u.full_name = "Second Lp User"
+    u.confirmed_at = Time.zone.now.utc
+  end
+  LeadProviderProfile.find_or_create_by!(user: user, lead_provider: LeadProvider.first)
+
   user = User.find_or_create_by!(email: "lead-provider@example.com") do |u|
     u.full_name = "Lp User"
     u.confirmed_at = Time.zone.now.utc
@@ -49,6 +61,14 @@ if Rails.env.development? || Rails.env.deployed_development?
 
   School.where(urn: school_urns_twenty_twenty_two).each do |school|
     Partnership.find_or_create_by!(school: school, lead_provider: LeadProvider.first, cohort: Cohort.find_or_create_by!(start_year: 2022))
+  end
+
+  user = User.find_or_create_by!(email: "second-school-leader@example.com") do |u|
+    u.full_name = "School Leader User - Induction Coordinator"
+    u.confirmed_at = Time.zone.now.utc
+  end
+  if School.any?
+    InductionCoordinatorProfile.joins(:schools).find_or_create_by!(user: user, schools: [School.first])
   end
 
   user = User.find_or_create_by!(email: "school-leader@example.com") do |u|

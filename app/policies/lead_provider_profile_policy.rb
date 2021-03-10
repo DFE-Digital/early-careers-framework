@@ -9,6 +9,10 @@ class LeadProviderProfilePolicy < ApplicationPolicy
     admin_only
   end
 
+  def destroy?
+    admin_only
+  end
+
   def create?
     admin_only
   end

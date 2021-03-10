@@ -33,7 +33,7 @@
           Delete Profile
         </dt>
         <dd class="govuk-summary-list__value">
-          <%= govuk_link_to "Delete", admin_induction_coordinator_profile_path(@induction_coordinator_profile.id), button: true, action_name: :delete %>
+          <%= govuk_link_to "Delete", admin_induction_coordinator_profile_path(@induction_coordinator_profile.id), button: true, action: :destroy, method: :delete %>
         </dd>
       </div>
 

@@ -33,7 +33,9 @@
           Delete Profile
         </dt>
         <dd class="govuk-summary-list__value">
-          <%= govuk_link_to "Delete", admin_admin_profile_path(@admin_profile.id), button: true, action_name: :delete %>
+          <%= link_to 'Delete', admin_admin_profile_path(@admin_profile.id), method: :delete%>
+          <%#= link_to 'Destroy', admin_admin_profile_path(@admin_profile.id), :method => :delete %>
+          <%#= link_to "Delete", admin_admin_profile_path(@admin_profile.id), class: 'govuk-button', data: { confirm: 'Are you sure?' },action: :destroy, method: :delete %>
         </dd>
       </div>
 
