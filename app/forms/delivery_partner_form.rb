@@ -6,6 +6,7 @@ class DeliveryPartnerForm
   attr_accessor :name, :lead_provider_ids, :provider_relationship_hashes
   validate :lead_providers_and_cohorts_validation
 
+  # TODO: ECF-RP-328
   def self.provider_relationship_value(lead_provider, cohort)
     "{\"lead_provider_id\": \"#{lead_provider.id}\", \"cohort_id\": \"#{cohort.id}\"}"
   end
