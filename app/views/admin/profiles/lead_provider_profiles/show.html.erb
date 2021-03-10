@@ -1,0 +1,42 @@
+<%= content_for :before_content, govuk_breadcrumbs(breadcrumbs: {
+  "Lead Providers Profiles" => admin_lead_provider_profiles_path,
+  "Delete Lead Provider Profile" => nil
+}) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-m govuk-!-margin-bottom-2">
+      Delete Lead Provider Profile
+    </h1>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Name
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @lead_provider_profile.user.full_name %>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Email
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @lead_provider_profile.user.email %>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Delete User
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= govuk_link_to "Delete", admin_lead_provider_profile_path(@lead_provider_profile.id), button: true, action_name: :delete %>
+        </dd>
+      </div>
+
+    </dl>
+  </div>
+</div>
