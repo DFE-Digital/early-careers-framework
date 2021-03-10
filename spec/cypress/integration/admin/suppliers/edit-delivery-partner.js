@@ -48,7 +48,7 @@ describe("Admin user editing delivery partner", () => {
     cy.get(".govuk-button").contains("Edit").click();
 
     cy.get(
-      `[name='delivery_partner_form[lead_providers][]'][value=${leadProviderId}]`
+      `[name='delivery_partner_form[lead_provider_ids][]'][value=${leadProviderId}]`
     ).uncheck();
     cy.clickCommitButton();
 

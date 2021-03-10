@@ -32,7 +32,7 @@ describe("Admin user creating delivery partner", () => {
       "/admin/suppliers/new/delivery-partner/choose-lps"
     );
     cy.get(
-      "input[name='delivery_partner_form[lead_providers][]'][type=checkbox]"
+      "input[name='delivery_partner_form[lead_provider_ids][]'][type=checkbox]"
     ).should("have.length", 1);
     cy.get(
       "input[name='delivery_partner_form[provider_relationship_hashes][]'][type=checkbox]"
@@ -79,7 +79,7 @@ describe("Admin user creating delivery partner", () => {
     cy.chooseFirstLeadProviderAndCohort();
     cy.clickBackLink();
     cy.get(
-      "[name='delivery_partner_form[lead_providers][]'][type=checkbox]"
+      "[name='delivery_partner_form[lead_provider_ids][]'][type=checkbox]"
     ).should("be.checked");
     cy.get(
       "[name='delivery_partner_form[provider_relationship_hashes][]'][type=checkbox]"

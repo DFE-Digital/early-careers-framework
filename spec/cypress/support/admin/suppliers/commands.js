@@ -19,7 +19,7 @@ Cypress.Commands.add("chooseLeadProviderType", () => {
 
 Cypress.Commands.add("chooseFirstLeadProviderAndCohort", () => {
   cy.get(
-    "[name='delivery_partner_form[lead_providers][]'][type=checkbox]"
+    "[name='delivery_partner_form[lead_provider_ids][]'][type=checkbox]"
   ).check();
   cy.get(
     "[name='delivery_partner_form[provider_relationship_hashes][]'][type=checkbox]"
