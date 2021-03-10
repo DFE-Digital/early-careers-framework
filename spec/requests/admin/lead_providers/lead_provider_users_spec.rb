@@ -11,20 +11,20 @@ RSpec.describe "Admin::LeadProviders::LeadProviderUsers", type: :request do
     sign_in admin_user
   end
 
-  describe "GET /admin/lead_providers/users/:id/edit" do
+  describe "GET /admin/suppliers/lead_providers/users/:id/edit" do
     it "renders the index template" do
-      get "/admin/lead-providers/users/#{lead_provider_user.id}/edit"
+      get "/admin/suppliers/lead-providers/users/#{lead_provider_user.id}/edit"
 
       expect(response.body).to include("Edit user details")
-      expect(response).to render_template("admin/lead_providers/lead_provider_users/edit")
+      expect(response).to render_template("admin/suppliers/lead_provider_users/edit")
     end
   end
 
-  describe "PATCH /admin/lead_providers/:id/users/:id" do
+  describe "PATCH /admin/suppliers/lead_providers/:id/users/:id" do
     let(:email) { "user@example.com" }
 
     it "updates the user and redirects to users page" do
-      patch "/admin/lead-providers/users/#{lead_provider_user.id}", params: {
+      patch "/admin/suppliers/lead-providers/users/#{lead_provider_user.id}", params: {
         user: { email: email },
       }
 
@@ -35,12 +35,12 @@ RSpec.describe "Admin::LeadProviders::LeadProviderUsers", type: :request do
 
     context "when the user params are invalid" do
       it "renders error messages" do
-        patch "/admin/lead-providers/users/#{lead_provider_user.id}", params: {
+        patch "/admin/suppliers/lead-providers/users/#{lead_provider_user.id}", params: {
           user: { email: nil },
         }
 
         expect(response.body).to include("Enter an email")
-        expect(response).to render_template("admin/lead_providers/lead_provider_users/edit")
+        expect(response).to render_template("admin/suppliers/lead_provider_users/edit")
       end
     end
   end

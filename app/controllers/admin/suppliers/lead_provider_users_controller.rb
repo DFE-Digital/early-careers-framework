@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Admin
-  module LeadProviders
+  module Suppliers
     class LeadProviderUsersController < Admin::BaseController
       skip_after_action :verify_policy_scoped
       before_action :load_lead_provider_user

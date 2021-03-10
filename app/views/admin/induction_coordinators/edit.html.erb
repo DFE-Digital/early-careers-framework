@@ -1,3 +1,5 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: admin_induction_coordinators_path) %>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-l">Edit user details</h1>
@@ -13,5 +15,5 @@
       %>
       <%= f.govuk_submit "Save" %>
     <% end %>
-  <div>
-<div>
+  </div>
+</div>
