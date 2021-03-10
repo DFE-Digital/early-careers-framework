@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   get "/pages/:page", to: "pages#show"
   get "check" => "application#check"
 
+  resource :cookies, only: %i[show update]
   resource :dashboard, controller: :dashboard, only: :show
   resource :supplier_dashboard, controller: :supplier_dashboard, only: :show
   resource :school_invites, only: %i[show create]
