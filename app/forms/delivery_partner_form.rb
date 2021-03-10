@@ -3,7 +3,7 @@
 class DeliveryPartnerForm
   include ActiveModel::Model
 
-  attr_accessor :name, :lead_providers, :provider_relationships, :provider_relationship_hashes
+  attr_accessor :name, :lead_providers, :provider_relationship_hashes
   validate :lead_providers_and_cohorts_validation
 
   def self.provider_relationship_value(lead_provider, cohort)
@@ -16,7 +16,7 @@ class DeliveryPartnerForm
 
   def chosen_provider_relationships
     provider_relationship_hashes
-      &.map { |value| JSON.parse(value) }
+      &.map { |provider_relationship_hash| JSON.parse(provider_relationship_hash) }
       &.filter { |relationship_params| lead_providers.include?(relationship_params["lead_provider_id"]) }
       &.map { |relationship_params| ProviderRelationship.find_or_initialize_by(relationship_params) }
   end
@@ -33,7 +33,6 @@ class DeliveryPartnerForm
   def populate_provider_relationships(params)
     self.provider_relationship_hashes = params.dig(:delivery_partner_form, :provider_relationship_hashes)&.keep_if(&:present?)
     self.lead_providers = params.dig(:delivery_partner_form, :lead_providers)&.keep_if(&:present?)
-    self.provider_relationships = chosen_provider_relationships
   end
 
   def save!
@@ -74,7 +73,7 @@ private
     # Ensure all selected lead providers have at least one selected cohort
     # This is indicated by the presence of a provider relationship for that lead provider
     lead_providers.each do |lead_provider_id|
-      unless provider_relationships.filter { |provider_relationship| provider_relationship.lead_provider_id == lead_provider_id }.any?
+      unless chosen_provider_relationships.pluck(:lead_provider_id).include?(lead_provider_id)
         errors.add(:lead_providers, :blank, message: "Choose at least one cohort for every selected lead provider")
         break
       end
