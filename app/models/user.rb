@@ -14,7 +14,6 @@ class User < ApplicationRecord
   default_scope -> { kept }
 
   validates :full_name, presence: { message: "Enter a full name" }
-  validates :full_name, presence: { message: "Enter your full name" }
   validates :email, presence: true, uniqueness: true, format: { with: Devise.email_regexp }
 
   def admin?

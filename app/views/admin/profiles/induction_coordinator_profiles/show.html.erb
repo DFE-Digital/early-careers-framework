@@ -1,6 +1,6 @@
 <%= content_for :before_content, govuk_breadcrumbs(breadcrumbs: {
-  "Induction Coordinator Profiles" => admin_induction_coordinator_profiles_path,
-  "Delete Induction Coordinator Profile" => nil
+  "Induction Coordinator Users" => admin_induction_coordinator_profiles_path,
+  "Delete Induction Coordinator User" => nil
 }) %>
 
 <%= form_for :confirmation, url: admin_induction_coordinator_profile_path(@induction_coordinator_profile), method: :delete do |f| %>

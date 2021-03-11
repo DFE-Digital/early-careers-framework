@@ -1,13 +1,13 @@
 <%= content_for :before_content, govuk_breadcrumbs(breadcrumbs: {
-  "Lead Providers Profiles" => admin_lead_provider_profiles_path,
-  "Delete Lead Provider Profile" => nil
+  "Lead Providers Users" => admin_lead_provider_profiles_path,
+  "Delete Lead Provider User" => nil
 }) %>
 
 <%= form_for :confirmation, url: admin_lead_provider_profile_path(@lead_provider_profile), method: :delete do |f| %>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-m govuk-!-margin-bottom-2">
-      Delete Lead Provider Profile
+      Delete Lead Provider User
     </h1>
 
     <dl class="govuk-summary-list">
@@ -34,7 +34,7 @@
           Delete User
         </dt>
         <dd class="govuk-summary-list__value">
-          <%= f.govuk_submit "Delete Profile", classes: "govuk-button--warning" %>
+          <%= f.govuk_submit "Delete User", classes: "govuk-button--warning" %>
         </dd>
       </div>
 
