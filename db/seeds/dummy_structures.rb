@@ -27,32 +27,26 @@ if CoreInductionProgramme.none?
 end
 
 if Rails.env.development? || Rails.env.deployed_development?
-  user = User.find_or_create_by!(email: "admin@example.com") do |u|
+  standard_user_emails = ['admin@example.com', "lead-provider@example.com", "second-school-leader@example.com", "school-leader@example.com"]
+  (1..5).each do |number|
+    standard_user_emails << "second-admin-#{number}@example.com"
+    standard_user_emails << "second-lead-provider-#{number}@example.com"
+    standard_user_emails << "second-school-leader-#{number}@example.com"
+  end
+
+  User.discarded.where(email: standard_user_emails).each do |user|
+    user.undiscard!
+    user.admin_profile&.undiscard!
+    user.lead_provider_profile&.undiscard!
+    user.induction_coordinator_profile&.undiscard!
+  end
+
+
+  user = User.with_discarded.find_or_create_by!(email: "admin@example.com") do |u|
     u.full_name = "Admin User"
     u.confirmed_at = Time.zone.now.utc
   end
-  AdminProfile.find_or_create_by!(user: user)
-
-  (1..5).each do |number|
-    user = User.find_or_create_by!(email: "second-admin-#{number}@example.com") do |u|
-      u.full_name = "Second Admin User #{number}"
-      u.confirmed_at = Time.zone.now.utc
-    end
-    AdminProfile.find_or_create_by!(user: user)
-
-    user = User.find_or_create_by!(email: "second-lead-provider-#{number}@example.com") do |u|
-      u.full_name = "Second Lp User #{number}"
-      u.confirmed_at = Time.zone.now.utc
-    end
-    LeadProviderProfile.find_or_create_by!(user: user, lead_provider: LeadProvider.first)
-
-    user = User.find_or_create_by!(email: "second-school-leader-#{number}@example.com") do |u|
-      u.full_name = "School Leader User - Induction Coordinator #{number}"
-      u.confirmed_at = Time.zone.now.utc
-    end
-
-    InductionCoordinatorProfile.find_or_create_by!(user: user)
-  end
+  AdminProfile.with_discarded.find_or_create_by!(user: user)
 
   user = User.find_or_create_by!(email: "lead-provider@example.com") do |u|
     u.full_name = "Lp User"
