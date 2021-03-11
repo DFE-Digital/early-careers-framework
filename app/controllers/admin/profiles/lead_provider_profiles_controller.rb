@@ -3,6 +3,7 @@
 module Admin
   module Profiles
     class LeadProviderProfilesController < Admin::BaseController
+      before_action :set_lead_provider_profile, only: %i[show destroy]
       skip_after_action :verify_policy_scoped, only: %i[show destroy]
 
       def index
@@ -14,19 +15,23 @@ module Admin
       end
 
       def show
-        authorize LeadProviderProfile, :show?
-        @lead_provider_profile = LeadProviderProfile.find(params[:id])
+        authorize @lead_provider_profile
       end
 
       def destroy
-        authorize LeadProviderProfile, :destroy?
+        authorize @lead_provider_profile
         ActiveRecord::Base.transaction do
-          profile = LeadProviderProfile.find(params[:id])
-          profile.user.discard!
-          profile.discard!
+          @lead_provider_profile.user.discard!
+          @lead_provider_profile.discard!
         end
 
         redirect_to admin_lead_provider_profiles_path
+      end
+
+      private
+
+      def set_lead_provider_profile
+        @lead_provider_profile = LeadProviderProfile.find(params[:id])
       end
     end
   end

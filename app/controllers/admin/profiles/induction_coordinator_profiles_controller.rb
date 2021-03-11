@@ -3,6 +3,7 @@
 module Admin
   module Profiles
     class InductionCoordinatorProfilesController < Admin::BaseController
+      before_action :set_induction_coordinator_profile, only: %i[show destroy]
       skip_after_action :verify_policy_scoped, only: %i[show destroy]
 
       def index
@@ -14,19 +15,23 @@ module Admin
       end
 
       def show
-        authorize InductionCoordinatorProfile, :show?
-        @induction_coordinator_profile = InductionCoordinatorProfile.find(params[:id])
+        authorize @induction_coordinator_profile
       end
 
       def destroy
-        authorize InductionCoordinatorProfile, :destroy?
+        authorize @induction_coordinator_profile
         ActiveRecord::Base.transaction do
-          profile = InductionCoordinatorProfile.find(params[:id])
-          profile.user.discard!
-          profile.discard!
+          @induction_coordinator_profile.user.discard!
+          @induction_coordinator_profile.discard!
         end
 
         redirect_to admin_induction_coordinator_profiles_path
+      end
+
+      private
+
+      def set_induction_coordinator_profile
+        @induction_coordinator_profile = InductionCoordinatorProfile.find(params[:id])
       end
     end
   end
