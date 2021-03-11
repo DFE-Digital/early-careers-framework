@@ -27,6 +27,11 @@ if CoreInductionProgramme.none?
 end
 
 if Rails.env.development? || Rails.env.deployed_development?
+  User.undiscard_all!
+  AdminProfile.undiscard_all!
+  InductionCoordinatorProfile.undiscard_all!
+  LeadProviderProfile.undiscard_all!
+
   user = User.find_or_create_by!(email: "admin@example.com") do |u|
     u.full_name = "Admin User"
     u.confirmed_at = Time.zone.now.utc
