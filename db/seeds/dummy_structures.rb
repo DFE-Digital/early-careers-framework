@@ -50,9 +50,8 @@ if Rails.env.development? || Rails.env.deployed_development?
       u.full_name = "School Leader User - Induction Coordinator #{number}"
       u.confirmed_at = Time.zone.now.utc
     end
-    if School.any?
-      InductionCoordinatorProfile.joins(:schools).find_or_create_by!(user: user, schools: [School.first])
-    end
+
+    InductionCoordinatorProfile.find_or_create_by!(user: user)
   end
 
   user = User.find_or_create_by!(email: "lead-provider@example.com") do |u|
