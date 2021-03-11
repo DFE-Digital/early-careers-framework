@@ -21,7 +21,7 @@ class InductionCoordinatorProfilePolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      return scope.kept if user.admin?
+      return scope.all if user.admin?
 
       scope.none
     end
