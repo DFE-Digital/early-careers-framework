@@ -1,0 +1,9 @@
+.govuk-header {
+  border-bottom: 10px $govuk-brand-colour solid;
+
+  &__container {
+    // Doesn't seem to be any need to do this but leaving it in case there's
+    // any strange bugs in other browsers in the future
+    /* border-bottom: 0; */
+  }
+}
