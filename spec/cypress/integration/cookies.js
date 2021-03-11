@@ -57,6 +57,8 @@ describe("Cookie consent", () => {
       "be.checked"
     );
 
+    cy.visit("/");
+
     cy.get(".js-cookie-banner").should("not.exist");
 
     cy.clearCookies();
@@ -76,6 +78,8 @@ describe("Cookie consent", () => {
     cy.get('[name="cookies_form[analytics_consent]"][value="off"]').should(
       "be.checked"
     );
+
+    cy.visit("/");
 
     cy.get(".js-cookie-banner").should("not.exist");
   });
