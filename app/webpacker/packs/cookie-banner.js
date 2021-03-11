@@ -8,16 +8,23 @@ if (cookieBannerEl) {
       return;
     }
 
+    const body = new FormData(cookieFormEl);
+    body.append("cookies_form[analytics_consent]", e.target.value);
+
     fetch(cookieFormEl.action, {
       method: "PUT",
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        cookies_form: { analytics_consent: e.target.value },
-      }),
+      body,
     })
+      .then((res) => {
+        if (res.status >= 200 && res.status < 300) {
+          return res;
+        }
+
+        throw new Error(res);
+      })
       .then((res) => res.json())
       .then(({ message }) => {
         const messageEl = cookieBannerEl.querySelector(".js-cookie-message");
