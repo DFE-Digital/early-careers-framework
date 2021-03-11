@@ -24,7 +24,7 @@ module Admin
         redirect_to admin_lead_provider_profiles_path
       end
 
-      private
+    private
 
       def set_lead_provider_profile
         @lead_provider_profile = LeadProviderProfile.find(params[:id])

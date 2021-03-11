@@ -16,7 +16,6 @@ module Admin
 
       def show
         authorize @admin_profile
-
       end
 
       def destroy
@@ -25,7 +24,7 @@ module Admin
         redirect_to admin_admin_profiles_path
       end
 
-      private
+    private
 
       def set_admin_profile
         @admin_profile = AdminProfile.find(params[:id])

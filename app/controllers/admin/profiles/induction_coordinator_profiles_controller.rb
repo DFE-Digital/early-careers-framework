@@ -24,7 +24,7 @@ module Admin
         redirect_to admin_induction_coordinator_profiles_path
       end
 
-      private
+    private
 
       def set_induction_coordinator_profile
         @induction_coordinator_profile = InductionCoordinatorProfile.find(params[:id])
