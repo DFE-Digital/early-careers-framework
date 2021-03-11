@@ -8,10 +8,7 @@ module Admin
 
       def index
         authorize AdminProfile, :index?
-        admin_profiles = policy_scope(AdminProfile)
-        @admin_profiles = Kaminari.paginate_array(admin_profiles).page(params[:page]).per(20)
-        @page = @admin_profiles.current_page
-        @total_pages = @admin_profiles.total_pages
+        @admin_profiles = policy_scope(AdminProfile)
       end
 
       def show
