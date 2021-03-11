@@ -21,7 +21,13 @@ module Admin
 
       def destroy
         authorize AdminProfile, :destroy?
-        AdminProfile.find(params[:id]).discard!
+
+        ActiveRecord::Base.transaction do
+          profile = AdminProfile.find(params[:id])
+          profile.user.discard!
+          profile.discard!
+        end
+
         redirect_to admin_admin_profiles_path
       end
     end

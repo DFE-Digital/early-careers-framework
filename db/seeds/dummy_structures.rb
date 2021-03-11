@@ -33,17 +33,27 @@ if Rails.env.development? || Rails.env.deployed_development?
   end
   AdminProfile.find_or_create_by!(user: user)
 
-  user = User.find_or_create_by!(email: "second-admin@example.com") do |u|
-    u.full_name = "Second Admin User"
-    u.confirmed_at = Time.zone.now.utc
-  end
-  AdminProfile.find_or_create_by!(user: user)
+  1..5.each do |number|
+    user = User.find_or_create_by!(email: "second-admin-#{number}@example.com") do |u|
+      u.full_name = "Second Admin User"
+      u.confirmed_at = Time.zone.now.utc
+    end
+    AdminProfile.find_or_create_by!(user: user)
 
-  user = User.find_or_create_by!(email: "second-lead-provider@example.com") do |u|
-    u.full_name = "Second Lp User"
-    u.confirmed_at = Time.zone.now.utc
+    user = User.find_or_create_by!(email: "second-lead-provider-#{number}@example.com") do |u|
+      u.full_name = "Second Lp User"
+      u.confirmed_at = Time.zone.now.utc
+    end
+    LeadProviderProfile.find_or_create_by!(user: user, lead_provider: LeadProvider.first)
+
+    user = User.find_or_create_by!(email: "second-school-leader-#{number}@example.com") do |u|
+      u.full_name = "School Leader User - Induction Coordinator"
+      u.confirmed_at = Time.zone.now.utc
+    end
+    if School.any?
+      InductionCoordinatorProfile.joins(:schools).find_or_create_by!(user: user, schools: [School.first])
+    end
   end
-  LeadProviderProfile.find_or_create_by!(user: user, lead_provider: LeadProvider.first)
 
   user = User.find_or_create_by!(email: "lead-provider@example.com") do |u|
     u.full_name = "Lp User"
