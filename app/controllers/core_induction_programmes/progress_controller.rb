@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CoreInductionProgramme::ProgressController < ApplicationController
+class CoreInductionProgrammes::ProgressController < ApplicationController
   include Pundit
   include GovspeakHelper
 
@@ -16,7 +16,7 @@ class CoreInductionProgramme::ProgressController < ApplicationController
         progress.update!(progress: params[:progress])
       end
     end
-    redirect_to cip_year_module_url(id: @course_lesson.course_module.id)
+    redirect_to year_module_url(id: @course_lesson.course_module.id)
   end
 
 private

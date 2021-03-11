@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_24_162240) do
+ActiveRecord::Schema.define(version: 2021_03_10_114107) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -77,6 +77,7 @@ ActiveRecord::Schema.define(version: 2021_02_24_162240) do
     t.uuid "previous_module_id"
     t.uuid "course_year_id", null: false
     t.integer "version", default: 1, null: false
+    t.string "term", default: "spring"
     t.index ["course_year_id"], name: "index_course_modules_on_course_year_id"
     t.index ["previous_module_id"], name: "index_course_modules_on_previous_module_id"
   end

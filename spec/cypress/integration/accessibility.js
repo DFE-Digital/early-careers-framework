@@ -48,10 +48,10 @@ describe("Accessibility", () => {
 
     cy.login("early_career_teacher");
 
-    cy.visit("/core-induction-programme");
+    cy.visit("/core-induction-programmes");
     cy.checkA11y();
 
-    cy.contains("Test Course year").click();
+    cy.contains("Test Core induction programme").click();
     cy.checkA11y();
 
     cy.contains("Test Course module").click();

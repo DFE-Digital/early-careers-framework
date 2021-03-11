@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CoreInductionProgramme::YearsController < ApplicationController
+class CoreInductionProgrammes::YearsController < ApplicationController
   include Pundit
   include GovspeakHelper
   include CipBreadcrumbHelper
@@ -17,7 +17,7 @@ class CoreInductionProgramme::YearsController < ApplicationController
     if params[:commit] == "Save changes"
       @course_year.save!
       flash[:success] = "Your changes have been saved"
-      redirect_to cip_year_url
+      redirect_to year_url
     else
       render action: "edit"
     end

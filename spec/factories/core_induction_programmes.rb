@@ -2,6 +2,6 @@
 
 FactoryBot.define do
   factory :core_induction_programme do
-    name { "MyString" }
+    name { "Test Core induction programme" }
   end
 end

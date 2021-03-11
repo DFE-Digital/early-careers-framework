@@ -30,22 +30,21 @@ Rails.application.routes.draw do
     post "/govspeak_test", to: "govspeak_test#preview"
   end
 
-  resource :core_induction_programme, controller: :core_induction_programme, only: :show, as: "cip", path: "/core-induction-programme" do
-    get "download-export", to: "core_induction_programme#download_export", as: "download_export"
+  resources :core_induction_programmes, path: "core-induction-programmes", only: %i[show index], as: "cip"
+  get "download-export", to: "core_induction_programmes#download_export", as: :download_export
 
-    resources :years, controller: "core_induction_programme/years", only: %i[show edit update] do
-      resources :modules, controller: "core_induction_programme/modules", only: %i[show edit update] do
-        resources :lessons, controller: "core_induction_programme/lessons", only: %i[show edit update] do
-          resources :parts, controller: "core_induction_programme/lesson_parts", only: %i[show edit update destroy] do
-            get "split", to: "core_induction_programme/lesson_parts#show_split", as: "split"
-            post "split", to: "core_induction_programme/lesson_parts#split"
-            get "show_delete", to: "core_induction_programme/lesson_parts#show_delete"
-          end
-          resource :progress, controller: "core_induction_programme/progress", only: %i[update]
+  resources :years, controller: "core_induction_programmes/years", only: %i[show edit update] do
+    resources :modules, controller: "core_induction_programmes/modules", only: %i[show edit update] do
+      resources :lessons, controller: "core_induction_programmes/lessons", only: %i[show edit update] do
+        resources :parts, controller: "core_induction_programmes/lesson_parts", only: %i[show edit update destroy] do
+          get "split", to: "core_induction_programmes/lesson_parts#show_split", as: "split"
+          post "split", to: "core_induction_programmes/lesson_parts#split"
+          get "show_delete", to: "core_induction_programmes/lesson_parts#show_delete"
         end
+        resource :progress, controller: "core_induction_programmes/progress", only: %i[update]
       end
     end
   end
 
-  root to: "core_induction_programme#show"
+  root to: "core_induction_programmes#index"
 end

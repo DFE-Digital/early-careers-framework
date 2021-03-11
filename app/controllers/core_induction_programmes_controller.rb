@@ -1,8 +1,14 @@
 # frozen_string_literal: true
 
-class CoreInductionProgrammeController < ApplicationController
+class CoreInductionProgrammesController < ApplicationController
+  include CipBreadcrumbHelper
+
+  def index
+    @core_induction_programmes = CoreInductionProgramme.all
+  end
+
   def show
-    @course_years = CourseYear.all
+    @core_induction_programme = CoreInductionProgramme.find(params[:id])
   end
 
   def download_export
@@ -15,7 +21,7 @@ class CoreInductionProgrammeController < ApplicationController
         type: "text/plain",
       )
     else
-      redirect_to cip_path
+      redirect_to cip_index_path
     end
   end
 end

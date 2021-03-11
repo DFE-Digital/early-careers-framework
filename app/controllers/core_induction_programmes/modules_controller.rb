@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CoreInductionProgramme::ModulesController < ApplicationController
+class CoreInductionProgrammes::ModulesController < ApplicationController
   include Pundit
   include GovspeakHelper
   include CipBreadcrumbHelper
@@ -14,10 +14,11 @@ class CoreInductionProgramme::ModulesController < ApplicationController
   def edit; end
 
   def update
+    @course_module.assign_attributes(course_module_params)
     if params[:commit] == "Save changes"
       @course_module.save!
       flash[:success] = "Your changes have been saved"
-      redirect_to cip_year_module_url
+      redirect_to year_module_url
     else
       render action: "edit"
     end
@@ -28,11 +29,10 @@ private
   def load_course_module
     @course_module = CourseModule.find(params[:id])
     authorize @course_module
-    @course_module.assign_attributes(course_module_params)
     @course_lessons_with_progress = @course_module.lessons_with_progress @current_user
   end
 
   def course_module_params
-    params.permit(:content, :title)
+    params.require(:course_module).permit(:content, :title, :term)
   end
 end

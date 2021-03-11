@@ -1,0 +1,27 @@
+<%= govuk_breadcrumbs breadcrumbs: home_breadcrumbs(@current_user) %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">The Early Career Framework study material</h1>
+
+    <% if @core_induction_programme.course_years.any? %>
+      <% @core_induction_programme.course_years.each do |course_year| %>
+        <h2 class="govuk-heading-l"><%= course_year.title %></h2>
+
+        <div class="gem-c-govspeak govuk-govspeak ">
+          <%= course_year.content_to_html.html_safe %>
+        </div>
+
+        <h3 class="govuk-heading-l">Autumn term</h3>
+        <%= render "module_list", locals = { course_modules: course_year.autumn_modules_with_progress(@current_user) } %>
+
+        <h3 class="govuk-heading-l">Spring term</h3>
+        <%= render "module_list", locals = { course_modules: course_year.spring_modules_with_progress(@current_user) } %>
+
+        <h3 class="govuk-heading-l">Summer term</h3>
+        <%= render "module_list", locals = { course_modules: course_year.summer_modules_with_progress(@current_user) } %>
+      <% end %>
+    <% else %>
+      <p>No course years were found!</p>
+    <% end %>
+  </div>
+</div>

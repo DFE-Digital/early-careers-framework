@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 module CipBreadcrumbHelper
+  def home_breadcrumbs(user)
+    [home_crumb(user)]
+  end
+
   def course_year_breadcrumbs(user, course_year)
     year_crumb = course_year_crumb(course_year)
     [
@@ -35,15 +39,15 @@ private
   end
 
   def course_year_crumb(course_year)
-    [course_year.title, cip_year_path(course_year)]
+    [course_year.title, year_path(course_year)]
   end
 
   def course_module_crumb(course_module)
-    [course_module.title, cip_year_module_path(course_module.course_year, course_module)]
+    [course_module.title, year_module_path(course_module.course_year, course_module)]
   end
 
   def course_lesson_crumb(course_lesson)
-    [course_lesson.title, cip_year_module_lesson_path(course_lesson.course_module.course_year, course_lesson.course_module, course_lesson)]
+    [course_lesson.title, year_module_lesson_path(course_lesson.course_module.course_year, course_lesson.course_module, course_lesson)]
   end
 
   def end_crumb(crumb)

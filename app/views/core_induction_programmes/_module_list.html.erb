@@ -1,0 +1,21 @@
+<% if course_modules.each do |course_module| %>
+  <ul class="app-task-list__items">
+    <li>
+      <div class="module-task-list__item">
+        <span>
+          <%= govuk_link_to(
+                course_module.title,
+                year_module_url(course_module.course_year, course_module),
+                class: "govuk-body-l govuk-!-font-weight-bold") %>
+        </span>
+        <%= render ProgressLabelComponent.new progress: course_module.progress %>
+      </div>
+
+      <div class="gem-c-govspeak govuk-govspeak">
+        <%= course_module.content_to_html.html_safe %>
+      </div>
+    </li>
+  </ul>
+<% end.empty? %>
+  <p>No course modules were found!</p>
+<% end %>

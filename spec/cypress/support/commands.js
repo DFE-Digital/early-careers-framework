@@ -15,14 +15,12 @@ Cypress.Commands.add("logout", () => {
 });
 
 Cypress.Commands.add("visitYear", (courseYear) => {
-  cy.visit(`/core-induction-programme/years/${courseYear.id}`);
+  cy.visit(`/years/${courseYear.id}`);
   cy.get("h1").should("contain", courseYear.title);
 });
 
 Cypress.Commands.add("visitModule", (courseModule) => {
-  cy.visit(
-    `/core-induction-programme/years/${courseModule.course_year_id}/modules/${courseModule.id}`
-  );
+  cy.visit(`/years/${courseModule.course_year_id}/modules/${courseModule.id}`);
   cy.get("h1").should("contain", courseModule.title);
 });
 
@@ -31,7 +29,7 @@ Cypress.Commands.add("visitLesson", (courseLesson) => {
     `CourseModule.find_by(id: "${courseLesson.course_module_id}")`
   ).then((courseModule) => {
     cy.visit(
-      `/core-induction-programme/years/${courseModule.course_year_id}/modules/${courseModule.id}/lessons/${courseLesson.id}`
+      `/years/${courseModule.course_year_id}/modules/${courseModule.id}/lessons/${courseLesson.id}`
     );
     cy.get("h1").should("contain", courseLesson.title);
   });
@@ -42,7 +40,7 @@ Cypress.Commands.add("visitModuleOfLesson", (courseLesson) => {
     `CourseModule.find_by(id: "${courseLesson.course_module_id}")`
   ).then((courseModule) => {
     cy.visit(
-      `/core-induction-programme/years/${courseModule.course_year_id}/modules/${courseModule.id}`
+      `/years/${courseModule.course_year_id}/modules/${courseModule.id}`
     );
     cy.get("h1").should("contain", courseModule.title);
   });

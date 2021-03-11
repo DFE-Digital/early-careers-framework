@@ -11,7 +11,7 @@
         <% if part == @course_lesson_part %>
           <span><%= part.title %></span>
         <% else %>
-          <%= govuk_link_to part.title, cip_year_module_lesson_part_split_path(part_id: part.id) %>
+          <%= govuk_link_to part.title, year_module_lesson_part_split_path(part_id: part.id) %>
         <% end %>
       </li>
     <% end %>
@@ -32,7 +32,7 @@
 </div>
 
 <main class="govuk-body outside-content-wrapper" id="main-content" role="main">
-  <%= form_with model: @split_lesson_part_form, url: cip_year_module_lesson_part_split_path, method: :post do |f| %>
+  <%= form_with model: @split_lesson_part_form, url: year_module_lesson_part_split_path, method: :post do |f| %>
     <%= f.govuk_error_summary %>
 
     <div class="govuk-grid-row">

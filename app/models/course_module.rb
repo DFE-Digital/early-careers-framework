@@ -17,6 +17,20 @@ class CourseModule < ApplicationRecord
   validates :title, presence: { message: "Enter a title" }, length: { maximum: 255 }
   validates :content, presence: { message: "Enter content" }, length: { maximum: 100_000 }
 
+  def self.terms
+    {
+      autumn: "autumn",
+      spring: "spring",
+      summer: "summer",
+    }
+  end
+
+  def self.term_options
+    terms.values.map { |term| OpenStruct.new(id: term, name: term.capitalize) }
+  end
+
+  enum term: terms
+
   def content_to_html
     Govspeak::Document.new(content, options: { allow_extra_quotes: true }).to_html
   end

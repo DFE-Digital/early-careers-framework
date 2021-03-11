@@ -45,16 +45,22 @@ describe("Meta test helper tests", () => {
       ["create", "course_lesson"],
     ]);
 
-    cy.visit("/core-induction-programme");
+    cy.visit("/core-induction-programmes");
 
-    cy.get('.govuk-link:contains("Test Course year")').should("have.length", 3);
+    cy.get('.govuk-link:contains("Test Core induction programme")').should(
+      "have.length",
+      3
+    );
 
     cy.app("clean");
 
     cy.reload();
 
-    cy.get('.govuk-link:contains("Test Course year")').should("have.length", 0);
-    cy.contains("No course years were found!");
+    cy.get('.govuk-link:contains("Test Core induction programme")').should(
+      "have.length",
+      0
+    );
+    cy.contains("No courses were found!");
   });
 
   it("should start with a clean database", () => {

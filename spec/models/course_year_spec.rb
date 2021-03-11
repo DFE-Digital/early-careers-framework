@@ -31,7 +31,7 @@ RSpec.describe CourseYear, type: :model do
       @teacher = FactoryBot.create(:user, :early_career_teacher)
 
       @course_year = FactoryBot.create(:course_year)
-      @course_module_one = FactoryBot.create(:course_module, title: "One", course_year: @course_year)
+      @course_module_one = FactoryBot.create(:course_module, title: "One", course_year: @course_year, term: "summer")
       @course_lesson_one = FactoryBot.create(:course_lesson, course_module: @course_module_one)
       @course_lesson_two = FactoryBot.create(:course_lesson, course_module: @course_module_one)
 
@@ -44,16 +44,21 @@ RSpec.describe CourseYear, type: :model do
     end
 
     it "returns modules in order after they get updated" do
-      course_module_two = FactoryBot.create(:course_module, title: "Two", course_year: @course_year)
-      course_module_three = FactoryBot.create(:course_module, title: "Three", course_year: @course_year)
-      course_module_four = FactoryBot.create(:course_module, title: "Four", course_year: @course_year)
+      course_module_two = FactoryBot.create(:course_module, title: "Two", course_year: @course_year, term: "spring")
+      course_module_three = FactoryBot.create(:course_module, title: "Three", course_year: @course_year, term: "spring")
+      course_module_four = FactoryBot.create(:course_module, title: "Four", course_year: @course_year, term: "spring")
 
       course_module_two.update!(previous_module: @course_module_one)
       course_module_four.update!(previous_module: course_module_two)
       course_module_three.update!(previous_module: course_module_four)
 
-      expected_lessons_with_order = [@course_module_one, course_module_two, course_module_four, course_module_three]
-      @course_year.course_modules_in_order.zip(expected_lessons_with_order).each do |actual, expected|
+      expected_modules_in_order = [@course_module_one, course_module_two, course_module_four, course_module_three]
+      @course_year.course_modules_in_order.zip(expected_modules_in_order).each do |actual, expected|
+        expect(actual).to eq(expected)
+      end
+
+      expected_spring_modules = [course_module_two, course_module_four, course_module_three]
+      @course_year.spring_modules_with_progress(@teacher).zip(expected_spring_modules).each do |actual, expected|
         expect(actual).to eq(expected)
       end
     end

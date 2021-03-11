@@ -2,7 +2,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <% if policy(@course_module).edit? %>
-      <%= govuk_link_to "Edit module content", edit_cip_year_module_url(@course_module), button: true%>
+      <%= govuk_link_to "Edit module content", edit_year_module_url(@course_module), button: true%>
     <% end %>
     <h1 class="govuk-heading-l"> <%= @course_module.title %></h1>
     <div class="gem-c-govspeak govuk-govspeak ">
@@ -15,7 +15,7 @@
           <% if @course_lessons_with_progress.each do |lesson| %>
             <li class="app-task-list__item">
               <div>
-                <%= govuk_link_to lesson.title, cip_year_module_lesson_path(@course_module.course_year, @course_module, lesson) %>
+                <%= govuk_link_to lesson.title, year_module_lesson_path(@course_module.course_year, @course_module, lesson) %>
                 <% if lesson.completion_time_in_minutes %>
                   <p>Duration: <%= lesson.duration_in_minutes_in_words %></p>
                 <% end %>

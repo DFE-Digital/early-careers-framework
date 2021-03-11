@@ -6,7 +6,7 @@ describe CipBreadcrumbHelper, type: :helper do
   before :each do
     @user = FactoryBot.create(:user, :admin)
     @course_year = FactoryBot.create(:course_year)
-    @course_year_crumb = [@course_year.title, "/core-induction-programme/years/#{@course_year.id}"]
+    @course_year_crumb = [@course_year.title, "/years/#{@course_year.id}"]
   end
 
   describe "#year_breadcrumb" do
@@ -28,7 +28,7 @@ describe CipBreadcrumbHelper, type: :helper do
 
   describe "#module_breadcrumb" do
     let(:course_module) { create(:course_module, course_year: @course_year) }
-    let(:course_module_crumb) { [course_module.title, "/core-induction-programme/years/#{@course_year.id}/modules/#{course_module.id}"] }
+    let(:course_module_crumb) { [course_module.title, "/years/#{@course_year.id}/modules/#{course_module.id}"] }
     let(:course_module_breadcrumb) { helper.course_module_breadcrumbs(@user, course_module) }
 
     it "returns an array for the course module breadcrumb" do
@@ -49,8 +49,8 @@ describe CipBreadcrumbHelper, type: :helper do
   describe "#lesson_breadcrumb" do
     let(:course_module) { create(:course_module, course_year: @course_year) }
     let(:course_lesson) { create(:course_lesson, course_module: course_module) }
-    let(:course_module_crumb) { [course_module.title, "/core-induction-programme/years/#{@course_year.id}/modules/#{course_module.id}"] }
-    let(:course_lesson_crumb) { [course_lesson.title, "/core-induction-programme/years/#{@course_year.id}/modules/#{course_module.id}/lessons/#{course_lesson.id}"] }
+    let(:course_module_crumb) { [course_module.title, "/years/#{@course_year.id}/modules/#{course_module.id}"] }
+    let(:course_lesson_crumb) { [course_lesson.title, "/years/#{@course_year.id}/modules/#{course_module.id}/lessons/#{course_lesson.id}"] }
     let(:course_lesson_breadcrumb) { helper.course_lesson_breadcrumbs(@user, course_lesson) }
 
     it "returns an array for the course lesson breadcrumb" do

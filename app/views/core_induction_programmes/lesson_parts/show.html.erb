@@ -3,16 +3,16 @@
   <div class="govuk-grid-column-full">
 
     <% if policy(@course_lesson_part.course_lesson).edit? %>
-      <%= govuk_link_to "Edit lesson", edit_cip_year_module_lesson_path(id: @course_lesson_part.course_lesson.id), button: true %>
+      <%= govuk_link_to "Edit lesson", edit_year_module_lesson_path(id: @course_lesson_part.course_lesson.id), button: true %>
     <% end %>
     <% if policy(@course_lesson_part).edit? %>
-      <%= govuk_link_to "Edit lesson part", edit_cip_year_module_lesson_part_path(@course_lesson_part), button: true %>
+      <%= govuk_link_to "Edit lesson part", edit_year_module_lesson_part_path(@course_lesson_part), button: true %>
     <% end %>
     <% if policy(@course_lesson_part).show_split? %>
-      <%= govuk_link_to "Split lesson part", cip_year_module_lesson_part_split_path(part_id: @course_lesson_part.id), button: true %>
+      <%= govuk_link_to "Split lesson part", year_module_lesson_part_split_path(part_id: @course_lesson_part.id), button: true %>
     <% end %>
     <% if policy(@course_lesson_part).show_delete? %>
-      <%= govuk_link_to "Delete lesson part", cip_year_module_lesson_part_show_delete_path(part_id: @course_lesson_part.id), button: true, class: "govuk-button--secondary"  %>
+      <%= govuk_link_to "Delete lesson part", year_module_lesson_part_show_delete_path(part_id: @course_lesson_part.id), button: true, class: "govuk-button--secondary"  %>
     <% end %>
 
     <h1 class="govuk-heading-xl govuk-!-margin-bottom-4"> <%= @course_lesson_part.course_lesson.title %></h1>
@@ -29,7 +29,7 @@
           <% if part == @course_lesson_part %>
             <span><%= part.title %></span>
           <% else %>
-            <%= govuk_link_to part.title, cip_year_module_lesson_part_path(lesson_id: @course_lesson_part.course_lesson.id, id: part.id) %>
+            <%= govuk_link_to part.title, year_module_lesson_part_path(lesson_id: @course_lesson_part.course_lesson.id, id: part.id) %>
           <% end %>
         </li>
       <% end %>
@@ -41,7 +41,7 @@
     </div>
 
     <% if policy(@course_lesson_part.course_lesson).set_progress? && @course_lesson_part.next_lesson_part.nil? %>
-      <%= form_with url: cip_year_module_lesson_progress_path(lesson_id: @course_lesson_part.course_lesson.id), method: :put do |f| %>
+      <%= form_with url: year_module_lesson_progress_path(lesson_id: @course_lesson_part.course_lesson.id), method: :put do |f| %>
         <%= f.govuk_collection_radio_buttons(
               :progress,
               [
@@ -61,13 +61,13 @@
       <ul class="step-by-step-navigation__list">
         <% if @course_lesson_part.previous_lesson_part %>
           <%= render NavigationPreviousComponent.new(
-            url: cip_year_module_lesson_part_path(id: @course_lesson_part.previous_lesson_part.id),
+            url: year_module_lesson_part_path(id: @course_lesson_part.previous_lesson_part.id),
             text: @course_lesson_part.previous_lesson_part.title) %>
         <% end %>
 
         <% if @course_lesson_part.next_lesson_part %>
           <%= render NavigationNextComponent.new(
-            url: cip_year_module_lesson_part_path(id: @course_lesson_part.next_lesson_part.id),
+            url: year_module_lesson_part_path(id: @course_lesson_part.next_lesson_part.id),
             text: @course_lesson_part.next_lesson_part.title) %>
         <% end %>
       </ul>
