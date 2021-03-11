@@ -4,11 +4,10 @@ require "rails_helper"
 
 RSpec.describe "Admin::Profiles::LeadProviderProfiles", type: :request do
   let(:admin_user) { create(:user, :admin) }
-  let(:lead_provider_user) { create(:user, :lead_provider, full_name: 'Joe Blogs', email: 'joe-blogs@example.com') }
-  let(:lead_provider_profile){ lead_provider_user.lead_provider_profile }
-  let(:lead_provider_user_two) { create(:user, :lead_provider, full_name: 'Emma Dow', email: 'emma-dow@example.com') }
-  let(:lead_provider_profile_two){ lead_provider_user_two.lead_provider_profile }
-
+  let(:lead_provider_user) { create(:user, :lead_provider, full_name: "Joe Blogs", email: "joe-blogs@example.com") }
+  let(:lead_provider_profile) { lead_provider_user.lead_provider_profile }
+  let(:lead_provider_user_two) { create(:user, :lead_provider, full_name: "Emma Dow", email: "emma-dow@example.com") }
+  let(:lead_provider_profile_two) { lead_provider_user_two.lead_provider_profile }
 
   before do
     lead_provider_user

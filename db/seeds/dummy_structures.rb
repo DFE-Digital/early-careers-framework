@@ -33,7 +33,7 @@ if Rails.env.development? || Rails.env.deployed_development?
   end
   AdminProfile.find_or_create_by!(user: user)
 
-  1..5.each do |number|
+  (1..5).each do |number|
     user = User.find_or_create_by!(email: "second-admin-#{number}@example.com") do |u|
       u.full_name = "Second Admin User"
       u.confirmed_at = Time.zone.now.utc
