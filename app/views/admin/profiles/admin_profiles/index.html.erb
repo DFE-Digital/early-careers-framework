@@ -11,6 +11,7 @@
 <% end %>
 
 <table class="govuk-table">
+
   <thead>
     <tr class="govuk-table__row">
       <th scope="col" class="govuk-table__header">Full Name</th>
@@ -18,6 +19,7 @@
       <th scope="col" class="govuk-table__header">Delete</th>
     </tr>
   </thead>
+
   <tbody class="govuk-table__body">
     <% @admin_profiles.each do |admin_profile| %>
       <tr class="govuk-table__row">
@@ -31,6 +33,7 @@
       </tr>
     <% end %>
   </tbody>
+
 </table>
 <%= govuk_paginate @admin_profiles %>
 
