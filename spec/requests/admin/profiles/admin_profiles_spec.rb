@@ -37,6 +37,15 @@ RSpec.describe "Admin::Profiles::AdminProfiles", type: :request do
   end
 
   describe "DELETE /admin/profiles/admin-profiles/{admin_profile_two.id}" do
+    it "does not allow deleting the current logged in admin" do
+      delete "/admin/profiles/admin-profiles/#{admin_profile.id}"
+
+      admin_profile.reload
+      admin_user.reload
+      expect(admin_profile_two.discarded?).to be false
+      expect(admin_user_two.discarded?).to be false
+    end
+
     it "marks the admin profile as deleted" do
       delete "/admin/profiles/admin-profiles/#{admin_profile_two.id}"
 

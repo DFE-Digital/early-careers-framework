@@ -10,7 +10,7 @@ class AdminProfilePolicy < ApplicationPolicy
   end
 
   def destroy?
-    admin_only
+    admin_only && @record.id != user.id
   end
 
   def create?
