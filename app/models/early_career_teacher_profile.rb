@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class EarlyCareerTeacherProfile < BaseProfile
+class EarlyCareerTeacherProfile < ApplicationRecord
   belongs_to :user
   belongs_to :school
   belongs_to :core_induction_programme, optional: true
