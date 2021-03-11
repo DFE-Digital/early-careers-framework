@@ -4,11 +4,10 @@ require "rails_helper"
 
 RSpec.describe "Admin::Profiles::InductionCoordinatorProfiles", type: :request do
   let(:admin_user) { create(:user, :admin) }
-  let(:induction_coordinator_user) { create(:user, :induction_coordinator, full_name: 'Joe Blogs', email: 'joe-blogs@example.com') }
-  let(:induction_coordinator_profile){ induction_coordinator_user.induction_coordinator_profile }
-  let(:induction_coordinator_user_two) { create(:user, :induction_coordinator, full_name: 'Emma Dow', email: 'emma-dow@example.com') }
-  let(:induction_coordinator_profile_two){ induction_coordinator_user_two.induction_coordinator_profile }
-
+  let(:induction_coordinator_user) { create(:user, :induction_coordinator, full_name: "Joe Blogs", email: "joe-blogs@example.com") }
+  let(:induction_coordinator_profile) { induction_coordinator_user.induction_coordinator_profile }
+  let(:induction_coordinator_user_two) { create(:user, :induction_coordinator, full_name: "Emma Dow", email: "emma-dow@example.com") }
+  let(:induction_coordinator_profile_two) { induction_coordinator_user_two.induction_coordinator_profile }
 
   before do
     induction_coordinator_user

@@ -3,11 +3,10 @@
 require "rails_helper"
 
 RSpec.describe "Admin::Profiles::AdminProfiles", type: :request do
-  let(:admin_user) { create(:user, :admin, full_name: 'Joe Blogs', email: 'joe-blogs@example.com') }
-  let(:admin_profile){ admin_user.admin_profile }
-  let(:admin_user_two) { create(:user, :admin, full_name: 'Emma Dow', email: 'emma-dow@example.com') }
-  let(:admin_profile_two){ admin_user_two.admin_profile }
-
+  let(:admin_user) { create(:user, :admin, full_name: "Joe Blogs", email: "joe-blogs@example.com") }
+  let(:admin_profile) { admin_user.admin_profile }
+  let(:admin_user_two) { create(:user, :admin, full_name: "Emma Dow", email: "emma-dow@example.com") }
+  let(:admin_profile_two) { admin_user_two.admin_profile }
 
   before do
     admin_user
