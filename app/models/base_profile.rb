@@ -2,9 +2,15 @@
 
 class BaseProfile < ApplicationRecord
   self.abstract_class = true
-  scope :kept, -> { undiscarded.joins(:user).merge(User.kept) }
+  include Discard::Model
 
-  def kept?
-    undiscarded? && user.kept?
+  default_scope -> { kept }
+
+  after_discard do
+    user.discard!
+  end
+
+  after_undiscard do
+    user.undiscard!
   end
 end

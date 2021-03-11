@@ -21,12 +21,7 @@ module Admin
 
       def destroy
         authorize @admin_profile
-
-        ActiveRecord::Base.transaction do
-          @admin_profile.user.discard!
-          @admin_profile.discard!
-        end
-
+        @admin_profile.discard!
         redirect_to admin_admin_profiles_path
       end
 

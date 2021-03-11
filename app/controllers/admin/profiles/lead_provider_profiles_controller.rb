@@ -20,11 +20,7 @@ module Admin
 
       def destroy
         authorize @lead_provider_profile
-        ActiveRecord::Base.transaction do
-          @lead_provider_profile.user.discard!
-          @lead_provider_profile.discard!
-        end
-
+        @lead_provider_profile.discard!
         redirect_to admin_lead_provider_profiles_path
       end
 

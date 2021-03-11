@@ -20,11 +20,7 @@ module Admin
 
       def destroy
         authorize @induction_coordinator_profile
-        ActiveRecord::Base.transaction do
-          @induction_coordinator_profile.user.discard!
-          @induction_coordinator_profile.discard!
-        end
-
+        @induction_coordinator_profile.discard!
         redirect_to admin_induction_coordinator_profiles_path
       end
 
