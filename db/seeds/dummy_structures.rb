@@ -27,7 +27,7 @@ if CoreInductionProgramme.none?
 end
 
 if Rails.env.development? || Rails.env.deployed_development?
-  standard_user_emails = ['admin@example.com', "lead-provider@example.com", "second-school-leader@example.com", "school-leader@example.com"]
+  standard_user_emails = ["admin@example.com", "lead-provider@example.com", "second-school-leader@example.com", "school-leader@example.com"]
   (1..5).each do |number|
     standard_user_emails << "second-admin-#{number}@example.com"
     standard_user_emails << "second-lead-provider-#{number}@example.com"
@@ -40,7 +40,6 @@ if Rails.env.development? || Rails.env.deployed_development?
     user.lead_provider_profile&.undiscard!
     user.induction_coordinator_profile&.undiscard!
   end
-
 
   user = User.with_discarded.find_or_create_by!(email: "admin@example.com") do |u|
     u.full_name = "Admin User"
