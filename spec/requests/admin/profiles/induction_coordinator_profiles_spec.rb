@@ -15,9 +15,9 @@ RSpec.describe "Admin::Profiles::InductionCoordinatorProfiles", type: :request d
     sign_in admin_user
   end
 
-  describe "GET /admin/profiles/induction_coordinator_profiles" do
+  describe "GET /admin/profiles/induction-coordinator-profiles" do
     it "renders the induction_coordinator_profiles template" do
-      get "/admin/profiles/induction_coordinator_profiles"
+      get "/admin/profiles/induction-coordinator-profiles"
       expect(response).to render_template("admin/profiles/induction_coordinator_profiles/index")
       expect(response.body).to include(CGI.escapeHTML(induction_coordinator_profile_two.user.full_name))
       expect(response.body).to include(CGI.escapeHTML(induction_coordinator_profile_two.user.email))
@@ -27,9 +27,9 @@ RSpec.describe "Admin::Profiles::InductionCoordinatorProfiles", type: :request d
     end
   end
 
-  describe "GET /admin/profiles/induction_coordinator_profile/{induction_coordinator_profile_two.id}" do
+  describe "GET /admin/profiles/induction-coordinator-profiles/{induction_coordinator_profile_two.id}" do
     it "renders the show template" do
-      get "/admin/profiles/induction_coordinator_profiles/#{induction_coordinator_profile_two.id}"
+      get "/admin/profiles/induction-coordinator-profiles/#{induction_coordinator_profile_two.id}"
       expect(response).to render_template("admin/profiles/induction_coordinator_profiles/show")
       expect(response.body).to include(CGI.escapeHTML(induction_coordinator_profile_two.user.full_name))
       expect(response.body).to include(CGI.escapeHTML(induction_coordinator_profile_two.user.email))
@@ -37,9 +37,9 @@ RSpec.describe "Admin::Profiles::InductionCoordinatorProfiles", type: :request d
     end
   end
 
-  describe "DELETE /admin/profiles/induction_coordinator_profile/{induction_coordinator_profile_two.id}" do
+  describe "DELETE /admin/profiles/induction-coordinator-profiles/{induction_coordinator_profile_two.id}" do
     it "marks the induction_coordinator profile as deleted" do
-      delete "/admin/profiles/induction_coordinator_profiles/#{induction_coordinator_profile_two.id}"
+      delete "/admin/profiles/induction-coordinator-profiles/#{induction_coordinator_profile_two.id}"
 
       induction_coordinator_profile_two.reload
       induction_coordinator_user_two.reload
@@ -48,9 +48,9 @@ RSpec.describe "Admin::Profiles::InductionCoordinatorProfiles", type: :request d
     end
 
     it "redirects to the induction_coordinator_profile index page" do
-      delete "/admin/profiles/induction_coordinator_profiles/#{induction_coordinator_profile_two.id}"
+      delete "/admin/profiles/induction-coordinator-profiles/#{induction_coordinator_profile_two.id}"
 
-      expect(response).to redirect_to("/admin/profiles/induction_coordinator_profiles")
+      expect(response).to redirect_to("/admin/profiles/induction-coordinator-profiles")
       expect(response.body).not_to include(CGI.escapeHTML(induction_coordinator_profile_two.user.full_name))
     end
   end

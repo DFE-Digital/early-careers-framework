@@ -17,7 +17,7 @@ RSpec.describe "Admin::Profiles::LeadProviderProfiles", type: :request do
 
   describe "GET /admin/profiles/lead_provider_profiles" do
     it "renders the lead_provider_profiles template" do
-      get "/admin/profiles/lead_provider_profiles"
+      get "/admin/profiles/lead-provider-profiles"
       expect(response).to render_template("admin/profiles/lead_provider_profiles/index")
       expect(response.body).to include(CGI.escapeHTML(lead_provider_profile_two.user.full_name))
       expect(response.body).to include(CGI.escapeHTML(lead_provider_profile_two.user.email))
@@ -27,9 +27,9 @@ RSpec.describe "Admin::Profiles::LeadProviderProfiles", type: :request do
     end
   end
 
-  describe "GET /admin/profiles/lead_provider_profile/{lead_provider_profile_two.id}" do
+  describe "GET /admin/profiles/lead-provider-profiles/{lead_provider_profile_two.id}" do
     it "renders the show template" do
-      get "/admin/profiles/lead_provider_profiles/#{lead_provider_profile_two.id}"
+      get "/admin/profiles/lead-provider-profiles/#{lead_provider_profile_two.id}"
       expect(response).to render_template("admin/profiles/lead_provider_profiles/show")
       expect(response.body).to include(CGI.escapeHTML(lead_provider_profile_two.user.full_name))
       expect(response.body).to include(CGI.escapeHTML(lead_provider_profile_two.user.email))
@@ -37,9 +37,9 @@ RSpec.describe "Admin::Profiles::LeadProviderProfiles", type: :request do
     end
   end
 
-  describe "DELETE /admin/profiles/lead_provider_profile/{lead_provider_profile_two.id}" do
+  describe "DELETE /admin/profiles/lead-provider-profiles/{lead_provider_profile_two.id}" do
     it "marks the lead_provider profile as deleted" do
-      delete "/admin/profiles/lead_provider_profiles/#{lead_provider_profile_two.id}"
+      delete "/admin/profiles/lead-provider-profiles/#{lead_provider_profile_two.id}"
 
       lead_provider_profile_two.reload
       lead_provider_user_two.reload
@@ -48,9 +48,9 @@ RSpec.describe "Admin::Profiles::LeadProviderProfiles", type: :request do
     end
 
     it "redirects to the lead_provider_profile index page" do
-      delete "/admin/profiles/lead_provider_profiles/#{lead_provider_profile_two.id}"
+      delete "/admin/profiles/lead-provider-profiles/#{lead_provider_profile_two.id}"
 
-      expect(response).to redirect_to("/admin/profiles/lead_provider_profiles")
+      expect(response).to redirect_to("/admin/profiles/lead-provider-profiles")
       expect(response.body).not_to include(CGI.escapeHTML(lead_provider_profile_two.user.full_name))
     end
   end

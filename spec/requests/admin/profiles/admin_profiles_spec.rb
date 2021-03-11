@@ -14,9 +14,9 @@ RSpec.describe "Admin::Profiles::AdminProfiles", type: :request do
     sign_in admin_user
   end
 
-  describe "GET /admin/profiles/admin_profiles" do
+  describe "GET /admin/profiles/admin-profiles" do
     it "renders the admin_profiles template" do
-      get "/admin/profiles/admin_profiles"
+      get "/admin/profiles/admin-profiles"
       expect(response).to render_template("admin/profiles/admin_profiles/index")
       expect(response.body).to include(CGI.escapeHTML(admin_profile_two.user.full_name))
       expect(response.body).to include(CGI.escapeHTML(admin_profile_two.user.email))
@@ -26,9 +26,9 @@ RSpec.describe "Admin::Profiles::AdminProfiles", type: :request do
     end
   end
 
-  describe "GET /admin/profiles/admin_profile/{admin_profile_two.id}" do
+  describe "GET /admin/profiles/admin-profiles/{admin_profile_two.id}" do
     it "renders the show template" do
-      get "/admin/profiles/admin_profiles/#{admin_profile_two.id}"
+      get "/admin/profiles/admin-profiles/#{admin_profile_two.id}"
       expect(response).to render_template("admin/profiles/admin_profiles/show")
       expect(response.body).to include(CGI.escapeHTML(admin_profile_two.user.full_name))
       expect(response.body).to include(CGI.escapeHTML(admin_profile_two.user.email))
@@ -36,9 +36,9 @@ RSpec.describe "Admin::Profiles::AdminProfiles", type: :request do
     end
   end
 
-  describe "DELETE /admin/profiles/admin_profile/{admin_profile_two.id}" do
+  describe "DELETE /admin/profiles/admin-profiles/{admin_profile_two.id}" do
     it "marks the admin profile as deleted" do
-      delete "/admin/profiles/admin_profiles/#{admin_profile_two.id}"
+      delete "/admin/profiles/admin-profiles/#{admin_profile_two.id}"
 
       admin_profile_two.reload
       admin_user_two.reload
@@ -47,9 +47,9 @@ RSpec.describe "Admin::Profiles::AdminProfiles", type: :request do
     end
 
     it "redirects to the admin_profile index page" do
-      delete "/admin/profiles/admin_profiles/#{admin_profile_two.id}"
+      delete "/admin/profiles/admin-profiles/#{admin_profile_two.id}"
 
-      expect(response).to redirect_to("/admin/profiles/admin_profiles")
+      expect(response).to redirect_to("/admin/profiles/admin-profiles")
       expect(response.body).not_to include(CGI.escapeHTML(admin_profile_two.user.full_name))
     end
   end
