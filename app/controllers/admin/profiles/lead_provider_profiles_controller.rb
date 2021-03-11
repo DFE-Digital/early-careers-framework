@@ -20,7 +20,12 @@ module Admin
 
       def destroy
         authorize LeadProviderProfile, :destroy?
-        LeadProviderProfile.find(params[:id])
+        ActiveRecord::Base.transaction do
+          profile = LeadProviderProfile.find(params[:id])
+          profile.user.discard!
+          profile.discard!
+        end
+
         redirect_to admin_lead_provider_profiles_path
       end
     end
