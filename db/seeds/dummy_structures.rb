@@ -35,19 +35,19 @@ if Rails.env.development? || Rails.env.deployed_development?
 
   (1..5).each do |number|
     user = User.find_or_create_by!(email: "second-admin-#{number}@example.com") do |u|
-      u.full_name = "Second Admin User"
+      u.full_name = "Second Admin User #{number}"
       u.confirmed_at = Time.zone.now.utc
     end
     AdminProfile.find_or_create_by!(user: user)
 
     user = User.find_or_create_by!(email: "second-lead-provider-#{number}@example.com") do |u|
-      u.full_name = "Second Lp User"
+      u.full_name = "Second Lp User #{number}"
       u.confirmed_at = Time.zone.now.utc
     end
     LeadProviderProfile.find_or_create_by!(user: user, lead_provider: LeadProvider.first)
 
     user = User.find_or_create_by!(email: "second-school-leader-#{number}@example.com") do |u|
-      u.full_name = "School Leader User - Induction Coordinator"
+      u.full_name = "School Leader User - Induction Coordinator #{number}"
       u.confirmed_at = Time.zone.now.utc
     end
     if School.any?
