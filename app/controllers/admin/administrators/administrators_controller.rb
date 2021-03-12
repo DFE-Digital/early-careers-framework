@@ -68,7 +68,7 @@ module Admin
       def destroy
         authorize @administrator
         @administrator.admin_profile.discard!
-        set_success_message(content: "Admin User was Deleted")
+        set_success_message(content: "User deleted")
         redirect_to admin_administrators_path
       end
 
