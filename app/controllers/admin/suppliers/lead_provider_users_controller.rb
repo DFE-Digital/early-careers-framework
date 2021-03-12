@@ -23,7 +23,7 @@ module Admin
       def destroy
         authorize @lead_provider_user
         @lead_provider_user.lead_provider_profile.discard!
-        set_success_message(content: "User deleted")
+        set_success_message(content: "User deleted", title: "Success")
         redirect_to admin_supplier_users_path
       end
 
