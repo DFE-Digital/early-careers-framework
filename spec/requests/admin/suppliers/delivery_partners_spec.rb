@@ -135,14 +135,6 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
     end
   end
 
-  describe "GET /admin/suppliers/delivery-partners/{delivery_partner.id}" do
-    it "renders the show template" do
-      get "/admin/suppliers/delivery-partners/#{delivery_partner.id}"
-      expect(response).to render_template("admin/suppliers/delivery_partners/show")
-      expect(response.body).to include(CGI.escapeHTML(delivery_partner.name))
-    end
-  end
-
   describe "GET /admin/suppliers/delivery-partners/{delivery_partner.id}/edit" do
     it "renders the edit template" do
       get "/admin/suppliers/delivery-partners/#{delivery_partner.id}/edit"
@@ -167,7 +159,7 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
         provider_relationship_hashes: [provider_relationship_value(lead_provider, cohort)],
       } }
 
-      expect(response).to redirect_to("/admin/suppliers/delivery-partners/#{delivery_partner.id}")
+      expect(response).to redirect_to("/admin/suppliers")
       follow_redirect!
       expect(response.body).to include(CGI.escapeHTML(delivery_partner.name))
     end

@@ -3,7 +3,7 @@
 module Admin
   module Suppliers
     class DeliveryPartnersController < Admin::BaseController
-      before_action :set_delivery_partner, only: %i[show delete edit update destroy]
+      before_action :set_delivery_partner, only: %i[delete edit update destroy]
       skip_after_action :verify_policy_scoped
 
       def choose_name
@@ -66,10 +66,6 @@ module Admin
         redirect_to admin_suppliers_path
       end
 
-      def show
-        authorize @delivery_partner
-      end
-
       def delete
         authorize @delivery_partner, :destroy?
       end
@@ -95,7 +91,7 @@ module Admin
         render :edit and return unless @delivery_partner_form.valid?
 
         @delivery_partner_form.update!(@delivery_partner)
-        redirect_to admin_delivery_partner_path(@delivery_partner)
+        redirect_to admin_suppliers_path
       end
 
       def destroy
