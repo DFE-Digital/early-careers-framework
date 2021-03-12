@@ -14,7 +14,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def delete?
-    admin_only
+    admin_only && user_policy.rb
   end
 
   def destroy?
