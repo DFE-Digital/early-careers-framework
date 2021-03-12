@@ -14,6 +14,10 @@ class ApplicationController < ActionController::Base
     stored_location_for(user) || helpers.profile_dashboard_url(user)
   end
 
+  def set_success_message(title: "Success", heading: "", content: "")
+    flash[:success] = { title: title, heading: heading, content: content }
+  end
+
 protected
 
   def configure_permitted_parameters
