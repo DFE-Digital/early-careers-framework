@@ -21,7 +21,6 @@ class UserPolicy < ApplicationPolicy
     admin_only && @record.id != user.id
   end
 
-
   def permitted_attributes
     if user.admin?
       %i[full_name email]
