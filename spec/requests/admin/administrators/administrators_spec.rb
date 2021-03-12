@@ -6,12 +6,12 @@ RSpec.describe "Admin::Administrators::Administrators", type: :request do
   let(:name) { Faker::Name.name }
   let(:email) { Faker::Internet.email }
   let(:new_user) { User.find_by(email: email) }
+  let(:admin_user) { create(:user, :admin) }
   let(:admin_user_two) { create(:user, :admin, full_name: "Emma Dow", email: "emma-dow@example.com") }
   let(:admin_profile_two) { admin_user_two.admin_profile }
 
   before do
-    user = create(:user, :admin)
-    sign_in user
+    sign_in admin_user
     admin_user_two
   end
 
@@ -141,6 +141,16 @@ RSpec.describe "Admin::Administrators::Administrators", type: :request do
 
       expect(response).to redirect_to("/admin/administrators?user_deleted=true")
       expect(response.body).not_to include(CGI.escapeHTML(admin_user_two.full_name))
+    end
+
+    it "does not allow deleting the current logged in admin" do
+      expect { delete "/admin/administrators/#{admin_user.id}" }.to raise_error Pundit::NotAuthorizedError
+
+
+      admin_profile.reload
+      admin_user.reload
+      expect(admin_profile.discarded?).to be false
+      expect(admin_user.discarded?).to be false
     end
   end
 
