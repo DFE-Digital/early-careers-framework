@@ -53,6 +53,8 @@ module Admin
 
       def edit; end
 
+      def delete; end
+
       def update
         if @administrator.update(permitted_attributes(@administrator))
           redirect_to :admin_administrators, notice: "Changes saved successfully"
