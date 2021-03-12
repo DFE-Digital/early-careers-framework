@@ -15,7 +15,7 @@
       %>
       <%= f.govuk_submit "Save" %>
       <% if current_user.id != @administrator.id %>
-        <%= govuk_link_to "Delete", delete_admin_administrator_path(@administrator), button: true, class: "govuk-button--warning" %>
+        <%= govuk_link_to "Delete", delete_admin_administrator_path(@administrator), button: true, class: "govuk-button--warning cypress-test-delete-button" %>
       <% end %>
     <% end %>
   </div>
