@@ -124,12 +124,11 @@ RSpec.describe "Admin::SupplierUsers", type: :request do
       given_i_have_entered_user_details(full_name, email)
     end
 
-    it "redirects to the confirmation page" do
+    it "redirects to the supplier users page" do
       when_i_confirm_my_choices
 
       # Then
-      new_user = User.order(:created_at).last
-      expect(response).to redirect_to "/admin/suppliers/users/new/success?user_id=#{new_user.id}"
+      expect(response).to redirect_to "/admin/suppliers/users"
     end
 
     it "creates a new user" do

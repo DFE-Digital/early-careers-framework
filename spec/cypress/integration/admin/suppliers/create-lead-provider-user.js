@@ -35,19 +35,12 @@ describe("Admin user creating lead provider user", () => {
     cy.get("main").should("contain", userEmail);
     cy.confirmCreateSupplierUser();
 
-    cy.location("pathname").should(
-      "contain",
-      "/admin/suppliers/users/new/success"
-    );
-
-    cy.get("a").contains("manage suppliers").click();
-    cy.location("pathname").should("equal", "/admin/suppliers");
-
-    cy.get("a").contains("All users").click();
     cy.location("pathname").should("equal", "/admin/suppliers/users");
     cy.get("main").should("contain", userName);
     cy.get("main").should("contain", userEmail);
     cy.get("main").should("contain", leadProviderName);
+    cy.get("main").should("contain", "User added");
+    cy.get("main").should("contain", "They have been sent an email to sign in");
   });
 
   it("remembers previous choices", () => {
@@ -77,14 +70,12 @@ describe("Admin user creating lead provider user", () => {
 
     cy.confirmCreateSupplierUser();
 
-    cy.get("a").contains("manage suppliers").click();
-    cy.location("pathname").should("equal", "/admin/suppliers");
-
-    cy.get("a").contains("All users").click();
     cy.location("pathname").should("equal", "/admin/suppliers/users");
     cy.get("main").should("contain", userName);
     cy.get("main").should("contain", userEmail);
     cy.get("main").should("contain", leadProviderName);
+    cy.get("main").should("contain", "User added");
+    cy.get("main").should("contain", "They have been sent an email to sign in");
   });
 
   it("allows changing name choice", () => {
@@ -106,13 +97,11 @@ describe("Admin user creating lead provider user", () => {
 
     cy.confirmCreateSupplierUser();
 
-    cy.get("a").contains("manage suppliers").click();
-    cy.location("pathname").should("equal", "/admin/suppliers");
-
-    cy.get("a").contains("All users").click();
     cy.location("pathname").should("equal", "/admin/suppliers/users");
     cy.get("main").should("contain", userName);
     cy.get("main").should("contain", userEmail);
     cy.get("main").should("contain", leadProviderName);
+    cy.get("main").should("contain", "User added");
+    cy.get("main").should("contain", "They have been sent an email to sign in");
   });
 });

@@ -34,14 +34,14 @@
   </div>
   <div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key">
-      Organisation
+      Supplier
     </dt>
     <dd class="govuk-summary-list__value">
       <%= @supplier_user_form.chosen_supplier.name %>
     </dd>
     <dd class="govuk-summary-list__actions">
       <%= govuk_link_to new_admin_supplier_user_path(continue: true), class: "govuk-link--no-visited-state" do %>
-        Change<span class="govuk-visually-hidden"> organisation</span>
+        Change<span class="govuk-visually-hidden"> supplier</span>
       <% end %>
     </dd>
   </div>
