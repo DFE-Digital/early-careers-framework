@@ -1,0 +1,5 @@
+<h1>Confirm deletion of <%= @lead_provider_user.full_name %></h1>
+<%= form_for :confirmation, url: admin_lead_provider_user_path(@lead_provider_user), method: :delete do |f| %>
+  <%= f.govuk_submit "Delete lead provider", classes: "govuk-button--warning" %>
+<% end %>
+<%= govuk_link_to "Back", edit_admin_lead_provider_user_path(@lead_provider_user), button: true, class: "govuk-button--secondary" %>

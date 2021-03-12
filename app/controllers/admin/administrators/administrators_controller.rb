@@ -5,7 +5,7 @@ module Admin
     class AdministratorsController < Admin::BaseController
       skip_after_action :verify_authorized, only: :index
       skip_after_action :verify_policy_scoped, except: :index
-      before_action :load_admin, only: %i[edit update]
+      before_action :load_admin, only: %i[edit update delete destroy]
 
       def index
         @administrators = policy_scope(User).admins
@@ -59,6 +59,16 @@ module Admin
         else
           render :edit
         end
+      end
+
+      def delete
+        authorize @administrator, :destroy?
+      end
+
+      def destroy
+        authorize @administrator
+        @administrator.admin_profile.discard!
+        redirect_to admin_administrators_path
       end
 
     private

@@ -16,6 +16,12 @@ module Admin
         end
       end
 
+      def destroy
+        authorize @lead_provider_user
+        @lead_provider_user.lead_provider_profile.discard!
+        redirect_to admin_supplier_users_path
+      end
+
     private
 
       def load_lead_provider_user
