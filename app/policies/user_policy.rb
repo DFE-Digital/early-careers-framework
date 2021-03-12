@@ -13,10 +13,6 @@ class UserPolicy < ApplicationPolicy
     admin_only
   end
 
-  def delete?
-    admin_only && @record.id != user.id
-  end
-
   def destroy?
     admin_only && @record.id != user.id
   end
