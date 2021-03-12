@@ -6,11 +6,30 @@ module Admin
       before_action :set_delivery_partner, only: %i[show delete edit update destroy]
       skip_after_action :verify_policy_scoped
 
+      def choose_name
+        authorize DeliveryPartner, :new?
+
+        if params[:continue]
+          @delivery_partner_form = DeliveryPartnerForm.new(session[:delivery_partner_form])
+        else
+          session.delete(:delivery_partner_form)
+          @delivery_partner_form = DeliveryPartnerForm.new
+        end
+      end
+
+      def receive_name
+        authorize DeliveryPartner, :new?
+        @delivery_partner_form = DeliveryPartnerForm.new(params.require(:delivery_partner_form).permit(:name))
+
+        render :choose_name and return unless @delivery_partner_form.valid?(:name)
+
+        session[:delivery_partner_form] = (session[:delivery_partner_form] || {}).merge({ name: @delivery_partner_form.name })
+        redirect_to choose_lps_admin_delivery_partners_path
+      end
+
       def choose_lead_providers
         authorize DeliveryPartner, :create?
 
-        new_supplier_form = NewSupplierForm.new(session[:new_supplier_form])
-        session[:delivery_partner_form] = (session[:delivery_partner_form] || {}).merge({ name: new_supplier_form.name })
         @delivery_partner_form = DeliveryPartnerForm.new(session[:delivery_partner_form])
       end
 
@@ -20,7 +39,7 @@ module Admin
         @delivery_partner_form = DeliveryPartnerForm.new(session[:delivery_partner_form])
         @delivery_partner_form.populate_provider_relationships(params)
 
-        render :choose_lead_providers and return unless @delivery_partner_form.valid?
+        render :choose_lead_providers and return unless @delivery_partner_form.valid?(:lead_providers)
 
         session[:delivery_partner_form].merge!(
           {
@@ -40,18 +59,11 @@ module Admin
         authorize DeliveryPartner, :create?
 
         delivery_partner_form = DeliveryPartnerForm.new(session[:delivery_partner_form])
-        delivery_partner = delivery_partner_form.save!
-
-        redirect_to success_admin_delivery_partners_path(delivery_partner: delivery_partner)
-      end
-
-      def delivery_partner_success
-        authorize DeliveryPartner, :create?
-        session.delete(:new_supplier_form)
-        session.delete(:lead_provider_form)
+        delivery_partner_form.save!
         session.delete(:delivery_partner_form)
 
-        @delivery_partner = DeliveryPartner.find(params[:delivery_partner])
+        set_success_message(heading: "Delivery partner created")
+        redirect_to admin_suppliers_path
       end
 
       def show

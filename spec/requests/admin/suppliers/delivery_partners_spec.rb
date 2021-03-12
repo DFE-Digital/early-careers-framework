@@ -14,6 +14,39 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
     sign_in admin_user
   end
 
+  describe "GET /admin/suppliers/new/delivery-partner/choose-name" do
+    it "renders the new template" do
+      get "/admin/suppliers/new/delivery-partner/choose-name"
+
+      expect(response).to render_template("admin/suppliers/delivery_partners/choose_name")
+    end
+  end
+
+  describe "POST /admin/suppliers/new/delivery-partner/choose-name" do
+    it "redirects to the choose lps page" do
+      when_I_choose_a_delivery_partner_name(delivery_partner_name)
+
+      expect(response).to redirect_to("/admin/suppliers/new/delivery-partner/choose-lps")
+    end
+
+    it "Sets the correct name" do
+      when_I_choose_a_delivery_partner_name(delivery_partner_name)
+
+      # Then
+      given_I_have_chosen_lps_and_cohorts([lead_provider], { lead_provider => [cohort] })
+      given_I_have_confirmed_my_choices
+      expect(DeliveryPartner.find_by_name(delivery_partner_name)).not_to be_nil
+    end
+
+    it "Shows an error if the name is blank" do
+      when_I_choose_a_delivery_partner_name("")
+
+      # Then
+      expect(response).to render_template("admin/suppliers/delivery_partners/choose_name")
+      expect(response.body).to include("Enter a name")
+    end
+  end
+
   describe "GET /admin/suppliers/new/delivery-partner/choose-lps" do
     it "renders the choose_lead_providers template" do
       # When
@@ -26,8 +59,7 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
 
   describe "POST /admin/suppliers/new/delivery-partner/choose-lps" do
     before do
-      given_I_have_chosen_supplier_name(delivery_partner_name)
-      given_I_have_chosen_delivery_partner_type
+      given_I_have_chosen_delivery_partner_name(delivery_partner_name)
     end
 
     it "redirects to the review page" do
@@ -85,31 +117,21 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
 
   describe "POST /admin/suppliers/new/delivery-partner" do
     before do
-      given_I_have_chosen_supplier_name(delivery_partner_name)
-      given_I_have_chosen_delivery_partner_type
+      given_I_have_chosen_delivery_partner_name(delivery_partner_name)
       given_I_have_chosen_lps_and_cohorts([lead_provider], { lead_provider => [cohort] })
     end
 
     it "redirects to the list of providers on success" do
       when_I_confirm_my_choices
 
-      # Then
-      new_delivery_partner = DeliveryPartner.order(:created_at).last
-      expect(response).to redirect_to("/admin/suppliers/new/delivery-partner/success?delivery_partner=#{new_delivery_partner.id}")
+      expect(response).to redirect_to("/admin/suppliers")
+      expect(flash[:success]).to eql({ title: "Success", heading: "Delivery partner created", content: "" })
     end
 
     it "creates a new delivery partner" do
       expect {
         when_I_confirm_my_choices
       }.to change { DeliveryPartner.count }.by(1)
-    end
-
-    it "creates a delivery partner with the correct name" do
-      # When
-      post "/admin/suppliers/new/delivery-partner", params: {}
-
-      # Then
-      expect(DeliveryPartner.find_by_name(delivery_partner_name)).not_to be_nil
     end
   end
 

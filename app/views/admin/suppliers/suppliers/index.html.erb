@@ -1,6 +1,8 @@
 <%= render "layout", locals = { page: "suppliers" } %>
 
-<%= govuk_link_to "Add a new supplier", new_admin_supplier_path, button: true %>
+<p class="govuk-body-l">Manage your lead providers and delivery partners supplying training.</p>
+
+<%= govuk_link_to "Add a new delivery partner",  choose_name_admin_delivery_partners_path, button: true %>
 
 <table class="govuk-table">
   <thead>
