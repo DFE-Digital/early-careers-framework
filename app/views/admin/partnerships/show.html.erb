@@ -1,0 +1,95 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l govuk-!-margin-bottom-10">
+      Partnership information
+    </h1>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Status
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @partnership.status.upcase %>
+        </dd>
+      </div>
+      <% if @partnership.rejected? %>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Rejected at
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @partnership.rejected_at %>
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Reason
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @partnership.reason_for_rejection_for_database %>
+        </dd>
+      </div>
+      <% end %>
+      <% if @partnership.accepted? %>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Accepted at
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @partnership.accepted_at %>
+        </dd>
+      </div>
+      <% end %>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          School name
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @partnership.school.name %>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          School URN
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @partnership.school.urn %>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Lead provider
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @partnership.lead_provider.name %>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Cohort
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @partnership.cohort.start_year %>
+        </dd>
+      </div>
+    </dl>
+  </div>
+  <% unless @partnership.rejected? %>
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l govuk-!-margin-bottom-10">
+      Reject partnership
+    </h1>
+    <%= form_for @partnership, url: reject_admin_partnership_path, method: :patch do |f| %>
+      <%= f.govuk_collection_radio_buttons(
+            :reason_for_rejection, @reasons_for_rejection, :id, :name,
+            legend: -> { tag.h1("Tell us why" , class: "govuk-heading-m") }
+          ) %>
+      <%= f.govuk_submit "Submit" %>
+    <% end %>
+  </div>
+  <% end %>
+</div>

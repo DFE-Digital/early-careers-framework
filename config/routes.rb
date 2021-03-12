@@ -97,6 +97,11 @@ Rails.application.routes.draw do
     end
 
     resources :induction_coordinators, only: %i[index edit update], path: "induction-coordinators"
+    resources :partnerships, only: %i[show] do
+      member do
+        patch :reject
+      end
+    end
   end
 
   get "/403", to: "errors#forbidden", via: :all
