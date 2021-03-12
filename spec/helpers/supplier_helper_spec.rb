@@ -14,9 +14,9 @@ RSpec.describe SupplierHelper, type: :helper do
     end
 
     context "when the supplier is an delivery partner" do
-      let(:result) { "/admin/suppliers/delivery-partners/#{delivery_partner.id}" }
+      let(:result) { "/admin/suppliers/delivery-partners/#{delivery_partner.id}/edit" }
 
-      it "returns the admin url for the delivery partner" do
+      it "returns the admin edit url for the delivery partner" do
         expect(helper.supplier_link(delivery_partner)).to eq(result)
       end
     end
