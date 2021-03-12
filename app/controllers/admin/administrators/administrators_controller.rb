@@ -61,10 +61,6 @@ module Admin
         end
       end
 
-      def delete
-        authorize @administrator, :destroy?
-      end
-
       def destroy
         authorize @administrator
         @administrator.discard!
