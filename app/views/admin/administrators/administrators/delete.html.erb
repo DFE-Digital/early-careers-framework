@@ -1,6 +1,5 @@
 <h1>Confirm deletion of <%= @administrator.full_name %></h1>
 <%= form_for :confirmation, url: admin_administrator_path(@administrator), method: :delete do |f| %>
-  <%= f.hidden_field :answers_checked, value: true %>
   <%= f.govuk_submit "Delete Administrator", classes: "govuk-button--warning" %>
 <% end %>
 <%= govuk_link_to "Back", edit_admin_administrator_path(@administrator), button: true, class: "govuk-button--secondary" %>

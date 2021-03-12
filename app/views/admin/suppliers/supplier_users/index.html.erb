@@ -1,3 +1,7 @@
+<% if @user_deleted %>
+  <%= govuk_panel title: "User Deleted", body: nil %>
+<% end %>
+
 <%= render "admin/suppliers/suppliers/layout", locals = { page: "users" } %>
 <%= govuk_link_to "Add a new user", new_admin_supplier_user_path, button: true %>
 <table class="govuk-table">
