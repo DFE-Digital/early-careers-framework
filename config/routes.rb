@@ -94,12 +94,6 @@ Rails.application.routes.draw do
         end
       end
     end
-    scope :profiles, module: "profiles" do
-      root to: redirect("/admin/profiles/admin-profiles")
-      resources :admin_profiles, only: %i[index show destroy], path: "/admin-profiles"
-      resources :induction_coordinator_profiles, only: %i[index show destroy], path: "/induction-coordinator-profiles"
-      resources :lead_provider_profiles, only: %i[index show destroy], path: "/lead-provider-profiles"
-    end
 
     scope :administrators, module: "administrators" do
       resources :administrators, only: %i[index new create edit update destroy delete], path: "/" do
