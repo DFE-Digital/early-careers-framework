@@ -45,16 +45,19 @@ if Rails.env.development? || Rails.env.deployed_development?
     user = User.with_discarded.find_or_create_by!(email: "second-admin-#{number}@example.com") do |u|
       u.full_name = "Second Admin User #{number}"
       u.confirmed_at = Time.zone.now.utc
-      u.undiscard
     end
+
+    user.undiscard
 
     AdminProfile.with_discarded.find_or_create_by!(user: user).undiscard
 
     user = User.with_discarded.find_or_create_by!(email: "second-lead-provider-#{number}@example.com") do |u|
       u.full_name = "Second Lp User #{number}"
       u.confirmed_at = Time.zone.now.utc
-      u.undiscard
     end
+
+    user.undiscard
+
     LeadProviderProfile.with_discarded.find_or_create_by!(user: user, lead_provider: LeadProvider.first).undiscard
   end
 
@@ -62,6 +65,7 @@ if Rails.env.development? || Rails.env.deployed_development?
     u.full_name = "Admin User"
     u.confirmed_at = Time.zone.now.utc
   end
+
   user.undiscard
 
   AdminProfile.with_discarded.find_or_create_by!(user: user).undiscard
@@ -70,6 +74,7 @@ if Rails.env.development? || Rails.env.deployed_development?
     u.full_name = "Lp User"
     u.confirmed_at = Time.zone.now.utc
   end
+
   user.undiscard
 
   LeadProviderProfile.find_or_create_by!(user: user, lead_provider: LeadProvider.first).undiscard
@@ -90,6 +95,7 @@ if Rails.env.development? || Rails.env.deployed_development?
     u.full_name = "School Leader User - Induction Coordinator"
     u.confirmed_at = Time.zone.now.utc
   end
+
   user.undiscard
 
   if School.any?
@@ -102,6 +108,7 @@ if Rails.env.development? || Rails.env.deployed_development?
   end
 
   user.undiscard
+
   if School.any?
     InductionCoordinatorProfile.joins(:schools).find_or_create_by!(user: user, schools: [School.first]).undiscard
   end
