@@ -13,6 +13,12 @@ class User < ApplicationRecord
   include Discard::Model
   default_scope -> { kept }
 
+  after_discard do
+    induction_coordinator_profile&.discard! unless induction_coordinator_profile&.discarded?
+    lead_provider_profile&.discard! unless lead_provider_profile&.discarded?
+    admin_profile&.discard! unless admin_profile&.discarded?
+  end
+
   validates :full_name, presence: { message: "Enter a full name" }
   validates :email, presence: true, uniqueness: true, format: { with: Devise.email_regexp }
 
