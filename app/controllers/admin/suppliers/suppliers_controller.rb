@@ -4,7 +4,6 @@ module Admin
   module Suppliers
     class SuppliersController < Admin::BaseController
       skip_after_action :verify_authorized, only: :index
-      skip_after_action :verify_policy_scoped, except: :index
 
       def index
         lead_providers = policy_scope(LeadProvider)
