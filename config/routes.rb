@@ -55,34 +55,16 @@ Rails.application.routes.draw do
 
   namespace :admin do
     scope :suppliers, module: "suppliers" do
-      resources :suppliers, only: %i[index new], path: "/"
+      resources :suppliers, only: :index, path: "/"
       scope "new" do
-        resources :suppliers, only: :create, path: "/", as: "new_supplier" do
-          collection do
-            get "supplier-type", action: :new_supplier_type
-            post "supplier-type", action: :receive_new_supplier_type
-          end
-        end
-
-        resources :lead_providers, only: [], path: "lead-provider" do
-          collection do
-            get "choose-cip", action: :choose_cip
-            post "choose-cip", action: :receive_cip
-            get "choose-cohorts", action: :choose_cohorts
-            post "choose-cohorts", action: :receive_cohorts
-            get "review", action: :review
-            post "/", action: :create
-            get "success", action: :success
-          end
-        end
-
         resources :delivery_partners, only: [], path: "delivery-partner" do
           collection do
+            get "choose-name", action: :choose_name
+            post "choose-name", action: :receive_name
             get "choose-lps", action: :choose_lead_providers
             post "choose-lps", action: :receive_lead_providers
             get "review", action: :review_delivery_partner
             post "/", action: :create_delivery_partner
-            get "success", action: :delivery_partner_success
           end
         end
       end

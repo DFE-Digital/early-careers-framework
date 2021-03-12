@@ -1,19 +1,9 @@
-Cypress.Commands.add("clickCreateSupplierButton", () => {
-  cy.get(".govuk-button").contains("Add a new supplier").click();
+Cypress.Commands.add("clickCreateDeliveryPartnerButton", () => {
+  cy.get(".govuk-button").contains("Add a new delivery partner").click();
 });
 
 Cypress.Commands.add("chooseSupplierName", (deliveryPartnerName) => {
   cy.get("input[type=text]").type(deliveryPartnerName);
-  cy.clickCommitButton();
-});
-
-Cypress.Commands.add("chooseDeliveryPartnerType", () => {
-  cy.get("[type=radio]").check("delivery_partner");
-  cy.clickCommitButton();
-});
-
-Cypress.Commands.add("chooseLeadProviderType", () => {
-  cy.get("[type=radio]").check("lead_provider");
   cy.clickCommitButton();
 });
 
@@ -24,16 +14,6 @@ Cypress.Commands.add("chooseFirstLeadProviderAndCohort", () => {
   cy.get(
     "[name='delivery_partner_form[provider_relationship_hashes][]'][type=checkbox]"
   ).check();
-  cy.clickCommitButton();
-});
-
-Cypress.Commands.add("chooseFirstCIPForLeadProvider", () => {
-  cy.get("input[name='lead_provider_form[cip]'][type=radio]").check();
-  cy.clickCommitButton();
-});
-
-Cypress.Commands.add("chooseFirstCohortForLeadProvider", () => {
-  cy.get("input[name='lead_provider_form[cohorts][]'][type=checkbox]").check();
   cy.clickCommitButton();
 });
 
