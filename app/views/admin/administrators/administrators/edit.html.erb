@@ -14,7 +14,9 @@
             label: { text: "Email" })
       %>
       <%= f.govuk_submit "Save" %>
-      <%= govuk_link_to "Delete User", delete_admin_administrator_path(@administrator), button: true, class: "govuk-button--warning" %>
+      <% if current_user.id != @administrator.id %>
+        <%= govuk_link_to "Delete User", delete_admin_administrator_path(@administrator), button: true, class: "govuk-button--warning" %>
+      <% end %>
     <% end %>
   </div>
 </div>

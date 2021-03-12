@@ -8,7 +8,6 @@ module Admin
       before_action :load_admin, only: %i[edit update delete destroy]
 
       def index
-        @user_deleted = params[:user_deleted]
         @administrators = policy_scope(User).admins
       end
 
@@ -69,7 +68,8 @@ module Admin
       def destroy
         authorize @administrator
         @administrator.admin_profile.discard!
-        redirect_to admin_administrators_path(user_deleted: true)
+        set_success_message(content: "Admin User was Deleted")
+        redirect_to admin_administrators_path
       end
 
     private

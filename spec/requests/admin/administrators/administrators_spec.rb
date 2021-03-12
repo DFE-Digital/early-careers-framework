@@ -139,7 +139,7 @@ RSpec.describe "Admin::Administrators::Administrators", type: :request do
     it "redirects to the lead_provider users index page" do
       delete "/admin/administrators/#{admin_user_two.id}"
 
-      expect(response).to redirect_to("/admin/administrators?user_deleted=true")
+      expect(response).to redirect_to("/admin/administrators")
       expect(response.body).not_to include(CGI.escapeHTML(admin_user_two.full_name))
     end
 
