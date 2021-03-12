@@ -14,10 +14,10 @@ RSpec.describe UserPolicy, type: :policy do
     it { is_expected.to permit_edit_and_update_actions }
     it { is_expected.to permit_action(:destroy) }
 
-    context 'and attempting to delete its own record' do
+    context "and attempting to delete its own record" do
       subject { described_class.new(acting_user, acting_user) }
 
-      it 'does not allow deletion' do
+      it "does not allow deletion" do
         expect(subject.destroy?).to eq false
       end
     end

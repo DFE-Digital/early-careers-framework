@@ -146,7 +146,6 @@ RSpec.describe "Admin::Administrators::Administrators", type: :request do
     it "does not allow deleting the current logged in admin" do
       expect { delete "/admin/administrators/#{admin_user.id}" }.to raise_error Pundit::NotAuthorizedError
 
-
       admin_profile.reload
       admin_user.reload
       expect(admin_profile.discarded?).to be false

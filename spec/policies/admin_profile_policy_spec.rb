@@ -14,10 +14,10 @@ RSpec.describe AdminProfilePolicy, type: :policy do
     it { is_expected.to permit_action(:destroy) }
     it { is_expected.to permit_action(:index) }
 
-    context 'and attempting to delete its own record' do
+    context "and attempting to delete its own record" do
       subject { described_class.new(user, user) }
 
-      it 'does not allow deletion' do
+      it "does not allow deletion" do
         expect(subject.destroy?).to eq false
       end
     end
