@@ -20,7 +20,7 @@ RSpec.describe "Admin::Suppliers", type: :request do
 
     it "lists delivery partners and lead providers" do
       get "/admin/suppliers"
-      expect(response.body).to include(lead_provider.name, delivery_partner.name)
+      expect(response.body).to include(CGI.escapeHTML(lead_provider.name), CGI.escapeHTML(delivery_partner.name))
     end
   end
 end
