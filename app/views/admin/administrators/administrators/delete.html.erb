@@ -1,5 +1,5 @@
 <h1>Do you want to delete this user?</h1>
-<p>User: <%= @administrator.full_name %></p>
+<h3>User: <%= @administrator.full_name %></h3>
 <%= form_for :confirmation, url: admin_administrator_path(@administrator), method: :delete do |f| %>
   <%= f.govuk_submit "Delete", classes: "govuk-button--warning" %>
 <% end %>
