@@ -1,11 +1,10 @@
 <% content_for :before_content, govuk_back_link(text: "Back", href: admin_suppliers_path) %>
 
-<%= @value %>
-<%= form_with model: @new_supplier_form, url: admin_new_supplier_index_path, method: :post do |f| %>
+<%= form_with model: @delivery_partner_form, url: choose_name_admin_delivery_partners_path, method: :post do |f| %>
   <%= f.govuk_text_field(
         :name,
         width: "three-quarters",
-        label: -> { tag.h1("Supplier name", class: "govuk-heading-l") })
+        label: -> { tag.h1("Delivery partner name", class: "govuk-heading-l") })
   %>
   <%= f.govuk_submit "Continue" %>
 <% end %>
