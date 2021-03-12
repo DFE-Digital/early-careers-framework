@@ -7,7 +7,7 @@ module Admin
       skip_after_action :verify_policy_scoped
 
       before_action :set_suppliers, only: %i[new receive_supplier]
-      before_action :form_from_session, only: %i[user_details review create success]
+      before_action :form_from_session, only: %i[user_details review create]
 
       def index
         sorted_users = User.for_lead_provider.sort_by(&:full_name)
@@ -64,16 +64,11 @@ module Admin
         authorize User
         authorize LeadProviderProfile
 
-        user = @supplier_user_form.save!
-        redirect_to admin_new_supplier_user_success_path(user_id: user.id)
-      end
-
-      def success
-        @user = User.find(params[:user_id])
-        authorize @user, :show?
-        @supplier_name = @supplier_user_form.chosen_supplier.name
-
+        @supplier_user_form.save!
         session.delete(:supplier_user_form)
+
+        set_success_message(heading: "User added", content: "They have been sent an email to sign in")
+        redirect_to admin_supplier_users_path
       end
 
     private
