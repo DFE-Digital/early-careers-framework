@@ -43,7 +43,7 @@ if Rails.env.development? || Rails.env.deployed_development?
 
   (1..5).each do |number|
     user = User.with_discarded.find_or_create_by!(email: "second-admin-#{number}@example.com") do |u|
-      u.full_name = "Second Admin User #{number}"
+      u.full_name = "John Doe - #{number}"
       u.confirmed_at = Time.zone.now.utc
     end
 
@@ -52,7 +52,7 @@ if Rails.env.development? || Rails.env.deployed_development?
     AdminProfile.with_discarded.find_or_create_by!(user: user).undiscard
 
     user = User.with_discarded.find_or_create_by!(email: "second-lead-provider-#{number}@example.com") do |u|
-      u.full_name = "Second Lp User #{number}"
+      u.full_name = "Merry Doe - #{number}"
       u.confirmed_at = Time.zone.now.utc
     end
 
