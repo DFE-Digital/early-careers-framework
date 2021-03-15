@@ -16,7 +16,7 @@ describe("Admin user deleting delivery partner user", () => {
     cy.get("[data-test=delete-button]").click();
     cy.get("main").should("contain", "Do you want to delete this user?");
     cy.get("main").should("contain", "Supplier user: John Wick");
-    cy.get(".govuk-button--warning").click();
+    cy.get(".data-test-delete-submit-button").click();
     cy.get("main").should("not.contain", deliveryPartnerName);
     cy.get("main").should("contain", "User deleted");
   });

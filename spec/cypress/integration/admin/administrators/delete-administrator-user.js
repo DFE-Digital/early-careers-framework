@@ -13,7 +13,7 @@ describe("Admin user deleting another admin user", () => {
     cy.get("[data-test=delete-button]").click();
     cy.get("main").should("contain", "Do you want to delete this user?");
     cy.get("main").should("contain", "Admin user: Emma Dow");
-    cy.get(".govuk-button--warning").click();
+    cy.get(".data-test-delete-submit-button").click();
     cy.get("main").should("not.contain", adminUserName);
     cy.get("main").should("contain", "User deleted");
   });

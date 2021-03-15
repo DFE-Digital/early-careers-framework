@@ -3,4 +3,4 @@
 <%= form_for :confirmation, url: admin_administrator_path(@administrator), method: :delete do |f| %>
   <%= f.govuk_submit "Delete", classes: "govuk-button--warning" %>
 <% end %>
-<%= govuk_link_to "Back", edit_admin_administrator_path(@administrator), button: true, class: "govuk-button--secondary" %>
+<%= govuk_link_to "Back", edit_admin_administrator_path(@administrator), button: true, class: "govuk-button--secondary data-test-delete-submit-button" %>
