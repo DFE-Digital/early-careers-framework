@@ -1,22 +1,18 @@
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">Administrators</h1>
-    <%= govuk_link_to "Create a new administrator", new_admin_administrator_path, button: true %>
-    <table class="govuk-table">
-      <thead>
-        <tr class="govuk-table__row">
-          <th scope="col" class="govuk-table__header">Name</th>
-          <th scope="col" class="govuk-table__header">Email</th>
-        </tr>
-      </thead>
-      <tbody class="govuk-table__body">
-        <% @administrators.each do |administrator| %>
-          <tr class="govuk-table__row">
-            <td class="govuk-table__cell"><%= govuk_link_to administrator.full_name, edit_admin_administrator_path(administrator) %></td>
-            <td class="govuk-table__cell"><%= administrator.email %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
-</div>
+<h1 class="govuk-heading-l">Administrators</h1>
+<%= govuk_link_to "Create a new administrator", new_admin_administrator_path, button: true %>
+<table class="govuk-table">
+  <thead>
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Name</th>
+      <th scope="col" class="govuk-table__header">Email</th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    <% @administrators.each do |administrator| %>
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell"><%= govuk_link_to administrator.full_name, edit_admin_administrator_path(administrator) %></td>
+        <td class="govuk-table__cell"><%= administrator.email %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

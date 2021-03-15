@@ -28,7 +28,7 @@ describe("Meta test helper tests", () => {
     });
 
     // @todo this test needs fleshing out when there's more functionality
-    cy.get(".govuk-link").contains("Lead Provider");
+    cy.get("[data-test=supplier-name]").contains("Lead Provider");
   });
 
   it("should have a cleanable database", () => {
@@ -40,7 +40,10 @@ describe("Meta test helper tests", () => {
 
     cy.login("admin");
 
-    cy.get('.govuk-link:contains("Lead Provider")').should("have.length", 3);
+    cy.get('[data-test=supplier-name]:contains("Lead Provider")').should(
+      "have.length",
+      3
+    );
 
     cy.app("clean");
 
