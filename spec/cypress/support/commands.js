@@ -14,11 +14,6 @@ Cypress.Commands.add("logout", () => {
   cy.location("pathname").should("eq", "/");
 });
 
-Cypress.Commands.add("visitYear", (courseYear) => {
-  cy.visit(`/years/${courseYear.id}`);
-  cy.get("h1").should("contain", courseYear.title);
-});
-
 Cypress.Commands.add("visitModule", (courseModule) => {
   cy.visit(`/years/${courseModule.course_year_id}/modules/${courseModule.id}`);
   cy.get("h1").should("contain", courseModule.title);

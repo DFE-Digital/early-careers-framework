@@ -6,47 +6,48 @@ describe CipBreadcrumbHelper, type: :helper do
   before :each do
     @user = FactoryBot.create(:user, :admin)
     @course_year = FactoryBot.create(:course_year)
-    @course_year_crumb = [@course_year.title, "/years/#{@course_year.id}"]
+    @programme = @course_year.core_induction_programme
+    @programme_crumb = [@programme.name, "/core-induction-programmes/#{@programme.id}"]
   end
 
-  describe "#year_breadcrumb" do
-    let(:course_year_breadcrumb) { helper.course_year_breadcrumbs(@user, @course_year) }
+  describe "#programme_breadcrumbs" do
+    let(:programme_breadcrumbs) { helper.programme_breadcrumbs(@user, @programme) }
     it "returns an array for the course year breadcrumb" do
-      expect(course_year_breadcrumb).to eq([["Home", "/dashboard"], @course_year_crumb])
+      expect(programme_breadcrumbs).to eq([["Home", "/dashboard"], @programme_crumb])
     end
 
     it "returns a url for the end crumb when the action_name is edit" do
       allow(helper).to receive(:action_name) { "edit" }
-      expect(course_year_breadcrumb).to eql([["Home", "/dashboard"], @course_year_crumb])
+      expect(programme_breadcrumbs).to eql([["Home", "/dashboard"], @programme_crumb])
     end
 
     it "returns just the title for the end crumb when the action_name is show" do
       allow(helper).to receive(:action_name) { "show" }
-      expect(course_year_breadcrumb).to eql([["Home", "/dashboard"], @course_year.title])
+      expect(programme_breadcrumbs).to eql([["Home", "/dashboard"], @programme.name])
     end
   end
 
-  describe "#module_breadcrumb" do
+  describe "#module_breadcrumbs" do
     let(:course_module) { create(:course_module, course_year: @course_year) }
     let(:course_module_crumb) { [course_module.title, "/years/#{@course_year.id}/modules/#{course_module.id}"] }
     let(:course_module_breadcrumb) { helper.course_module_breadcrumbs(@user, course_module) }
 
     it "returns an array for the course module breadcrumb" do
-      expect(course_module_breadcrumb).to eq([["Home", "/dashboard"], @course_year_crumb, course_module_crumb])
+      expect(course_module_breadcrumb).to eq([["Home", "/dashboard"], @programme_crumb, course_module_crumb])
     end
 
     it "returns a url for the end crumb when the action_name is edit" do
       allow(helper).to receive(:action_name) { "edit" }
-      expect(course_module_breadcrumb).to eq([["Home", "/dashboard"], @course_year_crumb, course_module_crumb])
+      expect(course_module_breadcrumb).to eq([["Home", "/dashboard"], @programme_crumb, course_module_crumb])
     end
 
     it "returns just the title for the end crumb when the action_name is show" do
       allow(helper).to receive(:action_name) { "show" }
-      expect(course_module_breadcrumb).to eql([["Home", "/dashboard"], @course_year_crumb, course_module.title])
+      expect(course_module_breadcrumb).to eql([["Home", "/dashboard"], @programme_crumb, course_module.title])
     end
   end
 
-  describe "#lesson_breadcrumb" do
+  describe "#lesson_breadcrumbs" do
     let(:course_module) { create(:course_module, course_year: @course_year) }
     let(:course_lesson) { create(:course_lesson, course_module: course_module) }
     let(:course_module_crumb) { [course_module.title, "/years/#{@course_year.id}/modules/#{course_module.id}"] }
@@ -54,17 +55,17 @@ describe CipBreadcrumbHelper, type: :helper do
     let(:course_lesson_breadcrumb) { helper.course_lesson_breadcrumbs(@user, course_lesson) }
 
     it "returns an array for the course lesson breadcrumb" do
-      expect(course_lesson_breadcrumb).to eq([["Home", "/dashboard"], @course_year_crumb, course_module_crumb, course_lesson_crumb])
+      expect(course_lesson_breadcrumb).to eq([["Home", "/dashboard"], @programme_crumb, course_module_crumb, course_lesson_crumb])
     end
 
     it "returns the url for the end crumb when the action_name is edit" do
       allow(helper).to receive(:action_name) { "edit" }
-      expect(course_lesson_breadcrumb).to eq([["Home", "/dashboard"], @course_year_crumb, course_module_crumb, course_lesson_crumb])
+      expect(course_lesson_breadcrumb).to eq([["Home", "/dashboard"], @programme_crumb, course_module_crumb, course_lesson_crumb])
     end
 
     it "returns just the title for the end crumb when the action_name is show" do
       allow(helper).to receive(:action_name) { "show" }
-      expect(course_lesson_breadcrumb).to eq([["Home", "/dashboard"], @course_year_crumb, course_module_crumb, course_lesson.title])
+      expect(course_lesson_breadcrumb).to eq([["Home", "/dashboard"], @programme_crumb, course_module_crumb, course_lesson.title])
     end
   end
 end

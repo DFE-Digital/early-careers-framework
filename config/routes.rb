@@ -33,7 +33,7 @@ Rails.application.routes.draw do
   resources :core_induction_programmes, path: "core-induction-programmes", only: %i[show index], as: "cip"
   get "download-export", to: "core_induction_programmes#download_export", as: :download_export
 
-  resources :years, controller: "core_induction_programmes/years", only: %i[show edit update] do
+  resources :years, controller: "core_induction_programmes/years", only: %i[edit update] do
     resources :modules, controller: "core_induction_programmes/modules", only: %i[show edit update] do
       resources :lessons, controller: "core_induction_programmes/lessons", only: %i[show edit update] do
         resources :parts, controller: "core_induction_programmes/lesson_parts", only: %i[show edit update destroy] do

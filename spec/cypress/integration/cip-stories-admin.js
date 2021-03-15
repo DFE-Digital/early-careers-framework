@@ -12,7 +12,9 @@ describe("Admin user interaction with Core Induction Programme", () => {
     cy.appFactories([["create", "course_year"]]).as("courseYear");
 
     cy.get("@courseYear").then(([year]) => {
-      cy.visitYear(year);
+      cy.visit(
+        `/core-induction-programmes/${year.core_induction_programme_id}`
+      );
       cy.get("a.govuk-button").contains("Edit year content").click();
 
       cy.get("h1").should("contain", "Content change preview");
@@ -20,13 +22,15 @@ describe("Admin user interaction with Core Induction Programme", () => {
       cy.contains("See preview").click();
 
       cy.get("h1").should("contain", "Content change preview");
-      cy.visitYear(year);
+      cy.visit(
+        `/core-induction-programmes/${year.core_induction_programme_id}`
+      );
 
       cy.get("a.govuk-button").contains("Edit year content").click();
       cy.get("input[name='title']").type("New title");
       cy.contains("Save changes").click();
 
-      cy.get("h1").should("contain", "New title");
+      cy.get("h2").should("contain", "New title");
     });
   });
 

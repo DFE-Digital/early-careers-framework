@@ -6,10 +6,8 @@ class CoreInductionProgrammes::YearsController < ApplicationController
   include CipBreadcrumbHelper
 
   after_action :verify_authorized
-  before_action :authenticate_user!, except: :show
+  before_action :authenticate_user!
   before_action :load_course_year
-
-  def show; end
 
   def edit; end
 
@@ -17,7 +15,7 @@ class CoreInductionProgrammes::YearsController < ApplicationController
     if params[:commit] == "Save changes"
       @course_year.save!
       flash[:success] = "Your changes have been saved"
-      redirect_to year_url
+      redirect_to cip_url(@course_year.core_induction_programme)
     else
       render action: "edit"
     end

@@ -5,11 +5,11 @@ module CipBreadcrumbHelper
     [home_crumb(user)]
   end
 
-  def course_year_breadcrumbs(user, course_year)
-    year_crumb = course_year_crumb(course_year)
+  def programme_breadcrumbs(user, programme)
+    programme_crumb = programme_crumb(programme)
     [
       home_crumb(user),
-      end_crumb(year_crumb),
+      end_crumb(programme_crumb),
     ]
   end
 
@@ -17,7 +17,7 @@ module CipBreadcrumbHelper
     module_crumb = course_module_crumb(course_module)
     [
       home_crumb(user),
-      course_year_crumb(course_module.course_year),
+      programme_crumb(course_module.course_year.core_induction_programme),
       end_crumb(module_crumb),
     ]
   end
@@ -26,7 +26,7 @@ module CipBreadcrumbHelper
     lesson_crumb = course_lesson_crumb(course_lesson)
     [
       home_crumb(user),
-      course_year_crumb(course_lesson.course_module.course_year),
+      programme_crumb(course_lesson.course_module.course_year.core_induction_programme),
       course_module_crumb(course_lesson.course_module),
       end_crumb(lesson_crumb),
     ]
@@ -38,8 +38,8 @@ private
     ["Home", user ? dashboard_path : cip_path]
   end
 
-  def course_year_crumb(course_year)
-    [course_year.title, year_path(course_year)]
+  def programme_crumb(programme)
+    [programme.name, cip_path(programme)]
   end
 
   def course_module_crumb(course_module)

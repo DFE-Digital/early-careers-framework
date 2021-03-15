@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class CoreInductionProgrammesController < ApplicationController
+  include Pundit
   include CipBreadcrumbHelper
 
   def index
