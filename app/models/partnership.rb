@@ -16,6 +16,8 @@ class Partnership < ApplicationRecord
     other: "Other",
   }, _prefix: :rejected_with
 
+  validates :reason_for_rejection, presence: { message: "Select a reason" }, if: proc { |partnership| partnership.rejected? }
+
   belongs_to :school
   belongs_to :lead_provider
   belongs_to :cohort

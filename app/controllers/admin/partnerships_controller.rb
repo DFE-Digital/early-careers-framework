@@ -19,8 +19,11 @@ module Admin
 
     def reject
       authorize @partnership, :update?
-      @partnership.update!(reject_params)
-      redirect_to admin_partnership_path(@partnership), notice: "Partnership successfully rejected"
+      if @partnership.update(reject_params)
+        redirect_to admin_partnership_path(@partnership), notice: "Partnership successfully rejected"
+      else
+        render :show
+      end
     end
 
   private
