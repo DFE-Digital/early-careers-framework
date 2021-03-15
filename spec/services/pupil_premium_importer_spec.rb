@@ -62,5 +62,15 @@ RSpec.describe PupilPremiumImporter do
 
       expect(School.first.pupil_premiums.count).to be 2
     end
+
+    context "when the school is not eligible" do
+      before do
+        School.find_by(urn: 100_000).update(school_status_code: 2)
+      end
+
+      it "updates the school" do
+        expect(School.unscoped.find_by(urn: 100_000).pupil_premiums.first).to be_present
+      end
+    end
   end
 end
