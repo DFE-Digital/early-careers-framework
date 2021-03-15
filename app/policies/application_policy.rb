@@ -22,6 +22,10 @@ class ApplicationPolicy
     false
   end
 
+  def delete?
+    destroy?
+  end
+
   def new?
     create?
   end

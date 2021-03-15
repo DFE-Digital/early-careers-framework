@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_09_192722) do
+ActiveRecord::Schema.define(version: 2021_03_11_121031) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(version: 2021_03_09_192722) do
     t.uuid "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_admin_profiles_on_discarded_at"
     t.index ["user_id"], name: "index_admin_profiles_on_user_id"
   end
 
@@ -94,6 +96,8 @@ ActiveRecord::Schema.define(version: 2021_03_09_192722) do
     t.uuid "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_induction_coordinator_profiles_on_discarded_at"
     t.index ["user_id"], name: "index_induction_coordinator_profiles_on_user_id"
   end
 
@@ -122,6 +126,8 @@ ActiveRecord::Schema.define(version: 2021_03_09_192722) do
     t.uuid "lead_provider_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_lead_provider_profiles_on_discarded_at"
     t.index ["lead_provider_id"], name: "index_lead_provider_profiles_on_lead_provider_id"
     t.index ["user_id"], name: "index_lead_provider_profiles_on_user_id"
   end
@@ -271,7 +277,9 @@ ActiveRecord::Schema.define(version: 2021_03_09_192722) do
     t.datetime "confirmation_sent_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "discarded_at"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
+    t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 

@@ -68,7 +68,11 @@ Rails.application.routes.draw do
           end
         end
       end
-      resources :supplier_users, only: %i[index new create], path: "users"
+      resources :supplier_users, only: %i[index new create destroy], path: "users" do
+        member do
+          get "delete", action: :delete
+        end
+      end
       scope "users/new" do
         post "/", controller: :supplier_users, action: :receive_supplier
         get "user-details", controller: :supplier_users, action: :user_details, as: :new_supplier_user_details
@@ -83,14 +87,22 @@ Rails.application.routes.draw do
       end
 
       scope path: "lead-providers" do
-        resources :lead_provider_users, only: %i[edit update], path: "users"
+        resources :lead_provider_users, only: %i[edit update destroy], path: "users" do
+          member do
+            get "delete", action: :delete
+          end
+        end
       end
     end
 
     scope :administrators, module: "administrators" do
-      resources :administrators, only: %i[index new create edit update], path: "/" do
+      resources :administrators, only: %i[index new create edit update destroy], path: "/" do
         collection do
           post "new/confirm", action: :confirm, as: :confirm
+        end
+
+        member do
+          get "delete", action: :delete
         end
       end
     end

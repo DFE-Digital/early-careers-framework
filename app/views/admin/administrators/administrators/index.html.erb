@@ -10,7 +10,7 @@
   <tbody class="govuk-table__body">
     <% @administrators.each do |administrator| %>
       <tr class="govuk-table__row">
-        <td class="govuk-table__cell"><%= govuk_link_to administrator.full_name, edit_admin_administrator_path(administrator) %></td>
+        <td class="govuk-table__cell" data-test="edit-admin-link"><%= govuk_link_to administrator.full_name, edit_admin_administrator_path(administrator) %></td>
         <td class="govuk-table__cell"><%= administrator.email %></td>
       </tr>
     <% end %>

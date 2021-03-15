@@ -5,7 +5,7 @@ module Admin
     class AdministratorsController < Admin::BaseController
       skip_after_action :verify_authorized, only: :index
       skip_after_action :verify_policy_scoped, except: :index
-      before_action :load_admin, only: %i[edit update]
+      before_action :load_admin, only: %i[edit update delete destroy]
 
       def index
         @administrators = policy_scope(User).admins
@@ -53,12 +53,21 @@ module Admin
 
       def edit; end
 
+      def delete; end
+
       def update
         if @administrator.update(permitted_attributes(@administrator))
           redirect_to :admin_administrators, notice: "Changes saved successfully"
         else
           render :edit
         end
+      end
+
+      def destroy
+        authorize @administrator
+        @administrator.discard!
+        set_success_message(content: "User deleted", title: "Success")
+        redirect_to admin_administrators_path
       end
 
     private
