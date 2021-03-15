@@ -40,7 +40,7 @@ describe("Admin user deleting delivery partner", () => {
     cy.location("pathname").should("contain", "/delete");
 
     cy.get(".govuk-button").contains("Back").click();
-    cy.location("pathname").should("contain", "Edit");
+    cy.location("pathname").should("contain", "/edit");
     cy.get("main").should("contain", deliveryPartnerName);
   });
 });

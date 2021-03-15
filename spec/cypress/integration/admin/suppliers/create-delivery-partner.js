@@ -1,6 +1,6 @@
 describe("Admin user creating delivery partner", () => {
   const leadProviderName = "Lead Provider 1";
-  const cohortName = "2021 to 2023";
+  const cohortName = "2021";
 
   beforeEach(() => {
     cy.login("admin");

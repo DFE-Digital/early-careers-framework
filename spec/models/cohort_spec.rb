@@ -10,8 +10,8 @@ RSpec.describe Cohort, type: :model do
   end
 
   describe "display_name" do
-    it "displays the correct years" do
-      expect(Cohort.new(start_year: 2021).display_name).to eq "2021 to 2023"
+    it "displays the correct year" do
+      expect(Cohort.new(start_year: 2021).display_name).to eq "2021"
     end
   end
 
