@@ -25,7 +25,7 @@ describe("Admin user creating lead provider user", () => {
       "equal",
       "/admin/suppliers/users/new/user-details"
     );
-    cy.chooseNameAndEmailForLeadProviderUser(userName, userEmail);
+    cy.chooseNameAndEmailForUser(userName, userEmail);
 
     cy.location("pathname").should(
       "equal",
@@ -56,7 +56,7 @@ describe("Admin user creating lead provider user", () => {
     cy.get("input[type=text]").should("have.value", leadProviderName);
     cy.clickCommitButton();
 
-    cy.chooseNameAndEmailForLeadProviderUser(userName, userEmail);
+    cy.chooseNameAndEmailForUser(userName, userEmail);
     cy.clickBackLink();
     cy.get("input[name='supplier_user_form[full_name]'").should(
       "have.value",
@@ -87,10 +87,10 @@ describe("Admin user creating lead provider user", () => {
     cy.clickCreateSupplierUserButton();
 
     cy.chooseLeadProviderName(leadProviderName);
-    cy.chooseNameAndEmailForLeadProviderUser("wrongName", userEmail);
+    cy.chooseNameAndEmailForUser("wrongName", userEmail);
 
     cy.get("a").contains("Change name").click();
-    cy.chooseNameAndEmailForLeadProviderUser(
+    cy.chooseNameAndEmailForUser(
       `{selectall}${userName}`,
       `{selectall}${userEmail}`
     );

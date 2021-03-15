@@ -16,9 +16,7 @@ describe("Admin user creating another admin user", () => {
     cy.get(".govuk-button").contains("Create a new administrator").click();
 
     cy.location("pathname").should("equal", "/admin/administrators/new");
-    cy.get("input[name='user[full_name]']").type(fullName);
-    cy.get("input[name='user[email]']").type(email);
-    cy.get(".govuk-button").contains("Continue").click();
+    cy.chooseNameAndEmailForUser(fullName, email);
 
     cy.location("pathname").should(
       "equal",
@@ -38,5 +36,31 @@ describe("Admin user creating another admin user", () => {
     cy.appEval(`User.find_by(email: "${email}").admin?`).then((result) =>
       expect(result).to.equal(true)
     );
+  });
+
+  describe("Accessibility", () => {
+    it("/admin/administrators should be accessible", () => {
+      cy.visit("/admin/administrators");
+      cy.checkA11y();
+    });
+
+    it("/admin/administrators/new should be accessible", () => {
+      cy.visit("/admin/administrators/new");
+      cy.checkA11y();
+    });
+
+    it("/admin/administrators/new/confirm should be accessible", () => {
+      const fullName = "John Smith";
+      const email = "j.smith@example.com";
+
+      cy.visit("/admin/administrators/new");
+      cy.chooseNameAndEmailForUser(fullName, email);
+
+      cy.location("pathname").should(
+        "equal",
+        "/admin/administrators/new/confirm"
+      );
+      cy.checkA11y();
+    });
   });
 });
