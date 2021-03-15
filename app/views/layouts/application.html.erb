@@ -84,7 +84,11 @@
               </h2>
             </div>
           <% elsif type == "success" %>
-            <%= govuk_notification_banner title: msg["title"], success: true do |banner| %>
+            <%= govuk_notification_banner(
+                  title: msg["title"],
+                  success: true,
+                  html_attributes: { data: { test: "notification-banner" } }
+                ) do |banner| %>
               <% banner.add_heading(text: msg["heading"]) %>
               <% msg["content"] %>
             <% end %>

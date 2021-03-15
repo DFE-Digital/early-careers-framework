@@ -88,7 +88,14 @@ RSpec.describe "Admin::Administrators::Administrators", type: :request do
     it "renders a success message" do
       given_a_user_is_created
 
-      expect(response).to render_template("admin/administrators/administrators/create")
+      expect(response).to redirect_to("/admin/administrators")
+      expect(flash[:success]).to(
+        eql({
+          title: "Success",
+          heading: "User added",
+          content: "They have been sent an email to sign in",
+        }),
+      )
     end
   end
 
