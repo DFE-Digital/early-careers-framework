@@ -93,6 +93,17 @@ RSpec.describe SchoolDataImporter do
           expect(existing_school.school_local_authority_districts.where(end_year: 2021).count).to be 1
         end
       end
+
+      context "when the school exists and is not eligible" do
+        let!(:existing_school) { create(:school, urn: 20_001, name: "NOT The Starship Children's Centre", school_status_code: 2) }
+
+        it "updates the school" do
+          school_data_importer.run
+          existing_school.reload
+
+          expect(existing_school.name).to eql("The Starship Children's Centre")
+        end
+      end
     end
   end
 end

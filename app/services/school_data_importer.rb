@@ -34,7 +34,7 @@ private
   end
 
   def row_to_school(row)
-    school = School.find_or_initialize_by(urn: row.fetch("URN"))
+    school = School.unscoped.find_or_initialize_by(urn: row.fetch("URN"))
     school.name = row.fetch("EstablishmentName")
     school.school_type_code = row.fetch("TypeOfEstablishment (code)").to_i
     school.school_type_name = row.fetch("TypeOfEstablishment (name)")
