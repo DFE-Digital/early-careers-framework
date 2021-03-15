@@ -1,13 +1,19 @@
 <% content_for :before_content, govuk_back_link(text: "Back", href: registrations_question_two_path) %>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h2 class="govuk-heading-l">What is your school Unique Reference Number(URN)?</h2>
     <%= form_with(model: @school_profile_form, url: registrations_school_profile_path) do |f| %>
       <%= f.govuk_error_summary %>
-      <label class="govuk-hint">
-        This is a 6 digit number. Not sure? <a target='_blank' href='https://www.get-information-schools.service.gov.uk/'>Search for your school</a> on our register.
-        <%= f.govuk_text_field(:urn, width: 20, label:  nil, link_errors: true) %>
-      </label>
+      <%= f.govuk_text_field(
+            :urn,
+            width: 20,
+            label: { text: "What is your school Unique Reference Number (URN)?", tag: "h1", size: "l" },
+            hint: -> { tag.p do
+              concat("This is a 6 digit number. Not sure? ")
+              concat(govuk_link_to("Search for your school", "https://www.get-information-schools.service.gov.uk/", target: "_blank", rel: "noopener noreferrer"))
+              concat(" on our register.")
+            end
+            },
+            link_errors: true) %>
       <%= f.govuk_submit "Continue" %>
     <% end %>
   </div>

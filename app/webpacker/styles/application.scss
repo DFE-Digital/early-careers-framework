@@ -10,12 +10,14 @@ $govuk-font-url-function: frontend-font-url;
 $govuk-image-url-function: frontend-image-url;
 
 @import "~govuk-frontend/govuk/all";
-@import "school_search";
-@import "registration";
+@import "~accessible-autocomplete";
+
 @import "app_task_list";
-@import "pagination";
-@import "page-tabs";
+@import "header_overrides";
 @import "lead_providers/dashboard_numbers";
 @import "lead_providers/index_group";
+@import "pagination";
+@import "page-tabs";
 @import "primary-nav";
-@import "~accessible-autocomplete";
+@import "registration";
+@import "school_search";
