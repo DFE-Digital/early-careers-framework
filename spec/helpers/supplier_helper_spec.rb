@@ -9,7 +9,7 @@ RSpec.describe SupplierHelper, type: :helper do
   describe "#supplier_link" do
     context "when the supplier is a lead provider" do
       it "returns nil" do
-        expect(helper.supplier_link(lead_provider)).to be_nil
+        expect(helper.supplier_link(lead_provider)).to eq(lead_provider.name)
       end
     end
 
@@ -17,7 +17,7 @@ RSpec.describe SupplierHelper, type: :helper do
       let(:result) { "/admin/suppliers/delivery-partners/#{delivery_partner.id}/edit" }
 
       it "returns the admin edit url for the delivery partner" do
-        expect(helper.supplier_link(delivery_partner)).to eq(result)
+        expect(helper.supplier_link(delivery_partner)).to include(result, delivery_partner.name)
       end
     end
   end
