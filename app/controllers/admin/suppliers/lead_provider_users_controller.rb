@@ -16,6 +16,17 @@ module Admin
         end
       end
 
+      def delete
+        authorize @lead_provider_user
+      end
+
+      def destroy
+        authorize @lead_provider_user
+        @lead_provider_user.discard!
+        set_success_message(content: "User deleted", title: "Success")
+        redirect_to admin_supplier_users_path
+      end
+
     private
 
       def load_lead_provider_user

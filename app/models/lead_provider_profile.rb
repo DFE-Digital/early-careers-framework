@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class LeadProviderProfile < ApplicationRecord
+class LeadProviderProfile < BaseProfile
   belongs_to :user
   belongs_to :lead_provider
 end
