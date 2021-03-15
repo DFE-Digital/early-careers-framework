@@ -1,6 +1,6 @@
 <h1>Do you want to delete this user?</h1>
 <p class="govuk-!-font-weight-bold">Admin user: <span class="govuk-!-font-weight-regular"><%= @administrator.full_name %></span></p>
 <%= form_for :confirmation, url: admin_administrator_path(@administrator), method: :delete do |f| %>
-  <%= f.govuk_submit "Delete", classes: "govuk-button--warning" %>
+  <%= f.govuk_submit "Delete", classes: "govuk-button--warning data-test-delete-submit-button" %>
 <% end %>
-<%= govuk_link_to "Back", edit_admin_administrator_path(@administrator), button: true, class: "govuk-button--secondary data-test-delete-submit-button" %>
+<%= govuk_link_to "Back", edit_admin_administrator_path(@administrator), button: true, class: "govuk-button--secondary" %>
