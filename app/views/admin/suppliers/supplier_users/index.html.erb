@@ -11,7 +11,7 @@
   <tbody class="govuk-table__body">
     <% @users.each do |user| %>
       <tr class="govuk-table__row">
-        <td class="govuk-table__cell cypress-test-edit-supplier-user-link"><%= govuk_link_to user.full_name, admin_edit_user_path(user) %></td>
+        <td class="govuk-table__cell" data-cy="edit-supplier-user-link"><%= govuk_link_to user.full_name, admin_edit_user_path(user) %></td>
         <td class="govuk-table__cell"><%= user.email %></td>
         <td class="govuk-table__cell"><%= user.supplier_name %></td>
       </tr>
