@@ -71,4 +71,5 @@ describe("Admin user editing delivery partner", () => {
       cy.location("pathname").should("contain", "/edit");
       cy.checkA11y();
     });
+  });
 });
