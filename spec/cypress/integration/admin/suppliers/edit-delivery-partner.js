@@ -45,4 +45,16 @@ describe("Admin user editing delivery partner", () => {
       `[name='delivery_partner_form[lead_provider_ids][]'][value=${leadProviderId}]`
     ).should("not.be.checked");
   });
+
+  it("has a back link to the supplier page", () => {
+    cy.appScenario("admin/suppliers/manage_delivery_partner");
+
+    cy.visit("/admin/suppliers");
+    cy.get("a").contains(deliveryPartnerName).click();
+
+    cy.location("pathname").should("contain", "/edit");
+
+    cy.clickBackLink();
+    cy.location("pathname").should("contain", "/admin/suppliers");
+  });
 });
