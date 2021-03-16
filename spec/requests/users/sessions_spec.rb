@@ -24,10 +24,22 @@ RSpec.describe "Users::Sessions", type: :request do
   end
 
   describe "POST /users/sign_in" do
-    context "when sign in email has been sent" do
+    let(:login_url_regex) { /http:\/\/localhost:3000\/users\/confirm_sign_in\?login_token=.*/ }
+
+    before do
+      mail = instance_double(ActionMailer::MessageDelivery, deliver_now: true)
+      allow(UserMailer).to receive(:sign_in_email).and_return(mail)
+    end
+
+    context "when email matches a user" do
       it "renders the login_email_sent template" do
         post "/users/sign_in", params: { user: { email: user.email } }
         expect(response).to render_template(:login_email_sent)
+      end
+
+      it "sends a log_in email request to User Mailer" do
+        expect(UserMailer).to receive(:sign_in_email).with(user, login_url_regex)
+        post "/users/sign_in", params: { user: { email: user.email } }
       end
     end
 
@@ -36,6 +48,11 @@ RSpec.describe "Users::Sessions", type: :request do
       it "renders the email_not_found template" do
         post "/users/sign_in", params: { user: { email: email } }
         expect(response).to redirect_to(registrations_account_not_found_path)
+      end
+
+      it "does not send a log in email" do
+        expect(UserMailer).not_to receive(:sign_in_email)
+        post "/users/sign_in", params: { user: { email: email } }
       end
     end
   end
