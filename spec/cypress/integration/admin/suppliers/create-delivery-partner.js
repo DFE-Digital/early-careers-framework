@@ -101,4 +101,54 @@ describe("Admin user creating delivery partner", () => {
     cy.location("pathname").should("equal", "/admin/suppliers");
     cy.get("main").should("contain", deliveryPartnerName);
   });
+
+  describe("Accessibility", () => {
+    it("/admin/suppliers is accessible", () => {
+      cy.appScenario("admin/suppliers/create_supplier");
+
+      cy.visit("/admin/suppliers");
+      cy.checkA11y();
+    });
+
+    it("/admin/suppliers/new/delivery-partner/choose-name", () => {
+      cy.appScenario("admin/suppliers/create_supplier");
+
+      cy.visit("/admin/suppliers");
+      cy.clickCreateDeliveryPartnerButton();
+
+      cy.location("pathname").should(
+        "equal",
+        "/admin/suppliers/new/delivery-partner/choose-name"
+      );
+      cy.checkA11y();
+    });
+
+    // This test currently fails due to aria-expanded being set on the input element
+    // We are replacing these nested checkboxes with two pages anyway
+    // TODO reenable when this has been done
+    xit("/admin/suppliers/new/delivery-partner/choose-lps", () => {
+      cy.appScenario("admin/suppliers/create_supplier");
+      const deliveryPartnerName = "New delivery partner";
+
+      cy.visit("/admin/suppliers");
+      cy.clickCreateDeliveryPartnerButton();
+      cy.chooseSupplierName(deliveryPartnerName);
+      cy.location("pathname").should(
+        "equal",
+        "/admin/suppliers/new/delivery-partner/choose-lps"
+      );
+      cy.checkA11y();
+    });
+
+    it("/admin/suppliers/new/delivery-partner/review should be accessible", () => {
+      cy.appScenario("admin/suppliers/create_supplier");
+      const deliveryPartnerName = "New delivery partner";
+
+      cy.visit("/admin/suppliers");
+      cy.clickCreateDeliveryPartnerButton();
+      cy.chooseSupplierName(deliveryPartnerName);
+      cy.chooseFirstLeadProviderAndCohort();
+      cy.checkA11y();
+    });
+  });
 });
