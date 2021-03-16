@@ -76,4 +76,18 @@ describe("Accessibility", () => {
 
     cy.checkA11y();
   });
+
+  // This test should only be ran locally due to the length of time taken to complete.
+  // To include it add '--env tags=checkCourseLessonsAccessibility' to the yarn cypress:open cmd.
+  if (Cypress.env("tags")?.includes("checkCourseLessonsAccessibility")) {
+    it("Visit all course lessons to check for accessibility", () => {
+      cy.app("load_seed");
+      cy.appEval(`CourseLesson.all`).then((courseLessons) => {
+        cy.wrap(courseLessons).each((courseLesson) => {
+          cy.visitLesson(courseLesson);
+          cy.checkA11y();
+        });
+      });
+    });
+  }
 });
