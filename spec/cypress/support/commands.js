@@ -52,7 +52,14 @@ const SIGN_IN_EMAIL_TEMPLATE = "7ab8db5b-9842-4bc3-8dbb-f590a3198d9e";
 const EMAIL_CONFIRMATION_TEMPLATE = "50059d26-c65d-4e88-831a-8bfb9f4116cd";
 const PRIMARY_CONTACT_TEMPLATE = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f";
 
-const computeHeadersFromEmail = (email) => email.header.reduce((hashSoFar, element) => ({ ...hashSoFar, [element.name]: element.unparsed_value }), {});
+const computeHeadersFromEmail = (email) =>
+  email.header.reduce(
+    (hashSoFar, element) => ({
+      ...hashSoFar,
+      [element.name]: element.unparsed_value,
+    }),
+    {}
+  );
 
 Cypress.Commands.add("verifySignInEmailSent", (user) => {
   cy.appEval("ActionMailer::Base.deliveries").then((emails) => {
@@ -79,9 +86,7 @@ Cypress.Commands.add("verifyPrimaryContactEmailSent", (coordinator, email) => {
     expect(emails).to.have.lengthOf(1);
     const headersHash = computeHeadersFromEmail(emails[0]);
     expect(headersHash["template-id"]).to.eq(PRIMARY_CONTACT_TEMPLATE);
-    expect(headersHash.personalisation.full_name).to.eq(
-      coordinator.full_name
-    );
+    expect(headersHash.personalisation.full_name).to.eq(coordinator.full_name);
     expect(headersHash.personalisation.email).to.eq(coordinator.email);
     expect(headersHash.To).to.eq(email);
   });
