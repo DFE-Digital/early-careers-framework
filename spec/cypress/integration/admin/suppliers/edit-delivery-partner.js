@@ -46,6 +46,18 @@ describe("Admin user editing delivery partner", () => {
     ).should("not.be.checked");
   });
 
+  it("has a back link to the supplier page", () => {
+    cy.appScenario("admin/suppliers/manage_delivery_partner");
+
+    cy.visit("/admin/suppliers");
+    cy.get("a").contains(deliveryPartnerName).click();
+
+    cy.location("pathname").should("contain", "/edit");
+
+    cy.clickBackLink();
+    cy.location("pathname").should("contain", "/admin/suppliers");
+  });
+
   // This test currently fails due to things arising from nested checkboxes
   // We are replacing these nested checkboxes with two pages anyway
   // TODO reenable when this has been done
@@ -59,5 +71,4 @@ describe("Admin user editing delivery partner", () => {
       cy.location("pathname").should("contain", "/edit");
       cy.checkA11y();
     });
-  });
 });

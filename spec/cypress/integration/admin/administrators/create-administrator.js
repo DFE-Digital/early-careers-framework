@@ -13,7 +13,7 @@ describe("Admin user creating another admin user", () => {
     const email = "j.smith@example.com";
 
     cy.visit("/admin/administrators");
-    cy.get(".govuk-button").contains("Create a new administrator").click();
+    cy.get("[data-test=create-admin-button").click();
 
     cy.location("pathname").should("equal", "/admin/administrators/new");
     cy.chooseNameAndEmailForUser(fullName, email);
@@ -27,14 +27,13 @@ describe("Admin user creating another admin user", () => {
     cy.get("input.govuk-button").contains("Create administrator user").click();
 
     cy.location("pathname").should("equal", "/admin/administrators");
-    cy.get(".govuk-button").contains("View all administrators").click();
-
-    cy.location("pathname").should("equal", "/admin/administrators");
     cy.get("main").should("contain", fullName);
     cy.get("main").should("contain", email);
-
-    cy.appEval(`User.find_by(email: "${email}").admin?`).then((result) =>
-      expect(result).to.equal(true)
+    cy.get("[data-test=notification-banner]").should("contain", "Success");
+    cy.get("[data-test=notification-banner]").should("contain", "User added");
+    cy.get("[data-test=notification-banner]").should(
+      "contain",
+      "They have been sent an email to sign in"
     );
   });
 

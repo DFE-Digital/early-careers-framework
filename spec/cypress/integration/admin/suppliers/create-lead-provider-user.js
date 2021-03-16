@@ -39,8 +39,12 @@ describe("Admin user creating lead provider user", () => {
     cy.get("main").should("contain", userName);
     cy.get("main").should("contain", userEmail);
     cy.get("main").should("contain", leadProviderName);
-    cy.get("main").should("contain", "User added");
-    cy.get("main").should("contain", "They have been sent an email to sign in");
+    cy.get("[data-test=notification-banner]").should("contain", "Success");
+    cy.get("[data-test=notification-banner]").should("contain", "User added");
+    cy.get("[data-test=notification-banner]").should(
+      "contain",
+      "They have been sent an email to sign in"
+    );
   });
 
   it("remembers previous choices", () => {
@@ -74,8 +78,12 @@ describe("Admin user creating lead provider user", () => {
     cy.get("main").should("contain", userName);
     cy.get("main").should("contain", userEmail);
     cy.get("main").should("contain", leadProviderName);
-    cy.get("main").should("contain", "User added");
-    cy.get("main").should("contain", "They have been sent an email to sign in");
+    cy.get("[data-test=notification-banner]").should("contain", "Success");
+    cy.get("[data-test=notification-banner]").should("contain", "User added");
+    cy.get("[data-test=notification-banner]").should(
+      "contain",
+      "They have been sent an email to sign in"
+    );
   });
 
   it("allows changing name choice", () => {
@@ -102,7 +110,12 @@ describe("Admin user creating lead provider user", () => {
     cy.get("main").should("contain", userEmail);
     cy.get("main").should("contain", leadProviderName);
     cy.get("main").should("contain", "User added");
-    cy.get("main").should("contain", "They have been sent an email to sign in");
+    cy.get("[data-test=notification-banner]").should("contain", "Success");
+    cy.get("[data-test=notification-banner]").should("contain", "User added");
+    cy.get("[data-test=notification-banner]").should(
+      "contain",
+      "They have been sent an email to sign in"
+    );
   });
 
   describe("Accessibility", () => {

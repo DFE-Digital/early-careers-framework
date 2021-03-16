@@ -49,6 +49,9 @@ module Admin
           AdminProfile.create!(user: user)
         end
         session.delete(:administrator_user)
+
+        set_success_message(heading: "User added", content: "They have been sent an email to sign in")
+        redirect_to admin_administrators_path
       end
 
       def edit; end

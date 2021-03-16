@@ -129,6 +129,13 @@ RSpec.describe "Admin::SupplierUsers", type: :request do
 
       # Then
       expect(response).to redirect_to "/admin/suppliers/users"
+      expect(flash[:success]).to(
+        eql({
+          title: "Success",
+          heading: "User added",
+          content: "They have been sent an email to sign in",
+        }),
+      )
     end
 
     it "creates a new user" do

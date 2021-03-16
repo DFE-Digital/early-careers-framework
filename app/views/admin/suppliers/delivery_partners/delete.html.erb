@@ -3,4 +3,4 @@
   <%= f.hidden_field :answers_checked, value: true %>
   <%= f.govuk_submit "Delete", classes: "govuk-button--warning" %>
 <% end %>
-<%= govuk_link_to "Back", admin_delivery_partner_path(@delivery_partner), button: true, class: "govuk-button--secondary" %>
+<%= govuk_link_to "Back", edit_admin_delivery_partner_path(@delivery_partner), button: true, class: "govuk-button--secondary" %>
