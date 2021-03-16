@@ -46,7 +46,7 @@ describe("Admin user creating delivery partner", () => {
     cy.get("main").should("contain", cohortName);
     cy.confirmCreateSupplier();
 
-    cy.location("pathname").should("contain", "/admin/suppliers");
+    cy.location("pathname").should("equal", "/admin/suppliers");
     cy.get("main").should("contain", deliveryPartnerName);
     cy.get("main").should("contain", "Delivery partner created");
   });

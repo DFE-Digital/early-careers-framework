@@ -17,7 +17,10 @@ describe("Admin user deleting delivery partner", () => {
     );
     cy.get(".govuk-button").contains("Delete").click();
 
-    cy.location("pathname").should("contain", "/delete");
+    cy.location("pathname").should(
+      "match",
+      /\/admin\/suppliers\/delivery-partners\/.*\/delete/
+    );
     cy.get("main").should("contain", deliveryPartnerName);
     cy.get(".govuk-button").contains("Delete").click();
 
@@ -37,10 +40,16 @@ describe("Admin user deleting delivery partner", () => {
     );
     cy.get(".govuk-button").contains("Delete").click();
 
-    cy.location("pathname").should("contain", "/delete");
+    cy.location("pathname").should(
+      "match",
+      /\/admin\/suppliers\/delivery-partners\/.*\/delete/
+    );
 
     cy.get(".govuk-button").contains("Back").click();
-    cy.location("pathname").should("contain", "/edit");
+    cy.location("pathname").should(
+      "match",
+      /\/admin\/suppliers\/delivery-partners\/.*\/edit/
+    );
     cy.get("main").should("contain", deliveryPartnerName);
   });
 });
