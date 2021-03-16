@@ -45,4 +45,19 @@ describe("Admin user editing delivery partner", () => {
       `[name='delivery_partner_form[lead_provider_ids][]'][value=${leadProviderId}]`
     ).should("not.be.checked");
   });
+
+  // This test currently fails due to things arising from nested checkboxes
+  // We are replacing these nested checkboxes with two pages anyway
+  // TODO reenable when this has been done
+  xdescribe("Accessibility", () => {
+    it("/admin/suppliers/:id/edit should be accessible", () => {
+      cy.appScenario("admin/suppliers/manage_delivery_partner");
+
+      cy.visit("/admin/suppliers");
+      cy.get("a").contains(deliveryPartnerName).click();
+
+      cy.location("pathname").should("contain", "/edit");
+      cy.checkA11y();
+    });
+  });
 });
