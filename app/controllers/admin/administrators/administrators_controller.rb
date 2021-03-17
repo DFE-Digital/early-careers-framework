@@ -47,6 +47,9 @@ module Admin
         ActiveRecord::Base.transaction do
           user.save!
           AdminProfile.create!(user: user)
+          AdminMailer.account_created_email(
+            user, helpers.new_user_session_url
+          ).deliver_now
         end
         session.delete(:administrator_user)
 

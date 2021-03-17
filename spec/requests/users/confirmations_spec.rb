@@ -13,6 +13,7 @@ RSpec.describe "Users::Confirmations", type: :request do
 
   describe "GET /users/confirmation" do
     before do
+      allow(UserMailer).to receive(:primary_contact_notification).and_call_original
       school.induction_coordinator_profiles << induction_coordinator
     end
 

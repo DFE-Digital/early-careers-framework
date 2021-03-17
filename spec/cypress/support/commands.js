@@ -71,3 +71,9 @@ Cypress.Commands.add("verifySignInEmailSent", (user) => {
     expect(headersHash.To).to.eq(user.email);
   });
 });
+
+Cypress.Commands.add("chooseNameAndEmailForUser", (name, email) => {
+  cy.get("input[name*=full_name").type(name);
+  cy.get("input[name*=email").type(email);
+  cy.clickCommitButton();
+});

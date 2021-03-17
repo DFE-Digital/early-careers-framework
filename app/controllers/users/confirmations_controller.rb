@@ -22,7 +22,7 @@ private
     school = resource.induction_coordinator_profile.schools.first
 
     if school.primary_contact_email != resource.email
-      UserMailer.primary_contact_notification(resource, school)
+      UserMailer.primary_contact_notification(resource, school).deliver_now
     end
   end
 end
