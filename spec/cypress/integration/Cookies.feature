@@ -1,0 +1,40 @@
+Feature: Cookie page
+  Everybody wants to set cookie preferences
+
+  Scenario: Setting cookie preferences on cookie page
+    Given I am on "cookie" page
+    Then "cookie consent" radios are unchecked
+    When I set "cookie consent" radio to "on"
+    And I click the submit button
+    Then cookie preferences have changed
+    And "cookie consent" radio with value "on" is checked
+    When I set "cookie consent" radio to "off"
+    And I click the submit button
+    Then cookie preferences have changed
+    And "cookie consent" radio with value "off" is checked
+
+  Scenario: Setting preferences through banner without js
+    Given I am on "index" page without JavaScript
+    When I click to accept cookies
+    Then cookie preferences have changed
+    And "cookie consent" radio with value "on" is checked
+
+  Scenario: Accepting cookies through banner with js
+    Given I am on "index" page
+    When I click to accept cookies
+    Then "cookie banner" should contain "You've accepted analytics cookies."
+    When I hide cookie banner
+    Then "cookie banner" should be hidden
+    Given I am on "cookie" page
+    Then "cookie banner" should not exist
+    And "cookie consent" radio with value "on" is checked
+
+  Scenario: Rejecting cookies through banner with js
+    Given I am on "index" page
+    When I click to reject cookies
+    Then "cookie banner" should contain "You've rejected analytics cookies."
+    When I hide cookie banner
+    Then "cookie banner" should be hidden
+    Given I am on "cookie" page
+    Then "cookie banner" should not exist
+    And "cookie consent" radio with value "off" is checked

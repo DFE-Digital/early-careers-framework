@@ -1,0 +1,16 @@
+import { Given } from "cypress-cucumber-preprocessor/steps";
+
+const pagePaths = {
+  cookie: "/cookies",
+  index: "/",
+};
+
+Given("I am on {string} page", (page) => {
+  const path = pagePaths[page];
+  cy.visit(path);
+});
+
+Given("I am on {string} page without JavaScript", (page) => {
+  const path = pagePaths[page];
+  cy.visit(`${path}?nojs=nojs`);
+});

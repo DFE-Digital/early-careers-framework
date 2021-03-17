@@ -33,7 +33,7 @@ describe("Admin user deleting lead provider user", () => {
 
       cy.location("pathname").should(
         "match",
-        /\/admin\/suppliers\/lead-providers\/users\/.*\/edit/
+        /\/lead-providers\/users\/.*\/edit/
       );
       cy.checkA11y();
     });
@@ -50,7 +50,7 @@ describe("Admin user deleting lead provider user", () => {
 
       cy.location("pathname").should(
         "match",
-        /\/admin\/suppliers\/lead-providers\/users\/.*\/delete/
+        /\/lead-providers\/users\/.*\/delete/
       );
       cy.checkA11y();
     });
