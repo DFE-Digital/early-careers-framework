@@ -13,7 +13,10 @@ describe("Admin user editing delivery partner", () => {
     cy.visit("/admin/suppliers");
     cy.get("a").contains(deliveryPartnerName).click();
 
-    cy.location("pathname").should("contain", "/edit");
+    cy.location("pathname").should(
+      "match",
+      /\/admin\/suppliers\/delivery-partners\/.*\/edit/
+    );
     cy.get("[name='delivery_partner_form[name]']").should(
       "have.value",
       deliveryPartnerName
@@ -23,7 +26,7 @@ describe("Admin user editing delivery partner", () => {
     );
     cy.clickCommitButton();
 
-    cy.location("pathname").should("contain", "/admin/suppliers");
+    cy.location("pathname").should("equal", "/admin/suppliers");
     cy.get("main").should("contain", newName);
     cy.get("main").should("not.contain", deliveryPartnerName);
   });
@@ -52,9 +55,30 @@ describe("Admin user editing delivery partner", () => {
     cy.visit("/admin/suppliers");
     cy.get("a").contains(deliveryPartnerName).click();
 
-    cy.location("pathname").should("contain", "/edit");
+    cy.location("pathname").should(
+      "match",
+      /\/admin\/suppliers\/delivery-partners\/.*\/edit/
+    );
 
     cy.clickBackLink();
-    cy.location("pathname").should("contain", "/admin/suppliers");
+    cy.location("pathname").should("equal", "/admin/suppliers");
+  });
+
+  // This test currently fails due to things arising from nested checkboxes
+  // We are replacing these nested checkboxes with two pages anyway
+  // TODO reenable when this has been done
+  xdescribe("Accessibility", () => {
+    it("/admin/suppliers/:id/edit should be accessible", () => {
+      cy.appScenario("admin/suppliers/manage_delivery_partner");
+
+      cy.visit("/admin/suppliers");
+      cy.get("a").contains(deliveryPartnerName).click();
+
+      cy.location("pathname").should(
+        "match",
+        /\/admin\/suppliers\/delivery-partners\/.*\/edit/
+      );
+      cy.checkA11y();
+    });
   });
 });

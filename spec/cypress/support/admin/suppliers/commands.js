@@ -33,9 +33,3 @@ Cypress.Commands.add("chooseLeadProviderName", (leadProviderName) => {
   cy.get("input[type=text]").type(leadProviderName);
   cy.clickCommitButton();
 });
-
-Cypress.Commands.add("chooseNameAndEmailForLeadProviderUser", (name, email) => {
-  cy.get("input[name='supplier_user_form[full_name]'").type(name);
-  cy.get("input[name='supplier_user_form[email]'").type(email);
-  cy.clickCommitButton();
-});
