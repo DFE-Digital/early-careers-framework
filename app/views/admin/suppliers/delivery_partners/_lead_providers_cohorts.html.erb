@@ -1,6 +1,6 @@
 <%= f.govuk_check_boxes_fieldset(
   :lead_provider_ids,
-  legend: { text: "Which lead providers and cohorts are #{@delivery_partner_form.name} working with?", tag: "h1", size: "l" },
+  legend: { text: "Which lead providers and cohorts are #{@delivery_partner_form.name} working with?", **legend_options },
 ) do %>
   <% @delivery_partner_form.available_lead_providers.each do |lead_provider| %>
     <%= f.govuk_check_box :lead_provider_ids, lead_provider.id, label: { text: lead_provider.name }, link_errors: true do %>
