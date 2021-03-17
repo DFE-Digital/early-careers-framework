@@ -10,7 +10,7 @@ describe("Accessibility", () => {
 
     // School not registered page
     cy.get('[name="user[email]"]').type("doesntexist@example.com{enter}");
-    cy.get("h1").should("contain", "You do not have an account");
+    cy.get("h1").should("contain", "we have sent you an email");
     cy.checkA11y();
     cy.appSentEmails().then((emails) => {
       expect(emails).to.have.lengthOf(0);
@@ -24,7 +24,7 @@ describe("Accessibility", () => {
       });
 
     cy.get('[name="commit"]').contains("Sign in").click();
-    cy.get("h1").should("contain", "Check your email");
+    cy.get("h1").should("contain", "we have sent you an email");
     cy.checkA11y();
 
     cy.get("@userData").then(([user]) => {
