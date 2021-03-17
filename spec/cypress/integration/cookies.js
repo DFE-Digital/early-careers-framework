@@ -1,6 +1,8 @@
 describe("Cookie consent", () => {
+  const basePath = "/cookies";
+
   it("should be settable on a cookies page", () => {
-    cy.visit("/cookies");
+    cy.visit(basePath);
 
     cy.get('[name="cookies_form[analytics_consent]"]')
       .should("not.be.checked")
@@ -51,7 +53,7 @@ describe("Cookie consent", () => {
 
     cy.get(".js-cookie-banner").should("not.be.visible");
 
-    cy.visit("/cookies");
+    cy.visit(basePath);
 
     cy.get('[name="cookies_form[analytics_consent]"][value="on"]').should(
       "be.checked"
@@ -73,7 +75,7 @@ describe("Cookie consent", () => {
 
     cy.get(".js-cookie-banner").should("not.be.visible");
 
-    cy.visit("/cookies");
+    cy.visit(basePath);
 
     cy.get('[name="cookies_form[analytics_consent]"][value="off"]').should(
       "be.checked"

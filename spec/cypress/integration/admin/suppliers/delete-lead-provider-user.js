@@ -1,4 +1,5 @@
 describe("Admin user deleting lead provider user", () => {
+  const basePath = "/admin/suppliers";
   const leadProviderUserName = "John Wick";
 
   beforeEach(() => {
@@ -7,7 +8,7 @@ describe("Admin user deleting lead provider user", () => {
 
   it("should allow deleting user", () => {
     cy.appScenario("/admin/suppliers/create_lead_provider_user");
-    cy.visit("/admin/suppliers");
+    cy.visit(basePath);
     cy.get("a").contains("All users").click();
     cy.get("main").should("contain", leadProviderUserName);
     cy.get("[data-test=edit-supplier-user-link]")
@@ -25,7 +26,7 @@ describe("Admin user deleting lead provider user", () => {
     it("/admin/suppliers/lead-providers/users/:id/edit should be accessible", () => {
       cy.appScenario("/admin/suppliers/create_lead_provider_user");
 
-      cy.visit("/admin/suppliers/users");
+      cy.visit(`${basePath}/users`);
       cy.get("[data-test=edit-supplier-user-link]")
         .contains(leadProviderUserName)
         .click();
@@ -40,7 +41,7 @@ describe("Admin user deleting lead provider user", () => {
     it("/admin/suppliers/lead-providers/users/:id/delete should be accessible", () => {
       cy.appScenario("/admin/suppliers/create_lead_provider_user");
 
-      cy.visit("/admin/suppliers/users");
+      cy.visit(`${basePath}/users`);
       cy.get("[data-test=edit-supplier-user-link]")
         .contains(leadProviderUserName)
         .click();

@@ -1,13 +1,9 @@
 describe("Admin user creating lead provider user", () => {
+  const basePath = "/admin/suppliers/users";
   const leadProviderName = "Lead Provider 1";
 
   beforeEach(() => {
     cy.login("admin");
-  });
-
-  it("should show a create supplier user button", () => {
-    cy.visit("/admin/suppliers/users");
-    cy.get(".govuk-button").should("contain", "Add a new user");
   });
 
   it("should create a new lead provider", () => {
@@ -15,27 +11,21 @@ describe("Admin user creating lead provider user", () => {
     const userName = "John Smith";
     const userEmail = "j.s@example.com";
 
-    cy.visit("/admin/suppliers/users");
+    cy.visit(basePath);
     cy.clickCreateSupplierUserButton();
 
-    cy.location("pathname").should("equal", "/admin/suppliers/users/new");
+    cy.location("pathname").should("equal", `${basePath}/new`);
     cy.chooseLeadProviderName(leadProviderName);
 
-    cy.location("pathname").should(
-      "equal",
-      "/admin/suppliers/users/new/user-details"
-    );
+    cy.location("pathname").should("equal", `${basePath}/new/user-details`);
     cy.chooseNameAndEmailForUser(userName, userEmail);
 
-    cy.location("pathname").should(
-      "equal",
-      "/admin/suppliers/users/new/review"
-    );
+    cy.location("pathname").should("equal", `${basePath}/new/review`);
     cy.get("main").should("contain", userName);
     cy.get("main").should("contain", userEmail);
     cy.confirmCreateSupplierUser();
 
-    cy.location("pathname").should("equal", "/admin/suppliers/users");
+    cy.location("pathname").should("equal", basePath);
     cy.get("main").should("contain", userName);
     cy.get("main").should("contain", userEmail);
     cy.get("main").should("contain", leadProviderName);
@@ -52,7 +42,7 @@ describe("Admin user creating lead provider user", () => {
     const userName = "John Smith";
     const userEmail = "j.s@example.com";
 
-    cy.visit("/admin/suppliers/users");
+    cy.visit(basePath);
     cy.clickCreateSupplierUserButton();
 
     cy.chooseLeadProviderName(leadProviderName);
@@ -74,7 +64,7 @@ describe("Admin user creating lead provider user", () => {
 
     cy.confirmCreateSupplierUser();
 
-    cy.location("pathname").should("equal", "/admin/suppliers/users");
+    cy.location("pathname").should("equal", basePath);
     cy.get("main").should("contain", userName);
     cy.get("main").should("contain", userEmail);
     cy.get("main").should("contain", leadProviderName);
@@ -91,7 +81,7 @@ describe("Admin user creating lead provider user", () => {
     const userName = "John Smith";
     const userEmail = "j.s@example.com";
 
-    cy.visit("/admin/suppliers/users");
+    cy.visit(basePath);
     cy.clickCreateSupplierUserButton();
 
     cy.chooseLeadProviderName(leadProviderName);
@@ -105,7 +95,7 @@ describe("Admin user creating lead provider user", () => {
 
     cy.confirmCreateSupplierUser();
 
-    cy.location("pathname").should("equal", "/admin/suppliers/users");
+    cy.location("pathname").should("equal", basePath);
     cy.get("main").should("contain", userName);
     cy.get("main").should("contain", userEmail);
     cy.get("main").should("contain", leadProviderName);
@@ -122,32 +112,29 @@ describe("Admin user creating lead provider user", () => {
     it("/admin/suppliers/users should be accessible", () => {
       cy.appScenario("admin/suppliers/create_supplier");
 
-      cy.visit("/admin/suppliers/users");
+      cy.visit(basePath);
       cy.checkA11y();
     });
 
     it("/admin/suppliers/users/new should be accessible", () => {
       cy.appScenario("admin/suppliers/create_supplier");
 
-      cy.visit("/admin/suppliers/users");
+      cy.visit(basePath);
       cy.clickCreateSupplierUserButton();
 
-      cy.location("pathname").should("equal", "/admin/suppliers/users/new");
+      cy.location("pathname").should("equal", `${basePath}/new`);
       cy.checkA11y();
     });
 
     it("/admin/suppliers/users/new/user-details should be accessible", () => {
       cy.appScenario("admin/suppliers/create_supplier");
 
-      cy.visit("/admin/suppliers/users");
+      cy.visit(basePath);
       cy.clickCreateSupplierUserButton();
 
       cy.chooseLeadProviderName(leadProviderName);
 
-      cy.location("pathname").should(
-        "equal",
-        "/admin/suppliers/users/new/user-details"
-      );
+      cy.location("pathname").should("equal", `${basePath}/new/user-details`);
       cy.checkA11y();
     });
 
@@ -156,17 +143,14 @@ describe("Admin user creating lead provider user", () => {
       const userName = "John Smith";
       const userEmail = "j.s@example.com";
 
-      cy.visit("/admin/suppliers/users");
+      cy.visit(basePath);
       cy.clickCreateSupplierUserButton();
 
       cy.chooseLeadProviderName(leadProviderName);
 
       cy.chooseNameAndEmailForUser(userName, userEmail);
 
-      cy.location("pathname").should(
-        "equal",
-        "/admin/suppliers/users/new/review"
-      );
+      cy.location("pathname").should("equal", `${basePath}/new/review`);
       cy.checkA11y();
     });
   });
