@@ -1,6 +1,8 @@
 <h1>Confirm deletion of <%= @delivery_partner.name %></h1>
 <%= form_for :confirmation, url: admin_delivery_partner_path(@delivery_partner), method: :delete do |f| %>
   <%= f.hidden_field :answers_checked, value: true %>
-  <%= f.govuk_submit "Delete", classes: "govuk-button--warning" %>
+  <div class="govuk-button-group">
+    <%= f.govuk_submit "Delete", classes: "govuk-button--warning" %>
+    <%= govuk_link_to "Back", edit_admin_delivery_partner_path(@delivery_partner), button: true, class: "govuk-button--secondary" %>
+  </div>
 <% end %>
-<%= govuk_link_to "Back", edit_admin_delivery_partner_path(@delivery_partner), button: true, class: "govuk-button--secondary" %>

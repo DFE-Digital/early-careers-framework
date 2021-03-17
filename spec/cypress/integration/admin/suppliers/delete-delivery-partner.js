@@ -26,6 +26,7 @@ describe("Admin user deleting delivery partner", () => {
 
     cy.location("pathname").should("equal", "/admin/suppliers");
     cy.get("main").should("not.contain", deliveryPartnerName);
+    cy.get("main").should("contain", "Delivery partner deleted");
   });
 
   it("has a back button to the edit page", () => {
