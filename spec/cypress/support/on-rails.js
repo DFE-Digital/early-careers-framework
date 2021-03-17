@@ -33,6 +33,7 @@ Cypress.Commands.add("appFixtures", (options) => {
 
 beforeEach(() => {
   cy.app("clean");
+  cy.appEval("ActionMailer::Base.deliveries.clear");
 });
 
 // comment this out if you do not want to attempt to log additional info on test fail

@@ -12,6 +12,9 @@ describe("Accessibility", () => {
     cy.get('[name="user[email]"]').type("doesntexist@example.com{enter}");
     cy.get("h1").should("contain", "You do not have an account");
     cy.checkA11y();
+    cy.appSentEmails().then((emails) => {
+      expect(emails).to.have.lengthOf(0);
+    });
 
     cy.appFactories([["create", "user", "early_career_teacher"]])
       .as("userData")
@@ -23,6 +26,10 @@ describe("Accessibility", () => {
     cy.get('[name="commit"]').contains("Sign in").click();
     cy.get("h1").should("contain", "Check your email");
     cy.checkA11y();
+
+    cy.get("@userData").then(([user]) => {
+      cy.verifySignInEmailSent(user);
+    });
 
     cy.get("@userData")
       .then(([user]) =>
