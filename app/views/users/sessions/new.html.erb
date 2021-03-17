@@ -15,6 +15,6 @@
     <% end %>
     <%= govuk_link_to "Register your school", registrations_question_one_path %>
     <p class="govuk-!-margin-bottom-0 govuk-!-margin-top-15"><strong>Problems signing in</strong></p>
-    <p class="govuk-!-margin-top-1">Contact us: <%= mail_to "ecf-support@digital.education.gov.uk" %></p>
+    <p class="govuk-!-margin-top-1">Contact us: <%= render MailToSupportComponent.new %></p>
   </div>
 </div>

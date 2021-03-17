@@ -4,6 +4,6 @@
     <p class="govuk-!-margin-top-5">We've sent you a link to verify your email address.</p>
     <p class="govuk-!-margin-bottom-12">This will expire in 24 hours. It may be in your spam or junk folder</p>
     <p class="govuk-!-font-weight-bold">If you don't get an email contact us:</p>
-    <%= mail_to "ecf-support@digital.education.gov.uk" %>
+    <%= render MailToSupportComponent.new %>
   </div>
 </div>
