@@ -18,6 +18,11 @@ resource cloudfoundry_app web_app {
   stopped = var.app_stopped
   strategy = var.web_app_deployment_strategy
   timeout = var.app_start_timeout
+
+  service_binding {
+    service_instance = cloudfoundry_user_provided_service.logging.id
+  }
+
   dynamic "service_binding" {
     for_each = local.app_service_bindings
     content {
@@ -34,4 +39,10 @@ resource cloudfoundry_route web_app_route {
   domain   = data.cloudfoundry_domain.cloudapps_digital.id
   space    = data.cloudfoundry_space.space.id
   hostname = local.web_app_name
+}
+
+resource cloudfoundry_user_provided_service logging {
+  name             = local.logging_service_name
+  space            = data.cloudfoundry_space.space.id
+  syslog_drain_url = var.logstash_url
 }
