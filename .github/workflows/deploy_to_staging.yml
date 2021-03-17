@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Tag release
         run: |
-           TAGNAME=$(git log -1 --pretty=%B | sed -n 's/Release version \(.*\) to staging/\1/p')
+           TAGNAME=$(git log -1 --pretty=%B | sed -n 's/.*Release version \(.*\) to staging.*/\1/p')
            ([[ ! -z "$TAGNAME" ]] && git tag -f $TAGNAME && git push origin $TAGNAME -f) || echo "No version found" && exit 1
 
       - name: trigger-deploy
