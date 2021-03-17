@@ -1,32 +1,8 @@
 # frozen_string_literal: true
 
-SchoolDataImporter.new(Rails.logger).delay.run
-
-if Cohort.none?
-  Cohort.find_or_create_by!(start_year: 2021)
-  Cohort.find_or_create_by!(start_year: 2022)
-end
-
-# TODO: Remove this when we have a way of adding lead providers, or expand to include all of them
-unless LeadProvider.first
-  LeadProvider.find_or_create_by!(name: "Test Lead Provider")
-end
-
-test_lead_provider = LeadProvider.find_by(name: "Test Lead Provider")
-
-if test_lead_provider
-  test_lead_provider.cohorts = Cohort.all
-  test_lead_provider.save!
-end
-
-if CoreInductionProgramme.none?
-  CoreInductionProgramme.find_or_create_by!(name: "Ambition Institute")
-  CoreInductionProgramme.find_or_create_by!(name: "Education Development Trust")
-  CoreInductionProgramme.find_or_create_by!(name: "Teach First")
-  CoreInductionProgramme.find_or_create_by!(name: "UCL")
-end
-
 if Rails.env.development? || Rails.env.deployed_development?
+  SchoolDataImporter.new(Rails.logger).delay.run
+
   standard_user_emails = ["admin@example.com", "lead-provider@example.com", "second-school-leader@example.com", "school-leader@example.com"]
   (1..5).each do |number|
     standard_user_emails << "second-admin-#{number}@example.com"
