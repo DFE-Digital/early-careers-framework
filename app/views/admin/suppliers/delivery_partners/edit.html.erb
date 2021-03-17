@@ -8,8 +8,10 @@
 
       <%= f.govuk_text_field :name, label: { size: "m" } %>
       <%= render "lead_providers_cohorts", locals = { f: f, legend_options: { size: "m" } } %>
-      <%= f.govuk_submit "Save" %>
-    <%= govuk_link_to "Delete", delete_admin_delivery_partner_path(@delivery_partner), button: true, class: "govuk-button--warning" %>
+      <div class="govuk-button-group">
+        <%= f.govuk_submit "Save" %>
+        <%= govuk_link_to "Delete", delete_admin_delivery_partner_path(@delivery_partner), button: true, class: "govuk-button--warning" %>
+      </div>
     <% end %>
   </div>
 </div>
