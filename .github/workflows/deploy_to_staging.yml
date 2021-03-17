@@ -16,6 +16,13 @@ jobs:
           INPUTS='${{ format('{{"environment": "staging", "ref": "{0}"}}', github.sha) }}'
           echo "INPUTS=${INPUTS}" >> $GITHUB_ENV
 
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Tag release
+        run: |
+           TAGNAME=$(git log -1 --pretty=%B | sed -n 's/.*Release version \(.*\) to staging.*/\1/p')
+           ([[ ! -z "$TAGNAME" ]] && git tag -f $TAGNAME && git push origin $TAGNAME -f) || echo "No version found" && exit 1
+
       - name: trigger-deploy
         uses: benc-uk/workflow-dispatch@v1.1
         with:
