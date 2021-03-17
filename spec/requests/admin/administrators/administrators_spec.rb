@@ -97,6 +97,15 @@ RSpec.describe "Admin::Administrators::Administrators", type: :request do
         }),
       )
     end
+
+    it "sends new admin an account created email" do
+      url = "http://www.example.com/users/sign_in"
+      allow(AdminMailer).to receive(:account_created_email).and_call_original
+
+      given_a_user_is_created
+
+      expect(AdminMailer).to have_received(:account_created_email).with(new_user, url)
+    end
   end
 
   let(:admin_profile) { create(:admin_profile) }
