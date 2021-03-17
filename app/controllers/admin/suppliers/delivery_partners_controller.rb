@@ -98,6 +98,7 @@ module Admin
         authorize @delivery_partner
 
         @delivery_partner.discard!
+        set_success_message(content: "Delivery partner deleted", title: "Success")
         redirect_to admin_suppliers_path
       end
 
