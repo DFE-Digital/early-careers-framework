@@ -24,8 +24,7 @@ RSpec.describe "Registrations::UserProfile", type: :request do
 
   describe "POST /registrations/user-profile" do
     before do
-      mail = instance_double(ActionMailer::MessageDelivery, deliver_now: true)
-      allow(UserMailer).to receive(:confirmation_instructions).and_return(mail)
+      allow(UserMailer).to receive(:confirmation_instructions).and_call_original
     end
 
     context "when request is valid" do

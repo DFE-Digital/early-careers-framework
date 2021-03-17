@@ -27,8 +27,7 @@ RSpec.describe "Users::Sessions", type: :request do
     let(:login_url_regex) { /http:\/\/localhost:3000\/users\/confirm_sign_in\?login_token=.*/ }
 
     before do
-      mail = instance_double(ActionMailer::MessageDelivery, deliver_now: true)
-      allow(UserMailer).to receive(:sign_in_email).and_return(mail)
+      allow(UserMailer).to receive(:sign_in_email).and_call_original
     end
 
     context "when email matches a user" do
