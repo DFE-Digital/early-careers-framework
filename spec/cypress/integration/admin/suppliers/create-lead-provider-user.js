@@ -25,7 +25,7 @@ describe("Admin user creating lead provider user", () => {
       "equal",
       "/admin/suppliers/users/new/user-details"
     );
-    cy.chooseNameAndEmailForLeadProviderUser(userName, userEmail);
+    cy.chooseNameAndEmailForUser(userName, userEmail);
 
     cy.location("pathname").should(
       "equal",
@@ -60,7 +60,7 @@ describe("Admin user creating lead provider user", () => {
     cy.get("input[type=text]").should("have.value", leadProviderName);
     cy.clickCommitButton();
 
-    cy.chooseNameAndEmailForLeadProviderUser(userName, userEmail);
+    cy.chooseNameAndEmailForUser(userName, userEmail);
     cy.clickBackLink();
     cy.get("input[name='supplier_user_form[full_name]'").should(
       "have.value",
@@ -95,10 +95,10 @@ describe("Admin user creating lead provider user", () => {
     cy.clickCreateSupplierUserButton();
 
     cy.chooseLeadProviderName(leadProviderName);
-    cy.chooseNameAndEmailForLeadProviderUser("wrongName", userEmail);
+    cy.chooseNameAndEmailForUser("wrongName", userEmail);
 
     cy.get("a").contains("Change name").click();
-    cy.chooseNameAndEmailForLeadProviderUser(
+    cy.chooseNameAndEmailForUser(
       `{selectall}${userName}`,
       `{selectall}${userEmail}`
     );
@@ -116,5 +116,58 @@ describe("Admin user creating lead provider user", () => {
       "contain",
       "They have been sent an email to sign in"
     );
+  });
+
+  describe("Accessibility", () => {
+    it("/admin/suppliers/users should be accessible", () => {
+      cy.appScenario("admin/suppliers/create_supplier");
+
+      cy.visit("/admin/suppliers/users");
+      cy.checkA11y();
+    });
+
+    it("/admin/suppliers/users/new should be accessible", () => {
+      cy.appScenario("admin/suppliers/create_supplier");
+
+      cy.visit("/admin/suppliers/users");
+      cy.clickCreateSupplierUserButton();
+
+      cy.location("pathname").should("equal", "/admin/suppliers/users/new");
+      cy.checkA11y();
+    });
+
+    it("/admin/suppliers/users/new/user-details should be accessible", () => {
+      cy.appScenario("admin/suppliers/create_supplier");
+
+      cy.visit("/admin/suppliers/users");
+      cy.clickCreateSupplierUserButton();
+
+      cy.chooseLeadProviderName(leadProviderName);
+
+      cy.location("pathname").should(
+        "equal",
+        "/admin/suppliers/users/new/user-details"
+      );
+      cy.checkA11y();
+    });
+
+    it("/admin/suppliers/users/new/review should be accessible", () => {
+      cy.appScenario("admin/suppliers/create_supplier");
+      const userName = "John Smith";
+      const userEmail = "j.s@example.com";
+
+      cy.visit("/admin/suppliers/users");
+      cy.clickCreateSupplierUserButton();
+
+      cy.chooseLeadProviderName(leadProviderName);
+
+      cy.chooseNameAndEmailForUser(userName, userEmail);
+
+      cy.location("pathname").should(
+        "equal",
+        "/admin/suppliers/users/new/review"
+      );
+      cy.checkA11y();
+    });
   });
 });

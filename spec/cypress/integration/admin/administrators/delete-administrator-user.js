@@ -6,7 +6,7 @@ describe("Admin user deleting another admin user", () => {
   });
 
   it("should allow deleting user", () => {
-    cy.appScenario("/admin/administrators/create_admin_user");
+    cy.appScenario("admin/administrators/manage_admin_users");
     cy.visit("/admin/administrators");
     cy.get("main").should("contain", adminUserName);
     cy.get("[data-test=edit-admin-link]").contains(adminUserName).click();
@@ -16,5 +16,32 @@ describe("Admin user deleting another admin user", () => {
     cy.get(".data-test-delete-submit-button").click();
     cy.get("main").should("not.contain", adminUserName);
     cy.get("main").should("contain", "User deleted");
+  });
+
+  describe("Accessibility", () => {
+    it("/admin/administrators/ should be accessible", () => {
+      cy.appScenario("admin/administrators/manage_admin_users");
+
+      cy.visit("/admin/administrators");
+      cy.checkA11y();
+    });
+
+    it("/admin/administrators/:id/edit should be accessible", () => {
+      cy.appScenario("admin/administrators/manage_admin_users");
+
+      cy.visit("/admin/administrators");
+      cy.get("[data-test=edit-admin-link]").contains(adminUserName).click();
+      cy.checkA11y();
+    });
+
+    it("/admin/administrators/:id/delete should be accessible", () => {
+      cy.appScenario("admin/administrators/manage_admin_users");
+
+      cy.visit("/admin/administrators");
+      cy.get("[data-test=edit-admin-link]").contains(adminUserName).click();
+
+      cy.get("[data-test=delete-button]").click();
+      cy.checkA11y();
+    });
   });
 });

@@ -47,3 +47,9 @@ Cypress.Commands.add("clickBackLink", () => {
 Cypress.Commands.add("clickCommitButton", () => {
   cy.get("[name=commit]").click();
 });
+
+Cypress.Commands.add("chooseNameAndEmailForUser", (name, email) => {
+  cy.get("input[name*=full_name").type(name);
+  cy.get("input[name*=email").type(email);
+  cy.clickCommitButton();
+});
