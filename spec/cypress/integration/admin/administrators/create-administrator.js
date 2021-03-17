@@ -3,11 +3,6 @@ describe("Admin user creating another admin user", () => {
     cy.login("admin");
   });
 
-  it("should show a create administrator button", () => {
-    cy.visit("/admin/administrators");
-    cy.get(".govuk-button").should("contain", "Create a new administrator");
-  });
-
   it("should create a new user", () => {
     const fullName = "John Smith";
     const email = "j.smith@example.com";

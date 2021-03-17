@@ -3,9 +3,7 @@ describe("Admin user deleting delivery partner", () => {
 
   beforeEach(() => {
     cy.login("admin");
-  });
 
-  it("should delete a new delivery partner", () => {
     cy.appScenario("admin/suppliers/manage_delivery_partner");
 
     cy.visit("/admin/suppliers");
@@ -22,6 +20,9 @@ describe("Admin user deleting delivery partner", () => {
       /\/admin\/suppliers\/delivery-partners\/.*\/delete/
     );
     cy.get("main").should("contain", deliveryPartnerName);
+  });
+
+  it("should delete a new delivery partner", () => {
     cy.get(".govuk-button").contains("Delete").click();
 
     cy.location("pathname").should("equal", "/admin/suppliers");
@@ -29,22 +30,6 @@ describe("Admin user deleting delivery partner", () => {
   });
 
   it("has a back button to the edit page", () => {
-    cy.appScenario("admin/suppliers/manage_delivery_partner");
-
-    cy.visit("/admin/suppliers");
-    cy.get("a").contains(deliveryPartnerName).click();
-
-    cy.location("pathname").should(
-      "contain",
-      "/admin/suppliers/delivery-partner"
-    );
-    cy.get(".govuk-button").contains("Delete").click();
-
-    cy.location("pathname").should(
-      "match",
-      /\/admin\/suppliers\/delivery-partners\/.*\/delete/
-    );
-
     cy.get(".govuk-button").contains("Back").click();
     cy.location("pathname").should(
       "match",

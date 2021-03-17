@@ -5,11 +5,6 @@ describe("Admin user creating lead provider user", () => {
     cy.login("admin");
   });
 
-  it("should show a create supplier user button", () => {
-    cy.visit("/admin/suppliers/users");
-    cy.get(".govuk-button").should("contain", "Add a new user");
-  });
-
   it("should create a new lead provider", () => {
     cy.appScenario("admin/suppliers/create_supplier");
     const userName = "John Smith";

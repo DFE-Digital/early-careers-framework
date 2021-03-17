@@ -6,11 +6,6 @@ describe("Admin user creating delivery partner", () => {
     cy.login("admin");
   });
 
-  it("should show a create supplier button", () => {
-    cy.visit("/admin/suppliers");
-    cy.get(".govuk-button").should("contain", "Add a new delivery partner");
-  });
-
   it("should create a new delivery partner", () => {
     cy.appScenario("admin/suppliers/create_supplier");
     const deliveryPartnerName = "New delivery partner";
