@@ -1,4 +1,5 @@
 describe("Admin user creating delivery partner", () => {
+  const basePath = "/admin/suppliers";
   const leadProviderName = "Lead Provider 1";
   const cohortName = "2021";
 
@@ -6,28 +7,19 @@ describe("Admin user creating delivery partner", () => {
     cy.login("admin");
   });
 
-  it("should show a create supplier button", () => {
-    cy.visit("/admin/suppliers");
-    cy.get(".govuk-button").should("contain", "Add a new delivery partner");
-  });
-
   it("should create a new delivery partner", () => {
     cy.appScenario("admin/suppliers/create_supplier");
     const deliveryPartnerName = "New delivery partner";
 
-    cy.visit("/admin/suppliers");
+    cy.visit(basePath);
     cy.clickCreateDeliveryPartnerButton();
 
-    cy.location("pathname").should(
-      "equal",
-      "/admin/suppliers/new/delivery-partner/choose-name"
-    );
+    const newPartnerPath = `${basePath}/new/delivery-partner`;
+
+    cy.location("pathname").should("equal", `${newPartnerPath}/choose-name`);
     cy.chooseSupplierName(deliveryPartnerName);
 
-    cy.location("pathname").should(
-      "equal",
-      "/admin/suppliers/new/delivery-partner/choose-lps"
-    );
+    cy.location("pathname").should("equal", `${newPartnerPath}/choose-lps`);
     cy.get(
       "input[name='delivery_partner_form[lead_provider_ids][]'][type=checkbox]"
     ).should("have.length", 1);
@@ -36,17 +28,14 @@ describe("Admin user creating delivery partner", () => {
     ).should("have.length", 1);
     cy.chooseFirstLeadProviderAndCohort();
 
-    cy.location("pathname").should(
-      "equal",
-      "/admin/suppliers/new/delivery-partner/review"
-    );
+    cy.location("pathname").should("equal", `${newPartnerPath}/review`);
     cy.get("main").should("contain", deliveryPartnerName);
     cy.get("main").should("contain", leadProviderName);
 
     cy.get("main").should("contain", cohortName);
     cy.confirmCreateSupplier();
 
-    cy.location("pathname").should("equal", "/admin/suppliers");
+    cy.location("pathname").should("equal", basePath);
     cy.get("main").should("contain", deliveryPartnerName);
     cy.get("main").should("contain", "Delivery partner created");
   });
@@ -55,7 +44,7 @@ describe("Admin user creating delivery partner", () => {
     cy.appScenario("admin/suppliers/create_supplier");
     const deliveryPartnerName = "New delivery partner";
 
-    cy.visit("/admin/suppliers");
+    cy.visit(basePath);
     cy.clickCreateDeliveryPartnerButton();
 
     cy.chooseSupplierName(deliveryPartnerName);
@@ -78,7 +67,7 @@ describe("Admin user creating delivery partner", () => {
     cy.get("main").should("contain", cohortName);
     cy.confirmCreateSupplier();
 
-    cy.location("pathname").should("equal", "/admin/suppliers");
+    cy.location("pathname").should("equal", basePath);
     cy.get("main").should("contain", deliveryPartnerName);
   });
 
@@ -86,7 +75,7 @@ describe("Admin user creating delivery partner", () => {
     cy.appScenario("admin/suppliers/create_supplier");
     const deliveryPartnerName = "New delivery partner";
 
-    cy.visit("/admin/suppliers");
+    cy.visit(basePath);
     cy.clickCreateDeliveryPartnerButton();
 
     cy.chooseSupplierName("wrong name");
@@ -98,7 +87,7 @@ describe("Admin user creating delivery partner", () => {
     cy.clickCommitButton();
     cy.confirmCreateSupplier();
 
-    cy.location("pathname").should("equal", "/admin/suppliers");
+    cy.location("pathname").should("equal", basePath);
     cy.get("main").should("contain", deliveryPartnerName);
   });
 
@@ -106,19 +95,19 @@ describe("Admin user creating delivery partner", () => {
     it("/admin/suppliers is accessible", () => {
       cy.appScenario("admin/suppliers/create_supplier");
 
-      cy.visit("/admin/suppliers");
+      cy.visit(basePath);
       cy.checkA11y();
     });
 
     it("/admin/suppliers/new/delivery-partner/choose-name", () => {
       cy.appScenario("admin/suppliers/create_supplier");
 
-      cy.visit("/admin/suppliers");
+      cy.visit(basePath);
       cy.clickCreateDeliveryPartnerButton();
 
       cy.location("pathname").should(
         "equal",
-        "/admin/suppliers/new/delivery-partner/choose-name"
+        `${basePath}/new/delivery-partner/choose-name`
       );
       cy.checkA11y();
     });
@@ -130,12 +119,12 @@ describe("Admin user creating delivery partner", () => {
       cy.appScenario("admin/suppliers/create_supplier");
       const deliveryPartnerName = "New delivery partner";
 
-      cy.visit("/admin/suppliers");
+      cy.visit(basePath);
       cy.clickCreateDeliveryPartnerButton();
       cy.chooseSupplierName(deliveryPartnerName);
       cy.location("pathname").should(
         "equal",
-        "/admin/suppliers/new/delivery-partner/choose-lps"
+        `${basePath}/new/delivery-partner/choose-lps`
       );
       cy.checkA11y();
     });
@@ -144,7 +133,7 @@ describe("Admin user creating delivery partner", () => {
       cy.appScenario("admin/suppliers/create_supplier");
       const deliveryPartnerName = "New delivery partner";
 
-      cy.visit("/admin/suppliers");
+      cy.visit(basePath);
       cy.clickCreateDeliveryPartnerButton();
       cy.chooseSupplierName(deliveryPartnerName);
       cy.chooseFirstLeadProviderAndCohort();

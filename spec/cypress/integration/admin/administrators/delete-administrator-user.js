@@ -1,5 +1,6 @@
 describe("Admin user deleting another admin user", () => {
   const adminUserName = "Emma Dow";
+  const basePath = "/admin/administrators";
 
   beforeEach(() => {
     cy.login("admin");
@@ -7,7 +8,7 @@ describe("Admin user deleting another admin user", () => {
 
   it("should allow deleting user", () => {
     cy.appScenario("admin/administrators/manage_admin_users");
-    cy.visit("/admin/administrators");
+    cy.visit(basePath);
     cy.get("main").should("contain", adminUserName);
     cy.get("[data-test=edit-admin-link]").contains(adminUserName).click();
     cy.get("[data-test=delete-button]").click();
@@ -22,14 +23,14 @@ describe("Admin user deleting another admin user", () => {
     it("/admin/administrators/ should be accessible", () => {
       cy.appScenario("admin/administrators/manage_admin_users");
 
-      cy.visit("/admin/administrators");
+      cy.visit(basePath);
       cy.checkA11y();
     });
 
     it("/admin/administrators/:id/edit should be accessible", () => {
       cy.appScenario("admin/administrators/manage_admin_users");
 
-      cy.visit("/admin/administrators");
+      cy.visit(basePath);
       cy.get("[data-test=edit-admin-link]").contains(adminUserName).click();
       cy.checkA11y();
     });
@@ -37,7 +38,7 @@ describe("Admin user deleting another admin user", () => {
     it("/admin/administrators/:id/delete should be accessible", () => {
       cy.appScenario("admin/administrators/manage_admin_users");
 
-      cy.visit("/admin/administrators");
+      cy.visit(basePath);
       cy.get("[data-test=edit-admin-link]").contains(adminUserName).click();
 
       cy.get("[data-test=delete-button]").click();
