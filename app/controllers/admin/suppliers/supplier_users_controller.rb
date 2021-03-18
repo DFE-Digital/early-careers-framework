@@ -67,7 +67,7 @@ module Admin
         @supplier_user_form.save!
         session.delete(:supplier_user_form)
 
-        set_success_message(heading: "User added", content: "They have been sent an email to sign in")
+        set_success_message(heading: "User added", content: "")
         redirect_to admin_supplier_users_path
       end
 
