@@ -1,5 +1,5 @@
 Feature: Cookie page
-  Everybody wants to set cookie preferences
+  All ECF users needs to be able to set and modify their cookie preferences
 
   Scenario: Preferences should not be initially set
     Given I am on "cookie" page
