@@ -19,10 +19,6 @@ resource cloudfoundry_app web_app {
   strategy = var.web_app_deployment_strategy
   timeout = var.app_start_timeout
 
-  service_binding {
-    service_instance = cloudfoundry_user_provided_service.logging.id
-  }
-
   dynamic "service_binding" {
     for_each = local.app_service_bindings
     content {
