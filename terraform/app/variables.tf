@@ -76,6 +76,10 @@ variable paas_worker_app_memory {
   default = 512
 }
 
+variable logstash_url {
+  default = ""
+}
+
 variable secret_paas_app_env_values {
   default = {}
   type = map(string)

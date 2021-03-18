@@ -44,5 +44,5 @@ module paas {
   web_app_instances                 = var.paas_web_app_instances
   web_app_memory                    = var.paas_web_app_memory
   web_app_start_command             = var.paas_web_app_start_command
-  logstash_url                      = var.SYSLOG_DRAIN_URL
+  logstash_url                      = var.logstash_url
 }
