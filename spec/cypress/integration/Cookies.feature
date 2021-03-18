@@ -3,7 +3,7 @@ Feature: Cookie page
 
   Scenario: Setting cookie preferences on cookie page
     Given I am on "cookie" page
-    And "cookie consent" radios are unchecked
+    Then "cookie consent" radios are unchecked
 
     When I set "cookie consent" radio to "on"
     And I click the submit button
