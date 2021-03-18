@@ -1,9 +1,12 @@
 Feature: Cookie page
   Everybody wants to set cookie preferences
 
-  Scenario: Setting cookie preferences on cookie page
+  Scenario: Preferences should not be initially set
     Given I am on "cookie" page
     Then "cookie consent" radios are unchecked
+
+  Scenario: Setting cookie preferences on cookie page
+    Given I am on "cookie" page
 
     When I set "cookie consent" radio to "on"
     And I click the submit button
