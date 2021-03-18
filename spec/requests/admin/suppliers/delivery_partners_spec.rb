@@ -82,11 +82,11 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
 
     it "creates a provider relationship for each cohort" do
       # Given
-      cohort2 = create(:cohort)
+      cohort_2 = create(:cohort)
       selected_lead_provider = lead_provider
-      selected_lead_provider.cohorts << cohort2
+      selected_lead_provider.cohorts << cohort_2
 
-      when_I_choose_lps_and_cohorts([lead_provider], { lead_provider => [cohort, cohort2] })
+      when_I_choose_lps_and_cohorts([lead_provider], { lead_provider => [cohort, cohort_2] })
 
       # Then
       given_I_have_confirmed_my_choices
@@ -94,7 +94,7 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
       new_delivery_partner = DeliveryPartner.order(:created_at).last
       expect(new_delivery_partner.provider_relationships.count).to eq(2)
       expect(new_delivery_partner.provider_relationships.where(lead_provider: lead_provider, cohort: cohort).count).to eq(1)
-      expect(new_delivery_partner.provider_relationships.where(lead_provider: lead_provider, cohort: cohort2).count).to eq(1)
+      expect(new_delivery_partner.provider_relationships.where(lead_provider: lead_provider, cohort: cohort_2).count).to eq(1)
     end
 
     it "displays an error when no lead provider is selected" do
