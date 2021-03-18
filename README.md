@@ -41,18 +41,10 @@ or `db:seed`.
 ### Govuk Notify
 Register on [GOV.UK Notify](https://www.notifications.service.gov.uk). 
 Ask someone from the team to add you to our service.
-Generate an api key for yourself and set it in your `.env` file.
+Generate a limited api key for yourself and set it in your `.env` file.
 
 ### Set up git hooks
 Run `git config core.hooksPath .githooks` to use the included git hooks.
-
-## Whats included in this boilerplate?
-
-- Rails 6.0 with Webpacker
-- [GOV.UK Frontend](https://github.com/alphagov/govuk-frontend)
-- RSpec
-- Dotenv (managing environment variables)
-- Travis with Heroku deployment
 
 ## Running specs, linter(without auto correct) and annotate models and serializers
 ```
@@ -69,11 +61,7 @@ bundle exec rspec
 It's best to lint just your app directories and not those belonging to the framework, e.g.
 
 ```bash
-bundle exec rubocop app config db lib spec Gemfile --format clang -a
-
-or
-
-bundle exec scss-lint app/webpacker/styles
+bundle exec rake lint:ruby
 ```
 
 ## End to end tests
@@ -98,24 +86,24 @@ yarn cypress:open
 Review apps are automatically created when a PR is opened. A link to the app will be posted on the review.
 
 ## Deploying on GOV.UK PaaS
+Check the [documentation](./documentation/terraform.md) for detailed information on terraform.
 
-### Prerequisites
+### Creating an initial admin user
+1. Follow the [debugging instructions](./documentation/debugging_in_govpaas.md) to gain SSH access to the instance and cd to the app dir
+2. Run `/usr/local/bin/bundle exec rake "admin:create[user name,email@example.com]"`. For example, the command for a user named `John Smith` with the email
+`john.smith@example.com` would be `/usr/local/bin/bundle exec rake "admin:create[John Smith,john.smith@example.com]"`. 
+   
+**The format here is important!
+   Notice that there are no extra spaces in the square brackets, and no quote marks inside the square brackets**
 
-- Your department, agency or team has a GOV.UK PaaS account
-- You have a personal account granted by your organisation manager
-- You have downloaded and installed the [Cloud Foundry CLI](https://github.com/cloudfoundry/cli#downloads) for your platform
+## Importing School data
+1. Make sure you have copied `.env.template` to `.env` and filled in the GIAS information with details from a teammate
+2. Run `bundle exec rake schools_data:import` to import the latest schools data from GIAS. This takes around 10 minutes
+3. Run `bundle exec rake sparsity:import` to populate the sparsity tables
+4. Run `bundle exec rake pupil_premium:import` to populate the pupil premium tables
 
-### Deploy
-
-1. Run `cf login -a api.london.cloud.service.gov.uk -u USERNAME`, `USERNAME` is your personal GOV.UK PaaS account email address
-2. Run `bundle package --all` to vendor ruby dependencies
-3. Run `yarn` to vendor node dependencies
-4. Run `bundle exec rails webpacker:compile` to compile assets
-5. Run `cf push` to push the app to Cloud Foundry Application Runtime
-
-Check the file `manifest.yml` for customisation of name (you may need to change it as there could be a conflict on that name), buildpacks and eventual services (PostgreSQL needs to be [set up](https://docs.cloud.service.gov.uk/deploying_services/postgresql/)).
-
-The app should be available at https://govuk-rails-boilerplate.london.cloudapps.digital
+Note: running `db:seed` schedules the `schools_data:import` as a delayed job. You can run `bin/delayed_job start --exit-on-complete`
+to execute this delayed job in the background.
 
 ## Dealing with cip content
 

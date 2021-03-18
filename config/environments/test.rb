@@ -46,7 +46,7 @@ Rails.application.configure do
   config.action_mailer.default_options = {
     from: "mail@example.com",
   }
-  config.domain = "localhost:3000"
+  config.domain = "www.example.com"
 
   config.support_email = "ecf-support@example.com"
 

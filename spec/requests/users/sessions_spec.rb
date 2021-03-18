@@ -24,7 +24,7 @@ RSpec.describe "Users::Sessions", type: :request do
   end
 
   describe "POST /users/sign_in" do
-    let(:login_url_regex) { /http:\/\/localhost:3000\/users\/confirm_sign_in\?login_token=.*/ }
+    let(:login_url_regex) { /http:\/\/www\.example\.com\/users\/confirm_sign_in\?login_token=.*/ }
 
     before do
       allow(UserMailer).to receive(:sign_in_email).and_call_original
