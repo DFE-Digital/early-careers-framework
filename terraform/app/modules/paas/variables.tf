@@ -37,6 +37,9 @@ variable web_app_memory {
 variable web_app_start_command {
 }
 
+variable logstash_url {
+}
+
 locals {
 
   app_env_domain  = {
@@ -53,10 +56,12 @@ locals {
   )
   app_cloudfoundry_service_instances = [
     cloudfoundry_service_instance.postgres_instance.id,
+    cloudfoundry_user_provided_service.logging.id,
   ]
   app_service_bindings = concat(
     local.app_cloudfoundry_service_instances,
   )
+  logging_service_name     = "${var.service_name}-logit-${var.environment}"
   postgres_service_name    = "${var.service_name}-postgres-${var.environment}"
   web_app_name             = "${var.service_name}-${var.environment}"
 }
