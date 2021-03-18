@@ -12,6 +12,9 @@ gem "devise", ">= 4.7.3"
 gem "kaminari", ">= 1.2.0"
 gem "pundit"
 
+# Adds health check functionality
+gem "health_check", ">= 3.0.0"
+
 # Use postgresql as the database for Active Record
 gem "pg", ">= 0.18", "< 2.0"
 
