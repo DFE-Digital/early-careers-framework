@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe AdminProfile, type: :model do
   it { is_expected.to belong_to(:user) }
 
-  describe "create_admin" do
+  describe ".create_admin" do
     let(:name) { Faker::Name.name }
     let(:email) { Faker::Internet.email }
     let(:sign_in_url) { "www.example.com/sign-in" }
