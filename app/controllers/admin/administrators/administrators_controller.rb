@@ -38,19 +38,10 @@ module Admin
       end
 
       def create
-        user = User.new(permitted_attributes(User))
-        user.confirm
-
-        authorize user
+        authorize User
         authorize AdminProfile
 
-        ActiveRecord::Base.transaction do
-          user.save!
-          AdminProfile.create!(user: user)
-          AdminMailer.account_created_email(
-            user, helpers.new_user_session_url
-          ).deliver_now
-        end
+        AdminProfile.create_admin(params[:user][:full_name], params[:user][:email], new_user_session_url)
         session.delete(:administrator_user)
 
         set_success_message(heading: "User added", content: "They have been sent an email to sign in")
