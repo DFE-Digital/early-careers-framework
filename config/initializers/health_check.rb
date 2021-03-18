@@ -2,13 +2,13 @@
 
 HealthCheck.setup do |config|
   # uri prefix (no leading slash)
-  config.uri = "health_check"
+  config.uri = "healthcheck"
 
   # Text output upon success
   config.success = "success for following checks: ['database', 'migrations', 'email']"
 
   # Timeout in seconds used when checking smtp server
-  config.smtp_timeout = 30.0
+  # config.smtp_timeout = 30.0
 
   # http status code used when plain text error message is output
   # Set to 200 if you want your want to distinguish between partial (text does not include success) and
