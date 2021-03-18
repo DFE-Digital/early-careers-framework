@@ -15,6 +15,9 @@
       <%= f.govuk_submit "Sign in" %>
     <% end %>
     <p class="govuk-!-margin-bottom-0 govuk-!-margin-top-15"><strong>Problems signing in</strong></p>
-    <p class="govuk-!-margin-top-1">Contact us: <%= render MailToSupportComponent.new %></p>
+    <ul>
+      <li><%= govuk_link_to "check if you have an account", registrations_account_not_found_path %></li>
+      <li>contact us: <%= render MailToSupportComponent.new %></li>
+    </ul>
   </div>
 </div>
