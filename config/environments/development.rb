@@ -18,6 +18,8 @@ Rails.application.configure do
 
   config.domain = ENV["DOMAIN"]
 
+  config.support_email = "ecf-support@digital.education.gov.uk"
+
   config.gias_api_schema = ENV["GIAS_API_SCHEMA"]
   config.gias_extract_id = ENV["GIAS_EXTRACT_ID"]
   config.gias_api_user = ENV["GIAS_API_USER"]
