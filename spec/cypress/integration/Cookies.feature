@@ -3,11 +3,13 @@ Feature: Cookie page
 
   Scenario: Setting cookie preferences on cookie page
     Given I am on "cookie" page
-    Then "cookie consent" radios are unchecked
+    And "cookie consent" radios are unchecked
+
     When I set "cookie consent" radio to "on"
     And I click the submit button
     Then cookie preferences have changed
     And "cookie consent" radio with value "on" is checked
+
     When I set "cookie consent" radio to "off"
     And I click the submit button
     Then cookie preferences have changed
@@ -21,20 +23,26 @@ Feature: Cookie page
 
   Scenario: Accepting cookies through banner with js
     Given I am on "index" page
+
     When I click to accept cookies
     Then "cookie banner" should contain "You've accepted analytics cookies."
+
     When I hide cookie banner
     Then "cookie banner" should be hidden
-    Given I am on "cookie" page
+
+    When I navigate to "cookie" page
     Then "cookie banner" should not exist
     And "cookie consent" radio with value "on" is checked
 
   Scenario: Rejecting cookies through banner with js
     Given I am on "index" page
+
     When I click to reject cookies
     Then "cookie banner" should contain "You've rejected analytics cookies."
+
     When I hide cookie banner
     Then "cookie banner" should be hidden
-    Given I am on "cookie" page
+
+    When I navigate to "cookie" page
     Then "cookie banner" should not exist
     And "cookie consent" radio with value "off" is checked

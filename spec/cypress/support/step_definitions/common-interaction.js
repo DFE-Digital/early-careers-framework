@@ -1,4 +1,4 @@
-import { When, Then } from "cypress-cucumber-preprocessor/steps";
+import { Given, When, Then } from "cypress-cucumber-preprocessor/steps";
 
 const elements = {
   "cookie consent": '[name="cookies_form[analytics_consent]"]',
@@ -14,7 +14,7 @@ When("I click the submit button", () => {
   cy.clickCommitButton();
 });
 
-Then("{string} radios are unchecked", (element) => {
+Given("{string} radios are unchecked", (element) => {
   const selector = elements[element];
   cy.get(selector).should("not.be.checked");
 });
