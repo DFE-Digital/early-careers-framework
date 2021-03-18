@@ -48,6 +48,8 @@ Rails.application.configure do
   }
   config.domain = "localhost:3000"
 
+  config.support_email = "ecf-support@example.com"
+
   config.gias_api_schema = "https://www.example-gias.com"
   config.gias_extract_id = 1234
   config.gias_api_user = "gias-user"
