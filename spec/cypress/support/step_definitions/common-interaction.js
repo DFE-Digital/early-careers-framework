@@ -9,7 +9,7 @@ const elements = {
   email: "input[name*=email]",
   "notification banner": "[data-test=notification-banner]",
   "edit admin link": "[data-test=edit-admin-link]",
-  "delete button": "[data-test=delete-button]"
+  "delete button": "[data-test=delete-button]",
 };
 
 const get = (element) => cy.get(elements[element] || element);
@@ -29,7 +29,6 @@ When("I click on {string}", (element) => {
 When("I click on {string} containing {string}", (element, containing) => {
   get(element).contains(containing).click();
 });
-
 
 When("I click the submit button", () => {
   cy.clickCommitButton();
@@ -59,6 +58,6 @@ Then("{string} should not exist", (element) => {
   get(element).should("not.exist");
 });
 
-Then("the page should be accessible", (element) => {
+Then("the page should be accessible", () => {
   cy.checkA11y();
 });
