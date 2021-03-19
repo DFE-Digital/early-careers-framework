@@ -1,9 +1,9 @@
 Feature: Cookie page
-  All ECF users needs to be able to set and modify their cookie preferences
+  All ECF users need to be able to set and modify their cookie preferences
 
   Scenario: Preferences should not be initially set
     Given I am on "cookie" page
-    Then "cookie consent" radios are unchecked
+    Then "cookie consent" radios should be unchecked
 
   Scenario: Setting cookie preferences on cookie page
     Given I am on "cookie" page
@@ -19,13 +19,13 @@ Feature: Cookie page
     And "cookie consent" radio with value "off" is checked
 
   Scenario: Setting preferences through banner without js
-    Given I am on "index" page without JavaScript
+    Given I am on "start" page without JavaScript
     When I click to accept cookies
     Then cookie preferences have changed
     And "cookie consent" radio with value "on" is checked
 
   Scenario: Accepting cookies through banner with js
-    Given I am on "index" page
+    Given I am on "start" page
 
     When I click to accept cookies
     Then "cookie banner" should contain "You've accepted analytics cookies."
@@ -38,7 +38,7 @@ Feature: Cookie page
     And "cookie consent" radio with value "on" is checked
 
   Scenario: Rejecting cookies through banner with js
-    Given I am on "index" page
+    Given I am on "start" page
 
     When I click to reject cookies
     Then "cookie banner" should contain "You've rejected analytics cookies."

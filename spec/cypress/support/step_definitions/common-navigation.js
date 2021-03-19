@@ -2,7 +2,7 @@ import { Given, When } from "cypress-cucumber-preprocessor/steps";
 
 const pagePaths = {
   cookie: "/cookies",
-  index: "/",
+  start: "/",
 };
 
 Given("I am on {string} page", (page) => {

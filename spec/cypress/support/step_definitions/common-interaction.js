@@ -14,7 +14,7 @@ When("I click the submit button", () => {
   cy.clickCommitButton();
 });
 
-Then("{string} radios are unchecked", (element) => {
+Then("{string} radios should be unchecked", (element) => {
   const selector = elements[element];
   cy.get(selector).should("not.be.checked");
 });
