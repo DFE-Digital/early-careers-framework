@@ -11,6 +11,12 @@ const pagePaths = {
   "admin listing": "/admin/administrators",
   "admin creation": "/admin/administrators/new",
   "admin confirm creation": "/admin/administrators/new/confirm",
+  "delivery supplier listing": "/admin/suppliers",
+  "choose new delivery partner name":
+    "/admin/suppliers/new/delivery-partner/choose-name",
+  "choose new delivery partner lead providers":
+    "/admin/suppliers/new/delivery-partner/choose-lps",
+  "new delivery partner review": "/admin/suppliers/new/delivery-partner/review",
 };
 
 Given("I am on {string} page", (page) => {
