@@ -7,7 +7,7 @@ RSpec.describe "Health Check", type: :request do
     it "returns success message for current health checks" do
       get "/healthcheck"
 
-      expected = "success for following checks: ['database', 'migrations', 'email']"
+      expected = "success for following checks: ['database', 'migrations']"
       expect(response.body).to eq(expected)
     end
 

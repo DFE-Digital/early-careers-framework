@@ -5,7 +5,7 @@ HealthCheck.setup do |config|
   config.uri = "healthcheck"
 
   # Text output upon success
-  config.success = "success for following checks: ['database', 'migrations', 'email']"
+  config.success = "success for following checks: ['database', 'migrations']"
 
   # Timeout in seconds used when checking smtp server
   # config.smtp_timeout = 30.0
@@ -23,13 +23,13 @@ HealthCheck.setup do |config|
   config.http_status_for_error_object = 500
 
   # You can customize which checks happen on a standard health check, eg to set an explicit list use:
-  config.standard_checks = %w[database migrations email]
+  config.standard_checks = %w[database migrations]
 
   # Or to exclude one check:
   # config.standard_checks -= [ 'emailconf' ]
 
   # You can set what tests are run with the 'full' or 'all' parameter
-  config.full_checks = %w[database migrations email]
+  config.full_checks = %w[database migrations]
 
   # Add one or more custom checks that return a blank string if ok, or an error message if there is an error
   # config.add_custom_check do
