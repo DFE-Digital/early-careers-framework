@@ -18,6 +18,16 @@ class DeliveryPartnerForm
     { "lead_provider_id" => lead_provider.id, "cohort_id" => cohort.id }.to_json
   end
 
+  def self.from_delivery_partner(delivery_partner)
+    new(
+      name: delivery_partner.name,
+      lead_provider_ids: delivery_partner.lead_providers.map(&:id),
+      provider_relationship_hashes: delivery_partner.provider_relationships.map do |relationship|
+        DeliveryPartnerForm.provider_relationship_value(relationship.lead_provider, relationship.cohort)
+      end,
+    )
+  end
+
   def available_lead_providers
     LeadProvider.joins(:cohorts).includes(:cohorts).select { |lead_provider| lead_provider.cohorts.any? }
   end
@@ -43,30 +53,15 @@ class DeliveryPartnerForm
         &.map { |provider_relationship_hash| JSON.parse(provider_relationship_hash) }
   end
 
-  def save!
-    delivery_partner = DeliveryPartner.new(name: name)
-
-    ActiveRecord::Base.transaction do
-      delivery_partner.save!
-      chosen_provider_relationships.each do |provider_relationship|
-        provider_relationship.delivery_partner = delivery_partner
-        provider_relationship.save!
+  def save!(delivery_partner = nil)
+    delivery_partner ||= DeliveryPartner.new
+    if valid?(:update)
+      ActiveRecord::Base.transaction do
+        delivery_partner.name = name
+        delivery_partner.provider_relationships.where.not(id: chosen_provider_relationships).discard_all!
+        delivery_partner.provider_relationships = chosen_provider_relationships
+        delivery_partner.save!
       end
-    end
-
-    delivery_partner
-  end
-
-  def update!(delivery_partner)
-    delivery_partner.name = name
-    ActiveRecord::Base.transaction do
-      delivery_partner.save!
-      chosen_provider_relationships.each do |provider_relationship|
-        provider_relationship.delivery_partner = delivery_partner
-        provider_relationship.save!
-      end
-
-      delivery_partner.provider_relationships.where.not(id: chosen_provider_relationships).discard_all!
     end
   end
 

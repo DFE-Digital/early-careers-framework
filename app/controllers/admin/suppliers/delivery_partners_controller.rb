@@ -49,26 +49,20 @@ module Admin
         redirect_to admin_suppliers_path
       end
 
-      def delete; end
-
       def edit
-        @delivery_partner_form = DeliveryPartnerForm.new(
-          name: @delivery_partner.name,
-          lead_provider_ids: @delivery_partner.lead_providers.map(&:id),
-          provider_relationship_hashes: @delivery_partner.provider_relationships.map do |relationship|
-            DeliveryPartnerForm.provider_relationship_value(relationship.lead_provider, relationship.cohort)
-          end,
-        )
+        @delivery_partner_form = DeliveryPartnerForm.from_delivery_partner(@delivery_partner)
       end
 
       def update
         @delivery_partner_form = DeliveryPartnerForm.new(delivery_partner_params)
-
         render :edit and return unless @delivery_partner_form.valid?(:update)
 
-        @delivery_partner_form.update!(@delivery_partner)
+        @delivery_partner_form.save!(@delivery_partner)
+        set_success_message(content: "Delivery partner updated", title: "Success")
         redirect_to admin_suppliers_path
       end
+
+      def delete; end
 
       def destroy
         @delivery_partner.discard!
@@ -90,11 +84,9 @@ module Admin
       end
 
       def delivery_partner_params
-        if params.key?(:delivery_partner_form)
-          params.require(:delivery_partner_form).permit(:name, lead_provider_ids: [], provider_relationship_hashes: [])
-        else
-          {}
-        end
+        return {} unless params.key?(:delivery_partner_form)
+
+        params.require(:delivery_partner_form).permit(:name, lead_provider_ids: [], provider_relationship_hashes: [])
       end
     end
   end
