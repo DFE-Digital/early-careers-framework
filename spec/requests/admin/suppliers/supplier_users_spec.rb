@@ -133,7 +133,7 @@ RSpec.describe "Admin::SupplierUsers", type: :request do
         eql({
           title: "Success",
           heading: "User added",
-          content: "They have been sent an email to sign in",
+          content: "",
         }),
       )
     end
