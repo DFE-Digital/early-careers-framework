@@ -8,12 +8,19 @@ ruby File.read(".ruby-version").chomp
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem "rails", "~> 6.1.2", ">= 6.1.2.1"
 
+# User management and rbac
 gem "devise", ">= 4.7.3"
-gem "kaminari", ">= 1.2.0"
 gem "pundit"
+
+# Pagination
+gem "kaminari", ">= 1.2.0"
 
 # Adds health check functionality
 gem "health_check", github: "/ianheggie/health_check", ref: "0b799ead604f900ed50685e9b2d469cd2befba5b"
+
+# Cleaner logs, one line per request
+gem "lograge"
+gem "logstash-event"
 
 # Use postgresql as the database for Active Record
 gem "pg", ">= 0.18", "< 2.0"
