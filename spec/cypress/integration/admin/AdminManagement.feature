@@ -4,17 +4,17 @@ Feature: Admin user modifying admin users
   Background:
     Given I am logged in as an "admin"
     And scenario "admin/administrators/manage_admin_users" has been ran
-    And I am on "admin admin" page
+    And I am on "admin listing" page
 
   Scenario: Creating a new admin user
     When I click on "create admin button"
-    Then I should be on "admin admin creation" page
+    Then I should be on "admin creation" page
     And the page should be accessible
 
     When I type "John Smith" into "name" field
     And I type "j.smith@example.com" into "email" field
     And I click the submit button
-    Then I should be on "admin admin confirm creation" page
+    Then I should be on "admin confirm creation" page
     And the page should be accessible
     And "main" should contain "John Smith"
     And "main" should contain "j.smith@example.com"
