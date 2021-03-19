@@ -9,6 +9,7 @@ RSpec.describe AdminProfile, type: :model do
     let(:name) { Faker::Name.name }
     let(:email) { Faker::Internet.email }
     let(:sign_in_url) { "www.example.com/sign-in" }
+    let(:created_user) { User.find_by(email: email) }
 
     it "creates an admin user" do
       expect {
@@ -16,10 +17,15 @@ RSpec.describe AdminProfile, type: :model do
       }.to change { AdminProfile.count }.by(1)
     end
 
+    it "confirms the newly created user" do
+      AdminProfile.create_admin(name, email, sign_in_url)
+
+      expect(created_user.confirmed?).to be true
+    end
+
     it "creates a user with the correct details" do
       AdminProfile.create_admin(name, email, sign_in_url)
 
-      created_user = User.find_by(email: email)
       expect(created_user.present?).to be(true)
       expect(created_user.full_name).to eql(name)
     end
@@ -29,7 +35,6 @@ RSpec.describe AdminProfile, type: :model do
 
       AdminProfile.create_admin(name, email, sign_in_url)
 
-      created_user = User.find_by(email: email)
       expect(AdminMailer).to have_received(:account_created_email).with(created_user, sign_in_url)
     end
   end
