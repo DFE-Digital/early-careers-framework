@@ -15,7 +15,7 @@ exec 1>&2
 
 # Check changed files for an AWS keys
 KEY=$(
-    git diff --cached --name-only -z HEAD~2 |
+    git diff --cached --name-only -z $against |
         tr '\0' '\n' |
         grep --invert-match --fixed-strings 'yarn.lock' |
         xargs ls -d 2> /dev/null |
