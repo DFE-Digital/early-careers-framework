@@ -8,7 +8,7 @@ module Admin
       before_action :load_admin, only: %i[edit update delete destroy]
 
       def index
-        @administrators = policy_scope(User).admins
+        @administrators = policy_scope(User).admins.order(:full_name)
       end
 
       def new
