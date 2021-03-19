@@ -67,7 +67,7 @@ module Admin
         @supplier_user_form.save!
         session.delete(:supplier_user_form)
 
-        set_success_message(heading: "User added", content: "")
+        set_success_message(heading: "User added")
         redirect_to admin_supplier_users_path
       end
 
