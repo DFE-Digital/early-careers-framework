@@ -98,7 +98,7 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
     end
 
     it "displays an error when no lead provider is selected" do
-      when_I_choose_lps_and_cohorts([], {})
+      when_I_choose_lps([])
 
       # Then
       expect(response).to render_template(:choose_lead_providers)
@@ -110,8 +110,8 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
       when_I_choose_lps_and_cohorts([lead_provider, second_lead_provider], { lead_provider => [cohort] })
 
       # Then
-      expect(response).to render_template(:choose_lead_providers)
-      expect(response.body).to include("Choose at least one cohort for every selected lead provider")
+      expect(response).to render_template(:choose_cohorts)
+      expect(response.body).to include("Choose at least one cohort for every lead provider")
     end
   end
 

@@ -63,6 +63,8 @@ Rails.application.routes.draw do
             post "choose-name", action: :receive_name
             get "choose-lps", action: :choose_lead_providers
             post "choose-lps", action: :receive_lead_providers
+            get "choose-cohorts", action: :choose_cohorts
+            post "choose-cohorts", action: :receive_cohorts
             get "review", action: :review_delivery_partner
             post "/", action: :create_delivery_partner
           end

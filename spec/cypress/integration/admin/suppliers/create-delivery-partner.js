@@ -23,10 +23,13 @@ describe("Admin user creating delivery partner", () => {
     cy.get(
       "input[name='delivery_partner_form[lead_provider_ids][]'][type=checkbox]"
     ).should("have.length", 1);
+    cy.chooseFirstLeadProvider();
+
+    cy.location("pathname").should("equal", `${newPartnerPath}/choose-cohorts`);
     cy.get(
       "input[name='delivery_partner_form[provider_relationship_hashes][]'][type=checkbox]"
     ).should("have.length", 1);
-    cy.chooseFirstLeadProviderAndCohort();
+    cy.chooseFirstCohort();
 
     cy.location("pathname").should("equal", `${newPartnerPath}/review`);
     cy.get("main").should("contain", deliveryPartnerName);
@@ -54,9 +57,12 @@ describe("Admin user creating delivery partner", () => {
 
     cy.chooseFirstLeadProviderAndCohort();
     cy.clickBackLink();
+
     cy.get(
       "[name='delivery_partner_form[lead_provider_ids][]'][type=checkbox]"
     ).should("be.checked");
+    cy.clickCommitButton();
+
     cy.get(
       "[name='delivery_partner_form[provider_relationship_hashes][]'][type=checkbox]"
     ).should("be.checked");
@@ -85,6 +91,7 @@ describe("Admin user creating delivery partner", () => {
     cy.chooseSupplierName(`{selectall}${deliveryPartnerName}`);
 
     cy.clickCommitButton();
+    cy.clickCommitButton();
     cy.confirmCreateSupplier();
 
     cy.location("pathname").should("equal", basePath);
@@ -112,10 +119,7 @@ describe("Admin user creating delivery partner", () => {
       cy.checkA11y();
     });
 
-    // This test currently fails due to aria-expanded being set on the input element
-    // We are replacing these nested checkboxes with two pages anyway
-    // TODO reenable when this has been done
-    xit("/admin/suppliers/new/delivery-partner/choose-lps", () => {
+    it("/admin/suppliers/new/delivery-partner/choose-lps", () => {
       cy.appScenario("admin/suppliers/create_supplier");
       const deliveryPartnerName = "New delivery partner";
 
@@ -125,6 +129,21 @@ describe("Admin user creating delivery partner", () => {
       cy.location("pathname").should(
         "equal",
         `${basePath}/new/delivery-partner/choose-lps`
+      );
+      cy.checkA11y();
+    });
+
+    it("/admin/suppliers/new/delivery-partner/choose-cohorts", () => {
+      cy.appScenario("admin/suppliers/create_supplier");
+      const deliveryPartnerName = "New delivery partner";
+
+      cy.visit(basePath);
+      cy.clickCreateDeliveryPartnerButton();
+      cy.chooseSupplierName(deliveryPartnerName);
+      cy.chooseFirstLeadProvider();
+      cy.location("pathname").should(
+        "equal",
+        `${basePath}/new/delivery-partner/choose-cohorts`
       );
       cy.checkA11y();
     });
