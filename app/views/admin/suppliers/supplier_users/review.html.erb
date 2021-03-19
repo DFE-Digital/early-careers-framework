@@ -1,3 +1,4 @@
+<% content_for :title, "Confirm user" %>
 <% content_for :before_content, govuk_back_link(
   text: "Back",
   href: admin_new_supplier_user_details_path)
@@ -49,5 +50,5 @@
 
 <%= form_for :confirmation, url: admin_supplier_users_path, method: :post do |f| %>
   <%= f.hidden_field :answers_checked, value: true %>
-  <%= f.govuk_submit "Create user" %>
+  <%= f.govuk_submit "Confirm" %>
 <% end %>

@@ -1,3 +1,4 @@
+<% content_for :title, "Confirm partner" %>
 <% content_for :before_content, govuk_back_link(
   text: "Back",
   href: choose_lps_admin_delivery_partners_path)
@@ -42,5 +43,5 @@
 
 <%= form_for :confirmation, url: admin_delivery_partners_path, method: :post do |f| %>
   <%= f.hidden_field :answers_checked, value: true %>
-  <%= f.govuk_submit "Create supplier" %>
+  <%= f.govuk_submit "Confirm" %>
 <% end %>
