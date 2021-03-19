@@ -10,5 +10,18 @@ RSpec.describe "Health Check", type: :request do
       expected = "success for following checks: ['database', 'migrations', 'email']"
       expect(response.body).to eq(expected)
     end
+
+    context "failed database check" do
+      before(:each) do
+        expect(ActiveRecord::Migration).to receive(:check_pending!).and_raise(ActiveRecord::PendingMigrationError, "Migration is pending")
+      end
+
+      it "returns error if database is not migrated correctly" do
+        get "/healthcheck"
+
+        expected = "failure"
+        expect(response.body).to eq(expected)
+      end
+    end
   end
 end
