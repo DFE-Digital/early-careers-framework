@@ -106,6 +106,7 @@ Rails.application.configure do
     exceptions = %w[controller action format id]
     {
       params: event.payload[:params].except(*exceptions),
+      exception: event.payload[:exception], # ["ExceptionClass", "the message"]
     }
   end
 
