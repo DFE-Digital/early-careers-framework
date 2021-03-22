@@ -62,17 +62,35 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
       given_I_have_chosen_delivery_partner_name(delivery_partner_name)
     end
 
-    it "redirects to the review page" do
-      when_I_choose_lps_and_cohorts([lead_provider], { lead_provider => [cohort] })
+    it "redirects to the choose cohorts page" do
+      when_I_choose_lps([lead_provider])
 
-      # Then
-      expect(response).to redirect_to("/admin/suppliers/new/delivery-partner/review")
+      expect(response).to redirect_to("/admin/suppliers/new/delivery-partner/choose-cohorts")
+    end
+
+    it "displays an error when no lead provider is selected" do
+      when_I_choose_lps([])
+
+      expect(response).to render_template(:choose_lead_providers)
+      expect(response.body).to include("Choose at least one")
+    end
+  end
+
+  describe "GET /admin/suppliers/new/delivery-partner/choose-cohorts" do
+    it "renders the choose_cohorts template" do
+      get "/admin/suppliers/new/delivery-partner/choose-cohorts"
+
+      expect(response).to render_template(:choose_cohorts)
+    end
+  end
+
+  describe "POST /admin/suppliers/new/delivery-partner/choose-cohorts" do
+    before do
+      given_I_have_chosen_delivery_partner_name(delivery_partner_name)
     end
 
     it "sets the correct lead provider and cohort" do
       when_I_choose_lps_and_cohorts([lead_provider], { lead_provider => [cohort] })
-
-      # Then
       given_I_have_confirmed_my_choices
 
       new_delivery_partner = DeliveryPartner.order(:created_at).last
@@ -80,15 +98,18 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
       expect(new_delivery_partner.provider_relationships.map(&:cohort)).to contain_exactly(cohort)
     end
 
+    it "redirects to the review page" do
+      when_I_choose_lps_and_cohorts([lead_provider], { lead_provider => [cohort] })
+
+      expect(response).to redirect_to("/admin/suppliers/new/delivery-partner/review")
+    end
+
     it "creates a provider relationship for each cohort" do
-      # Given
       cohort_2 = create(:cohort)
       selected_lead_provider = lead_provider
       selected_lead_provider.cohorts << cohort_2
 
       when_I_choose_lps_and_cohorts([lead_provider], { lead_provider => [cohort, cohort_2] })
-
-      # Then
       given_I_have_confirmed_my_choices
 
       new_delivery_partner = DeliveryPartner.order(:created_at).last
@@ -97,21 +118,12 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
       expect(new_delivery_partner.provider_relationships.where(lead_provider: lead_provider, cohort: cohort_2).count).to eq(1)
     end
 
-    it "displays an error when no lead provider is selected" do
-      when_I_choose_lps_and_cohorts([], {})
-
-      # Then
-      expect(response).to render_template(:choose_lead_providers)
-      expect(response.body).to include("Choose at least one")
-    end
-
     it "displays an error when no cohorts are selected for a lead provider" do
       second_lead_provider = create(:lead_provider)
       when_I_choose_lps_and_cohorts([lead_provider, second_lead_provider], { lead_provider => [cohort] })
 
-      # Then
-      expect(response).to render_template(:choose_lead_providers)
-      expect(response.body).to include("Choose at least one cohort for every selected lead provider")
+      expect(response).to render_template(:choose_cohorts)
+      expect(response.body).to include("Choose at least one cohort for every lead provider")
     end
   end
 
