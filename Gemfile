@@ -10,6 +10,7 @@ gem "rails", "~> 6.1.2", ">= 6.1.2.1"
 
 # User management and rbac
 gem "devise", ">= 4.7.3"
+gem "paper_trail"
 gem "pundit"
 
 # Pagination

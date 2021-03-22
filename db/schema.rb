@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_11_121031) do
+ActiveRecord::Schema.define(version: 2021_03_19_153016) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -171,6 +171,10 @@ ActiveRecord::Schema.define(version: 2021_03_11_121031) do
     t.uuid "school_id", null: false
     t.uuid "lead_provider_id", null: false
     t.uuid "cohort_id", null: false
+    t.string "status", default: "pending", null: false
+    t.string "reason_for_rejection"
+    t.datetime "accepted_at"
+    t.datetime "rejected_at"
     t.index ["cohort_id"], name: "index_partnerships_on_cohort_id"
     t.index ["lead_provider_id"], name: "index_partnerships_on_lead_provider_id"
     t.index ["school_id"], name: "index_partnerships_on_school_id"
@@ -281,6 +285,17 @@ ActiveRecord::Schema.define(version: 2021_03_11_121031) do
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
+  end
+
+  create_table "versions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "item_type", null: false
+    t.bigint "item_id", null: false
+    t.string "event", null: false
+    t.string "whodunnit"
+    t.text "object"
+    t.datetime "created_at"
+    t.text "object_changes"
+    t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
   add_foreign_key "admin_profiles", "users"
