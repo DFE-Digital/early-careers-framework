@@ -1,5 +1,33 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: users
+#
+#  id                      :uuid             not null, primary key
+#  confirmation_sent_at    :datetime
+#  confirmation_token      :string
+#  confirmed_at            :datetime
+#  current_sign_in_at      :datetime
+#  current_sign_in_ip      :inet
+#  discarded_at            :datetime
+#  email                   :string           default(""), not null
+#  full_name               :string           not null
+#  last_sign_in_at         :datetime
+#  last_sign_in_ip         :inet
+#  login_token             :string
+#  login_token_valid_until :datetime
+#  remember_created_at     :datetime
+#  sign_in_count           :integer          default(0), not null
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#
+# Indexes
+#
+#  index_users_on_confirmation_token  (confirmation_token) UNIQUE
+#  index_users_on_discarded_at        (discarded_at)
+#  index_users_on_email               (email) UNIQUE
+#
 class User < ApplicationRecord
   devise :registerable, :trackable, :confirmable, :passwordless_authenticatable
 

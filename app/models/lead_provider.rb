@@ -1,5 +1,14 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: lead_providers
+#
+#  id         :uuid             not null, primary key
+#  name       :string           not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
 class LeadProvider < ApplicationRecord
   has_many :partnerships
   has_many :schools, through: :partnerships

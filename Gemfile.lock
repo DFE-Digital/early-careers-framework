@@ -73,6 +73,9 @@ GEM
     akami (1.3.1)
       gyoku (>= 0.4.0)
       nokogiri
+    annotate (3.1.1)
+      activerecord (>= 3.2, < 7.0)
+      rake (>= 10.4, < 14.0)
     ar-uuid (0.2.1)
       activerecord
     ast (2.4.1)
@@ -381,6 +384,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  annotate
   ar-uuid (~> 0.2.1)
   blueprinter
   bootsnap (>= 1.1.0)

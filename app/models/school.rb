@@ -1,5 +1,43 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: schools
+#
+#  id                           :uuid             not null, primary key
+#  address_line1                :string           not null
+#  address_line2                :string
+#  address_line3                :string
+#  administrative_district_code :string
+#  administrative_district_name :string
+#  domains                      :string           default([]), not null, is an Array
+#  name                         :string           not null
+#  postcode                     :string           not null
+#  primary_contact_email        :string
+#  school_phase_name            :string
+#  school_phase_type            :integer
+#  school_status_code           :integer
+#  school_status_name           :string
+#  school_type_code             :integer
+#  school_type_name             :string
+#  school_website               :string
+#  secondary_contact_email      :string
+#  ukprn                        :string
+#  urn                          :string           not null
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
+#  network_id                   :uuid
+#
+# Indexes
+#
+#  index_schools_on_name        (name)
+#  index_schools_on_network_id  (network_id)
+#  index_schools_on_urn         (urn) UNIQUE
+#
+# Foreign Keys
+#
+#  fk_rails_...  (network_id => networks.id)
+#
 class School < ApplicationRecord
   CONFIRMATION_WINDOW = 24
   ELIGIBLE_TYPE_CODES = [1, 2, 3, 5, 6, 7, 8, 12, 14, 15, 18, 28, 31, 32, 33, 34, 35, 36, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48].freeze

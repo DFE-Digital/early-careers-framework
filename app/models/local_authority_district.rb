@@ -1,5 +1,19 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: local_authority_districts
+#
+#  id         :uuid             not null, primary key
+#  code       :string
+#  name       :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+# Indexes
+#
+#  index_local_authority_districts_on_code  (code) UNIQUE
+#
 class LocalAuthorityDistrict < ApplicationRecord
   has_many :school_local_authority_districts
   has_many :schools, through: :school_local_authority_districts
