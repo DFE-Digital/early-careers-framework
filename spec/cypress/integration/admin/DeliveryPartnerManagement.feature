@@ -14,10 +14,14 @@ Feature: Admin user modifying delivery partners
     When I type "New delivery partner" into "delivery partner name" field
     And I click the submit button
     Then I should be on "choose new delivery partner lead providers" page
-    # And the page should be accessible
+    And the page should be accessible
 
     When I click on "Lead Provider 1" label
-    And I click on "2021" label
+    And I click the submit button
+    Then I should be on "choose delivery partner cohorts" page
+    And the page should be accessible
+
+    When I click on "2021" label
     And I click the submit button
     Then I should be on "new delivery partner review" page
     And "main" should contain "New delivery partner"
@@ -40,21 +44,26 @@ Feature: Admin user modifying delivery partners
 
     When I click the submit button
     And I click on "Lead Provider 1" label
+    And I click the submit button
     And I click on "2021" label
     And I click the submit button
     And I click the back link
     Then "Lead Provider 1" label should be checked
-    And "2021" label should be checked
+
+    When I click the submit button
+    Then "2021" label should be checked
 
   Scenario: It should allow changing name choice during creation
     When I click on "create delivery partner button"
     And I type "wrong name" into "delivery partner name" field
     And I click the submit button
     And I click on "Lead Provider 1" label
+    And I click the submit button
     And I click on "2021" label
     And I click the submit button
     And I click on "change name link"
     And I type "{selectall}New delivery partner" into "delivery partner name" field
+    And I click the submit button
     And I click the submit button
     And I click the submit button
     Then "main" should contain "New delivery partner"

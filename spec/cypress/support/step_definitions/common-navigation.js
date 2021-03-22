@@ -16,6 +16,8 @@ const pagePaths = {
     "/admin/suppliers/new/delivery-partner/choose-name",
   "choose new delivery partner lead providers":
     "/admin/suppliers/new/delivery-partner/choose-lps",
+  "choose delivery partner cohorts":
+    "/admin/suppliers/new/delivery-partner/choose-cohorts",
   "new delivery partner review": "/admin/suppliers/new/delivery-partner/review",
   "delivery partner edit": /\/delivery-partners\/.*\/edit/,
 };

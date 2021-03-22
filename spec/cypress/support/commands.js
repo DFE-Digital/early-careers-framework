@@ -77,3 +77,7 @@ Cypress.Commands.add("chooseNameAndEmailForUser", (name, email) => {
   cy.get("input[name*=email").type(email);
   cy.clickCommitButton();
 });
+
+Cypress.Commands.add("titleShouldEqual", (title) => {
+  cy.title().should("equal", `${title} - Early career framework`);
+});

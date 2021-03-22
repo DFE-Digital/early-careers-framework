@@ -1,3 +1,4 @@
+<% content_for :title, "Delete partner" %>
 <h1>Confirm deletion of <%= @delivery_partner.name %></h1>
 <%= form_for :confirmation, url: admin_delivery_partner_path(@delivery_partner), method: :delete do |f| %>
   <%= f.hidden_field :answers_checked, value: true %>

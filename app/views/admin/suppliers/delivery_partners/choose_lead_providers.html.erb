@@ -1,3 +1,4 @@
+<% content_for :title, "Choose providers" %>
 <% content_for :before_content, govuk_back_link(
   text: "Back",
   href: choose_name_admin_delivery_partners_path(continue: true))
@@ -5,7 +6,13 @@
 
 <%= form_with model: @delivery_partner_form, url: choose_lps_admin_delivery_partners_path, method: :post do |f| %>
 
-  <%= render "lead_providers_cohorts", locals = { f: f, legend_options: { tag: "h1", size: "l" } } %>
+  <%= f.govuk_collection_check_boxes(
+    :lead_provider_ids,
+    @delivery_partner_form.available_lead_providers,
+    :id,
+    :name,
+    legend: { text: "Which lead providers are #{@delivery_partner_form.name} working with?", tag: "h1", size: "l" },
+  )%>
 
   <%= f.govuk_submit "Continue" %>
 <% end %>

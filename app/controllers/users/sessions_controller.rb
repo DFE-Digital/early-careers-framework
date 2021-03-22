@@ -17,7 +17,7 @@ class Users::SessionsController < Devise::SessionsController
   rescue LoginIncompleteError
     render :login_email_sent
   rescue EmailNotFoundError
-    redirect_to :registrations_account_not_found
+    render :login_email_sent
   end
 
   def sign_in_with_token
