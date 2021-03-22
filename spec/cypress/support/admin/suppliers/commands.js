@@ -7,14 +7,23 @@ Cypress.Commands.add("chooseSupplierName", (deliveryPartnerName) => {
   cy.clickCommitButton();
 });
 
-Cypress.Commands.add("chooseFirstLeadProviderAndCohort", () => {
+Cypress.Commands.add("chooseFirstLeadProvider", () => {
   cy.get(
     "[name='delivery_partner_form[lead_provider_ids][]'][type=checkbox]"
   ).check();
+  cy.clickCommitButton();
+});
+
+Cypress.Commands.add("chooseFirstCohort", () => {
   cy.get(
     "[name='delivery_partner_form[provider_relationship_hashes][]'][type=checkbox]"
   ).check();
   cy.clickCommitButton();
+});
+
+Cypress.Commands.add("chooseFirstLeadProviderAndCohort", () => {
+  cy.chooseFirstLeadProvider();
+  cy.chooseFirstCohort();
 });
 
 Cypress.Commands.add("confirmCreateSupplier", () => {
