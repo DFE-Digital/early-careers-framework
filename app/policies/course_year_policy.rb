@@ -6,6 +6,10 @@ class CourseYearPolicy < ApplicationPolicy
     @record = record
   end
 
+  def new?
+    admin_only
+  end
+
   def show?
     true
   end

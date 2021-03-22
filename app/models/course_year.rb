@@ -4,7 +4,8 @@ class CourseYear < ApplicationRecord
   include CourseLessonProgressHelper
   include OrderHelper
 
-  belongs_to :core_induction_programme, optional: true
+  validates :core_induction_programme, presence: { message: "Select a provider" }
+  belongs_to :core_induction_programme
   has_many :course_modules, dependent: :delete_all
 
   validates :title, presence: { message: "Enter a title" }, length: { maximum: 255 }

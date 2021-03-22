@@ -7,7 +7,30 @@ class CoreInductionProgrammes::YearsController < ApplicationController
 
   after_action :verify_authorized
   before_action :authenticate_user!
-  before_action :load_course_year
+  before_action :load_course_year, except: %i[new create]
+
+  def new
+    authorize CourseYear
+    @core_induction_programmes = CoreInductionProgramme.all
+    @course_year = CourseYear.new
+  end
+
+  def create
+    authorize CourseYear
+    @course_year = CourseYear.new(
+      course_year_params.merge(
+        is_year_one: false, core_induction_programme: find_core_induction_programme,
+      ),
+    )
+
+    if @course_year.valid?
+      @course_year.save!
+      redirect_to cip_index_path
+    else
+      @core_induction_programmes = CoreInductionProgramme.all
+      render action: "new"
+    end
+  end
 
   def edit; end
 
@@ -31,6 +54,12 @@ private
   end
 
   def course_year_params
-    params.permit(:content, :title)
+    return {} unless params.key? :course_year
+
+    params.require(:course_year).permit(:title, :content)
+  end
+
+  def find_core_induction_programme
+    CoreInductionProgramme.find_by(id: params[:course_year][:core_induction_programme])
   end
 end

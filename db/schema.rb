@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_10_114107) do
+ActiveRecord::Schema.define(version: 2021_03_18_163012) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -89,7 +89,7 @@ ActiveRecord::Schema.define(version: 2021_03_10_114107) do
     t.string "title", null: false
     t.text "content", null: false
     t.integer "version", default: 1, null: false
-    t.uuid "core_induction_programme_id"
+    t.uuid "core_induction_programme_id", null: false
     t.index ["core_induction_programme_id"], name: "index_course_years_on_core_induction_programme_id"
   end
 

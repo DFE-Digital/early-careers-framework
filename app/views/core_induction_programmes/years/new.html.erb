@@ -1,0 +1,23 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Create an additional course year</h1>
+    <%= form_with model: @course_year, url: years_path, method: :post do |f| %>
+      <%= f.govuk_error_summary %>
+      <%= f.govuk_collection_radio_buttons(
+            :core_induction_programme,
+            @core_induction_programmes,
+            :id,
+            :name,
+            legend: { text: "Which provider would you like to create an additional year for?" , class: "govuk-heading-m" }
+          ) %>
+      <%= f.govuk_text_field :title, label: { text: 'Course year title' } %>
+      <%= f.govuk_text_area(
+            :content,
+            label: { text: 'Course year content' },
+            hint: { text: 'This content will be included at the top of the course year' },
+            rows: 10
+          ) %>
+      <%= f.govuk_submit "Create" %>
+    <% end %>
+  </div>
+</div>

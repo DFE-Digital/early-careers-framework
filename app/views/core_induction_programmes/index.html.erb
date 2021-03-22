@@ -2,6 +2,7 @@
   <div class="govuk-grid-column-full">
     <% if @current_user&.admin? %>
       <%= govuk_link_to "Download export", download_export_path, button: true%>
+      <%= govuk_link_to "Create CIP Year", new_year_path, button: true %>
     <% end %>
     <h1 class="govuk-heading-xl">What is the early career framework?</h1>
     <p>The early career framework (ECF) was designed to make sure early career teachers focus on learning the things that make the most difference in the classroom and their professional practice.</p>

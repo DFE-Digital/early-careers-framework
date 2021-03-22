@@ -2,7 +2,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <h1 class="govuk-heading-l">Content change preview</h1>
-    <%= form_with url: year_path, method: :put do |f| %>
+    <%= form_with model: @course_year, url: year_path, method: :put do |f| %>
       <%= f.govuk_text_field :title, label: { text: "Year title" }, value: @course_year.title %>
       <%= f.govuk_text_area :content, label: { text: "Markdown string for course year content" }, rows: 10, value: @course_year.content %>
       <%= f.govuk_submit "See preview" %>
