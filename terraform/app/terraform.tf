@@ -45,4 +45,6 @@ module paas {
   web_app_memory                    = var.paas_web_app_memory
   web_app_start_command             = var.paas_web_app_start_command
   logstash_url                      = var.logstash_url
+  metricbeat_url                    = var.metricbeat_url
+  use_metricbeat                    = var.use_metricbeat
 }

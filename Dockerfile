@@ -80,6 +80,10 @@ COPY --from=assets-precompile /app /app
 COPY --from=assets-precompile /usr/local/bundle/ /usr/local/bundle/
 
 WORKDIR /app
+RUN tar -xf metricbeat.tar.gz && \
+    mv metricbeat/sgerrand.rsa.pub /etc/apk/keys/sgerrand.rsa.pub && \
+    apk add metricbeat/glibc-2.33-r0.apk && \
+    chmod go-w metricbeat/metricbeat
 
 # Use this for development testing
 # CMD bundle exec rails db:migrate && bundle exec rails server -b 0.0.0.0

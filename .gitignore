@@ -50,3 +50,6 @@ tokens
 
 /spec/cypress/videos
 /spec/cypress/screenshots
+
+# Metricbeat
+/metricbeat

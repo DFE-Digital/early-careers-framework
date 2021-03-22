@@ -80,6 +80,14 @@ variable logstash_url {
   default = ""
 }
 
+variable metricbeat_url {
+  default = ""
+}
+
+variable use_metricbeat {
+  default = false
+}
+
 variable secret_paas_app_env_values {
   default = {}
   type = map(string)

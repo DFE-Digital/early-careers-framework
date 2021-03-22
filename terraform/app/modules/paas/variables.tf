@@ -40,6 +40,12 @@ variable web_app_start_command {
 variable logstash_url {
 }
 
+variable metricbeat_url {
+}
+
+variable use_metricbeat {
+}
+
 locals {
 
   app_env_domain  = {
@@ -64,4 +70,6 @@ locals {
   logging_service_name     = "${var.service_name}-logit-${var.environment}"
   postgres_service_name    = "${var.service_name}-postgres-${var.environment}"
   web_app_name             = "${var.service_name}-${var.environment}"
+  metricbeat_start_command = "metricbeat/metricbeat -E \"output.logstash.hosts=['${var.metricbeat_url}']\" > /dev/null 2>&1 &"
+  web_app_start_command    = var.use_metricbeat ? "${local.metricbeat_start_command} ${var.web_app_start_command}" : var.web_app_start_command
 }

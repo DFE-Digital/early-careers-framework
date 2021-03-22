@@ -7,7 +7,7 @@ resource cloudfoundry_service_instance postgres_instance {
 
 resource cloudfoundry_app web_app {
   name = local.web_app_name
-  command = var.web_app_start_command
+  command = local.web_app_start_command
   docker_image = var.app_docker_image
   health_check_type = "http"
   health_check_http_endpoint = "/check"

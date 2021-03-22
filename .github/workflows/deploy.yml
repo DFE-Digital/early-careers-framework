@@ -132,7 +132,7 @@ jobs:
           export TF_VAR_paas_app_docker_image=${{ env.DOCKERHUB_REPOSITORY_BASE }}${{ env.DOCKERHUB_ENV }}:${{ env.TAG }}
           cd terraform/app
           terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-7f2ca242-9929-4662-a79c-c454ea56ea7b" -backend-config="key=${{ github.event.inputs.environment }}/terraform.tfstate"
-          terraform apply -input=false -auto-approve -var-file ../workspace-variables/review.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_DEV}}"}' -var='environment=${{github.event.inputs.environment}}' -var 'logstash_url=${{secrets.SYSLOG_DRAIN_URL}}'
+          terraform apply -input=false -auto-approve -var-file ../workspace-variables/review.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_DEV}}"}' -var='environment=${{github.event.inputs.environment}}' -var 'logstash_url=${{secrets.SYSLOG_DRAIN_URL}}' -var 'metricbeat_url=${{secrets.METRICBEAT_URL}}'
 
       - name: Deploy to staging
         if: ${{ github.event.inputs.environment == 'staging' }}
