@@ -3,8 +3,8 @@ Feature: Admin user modifying delivery partners
 
   Background:
     Given I am logged in as an "admin"
-    And scenario "admin/suppliers/create_supplier" has been ran
-    And I am on "delivery supplier listing" page
+    And scenario "admin/suppliers" has been ran
+    And I am on "delivery partner listing" page
 
   Scenario: Creating a new delivery partner
     When I click on "create delivery partner button"
@@ -26,7 +26,7 @@ Feature: Admin user modifying delivery partners
     And the page should be accessible
 
     When I click the submit button
-    Then I should be on "delivery supplier listing" page
+    Then I should be on "delivery partner listing" page
     And "main" should contain "New delivery partner"
     And "notification banner" should contain "Delivery partner created"
     And the page should be accessible
@@ -60,5 +60,25 @@ Feature: Admin user modifying delivery partners
     Then "main" should contain "New delivery partner"
 
     When I click the submit button
-    Then I should be on "delivery supplier listing" page
+    Then I should be on "delivery partner listing" page
     And "main" should contain "New delivery partner"
+
+  Scenario: Admins should be able to edit delivery partners
+    When I click on "a" containing "Delivery Partner 1"
+    Then I should be on "delivery partner edit" page
+    And "name input" should have value "Delivery Partner 1"
+    # And the page should be accessible
+
+    When I type "{selectall}New delivery partner" into "name input" field
+    And I click on "Lead Provider 1" label
+    And I click the submit button
+    Then I should be on "delivery partner listing" page
+    And "main" should contain "New delivery partner"
+    And "main" should not contain "Delivery Partner 1"
+
+    When I click on "a" containing "New delivery partner"
+    Then "Lead Provider 1" label should be unchecked
+
+    # Should be able to go back to suppliers page
+    When I click the back link
+    Then I should be on "delivery partner listing" page

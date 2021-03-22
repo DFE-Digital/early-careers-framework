@@ -14,6 +14,7 @@ const elements = {
     '.govuk-button:contains("new delivery partner")',
   "delivery partner name": 'input[type="text"]',
   "change name link": 'a:contains("Change name")',
+  "name input": '[name*="name"]',
 };
 
 const get = (element) => cy.get(elements[element] || element);
@@ -84,6 +85,19 @@ Then("{string} label should be checked", (text) => {
       }
 
       cy.get(`#${inputId}`).should("be.checked");
+    });
+});
+
+Then("{string} label should be unchecked", (text) => {
+  cy.get("label")
+    .contains(text)
+    .invoke("attr", "for")
+    .then((inputId) => {
+      if (!inputId) {
+        throw new Error("for not available on this label");
+      }
+
+      cy.get(`#${inputId}`).should("not.be.checked");
     });
 });
 
