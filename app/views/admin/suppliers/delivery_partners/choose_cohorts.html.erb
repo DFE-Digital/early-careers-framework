@@ -1,10 +1,11 @@
+<% content_for :title, "Choose cohorts" %>
 <% content_for :before_content, govuk_back_link(
   text: "Back",
   href: choose_name_admin_delivery_partners_path(continue: true))
 %>
-<h1 class="govuk-heading-l">What cohort are they working with?</h1>
+<h1 class="govuk-heading-l">What cohorts are <%= @delivery_partner_form.name %> working with?</h1>
 <%= form_with model: @delivery_partner_form, url: choose_cohorts_admin_delivery_partners_path, method: :post do |f| %>
-  <% @delivery_partner_form.available_lead_providers.each do |lead_provider| %>
+  <% @delivery_partner_form.chosen_lead_providers.each do |lead_provider| %>
     <%= f.govuk_check_boxes_fieldset(
       :provider_relationship_hashes,
       legend: { text: lead_provider.name },

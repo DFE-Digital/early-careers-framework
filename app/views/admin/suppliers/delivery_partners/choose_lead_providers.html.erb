@@ -6,14 +6,13 @@
 
 <%= form_with model: @delivery_partner_form, url: choose_lps_admin_delivery_partners_path, method: :post do |f| %>
 
-  <%= f.govuk_check_boxes_fieldset(
+  <%= f.govuk_collection_check_boxes(
     :lead_provider_ids,
+    @delivery_partner_form.available_lead_providers,
+    :id,
+    :name,
     legend: { text: "Which lead providers are #{@delivery_partner_form.name} working with?", tag: "h1", size: "l" },
-    ) do %>
-    <% @delivery_partner_form.available_lead_providers.each do |lead_provider| %>
-      <%= f.govuk_check_box :lead_provider_ids, lead_provider.id, label: { text: lead_provider.name }, link_errors: true %>
-    <% end %>
-  <% end %>
+  )%>
 
   <%= f.govuk_submit "Continue" %>
 <% end %>

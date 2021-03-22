@@ -32,6 +32,10 @@ class DeliveryPartnerForm
     LeadProvider.joins(:cohorts).includes(:cohorts).select { |lead_provider| lead_provider.cohorts.any? }
   end
 
+  def chosen_lead_providers
+    LeadProvider.where(id: lead_provider_ids).joins(:cohorts).includes(:cohorts)
+  end
+
   def chosen_provider_relationships
     provider_relationships
       &.filter { |relationship_params| lead_provider_ids&.include?(relationship_params["lead_provider_id"]) }
