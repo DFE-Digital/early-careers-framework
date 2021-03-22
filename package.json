@@ -14,7 +14,8 @@
   },
   "devDependencies": {
     "axe-core": "^4.1.2",
-    "cypress": "^6.5.0",
+    "cypress": "6.8.0",
+    "cypress-cucumber-preprocessor": "^4.0.1",
     "cypress-axe": "^0.12.2",
     "cypress-intellij-reporter": "^0.0.6",
     "eslint": "^7.13.0",
