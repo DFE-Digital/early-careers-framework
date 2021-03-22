@@ -11,7 +11,7 @@
       <%= render "lead_providers_cohorts", locals = { f: f, legend_options: { size: "m" } } %>
       <div class="govuk-button-group">
         <%= f.govuk_submit "Save" %>
-        <%= govuk_link_to "Delete", delete_admin_delivery_partner_path(@delivery_partner), button: true, class: "govuk-button--warning" %>
+        <%= govuk_link_to "Delete", delete_admin_delivery_partner_path(@delivery_partner), button: true, class: "govuk-button--warning", "data-test": "delete-button" %>
       </div>
     <% end %>
   </div>

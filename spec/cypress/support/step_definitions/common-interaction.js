@@ -15,6 +15,7 @@ const elements = {
   "delivery partner name": 'input[type="text"]',
   "change name link": 'a:contains("Change name")',
   "name input": '[name*="name"]',
+  "back button": '.govuk-button:contains("Back")',
 };
 
 const get = (element) => cy.get(elements[element] || element);

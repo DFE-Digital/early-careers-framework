@@ -91,3 +91,22 @@ Feature: Admin user modifying delivery partners
     # Should be able to go back to suppliers page
     When I click the back link
     Then I should be on "delivery partner listing" page
+
+  Scenario: Admins should be able to delete delivery partners
+    When I click on "a" containing "Delivery Partner 1"
+    And I click on "delete button"
+    Then I should be on "delivery partner delete" page
+    And the page should be accessible
+
+    When I click on "delete button"
+    Then I should be on "delivery partner listing" page
+    And "main" should not contain "Delivery Partner 1"
+    And "notification banner" should contain "Delivery partner delete"
+
+  Scenario: Admins should be able to click back to edit page when deleting delivery partners
+    When I click on "a" containing "Delivery Partner 1"
+    And I click on "delete button"
+    Then I should be on "delivery partner delete" page
+
+    When I click on "back button"
+    Then I should be on "delivery partner edit" page

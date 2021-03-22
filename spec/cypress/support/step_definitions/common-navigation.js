@@ -20,6 +20,7 @@ const pagePaths = {
     "/admin/suppliers/new/delivery-partner/choose-cohorts",
   "new delivery partner review": "/admin/suppliers/new/delivery-partner/review",
   "delivery partner edit": /\/delivery-partners\/.*\/edit/,
+  "delivery partner delete": /\/delivery-partners\/.*\/delete/,
 };
 
 Given("I am on {string} page", (page) => {
