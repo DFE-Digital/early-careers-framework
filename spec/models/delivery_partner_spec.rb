@@ -3,6 +3,10 @@
 require "rails_helper"
 
 RSpec.describe DeliveryPartner, type: :model do
+  it "enables paper trail" do
+    is_expected.to be_versioned
+  end
+
   it "can be created" do
     expect {
       DeliveryPartner.create(name: "Delivery Partner")

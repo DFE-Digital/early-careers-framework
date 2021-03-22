@@ -3,11 +3,11 @@
 class Admin::BaseController < ApplicationController
   include Pundit
 
-  before_action :set_paper_trail_whodunnit
   before_action :authenticate_user!
   before_action :ensure_admin
   after_action :verify_authorized
   after_action :verify_policy_scoped
+  before_action :set_paper_trail_whodunnit
 
 private
 

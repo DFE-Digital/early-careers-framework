@@ -7,9 +7,9 @@ RSpec.describe "Admin::LeadProviders::LeadProviderUsers", type: :request do
   let(:lead_provider_user) { lead_provider_profile.user }
   let(:lead_provider_user_two) { create(:user, :lead_provider, full_name: "Emma Dow", email: "emma-dow@example.com") }
   let(:lead_provider_profile_two) { lead_provider_user_two.lead_provider_profile }
+  let(:admin_user) { create(:user, :admin) }
 
   before do
-    admin_user = create(:user, :admin)
     sign_in admin_user
     lead_provider_user
     lead_provider_user_two
@@ -46,6 +46,18 @@ RSpec.describe "Admin::LeadProviders::LeadProviderUsers", type: :request do
         expect(response.body).to include("Enter an email")
         expect(response).to render_template("admin/suppliers/lead_provider_users/edit")
       end
+    end
+
+    context "when an audited action", versioning: true do
+      let(:current_admin) { admin_user }
+
+      before do
+        patch "/admin/suppliers/lead-providers/users/#{lead_provider_user.id}", params: {
+          user: { email: email },
+        }
+      end
+
+      include_examples "audits changes"
     end
   end
 
