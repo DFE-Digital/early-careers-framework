@@ -8,9 +8,9 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
   let(:cohort) { create(:cohort) }
   let(:lead_provider) { create(:lead_provider, cohorts: [cohort]) }
   let(:delivery_partner) { create(:delivery_partner) }
+  let(:admin_user) { create(:user, :admin) }
 
   before do
-    admin_user = create(:user, :admin)
     sign_in admin_user
   end
 
@@ -144,6 +144,14 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
       expect {
         when_I_confirm_my_choices
       }.to change { DeliveryPartner.count }.by(1)
+    end
+
+    context "when an audited action", versioning: true do
+      let(:current_admin) { admin_user }
+
+      before { when_I_confirm_my_choices }
+
+      include_examples "audits changes"
     end
   end
 

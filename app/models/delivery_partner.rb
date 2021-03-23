@@ -4,6 +4,8 @@ class DeliveryPartner < DiscardableRecord
   has_many :provider_relationships
   has_many :lead_providers, through: :provider_relationships
 
+  has_paper_trail
+
   after_discard do
     provider_relationships.discard_all
   end

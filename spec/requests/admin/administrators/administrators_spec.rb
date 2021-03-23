@@ -167,6 +167,16 @@ RSpec.describe "Admin::Administrators::Administrators", type: :request do
       expect(admin_profile.discarded?).to be false
       expect(admin_user.discarded?).to be false
     end
+
+    describe "when an audited action", versioning: true do
+      let(:current_admin) { admin_user }
+
+      before do
+        delete "/admin/administrators/#{admin_user_two.id}"
+      end
+
+      include_examples "audits changes"
+    end
   end
 
 private

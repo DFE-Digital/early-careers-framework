@@ -5,9 +5,9 @@ require "rails_helper"
 RSpec.describe "Admin::InductionCoodinators", type: :request do
   let(:induction_coordinator_profile) { create(:induction_coordinator_profile) }
   let(:induction_coordinator) { induction_coordinator_profile.user }
+  let(:admin_user) { create(:user, :admin) }
 
   before do
-    admin_user = create(:user, :admin)
     sign_in admin_user
   end
 
@@ -53,6 +53,18 @@ RSpec.describe "Admin::InductionCoodinators", type: :request do
         expect(response.body).to include("Enter an email")
         expect(response).to render_template("admin/induction_coordinators/edit")
       end
+    end
+
+    context "when an audited action", versioning: true do
+      let(:current_admin) { admin_user }
+
+      before do
+        patch "/admin/induction-coordinators/#{induction_coordinator.id}", params: {
+          user: { email: email },
+        }
+      end
+
+      include_examples "audits changes"
     end
   end
 end

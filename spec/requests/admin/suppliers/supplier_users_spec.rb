@@ -6,9 +6,9 @@ RSpec.describe "Admin::SupplierUsers", type: :request do
   let(:lead_provider) { create(:lead_provider) }
   let(:full_name) { Faker::Name.name }
   let(:email) { Faker::Internet.email }
+  let(:admin_user) { create(:user, :admin) }
 
   before do
-    admin_user = create(:user, :admin)
     sign_in admin_user
   end
 
@@ -148,6 +148,14 @@ RSpec.describe "Admin::SupplierUsers", type: :request do
       expect {
         when_i_confirm_my_choices
       }.to change { LeadProviderProfile.count }.by(1)
+    end
+
+    context "when an audited action", versioning: true do
+      let(:current_admin) { admin_user }
+
+      before { when_i_confirm_my_choices }
+
+      include_examples "audits changes"
     end
   end
 
