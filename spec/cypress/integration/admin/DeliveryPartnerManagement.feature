@@ -76,11 +76,11 @@ Feature: Admin user modifying delivery partners
   Scenario: Admins should be able to edit delivery partners
     When I click on "link" containing "Delivery Partner 1"
     Then I should be on "delivery partner edit" page
-    And "name input" should have value "Delivery Partner 1"
+    And "delivery partner name input" should have value "Delivery Partner 1"
     # And the page should be accessible
 
-    When I clear "name input"
-    And I type "New delivery partner" into "name input"
+    When I clear "delivery partner name input"
+    And I type "New delivery partner" into "delivery partner name input"
     And I click on "Lead Provider 1" label
     And I click the submit button
     Then I should be on "delivery partner index" page
