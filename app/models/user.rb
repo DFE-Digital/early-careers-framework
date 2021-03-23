@@ -2,6 +2,7 @@
 
 class User < ApplicationRecord
   devise :registerable, :trackable, :confirmable, :passwordless_authenticatable
+  has_paper_trail
 
   has_one :induction_coordinator_profile
   has_one :lead_provider_profile

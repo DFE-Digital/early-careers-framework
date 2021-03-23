@@ -3,6 +3,10 @@
 require "rails_helper"
 
 RSpec.describe User, type: :model do
+  it "enables paper trail" do
+    is_expected.to be_versioned
+  end
+
   describe "associations" do
     it { is_expected.to have_one(:admin_profile) }
     it { is_expected.to have_one(:induction_coordinator_profile) }
