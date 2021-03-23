@@ -16,6 +16,7 @@
     "whatwg-fetch": "^3.6.1"
   },
   "devDependencies": {
+    "@percy/cypress": "^2.3.4",
     "cypress": "6.8.0",
     "cypress-cucumber-preprocessor": "^4.0.1",
     "cypress-intellij-reporter": "^0.0.6",

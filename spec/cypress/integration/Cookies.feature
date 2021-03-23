@@ -18,6 +18,9 @@ Feature: Cookie page
     Then cookie preferences have changed
     And "cookie consent radio" with value "off" is checked
 
+    And the page should be accessible
+    And percy should be sent snapshot
+
   Scenario: Setting preferences through banner without js
     Given I am on "start" page without JavaScript
     When I click to accept cookies
