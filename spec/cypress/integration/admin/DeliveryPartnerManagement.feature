@@ -74,7 +74,7 @@ Feature: Admin user modifying delivery partners
     And "page body" should contain "New delivery partner"
 
   Scenario: Admins should be able to edit delivery partners
-    When I click on "a" containing "Delivery Partner 1"
+    When I click on "link" containing "Delivery Partner 1"
     Then I should be on "delivery partner edit" page
     And "name input" should have value "Delivery Partner 1"
     # And the page should be accessible
@@ -87,7 +87,7 @@ Feature: Admin user modifying delivery partners
     And "page body" should contain "New delivery partner"
     And "page body" should not contain "Delivery Partner 1"
 
-    When I click on "a" containing "New delivery partner"
+    When I click on "link" containing "New delivery partner"
     Then "Lead Provider 1" label should be unchecked
 
     # Should be able to go back to suppliers page
@@ -95,7 +95,7 @@ Feature: Admin user modifying delivery partners
     Then I should be on "delivery partner index" page
 
   Scenario: Admins should be able to delete delivery partners
-    When I click on "a" containing "Delivery Partner 1"
+    When I click on "link" containing "Delivery Partner 1"
     And I click on "delete button"
     Then I should be on "delivery partner delete" page
     And the page should be accessible
@@ -106,7 +106,7 @@ Feature: Admin user modifying delivery partners
     And "notification banner" should contain "Delivery partner deleted"
 
   Scenario: Admins should be able to click back to edit page when deleting delivery partners
-    When I click on "a" containing "Delivery Partner 1"
+    When I click on "link" containing "Delivery Partner 1"
     And I click on "delete button"
     Then I should be on "delivery partner delete" page
 
