@@ -48,10 +48,12 @@ jobs:
           git branch tmp-branch
           git switch master
           git reset --hard tmp-branch --
-          git branch -D tmp-branch
-          git tag -f ${{ github.event.inputs.version }}
+          git branch --delete --force tmp-branch
+          git tag --force ${{ github.event.inputs.version }}
+          git tag --force staging
 
-          git push --force origin ${{ github.event.inputs.version }}
+          git push --force origin refs/tags/${{ github.event.inputs.version }}
+          git push --force origin refs/tags/staging
           git push --force origin master
 
           echo "HEAD=$(git rev-parse ${{ github.event.inputs.version }})" >> $GITHUB_ENV
