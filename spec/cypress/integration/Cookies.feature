@@ -3,26 +3,26 @@ Feature: Cookie page
 
   Scenario: Preferences should not be initially set
     Given I am on "cookie" page
-    Then "cookie consent" radios should be unchecked
+    Then "cookie consent radio" should be unchecked
 
   Scenario: Setting cookie preferences on cookie page
     Given I am on "cookie" page
 
-    When I set "cookie consent" radio to "on"
+    When I set "cookie consent radio" to "on"
     And I click the submit button
     Then cookie preferences have changed
-    And "cookie consent" radio with value "on" is checked
+    And "cookie consent radio" with value "on" is checked
 
-    When I set "cookie consent" radio to "off"
+    When I set "cookie consent radio" to "off"
     And I click the submit button
     Then cookie preferences have changed
-    And "cookie consent" radio with value "off" is checked
+    And "cookie consent radio" with value "off" is checked
 
   Scenario: Setting preferences through banner without js
     Given I am on "start" page without JavaScript
     When I click to accept cookies
     Then cookie preferences have changed
-    And "cookie consent" radio with value "on" is checked
+    And "cookie consent radio" with value "on" is checked
 
   Scenario: Accepting cookies through banner with js
     Given I am on "start" page
@@ -35,7 +35,7 @@ Feature: Cookie page
 
     When I navigate to "cookie" page
     Then "cookie banner" should not exist
-    And "cookie consent" radio with value "on" is checked
+    And "cookie consent radio" with value "on" is checked
 
   Scenario: Rejecting cookies through banner with js
     Given I am on "start" page
@@ -48,4 +48,4 @@ Feature: Cookie page
 
     When I navigate to "cookie" page
     Then "cookie banner" should not exist
-    And "cookie consent" radio with value "off" is checked
+    And "cookie consent radio" with value "off" is checked

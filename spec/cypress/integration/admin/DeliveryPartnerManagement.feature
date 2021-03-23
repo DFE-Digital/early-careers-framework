@@ -11,7 +11,7 @@ Feature: Admin user modifying delivery partners
     Then I should be on "choose new delivery partner name" page
     And the page should be accessible
 
-    When I type "New delivery partner" into "delivery partner name" field
+    When I type "New delivery partner" into "delivery partner name input"
     And I click the submit button
     Then I should be on "choose new delivery partner lead providers" page
     And the page should be accessible
@@ -24,23 +24,23 @@ Feature: Admin user modifying delivery partners
     When I click on "2021" label
     And I click the submit button
     Then I should be on "new delivery partner review" page
-    And "main" should contain "New delivery partner"
-    And "main" should contain "Lead Provider 1"
-    And "main" should contain "2021"
+    And "page body" should contain "New delivery partner"
+    And "page body" should contain "Lead Provider 1"
+    And "page body" should contain "2021"
     And the page should be accessible
 
     When I click the submit button
     Then I should be on "delivery partner index" page
-    And "main" should contain "New delivery partner"
+    And "page body" should contain "New delivery partner"
     And "notification banner" should contain "Delivery partner created"
     And the page should be accessible
 
   Scenario: It should remember details when navigating backwards in creation process
     When I click on "create delivery partner button"
-    And I type "New delivery partner" into "delivery partner name" field
+    And I type "New delivery partner" into "delivery partner name input"
     And I click the submit button
     And I click the back link
-    Then "delivery partner name" should have value "New delivery partner"
+    Then "delivery partner name input" should have value "New delivery partner"
 
     When I click the submit button
     And I click on "Lead Provider 1" label
@@ -55,22 +55,23 @@ Feature: Admin user modifying delivery partners
 
   Scenario: It should allow changing name choice during creation
     When I click on "create delivery partner button"
-    And I type "wrong name" into "delivery partner name" field
+    And I type "wrong name" into "delivery partner name input"
     And I click the submit button
     And I click on "Lead Provider 1" label
     And I click the submit button
     And I click on "2021" label
     And I click the submit button
     And I click on "change name link"
-    And I type "{selectall}New delivery partner" into "delivery partner name" field
+    And I clear "delivery partner name input"
+    And I type "New delivery partner" into "delivery partner name input"
     And I click the submit button
     And I click the submit button
     And I click the submit button
-    Then "main" should contain "New delivery partner"
+    Then "page body" should contain "New delivery partner"
 
     When I click the submit button
     Then I should be on "delivery partner index" page
-    And "main" should contain "New delivery partner"
+    And "page body" should contain "New delivery partner"
 
   Scenario: Admins should be able to edit delivery partners
     When I click on "a" containing "Delivery Partner 1"
@@ -78,12 +79,13 @@ Feature: Admin user modifying delivery partners
     And "name input" should have value "Delivery Partner 1"
     # And the page should be accessible
 
-    When I type "{selectall}New delivery partner" into "name input" field
+    When I clear "name input"
+    And I type "New delivery partner" into "name input"
     And I click on "Lead Provider 1" label
     And I click the submit button
     Then I should be on "delivery partner index" page
-    And "main" should contain "New delivery partner"
-    And "main" should not contain "Delivery Partner 1"
+    And "page body" should contain "New delivery partner"
+    And "page body" should not contain "Delivery Partner 1"
 
     When I click on "a" containing "New delivery partner"
     Then "Lead Provider 1" label should be unchecked
@@ -100,7 +102,7 @@ Feature: Admin user modifying delivery partners
 
     When I click on "delete button"
     Then I should be on "delivery partner index" page
-    And "main" should not contain "Delivery Partner 1"
+    And "page body" should not contain "Delivery Partner 1"
     And "notification banner" should contain "Delivery partner deleted"
 
   Scenario: Admins should be able to click back to edit page when deleting delivery partners
