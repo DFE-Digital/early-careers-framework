@@ -5,9 +5,9 @@ class Admin::BaseController < ApplicationController
 
   before_action :authenticate_user!
   before_action :ensure_admin
+  before_action :set_paper_trail_whodunnit
   after_action :verify_authorized
   after_action :verify_policy_scoped
-  before_action :set_paper_trail_whodunnit
 
 private
 
