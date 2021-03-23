@@ -1,4 +1,4 @@
-name: Deploy to Environment
+name: Deploy monitoring stack to Dev
 
 on:
   workflow_dispatch:
@@ -16,7 +16,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   deploy:
-    name: build docker image and deploy
+    name: deploy monitoring stack
     needs: turnstyle
     runs-on: ubuntu-20.04
     steps:

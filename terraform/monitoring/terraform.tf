@@ -10,8 +10,6 @@ terraform {
 provider cloudfoundry {
   api_url           = var.paas_api_url
   password          = var.paas_password
-  sso_passcode      = ""
   store_tokens_path = "./tokens"
   user              = var.paas_user
-
 }
