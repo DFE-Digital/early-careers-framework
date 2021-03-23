@@ -3,25 +3,25 @@ Feature: Admin user modifying admin users
 
   Background:
     Given I am logged in as an "admin"
-    And scenario "admin/administrators/manage_admin_users" has been ran
-    And I am on "admin listing" page
+    And scenario "admin/administrators/manage_admin_users" has been run
+    And I am on "admin index" page
 
   Scenario: Creating a new admin user
     When I click on "create admin button"
     Then I should be on "admin creation" page
     And the page should be accessible
 
-    When I type "John Smith" into "name" field
-    And I type "j.smith@example.com" into "email" field
+    When I type "John Smith" into "name input"
+    And I type "j.smith@example.com" into "email input"
     And I click the submit button
     Then I should be on "admin confirm creation" page
     And the page should be accessible
-    And "main" should contain "John Smith"
-    And "main" should contain "j.smith@example.com"
+    And "page body" should contain "John Smith"
+    And "page body" should contain "j.smith@example.com"
 
     When I click the submit button
-    Then "main" should contain "John Smith"
-    And "main" should contain "j.smith@example.com"
+    Then "page body" should contain "John Smith"
+    And "page body" should contain "j.smith@example.com"
     And "notification banner" should contain "Success"
     And "notification banner" should contain "User added"
     And "notification banner" should contain "They have been sent an email to sign in"
@@ -29,15 +29,15 @@ Feature: Admin user modifying admin users
 
   Scenario: Deleting an admin user
     When I click on "edit admin link" containing "Emma Dow"
-    Then "main" should contain "Edit user details"
+    Then "page body" should contain "Edit user details"
     And the page should be accessible
 
     When I click on "delete button"
-    Then "main" should contain "Do you want to delete this user?"
-    And "main" should contain "Admin user: Emma Dow"
+    Then "page body" should contain "Do you want to delete this user?"
+    And "page body" should contain "Admin user: Emma Dow"
     And the page should be accessible
 
     When I click on "delete button"
-    Then "main" should not contain "Emma Dow"
-    And "main" should contain "User deleted"
+    Then "page body" should not contain "Emma Dow"
+    And "page body" should contain "User deleted"
 
