@@ -3,8 +3,8 @@ Feature: Admin user modifying delivery partners
 
   Background:
     Given I am logged in as an "admin"
-    And scenario "admin/suppliers" has been ran
-    And I am on "delivery partner listing" page
+    And scenario "admin/suppliers" has been run
+    And I am on "delivery partner index" page
 
   Scenario: Creating a new delivery partner
     When I click on "create delivery partner button"
@@ -30,7 +30,7 @@ Feature: Admin user modifying delivery partners
     And the page should be accessible
 
     When I click the submit button
-    Then I should be on "delivery partner listing" page
+    Then I should be on "delivery partner index" page
     And "main" should contain "New delivery partner"
     And "notification banner" should contain "Delivery partner created"
     And the page should be accessible
@@ -69,7 +69,7 @@ Feature: Admin user modifying delivery partners
     Then "main" should contain "New delivery partner"
 
     When I click the submit button
-    Then I should be on "delivery partner listing" page
+    Then I should be on "delivery partner index" page
     And "main" should contain "New delivery partner"
 
   Scenario: Admins should be able to edit delivery partners
@@ -81,7 +81,7 @@ Feature: Admin user modifying delivery partners
     When I type "{selectall}New delivery partner" into "name input" field
     And I click on "Lead Provider 1" label
     And I click the submit button
-    Then I should be on "delivery partner listing" page
+    Then I should be on "delivery partner index" page
     And "main" should contain "New delivery partner"
     And "main" should not contain "Delivery Partner 1"
 
@@ -90,7 +90,7 @@ Feature: Admin user modifying delivery partners
 
     # Should be able to go back to suppliers page
     When I click the back link
-    Then I should be on "delivery partner listing" page
+    Then I should be on "delivery partner index" page
 
   Scenario: Admins should be able to delete delivery partners
     When I click on "a" containing "Delivery Partner 1"
@@ -99,9 +99,9 @@ Feature: Admin user modifying delivery partners
     And the page should be accessible
 
     When I click on "delete button"
-    Then I should be on "delivery partner listing" page
+    Then I should be on "delivery partner index" page
     And "main" should not contain "Delivery Partner 1"
-    And "notification banner" should contain "Delivery partner delete"
+    And "notification banner" should contain "Delivery partner deleted"
 
   Scenario: Admins should be able to click back to edit page when deleting delivery partners
     When I click on "a" containing "Delivery Partner 1"

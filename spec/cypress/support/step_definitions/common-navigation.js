@@ -3,15 +3,15 @@ import { Given, When, Then } from "cypress-cucumber-preprocessor/steps";
 Given("I am logged in as a {string}", (user) => cy.login(user));
 Given("I am logged in as an {string}", (user) => cy.login(user));
 
-Given("scenario {string} has been ran", (scenario) => cy.appScenario(scenario));
+Given("scenario {string} has been run", (scenario) => cy.appScenario(scenario));
 
 const pagePaths = {
   cookie: "/cookies",
   start: "/",
-  "admin listing": "/admin/administrators",
+  "admin index": "/admin/administrators",
   "admin creation": "/admin/administrators/new",
   "admin confirm creation": "/admin/administrators/new/confirm",
-  "delivery partner listing": "/admin/suppliers",
+  "delivery partner index": "/admin/suppliers",
   "choose new delivery partner name":
     "/admin/suppliers/new/delivery-partner/choose-name",
   "choose new delivery partner lead providers":

@@ -3,8 +3,8 @@ Feature: Admin user modifying admin users
 
   Background:
     Given I am logged in as an "admin"
-    And scenario "admin/administrators/manage_admin_users" has been ran
-    And I am on "admin listing" page
+    And scenario "admin/administrators/manage_admin_users" has been run
+    And I am on "admin index" page
 
   Scenario: Creating a new admin user
     When I click on "create admin button"
