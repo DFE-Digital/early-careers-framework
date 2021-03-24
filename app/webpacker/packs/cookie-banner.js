@@ -38,6 +38,13 @@ if (cookieBannerEl) {
           .removeAttribute("hidden");
       });
 
+    const gaSrc = window.ecfAnalyticsScript;
+    if (e.target.value === "on" && gaSrc) {
+      const scriptEl = document.createElement("script");
+      scriptEl.src = gaSrc;
+      document.body.appendChild(scriptEl);
+    }
+
     e.preventDefault();
   });
 
