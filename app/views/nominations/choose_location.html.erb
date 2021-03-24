@@ -1,0 +1,26 @@
+<% content_for :title, "Resend nomination: search location" %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: root_path) %>
+
+<h1 class="govuk-heading-l">Nominate a school lead</h1>
+<p>This is someone who is responsible for running induction at your school.</p>
+<p>They will:</p>
+<ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-8">
+  <li>confirm the type of induction programme your school wants to run</li>
+  <li>tell us which early career teachers and mentors are starting a programme</li>
+  <li>receive any future notifications about this service</li>
+</ul>
+
+<%= form_with model: @nomination_form, url: choose_location_nominations_path, method: :post do |f| %>
+  <%= f.govuk_error_summary %>
+  <div class="govuk-input--width-20">
+    <%= f.govuk_collection_select(
+          :local_authority_id,
+          @local_authorities,
+          :id,
+          :name,
+          label: { text: "School location", class: "govuk-label govuk-label--m" },
+          hint: { text: "Enter town, city or postcode"},
+          options: { include_blank: true }) %>
+  </div>
+  <%= f.govuk_submit "Continue" %>
+<% end %>
