@@ -49,6 +49,7 @@ Cypress.Commands.add("clickCommitButton", () => {
 });
 
 const SIGN_IN_EMAIL_TEMPLATE = "7ab8db5b-9842-4bc3-8dbb-f590a3198d9e";
+const ADMIN_ACCOUNT_CREATED_TEMPLATE = "3620d073-d2cc-4d65-9a51-e12770cf25d9";
 
 const computeHeadersFromEmail = (email) =>
   email.header.reduce(
@@ -77,6 +78,15 @@ Cypress.Commands.add("verifySignInEmailSentForEmail", (email) => {
     expect(emails).to.have.lengthOf(1);
     const headersHash = computeHeadersFromEmail(emails[0]);
     expect(headersHash["template-id"]).to.eq(SIGN_IN_EMAIL_TEMPLATE);
+    expect(headersHash.To).to.eq(email);
+  });
+});
+
+Cypress.Commands.add("verifyAdminAccountCreatedEmailSentForEmail", (email) => {
+  cy.appSentEmails().then((emails) => {
+    expect(emails).to.have.lengthOf(1);
+    const headersHash = computeHeadersFromEmail(emails[0]);
+    expect(headersHash["template-id"]).to.eq(ADMIN_ACCOUNT_CREATED_TEMPLATE);
     expect(headersHash.To).to.eq(email);
   });
 });

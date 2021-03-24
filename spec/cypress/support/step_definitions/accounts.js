@@ -1,10 +1,19 @@
-import { Given, And } from "cypress-cucumber-preprocessor/steps";
+import { Given } from "cypress-cucumber-preprocessor/steps";
 
 Given("Admin account was created with {string}", (emailString) => {
   cy.appFactories([["create", "user", "admin", { email: emailString }]]).as(
     "userData"
   );
 });
+
+Given(
+  "Admin account was created with email {string} and name {string}",
+  (emailString, nameString) => {
+    cy.appFactories([
+      ["create", "user", "admin", { email: emailString, name: nameString }],
+    ]).as("userData");
+  }
+);
 
 Given("Lead Provider account was created with {string}", (emailString) => {
   cy.appFactories([
@@ -20,7 +29,3 @@ Given(
     ]).as("userData");
   }
 );
-
-And("I sign in", () => {
-  cy.get('[action="/users/sign_in_with_token"] [name="commit"]').click();
-});
