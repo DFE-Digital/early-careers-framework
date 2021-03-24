@@ -290,7 +290,7 @@ ActiveRecord::Schema.define(version: 2021_03_23_180540) do
     t.json "object"
     t.json "object_changes"
     t.datetime "created_at"
-    t.uuid "item_id", null: false
+    t.uuid "item_id", default: -> { "gen_random_uuid()" }, null: false
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
