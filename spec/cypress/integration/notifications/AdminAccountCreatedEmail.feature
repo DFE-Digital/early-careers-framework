@@ -3,12 +3,12 @@ Feature: Admin Account Created Email
 
   Scenario: Sending Email to newly Created Admin account
     Given I am logged in as an "admin"
-    And I am on "admin listing" page
+    And I am on "admin index" page
     When I click on "create admin button"
     Then I should be on "admin creation" page
 
-    When I type "Joe Wick" into "name" field
-    And I type "new-admin@example.com" into "email" field
+    When I type "Joe Wick" into "name input"
+    And I type "new-admin@example.com" into "email input"
     And I click the submit button
     And "main" should contain "Joe Wick"
     And "main" should contain "new-admin@example.com"
