@@ -16,6 +16,13 @@ FactoryBot.define do
       induction_coordinator_profile { build(:induction_coordinator_profile) }
     end
 
+    trait :induction_coordinator_with_school do
+      induction_coordinator_profile { build(:induction_coordinator_profile) }
+      after(:build) do |user|
+        user.induction_coordinator_profile.schools << FactoryBot.build(:school, primary_contact_email: "school_primary_contact_email@example.com")
+      end
+    end
+
     trait :lead_provider do
       lead_provider_profile { build(:lead_provider_profile) }
     end

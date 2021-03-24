@@ -25,7 +25,12 @@ Given(
   "Induction Coordinator account was created with {string}",
   (emailString) => {
     cy.appFactories([
-      ["create", "user", "induction_coordinator", { email: emailString }],
+      [
+        "create",
+        "user",
+        "induction_coordinator_with_school",
+        { email: emailString },
+      ],
     ]).as("userData");
   }
 );

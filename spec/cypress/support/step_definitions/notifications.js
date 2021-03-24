@@ -14,6 +14,13 @@ Given(
   }
 );
 
+Given(
+  "Email should be sent to Primary Email Contact of the School belonging to {string}",
+  (email) => {
+    cy.verifyPrimaryContactEmailSentForEmail(email);
+  }
+);
+
 When(
   "I should be able to login with magic link for email {string}",
   (email) => {
