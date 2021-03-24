@@ -8,9 +8,8 @@ on:
         required: true
         default: dev
       ref:
-        description: Git ref to deploy
+        description: Git ref to deploy (sha)
         required: true
-        default: develop
 
 env:
   DOCKERHUB_REPOSITORY_BASE: dfedigital/early-careers-framework-
@@ -45,7 +44,7 @@ jobs:
       - name: Set environment variables
         id: set_env_vars
         run:
-          echo "TAG=${{ github.sha }}" >> $GITHUB_ENV
+          echo "TAG=${{ github.event.inputs.ref }}" >> $GITHUB_ENV
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
