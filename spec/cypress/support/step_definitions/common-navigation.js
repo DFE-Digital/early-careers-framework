@@ -22,6 +22,11 @@ const pagePaths = {
   "delivery partner edit": /\/delivery-partners\/.*\/edit/,
   "delivery partner delete": /\/delivery-partners\/.*\/delete/,
   "users sign in": "/users/sign_in",
+  "lead provider users index": "/admin/suppliers/users",
+  "new lead provider user": "/admin/suppliers/users/new",
+  "new lead provider user details": "/admin/suppliers/users/new/user-details",
+  "new lead provider user review": "/admin/suppliers/users/new/review",
+  "lead provider user delete": /\/lead-providers\/users\/.*\/delete/,
 };
 
 Given("I am on {string} page", (page) => {

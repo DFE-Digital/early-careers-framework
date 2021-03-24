@@ -16,6 +16,9 @@ const elements = {
   "name input": '[name*="name"]',
   "back button": '.govuk-button:contains("Back")',
   link: "a",
+  "create supplier user button": '.govuk-button:contains("Add a new user")',
+  "supplier name input": "#supplier-user-form-supplier-field",
+  "edit supplier user link": "[data-test=edit-supplier-user-link]",
 };
 
 const get = (element) => cy.get(elements[element] || element);
