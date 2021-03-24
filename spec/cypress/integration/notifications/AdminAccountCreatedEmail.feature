@@ -15,4 +15,3 @@ Feature: Admin Account Created Email
     And I click the submit button
     Then "notification banner" should contain "User added"
     And An Admin account created email will be sent to the email "new-admin@example.com"
-

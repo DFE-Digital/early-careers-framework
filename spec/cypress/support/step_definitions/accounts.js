@@ -10,7 +10,12 @@ Given(
   "Admin account was created with email {string} and name {string}",
   (emailString, nameString) => {
     cy.appFactories([
-      ["create", "user", "admin", { email: emailString, name: nameString }],
+      [
+        "create",
+        "user",
+        "admin",
+        { email: emailString, full_name: nameString },
+      ],
     ]).as("userData");
   }
 );

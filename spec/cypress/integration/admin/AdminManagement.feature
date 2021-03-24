@@ -3,7 +3,7 @@ Feature: Admin user modifying admin users
 
   Background:
     Given I am logged in as an "admin"
-    And scenario "admin/administrators/manage_admin_users" has been run
+    And Admin account was created with email "emma-dow@example.com" and name "Emma Dow"
     And I am on "admin index" page
 
   Scenario: Creating a new admin user
@@ -40,4 +40,3 @@ Feature: Admin user modifying admin users
     When I click on "delete button"
     Then "page body" should not contain "Emma Dow"
     And "page body" should contain "User deleted"
-

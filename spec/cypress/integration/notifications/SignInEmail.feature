@@ -24,5 +24,3 @@ Feature: Sign In Email
     And I click the submit button
     Then An email sign in notification should be sent for email "induction-coordinator-test@example.com"
     And I should be able to login with magic link for email "induction-coordinator-test@example.com"
-
-

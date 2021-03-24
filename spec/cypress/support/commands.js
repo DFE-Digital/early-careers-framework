@@ -92,6 +92,7 @@ Cypress.Commands.add("verifyAdminAccountCreatedEmailSentForEmail", (email) => {
   });
 });
 
+// TODO This will be reused when we will have working registrations for induction coordinators
 Cypress.Commands.add("verifyPrimaryContactEmailSentForEmail", (email) => {
   cy.appSentEmails().then((emails) => {
     expect(emails).to.have.lengthOf(2);
