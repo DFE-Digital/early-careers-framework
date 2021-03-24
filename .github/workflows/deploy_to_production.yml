@@ -14,13 +14,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Update tags
+      - name: Fetch tag
         run: |
           git fetch --all --tags
           git checkout tags/${{ github.event.inputs.tag }} # Ensure the tag exists
-
-          git tag --force production
-          git push --force origin refs/tags/production
 
           echo "HEAD=$(git rev-parse ${{ github.event.inputs.tag }})" >> $GITHUB_ENV
 
