@@ -1,7 +1,15 @@
-import { Given, When, Then } from "cypress-cucumber-preprocessor/steps";
+import { Given, When } from "cypress-cucumber-preprocessor/steps";
 
-Given("An email notification should be sent", () => {});
+Given(
+  "An email sign in notification should be sent for email {string}",
+  (email) => {
+    cy.verifySignInEmailSentForEmail(email);
+  }
+);
 
-When("An email notification should be sent 2", () => {});
-
-Then("An email notification should be sent 3", () => {});
+When(
+  "I should be able to login with magic link for email {string}",
+  (email) => {
+    cy.signInUsingEmailUrl(email);
+  }
+);

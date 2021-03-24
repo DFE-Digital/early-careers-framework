@@ -72,6 +72,31 @@ Cypress.Commands.add("verifySignInEmailSent", (user) => {
   });
 });
 
+Cypress.Commands.add("verifySignInEmailSentForEmail", (email) => {
+  cy.appSentEmails().then((emails) => {
+    expect(emails).to.have.lengthOf(1);
+    const headersHash = computeHeadersFromEmail(emails[0]);
+    expect(headersHash["template-id"]).to.eq(SIGN_IN_EMAIL_TEMPLATE);
+    expect(headersHash.To).to.eq(email);
+  });
+});
+
+Cypress.Commands.add("signInUsingEmailUrl", (email) => {
+  cy.appSentEmails().then((emails) => {
+    expect(emails).to.have.lengthOf(1);
+    const headersHash = computeHeadersFromEmail(emails[0]);
+    expect(headersHash["template-id"]).to.eq(SIGN_IN_EMAIL_TEMPLATE);
+    expect(headersHash.To).to.eq(email);
+    cy.visit(
+      headersHash.personalisation.sign_in_url.replace(
+        "http://www.example.com",
+        ""
+      )
+    );
+    cy.get("h1").should("contain", "Sign in successful");
+  });
+});
+
 Cypress.Commands.add("chooseNameAndEmailForUser", (name, email) => {
   cy.get("input[name*=full_name").type(name);
   cy.get("input[name*=email").type(email);
