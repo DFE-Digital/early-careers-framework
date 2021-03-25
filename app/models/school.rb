@@ -84,6 +84,10 @@ class School < ApplicationRecord
       &.any?
   end
 
+  def chosen_programme?(cohort)
+    school_cohorts.find_by(cohort: cohort).present?
+  end
+
   def eligible?
     eligible_establishment_type? && open? && in_england?
   end

@@ -8,6 +8,7 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
     if resource.errors.empty?
       notify_school_primary_contact
       sign_in(resource)
+      @current_user = current_user
       render :confirmed
     else
       respond_with_navigational(resource.errors, status: :unprocessable_entity) { render :new }

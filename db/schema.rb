@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_23_180540) do
+ActiveRecord::Schema.define(version: 2021_03_24_182656) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -200,7 +200,7 @@ ActiveRecord::Schema.define(version: 2021_03_23_180540) do
   end
 
   create_table "school_cohorts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "induction_programme_choice", default: "not_yet_known", null: false
+    t.string "induction_programme_choice", null: false
     t.uuid "school_id", null: false
     t.uuid "cohort_id", null: false
     t.datetime "created_at", precision: 6, null: false
