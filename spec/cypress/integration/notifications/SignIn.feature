@@ -2,7 +2,7 @@ Feature: Sign In
   Users will be able to login using email notifications being sent
 
   Scenario: Login as an Admin User to receive notification with magic link
-    Given Admin account was created with "admin-test@example.com"
+    Given Admin account was created with email "admin-test@example.com"
     And I am on "users sign in" page
     When I type "admin-test@example.com" into "email input"
     And I click the submit button

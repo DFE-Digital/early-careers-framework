@@ -1,6 +1,6 @@
 import { Given } from "cypress-cucumber-preprocessor/steps";
 
-Given("Admin account was created with {string}", (emailString) => {
+Given("Admin account was created with email {string}", (emailString) => {
   cy.appFactories([["create", "user", "admin", { email: emailString }]]).as(
     "userData"
   );
