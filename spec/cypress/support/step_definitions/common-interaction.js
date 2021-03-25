@@ -19,6 +19,7 @@ const elements = {
   "create supplier user button": '.govuk-button:contains("Add a new user")',
   "supplier name input": "#supplier-user-form-supplier-field",
   "edit supplier user link": "[data-test=edit-supplier-user-link]",
+  "autocomplete dropdown item": ".autocomplete__menu li",
 };
 
 const get = (element) => cy.get(elements[element] || element);

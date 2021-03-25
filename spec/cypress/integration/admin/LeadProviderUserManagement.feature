@@ -12,7 +12,7 @@ Feature: Admin user modifying lead provider users
     And the page should be accessible
 
     When I type "Lead" into "supplier name input"
-    And I click on "li" containing "Lead Provider 1"
+    And I click on "autocomplete dropdown item" containing "Lead Provider 1"
     And I click the submit button
     Then I should be on "new lead provider user details" page
     And the page should be accessible
@@ -70,4 +70,3 @@ Feature: Admin user modifying lead provider users
     Then I should be on "lead provider users index" page
     And "page body" should not contain "John Wick"
     And "notification banner" should contain "User deleted"
-
