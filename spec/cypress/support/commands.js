@@ -74,50 +74,6 @@ Cypress.Commands.add("verifySignInEmailSentToUser", (user) => {
   });
 });
 
-Cypress.Commands.add("verifySignInEmailSentForEmail", (email) => {
-  cy.appSentEmails().then((emails) => {
-    expect(emails).to.have.lengthOf(1);
-    const headersHash = computeHeadersFromEmail(emails[0]);
-    expect(headersHash["template-id"]).to.eq(SIGN_IN_EMAIL_TEMPLATE);
-    expect(headersHash.To).to.eq(email);
-  });
-});
-
-Cypress.Commands.add("verifyAdminAccountCreatedEmailSentForEmail", (email) => {
-  cy.appSentEmails().then((emails) => {
-    expect(emails).to.have.lengthOf(1);
-    const headersHash = computeHeadersFromEmail(emails[0]);
-    expect(headersHash["template-id"]).to.eq(ADMIN_ACCOUNT_CREATED_TEMPLATE);
-    expect(headersHash.To).to.eq(email);
-  });
-});
-
-// TODO This will be reused when we will have working registrations for induction coordinators
-Cypress.Commands.add("verifyPrimaryContactEmailSentForEmail", (email) => {
-  cy.appSentEmails().then((emails) => {
-    expect(emails).to.have.lengthOf(2);
-    const headersHash = computeHeadersFromEmail(emails[1]);
-    expect(headersHash["template-id"]).to.eq(PRIMARY_CONTACT_TEMPLATE);
-    expect(headersHash.To).to.eq(email);
-  });
-});
-
-Cypress.Commands.add("signInUsingEmailUrl", (email) => {
-  cy.appSentEmails().then((emails) => {
-    expect(emails).to.have.lengthOf(1);
-    const headersHash = computeHeadersFromEmail(emails[0]);
-    expect(headersHash["template-id"]).to.eq(SIGN_IN_EMAIL_TEMPLATE);
-    expect(headersHash.To).to.eq(email);
-    cy.visit(
-      headersHash.personalisation.sign_in_url.replace(
-        "http://www.example.com",
-        ""
-      )
-    );
-    cy.get("h1").should("contain", "Sign in successful");
-  });
-});
-
 Cypress.Commands.add("chooseNameAndEmailForUser", (name, email) => {
   cy.get("input[name*=full_name").type(name);
   cy.get("input[name*=email").type(email);
@@ -127,3 +83,10 @@ Cypress.Commands.add("chooseNameAndEmailForUser", (name, email) => {
 Cypress.Commands.add("titleShouldEqual", (title) => {
   cy.title().should("equal", `${title} - Early career framework`);
 });
+
+module.exports = {
+  computeHeadersFromEmail,
+  SIGN_IN_EMAIL_TEMPLATE,
+  ADMIN_ACCOUNT_CREATED_TEMPLATE,
+  PRIMARY_CONTACT_TEMPLATE,
+};
