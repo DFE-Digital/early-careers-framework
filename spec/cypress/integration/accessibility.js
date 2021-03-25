@@ -28,7 +28,7 @@ describe("Accessibility", () => {
     cy.checkA11y();
 
     cy.get("@userData").then(([user]) => {
-      cy.verifySignInEmailSent(user);
+      cy.verifySignInEmailSentToUser(user);
     });
 
     cy.get("@userData")

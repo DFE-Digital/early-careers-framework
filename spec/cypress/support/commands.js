@@ -64,7 +64,7 @@ Cypress.Commands.add("appSentEmails", () =>
   cy.appEval("ActionMailer::Base.deliveries")
 );
 
-Cypress.Commands.add("verifySignInEmailSent", (user) => {
+Cypress.Commands.add("verifySignInEmailSentToUser", (user) => {
   cy.appSentEmails().then((emails) => {
     expect(emails).to.have.lengthOf(1);
     const headersHash = computeHeadersFromEmail(emails[0]);
