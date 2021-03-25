@@ -66,6 +66,24 @@ jobs:
       - name: Run tests
         run: bundle exec rspec
 
+      - name: Create ERD dot
+        run: bundle exec erd --filetype=dot
+
+      - name: Create ERD PDF
+        run: bundle exec erd
+
+      - name: Publish ERD
+        uses: actions/upload-artifact@v2
+        with:
+          name: Continuing Professional Development ERD Dotfile
+          path: tmp/entity-relationship-diagram.dot
+
+      - name: Publish ERD PDF
+        uses: actions/upload-artifact@v2
+        with:
+          name: Continuing Professional Development ERD PDF
+          path: tmp/entity-relationship-diagram.pdf
+
   frontend-tests:
     name: Run frontend JS unit tests
 
