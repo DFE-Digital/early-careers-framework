@@ -6,7 +6,7 @@
 
 - Ruby 2.7.1
 - PostgreSQL
-- NodeJS 12.13.x
+- NodeJS 14.x
 - Yarn 1.12.x
 - Docker
 
@@ -36,10 +36,10 @@ It should be possible to run just the database from docker, if you want to.
 Check docker-compose file for username and password to put in your `.env` file.
 
 If you want to seed the database you can either run `db:drop` and `db:setup` tasks with your preferred method,
-or `db:seed`. 
+or `db:seed`.
 
 ### Govuk Notify
-Register on [GOV.UK Notify](https://www.notifications.service.gov.uk). 
+Register on [GOV.UK Notify](https://www.notifications.service.gov.uk).
 Ask someone from the team to add you to our service.
 Generate a limited api key for yourself and set it in your `.env` file.
 
@@ -91,8 +91,8 @@ Check the [documentation](./documentation/terraform.md) for detailed information
 ### Creating an initial admin user
 1. Follow the [debugging instructions](./documentation/debugging_in_govpaas.md) to gain SSH access to the instance and cd to the app dir
 2. Run `/usr/local/bin/bundle exec rake "admin:create[user name,email@example.com]"`. For example, the command for a user named `John Smith` with the email
-`john.smith@example.com` would be `/usr/local/bin/bundle exec rake "admin:create[John Smith,john.smith@example.com]"`. 
-   
+`john.smith@example.com` would be `/usr/local/bin/bundle exec rake "admin:create[John Smith,john.smith@example.com]"`.
+
 **The format here is important!
    Notice that there are no extra spaces in the square brackets, and no quote marks inside the square brackets**
 
