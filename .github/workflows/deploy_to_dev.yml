@@ -67,7 +67,7 @@ jobs:
         context: .
         build-args: |
           BUILDKIT_INLINE_CACHE=1
-          VERSION=${{ github.sha }}
+          SHA=${{ github.sha }}
         cache-from: |
           dfedigital/early-careers-framework-prod:latest
         push: true

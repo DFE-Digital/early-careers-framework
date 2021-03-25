@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   before_action :set_current_user, unless: :devise_controller?
 
   def check
-    render json: { status: "OK", version: ENV["SHA"], environment: Rails.env }, status: :ok
+    render json: { status: "OK", version: release_version, sha: ENV["SHA"], environment: Rails.env }, status: :ok
   end
 
   def after_sign_in_path_for(user)
@@ -19,6 +19,10 @@ class ApplicationController < ActionController::Base
   end
 
 protected
+
+  def release_version
+    ENV["RELEASE_VERSION"] || "-"
+  end
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: %i[email full_name])

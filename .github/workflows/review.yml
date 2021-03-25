@@ -70,7 +70,7 @@ jobs:
           context: .
           build-args: |
             BUILDKIT_INLINE_CACHE=1
-            VERSION=${{ env.TAG }}
+            SHA=${{ github.sha }}
           cache-from: |
             dfedigital/early-careers-framework-dev:${{ env.ENVIRONMENT }}
             dfedigital/early-careers-framework-dev:latest
