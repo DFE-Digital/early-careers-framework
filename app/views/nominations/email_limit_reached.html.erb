@@ -1,0 +1,17 @@
+<% content_for :title, "Fail: resend nomination limit reached" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-header-l">
+      An induction tutor has already been nominated for your school
+    </h1>
+
+    <h2 class="govuk-heading-m">
+      What to do next
+    </h2>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>Ask your colleagues about it</li>
+      <li>Contact DfE on <%= MailToSupportComponent.new %></li>
+    </ul>
+  </div>
+</div>

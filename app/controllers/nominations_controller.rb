@@ -24,14 +24,23 @@ class NominationsController < ApplicationController
     render :choose_school and return unless @nomination_form.valid?(:school)
 
     session[:nomination_form] = @nomination_form.serializable_hash
-    if @nomination_form.school.eligible?
-      redirect_to review_nominations_path
-    else
+
+    if !@nomination_form.school.eligible?
       redirect_to not_eligible_nominations_path
+    elsif @nomination_form.school.fully_registered?
+      redirect_to already_nominated_nominations_path
+    elsif @nomination_form.school.partially_registered?
+      redirect_to nominations_limit_reached
+    else
+      redirect_to review_nominations_path
     end
   end
 
   def not_eligible; end
+
+  def already_nominated; end
+
+  def nominations_limit_reached; end
 
   def review; end
 

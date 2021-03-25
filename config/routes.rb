@@ -58,6 +58,8 @@ Rails.application.routes.draw do
       post "review", action: :create
       get "success", action: :success
       get "not-eligible", action: :not_eligible
+      get "already-nominated", action: :already_nominated
+      get "nominations-limit-reached", action: :nominations_limit_reached
     end
   end
 

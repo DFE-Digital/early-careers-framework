@@ -1,4 +1,4 @@
-<% content_for :title, "Success: nomination instructions were sent to school" %>
+<% content_for :title, "Success: nomination instructions sent to school" %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -14,7 +14,13 @@
     <ul class="govuk-list govuk-list--bullet">
       <li>your school will receive an email with a link to nominate an induction tutor</li>
       <li>this link will expire in 7 days</li>
-      <li>if your school does not receive this email, ensure your schools email address is correct on our register, <a href="https://www.get-information-schools.service.gov.uk/">Get information about schools</a></li>
+      <li>
+        we cannot disclose the email address. It will be an administration email, for example, office@, admin@ or head@
+      </li>
+      <li>
+        if your school does not receive this email, ensure your school email address is correct on our register,
+        <%= govuk_link_to "Get information about schools", "https://www.get-information-schools.service.gov.uk/" %>
+      </li>
       <li>if your school does not receive this email, contact: <%= render MailToSupportComponent.new %></li>
     </ul>
   </div>
