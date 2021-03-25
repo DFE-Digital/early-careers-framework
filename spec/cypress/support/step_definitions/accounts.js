@@ -20,14 +20,17 @@ Given(
   }
 );
 
-Given("Lead Provider account was created with {string}", (emailString) => {
-  cy.appFactories([
-    ["create", "user", "lead_provider", { email: emailString }],
-  ]).as("userData");
-});
+Given(
+  "Lead Provider account was created with email {string}",
+  (emailString) => {
+    cy.appFactories([
+      ["create", "user", "lead_provider", { email: emailString }],
+    ]).as("userData");
+  }
+);
 
 Given(
-  "Induction Coordinator account was created with {string}",
+  "Induction Coordinator account was created with email {string}",
   (emailString) => {
     cy.appFactories([
       [
