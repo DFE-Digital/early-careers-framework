@@ -19,7 +19,6 @@ gem "bundler"
 gem "railties"
 # gem "sprockets-rails"
 
-
 # User management and rbac
 gem "devise", ">= 4.7.3"
 gem "paper_trail"
