@@ -26,6 +26,7 @@ Feature: Admin user modifying admin users
     And "notification banner" should contain "User added"
     And "notification banner" should contain "They have been sent an email to sign in"
     And the page should be accessible
+    And An Admin account created email will be sent to the email "j.smith@example.com"
 
   Scenario: Deleting an admin user
     When I click on "edit admin link" containing "Emma Dow"
