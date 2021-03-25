@@ -10,7 +10,7 @@
   <li>receive any future notifications about this service</li>
 </ul>
 
-<%= form_with model: @nomination_form, url: choose_location_nominations_path, method: :post do |f| %>
+<%= form_with model: @nomination_request_form, url: choose_location_nominations_path, method: :post do |f| %>
   <%= f.govuk_error_summary %>
   <div class="govuk-input--width-20">
     <%= f.govuk_collection_select(

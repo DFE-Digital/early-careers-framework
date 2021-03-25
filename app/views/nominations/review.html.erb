@@ -19,7 +19,7 @@
             Name
           </dt>
           <dd class="govuk-summary-list__value">
-            <%= @nomination_form.school.name %>
+            <%= @nomination_request_form.school.name %>
           </dd>
         </div>
 
@@ -28,7 +28,7 @@
             URN
           </dt>
           <dd class="govuk-summary-list__value">
-            <%= @nomination_form.school.urn %>
+            <%= @nomination_request_form.school.urn %>
           </dd>
         </div>
 
@@ -37,7 +37,7 @@
             Address
           </dt>
           <dd class="govuk-summary-list__value">
-            <%= simple_format @nomination_form.school.full_address, class: "govuk-body" %>
+            <%= simple_format @nomination_request_form.school.full_address, class: "govuk-body" %>
           </dd>
         </div>
       </dl>

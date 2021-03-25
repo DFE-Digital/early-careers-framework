@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class NominationForm
+class NominationRequestForm
   include ActiveModel::Model
   include ActiveModel::Serialization
 
@@ -17,8 +17,7 @@ class NominationForm
   end
 
   def available_schools
-    school_ids = SchoolLocalAuthority.where(local_authority_id: local_authority_id).map(&:school_id)
-    School.unscoped.open.where(id: school_ids)
+    School.unscoped.open.joins(:school_local_authorities).where(school_local_authorities: { local_authority_id: local_authority_id })
   end
 
   def school

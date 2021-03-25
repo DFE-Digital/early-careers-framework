@@ -1,7 +1,7 @@
 import accessibleAutocomplete from "accessible-autocomplete";
 
 const locationSelect = document.querySelector(
-  "[name='nomination_form[local_authority_id]']"
+  "[name='nomination_request_form[local_authority_id]']"
 );
 
 if (locationSelect) {
@@ -11,7 +11,7 @@ if (locationSelect) {
 }
 
 const schoolSelect = document.querySelector(
-  "[name='nomination_form[school_id]']"
+  "[name='nomination_request_form[school_id]']"
 );
 
 if (schoolSelect) {
