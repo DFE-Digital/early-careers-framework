@@ -1,7 +1,7 @@
 attributes:
   - content
 disconnected: false
-filename: tmp/entity-relationship-diagram-2
+filename: tmp/entity-relationship-diagram
 filetype: pdf
 indirect: true
 inheritance: false
