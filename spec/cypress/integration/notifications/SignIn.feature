@@ -1,4 +1,4 @@
-Feature: Sign In Email
+Feature: Sign In
   Users will be able to login using email notifications being sent
 
   Scenario: Login as an Admin User to receive notification with magic link
