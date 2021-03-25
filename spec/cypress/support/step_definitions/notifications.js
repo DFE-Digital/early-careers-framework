@@ -1,14 +1,14 @@
 import { Given, When } from "cypress-cucumber-preprocessor/steps";
 
 Given(
-  "An email sign in notification should be sent for email {string}",
+  "An email sign in notification should be sent to the email {string}",
   (email) => {
     cy.verifySignInEmailSentForEmail(email);
   }
 );
 
 Given(
-  "An Admin account created email will be sent to the email {string}",
+  "An Admin account created email should be sent to the email {string}",
   (email) => {
     cy.verifyAdminAccountCreatedEmailSentForEmail(email);
   }
