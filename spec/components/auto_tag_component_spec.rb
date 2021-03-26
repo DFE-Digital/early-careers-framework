@@ -3,10 +3,10 @@
 require "rails_helper"
 
 RSpec.describe AutoTagComponent, type: :component do
-  it "renders grey tag for to do" do
+  it "renders yellow tag for to do" do
     rendered_component = render_inline(described_class.new(text: "To do")).to_html
     expect(rendered_component).to include("To do")
-    expect(rendered_component).to include("grey")
+    expect(rendered_component).to include("yellow")
   end
 
   it "renders green tag for done" do

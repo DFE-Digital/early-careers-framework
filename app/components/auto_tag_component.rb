@@ -3,7 +3,7 @@
 class AutoTagComponent < ViewComponent::Base
   def initialize(text:)
     colours = {
-      "to do": "grey",
+      "to do": "yellow",
       "cannot start yet": "grey",
       "setup complete": "green",
       "done": "green",
