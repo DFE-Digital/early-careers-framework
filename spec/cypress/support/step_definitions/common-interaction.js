@@ -1,20 +1,29 @@
 import { When, Then } from "cypress-cucumber-preprocessor/steps";
 
-const elements = {
-  "cookie consent radio": '[name="cookies_form[analytics_consent]"]',
-  "cookie banner": ".js-cookie-banner",
-  "create admin button": "[data-test=create-admin-button]",
-  "page body": "main",
+const inputs = {
   "email input": "input[name*=email]",
-  "notification banner": "[data-test=notification-banner]",
-  "edit admin link": "[data-test=edit-admin-link]",
+  "delivery partner name input": 'input[type="text"]',
+  "name input": '[name*="name"]',
+  "cookie consent radio": '[name="cookies_form[analytics_consent]"]',
+  "location input": '[id="nomination-request-form-local-authority-id-field"]',
+};
+
+const buttons = {
+  "create admin button": "[data-test=create-admin-button]",
   "delete button": "[data-test=delete-button]",
   "create delivery partner button":
     '.govuk-button:contains("new delivery partner")',
-  "delivery partner name input": 'input[type="text"]',
-  "change name link": 'a:contains("Change name")',
-  "name input": '[name*="name"]',
   "back button": '.govuk-button:contains("Back")',
+};
+
+const elements = {
+  ...inputs,
+  ...buttons,
+  "page body": "main",
+  "cookie banner": ".js-cookie-banner",
+  "notification banner": "[data-test=notification-banner]",
+  "edit admin link": "[data-test=edit-admin-link]",
+  "change name link": 'a:contains("Change name")',
   link: "a",
 };
 
@@ -50,6 +59,15 @@ When("I click the submit button", () => {
 
 When("I click the back link", () => {
   cy.clickBackLink();
+});
+
+When("I type {string} into accessible autocomplete", (value) => {
+  cy.get(".autocomplete__wrapper").click();
+  cy.focused().type(value);
+});
+
+When("I click on the first element in the displayed list", () => {
+  cy.get("ul li:first").click();
 });
 
 Then("{string} should be unchecked", (element) => {
