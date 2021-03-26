@@ -26,6 +26,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Pin Terraform version
+        uses: hashicorp/setup-terraform@v1.2.1
+        with:
+          terraform_version: 0.14.0
+
       - name: Deploy to production
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_PRODUCTION }}

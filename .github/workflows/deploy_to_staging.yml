@@ -30,6 +30,11 @@ jobs:
         run: |
           echo ${{ github.event.inputs.version }} | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$'
 
+      - name: Pin Terraform version
+        uses: hashicorp/setup-terraform@v1.2.1
+        with:
+          terraform_version: 0.14.0
+
       - uses: actions/checkout@v2
         name: Checkout Code
         with:
