@@ -1,8 +1,6 @@
 import accessibleAutocomplete from "accessible-autocomplete";
 
-const locationSelect = document.querySelector(
-  "[name='nomination_request_form[local_authority_id]']"
-);
+const locationSelect = document.querySelector(".js-location-select");
 
 if (locationSelect) {
   accessibleAutocomplete.enhanceSelectElement({
@@ -10,9 +8,7 @@ if (locationSelect) {
   });
 }
 
-const schoolSelect = document.querySelector(
-  "[name='nomination_request_form[school_id]']"
-);
+const schoolSelect = document.querySelector(".js-school-select");
 
 if (schoolSelect) {
   accessibleAutocomplete.enhanceSelectElement({
