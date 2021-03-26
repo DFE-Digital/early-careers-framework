@@ -1,0 +1,42 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-3"><%= @cohort.start_year %></h1>
+
+    <p class="govuk-body-l govuk-!-margin-bottom-8">
+    <% if @school_cohort[:induction_programme_choice] === "core_induction_programme" %>
+      Using accredited materials
+    <% else %>
+      Training provider funded by DfE
+    <% end %>
+    </p>
+
+    <ol class="app-task-list">
+      <li>
+        <h2 class="app-task-list__section">
+          Next steps
+        </h2>
+        <ul class="app-task-list__items">
+
+          <li class="app-task-list__item">
+            <span class="app-task-list__task-name">
+              <a class="govuk-link--no-visited-state" href="#" aria-describedby="eligibility-status">
+                Choose your training materials
+              </a>
+            </span>
+
+            <%= render AutoTagComponent.new(text: "To do") %>
+          </li>
+
+          <li class="app-task-list__item">
+            <span class="app-task-list__task-name">
+              <a class="govuk-link--no-visited-state" href="#">Add teachers and mentors</a>
+            </span>
+
+            <%= render AutoTagComponent.new(text: "Cannot start yet") %>
+          </li>
+
+        </ul>
+      </li>
+    </ol>
+  </div>
+</div>
