@@ -11,9 +11,8 @@ on:
         required: true
         default: develop
 jobs:
-  turnstyle:
+  deploy-to-staging:
     runs-on: ubuntu-20.04
-    timeout-minutes: 20
     steps:
       - uses: softprops/turnstyle@v1
         name: Check workflow concurrency
@@ -23,9 +22,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  deploy-to-staging:
-    runs-on: ubuntu-20.04
-    steps:
       - name: Check tag format
         run: |
           echo ${{ github.event.inputs.version }} | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$'
