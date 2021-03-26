@@ -4,9 +4,9 @@
 
 ## Prerequisites
 
-- Ruby 2.7.1
+- Ruby 2.7.2
 - PostgreSQL
-- NodeJS 14.x
+- NodeJS 14.16.0
 - Yarn 1.12.x
 - Docker
 
