@@ -8,7 +8,7 @@ RSpec.describe "Nominations flow", type: :request do
   end
 
   describe "choose location" do
-    it "renders the school search page" do
+    it "renders the choose location page" do
       get "/nominations/choose-location"
       expect(response).to render_template(:choose_location)
     end
@@ -26,7 +26,7 @@ RSpec.describe "Nominations flow", type: :request do
   end
 
   describe "choose school" do
-    it "renders the school search page" do
+    it "renders the choose school page" do
       get "/nominations/choose-school"
       expect(response).to render_template(:choose_school)
     end
@@ -94,7 +94,7 @@ RSpec.describe "Nominations flow", type: :request do
           .and_return(session)
     end
 
-    it "renders the school search page" do
+    it "renders the review page" do
       get "/nominations/review"
       expect(response).to render_template(:review)
     end
@@ -106,28 +106,28 @@ RSpec.describe "Nominations flow", type: :request do
   end
 
   describe "success" do
-    it "renders the school search page" do
+    it "renders the success page" do
       get "/nominations/success"
       expect(response).to render_template(:success)
     end
   end
 
   describe "not eligible" do
-    it "renders the school search page" do
+    it "renders the not eligible page" do
       get "/nominations/not-eligible"
       expect(response).to render_template(:not_eligible)
     end
   end
 
   describe "email limit reached" do
-    it "renders the school search page" do
+    it "renders the email limit reached page" do
       get "/nominations/already-nominated"
       expect(response).to render_template(:already_nominated)
     end
   end
 
   describe "already nominated" do
-    it "renders the school search page" do
+    it "renders the already nominated page" do
       get "/nominations/limit-reached"
       expect(response).to render_template(:limit_reached)
     end
