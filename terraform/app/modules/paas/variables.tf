@@ -40,6 +40,11 @@ variable web_app_start_command {
 variable logstash_url {
 }
 
+variable govuk_hostnames {
+  type = list(string)
+  default = []
+}
+
 locals {
 
   app_env_domain  = {

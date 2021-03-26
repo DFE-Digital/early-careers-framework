@@ -28,6 +28,12 @@ resource cloudfoundry_app web_app {
   routes {
     route = cloudfoundry_route.web_app_route.id
   }
+  dynamic "routes" {
+    for_each = cloudfoundry_route.web_app_route_gov_uk
+    content {
+      route = routes.value["id"]
+    }
+  }
   environment = local.app_environment
 }
 
@@ -35,6 +41,13 @@ resource cloudfoundry_route web_app_route {
   domain   = data.cloudfoundry_domain.cloudapps_digital.id
   space    = data.cloudfoundry_space.space.id
   hostname = local.web_app_name
+}
+
+resource cloudfoundry_route web_app_route_gov_uk {
+  for_each = toset(var.govuk_hostnames)
+  domain   = data.cloudfoundry_domain.education_gov_uk.id
+  space    = data.cloudfoundry_space.space.id
+  hostname = each.value
 }
 
 resource cloudfoundry_user_provided_service logging {
