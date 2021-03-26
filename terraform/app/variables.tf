@@ -85,6 +85,11 @@ variable secret_paas_app_env_values {
   type = map(string)
 }
 
+variable govuk_hostnames {
+  type = list(string)
+  default = []
+}
+
 locals {
   paas_app_env_yml_values = yamldecode(file("${path.module}/../workspace-variables/${var.app_environment}_app_env.yml"))
   paas_app_env_values = merge(
