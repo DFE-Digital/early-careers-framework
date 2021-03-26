@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: Which version are you creating?
+        description: Which version are you creating? ("vx.x.x")
         required: true
       ref:
         description: Git ref to deploy
@@ -14,6 +14,10 @@ jobs:
   deploy-to-staging:
     runs-on: ubuntu-20.04
     steps:
+      - name: Check tag format
+        run: |
+          echo ${{ github.event.inputs.version }} | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$'
+
       - uses: actions/checkout@v2
         name: Checkout Code
         with:
