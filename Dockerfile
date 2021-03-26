@@ -67,9 +67,9 @@ RUN yarn jest --passWithNoTests && \
 # If a existing base image name is specified Stage 1 & 2 will not be built and gems and dev packages will be used from the supplied image.
 FROM ${BASE_RUBY_IMAGE} AS production
 
-ARG VERSION
+ARG SHA
 ENV AUTHORISED_HOSTS=127.0.0.1 \
-    SHA=${VERSION}
+    SHA=${SHA}
 
 RUN apk -U upgrade && \
     apk add --update --no-cache tzdata libpq libxml2 libxslt graphviz && \

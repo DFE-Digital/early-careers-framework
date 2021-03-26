@@ -29,6 +29,11 @@ const pagePaths = {
   "resend nominations not eligible": "nominations/not-eligible",
   "resend nominations already nominated": "nominations/already-nominated",
   "resend nominations limit reached": "nominations/limit-reached",
+  "lead provider users index": "/admin/suppliers/users",
+  "new lead provider user": "/admin/suppliers/users/new",
+  "new lead provider user details": "/admin/suppliers/users/new/user-details",
+  "new lead provider user review": "/admin/suppliers/users/new/review",
+  "lead provider user delete": /\/lead-providers\/users\/.*\/delete/,
 };
 
 Given("I am on {string} page", (page) => {

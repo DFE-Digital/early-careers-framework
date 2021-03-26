@@ -1,45 +1,129 @@
 name: Deploy to Staging
 
 on:
-  push:
-    branches:
-      - master
-    paths-ignore:
-      - 'documentation/**'
-
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Which version are you creating? ("vx.x.x")
+        required: true
+      ref:
+        description: Git ref to deploy
+        required: true
+        default: develop
 jobs:
-  deploy:
+  deploy-to-staging:
     runs-on: ubuntu-20.04
     steps:
-      - name: setup-inputs
-        run: |
-          INPUTS='${{ format('{{"environment": "staging", "ref": "{0}"}}', github.sha) }}'
-          echo "INPUTS=${INPUTS}" >> $GITHUB_ENV
-
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Tag release
-        run: |
-           TAGNAME=$(git log -1 --pretty=%B | sed -n 's/.*Release version \(.*\) to staging.*/\1/p')
-           ([[ ! -z "$TAGNAME" ]] && git tag -f $TAGNAME && git push origin $TAGNAME -f) || (echo "No version found" && exit 1)
-
-      - name: trigger-deploy
-        uses: benc-uk/workflow-dispatch@v1.1
+      - uses: softprops/turnstyle@v1
+        name: Check workflow concurrency
         with:
-          workflow: Deploy to Environment # Workflow name, in deploy.yml
-          token: ${{ secrets.PERSONAL_TOKEN }}
-          inputs: ${{ env.INPUTS }}
+          poll-interval-seconds: 20
+          same-branch-only: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Wait for Deploy App Workflow
-        id: wait_for_deploy_app
-        uses: fountainhead/action-wait-for-check@v1.0.0
+      - name: Check tag format
+        run: |
+          echo ${{ github.event.inputs.version }} | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$'
+
+      - name: Pin Terraform version
+        uses: hashicorp/setup-terraform@v1.2.1
         with:
-          token: ${{ secrets.PERSONAL_TOKEN }}
-          ref: ${{ github.event.pull_request.head.sha || github.ref }}
-          checkName: build docker image and deploy # Job name within workflow
-          timeoutSeconds: 900
-          intervalSeconds: 15
+          terraform_version: 0.14.0
 
-      - name: Fail if child job fails
-        if: ${{ steps.wait_for_deploy_app.outputs.conclusion != 'success' }}
-        run: exit 1
+      - uses: actions/checkout@v2
+        name: Checkout Code
+        with:
+          ref: ${{ github.event.inputs.ref }}
+
+      - name: Branch protection OFF
+        uses: octokit/request-action@v2.x
+        with:
+          route: PUT /repos/DFE-Digital/early-careers-framework/branches/master/protection
+          repository: ${{ github.repository }}
+          owner: DFE-Digital
+          required_status_checks: |
+            null
+          required_pull_request_reviews: |
+            null
+          enforce_admins: |
+            null
+          allow_force_pushes: |
+            true
+          required_linear_history: |
+            true
+          allow_deletions: |
+            null
+          restrictions: |
+            null
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
+
+      - name: Update master
+        run: |
+          git fetch
+          git branch tmp-branch
+          git switch master
+          git reset --hard tmp-branch --
+          git branch --delete --force tmp-branch
+          git tag --force ${{ github.event.inputs.version }}
+
+          git push --force origin refs/tags/${{ github.event.inputs.version }}
+          git push --force origin master
+
+          echo "HEAD=$(git rev-parse ${{ github.event.inputs.version }})" >> $GITHUB_ENV
+
+      - name: Branch protection ON
+        uses: octokit/request-action@v2.x
+        if: always() # Force this step to run so we don't leave master unprotected
+        with:
+          route: PUT /repos/DFE-Digital/early-careers-framework/branches/master/protection
+          repository: ${{ github.repository }}
+          owner: DFE-Digital
+          required_status_checks: |
+            strict: true
+            contexts:
+              - Run Cypress
+              - Run frontend JS unit tests
+              - Run rspec
+              - deploy
+              - lint
+          required_pull_request_reviews: |
+            dismiss_stale_reviews: true
+            require_code_owner_reviews: true
+          enforce_admins: |
+            true
+          allow_force_pushes: |
+            null
+          required_linear_history: |
+            true
+          allow_deletions: |
+            null
+          restrictions: |
+            null
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_DEV_PASSWORD }}
+
+      - name: retag docker image
+        run: |
+          docker pull dfedigital/early-careers-framework-prod:${{ env.HEAD }}
+          docker tag dfedigital/early-careers-framework-prod:${{ env.HEAD }} dfedigital/early-careers-framework-prod:${{ github.event.inputs.version }}
+          docker push dfedigital/early-careers-framework-prod:${{ github.event.inputs.version }}
+
+      - name: Deploy to staging
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_STAGING }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_STAGING }}
+          TF_VAR_paas_user: ${{ secrets.GOVPAAS_STAG_USERNAME }}
+          TF_VAR_paas_password: ${{ secrets.GOVPAAS_STAG_PASSWORD }}
+        run: |
+          export TF_VAR_paas_app_docker_image=dfedigital/early-careers-framework-prod:${{ github.event.inputs.version }}
+          cd terraform/app
+          terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-e2123d0b-d394-4594-8056-315300e7d8a8"
+          terraform apply -input=false -auto-approve -var-file ../workspace-variables/staging.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_STAGING}}", "RELEASE_VERSION":"${{github.event.inputs.version}}"}' -var 'logstash_url=${{secrets.SYSLOG_DRAIN_URL}}'

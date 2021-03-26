@@ -5,7 +5,9 @@ const inputs = {
   "delivery partner name input": 'input[type="text"]',
   "name input": '[name*="name"]',
   "cookie consent radio": '[name="cookies_form[analytics_consent]"]',
-  "location input": '[id="nomination-request-form-local-authority-id-field"]',
+  "location input": "#nomination-request-form-local-authority-id-field",
+  "school input": "#nomination-request-form-school-id-field",
+  "supplier name input": "#supplier-user-form-supplier-field",
 };
 
 const buttons = {
@@ -14,17 +16,24 @@ const buttons = {
   "create delivery partner button":
     '.govuk-button:contains("new delivery partner")',
   "back button": '.govuk-button:contains("Back")',
+  "create supplier user button": '.govuk-button:contains("Add a new user")',
+};
+
+const links = {
+  link: "a",
+  "edit admin link": "[data-test=edit-admin-link]",
+  "change name link": 'a:contains("Change name")',
+  "edit supplier user link": "[data-test=edit-supplier-user-link]",
 };
 
 const elements = {
   ...inputs,
   ...buttons,
+  ...links,
   "page body": "main",
   "cookie banner": ".js-cookie-banner",
   "notification banner": "[data-test=notification-banner]",
-  "edit admin link": "[data-test=edit-admin-link]",
-  "change name link": 'a:contains("Change name")',
-  link: "a",
+  "autocomplete dropdown item": ".autocomplete__menu li",
 };
 
 const get = (element) => cy.get(elements[element] || element);
@@ -59,15 +68,6 @@ When("I click the submit button", () => {
 
 When("I click the back link", () => {
   cy.clickBackLink();
-});
-
-When("I type {string} into accessible autocomplete", (value) => {
-  cy.get(".autocomplete__wrapper").click();
-  cy.focused().type(value);
-});
-
-When("I click on the first element in the displayed list", () => {
-  cy.get("ul li:first").click();
 });
 
 Then("{string} should be unchecked", (element) => {

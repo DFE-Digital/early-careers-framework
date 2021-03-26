@@ -6,15 +6,14 @@ Feature: Resend nominations flow
     And I am on "resend nominations choose location" page
     Then the page should be accessible
 
-
-    When I type "test" into accessible autocomplete
-    And I click on the first element in the displayed list
+    When I type "test" into "location input"
+    And I click on "autocomplete dropdown item" containing "Test"
     And I click the submit button
     Then I am on "resend nominations choose school" page
     And the page should be accessible
 
-    When I type "test" into accessible autocomplete
-    And I click on the first element in the displayed list
+    When I type "test" into "school input"
+    And I click on "autocomplete dropdown item" containing "Test"
     And I click the submit button
     Then I am on "resend nominations review" page
     And the page should be accessible

@@ -81,7 +81,10 @@ Cypress.Commands.add("chooseNameAndEmailForUser", (name, email) => {
 });
 
 Cypress.Commands.add("titleShouldEqual", (title) => {
-  cy.title().should("equal", `${title} - Early career framework`);
+  cy.title().should(
+    "equal",
+    `${title} - Manage training for early career teachers`
+  );
 });
 
 module.exports = {
