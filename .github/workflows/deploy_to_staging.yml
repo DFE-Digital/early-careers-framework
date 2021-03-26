@@ -11,6 +11,18 @@ on:
         required: true
         default: develop
 jobs:
+  turnstyle:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 20
+    steps:
+      - uses: softprops/turnstyle@v1
+        name: Check workflow concurrency
+        with:
+          poll-interval-seconds: 20
+          same-branch-only: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   deploy-to-staging:
     runs-on: ubuntu-20.04
     steps:
