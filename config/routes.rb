@@ -48,6 +48,21 @@ Rails.application.routes.draw do
     resource :school_not_confirmed, only: :show, controller: :school_not_confirmed, path: "/school-not-confirmed"
   end
 
+  resources :nominations, only: [] do
+    collection do
+      get "choose-location", action: :choose_location
+      post "choose-location", action: :receive_location
+      get "choose-school", action: :choose_school
+      post "choose-school", action: :receive_school
+      get "review", action: :review
+      post "review", action: :create
+      get "success", action: :success
+      get "not-eligible", action: :not_eligible
+      get "already-nominated", action: :already_nominated
+      get "limit-reached", action: :limit_reached
+    end
+  end
+
   namespace :lead_providers do
     resources :your_schools, only: %i[index create]
     resources :school_details, only: %i[show]
