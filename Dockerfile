@@ -69,7 +69,7 @@ FROM ${BASE_RUBY_IMAGE} AS production
 
 ARG VERSION
 ENV AUTHORISED_HOSTS=127.0.0.1 \
-    SHA=${VERSION}
+    SHA=${SHA}
 
 RUN apk -U upgrade && \
     apk add --update --no-cache tzdata libpq libxml2 libxslt graphviz && \
