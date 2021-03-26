@@ -6,5 +6,9 @@ terraform {
       source  = "cloudfoundry-community/cloudfoundry"
       version = ">= 0.13.0"
     }
+    statuscake = {
+      source  = "StatusCakeDev/statuscake"
+      version = "~> 1.0.1"
+    }
   }
 }
