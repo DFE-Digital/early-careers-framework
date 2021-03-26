@@ -20,7 +20,8 @@
           :name,
           label: { text: "School location", class: "govuk-label govuk-label--m" },
           hint: { text: "Enter town, city or postcode"},
-          options: { include_blank: true }) %>
+          options: { include_blank: true },
+          class: ["js-location-select"]) %>
   </div>
   <%= f.govuk_submit "Continue" %>
 <% end %>

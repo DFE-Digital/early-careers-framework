@@ -4,14 +4,16 @@
 <%= form_with model: @nomination_request_form, url: choose_school_nominations_path, method: :post do |f| %>
   <div class="govuk-input--width-20">
     <%= f.govuk_error_summary %>
+    <!-- TODO https://trello.com/c/vIDt0PVz/419-make-school-search-autocomplete-work-with-urn -->
     <%= f.govuk_collection_select(
           :school_id,
           @nomination_request_form.available_schools,
           :id,
           :name,
-          label: { text: "Find your school", class: "govuk-label govuk-label--l" },
-          hint: { text: "Enter name, URN, LAESTAB or UKPRN"}, #TODO: make it work with those
-          options: { include_blank: true }) %>
+          label: { text: "Find your school", tag: "h1", size: "l"  },
+          hint: { text: "Enter name, URN, LAESTAB or UKPRN"},
+          options: { include_blank: true },
+          class: ["js-school-select"]) %>
   </div>
   <%= f.govuk_submit "Continue" %>
 <% end %>

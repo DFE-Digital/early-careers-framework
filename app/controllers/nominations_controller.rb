@@ -12,10 +12,13 @@ class NominationsController < ApplicationController
   end
 
   def receive_location
-    render :choose_location and return unless @nomination_request_form.valid?(:local_authority)
-
-    session[:nomination_request_form] = @nomination_request_form.serializable_hash
-    redirect_to choose_school_nominations_path
+    if @nomination_request_form.valid?(:local_authority)
+      session[:nomination_request_form] = @nomination_request_form.serializable_hash
+      redirect_to choose_school_nominations_path
+    else
+      @local_authorities = LocalAuthority.all
+      render :choose_location
+    end
   end
 
   def choose_school; end
@@ -30,7 +33,7 @@ class NominationsController < ApplicationController
     elsif @nomination_request_form.school.fully_registered?
       redirect_to already_nominated_nominations_path
     elsif @nomination_request_form.school.partially_registered?
-      redirect_to nominations_limit_reached
+      redirect_to limit_reached_nominations_path
     else
       redirect_to review_nominations_path
     end
@@ -40,7 +43,7 @@ class NominationsController < ApplicationController
 
   def already_nominated; end
 
-  def nominations_limit_reached; end
+  def limit_reached; end
 
   def review; end
 

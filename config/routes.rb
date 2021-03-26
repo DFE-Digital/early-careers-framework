@@ -59,7 +59,7 @@ Rails.application.routes.draw do
       get "success", action: :success
       get "not-eligible", action: :not_eligible
       get "already-nominated", action: :already_nominated
-      get "nominations-limit-reached", action: :nominations_limit_reached
+      get "limit-reached", action: :limit_reached
     end
   end
 

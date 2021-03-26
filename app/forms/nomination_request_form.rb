@@ -21,7 +21,7 @@ class NominationRequestForm
   end
 
   def school
-    School.find(school_id)
+    School.unscoped.find(school_id)
   end
 
   def save!
