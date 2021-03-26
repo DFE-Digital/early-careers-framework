@@ -27,6 +27,8 @@ const pagePaths = {
   "new lead provider user details": "/admin/suppliers/users/new/user-details",
   "new lead provider user review": "/admin/suppliers/users/new/review",
   "lead provider user delete": /\/lead-providers\/users\/.*\/delete/,
+  "choose programme": "/schools/choose-programme",
+  schools: "/schools",
 };
 
 Given("I am on {string} page", (page) => {
