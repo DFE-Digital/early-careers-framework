@@ -1,24 +1,38 @@
 import { When, Then } from "cypress-cucumber-preprocessor/steps";
 
-const elements = {
-  "cookie consent radio": '[name="cookies_form[analytics_consent]"]',
-  "cookie banner": ".js-cookie-banner",
-  "create admin button": "[data-test=create-admin-button]",
-  "page body": "main",
+const inputs = {
   "email input": "input[name*=email]",
-  "notification banner": "[data-test=notification-banner]",
-  "edit admin link": "[data-test=edit-admin-link]",
+  "delivery partner name input": 'input[type="text"]',
+  "name input": '[name*="name"]',
+  "cookie consent radio": '[name="cookies_form[analytics_consent]"]',
+  "location input": "#nomination-request-form-local-authority-id-field",
+  "school input": "#nomination-request-form-school-id-field",
+  "supplier name input": "#supplier-user-form-supplier-field",
+};
+
+const buttons = {
+  "create admin button": "[data-test=create-admin-button]",
   "delete button": "[data-test=delete-button]",
   "create delivery partner button":
     '.govuk-button:contains("new delivery partner")',
-  "delivery partner name input": 'input[type="text"]',
-  "change name link": 'a:contains("Change name")',
-  "name input": '[name*="name"]',
   "back button": '.govuk-button:contains("Back")',
-  link: "a",
   "create supplier user button": '.govuk-button:contains("Add a new user")',
-  "supplier name input": "#supplier-user-form-supplier-field",
+};
+
+const links = {
+  link: "a",
+  "edit admin link": "[data-test=edit-admin-link]",
+  "change name link": 'a:contains("Change name")',
   "edit supplier user link": "[data-test=edit-supplier-user-link]",
+};
+
+const elements = {
+  ...inputs,
+  ...buttons,
+  ...links,
+  "page body": "main",
+  "cookie banner": ".js-cookie-banner",
+  "notification banner": "[data-test=notification-banner]",
   "autocomplete dropdown item": ".autocomplete__menu li",
 };
 

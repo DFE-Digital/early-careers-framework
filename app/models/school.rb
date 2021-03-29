@@ -16,6 +16,7 @@ class School < ApplicationRecord
   has_many :lead_providers, through: :partnerships
   has_many :school_cohorts
   has_many :pupil_premiums
+  has_many :nomination_emails
   has_and_belongs_to_many :induction_coordinator_profiles
 
   has_many :early_career_teacher_profiles

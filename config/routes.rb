@@ -31,6 +31,8 @@ Rails.application.routes.draw do
     resources :school_search, only: %i[index]
   end
 
+  resources :nominations, only: %i[index]
+
   namespace :registrations do
     root to: "start#index"
     resource :account_not_found, only: :show, controller: :account_not_found, path: "/account-not-found"
@@ -45,6 +47,21 @@ Rails.application.routes.draw do
     resource :school_not_eligible, only: :show, controller: :school_not_eligible, path: "/school-not-eligible"
     resource :school_registered, only: :show, controller: :school_registered, path: "/school-registered"
     resource :school_not_confirmed, only: :show, controller: :school_not_confirmed, path: "/school-not-confirmed"
+  end
+
+  resources :nominations, only: [] do
+    collection do
+      get "choose-location", action: :choose_location
+      post "choose-location", action: :receive_location
+      get "choose-school", action: :choose_school
+      post "choose-school", action: :receive_school
+      get "review", action: :review
+      post "review", action: :create
+      get "success", action: :success
+      get "not-eligible", action: :not_eligible
+      get "already-nominated", action: :already_nominated
+      get "limit-reached", action: :limit_reached
+    end
   end
 
   namespace :lead_providers do

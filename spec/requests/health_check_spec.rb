@@ -2,8 +2,7 @@
 
 require "rails_helper"
 
-# TODO: Renable when rails works
-RSpec.xdescribe "Health Check", type: :request do
+RSpec.describe "Health Check", type: :request do
   describe "GET /health_check" do
     it "returns success message for current health checks" do
       get "/healthcheck"

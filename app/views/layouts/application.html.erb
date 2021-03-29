@@ -4,8 +4,7 @@
     <title><%= (yield(:title) + " - " unless yield(:title).blank?).to_s + "Manage training for early career teachers" %></title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-<!--    TODO: Reenable when rails is working-->
-    <%#= canonical_tag %>
+    <%= canonical_tag %>
     <%= tag :meta, name: 'viewport', content: 'width=device-width, initial-scale=1' %>
     <%= tag :meta, property: 'og:image', content: asset_pack_path('media/images/govuk-opengraph-image.png') %>
     <%= tag :meta, name: 'theme-color', content: '#0b0c0c' %>

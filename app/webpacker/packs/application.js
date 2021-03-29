@@ -16,5 +16,6 @@ import "whatwg-fetch";
 import "./admin/supplier-users";
 import "./cookie-banner";
 import "./school_search";
+import "./nominations";
 
 initAll();
