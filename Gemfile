@@ -6,18 +6,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby File.read(".ruby-version").chomp
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-# gem "rails", "~> 6.1.2", ">= 6.1.2.1"
-gem "actioncable"
-gem "actionmailer"
-gem "actionpack"
-gem "actionview"
-gem "activejob"
-gem "activemodel"
-gem "activerecord"
-gem "activesupport"
-gem "bundler"
-gem "railties"
-# gem "sprockets-rails"
+gem "rails", "~> 6.1.3", ">= 6.1.3.1"
 
 # User management and rbac
 gem "devise", ">= 4.7.3"
@@ -28,7 +17,7 @@ gem "pundit"
 gem "kaminari", ">= 1.2.0"
 
 # Adds health check functionality
-# gem "health_check", github: "/ianheggie/health_check", ref: "0b799ead604f900ed50685e9b2d469cd2befba5b"
+gem "health_check", github: "/ianheggie/health_check", ref: "0b799ead604f900ed50685e9b2d469cd2befba5b"
 
 # Cleaner logs, one line per request
 gem "lograge"
@@ -56,7 +45,7 @@ gem "bootsnap", ">= 1.1.0", require: false
 gem "foreman"
 
 # Canonical meta tag
-# gem "canonical-rails", ">= 0.2.11" remove until rails is fixed https://github.com/rails/rails/issues/41750
+gem "canonical-rails", ">= 0.2.11"
 
 gem "listen", ">= 3.0.5", "< 3.4"
 
