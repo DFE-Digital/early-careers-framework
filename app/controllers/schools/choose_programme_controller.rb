@@ -5,10 +5,10 @@ class Schools::ChooseProgrammeController < Schools::BaseController
   skip_after_action :verify_policy_scoped
 
   def show
-    school = @current_user.induction_coordinator_profile.schools.first
+    school = current_user.induction_coordinator_profile.schools.first
 
     if school.chosen_programme?(Cohort.current)
-      redirect_to helpers.profile_dashboard_url(@current_user)
+      redirect_to helpers.profile_dashboard_url(current_user)
     else
       @induction_choice_form = InductionChoiceForm.new
     end
@@ -28,6 +28,6 @@ class Schools::ChooseProgrammeController < Schools::BaseController
       induction_programme_choice: @induction_choice_form.programme_choice,
     )
 
-    redirect_to helpers.profile_dashboard_url(@current_user)
+    redirect_to helpers.profile_dashboard_url(current_user)
   end
 end

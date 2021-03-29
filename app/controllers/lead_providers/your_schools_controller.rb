@@ -42,7 +42,7 @@ module LeadProviders
     end
 
     def set_lead_provider
-      @lead_provider = @current_user&.lead_provider
+      @lead_provider = current_user&.lead_provider
     end
   end
 end
