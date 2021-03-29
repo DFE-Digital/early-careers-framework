@@ -33,7 +33,12 @@ RSpec.describe InviteSchools do
 
     it "sends the nomination email" do
       expect(SchoolMailer).to receive(:nomination_email).with(
-        school.primary_contact_email, String, String
+        hash_including(
+          reference: String,
+          school_name: String,
+          nomination_url: String,
+          recipient: school.primary_contact_email,
+        ),
       ).and_call_original
 
       invite_schools.run [school.id]
@@ -44,7 +49,12 @@ RSpec.describe InviteSchools do
 
       it "sends the nomination email to the secondary contact" do
         expect(SchoolMailer).to receive(:nomination_email).with(
-          school.secondary_contact_email, String, String
+          hash_including(
+            reference: String,
+            school_name: String,
+            nomination_url: String,
+            recipient: school.secondary_contact_email,
+          ),
         ).and_call_original
 
         invite_schools.run [school.id]

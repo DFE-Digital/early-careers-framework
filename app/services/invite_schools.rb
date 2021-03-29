@@ -21,7 +21,7 @@ class InviteSchools
         sent_to: recipient,
         sent_at: Time.zone.now,
       )
-      send_nomination_email(recipient, token)
+      send_nomination_email(recipient, token, school.name)
     rescue StandardError
       logger.info "Error emailing school: #{school_id} ... skipping"
     end
@@ -29,9 +29,12 @@ class InviteSchools
 
 private
 
-  def send_nomination_email(recipient, token)
+  def send_nomination_email(recipient, token, school_name)
     SchoolMailer.nomination_email(
-      recipient, nomination_url(token), token
+      recipient: recipient,
+      reference: token,
+      school_name: school_name,
+      nomination_url: nomination_url(token),
     ).deliver_now
   end
 
