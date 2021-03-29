@@ -79,7 +79,7 @@ RSpec.describe "Nominations flow", type: :request do
 
       it "redirects to non eligible" do
         post "/nominations/choose-school", params: { nomination_request_form: { school_id: school.id } }
-        expect(response).to redirect_to(already_nominated_nominations_path)
+        expect(response).to redirect_to(already_renominated_nominations_path)
       end
     end
   end
@@ -122,7 +122,7 @@ RSpec.describe "Nominations flow", type: :request do
   describe "email limit reached" do
     it "renders the email limit reached page" do
       get "/nominations/already-nominated"
-      expect(response).to render_template(:already_nominated)
+      expect(response).to render_template(:already_renominated)
     end
   end
 

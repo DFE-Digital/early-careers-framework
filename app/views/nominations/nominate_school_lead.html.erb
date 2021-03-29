@@ -1,0 +1,57 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <h1 class="govuk-heading-xl">Nominate an induction tutor</h1>
+
+    <div class="govuk-!-margin-bottom-9">
+      <h2 class="govuk-heading-m govuk-!-margin-bottom-1">School details</h2>
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Name
+          </dt>
+          <dd class="govuk-summary-list__value">
+            Acorn Primary School
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            URN
+          </dt>
+          <dd class="govuk-summary-list__value">
+            9348523
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Address
+          </dt>
+          <dd class="govuk-summary-list__value">
+            School lane<br> Mill Road<br> Norwich<br> NR16 2HU
+          </dd>
+        </div>
+      </dl>
+    </div>
+    <%= form_for :confirmation, url: create_school_lead_nomination_nominations_path, method: :post do |f| %>
+        <div class="govuk-form-group">
+          <h2 class="govuk-heading-m">Your induction tutor</h2>
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="full-name">
+              Full name
+            </label>
+            <input class="govuk-input govuk-input--width-20" id="full-name" name="full-name" type="text" spellcheck="false" autocomplete="name">
+          </div>
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="nominee-email-address">
+              Email address
+            </label>
+            <div id="nominee-email-address-hint" class="govuk-hint">
+              They will sign in with this email and get future notifications about this service
+            </div>
+            <input class="govuk-input govuk-input--width-20" id="nominee-email-address" name="nominee-email-address" type="email" spellcheck="false" aria-describedby="nominee-email-address-hint" autocomplete="email">
+          </div>
+        </div>
+      <%= f.govuk_submit "Confirm" %>
+    <% end %>
+  </div>
+</div>
