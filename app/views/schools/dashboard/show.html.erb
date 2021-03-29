@@ -27,7 +27,7 @@
           <% end %>
         </td>
         <td class="govuk-table__cell">
-          <%= render AutoTagComponent.new(text: "To do") %>
+          <%= render AutoTagComponent.new(text: cohort[:school_cohort].status) %>
         </td>
       </tr>
     <% end %>

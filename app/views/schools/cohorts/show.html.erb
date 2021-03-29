@@ -4,9 +4,9 @@
 
     <p class="govuk-body-l govuk-!-margin-bottom-8">
     <% if @school_cohort[:induction_programme_choice] === "core_induction_programme" %>
-      Using accredited materials
+      Training using accredited materials.
     <% else %>
-      Training provider funded by DfE
+      Using a training provider funded by the DfE.
     <% end %>
     </p>
 
@@ -17,22 +17,44 @@
         </h2>
         <ul class="app-task-list__items">
 
+          <% if @school_cohort[:induction_programme_choice] === "core_induction_programme" %>
+            <li class="app-task-list__item">
+              <span class="app-task-list__task-name">
+                <%= govuk_link_to "Choose your training materials", "#" %>
+              </span>
+
+              <%= render AutoTagComponent.new(text: @school_cohort.choose_training_materials_status) %>
+            </li>
+          <% else %>
+            <li class="app-task-list__item">
+              <span class="app-task-list__task-name">
+                <%= govuk_link_to "Add estimated numbers of teachers and mentors", "#" %>
+              </span>
+
+              <%= render AutoTagComponent.new(text: @school_cohort.number_of_participants_status) %>
+            </li>
+            <li class="app-task-list__item">
+              <span class="app-task-list__task-name">
+                <%= govuk_link_to "Sign up with a training provider", "#" %>
+              </span>
+
+              <%= render AutoTagComponent.new(text: @school_cohort.training_provider_status) %>
+            </li>
+            <li class="app-task-list__item">
+              <span class="app-task-list__task-name">
+                <%= govuk_link_to "Read and accept privacy and data policy", "#" %>
+              </span>
+
+              <%= render AutoTagComponent.new(text: @school_cohort.accept_legal_status) %>
+            </li>
+          <% end %>
+
           <li class="app-task-list__item">
             <span class="app-task-list__task-name">
-              <a class="govuk-link--no-visited-state" href="#" aria-describedby="eligibility-status">
-                Choose your training materials
-              </a>
+              <%= govuk_link_to "Add teachers and mentors", "#" %>
             </span>
 
-            <%= render AutoTagComponent.new(text: "To do") %>
-          </li>
-
-          <li class="app-task-list__item">
-            <span class="app-task-list__task-name">
-              <a class="govuk-link--no-visited-state" href="#">Add teachers and mentors</a>
-            </span>
-
-            <%= render AutoTagComponent.new(text: "Cannot start yet") %>
+            <%= render AutoTagComponent.new(text: @school_cohort.add_participants_status) %>
           </li>
 
         </ul>

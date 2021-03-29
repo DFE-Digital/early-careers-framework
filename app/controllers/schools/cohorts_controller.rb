@@ -12,5 +12,9 @@ class Schools::CohortsController < Schools::BaseController
       cohort: @cohort,
       school: @school,
     )
+
+    unless @school_cohort
+      redirect_to schools_choose_programme_path
+    end
   end
 end

@@ -18,5 +18,10 @@ class Schools::DashboardController < Schools::BaseController
         school_cohort: school_cohort,
       }
     end
+
+    # This will need to be updated when more than one cohort is supported
+    unless @cohorts[0][:school_cohort]
+      redirect_to schools_choose_programme_path
+    end
   end
 end
