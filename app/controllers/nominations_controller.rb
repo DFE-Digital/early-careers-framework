@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class NominationsController < ApplicationController
-  before_action :load_nomination_request_form, except: %i[choose_location]
+  # before_action :load_nomination_request_form, except: %i[choose_location]
 
   def choose_location
     @local_authorities = LocalAuthority.all
@@ -31,7 +31,7 @@ class NominationsController < ApplicationController
     if !@nomination_request_form.school.eligible?
       redirect_to not_eligible_nominations_path
     elsif @nomination_request_form.school.fully_registered?
-      redirect_to already_nominated_nominations_path
+      redirect_to already_renominated_nominations_path
     elsif @nomination_request_form.school.partially_registered?
       redirect_to limit_reached_nominations_path
     else
@@ -39,13 +39,29 @@ class NominationsController < ApplicationController
     end
   end
 
+  def resend_email_after_link_expired
+    redirect_to success_nominations_path
+  end
+
+  def create_school_lead_nomination; end
+
   def not_eligible; end
 
-  def already_nominated; end
+  def already_renominated; end
 
   def limit_reached; end
 
   def review; end
+
+  def already_associated_with_another_school; end
+
+  def already_nominated; end
+
+  def link_expired; end
+
+  def nominate_school_lead; end
+
+  def nominate_school_lead_success; end
 
   def create
     @nomination_request_form.save!

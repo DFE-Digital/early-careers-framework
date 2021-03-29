@@ -59,8 +59,15 @@ Rails.application.routes.draw do
       post "review", action: :create
       get "success", action: :success
       get "not-eligible", action: :not_eligible
-      get "already-nominated", action: :already_nominated
+      get "already-renominated", action: :already_renominated
       get "limit-reached", action: :limit_reached
+      get "already-associated-with-another_school", action: :already_associated_with_another_school
+      get "already-nominated", action: :already_nominated
+      get "link-expired", action: :link_expired
+      get "nominate-school-lead", action: :nominate_school_lead
+      get "nominate-school-lead-success", action: :nominate_school_lead_success
+      post "resend-email-after-link-expired", action: :resend_email_after_link_expired
+      post "create-school-lead-nomination", action: :create_school_lead_nomination
     end
   end
 

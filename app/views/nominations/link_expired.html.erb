@@ -1,0 +1,13 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">The link has expired</h1>
+
+    <div class="govuk-!-margin-bottom-9">
+      <p>You need to resend the email with a new link</p>
+    </div>
+
+    <%= form_for :confirmation, url: resend_email_after_link_expired_nominations_path, method: :post do |f| %>
+      <%= f.govuk_submit "Resend email" %>
+    <% end %>
+  </div>
+</div>
