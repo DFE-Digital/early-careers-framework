@@ -85,7 +85,7 @@ class School < ApplicationRecord
   end
 
   def chosen_programme?(cohort)
-    school_cohorts.find_by(cohort: cohort).present?
+    school_cohorts.exists?(cohort: cohort)
   end
 
   def eligible?

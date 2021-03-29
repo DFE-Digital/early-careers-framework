@@ -4,8 +4,8 @@ require "rails_helper"
 
 RSpec.describe "Users::Confirmations", type: :request do
   let(:confirmation_token) { "soC7rF8i_BgYdUxafFcP" }
+  let(:school) { create(:school) }
   let(:induction_coordinator) { user.induction_coordinator_profile }
-  let(:school) { induction_coordinator.schools.first }
 
   let(:user) do
     create(:user, :induction_coordinator, confirmed_at: nil, confirmation_token: confirmation_token)
