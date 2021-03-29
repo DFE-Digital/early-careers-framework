@@ -46,7 +46,7 @@ When("I navigate to {string} page", (page) => {
   cy.visit(path);
 });
 
-Then("I should be on {string} page", (page) => {
+const assertOnPage = (page) => {
   const path = pagePaths[page];
 
   if (!path) {
@@ -58,4 +58,12 @@ Then("I should be on {string} page", (page) => {
   } else {
     cy.location("pathname").should("match", path);
   }
+};
+
+Then("I should be on {string} page", (page) => {
+  assertOnPage(page);
+});
+
+Then("I should have been redirected to {string} page", (page) => {
+  assertOnPage(page);
 });

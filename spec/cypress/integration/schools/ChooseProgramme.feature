@@ -8,18 +8,22 @@ Feature: Induction tutors choosing programmes
   Scenario: Choosing Core Induction Programme
     Given I am logged in as an "induction_coordinator"
     Then I should be on "choose programme" page
+    And the page should be accessible
     
     When I click on "accredited materials" label
     And I click the submit button
     Then I should be on "schools" page
+    And the page should be accessible
 
     When I am on "choose programme" page
-    Then I should be on "schools" page
+    Then I should have been redirected to "schools" page
 
   Scenario: Choosing Full Induction Programme
     Given I am logged in as an "induction_coordinator"
     Then I should be on "choose programme" page
+    And the page should be accessible
 
     When I click on "training provider" label
     And I click the submit button
     Then I should be on "schools" page
+    And the page should be accessible
