@@ -58,7 +58,7 @@ gem "tzinfo-data"
 # serialization gem that offers more features than active model serializer
 gem "blueprinter"
 
-gem "govuk-components", ">= 1.1.3"
+gem "govuk-components", ">= 1.1.5"
 gem "govuk_design_system_formbuilder", "~> 2.3.0b1"
 gem "view_component", require: "view_component/engine"
 
