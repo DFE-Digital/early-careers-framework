@@ -27,6 +27,7 @@ RSpec.describe School, type: :model do
     it { is_expected.to have_many(:early_career_teachers).through(:early_career_teacher_profiles) }
     it { is_expected.to have_many(:pupil_premiums) }
     it { is_expected.to have_many(:school_cohorts) }
+    it { is_expected.to have_many(:nomination_emails) }
     it { is_expected.to have_many(:school_local_authorities) }
     it { is_expected.to have_many(:local_authorities).through(:school_local_authorities) }
     it { is_expected.to have_many(:school_local_authority_districts) }
