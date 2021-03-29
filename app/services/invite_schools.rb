@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 class InviteSchools
-  def run(school_ids)
+  def run(school_urns)
     logger = Rails.logger
     logger.info "Emailing schools"
 
-    school_ids.each do |school_id|
-      school = School.find_by(id: school_id)
+    school_urns.each do |urn|
+      school = School.find_by(urn: urn)
 
       if school.nil?
-        logger.info "School not found: #{school_id} ... skipping"
+        logger.info "School not found, urn: #{urn} ... skipping"
         next
       end
 
@@ -23,7 +23,7 @@ class InviteSchools
       )
       send_nomination_email(recipient, token, school.name)
     rescue StandardError
-      logger.info "Error emailing school: #{school_id} ... skipping"
+      logger.info "Error emailing school, urn: #{urn} ... skipping"
     end
   end
 

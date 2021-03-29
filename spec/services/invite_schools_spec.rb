@@ -20,12 +20,12 @@ RSpec.describe InviteSchools do
 
     it "creates a record for the nomination email" do
       expect {
-        invite_schools.run [school.id]
+        invite_schools.run [school.urn]
       }.to change { school.nomination_emails.count }.by 1
     end
 
     it "creates a nomination email with the correct fields" do
-      invite_schools.run [school.id]
+      invite_schools.run [school.urn]
       expect(nomination_email.sent_to).to eq school.primary_contact_email
       expect(nomination_email.sent_at).to be_present
       expect(nomination_email.token).to be_present
@@ -41,7 +41,7 @@ RSpec.describe InviteSchools do
         ),
       ).and_call_original
 
-      invite_schools.run [school.id]
+      invite_schools.run [school.urn]
     end
 
     context "when school primary contact email is null" do
@@ -57,7 +57,7 @@ RSpec.describe InviteSchools do
           ),
         ).and_call_original
 
-        invite_schools.run [school.id]
+        invite_schools.run [school.urn]
       end
     end
 
@@ -67,7 +67,7 @@ RSpec.describe InviteSchools do
       let(:another_school) { create(:school) }
 
       it "skips to the next school_id" do
-        invite_schools.run [school.id, another_school.id]
+        invite_schools.run [school.urn, another_school.urn]
         expect(school.nomination_emails).to be_empty
         expect(another_school.nomination_emails).not_to be_empty
       end
