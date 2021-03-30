@@ -39,3 +39,16 @@ en:
               blank: "Enter an email"
               taken: "This email address is already in use"
               invalid: "Enter a valid email address"
+  activemodel:
+    errors:
+      models:
+        school_cohort_form:
+          attributes:
+            estimated_mentor_count:
+              not_a_number: "Enter a number between 0 and 1000"
+            estimated_teacher_count:
+              not_a_number:
+                not_a_number: "Enter a number between 0 and 1000"
+
+
+

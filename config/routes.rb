@@ -133,7 +133,8 @@ Rails.application.routes.draw do
     resource :choose_programme, controller: :choose_programme, only: %i[show create], path: "choose-programme"
   end
 
-  resource :estimate_participants, only: %i[edit update]
+  # put this under schools/estimates_controller ?
+  resources :estimate_participants, only: %i[show create], path: "estimate-participants"
 
   get "/403", to: "errors#forbidden", via: :all
   get "/404", to: "errors#not_found", via: :all

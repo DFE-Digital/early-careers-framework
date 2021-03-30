@@ -1,5 +1,29 @@
-<% form_for @school_cohort, url: estimate_participants_path do %>
-  <%= f.govuk_error_summary %
-  <%= f.govuk_text_field :estimated_teacher_count, label: { text: 'Number of ECTs' }, hint: { text: 'You can find it on your birth certificate' } %>
-  <%= f.govuk_text_field :estimated_mentor_count, label: { text: 'Number of mentors' }, hint: { text: 'You can find it on your birth certificate' } %>
-<% end %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h2 class="govuk-heading-l">Estimated numbers of participants starting in 2021</h2>
+    <%= form_with(model: @school_cohort_form, url: estimate_participants_path) do |f| %>
+      <%= f.govuk_error_summary %>
+      <%= f.govuk_text_field(
+          :estimated_teacher_count,
+          width: 20,
+          link_errors: true,
+          label: {
+            text: "Number of ECTs",
+            class: "govuk-label govuk-label--m"
+          }
+      ) %>
+
+      <%= f.govuk_text_field(
+          :estimated_mentor_count,
+          width: 20,
+          link_errors: true,
+          label: {
+            text: "Number of mentors",
+            class: "govuk-label govuk-label--m"
+          }
+      ) %>
+
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>
