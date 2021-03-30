@@ -59,7 +59,17 @@ class NominationsController < ApplicationController
 
   def link_expired; end
 
-  def nominate_school_lead; end
+  def nominate_school_lead
+    @nomination_email = NominationEmail.find_by(token: params[:token])
+
+    if @nomination_email.nomination_expired?
+      redirect_to link_expired_nominations_path
+    elsif @nomination_email.tutor_already_nominated?
+      redirect_to link_expired_nominations_path
+    else
+      @school = @nomination_email.school
+    end
+  end
 
   def nominate_school_lead_success; end
 
@@ -73,6 +83,8 @@ class NominationsController < ApplicationController
   def success; end
 
 private
+
+  def email_address_already_used_for_another_school?; end
 
   def load_nomination_request_form
     @nomination_request_form = NominationRequestForm.new(session[:nomination_request_form])
