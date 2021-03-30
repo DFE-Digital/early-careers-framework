@@ -3,6 +3,18 @@
 class NominationsController < ApplicationController
   # before_action :load_nomination_request_form, except: %i[choose_location]
 
+  def index
+    @nomination_email = NominationEmail.find_by(token: params[:token])
+
+    if @nomination_email.nomination_expired?
+      redirect_to link_expired_nominations_path
+    elsif @nomination_email.tutor_already_nominated?
+      redirect_to link_expired_nominations_path
+    else
+      @school = @nomination_email.school
+    end
+  end
+
   def choose_location
     @local_authorities = LocalAuthority.all
     unless params[:continue]

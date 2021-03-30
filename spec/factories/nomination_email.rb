@@ -12,9 +12,9 @@ FactoryBot.define do
     end
 
     trait :already_nominated_induction_tutor do
-      after(:build) do
+      after(:build) do |nomination_email|
         build(:user, :induction_coordinator) do |user|
-          user.induction_coordinator_profile.schools << school
+          user.induction_coordinator_profile.schools << nomination_email.school
         end
       end
     end
@@ -22,7 +22,8 @@ FactoryBot.define do
     trait :email_address_already_used_for_another_school do
       after(:build) do
         build(:user, :induction_coordinator) do |user|
-          user.induction_coordinator_profile.schools << build(:school, name: "Another Registered School")
+          school = create(:school, name: "Another Registered School")
+          user.induction_coordinator_profile.schools << school
         end
       end
     end
