@@ -22,4 +22,23 @@ RSpec.describe SchoolMailer, type: :mailer do
       expect(nomination_email.to).to eq([primary_contact_email])
     end
   end
+
+  describe "#nomination_email_confirmation" do
+    let(:school) { create(:school) }
+    let(:user) { create(:user, :induction_coordinator) }
+    let(:sign_in_url) { "https://ecf-dev.london.cloudapps/users/sign_in" }
+
+    let(:nomination_confirmation_email) do
+      SchoolMailer.nomination_confirmation_email(
+        tutor: user,
+        school: school,
+        sign_in_url: sign_in_url,
+      ).deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(nomination_confirmation_email.to).to eq([user.email])
+      expect(nomination_confirmation_email.from).to eq(["mail@example.com"])
+    end
+  end
 end
