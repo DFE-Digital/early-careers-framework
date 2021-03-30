@@ -3,6 +3,6 @@
 namespace :schools do
   desc "Send nomination invitations to schools"
   task send_invites: :environment do
-    InviteSchool.run(ARGV[1..-1])
+    InviteSchools.new.run(ARGV[1..-1])
   end
 end
