@@ -10,8 +10,8 @@ class CoreInductionProgrammes::LessonsController < ApplicationController
   before_action :load_course_lesson
 
   def show
-    if @current_user&.early_career_teacher?
-      progress = CourseLessonProgress.find_or_create_by!(early_career_teacher_profile: @current_user.early_career_teacher_profile, course_lesson: @course_lesson)
+    if current_user&.early_career_teacher?
+      progress = CourseLessonProgress.find_or_create_by!(early_career_teacher_profile: current_user.early_career_teacher_profile, course_lesson: @course_lesson)
       progress.in_progress! if progress.not_started?
     end
     if @course_lesson.course_lesson_parts.first

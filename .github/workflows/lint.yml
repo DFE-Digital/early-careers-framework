@@ -12,13 +12,13 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1.4.4
         with:
-          node-version: '12'
+          node-version: '14'
       - name: Yarn install
         run: npm i -g yarn && yarn
       - name: Set up Ruby
         uses: ruby/setup-ruby@9bc07a3af02ce5950e977cab8b77210dc3178328
         with:
-          ruby-version: 2.7.1
+          ruby-version: 2.7.2
       - name: Install dependencies
         run: bundle install
       - name: Create mail log file

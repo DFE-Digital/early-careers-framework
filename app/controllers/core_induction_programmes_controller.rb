@@ -13,7 +13,7 @@ class CoreInductionProgrammesController < ApplicationController
   end
 
   def download_export
-    if @current_user&.admin?
+    if current_user&.admin?
       CoreInductionProgrammeExporter.new.run
 
       send_file(

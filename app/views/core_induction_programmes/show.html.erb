@@ -1,8 +1,8 @@
-<%= govuk_breadcrumbs breadcrumbs: programme_breadcrumbs(@current_user, @core_induction_programme) %>
+<%= govuk_breadcrumbs breadcrumbs: programme_breadcrumbs(current_user, @core_induction_programme) %>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    <% if @current_user&.admin? %>
+    <% if current_user&.admin? %>
       <%= govuk_link_to "Create CIP Module", cip_create_module_path(@core_induction_programme.id), button: true %>
     <% end %>
 
@@ -20,13 +20,13 @@
         </div>
 
         <h3 class="govuk-heading-l">Autumn term</h3>
-        <%= render "module_list", locals = { course_modules: course_year.autumn_modules_with_progress(@current_user) } %>
+        <%= render "module_list", locals = { course_modules: course_year.autumn_modules_with_progress(current_user) } %>
 
         <h3 class="govuk-heading-l">Spring term</h3>
-        <%= render "module_list", locals = { course_modules: course_year.spring_modules_with_progress(@current_user) } %>
+        <%= render "module_list", locals = { course_modules: course_year.spring_modules_with_progress(current_user) } %>
 
         <h3 class="govuk-heading-l">Summer term</h3>
-        <%= render "module_list", locals = { course_modules: course_year.summer_modules_with_progress(@current_user) } %>
+        <%= render "module_list", locals = { course_modules: course_year.summer_modules_with_progress(current_user) } %>
       <% end %>
     <% else %>
       <p>No course years were found!</p>

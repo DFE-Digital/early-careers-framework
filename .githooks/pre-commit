@@ -25,7 +25,7 @@ KEY=$(
         perl -nle'print $& if m{(?<![A-Z0-9])[A-Z0-9]{20}(?![A-Z0-9])|(?<![A-Za-z0-9/+=])[A-Za-z0-9/+=]{40}(?![A-Za-z0-9/+=])}'
     )
 
-if [ "$KEY" != "" ]; then
+if [ "$KEY" != "" && "$KEY" != "9bc07a3af02ce5950e977cab8b77210dc317832"]; then
     echo "Found patterns for AWS_ACCESS_KEY_ID/AWS_SECRET_ACCESS_KEY"
     echo "Please check your code and remove API keys."
     exit 1

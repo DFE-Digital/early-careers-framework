@@ -1,6 +1,6 @@
 <% content_for :outside_container do %>
 <div class="govuk-width-container govuk-main-wrapper govuk-body">
-  <%= govuk_breadcrumbs breadcrumbs: course_lesson_breadcrumbs(@current_user, @course_lesson_part.course_lesson) %>
+  <%= govuk_breadcrumbs breadcrumbs: course_lesson_breadcrumbs(current_user, @course_lesson_part.course_lesson) %>
   <h1 class="govuk-heading-l">Split lesson part</h1>
 
   <p class="govuk-body govuk-!-font-size-19 govuk-!-margin-bottom-2">Contents</p>

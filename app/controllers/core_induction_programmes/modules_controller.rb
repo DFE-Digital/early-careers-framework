@@ -62,7 +62,7 @@ private
     @course_years = @course_module.course_year.core_induction_programme.course_years
     @course_modules = @course_module.course_year.course_modules
     authorize @course_module
-    @course_lessons_with_progress = @course_module.lessons_with_progress @current_user
+    @course_lessons_with_progress = @course_module.lessons_with_progress current_user
   end
 
   def course_module_params

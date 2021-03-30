@@ -9,9 +9,9 @@ class CoreInductionProgrammes::ProgressController < ApplicationController
   before_action :load_course_lesson
 
   def update
-    progress = CourseLessonProgress.find_or_create_by!(early_career_teacher_profile: @current_user.early_career_teacher_profile, course_lesson: @course_lesson)
+    progress = CourseLessonProgress.find_or_create_by!(early_career_teacher_profile: current_user.early_career_teacher_profile, course_lesson: @course_lesson)
     authorize progress
-    if @current_user.early_career_teacher?
+    if current_user.early_career_teacher?
       unless params[:progress].include?("not_started")
         progress.update!(progress: params[:progress])
       end
