@@ -29,6 +29,7 @@ const pagePaths = {
   "resend nominations not eligible": "nominations/not-eligible",
   "resend nominations already nominated": "nominations/already-nominated",
   "resend nominations limit reached": "nominations/limit-reached",
+  nominations: "nominations",
   "lead provider users index": "/admin/suppliers/users",
   "new lead provider user": "/admin/suppliers/users/new",
   "new lead provider user details": "/admin/suppliers/users/new/user-details",
@@ -42,6 +43,12 @@ const pagePaths = {
 Given("I am on {string} page", (page) => {
   const path = pagePaths[page];
   cy.visit(path);
+});
+
+Given("I am on {string} page with token {string}", (page, token) => {
+  const path = pagePaths[page];
+  const pathWithToken = `${path}?token=${token}`;
+  cy.visit(pathWithToken);
 });
 
 Given("I am on {string} page without JavaScript", (page) => {
