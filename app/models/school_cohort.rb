@@ -32,11 +32,15 @@ class SchoolCohort < ApplicationRecord
   end
 
   def status
-    if induction_programme_choice == "core_induction_programme"
+    if school_chose_cip?
       cip_status
     else
       fip_status
     end
+  end
+
+  def school_chose_cip?
+    induction_programme_choice == "core_induction_programme"
   end
 
 private

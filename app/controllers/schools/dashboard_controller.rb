@@ -7,20 +7,14 @@ class Schools::DashboardController < Schools::BaseController
   def show
     @school = current_user.induction_coordinator_profile.schools.first
 
-    @cohorts = [Cohort.current].map do |cohort|
-      school_cohort = SchoolCohort.find_by(
-        cohort: cohort,
-        school: @school,
-      )
-
-      {
-        cohort: cohort,
-        school_cohort: school_cohort,
-      }
+    @school_cohorts = [Cohort.current].map do |cohort|
+      @school.school_cohorts.detect do |school_cohort|
+        school_cohort.cohort_id == cohort.id
+      end
     end
 
     # This will need to be updated when more than one cohort is supported
-    unless @cohorts[0][:school_cohort]
+    unless @school_cohorts[0]
       redirect_to schools_choose_programme_path
     end
   end

@@ -10,7 +10,7 @@
 }
 
 .app-task-list__item {
-  $border: 1px solid #b1b4b6;
+  $border: 1px solid $govuk-border-colour;
 
   border-bottom: $border;
   margin-bottom: 0;

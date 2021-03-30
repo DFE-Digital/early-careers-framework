@@ -14,20 +14,20 @@
     </tr>
   </thead>
   <tbody class="govuk-table__body">
-    <% @cohorts.each do |cohort| %>
+    <% @school_cohorts.each do |school_cohort| %>
       <tr class="govuk-table__row">
         <td class="govuk-table__cell">
-          <%= govuk_link_to cohort[:cohort].start_year, schools_cohort_path(cohort[:cohort].start_year) %>
+          <%= govuk_link_to school_cohort.cohort.start_year, schools_cohort_path(school_cohort.cohort.start_year) %>
         </td>
         <td class="govuk-table__cell">
-          <% if cohort[:school_cohort][:induction_programme_choice] === 'core_induction_programme' %>
+          <% if school_cohort.school_chose_cip? %>
             Using accredited materials
           <% else %>
             Training provider funded by DfE
           <% end %>
         </td>
         <td class="govuk-table__cell">
-          <%= render AutoTagComponent.new(text: cohort[:school_cohort].status) %>
+          <%= render AutoTagComponent.new(text: school_cohort.status) %>
         </td>
       </tr>
     <% end %>

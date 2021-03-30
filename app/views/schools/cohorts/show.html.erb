@@ -3,7 +3,7 @@
     <h1 class="govuk-heading-xl govuk-!-margin-bottom-3"><%= @cohort.start_year %></h1>
 
     <p class="govuk-body-l govuk-!-margin-bottom-8">
-    <% if @school_cohort[:induction_programme_choice] === "core_induction_programme" %>
+    <% if @school_cohort.school_chose_cip? %>
       Training using accredited materials.
     <% else %>
       Using a training provider funded by the DfE.
@@ -17,7 +17,7 @@
         </h2>
         <ul class="app-task-list__items">
 
-          <% if @school_cohort[:induction_programme_choice] === "core_induction_programme" %>
+          <% if @school_cohort.school_chose_cip? %>
             <li class="app-task-list__item">
               <span class="app-task-list__task-name">
                 <%= govuk_link_to "Choose your training materials", "#" %>
