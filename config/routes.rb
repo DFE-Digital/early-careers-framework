@@ -30,7 +30,10 @@ Rails.application.routes.draw do
     post "/govspeak_test", to: "govspeak_test#preview"
   end
 
-  resources :core_induction_programmes, path: "core-induction-programmes", only: %i[show index], as: "cip"
+  resources :core_induction_programmes, path: "core-induction-programmes", only: %i[show index], as: "cip" do
+    get "create-module", to: "core_induction_programmes/modules#new"
+    post "create-module", to: "core_induction_programmes/modules#create"
+  end
   get "download-export", to: "core_induction_programmes#download_export", as: :download_export
 
   resources :years, controller: "core_induction_programmes/years", only: %i[new create edit update] do

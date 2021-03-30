@@ -45,5 +45,12 @@ RSpec.describe CourseModule, type: :model do
         expect(actual).to eq(expected)
       end
     end
+
+    describe "course_modules" do
+      it "returns the term and title of a course module" do
+        course_module = FactoryBot.create(:course_module)
+        expect(course_module.term_and_title).to eq("spring: Test Course module")
+      end
+    end
   end
 end

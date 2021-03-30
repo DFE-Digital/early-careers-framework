@@ -1,0 +1,31 @@
+  <%= f.govuk_error_summary %>
+  <%= f.govuk_text_field :title, label: { text: 'Course module title' } %>
+  <%= f.govuk_collection_select(
+        :course_year_id,
+        @course_years,
+        :id,
+        :title,
+        label: { text: "Which year would you like to assign the module to?" , class: "govuk-heading-m" },
+        hint: { text: "Course Years are listed in order" }
+      ) %>
+  <%= f.govuk_collection_select(
+        :previous_module_id,
+        @course_modules,
+        :id,
+        :term_and_title,
+        label: { text: "Where would you like the module to be placed?" , class: "govuk-heading-m" },
+        hint: { text: "The module you are selecting will precede the module you are creating" },
+        options: { include_blank: true }
+      ) %>
+  <%= f.govuk_collection_radio_buttons(
+        :term,
+        CourseModule.term_options,
+        :id,
+        :name,
+        legend: { text: "Module term", class: "govuk-label"}) %>
+  <%= f.govuk_text_area(
+        :content,
+        label: { text: 'Course module content' },
+        rows: 10
+      ) %>
+  <%= f.govuk_submit "Save changes" %>

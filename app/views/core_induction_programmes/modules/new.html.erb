@@ -1,0 +1,8 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Create an additional course module</h1>
+    <%= form_with model: @course_module, url: cip_create_module_path, method: :post do |f| %>
+    <%= render "course_module_fields", locals = { f:f } %>
+    <% end %>
+  </div>
+</div>

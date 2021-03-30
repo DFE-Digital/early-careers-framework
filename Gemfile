@@ -6,7 +6,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby File.read(".ruby-version").chomp
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 6.1.2", ">= 6.1.2.1"
+gem "rails", "~> 6.1.3.1", ">= 6.1.3.1"
 
 gem "devise", ">= 4.7.3"
 gem "kaminari", ">= 1.2.1"

@@ -47,4 +47,8 @@ class CourseModule < ApplicationRecord
 
     get_user_lessons_and_progresses(ect_profile, lessons_in_order)
   end
+
+  def term_and_title
+    "#{term}: #{title}"
+  end
 end

@@ -1,6 +1,11 @@
 <%= govuk_breadcrumbs breadcrumbs: programme_breadcrumbs(@current_user, @core_induction_programme) %>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+
+    <% if @current_user&.admin? %>
+      <%= govuk_link_to "Create CIP Module", cip_create_module_path(@core_induction_programme.id), button: true %>
+    <% end %>
+
     <h1 class="govuk-heading-xl">The Early Career Framework study material</h1>
 
     <% if @core_induction_programme.course_years.any? %>

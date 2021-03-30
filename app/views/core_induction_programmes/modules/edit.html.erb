@@ -3,16 +3,8 @@
   <div class="govuk-grid-column-full">
     <h1 class="govuk-heading-l">Content change preview</h1>
     <%= form_with model:@course_module, url: year_module_path, method: :put do |f| %>
-      <%= f.govuk_text_field :title, label: { text: "Module title" } %>
-      <%= f.govuk_collection_radio_buttons(
-            :term,
-            CourseModule.term_options,
-            :id,
-            :name,
-            legend: {text: "Module term", class: "govuk-label"}) %>
-      <%= f.govuk_text_area :content, label: { text: "Markdown string for course module content" }, rows: 10 %>
+      <%= render "course_module_fields", locals = { f:f } %>
       <%= f.govuk_submit "See preview" %>
-      <%= f.govuk_submit "Save changes" %>
     <% end %>
     <div class="gem-c-govspeak govuk-govspeak ">
       <%= @course_module.content_to_html.html_safe %>

@@ -28,5 +28,20 @@
         </ul>
       </li>
     </ol>
+    <nav class="step-by-step-navigation" role="navigation" aria-label="Lesson Part Navigation">
+      <ul class="step-by-step-navigation__list">
+        <% if @course_module.previous_module %>
+          <%= render NavigationPreviousComponent.new(
+            url: year_module_path(id: @course_module.previous_module.id),
+            text: @course_module.previous_module.title) %>
+        <% end %>
+
+        <% if @course_module.next_module %>
+          <%= render NavigationNextComponent.new(
+            url: year_module_path(id: @course_module.next_module.id),
+            text: @course_module.next_module.title) %>
+        <% end %>
+      </ul>
+    </nav>
   </div>
 </div>
