@@ -42,7 +42,7 @@
             </li>
             <li class="app-task-list__item">
               <span class="app-task-list__task-name">
-                <%= govuk_link_to "Read and accept privacy and data policy", "#" %>
+                <%= govuk_link_to "Read and accept privacy and data policy", legal_schools_cohort_path(@cohort.start_year) %>
               </span>
 
               <%= render AutoTagComponent.new(text: @school_cohort.accept_legal_status) %>
@@ -51,7 +51,7 @@
 
           <li class="app-task-list__item">
             <span class="app-task-list__task-name">
-              <%= govuk_link_to "Add teachers and mentors", "#" %>
+              <%= govuk_link_to "Add teachers and mentors", add_participants_schools_cohort_path(@cohort.start_year) %>
             </span>
 
             <%= render AutoTagComponent.new(text: @school_cohort.add_participants_status) %>

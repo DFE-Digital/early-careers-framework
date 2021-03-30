@@ -133,7 +133,9 @@ Rails.application.routes.draw do
     resource :choose_programme, controller: :choose_programme, only: %i[show create], path: "choose-programme"
     resources :cohorts do
       member do
-        get "/:start_year", action: :show
+        get "show"
+        get "legal"
+        get "add_participants"
       end
     end
   end
