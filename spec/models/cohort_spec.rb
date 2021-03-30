@@ -9,6 +9,14 @@ RSpec.describe Cohort, type: :model do
     }.to change { Cohort.count }.by(1)
   end
 
+  describe ".current" do
+    it "returns the 2021 cohort" do
+      cohort_2021 = Cohort.create!(start_year: 2021)
+
+      expect(Cohort.current).to eq cohort_2021
+    end
+  end
+
   describe "display_name" do
     it "displays the correct year" do
       expect(Cohort.new(start_year: 2021).display_name).to eq "2021"

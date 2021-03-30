@@ -25,7 +25,6 @@ Rails.application.routes.draw do
 
   scope path: "induction-programme", module: :induction_programme do
     resource :estimates, only: %i[show create]
-    resource :choices, only: %i[show create]
   end
 
   namespace :demo do
@@ -127,6 +126,11 @@ Rails.application.routes.draw do
     end
 
     resources :induction_coordinators, only: %i[index edit update], path: "induction-coordinators"
+  end
+
+  namespace :schools do
+    resource :dashboard, controller: :dashboard, only: :show, path: "/"
+    resource :choose_programme, controller: :choose_programme, only: %i[show create], path: "choose-programme"
   end
 
   get "/403", to: "errors#forbidden", via: :all

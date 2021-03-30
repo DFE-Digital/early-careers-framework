@@ -3,15 +3,14 @@
 require "rails_helper"
 
 RSpec.describe "InductionProgramme::Estimates", type: :request do
-  let(:school) { create(:school) }
   let(:cohort) { create(:cohort, start_year: 2021) }
-  let(:induction_coordinator) { user.induction_coordinator_profile }
   let(:user) { create(:user, :induction_coordinator, confirmed_at: 2.hours.ago) }
-  let!(:school_cohort) { SchoolCohort.create(cohort: cohort, school: school) }
+  let(:induction_coordinator) { user.induction_coordinator_profile }
+  let(:school) { induction_coordinator.schools.first }
+  let!(:school_cohort) { SchoolCohort.create(cohort: cohort, school: school, induction_programme_choice: "full_induction_programme") }
 
   before do
     sign_in user
-    induction_coordinator.schools << school
   end
 
   describe "GET /induction-programme/estimates" do
@@ -29,7 +28,7 @@ RSpec.describe "InductionProgramme::Estimates", type: :request do
 
       expect(school_cohort.reload.estimated_teacher_count).to be 5
       expect(school_cohort.reload.estimated_mentor_count).to be 2
-      expect(response).to redirect_to :dashboard
+      expect(response).to redirect_to schools_dashboard_path
     end
 
     it "renders errors when the form is invalid" do

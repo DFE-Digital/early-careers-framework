@@ -34,6 +34,8 @@ const pagePaths = {
   "new lead provider user details": "/admin/suppliers/users/new/user-details",
   "new lead provider user review": "/admin/suppliers/users/new/review",
   "lead provider user delete": /\/lead-providers\/users\/.*\/delete/,
+  "choose programme": "/schools/choose-programme",
+  schools: "/schools",
 };
 
 Given("I am on {string} page", (page) => {
@@ -51,7 +53,7 @@ When("I navigate to {string} page", (page) => {
   cy.visit(path);
 });
 
-Then("I should be on {string} page", (page) => {
+const assertOnPage = (page) => {
   const path = pagePaths[page];
 
   if (!path) {
@@ -63,4 +65,12 @@ Then("I should be on {string} page", (page) => {
   } else {
     cy.location("pathname").should("match", path);
   }
+};
+
+Then("I should be on {string} page", (page) => {
+  assertOnPage(page);
+});
+
+Then("I should have been redirected to {string} page", (page) => {
+  assertOnPage(page);
 });

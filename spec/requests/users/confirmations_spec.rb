@@ -4,8 +4,8 @@ require "rails_helper"
 
 RSpec.describe "Users::Confirmations", type: :request do
   let(:confirmation_token) { "soC7rF8i_BgYdUxafFcP" }
-  let(:school) { create(:school) }
   let(:induction_coordinator) { user.induction_coordinator_profile }
+  let(:school) { induction_coordinator.schools.first }
 
   let(:user) do
     create(:user, :induction_coordinator, confirmed_at: nil, confirmation_token: confirmation_token)
@@ -48,7 +48,7 @@ RSpec.describe "Users::Confirmations", type: :request do
       end
 
       it "does not notify the school primary contact" do
-        expect(UserMailer).not_to receive(:primary_contact_notification).with(user, school)
+        expect(UserMailer).not_to receive(:primary_contact_notification).with(anything, anything)
 
         get "/users/confirmation?confirmation_token=#{confirmation_token}"
       end
