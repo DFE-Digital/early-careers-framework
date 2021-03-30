@@ -11,7 +11,7 @@
             Name
           </dt>
           <dd class="govuk-summary-list__value">
-            Acorn Primary School
+            <%= @school.name %>
           </dd>
         </div>
         <div class="govuk-summary-list__row">
@@ -19,7 +19,7 @@
             URN
           </dt>
           <dd class="govuk-summary-list__value">
-            9348523
+            <%= @school.urn %>
           </dd>
         </div>
         <div class="govuk-summary-list__row">
@@ -27,7 +27,7 @@
             Address
           </dt>
           <dd class="govuk-summary-list__value">
-            School lane<br> Mill Road<br> Norwich<br> NR16 2HU
+            <%= simple_format @school.full_address, class: "govuk-body" %>
           </dd>
         </div>
       </dl>
@@ -36,19 +36,10 @@
         <div class="govuk-form-group">
           <h2 class="govuk-heading-m">Your induction tutor</h2>
           <div class="govuk-form-group">
-            <label class="govuk-label" for="full-name">
-              Full name
-            </label>
-            <input class="govuk-input govuk-input--width-20" id="full-name" name="full-name" type="text" spellcheck="false" autocomplete="name">
+            <%= f.govuk_text_field(:full_name, label: { text: "Full name" }) %>
           </div>
           <div class="govuk-form-group">
-            <label class="govuk-label" for="nominee-email-address">
-              Email address
-            </label>
-            <div id="nominee-email-address-hint" class="govuk-hint">
-              They will sign in with this email and get future notifications about this service
-            </div>
-            <input class="govuk-input govuk-input--width-20" id="nominee-email-address" name="nominee-email-address" type="email" spellcheck="false" aria-describedby="nominee-email-address-hint" autocomplete="email">
+            <%= f.govuk_email_field(:full_name, label: { text: "Email address", hint: "They will sign in with this email and get future notifications about this service" }) %>
           </div>
         </div>
       <%= f.govuk_submit "Confirm" %>
