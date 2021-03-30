@@ -1,0 +1,5 @@
+<% form_for @school_cohort, url: estimate_participants_path do %>
+  <%= f.govuk_error_summary %
+  <%= f.govuk_text_field :estimated_teacher_count, label: { text: 'Number of ECTs' }, hint: { text: 'You can find it on your birth certificate' } %>
+  <%= f.govuk_text_field :estimated_mentor_count, label: { text: 'Number of mentors' }, hint: { text: 'You can find it on your birth certificate' } %>
+<% end %>
