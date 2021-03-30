@@ -34,10 +34,11 @@ private
 
   def load_course_lesson
     @course_lesson = CourseLesson.find(params[:id])
+    @course_modules = CourseModule.where(course_year_id: @course_lesson.course_module[:course_year_id])
     authorize @course_lesson
   end
 
   def course_lesson_params
-    params.require(:course_lesson).permit(:title, :completion_time_in_minutes)
+    params.require(:course_lesson).permit(:title, :completion_time_in_minutes, :course_module_id)
   end
 end

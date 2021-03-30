@@ -56,6 +56,13 @@ RSpec.describe "Core Induction Programme Lesson", type: :request do
         expect(response).to render_template(:edit)
         expect(response.body).to include("Enter a number greater than 0")
       end
+
+      it "allows a course lesson to be reassigned to a different course module" do
+        second_course_module = FactoryBot.create(:course_module)
+        put course_lesson_url, params: { course_lesson: { commit: "Save changes", course_module_id: second_course_module[:id] } }
+        course_lesson.reload
+        expect(course_lesson[:course_module_id]).to eq(second_course_module[:id])
+      end
     end
   end
 

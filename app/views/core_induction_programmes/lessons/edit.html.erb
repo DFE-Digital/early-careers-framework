@@ -5,6 +5,13 @@
     <%= form_with model: @course_lesson, url: year_module_lesson_path, method: :put do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_text_field :title, label: { text: "Lesson title" }, value: @course_lesson.title %>
+      <%= f.govuk_collection_select(
+            :course_module_id,
+            @course_modules,
+            :id,
+            :term_and_title,
+            label: { text: "Which module would you like the lesson to be assigned to?" },
+            ) %>
       <%= f.govuk_number_field(
             :completion_time_in_minutes,
             label: { text: "Time in minutes"},
