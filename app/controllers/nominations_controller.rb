@@ -21,9 +21,14 @@ class NominationsController < ApplicationController
 
   def create_school_lead_nomination
     load_nominate_induction_tutor_form
-    @nominate_induction_tutor_form.save!
-    session.delete(:nominate_induction_tutor_form)
-    redirect_to nominate_school_lead_success_nominations_path
+
+    if User.exists?(email: @nominate_induction_tutor_form.email)
+      redirect_to already_associated_with_another_school_nominations_path
+    else
+      @nominate_induction_tutor_form.save!
+      session.delete(:nominate_induction_tutor_form)
+      redirect_to nominate_school_lead_success_nominations_path
+    end
   end
 
   def link_expired
