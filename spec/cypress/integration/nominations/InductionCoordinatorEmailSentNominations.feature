@@ -17,12 +17,15 @@ Feature: Resend nominations flow
 #    Then "page body" should contain "Instructions have been emailed to the school"
 #    And Email should be sent to Primary Email Contact of the School belonging to "primary-contact-email@example.com"
 #
-  Scenario: Non Valid Nomination Link was sent for which Induction Tutor was already nominated for the same school
-    Given Following Factory set up was run "nomination_email" with trait "already_nominated_induction_tutor"
-    When I am on "nominations" page with token "foo-bar-baz"
-    Then "page body" should contain "An Induction Tutor has already been nominated for your school"
-#
-#  Scenario: Nomination Link was sent for which Induction Tutor was already nominated for another school
-#    Given Following Factory set up was run "nomination_email" with trait "email_address_already_used_for_another_school"
+#  Scenario: Non Valid Nomination Link was sent for which Induction Tutor was already nominated for the same school
+#    Given Following Factory set up was run "nomination_email" with trait "already_nominated_induction_tutor"
 #    When I am on "nominations" page with token "foo-bar-baz"
-#    Then "page body" should contain "That email address is already associated with another school"
+#    Then "page body" should contain "An Induction Tutor has already been nominated for your school"
+#
+  Scenario: Nomination Link was sent for which Induction Tutor was already nominated for another school
+    Given Following Factory set up was run "nomination_email" with trait "email_address_already_used_for_another_school"
+    When I am on "nominations" page with token "foo-bar-baz"
+    Then I type "John Wick" into "name input"
+    And I type "john-wick@example.com" into "email input"
+    When I click the submit button
+    Then "page body" should contain "That email address is already associated with another school"
