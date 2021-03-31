@@ -20,7 +20,7 @@
           <%= govuk_link_to school_cohort.cohort.start_year, schools_cohort_path(school_cohort.cohort.start_year) %>
         </td>
         <td class="govuk-table__cell">
-          <% if school_cohort.school_chose_cip? %>
+          <% if school_cohort.core_induction_programme? %>
             Using accredited materials
           <% else %>
             Training provider funded by DfE
