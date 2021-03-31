@@ -1,19 +1,7 @@
 # frozen_string_literal: true
 
 class NominationsController < ApplicationController
-  # before_action :load_nomination_request_form, except: %i[choose_location]
-
-  def index
-    @nomination_email = NominationEmail.find_by(token: params[:token])
-
-    if @nomination_email.nomination_expired?
-      redirect_to link_expired_nominations_path
-    elsif @nomination_email.tutor_already_nominated?
-      redirect_to link_expired_nominations_path
-    else
-      @school = @nomination_email.school
-    end
-  end
+  before_action :load_nomination_request_form, except: %i[choose_location index resend_email_after_link_expired link_expired already_nominated]
 
   def choose_location
     @local_authorities = LocalAuthority.all
@@ -55,7 +43,26 @@ class NominationsController < ApplicationController
     redirect_to success_nominations_path
   end
 
-  def create_school_lead_nomination; end
+  def index
+    @nomination_email = NominationEmail.find_by(token: params[:token])
+
+    if @nomination_email.nil?
+      redirect_to link_invalid_nominations_path
+    elsif @nomination_email.nomination_expired?
+      redirect_to link_expired_nominations_path
+    elsif @nomination_email.tutor_already_nominated?
+      redirect_to link_expired_nominations_path
+    else
+      @nominate_induction_tutor_form = ::NominateInductionTutorForm.new(session[:nominate_induction_tutor_form])
+      @school = @nomination_email.school
+    end
+  end
+
+  def create_school_lead_nomination
+    @nominate_induction_tutor_form.save!
+    session.delete(:nominate_induction_tutor_form)
+    redirect_to nominate_school_lead_success_nominations_path
+  end
 
   def not_eligible; end
 
@@ -70,18 +77,6 @@ class NominationsController < ApplicationController
   def already_nominated; end
 
   def link_expired; end
-
-  def nominate_school_lead
-    @nomination_email = NominationEmail.find_by(token: params[:token])
-
-    if @nomination_email.nomination_expired?
-      redirect_to link_expired_nominations_path
-    elsif @nomination_email.tutor_already_nominated?
-      redirect_to link_expired_nominations_path
-    else
-      @school = @nomination_email.school
-    end
-  end
 
   def nominate_school_lead_success; end
 

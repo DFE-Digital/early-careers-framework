@@ -6,7 +6,7 @@ class NominationEmail < ApplicationRecord
   NOMINATION_EXPIRY_TIME = 7.days
 
   def nomination_expired?
-    sent_at > NOMINATION_EXPIRY_TIME
+    sent_at > Time.zone.now + NOMINATION_EXPIRY_TIME
   end
 
   def tutor_already_nominated?
