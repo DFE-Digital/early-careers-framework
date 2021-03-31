@@ -13,7 +13,7 @@ FactoryBot.define do
 
     trait :already_nominated_induction_tutor do
       after(:build) do |nomination_email|
-        build(:user, :induction_coordinator) do |user|
+        create(:user, :induction_coordinator) do |user|
           user.induction_coordinator_profile.schools << nomination_email.school
         end
       end
