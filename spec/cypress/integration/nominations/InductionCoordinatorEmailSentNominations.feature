@@ -7,7 +7,7 @@ Feature: Resend nominations flow
     Then I type "John Wick" into "name input"
     And I type "john-wick@example.com" into "email input"
     When I click the submit button
-    Then "page body" should contain "School Lead has been nominated"
+    Then "notification banner" should contain "School Lead has been nominated"
 
 #  Scenario: Expired Nomination Link was sent
 #    Given Following Factory set up was run "nomination_email" with trait "expired_nomination_email"

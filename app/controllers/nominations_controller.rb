@@ -3,6 +3,29 @@
 class NominationsController < ApplicationController
   before_action :load_nomination_request_form, except: %i[choose_location index resend_email_after_link_expired link_expired already_nominated]
 
+  def index
+    @nomination_email = NominationEmail.find_by(token: params[:token])
+    @token = params[:token]
+
+    if @nomination_email.nil?
+      redirect_to link_invalid_nominations_path
+    elsif @nomination_email.nomination_expired?
+      redirect_to link_expired_nominations_path
+    elsif @nomination_email.tutor_already_nominated?
+      redirect_to link_expired_nominations_path
+    else
+      load_nominate_induction_tutor_form
+      @school = @nomination_email.school
+    end
+  end
+
+  def create_school_lead_nomination
+    load_nominate_induction_tutor_form
+    @nominate_induction_tutor_form.save!
+    session.delete(:nominate_induction_tutor_form)
+    redirect_to nominate_school_lead_success_nominations_path
+  end
+
   def choose_location
     @local_authorities = LocalAuthority.all
     unless params[:continue]
@@ -43,27 +66,6 @@ class NominationsController < ApplicationController
     redirect_to success_nominations_path
   end
 
-  def index
-    @nomination_email = NominationEmail.find_by(token: params[:token])
-
-    if @nomination_email.nil?
-      redirect_to link_invalid_nominations_path
-    elsif @nomination_email.nomination_expired?
-      redirect_to link_expired_nominations_path
-    elsif @nomination_email.tutor_already_nominated?
-      redirect_to link_expired_nominations_path
-    else
-      @nominate_induction_tutor_form = ::NominateInductionTutorForm.new(session[:nominate_induction_tutor_form])
-      @school = @nomination_email.school
-    end
-  end
-
-  def create_school_lead_nomination
-    @nominate_induction_tutor_form.save!
-    session.delete(:nominate_induction_tutor_form)
-    redirect_to nominate_school_lead_success_nominations_path
-  end
-
   def not_eligible; end
 
   def already_renominated; end
@@ -92,6 +94,17 @@ class NominationsController < ApplicationController
 private
 
   def email_address_already_used_for_another_school?; end
+
+  def load_nominate_induction_tutor_form
+    @nominate_induction_tutor_form = ::NominateInductionTutorForm.new(session[:nominate_induction_tutor_form])
+    @nominate_induction_tutor_form.assign_attributes(nominate_induction_tutor_form_params)
+  end
+
+  def nominate_induction_tutor_form_params
+    return {} unless params.key?(:nominate_induction_tutor_form)
+
+    params.require(:nominate_induction_tutor_form).permit(:full_name, :email, :token)
+  end
 
   def load_nomination_request_form
     @nomination_request_form = NominationRequestForm.new(session[:nomination_request_form])
