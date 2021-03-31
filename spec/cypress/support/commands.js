@@ -51,6 +51,7 @@ Cypress.Commands.add("clickCommitButton", () => {
 const SIGN_IN_EMAIL_TEMPLATE = "7ab8db5b-9842-4bc3-8dbb-f590a3198d9e";
 const ADMIN_ACCOUNT_CREATED_TEMPLATE = "3620d073-d2cc-4d65-9a51-e12770cf25d9";
 const NOMINATION_EMAIL_TEMPLATE = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f";
+const TUTOR_NOMINATION_TEMPLATE = "240c5685-5cb0-40a9-9bd4-1a595d991cbc";
 
 const computeHeadersFromEmail = (email) =>
   email.header.reduce(
@@ -92,4 +93,5 @@ module.exports = {
   SIGN_IN_EMAIL_TEMPLATE,
   ADMIN_ACCOUNT_CREATED_TEMPLATE,
   NOMINATION_EMAIL_TEMPLATE,
+  TUTOR_NOMINATION_TEMPLATE,
 };
