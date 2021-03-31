@@ -102,8 +102,6 @@ class NominationsController < ApplicationController
 
 private
 
-  def email_address_already_used_for_another_school?; end
-
   def load_nominate_induction_tutor_form
     @nominate_induction_tutor_form = ::NominateInductionTutorForm.new(session[:nominate_induction_tutor_form])
     @nominate_induction_tutor_form.assign_attributes(nominate_induction_tutor_form_params)
