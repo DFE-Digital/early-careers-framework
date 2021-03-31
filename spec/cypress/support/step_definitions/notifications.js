@@ -35,7 +35,7 @@ Given(
   (email) => {
     cy.appSentEmails().then((emails) => {
       expect(emails).to.have.lengthOf(1);
-      const headersHash = computeHeadersFromEmail(emails[1]);
+      const headersHash = computeHeadersFromEmail(emails[0]);
       expect(headersHash["template-id"]).to.eq(NOMINATION_EMAIL_TEMPLATE);
       expect(headersHash.To).to.eq(email);
     });
