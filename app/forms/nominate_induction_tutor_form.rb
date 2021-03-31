@@ -24,6 +24,8 @@ class NominateInductionTutorForm
       user
     end
 
+    UserMailer.tutor_nomination_instructions(user, school.name).deliver_now
+
     user
   end
 end
