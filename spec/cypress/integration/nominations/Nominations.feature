@@ -48,7 +48,6 @@ Feature: Resend nominations flow
     Then "page body" should contain "Instructions have been emailed to the school"
     And Email should be sent to Primary Email Contact of the School belonging to "primary-contact-email@example.com"
 
-
   Scenario: Non Valid Nomination Link was sent for which Induction Tutor was already nominated for the same school
     Given Following Factory set up was run "nomination_email already_nominated_induction_tutor"
     When I go to nominations link with nomination "foo-bar-baz"
