@@ -36,6 +36,7 @@ const pagePaths = {
   "lead provider user delete": /\/lead-providers\/users\/.*\/delete/,
   "choose programme": "/schools/choose-programme",
   schools: "/schools",
+  "2021 school cohorts": "/schools/cohorts/2021",
 };
 
 Given("I am on {string} page", (page) => {

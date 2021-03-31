@@ -10,4 +10,55 @@ class SchoolCohort < ApplicationRecord
 
   belongs_to :cohort
   belongs_to :school
+
+  def number_of_participants_status
+    "cannot start yet"
+  end
+
+  def training_provider_status
+    "cannot start yet"
+  end
+
+  def accept_legal_status
+    "cannot start yet"
+  end
+
+  def add_participants_status
+    "cannot start yet"
+  end
+
+  def choose_training_materials_status
+    "cannot start yet"
+  end
+
+  def status
+    if school_chose_cip?
+      cip_status
+    else
+      fip_status
+    end
+  end
+
+  def school_chose_cip?
+    induction_programme_choice == "core_induction_programme"
+  end
+
+private
+
+  def cip_status
+    if choose_training_materials_status == "done" && add_participants_status == "done"
+      "done"
+    else
+      "to do"
+    end
+  end
+
+  def fip_status
+    if number_of_participants_status == "done" && training_provider_status == "done" &&
+        accept_legal_status == "done" && add_participants_status == "done"
+      "done"
+    else
+      "to do"
+    end
+  end
 end
