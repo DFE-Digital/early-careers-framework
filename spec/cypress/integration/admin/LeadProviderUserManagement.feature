@@ -4,6 +4,7 @@ Feature: Admin user modifying lead provider users
   Background:
     Given I am logged in as an "admin"
     And scenario "admin/suppliers" has been run
+    And user was created as "lead_provider" with full_name "John Wick" and email "john-wick@example.com"
     And I am on "lead provider users index" page
 
   Scenario: Creating a new lead provider user

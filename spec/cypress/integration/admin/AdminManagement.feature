@@ -3,7 +3,7 @@ Feature: Admin user modifying admin users
 
   Background:
     Given I am logged in as an "admin"
-    And Admin account was created with email "emma-dow@example.com" and name "Emma Dow"
+    And user was created as "admin" with email "emma-dow@example.com" and full_name "Emma Dow"
     And I am on "admin index" page
 
   Scenario: Creating a new admin user
