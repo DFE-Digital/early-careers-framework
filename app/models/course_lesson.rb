@@ -4,6 +4,7 @@ class CourseLesson < ApplicationRecord
   include OrderHelper
 
   belongs_to :course_module
+  has_one :course_year, through: :course_module
 
   # We use previous_lesson_id to store the connections between lessons
   # The id telling us which lesson is next lives on the next lesson, where it is called 'previous_lesson_id'
@@ -20,7 +21,7 @@ class CourseLesson < ApplicationRecord
 
   def course_lesson_parts_in_order
     preloaded_parts = course_lesson_parts.includes(:previous_lesson_part, :next_lesson_part)
-    elements_in_order(elements: preloaded_parts, previous_method_name: :previous_lesson_part)
+    elements_in_order(elements: preloaded_parts, get_previous_element: :previous_lesson_part)
   end
 
   def duration_in_minutes_in_words

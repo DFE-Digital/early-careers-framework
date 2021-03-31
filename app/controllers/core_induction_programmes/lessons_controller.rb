@@ -11,7 +11,10 @@ class CoreInductionProgrammes::LessonsController < ApplicationController
 
   def show
     if current_user&.early_career_teacher?
-      progress = CourseLessonProgress.find_or_create_by!(early_career_teacher_profile: current_user.early_career_teacher_profile, course_lesson: @course_lesson)
+      progress = CourseLessonProgress.find_or_create_by!(
+        early_career_teacher_profile: current_user.early_career_teacher_profile,
+        course_lesson: @course_lesson,
+      )
       progress.in_progress! if progress.not_started?
     end
     if @course_lesson.course_lesson_parts.first
@@ -34,7 +37,7 @@ private
 
   def load_course_lesson
     @course_lesson = CourseLesson.find(params[:id])
-    @course_modules = CourseModule.where(course_year_id: @course_lesson.course_module[:course_year_id])
+    @course_modules = CourseModule.where(course_year: @course_lesson.course_year)
     authorize @course_lesson
   end
 

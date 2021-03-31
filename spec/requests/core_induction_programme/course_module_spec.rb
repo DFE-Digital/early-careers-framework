@@ -12,6 +12,7 @@ RSpec.describe "Core Induction Programme Module", type: :request do
       admin_user = create(:user, :admin)
       sign_in admin_user
     end
+
     describe "GET /create-module" do
       it "renders the create-module page" do
         get "/core-induction-programmes/#{course_module.course_year.core_induction_programme[:id]}/create-module"
@@ -42,14 +43,6 @@ RSpec.describe "Core Induction Programme Module", type: :request do
 
         expect(third_course_module[:previous_module_id]).to eq(course_module[:id])
         expect(second_course_module[:previous_module_id]).to eq(third_course_module[:id])
-      end
-
-      it "assigns nil to the new module if it's selected to be first in the list" do
-        create_course_module("")
-        third_course_module = CourseModule.find_by(title: "Additional module title")
-        course_module.reload
-        expect(third_course_module[:previous_module_id]).to eq(nil)
-        expect(course_module[:previous_module_id]).to eq(third_course_module[:id])
       end
 
       it "assigns assigns a new module to the end of the module list" do

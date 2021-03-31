@@ -17,7 +17,7 @@ class CourseYear < ApplicationRecord
 
   def course_modules_in_order(modules_to_order = course_modules)
     preloaded_modules = modules_to_order.includes(:previous_module, :next_module)
-    elements_in_order(elements: preloaded_modules, previous_method_name: :previous_module)
+    elements_in_order(elements: preloaded_modules, get_previous_element: :previous_module)
   end
 
   def autumn_modules_with_progress(user)

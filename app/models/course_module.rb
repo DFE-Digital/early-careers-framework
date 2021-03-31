@@ -16,6 +16,7 @@ class CourseModule < ApplicationRecord
 
   validates :title, presence: { message: "Enter a title" }, length: { maximum: 255 }
   validates :content, presence: { message: "Enter content" }, length: { maximum: 100_000 }
+  validate :check_previous_module_id
 
   def self.terms
     {
@@ -37,7 +38,7 @@ class CourseModule < ApplicationRecord
 
   def course_lessons_in_order
     preloaded_lessons = course_lessons.includes(:previous_lesson, :next_lesson)
-    elements_in_order(elements: preloaded_lessons, previous_method_name: :previous_lesson)
+    elements_in_order(elements: preloaded_lessons, get_previous_element: :previous_lesson)
   end
 
   def lessons_with_progress(user)
@@ -50,5 +51,13 @@ class CourseModule < ApplicationRecord
 
   def term_and_title
     "#{term}: #{title}"
+  end
+
+  def check_previous_module_id
+    errors.add(:previous_module_id, "Select a different module") if previous_module == self
+  end
+
+  def other_modules_in_year
+    course_year.course_modules.where.not(id: id)
   end
 end

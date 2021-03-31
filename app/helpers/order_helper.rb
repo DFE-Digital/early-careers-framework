@@ -1,24 +1,16 @@
 # frozen_string_literal: true
 
 module OrderHelper
-  def elements_in_order(elements:, previous_method_name:)
-    first_elements = elements.filter { |element| !elements.include?(element.send(previous_method_name)) }
-    return [] unless first_elements.any?
+  def elements_in_order(elements:, get_previous_element:)
+    all_elements_in_order = []
 
-    strands = first_elements.map do |first_element|
-      ordered_elements = [first_element]
-      current_element = first_element
-      next_element = elements.find { |element| element.send(previous_method_name) == current_element }
-
-      while elements.include?(next_element)
-        ordered_elements += [next_element]
-        current_element = next_element
-        next_element = elements.find { |element| element.send(previous_method_name) == current_element }
-      end
-
-      ordered_elements
+    current_elements = elements.filter { |element| elements.exclude?(element.send(get_previous_element)) }
+    until current_elements.empty?
+      all_elements_in_order += current_elements
+      remaining_elements = elements.reject { |element| all_elements_in_order.include?(element) }
+      current_elements = remaining_elements.filter { |element| current_elements.include?(element.send(get_previous_element)) }
     end
 
-    strands.flatten
+    all_elements_in_order
   end
 end

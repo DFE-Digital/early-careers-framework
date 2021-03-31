@@ -7,32 +7,24 @@ class CoreInductionProgrammes::ModulesController < ApplicationController
 
   after_action :verify_authorized
   before_action :authenticate_user!, except: :show
-  before_action :load_course_module, except: %i[new create]
+  before_action :load_course_module, only: %i[update edit show]
+  before_action :make_course_module, only: %i[new create]
 
-  def show; end
-
-  def new
-    authorize CourseModule
-    @course_module = CourseModule.new
-    @course_years = CourseYear.where(core_induction_programme_id: params[:cip_id])
-    @course_modules = CourseModule.where(course_year_id: @course_years.map(&:id))
+  def show
+    @course_lessons_with_progress = @course_module.lessons_with_progress current_user
   end
 
+  def new; end
+
   def create
-    authorize CourseModule
-    @course_module = CourseModule.new(
-      course_module_params.merge(
-        course_year: find_course_year,
-        previous_module_id: set_previous_module,
-      ),
-    )
+    next_module = find_next_module
+    @course_module.assign_attributes(course_module_params)
+
     if @course_module.valid?
-      replace_previous_module_reference(@course_module)
       @course_module.save!
+      next_module&.update!(previous_module: @course_module)
       redirect_to cip_index_path
     else
-      @course_years = CourseYear.where(core_induction_programme_id: params[:cip_id])
-      @course_modules = CourseModule.where(course_year_id: @course_years.first[:id])
       render action: "new"
     end
   end
@@ -40,14 +32,14 @@ class CoreInductionProgrammes::ModulesController < ApplicationController
   def edit; end
 
   def update
-    @course_module.assign_attributes(
-      course_module_params.merge(
-        previous_module_id: set_previous_module,
-      ),
-    )
+    next_module = @course_module.next_module
+    previous_module = @course_module.previous_module
+    @course_module.assign_attributes(course_module_params)
+
     if params[:commit] == "Save changes"
-      replace_previous_module_reference_for_existing_modules(@course_module)
       @course_module.save!
+      next_module&.update!(previous_module: previous_module)
+
       flash[:success] = "Your changes have been saved"
       redirect_to year_module_url
     else
@@ -57,50 +49,29 @@ class CoreInductionProgrammes::ModulesController < ApplicationController
 
 private
 
+  def make_course_module
+    authorize CourseModule
+    @course_years = CourseYear.where(core_induction_programme_id: params[:cip_id])
+    @course_modules = CourseModule.where(course_year_id: @course_years.map(&:id))
+    @course_module = CourseModule.new
+  end
+
   def load_course_module
     @course_module = CourseModule.find(params[:id])
     @course_years = @course_module.course_year.core_induction_programme.course_years
-    @course_modules = @course_module.course_year.course_modules
+    @course_modules = @course_module.other_modules_in_year
     authorize @course_module
-    @course_lessons_with_progress = @course_module.lessons_with_progress current_user
   end
 
   def course_module_params
-    params.require(:course_module).permit(:content, :title, :term, :course_year_id)
+    params
+        .require(:course_module)
+        .permit(:content, :title, :term, :course_year_id, :previous_module_id)
   end
 
-  def find_course_year
-    CourseYear.find_by(id: params[:course_module][:course_year_id])
-  end
-
-  def set_previous_module
-    previous_module = params[:course_module][:previous_module_id]
-    if previous_module.blank?
-      nil
-    else
-      params[:course_module][:previous_module_id]
-    end
-  end
-
-  def replace_previous_module_reference(new_course_module)
+  def find_next_module
     previous_module_id = params[:course_module][:previous_module_id]
-
-    if previous_module_id.blank?
-      next_module = CourseModule.where(previous_module_id: nil).where(course_year_id: params[:course_module][:course_year_id]).first
-    else
-      previous_module = CourseModule.find(previous_module_id)
-      next_module = previous_module.next_module
-    end
-
-    if next_module.present?
-      next_module.update!(previous_module: new_course_module)
-    end
-  end
-
-  def replace_previous_module_reference_for_existing_modules(new_course_module)
-    module_to_change = CourseModule.find(new_course_module[:id])
-    next_module = module_to_change.next_module
-
-    next_module&.update!(previous_module: module_to_change[:previous_module])
+    previous_module = CourseModule.where(id: previous_module_id).first
+    previous_module&.next_module
   end
 end
