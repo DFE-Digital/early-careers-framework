@@ -10,7 +10,7 @@ class NominationsController < ApplicationController
     if @nomination_email.nil?
       redirect_to link_invalid_nominations_path
     elsif @nomination_email.nomination_expired?
-      redirect_to link_expired_nominations_path
+      redirect_to link_expired_nominations_path(school_id: @nomination_email.school_id)
     elsif @nomination_email.tutor_already_nominated?
       redirect_to link_expired_nominations_path
     else
@@ -24,6 +24,16 @@ class NominationsController < ApplicationController
     @nominate_induction_tutor_form.save!
     session.delete(:nominate_induction_tutor_form)
     redirect_to nominate_school_lead_success_nominations_path
+  end
+
+  def link_expired
+    @school_id = params[:school_id]
+  end
+
+  def resend_email_after_link_expired
+    school = School.find(params[:resend_email_after_link_expired][:school_id])
+    InviteSchools.new.resend_school_invitation(school)
+    redirect_to success_nominations_path
   end
 
   def choose_location
@@ -62,10 +72,6 @@ class NominationsController < ApplicationController
     end
   end
 
-  def resend_email_after_link_expired
-    redirect_to success_nominations_path
-  end
-
   def not_eligible; end
 
   def already_renominated; end
@@ -77,8 +83,6 @@ class NominationsController < ApplicationController
   def already_associated_with_another_school; end
 
   def already_nominated; end
-
-  def link_expired; end
 
   def nominate_school_lead_success; end
 

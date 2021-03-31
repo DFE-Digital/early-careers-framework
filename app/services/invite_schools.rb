@@ -1,6 +1,18 @@
 # frozen_string_literal: true
 
 class InviteSchools
+  def resend_school_invitation(school)
+    token = reference
+    recipient = recipient_email(school)
+
+    school.nomination_emails.create!(
+      token: token,
+      sent_to: recipient,
+      sent_at: Time.zone.now,
+    )
+    send_nomination_email(recipient, token, school.name)
+  end
+
   def run(school_urns)
     logger = Rails.logger
     logger.info "Emailing schools"
