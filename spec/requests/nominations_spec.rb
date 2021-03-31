@@ -121,7 +121,7 @@ RSpec.describe "Nominations flow", type: :request do
 
   describe "email limit reached" do
     it "renders the email limit reached page" do
-      get "/nominations/already-nominated"
+      get "/nominations/already-renominated"
       expect(response).to render_template(:already_renominated)
     end
   end
