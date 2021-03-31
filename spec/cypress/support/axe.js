@@ -22,4 +22,8 @@ Cypress.Commands.overwrite("checkA11y", (orig, ...args) => {
   cy.injectAxe();
 
   orig(...args);
+
+  cy.location("pathname").then((path) => {
+    cy.task("axe", path);
+  });
 });
