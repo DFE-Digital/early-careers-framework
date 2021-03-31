@@ -131,6 +131,11 @@ Rails.application.routes.draw do
   namespace :schools do
     resource :dashboard, controller: :dashboard, only: :show, path: "/"
     resource :choose_programme, controller: :choose_programme, only: %i[show create], path: "choose-programme"
+    resources :cohorts do
+      member do
+        get "/:start_year", action: :show
+      end
+    end
   end
 
   # put this under schools/estimates_controller ?

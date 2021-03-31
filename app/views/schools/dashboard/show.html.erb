@@ -1,1 +1,35 @@
-<h1>Dashboard goes here</h1>
+<span class="govuk-caption-l"><%= @school.name %></span>
+<h1 class="govuk-heading-xl govuk-!-margin-bottom-7">Manage your training</h1>
+
+<p class="govuk-body govuk-!-margin-bottom-5">Check and add details for every academic year/cohort.</p>
+
+<h2 class="govuk-heading-m govuk-!-margin-bottom-1">Your cohorts</h2>
+
+<table class="govuk-table">
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th class="govuk-table__header" scope="col">Year</th>
+      <th class="govuk-table__header" scope="col">Programme</th>
+      <th class="govuk-table__header" scope="col">Status</th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    <% @school_cohorts.each do |school_cohort| %>
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell">
+          <%= govuk_link_to school_cohort.cohort.start_year, schools_cohort_path(school_cohort.cohort.start_year) %>
+        </td>
+        <td class="govuk-table__cell">
+          <% if school_cohort.school_chose_cip? %>
+            Using accredited materials
+          <% else %>
+            Training provider funded by DfE
+          <% end %>
+        </td>
+        <td class="govuk-table__cell">
+          <%= render AutoTagComponent.new(text: school_cohort.status) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
