@@ -64,7 +64,7 @@ Rails.application.routes.draw do
       get "already-associated-with-another_school", action: :already_associated_with_another_school
       get "already-nominated", action: :already_nominated
       get "link-expired", action: :link_expired
-      get "nominate-school-lead", action: :nominate_school_lead
+      get "link-invalid", action: :link_invalid
       get "nominate-school-lead-success", action: :nominate_school_lead_success
       post "resend-email-after-link-expired", action: :resend_email_after_link_expired
       post "create-school-lead-nomination", action: :create_school_lead_nomination

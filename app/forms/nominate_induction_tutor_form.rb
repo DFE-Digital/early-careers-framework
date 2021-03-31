@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class NominateInductionTutorFormForm
+class NominateInductionTutorForm
   include ActiveModel::Model
 
   attr_accessor :full_name, :email, :token

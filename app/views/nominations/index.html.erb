@@ -32,14 +32,14 @@
         </div>
       </dl>
     </div>
-    <%= form_for :confirmation, url: create_school_lead_nomination_nominations_path, method: :post do |f| %>
+    <%= form_with model: @nominate_induction_tutor_form, url: create_school_lead_nomination_nominations_path, method: :post do |f| %>
         <div class="govuk-form-group">
           <h2 class="govuk-heading-m">Your induction tutor</h2>
           <div class="govuk-form-group">
             <%= f.govuk_text_field(:full_name, label: { text: "Full name" }) %>
           </div>
           <div class="govuk-form-group">
-            <%= f.govuk_email_field(:full_name, label: { text: "Email address", hint: "They will sign in with this email and get future notifications about this service" }) %>
+            <%= f.govuk_email_field(:email, label: { text: "Email address", hint: "They will sign in with this email and get future notifications about this service" }) %>
           </div>
         </div>
       <%= f.govuk_submit "Confirm" %>
