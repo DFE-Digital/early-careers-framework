@@ -17,4 +17,8 @@ class Schools::CohortsController < Schools::BaseController
       redirect_to schools_choose_programme_path
     end
   end
+
+  def legal; end
+
+  def add_participants; end
 end
