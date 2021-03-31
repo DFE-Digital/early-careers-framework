@@ -123,3 +123,6 @@ to execute this delayed job in the background.
 1. Add an option `on_duplicate_key_ignore` to lead providers, think carefully which ones from seed dump are needed.
 1. Commit, push, run seeding job from above in the deployed app.
 
+## Architecture Decision Records
+
+* There is a cross-project ADR at <https://github.com/DFE-Digital/cpd-adr>
