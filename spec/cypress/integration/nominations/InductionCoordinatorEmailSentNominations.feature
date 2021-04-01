@@ -2,6 +2,7 @@ Feature: Resend nominations flow
   All users need to be able to attempt to resend nominations for any school
 
   Scenario: Valid Nomination Link was sent
+  {word} was created with {}
     Given Following Factory set up was run "nomination_email"
     When I am on "nominations" page with token "foo-bar-baz"
     Then I type "John Wick" into "name input"
