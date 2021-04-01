@@ -2,6 +2,55 @@
 
 SchoolDataImporter.new(Rails.logger).delay.run
 
+school_one_hash = { "urn" => "0082379", "name" => "Email Nomination School", "school_type_code" => 1, "address_line1" => "2033 Dickinson Squares", "postcode" => "92635", "domains" => ["hoeger-shanahan.com"], "primary_contact_email" => "mehmet.duran@digital.education.gov.uk", "administrative_district_code" => "E123" }
+school_two_hash = { "urn" => "0082380", "name" => "Second Email Nomination School", "school_type_code" => 1, "address_line1" => "2050 Dickinson Squares", "postcode" => "92636", "domains" => ["bazinga-foo.com"], "primary_contact_email" => "mehmet.duran@digital.education.gov.uk", "administrative_district_code" => "E123" }
+school_three_hash = { "urn" => "0082380", "name" => "Third Email Nomination School", "school_type_code" => 1, "address_line1" => "2046 Dickinson Squares", "postcode" => "92640", "domains" => ["bazinga-bar.com"], "primary_contact_email" => "mehmet.duran@digital.education.gov.uk", "administrative_district_code" => "E123" }
+school_four_hash = { "urn" => "0082380", "name" => "Fourth Email Nomination School", "school_type_code" => 1, "address_line1" => "2050 Dickinson Squares", "postcode" => "92646", "domains" => ["bazinga-baz.com"], "primary_contact_email" => "mehmet.duran@digital.education.gov.uk", "administrative_district_code" => "E123" }
+nomination_email_school_one = School.create!(school_one_hash)
+nomination_email_school_two = School.create!(school_two_hash)
+nomination_email_school_three = School.create!(school_three_hash)
+nomination_email_school_four = School.create!(school_four_hash)
+
+normal_nomination_email = NominationEmail.create!(token: "normal_nomination_email",
+                                                  sent_to: "mehmet.duran@digital.education.gov.uk",
+                                                  sent_at: Time.zone.now,
+                                                  school: nomination_email_school_one)
+
+expired_nomination_email = NominationEmail.create!(token: "expired_nomination_email",
+                                                   sent_to: "mehmet.duran+expired@digital.education.gov.uk",
+                                                   sent_at: 1.year.ago,
+                                                   school: nomination_email_school_one)
+
+already_nominated_induction_tutor_email = NominationEmail.create!(token: "expired_nomination_email",
+                                                                  sent_to: "mehmet.duran+already_nominated_induction_tutor_email@digital.education.gov.uk",
+                                                                  sent_at: Time.zone.now,
+                                                                  school: nomination_email_school_two)
+
+email_address_already_used_for_another_school = NominationEmail.create!(token: "expired_nomination_email",
+                                                                        sent_to: "mehmet.duran+email_address_already_used_for_another_school@digital.education.gov.uk",
+                                                                        sent_at: Time.zone.now,
+                                                                        school: nomination_email_school_three)
+# This is to make rubocop happy
+normal_nomination_email.to_s
+expired_nomination_email.to_s
+already_nominated_induction_tutor_email.to_s
+email_address_already_used_for_another_school.to_s
+
+already_nominated_induction_tutor_email_user = User.with_discarded.find_or_create_by!(email: "mehmet.duran+already_nominated_induction_tutor_email@digital.education.gov.uk") do |u|
+  u.full_name = "already_nominated_induction_tutor_email_user"
+  u.confirmed_at = Time.zone.now.utc
+end
+
+email_address_already_used_for_another_school_user = User.with_discarded.find_or_create_by!(email: "mehmet.duran+already_nominated_induction_tutor_email@digital.education.gov.uk") do |u|
+  u.full_name = "email_address_already_used_for_another_school_user"
+  u.confirmed_at = Time.zone.now.utc
+end
+
+already_nominated_induction_tutor_email_profile = InductionCoordinatorProfile.find_or_create_by!(user: already_nominated_induction_tutor_email_user).undiscard
+email_address_already_used_for_another_school_profile = InductionCoordinatorProfile.find_or_create_by!(user: email_address_already_used_for_another_school_user).undiscard
+already_nominated_induction_tutor_email_profile.schools << nomination_email_school_two
+email_address_already_used_for_another_school_profile.schools << nomination_email_school_four
+
 standard_user_emails = ["admin@example.com", "lead-provider@example.com", "second-school-leader@example.com", "school-leader@example.com"]
 (1..5).each do |number|
   standard_user_emails << "second-admin-#{number}@example.com"
