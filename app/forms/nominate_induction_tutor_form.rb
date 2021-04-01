@@ -10,18 +10,16 @@ class NominateInductionTutorForm
 
   def save!
     school = NominationEmail.find_by(token: token).school
-    profile = InductionCoordinatorProfile.new
 
     user = ActiveRecord::Base.transaction do
-      user = User.create!(
+      user_record = User.create!(
         full_name: full_name,
         email: email,
         confirmed_at: Time.zone.now,
       )
-      profile.user = user
-      profile.save!
-      school.induction_coordinator_profiles << profile
-      user
+
+      InductionCoordinatorProfile.create!(user: user, schools: [school])
+      user_record
     end
 
     UserMailer.tutor_nomination_instructions(user, school.name).deliver_now
