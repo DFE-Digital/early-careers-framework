@@ -6,6 +6,7 @@ Feature: Resend nominations flow
     When I am on "nominations" page with token "foo-bar-baz"
     Then I type "John Wick" into "name input"
     And I type "john-wick@example.com" into "email input"
+
     When I click the submit button
     Then "notification banner" should contain "School Lead has been nominated"
     And Email should be sent to Nominated School Induction Coordinator to email "john-wick@example.com"
@@ -14,6 +15,7 @@ Feature: Resend nominations flow
     Given Following Factory set up was run "nomination_email" with trait "expired_nomination_email"
     When I am on "nominations" page with token "foo-bar-baz"
     Then "page body" should contain "This Link has expired"
+
     When I click the submit button
     Then "page body" should contain "Instructions have been emailed to the school"
     And Email should be sent to Primary Email Contact of the School belonging to "primary-contact-email@example.com"
@@ -28,5 +30,6 @@ Feature: Resend nominations flow
     When I am on "nominations" page with token "foo-bar-baz"
     Then I type "John Wick" into "name input"
     And I type "john-wick@example.com" into "email input"
+
     When I click the submit button
     Then "page body" should contain "That email address is already associated with another school"
