@@ -7,6 +7,7 @@
   <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-m">2021</span>
     <h1 class="govuk-heading-l">Sign up with a training provider</h1>
+    <% unless @partnership %>
     <p class="govuk-body">You need to sign a contract with a training provider so they can deliver your programme.</p>
     <p class="govuk-body">You can find out more about what they’re offering and contact them directly:</p>
     <ul class="govuk-list govuk-list--bullet">
@@ -22,5 +23,6 @@
       <li>you'll get an email when the provider has confirmed your contract with the DfE</li>
       <li>this may take a few weeks but this page will automatically update</li>
     </ul>
+    <% end %>
   </div>
 </div>
