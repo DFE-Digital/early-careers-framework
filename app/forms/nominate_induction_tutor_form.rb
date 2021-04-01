@@ -16,7 +16,7 @@ class NominateInductionTutorForm
       user = User.create!(
         full_name: full_name,
         email: email,
-        confirmed_at: Time.zone.now.utc, # Question Should we confirm the user or not?
+        confirmed_at: Time.zone.now.utc,
       )
       profile.user = user
       profile.save!
