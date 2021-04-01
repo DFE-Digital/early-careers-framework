@@ -77,11 +77,11 @@ jobs:
             BUILDKIT_INLINE_CACHE=1
             SHA=${{ github.sha }}
           cache-from: |
-            dfedigital/early-careers-framework-prod:latest
+            dfedigital/early-careers-framework-dev:latest
           push: true
           tags: |
             dfedigital/early-careers-framework-prod:${{ github.sha }}
-            dfedigital/early-careers-framework-prod:latest
+            dfedigital/early-careers-framework-dev:latest
           target: production
 
       - name: Deploy to dev
