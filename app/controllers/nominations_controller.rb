@@ -9,9 +9,9 @@ class NominationsController < ApplicationController
 
     if @nomination_email.nil?
       redirect_to link_invalid_nominations_path
-    elsif @nomination_email.nomination_expired?
+    elsif @nomination_email.expired?
       redirect_to link_expired_nominations_path(school_id: @nomination_email.school_id)
-    elsif @nomination_email.tutor_already_nominated?
+    elsif @nomination_email.school.tutor_already_nominated?
       redirect_to already_nominated_nominations_path
     else
       load_nominate_induction_tutor_form

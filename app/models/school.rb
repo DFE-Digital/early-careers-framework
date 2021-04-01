@@ -148,4 +148,8 @@ private
       &.joins(:user)
       &.where&.not(users: { confirmed_at: nil })
   end
+
+  def tutor_already_nominated?
+    induction_coordinator_profiles.count.positive?
+  end
 end
