@@ -18,7 +18,7 @@ class NominateInductionTutorForm
         confirmed_at: Time.zone.now,
       )
 
-      InductionCoordinatorProfile.create!(user: user, schools: [school])
+      InductionCoordinatorProfile.create!(user: user_record, schools: [school])
       user_record
     end
 
