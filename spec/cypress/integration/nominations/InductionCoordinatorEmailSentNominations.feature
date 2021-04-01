@@ -3,7 +3,7 @@ Feature: Resend nominations flow
 
   Scenario: Valid Nomination Link was sent
   {word} was created with {}
-    Given Following Factory set up was run "nomination_email"
+    Given nomination_email was created with token "foo-bar-baz"
     When I am on "nominations with token" page
     Then I type "John Wick" into "name input"
     And I type "john-wick@example.com" into "email input"
@@ -13,7 +13,7 @@ Feature: Resend nominations flow
     And Email should be sent to Nominated School Induction Coordinator to email "john-wick@example.com"
 
   Scenario: Expired Nomination Link was sent
-    Given Following Factory set up was run "nomination_email" with trait "expired_nomination_email"
+    Given nomination_email was created as "expired_nomination_email" with token "foo-bar-baz"
     When I am on "nominations with token" page
     Then "page body" should contain "This Link has expired"
 
@@ -22,12 +22,12 @@ Feature: Resend nominations flow
     And Email should be sent to Primary Email Contact of the School belonging to "primary-contact-email@example.com"
 
   Scenario: Invalid Nomination Link was sent for which Induction Tutor was already nominated for the same school
-    Given Following Factory set up was run "nomination_email" with trait "already_nominated_induction_tutor"
+    Given nomination_email was created as "already_nominated_induction_tutor" with token "foo-bar-baz"
     When I am on "nominations with token" page
     Then "page body" should contain "An Induction Tutor has already been nominated for your school"
 
   Scenario: Nomination Link was sent for which Induction Tutor was already nominated for another school
-    Given Following Factory set up was run "nomination_email" with trait "email_address_already_used_for_another_school"
+    Given nomination_email was created as "email_address_already_used_for_another_school" with token "foo-bar-baz"
     When I am on "nominations with token" page
     Then I type "John Wick" into "name input"
     And I type "john-wick@example.com" into "email input"
