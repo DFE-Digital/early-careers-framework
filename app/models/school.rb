@@ -119,6 +119,10 @@ class School < ApplicationRecord
       .merge(LocalAuthorityDistrict.only_with_uplift(year))
   }
 
+  def tutor_already_nominated?
+    induction_coordinator_profiles.count.positive?
+  end
+
 private
 
   def open?
@@ -147,9 +151,5 @@ private
     induction_coordinator_profiles
       &.joins(:user)
       &.where&.not(users: { confirmed_at: nil })
-  end
-
-  def tutor_already_nominated?
-    induction_coordinator_profiles.count.positive?
   end
 end
