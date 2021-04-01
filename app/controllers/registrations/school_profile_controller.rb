@@ -24,7 +24,7 @@ private
 
   def load_school
     session["school_urn"] = school_params[:urn]
-    @school = School.find_by(urn: school_params[:urn])
+    @school = School.eligible.find_by(urn: school_params[:urn])
   end
 
   def redirect

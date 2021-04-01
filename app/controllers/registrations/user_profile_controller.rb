@@ -30,7 +30,7 @@ private
   end
 
   def load_school
-    @school = School.find_by(urn: session[:school_urn])
+    @school = School.eligible.find_by(urn: session[:school_urn])
     raise ActionController::BadRequest if @school.nil?
   end
 end

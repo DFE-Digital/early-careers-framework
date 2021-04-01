@@ -6,7 +6,7 @@ class InviteSchools
     logger.info "Emailing schools"
 
     school_urns.each do |urn|
-      school = School.find_by(urn: urn)
+      school = School.eligible.find_by(urn: urn)
 
       if school.nil?
         logger.info "School not found, urn: #{urn} ... skipping"
