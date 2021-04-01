@@ -1,12 +1,16 @@
+Which heading do we want ?
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+  <!-- have we a helper for cohort year, yes -->
     <h2 class="govuk-heading-l">Estimated numbers of participants starting in 2021</h2>
-    <%= form_with(model: @school_cohort_form, url: estimate_participants_path) do |f| %>
+
+    <%= form_with(model: @school_cohort_form, url: schools_estimate_participant_path(@school_cohort), method: :patch) do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_text_field(
           :estimated_teacher_count,
           width: 20,
           link_errors: true,
+          value: @school_cohort.estimated_teacher_count,
           label: {
             text: "Number of ECTs",
             class: "govuk-label govuk-label--m"
@@ -17,6 +21,7 @@
           :estimated_mentor_count,
           width: 20,
           link_errors: true,
+          value: @school_cohort.estimated_mentor_count,
           label: {
             text: "Number of mentors",
             class: "govuk-label govuk-label--m"

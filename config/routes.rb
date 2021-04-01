@@ -136,10 +136,10 @@ Rails.application.routes.draw do
         get "/:start_year", action: :show
       end
     end
+    resources :estimate_participants, only: %i[edit update], path: "estimate-participants"
   end
 
   # put this under schools/estimates_controller ?
-  resources :estimate_participants, only: %i[show create], path: "estimate-participants"
 
   get "/403", to: "errors#forbidden", via: :all
   get "/404", to: "errors#not_found", via: :all
