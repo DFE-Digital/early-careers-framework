@@ -22,7 +22,8 @@ class NominateInductionTutorForm
       user_record
     end
 
-    UserMailer.tutor_nomination_instructions(user, school.name).deliver_now
+    sign_in_url = Rails.application.routes.url_helpers.sign_in_url(host: Rails.application.config.domain)
+    nomination_email.nomination_confirmation_email(tutor: user, school: school, sign_in_url: sign_in_url).deliver_now
 
     user
   end
