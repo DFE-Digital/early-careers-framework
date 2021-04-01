@@ -8,6 +8,6 @@ paas_space_name = "early-careers-framework-staging"
 paas_postgres_service_plan = "tiny-unencrypted-11"
 paas_app_start_timeout = "180"
 paas_app_stopped = false
-paas_web_app_deployment_strategy = "blue-green-v2"
+paas_web_app_deployment_strategy = "standard"
 paas_web_app_instances = 1
 paas_web_app_memory = 512
