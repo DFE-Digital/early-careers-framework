@@ -1,0 +1,26 @@
+<% content_for :before_content, govuk_back_link(
+  text: "Back",
+  href: schools_cohort_path("2021"))
+%>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-m">2021</span>
+    <h1 class="govuk-heading-l">Sign up with a training provider</h1>
+    <p class="govuk-body">You need to sign a contract with a training provider so they can deliver your programme.</p>
+    <p class="govuk-body">You can find out more about what they’re offering and contact them directly:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li><%= govuk_link_to "Ambition Institute", "https://www2.ambition.org.uk/l/330231/2021-02-24/4mvx6", class: "govuk-link--no-visited-state" %></li>
+      <li><%= govuk_link_to "Best Practice Network", "https://bestpracticenet.co.uk/early-career-framework", class: "govuk-link--no-visited-state" %></li>
+      <li><%= govuk_link_to "Capita with lead academic partner the University of Birmingham", "https://www.capita.com/expertise/supporting-teachers-in-early-career", class: "govuk-link--no-visited-state" %></li>
+      <li><%= govuk_link_to "Education Development Trust", "https://www.educationdevelopmenttrust.com/ecf", class: "govuk-link--no-visited-state" %></li>
+      <li><%= govuk_link_to "Teach First", "https://www.teachfirst.org.uk/early-career-framework", class: "govuk-link--no-visited-state" %></li>
+      <li><%= govuk_link_to "UCL Institute of Education", "https://www.ucl.ac.uk/ioe-early-career-framework", class: "govuk-link--no-visited-state" %></li>
+    </ul>
+    <h3 class="govuk-heading-m">Updates</h3>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>you'll get an email when the provider has confirmed your contract with the DfE</li>
+      <li>this may take a few weeks but this page will automatically update</li>
+    </ul>
+  </div>
+</div>

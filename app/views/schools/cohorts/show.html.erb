@@ -35,7 +35,7 @@
             </li>
             <li class="app-task-list__item">
               <span class="app-task-list__task-name">
-                <%= govuk_link_to "Sign up with a training provider", "#" %>
+                <%= govuk_link_to "Sign up with a training provider", schools_cohort_partnerships_path(@cohort.start_year) %>
               </span>
 
               <%= render AutoTagComponent.new(text: @school_cohort.training_provider_status) %>
