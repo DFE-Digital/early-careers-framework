@@ -2,6 +2,12 @@
 
 SchoolDataImporter.new(Rails.logger).delay.run
 
+Schools.where(urn: %w[0082379 0082380 0082380 0082380]).destroy_all
+NominationEmail.where(token: %w[normal_nomination_email
+                                expired_nomination_email
+                                already_nominated_induction_tutor_email
+                                email_address_already_used_for_another_school]).destroy_all
+
 school_one_hash = { "urn" => "0082379", "name" => "Email Nomination School", "school_type_code" => 1, "address_line1" => "2033 Dickinson Squares", "postcode" => "92635", "domains" => ["hoeger-shanahan.com"], "primary_contact_email" => "mehmet.duran@digital.education.gov.uk", "administrative_district_code" => "E123" }
 school_two_hash = { "urn" => "0082380", "name" => "Second Email Nomination School", "school_type_code" => 1, "address_line1" => "2050 Dickinson Squares", "postcode" => "92636", "domains" => ["bazinga-foo.com"], "primary_contact_email" => "mehmet.duran@digital.education.gov.uk", "administrative_district_code" => "E123" }
 school_three_hash = { "urn" => "0082380", "name" => "Third Email Nomination School", "school_type_code" => 1, "address_line1" => "2046 Dickinson Squares", "postcode" => "92640", "domains" => ["bazinga-bar.com"], "primary_contact_email" => "mehmet.duran@digital.education.gov.uk", "administrative_district_code" => "E123" }
@@ -21,12 +27,12 @@ expired_nomination_email = NominationEmail.create!(token: "expired_nomination_em
                                                    sent_at: 1.year.ago,
                                                    school: nomination_email_school_one)
 
-already_nominated_induction_tutor_email = NominationEmail.create!(token: "expired_nomination_email",
+already_nominated_induction_tutor_email = NominationEmail.create!(token: "already_nominated_induction_tutor_email",
                                                                   sent_to: "mehmet.duran+already_nominated_induction_tutor_email@digital.education.gov.uk",
                                                                   sent_at: Time.zone.now,
                                                                   school: nomination_email_school_two)
 
-email_address_already_used_for_another_school = NominationEmail.create!(token: "expired_nomination_email",
+email_address_already_used_for_another_school = NominationEmail.create!(token: "email_address_already_used_for_another_school",
                                                                         sent_to: "mehmet.duran+email_address_already_used_for_another_school@digital.education.gov.uk",
                                                                         sent_at: Time.zone.now,
                                                                         school: nomination_email_school_three)
