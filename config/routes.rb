@@ -139,8 +139,6 @@ Rails.application.routes.draw do
     resources :estimate_participants, only: %i[edit update], path: "estimate-participants"
   end
 
-  # put this under schools/estimates_controller ?
-
   get "/403", to: "errors#forbidden", via: :all
   get "/404", to: "errors#not_found", via: :all
   get "/422", to: "errors#unprocessable_entity", via: :all
