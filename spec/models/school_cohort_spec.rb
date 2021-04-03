@@ -24,5 +24,5 @@ RSpec.describe SchoolCohort, type: :model do
   it { is_expected.to respond_to(:choose_training_materials_status) }
   it { is_expected.to respond_to(:number_of_participants_status) }
   it { is_expected.to respond_to(:status) }
-  it { is_expected.to respond_to(:school_choose_cip?) }
+  it { is_expected.to respond_to(:school_chose_cip?) }
 end
