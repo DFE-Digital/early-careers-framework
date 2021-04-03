@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 class Schools::EstimateParticipantsController < Schools::BaseController
-  # who has permissions to view this ?
   skip_after_action :verify_authorized
   skip_after_action :verify_policy_scoped
-  before_action :get_school_cohort
+  before_action :set_school_cohort
 
   def edit
     @school_cohort_form = SchoolCohortForm.new
@@ -15,7 +14,7 @@ class Schools::EstimateParticipantsController < Schools::BaseController
 
     if @school_cohort_form.valid?
       @school_cohort.update!(form_params)
-      redirect_to "/schools/cohorts/2021" # TODO: this needs changing?
+      redirect_to schools_cohort_path(@school_cohort.cohort.start_year)
     else
       render :edit
     end
@@ -23,7 +22,7 @@ class Schools::EstimateParticipantsController < Schools::BaseController
 
 private
 
-  def get_school_cohort
+  def set_school_cohort
     @school_cohort = SchoolCohort.find(params[:id])
   end
 

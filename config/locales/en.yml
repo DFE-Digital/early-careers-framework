@@ -30,6 +30,12 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
+  estimate_participants_default_message: &default_message "Enter a number between 0 and 1000"
+  estimate_participants_defaults: &defaults
+    not_a_number: *default_message
+    less_than: *default_message
+    greater_than_or_equal_to: *default_message
+
   activerecord:
     errors:
       models:
@@ -39,16 +45,6 @@ en:
               blank: "Enter an email"
               taken: "This email address is already in use"
               invalid: "Enter a valid email address"
-
-  estimate_participants_default_message: &default_message "Enter a number between 0 and 1000"
-  estimate_participants_defaults: &defaults
-    not_a_number: *default_message
-    less_than: *default_message
-    greater_than_or_equal_to: *default_message
-
-  activemodel:
-    errors:
-      models:
         school_cohort_form:
           attributes:
             estimated_mentor_count:
@@ -57,6 +53,7 @@ en:
             estimated_teacher_count:
               <<: *defaults
               blank: "enter your expected number of teachers"
+
 
 
 

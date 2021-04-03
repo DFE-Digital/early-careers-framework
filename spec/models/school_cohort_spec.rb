@@ -16,4 +16,13 @@ RSpec.describe SchoolCohort, type: :model do
       not_yet_known: "not_yet_known",
     ).backed_by_column_of_type(:string)
   }
+
+  it { is_expected.to respond_to(:number_of_participants_status) }
+  it { is_expected.to respond_to(:training_provider_status) }
+  it { is_expected.to respond_to(:accept_legal_status) }
+  it { is_expected.to respond_to(:add_participants_status) }
+  it { is_expected.to respond_to(:choose_training_materials_status) }
+  it { is_expected.to respond_to(:number_of_participants_status) }
+  it { is_expected.to respond_to(:status) }
+  it { is_expected.to respond_to(:school_choose_cip?) }
 end
