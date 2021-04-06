@@ -12,7 +12,11 @@ class SchoolCohort < ApplicationRecord
   belongs_to :school
 
   def number_of_participants_status
-    "cannot start yet"
+    if !estimated_teacher_count.nil? && !estimated_mentor_count.nil?
+      "done"
+    else
+      "to do"
+    end
   end
 
   def training_provider_status
