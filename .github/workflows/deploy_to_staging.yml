@@ -122,6 +122,8 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_STAGING }}
           TF_VAR_paas_user: ${{ secrets.GOVPAAS_STAG_USERNAME }}
           TF_VAR_paas_password: ${{ secrets.GOVPAAS_STAG_PASSWORD }}
+          TF_VAR_statuscake_username: ${{ secrets.STATUSCAKE_USERNAME }}
+          TF_VAR_statuscake_apikey: ${{ secrets.STATUSCAKE_APIKEY }}
         run: |
           export TF_VAR_paas_app_docker_image=dfedigital/early-careers-framework-prod:${{ github.event.inputs.version }}
           cd terraform/app
