@@ -17,11 +17,11 @@ class NominationRequestForm
   end
 
   def available_schools
-    School.unscoped.open.joins(:school_local_authorities).where(school_local_authorities: { local_authority_id: local_authority_id })
+    School.open.joins(:school_local_authorities).where(school_local_authorities: { local_authority_id: local_authority_id })
   end
 
   def school
-    School.unscoped.find(school_id)
+    School.find(school_id)
   end
 
   def save!

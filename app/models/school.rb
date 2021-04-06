@@ -22,16 +22,14 @@ class School < ApplicationRecord
   has_many :early_career_teacher_profiles
   has_many :early_career_teachers, through: :early_career_teacher_profiles, source: :user
 
-  default_scope -> { eligible }
-
   scope :eligible, -> { open.eligible_establishment_type.in_england }
 
   scope :with_name_like, lambda { |search_key|
-    School.where("name ILIKE ?", "%#{search_key}%")
+    School.eligible.where("name ILIKE ?", "%#{search_key}%")
   }
 
   scope :with_urn_like, lambda { |search_key|
-    School.where("urn ILIKE ?", "%#{search_key}%")
+    School.eligible.where("urn ILIKE ?", "%#{search_key}%")
   }
 
   scope :search_by_name_or_urn, lambda { |search_key|

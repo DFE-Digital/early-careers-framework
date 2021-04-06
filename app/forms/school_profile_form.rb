@@ -11,7 +11,7 @@ class SchoolProfileForm
 private
 
   def urn_matches_school
-    school = School.find_by(urn: urn)
+    school = School.eligible.find_by(urn: urn)
     errors.add(:urn, :invalid, message: "No school matched that URN") if school.nil?
   end
 end

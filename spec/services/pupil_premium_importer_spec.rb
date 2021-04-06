@@ -69,7 +69,7 @@ RSpec.describe PupilPremiumImporter do
       end
 
       it "updates the school" do
-        expect(School.unscoped.find_by(urn: 100_000).pupil_premiums.first).to be_present
+        expect(School.find_by(urn: 100_000).pupil_premiums.first).to be_present
       end
     end
   end

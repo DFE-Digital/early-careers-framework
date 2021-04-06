@@ -71,14 +71,9 @@ RSpec.describe School, type: :model do
       let(:eligible_school) { open_school }
       let(:ineligible_school) { closed_school }
 
-      it "should be the default scope" do
-        expect(School.all).to include(eligible_school)
-        expect(School.all).not_to include(ineligible_school)
-      end
-
       it "should only include eligible schools" do
-        expect(School.all).to include(open_school, eligible_school_type, english_school)
-        expect(School.all).not_to include(closed_school, ineligible_school_type, welsh_school)
+        expect(School.eligible.all).to include(open_school, eligible_school_type, english_school)
+        expect(School.eligible.all).not_to include(closed_school, ineligible_school_type, welsh_school)
       end
     end
   end
