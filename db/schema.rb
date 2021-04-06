@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_24_182656) do
+ActiveRecord::Schema.define(version: 2021_04_06_120453) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -184,7 +184,9 @@ ActiveRecord::Schema.define(version: 2021_03_24_182656) do
     t.uuid "school_id", null: false
     t.uuid "lead_provider_id", null: false
     t.uuid "cohort_id", null: false
+    t.uuid "delivery_partner_id"
     t.index ["cohort_id"], name: "index_partnerships_on_cohort_id"
+    t.index ["delivery_partner_id"], name: "index_partnerships_on_delivery_partner_id"
     t.index ["lead_provider_id"], name: "index_partnerships_on_lead_provider_id"
     t.index ["school_id"], name: "index_partnerships_on_school_id"
   end
@@ -274,6 +276,16 @@ ActiveRecord::Schema.define(version: 2021_03_24_182656) do
     t.index ["urn"], name: "index_schools_on_urn", unique: true
   end
 
+  create_table "tasks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.string "status", default: "TO DO", null: false
+    t.string "description", null: false
+    t.uuid "school_cohort_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["school_cohort_id"], name: "index_tasks_on_school_cohort_id"
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "full_name", null: false
     t.string "email", default: "", null: false
@@ -323,6 +335,7 @@ ActiveRecord::Schema.define(version: 2021_03_24_182656) do
   add_foreign_key "lead_provider_profiles", "users"
   add_foreign_key "nomination_emails", "schools"
   add_foreign_key "partnerships", "cohorts"
+  add_foreign_key "partnerships", "delivery_partners"
   add_foreign_key "partnerships", "lead_providers"
   add_foreign_key "partnerships", "schools"
   add_foreign_key "provider_relationships", "cohorts"
@@ -336,4 +349,5 @@ ActiveRecord::Schema.define(version: 2021_03_24_182656) do
   add_foreign_key "school_local_authority_districts", "local_authority_districts"
   add_foreign_key "school_local_authority_districts", "schools"
   add_foreign_key "schools", "networks"
+  add_foreign_key "tasks", "school_cohorts"
 end
