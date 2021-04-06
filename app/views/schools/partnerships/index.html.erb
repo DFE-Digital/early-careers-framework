@@ -1,11 +1,11 @@
 <% content_for :before_content, govuk_back_link(
   text: "Back",
-  href: schools_cohort_path("2021"))
+  href: schools_cohort_path(@cohort.start_year))
 %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <span class="govuk-caption-m">2021</span>
+    <span class="govuk-caption-m">@cohort.start_year</span>
     <h1 class="govuk-heading-l">Sign up with a training provider</h1>
     <% if @partnership %>
     <h3 class="govuk-heading-m">Partnership details</h3>
