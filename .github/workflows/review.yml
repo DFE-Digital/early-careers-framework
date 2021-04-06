@@ -80,13 +80,13 @@ jobs:
           context: .
           build-args: |
             BUILDKIT_INLINE_CACHE=1
-            SHA=${{ github.sha }}
+            SHA=${{ github.event.pull_request.head.sha }}
           cache-from: |
             dfedigital/early-careers-framework-dev:${{ env.ENVIRONMENT }}
             dfedigital/early-careers-framework-dev:latest
           push: true
           tags: |
-            dfedigital/early-careers-framework-dev:${{ github.sha }}
+            dfedigital/early-careers-framework-dev:${{ github.event.pull_request.head.sha }}
             dfedigital/early-careers-framework-dev:${{ env.ENVIRONMENT }}
             dfedigital/early-careers-framework-dev:latest
           target: production
@@ -98,7 +98,7 @@ jobs:
           TF_VAR_paas_user: ${{ secrets.GOVPAAS_DEV_USERNAME }}
           TF_VAR_paas_password: ${{ secrets.GOVPAAS_DEV_PASSWORD }}
         run: |
-          export TF_VAR_paas_app_docker_image=dfedigital/early-careers-framework-dev:${{ github.sha }}
+          export TF_VAR_paas_app_docker_image=dfedigital/early-careers-framework-dev:${{ github.event.pull_request.head.sha }}
           cd terraform/app
           terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-7f2ca242-9929-4662-a79c-c454ea56ea7b" -backend-config="key=${{ env.ENVIRONMENT }}/terraform.tfstate"
           terraform apply -input=false -auto-approve -var-file ../workspace-variables/review.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_DEV}}"}' -var='environment=${{env.ENVIRONMENT}}' -var 'logstash_url=${{secrets.SYSLOG_DRAIN_URL}}'
