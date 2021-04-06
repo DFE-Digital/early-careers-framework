@@ -6,7 +6,7 @@ class Schools::EstimateParticipantsController < Schools::BaseController
   before_action :set_school_cohort
 
   def edit
-    @school_cohort_form = SchoolCohortForm.new
+    @school_cohort_form = SchoolCohortForm.new(@school_cohort)
   end
 
   def update
