@@ -7,7 +7,32 @@
   <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-m">2021</span>
     <h1 class="govuk-heading-l">Sign up with a training provider</h1>
-    <% unless @partnership %>
+    <% if @partnership %>
+    <h3 class="govuk-heading-m">Partnership details</h3>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Delivery partner
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @delivery_partner.name %>
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Lead provider
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @partnership.lead_provider.name %>
+        </dd>
+      </div>
+    </dl>
+
+    <p>
+    <!-- TODO: Add link to challenge partnership -->
+    If this doesn't look right you can <%= govuk_link_to "report that your school has been signed up incorrectly", "#" %>
+    </p>
+    <% else %>
     <p class="govuk-body">You need to sign a contract with a training provider so they can deliver your programme.</p>
     <p class="govuk-body">You can find out more about what they’re offering and contact them directly:</p>
     <ul class="govuk-list govuk-list--bullet">

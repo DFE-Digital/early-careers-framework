@@ -6,18 +6,13 @@ class Schools::PartnershipsController < Schools::BaseController
 
   def index
     @school = current_user.induction_coordinator_profile.schools.first
-    @partnership = Partnership.find_by(school: @school, cohort: cohort)
-
-    # if school.chosen_programme?(Cohort.current)
-    #   redirect_to helpers.profile_dashboard_url(current_user)
-    # else
-    #   @induction_choice_form = InductionChoiceForm.new
-    # end
+    @partnership = @school.partnerships&.find_by(cohort: cohort)
+    @delivery_partner = @partnership&.lead_provider&.delivery_partners&.find_by(provider_relationships: { cohort: cohort })
   end
 
 private
 
   def cohort
-    @cohort ||= Cohort.find_by(start_year: params[:id])
+    @cohort ||= Cohort.find_by(start_year: params[:cohort_id])
   end
 end

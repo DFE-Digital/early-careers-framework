@@ -13,7 +13,7 @@ RSpec.describe "Schools::Partnerships", type: :request do
   end
 
   describe "GET /schools/cohorts/:start_year/partnerships" do
-    it "shows available delivery partners" do
+    it "renders the partnerships template" do
       get "/schools/cohorts/#{cohort.start_year}/partnerships"
 
       expect(response).to render_template("schools/partnerships/index")
