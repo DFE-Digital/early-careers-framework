@@ -3,24 +3,15 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-header-l">
-      You can only send 1 nomination email per day
+      An induction tutor has already been nominated for your school
     </h1>
-    <p>
-      You have already sent a renomination email today. Try again tomorrow.
-    </p>
 
     <h2 class="govuk-heading-m">
-      If you haven't received this email
+      What to do next
     </h2>
     <ul class="govuk-list govuk-list--bullet">
-      <li>
-        we cannot disclose the email address. It will be an administration email, for example office@, admin@ or head@
-      </li>
-      <li>
-        if your school does not receive this email, ensure your schools email address is correct on our register,
-        <%= govuk_link_to "Get information about schools", "https://www.get-information-schools.service.gov.uk/" %>
-      </li>
-      <li>if your school does not receive this email, contact: <%= render MailToSupportComponent.new %></li>
+      <li>Ask your colleagues about it</li>
+      <li>Contact DfE on <%= render MailToSupportComponent.new %></li>
     </ul>
   </div>
 </div>
