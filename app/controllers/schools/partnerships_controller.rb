@@ -6,7 +6,7 @@ class Schools::PartnershipsController < Schools::BaseController
 
   def index
     @school = current_user.induction_coordinator_profile.schools.first
-    @partnership = @school.partnerships&.find_by(cohort: cohort)
+    @partnership = @school.partnerships.find_by(cohort: cohort)
   end
 
 private

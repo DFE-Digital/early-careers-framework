@@ -276,16 +276,6 @@ ActiveRecord::Schema.define(version: 2021_04_06_120453) do
     t.index ["urn"], name: "index_schools_on_urn", unique: true
   end
 
-  create_table "tasks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name", null: false
-    t.string "status", default: "TO DO", null: false
-    t.string "description", null: false
-    t.uuid "school_cohort_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["school_cohort_id"], name: "index_tasks_on_school_cohort_id"
-  end
-
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "full_name", null: false
     t.string "email", default: "", null: false
@@ -349,5 +339,4 @@ ActiveRecord::Schema.define(version: 2021_04_06_120453) do
   add_foreign_key "school_local_authority_districts", "local_authority_districts"
   add_foreign_key "school_local_authority_districts", "schools"
   add_foreign_key "schools", "networks"
-  add_foreign_key "tasks", "school_cohorts"
 end
