@@ -53,8 +53,3 @@ en:
             estimated_teacher_count:
               <<: *defaults
               blank: "enter your expected number of teachers"
-
-
-
-
-
