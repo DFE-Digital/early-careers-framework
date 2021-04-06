@@ -37,7 +37,7 @@ class NominationsController < ApplicationController
 
   def resend_email_after_link_expired
     school = School.find(params[:resend_email_after_link_expired][:school_id])
-    InviteSchools.new.resend_school_invitation(school)
+    InviteSchools.new.call([school.urn])
     redirect_to success_nominations_path
   end
 
