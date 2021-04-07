@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_06_120453) do
+ActiveRecord::Schema.define(version: 2021_04_07_110504) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 2021_04_06_120453) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "start_year", limit: 2, null: false
+    t.index ["start_year"], name: "index_cohorts_on_start_year", unique: true
   end
 
   create_table "cohorts_lead_providers", id: false, force: :cascade do |t|
