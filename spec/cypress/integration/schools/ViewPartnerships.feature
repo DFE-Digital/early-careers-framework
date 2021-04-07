@@ -19,6 +19,7 @@ Feature: Induction tutors viewing partnerships
     And "page body" should contain "estimated numbers of teachers"
     And "page body" should contain "Add teachers"
     And "page body" should not contain "Choose your training"
+    And the page should be accessible
 
     When I click on "link" containing "Sign up with a training provider"
     Then I should be on "2021 school partnerships" page
