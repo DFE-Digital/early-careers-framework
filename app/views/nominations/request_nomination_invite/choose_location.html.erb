@@ -1,4 +1,4 @@
-<% content_for :title, "Resend nomination: search location" %>
+<% content_for :title, "Search school location" %>
 <% content_for :before_content, govuk_back_link(text: "Back", href: root_path) %>
 
 <h1 class="govuk-heading-l">Nominate an induction tutor</h1>
@@ -10,7 +10,7 @@
   <li>receive any future notifications about this service</li>
 </ul>
 
-<%= form_with model: @nomination_request_form, url: choose_location_nominations_path, method: :post do |f| %>
+<%= form_with model: @nomination_request_form, url: choose_location_request_nomination_invite_path, method: :post do |f| %>
   <%= f.govuk_error_summary %>
   <div class="govuk-input--width-20">
     <%= f.govuk_collection_select(

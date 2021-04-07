@@ -74,10 +74,6 @@ class School < ApplicationRecord
     induction_coordinator_profiles.none?
   end
 
-  def partially_registered?
-    false # TODO: remove in the next PR
-  end
-
   def chosen_programme?(cohort)
     school_cohorts.exists?(cohort: cohort)
   end

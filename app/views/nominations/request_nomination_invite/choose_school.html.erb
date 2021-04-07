@@ -1,7 +1,7 @@
-<% content_for :title, "Resend nomination: search school" %>
-<% content_for :before_content, govuk_back_link(text: "Back", href: root_path) %>
+<% content_for :title, "Find school" %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: choose_location_request_nomination_invite_path(continue: true)) %>
 
-<%= form_with model: @nomination_request_form, url: choose_school_nominations_path, method: :post do |f| %>
+<%= form_with model: @nomination_request_form, url: choose_school_request_nomination_invite_path, method: :post do |f| %>
   <div class="govuk-input--width-20">
     <%= f.govuk_error_summary %>
     <!-- TODO https://trello.com/c/vIDt0PVz/419-make-school-search-autocomplete-work-with-urn -->

@@ -1,0 +1,18 @@
+<% content_for :title, "Error: induction tutor nominated" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-header-l">
+      An Induction Tutor has already been nominated for your school
+    </h1>
+
+    <h2 class="govuk-heading-m">
+      What you can do
+    </h2>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>if you have been nominated, you can <%= govuk_link_to "sign in", new_user_session_path %></li>
+      <li>check with your colleagues</li>
+      <li>if you are still not sure, contact: <%= render MailToSupportComponent.new %></li>
+    </ul>
+  </div>
+</div>

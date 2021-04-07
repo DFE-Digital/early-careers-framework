@@ -1,14 +1,8 @@
-<% content_for :title, "Success: nomination instructions sent to school" %>
+<% content_for :title, "New link sent" %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <div class="govuk-!-margin-bottom-8">
-      <div class="govuk-panel govuk-panel--confirmation">
-        <h1 class="govuk-panel__title">
-          Your school has been sent a link
-        </h1>
-      </div>
-    </div>
+    <%= govuk_panel title: "Your school has been sent a link", body: nil, classes: "govuk-!-margin-bottom-8" %>
 
     <h2 class="govuk-heading-m">What happens next</h2>
     <ul class="govuk-list govuk-list--bullet">

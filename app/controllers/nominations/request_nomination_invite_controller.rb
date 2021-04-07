@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class NominationsController < ApplicationController
+class Nominations::RequestNominationInviteController < ApplicationController
   before_action :load_nomination_request_form, except: %i[choose_location]
 
   def choose_location
@@ -14,7 +14,7 @@ class NominationsController < ApplicationController
   def receive_location
     if @nomination_request_form.valid?(:local_authority)
       session[:nomination_request_form] = @nomination_request_form.serializable_hash
-      redirect_to choose_school_nominations_path
+      redirect_to choose_school_request_nomination_invite_path
     else
       @local_authorities = LocalAuthority.all
       render :choose_location
@@ -29,13 +29,13 @@ class NominationsController < ApplicationController
     session[:nomination_request_form] = @nomination_request_form.serializable_hash
 
     if !@nomination_request_form.school.eligible?
-      redirect_to not_eligible_nominations_path
+      redirect_to not_eligible_request_nomination_invite_path
     elsif @nomination_request_form.school.fully_registered?
-      redirect_to already_nominated_nominations_path
-    elsif @nomination_request_form.school.partially_registered?
-      redirect_to limit_reached_nominations_path
+      redirect_to already_nominated_request_nomination_invite_path
+    elsif @nomination_request_form.email_limit_reached?
+      redirect_to limit_reached_request_nomination_invite_path
     else
-      redirect_to review_nominations_path
+      redirect_to review_request_nomination_invite_path
     end
   end
 
@@ -51,7 +51,9 @@ class NominationsController < ApplicationController
     @nomination_request_form.save!
     session.delete(:nomination_request_form)
 
-    redirect_to success_nominations_path
+    redirect_to success_request_nomination_invite_path
+  rescue TooManyEmailsError
+    redirect_to limit_reached_request_nomination_invite_path
   end
 
   def success; end

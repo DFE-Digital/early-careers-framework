@@ -96,13 +96,14 @@ RSpec.describe School, type: :model do
 
   describe "#fully_registered?" do
     let(:school) { create(:school) }
-    it "returns false if no one has registered the school" do
+    it "returns false if there are no induction coordinators for the school" do
       expect(school.fully_registered?).to be false
     end
 
     context "when school has an induction coordinator" do
-      let(:user) { create(:user) }
-      let!(:coordinator) { create(:induction_coordinator_profile, user: user, schools: [school]) }
+      before do
+        create(:user, :induction_coordinator, schools: [school])
+      end
 
       it "returns true" do
         expect(school.fully_registered?).to be true
