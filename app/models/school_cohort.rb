@@ -20,7 +20,7 @@ class SchoolCohort < ApplicationRecord
   end
 
   def training_provider_status
-    "cannot start yet"
+    school.partnerships&.exists?(cohort: cohort) ? "done" : "to do"
   end
 
   def accept_legal_status

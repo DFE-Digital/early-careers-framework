@@ -57,13 +57,15 @@ LeadProviderProfile.find_or_create_by!(user: user, lead_provider: LeadProvider.f
 school_urns_twenty_twenty_one = %w[136089 105448 128702 113280 138229 143094 140667 127834 146786 113199 126346 133936 132971 107126 102887 102418 129369 140980 116848 112236]
 
 School.where(urn: school_urns_twenty_twenty_one).each do |school|
-  Partnership.find_or_create_by!(school: school, lead_provider: LeadProvider.first, cohort: Cohort.find_or_create_by!(start_year: 2021))
+  delivery_partner = DeliveryPartner.create!(name: "delivery partner 2021")
+  Partnership.find_or_create_by!(school: school, lead_provider: LeadProvider.first, cohort: Cohort.find_or_create_by!(start_year: 2021), delivery_partner: delivery_partner)
 end
 
 school_urns_twenty_twenty_two = %w[119378 134847 113870 127979 144744 121499 147505 105626 402027 100173]
 
 School.where(urn: school_urns_twenty_twenty_two).each do |school|
-  Partnership.find_or_create_by!(school: school, lead_provider: LeadProvider.first, cohort: Cohort.find_or_create_by!(start_year: 2022))
+  delivery_partner = DeliveryPartner.create!(name: "delivery partner 2022")
+  Partnership.find_or_create_by!(school: school, lead_provider: LeadProvider.first, cohort: Cohort.find_or_create_by!(start_year: 2022), delivery_partner: delivery_partner)
 end
 
 user = User.with_discarded.find_or_create_by!(email: "second-school-leader@example.com") do |u|

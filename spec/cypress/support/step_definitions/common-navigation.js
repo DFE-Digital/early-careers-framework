@@ -38,6 +38,7 @@ const pagePaths = {
   schools: "/schools",
   "2021 school cohorts": "/schools/cohorts/2021",
   "estimate participants": /\/schools\/estimate-participants\/.*\/edit/,
+  "2021 school partnerships": "/schools/cohorts/2021/partnerships",
 };
 
 Given("I am on {string} page", (page) => {
