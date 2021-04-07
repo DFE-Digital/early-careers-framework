@@ -46,6 +46,14 @@
           <nav aria-label="Page Navigation">
             <ul id="navigation" class="govuk-header__navigation " aria-label="Top Level Navigation">
               <% if user_signed_in? %>
+              <li class="govuk-header__navigation-item <%= "govuk-header__navigation-item--active" if current_page?(dashboard_path) %>">
+                <%= govuk_link_to "Home", dashboard_path, class: "govuk-header__link" %>
+              </li>
+              <% if current_user.admin? %>
+                <li class="govuk-header__navigation-item <%= "govuk-header__navigation-item--active" if current_page?(cip_index_path) %>">
+                  <%= govuk_link_to "Core Induction Programme", cip_index_path, class: "govuk-header__link" %>
+                </li>
+              <% end %>
               <li class="govuk-header__navigation-item">
                 <%= govuk_link_to "Logout", destroy_user_session_path, class: "govuk-header__link" %>
               </li>
@@ -54,9 +62,6 @@
                 <%= govuk_link_to "Login", new_user_session_path, class: "govuk-header__link" %>
               </li>
               <% end %>
-              <li class="govuk-header__navigation-item govuk-header__navigation-item--active">
-                <%= govuk_link_to "Core Induction Programme", cip_index_path, class: "govuk-header__link" %>
-              </li>
             </ul>
           </nav>
         </div>

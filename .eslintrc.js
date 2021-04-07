@@ -17,5 +17,7 @@ module.exports = {
   },
   rules: {
     "import/no-commonjs": ["error"],
+    "no-only-tests/no-only-tests": "error",
   },
+  plugins: ["no-only-tests"],
 };
