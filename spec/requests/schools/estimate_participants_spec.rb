@@ -32,7 +32,6 @@ RSpec.describe "Schools::EstimateParticipants", type: :request do
       school_cohort.reload
       expect(school_cohort.estimated_mentor_count).to eq 20
       expect(school_cohort.estimated_teacher_count).to eq 30
-      # do we need this here, should really be part of cypress tests ?
       expect(response).to redirect_to(schools_cohort_path(school_cohort.cohort.start_year))
     end
   end
