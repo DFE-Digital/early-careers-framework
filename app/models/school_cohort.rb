@@ -20,11 +20,7 @@ class SchoolCohort < ApplicationRecord
   end
 
   def training_provider_status
-    if school.partnerships.exists?(cohort: cohort)
-      "done"
-    else
-      "to do"
-    end
+    school.partnerships&.exists?(cohort: cohort) ? "done" : "to do"
   end
 
   def accept_legal_status
