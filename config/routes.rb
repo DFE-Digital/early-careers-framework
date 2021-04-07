@@ -137,6 +137,7 @@ Rails.application.routes.draw do
         get "add_participants"
       end
     end
+    resources :estimate_participants, only: %i[edit update], path: "estimate-participants"
   end
 
   get "/403", to: "errors#forbidden", via: :all

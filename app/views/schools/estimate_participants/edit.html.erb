@@ -1,0 +1,5 @@
+<% content_for :before_content, govuk_back_link(
+  text: "Back",
+  href: schools_cohort_path(@school_cohort.cohort.start_year))
+%>
+<%= render 'school_cohort_form' %>
