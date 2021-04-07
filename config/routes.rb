@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  devise_for :users, skip: :registrations, controllers: {
+  devise_for :users, skip: %i[registrations confirmations], controllers: {
     sessions: "users/sessions",
-    confirmations: "users/confirmations",
   }
 
   devise_scope :user do

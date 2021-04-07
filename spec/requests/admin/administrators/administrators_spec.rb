@@ -73,12 +73,6 @@ RSpec.describe "Admin::Administrators::Administrators", type: :request do
       expect { create_new_user }.to change { AdminProfile.count }.by 1
     end
 
-    it "confirms the new user" do
-      given_a_user_is_created
-
-      expect(new_user.confirmed?).to be true
-    end
-
     it "makes the new user an admin" do
       given_a_user_is_created
 

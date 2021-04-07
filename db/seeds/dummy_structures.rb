@@ -19,7 +19,6 @@ end
 (1..5).each do |number|
   user = User.with_discarded.find_or_create_by!(email: "second-admin-#{number}@example.com") do |u|
     u.full_name = "John Doe - #{number}"
-    u.confirmed_at = Time.zone.now.utc
   end
 
   user.undiscard
@@ -28,7 +27,6 @@ end
 
   user = User.with_discarded.find_or_create_by!(email: "second-lead-provider-#{number}@example.com") do |u|
     u.full_name = "Merry Doe - #{number}"
-    u.confirmed_at = Time.zone.now.utc
   end
 
   user.undiscard
@@ -38,7 +36,6 @@ end
 
 user = User.with_discarded.find_or_create_by!(email: "admin@example.com") do |u|
   u.full_name = "Admin User"
-  u.confirmed_at = Time.zone.now.utc
 end
 
 user.undiscard
@@ -47,7 +44,6 @@ AdminProfile.with_discarded.find_or_create_by!(user: user).undiscard
 
 user = User.find_or_create_by!(email: "lead-provider@example.com") do |u|
   u.full_name = "Lp User"
-  u.confirmed_at = Time.zone.now.utc
 end
 
 user.undiscard
@@ -70,7 +66,6 @@ end
 
 user = User.with_discarded.find_or_create_by!(email: "second-school-leader@example.com") do |u|
   u.full_name = "School Leader User - Induction Coordinator"
-  u.confirmed_at = Time.zone.now.utc
 end
 
 user.undiscard
@@ -81,7 +76,6 @@ end
 
 user = User.with_discarded.find_or_create_by!(email: "school-leader@example.com") do |u|
   u.full_name = "School Leader User"
-  u.confirmed_at = Time.zone.now.utc
 end
 
 user.undiscard
@@ -92,7 +86,6 @@ end
 
 user = User.find_or_create_by!(email: "early-career-teacher@example.com") do |u|
   u.full_name = "ECT User"
-  u.confirmed_at = Time.zone.now.utc
 end
 if School.any?
   EarlyCareerTeacherProfile.find_or_create_by!(user: user, school: School.first, cohort: Cohort.first, core_induction_programme: CoreInductionProgramme.first)

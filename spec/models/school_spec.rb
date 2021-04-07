@@ -85,7 +85,7 @@ RSpec.describe School, type: :model do
     end
 
     context "when school has an induction coordinator" do
-      let(:user) { create(:user, confirmed_at: 1.day.ago) }
+      let(:user) { create(:user) }
       let!(:coordinator) { create(:induction_coordinator_profile, user: user, schools: [school]) }
 
       it "returns false" do
@@ -100,57 +100,12 @@ RSpec.describe School, type: :model do
       expect(school.fully_registered?).to be false
     end
 
-    context "when school has an unconfirmed induction coordinator" do
-      let(:user) { create(:user, confirmed_at: nil) }
-      let!(:coordinator) { create(:induction_coordinator_profile, user: user, schools: [school]) }
-
-      it "returns false" do
-        expect(school.fully_registered?).to be false
-      end
-    end
-
-    context "when school has a confirmed induction coordinator" do
-      let(:user) { create(:user, confirmed_at: 1.day.ago) }
+    context "when school has an induction coordinator" do
+      let(:user) { create(:user) }
       let!(:coordinator) { create(:induction_coordinator_profile, user: user, schools: [school]) }
 
       it "returns true" do
         expect(school.fully_registered?).to be true
-      end
-    end
-  end
-
-  describe "#partially_registered?" do
-    let(:school) { create(:school) }
-    it "returns false if no one has registered the school" do
-      expect(school.partially_registered?).to be false
-    end
-
-    context "when school has an unconfirmed induction coordinator in the last 24 hours" do
-      let(:user) { create(:user, confirmed_at: nil, confirmation_sent_at: 2.hours.ago) }
-      let!(:coordinator) { create(:induction_coordinator_profile, user: user, schools: [school]) }
-
-      it "returns true" do
-        expect(school.partially_registered?).to be true
-      end
-    end
-
-    context "when unconfirmed induction coordinator was emailed more than 24 hours ago" do
-      let(:user) { create(:user, confirmed_at: nil) }
-      let!(:coordinator) { create(:induction_coordinator_profile, user: user, schools: [school]) }
-
-      before { user.update(confirmation_sent_at: 2.days.ago) }
-
-      it "returns false" do
-        expect(school.partially_registered?).to be false
-      end
-    end
-
-    context "when school has a confirmed induction coordinator" do
-      let(:user) { create(:user, confirmed_at: 1.day.ago) }
-      let!(:coordinator) { create(:induction_coordinator_profile, user: user, schools: [school]) }
-
-      it "returns false if no one has registered a school" do
-        expect(school.partially_registered?).to be false
       end
     end
   end
