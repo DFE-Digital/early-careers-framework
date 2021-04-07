@@ -12,7 +12,7 @@ class SchoolCohort < ApplicationRecord
   belongs_to :school
 
   def number_of_participants_status
-    if !estimated_teacher_count.nil? && !estimated_mentor_count.nil?
+    if estimated_teacher_count.present? && estimated_mentor_count.present?
       "done"
     else
       "to do"
