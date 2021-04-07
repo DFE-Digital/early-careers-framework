@@ -158,6 +158,9 @@ jobs:
       - name: Set up test database
         run: bin/rails db:create db:schema:load
 
+      - name: Webpacker
+        run: bin/webpack
+
       - name: Run Cypress
         uses: cypress-io/github-action@v2
         with:
