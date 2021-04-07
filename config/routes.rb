@@ -14,6 +14,9 @@ Rails.application.routes.draw do
   get "/pages/:page", to: "pages#show"
   get "check" => "application#check"
 
+  root "start#index"
+  get "/check-account", to: "check_account#show"
+
   resource :cookies, only: %i[show update]
   resource :dashboard, controller: :dashboard, only: :show
   resource :supplier_dashboard, controller: :supplier_dashboard, only: :show
@@ -32,22 +35,6 @@ Rails.application.routes.draw do
   end
 
   resources :nominations, only: %i[index]
-
-  namespace :registrations do
-    root to: "start#index"
-    resource :account_not_found, only: :show, controller: :account_not_found, path: "/account-not-found"
-    resource :question_one, only: %i[show create], controller: :question_one, path: "/question-one"
-    resource :question_two, only: %i[show create], controller: :question_two, path: "/question-two"
-    resource :no_decision, only: :show, controller: :no_decision, path: "/no-decision"
-    resource :learn_options, only: :show, controller: :learn_options, path: "/learn-options"
-    resource :no_participants, only: :show, controller: :no_participants, path: "/no-participants"
-    resource :school_profile, only: %i[show create], controller: :school_profile, path: "/school-profile"
-    resource :user_profile, only: %i[new create], controller: :user_profile, path: "/user-profile"
-    resource :verification_sent, only: :show, controller: :verification_sent, path: "/verification-sent"
-    resource :school_not_eligible, only: :show, controller: :school_not_eligible, path: "/school-not-eligible"
-    resource :school_registered, only: :show, controller: :school_registered, path: "/school-registered"
-    resource :school_not_confirmed, only: :show, controller: :school_not_confirmed, path: "/school-not-confirmed"
-  end
 
   resources :nominations, only: [] do
     collection do
@@ -147,6 +134,4 @@ Rails.application.routes.draw do
   get "/500", to: "errors#internal_server_error", via: :all
 
   resource :school_search, only: %i[show create], path: "school-search", controller: :school_search
-
-  root "registrations/start#index"
 end

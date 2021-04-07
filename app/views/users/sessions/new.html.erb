@@ -1,7 +1,7 @@
 <% content_for :title, "Sign in" %>
 <% content_for :before_content, govuk_back_link(
   text: "Back",
-  href: registrations_root_path)
+  href: root_path)
 %>
 
 <div class="govuk-grid-row">
@@ -16,7 +16,7 @@
     <% end %>
     <p class="govuk-!-margin-bottom-0 govuk-!-margin-top-15"><strong>Problems signing in</strong></p>
     <ul>
-      <li><%= govuk_link_to "check if you have an account", registrations_account_not_found_path %></li>
+      <li><%= govuk_link_to "check if you have an account", check_account_path %></li>
       <li>contact us: <%= render MailToSupportComponent.new %></li>
     </ul>
   </div>
