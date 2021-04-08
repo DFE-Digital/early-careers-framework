@@ -44,7 +44,7 @@ describe("Accessibility", () => {
   });
 
   it("CIP should be accessible", () => {
-    cy.appFactories([["create", "course_lesson", "with_lesson_part"]]);
+    cy.appFactories([["create", "core_induction_programme"]]);
 
     cy.login("early_career_teacher");
 
@@ -54,11 +54,18 @@ describe("Accessibility", () => {
     cy.contains("Test Core induction programme").click();
     cy.checkA11y();
 
-    cy.contains("Test Course module").click();
-    cy.checkA11y();
+    cy.appFactories([["create", "course_lesson", "with_lesson_part"]]).as(
+      "courseLesson"
+    );
+    cy.get("@courseLesson").then(([lesson]) => {
+      cy.visitModuleOfLesson(lesson);
 
-    cy.contains("Test Course lesson").click();
-    cy.checkA11y();
+      cy.contains("Test Course module").click();
+      cy.checkA11y();
+
+      cy.contains("Test Course lesson").click();
+      cy.checkA11y();
+    });
   });
 
   it("Govspeak should be accessible", () => {

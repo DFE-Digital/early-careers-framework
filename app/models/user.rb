@@ -12,7 +12,6 @@ class User < ApplicationRecord
   has_one :mentor_profile
 
   has_one :core_induction_programme, through: :early_career_teacher_profile
-  has_many :course_years, through: :core_induction_programme
 
   validates :full_name, presence: { message: "Enter your full name" }
   validates :email, presence: true, uniqueness: true, format: { with: Devise.email_regexp }
@@ -31,5 +30,9 @@ class User < ApplicationRecord
 
   def mentor?
     mentor_profile.present?
+  end
+
+  def course_years
+    core_induction_programme&.course_years || []
   end
 end

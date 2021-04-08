@@ -2,16 +2,16 @@
 
 class CoreInductionProgrammeExporter
   def run
+    years = CourseYear.order(:title)
     SeedDump.dump(
-      CoreInductionProgramme,
+      years,
       file: "db/seeds/cip_seed_dump.rb",
       exclude: %i[created_at updated_at],
       import: true,
     )
 
-    years = CourseYear.order(:title)
     SeedDump.dump(
-      years,
+      CoreInductionProgramme,
       file: "db/seeds/cip_seed_dump.rb",
       exclude: %i[created_at updated_at],
       import: true,

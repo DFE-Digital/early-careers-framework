@@ -8,15 +8,14 @@ RSpec.describe CourseYear, type: :model do
       CourseYear.create(
         title: "Test Course year",
         content: "No content",
-        is_year_one: false,
-        core_induction_programme: FactoryBot.create(:core_induction_programme),
       )
     }.to change { CourseYear.count }.by(1)
   end
 
   describe "associations" do
-    it { is_expected.to belong_to(:core_induction_programme) }
     it { is_expected.to have_many(:course_modules) }
+    it { is_expected.to have_one(:core_induction_programme_one) }
+    it { is_expected.to have_one(:core_induction_programme_two) }
   end
 
   describe "validations" do
@@ -25,7 +24,6 @@ RSpec.describe CourseYear, type: :model do
     it { is_expected.to validate_length_of(:title).is_at_most(255) }
     it { is_expected.to validate_presence_of(:content).with_message("Enter content") }
     it { is_expected.to validate_length_of(:content).is_at_most(100_000) }
-    it { is_expected.to validate_presence_of(:core_induction_programme).with_message("Select a provider") }
   end
 
   describe "course_modules" do

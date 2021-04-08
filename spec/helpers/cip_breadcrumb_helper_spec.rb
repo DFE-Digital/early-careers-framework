@@ -6,7 +6,7 @@ describe CipBreadcrumbHelper, type: :helper do
   before :each do
     @user = FactoryBot.create(:user, :admin)
     @course_year = FactoryBot.create(:course_year)
-    @programme = @course_year.core_induction_programme
+    @programme = FactoryBot.create(:core_induction_programme, course_year_one: @course_year)
     @programme_crumb = [@programme.name, "/core-induction-programmes/#{@programme.id}"]
   end
 

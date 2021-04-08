@@ -12,10 +12,14 @@ describe("ECT user interaction with Core Induction Programme", () => {
     cy.appFactories([["create", "course_year"]]).as("courseYear");
 
     cy.get("@courseYear").then(([year]) => {
-      cy.visit(
-        `/core-induction-programmes/${year.core_induction_programme_id}`
-      );
-      cy.contains("a.govuk-button", "Edit year content").should("not.exist");
+      cy.appFactories([
+        ["create", "core_induction_programme", { course_year_one_id: year.id }],
+      ]).as("coreInductionProgramme");
+
+      cy.get("@coreInductionProgramme").then(([coreInductionProgramme]) => {
+        cy.visit(`/core-induction-programmes/${coreInductionProgramme.id}`);
+        cy.contains("a.govuk-button", "Edit year content").should("not.exist");
+      });
     });
   });
 

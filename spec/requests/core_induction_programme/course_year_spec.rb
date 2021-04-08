@@ -23,13 +23,6 @@ RSpec.describe "Core Induction Programme Year", type: :request do
       it "creates a new year, redirecting to the CIP homepage" do
         expect(create_course_year).to redirect_to("/core-induction-programmes")
       end
-
-      it "creates a new year that renders on the course year show page" do
-        create_course_year
-        get cip_url(course_year.core_induction_programme[:id])
-        expect(response.body).to include("Additional year title")
-        expect(response.body).to include("Additional year content")
-      end
     end
 
     describe "GET /years/years_id/edit" do
@@ -49,6 +42,7 @@ RSpec.describe "Core Induction Programme Year", type: :request do
       end
 
       it "redirects to the year page and updates content when saving changes" do
+        create_cip
         put course_year_url, params: { commit: "Save changes", course_year: { content: "Adding new content" } }
         expect(response).to redirect_to(cip_url(course_year.core_induction_programme))
         get cip_url(course_year.core_induction_programme)
@@ -56,6 +50,7 @@ RSpec.describe "Core Induction Programme Year", type: :request do
       end
 
       it "redirects to the year page when saving title" do
+        create_cip
         put course_year_url, params: { commit: "Save changes", course_year: { title: "New title" } }
         expect(response).to redirect_to(cip_url(course_year.core_induction_programme))
         get cip_url(course_year.core_induction_programme)
@@ -125,6 +120,9 @@ def create_course_year
   post "/years", params: { course_year: {
     title: "Additional year title",
     content: "Additional year content",
-    core_induction_programme: course_year.core_induction_programme[:id],
   } }
+end
+
+def create_cip
+  FactoryBot.create(:core_induction_programme, course_year_one: course_year)
 end

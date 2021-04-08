@@ -39,7 +39,10 @@ private
   end
 
   def programme_crumb(programme)
-    [programme.name, cip_path(programme)]
+    if programme.present?
+      [programme.name, cip_path(programme)]
+    else ["no programme"]
+    end
   end
 
   def course_module_crumb(course_module)

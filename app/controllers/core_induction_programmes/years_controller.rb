@@ -17,11 +17,7 @@ class CoreInductionProgrammes::YearsController < ApplicationController
 
   def create
     authorize CourseYear
-    @course_year = CourseYear.new(
-      course_year_params.merge(
-        is_year_one: false, core_induction_programme: find_core_induction_programme,
-      ),
-    )
+    @course_year = CourseYear.new(course_year_params)
 
     if @course_year.valid?
       @course_year.save!
@@ -57,9 +53,5 @@ private
     return {} unless params.key? :course_year
 
     params.require(:course_year).permit(:title, :content)
-  end
-
-  def find_core_induction_programme
-    CoreInductionProgramme.find_by(id: params[:course_year][:core_induction_programme])
   end
 end
