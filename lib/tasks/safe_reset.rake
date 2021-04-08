@@ -11,6 +11,7 @@ namespace :db do
                    .map { |row| row["tablename"] }
       tables.delete "schema_migrations"
       tables.each { |table| connection.execute("TRUNCATE #{table} CASCADE;") }
+      Rake::Task["db:seed"].invoke
       puts "Reseeded the database!"
     else
       puts "You should think twice before recreating staging or production database!"
