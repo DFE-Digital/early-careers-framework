@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class InviteSchools
+  EMAIL_COOLDOWN_PERIOD = 24.hours
+
   def run(school_urns)
     logger = Rails.logger
     logger.info "Emailing schools"
@@ -25,6 +27,11 @@ class InviteSchools
     rescue StandardError
       logger.info "Error emailing school, urn: #{urn} ... skipping"
     end
+  end
+
+  def sent_email_recently?(school)
+    latest_nomination_email = NominationEmail.where(school: school).order(sent_at: :desc).first
+    latest_nomination_email&.sent_within_last?(EMAIL_COOLDOWN_PERIOD) || false
   end
 
 private
@@ -52,9 +59,10 @@ private
   end
 
   def nomination_url(token)
-    Rails.application.routes.url_helpers.nominations_url(
-      token: token,
-      host: Rails.application.config.domain,
-    )
+    token
+    # Rails.application.routes.url_helpers.nominations_url( # TODO
+    #   token: token,
+    #   host: Rails.application.config.domain,
+    # )
   end
 end

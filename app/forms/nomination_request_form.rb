@@ -24,11 +24,25 @@ class NominationRequestForm
     School.find(school_id)
   end
 
+  def email_limit_reached?
+    invite_schools_service.sent_email_recently?(school)
+  end
+
   def save!
     if valid?(:save)
       ActiveRecord::Base.transaction do
-        # TODO: Send an email with a magic link, make sure magic link expires, have a check for too many emails
+        raise TooManyEmailsError if email_limit_reached?
+
+        invite_schools_service.run([school.urn])
       end
     end
   end
+
+private
+
+  def invite_schools_service
+    @invite_schools_service ||= InviteSchools.new
+  end
 end
+
+class TooManyEmailsError < StandardError; end

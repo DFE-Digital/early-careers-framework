@@ -33,20 +33,20 @@ Rails.application.routes.draw do
     resources :school_search, only: %i[index]
   end
 
-  resources :nominations, only: %i[index]
-
-  resources :nominations, only: [] do
-    collection do
-      get "choose-location", action: :choose_location
-      post "choose-location", action: :receive_location
-      get "choose-school", action: :choose_school
-      post "choose-school", action: :receive_school
-      get "review", action: :review
-      post "review", action: :create
-      get "success", action: :success
-      get "not-eligible", action: :not_eligible
-      get "already-nominated", action: :already_nominated
-      get "limit-reached", action: :limit_reached
+  scope :nominations, module: :nominations do
+    resource :request_nomination_invite, controller: :request_nomination_invite, only: [], path: "/" do
+      collection do
+        get "choose-location", action: :choose_location
+        post "choose-location", action: :receive_location
+        get "choose-school", action: :choose_school
+        post "choose-school", action: :receive_school
+        get "review", action: :review
+        post "review", action: :create
+        get "success", action: :success
+        get "not-eligible", action: :not_eligible
+        get "limit-reached", action: :limit_reached
+        get "already-nominated", action: :already_nominated
+      end
     end
   end
 
