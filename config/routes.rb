@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   get "/check-account", to: "check_account#show"
 
   resource :cookies, only: %i[show update]
+  resource :privacy_policy, only: %i[show]
   resource :dashboard, controller: :dashboard, only: :show
   resource :supplier_dashboard, controller: :supplier_dashboard, only: :show
   resource :school_invites, only: %i[show create]
