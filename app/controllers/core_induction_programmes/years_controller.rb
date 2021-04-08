@@ -34,7 +34,7 @@ class CoreInductionProgrammes::YearsController < ApplicationController
     if params[:commit] == "Save changes"
       @course_year.save!
       flash[:success] = "Your changes have been saved"
-      redirect_to cip_url(@course_year.core_induction_programme)
+      redirect_to cip_path(@course_year.core_induction_programme)
     else
       render action: "edit"
     end

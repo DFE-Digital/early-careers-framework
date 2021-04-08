@@ -87,4 +87,8 @@ RSpec.configure do |config|
   config.before :each do
     clear_enqueued_jobs
   end
+
+  config.before(:suite) do
+    Webpacker.compile
+  end
 end

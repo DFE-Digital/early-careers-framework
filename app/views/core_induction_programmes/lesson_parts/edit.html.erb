@@ -2,8 +2,8 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <h1 class="govuk-heading-l">Content change preview</h1>
-    <%= govuk_link_to "Delete lesson part", year_module_lesson_part_show_delete_path(part_id: @course_lesson_part.id), button: true, class: "govuk-button--secondary"  %>
-    <%= form_with url: year_module_lesson_part_path, method: :put do |f| %>
+    <%= govuk_link_to "Delete lesson part", lesson_part_show_delete_path(lesson_part_id: @course_lesson_part.id), button: true, class: "govuk-button--secondary"  %>
+    <%= form_with url: lesson_part_path, method: :put do |f| %>
       <%= f.govuk_text_field :title, label: { text: "Lesson title" }, value: @course_lesson_part.title %>
       <%= f.govuk_text_area :content, label: { text: "Markdown string for course lesson content" }, rows: 10, value: @course_lesson_part.content %>
       <%= f.govuk_submit "See preview" %>

@@ -29,7 +29,7 @@ describe CipBreadcrumbHelper, type: :helper do
 
   describe "#module_breadcrumbs" do
     let(:course_module) { create(:course_module, course_year: @course_year) }
-    let(:course_module_crumb) { [course_module.title, "/years/#{@course_year.id}/modules/#{course_module.id}"] }
+    let(:course_module_crumb) { [course_module.title, "/modules/#{course_module.id}"] }
     let(:course_module_breadcrumb) { helper.course_module_breadcrumbs(@user, course_module) }
 
     it "returns an array for the course module breadcrumb" do
@@ -50,8 +50,8 @@ describe CipBreadcrumbHelper, type: :helper do
   describe "#lesson_breadcrumbs" do
     let(:course_module) { create(:course_module, course_year: @course_year) }
     let(:course_lesson) { create(:course_lesson, course_module: course_module) }
-    let(:course_module_crumb) { [course_module.title, "/years/#{@course_year.id}/modules/#{course_module.id}"] }
-    let(:course_lesson_crumb) { [course_lesson.title, "/years/#{@course_year.id}/modules/#{course_module.id}/lessons/#{course_lesson.id}"] }
+    let(:course_module_crumb) { [course_module.title, "/modules/#{course_module.id}"] }
+    let(:course_lesson_crumb) { [course_lesson.title, "/lessons/#{course_lesson.id}"] }
     let(:course_lesson_breadcrumb) { helper.course_lesson_breadcrumbs(@user, course_lesson) }
 
     it "returns an array for the course lesson breadcrumb" do

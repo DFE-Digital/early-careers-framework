@@ -31,7 +31,7 @@
     <h2 class="govuk-heading-l">Courses</h2>
     <% if @core_induction_programmes.any? %>
       <% @core_induction_programmes.each do |core_induction_programme| %>
-        <p><%= govuk_link_to core_induction_programme.name, cip_path(id: core_induction_programme.id) %></p>
+        <p><%= govuk_link_to core_induction_programme.name, cip_path(core_induction_programme) %></p>
       <% end %>
     <% else %>
       <p>No courses were found!</p>

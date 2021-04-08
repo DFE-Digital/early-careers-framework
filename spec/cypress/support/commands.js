@@ -15,28 +15,20 @@ Cypress.Commands.add("logout", () => {
 });
 
 Cypress.Commands.add("visitModule", (courseModule) => {
-  cy.visit(`/years/${courseModule.course_year_id}/modules/${courseModule.id}`);
+  cy.visit(`/modules/${courseModule.id}`);
   cy.get("h1").should("contain", courseModule.title);
 });
 
 Cypress.Commands.add("visitLesson", (courseLesson) => {
-  cy.appEval(
-    `CourseModule.find_by(id: "${courseLesson.course_module_id}")`
-  ).then((courseModule) => {
-    cy.visit(
-      `/years/${courseModule.course_year_id}/modules/${courseModule.id}/lessons/${courseLesson.id}`
-    );
-    cy.get("h1").should("contain", courseLesson.title);
-  });
+  cy.visit(`/lessons/${courseLesson.id}`);
+  cy.get("h1").should("contain", courseLesson.title);
 });
 
 Cypress.Commands.add("visitModuleOfLesson", (courseLesson) => {
   cy.appEval(
     `CourseModule.find_by(id: "${courseLesson.course_module_id}")`
   ).then((courseModule) => {
-    cy.visit(
-      `/years/${courseModule.course_year_id}/modules/${courseModule.id}`
-    );
+    cy.visit(`/modules/${courseModule.id}`);
     cy.get("h1").should("contain", courseModule.title);
   });
 });

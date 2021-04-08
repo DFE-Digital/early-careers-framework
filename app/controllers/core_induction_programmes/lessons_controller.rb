@@ -18,7 +18,7 @@ class CoreInductionProgrammes::LessonsController < ApplicationController
       progress.in_progress! if progress.not_started?
     end
     if @course_lesson.course_lesson_parts.first
-      redirect_to year_module_lesson_part_path(lesson_id: @course_lesson.id, id: @course_lesson.course_lesson_parts_in_order[0])
+      redirect_to lesson_part_path(@course_lesson.course_lesson_parts_in_order[0])
     end
   end
 
@@ -27,7 +27,7 @@ class CoreInductionProgrammes::LessonsController < ApplicationController
   def update
     if @course_lesson.update(course_lesson_params)
       flash[:success] = "Your changes have been saved"
-      redirect_to year_module_lesson_url
+      redirect_to lesson_path
     else
       render action: "edit"
     end

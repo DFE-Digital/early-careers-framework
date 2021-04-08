@@ -41,7 +41,7 @@ class CoreInductionProgrammes::ModulesController < ApplicationController
       next_module&.update!(previous_module: previous_module)
 
       flash[:success] = "Your changes have been saved"
-      redirect_to year_module_url
+      redirect_to module_path
     else
       render action: "edit"
     end

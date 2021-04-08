@@ -4,7 +4,8 @@ require "rails_helper"
 
 RSpec.describe "Core Induction Programme Progress", type: :request do
   let(:course_lesson) { FactoryBot.create(:course_lesson) }
-  let(:progress_url) { "/years/#{course_lesson.course_module.course_year.id}/modules/#{course_lesson.course_module.id}/lessons/#{course_lesson.id}/progress" }
+  let(:progress_url) { "/lessons/#{course_lesson.id}/progress" }
+  let(:module_url) { "/modules/#{course_lesson.course_module.id}" }
 
   describe "when an ECT is logged in" do
     let(:user) { create(:user, :early_career_teacher) }
@@ -18,7 +19,7 @@ RSpec.describe "Core Induction Programme Progress", type: :request do
       sign_in user
     end
 
-    describe "PUT /years/:years/modules/:modules/lessons/:lessons/progress" do
+    describe "PUT /lessons/:id/progress" do
       it "updates the progress of an ECT" do
         put progress_url, params: { progress: "complete" }
         expect(progress).to eq("complete")
@@ -26,12 +27,12 @@ RSpec.describe "Core Induction Programme Progress", type: :request do
 
       it "redirects to module when changing progress" do
         put progress_url, params: { progress: "complete" }
-        expect(response).to redirect_to("/years/#{course_lesson.course_module.course_year.id}/modules/#{course_lesson.course_module.id}")
+        expect(response).to redirect_to(module_url)
       end
 
       it "redirects to module when not changing progress" do
         put progress_url, params: { progress: "" }
-        expect(response).to redirect_to("/years/#{course_lesson.course_module.course_year.id}/modules/#{course_lesson.course_module.id}")
+        expect(response).to redirect_to(module_url)
       end
     end
   end

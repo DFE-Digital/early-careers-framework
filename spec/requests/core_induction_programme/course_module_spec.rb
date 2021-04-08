@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe "Core Induction Programme Module", type: :request do
   let(:course_module) { FactoryBot.create(:course_module) }
-  let(:course_module_url) { "/years/#{course_module.course_year.id}/modules/#{course_module.id}" }
+  let(:course_module_url) { "/modules/#{course_module.id}" }
   let(:second_course_module) { FactoryBot.create(:course_module, title: "Second module title", previous_module: course_module) }
   let(:core_induction_programme) { FactoryBot.create(:core_induction_programme, course_year_one: course_module.course_year) }
 
@@ -30,7 +30,7 @@ RSpec.describe "Core Induction Programme Module", type: :request do
       it "creates a new module that is then displayed in the list of course module" do
         course_module.next_module = second_course_module
         create_course_module(course_module[:id])
-        get cip_url(course_module.course_year.core_induction_programme[:id], course_module[:id])
+        get cip_path(course_module.course_year.core_induction_programme)
         expect(response.body).to include("Additional module title")
         expect(response.body).to include("Additional module content")
       end
@@ -53,21 +53,21 @@ RSpec.describe "Core Induction Programme Module", type: :request do
       end
     end
 
-    describe "GET /years/:years_id/modules/module_id" do
+    describe "GET /modules/:id" do
       it "renders the cip module page" do
         get course_module_url
         expect(response).to render_template(:show)
       end
     end
 
-    describe "GET /years/:years_id/modules/module_id/edit" do
+    describe "GET /modules/:id/edit" do
       it "renders the cip module edit page" do
         get "#{course_module_url}/edit"
         expect(response).to render_template(:edit)
       end
     end
 
-    describe "PUT /years/:years_id/modules/module_id" do
+    describe "PUT /modules/:id" do
       it "renders a preview of changes to module" do
         put course_module_url, params: { commit: "See preview", course_module: { content: "Extra content" } }
         expect(response).to render_template(:edit)
@@ -100,8 +100,13 @@ RSpec.describe "Core Induction Programme Module", type: :request do
       it "assigns nil to an existing module when a module is moved from first in the list" do
         third_course_module = FactoryBot.create(:course_module, title: "third module title", previous_module: second_course_module)
 
-        put "/years/#{course_module.course_year.id}/modules/#{course_module.id}",
-            params: { commit: "Save changes", course_module: { previous_module_id: third_course_module[:id], course_year_id: course_module.course_year[:id] } }
+        put "/modules/#{course_module.id}", params: {
+          commit: "Save changes",
+          course_module: {
+            previous_module_id: third_course_module.id,
+            course_year_id: course_module.course_year.id,
+          },
+        }
         course_module.reload
         second_course_module.reload
         expect(second_course_module[:previous_module_id]).to eq(nil)
@@ -116,14 +121,14 @@ RSpec.describe "Core Induction Programme Module", type: :request do
       sign_in user
     end
 
-    describe "GET /years/:years_id/modules/module_id" do
+    describe "GET /modules/:id" do
       it "renders the cip module page" do
         get course_module_url
         expect(response).to render_template(:show)
       end
     end
 
-    describe "GET /years/:years_id/modules/module_id/edit" do
+    describe "GET /modules/:id/edit" do
       it "raises an authorization error" do
         expect { get "#{course_module_url}/edit" }.to raise_error Pundit::NotAuthorizedError
       end
@@ -143,21 +148,21 @@ RSpec.describe "Core Induction Programme Module", type: :request do
   end
 
   describe "when a non-user is accessing the module page" do
-    describe "GET /years/:years_id/modules/module_id/" do
+    describe "GET /modules/:id/" do
       it "renders the cip module page" do
         get course_module_url
         expect(response).to render_template(:show)
       end
     end
 
-    describe "GET /years/:years_id/modules/module_id/edit" do
+    describe "GET /modules/:id/edit" do
       it "redirects to the sign in page" do
         get "#{course_module_url}/edit"
         expect(response).to redirect_to("/users/sign_in")
       end
     end
 
-    describe "PUT /years/:years_id/modules/module_id" do
+    describe "PUT /modules/:id" do
       it "redirects to the sign in page" do
         put course_module_url, params: { commit: "Save changes", course_module: { content: course_module.content } }
         expect(response).to redirect_to("/users/sign_in")

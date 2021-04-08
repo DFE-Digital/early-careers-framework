@@ -5,7 +5,7 @@
         <span>
           <%= govuk_link_to(
                 course_module.title,
-                year_module_url(course_module.course_year, course_module),
+                module_path(course_module),
                 class: "govuk-body-l govuk-!-font-weight-bold") %>
         </span>
         <%= render ProgressLabelComponent.new progress: course_module.progress %>

@@ -31,7 +31,6 @@ describe("Meta test helper tests", () => {
 
     cy.get("@courseLesson").then(([lesson]) => {
       cy.visitLesson(lesson);
-      cy.url().should("contain", `/lessons/${lesson.id}`);
       cy.get(".govuk-govspeak").should("contain", "No content");
     });
   });

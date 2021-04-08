@@ -76,7 +76,7 @@ development:
 
 test:
   <<: *default
-  compile: true
+  compile: false
 
 production: &production
   <<: *default
