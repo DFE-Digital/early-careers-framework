@@ -95,6 +95,18 @@ RSpec.describe "Requesting an invitation to nominate an induction tutor", type: 
       post "/nominations/review"
       expect(response).to redirect_to(success_request_nomination_invite_path)
     end
+
+    it "calls save! on the form" do
+      expect_any_instance_of(NominationRequestForm).to receive(:save!)
+      post "/nominations/review"
+    end
+
+    it "redirects to limit-reached" do
+      expect_any_instance_of(NominationRequestForm).to receive(:save!).and_raise(TooManyEmailsError)
+
+      post "/nominations/review"
+      expect(response).to redirect_to(limit_reached_request_nomination_invite_path)
+    end
   end
 
   describe "success" do

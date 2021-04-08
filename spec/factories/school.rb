@@ -19,5 +19,9 @@ FactoryBot.define do
     trait :sparsity_uplift do
       school_local_authority_districts { [build(:school_local_authority_district, :sparse)] }
     end
+
+    trait :with_local_authority do
+      school_local_authorities { [build(:school_local_authority)] }
+    end
   end
 end

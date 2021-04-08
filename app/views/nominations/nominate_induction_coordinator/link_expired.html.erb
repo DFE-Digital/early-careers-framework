@@ -1,0 +1,12 @@
+<% content_for :title, "Error: Link expired" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">This link has expired</h1>
+
+    <%= form_for :resend_email_after_link_expired, url: link_expired_nominate_induction_coordinator_path, method: :post do |f| %>
+      <%= f.hidden_field :school_id, value: @school_id %>
+      <%= f.govuk_submit "Resend email" %>
+    <% end %>
+  </div>
+</div>

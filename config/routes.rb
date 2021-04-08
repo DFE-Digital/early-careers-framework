@@ -48,6 +48,15 @@ Rails.application.routes.draw do
         get "already-nominated", action: :already_nominated
       end
     end
+    resource :nominate_induction_coordinator, controller: :nominate_induction_coordinator, only: %i[new create], path: "/" do
+      collection do
+        get "email-used", action: :email_used
+        get "link-expired", action: :link_expired
+        post "link-expired", action: :resend_email_after_link_expired
+        get "link-invalid", action: :link_invalid
+        get "nominate-school-lead-success", action: :nominate_school_lead_success
+      end
+    end
   end
 
   namespace :lead_providers do
