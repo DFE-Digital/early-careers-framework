@@ -21,3 +21,7 @@ $govuk-image-url-function: frontend-image-url;
 @import "primary-nav";
 @import "registration";
 @import "school_search";
+
+.govuk-tag {
+  white-space: nowrap;
+}
