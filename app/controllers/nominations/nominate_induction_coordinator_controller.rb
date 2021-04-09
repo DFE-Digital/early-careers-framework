@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class Nominations::NominateInductionCoordinatorController < ApplicationController
-  def new
-    @token = params[:token]
-    nomination_email = NominationEmail.find_by(token: @token)
+  def start
+    token = params[:token]
+    nomination_email = NominationEmail.find_by(token: token)
 
     if nomination_email.nil?
       redirect_to link_invalid_nominate_induction_coordinator_path
@@ -13,8 +13,14 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
       redirect_to already_nominated_request_nomination_invite_path
     else
       load_nominate_induction_tutor_form
-      @nominate_induction_tutor_form.token = @token
+      @nominate_induction_tutor_form.token = token
+      session[:nominate_induction_tutor_form] = @nominate_induction_tutor_form
     end
+  end
+
+  def new
+    load_nominate_induction_tutor_form
+    record_nomination_email_opened
   end
 
   def create
@@ -25,7 +31,7 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
     @nominate_induction_tutor_form.save!
     redirect_to nominate_school_lead_success_nominate_induction_coordinator_path
   rescue UserExistsError
-    redirect_to email_used_nominate_induction_coordinator_path(token: @nominate_induction_tutor_form.token)
+    redirect_to email_used_nominate_induction_coordinator_path
   end
 
   def link_expired
@@ -50,7 +56,7 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
 private
 
   def load_nominate_induction_tutor_form
-    @nominate_induction_tutor_form = ::NominateInductionTutorForm.new
+    @nominate_induction_tutor_form = ::NominateInductionTutorForm.new(session[:nominate_induction_tutor_form])
     @nominate_induction_tutor_form.assign_attributes(nominate_induction_tutor_form_params)
   end
 
@@ -58,6 +64,12 @@ private
     return {} unless params.key?(:nominate_induction_tutor_form)
 
     params.require(:nominate_induction_tutor_form).permit(:full_name, :email, :token)
+  end
+
+  def record_nomination_email_opened
+    NominationEmail
+      .where(token: @nominate_induction_tutor_form.token, opened_at: nil)
+      .update_all(opened_at: Time.zone.now)
   end
 
   def build_nomination_request_form

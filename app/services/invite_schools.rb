@@ -4,7 +4,6 @@ class InviteSchools
   EMAIL_COOLDOWN_PERIOD = 24.hours
 
   def run(school_urns)
-    logger = Rails.logger
     logger.info "Emailing schools"
 
     school_urns.each do |urn|
@@ -15,15 +14,16 @@ class InviteSchools
         next
       end
 
-      token = reference
-      recipient = recipient_email(school)
-
-      school.nomination_emails.create!(
-        token: token,
-        sent_to: recipient,
+      nomination_email = school.nomination_emails.create!(
+        token: generate_token,
+        sent_to: recipient_email(school),
         sent_at: Time.zone.now,
       )
-      send_nomination_email(recipient, token, school.name)
+      send_nomination_email(
+        nomination_email.sent_to,
+        nomination_email.token,
+        school.name,
+      )
     rescue StandardError
       logger.info "Error emailing school, urn: #{urn} ... skipping"
     end
@@ -46,12 +46,10 @@ private
   end
 
   def recipient_email(school)
-    return school.secondary_contact_email unless school.primary_contact_email
-
-    school.primary_contact_email
+    school.primary_contact_email || school.secondary_contact_email
   end
 
-  def reference
+  def generate_token
     loop do
       value = SecureRandom.hex(16)
       break value unless NominationEmail.exists?(token: value)
@@ -59,10 +57,13 @@ private
   end
 
   def nomination_url(token)
-    token
-    # Rails.application.routes.url_helpers.nominations_url( # TODO
-    #   token: token,
-    #   host: Rails.application.config.domain,
-    # )
+    Rails.application.routes.url_helpers.start_nominate_induction_coordinator_url(
+      token: token,
+      host: Rails.application.config.domain,
+    )
+  end
+
+  def logger
+    @logger ||= Rails.logger
   end
 end

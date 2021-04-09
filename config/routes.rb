@@ -52,6 +52,7 @@ Rails.application.routes.draw do
     end
     resource :nominate_induction_coordinator, controller: :nominate_induction_coordinator, only: %i[new create], path: "/" do
       collection do
+        get "start", action: :start
         get "email-used", action: :email_used
         get "link-expired", action: :link_expired
         post "link-expired", action: :resend_email_after_link_expired

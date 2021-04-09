@@ -12,36 +12,7 @@
     </p>
 
     <div class="govuk-!-margin-bottom-9">
-      <h2 class="govuk-heading-m govuk-!-margin-bottom-1">Your school</h2>
-      <dl class="govuk-summary-list">
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">
-            Name
-          </dt>
-          <dd class="govuk-summary-list__value">
-            <%= @nomination_request_form.school.name %>
-          </dd>
-        </div>
-
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">
-            URN
-          </dt>
-          <dd class="govuk-summary-list__value">
-            <%= @nomination_request_form.school.urn %>
-          </dd>
-        </div>
-
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">
-            Address
-          </dt>
-          <dd class="govuk-summary-list__value">
-            <%= simple_format @nomination_request_form.school.full_address, class: "govuk-body" %>
-          </dd>
-        </div>
-      </dl>
-
+      <%= render partial: 'nominations/school_details', locals: { school: @nomination_request_form.school, title: "Your school" } %>
       <%= govuk_link_to "Change school", choose_location_request_nomination_invite_path(continue: true), class: "govuk-link--no-visited-state" %>
     </div>
 

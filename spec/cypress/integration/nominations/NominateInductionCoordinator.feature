@@ -2,7 +2,10 @@ Feature: Nominate induction tutor
 
   Scenario: Valid Nomination Link was sent
     Given nomination_email was created with token "foo-bar-baz"
-    And I am on "nominations with token" page
+    And I am on "start nominations with token" page
+    Then the page should be accessible
+
+    When I click on "link" containing "Start"
     Then the page should be accessible
 
     When I type "John Smith" into "name input"
@@ -14,7 +17,7 @@ Feature: Nominate induction tutor
 
   Scenario: Expired Nomination Link was sent
     Given nomination_email was created as "expired_nomination_email" with token "foo-bar-baz"
-    And I am on "nominations with token" page
+    And I am on "start nominations with token" page
     Then "page body" should contain "This link has expired"
     And the page should be accessible
 
@@ -24,13 +27,14 @@ Feature: Nominate induction tutor
 
   Scenario: Nomination Link was sent for which Induction Tutor was already nominated for the same school
     Given nomination_email was created as "already_nominated_induction_tutor" with token "foo-bar-baz"
-    When I am on "nominations with token" page
+    When I am on "start nominations with token" page
     Then "page body" should contain "An induction tutor has already been nominated for your school"
     And the page should be accessible
 
   Scenario: Nomination Link was sent for which Induction Tutor was already nominated for another school
     Given nomination_email was created as "email_address_already_used_for_another_school" with token "foo-bar-baz"
-    When I am on "nominations with token" page
+    When I am on "start nominations with token" page
+    Then I click on "link" containing "Start"
     Then I type "John Wick" into "name input"
     And I type "john-wick@example.com" into "email input"
 

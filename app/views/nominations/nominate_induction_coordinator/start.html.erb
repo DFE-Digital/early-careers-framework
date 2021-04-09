@@ -1,0 +1,14 @@
+<h1>Nominate an induction tutor</h1>
+
+<%= render partial: 'nominations/school_details', locals: { school: @nominate_induction_tutor_form.school, title: "Your school" } %>
+
+This is someone who is responsible for running induction at your school.
+
+They will:
+<ul>
+  <li>confirm the type of induction programme your school wants to run</li>
+  <li>tell us which early career teachers and mentors are starting a programme</li>
+  <li>receive any future notifications about this service</li>
+</ul>
+
+<%= govuk_link_to "Start", { action: :new }, class: 'govuk-button' %>
