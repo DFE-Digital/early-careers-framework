@@ -2,7 +2,7 @@ name: Create Review App
 on:
   pull_request:
     branches: [ develop ]
-    types: [ opened, synchronize ]
+    types: [ opened, synchronize, reopened ]
     paths-ignore:
       - 'documentation/**'
 
