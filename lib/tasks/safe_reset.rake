@@ -5,7 +5,10 @@ namespace :db do
   task safe_reset: :environment do
     if Rails.env.development? || Rails.env.deployed_development?
       connection = ActiveRecord::Base.connection
-      tables = connection.execute("SELECT * FROM pg_catalog.pg_tables;").filter { |row| row["schemaname"].include?("public") }.map { |row| row["tablename"] }
+      tables = connection
+                   .execute("SELECT * FROM pg_catalog.pg_tables;")
+                   .filter { |row| row["schemaname"].include?("public") }
+                   .map { |row| row["tablename"] }
       tables.delete "schema_migrations"
       tables.delete "spatial_ref_sys"
       tables.each { |table| connection.execute("TRUNCATE #{table} CASCADE;") }
