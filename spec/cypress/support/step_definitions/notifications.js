@@ -3,7 +3,8 @@ import {
   computeHeadersFromEmail,
   SIGN_IN_EMAIL_TEMPLATE,
   ADMIN_ACCOUNT_CREATED_TEMPLATE,
-  PRIMARY_CONTACT_TEMPLATE,
+  NOMINATION_EMAIL_TEMPLATE,
+  NOMINATION_CONFIRMATION_EMAIL_TEMPLATE,
 } from "../commands";
 
 Given(
@@ -34,9 +35,23 @@ Given(
   "Email should be sent to Primary Email Contact of the School belonging to {string}",
   (email) => {
     cy.appSentEmails().then((emails) => {
-      expect(emails).to.have.lengthOf(2);
-      const headersHash = computeHeadersFromEmail(emails[1]);
-      expect(headersHash["template-id"]).to.eq(PRIMARY_CONTACT_TEMPLATE);
+      expect(emails).to.have.lengthOf(1);
+      const headersHash = computeHeadersFromEmail(emails[0]);
+      expect(headersHash["template-id"]).to.eq(NOMINATION_EMAIL_TEMPLATE);
+      expect(headersHash.To).to.eq(email);
+    });
+  }
+);
+
+Given(
+  "Email should be sent to Nominated School Induction Coordinator to email {string}",
+  (email) => {
+    cy.appSentEmails().then((emails) => {
+      expect(emails).to.have.lengthOf(1);
+      const headersHash = computeHeadersFromEmail(emails[0]);
+      expect(headersHash["template-id"]).to.eq(
+        NOMINATION_CONFIRMATION_EMAIL_TEMPLATE
+      );
       expect(headersHash.To).to.eq(email);
     });
   }

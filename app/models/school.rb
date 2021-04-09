@@ -66,7 +66,7 @@ class School < ApplicationRecord
     address.squeeze("\n")
   end
 
-  def fully_registered?
+  def registered?
     induction_coordinator_profiles.any?
   end
 

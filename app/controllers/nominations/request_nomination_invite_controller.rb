@@ -30,7 +30,7 @@ class Nominations::RequestNominationInviteController < ApplicationController
 
     if !@nomination_request_form.school.eligible?
       redirect_to not_eligible_request_nomination_invite_path
-    elsif @nomination_request_form.school.fully_registered?
+    elsif @nomination_request_form.school.registered?
       redirect_to already_nominated_request_nomination_invite_path
     elsif @nomination_request_form.email_limit_reached?
       redirect_to limit_reached_request_nomination_invite_path

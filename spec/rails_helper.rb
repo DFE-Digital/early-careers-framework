@@ -81,6 +81,8 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
+RSpec::Matchers.define_negated_matcher :not_change, :change
+
 RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include ActiveSupport::Testing::TimeHelpers

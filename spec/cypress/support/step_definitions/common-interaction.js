@@ -37,6 +37,7 @@ const elements = {
   "cookie banner": ".js-cookie-banner",
   "notification banner": "[data-test=notification-banner]",
   "autocomplete dropdown item": ".autocomplete__menu li",
+  "success panel": "[data-test=success-panel]",
 };
 
 const get = (element) => cy.get(elements[element] || element);

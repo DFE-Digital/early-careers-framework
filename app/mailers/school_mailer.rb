@@ -18,15 +18,15 @@ class SchoolMailer < ApplicationMailer
     )
   end
 
-  def nomination_confirmation_email(tutor:, school:, sign_in_url:)
+  def nomination_confirmation_email(user:, school:, start_url:)
     template_mail(
       NOMINATION_CONFIRMATION_EMAIL_TEMPLATE,
-      to: tutor.email,
+      to: user.email,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
         school_name: school.name,
-        sign_in_url: sign_in_url,
+        start_url: start_url,
       },
     )
   end
