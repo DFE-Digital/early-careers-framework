@@ -24,5 +24,7 @@ User.find_or_create_by!(email: "school-leader@example.com") do |user|
     administrative_district_code: "E123",
     urn: "999999",
   )
-  InductionCoordinatorProfile.find_or_create_by!(user: user, schools: [school])
+  InductionCoordinatorProfile.find_or_create_by!(user: user) do |profile|
+    profile.update!(schools: [school])
+  end
 end
