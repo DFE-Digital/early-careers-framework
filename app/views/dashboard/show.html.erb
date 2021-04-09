@@ -1,8 +1,8 @@
 <div class="govuk-grid-row govuk-!-margin-bottom-6">
   <div class="govuk-grid-column-full">
     <div class="blue-header">
-      <h1 class="govuk-heading-xl blue-header__title">Welcome Joe</h1>
-      <a href="#" class="blue-header__text">Change username</a>
+      <h1 class="govuk-heading-xl blue-header__title">Welcome <%= current_user.preferred_name %></h1>
+      <%= govuk_link_to "Edit username", edit_username_path, class: "blue-header__text", "data-test": "edit-username" %>
     </div>
 
     <% if current_user.early_career_teacher? %>

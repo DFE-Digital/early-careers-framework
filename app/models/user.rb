@@ -35,4 +35,8 @@ class User < ApplicationRecord
   def course_years
     core_induction_programme&.course_years || []
   end
+
+  def preferred_name
+    username&.presence || full_name
+  end
 end

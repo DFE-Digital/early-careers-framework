@@ -6,15 +6,15 @@
   @include govuk-responsive-margin(6, "bottom");
 
   background-color: govuk-colour("dark-blue");
-}
 
-.blue-header__title {
-  @include govuk-responsive-margin(1, "bottom");
+  .blue-header__title {
+    @include govuk-responsive-margin(1, "bottom");
 
-  color: white;
-}
+    color: white;
+  }
 
-.blue-header__text {
-  font-weight: bold;
-  color: white;
+  .blue-header__text {
+    font-weight: bold;
+    color: white;
+  }
 }

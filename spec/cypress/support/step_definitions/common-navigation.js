@@ -1,13 +1,12 @@
 import { Given, When, Then } from "cypress-cucumber-preprocessor/steps";
 
-Given("I am logged in as a {string}", (user) => cy.login(user));
-Given("I am logged in as an {string}", (user) => cy.login(user));
-
 Given("scenario {string} has been ran", (scenario) => cy.appScenario(scenario));
 
 const pagePaths = {
   cookie: "/cookies",
   start: "/",
+  dashboard: "/dashboard",
+  "edit username": "/username/edit",
 };
 
 Given("I am on {string} page", (page) => {
@@ -25,7 +24,24 @@ When("I navigate to {string} page", (page) => {
   cy.visit(path);
 });
 
-Then("I should be on {string} page", (page) => {
+const assertOnPage = (page) => {
   const path = pagePaths[page];
-  cy.location("pathname").should("equal", path);
+
+  if (!path) {
+    throw new Error(`Path not found for ${page}`);
+  }
+
+  if (typeof path === "string") {
+    cy.location("pathname").should("equal", path);
+  } else {
+    cy.location("pathname").should("match", path);
+  }
+};
+
+Then("I should be on {string} page", (page) => {
+  assertOnPage(page);
+});
+
+Then("I should have been redirected to {string} page", (page) => {
+  assertOnPage(page);
 });

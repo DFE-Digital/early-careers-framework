@@ -1,0 +1,15 @@
+<% content_for :before_content, govuk_back_link(
+  text: "Back",
+  href: dashboard_path)
+%>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Edit your username</h1>
+
+    <%= form_with model: current_user, url: username_path do |f| %>
+      <%= f.govuk_text_field :username, label: { text: "Username" }, width: "two-thirds" %>
+      <%= f.govuk_submit "Save" %>
+    <% end %>
+  </div>
+</div>

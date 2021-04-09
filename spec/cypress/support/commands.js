@@ -1,3 +1,4 @@
+// Heads up, this is NOT used in the Cucumber specs - see factory-bot.js
 Cypress.Commands.add("login", (...traits) => {
   cy.appFactories([["create", "user", ...traits]])
     .as("userData")
