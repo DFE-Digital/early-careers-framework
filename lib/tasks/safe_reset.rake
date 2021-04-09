@@ -10,6 +10,7 @@ namespace :db do
                    .filter { |row| row["schemaname"].include?("public") }
                    .map { |row| row["tablename"] }
       tables.delete "schema_migrations"
+      tables.delete "spatial_ref_sys"
       tables.each { |table| connection.execute("TRUNCATE #{table} CASCADE;") }
       Rake::Task["db:seed"].invoke
       puts "Re-seeded the database!"
