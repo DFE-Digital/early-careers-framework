@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 namespace :db do
-  desc "Drop, create, migrate then seed the development database"
+  desc "Remove all database content, then seed it. Only for dev environments."
   task safe_reset: :environment do
     if Rails.env.development? || Rails.env.deployed_development?
       connection = ActiveRecord::Base.connection
@@ -15,7 +15,8 @@ namespace :db do
       puts "Re-seeded the database!"
     else
       puts "You should think twice before recreating staging or production database!"
-      puts "Use 'db:reset' task to do it if you really want to."
+      puts "Fire off Rails console and copy the code from this task if you really have to."
+      puts "Make sure you know what you are doing and maybe do a back-up first."
     end
   end
 end
