@@ -14,10 +14,7 @@ class Nominations::NotifyCallbacksController < ActionController::API
 private
 
   def log_email
-    Rails.logger.info "Email could not be sent"
-    Rails.logger.info "notify_id: #{params[:id]}"
-    Rails.logger.info "reference: #{params[:reference]}"
-    Rails.logger.info "template_id: #{params[:template_id]}"
+    Rails.logger.info "Email could not be sent - notify_id: #{params[:id]}, reference: #{params[:reference]}, template_id: #{params[:template_id]}"
   end
 
   def failed_email?(email)
