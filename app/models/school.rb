@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class School < ApplicationRecord
-  CONFIRMATION_WINDOW = 24
   ELIGIBLE_TYPE_CODES = [1, 2, 3, 5, 6, 7, 8, 12, 14, 15, 18, 28, 31, 32, 33, 34, 35, 36, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48].freeze
   ELIGIBLE_STATUS_CODES = [1, 3].freeze
 
@@ -22,16 +21,14 @@ class School < ApplicationRecord
   has_many :early_career_teacher_profiles
   has_many :early_career_teachers, through: :early_career_teacher_profiles, source: :user
 
-  default_scope -> { eligible }
-
   scope :eligible, -> { open.eligible_establishment_type.in_england }
 
   scope :with_name_like, lambda { |search_key|
-    School.where("name ILIKE ?", "%#{search_key}%")
+    School.eligible.where("name ILIKE ?", "%#{search_key}%")
   }
 
   scope :with_urn_like, lambda { |search_key|
-    School.where("urn ILIKE ?", "%#{search_key}%")
+    School.eligible.where("urn ILIKE ?", "%#{search_key}%")
   }
 
   scope :search_by_name_or_urn, lambda { |search_key|
@@ -70,19 +67,11 @@ class School < ApplicationRecord
   end
 
   def fully_registered?
-    confirmed_induction_coordinators.any?
+    induction_coordinator_profiles.any?
   end
 
   def not_registered?
     induction_coordinator_profiles.none?
-  end
-
-  def partially_registered?
-    return false if fully_registered?
-
-    unconfirmed_induction_coordinators
-      &.where("users.confirmation_sent_at > ?", CONFIRMATION_WINDOW.hours.ago)
-      &.any?
   end
 
   def chosen_programme?(cohort)
@@ -136,16 +125,4 @@ private
   scope :open, -> { where(school_status_code: ELIGIBLE_STATUS_CODES) }
   scope :eligible_establishment_type, -> { where(school_type_code: ELIGIBLE_TYPE_CODES) }
   scope :in_england, -> { where("administrative_district_code ILIKE 'E%'") }
-
-  def unconfirmed_induction_coordinators
-    induction_coordinator_profiles
-      &.joins(:user)
-      &.where(users: { confirmed_at: nil })
-  end
-
-  def confirmed_induction_coordinators
-    induction_coordinator_profiles
-      &.joins(:user)
-      &.where&.not(users: { confirmed_at: nil })
-  end
 end

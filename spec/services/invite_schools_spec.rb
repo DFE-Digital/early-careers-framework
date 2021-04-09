@@ -73,4 +73,56 @@ RSpec.describe InviteSchools do
       end
     end
   end
+
+  describe "#sent_email_recently?" do
+    it "is false when the school has not been emailed" do
+      expect(invite_schools.sent_email_recently?(school)).to eq false
+    end
+
+    context "when the school has been emailed more than 24 hours ago" do
+      before do
+        create(:nomination_email, school: school, sent_at: 25.hours.ago)
+      end
+
+      it "returns false" do
+        expect(invite_schools.sent_email_recently?(school)).to eq false
+      end
+    end
+
+    context "when the school has been emailed within the last 24 hours" do
+      before do
+        create(:nomination_email, school: school)
+      end
+
+      it "returns true" do
+        expect(invite_schools.sent_email_recently?(school)).to eq true
+      end
+    end
+
+    context "when the school has been emailed more than one" do
+      before do
+        create(:nomination_email, school: school, sent_at: 5.days.ago)
+      end
+
+      context "and have been emailed within the last 24 hours" do
+        before do
+          create(:nomination_email, school: school)
+        end
+
+        it "returns true" do
+          expect(invite_schools.sent_email_recently?(school)).to eq true
+        end
+      end
+
+      context "and the school has not been emailed within the last 24 hours" do
+        before do
+          create(:nomination_email, school: school, sent_at: 25.hours.ago)
+        end
+
+        it "returns false" do
+          expect(invite_schools.sent_email_recently?(school)).to eq false
+        end
+      end
+    end
+  end
 end

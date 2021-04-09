@@ -50,7 +50,7 @@ Rails.application.configure do
   # config.active_job.queue_name_prefix = "govuk_rails_boilerplate_production"
   config.domain = ENV["DOMAIN"]
 
-  config.support_email = "ecf-support@digital.education.gov.uk"
+  config.support_email = "continuing-professional-development@digital.education.gov.uk"
 
   config.gias_api_schema = ENV["GIAS_API_SCHEMA"]
   config.gias_extract_id = ENV["GIAS_EXTRACT_ID"]

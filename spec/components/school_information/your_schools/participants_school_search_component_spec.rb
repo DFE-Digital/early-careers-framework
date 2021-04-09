@@ -7,13 +7,14 @@ RSpec.describe ::SchoolInformation::YourSchools::ParticipantsSchoolSearchCompone
   let(:cohort_2) { create(:cohort, start_year: 2022) }
   let(:school_1) { create(:school) }
   let(:school_2) { create(:school) }
+  let(:delivery_partner) { create(:delivery_partner) }
   let(:lead_provider) { create(:lead_provider, cohorts: [cohort_1, cohort_2]) }
   let(:schools) { school_search_form.find_schools(nil) }
   let(:selected_cohort) { cohort_1 }
   let(:component) { described_class.new(schools: schools, selected_cohort: cohort_1, school_search_form: school_search_form) }
   let(:rendered_component) { render_inline(component).to_html }
-  let(:partnership_1) { create(:partnership, cohort: cohort_1, school: school_1, lead_provider: lead_provider) }
-  let(:partnership_2) { create(:partnership, cohort: cohort_1, school: school_2, lead_provider: lead_provider) }
+  let(:partnership_1) { create(:partnership, cohort: cohort_1, school: school_1, lead_provider: lead_provider, delivery_partner: delivery_partner) }
+  let(:partnership_2) { create(:partnership, cohort: cohort_1, school: school_2, lead_provider: lead_provider, delivery_partner: delivery_partner) }
 
   let(:school_search_form) do
     search_form = SchoolSearchForm.new

@@ -17,12 +17,6 @@ RSpec.describe AdminProfile, type: :model do
       }.to change { AdminProfile.count }.by(1)
     end
 
-    it "confirms the newly created user" do
-      AdminProfile.create_admin(name, email, sign_in_url)
-
-      expect(created_user.confirmed?).to be true
-    end
-
     it "creates a user with the correct details" do
       AdminProfile.create_admin(name, email, sign_in_url)
 

@@ -7,5 +7,3 @@ ProviderRelationship.create!(delivery_partner: delivery_partner, lead_provider: 
 
 lead_provider_2 = FactoryBot.create(:lead_provider, cohorts: [cohort])
 ProviderRelationship.create!(delivery_partner: delivery_partner, lead_provider: lead_provider_2, cohort: cohort)
-
-FactoryBot.create(:user, :lead_provider, full_name: "John Wick", email: "john-wick@example.com")

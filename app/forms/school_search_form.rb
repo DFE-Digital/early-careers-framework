@@ -15,10 +15,10 @@ class SchoolSearchForm
                 :with_school_partnerships
 
   def find_schools(page)
-    schools = School.where("lower(name) LIKE ? OR
+    schools = School.eligible.where("lower(name) LIKE ? OR
                             lower(urn) LIKE ?",
-                           "%#{(school_name || '').downcase}%",
-                           "%#{(school_name || '').downcase}%")
+                                    "%#{(school_name || '').downcase}%",
+                                    "%#{(school_name || '').downcase}%")
                     .includes(:network, :lead_providers)
 
     schools = schools.partnered(year) if with_school_partnerships

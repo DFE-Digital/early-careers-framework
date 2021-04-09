@@ -8,6 +8,8 @@ Given("scenario {string} has been run", (scenario) => cy.appScenario(scenario));
 const pagePaths = {
   cookie: "/cookies",
   start: "/",
+  privacy: "/privacy_policy",
+  "check account": "/check-account",
   "admin index": "/admin/administrators",
   "admin creation": "/admin/administrators/new",
   "admin confirm creation": "/admin/administrators/new/confirm",
@@ -38,6 +40,7 @@ const pagePaths = {
   schools: "/schools",
   "2021 school cohorts": "/schools/cohorts/2021",
   "estimate participants": /\/schools\/estimate-participants\/.*\/edit/,
+  "2021 school partnerships": "/schools/cohorts/2021/partnerships",
 };
 
 Given("I am on {string} page", (page) => {

@@ -123,3 +123,9 @@ to execute this delayed job in the background.
 1. Add an option `on_duplicate_key_ignore` to lead providers, think carefully which ones from seed dump are needed.
 1. Commit, push, run seeding job from above in the deployed app.
 
+### Sending school nomination invites
+
+```bash
+bundle exec rake 'schools:send_invites[urn1 urn2 ...]'
+```
+

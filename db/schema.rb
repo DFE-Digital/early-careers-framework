@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_24_182656) do
+ActiveRecord::Schema.define(version: 2021_04_07_182348) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 2021_03_24_182656) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "start_year", limit: 2, null: false
+    t.index ["start_year"], name: "index_cohorts_on_start_year", unique: true
   end
 
   create_table "cohorts_lead_providers", id: false, force: :cascade do |t|
@@ -184,7 +185,9 @@ ActiveRecord::Schema.define(version: 2021_03_24_182656) do
     t.uuid "school_id", null: false
     t.uuid "lead_provider_id", null: false
     t.uuid "cohort_id", null: false
+    t.uuid "delivery_partner_id"
     t.index ["cohort_id"], name: "index_partnerships_on_cohort_id"
+    t.index ["delivery_partner_id"], name: "index_partnerships_on_delivery_partner_id"
     t.index ["lead_provider_id"], name: "index_partnerships_on_lead_provider_id"
     t.index ["school_id"], name: "index_partnerships_on_school_id"
   end
@@ -285,13 +288,9 @@ ActiveRecord::Schema.define(version: 2021_03_24_182656) do
     t.inet "current_sign_in_ip"
     t.inet "last_sign_in_ip"
     t.integer "sign_in_count", default: 0, null: false
-    t.string "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "discarded_at"
-    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
@@ -323,6 +322,7 @@ ActiveRecord::Schema.define(version: 2021_03_24_182656) do
   add_foreign_key "lead_provider_profiles", "users"
   add_foreign_key "nomination_emails", "schools"
   add_foreign_key "partnerships", "cohorts"
+  add_foreign_key "partnerships", "delivery_partners"
   add_foreign_key "partnerships", "lead_providers"
   add_foreign_key "partnerships", "schools"
   add_foreign_key "provider_relationships", "cohorts"

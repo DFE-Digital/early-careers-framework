@@ -40,7 +40,8 @@ RSpec.describe SchoolSearchForm, type: :model do
       school = schools[2]
       lead_provider = create(:lead_provider)
       cohort = create(:cohort, start_year: 2021)
-      Partnership.create!(school: school, lead_provider: lead_provider, cohort: cohort)
+      delivery_partner = create(:delivery_partner)
+      Partnership.create!(school: school, lead_provider: lead_provider, cohort: cohort, delivery_partner: delivery_partner)
 
       form = SchoolSearchForm.new(partnership: ["", "in_a_partnership"])
       search_result = form.find_schools(1)
@@ -53,7 +54,8 @@ RSpec.describe SchoolSearchForm, type: :model do
       school = schools[2]
       lead_provider = create(:lead_provider)
       cohort = create(:cohort, start_year: 2021)
-      Partnership.create!(school: school, lead_provider: lead_provider, cohort: cohort)
+      delivery_partner = create(:delivery_partner)
+      Partnership.create!(school: school, lead_provider: lead_provider, cohort: cohort, delivery_partner: delivery_partner)
 
       form = SchoolSearchForm.new(school_name: "Test school one", partnership: ["", "in_a_partnership"])
       search_result = form.find_schools(1)

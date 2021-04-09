@@ -49,7 +49,7 @@ variable paas_user {
 }
 
 variable paas_web_app_deployment_strategy {
-  default = "blue-green-v2"
+  default = "standard"
 }
 
 variable paas_web_app_instances {
@@ -65,7 +65,7 @@ variable paas_web_app_start_command {
 }
 
 variable paas_worker_app_deployment_strategy {
-  default = "blue-green-v2"
+  default = "standard"
 }
 
 variable paas_worker_app_instances {
@@ -88,6 +88,18 @@ variable secret_paas_app_env_values {
 variable govuk_hostnames {
   type = list(string)
   default = []
+}
+
+# Statuscake
+variable "statuscake_alerts" {
+  description = "Define Statuscake alerts with the attributes below"
+  default     = {}
+}
+
+variable statuscake_username {
+}
+
+variable statuscake_apikey {
 }
 
 locals {

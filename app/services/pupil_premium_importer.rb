@@ -27,7 +27,7 @@ private
 
   def update_school_premium(row)
     urn = row.fetch("URN")
-    school = School.unscoped.find_by(urn: urn)
+    school = School.find_by(urn: urn)
     logger.info "Could not find school with URN #{urn}" and return unless school
 
     total_pupils = row.fetch("Number of pupils on roll (7)").delete(",").to_i

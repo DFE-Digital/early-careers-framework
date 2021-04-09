@@ -25,7 +25,6 @@ class SupplierUserForm
       user = User.create!(
         full_name: full_name,
         email: email,
-        confirmed_at: Time.zone.now.utc, # Skip confirmation email
       )
       profile.user = user
       profile.save!

@@ -7,7 +7,6 @@ class AdminProfile < BaseProfile
     user = User.new(full_name: full_name, email: email)
 
     ActiveRecord::Base.transaction do
-      user.confirm
       user.save!
       AdminProfile.create!(user: user)
       AdminMailer.account_created_email(user, sign_in_url).deliver_now

@@ -1,0 +1,22 @@
+<% content_for :title, "Error: school not eligible" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-header-l">
+      Sorry, your school is not eligible
+    </h1>
+
+    <p>Only schools in England are eligible for ECF inductions.</p>
+    <p>The following institutions are also not eligible:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>secure training centres</li>
+      <li>
+        schools in special measures and further education institutions with any Grade 4 (inadequate) Ofsted ratings,
+        except where Ofsted has said they can hire newly qualified teachers
+      </li>
+    </ul>
+
+    <!-- TODO: Add guidance page and link to it -->
+    <%= govuk_link_to "See our statutory induction guidance", "#" %>
+  </div>
+</div>
