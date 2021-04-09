@@ -9,10 +9,32 @@ RSpec.describe "Nominations::NotifyCallbacks", type: :request do
     it "updates matching nomination email" do
       post "/nominations/notify-callback", params: {
         reference: nomination_email.token,
-        status: "failure",
+        status: "failed",
       }
 
-      expect(nomination_email.reload.notify_status).to eq "failure"
+      expect(nomination_email.reload.notify_status).to eq "failed"
+    end
+
+    context "when reference is nil" do
+      it "returns successfully" do
+        post "/nominations/notify-callback", params: {
+          reference: nil,
+          status: "delivered",
+        }
+
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+    context "when reference does not match any records" do
+      it "returns successfully" do
+        post "/nominations/notify-callback", params: {
+          reference: "reference",
+          status: "delivered",
+        }
+
+        expect(response).to have_http_status(:success)
+      end
     end
   end
 end
