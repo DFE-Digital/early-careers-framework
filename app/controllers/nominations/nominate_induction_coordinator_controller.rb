@@ -9,7 +9,7 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
       redirect_to link_invalid_nominate_induction_coordinator_path
     elsif @nomination_email.expired?
       redirect_to link_expired_nominate_induction_coordinator_path(school_id: @nomination_email.school_id)
-    elsif @nomination_email.school.fully_registered?
+    elsif @nomination_email.school.registered?
       redirect_to already_nominated_request_nomination_invite_path
     else
       load_nominate_induction_tutor_form
