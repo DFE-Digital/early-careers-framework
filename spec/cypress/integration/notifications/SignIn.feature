@@ -18,7 +18,7 @@ Feature: Sign In
     And I should be able to login with magic link for email "lead-provider-test@example.com"
 
   Scenario: Login as an Induction Coordinator User to receive notification with magic link
-    Given user was created as "induction_coordinator_with_school" with email "induction-coordinator-test@example.com"
+    Given user was created as "induction_coordinator" with email "induction-coordinator-test@example.com"
     And I am on "users sign in" page
     When I type "induction-coordinator-test@example.com" into "email input"
     And I click the submit button

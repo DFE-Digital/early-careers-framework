@@ -1,7 +1,7 @@
-<% content_for :title, "Resend nomination: confirm school" %>
+<% content_for :title, "Confirm school" %>
 <% content_for :before_content, govuk_back_link(
   text: "Back",
-  href: choose_location_nominations_path)
+  href: choose_school_request_nomination_invite_path)
 %>
 
 <div class="govuk-grid-row">
@@ -42,10 +42,10 @@
         </div>
       </dl>
 
-      <%= govuk_link_to "Change school", choose_location_nominations_path(continue: true), class: "govuk-link--no-visited-state" %>
+      <%= govuk_link_to "Change school", choose_location_request_nomination_invite_path(continue: true), class: "govuk-link--no-visited-state" %>
     </div>
 
-    <%= form_for :confirmation, url: review_nominations_path, method: :post do |f| %>
+    <%= form_for :confirmation, url: review_request_nomination_invite_path, method: :post do |f| %>
       <%= f.hidden_field :answers_checked, value: true %>
       <%= f.govuk_submit "Confirm" %>
     <% end %>

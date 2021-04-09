@@ -13,12 +13,11 @@ FactoryBot.define do
 
     trait :induction_coordinator do
       induction_coordinator_profile { build(:induction_coordinator_profile) }
-    end
-
-    trait :induction_coordinator_with_school do
-      induction_coordinator_profile { build(:induction_coordinator_profile) }
-      after(:build) do |user|
-        user.induction_coordinator_profile.schools << FactoryBot.build(:school, primary_contact_email: "school_primary_contact_email@example.com")
+      transient do
+        schools { induction_coordinator_profile.schools }
+      end
+      after(:build) do |user, evaluator|
+        user.induction_coordinator_profile.schools = evaluator.schools
       end
     end
 

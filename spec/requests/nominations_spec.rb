@@ -2,7 +2,8 @@
 
 require "rails_helper"
 
-RSpec.describe "Nominations flow", type: :request do
+RSpec.describe "Requesting an invitation to nominate an induction tutor", type: :request do
+  let(:school) { create(:school) }
   before do
     create(:school_local_authority)
   end
@@ -21,7 +22,7 @@ RSpec.describe "Nominations flow", type: :request do
 
     it "redirects to choose-school" do
       post "/nominations/choose-location", params: { nomination_request_form: { local_authority_id: LocalAuthority.first.id } }
-      expect(response).to redirect_to(choose_school_nominations_path)
+      expect(response).to redirect_to(choose_school_request_nomination_invite_path)
     end
   end
 
@@ -38,60 +39,51 @@ RSpec.describe "Nominations flow", type: :request do
     end
 
     context "when given an eligible, un-nominated school" do
-      let(:school) { create(:school) }
-
       it "redirects to review" do
-        post "/nominations/choose-school", params: { nomination_request_form: { school_id: school.id } }
-        expect(response).to redirect_to(review_nominations_path)
+        when_i_choose_the_school
+        expect(response).to redirect_to(review_request_nomination_invite_path)
       end
     end
 
     context "when given an ineligible school" do
       let(:school) { create(:school, administrative_district_code: "W12") }
 
-      it "redirects to non eligible" do
-        post "/nominations/choose-school", params: { nomination_request_form: { school_id: school.id } }
-        expect(response).to redirect_to(not_eligible_nominations_path)
+      it "redirects to not eligible" do
+        when_i_choose_the_school
+        expect(response).to redirect_to(not_eligible_request_nomination_invite_path)
       end
     end
 
     context "when given an eligible, already nominated school" do
-      let(:school) { create(:school) }
-
       before do
-        user = create(:user, confirmed_at: nil, confirmation_sent_at: 2.hours.ago)
-        create(:induction_coordinator_profile, user: user, schools: [school])
+        create(:user, :induction_coordinator, schools: [school])
       end
 
-      xit "redirects to non eligible" do # TODO: this is clearly wrong, I fix it in the next PR
-        post "/nominations/choose-school", params: { nomination_request_form: { school_id: school.id } }
-        expect(response).to redirect_to(limit_reached_nominations_path)
+      it "redirects to already nominated" do
+        when_i_choose_the_school
+        expect(response).to redirect_to(already_nominated_request_nomination_invite_path)
       end
     end
 
-    context "when given an eligible, already nominated school" do
-      let(:school) { create(:school) }
-
+    context "when given an eligible school emailed within the last 24 hours" do
       before do
-        user = create(:user, confirmed_at: 2.hours.ago)
-        create(:induction_coordinator_profile, user: user, schools: [school])
+        create(:nomination_email, school: school, sent_at: 1.hour.ago)
       end
 
-      xit "redirects to non eligible" do # TODO: this is wrong, fixed in next PR
-        post "/nominations/choose-school", params: { nomination_request_form: { school_id: school.id } }
-        expect(response).to redirect_to(already_nominated_nominations_path)
+      it "redirects to limit reached" do
+        when_i_choose_the_school
+        expect(response).to redirect_to(limit_reached_request_nomination_invite_path)
       end
     end
   end
 
   describe "review" do
-    let(:school) { create(:school) }
     let(:session) { { nomination_request_form: { school_id: school.id } } }
 
     before do
-      allow_any_instance_of(NominationsController)
-          .to receive(:session)
-          .and_return(session)
+      allow_any_instance_of(Nominations::RequestNominationInviteController)
+        .to receive(:session)
+              .and_return(session)
     end
 
     it "renders the review page" do
@@ -101,7 +93,7 @@ RSpec.describe "Nominations flow", type: :request do
 
     it "redirects to success page" do
       post "/nominations/review"
-      expect(response).to redirect_to(success_nominations_path)
+      expect(response).to redirect_to(success_request_nomination_invite_path)
     end
   end
 
@@ -121,15 +113,21 @@ RSpec.describe "Nominations flow", type: :request do
 
   describe "email limit reached" do
     it "renders the email limit reached page" do
-      get "/nominations/already-nominated"
-      expect(response).to render_template(:already_nominated)
+      get "/nominations/limit-reached"
+      expect(response).to render_template(:limit_reached)
     end
   end
 
   describe "already nominated" do
     it "renders the already nominated page" do
-      get "/nominations/limit-reached"
-      expect(response).to render_template(:limit_reached)
+      get "/nominations/already-nominated"
+      expect(response).to render_template(:already_nominated)
     end
+  end
+
+private
+
+  def when_i_choose_the_school
+    post "/nominations/choose-school", params: { nomination_request_form: { school_id: school.id } }
   end
 end
