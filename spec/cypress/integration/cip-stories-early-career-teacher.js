@@ -3,22 +3,23 @@ describe("ECT user interaction with Core Induction Programme", () => {
     cy.login("early_career_teacher");
   });
 
-  it("should not show a download export button", () => {
-    cy.visit("/core-induction-programmes");
-    cy.contains("a.govuk-button", "Download export").should("not.exist");
-  });
-
   it("should not allow to edit year title", () => {
     cy.appFactories([["create", "course_year"]]).as("courseYear");
 
     cy.get("@courseYear").then(([year]) => {
-      cy.appFactories([
-        ["create", "core_induction_programme", { course_year_one_id: year.id }],
-      ]).as("coreInductionProgramme");
-
-      cy.get("@coreInductionProgramme").then(([coreInductionProgramme]) => {
-        cy.visit(`/core-induction-programmes/${coreInductionProgramme.id}`);
-        cy.contains("a.govuk-button", "Edit year content").should("not.exist");
+      cy.get("@userData").then(([user]) => {
+        cy.appEval(`User.find("${user.id}").core_induction_programme`).then(
+          (cip) => {
+            cy.appEval(
+              `CoreInductionProgramme.find("${cip.id}").update!(course_year_one_id: "${year.id}")`
+            ).then(() => {
+              cy.visit(`/core-induction-programmes/${cip.id}`);
+              cy.contains("a.govuk-button", "Edit year content").should(
+                "not.exist"
+              );
+            });
+          }
+        );
       });
     });
   });

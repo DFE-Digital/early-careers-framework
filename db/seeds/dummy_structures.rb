@@ -31,10 +31,14 @@ unless Rails.env.production?
   end
 
   if EarlyCareerTeacherProfile.none?
-    user = User.find_or_create_by!(email: "early-career-teacher@example.com") do |u|
-      u.full_name = "ECT User"
-      u.confirmed_at = Time.zone.now.utc
+    CoreInductionProgramme.all.each do |cip|
+      cip_name_for_email = cip.name.gsub(/\s+/, "-").downcase
+
+      user = User.find_or_create_by!(email: "#{cip_name_for_email}-early-career-teacher@example.com") do |u|
+        u.full_name = "#{cip.name} ECT User"
+        u.confirmed_at = Time.zone.now.utc
+      end
+      EarlyCareerTeacherProfile.create!(user: user, cohort: Cohort.first, core_induction_programme: cip, mentor_profile: MentorProfile.first)
     end
-    EarlyCareerTeacherProfile.create!(user: user, cohort: Cohort.first, core_induction_programme: CoreInductionProgramme.first, mentor_profile: MentorProfile.first)
   end
 end

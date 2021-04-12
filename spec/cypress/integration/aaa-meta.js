@@ -44,6 +44,8 @@ describe("Meta test helper tests", () => {
       ["create", "core_induction_programme"],
     ]);
 
+    cy.login("admin");
+
     cy.visit("/core-induction-programmes");
 
     cy.get('.govuk-link:contains("Test Core induction programme")').should(
@@ -52,8 +54,8 @@ describe("Meta test helper tests", () => {
     );
 
     cy.app("clean");
-
-    cy.reload();
+    cy.login("admin");
+    cy.visit("/core-induction-programmes");
 
     cy.get('.govuk-link:contains("Test Core induction programme")').should(
       "have.length",

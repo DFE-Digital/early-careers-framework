@@ -5,11 +5,13 @@ class CoreInductionProgrammesController < ApplicationController
   include CipBreadcrumbHelper
 
   def index
+    authorize CoreInductionProgramme
     @core_induction_programmes = CoreInductionProgramme.all
   end
 
   def show
     @core_induction_programme = CoreInductionProgramme.find(params[:id])
+    authorize @core_induction_programme
   end
 
   def download_export

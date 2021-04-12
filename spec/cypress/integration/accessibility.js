@@ -46,7 +46,7 @@ describe("Accessibility", () => {
   it("CIP should be accessible", () => {
     cy.appFactories([["create", "core_induction_programme"]]);
 
-    cy.login("early_career_teacher");
+    cy.login("admin");
 
     cy.visit("/core-induction-programmes");
     cy.checkA11y();

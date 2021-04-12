@@ -51,5 +51,5 @@ Rails.application.routes.draw do
       get "show_delete", to: "lesson_parts#show_delete"
     end
   end
-  root to: "core_induction_programmes#index"
+  root to: "start#index"
 end
