@@ -24,4 +24,4 @@ jobs:
           cf_password: ${{ secrets.GOVPAAS_DEV_PASSWORD }}
           cf_org: dfe
           cf_space: earlycareers-framework-dev
-          command: cf run-task ${{ github.event.inputs.env }} --command "cd /app && /usr/local/bin/bundle exec rake ${{ github.event.inputs.task }}" --name github-task-run
+          command: run-task ${{ github.event.inputs.env }} --command "cd /app && /usr/local/bin/bundle exec rake ${{ github.event.inputs.task }}" --name github-task-run
