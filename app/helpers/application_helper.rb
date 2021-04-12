@@ -3,7 +3,7 @@
 module ApplicationHelper
   def profile_dashboard_url(user)
     if user.admin?
-      admin_suppliers_url
+      admin_schools_url
     elsif user.induction_coordinator?
       induction_coordinator_dashboard_url(user)
     else
