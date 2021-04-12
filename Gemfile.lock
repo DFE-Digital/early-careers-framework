@@ -438,7 +438,7 @@ DEPENDENCIES
   rails (~> 6.1.3.1, >= 6.1.3.1)
   rails-controller-testing (>= 1.0.5)
   rspec-rails (~> 4.0.2)
-  rubocop-govuk
+  rubocop-govuk (>= 3.17.2)
   scss_lint-govuk
   seed_dump (>= 3.3.1)
   shoulda-matchers (~> 4.4)
