@@ -49,3 +49,14 @@ Feature: Cookie page
     When I navigate to "cookie" page
     Then "cookie banner" should not exist
     And "cookie consent radio" with value "off" is checked
+
+  Scenario: Returning from cookie show page
+    Given I am on "start" page
+    When I click on "link" containing "Cookies"
+    Then I am on "cookie" page
+
+    When I set "cookie consent radio" to "off"
+    And I click the submit button
+    And I click on "link" containing "Back"
+    Then I am on "start" page
+

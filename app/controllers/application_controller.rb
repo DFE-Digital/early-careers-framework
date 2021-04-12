@@ -4,6 +4,15 @@ class ApplicationController < ActionController::Base
   default_form_builder GOVUKDesignSystemFormBuilder::FormBuilder
 
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :previous_url_for_cookies_page
+
+  def previous_url_for_cookies_page
+    if request.get? && controller_name == "cookies"
+      session[:return_to] ||= root_url
+    elsif request.get?
+      session[:return_to] = request.original_url
+    end
+  end
 
   def check
     render json: { status: "OK", version: release_version, sha: ENV["SHA"], environment: Rails.env }, status: :ok

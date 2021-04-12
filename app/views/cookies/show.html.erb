@@ -1,3 +1,8 @@
+<%= render GovukComponent::BackLink.new(
+      text: 'Back',
+      href: @backlink,
+    )
+%>
 <% content_for :title, "Cookies" %>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
