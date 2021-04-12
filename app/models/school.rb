@@ -24,11 +24,11 @@ class School < ApplicationRecord
   scope :eligible, -> { open.eligible_establishment_type.in_england }
 
   scope :with_name_like, lambda { |search_key|
-    School.eligible.where("name ILIKE ?", "%#{search_key}%")
+    where("name ILIKE ?", "%#{search_key}%")
   }
 
   scope :with_urn_like, lambda { |search_key|
-    School.eligible.where("urn ILIKE ?", "%#{search_key}%")
+    where("urn ILIKE ?", "%#{search_key}%")
   }
 
   scope :search_by_name_or_urn, lambda { |search_key|
@@ -41,15 +41,15 @@ class School < ApplicationRecord
   }
 
   scope :partnered, lambda { |year|
-    where(id: Partnership.joins(:cohort).where(cohorts: { start_year: year }).pluck(:school_id))
+    where(id: Partnership.joins(:cohort).where(cohorts: { start_year: year }).select(:school_id))
   }
 
   scope :partnered_with_lead_provider, lambda { |lead_provider_id|
-    where(id: Partnership.where(lead_provider_id: lead_provider_id).pluck(:school_id))
+    where(id: Partnership.where(lead_provider_id: lead_provider_id).select(:school_id))
   }
 
   scope :unpartnered, lambda { |year|
-    where.not(id: Partnership.joins(:cohort).where(cohorts: { start_year: year }).pluck(:school_id))
+    where.not(id: Partnership.joins(:cohort).where(cohorts: { start_year: year }).select(:school_id))
   }
 
   def lead_provider(year)
@@ -119,7 +119,7 @@ private
   end
 
   def in_england?
-    administrative_district_code.match?(/^[Ee].*/)
+    administrative_district_code.match?(/^[Ee]/)
   end
 
   scope :open, -> { where(school_status_code: ELIGIBLE_STATUS_CODES) }
