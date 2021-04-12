@@ -161,6 +161,7 @@ jobs:
       - name: Webpacker
         run: bin/webpack
 
+      # Percy stuff is from https://dev.to/digitaledawn/github-action-cypress-and-percy-parallelisation-setup-484a
       - name: Run Cypress
         uses: cypress-io/github-action@v2
         with:
@@ -168,3 +169,7 @@ jobs:
           wait-on: 'http://localhost:5017/'
           env: port=5017
           project: ./spec
+          command-prefix: 'percy exec -- npx'
+        env:
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+          COMMIT_INFO_BRANCH: ${{ github.head_ref }}
