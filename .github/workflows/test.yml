@@ -172,6 +172,4 @@ jobs:
           command-prefix: 'percy exec -- npx'
         env:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
-          PERCY_TARGET_BRANCH: 'develop'
-          PERCY_BRANCH: ${{ github.head_ref }}
           COMMIT_INFO_BRANCH: ${{ github.head_ref }}
