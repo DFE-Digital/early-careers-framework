@@ -2,6 +2,8 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-l">Sign in</h1>
     <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+      <%= f.govuk_error_summary %>
+
       <div class="govuk-form-group">
         <%= f.govuk_email_field :email, label: { text: "Email address" } %>
       </div>

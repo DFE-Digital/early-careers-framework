@@ -3,10 +3,9 @@ Cypress.Commands.add("login", (...traits) => {
   cy.appFactories([["create", "user", ...traits]])
     .as("userData")
     .then(([user]) => {
-      cy.visit(`/users/confirm_sign_in?login_token=${user.login_token}`);
+      cy.visit("/users/sign_in");
+      cy.get("[name*=email]").type(`${user.email}{enter}`);
     });
-
-  cy.get('[action="/users/sign_in_with_token"] [name="commit"]').click();
 });
 
 Cypress.Commands.add("logout", () => {

@@ -10,34 +10,25 @@ describe("Accessibility", () => {
 
     // School not registered page
     cy.get('[name="user[email]"]').type("doesntexist@example.com{enter}");
-    cy.get("h1").should("contain", "Your school has not registered");
+    cy.get(".govuk-error-summary").should(
+      "contain",
+      "This email address is not the same as the one your school used to create your account."
+    );
+    cy.checkA11y();
+
+    cy.visit("/users/sign_in");
     cy.checkA11y();
 
     cy.appFactories([["create", "user", "early_career_teacher"]])
       .as("userData")
       .then(([user]) => {
-        cy.visit("/users/sign_in");
         cy.get('[name="user[email]"]').type(user.email);
       });
 
     cy.get('[name="commit"]').contains("Sign in").click();
-    cy.get("h1").should("contain", "Check your email");
-    cy.checkA11y();
 
-    cy.get("@userData")
-      .then(([user]) =>
-        // Update user as previous step caused login token to change
-        cy.appEval(`User.find_by(id: "${user.id}")`)
-      )
-      .as("userData")
-      .then((user) => {
-        cy.visit(`/users/confirm_sign_in?login_token=${user.login_token}`);
-      });
-    cy.checkA11y();
-
-    cy.get('[action="/users/sign_in_with_token"] [name="commit"]').click();
-    cy.get("@userData").then(() => {
-      // cy.get("h1").should("contain", `Hi ${user.full_name}`);
+    cy.get("@userData").then(([user]) => {
+      cy.get("h1").should("contain", `Welcome ${user.full_name}`);
     });
 
     cy.checkA11y();

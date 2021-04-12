@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
-  devise :registerable, :trackable, :confirmable, :passwordless_authenticatable
+  devise :registerable, :trackable, :confirmable, :yolo_authenticatable
 
   has_one :induction_coordinator_profile
 
@@ -38,5 +38,9 @@ class User < ApplicationRecord
 
   def preferred_name
     username&.presence || full_name
+  end
+
+  def dfe_confirmed?
+    true
   end
 end

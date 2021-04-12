@@ -38,10 +38,9 @@ const login = (traits, args) => {
   cy.appFactories([factoryArgs])
     .as("userData")
     .then(([user]) => {
-      cy.visit(`/users/confirm_sign_in?login_token=${user.login_token}`);
+      cy.visit("/users/sign_in");
+      cy.get("[name*=email]").type(`${user.email}{enter}`);
     });
-
-  cy.get('[action="/users/sign_in_with_token"] [name="commit"]').click();
 };
 
 Given("I am logged in as {string}", (traits) => login(traits));
