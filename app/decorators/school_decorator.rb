@@ -10,6 +10,10 @@ module Decorators
       @school = school
     end
 
+    def name_with_address
+      "<strong>#{name}</strong> (#{full_address_formatted})"
+    end
+
     def full_address_formatted
       [address_line1, address_line2, address_line3, postcode].reject(&:blank?).join(", ")
     end
