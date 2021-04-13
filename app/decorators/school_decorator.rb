@@ -11,7 +11,7 @@ module Decorators
     end
 
     def name_with_address
-      "<strong>#{name}</strong> (#{full_address_formatted})"
+      "#{name} (#{full_address_formatted})"
     end
 
     def full_address_formatted

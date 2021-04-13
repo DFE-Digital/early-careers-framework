@@ -8,7 +8,7 @@ RSpec.describe Decorators::SchoolDecorator do
 
   describe "#name_with_address" do
     let(:expected_name_with_address) do
-      "<strong>#{school.name}</strong> (#{school_decorator.full_address_formatted})"
+      "#{school.name} (#{school_decorator.full_address_formatted})"
     end
     it "returns the school name with an appended address" do
       expect(school_decorator.name_with_address).to eq expected_name_with_address
