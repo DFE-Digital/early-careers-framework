@@ -3,6 +3,7 @@ import { When, Then } from "cypress-cucumber-preprocessor/steps";
 const elements = {
   "cookie consent radio": '[name="cookies_form[analytics_consent]"]',
   "cookie banner": ".js-cookie-banner",
+  "phase banner": ".govuk-phase-banner",
   "page body": "main",
   "edit username link": '[data-test="edit-username"]',
   "name input": '[name*="name"]',
