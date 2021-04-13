@@ -36,7 +36,7 @@ RSpec.describe "Cookies API", type: :request do
 
   describe "GET /cookies" do
     context "from a different page" do
-      it "sets the session[:return_to] previous url" do
+      it "sets the session[:return_to] as previous url" do
         get privacy_policy_path
         expect(session[:return_to]).to eq("http://www.example.com/privacy_policy")
         get cookies_path
@@ -45,7 +45,7 @@ RSpec.describe "Cookies API", type: :request do
     end
 
     context "from the same page with empty session" do
-      it "sets the session[:return_to] root url" do
+      it "sets the session[:return_to] as root url" do
         get cookies_path
         expect(session[:return_to]).to eq("http://www.example.com/")
       end
