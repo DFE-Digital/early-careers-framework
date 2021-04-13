@@ -3,6 +3,13 @@
 class UsernameController < ApplicationController
   before_action :authenticate_user!
 
+  def new; end
+
+  def create
+    current_user.update!(user_params.merge(account_created: true))
+    redirect_to dashboard_path
+  end
+
   def edit; end
 
   def update

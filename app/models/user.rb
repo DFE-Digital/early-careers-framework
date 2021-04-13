@@ -39,8 +39,4 @@ class User < ApplicationRecord
   def preferred_name
     username&.presence || full_name
   end
-
-  def dfe_confirmed?
-    true
-  end
 end

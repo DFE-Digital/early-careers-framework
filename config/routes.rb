@@ -19,7 +19,7 @@ Rails.application.routes.draw do
 
   resource :cookies, only: %i[show update]
   resource :dashboard, controller: :dashboard, only: :show
-  resource :username, controller: :username, only: %i[edit update]
+  resource :username, controller: :username, only: %i[new create edit update]
 
   get "/403", to: "errors#forbidden", via: :all
   get "/404", to: "errors#not_found", via: :all

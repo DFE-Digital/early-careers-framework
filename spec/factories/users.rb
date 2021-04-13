@@ -7,6 +7,7 @@ FactoryBot.define do
     login_token { Faker::Alphanumeric.alpha(number: 10) }
     confirmed_at { 1.hour.ago }
     login_token_valid_until { 1.hour.from_now }
+    account_created { true }
 
     trait :admin do
       admin_profile { build(:admin_profile) }
