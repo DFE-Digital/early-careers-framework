@@ -49,7 +49,7 @@ describe("Accessibility", () => {
 
   it("Admin suppliers should be accessible", () => {
     cy.login("admin");
-    cy.get("h1").should("contain", "Suppliers");
+    cy.get("h1").should("contain", "Schools");
     cy.checkA11y();
   });
 });

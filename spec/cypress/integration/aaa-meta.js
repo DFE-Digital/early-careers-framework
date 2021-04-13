@@ -15,13 +15,15 @@ describe("Meta test helper tests", () => {
     cy.get("#success-message").should("contain", "Signed out successfully.");
 
     cy.login("admin");
-    cy.get("h1").should("contain", "Suppliers");
+    cy.get("h1").should("contain", "Schools");
   });
 
   it("should have factory_bot helper functions", () => {
     cy.appFactories([["create", "lead_provider"]]).as("leadProvider");
 
     cy.login("admin");
+
+    cy.visit("/admin/suppliers");
 
     cy.get("@leadProvider").should(([provider]) => {
       expect(provider.name).to.equal("Lead Provider");
@@ -39,6 +41,7 @@ describe("Meta test helper tests", () => {
     ]);
 
     cy.login("admin");
+    cy.visit("/admin/suppliers");
 
     cy.get('[data-test=supplier-name]:contains("Lead Provider")').should(
       "have.length",
