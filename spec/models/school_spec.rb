@@ -23,6 +23,7 @@ RSpec.describe School, type: :model do
     it { is_expected.to have_many(:partnerships) }
     it { is_expected.to have_many(:lead_providers).through(:partnerships) }
     it { is_expected.to have_and_belong_to_many(:induction_coordinator_profiles) }
+    it { is_expected.to have_many(:induction_coordinators).through(:induction_coordinator_profiles).source(:user) }
     it { is_expected.to have_many(:early_career_teacher_profiles) }
     it { is_expected.to have_many(:early_career_teachers).through(:early_career_teacher_profiles) }
     it { is_expected.to have_many(:pupil_premiums) }

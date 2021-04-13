@@ -11,7 +11,7 @@ class SchoolPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      return scope.all if user.admin?
+      return scope.eligible if user.admin?
 
       scope.none
     end

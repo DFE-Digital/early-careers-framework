@@ -10,6 +10,7 @@ RSpec.describe User, type: :model do
   describe "associations" do
     it { is_expected.to have_one(:admin_profile) }
     it { is_expected.to have_one(:induction_coordinator_profile) }
+    it { is_expected.to have_many(:schools).through(:induction_coordinator_profile) }
     it { is_expected.to have_one(:lead_provider_profile) }
     it { is_expected.to have_one(:lead_provider).through(:lead_provider_profile) }
     it { is_expected.to have_one(:early_career_teacher_profile) }

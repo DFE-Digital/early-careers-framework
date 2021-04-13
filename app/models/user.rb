@@ -5,6 +5,7 @@ class User < ApplicationRecord
   has_paper_trail
 
   has_one :induction_coordinator_profile
+  has_many :schools, through: :induction_coordinator_profile
   has_one :lead_provider_profile
   has_one :lead_provider, through: :lead_provider_profile
   has_one :admin_profile
