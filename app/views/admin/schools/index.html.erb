@@ -1,3 +1,20 @@
+<h1 class="govuk-heading-l">Schools</h1>
+<div class="search-container">
+  <%= form_with method: :get do |f| %>
+    <div class="school-search">
+      <div class="school-search__input">
+        <%= f.govuk_text_field(
+              :query,
+              value: @query,
+              label: { text: "Search schools", size: "s" },
+            )
+        %>
+      </div>
+      <%= f.govuk_submit "Search", classes: "school-search__button", "data-test": "search-button" %>
+    </div>
+  <% end %>
+</div>
+
 <table class="govuk-table">
   <thead>
     <tr class="govuk-table__row">

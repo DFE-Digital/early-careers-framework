@@ -11,6 +11,7 @@ const inputs = {
   "estimated teacher input":
     "#school-cohort-form-estimated-teacher-count-field",
   "estimated mentor input": "#school-cohort-form-estimated-mentor-count-field",
+  "search box": "input[name=query]",
 };
 
 const buttons = {
@@ -20,6 +21,7 @@ const buttons = {
     '.govuk-button:contains("new delivery partner")',
   "back button": '.govuk-button:contains("Back")',
   "create supplier user button": '.govuk-button:contains("Add a new user")',
+  "search button": "[data-test=search-button]",
 };
 
 const links = {
@@ -52,6 +54,10 @@ When("I clear {string}", (element) => {
 
 When("I type {string} into {string}", (value, element) => {
   get(element).type(value);
+});
+
+When("I type {string} into {string} and press enter", (value, element) => {
+  get(element).type(`${value}{enter}`);
 });
 
 When("I click on {string}", (element) => {
@@ -126,6 +132,10 @@ Then("{string} label should be unchecked", (text) => {
 
       cy.get(`#${inputId}`).should("not.be.checked");
     });
+});
+
+Then("the table should have {int} row(s)", (number) => {
+  cy.get("tbody").find("tr").should("have.length", number);
 });
 
 Then("the page should be accessible", () => {
