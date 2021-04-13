@@ -4,12 +4,13 @@
 
 ## Prerequisites
 
+
 - Ruby 2.7.2
 - PostgreSQL
 - NodeJS 14.16.0
 - Yarn 1.12.x
 - Docker
-
+ 
 ## Setting up the app in development
 
 We have a requirement for commits to be signed: https://docs.github.com/en/github/authenticating-to-github/signing-commits
