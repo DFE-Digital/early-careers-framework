@@ -109,6 +109,14 @@ class School < ApplicationRecord
       .merge(LocalAuthorityDistrict.only_with_uplift(year))
   }
 
+  def contact_email
+    if induction_coordinators.any?
+      induction_coordinators.first.email
+    else
+      primary_contact_email || secondary_contact_email
+    end
+  end
+
 private
 
   def open?
