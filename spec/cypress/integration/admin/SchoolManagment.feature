@@ -10,14 +10,15 @@ Feature: Admin user managing schools
     Then the table should have 20 rows
     And the page should be accessible
 
-    When I type "include" into "search box" and press enter
-    Then "page body" should contain "1234"
+    When I type "include" into "search box"
+    And I press enter in "search box"
+    Then "page body" should contain "123456"
     And "page body" should contain "Include this school"
     And the table should have 1 row
 
     When I clear "search box"
-    And I type "1234" into "search box"
+    And I type "123456" into "search box"
     And I click on "search button"
-    Then "page body" should contain "1234"
+    Then "page body" should contain "123456"
     And "page body" should contain "Include this school"
     And the table should have 1 row

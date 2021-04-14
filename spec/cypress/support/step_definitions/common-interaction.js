@@ -56,8 +56,8 @@ When("I type {string} into {string}", (value, element) => {
   get(element).type(value);
 });
 
-When("I type {string} into {string} and press enter", (value, element) => {
-  get(element).type(`${value}{enter}`);
+When("I press enter in {string}", (element) => {
+  get(element).type(`{enter}`);
 });
 
 When("I click on {string}", (element) => {
