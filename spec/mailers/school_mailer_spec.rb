@@ -42,4 +42,54 @@ RSpec.describe SchoolMailer, type: :mailer do
       expect(nomination_confirmation_email.from).to eq(["mail@example.com"])
     end
   end
+
+  describe "#partnership_notification_email" do
+    let(:recipient) { Faker::Internet.email }
+    let(:provider_name) { Faker::Company.name }
+    let(:start_url) { "https://www.example.com" }
+    let(:challenge_url) { "https://www.example.com?token=abc123" }
+
+    let(:partnership_notification_email) do
+      SchoolMailer.partnership_notification_email(
+        recipient: recipient,
+        provider_name: provider_name,
+        start_url: start_url,
+        challenge_url: start_url,
+      )
+    end
+
+    it "renders the right headers" do
+      expect(partnership_notification_email.from).to eq(["mail@example.com"])
+      expect(partnership_notification_email.to).to eq([recipient])
+    end
+  end
+
+  describe "#send_partnership_notification_email" do
+    before(:all) do
+      RSpec::Mocks.configuration.verify_partial_doubles = false
+    end
+
+    after(:all) do
+      RSpec::Mocks.configuration.verify_partial_doubles = true
+    end
+
+    let(:recipient) { Faker::Internet.email }
+    let(:provider_name) { Faker::Company.name }
+    let(:start_url) { "https://www.example.com" }
+    let(:challenge_url) { "https://www.example.com?token=abc123" }
+    let(:expected_notify_id) { "abc123" }
+
+    it "renders the right headers" do
+      allow_any_instance_of(Mail::TestMailer).to receive_message_chain(:response, :id) { expected_notify_id }
+
+      actual_notify_id = SchoolMailer.send_partnership_notification_email(
+        recipient: recipient,
+        provider_name: provider_name,
+        start_url: start_url,
+        challenge_url: start_url,
+      )
+
+      expect(actual_notify_id).to eql expected_notify_id
+    end
+  end
 end
