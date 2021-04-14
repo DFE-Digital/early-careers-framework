@@ -16,8 +16,8 @@ class CookiesController < ApplicationController
     respond_to do |format|
       format.html do
         set_cookie_form
-        @consent_updated = true # TODO: remove this and style notice
-        redirect_to cookies_path, notice: "You’ve set your cookie preferences."
+        set_success_message(content: "You’ve set your cookie preferences.", title: "Success")
+        redirect_to cookies_path
       end
 
       format.json do
