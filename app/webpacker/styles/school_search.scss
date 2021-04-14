@@ -4,6 +4,9 @@
 
 .autocomplete__wrapper {
   background: govuk-colour("white");
+  input {
+    background: govuk-colour("white");
+  }
 }
 
 .card {
