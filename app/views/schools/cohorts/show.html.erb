@@ -28,13 +28,6 @@
           <% else %>
             <li class="app-task-list__item">
               <span class="app-task-list__task-name">
-                <%= govuk_link_to "Add estimated numbers of teachers and mentors", edit_schools_estimate_participant_path(@school_cohort.id) %>
-              </span>
-
-              <%= render AutoTagComponent.new(text: @school_cohort.number_of_participants_status) %>
-            </li>
-            <li class="app-task-list__item">
-              <span class="app-task-list__task-name">
                 <%= govuk_link_to "Sign up with a training provider", schools_cohort_partnerships_path(@cohort.start_year) %>
               </span>
 

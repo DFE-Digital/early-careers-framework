@@ -8,9 +8,6 @@ const inputs = {
   "location input": "#nomination-request-form-local-authority-id-field",
   "school input": "#nomination-request-form-school-id-field",
   "supplier name input": "#supplier-user-form-supplier-field",
-  "estimated teacher input":
-    "#school-cohort-form-estimated-teacher-count-field",
-  "estimated mentor input": "#school-cohort-form-estimated-mentor-count-field",
   "search box": "input[name=query]",
 };
 

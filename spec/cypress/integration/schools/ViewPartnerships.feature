@@ -16,7 +16,6 @@ Feature: Induction tutors viewing partnerships
     When I click on "link" containing "2021"
     Then I am on "2021 school cohorts" page
     And "page body" should contain "Sign up with a training provider"
-    And "page body" should contain "estimated numbers of teachers"
     And "page body" should contain "Add teachers"
     And "page body" should not contain "Choose your training"
     And the page should be accessible
