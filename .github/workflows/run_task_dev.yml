@@ -1,0 +1,27 @@
+name: Run task in dev space
+
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: Rake task to run
+        required: true
+        default: db:safe_reset
+      env:
+        description: App to run the task on
+        required: true
+        default: ecf-engage-and-learn-dev
+
+jobs:
+  run-task:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: CF CLI Action
+        uses: citizen-of-planet-earth/cf-cli-action@v2
+        with:
+          cf_api: https://api.london.cloud.service.gov.uk
+          cf_username: ${{ secrets.GOVPAAS_DEV_USERNAME }}
+          cf_password: ${{ secrets.GOVPAAS_DEV_PASSWORD }}
+          cf_org: dfe
+          cf_space: earlycareers-framework-dev
+          command: run-task ${{ github.event.inputs.env }} --command "cd /app && /usr/local/bin/bundle exec rake ${{ github.event.inputs.task }}" --name github-task-run

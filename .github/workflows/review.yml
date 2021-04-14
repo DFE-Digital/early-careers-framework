@@ -2,7 +2,7 @@ name: Create Review App
 on:
   pull_request:
     branches: [ develop ]
-    types: [opened, synchronize]
+    types: [ opened, synchronize, reopened ]
     paths-ignore:
       - 'documentation/**'
 
@@ -10,32 +10,100 @@ jobs:
   deploy:
     runs-on: ubuntu-20.04
     steps:
+      - uses: softprops/turnstyle@v1
+        name: Check workflow concurrency
+        with:
+          poll-interval-seconds: 20
+          same-branch-only: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: setup-inputs
         run: |
-          INPUTS='${{ format('{{"environment": "review-pr-{0}", "ref": "{1}"}}',  github.event.number, github.sha) }}'
-          echo "INPUTS=${INPUTS}" >> $GITHUB_ENV
+          echo "ENVIRONMENT=review-pr-${{ github.event.number }}" >> $GITHUB_ENV
 
-      - name: trigger-deploy
-        uses: benc-uk/workflow-dispatch@v1.1
+      - uses: actions/checkout@v2
+        name: Checkout Code
         with:
-          workflow: Deploy to Environment # Workflow name, in deploy.yml
-          token: ${{ secrets.PERSONAL_TOKEN }}
-          inputs: ${{ env.INPUTS }}
-          ref: ${{ github.event.pull_request.head.ref || github.ref }}
+          ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: Wait for Deploy App Workflow
-        id: wait_for_deploy_app
-        uses: fountainhead/action-wait-for-check@v1.0.0
+      - name: Pin Terraform version
+        uses: hashicorp/setup-terraform@v1.2.1
         with:
-          token: ${{ secrets.PERSONAL_TOKEN }}
-          ref: ${{ github.event.pull_request.head.sha || github.ref }}
-          checkName: build docker image and deploy # Job name within workflow
-          timeoutSeconds: 900
-          intervalSeconds: 15
+          terraform_version: 0.14.0
 
-      - name: Fail if child job fails
-        if: ${{ steps.wait_for_deploy_app.outputs.conclusion != 'success' }}
-        run: exit 1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_DEV_PASSWORD }}
+
+      - name: Build and push docker image from builder target
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          build-args: BUILDKIT_INLINE_CACHE=1
+          cache-from: |
+            dfedigital/early-careers-framework-dev:engage-and-learn-builder
+          push: true
+          tags: dfedigital/early-careers-framework-dev:engage-and-learn-builder
+          target: builder
+
+      - name: Build and push docker image from engage-and-learn-gems-node-modules target
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          build-args: BUILDKIT_INLINE_CACHE=1
+          cache-from: |
+            dfedigital/early-careers-framework-dev:engage-and-learn-gems-node-modules
+          push: true
+          tags: dfedigital/early-careers-framework-dev:engage-and-learn-gems-node-modules
+          target: engage-and-learn-gems-node-modules
+
+      - name: Build and push docker image from assets-precompile target
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          build-args: BUILDKIT_INLINE_CACHE=1
+          cache-from: |
+            dfedigital/early-careers-framework-dev:engage-and-learn-assets-precompile
+          push: true
+          tags: dfedigital/early-careers-framework-dev:engage-and-learn-assets-precompile
+          target: assets-precompile
+
+      - name: Build and push docker image from production target
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
+            SHA=${{ github.event.pull_request.head.sha }}
+          cache-from: |
+            dfedigital/early-careers-framework-dev:engage-and-learn-${{ env.ENVIRONMENT }}
+            dfedigital/early-careers-framework-dev:engage-and-learn-latest
+          push: true
+          tags: |
+            dfedigital/early-careers-framework-dev:engage-and-learn-${{ github.event.pull_request.head.sha }}
+            dfedigital/early-careers-framework-dev:engage-and-learn-${{ env.ENVIRONMENT }}
+            dfedigital/early-careers-framework-dev:engage-and-learn-latest
+          target: production
+
+      - name: Deploy review app to dev
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TF_VAR_paas_user: ${{ secrets.GOVPAAS_DEV_USERNAME }}
+          TF_VAR_paas_password: ${{ secrets.GOVPAAS_DEV_PASSWORD }}
+          TF_VAR_statuscake_username: ${{ secrets.STATUSCAKE_USERNAME }}
+          TF_VAR_statuscake_apikey: ${{ secrets.STATUSCAKE_APIKEY }}
+        run: |
+          export TF_VAR_paas_app_docker_image=dfedigital/early-careers-framework-dev:engage-and-learn-${{ github.event.pull_request.head.sha }}
+          cd terraform/app
+          terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-583f04ed-cc98-4c9d-b633-a3a6fa3785b5" -backend-config="key=${{ env.ENVIRONMENT }}/terraform.tfstate"
+          terraform apply -input=false -auto-approve -var-file ../workspace-variables/review.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_DEV}}"}' -var='environment=${{env.ENVIRONMENT}}'
 
       - name: comment on PR
         uses: unsplash/comment-on-pr@master

@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   def check
-    render json: { status: "OK", version: ENV["SHA"], environment: Rails.env }, status: :ok
+    render json: { status: "OK", version: release_version, sha: ENV["SHA"], environment: Rails.env }, status: :ok
   end
 
   def after_sign_in_path_for(user)
@@ -21,6 +21,10 @@ protected
     else
       new_username_path
     end
+  end
+
+  def release_version
+    ENV["RELEASE_VERSION"] || "-"
   end
 
   def configure_permitted_parameters
