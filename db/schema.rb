@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_07_182348) do
+ActiveRecord::Schema.define(version: 2021_04_14_143751) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -179,6 +179,19 @@ ActiveRecord::Schema.define(version: 2021_04_07_182348) do
     t.index ["token"], name: "index_nomination_emails_on_token", unique: true
   end
 
+  create_table "partnership_notification_emails", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "token", null: false
+    t.string "sent_to", null: false
+    t.string "notify_id"
+    t.string "notify_status"
+    t.datetime "delivered_at"
+    t.uuid "partnership_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["partnership_id"], name: "index_partnership_notification_emails_on_partnership_id"
+    t.index ["token"], name: "index_partnership_notification_emails_on_token", unique: true
+  end
+
   create_table "partnerships", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -321,6 +334,7 @@ ActiveRecord::Schema.define(version: 2021_04_07_182348) do
   add_foreign_key "lead_provider_profiles", "lead_providers"
   add_foreign_key "lead_provider_profiles", "users"
   add_foreign_key "nomination_emails", "schools"
+  add_foreign_key "partnership_notification_emails", "partnerships"
   add_foreign_key "partnerships", "cohorts"
   add_foreign_key "partnerships", "delivery_partners"
   add_foreign_key "partnerships", "lead_providers"
