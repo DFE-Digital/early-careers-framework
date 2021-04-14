@@ -40,7 +40,6 @@ const pagePaths = {
   "choose programme": "/schools/choose-programme",
   schools: "/schools",
   "2021 school cohorts": "/schools/cohorts/2021",
-  "estimate participants": /\/schools\/estimate-participants\/.*\/edit/,
   "2021 school partnerships": "/schools/cohorts/2021/partnerships",
 };
 
