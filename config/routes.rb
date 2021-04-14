@@ -23,6 +23,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     resources :school_search, only: %i[index]
+    resource :notify_callback, only: :create, path: "notify-callback"
   end
 
   namespace :demo do
@@ -30,7 +31,6 @@ Rails.application.routes.draw do
   end
 
   scope :nominations, module: :nominations do
-    resource :notify_callback, only: :create, path: "notify-callback"
     resource :request_nomination_invite, controller: :request_nomination_invite, only: [], path: "/" do
       collection do
         get "choose-location", action: :choose_location
