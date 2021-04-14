@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   resource :cookies, only: %i[show update]
   resource :privacy_policy, only: %i[show]
   resource :dashboard, controller: :dashboard, only: :show
+  resource :supplier_dashboard, controller: :supplier_dashboard, only: :show
 
   namespace :api do
     resources :school_search, only: %i[index]
@@ -136,4 +137,6 @@ Rails.application.routes.draw do
   get "/404", to: "errors#not_found", via: :all
   get "/422", to: "errors#unprocessable_entity", via: :all
   get "/500", to: "errors#internal_server_error", via: :all
+
+  resource :school_search, only: %i[show create], path: "school-search", controller: :school_search
 end
