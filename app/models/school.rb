@@ -17,6 +17,7 @@ class School < ApplicationRecord
   has_many :pupil_premiums
   has_many :nomination_emails
   has_and_belongs_to_many :induction_coordinator_profiles
+  has_many :induction_coordinators, through: :induction_coordinator_profiles, source: :user
 
   has_many :early_career_teacher_profiles
   has_many :early_career_teachers, through: :early_career_teacher_profiles, source: :user
@@ -107,6 +108,14 @@ class School < ApplicationRecord
     joins(:school_local_authority_districts, :local_authority_districts)
       .merge(LocalAuthorityDistrict.only_with_uplift(year))
   }
+
+  def contact_email
+    if induction_coordinators.any?
+      induction_coordinators.first.email
+    else
+      primary_contact_email || secondary_contact_email
+    end
+  end
 
 private
 

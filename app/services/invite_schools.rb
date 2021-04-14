@@ -16,7 +16,7 @@ class InviteSchools
 
       nomination_email = school.nomination_emails.create!(
         token: generate_token,
-        sent_to: recipient_email(school),
+        sent_to: school.contact_email,
         sent_at: Time.zone.now,
       )
       send_nomination_email(
@@ -43,10 +43,6 @@ private
       school_name: school_name,
       nomination_url: nomination_url(token),
     ).deliver_now
-  end
-
-  def recipient_email(school)
-    school.primary_contact_email || school.secondary_contact_email
   end
 
   def generate_token
