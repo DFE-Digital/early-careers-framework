@@ -3,7 +3,9 @@
 class CookiesController < ApplicationController
   before_action :set_cookie_form, only: :show
 
-  def show; end
+  def show
+    @backlink = session[:return_to]
+  end
 
   def update
     analytics_consent = params[:cookies_form][:analytics_consent]
@@ -14,8 +16,8 @@ class CookiesController < ApplicationController
     respond_to do |format|
       format.html do
         set_cookie_form
-        @consent_updated = true
-        render :show
+        set_success_message(content: "You’ve set your cookie preferences.", title: "Success")
+        redirect_to cookies_path
       end
 
       format.json do

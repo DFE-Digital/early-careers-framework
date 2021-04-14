@@ -1,21 +1,7 @@
 <% content_for :title, "Cookies" %>
+<% content_for :before_content, govuk_back_link( text: "Back", href: @backlink) %>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <% if @consent_updated %>
-      <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
-        <div class="govuk-notification-banner__header">
-          <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-            Success
-          </h2>
-        </div>
-        <div class="govuk-notification-banner__content">
-          <p class="govuk-notification-banner__heading">
-            You’ve set your cookie preferences.
-          </p>
-        </div>
-      </div>
-    <% end %>
-
     <h1 class="govuk-heading-l">Cookies</h1>
     <p>Cookies are small files saved on your phone, tablet or computer when you visit a website.</p>
     <p>We use cookies to make the Manage training for early career teachers service (the service) work and collect information about how you use our service.</p>
