@@ -129,8 +129,8 @@ Rails.application.routes.draw do
     resources :cohorts, only: :show do
       resources :partnerships, only: :index
       member do
-        get "legal"
-        get "add_participants"
+        get "programme-choice", as: :programme_choice
+        get "add-participants", as: :add_participants
       end
     end
   end

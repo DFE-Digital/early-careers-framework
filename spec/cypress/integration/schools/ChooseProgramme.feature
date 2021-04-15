@@ -21,7 +21,7 @@ Feature: Induction tutors choosing programmes
     Then I am on "2021 school cohorts" page
     And the page should be accessible
     And "page body" should contain "Choose your training"
-    And "page body" should contain "Add teachers"
+    And "page body" should contain "Add early career teachers"
 
   Scenario: Choosing Full Induction Programme
     When I click on "training provider" label
@@ -31,5 +31,5 @@ Feature: Induction tutors choosing programmes
 
     When I click on "link" containing "2021"
     Then I am on "2021 school cohorts" page
-    And "page body" should contain "Add teachers"
+    And "page body" should contain "Add early career teachers"
     And "page body" should not contain "Choose your training"

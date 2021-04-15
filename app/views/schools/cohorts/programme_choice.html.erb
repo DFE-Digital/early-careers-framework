@@ -1,0 +1,31 @@
+<% content_for :title, "Your induction programme" %>
+
+<% content_for :before_content, govuk_back_link(
+  text: "Back",
+  href: schools_cohort_path(@cohort.start_year))
+%>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-l"><%= @cohort.start_year %> cohort</span>
+    <h1 class="govuk-heading-xl govuk-!-margin-top-2">Your induction programme</h1>
+    <p>Use an approved training provider</p>
+    <h2 class="govuk-heading-m">Changing your programme</h2>
+    <p>Each induction programme is setup differently. Before you change your programme:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>make sure the programme you want to change to works for your school</li>
+      <li>if you have confirmed an agreement with a training provider, you need to speak to them      
+      <li>check the following advice on what would change on the service</li>
+    </ul>
+    <h3 class="govuk-heading-s">Using DfE accredited materials</h3>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>your early career teachers and mentors would access the materials and other resources on our service.</li>
+      <li>you will need to provide email addresses for your early career teachers and mentors</li>
+    </ul>
+    <h3 class="govuk-heading-s">Designing and delivering your own programme based on the early career framework (ECF)</h3>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>you no longer need to use this service</li>
+    </ul>
+    <p>If you need to change your programme, contact: <br><%= render MailToSupportComponent.new %></p>
+  </div>
+</div>
