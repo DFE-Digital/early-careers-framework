@@ -5,6 +5,15 @@ class NominationEmail < ApplicationRecord
 
   NOMINATION_EXPIRY_TIME = 7.days
 
+  def self.create_nomination_email(sent_at:, sent_to:, school:)
+    NominationEmail.create!(
+      sent_at: sent_at,
+      sent_to: sent_to,
+      school: school,
+      token: generate_token,
+    )
+  end
+
   def expired?
     !sent_within_last?(NOMINATION_EXPIRY_TIME)
   end
@@ -12,4 +21,20 @@ class NominationEmail < ApplicationRecord
   def sent_within_last?(relative_time)
     (sent_at + relative_time) > Time.zone.now
   end
+
+  def nomination_url
+    Rails.application.routes.url_helpers.start_nominate_induction_coordinator_url(
+      token: token,
+      host: Rails.application.config.domain,
+    )
+  end
+
+  def self.generate_token
+    loop do
+      value = SecureRandom.hex(16)
+      break value unless NominationEmail.exists?(token: value)
+    end
+  end
+
+  private_class_method :generate_token
 end

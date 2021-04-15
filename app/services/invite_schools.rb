@@ -14,16 +14,13 @@ class InviteSchools
         next
       end
 
-      nomination_email = school.nomination_emails.create!(
-        token: generate_token,
-        sent_to: school.contact_email,
+      nomination_email = NominationEmail.create_nomination_email(
         sent_at: Time.zone.now,
+        sent_to: school.contact_email,
+        school: school,
       )
-      send_nomination_email(
-        nomination_email.sent_to,
-        nomination_email.token,
-        school.name,
-      )
+
+      send_nomination_email(nomination_email)
     rescue StandardError
       logger.info "Error emailing school, urn: #{urn} ... skipping"
     end
@@ -36,27 +33,13 @@ class InviteSchools
 
 private
 
-  def send_nomination_email(recipient, token, school_name)
+  def send_nomination_email(nomination_email)
     SchoolMailer.nomination_email(
-      recipient: recipient,
-      reference: token,
-      school_name: school_name,
-      nomination_url: nomination_url(token),
+      recipient: nomination_email.sent_to,
+      reference: nomination_email.token,
+      school_name: nomination_email.school.name,
+      nomination_url: nomination_email.nomination_url,
     ).deliver_now
-  end
-
-  def generate_token
-    loop do
-      value = SecureRandom.hex(16)
-      break value unless NominationEmail.exists?(token: value)
-    end
-  end
-
-  def nomination_url(token)
-    Rails.application.routes.url_helpers.start_nominate_induction_coordinator_url(
-      token: token,
-      host: Rails.application.config.domain,
-    )
   end
 
   def logger
