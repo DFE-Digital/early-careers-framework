@@ -123,9 +123,9 @@ RSpec.describe "Users::Sessions", type: :request do
     context "when user is an admin" do
       let(:user) { create(:user, :admin) }
 
-      it "redirects to sign_in page" do
+      it "redirects to correct dashboard" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }
-        expect(response).to redirect_to(admin_suppliers_path)
+        expect(response).to redirect_to(admin_schools_path)
       end
     end
 

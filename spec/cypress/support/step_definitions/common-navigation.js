@@ -10,6 +10,7 @@ const pagePaths = {
   start: "/",
   privacy: "/privacy_policy",
   "check account": "/check-account",
+  "admin schools": "/admin/schools",
   "admin index": "/admin/administrators",
   "admin creation": "/admin/administrators/new",
   "admin confirm creation": "/admin/administrators/new/confirm",

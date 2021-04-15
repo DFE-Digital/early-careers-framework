@@ -46,10 +46,4 @@ describe("Accessibility", () => {
     cy.get("h1").should("contain", "User dashboard");
     cy.checkA11y();
   });
-
-  it("Admin suppliers should be accessible", () => {
-    cy.login("admin");
-    cy.get("h1").should("contain", "Suppliers");
-    cy.checkA11y();
-  });
 });

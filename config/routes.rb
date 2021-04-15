@@ -63,6 +63,8 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
+    resources :schools, only: :index
+
     scope :suppliers, module: "suppliers" do
       resources :suppliers, only: :index, path: "/"
       scope "new" do
