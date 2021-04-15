@@ -1,0 +1,18 @@
+<% content_for :before_content, govuk_back_link(
+  text: "Back",
+  href: root_url) # what is the back path here, could we use an internal referer helper?
+%>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Do you know how you want to run your statutory induction programme?</h1>
+      <p class="govuk-body">You will be choosing a programme for any new early career teachers. They will complete this programme over 2 years.</p>
+      <p class="govuk-body">Only use this service if your school wants to:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>use an approved training provider</li>
+      </ul>
+      <p class="govuk-body">Or</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>use the DfE accredited training materials</li>
+      </ul>
+      <p class="govuk-body">Not sure> Check our guidance on <%= govuk_link_to "induction programmes for early career teacher.", "https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview" %></p>
+      <%= govuk_link_to("Continue", schools_choose_programme_path, button: true)  %>

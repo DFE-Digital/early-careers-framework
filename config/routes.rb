@@ -123,7 +123,11 @@ Rails.application.routes.draw do
 
   namespace :schools do
     resource :dashboard, controller: :dashboard, only: :show, path: "/"
-    resource :choose_programme, controller: :choose_programme, only: %i[show create], path: "choose-programme"
+    resource :choose_programme, controller: :choose_programme, only: %i[show create], path: "choose-programme" do
+      member do
+        get "advisory"
+      end
+    end
     resources :cohorts, only: :show do
       resources :partnerships, only: :index
       member do

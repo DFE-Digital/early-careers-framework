@@ -25,7 +25,7 @@ private
     )
 
     unless @school_cohort
-      redirect_to schools_choose_programme_path
+      redirect_to advisory_schools_choose_programme_path
     end
   end
 end

@@ -4,6 +4,11 @@ class Schools::ChooseProgrammeController < Schools::BaseController
   skip_after_action :verify_authorized
   skip_after_action :verify_policy_scoped
 
+  def advisory
+    school = current_user.induction_coordinator_profile.schools.first
+    redirect_to helpers.profile_dashboard_url(current_user) if school.chosen_programme?(Cohort.current)
+  end
+
   def show
     school = current_user.induction_coordinator_profile.schools.first
 
