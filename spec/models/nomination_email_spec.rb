@@ -10,7 +10,7 @@ RSpec.describe NominationEmail, type: :model do
   describe ".create_nomination_email" do
     let(:school) { create(:school) }
     let(:email) { Faker::Internet.email }
-    let(:sent_at) { Time.zone.new(2020, 3, 4) }
+    let(:sent_at) { Time.utc(2020, 3, 4) }
 
     it "creates a record with a token" do
       expect {

@@ -2,15 +2,17 @@
 
 class NominationEmail < ApplicationRecord
   belongs_to :school
+  belongs_to :partnership_notification_email, optional: true
 
   NOMINATION_EXPIRY_TIME = 21.days
 
-  def self.create_nomination_email(sent_at:, sent_to:, school:)
+  def self.create_nomination_email(sent_at:, sent_to:, school:, partnership_notification_email: nil)
     NominationEmail.create!(
       sent_at: sent_at,
       sent_to: sent_to,
       school: school,
       token: generate_token,
+      partnership_notification_email: partnership_notification_email,
     )
   end
 

@@ -28,10 +28,11 @@ RSpec.describe PartnershipNotificationService do
       let(:school) { create(:school, primary_contact_email: contact_email) }
 
       it "emails the school primary contact" do
-        expect(SchoolMailer).to receive(:send_partnership_notification_email).with(
+        expect(SchoolMailer).to receive(:send_school_partnership_notification_email).with(
           hash_including(
             provider_name: @delivery_partner.name,
-            start_url: String,
+            cohort: String,
+            nominate_url: String,
             challenge_url: String,
             recipient: contact_email,
           ),
@@ -52,9 +53,10 @@ RSpec.describe PartnershipNotificationService do
       end
 
       it "emails the induction coordinator" do
-        expect(SchoolMailer).to receive(:send_partnership_notification_email).with(
+        expect(SchoolMailer).to receive(:send_coordinator_partnership_notification_email).with(
           hash_including(
             provider_name: @delivery_partner.name,
+            cohort: String,
             start_url: String,
             challenge_url: String,
             recipient: contact_email,

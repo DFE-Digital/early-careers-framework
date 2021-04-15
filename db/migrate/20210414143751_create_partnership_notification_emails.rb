@@ -5,6 +5,7 @@ class CreatePartnershipNotificationEmails < ActiveRecord::Migration[6.1]
     create_table :partnership_notification_emails do |t|
       t.string :token, null: false
       t.string :sent_to, null: false
+      t.string :email_type, null: false
       t.string :notify_id
       t.string :notify_status
       t.datetime :delivered_at
