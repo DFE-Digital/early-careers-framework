@@ -133,6 +133,13 @@ Rails.application.routes.draw do
     end
     resources :cohorts, only: :show do
       resources :partnerships, only: :index
+
+      namespace :core_programme do
+        resource :materials, only: [] do
+          get :info, on: :member
+        end
+      end
+
       member do
         get "programme-choice", as: :programme_choice
         get "add-participants", as: :add_participants

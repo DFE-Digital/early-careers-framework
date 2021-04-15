@@ -20,7 +20,7 @@ class SchoolCohort < ApplicationRecord
   end
 
   def choose_training_materials_status
-    "Cannot start yet"
+    "to do"
   end
 
   def status

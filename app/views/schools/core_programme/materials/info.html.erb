@@ -1,0 +1,226 @@
+<% content_for :before_content, govuk_back_link( text: "Back", href: :back) %>
+
+<span class="govuk-caption-l">Cohort <%= @cohort.start_year %></span>
+<h1 class="govuk-heading-l">Choose study materials for your early career teachers</h1>
+
+<p>It’s important to choose the right training materials for your school.</p>
+
+<p>Consider things like:</p>
+<ul class="govuk-list govuk-list--bullet">
+  <li>the style of content that’s likely to work for your teachers and mentors</li>
+  <li>which programme structure will best suit your school’s needs</li>
+  <li>whether you’d prefer some flexibility or a more prescriptive approach</li>
+</ul>
+
+<p>The 4 options all offer theory and practical classroom techniques that:</p>
+<ul class="govuk-list govuk-list--bullet">
+  <li>cover the early career framework</li>
+  <li>are aligned to the teachers’ standards</li>
+</ul>
+
+<p>As you can see below, they each take a different approach to the way they present their self-study materials.</p>
+<p>Once you’ve chosen which programme you want to follow, you can set up accounts for your teachers and mentors to access the self-study materials.</p>
+
+<h2 class="govuk-heading-m">Ambition</h2>
+
+<p>The first year of this programme consists of one module per term broken down into weekly topics. The second year follows the same modules, focusing on areas that need strengthening. The weekly topics feature:</p>
+<ul class="govuk-list govuk-list--bullet">
+  <li>evidence summaries</li>
+  <li>videos of experts talking through their insights and how these work in practice</li>
+  <li>a quiz to check teachers have understood the evidence summary</li>
+  <li>questions for teachers to discuss with their mentors</li>
+</ul>
+
+<p><%= govuk_link_to "See an example of an Ambition topic", "https://www.early-career-framework.education.gov.uk/ambition/ambition-institute/self-directed-study-materials/1-behaviour/2-routines/" %></p>
+
+<%= govuk_accordion do |accordion| %>
+  <%= accordion.add_section title: "Module 1: behaviour" do %>
+    <p>Teachers will cover:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>how to establish an effective learning environment</li>
+      <li>how to effectively manage behaviour</li>
+      <li>the importance of holding and promoting high expectations for all pupils</li>
+    </ul>
+  <% end %>
+
+  <%= accordion.add_section title: "Module 2: instruction" do %>
+    <p>Teachers will cover:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>the link between effective instruction and pupil learning</li>
+      <li>the elements of explicit instruction and the ‘I-we-you’ model as a useful way of approaching this</li>
+      <li>how instruction can support more effective pupil thinking</li>
+    </ul>
+  <% end %>
+
+  <%= accordion.add_section title: "Module 3: subject" do %>
+    <p>Teachers will cover:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>the curriculum</li>
+      <li>your mental model of the subject or phase you teach and its implications for your planning</li>
+      <li>how to know what pupils have understood, the barriers you face in doing so and how to respond to their needs</li>
+    </ul>
+  <% end %>
+<% end %>
+
+<p>View Ambition’s programme handbook in PDF format:</p>
+<ul class="govuk-list govuk-list--bullet">
+  <li><%= govuk_link_to "Ambition (PDF, 10 pages)", "https://www.early-career-framework.education.gov.uk/ambition/wp-content/uploads/sites/3/2020/08/Ambition-EarlyCareerTeachers_2020_ProgrammeHandbook.pdf" %></li>
+</ul>
+
+<h2 class="govuk-heading-m">Education Development Trust</h2>
+
+<p>This programme consists of 2 modules per term across the 2-year programme. They are broken down into weekly activities which enable teachers to:</p>
+<ul class="govuk-list govuk-list--bullet">
+  <li>understand the evidence behind education research and its implications on teaching</li>
+  <li>learn practical ideas to try in the classroom</li>
+  <li>reflect on their development and identify ways to improve</li>
+</ul>
+
+<p><%= govuk_link_to "See an example of an Education Development Trust topic", "https://www.early-career-framework.education.gov.uk/edt/edt-early-career-framework/self-directed-study-materials/establishing-a-positive-climate-for-learning/1-3-learning-about-classroom-routines/" %>
+
+<%= govuk_accordion do |accordion| %>
+  <% accordion.add_section title: "Module 1: establishing a positive climate for learning" do %>
+    <p>Teachers will learn about teaching your pupils how to behave in the classroom, setting clear expectations and reinforcing these with consistent routines.</p>
+  <% end %>
+
+  <% accordion.add_section title: "Module 2: how pupils learn - memory and cognition" do %>
+    <p>Teachers will gain an understanding of how the brain works, and how they can then design more effective learning for their pupils.</p>
+  <% end %>
+
+  <% accordion.add_section title: "Module 3: developing effective classroom practice - teaching and adapting" do %>
+    <p>Teachers will focus on the fundamental techniques they can use to become a more effective teacher.</p>
+  <% end %>
+
+  <% accordion.add_section title: "Module 4: the importance of subject and curriculum knowledge" do %>
+    <p>Teachers will learn practical ways to develop their subject and curriculum knowledge.</p>
+  <% end %>
+
+  <% accordion.add_section title: "Module 5: assessment, feedback and questioning" do %>
+    <p>Teachers will work on developing effective assessment and feedback practices.</p>
+  <% end %>
+
+  <% accordion.add_section title: "Module 6: a people profession" do %>
+    <p>Teachers will focus on developing strong professional relationships to build the best outcomes for their pupils.</p>
+  <% end %>
+
+  <% accordion.add_section title: "Module 7: embedding a positive climate for learning" do %>
+    <p>Teachers will look at what motivates pupils so they can develop a really purposeful learning environment.</p>
+  <% end %>
+
+  <% accordion.add_section title: "Module 8: how pupils learn - memory and cognition" do %>
+    <p>Teachers will consider how they can make new learning stick over time so pupils remember what they've been taught.</p>
+  <% end %>
+
+  <% accordion.add_section title: "Module 9: enhancing classroom practice - grouping and tailoring" do %>
+    <p>Teachers will enhance their teaching effectiveness by learning advanced group and pair working skills.</p>
+  <% end %>
+
+  <% accordion.add_section title: "Module 10: revisiting the importance of subject and curriculum knowledge" do %>
+    <p>Teachers will focus on how they can use their in-depth understanding of the subjects they teach to strengthen their pupils' knowledge.</p>
+  <% end %>
+
+  <% accordion.add_section title: "Module 11: deepening assessment, feedback and questioning" do %>
+    <p>Teachers will build on their existing knowledge to develop further practical ways to hone their assessment, feedback and questioning techniques.</p>
+  <% end %>
+<% end %>
+
+<p>View Education Development Trust’s programme handbook in PDF format:</p>
+<ul class="govuk-list govuk-list--bullet">
+  <li><%= govuk_link_to "Education Development Trust (PDF, 2 pages)", "https://www.early-career-framework.education.gov.uk/edt/edt-early-career-framework/self-directed-study-materials/establishing-a-positive-climate-for-learning/1-3-learning-about-classroom-routines/" %></li>
+</ul>
+
+
+<h2 class='govuk-heading-m'>Teach First</h2>
+<p>This programme consists of 6 half-termly modules during the first year of induction. The second year follows the same modules, focusing on areas that need strengthening.</p>
+
+<p>The modules are broken down into weekly topics where the teachers will:</p>
+<ul class="govuk-list govuk-list--bullet">
+  <li>watch video tutorials from education experts</li>
+  <li>read case studies about the topic</li>
+  <li>answer questions which they can then discuss with their mentor</li>
+</ul>
+
+<p><%= govuk_link_to "See an example of a Teach First topic", "https://www.early-career-framework.education.gov.uk/teachfirst/teach-first/self-directed-study-material/1-how-can-you-create-an-effective-learning-environment/1-establishing-effective-routines-51-minutes/" %></p>
+
+<%= govuk_accordion do |accordion| %>
+  <% accordion.add_section title: "Module 1: how to create an effective learning environment" do %>
+    <p>Teachers will explore what effective learning environments look like and strategies they can use to achieve them.</p>
+  <% end %>
+
+  <% accordion.add_section title: "Module 2: how do pupils learn?" do %>
+    <p>Teachers will explore the findings and evidence gathered during studies of how pupils learn, and the related implications for teaching.</p>
+  <% end %>
+
+  <% accordion.add_section title: "Module 3: what makes classroom practice effective?" do %>
+    <p>Teachers will hear an education expert talking about the features of effective classroom practice and why they are so important. They’ll then explore the features in detail and have time to plan them into their sequences of lessons.</p>
+  <% end %>
+
+  <% accordion.add_section title: "Module 4: how to use assessment and feedback to greatest effect" do %>
+    <p>Teachers will hear from education experts about why assessment should be at the heart of their teaching. They'll also explore ways to give purposeful feedback to their pupils and what they can learn from summative data sets.</p>
+  <% end %>
+
+  <% accordion.add_section title: "Module 5: how to support all pupils to succeed" do %>
+    <p>Teachers will hear a variety of educational specialists talk about ways to support all pupils to succeed across the curriculum, and why this is important.</p>
+  <% end %>
+
+  <% accordion.add_section title: "Module 6: how to design a coherent curriculum" do %>
+    <p>Teachers will learn how to design a carefully sequenced and coherent scheme of work and how this will improve learning for their pupils.</p>
+  <% end %>
+<% end %>
+
+<p>View Teach First’s programme handbook in PDF format:</p>
+<ul class="govuk-list govuk-list--bullet">
+  <li><%= govuk_link_to "Teach First (PDF, 30 pages)", "https://www.early-career-framework.education.gov.uk/teachfirst/wp-content/uploads/sites/4/2020/10/Early-Career-Framework-Programme-SLT-and-Induction-Lead-Handbook-1.pdf" %></li>
+</ul>
+
+<h2 class="govuk-heading-m">UCL Early Career Teacher Consortium</h2>
+
+<p>This programme consists of 8 modules across the 2 years. The modules are broken down into weekly topics where the teachers will:</p>
+<ul class="govuk-list govuk-list--bullet">
+  <li>read research about the topic</li>
+  <li>learn practical skills from case studies</li>
+  <li>reflect on what they’ve learnt</li>
+</ul>
+
+<p><%= govuk_link_to "See an example of a UCL topic", "https://www.early-career-framework.education.gov.uk/ucl/ucl/2-understanding-teachers-as-role-models/4-making-productive-use-of-assessment/5-planning-effective-and-manageable-marking-and-feedback/" %></p>
+
+<%= govuk_accordion do |accordion| %>
+  <% accordion.add_section title: "Module 1: enabling pupil learning" do %>
+    <p>Teachers will focus on how they set up their classroom as a learning environment. They'll be able to reflect on the different ways they can influence their environment, and learn practical strategies that keep pupils safe, motivated and focused on learning.</p>
+  <% end %>
+
+  <% accordion.add_section title: "Module 2: engaging pupils in learning" do %>
+    <p>Teachers will look at the impact of pupils’ prior knowledge on their learning and how knowledge changes through the cooperation of working and long-term memory.</p>
+  <% end %>
+
+  <% accordion.add_section title: "Module 3: developing quality pedagogy" do %>
+    <p>Teachers will extend their knowledge of effective modelling that enables pupils to tackle difficult concepts.</p>
+  <% end %>
+
+  <% accordion.add_section title: "Module 4: making productive use of assessment" do %>
+    <p>Teachers will build on their existing knowledge of assessment principles.</p>
+  <% end %>
+
+  <% accordion.add_section title: "Module 5: fulfilling professional responsibilities" do %>
+    <p>Teachers will consider what it means to be professional, and approaches to managing their professional development.</p>
+  <% end %>
+
+  <% accordion.add_section title: "Module 6: enabling pupil learning, part 2" do %>
+    <p>Teachers will focus on one particular part of their teaching to evaluate the impact their practices have on their pupils.</p>
+  <% end %>
+
+  <% accordion.add_section title: "Module 7: engaging pupils in learning, part 2" do %>
+    <p>Teachers will focus on how to improve their teaching without adding to their workload.</p>
+  <% end %>
+
+  <% accordion.add_section title: "Module 8: developing quality pedagogy and making use of assessment, part 2" do %>
+    <p>Teachers will look at how to gather evidence about the impact their teaching is having, followed by practical tips on altering their practices to get better results.</p>
+  <% end %>
+<% end %>
+
+<p>View UCL’s programme handbook in PDF format:</p>
+<ul class="govuk-list givuk-list-bullet">
+  <li><%= govuk_link_to "UCL Early Career Teacher Consortium (PDF, 74 pages)", "https://www.early-career-framework.education.gov.uk/ucl/wp-content/uploads/sites/5/2020/12/Programme-Handbook-Updated.pdf" %></li>
+</ul>
+
+<p>If you’re still not sure, you can <%= govuk_link_to "contact us", "mailto:continuing-professional-development@digital.education.gov.uk" %> for more information</p>
