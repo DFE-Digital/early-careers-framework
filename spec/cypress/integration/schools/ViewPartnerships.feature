@@ -2,8 +2,12 @@ Feature: Induction tutors viewing partnerships
   Induction tutors should be able to view details of their school partnership
 
   Background:
-    Given cohort was created with start_year "2021"
+   Given cohort was created with start_year "2021"
     And I am logged in as an "induction_coordinator"
+    Then I should be on "choose programme advisory" page
+    And the page should be accessible
+
+    When I click on "link" containing "Continue"
     Then I should be on "choose programme" page
     And the page should be accessible
 
