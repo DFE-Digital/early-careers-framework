@@ -7,6 +7,28 @@ RSpec.describe NominationEmail, type: :model do
     it { is_expected.to belong_to(:school) }
   end
 
+  describe ".create_nomination_email" do
+    let(:school) { create(:school) }
+    let(:email) { Faker::Internet.email }
+    let(:sent_at) { Time.zone.new(2020, 3, 4) }
+
+    it "creates a record with a token" do
+      expect {
+        NominationEmail.create_nomination_email(
+          sent_at: sent_at,
+          sent_to: email,
+          school: school,
+        )
+      }.to change { NominationEmail.count }.by 1
+
+      nomination_email = NominationEmail.first
+      expect(nomination_email.sent_at).to eql sent_at
+      expect(nomination_email.sent_to).to eql email
+      expect(nomination_email.school).to eql school
+      expect(nomination_email.token.length).to eql 32
+    end
+  end
+
   describe "expired email" do
     let(:expired_nomination_email) { create(:nomination_email, :expired_nomination_email) }
 
