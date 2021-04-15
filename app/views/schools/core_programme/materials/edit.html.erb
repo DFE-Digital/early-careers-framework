@@ -1,6 +1,6 @@
-<% content_for :before_content, govuk_back_link( text: "Back", href: :back) %>
+<% content_for :before_content, govuk_back_link( text: "Back", href: { action: :info }) %>
 
-<span class="govuk-caption-l">Cohort <%= @cohort.start_year %></span>
+<span class="govuk-caption-l"><%= @cohort.start_year %> cohort</span>
 <h1 class="govuk-heading-l">Which training materials do you want this cohort to use?</h1>
 
 <%= form_for @form, url: { action: :update }, method: :put do |f| %>

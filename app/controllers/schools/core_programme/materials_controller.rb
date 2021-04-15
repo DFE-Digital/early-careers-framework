@@ -5,8 +5,11 @@ class Schools::CoreProgramme::MaterialsController < Schools::BaseController
   skip_after_action :verify_policy_scoped
 
   before_action :set_school_cohort
+  before_action :prevent_double_submission, only: %i(info edit update)
 
   def info; end
+  def show; end
+
   def edit
     @form = CoreInductionProgrammeChoiceForm.new
   end
@@ -23,5 +26,13 @@ class Schools::CoreProgramme::MaterialsController < Schools::BaseController
     )
 
     redirect_to action: :success
+  end
+
+  private
+
+  def prevent_double_submission
+    return if @school_cohort.core_induction_programme_id.blank?
+
+    redirect_to action: :show
   end
 end

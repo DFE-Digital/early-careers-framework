@@ -1,6 +1,6 @@
-<% content_for :before_content, govuk_back_link( text: "Back", href: :back) %>
+<% content_for :before_content, govuk_back_link( text: "Back", href: schools_cohort_path(@cohort.start_year)) %>
 
-<span class="govuk-caption-l">Cohort <%= @cohort.start_year %></span>
+<span class="govuk-caption-l"><%= @cohort.start_year %> cohort</span>
 <h1 class="govuk-heading-l">Choose study materials for your early career teachers</h1>
 
 <p>It’s important to choose the right training materials for your school.</p>
