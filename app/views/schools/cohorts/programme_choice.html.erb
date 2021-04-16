@@ -2,19 +2,19 @@
 
 <% content_for :before_content, govuk_back_link(
   text: "Back",
-  href: schools_cohort_path(@cohort.start_year))
+  href: schools_cohort_path(@cohort.display_name))
 %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <span class="govuk-caption-l"><%= @cohort.start_year %> cohort</span>
+    <span class="govuk-caption-l"><%= @cohort.display_name %> cohort</span>
     <h1 class="govuk-heading-xl govuk-!-margin-top-2">Your induction programme</h1>
     <p>Use an approved training provider</p>
     <h2 class="govuk-heading-m">Changing your programme</h2>
     <p>Each induction programme is setup differently. Before you change your programme:</p>
     <ul class="govuk-list govuk-list--bullet">
       <li>make sure the programme you want to change to works for your school</li>
-      <li>if you have confirmed an agreement with a training provider, you need to speak to them      
+      <li>if you have confirmed an agreement with a training provider, you need to speak to them</li>   
       <li>check the following advice on what would change on the service</li>
     </ul>
     <h3 class="govuk-heading-s">Using DfE accredited materials</h3>

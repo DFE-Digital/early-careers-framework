@@ -2,12 +2,12 @@
 
 <% content_for :before_content, govuk_back_link(
   text: "Back",
-  href: schools_cohort_path(@cohort.start_year))
+  href: schools_cohort_path(@cohort.display_name))
 %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <span class="govuk-caption-l"><%= @cohort.start_year %> cohort</span>
+    <span class="govuk-caption-l"><%= @cohort.display_name %> cohort</span>
     <h1 class="govuk-heading-xl">Add early career teachers and mentors</h1>
     <p>From <strong>July</strong>, you can confirm which early career teachers and mentors are starting a programme this year.</p>
     <p>We will let you know when you can get started.</p>
