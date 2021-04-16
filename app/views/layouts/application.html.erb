@@ -26,12 +26,14 @@
     })(window,document,'script','dataLayer','GTM-N58Z5PG');</script>
     <!-- End Google Tag Manager -->
 
+    <% gtm_id = Rails.env.production? ? 'G-5707QPHZE0' : 'G-LR5YHTJD65' %>
+
     <% if cookies[:cookie_consent_1] == "on" %>
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-5707QPHZE0"></script>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=<%= gtm_id %>"></script>
     <% else %>
       <script>
         // For adding the script once the user has given permission
-        window.ecfAnalyticsScript = "https://www.googletagmanager.com/gtag/js?id=G-5707QPHZE0";
+        window.ecfAnalyticsScript = "https://www.googletagmanager.com/gtag/js?id=<%= gtm_id %>";
       </script>
     <% end %>
     <script>
@@ -39,7 +41,7 @@
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
 
-      gtag('config', 'G-5707QPHZE0');
+      gtag('config', '<%= gtm_id %>');
     </script>
   </head>
 
