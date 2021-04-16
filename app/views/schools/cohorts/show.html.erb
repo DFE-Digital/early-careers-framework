@@ -37,7 +37,7 @@
                 edit_schools_cohort_programme_path(@cohort.start_year) %>
             </span>
 
-            <%= render AutoTagComponent.new(text: @school_cohort.choose_training_materials_status) %>
+            <%= render AutoTagComponent.new(text: "done") %>
           </li>
 
           <% if @school_cohort.school_chose_cip? %>
