@@ -8,10 +8,10 @@ class SchoolCohortPolicy < ApplicationPolicy
     user.induction_coordinator_profile.school_ids.include?(record.school_id)
   end
 
-  alias update? show?
-  alias info? update?
-  alias edit? update?
-  alias success? update?
+  alias_method :update?, :show?
+  alias_method :info?, :update?
+  alias_method :edit?, :update?
+  alias_method :success?, :update?
 
   class Scope < Scope
     def resolve
@@ -20,7 +20,7 @@ class SchoolCohortPolicy < ApplicationPolicy
       scope.where(
         school_id: School.joins(:induction_coordinator_profiles)
           .where(induction_coordinator_profiles: { user_id: user.id })
-          .select(:id)
+          .select(:id),
       )
     end
   end
