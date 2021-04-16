@@ -18,6 +18,7 @@ Rails.application.routes.draw do
 
   resource :cookies, only: %i[show update]
   resource :privacy_policy, only: %i[show]
+  resource :accessibility_statement, only: :show, path: "accessibility-statement"
   resource :dashboard, controller: :dashboard, only: :show
   resource :supplier_dashboard, controller: :supplier_dashboard, only: :show
 
