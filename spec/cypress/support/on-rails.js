@@ -12,6 +12,11 @@ Cypress.Commands.add("appCommands", (body) => {
     .then((response) => response.body);
 });
 
+let createdRecords = {}
+export function getCreatedRecord (factory, index = 0) {
+  return (createdRecords[factory] && createdRecords[factory][index])
+}
+
 Cypress.Commands.add("app", (name, commandOptions) =>
   cy.appCommands({ name, options: commandOptions }).then((body) => body[0])
 );
@@ -23,7 +28,12 @@ Cypress.Commands.add("appScenario", (name, options = {}) =>
 Cypress.Commands.add("appEval", (code) => cy.app("eval", code));
 
 Cypress.Commands.add("appFactories", (options) =>
-  cy.app("factory_bot", options)
+  cy.app("factory_bot", options).then(records => {
+    options.forEach(([command, factory, opts], index) => {
+      createdRecords[factory] = createdRecords[factory] || []
+      createdRecords[factory].push(records[index])
+    })
+  })
 );
 
 Cypress.Commands.add("appFixtures", (options) => {

@@ -1,6 +1,13 @@
 import "@percy/cypress";
+import { getCreatedRecord } from "./on-rails"
 
 // Heads up, this is NOT used in the Cucumber specs - see factory-bot.js
+
+Cypress.Commands.add("loginCreated", (factory) => {
+  cy.visit(`/users/confirm_sign_in?login_token=${getCreatedRecord(factory).login_token}`);
+  cy.get('[action="/users/sign_in_with_token"] [name="commit"]').click();
+})
+
 Cypress.Commands.add("login", (...traits) => {
   cy.appFactories([["create", "user", ...traits]])
     .as("userData")

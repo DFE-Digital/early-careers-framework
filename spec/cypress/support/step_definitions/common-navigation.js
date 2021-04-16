@@ -1,7 +1,16 @@
 import { Given, When, Then } from "cypress-cucumber-preprocessor/steps";
+import { getCreatedRecord } from "../on-rails"
 
 Given("I am logged in as a {string}", (user) => cy.login(user));
 Given("I am logged in as an {string}", (user) => cy.login(user));
+Given("I am logged in as an induction coordinator for created school", () => {
+  const schoolId = getCreatedRecord('school').id;
+  cy.appFactories([
+    ["create", "user", "induction_coordinator", { school_ids: [schoolId]}]
+  ]).then(() => {
+    cy.loginCreated("user")
+  })
+})
 
 Given("scenario {string} has been run", (scenario) => cy.appScenario(scenario));
 
@@ -10,6 +19,10 @@ const pagePaths = {
   start: "/",
   privacy: "/privacy-policy",
   accessibility: "/accessibility-statement",
+  "2021 cohort CIP materials info": "/schools/cohorts/2021/core-programme/materials/info",
+  "2021 cohort CIP materials selection": "/schools/cohorts/2021/core-programme/materials/edit",
+  "2021 cohort CIP materials success": "/schools/cohorts/2021/core-programme/materials/success",
+  "2021 cohort CIP materials": "/schools/cohorts/2021/core-programme/materials",
   "check account": "/check-account",
   "admin schools": "/admin/schools",
   "admin index": "/admin/administrators",

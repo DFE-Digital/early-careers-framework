@@ -15,10 +15,10 @@ FactoryBot.define do
     trait :induction_coordinator do
       induction_coordinator_profile { build(:induction_coordinator_profile) }
       transient do
-        schools { induction_coordinator_profile.schools }
+        school_ids { induction_coordinator_profile.school_ids }
       end
       after(:build) do |user, evaluator|
-        user.induction_coordinator_profile.schools = evaluator.schools
+        user.induction_coordinator_profile.school_ids = evaluator.school_ids
       end
     end
 

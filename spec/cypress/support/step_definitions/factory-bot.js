@@ -1,10 +1,18 @@
 import { Given } from "cypress-cucumber-preprocessor/steps";
+import { getCreatedRecord } from "../on-rails"
 
 const parseArgs = (argsString) => {
   const args = {};
   argsString.split(/ and |, /).forEach((argString) => {
-    const [, key, value] = /([^ ]+) "([^"]+)"/.exec(argString);
-    args[key] = value;
+    if (argString.split(" ").includes("created")) {
+      let [, factory, as] = /created ([^ ]+)(?: as ([^ ]+))?/.exec(argString);
+      as = as || factory;
+
+      args[`${as}_id`] = getCreatedRecord(factory).id;
+    } else {
+      const [, key, value] = /([^ ]+) "([^"]+)"/.exec(argString);
+      args[key] = value;
+    }
   });
 
   return args;
@@ -29,7 +37,7 @@ Given("{word} was created with {}", (factory, args) => {
 Given("{word} was created as {string} with {}", (factory, traits, args) => {
   cy.appFactories([
     ["create", factory, ...traits.split(", "), parseArgs(args)],
-  ]);
+  ])
 });
 
 const login = (traits, args) => {

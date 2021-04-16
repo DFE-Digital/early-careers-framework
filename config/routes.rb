@@ -135,7 +135,7 @@ Rails.application.routes.draw do
       resources :partnerships, only: :index
       resource :programme, only: %i[edit], controller: 'choose_programme'
 
-      namespace :core_programme do
+      namespace :core_programme, path: 'core-programme' do
         resource :materials, only: %i(edit update show) do
           get :info
           get :success
