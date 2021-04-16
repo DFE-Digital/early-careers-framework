@@ -13,12 +13,19 @@ FactoryBot.define do
     end
 
     trait :induction_coordinator do
-      induction_coordinator_profile { build(:induction_coordinator_profile) }
+      induction_coordinator_profile
+
       transient do
         schools { induction_coordinator_profile.schools }
+        school_ids {}
       end
+
       after(:build) do |user, evaluator|
-        user.induction_coordinator_profile.schools = evaluator.schools
+        if evaluator.school_ids.present?
+          user.induction_coordinator_profile.school_ids = evaluator.school_ids
+        else
+          user.induction_coordinator_profile.schools = evaluator.schools
+        end
       end
     end
 

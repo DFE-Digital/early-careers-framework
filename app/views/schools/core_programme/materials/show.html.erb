@@ -1,0 +1,20 @@
+<% content_for :before_content, govuk_back_link( text: "Back", href: schools_cohort_path(@cohort.start_year)) %>
+
+<span class="govuk-caption-l"><%= @cohort.start_year %> cohort</span>
+<h1 class="govuk-heading-l">Choose what training materials you want to use for this cohort</h1>
+
+<p><strong>Current training materials:</strong> <%= @school_cohort.core_induction_programme.name %></p>
+
+<h2 class="govuk-heading-m">Your options if you want to change</h2>
+<p>Choose the following materials</p>
+<ul class='govuk-list govuk-list--bullet'>
+  <% CoreInductionProgramme.all.without(@school_cohort.core_induction_programme).each do |cip| %>
+    <li><%= govuk_link_to cip.name, '#' %></li>
+  <% end %>
+</ul>
+
+<h2 class="govuk-heading-m">How to change the type of training</h2>
+
+<p>To change the type of training this cohort is doing, contact <%= render MailToSupportComponent.new %>
+
+<%= govuk_warning text: "If your participants have begun their training they will loose progress and will have to start the new course from the beginning" %>

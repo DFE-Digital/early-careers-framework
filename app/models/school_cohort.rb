@@ -10,6 +10,7 @@ class SchoolCohort < ApplicationRecord
 
   belongs_to :cohort
   belongs_to :school
+  belongs_to :core_induction_programme, optional: true
 
   def training_provider_status
     school.partnerships&.exists?(cohort: cohort) ? "Done" : "To do"
@@ -20,7 +21,7 @@ class SchoolCohort < ApplicationRecord
   end
 
   def choose_training_materials_status
-    "Cannot start yet"
+    core_induction_programme_id ? "Done" : "To do"
   end
 
   def status
@@ -29,6 +30,14 @@ class SchoolCohort < ApplicationRecord
     else
       fip_status
     end
+  end
+
+  def school_chose_cip?
+    induction_programme_choice == "core_induction_programme"
+  end
+
+  def school_chose_fip?
+    induction_programme_choice == "full_induction_programme"
   end
 
 private
