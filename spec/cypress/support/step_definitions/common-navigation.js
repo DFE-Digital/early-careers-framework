@@ -22,8 +22,8 @@ const pagePaths = {
   "choose delivery partner cohorts":
     "/admin/suppliers/new/delivery-partner/choose-cohorts",
   "new delivery partner review": "/admin/suppliers/new/delivery-partner/review",
-  "delivery partner edit": /\/delivery-partners\/.*\/edit/,
-  "delivery partner delete": /\/delivery-partners\/.*\/delete/,
+  "delivery partner edit": "/delivery-partners/:id/edit",
+  "delivery partner delete": "/delivery-partners/:id/delete",
   "users sign in": "/users/sign_in",
   "resend nominations choose location": "nominations/choose-location",
   "resend nominations choose school": "nominations/choose-school",
@@ -37,7 +37,7 @@ const pagePaths = {
   "new lead provider user": "/admin/suppliers/users/new",
   "new lead provider user details": "/admin/suppliers/users/new/user-details",
   "new lead provider user review": "/admin/suppliers/users/new/review",
-  "lead provider user delete": /\/lead-providers\/users\/.*\/delete/,
+  "lead provider user delete": "/lead-providers/users/:id/delete",
   "choose programme": "/schools/choose-programme",
   schools: "/schools",
   "2021 school cohorts": "/schools/cohorts/2021",
@@ -46,6 +46,11 @@ const pagePaths = {
 
 Given("I am on {string} page", (page) => {
   const path = pagePaths[page];
+  cy.visit(path);
+});
+
+Given("I am on {string} page with id {string}", (page, id) => {
+  const path = pagePaths[page].replace(":id", id);
   cy.visit(path);
 });
 
@@ -66,10 +71,13 @@ const assertOnPage = (page) => {
     throw new Error(`Path not found for ${page}`);
   }
 
-  if (typeof path === "string") {
-    cy.location("pathname").should("equal", path);
+  if (path.includes(":id")) {
+    const pathRegex = new RegExp(
+      path.replace(/\//g, "\\/").replace(":id", "[^/]+")
+    );
+    cy.location("pathname").should("match", pathRegex);
   } else {
-    cy.location("pathname").should("match", path);
+    cy.location("pathname").should("equal", path);
   }
 };
 
