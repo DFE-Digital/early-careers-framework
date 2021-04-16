@@ -9,6 +9,7 @@ const pagePaths = {
   cookie: "/cookies",
   start: "/",
   privacy: "/privacy_policy",
+  accessibility: "/accessibility-statement",
   "check account": "/check-account",
   "admin schools": "/admin/schools",
   "admin index": "/admin/administrators",
