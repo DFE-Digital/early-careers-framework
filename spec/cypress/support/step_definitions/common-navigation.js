@@ -8,7 +8,7 @@ Given("scenario {string} has been run", (scenario) => cy.appScenario(scenario));
 const pagePaths = {
   cookie: "/cookies",
   start: "/",
-  privacy: "/privacy_policy",
+  privacy: "/privacy-policy",
   accessibility: "/accessibility-statement",
   "check account": "/check-account",
   "admin schools": "/admin/schools",
