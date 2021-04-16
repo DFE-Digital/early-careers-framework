@@ -10,6 +10,6 @@ class CoreInductionProgrammeChoiceForm
   def programme_choices
     CoreInductionProgramme
       .pluck(:id, :name)
-      .map {|attrs| OpenStruct.new(attrs) }
+      .map { |attrs| OpenStruct.new(attrs) }
   end
 end

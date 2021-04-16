@@ -133,10 +133,10 @@ Rails.application.routes.draw do
     end
     resources :cohorts, only: :show do
       resources :partnerships, only: :index
-      resource :programme, only: %i[edit], controller: 'choose_programme'
+      resource :programme, only: %i[edit], controller: "choose_programme"
 
-      namespace :core_programme, path: 'core-programme' do
-        resource :materials, only: %i(edit update show) do
+      namespace :core_programme, path: "core-programme" do
+        resource :materials, only: %i[edit update show] do
           get :info
           get :success
         end

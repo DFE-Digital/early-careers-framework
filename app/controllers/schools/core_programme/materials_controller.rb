@@ -5,9 +5,10 @@ class Schools::CoreProgramme::MaterialsController < Schools::BaseController
   skip_after_action :verify_policy_scoped
 
   before_action :set_school_cohort
-  before_action :prevent_double_submission, only: %i(info edit update)
+  before_action :prevent_double_submission, only: %i[info edit update]
 
   def info; end
+
   def show; end
 
   def edit
@@ -16,19 +17,19 @@ class Schools::CoreProgramme::MaterialsController < Schools::BaseController
 
   def update
     @form = CoreInductionProgrammeChoiceForm.new(
-      params.require(:core_induction_programme_choice_form).permit(:core_induction_programme_id)
+      params.require(:core_induction_programme_choice_form).permit(:core_induction_programme_id),
     )
 
     render :edit and return unless @form.valid?
 
     @school_cohort.update!(
-      core_induction_programme_id: @form.core_induction_programme_id
+      core_induction_programme_id: @form.core_induction_programme_id,
     )
 
     redirect_to action: :success
   end
 
-  private
+private
 
   def prevent_double_submission
     return if @school_cohort.core_induction_programme_id.blank?

@@ -10,7 +10,7 @@ class SchoolCohort < ApplicationRecord
 
   belongs_to :cohort
   belongs_to :school
-  belongs_to :core_induction_programme, required: false
+  belongs_to :core_induction_programme, optional: true
 
   def training_provider_status
     school.partnerships&.exists?(cohort: cohort) ? "Done" : "To do"

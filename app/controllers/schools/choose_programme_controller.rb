@@ -8,7 +8,6 @@ class Schools::ChooseProgrammeController < Schools::BaseController
 
   def advisory; end
 
-
   def show
     @induction_choice_form = InductionChoiceForm.new
   end
@@ -30,14 +29,12 @@ class Schools::ChooseProgrammeController < Schools::BaseController
     redirect_to helpers.profile_dashboard_url(current_user)
   end
 
-<<<<<<< HEAD
+  def edit; end
+
 private
 
   def verify_programme_chosen
     school = current_user.induction_coordinator_profile.schools.first
     redirect_to helpers.profile_dashboard_url(current_user) if school.chosen_programme?(Cohort.current)
   end
-=======
-  def edit; end
->>>>>>> No-op change training type page
 end

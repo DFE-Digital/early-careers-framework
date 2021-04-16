@@ -20,7 +20,6 @@ RSpec.describe "Schools::CoreProgramme::Materials", type: :request do
 
         expect(response).to render_template("schools/core_programme/materials/info")
       end
-
     end
     context "when cohort already has selected materials" do
       before do
@@ -42,7 +41,6 @@ RSpec.describe "Schools::CoreProgramme::Materials", type: :request do
 
         expect(response).to render_template("schools/core_programme/materials/edit")
       end
-
     end
     context "when cohort already has selected materials" do
       before do
@@ -58,41 +56,43 @@ RSpec.describe "Schools::CoreProgramme::Materials", type: :request do
   end
 
   describe "PUT /schools/cohorts/:id/core-programme/materials" do
-    def update
+    def update!
       put(
         "/schools/cohorts/2021/core-programme/materials",
         params: {
           core_induction_programme_choice_form: {
-            core_induction_programme_id: cip.id
-          }
-        }
+            core_induction_programme_id: cip.id,
+          },
+        },
       )
     end
 
     context "when cohort has no materials selected yet" do
       it "stores material selection within school cohort model" do
-        expect { update }
-          .to change { school_cohort.reload.core_induction_programme_id }.from(nil).to(cip.id)
+        update!
+        expect(school_cohort.reload.core_induction_programme_id).to eq cip.id
       end
 
       it "redirects to success page" do
-        update
+        update!
         expect(response).to redirect_to("/schools/cohorts/2021/core-programme/materials/success")
       end
     end
 
     context "when cohort already has selected materials" do
+      let(:selected_cip) { create :core_induction_programme }
+
       before do
-        school_cohort.update(core_induction_programme: cip)
+        school_cohort.update(core_induction_programme: selected_cip)
       end
 
       it "doesn't affect model" do
-        expect { update }
-          .not_to change { school_cohort.reload.attributes }
+        update!
+        expect(school_cohort.reload.core_induction_programme_id).to eq selected_cip.id
       end
 
       it "redirects to the materials page" do
-        update
+        update!
         expect(response).to redirect_to("/schools/cohorts/2021/core-programme/materials")
       end
     end

@@ -17,7 +17,7 @@ FactoryBot.define do
 
       transient do
         schools { induction_coordinator_profile.schools }
-        school_ids { }
+        school_ids {}
       end
 
       after(:build) do |user, evaluator|
