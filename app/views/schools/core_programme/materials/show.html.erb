@@ -15,6 +15,6 @@
 
 <h2 class="govuk-heading-m">How to change the type of training</h2>
 
-<p>To change the type of training this cohort is doing, contact <%= govuk_link_to "continuing-professional-development@digital.education.gov.uk", "mailto:continuing-professional-development@digital.education.gov.uk" %>
+<p>To change the type of training this cohort is doing, contact <%= render MailToSupportComponent.new %>
 
 <%= govuk_warning text: "If your participants have begun their training they will loose progress and will have to start the new course from the beginning" %>
