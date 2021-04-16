@@ -18,12 +18,22 @@
     <%= stylesheet_pack_tag 'application', media: 'all' %>
     <%= javascript_pack_tag 'application', defer: true unless params[:nojs] === "nojs" %>
 
+    <!-- Google Tag Manager (doesn't store personal info until permission given) -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-N58Z5PG');</script>
+    <!-- End Google Tag Manager -->
+
+    <% gtm_id = Rails.env.production? ? 'G-5707QPHZE0' : 'G-LR5YHTJD65' %>
+
     <% if cookies[:cookie_consent_1] == "on" %>
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-LR5YHTJD65"></script>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=<%= gtm_id %>"></script>
     <% else %>
       <script>
         // For adding the script once the user has given permission
-        window.ecfAnalyticsScript = "https://www.googletagmanager.com/gtag/js?id=G-LR5YHTJD65";
+        window.ecfAnalyticsScript = "https://www.googletagmanager.com/gtag/js?id=<%= gtm_id %>";
       </script>
     <% end %>
     <script>
@@ -31,11 +41,15 @@
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
 
-      gtag('config', 'G-LR5YHTJD65');
+      gtag('config', '<%= gtm_id %>');
     </script>
   </head>
 
   <body class="govuk-template__body ">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N58Z5PG"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
 
     <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
 
