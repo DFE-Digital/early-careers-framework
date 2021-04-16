@@ -1,0 +1,48 @@
+<% content_for :before_content, govuk_back_link( text: "Back", href: schools_cohort_path(@cohort.start_year)) %>
+
+<span class="govuk-caption-l"><%= @cohort.start_year %> cohort</span>
+<h1 class="govuk-heading-l">Choose the type of training</h1>
+
+<p>
+  <strong>Current training choice:</strong>
+    <% if @school_cohort.school_chose_cip? %>
+      Use the training materials to deliver your own (CIP)
+    <% else %>
+      Using a trining provider funded by the DfE (FIP)
+    <% end %>
+</p>
+
+<h2 class="govuk-heading-m">Your options if you want to change</h2>
+
+<% if !@school_cohort.school_chose_cip? %>
+  <h3 class="govuk-heading-m">Use the training materials to deliver your own (CIP)</h3>
+
+  <p>If you change to this, note that:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>You will need to now provide an email address for each participant you've added</li>
+    <li>Participants will sign into the new DfE platform and not the training provider platform. They may want to make a copy of any progress they made</li>
+    <li>If you're in a partnership with a Training Provider you will need to tell them your decision to change</li>
+  </ul>
+<% end %>
+
+<% if !@school_cohort.school_chose_fip? %>
+  <h3 class="govuk-heading-m">Using a training provider funded by the DfE (FIP)</h3>
+
+  <p>If you change to this, note that:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>You will need to find a training provider and form a partnership with them before the 31st of October</li>
+    <li>Participants will not be able to sign in and use online training materials</li>
+    <li>If your participants have begun their training they will loose progress and will have to sign into the training providers platform and start their training again</li>
+  </ul>
+<% end %>
+
+<h3 class="govuk-heading-m">Design your own based on the Early Career Framework (DIY)</h3>
+<p>If you change to this, note that:</p>
+<ul class="govuk-list govuk-list--bullet">
+  <li>Participants will not be able to sign in and use online training materials</li>
+  <li>If you're in a partnership with a Training Provider you will need to tell them your decision to change</li>
+</ul>
+
+<h2 class="govuk-heading-m">How to change the type of training</h2>
+
+<p>To change the type of training this cohort is doing, contact <%= govuk_link_to "continuing-professional-development@digital.education.gov.uk", "mailto:continuing-professional-development@digital.education.gov.uk" %>
