@@ -1,14 +1,15 @@
 import { Given } from "cypress-cucumber-preprocessor/steps";
-import { getCreatedRecord } from "../on-rails"
+import OnRails from "../on-rails"
 
 const parseArgs = (argsString) => {
   const args = {};
   argsString.split(/ and |, /).forEach((argString) => {
     if (argString.split(" ").includes("created")) {
-      let [, factory, as] = /created ([^ ]+)(?: as ([^ ]+))?/.exec(argString);
-      as = as || factory;
+      const matches = /created ([^ ]+)(?: as ([^ ]+))?/.exec(argString);
+      const factory = matches[1]
+      const as = matches[2] || factory;
 
-      args[`${as}_id`] = getCreatedRecord(factory).id;
+      args[`${as}_id`] = OnRails.getCreatedRecord(factory).id;
     } else {
       const [, key, value] = /([^ ]+) "([^"]+)"/.exec(argString);
       args[key] = value;

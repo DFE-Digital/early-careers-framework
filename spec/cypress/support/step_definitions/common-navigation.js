@@ -1,10 +1,10 @@
 import { Given, When, Then } from "cypress-cucumber-preprocessor/steps";
-import { getCreatedRecord } from "../on-rails"
+import OnRails from "../on-rails"
 
 Given("I am logged in as a {string}", (user) => cy.login(user));
 Given("I am logged in as an {string}", (user) => cy.login(user));
 Given("I am logged in as an induction coordinator for created school", () => {
-  const schoolId = getCreatedRecord('school').id;
+  const schoolId = OnRails.getCreatedRecord('school').id;
   cy.appFactories([
     ["create", "user", "induction_coordinator", { school_ids: [schoolId]}]
   ]).then(() => {

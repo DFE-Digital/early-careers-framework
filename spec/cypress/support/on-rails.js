@@ -13,8 +13,10 @@ Cypress.Commands.add("appCommands", (body) => {
 });
 
 let createdRecords = {}
-export function getCreatedRecord (factory, index = 0) {
-  return (createdRecords[factory] && createdRecords[factory][index])
+export default {
+  getCreatedRecord (factory, index = 0) {
+    return (createdRecords[factory] && createdRecords[factory][index])
+  }
 }
 
 Cypress.Commands.add("app", (name, commandOptions) =>
@@ -29,7 +31,7 @@ Cypress.Commands.add("appEval", (code) => cy.app("eval", code));
 
 Cypress.Commands.add("appFactories", (options) =>
   cy.app("factory_bot", options).then(records => {
-    options.forEach(([command, factory, opts], index) => {
+    options.forEach(([, factory, ], index) => {
       createdRecords[factory] = createdRecords[factory] || []
       createdRecords[factory].push(records[index])
     })
@@ -42,6 +44,7 @@ Cypress.Commands.add("appFixtures", (options) => {
 // CypressOnRails: end
 
 beforeEach(() => {
+  createdRecords = {}
   cy.app("clean");
   cy.appEval("ActionMailer::Base.deliveries.clear");
 });
