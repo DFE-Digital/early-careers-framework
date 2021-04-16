@@ -3,10 +3,10 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    <h1 class="govuk-heading-l">Nominate an induction tutor</h1>
+    <h1 class="govuk-heading-xl">Nominate an induction lead or tutor</h1>
 
     <div class="govuk-!-margin-bottom-9">
-      <h2 class="govuk-heading-m govuk-!-margin-bottom-1">School details</h2>
+      <h2 class="govuk-heading-m govuk-!-margin-bottom-1">Your school</h2>
       <dl class="govuk-summary-list">
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">
@@ -37,12 +37,15 @@
     <%= form_with model: @nominate_induction_tutor_form, url: nominate_induction_coordinator_path, method: :post do |f| %>
       <%= f.govuk_error_summary %>
       <div class="govuk-form-group">
-        <h2 class="govuk-heading-m">Your induction tutor</h2>
+        <h2 class="govuk-heading-m">Who do you want to nominate?</h2>
         <div class="govuk-form-group">
           <%= f.govuk_text_field(:full_name, label: { text: "Full name" }) %>
         </div>
         <div class="govuk-form-group">
-          <%= f.govuk_email_field(:email, label: { text: "Email address", hint: "They will sign in with this email and get future notifications about this service" }) %>
+          <%= f.govuk_email_field(
+                :email,
+                label: { text: "Work email address" },
+                hint: { text: "They will sign in with this email and get future notifications about this service" }) %>
         </div>
       </div>
       <%= f.hidden_field :token, value: @nominate_induction_tutor_form.token %>
