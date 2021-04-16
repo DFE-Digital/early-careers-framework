@@ -1,4 +1,6 @@
-<% content_for :before_content, govuk_back_link( text: "Back", href: :back) %>
+<% if !current_user || current_user.privacy_policy_acceptance %>
+  <% content_for :before_content, govuk_back_link( text: "Back", href: :back) %>
+<% end %>
 <h1 class="govuk-heading-l">How we look after your personal data</h1>
   <h2 class="govuk-heading-m">Department for Education (DfE)</h2>
     <p class="govuk-body">Mentions of "us" and "we" mean DfE and "you" means anyone using this service.</p>
@@ -98,3 +100,11 @@
 
   <h2 class="govuk-heading-m">Keeping our privacy policy up to date</h2>
   <p class="govuk-body">We reserve the right to update this privacy notice at any time, and we will provide you with a new privacy notice when we make any substantial updates. We will also notify you in other ways from time to time about the processing of your personal information.</p>
+
+<% if current_user && current_user.privacy_policy_acceptance.blank? %>
+  <%= form_tag({action: :update}, method: :put) do %>
+    <%= hidden_field_tag :pp_version, '1.0' %>
+
+    <%= submit_tag "Continue", class: "govuk-button" %>
+  <% end %>
+<% end %>
