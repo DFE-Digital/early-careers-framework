@@ -17,7 +17,7 @@ Feature: Induction tutors choosing programmes
     And the page should be accessible
 
     When I click the submit button
-    Then "page body" should contain "Select one"
+    Then "page body" should contain "Select the training materials you want to use"
 
     When I click on "label" containing "Awesome induction course"
     And I click the submit button

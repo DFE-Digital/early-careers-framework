@@ -5,7 +5,7 @@ class CoreInductionProgrammeChoiceForm
 
   attr_accessor :core_induction_programme_id
 
-  validates :core_induction_programme_id, presence: { message: "Select one" }
+  validates :core_induction_programme_id, presence: { message: "Select the training materials you want to use" }
 
   def programme_choices
     CoreInductionProgramme

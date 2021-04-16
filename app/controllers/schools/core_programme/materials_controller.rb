@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Schools::CoreProgramme::MaterialsController < Schools::BaseController
-  # skip_after_action :verify_policy_scoped
-
   before_action :set_school_cohort
   before_action :prevent_double_submission, only: %i[info edit update]
 
