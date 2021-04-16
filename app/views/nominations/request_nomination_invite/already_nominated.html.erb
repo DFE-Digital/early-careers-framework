@@ -12,6 +12,7 @@
       What you can do
     </h2>
     <ul class="govuk-list govuk-list--bullet">
+      <li>if you were nominated, <%= govuk_link_to "sign in", new_user_session_path %></li>
       <li>check with your colleagues</li>
       <li>if you are still not sure, contact: <%= render MailToSupportComponent.new %></li>
     </ul>
