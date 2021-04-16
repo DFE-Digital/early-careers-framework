@@ -1,12 +1,16 @@
 import "@percy/cypress";
-import OnRails from "./on-rails"
+import OnRails from "./on-rails";
 
 // Heads up, this is NOT used in the Cucumber specs - see factory-bot.js
 
 Cypress.Commands.add("loginCreated", (factory) => {
-  cy.visit(`/users/confirm_sign_in?login_token=${OnRails.getCreatedRecord(factory).login_token}`);
+  cy.visit(
+    `/users/confirm_sign_in?login_token=${
+      OnRails.getCreatedRecord(factory).login_token
+    }`
+  );
   cy.get('[action="/users/sign_in_with_token"] [name="commit"]').click();
-})
+});
 
 Cypress.Commands.add("login", (...traits) => {
   cy.appFactories([["create", "user", ...traits]])
@@ -33,9 +37,11 @@ Cypress.Commands.add("clickCommitButton", () => {
 });
 
 export const SIGN_IN_EMAIL_TEMPLATE = "7ab8db5b-9842-4bc3-8dbb-f590a3198d9e";
-export const ADMIN_ACCOUNT_CREATED_TEMPLATE = "3620d073-d2cc-4d65-9a51-e12770cf25d9";
+export const ADMIN_ACCOUNT_CREATED_TEMPLATE =
+  "3620d073-d2cc-4d65-9a51-e12770cf25d9";
 export const NOMINATION_EMAIL_TEMPLATE = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f";
-export const NOMINATION_CONFIRMATION_EMAIL_TEMPLATE = "240c5685-5cb0-40a9-9bd4-1a595d991cbc";
+export const NOMINATION_CONFIRMATION_EMAIL_TEMPLATE =
+  "240c5685-5cb0-40a9-9bd4-1a595d991cbc";
 
 export const computeHeadersFromEmail = (email) =>
   email.header.reduce(
@@ -45,7 +51,6 @@ export const computeHeadersFromEmail = (email) =>
     }),
     {}
   );
-
 Cypress.Commands.add("appSentEmails", () =>
   cy.appEval("ActionMailer::Base.deliveries")
 );
