@@ -21,7 +21,7 @@ class SchoolCohortPolicy < ApplicationPolicy
         school_id: School.joins(:induction_coordinator_profiles)
           .where(induction_coordinator_profiles: { user_id: user.id })
           .select(:id)
-        )
+      )
     end
   end
 end

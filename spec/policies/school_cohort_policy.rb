@@ -37,8 +37,8 @@ RSpec.describe SchoolCohortPolicy, type: :policy do
       let(:user) { create :user, :induction_coordinator, schools: coordinating_schools }
       let(:coordinating_schools) { create_list :school, 2 }
       let(:other_schools) { create_list :school, 2 }
-      let(:coordinating_cohorts) { Array.new(rand 3..5) { create :school_cohort, school: coordinating_schools.sample }}
-      let(:other_cohorts) { Array.new(rand 3..5) { create :school_cohort, school: other_schools.sample }}
+      let(:coordinating_cohorts) { Array.new(rand 3..5) { create :school_cohort, school: coordinating_schools.sample } }
+      let(:other_cohorts) { Array.new(rand 3..5) { create :school_cohort, school: other_schools.sample } }
 
       it "only returns cohorts for which user is nominated as a induction coordinator" do
         expect(scope.resolve).to match_array coordinating_cohorts
@@ -47,7 +47,7 @@ RSpec.describe SchoolCohortPolicy, type: :policy do
 
     context "for an admin" do
       let(:user) { create :user, :admin }
-      let(:cohorts) { Array.new(rand 3..5) { create :school_cohort }}
+      let(:cohorts) { Array.new(rand 3..5) { create :school_cohort } }
 
       it "all the school cohorts" do
         expect(scope.resolve).to match_array cohorts
