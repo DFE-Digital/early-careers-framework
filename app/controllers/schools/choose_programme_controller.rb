@@ -3,15 +3,12 @@
 class Schools::ChooseProgrammeController < Schools::BaseController
   skip_after_action :verify_authorized
   skip_after_action :verify_policy_scoped
+  before_action :verify_programme_chosen, only: %i[advisory show]
+
+  def advisory; end
 
   def show
-    school = current_user.induction_coordinator_profile.schools.first
-
-    if school.chosen_programme?(Cohort.current)
-      redirect_to helpers.profile_dashboard_url(current_user)
-    else
-      @induction_choice_form = InductionChoiceForm.new
-    end
+    @induction_choice_form = InductionChoiceForm.new
   end
 
   def create
@@ -29,5 +26,12 @@ class Schools::ChooseProgrammeController < Schools::BaseController
     )
 
     redirect_to helpers.profile_dashboard_url(current_user)
+  end
+
+private
+
+  def verify_programme_chosen
+    school = current_user.induction_coordinator_profile.schools.first
+    redirect_to helpers.profile_dashboard_url(current_user) if school.chosen_programme?(Cohort.current)
   end
 end

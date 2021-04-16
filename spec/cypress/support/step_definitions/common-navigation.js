@@ -40,6 +40,7 @@ const pagePaths = {
   "new lead provider user review": "/admin/suppliers/users/new/review",
   "lead provider user delete": "/lead-providers/users/:id/delete",
   "choose programme": "/schools/choose-programme",
+  "choose programme advisory": "/schools/choose-programme/advisory",
   schools: "/schools",
   "2021 school cohorts": "/schools/cohorts/2021",
   "2021 school partnerships": "/schools/cohorts/2021/partnerships",
