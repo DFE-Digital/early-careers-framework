@@ -21,7 +21,7 @@ class SchoolCohort < ApplicationRecord
   end
 
   def choose_training_materials_status
-    core_induction_programme_id ? "done" : "to do"
+    core_induction_programme_id ? "Done" : "To do"
   end
 
   def status
