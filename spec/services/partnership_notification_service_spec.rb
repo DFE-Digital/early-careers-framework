@@ -22,7 +22,7 @@ RSpec.describe PartnershipNotificationService do
   let(:partnership_notification_email) { partnership.partnership_notification_emails.last }
   let(:notify_id) { Faker::Alphanumeric.alphanumeric(number: 16) }
 
-  describe "#run" do
+  describe "#notify" do
     context "when the school has no induction coordinator" do
       let(:contact_email) { Faker::Internet.email }
       let(:school) { create(:school, primary_contact_email: contact_email) }
