@@ -40,25 +40,25 @@ private
       partnership_notification_email: notification_email,
     )
 
-    notify_id = SchoolMailer.send_school_partnership_notification_email(
+    notify_id = SchoolMailer.school_partnership_notification_email(
       recipient: notification_email.sent_to,
       provider_name: provider_name(notification_email),
       cohort: notification_email.partnership.cohort.display_name,
       nominate_url: nomination_email.nomination_url,
       challenge_url: challenge_url(notification_email.token),
-    )
+    ).deliver_now.delivery_method.response.id
 
     notification_email.update!(notify_id: notify_id)
   end
 
   def send_notification_email_to_coordinator(notification_email)
-    notify_id = SchoolMailer.send_coordinator_partnership_notification_email(
+    notify_id = SchoolMailer.coordinator_partnership_notification_email(
       recipient: notification_email.sent_to,
       provider_name: provider_name(notification_email),
       cohort: notification_email.partnership.cohort.display_name,
       start_url: Rails.application.routes.url_helpers.root_url(host: Rails.application.config.domain),
       challenge_url: challenge_url(notification_email.token),
-    )
+    ).deliver_now.delivery_method.response.id
 
     notification_email.update!(notify_id: notify_id)
   end

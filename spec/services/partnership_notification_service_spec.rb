@@ -27,8 +27,16 @@ RSpec.describe PartnershipNotificationService do
       let(:contact_email) { Faker::Internet.email }
       let(:school) { create(:school, primary_contact_email: contact_email) }
 
+      before(:all) do
+        RSpec::Mocks.configuration.verify_partial_doubles = false
+      end
+
+      after(:all) do
+        RSpec::Mocks.configuration.verify_partial_doubles = true
+      end
+
       it "emails the school primary contact" do
-        expect(SchoolMailer).to receive(:send_school_partnership_notification_email).with(
+        expect(SchoolMailer).to receive(:school_partnership_notification_email).with(
           hash_including(
             provider_name: @delivery_partner.name,
             cohort: String,
@@ -36,7 +44,8 @@ RSpec.describe PartnershipNotificationService do
             challenge_url: String,
             recipient: contact_email,
           ),
-        ).and_return(notify_id)
+        ).and_call_original
+        allow_any_instance_of(Mail::TestMailer).to receive_message_chain(:response, :id) { notify_id }
 
         partnership_notification_service.notify(partnership)
 
@@ -52,8 +61,16 @@ RSpec.describe PartnershipNotificationService do
         create(:user, :induction_coordinator, schools: [school], email: contact_email)
       end
 
+      before(:all) do
+        RSpec::Mocks.configuration.verify_partial_doubles = false
+      end
+
+      after(:all) do
+        RSpec::Mocks.configuration.verify_partial_doubles = true
+      end
+
       it "emails the induction coordinator" do
-        expect(SchoolMailer).to receive(:send_coordinator_partnership_notification_email).with(
+        expect(SchoolMailer).to receive(:coordinator_partnership_notification_email).with(
           hash_including(
             provider_name: @delivery_partner.name,
             cohort: String,
@@ -61,7 +78,8 @@ RSpec.describe PartnershipNotificationService do
             challenge_url: String,
             recipient: contact_email,
           ),
-        ).and_return(notify_id)
+        ).and_call_original
+        allow_any_instance_of(Mail::TestMailer).to receive_message_chain(:response, :id) { notify_id }
 
         partnership_notification_service.notify(partnership)
 

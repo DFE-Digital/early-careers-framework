@@ -63,28 +63,4 @@ class SchoolMailer < ApplicationMailer
       },
     )
   end
-
-  def self.send_school_partnership_notification_email(recipient:, provider_name:, cohort:, nominate_url:, challenge_url:)
-    result = SchoolMailer.school_partnership_notification_email(
-      recipient: recipient,
-      provider_name: provider_name,
-      cohort: cohort,
-      nominate_url: nominate_url,
-      challenge_url: challenge_url,
-    ).deliver_now
-
-    result.delivery_method.response.id
-  end
-
-  def self.send_coordinator_partnership_notification_email(recipient:, provider_name:, cohort:, start_url:, challenge_url:)
-    result = SchoolMailer.coordinator_partnership_notification_email(
-      recipient: recipient,
-      provider_name: provider_name,
-      cohort: cohort,
-      start_url: start_url,
-      challenge_url: challenge_url,
-    ).deliver_now
-
-    result.delivery_method.response.id
-  end
 end
