@@ -61,7 +61,7 @@ RSpec.describe "Admin::Schools", type: :request do
 
       it "renders the induction coordinator's details" do
         get "/admin/schools/#{school.id}"
-  
+
         expect(response.body).not_to include("Add induction tutor")
         expect(response.body).to include(induction_coordinator.email)
         expect(response.body).to include(induction_coordinator.full_name)

@@ -6,6 +6,16 @@ Feature: Admin user managing schools
     And scenario "admin/schools" has been run
     And I am on "admin schools" page
 
+  Scenario: Viewing a school
+    When  I click on "link" containing "Include this school"
+    Then I should be on "admin school overview" page
+    And "page body" should contain "Include this school"
+    And "page body" should contain "Sarah Smith"
+    And the page should be accessible
+
+    When I click on "link" containing "Change"
+    Then I should be on "admin induction coordinator edit" page
+
   Scenario: Viewing a list of schools
     Then the table should have 20 rows
     And the page should be accessible

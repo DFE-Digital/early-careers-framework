@@ -23,10 +23,10 @@ module Admin
       @induction_coordinator = @school.induction_coordinators&.first
     end
 
-    private
+  private
 
     def load_school
-      @school ||= School.find(params[:id])
+      @school = School.find(params[:id])
     end
   end
 end
