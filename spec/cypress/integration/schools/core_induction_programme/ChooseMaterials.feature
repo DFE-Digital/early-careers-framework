@@ -31,4 +31,4 @@ Feature: Induction tutors choosing programmes
     When I click on "link" containing "Choose your training materials"
     Then I should be on "2021 cohort CIP materials" page
     And the page should be accessible
-    And "page body" should contain "How to change the type of training"
+    And "page body" should contain "Changing your materials"
