@@ -9,7 +9,7 @@ RSpec.describe "Nominations::NotifyCallbacks", type: :request do
 
       it "updates matching nomination email" do
         post "/api/notify-callback", params: {
-          reference: nomination_email.token,
+          id: nomination_email.notify_id,
           status: "failed",
         }
 
