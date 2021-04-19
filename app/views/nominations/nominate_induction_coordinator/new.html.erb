@@ -6,33 +6,7 @@
     <h1 class="govuk-heading-xl">Nominate an induction lead or tutor</h1>
 
     <div class="govuk-!-margin-bottom-9">
-      <h2 class="govuk-heading-m govuk-!-margin-bottom-1">Your school</h2>
-      <dl class="govuk-summary-list">
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">
-            Name
-          </dt>
-          <dd class="govuk-summary-list__value">
-            <%= @nominate_induction_tutor_form.school.name %>
-          </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">
-            <abbr title="Unique reference number">URN</abbr>
-          </dt>
-          <dd class="govuk-summary-list__value">
-            <%= @nominate_induction_tutor_form.school.urn %>
-          </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">
-            Address
-          </dt>
-          <dd class="govuk-summary-list__value">
-            <%= simple_format @nominate_induction_tutor_form.school.full_address, class: "govuk-body" %>
-          </dd>
-        </div>
-      </dl>
+      <%= render partial: 'nominations/school_details', locals: { school: @nominate_induction_tutor_form.school, title: "Your school" } %>
     </div>
     <%= form_with model: @nominate_induction_tutor_form, url: nominate_induction_coordinator_path, method: :post do |f| %>
       <%= f.govuk_error_summary %>
