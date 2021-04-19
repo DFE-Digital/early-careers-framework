@@ -11,7 +11,7 @@ Feature: Nominate induction tutor
     When I type "John Smith" into "name input"
     And I type "john-smith@example.com" into "email input"
     And I click the submit button
-    Then "success panel" should contain "Induction tutor nominated"
+    Then "success panel" should contain "Induction lead or tutor nominated"
     And Email should be sent to Nominated School Induction Coordinator to email "john-smith@example.com"
     And the page should be accessible
 
@@ -28,7 +28,7 @@ Feature: Nominate induction tutor
   Scenario: Nomination Link was sent for which Induction Tutor was already nominated for the same school
     Given nomination_email was created as "already_nominated_induction_tutor" with token "foo-bar-baz"
     When I am on "start nominations with token" page
-    Then "page body" should contain "An induction tutor has already been nominated for your school"
+    Then "page body" should contain "An induction lead/tutor has already been nominated"
     And the page should be accessible
 
   Scenario: Nomination Link was sent for which Induction Tutor was already nominated for another school

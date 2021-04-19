@@ -4,6 +4,6 @@ require "rails_helper"
 
 RSpec.describe InductionChoiceForm, type: :model do
   describe "validations" do
-    it { is_expected.to validate_presence_of(:programme_choice).with_message("Select one") }
+    it { is_expected.to validate_presence_of(:programme_choice).with_message("Select how you want to run your induction") }
   end
 end

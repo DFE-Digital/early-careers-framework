@@ -5,12 +5,12 @@ class InductionChoiceForm
 
   attr_accessor :programme_choice
 
-  validates :programme_choice, presence: { message: "Select one" } # TODO: custom validation message https://docs.google.com/document/d/1s8lAiYEbCYyXyqJGxGfCtWj2g_FBHqvxrI6WYWof18o/edit?disco=AAAAL3D9uU8
+  validates :programme_choice, presence: { message: "Select how you want to run your induction" }
 
   def programme_choices
     [
-      OpenStruct.new(id: "full_induction_programme", name: "a programme led by a training provider, funded by the Department for Education (DfE)"),
-      OpenStruct.new(id: "core_induction_programme", name: "a programme led by the school, using accredited materials"),
+      OpenStruct.new(id: "full_induction_programme", name: "use an approved training provider"),
+      OpenStruct.new(id: "core_induction_programme", name: "use the DfE accredited materials"),
     ]
   end
 end
