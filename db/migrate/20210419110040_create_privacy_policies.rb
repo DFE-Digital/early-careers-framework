@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class CreatePrivacyPolicies < ActiveRecord::Migration[6.1]
-  class PrivacyPolicy < ActiveRecord::Base
+  class PrivacyPolicy < ApplicationRecord
   end
 
   def change
@@ -16,7 +18,7 @@ class CreatePrivacyPolicies < ActiveRecord::Migration[6.1]
       dir.up do
         PrivacyPolicy.create(
           version: "1.0",
-          html: <<~PRIVACY_POLICY
+          html: <<~PRIVACY_POLICY,
             <h2 class="govuk-heading-m">Department for Education (DfE)</h2>
             <p class="govuk-body">Mentions of "us" and "we" mean DfE and "you" means anyone using this service.</p>
             <p class="govuk-body">This work is being carried out by Get Teacher Professional Development, which is a part of the
