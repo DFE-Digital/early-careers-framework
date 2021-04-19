@@ -6,6 +6,7 @@ FactoryBot.define do
     sent_to { "John-Doe@example.com" }
     sent_at { Time.zone.now }
     school { build(:school, urn: "0922081", name: "Nominated School", primary_contact_email: "primary-contact-email@example.com", address_line1: "50 Olivia Drive", postcode: "CV37 9HE") }
+    notify_id { Faker::Internet.uuid }
 
     trait :expired_nomination_email do
       sent_at { 22.days.ago }
