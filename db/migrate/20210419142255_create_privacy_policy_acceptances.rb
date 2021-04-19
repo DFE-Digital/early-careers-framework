@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 class CreatePrivacyPolicyAcceptances < ActiveRecord::Migration[6.1]
-  class PrivacyPolicy < ActiveRecord::Base
+  class PrivacyPolicy < ApplicationRecord
   end
 
-  class User < ActiveRecord::Base
+  class User < ApplicationRecord
   end
 
-  class PrivacyPolicyAcceptance < ActiveRecord::Base
+  class PrivacyPolicyAcceptance < ApplicationRecord
     belongs_to :user
     belongs_to :privacy_policy
   end
@@ -15,7 +17,7 @@ class CreatePrivacyPolicyAcceptances < ActiveRecord::Migration[6.1]
       t.uuid :privacy_policy_id
       t.uuid :user_id
 
-      t.index %i(privacy_policy_id user_id), unique: true, name: 'single-acceptance'
+      t.index %i[privacy_policy_id user_id], unique: true, name: "single-acceptance"
       t.timestamps
     end
 
@@ -29,8 +31,8 @@ class CreatePrivacyPolicyAcceptances < ActiveRecord::Migration[6.1]
           PrivacyPolicyAcceptance.create(
             privacy_policy: policies[user.privacy_policy_acceptance["version"]],
             user: user,
-            created_at: user.privacy_policy_acceptance['accepted_at'],
-            updated_at: user.privacy_policy_acceptance['accepted_at'],
+            created_at: user.privacy_policy_acceptance["accepted_at"],
+            updated_at: user.privacy_policy_acceptance["accepted_at"],
           )
         end
       end
@@ -42,8 +44,8 @@ class CreatePrivacyPolicyAcceptances < ActiveRecord::Migration[6.1]
           ppa.user.update(
             privacy_policy_acceptance: {
               version: ppa.privacy_policy.version,
-              accepted_at: ppa.created_at
-            }
+              accepted_at: ppa.created_at,
+            },
           )
         end
       end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PrivacyPolicy < ApplicationRecord
   class Acceptance < ApplicationRecord
     self.table_name = :privacy_policy_acceptances
@@ -7,7 +9,7 @@ class PrivacyPolicy < ApplicationRecord
   end
 
   def self.current
-    order(Arel.sql "string_to_array(version, '.')::int[] desc").first
+    order(Arel.sql("string_to_array(version, '.')::int[] desc")).first
   end
 
   def self.acceptance_required?(user)
@@ -32,7 +34,7 @@ class PrivacyPolicy < ApplicationRecord
   def accept!(user)
     Acceptance.create(
       user: user,
-      privacy_policy: self
+      privacy_policy: self,
     )
   end
 end

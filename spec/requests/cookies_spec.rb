@@ -36,7 +36,7 @@ RSpec.describe "Cookies API", type: :request do
 
   describe "GET /cookies" do
     let!(:privacy_policy) { create :privacy_policy }
-    
+
     context "from a different page" do
       it "sets the session[:return_to] as previous url" do
         get privacy_policy_path

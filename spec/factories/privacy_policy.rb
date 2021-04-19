@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :privacy_policy do
     sequence(:version) { |i| [(i + 2) / 2, (i + 2) % 2].join(".") }
@@ -7,7 +9,7 @@ FactoryBot.define do
       if (existing = instance.class.find_by(version: instance.version))
         instance.attributes = existing.attributes
       else
-        instance.save
+        instance.save!
       end
     end
   end
