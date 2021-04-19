@@ -40,7 +40,7 @@ class CreatePrivacyPolicies < ActiveRecord::Migration[6.1]
                   <li>phone number</li>
                   <li>email address</li>
                   <li>TRN number</li>
-                  <li>any other information you choose to share during the applicaiton process - for example, you can choose to share equality and diversity information</li>
+                  <li>any other information you choose to share during the application process - for example, you can choose to share equality and diversity information</li>
                 </ul>
               <h3 class="govuk-heading-s">What data we collect if you work for a training provider</h3>
                 <p class="govuk-body">If you process teacher training applications, we may need to collect information about you so we can process applications, for example:</p>
@@ -82,7 +82,7 @@ class CreatePrivacyPolicies < ActiveRecord::Migration[6.1]
             <h2 class="govuk-heading-m">External organisations who process data</h2>
               <h3 class="govuk-heading-s">Customer service systems</h3>
                 <p class="govuk-body">We use a customer service management system to process some personal data, such as feedback you send us.</p>
-                <p class="govuk-body"><%= govuk_link_to 'Zendesk', "https://www.zendesk.co.uk/company/customers-partners/master-subscription-agreement/?cta=msa#confidentiality", class: "govuk-link" %> is currently our preferred customer service management system because it uses various safeguards to look after your data.</p>
+                <p class="govuk-body"><a class="govuk-link" href="https://www.zendesk.co.uk/company/customers-partners/master-subscription-agreement/?cta=msa#confidentiality">Zendesk</a> is currently our preferred customer service management system because it uses various safeguards to look after your data.</p>
 
               <h3 class="govuk-heading-s">Google</h3>
                 <p class="govuk-body">We'll ask if you agree to cookies so that we can get statistics from Google Analytics. If you consent, Google may be able to get your IP address. We use Google Analytics for statistics and will not identify you personally from these.</p>
@@ -102,17 +102,17 @@ class CreatePrivacyPolicies < ActiveRecord::Migration[6.1]
                 <li>get and reuse your data for different services</li>
                 <li>object to how your data is processed in certain circumstances</li>
               </ul>
-              <p class="govuk-body">You can find out more about how we handle personal data in our <%= govuk_link_to "personal information charter.", "https://www.gov.uk/government/organisations/department-for-education/about/personal-information-charter", class: "govuk-link" %></p>
+              <p class="govuk-body">You can find out more about how we handle personal data in our <a class="govuk-link" href="https://www.gov.uk/government/organisations/department-for-education/about/personal-information-charter">personal information charter.</a></p>
 
             <h2 class="govuk-heading-m">Getting help and raising a concern</h2>
               <p class="govuk-body">If you want to ask us to remove your data or get access to the data we have about you, you can email us on:</p>
 
-              <p><%= render MailToSupportComponent.new %></p>
+              <p><a class="govuk-link govuk-link--no-visited-state" href="mailto:continuing-professional-development@digital.education.gov.uk">continuing-professional-development@digital.education.gov.uk</a></p>
 
-              <p class="govuk-body">You can also use our contact form to <%= govuk_link_to "get in touch with our Data Protection Officer.", "https://form.education.gov.uk/en/AchieveForms/?form_uri=sandbox-publish://AF-Process-f1453496-7d8a-463f-9f33-1da2ac47ed76/AF-Stage-1e64d4cc-25fb-499a-a8d7-74e98203ac00/definition.json&redirectlink=%2Fen&cancelRedirectLink=%2Fen", class: "govuk-link" %></p>
+              <p class="govuk-body">You can also use our contact form to <a class="govuk-link" href="https://form.education.gov.uk/en/AchieveForms/?form_uri=sandbox-publish://AF-Process-f1453496-7d8a-463f-9f33-1da2ac47ed76/AF-Stage-1e64d4cc-25fb-499a-a8d7-74e98203ac00/definition.json&redirectlink=%2Fen&cancelRedirectLink=%2Fen">get in touch with our Data Protection Officer.</a></p>
 
               <p class="govuk-body">Once an early career teacher has enrolled with a teacher training provider, we will not be able to ask them to remove personal data from their systems. Please contact the provider separately.</p>
-              <p class="govuk-body">For further information or to raise a concern, visit the <%= govuk_link_to "Information Commissioner's Office.", "https://ico.org.uk/" %></p>
+              <p class="govuk-body">For further information or to raise a concern, visit the <a class="govuk-link" href="https://ico.org.uk/">Information Commissioner's Office.</a></p>
 
             <h2 class="govuk-heading-m">Keeping our privacy policy up to date</h2>
             <p class="govuk-body">We reserve the right to update this privacy notice at any time, and we will provide you with a new privacy notice when we make any substantial updates. We will also notify you in other ways from time to time about the processing of your personal information.</p>

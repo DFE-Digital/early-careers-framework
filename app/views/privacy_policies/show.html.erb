@@ -1,6 +1,6 @@
 <% content_for :title, "Privacy policy" %>
 
-<% if !current_user&.induction_coordinator? ||current_user.privacy_policy_acceptance %>
+<% if !PrivacyPolicy.acceptance_required?(current_user) %>
   <% content_for :before_content, govuk_back_link(text: "Back", href: :back) %>
   <h1 class="govuk-heading-xl">How we look after your personal data</h1>
 <% else %>
@@ -11,10 +11,10 @@
   <h2 class="govuk-heading-xl">How we look after your personal data</h2>
 <% end %>
 
-<% if current_user&.induction_coordinator? && current_user.privacy_policy_acceptance.blank? %>
-  <%= form_tag({ action: :update }, method: :put) do %>
-    <%= hidden_field_tag :pp_version, '1.0' %>
+<%= @policy.html.html_safe %>
 
+<% if PrivacyPolicy.acceptance_required?(current_user) %>
+  <%= form_tag({action: :update}, method: :put) do %>
     <%= submit_tag "Continue", class: "govuk-button" %>
   <% end %>
 <% end %>
