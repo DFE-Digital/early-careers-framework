@@ -1,12 +1,15 @@
+<% content_for :title, "Check account" %>
 <% content_for :before_content, govuk_back_link(text: "Back", href: new_user_session_path) %>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-l">Check if you have an account</h1>
+    <h1 class="govuk-heading-xl">Check if you have an account</h1>
     <h2 class="govuk-heading-m">Schools</h2>
-    <p class="govuk-!-margin-top-25">Your school has been sent an email to nominate an induction tutor. <%= govuk_link_to "Resend email", choose_location_request_nomination_invite_path %></p>
+    <p class="govuk-body">Your school has been sent an email to nominate someone who manages statutory inductions at your school.</p>
+    <p class="govuk-body">We cannot disclose the email address. It will be an administration email, for example, office@, admin@ or head@</p>
+    <p><%= govuk_link_to "Resend email", choose_location_request_nomination_invite_path %></p>
     <h2 class="govuk-heading-m">New teachers or mentors</h2>
-    <p class="govuk-!-margin-top-25">You only need to sign in if you’re using our accredited training materials. Check with your induction tutor.</p>
+    <p class="govuk-body">You only need to sign in if you’re using our accredited training materials. Check with the person at your school who is managing your induction.</p>
     <h2 class="govuk-heading-m">Training providers</h2>
-    <p class="govuk-!-margin-top-25">The Department for Education creates your account.<br>Contact: <%= render MailToSupportComponent.new %></p>
+    <p class="govuk-body">The Department for Education creates your account.<br>Contact: <%= render MailToSupportComponent.new %></p>
   </div>
 </div>

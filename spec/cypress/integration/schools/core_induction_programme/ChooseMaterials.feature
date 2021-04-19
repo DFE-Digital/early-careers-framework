@@ -22,7 +22,7 @@ Feature: Induction tutors choosing programmes
     When I click on "label" containing "Awesome induction course"
     And I click the submit button
     Then I should be on "2021 cohort CIP materials success" page
-    And "page body" should contain "Your choice of training materials for the 2021 cohort has been saved"
+    And "page body" should contain "Study materials saved"
     And the page should be accessible
 
     When I click on "link" containing "Back to 2021"
@@ -31,4 +31,4 @@ Feature: Induction tutors choosing programmes
     When I click on "link" containing "Choose your training materials"
     Then I should be on "2021 cohort CIP materials" page
     And the page should be accessible
-    And "page body" should contain "How to change the type of training"
+    And "page body" should contain "Changing your materials"
