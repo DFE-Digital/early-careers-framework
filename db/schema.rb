@@ -191,6 +191,7 @@ ActiveRecord::Schema.define(version: 2021_04_19_142255) do
     t.uuid "partnership_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["notify_id"], name: "index_partnership_notification_emails_on_notify_id"
     t.index ["partnership_id"], name: "index_partnership_notification_emails_on_partnership_id"
     t.index ["token"], name: "index_partnership_notification_emails_on_token", unique: true
   end

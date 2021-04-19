@@ -15,5 +15,6 @@ class CreatePartnershipNotificationEmails < ActiveRecord::Migration[6.1]
       t.timestamps
     end
     add_index :partnership_notification_emails, :token, unique: true
+    add_index :partnership_notification_emails, :notify_id
   end
 end
