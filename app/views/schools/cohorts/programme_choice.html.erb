@@ -18,9 +18,9 @@
     </p>
 
     <h2 class="govuk-heading-m">Changing your programme</h2>
-    <p>Each induction programme is setup differently. Before you change your programme:</p>
+    <p>Each induction programme is set up differently. Before you change your programme:</p>
     <ul class="govuk-list govuk-list--bullet">
-      <li>make sure the programme you want to change to works for your school</li>
+      <li>make sure the <%= govuk_link_to "programme you want to change to", "https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview" %> works for your school</li>
       <% if @school_cohort.school_chose_fip? %>
         <li>if you have confirmed an agreement with a training provider, you need to speak to them</li>
       <% end %>
