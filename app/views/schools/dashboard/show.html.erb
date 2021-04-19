@@ -1,4 +1,4 @@
-<% content_for :title, "Manage training - using provider" %>
+<% content_for :title, "Manage training" %>
 
 <span class="govuk-caption-l"><%= @school.name %></span>
 <h1 class="govuk-heading-xl govuk-!-margin-bottom-7">Manage your training</h1>
@@ -23,9 +23,9 @@
         </td>
         <td class="govuk-table__cell">
           <% if school_cohort.core_induction_programme? %>
-            Using accredited materials
+            Use DfE accredited materials
           <% else %>
-            Training provider funded by DfE
+            Use an approved training provider
           <% end %>
         </td>
         <td class="govuk-table__cell">

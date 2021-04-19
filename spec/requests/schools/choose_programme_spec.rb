@@ -57,7 +57,7 @@ RSpec.describe "Schools::ChooseProgramme", type: :request do
       post "/schools/choose-programme", params: { induction_choice_form: { programme_choice: "" } }
 
       expect(response).to render_template("schools/choose_programme/show")
-      expect(response.body).to include("Select one")
+      expect(response.body).to include("Select how you want to run your induction")
     end
 
     it "should store the induction choice" do

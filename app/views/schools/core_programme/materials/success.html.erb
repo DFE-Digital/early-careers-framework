@@ -1,3 +1,3 @@
-<%= govuk_panel title: "Your choice of training materials for the #{@cohort.start_year} cohort has been saved", body: nil, classes: "govuk-!-margin-bottom-8" %>
+<%= govuk_panel title: "Study materials saved", body: nil, classes: "govuk-!-margin-bottom-8" %>
 
-<%= govuk_link_to "Back to #{@cohort.display_name}", schools_cohort_path(@cohort.start_year) %>
+<%= govuk_link_to "Back to #{@cohort.display_name} cohort", schools_cohort_path(@cohort.start_year) %>
