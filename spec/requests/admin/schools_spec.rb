@@ -42,4 +42,30 @@ RSpec.describe "Admin::Schools", type: :request do
       expect(response.body).not_to include(excluded_school.urn)
     end
   end
+
+  describe "GET /admin/schools/:id" do
+    let(:school) { create(:school) }
+
+    it "renders the schools show template" do
+      get "/admin/schools/#{school.id}"
+
+      expect(response).to render_template("admin/schools/show")
+      expect(response.body).to include(school.name)
+      expect(response.body).to include("Add induction tutor")
+    end
+
+    context "when school is registered" do
+      let!(:induction_coordinator) do
+        create(:user, :induction_coordinator, schools: [school])
+      end
+
+      it "renders the induction coordinator's details" do
+        get "/admin/schools/#{school.id}"
+  
+        expect(response.body).not_to include("Add induction tutor")
+        expect(response.body).to include(induction_coordinator.email)
+        expect(response.body).to include(induction_coordinator.full_name)
+      end
+    end
+  end
 end

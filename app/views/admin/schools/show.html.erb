@@ -1,0 +1,35 @@
+<% content_for :title, "School detail: overview" %>
+
+<h1 class="govuk-heading-xl"><%= @school.name %></h1>
+<%= render partial: "navigation" %>
+<h2 class="govuk-heading-l">Overview</h2>
+<table class="govuk-table">
+  <tbody class="govuk-table__body">
+    <tr class="govuk-table__row">
+      <td class="govuk-table__cell">Induction tutor</td>
+      <td class="govuk-table__cell">
+        <% if @induction_coordinator %>
+          <%= @induction_coordinator.full_name %><br>
+          <%= mail_to @induction_coordinator.email, @induction_coordinator.email  %>
+        <% end %>
+      </td>
+      <td class="govuk-table__cell">
+        <% if @induction_coordinator %>
+        <%= govuk_link_to "Change", edit_admin_induction_coordinator_path(@induction_coordinator) %>
+        <% else %>
+        <%= govuk_link_to "Add induction tutor", new_admin_induction_coordinator_path %>
+        <% end %>
+      </td>
+    </tr>
+    <tr class="govuk-table__row">
+      <td class="govuk-table__cell">Local authority</td>
+      <td class="govuk-table__cell"><%=@school.local_authority&.name%></td>
+      <td class="govuk-table__cell"></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <td class="govuk-table__cell">Establishment group</td>
+      <td class="govuk-table__cell"></td>
+      <td class="govuk-table__cell"></td>
+    </tr>
+  </tbody>
+</table>
