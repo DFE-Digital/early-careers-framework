@@ -5,6 +5,7 @@ require "rails_helper"
 RSpec.describe NominationEmail, type: :model do
   describe "associations" do
     it { is_expected.to belong_to(:school) }
+    it { is_expected.to belong_to(:partnership_notification_email).optional(true) }
   end
 
   describe ".create_nomination_email" do
