@@ -17,10 +17,6 @@ Given("scenario {string} has been run", (scenario) => cy.appScenario(scenario));
 const pagePaths = {
   cookie: "/cookies",
   start: "/",
-<<<<<<< HEAD
-  privacy: "/privacy_policy",
-  accessibility: "/accessibility-statement",
-=======
   privacy: "/privacy-policy",
   accessibility: "/accessibility-statement",
   "2021 cohort CIP materials info":
@@ -30,7 +26,6 @@ const pagePaths = {
   "2021 cohort CIP materials success":
     "/schools/cohorts/2021/core-programme/materials/success",
   "2021 cohort CIP materials": "/schools/cohorts/2021/core-programme/materials",
->>>>>>> develop
   "check account": "/check-account",
   "admin schools": "/admin/schools",
   "admin index": "/admin/administrators",
