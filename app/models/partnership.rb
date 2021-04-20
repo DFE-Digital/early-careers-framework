@@ -8,4 +8,8 @@ class Partnership < ApplicationRecord
   has_many :partnership_notification_emails
 
   has_paper_trail
+
+  def challenged?
+    challenge_reason.present?
+  end
 end
