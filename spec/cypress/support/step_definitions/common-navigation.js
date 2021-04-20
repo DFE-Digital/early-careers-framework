@@ -60,6 +60,7 @@ const pagePaths = {
   schools: "/schools",
   "2021 school cohorts": "/schools/cohorts/2021",
   "2021 school partnerships": "/schools/cohorts/2021/partnerships",
+  "lead providers report schools start": "lead_providers/report-schools/start",
 };
 
 Given("I am on {string} page", (page) => {
