@@ -1,9 +1,7 @@
 <h2 class="govuk-heading-m">Support and guidance</h2>
 <p class="govuk-body-s">
   If you have a question, or you've had a problem using this service, please contact us at
-  <a href="mailto:continuing-professional-development@digital.education.gov.uk" class="govuk-footer__link">
-    continuing-professional-development@digital.education.gov.uk
-  </a>
+  <%= mail_to Rails.application.config.support_email, Rails.application.config.support_email, class: "govuk-footer__link govuk-link--no-visited-state" %>
 </p>
 <ul class="govuk-footer__inline-list">
   <li class="govuk-footer__inline-list-item">
