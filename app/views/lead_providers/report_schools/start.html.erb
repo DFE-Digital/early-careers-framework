@@ -3,8 +3,6 @@
     <h1 class="govuk-heading-xl">You can only confirm schools for the cohort that starts in the next academic year
       (<%= Cohort.current.display_name %>).</h1>
 
-    <p>To report a school to the current academic year, contact DfE support.</p>
-
-    <%= govuk_link_to "Continue", '#', class: 'govuk-button' %>
+    <%= govuk_link_to "Continue", '#', button: true%>
   </div>
 </div>
