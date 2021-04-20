@@ -16,7 +16,7 @@ private
   def induction_coordinator_dashboard_url(user)
     school = user.induction_coordinator_profile.schools.first
 
-    return schools_choose_programme_url unless school.chosen_programme?(Cohort.current)
+    return advisory_schools_choose_programme_url unless school.chosen_programme?(Cohort.current)
 
     schools_dashboard_url
   end

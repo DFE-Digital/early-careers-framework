@@ -10,6 +10,6 @@ RSpec.describe "rake admin:create", type: :task do
     url = "http://www.example.com/users/sign_in"
     expect(AdminProfile).to receive(:create_admin).with(name, email, url)
 
-    task.execute(to_task_arguments(name, email))
+    capture_output { task.execute(to_task_arguments(name, email)) }
   end
 end

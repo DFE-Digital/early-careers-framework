@@ -17,20 +17,16 @@ RSpec.describe SchoolCohort, type: :model do
     ).backed_by_column_of_type(:string)
   }
 
-  it { is_expected.to respond_to(:number_of_participants_status) }
   it { is_expected.to respond_to(:training_provider_status) }
-  it { is_expected.to respond_to(:accept_legal_status) }
   it { is_expected.to respond_to(:add_participants_status) }
   it { is_expected.to respond_to(:choose_training_materials_status) }
-  it { is_expected.to respond_to(:number_of_participants_status) }
   it { is_expected.to respond_to(:status) }
-  it { is_expected.to respond_to(:school_chose_cip?) }
 
   describe "#training_provider_status" do
     subject(:school_cohort) { create(:school_cohort) }
 
-    it "returns 'to do' by default" do
-      expect(subject.training_provider_status).to eq "to do"
+    it "returns 'To do' by default" do
+      expect(subject.training_provider_status).to eq "To do"
     end
 
     context "when school is in a partnership" do
@@ -46,8 +42,8 @@ RSpec.describe SchoolCohort, type: :model do
         )
       end
 
-      it "returns 'done' by default" do
-        expect(subject.training_provider_status).to eq "done"
+      it "returns 'Done' by default" do
+        expect(subject.training_provider_status).to eq "Done"
       end
     end
   end

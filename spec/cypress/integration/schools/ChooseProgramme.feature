@@ -2,9 +2,13 @@ Feature: Induction tutors choosing programmes
   Induction tutors should be able to choose between the Full and Core
   induction programmes for their school and view cohorts and tasks
 
-  Background: 
+  Background:
     Given cohort was created with start_year "2021"
     And I am logged in as an "induction_coordinator"
+    Then I should be on "choose programme advisory" page
+    And the page should be accessible
+
+    When I click on "link" containing "Continue"
     Then I should be on "choose programme" page
     And the page should be accessible
 
@@ -21,7 +25,7 @@ Feature: Induction tutors choosing programmes
     Then I am on "2021 school cohorts" page
     And the page should be accessible
     And "page body" should contain "Choose your training"
-    And "page body" should contain "Add teachers"
+    And "page body" should contain "Add early career teachers"
 
   Scenario: Choosing Full Induction Programme
     When I click on "training provider" label
@@ -31,5 +35,5 @@ Feature: Induction tutors choosing programmes
 
     When I click on "link" containing "2021"
     Then I am on "2021 school cohorts" page
-    And "page body" should contain "Add teachers"
+    And "page body" should contain "Add early career teachers"
     And "page body" should not contain "Choose your training"

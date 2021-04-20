@@ -1,11 +1,11 @@
-<% content_for :title, "Check your email" %>
+<% content_for :title, "Check email" %>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-l">If you have an account we'll send you a link to sign in</h1>
+    <h1 class="govuk-heading-xl">We’ve sent you a link to sign in</h1>
     <h2 class="govuk-heading-m">If you don't get an email</h2>
     <ul class="govuk-list govuk-list--bullet">
-      <li>check your spam or junk folder</li>
       <li><%= govuk_link_to "check if you have an account", check_account_path %></li>
+      <li>check your spam or junk folder</li>
       <li>contact us: <%= render MailToSupportComponent.new %></li>
     </ul>
   </div>

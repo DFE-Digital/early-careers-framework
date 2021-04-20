@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_07_182348) do
+ActiveRecord::Schema.define(version: 2021_04_15_132713) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -223,7 +223,9 @@ ActiveRecord::Schema.define(version: 2021_04_07_182348) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "estimated_teacher_count"
     t.integer "estimated_mentor_count"
+    t.uuid "core_induction_programme_id"
     t.index ["cohort_id"], name: "index_school_cohorts_on_cohort_id"
+    t.index ["core_induction_programme_id"], name: "index_school_cohorts_on_core_induction_programme_id"
     t.index ["school_id"], name: "index_school_cohorts_on_school_id"
   end
 
@@ -291,6 +293,7 @@ ActiveRecord::Schema.define(version: 2021_04_07_182348) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "discarded_at"
+    t.json "privacy_policy_acceptance"
     t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
@@ -330,6 +333,7 @@ ActiveRecord::Schema.define(version: 2021_04_07_182348) do
   add_foreign_key "provider_relationships", "lead_providers"
   add_foreign_key "pupil_premiums", "schools"
   add_foreign_key "school_cohorts", "cohorts"
+  add_foreign_key "school_cohorts", "core_induction_programmes"
   add_foreign_key "school_cohorts", "schools"
   add_foreign_key "school_local_authorities", "local_authorities"
   add_foreign_key "school_local_authorities", "schools"

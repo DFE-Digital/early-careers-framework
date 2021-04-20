@@ -3,20 +3,16 @@
 class Users::SessionsController < Devise::SessionsController
   include ApplicationHelper
 
-  class EmailNotFoundError < StandardError; end
-  class LoginIncompleteError < StandardError; end
-
   TEST_USERS = %w[admin@example.com lead-provider@example.com school-leader@example.com early-career-teacher@example.com].freeze
 
+  skip_before_action :check_privacy_policy_accepted
   before_action :mock_login, only: :create, if: -> { Rails.env.development? || Rails.env.deployed_development? }
   before_action :redirect_to_dashboard, only: %i[sign_in_with_token redirect_from_magic_link]
   before_action :ensure_login_token_valid, only: %i[sign_in_with_token redirect_from_magic_link]
 
   def create
     super
-  rescue LoginIncompleteError
-    render :login_email_sent
-  rescue EmailNotFoundError
+  rescue Devise::Strategies::PasswordlessAuthenticatable::Error
     render :login_email_sent
   end
 

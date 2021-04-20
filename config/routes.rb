@@ -17,7 +17,11 @@ Rails.application.routes.draw do
   get "/check-account", to: "check_account#show"
 
   resource :cookies, only: %i[show update]
+<<<<<<< HEAD
   resource :privacy_policy, only: %i[show]
+=======
+  resource :privacy_policy, only: %i[show update], path: "privacy-policy"
+>>>>>>> develop
   resource :accessibility_statement, only: :show, path: "accessibility-statement"
   resource :dashboard, controller: :dashboard, only: :show
   resource :supplier_dashboard, controller: :supplier_dashboard, only: :show
@@ -126,12 +130,25 @@ Rails.application.routes.draw do
 
   namespace :schools do
     resource :dashboard, controller: :dashboard, only: :show, path: "/"
-    resource :choose_programme, controller: :choose_programme, only: %i[show create], path: "choose-programme"
+    resource :choose_programme, controller: :choose_programme, only: %i[show create], path: "choose-programme" do
+      member do
+        get "advisory"
+      end
+    end
     resources :cohorts, only: :show do
       resources :partnerships, only: :index
+      resource :programme, only: %i[edit], controller: "choose_programme"
+
+      namespace :core_programme, path: "core-programme" do
+        resource :materials, only: %i[edit update show] do
+          get :info
+          get :success
+        end
+      end
+
       member do
-        get "legal"
-        get "add_participants"
+        get "programme-choice", as: :programme_choice
+        get "add-participants", as: :add_participants
       end
     end
   end
