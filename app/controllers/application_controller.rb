@@ -40,7 +40,7 @@ protected
   end
 
   def check_privacy_policy_accepted
-    return unless PrivacyPolicy.acceptance_required?(current_user)
+    return unless PrivacyPolicy.current.acceptance_required?(current_user)
 
     session[:original_path] = request.fullpath
     redirect_to privacy_policy_path

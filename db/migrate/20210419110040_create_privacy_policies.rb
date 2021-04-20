@@ -6,10 +6,12 @@ class CreatePrivacyPolicies < ActiveRecord::Migration[6.1]
 
   def change
     create_table :privacy_policies, id: :uuid do |t|
-      t.string :version, null: false
+      t.integer :major_version, null: false
+      t.integer :minor_version, null: false
+
       t.text :html, null: false
 
-      t.index :version, unique: true
+      t.index %i[major_version minor_version], unique: true
 
       t.timestamps
     end
@@ -17,7 +19,8 @@ class CreatePrivacyPolicies < ActiveRecord::Migration[6.1]
     reversible do |dir|
       dir.up do
         PrivacyPolicy.create(
-          version: "1.0",
+          major_version: 1,
+          minor_version: 0,
           html: <<~PRIVACY_POLICY,
             <h2 class="govuk-heading-m">Department for Education (DfE)</h2>
             <p class="govuk-body">Mentions of "us" and "we" mean DfE and "you" means anyone using this service.</p>

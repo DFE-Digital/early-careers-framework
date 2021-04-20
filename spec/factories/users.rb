@@ -28,8 +28,7 @@ FactoryBot.define do
       end
 
       after(:create) do |user|
-        policy = create(:privacy_policy, version: "1.0")
-        policy.accept!(user)
+        PrivacyPolicy.current.accept!(user)
       end
     end
 

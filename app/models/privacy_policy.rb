@@ -9,26 +9,22 @@ class PrivacyPolicy < ApplicationRecord
   end
 
   def self.current
-    order(Arel.sql("string_to_array(version, '.')::int[] desc")).first
+    order(:major_version, :minor_version).last
   end
 
-  def self.acceptance_required?(user)
+  def acceptance_required?(user)
     return false if !user || user.admin?
     return false unless user.induction_coordinator_profile
 
-    !current_policy_accepted?(user)
-  end
-
-  def self.current_policy_accepted?(user)
-    Acceptance
+    !Acceptance
       .joins(:privacy_policy)
       .where(user: user)
-      .where("privacy_policies.version LIKE ?", "#{current.major_version}.%")
+      .where("privacy_policies.major_version >= ?", major_version)
       .exists?
   end
 
-  def major_version
-    version.split(".").first
+  def version
+    [major_version, minor_version].join(".")
   end
 
   def accept!(user)

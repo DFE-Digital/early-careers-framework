@@ -24,7 +24,8 @@ class CreatePrivacyPolicyAcceptances < ActiveRecord::Migration[6.1]
     reversible do |dir|
       dir.up do
         policies = Hash.new do |hash, version|
-          hash[version] = PrivacyPolicy.find_by(version: version)
+          major, minor = version.split(".")
+          hash[version] = PrivacyPolicy.find_by(major_version: major, minor_version: minor)
         end
 
         User.where.not(privacy_policy_acceptance: nil).find_each do |user|

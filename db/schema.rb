@@ -193,11 +193,12 @@ ActiveRecord::Schema.define(version: 2021_04_19_142255) do
   end
 
   create_table "privacy_policies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "version", null: false
+    t.integer "major_version", null: false
+    t.integer "minor_version", null: false
     t.text "html", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["version"], name: "index_privacy_policies_on_version", unique: true
+    t.index ["major_version", "minor_version"], name: "index_privacy_policies_on_major_version_and_minor_version", unique: true
   end
 
   create_table "privacy_policy_acceptances", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

@@ -1,6 +1,6 @@
 <% content_for :title, "Privacy policy" %>
 
-<% if !PrivacyPolicy.acceptance_required?(current_user) %>
+<% if !@policy.acceptance_required?(current_user) %>
   <% content_for :before_content, govuk_back_link(text: "Back", href: :back) %>
   <h1 class="govuk-heading-xl">How we look after your personal data</h1>
 <% else %>
@@ -13,8 +13,9 @@
 
 <%= @policy.html.html_safe %>
 
-<% if PrivacyPolicy.acceptance_required?(current_user) %>
+<% if @policy.acceptance_required?(current_user) %>
   <%= form_tag({action: :update}, method: :put) do %>
+    <%= hidden_field_tag :policy_id, @policy.id %>
     <%= submit_tag "Continue", class: "govuk-button" %>
   <% end %>
 <% end %>

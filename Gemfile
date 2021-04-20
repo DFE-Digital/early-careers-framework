@@ -108,6 +108,7 @@ group :development do
 end
 
 group :test do
+  gem "database_cleaner"
   gem "faker"
   gem "pundit-matchers", "~> 1.6.0"
   gem "rails-controller-testing", ">= 1.0.5"

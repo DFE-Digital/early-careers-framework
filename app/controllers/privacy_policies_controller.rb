@@ -2,18 +2,15 @@
 
 class PrivacyPoliciesController < ApplicationController
   skip_before_action :check_privacy_policy_accepted
-  before_action :load_policy
 
-  def show; end
-
-  def update
-    @policy.accept!(current_user)
-    redirect_to session.delete(:original_path)
+  def show
+    @policy = PrivacyPolicy.current
   end
 
-private
+  def update
+    policy = PrivacyPolicy.find(params[:policy_id])
+    policy.accept!(current_user)
 
-  def load_policy
-    @policy = PrivacyPolicy.current
+    redirect_to session.delete(:original_path)
   end
 end
