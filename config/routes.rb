@@ -21,6 +21,12 @@ Rails.application.routes.draw do
   resource :accessibility_statement, only: :show, path: "accessibility-statement"
   resource :dashboard, controller: :dashboard, only: :show
   resource :supplier_dashboard, controller: :supplier_dashboard, only: :show
+  resource :challenge_partnership, path: "report-incorrect-partnership", only: :show do
+    collection do
+      get "link-expired", action: :link_expired
+      get "already-challenged", action: :already_challenged
+    end
+  end
 
   namespace :api do
     resources :school_search, only: %i[index]

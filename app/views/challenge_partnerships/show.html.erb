@@ -1,0 +1,25 @@
+<% content_for :title, "Report provider error" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Report that your school has been signed up incorrectly</h1>
+    <p class="govuk-body"><%= @school_name %>  has received a confirmation from <%= @provider_name %> but you believe
+      this is incorrect.</p>
+
+    <%= form_with do |f| %>
+      <%= f.govuk_collection_radio_buttons(
+            :challenge_reason,
+            [
+              OpenStruct.new(id: "another_provider", name: "I have already confirmed an agreement with another provider"),
+              OpenStruct.new(id: "not_confirmed", name: "We have not confirmed an agreement"),
+              OpenStruct.new(id: "do_not_recognise", name: "I do not recognise this training provider"),
+              OpenStruct.new(id: "no_ects", name: "We do not have any early career teachers this year"),
+              OpenStruct.new(id: "mistake", name: "This looks like a mistake"),
+            ],
+            :id,
+            :name,
+            legend: { text: "Tell us why", size: "m" }) %>
+      <%= f.govuk_submit %>
+    <% end %>
+  </div>
+</div>
