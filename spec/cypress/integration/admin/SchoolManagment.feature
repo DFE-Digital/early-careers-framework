@@ -9,6 +9,7 @@ Feature: Admin user managing schools
   Scenario: Viewing a list of schools
     Then the table should have 20 rows
     And the page should be accessible
+    And percy should be sent snapshot
 
     When I type "include" into "search box"
     And I press enter in "search box"

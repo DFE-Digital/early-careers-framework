@@ -10,16 +10,19 @@ Feature: Admin user modifying delivery partners
     When I click on "create delivery partner button"
     Then I should be on "choose new delivery partner name" page
     And the page should be accessible
+    And percy should be sent snapshot called "Choose new deivery partner name page"
 
     When I type "New delivery partner" into "delivery partner name input"
     And I click the submit button
     Then I should be on "choose new delivery partner lead providers" page
     And the page should be accessible
+    And percy should be sent snapshot called "Choose new delivery partner lead providers page"
 
     When I click on "Lead Provider 1" label
     And I click the submit button
     Then I should be on "choose delivery partner cohorts" page
     And the page should be accessible
+    And percy should be sent snapshot called "Choose delivery partner cohorts page"
 
     When I click on "2021" label
     And I click the submit button
@@ -28,12 +31,14 @@ Feature: Admin user modifying delivery partners
     And "page body" should contain "Lead Provider 1"
     And "page body" should contain "2021"
     And the page should be accessible
+    And percy should be sent snapshot called "New delivery partner review page"
 
     When I click the submit button
     Then I should be on "delivery partner index" page
     And "page body" should contain "New delivery partner"
     And "notification banner" should contain "Delivery partner created"
     And the page should be accessible
+    And percy should be sent snapshot called "New delivery partner index page"
 
   Scenario: It should remember details when navigating backwards in creation process
     When I click on "create delivery partner button"
@@ -78,6 +83,7 @@ Feature: Admin user modifying delivery partners
     Then I should be on "delivery partner edit" page
     And "delivery partner name input" should have value "Delivery Partner 1"
     # And the page should be accessible
+    And percy should be sent snapshot called "Delivery partner edit page"
 
     When I clear "delivery partner name input"
     And I type "New delivery partner" into "delivery partner name input"
@@ -99,6 +105,7 @@ Feature: Admin user modifying delivery partners
     And I click on "delete button"
     Then I should be on "delivery partner delete" page
     And the page should be accessible
+    And percy should be sent snapshot called "Delivery partner delete page"
 
     When I click on "delete button"
     Then I should be on "delivery partner index" page
