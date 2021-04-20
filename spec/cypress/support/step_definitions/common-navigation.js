@@ -1,15 +1,31 @@
 import { Given, When, Then } from "cypress-cucumber-preprocessor/steps";
+import OnRails from "../on-rails";
 
 Given("I am logged in as a {string}", (user) => cy.login(user));
 Given("I am logged in as an {string}", (user) => cy.login(user));
+Given("I am logged in as an induction coordinator for created school", () => {
+  const schoolId = OnRails.getCreatedRecord("school").id;
+  cy.appFactories([
+    ["create", "user", "induction_coordinator", { school_ids: [schoolId] }],
+  ]).then(() => {
+    cy.loginCreated("user");
+  });
+});
 
 Given("scenario {string} has been run", (scenario) => cy.appScenario(scenario));
 
 const pagePaths = {
   cookie: "/cookies",
   start: "/",
-  privacy: "/privacy_policy",
+  privacy: "/privacy-policy",
   accessibility: "/accessibility-statement",
+  "2021 cohort CIP materials info":
+    "/schools/cohorts/2021/core-programme/materials/info",
+  "2021 cohort CIP materials selection":
+    "/schools/cohorts/2021/core-programme/materials/edit",
+  "2021 cohort CIP materials success":
+    "/schools/cohorts/2021/core-programme/materials/success",
+  "2021 cohort CIP materials": "/schools/cohorts/2021/core-programme/materials",
   "check account": "/check-account",
   "admin schools": "/admin/schools",
   "admin index": "/admin/administrators",
@@ -40,6 +56,7 @@ const pagePaths = {
   "new lead provider user review": "/admin/suppliers/users/new/review",
   "lead provider user delete": "/lead-providers/users/:id/delete",
   "choose programme": "/schools/choose-programme",
+  "choose programme advisory": "/schools/choose-programme/advisory",
   schools: "/schools",
   "2021 school cohorts": "/schools/cohorts/2021",
   "2021 school partnerships": "/schools/cohorts/2021/partnerships",

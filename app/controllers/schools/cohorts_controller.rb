@@ -8,7 +8,5 @@ class Schools::CohortsController < Schools::BaseController
 
   def show; end
 
-  def legal; end
-
   def add_participants; end
 end

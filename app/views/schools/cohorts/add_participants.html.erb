@@ -1,24 +1,22 @@
+<% content_for :title, "Add teachers and mentors" %>
+
 <% content_for :before_content, govuk_back_link(
   text: "Back",
-  href: schools_cohort_path("2021"))
+  href: schools_cohort_path(@cohort.display_name))
 %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <span class="govuk-caption-m">2021</span>
-    <h1 class="govuk-heading-l">Add teachers and mentors</h1>
-
-    <p class="govuk-body">From <strong>July</strong>, you can confirm which early career teachers and mentors are starting a programme this year.</p>
-    <p class="govuk-body">We will let you know when you can get started.</p>
-
-    <p class="govuk-body">For each person, you will need:</p>
-
+    <span class="govuk-caption-l"><%= @cohort.display_name %> cohort</span>
+    <h1 class="govuk-heading-xl">Add early career teachers and mentors</h1>
+    <p>From <strong>July</strong>, you can confirm which early career teachers and mentors are starting a programme this year.</p>
+    <p>We will let you know when you can get started.</p>
+    <p>For each early career teacher and mentor, you will need:</p>
     <ul class="govuk-list govuk-list--bullet">
       <li>first name</li>
       <li>last name</li>
       <li>teacher reference number (TRN)</li>
       <li>date of birth</li>
     </ul>
-
   </div>
 </div>

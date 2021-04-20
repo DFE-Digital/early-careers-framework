@@ -1,27 +1,36 @@
 <% content_for :title, "Search school location" %>
 <% content_for :before_content, govuk_back_link(text: "Back", href: root_path) %>
 
-<h1 class="govuk-heading-l">Nominate an induction tutor</h1>
-<p>This is someone who is responsible for running induction at your school.</p>
-<p>They will:</p>
-<ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-8">
-  <li>confirm the type of induction programme your school wants to run</li>
-  <li>tell us which early career teachers and mentors are starting a programme</li>
-  <li>receive any future notifications about this service</li>
-</ul>
-
-<%= form_with model: @nomination_request_form, url: choose_location_request_nomination_invite_path, method: :post do |f| %>
-  <%= f.govuk_error_summary %>
-  <div class="govuk-input--width-20">
-    <%= f.govuk_collection_select(
-          :local_authority_id,
-          @local_authorities,
-          :id,
-          :name,
-          label: { text: "School location", class: "govuk-label govuk-label--m" },
-          hint: { text: "Enter local authority"},
-          options: { include_blank: true },
-          class: ["js-location-select"]) %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Nominate an induction lead or tutor</h1>
+    <p>Your induction lead or tutor will use our online service to manage their statutory induction programme and
+      receive any notifications.</p>
+    <p>You only need to nominate someone if your school wants to:</p>
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-8">
+      <li>use an approved training provider</li>
+    </ul>
+    <p>Or</p>
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-8">
+      <li>use the DfE accredited materials</li>
+    </ul>
+    <%= form_with model: @nomination_request_form, url: choose_location_request_nomination_invite_path, method: :post do |f| %>
+      <%= f.govuk_error_summary %>
+      <div class="govuk-input--width-20">
+        <%= f.govuk_collection_select(
+              :local_authority_id,
+              @local_authorities,
+              :id,
+              :name,
+              label: { text: "What is your school's local authority?", class: "govuk-label govuk-label--m" },
+              hint: -> { tag.span do
+                concat("This is the authority or council in your area. For example, Gloucestershire or Barnet. Not sure?")
+                concat(govuk_link_to("Find your school on our register", "https://get-information-schools.service.gov.uk/"))
+              end },
+              options: { include_blank: true },
+              class: ["js-location-select"]) %>
+      </div>
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
   </div>
-  <%= f.govuk_submit "Continue" %>
-<% end %>
+</div>

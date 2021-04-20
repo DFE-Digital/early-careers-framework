@@ -31,6 +31,21 @@ module TaskExampleGroup
   def to_task_arguments(*task_args)
     Rake::TaskArguments.new(task.arg_names, task_args)
   end
+
+  def capture_output
+    stdout = $stdout
+    $stdout = StringIO.new
+    stderr = $stderr
+    $stderr = StringIO.new
+    yield
+    {
+      stdout: $stdout.string,
+      stderr: $stderr.string,
+    }
+  ensure
+    $stdout = stdout
+    $stderr = stderr
+  end
 end
 
 RSpec.configure do |config|

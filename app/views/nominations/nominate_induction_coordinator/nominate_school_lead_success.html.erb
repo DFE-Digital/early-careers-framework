@@ -2,7 +2,12 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <%= govuk_panel title: "Induction tutor nominated", body: nil, classes: "govuk-!-margin-bottom-8", html_attributes: { "data-test": "success-panel" } %>
+    <%= govuk_panel(
+          title: "Induction lead or tutor nominated",
+          body: nil,
+          classes: "govuk-!-margin-bottom-8",
+          html_attributes: { "data-test": "success-panel" }
+        ) %>
 
     <h2 class="govuk-heading-m">What happens next</h2>
     <ul class="govuk-list govuk-list--bullet">

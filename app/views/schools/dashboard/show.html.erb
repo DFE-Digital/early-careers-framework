@@ -1,7 +1,9 @@
+<% content_for :title, "Manage training" %>
+
 <span class="govuk-caption-l"><%= @school.name %></span>
 <h1 class="govuk-heading-xl govuk-!-margin-bottom-7">Manage your training</h1>
 
-<p class="govuk-body govuk-!-margin-bottom-5">Check and add details for every academic year/cohort.</p>
+<p class="govuk-body-l govuk-!-margin-bottom-5">Check and complete steps for every academic year/cohort</p>
 
 <h2 class="govuk-heading-m govuk-!-margin-bottom-1">Your cohorts</h2>
 
@@ -20,10 +22,10 @@
           <%= govuk_link_to school_cohort.cohort.start_year, schools_cohort_path(school_cohort.cohort.start_year) %>
         </td>
         <td class="govuk-table__cell">
-          <% if school_cohort.school_chose_cip? %>
-            Using accredited materials
+          <% if school_cohort.core_induction_programme? %>
+            Use DfE accredited materials
           <% else %>
-            Training provider funded by DfE
+            Use an approved training provider
           <% end %>
         </td>
         <td class="govuk-table__cell">
