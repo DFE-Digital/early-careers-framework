@@ -2,21 +2,16 @@
   <div class="govuk-grid-column-full">
     <% if current_user.lead_provider? %>
       <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-xl">
-          <%= @lead_provider.name %>
-        </h1>
-        <div class="index-group">
-          <h2 class="govuk-heading-m">
-            <%= govuk_link_to "Find and add schools", start_lead_providers_report_schools_path %>
-          </h2>
-          <p class="govuk-body">Search for schools you want to recruit and add schools you have partnered with.</p>
-        </div>
-        <div class="index-group">
-          <h2 class="govuk-heading-m">
-            <%= govuk_link_to "Check your schools for #{@lead_provider.cohorts.current.display_name}", lead_providers_your_schools_path(selected_cohort_id: @lead_provider.cohorts.current.id) %>
-          </h2>
-          <p class="govuk-body">See which schools have added their early career teachers and mentors.</p>
-        </div>
+        <%= render partial: "navigation" %>
+        <h1 class="govuk-heading-xl"><%= @lead_provider.name %></h1>
+        <h2 class="govuk-heading-m">
+          <%= govuk_link_to "Find and add schools", start_lead_providers_report_schools_path %>
+        </h2>
+        <p>Tell the Department for Education (DfE) which schools you have confirmed an agreement with.</p>
+        <h2 class="govuk-heading-m">
+          <%= govuk_link_to "Check your schools for #{@lead_provider.cohorts.current.display_name}", lead_providers_your_schools_path(selected_cohort_id: @lead_provider.cohorts.current.id) %>
+        </h2>
+        <p class="govuk-body">See which schools have added their early career teachers and mentors.</p>
       </div>
     <% else %>
       <h1 class="govuk-heading-l">User dashboard</h1>
