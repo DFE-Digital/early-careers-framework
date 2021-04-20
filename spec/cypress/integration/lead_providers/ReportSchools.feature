@@ -8,4 +8,4 @@ Feature: Report Schools flow
     When I click on "link" containing "Find and add schools"
     Then I should be on "lead providers report schools start" page
     And the page should be accessible
-    And percy should be sent snapshot
+    And percy should be sent snapshot called "Lead provider report schools start page"
