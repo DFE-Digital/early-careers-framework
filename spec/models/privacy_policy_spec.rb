@@ -17,7 +17,7 @@ RSpec.describe PrivacyPolicy, type: :model do
   end
 
   describe "#acceptance_required?" do
-    let(:user) { create :user, :induction_coordinator, :no_privacy_policy_accepted }
+    let(:user) { create :user, :induction_coordinator }
     subject(:policy) { create :privacy_policy, major_version: 3, minor_version: 5 }
     subject(:result) { policy.acceptance_required?(user) }
 
@@ -60,7 +60,7 @@ RSpec.describe PrivacyPolicy, type: :model do
     end
 
     context "as a user not being an induction coordinator" do
-      let(:user) { create :user, :no_privacy_policy_accepted }
+      let(:user) { create :user }
 
       it { is_expected.to be false }
     end

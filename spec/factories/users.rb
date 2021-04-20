@@ -11,17 +11,10 @@ FactoryBot.define do
       admin_profile { build(:admin_profile) }
     end
 
-    trait :no_privacy_policy_accepted do
-      transient do
-        privacy_policy_accepted { false }
-      end
-    end
-
     trait :induction_coordinator do
       induction_coordinator_profile
 
       transient do
-        privacy_policy_accepted { "0.1" }
         schools { induction_coordinator_profile.schools }
         school_ids {}
       end
@@ -31,14 +24,6 @@ FactoryBot.define do
           user.induction_coordinator_profile.school_ids = evaluator.school_ids
         else
           user.induction_coordinator_profile.schools = evaluator.schools
-        end
-      end
-
-      after(:create) do |user, evaluator|
-        if evaluator.privacy_policy_accepted
-          major, minor = evaluator.privacy_policy_accepted.split(".")
-          policy = PrivacyPolicy.find_by!(major_version: major, minor_version: minor)
-          policy.accept!(user)
         end
       end
     end

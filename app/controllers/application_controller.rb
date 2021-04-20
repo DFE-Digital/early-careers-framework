@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
 
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :previous_url_for_cookies_page
-  before_action :check_privacy_policy_accepted, except: :check
+  before_action :check_privacy_policy_accepted
 
   def check
     render json: { status: "OK", version: release_version, sha: ENV["SHA"], environment: Rails.env }, status: :ok
@@ -40,7 +40,10 @@ protected
   end
 
   def check_privacy_policy_accepted
-    return unless PrivacyPolicy.current.acceptance_required?(current_user)
+    policy = PrivacyPolicy.current
+    return if policy.nil?
+
+    return unless policy.acceptance_required?(current_user)
 
     session[:original_path] = request.fullpath
     redirect_to privacy_policy_path
