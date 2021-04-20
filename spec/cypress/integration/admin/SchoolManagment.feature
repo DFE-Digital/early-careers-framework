@@ -13,9 +13,6 @@ Feature: Admin user managing schools
     And "page body" should contain "Sarah Smith"
     And the page should be accessible
 
-    When I click on "link" containing "Change"
-    Then I should be on "admin induction coordinator edit" page
-
   Scenario: Viewing a list of schools
     Then the table should have 20 rows
     And the page should be accessible

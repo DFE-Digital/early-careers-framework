@@ -1,4 +1,8 @@
 <% content_for :title, "School detail: overview" %>
+<% content_for :before_content, govuk_back_link(
+  text: "Back",
+  href: admin_schools_path)
+%>
 
 <h1 class="govuk-heading-xl"><%= @school.name %></h1>
 <%= render partial: "navigation" %>
@@ -15,7 +19,8 @@
       </td>
       <td class="govuk-table__cell">
         <% if @induction_coordinator %>
-        <%= govuk_link_to "Change", edit_admin_induction_coordinator_path(@induction_coordinator) %>
+        <!-- TODO: Add link to change induction coordinator for a school -->
+        <%= govuk_link_to "Change", "#" %>
         <% else %>
         <%= govuk_link_to "Add induction tutor", new_admin_induction_coordinator_path %>
         <% end %>
