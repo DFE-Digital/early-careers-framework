@@ -23,6 +23,7 @@ class InviteSchools
         nomination_email.sent_to,
         nomination_email.token,
         school.name,
+        email_expiry_date,
       )
     rescue StandardError
       logger.info "Error emailing school, urn: #{urn} ... skipping"
@@ -36,12 +37,13 @@ class InviteSchools
 
 private
 
-  def send_nomination_email(recipient, token, school_name)
+  def send_nomination_email(recipient, token, school_name, email_expiry_date)
     SchoolMailer.nomination_email(
       recipient: recipient,
       reference: token,
       school_name: school_name,
       nomination_url: nomination_url(token),
+      expiry_date: email_expiry_date,
     ).deliver_now
   end
 
@@ -61,6 +63,10 @@ private
       token: token,
       host: Rails.application.config.domain,
     )
+  end
+
+  def email_expiry_date
+    NominationEmail::NOMINATION_EXPIRY_TIME.from_now.strftime("%d/%m/%Y")
   end
 
   def logger
