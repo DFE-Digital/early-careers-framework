@@ -8,3 +8,4 @@ Feature: Check you have an account page
     When I click on "link" containing "check if you have an account"
     Then I am on "check account" page
     And the page should be accessible
+    And percy should be sent snapshot

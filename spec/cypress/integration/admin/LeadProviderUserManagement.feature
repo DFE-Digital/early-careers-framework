@@ -11,24 +11,28 @@ Feature: Admin user modifying lead provider users
     When I click on "create supplier user button"
     Then I should be on "new lead provider user" page
     And the page should be accessible
+    And percy should be sent snapshot called "New lead provider user page"
 
     When I type "Lead" into "supplier name input"
     And I click on "autocomplete dropdown item" containing "Lead Provider 1"
     And I click the submit button
     Then I should be on "new lead provider user details" page
     And the page should be accessible
+    And percy should be sent snapshot called "New lead provider user details page"
 
     When I type "John Smith" into "name input"
     And I type "j.s@example.com" into "email input"
     And I click the submit button
     Then I should be on "new lead provider user review" page
     And the page should be accessible
+    And percy should be sent snapshot called "New lead provider user review page"
     And "page body" should contain "John Smith"
     And "page body" should contain "j.s@example.com"
 
     When I click the submit button
     Then I should be on "lead provider users index" page
     And the page should be accessible
+    And percy should be sent snapshot called "Lead provider users index page"
     And "page body" should contain "John Smith"
     And "page body" should contain "j.s@example.com"
     And "page body" should contain "Lead Provider 1"
@@ -64,6 +68,7 @@ Feature: Admin user modifying lead provider users
     And I click on "delete button"
     Then I should be on "lead provider user delete" page
     And the page should be accessible
+    And percy should be sent snapshot called "Lead provider user delete page"
     Then "page body" should contain "Do you want to delete this user?"
     And "page body" should contain "Supplier user: John Wick"
 

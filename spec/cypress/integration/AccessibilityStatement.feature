@@ -4,3 +4,4 @@ Feature: Accessibility statement page
     When I click on "link" containing "Accessibility"
     Then I should be on "accessibility" page
     And the page should be accessible
+    And percy should be sent snapshot

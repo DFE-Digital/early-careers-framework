@@ -11,10 +11,12 @@ Feature: Induction tutors choosing programmes
     When I click on "link" containing "Choose your training materials"
     Then I should be on "2021 cohort CIP materials info" page
     And the page should be accessible
+    And percy should be sent snapshot called "2021 cohort CIP materials info page"
 
     When I click on "link" containing "Continue"
     Then I should be on "2021 cohort CIP materials selection" page
     And the page should be accessible
+    And percy should be sent snapshot called "2021 cohort CIP materials selection page"
 
     When I click the submit button
     Then "page body" should contain "Select the training materials you want to use"
@@ -24,6 +26,7 @@ Feature: Induction tutors choosing programmes
     Then I should be on "2021 cohort CIP materials success" page
     And "page body" should contain "Study materials saved"
     And the page should be accessible
+    And percy should be sent snapshot called "2021 cohort CIP materials success page"
 
     When I click on "link" containing "Back to 2021"
     Then I should be on "2021 school cohorts" page
@@ -31,4 +34,5 @@ Feature: Induction tutors choosing programmes
     When I click on "link" containing "Choose your training materials"
     Then I should be on "2021 cohort CIP materials" page
     And the page should be accessible
+    And percy should be sent snapshot called "2021 cohort CIP materials page"
     And "page body" should contain "Changing your materials"
