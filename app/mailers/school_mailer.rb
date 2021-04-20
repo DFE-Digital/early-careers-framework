@@ -6,11 +6,10 @@ class SchoolMailer < ApplicationMailer
   SCHOOL_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE = "99991fd9-fb41-48cf-846d-98a1fee7762a"
   COORDINATOR_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE = "076e8486-cbcc-44ee-8a6e-d2a721ee1460"
 
-  def nomination_email(recipient:, reference:, school_name:, nomination_url:, expiry_date:)
+  def nomination_email(recipient:, school_name:, nomination_url:, expiry_date:)
     template_mail(
       NOMINATION_EMAIL_TEMPLATE,
       to: recipient,
-      reference: reference,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
