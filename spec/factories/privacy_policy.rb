@@ -6,8 +6,4 @@ FactoryBot.define do
     minor_version { 0 }
     html { Faker::Lorem.paragraphs(number: 4).map { |para| "<p>#{para}</p>\n" }.join }
   end
-
-  factory :privacy_policy_acceptance do
-    privacy { build :privacy_policy, version: "1.0" }
-  end
 end
