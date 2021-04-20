@@ -26,7 +26,7 @@ module Admin
   private
 
     def load_school
-      @school = School.find(params[:id])
+      @school = School.eligible.find(params[:id])
     end
   end
 end
