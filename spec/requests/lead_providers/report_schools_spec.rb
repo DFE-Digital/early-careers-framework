@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe "Report schools spec", type: :request do
   let(:user) { create(:user, :lead_provider) }
 
-  describe "GET /lead_providers/report-schools/start" do
+  describe "GET /lead-providers/report-schools/start" do
     it "should show the start page to a lead provider" do
       sign_in user
       get start_lead_providers_report_schools_path
