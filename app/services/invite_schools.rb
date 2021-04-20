@@ -34,13 +34,14 @@ class InviteSchools
 private
 
   def send_nomination_email(nomination_email)
-    SchoolMailer.nomination_email(
+    notify_id = SchoolMailer.nomination_email(
       recipient: nomination_email.sent_to,
-      reference: nomination_email.token,
       school_name: nomination_email.school.name,
       nomination_url: nomination_email.nomination_url,
       expiry_date: email_expiry_date,
-    ).deliver_now
+    ).deliver_now.delivery_method.response.id
+
+    nomination_email.update!(notify_id: notify_id)
   end
 
   def email_expiry_date

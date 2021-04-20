@@ -4,15 +4,13 @@ require "rails_helper"
 
 RSpec.describe SchoolMailer, type: :mailer do
   describe "#nomination_email" do
-    let(:token) { "fedd83c06d5747f1" }
     let(:primary_contact_email) { "contact@example.com" }
-    let(:nomination_url) { "https://ecf-dev.london.cloudapps/nominations?token=#{token}" }
+    let(:nomination_url) { "https://ecf-dev.london.cloudapps/nominations?token=abc123" }
 
     let(:nomination_email) do
       SchoolMailer.nomination_email(
         recipient: primary_contact_email,
         nomination_url: nomination_url,
-        reference: token,
         school_name: "Great Ouse Academy",
         expiry_date: "1/1/2000",
       ).deliver_now
