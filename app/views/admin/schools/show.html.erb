@@ -1,8 +1,4 @@
 <% content_for :title, "School detail: overview" %>
-<% content_for :before_content, govuk_back_link(
-  text: "Back",
-  href: admin_schools_path)
-%>
 
 <h1 class="govuk-heading-xl"><%= @school.name %></h1>
 <%= render partial: "navigation" %>
