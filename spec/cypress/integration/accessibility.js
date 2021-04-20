@@ -13,7 +13,6 @@ describe("Accessibility", () => {
     cy.get('[name="user[email]"]').type("doesntexist@example.com{enter}");
     cy.titleShouldEqual("Check email");
     cy.checkA11y();
-    cy.percySnapshot("School not registered page");
     cy.appSentEmails().then((emails) => {
       expect(emails).to.have.lengthOf(0);
     });
