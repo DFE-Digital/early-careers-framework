@@ -1,0 +1,26 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: admin_induction_coordinators_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h2 class="govuk-heading-m">Your school</h1>
+    <ul class="govuk-list">
+      <li>Name: <%= @school.name %></li>
+      <li>URN: <%= @school.urn %></li>
+      <li>Address: <%= @school.full_address %></li>
+    </ul>
+
+    <h2 class="govuk-heading-m">Who do you want to nominate?</h2>
+    <%= form_for(@induction_coordinator, url: admin_induction_coordinators_path(@induction_coordinator)) do |f| %>
+      <%= f.govuk_error_summary %>
+      <%= f.govuk_text_field(
+            :full_name,
+            label: { text: "Full name" })
+      %>
+      <%= f.govuk_email_field(
+            :email,
+            label: { text: "Email" })
+      %>
+      <%= f.govuk_submit "Save" %>
+    <% end %>
+  </div>
+</div>

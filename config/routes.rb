@@ -121,7 +121,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :induction_coordinators, only: %i[index edit update], path: "induction-coordinators"
+    resources :induction_coordinators, only: %i[index edit update new create], path: "induction-coordinators"
   end
 
   namespace :schools do
