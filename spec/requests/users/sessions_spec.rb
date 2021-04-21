@@ -38,7 +38,13 @@ RSpec.describe "Users::Sessions", type: :request do
       end
 
       it "sends a log_in email request to User Mailer" do
-        expect(UserMailer).to receive(:sign_in_email).with(user, login_url_regex, token_expiry_regex)
+        expect(UserMailer).to receive(:sign_in_email).with(
+          hash_including(
+            user: user,
+            url: login_url_regex,
+            token_expiry: token_expiry_regex,
+          ),
+        )
         post "/users/sign_in", params: { user: { email: user.email } }
       end
     end

@@ -7,7 +7,9 @@ module Devise
   module Strategies
     class PasswordlessAuthenticatable < Authenticatable
       class Error < StandardError; end
+
       class EmailNotFoundError < Error; end
+
       class LoginIncompleteError < Error; end
 
       def authenticate!
@@ -26,7 +28,7 @@ module Devise
               host: Rails.application.config.domain,
             )
 
-            UserMailer.sign_in_email(user, url, token_expiry.to_s(:time)).deliver_now
+            UserMailer.sign_in_email(user: user, url: url, token_expiry: token_expiry.to_s(:time)).deliver_now
             raise LoginIncompleteError
           else
             raise EmailNotFoundError
