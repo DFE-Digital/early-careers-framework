@@ -26,7 +26,7 @@ class Schools::ChooseProgrammeController < Schools::BaseController
       induction_programme_choice: @induction_choice_form.programme_choice,
     )
 
-    redirect_to helpers.profile_dashboard_url(current_user)
+    redirect_to helpers.profile_dashboard_path(current_user)
   end
 
   def edit; end
@@ -35,6 +35,6 @@ private
 
   def verify_programme_chosen
     school = current_user.induction_coordinator_profile.schools.first
-    redirect_to helpers.profile_dashboard_url(current_user) if school.chosen_programme?(Cohort.current)
+    redirect_to helpers.profile_dashboard_path(current_user) if school.chosen_programme?(Cohort.current)
   end
 end

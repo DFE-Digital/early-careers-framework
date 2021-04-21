@@ -12,13 +12,13 @@ RSpec.describe ApplicationHelper, type: :helper do
     induction_coordinator.induction_coordinator_profile.update!(schools: [school])
   end
 
-  describe "#profile_dashboard_url" do
+  describe "#profile_dashboard_path" do
     it "returns the admin/schools path for admins" do
-      expect(helper.profile_dashboard_url(admin_user)).to eq("http://test.host/admin/schools")
+      expect(helper.profile_dashboard_path(admin_user)).to eq("/admin/schools")
     end
 
     it "returns schools/choose-programme for induction coordinators" do
-      expect(helper.profile_dashboard_url(induction_coordinator)).to eq("http://test.host/schools/choose-programme/advisory")
+      expect(helper.profile_dashboard_path(induction_coordinator)).to eq("/schools/choose-programme/advisory")
     end
 
     context "when a school has chosen a programme" do
@@ -27,7 +27,7 @@ RSpec.describe ApplicationHelper, type: :helper do
       end
 
       it "returns schools for induction coordinators" do
-        expect(helper.profile_dashboard_url(induction_coordinator)).to eq("http://test.host/schools")
+        expect(helper.profile_dashboard_path(induction_coordinator)).to eq("/schools")
       end
     end
   end
