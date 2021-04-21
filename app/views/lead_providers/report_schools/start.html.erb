@@ -1,7 +1,19 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+    <%= render TabsComponent.new do |component| %>
+      <%= component.tab(path: dashboard_path) do %>
+        <strong>Overview</strong>
+      <% end %>
+      <%= component.tab(path: start_lead_providers_report_schools_path) do %>
+        <strong>Schools</strong>
+      <% end %>
+    <% end %>
+
     <h1 class="govuk-heading-xl">You can only confirm schools for the cohort that starts in the next academic year
       (<%= Cohort.current.display_name %>).</h1>
+
+    <p>If you want to add schools to your 2021 cohort after October 31st, you need to contact:
+      <%= render MailToSupportComponent.new %></p>
 
     <%= govuk_link_to "Continue", '#', button: true%>
   </div>
