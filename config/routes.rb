@@ -64,7 +64,9 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
-    resources :schools, only: :index
+    resources :schools, only: %i[index show] do
+      resources :induction_coordinators, controller: "schools/induction_coordinators", only: %i[new create], path: "induction-coordinators"
+    end
 
     scope :suppliers, module: "suppliers" do
       resources :suppliers, only: :index, path: "/"
@@ -121,7 +123,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :induction_coordinators, only: %i[index edit update new create], path: "induction-coordinators"
+    resources :induction_coordinators, only: %i[index edit update], path: "induction-coordinators"
   end
 
   namespace :schools do
