@@ -47,7 +47,7 @@ Rails.application.configure do
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   config.active_job.queue_adapter = :delayed_job
-  # config.active_job.queue_name_prefix = "govuk_rails_boilerplate_production"
+  # config.active_job.queue_name_prefix = "early_career_framework_production"
   config.domain = ENV["DOMAIN"]
 
   config.support_email = "continuing-professional-development@digital.education.gov.uk"
