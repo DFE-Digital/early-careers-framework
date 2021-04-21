@@ -5,7 +5,7 @@ FactoryBot.define do
     token { Faker::Alphanumeric.alphanumeric(number: 16) }
     sent_to { "John-Doe@example.com" }
     sent_at { Time.zone.now }
-    school { build(:school, name: "Nominated School", primary_contact_email: "primary-contact-email@example.com") }
+    school { build(:school, urn: "0922081", name: "Nominated School", primary_contact_email: "primary-contact-email@example.com", address_line1: "50 Olivia Drive", postcode: "CV37 9HE") }
 
     trait :expired_nomination_email do
       sent_at { 1.year.ago }
