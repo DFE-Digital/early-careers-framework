@@ -103,7 +103,9 @@
             <% end %>
           </strong>
           <span class="govuk-phase-banner__text">
-            This is a new service – your <%= render MailToSupportComponent.new("feedback") %> will help us to improve it.
+            This is a new service – your
+            <%= govuk_link_to "feedback", "https://forms.office.com/Pages/ResponsePage.aspx?id=yXfS-grGoU2187O4s0qC-VlIdprT6TlEmsOS8-ufjHVUQzgyQVVOSERHWkZYV045RVYxSTBQWlNUSi4u", target: "_blank", rel: "noopener noreferrer" %>
+            will help us to improve it.
           </span>
         </p>
       </div>
