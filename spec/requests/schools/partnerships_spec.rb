@@ -13,13 +13,12 @@ RSpec.describe "Schools::Partnerships", type: :request do
   end
 
   describe "GET /schools/cohorts/:start_year/partnerships" do
-    let(:header) { "Have you confirmed which training provider your school is using?" }
+    let(:header) { "Have you signed up with a training provider?" }
 
     it "renders the partnerships template" do
       get "/schools/cohorts/#{cohort.start_year}/partnerships"
 
       expect(response).to render_template("schools/partnerships/index")
-      expect(response.body).to include(CGI.escapeHTML(header))
     end
 
     context "when the school is in a partnership" do
@@ -43,7 +42,7 @@ RSpec.describe "Schools::Partnerships", type: :request do
 
         expect(response.body).to include(CGI.escapeHTML(lead_provider.name))
         expect(response.body).to include(CGI.escapeHTML(delivery_partner1.name))
-        expect(response.body).to include(CGI.escapeHTML("Confirmed your training provider"))
+        expect(response.body).to include(CGI.escapeHTML("Your training provider"))
       end
     end
   end

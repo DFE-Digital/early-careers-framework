@@ -25,6 +25,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
   describe "POST /users/sign_in" do
     let(:login_url_regex) { /http:\/\/www\.example\.com\/users\/confirm_sign_in\?login_token=.*/ }
+    let(:token_expiry_regex) { /\d\d:\d\d/ }
 
     before do
       allow(UserMailer).to receive(:sign_in_email).and_call_original
@@ -37,7 +38,7 @@ RSpec.describe "Users::Sessions", type: :request do
       end
 
       it "sends a log_in email request to User Mailer" do
-        expect(UserMailer).to receive(:sign_in_email).with(user, login_url_regex)
+        expect(UserMailer).to receive(:sign_in_email).with(user, login_url_regex, token_expiry_regex)
         post "/users/sign_in", params: { user: { email: user.email } }
       end
     end
