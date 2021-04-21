@@ -68,9 +68,9 @@ class CreatePrivacyPolicies < ActiveRecord::Migration[6.1]
             <h3 class="govuk-heading-s">Processing applications</h3>
             <p class="govuk-body">Processing applications includes the following:</p>
             <ul class="govuk-list govuk-list--bullet">
-             <li>Sending applications to training providers</li>
+             <li>sending applications to training providers</li>
              <li>managing communications between candidates and training providers</li>
-             <li>working out and funding candidates are entitled to</li>
+             <li>working out what funding candidates are entitled to</li>
              <li>getting in touch if there is a security issue around your data</li>
              <li>getting in touch with candidates and training providers about their applications</li>
             </ul>

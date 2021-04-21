@@ -16,11 +16,11 @@ class PrivacyPolicy < ApplicationRecord
     return false if !user || user.admin?
     return false unless user.induction_coordinator_profile
 
-    !Acceptance
+    Acceptance
       .joins(:privacy_policy)
       .where(user: user)
       .where("privacy_policies.major_version >= ?", major_version)
-      .exists?
+      .none?
   end
 
   def version
@@ -28,7 +28,7 @@ class PrivacyPolicy < ApplicationRecord
   end
 
   def accept!(user)
-    Acceptance.create(
+    Acceptance.create!(
       user: user,
       privacy_policy: self,
     )
