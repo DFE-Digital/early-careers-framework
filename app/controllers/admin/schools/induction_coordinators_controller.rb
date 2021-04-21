@@ -2,33 +2,37 @@
 
 module Admin
   class Schools::InductionCoordinatorsController < Admin::BaseController
-    skip_after_action :verify_authorized, only: %i[new create]
-    before_action :load_induction_coordinator, only: %i[new create]
+    skip_after_action :verify_authorized
+    skip_after_action :verify_policy_scoped
+    before_action :set_school
+
+    def email_used; end
 
     def new
-      # is admin only?
-      @school = School.last # params[:school]
-      @induction_coordinator = User.new
+      @nominate_induction_tutor_form = AdminNominateInductionTutorForm.new
     end
 
     def create
-      # is admin only?
-      user = User.create!(user_params)
-      school = School.last
-      InductionCoordinatorProfile.find_or_create_by!(user: user) do |profile|
-        profile.update!(schools: [school])
-      end
+      @nominate_induction_tutor_form = AdminNominateInductionTutorForm.new(
+        form_params.merge(school_id: params[:school_id]),
+      )
+      render :new and return unless @nominate_induction_tutor_form.valid?
+
+      @nominate_induction_tutor_form.save!
+      set_success_message(content: "New Induction tutor has been created", title: "Success")
+      redirect_to admin_school_path(@school)
+    rescue UserExistsError
+      redirect_to email_used_admin_school_induction_coordinators_path
     end
 
   private
 
-    def user_params
-      params.require(:user).permit(:full_name, :email)
+    def set_school
+      @school = School.find params[:school_id]
     end
 
-    def load_induction_coordinator
-      @induction_coordinator = User.find(params[:id])
-      authorize @induction_coordinator
+    def form_params
+      params.require(:admin_nominate_induction_tutor_form).permit(:full_name, :email)
     end
   end
 end

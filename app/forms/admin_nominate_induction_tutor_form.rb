@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-class NominateInductionTutorForm
+class AdminNominateInductionTutorForm
   include ActiveModel::Model
 
-  attr_accessor :full_name, :email, :token
+  attr_accessor :full_name, :email, :school_id
+
+  def school
+    School.find school_id
+  end
 
   validates :full_name, presence: { message: "Enter a full name" }
   validates :email, presence: { message: "Enter email" }
-
-  def school
-    NominationEmail.find_by(token: token).school
-  end
 
   def save!
     raise UserExistsError if User.with_discarded.exists?(email: email)

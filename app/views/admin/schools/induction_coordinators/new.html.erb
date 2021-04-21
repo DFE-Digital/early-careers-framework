@@ -10,7 +10,7 @@
     </ul>
 
     <h2 class="govuk-heading-m">Who do you want to nominate?</h2>
-    <%= form_for(@induction_coordinator, url: admin_induction_coordinators_path(@induction_coordinator)) do |f| %>
+    <%= form_for(@nominate_induction_tutor_form, url: admin_school_induction_coordinators_path(@school)) do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_text_field(
             :full_name,
