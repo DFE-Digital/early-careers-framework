@@ -19,6 +19,7 @@ const pagePaths = {
   start: "/",
   privacy: "/privacy-policy",
   accessibility: "/accessibility-statement",
+  dashboard: "/dashboard",
   "2021 cohort CIP materials info":
     "/schools/cohorts/2021/core-programme/materials/info",
   "2021 cohort CIP materials selection":
@@ -62,6 +63,7 @@ const pagePaths = {
   schools: "/schools",
   "2021 school cohorts": "/schools/cohorts/2021",
   "2021 school partnerships": "/schools/cohorts/2021/partnerships",
+  "lead providers report schools start": "/lead-providers/report-schools/start",
 };
 
 Given("I am on {string} page", (page) => {

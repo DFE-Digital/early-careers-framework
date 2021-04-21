@@ -3,5 +3,6 @@
 FactoryBot.define do
   factory :lead_provider do
     name  { "Lead Provider" }
+    cohorts { Cohort.all }
   end
 end

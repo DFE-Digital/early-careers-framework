@@ -2,6 +2,6 @@
 
 FactoryBot.define do
   factory :cohort do
-    start_year { Faker::Date.unique.between(from: "2020-01-01", to: "2099-12-31").year }
+    start_year { Faker::Number.unique.between(from: 2021, to: 2100) }
   end
 end

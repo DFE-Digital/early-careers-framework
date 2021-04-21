@@ -58,9 +58,13 @@ Rails.application.routes.draw do
     end
   end
 
-  namespace :lead_providers do
+  namespace :lead_providers, path: "lead-providers" do
     resources :your_schools, only: %i[index create]
     resources :school_details, only: %i[show]
+
+    resource :report_schools, path: "report-schools", only: [] do
+      get "start", action: :start
+    end
   end
 
   namespace :admin do
