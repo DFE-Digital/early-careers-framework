@@ -1,4 +1,8 @@
-<h2 class="govuk-visually-hidden">Support links</h2>
+<h2 class="govuk-heading-m">Support and guidance</h2>
+<p class="govuk-body-s">
+  If you have a question, or you've had a problem using this service, please contact us at
+  <%= mail_to Rails.application.config.support_email, Rails.application.config.support_email, class: "govuk-footer__link govuk-link--no-visited-state" %>
+</p>
 <ul class="govuk-footer__inline-list">
   <li class="govuk-footer__inline-list-item">
     <%= link_to "Privacy", privacy_policy_path, class: "govuk-footer__link" %>
