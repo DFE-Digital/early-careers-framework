@@ -2,20 +2,14 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-header-l">
-      Sorry, your school is not eligible
+    <h1 class="govuk-header-xl">
+      Sorry, teachers cannot serve statutory induction at your school
     </h1>
 
-    <p>Only schools in England are eligible for ECF inductions.</p>
-    <p>The following institutions are also not eligible:</p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>secure training centres</li>
-      <li>
-        schools in special measures and further education institutions with any Grade 4 (inadequate) Ofsted ratings,
-        except where Ofsted has said they can hire newly qualified teachers
-      </li>
-    </ul>
-
-    <%= govuk_link_to "See our statutory induction guidance", "https://www.gov.uk/government/publications/induction-for-early-career-teachers-england" %>
+    <p class="govuk-body">It is only possible for teachers to serve statutory induction at certain institutions.</p>
+    <p class="govuk-body">For more details about eligibility,
+      <%= govuk_link_to(
+            "see our statutory guidance on inductions for early career teachers",
+            "https://www.gov.uk/government/publications/induction-for-early-career-teachers-england") %>.</p>
   </div>
 </div>
