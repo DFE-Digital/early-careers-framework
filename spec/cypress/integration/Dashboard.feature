@@ -7,3 +7,4 @@ Feature: Dashboard page
     And "page body" should contain "Confirm your schools"
     And "page body" should contain "Check your schools"
     And the page should be accessible
+    And percy should be sent snapshot called "Dashboard page"

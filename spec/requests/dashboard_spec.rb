@@ -7,7 +7,7 @@ RSpec.describe "Dashboard", type: :request do
 
   before do
     sign_in lead_provider
-    Cohort.create!(start_year: "2021")
+    Cohort.create!(start_year: Time.zone.now.year)
   end
 
   describe "GET /dashboard" do
