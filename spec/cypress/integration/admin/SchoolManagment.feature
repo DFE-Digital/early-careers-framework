@@ -11,6 +11,7 @@ Feature: Admin user managing schools
     Then I should be on "admin school overview" page
     And "page body" should contain "Include this school"
     And "page body" should contain "Sarah Smith"
+    And "page body" should contain "Test local authority"
     And the page should be accessible
 
   Scenario: Viewing a list of schools
