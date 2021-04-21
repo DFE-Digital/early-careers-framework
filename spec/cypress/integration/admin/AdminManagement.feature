@@ -10,12 +10,14 @@ Feature: Admin user modifying admin users
     When I click on "create admin button"
     Then I should be on "admin creation" page
     And the page should be accessible
+    And percy should be sent snapshot called "Admin creation page"
 
     When I type "John Smith" into "name input"
     And I type "j.smith@example.com" into "email input"
     And I click the submit button
     Then I should be on "admin confirm creation" page
     And the page should be accessible
+    And percy should be sent snapshot called "Admin confirm creation page"
     And "page body" should contain "John Smith"
     And "page body" should contain "j.smith@example.com"
 
@@ -32,11 +34,13 @@ Feature: Admin user modifying admin users
     When I click on "edit admin link" containing "Emma Dow"
     Then "page body" should contain "Edit user details"
     And the page should be accessible
+    And percy should be sent snapshot called "Edit admin page"
 
     When I click on "delete button"
     Then "page body" should contain "Do you want to delete this user?"
     And "page body" should contain "Admin user: Emma Dow"
     And the page should be accessible
+    And percy should be sent snapshot called "Delete admin page"
 
     When I click on "delete button"
     Then "page body" should not contain "Emma Dow"

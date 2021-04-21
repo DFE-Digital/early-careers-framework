@@ -8,15 +8,19 @@ Feature: Induction tutors choosing programmes
     Then I should be on "choose programme advisory" page
     And the page should be accessible
 
+  Scenario: Choosing Core Induction Programme
+    Then percy should be sent snapshot called "Choose programme advisory page"
+
     When I click on "link" containing "Continue"
     Then I should be on "choose programme" page
     And the page should be accessible
+    And percy should be sent snapshot called "Choose programme page"
 
-  Scenario: Choosing Core Induction Programme
     When I click on "accredited materials" label
     And I click the submit button
     Then I should be on "schools" page
     And the page should be accessible
+    And percy should be sent snapshot called "Schools page"
 
     When I am on "choose programme" page
     Then I should have been redirected to "schools" page
@@ -24,10 +28,14 @@ Feature: Induction tutors choosing programmes
     When I click on "link" containing "2021"
     Then I am on "2021 school cohorts" page
     And the page should be accessible
+    And percy should be sent snapshot called "2021 school cohorts page"
     And "page body" should contain "Choose your training"
     And "page body" should contain "Add early career teachers"
 
   Scenario: Choosing Full Induction Programme
+    When I click on "link" containing "Continue"
+    Then I should be on "choose programme" page
+
     When I click on "training provider" label
     And I click the submit button
     Then I should be on "schools" page

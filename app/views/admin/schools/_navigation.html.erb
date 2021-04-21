@@ -1,0 +1,11 @@
+<%= render TabsComponent.new do |component| %>
+  <%= component.tab(path: admin_school_path(@school)) do %>
+    <strong>Overview</strong>
+  <% end %>
+  <%= component.tab(path: "#") do %>
+    <strong>Participants</strong>
+  <% end %>
+  <%= component.tab(path: "#") do %>
+    <strong>Cohorts</strong>
+  <% end %>
+<% end %>
