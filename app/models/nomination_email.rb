@@ -3,7 +3,7 @@
 class NominationEmail < ApplicationRecord
   belongs_to :school
 
-  NOMINATION_EXPIRY_TIME = 7.days
+  NOMINATION_EXPIRY_TIME = 21.days
 
   def expired?
     !sent_within_last?(NOMINATION_EXPIRY_TIME)

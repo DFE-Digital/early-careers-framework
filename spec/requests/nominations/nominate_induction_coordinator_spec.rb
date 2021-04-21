@@ -41,13 +41,24 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
     end
 
     context "with an expired token" do
-      let(:nomination_email) { create(:nomination_email, sent_at: 6.weeks.ago) }
+      let(:nomination_email) { create(:nomination_email, :expired_nomination_email) }
       let(:token) { nomination_email.token }
 
       it "redirects to link-expired" do
         get "/nominations/start?token=#{token}"
 
         expect(response).to redirect_to("/nominations/link-expired?school_id=#{nomination_email.school.id}")
+      end
+    end
+
+    context "with a nearly expired token" do
+      let(:nomination_email) { create(:nomination_email, :nearly_expired_nomination_email) }
+      let(:token) { nomination_email.token }
+
+      it "renders the start nomination template" do
+        get "/nominations/start?token=#{token}"
+
+        expect(response).to render_template("nominations/nominate_induction_coordinator/start")
       end
     end
   end

@@ -14,6 +14,7 @@ RSpec.describe SchoolMailer, type: :mailer do
         nomination_url: nomination_url,
         reference: token,
         school_name: "Great Ouse Academy",
+        expiry_date: "1/1/2000",
       ).deliver_now
     end
 

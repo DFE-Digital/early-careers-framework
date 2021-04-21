@@ -8,7 +8,12 @@ FactoryBot.define do
     school { build(:school, urn: "0922081", name: "Nominated School", primary_contact_email: "primary-contact-email@example.com", address_line1: "50 Olivia Drive", postcode: "CV37 9HE") }
 
     trait :expired_nomination_email do
-      sent_at { 1.year.ago }
+      sent_at { 22.days.ago }
+      school { build(:school, :with_local_authority, name: "Nominated School", primary_contact_email: "primary-contact-email@example.com") }
+    end
+
+    trait :nearly_expired_nomination_email do
+      sent_at { 20.days.ago }
       school { build(:school, :with_local_authority, name: "Nominated School", primary_contact_email: "primary-contact-email@example.com") }
     end
 

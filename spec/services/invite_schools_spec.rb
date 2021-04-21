@@ -32,12 +32,14 @@ RSpec.describe InviteSchools do
     end
 
     it "sends the nomination email" do
+      travel_to Time.utc("2000-1-1")
       expect(SchoolMailer).to receive(:nomination_email).with(
         hash_including(
           reference: String,
           school_name: String,
           nomination_url: String,
           recipient: school.primary_contact_email,
+          expiry_date: "22/01/2000",
         ),
       ).and_call_original
 
