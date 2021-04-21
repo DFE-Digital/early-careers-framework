@@ -9,11 +9,11 @@ module Admin
     def email_used; end
 
     def new
-      @nominate_induction_tutor_form = AdminNominateInductionTutorForm.new
+      @nominate_induction_tutor_form = NominateInductionTutorForm.new
     end
 
     def create
-      @nominate_induction_tutor_form = AdminNominateInductionTutorForm.new(
+      @nominate_induction_tutor_form = NominateInductionTutorForm.new(
         form_params.merge(school_id: params[:school_id]),
       )
       render :new and return unless @nominate_induction_tutor_form.valid?
@@ -32,7 +32,7 @@ module Admin
     end
 
     def form_params
-      params.require(:admin_nominate_induction_tutor_form).permit(:full_name, :email)
+      params.require(:nominate_induction_tutor_form).permit(:full_name, :email)
     end
   end
 end
