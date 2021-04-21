@@ -1,6 +1,8 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">Manage training for early career teachers</h1>
+    <p class="govuk-body">This service is for induction leads/tutors nominated by their school.</p>
+
     <p>Use this service to manage your school’s statutory induction programme for early career teachers.</p>
 
     <p>Only use this service if your school wants to:</p>
@@ -16,5 +18,9 @@
       For example, if your ECTs are starting in September, you need to complete these steps before then.</p>
 
     <%= govuk_link_to "Start", new_user_session_path, button: true %>
+
+    <h2 class="govuk-heading-m">Do you have an account?</h2>
+    <p class="govuk-body">Your school has been sent an email to nominate someone who manages statutory inductions at your school.</p>
+    <p class="govuk-body"><%= govuk_link_to "Resend email", choose_location_request_nomination_invite_path %></p>
   </div>
 </div>

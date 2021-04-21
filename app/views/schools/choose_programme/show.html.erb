@@ -6,6 +6,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <%= form_for @induction_choice_form, url: schools_choose_programme_path, method: :post do |f| %>
+      <%= f.govuk_error_summary %>
       <%= f.govuk_collection_radio_buttons(
             :programme_choice,
             @induction_choice_form.programme_choices,

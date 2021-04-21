@@ -7,16 +7,19 @@ module Devise
   module Strategies
     class PasswordlessAuthenticatable < Authenticatable
       class Error < StandardError; end
+
       class EmailNotFoundError < Error; end
+
       class LoginIncompleteError < Error; end
 
       def authenticate!
         if params[:user].present?
           user = User.find_by(email: params[:user][:email])
 
+          token_expiry = 60.minutes.from_now
           result = user&.update(
             login_token: SecureRandom.hex(10),
-            login_token_valid_until: 60.minutes.from_now,
+            login_token_valid_until: token_expiry,
           )
 
           if result
@@ -25,7 +28,7 @@ module Devise
               host: Rails.application.config.domain,
             )
 
-            UserMailer.sign_in_email(user, url).deliver_now
+            UserMailer.sign_in_email(user: user, url: url, token_expiry: token_expiry.to_s(:time)).deliver_now
             raise LoginIncompleteError
           else
             raise EmailNotFoundError

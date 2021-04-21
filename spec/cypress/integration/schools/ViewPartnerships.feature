@@ -17,8 +17,8 @@ Feature: Induction tutors viewing partnerships
     Then I am on "2021 school cohorts" page
 
   Scenario: View chosen programme
-    When I click on "link" containing "Confirm your training provider"
+    When I click on "link" containing "Sign up with a training provider"
     Then I should be on "2021 school partnerships" page
-    And "page body" should contain "Have you confirmed which training provider your school is using?"
+    And "page body" should contain "Have you signed up with a training provider?"
     And the page should be accessible
     And percy should be sent snapshot

@@ -7,7 +7,10 @@ class SupplierUserForm
   attr_accessor :full_name, :email, :supplier
   validates :supplier, presence: { message: "Select one" }, on: :supplier
   validates :full_name, presence: { message: "Enter a name" }, on: :details
-  validates :email, presence: { message: "Enter email" }, on: :details
+  validates :email,
+            presence: { message: "Enter email" },
+            format: { with: Devise.email_regexp, message: "Enter an email address in the correct format, like name@example.com" },
+            on: :details
   validate :email_not_taken, on: :details
 
   def attributes
