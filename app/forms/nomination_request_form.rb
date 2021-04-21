@@ -6,10 +6,10 @@ class NominationRequestForm
 
   attr_accessor :local_authority_id, :school_id
   validates :local_authority_id,
-            presence: { message: "The details you entered do not match any establishments" },
+            presence: { message: "The details you entered do not match any schools" },
             on: %i[local_authority save]
   validates :school_id,
-            presence: { message: "The details you entered do not match any establishments" },
+            presence: { message: "The details you entered do not match any schools" },
             on: %i[school save]
 
   def attributes

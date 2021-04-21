@@ -17,7 +17,7 @@ RSpec.describe "Requesting an invitation to nominate an induction tutor", type: 
     it "shows validation error" do
       post "/nominations/choose-location"
       expect(response).to render_template(:choose_location)
-      expect(response.body).to include(CGI.escapeHTML("The details you entered do not match any establishments"))
+      expect(response.body).to include(CGI.escapeHTML("The details you entered do not match any schools"))
     end
 
     it "redirects to choose-school" do
@@ -35,7 +35,7 @@ RSpec.describe "Requesting an invitation to nominate an induction tutor", type: 
     it "shows validation error" do
       post "/nominations/choose-school"
       expect(response).to render_template(:choose_school)
-      expect(response.body).to include(CGI.escapeHTML("The details you entered do not match any establishments"))
+      expect(response.body).to include(CGI.escapeHTML("The details you entered do not match any schools"))
     end
 
     context "when given an eligible, un-nominated school" do

@@ -28,7 +28,7 @@ module Devise
               host: Rails.application.config.domain,
             )
 
-            UserMailer.sign_in_email(user: user, url: url, token_expiry: token_expiry.to_s(:time)).deliver_now
+            UserMailer.sign_in_email(user: user, url: url, token_expiry: token_expiry.localtime.to_s(:time)).deliver_now
             raise LoginIncompleteError
           else
             raise EmailNotFoundError
