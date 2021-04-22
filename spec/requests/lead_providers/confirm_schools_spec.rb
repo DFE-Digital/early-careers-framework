@@ -10,7 +10,7 @@ RSpec.describe "Lead Provider confirmation of schools", type: :request do
   before do
     sign_in lead_provider
 
-    set_session(:add_schools_form, {
+    set_session(:confirm_schools_form, {
       source: :csv,
       school_ids: schools.map(&:id),
       delivery_partner_id: delivery_partner.id,
@@ -31,7 +31,7 @@ RSpec.describe "Lead Provider confirmation of schools", type: :request do
     it "removes given school from the list" do
       post "/lead-providers/report-schools/confirm/remove", params: { remove: { school_id: school_to_remove.id } }
 
-      expect(session[:add_schools_form]["school_ids"]).not_to include school_to_remove.id
+      expect(session[:confirm_schools_form]["school_ids"]).not_to include school_to_remove.id
     end
   end
 end
