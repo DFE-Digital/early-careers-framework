@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   default_form_builder GOVUKDesignSystemFormBuilder::FormBuilder
 
   before_action :configure_permitted_parameters, if: :devise_controller?
-  before_action :previous_url_for_cookies_page
+  before_action :previous_url_for_cookies_page, except: :check
   before_action :check_privacy_policy_accepted
 
   def check

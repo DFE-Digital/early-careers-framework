@@ -33,6 +33,8 @@ module LeadProviders
     private
 
       def load_form
+        # TODO: remove when CVS/search journey is added
+        redirect_to(action: :start) unless session[:add_schools_form]
         @form = SelectSchoolsForm.new(session[:add_schools_form])
       end
     end
