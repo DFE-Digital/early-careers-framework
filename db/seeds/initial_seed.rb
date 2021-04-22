@@ -30,3 +30,7 @@ LeadProviderCip.find_or_create_by!(lead_provider: teach_first, cohort: cohort_20
 ucl = LeadProvider.find_or_create_by!(name: "UCL Institute of Education")
 ucl.update!(cohorts: [cohort_2021]) unless ucl.cohorts.any?
 LeadProviderCip.find_or_create_by!(lead_provider: ucl, cohort: cohort_2021, core_induction_programme: ucl_cip)
+
+PrivacyPolicy.find_or_initialize_by(major_version: 1, minor_version: 0)
+  .tap { |pp| pp.html = Rails.root.join("db/seeds/privacy_policy_1.0.html").read }
+  .save!
