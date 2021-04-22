@@ -3,13 +3,17 @@
 class NominateInductionTutorForm
   include ActiveModel::Model
 
-  attr_accessor :full_name, :email, :token
+  attr_accessor :full_name, :email, :token, :school_id
 
   validates :full_name, presence: { message: "Enter a full name" }
   validates :email, presence: { message: "Enter email" }, format: { with: Devise.email_regexp, message: "Enter an email address in the correct format, like name@example.com" }
 
   def school
-    NominationEmail.find_by(token: token).school
+    if school_id
+      School.find school_id
+    else
+      NominationEmail.find_by(token: token).school
+    end
   end
 
   def save!

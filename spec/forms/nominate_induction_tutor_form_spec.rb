@@ -15,10 +15,21 @@ RSpec.describe NominateInductionTutorForm, type: :model do
   end
 
   describe "#school" do
-    it "returns the correct school" do
-      form = NominateInductionTutorForm.new(token: token)
+    context "from token accessor" do
+      it "returns the correct school" do
+        form = NominateInductionTutorForm.new(token: token)
 
-      expect(form.school).to eql school
+        expect(form.school).to eql school
+      end
+    end
+
+    context "from school_id accessor" do
+      let(:school) { create(:school) }
+      it "returns the correct school" do
+        form = NominateInductionTutorForm.new(school_id: school.id)
+
+        expect(form.school).to eql school
+      end
     end
   end
 

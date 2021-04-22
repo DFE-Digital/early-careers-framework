@@ -30,6 +30,8 @@ const pagePaths = {
   "check account": "/check-account",
   "admin schools": "/admin/schools",
   "admin school overview": "/admin/schools/:id",
+  "new admin school induction coordinator":
+    "/admin/schools/:id/induction-coordinators/new",
   "admin index": "/admin/administrators",
   "admin induction coordinator edit": "/admin/induction-coordinators/:id/edit",
   "admin creation": "/admin/administrators/new",
