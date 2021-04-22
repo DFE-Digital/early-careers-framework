@@ -28,9 +28,12 @@ RSpec.describe "Admin::Schools::InductionCoodinators", type: :request do
         },
       }
       post admin_school_induction_coordinators_path(school.id), params: form_params
-      expect(User.last.full_name).to eq "jo"
-      expect(User.last.email).to eq "jo@example.com"
-      expect(User.last.induction_coordinator?).to be_truthy
+
+      created_user = User.find_by(email: "jo@example.com")
+      expect(created_user).to be_present
+      expect(created_user.full_name).to eq "jo"
+      expect(created_user.induction_coordinator?).to be_truthy
+      
       expect(response).to redirect_to admin_school_path(school.id)
     end
   end
