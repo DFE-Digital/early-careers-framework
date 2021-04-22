@@ -68,7 +68,7 @@ Rails.application.routes.draw do
       post "check-delivery-partner", action: :check_delivery_partner
       get "choose-delivery-partner", action: :choose_delivery_partner
 
-      resource :confirm, only: %i[show update] do
+      resource :confirm_schools, only: %i[show update], path: "confirm" do
         get :start
         post :remove
       end

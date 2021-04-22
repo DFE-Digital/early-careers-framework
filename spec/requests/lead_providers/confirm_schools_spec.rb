@@ -17,19 +17,19 @@ RSpec.describe "Lead Provider confirmation of schools", type: :request do
     })
   end
 
-  describe "GET /lead-providers/add-schools/confirm" do
+  describe "GET /lead-providers/report-schools/confirm" do
     it "renders show template" do
-      get "/lead-providers/add-schools/confirm"
+      get "/lead-providers/report-schools/confirm"
 
-      expect(response).to render_template "lead_providers/add_schools/confirms/show"
+      expect(response).to render_template "lead_providers/confirm_schools/show"
     end
   end
 
-  describe "POST /lead-providers/add-schools/confirm/remove" do
+  describe "POST /lead-providers/report-schools/confirm/remove" do
     let(:school_to_remove) { schools.sample }
 
     it "removes given school from the list" do
-      post "/lead-providers/add-schools/confirm/remove", params: { remove: { school_id: school_to_remove.id } }
+      post "/lead-providers/report-schools/confirm/remove", params: { remove: { school_id: school_to_remove.id } }
 
       expect(session[:add_schools_form]["school_ids"]).not_to include school_to_remove.id
     end
