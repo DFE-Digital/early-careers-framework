@@ -14,6 +14,8 @@ Feature: Admin user creating induction tutor
 
     When I click on "link" containing "Add induction tutor"
     Then I should be on "new admin school induction coordinator" page
+    And the page should be accessible
+    And percy should be sent snapshot
 
     When I type "John Smith" into "name input"
     And I type "j.smith@example.com" into "email input"
