@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module Support
   module RequestSpec
-    class SessionHelperController < ActionController::Base
+    class SessionHelperController < ApplicationController
       def update
-         session[params[:key]] = params[:value]
+        session[params[:key]] = params[:value]
       end
     end
 
