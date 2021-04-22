@@ -1,0 +1,45 @@
+<% content_for :title, "Confirm schools" %>
+<% content_for :before_content, govuk_back_link(text: 'Back', href: dashboard_path) %>
+
+<h1 class="govuk-heading-xl">Confirm recruitment of <%= @form.school_ids.count %> <%= "school".pluralize(@form.school_ids.count) %>, working with <%= @delivery_partner.name %>.</h1>
+
+<%= govuk_warning text: "Only report schools that you have signed a contract with." %>
+
+<table class="govuk-table">
+  <thead>
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">School</th>
+      <th scope="col" class="govuk-table__header">URN</th>
+      <th scope="col" class="govuk-table__header">Local Authority</th>
+      <th scope="col" class="govuk-table__header">Delivery partner</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    <% @schools.each do |school| %>
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell"><strong><%= school.name %></strong></td>
+        <td class="govuk-table__cell"><%= school.urn %></td>
+        <td class="govuk-table__cell"><%= school.local_authority&.name %></td>
+        <td class="govuk-table__cell"><%= @delivery_partner.name %></td>
+        <td class="govuk-table__cell">
+          <%= form_for :remove, url: { action: :remove } do |form| %>
+            <%= form.hidden_field :school_id, value: school.id %>
+            <%= form.submit "Remove", class: "govuk-button govuk-button--secondary govuk-!-margin-0", data: { module: "govuk-button" } %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p>Once you've confirmed, schools will be notified</p>
+
+<%= govuk_button_to "Confirm", { action: :update }, method: :put, class: "govuk-button govuk-!-margin-bottom-3" %>
+<% if @form.source == "csv" %>
+  <%= govuk_link_to "Re upload CSV", dashboard_path, class: "govuk-button govuk-button--secondary" %>
+<% end %>
+
+<%# This is for presentation only %>
+<hr>
+<%= govuk_link_to "Restart", action: :start %>
