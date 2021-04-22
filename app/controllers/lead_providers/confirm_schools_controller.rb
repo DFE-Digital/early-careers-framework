@@ -18,7 +18,7 @@ module LeadProviders
     # TODO: This action exists only for demonstration purpose and should be removed
     # as soon as the CSV/search journey is completed
     def start
-      session[:add_schools_form] = {
+      session[:confirm_schools_form] = {
         source: :csv,
         school_ids: School.order(Arel.sql("RANDOM()")).limit(10).pluck(:id),
         delivery_partner_id: DeliveryPartner.order(Arel.sql("RANDOM()")).first.id,
@@ -34,9 +34,7 @@ module LeadProviders
   private
 
     def load_form
-      # TODO: remove when CVS/search journey is added
-      redirect_to(action: :start) unless session[:add_schools_form]
-      @form = SelectSchoolsForm.new(session[:add_schools_form])
+      @form = ConfirmSchoolsForm.new(session[:confirm_schools_form])
     end
   end
 end

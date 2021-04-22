@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SelectSchoolsForm
+class ConfirmSchoolsForm
   include ActiveModel::Model
   include ActiveModel::Serialization
 
