@@ -43,10 +43,18 @@ Cypress.Commands.add("appFixtures", (options) => {
 });
 // CypressOnRails: end
 
-beforeEach(() => {
+const reset = () => {
   createdRecords = {};
   cy.app("clean");
   cy.appEval("ActionMailer::Base.deliveries.clear");
+};
+
+beforeEach(() => {
+  reset();
+});
+
+Cypress.on("after:run", () => {
+  reset();
 });
 
 // comment this out if you do not want to attempt to log additional info on test fail

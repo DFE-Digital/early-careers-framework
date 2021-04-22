@@ -1,23 +1,23 @@
 # frozen_string_literal: true
 
 module ApplicationHelper
-  def profile_dashboard_url(user)
+  def profile_dashboard_path(user)
     if user.admin?
-      admin_schools_url
+      admin_schools_path
     elsif user.induction_coordinator?
-      induction_coordinator_dashboard_url(user)
+      induction_coordinator_dashboard_path(user)
     else
-      dashboard_url
+      dashboard_path
     end
   end
 
 private
 
-  def induction_coordinator_dashboard_url(user)
+  def induction_coordinator_dashboard_path(user)
     school = user.induction_coordinator_profile.schools.first
 
-    return advisory_schools_choose_programme_url unless school.chosen_programme?(Cohort.current)
+    return advisory_schools_choose_programme_path unless school.chosen_programme?(Cohort.current)
 
-    schools_dashboard_url
+    schools_dashboard_path
   end
 end

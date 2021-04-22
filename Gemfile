@@ -48,6 +48,7 @@ gem "foreman"
 gem "canonical-rails", ">= 0.2.11"
 
 gem "listen", ">= 3.0.5", "< 3.4"
+gem "rack-attack", ">=6.5.0"
 
 # GOV.UK Notify
 gem "mail-notify", ">= 1.0.3"

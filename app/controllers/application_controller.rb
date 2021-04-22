@@ -22,7 +22,7 @@ private
   end
 
   def after_sign_in_path_for(user)
-    stored_location_for(user) || helpers.profile_dashboard_url(user)
+    stored_location_for(user) || helpers.profile_dashboard_path(user)
   end
 
   def set_success_message(title: "Success", heading: "", content: "")

@@ -40,14 +40,15 @@ Rails.application.configure do
   config.active_storage.service = :local
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  # config.force_ssl = true
+  config.force_ssl = true
+  config.session_store :cookie_store, key: "_early_career_framework_session", secure: true, expire_after: 2.weeks
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter     = :resque
-  # config.active_job.queue_name_prefix = "govuk_rails_boilerplate_production"
+  # config.active_job.queue_name_prefix = "early_career_framework_production"
   config.domain = ENV["DOMAIN"]
 
   config.support_email = "continuing-professional-development@digital.education.gov.uk"
