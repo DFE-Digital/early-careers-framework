@@ -3,13 +3,14 @@
 class PrivacyPoliciesController < ApplicationController
   skip_before_action :check_privacy_policy_accepted
 
-  def show; end
+  def show
+    @policy = PrivacyPolicy.current
+  end
 
   def update
-    current_user.update!(privacy_policy_acceptance: {
-      accepted_at: Time.zone.now,
-      version: params[:pp_version],
-    })
+    policy = PrivacyPolicy.find(params[:policy_id])
+    policy.accept!(current_user)
+
     redirect_to session.delete(:original_path)
   end
 end

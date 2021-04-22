@@ -40,9 +40,10 @@ protected
   end
 
   def check_privacy_policy_accepted
-    return if !current_user || current_user.admin?
-    return unless current_user.induction_coordinator_profile
-    return if current_user.privacy_policy_acceptance.present?
+    policy = PrivacyPolicy.current
+    return if policy.nil?
+
+    return unless policy.acceptance_required?(current_user)
 
     session[:original_path] = request.fullpath
     redirect_to privacy_policy_path

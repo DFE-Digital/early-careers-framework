@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_15_132713) do
+ActiveRecord::Schema.define(version: 2021_04_19_142255) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -192,6 +192,23 @@ ActiveRecord::Schema.define(version: 2021_04_15_132713) do
     t.index ["school_id"], name: "index_partnerships_on_school_id"
   end
 
+  create_table "privacy_policies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.integer "major_version", null: false
+    t.integer "minor_version", null: false
+    t.text "html", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["major_version", "minor_version"], name: "index_privacy_policies_on_major_version_and_minor_version", unique: true
+  end
+
+  create_table "privacy_policy_acceptances", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "privacy_policy_id"
+    t.uuid "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["privacy_policy_id", "user_id"], name: "single-acceptance", unique: true
+  end
+
   create_table "provider_relationships", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "lead_provider_id", null: false
     t.uuid "delivery_partner_id", null: false
@@ -293,7 +310,6 @@ ActiveRecord::Schema.define(version: 2021_04_15_132713) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "discarded_at"
-    t.json "privacy_policy_acceptance"
     t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
