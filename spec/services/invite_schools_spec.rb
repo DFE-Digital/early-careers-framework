@@ -46,8 +46,8 @@ RSpec.describe InviteSchools do
       invite_schools.run [school.urn]
     end
 
-    context "when school primary contact email is null" do
-      let(:primary_contact_email) { nil }
+    context "when school primary contact email is empty" do
+      let(:primary_contact_email) { "" }
 
       it "sends the nomination email to the secondary contact" do
         expect(SchoolMailer).to receive(:nomination_email).with(

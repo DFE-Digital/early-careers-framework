@@ -48,7 +48,7 @@ private
   end
 
   def recipient_email(school)
-    school.primary_contact_email || school.secondary_contact_email
+    school.primary_contact_email.presence || school.secondary_contact_email
   end
 
   def generate_token
