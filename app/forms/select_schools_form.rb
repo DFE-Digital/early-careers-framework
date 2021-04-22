@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SelectSchoolsForm
   include ActiveModel::Model
   include ActiveModel::Serialization
