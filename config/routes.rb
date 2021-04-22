@@ -67,6 +67,11 @@ Rails.application.routes.draw do
       get "start", action: :start
       post "check-delivery-partner", action: :check_delivery_partner
       get "choose-delivery-partner", action: :choose_delivery_partner
+
+      resource :confirm, only: %i[show update] do
+        get :start
+        post :remove
+      end
     end
   end
 
