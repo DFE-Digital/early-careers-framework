@@ -2,7 +2,7 @@
 
 module Admin
   class InductionCoordinatorsController < Admin::BaseController
-    skip_after_action :verify_authorized, only: %i[index]
+    skip_after_action :verify_authorized, only: :index
     skip_after_action :verify_policy_scoped, except: :index
     before_action :load_induction_coordinator, only: %i[edit update]
 
