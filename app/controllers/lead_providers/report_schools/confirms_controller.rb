@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module LeadProviders
   module AddSchools
     class ConfirmsController < ApplicationController
@@ -19,8 +21,8 @@ module LeadProviders
       def start
         session[:add_schools_form] = {
           source: :csv,
-          school_ids: School.order(Arel.sql('RANDOM()')).limit(10).pluck(:id),
-          delivery_partner_id: DeliveryPartner.order(Arel.sql('RANDOM()')).first.id
+          school_ids: School.order(Arel.sql("RANDOM()")).limit(10).pluck(:id),
+          delivery_partner_id: DeliveryPartner.order(Arel.sql("RANDOM()")).first.id,
         }
         redirect_to action: :show
       end

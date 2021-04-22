@@ -13,7 +13,7 @@ RSpec.describe "Lead Provider confirmation of schools", type: :request do
     set_session(:add_schools_form, {
       source: :csv,
       school_ids: schools.map(&:id),
-      delivery_partner_id: delivery_partner.id
+      delivery_partner_id: delivery_partner.id,
     })
   end
 
