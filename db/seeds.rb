@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "seeds/initial_seed"
+Dir[Rails.root.join("db/seeds/initial_seed.rb")].each { |seed| load seed }
 
-if Rails.env.development? || Rails.env.deployed_development?
-  require_relative "seeds/test_data"
-  require_relative "seeds/dummy_structures"
+if Rails.env.development? || Rails.env.deployed_development? || Rails.env.test?
+  Dir[Rails.root.join("db/seeds/test_data.rb")].each { |seed| load seed }
+  Dir[Rails.root.join("db/seeds/dummy_structures.rb")].each { |seed| load seed }
 end
