@@ -1,0 +1,24 @@
+<% content_for :title, "Choose Programme" %>
+<% content_for :before_content, govuk_back_link(
+  text: "Back",
+  href: schools_choose_programme_path)
+%>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Confirm your induction programme</h1>
+    <p class="govuk-body">You have chosen to:</p>
+
+    <ul class="govuk-list govuk-list--bullet">
+      <% if @induction_choice_form.programme_choice == "full_induction_programme" %>
+        <li>Use an approved training provider</li>
+      <% else %>
+        <li>Use DfE accredited materials</li>
+      <% end %>
+    </ul>
+
+    <%= form_for @induction_choice_form, url: save_programme_schools_choose_programme_path do |f| %>
+      <%= f.hidden_field :programme_choice %>
+      <%= f.govuk_submit "Confirm" %>
+    <% end %>
+  </div>
+</div>
