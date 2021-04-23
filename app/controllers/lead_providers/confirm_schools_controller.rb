@@ -5,12 +5,14 @@ module LeadProviders
     before_action :load_form
 
     def show
-      @schools = School.where(id: @form.school_ids).order(:name)
-      @delivery_partner = DeliveryPartner.find(@form.delivery_partner_id)
+      @schools = School.where(id: @confirm_schools_form.school_ids).order(:name).includes(:latest_school_authority)
+      @delivery_partner = DeliveryPartner.find(@confirm_schools_form.delivery_partner_id)
     end
 
     def remove
-      school = School.find @form.school_ids.delete(params[:remove][:school_id])
+      school_id = params[:remove][:school_id]
+      @confirm_schools_form.school_ids.delete(school_id)
+      school = School.find school_id
       set_success_message heading: "The school \"#{school.name}\" has been removed and won't be recruited"
       redirect_to action: :show
     end
@@ -34,7 +36,7 @@ module LeadProviders
   private
 
     def load_form
-      @form = ConfirmSchoolsForm.new(session[:confirm_schools_form])
+      @confirm_schools_form = ConfirmSchoolsForm.new(session[:confirm_schools_form])
     end
   end
 end

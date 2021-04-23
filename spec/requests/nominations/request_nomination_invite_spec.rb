@@ -90,9 +90,7 @@ RSpec.describe "Requesting an invitation to nominate an induction tutor", type: 
     let(:session) { { nomination_request_form: { school_id: school.id } } }
 
     before do
-      allow_any_instance_of(Nominations::RequestNominationInviteController)
-        .to receive(:session)
-              .and_return(session)
+      set_session :nomination_request_form, { school_id: school.id }
     end
 
     it "renders the review page" do

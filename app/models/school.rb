@@ -54,6 +54,9 @@ class School < ApplicationRecord
     where.not(id: Partnership.joins(:cohort).where(cohorts: { start_year: year }).select(:school_id))
   }
 
+  has_one :latest_school_authority, -> { latest }, class_name: "SchoolLocalAuthority"
+  delegate :local_authority, to: :latest_school_authority, allow_nil: true
+
   def lead_provider(year)
     partnerships.joins(%i[lead_provider cohort]).find_by(cohorts: { start_year: year })&.lead_provider
   end
@@ -86,10 +89,6 @@ class School < ApplicationRecord
 
   def cip_only?
     open? && cip_only_establishment_type?
-  end
-
-  def local_authority
-    school_local_authorities.latest.first&.local_authority
   end
 
   def local_authority_district
