@@ -29,6 +29,19 @@ RSpec.describe Partnership, type: :model do
     end
   end
 
+  describe "scope :unchallenged" do
+    let!(:challenged_partnership) { create(:partnership, challenged_at: Time.zone.now, challenge_reason: "mistake") }
+    before { partnership.save! }
+
+    it "includes unchallenged partnerships" do
+      expect(Partnership.unchallenged).to include(partnership)
+    end
+
+    it "does not include challenged partnerships" do
+      expect(Partnership.unchallenged).not_to include(challenged_partnership)
+    end
+  end
+
   describe "#challenge!" do
     it "sets the challenge reason and challenged at time" do
       freeze_time
