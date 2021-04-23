@@ -12,6 +12,15 @@ RSpec.describe PartnershipNotificationEmail, type: :model do
     it { is_expected.to delegate_method(:cohort).to(:partnership) }
   end
 
+  describe "#token_expiry" do
+    it "returns the correct value" do
+      travel_to Time.utc(2020, 1, 1, 13, 0, 0)
+
+      email = create(:partnership_notification_email)
+      expect(email.token_expiry).to eql Time.utc(2020, 1, 15, 13, 0, 0)
+    end
+  end
+
   describe "#token_expired?" do
     it "returns true when the token is more than 14 days old" do
       email = create(:partnership_notification_email)

@@ -15,7 +15,11 @@ class PartnershipNotificationEmail < ApplicationRecord
     school_email: "school_email",
   }
 
+  def token_expiry
+    created_at + TOKEN_LIFETIME
+  end
+
   def token_expired?
-    created_at + TOKEN_LIFETIME < Time.zone.now
+    token_expiry < Time.zone.now
   end
 end

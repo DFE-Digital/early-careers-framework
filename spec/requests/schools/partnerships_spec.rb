@@ -29,7 +29,7 @@ RSpec.describe "Schools::Partnerships", type: :request do
       let(:delivery_partners) { create_list(:delivery_partner, 5) }
 
       before do
-        Partnership.create!(cohort: cohort, lead_provider: lead_provider, school: school, delivery_partner: delivery_partner1)
+        @partnership = Partnership.create!(cohort: cohort, lead_provider: lead_provider, school: school, delivery_partner: delivery_partner1)
         Partnership.create!(cohort: cohort, lead_provider: lead_provider, school: another_school, delivery_partner: delivery_partner2)
 
         delivery_partners.each do |partner|
@@ -43,6 +43,44 @@ RSpec.describe "Schools::Partnerships", type: :request do
         expect(response.body).to include(CGI.escapeHTML(lead_provider.name))
         expect(response.body).to include(CGI.escapeHTML(delivery_partner1.name))
         expect(response.body).to include(CGI.escapeHTML("Your training provider"))
+      end
+
+      context "when the school has recently entered a partnership" do
+        before do
+          PartnershipNotificationEmail.create!(
+            token: "abc123",
+            sent_to: user.email,
+            partnership: @partnership,
+            email_type: PartnershipNotificationEmail.email_types[:induction_coordinator_email],
+          )
+        end
+
+        it "shows the challenge link" do
+          get "/schools/cohorts/#{cohort.start_year}/partnerships"
+
+          expect(response.body).to include("This link will expire on")
+          expect(response.body).to include("?token=abc123")
+        end
+      end
+
+      context "when the school entered a partnership a long time ago" do
+        before do
+          PartnershipNotificationEmail.create!(
+            token: "abc123",
+            sent_to: user.email,
+            partnership: @partnership,
+            email_type: PartnershipNotificationEmail.email_types[:induction_coordinator_email],
+          )
+        end
+
+        it "does not show the challenge link" do
+          travel_to 6.weeks.from_now
+          get "/schools/cohorts/#{cohort.start_year}/partnerships"
+
+          expect(response.body).not_to include("This link will expire on")
+          expect(response.body).not_to include("?token=abc123")
+          expect(response.body).to include("contact: ")
+        end
       end
     end
   end
