@@ -11,6 +11,8 @@ Feature: Induction tutors viewing partnerships
 
     When I click on "training provider" label
     And I click the submit button
+    And I click the submit button
+    And I click on "link" containing "Continue"
     Then I should be on "schools" page
 
     When I click on "link" containing "2021"
