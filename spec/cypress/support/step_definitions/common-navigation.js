@@ -62,6 +62,8 @@ const pagePaths = {
   "lead provider user delete": "/lead-providers/users/:id/delete",
   "choose programme": "/schools/choose-programme",
   "choose programme advisory": "/schools/choose-programme/advisory",
+  "choose programme confirm": "/schools/choose-programme/confirm-programme",
+  "choose programme success": "/schools/choose-programme/success",
   schools: "/schools",
   "2021 school cohorts": "/schools/cohorts/2021",
   "2021 school partnerships": "/schools/cohorts/2021/partnerships",
