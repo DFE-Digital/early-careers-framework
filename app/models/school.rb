@@ -113,7 +113,7 @@ class School < ApplicationRecord
     if induction_coordinators.any?
       induction_coordinators.first.email
     else
-      primary_contact_email || secondary_contact_email
+      primary_contact_email.presence || secondary_contact_email
     end
   end
 
