@@ -66,11 +66,22 @@ const pagePaths = {
   "2021 school cohorts": "/schools/cohorts/2021",
   "2021 school partnerships": "/schools/cohorts/2021/partnerships",
   "lead providers report schools start": "/lead-providers/report-schools/start",
+  "not found": "/404",
+  "internal server error": "/500",
+  forbidden: "/403",
 };
 
 Given("I am on {string} page", (page) => {
   const path = pagePaths[page];
   cy.visit(path);
+});
+
+Given("I am on {string} error page", (page) => {
+  const path = pagePaths[page];
+  cy.visit({
+    url: path,
+    failOnStatusCode: false,
+  });
 });
 
 Given("I am on {string} page with id {string}", (page, id) => {
