@@ -1,7 +1,7 @@
 <% content_for :title, "Confirm schools" %>
 <% content_for :before_content, govuk_back_link(text: 'Back', href: dashboard_path) %>
 
-<h1 class="govuk-heading-xl">Confirm recruitment of <%= @form.school_ids.count %> <%= "school".pluralize(@form.school_ids.count) %>, working with <%= @delivery_partner.name %>.</h1>
+<h1 class="govuk-heading-xl">Confirm recruitment of <%= @confirm_schools_form.school_ids.count %> <%= "school".pluralize(@confirm_schools_form.school_ids.count) %>, working with <%= @delivery_partner.name %>.</h1>
 
 <%= govuk_warning text: "Only report schools that you have signed a contract with." %>
 
@@ -36,7 +36,7 @@
 <p>Once you've confirmed, schools will be notified</p>
 
 <%= govuk_button_to "Confirm", { action: :update }, method: :put, class: "govuk-button govuk-!-margin-bottom-3" %>
-<% if @form.source == "csv" %>
+<% if @confirm_schools_form.source == "csv" %>
   <%= govuk_link_to "Re upload CSV", dashboard_path, class: "govuk-button govuk-button--secondary" %>
 <% end %>
 
