@@ -63,8 +63,8 @@ RSpec.describe "Admin::Schools", type: :request do
         get "/admin/schools/#{school.id}"
 
         expect(response.body).not_to include("Add induction tutor")
-        expect(response.body).to include(induction_coordinator.email)
-        expect(response.body).to include(induction_coordinator.full_name)
+        expect(response.body).to include(CGI.escapeHTML(induction_coordinator.email))
+        expect(response.body).to include(CGI.escapeHTML(induction_coordinator.full_name))
       end
     end
   end
