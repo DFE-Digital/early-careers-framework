@@ -26,7 +26,7 @@ class Schools::ChooseProgrammeController < Schools::BaseController
     SchoolCohort.find_or_create_by!(
       cohort: cohort,
       school: school,
-      induction_programme_choice: induction_programme_choice,
+      induction_programme_choice: @induction_choice_form.programme_choice,
     )
 
     session.delete(:induction_choice_form)
