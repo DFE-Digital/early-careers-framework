@@ -10,3 +10,14 @@ Feature: Report Schools flow
     And "page body" should contain "2021"
     And the page should be accessible
     And percy should be sent snapshot called "Lead provider report schools start page"
+
+  Scenario: Selecting a delivery partner
+    Given scenario "lead_provider_with_delivery_partners" has been run
+    And I am on "lead providers report schools start" page
+    When I click on "link" containing "Continue"
+    Then I should be on "lead providers report schools choose delivery partner" page
+    And "page body" should contain "Choose the delivery partner"
+    And "page body" should contain "Delivery Partner 1"
+    And the page should be accessible
+    And percy should be sent snapshot called "Lead provider report schools choose delivery partner page"
+

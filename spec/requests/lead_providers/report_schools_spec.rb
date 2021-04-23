@@ -7,14 +7,41 @@ RSpec.describe "Report schools spec", type: :request do
 
   before do
     create(:cohort, start_year: 2021)
+    sign_in user
   end
 
   describe "GET /lead-providers/report-schools/start" do
     it "should show the start page to a lead provider" do
-      sign_in user
       get start_lead_providers_report_schools_path
 
       expect(response).to render_template :start
+    end
+  end
+
+  describe "POST /lead-providers/report-schools/check-delivery-partner" do
+    it "shows an error if nothing is selected" do
+      post "/lead-providers/report-schools/check-delivery-partner", params: { lead_provider_delivery_partner_form: { delivery_partner_id: "" } }
+
+      expect(response).to render_template :choose_delivery_partner
+      expect(response.body).to include("Choose a delivery partner")
+    end
+
+    context "when a delivery partner has been selected" do
+      let(:lead_provider) { user.lead_provider }
+      let(:delivery_partner) { create(:delivery_partner) }
+
+      before do
+        ProviderRelationship.create(lead_provider: lead_provider, delivery_partner: delivery_partner, cohort: Cohort.current)
+      end
+
+      it "shows an error if nothing is selected" do
+        post "/lead-providers/report-schools/check-delivery-partner", params: {
+          lead_provider_delivery_partner_form: { delivery_partner_id: delivery_partner.id },
+        }
+
+        # TODO: this needs to redirect to a csv upload page when that's built
+        expect(response).to redirect_to :choose_delivery_partner_lead_providers_report_schools
+      end
     end
   end
 end

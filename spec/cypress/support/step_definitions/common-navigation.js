@@ -71,6 +71,7 @@ const pagePaths = {
   "not found": "/404",
   "internal server error": "/500",
   forbidden: "/403",
+  "lead providers report schools choose delivery partner": "/lead-providers/report-schools/choose-delivery-partner",
 };
 
 Given("I am on {string} page", (page) => {
