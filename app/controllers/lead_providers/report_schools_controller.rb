@@ -2,7 +2,9 @@
 
 module LeadProviders
   class ReportSchoolsController < ::LeadProviders::BaseController
-    def start; end
+    def start
+      session.delete(:delivery_partner_id)
+    end
 
     def choose_delivery_partner
       @delivery_partner_form = LeadProviderDeliveryPartnerForm.new
