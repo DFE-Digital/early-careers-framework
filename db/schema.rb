@@ -175,8 +175,28 @@ ActiveRecord::Schema.define(version: 2021_04_19_142255) do
     t.uuid "school_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.uuid "partnership_notification_email_id"
+    t.string "notify_id"
+    t.datetime "delivered_at"
+    t.index ["notify_id"], name: "index_nomination_emails_on_notify_id"
+    t.index ["partnership_notification_email_id"], name: "index_nomination_emails_on_partnership_notification_email_id"
     t.index ["school_id"], name: "index_nomination_emails_on_school_id"
     t.index ["token"], name: "index_nomination_emails_on_token", unique: true
+  end
+
+  create_table "partnership_notification_emails", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "token", null: false
+    t.string "sent_to", null: false
+    t.string "email_type", null: false
+    t.string "notify_id"
+    t.string "notify_status"
+    t.datetime "delivered_at"
+    t.uuid "partnership_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["notify_id"], name: "index_partnership_notification_emails_on_notify_id"
+    t.index ["partnership_id"], name: "index_partnership_notification_emails_on_partnership_id"
+    t.index ["token"], name: "index_partnership_notification_emails_on_token", unique: true
   end
 
   create_table "partnerships", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -339,7 +359,9 @@ ActiveRecord::Schema.define(version: 2021_04_19_142255) do
   add_foreign_key "lead_provider_cips", "lead_providers"
   add_foreign_key "lead_provider_profiles", "lead_providers"
   add_foreign_key "lead_provider_profiles", "users"
+  add_foreign_key "nomination_emails", "partnership_notification_emails"
   add_foreign_key "nomination_emails", "schools"
+  add_foreign_key "partnership_notification_emails", "partnerships"
   add_foreign_key "partnerships", "cohorts"
   add_foreign_key "partnerships", "delivery_partners"
   add_foreign_key "partnerships", "lead_providers"

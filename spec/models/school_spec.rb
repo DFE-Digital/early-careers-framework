@@ -264,4 +264,32 @@ RSpec.describe School, type: :model do
       expect(School.search_by_name_or_urn("999").first).eql?(school_2)
     end
   end
+
+  describe "#contact_email" do
+    let(:primary_contact_email) { Faker::Internet.email }
+    let(:secondary_contact_email) { Faker::Internet.email }
+    let(:school) { create(:school, primary_contact_email: primary_contact_email, secondary_contact_email: secondary_contact_email) }
+
+    context "when no induction coordinator has been nominated" do
+      it "returns the primary contact email" do
+        expect(school.contact_email).to eql primary_contact_email
+      end
+
+      context "when there is no primary contact email" do
+        let(:school) { create(:school, primary_contact_email: nil, secondary_contact_email: secondary_contact_email) }
+
+        it "returns the secondary contact email" do
+          expect(school.contact_email).to eql secondary_contact_email
+        end
+      end
+    end
+
+    context "when an induction coordinator has been nominated" do
+      let!(:induction_coordinator) { create(:user, :induction_coordinator, schools: [school]) }
+
+      it "returns the induction coordinator's email" do
+        expect(school.contact_email).to eql induction_coordinator.email
+      end
+    end
+  end
 end
