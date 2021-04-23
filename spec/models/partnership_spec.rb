@@ -3,6 +3,8 @@
 require "rails_helper"
 
 RSpec.describe Partnership, type: :model do
+  subject(:partnership) { build(:partnership) }
+
   it "enables paper trail" do
     is_expected.to be_versioned
   end
@@ -23,9 +25,29 @@ RSpec.describe Partnership, type: :model do
     end
 
     it "returns false when the partnership has not been challenged" do
-      partnership = build(:partnership)
-
       expect(partnership.challenged?).to eq false
+    end
+  end
+
+  describe "#challenge!" do
+    it "sets the challenge reason and challenged at time" do
+      freeze_time
+      partnership.challenge!("mistake")
+
+      expect(partnership.challenge_reason).to eql "mistake"
+      expect(partnership.challenged_at).to eql Time.zone.now
+    end
+
+    it "raises an error when given a bad argument" do
+      expect {
+        partnership.challenge!("bad_argument")
+      }.to raise_error ArgumentError
+    end
+
+    it "raises an error when given a blank argument" do
+      expect {
+        partnership.challenge!("")
+      }.to raise_error ArgumentError
     end
   end
 end

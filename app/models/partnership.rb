@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
 class Partnership < ApplicationRecord
+  enum challenge_reason: {
+    another_provider: "another_provider",
+    not_confirmed: "not_confirmed",
+    do_not_recognise: "do_not_recognise",
+    no_ects: "no_ects",
+    mistake: "mistake",
+  }
+
   belongs_to :school
   belongs_to :lead_provider
   belongs_to :cohort
@@ -11,5 +19,11 @@ class Partnership < ApplicationRecord
 
   def challenged?
     challenge_reason.present?
+  end
+
+  def challenge!(reason)
+    raise ArgumentError if reason.blank?
+
+    update!(challenge_reason: reason, challenged_at: Time.zone.now)
   end
 end

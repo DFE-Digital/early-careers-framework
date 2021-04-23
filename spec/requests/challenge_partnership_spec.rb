@@ -3,9 +3,9 @@
 require "rails_helper"
 
 RSpec.describe "Challenging a partnership", type: :request do
-  describe "GET /report-incorrect-partnership?token=:token" do
-    let(:partnership_notification_email) { create(:partnership_notification_email) }
+  let(:partnership_notification_email) { create(:partnership_notification_email) }
 
+  describe "GET /report-incorrect-partnership?token=:token" do
     it "renders the correct template" do
       get "/report-incorrect-partnership", params: { token: partnership_notification_email.token }
 
@@ -32,7 +32,7 @@ RSpec.describe "Challenging a partnership", type: :request do
       it "redirects to already-challenged" do
         get "/report-incorrect-partnership", params: { token: partnership_notification_email.token }
 
-        expect(response).to redirect_to("/report-incorrect-partnership/already-challenged")
+        expect(response).to redirect_to(/\/report-incorrect-partnership\/already-challenged\?school_name=.*/)
       end
     end
   end
@@ -49,5 +49,45 @@ RSpec.describe "Challenging a partnership", type: :request do
       get "/report-incorrect-partnership/already-challenged"
       expect(response).to render_template("challenge_partnerships/already_challenged")
     end
+  end
+
+  describe "POST /report-incorrect-partnership" do
+    it "redirects to the success page" do
+      when_i_submit_form_with_reason("mistake")
+
+      expect(response).to redirect_to("/report-incorrect-partnership/success")
+    end
+
+    it "updates the partnership with the correct details" do
+      freeze_time
+      when_i_submit_form_with_reason("mistake")
+
+      partnership_notification_email.partnership.reload
+      expect(partnership_notification_email.partnership.challenge_reason).to eql "mistake"
+      expect(partnership_notification_email.partnership.challenged_at).to eql Time.zone.now
+    end
+
+    it "shows an error message when no option is selected" do
+      when_i_submit_form_with_reason("")
+
+      expect(response).to render_template("challenge_partnerships/show")
+      expect(response.body).to include(CGI.escapeHTML("Error"))
+    end
+  end
+
+  describe "GET /report-incorrect-partnership/success" do
+    it "renders the success template" do
+      get "/report-incorrect-partnership/success"
+      expect(response).to render_template("challenge_partnerships/success")
+    end
+  end
+
+private
+
+  def when_i_submit_form_with_reason(reason)
+    post "/report-incorrect-partnership", params: { challenge_partnership_form: {
+      challenge_reason: reason,
+      token: partnership_notification_email.token,
+    } }
   end
 end
