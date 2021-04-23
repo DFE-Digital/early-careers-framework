@@ -62,11 +62,13 @@ locals {
   app_cloudfoundry_service_instances = [
     cloudfoundry_service_instance.postgres_instance.id,
     cloudfoundry_user_provided_service.logging.id,
+    cloudfoundry_service_instance.csv_bucket.id,
   ]
   app_service_bindings = concat(
     local.app_cloudfoundry_service_instances,
   )
   logging_service_name     = "${var.service_name}-logit-${var.environment}"
   postgres_service_name    = "${var.service_name}-postgres-${var.environment}"
+  csv_bucket_name          = "${var.service_name}-csv-${var.environment}"
   web_app_name             = "${var.service_name}-${var.environment}"
 }

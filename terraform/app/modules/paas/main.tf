@@ -5,6 +5,12 @@ resource cloudfoundry_service_instance postgres_instance {
   json_params = "{\"enable_extensions\": [\"pgcrypto\", \"fuzzystrmatch\", \"plpgsql\"]}"
 }
 
+resource cloudfoundry_service_instance csv_bucket {
+  name = local.csv_bucket_name
+  space = data.cloudfoundry_space.space.id
+  service_plan = data.cloudfoundry_service.aws-s3-bucket.service_plans["default"]
+}
+
 resource cloudfoundry_app web_app {
   name = local.web_app_name
   command = var.web_app_start_command

@@ -18,3 +18,7 @@ data cloudfoundry_domain education_gov_uk {
 data cloudfoundry_service postgres {
   name = "postgres"
 }
+
+data cloudfoundry_service aws-s3-bucket {
+  name = "aws-s3-bucket"
+}
