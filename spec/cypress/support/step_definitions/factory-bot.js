@@ -51,12 +51,30 @@ const login = (traits, args) => {
   cy.appFactories([factoryArgs])
     .as("userData")
     .then(([user]) => {
-      cy.visit("/users/sign_in");
-      cy.get("[name*=email]").type(`${user.email}{enter}`);
+      cy.visit(`/users/confirm_sign_in?login_token=${user.login_token}`);
     });
+
+  cy.get('[action="/users/sign_in_with_token"] [name="commit"]').click();
 };
 
 Given("I am logged in as {string}", (traits) => login(traits));
 Given("I am logged in as {string} with {}", (traits, args) =>
   login(traits, args)
 );
+
+Given("I am logged in as existing user with {}", (argsStr) => {
+  const args = parseArgs(argsStr);
+
+  const argsStrRails = Object.entries(args)
+    .map(([key, value]) => `${key}: "${value}"`)
+    .join(", ");
+
+  cy.appEval(
+    `User.find_by(${argsStrRails}).update(
+      login_token: "abcdefghij",
+      login_token_valid_until: 60.minutes.from_now)`
+  );
+  cy.visit(`/users/confirm_sign_in?login_token=abcdefghij`);
+
+  cy.get('[action="/users/sign_in_with_token"] [name="commit"]').click();
+});
