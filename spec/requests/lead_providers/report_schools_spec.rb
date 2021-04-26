@@ -53,10 +53,16 @@ RSpec.describe "Report schools spec", type: :request do
       set_session(:confirm_schools_form, { school_ids: schools.map(&:id), delivery_partner_id: delivery_partner.id })
     end
 
-    it "sdisplays success message" do
+    it "displays success message" do
       get success_lead_providers_report_schools_path
 
       expect(response).to render_template :success
+    end
+
+    it "removes confirmation form from session" do
+      get success_lead_providers_report_schools_path
+
+      expect(session).not_to have_key(:confirm_schools_form)
     end
   end
 end

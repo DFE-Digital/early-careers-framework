@@ -31,8 +31,20 @@ module LeadProviders
 
     # TODO: This is temporary behaviour and will be replaced with Partnership creation
     def update
-      # set_success_message heading: "The list of schools has been confirmed", content: "You will be redirected to success page in another story"
-      # redirect_to action: :show
+      cohort = Cohort.current
+
+      ActiveRecord::Base.transaction do
+        @confirm_schools_form.school_ids.each do |school_id|
+          partnership = Partnership.create!(
+            school_id: school_id,
+            cohort: cohort,
+            delivery_partner_id: @confirm_schools_form.delivery_partner_id,
+            lead_provider: current_user.lead_provider,
+          )
+
+          PartnershipNotificationService.new.delay.notify(partnership)
+        end
+      end
 
       redirect_to success_lead_providers_report_schools_path
     end
