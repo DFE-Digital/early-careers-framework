@@ -6,20 +6,24 @@ Feature: Reporting an error with a partnership
   Scenario: Successfully challenging a partnership from token link
     Given I am on "challenge partnership" page with id "abc123"
     Then the page should be accessible
+    And percy should be sent snapshot called "challenge options"
 
     When I click on "This looks like a mistake" label
     And I click the submit button
     Then I should be on "challenge partnership success" page
     And the page should be accessible
+    And percy should be sent snapshot called "challenge success"
 
     When I am on "challenge partnership" page with id "abc123"
     Then I should have been redirected to "already challenged" page
     And the page should be accessible
+    And percy should be sent snapshot called "already challenged"
 
   Scenario: Clicking an expired challenge link
     Given I am on "challenge partnership" page with id "expired"
     Then I should have been redirected to "challenge link expired" page
     And the page should be accessible
+    And percy should be sent snapshot called "challenge link expired"
 
   Scenario: A logged in induction tutor challenges partnership
     Given I am logged in as user with email "test-subject@example.com"
