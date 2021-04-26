@@ -41,6 +41,7 @@ Rails.application.routes.draw do
         get "review", action: :review
         post "review", action: :create
         get "success", action: :success
+        get "cip-only", action: :cip_only
         get "not-eligible", action: :not_eligible
         get "limit-reached", action: :limit_reached
         get "already-nominated", action: :already_nominated

@@ -28,7 +28,9 @@ class Nominations::RequestNominationInviteController < ApplicationController
 
     session[:nomination_request_form] = @nomination_request_form.serializable_hash
 
-    if !@nomination_request_form.school.eligible?
+    if @nomination_request_form.school.cip_only?
+      redirect_to cip_only_request_nomination_invite_path
+    elsif !@nomination_request_form.school.eligible?
       redirect_to not_eligible_request_nomination_invite_path
     elsif @nomination_request_form.school.registered?
       redirect_to already_nominated_request_nomination_invite_path
@@ -38,6 +40,8 @@ class Nominations::RequestNominationInviteController < ApplicationController
       redirect_to review_request_nomination_invite_path
     end
   end
+
+  def cip_only; end
 
   def not_eligible; end
 
