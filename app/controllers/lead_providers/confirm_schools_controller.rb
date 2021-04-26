@@ -2,7 +2,7 @@
 
 module LeadProviders
   class ConfirmSchoolsController < ApplicationController
-    before_action :load_form
+    before_action :load_form, except: :start
 
     def show
       @schools = School.includes(:local_authority).find(@confirm_schools_form.school_ids)
@@ -31,15 +31,16 @@ module LeadProviders
 
     # TODO: This is temporary behaviour and will be replaced with Partnership creation
     def update
-      set_success_message heading: "The list of schools has been confirmed", content: "You will be redirected to success page in another story"
-      redirect_to action: :show
+      # set_success_message heading: "The list of schools has been confirmed", content: "You will be redirected to success page in another story"
+      # redirect_to action: :show
+
+      redirect_to success_lead_providers_report_schools_path
     end
 
   private
 
     def load_form
-      # TODO: remove when CVS/search journey is added
-      redirect_to(action: :start) unless session[:confirm_schools_form]
+      redirect_to dashboard_path unless session[:confirm_schools_form]
       @confirm_schools_form = ConfirmSchoolsForm.new(session[:confirm_schools_form])
     end
   end
