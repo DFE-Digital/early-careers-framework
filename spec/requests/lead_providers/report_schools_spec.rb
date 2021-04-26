@@ -34,7 +34,7 @@ RSpec.describe "Report schools spec", type: :request do
         ProviderRelationship.create(lead_provider: lead_provider, delivery_partner: delivery_partner, cohort: Cohort.current)
       end
 
-      it "shows an error if nothing is selected" do
+      it "redirects to the csv upload page" do
         post "/lead-providers/report-schools/check-delivery-partner", params: {
           lead_provider_delivery_partner_form: { delivery_partner_id: delivery_partner.id },
         }
