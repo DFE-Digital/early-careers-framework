@@ -25,6 +25,9 @@ Rails.application.routes.draw do
   namespace :api do
     resources :school_search, only: %i[index]
     resource :notify_callback, only: :create, path: "notify-callback"
+    namespace :v1 do
+      resources :provider_events, only: %i[create]
+    end
   end
 
   namespace :demo do
