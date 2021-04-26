@@ -18,6 +18,16 @@ Feature: Induction tutors choosing programmes
 
     When I click on "accredited materials" label
     And I click the submit button
+    Then I should be on "choose programme confirm" page
+    And the page should be accessible
+    And percy should be sent snapshot called "Confirm materials CIP page"
+
+    When I click the submit button
+    Then I should be on "choose programme success" page
+    And the page should be accessible
+    And percy should be sent snapshot called "Choose materials success"
+
+    When I click on "link" containing "Continue"
     Then I should be on "schools" page
     And the page should be accessible
     And percy should be sent snapshot called "Schools page"
@@ -38,6 +48,14 @@ Feature: Induction tutors choosing programmes
 
     When I click on "training provider" label
     And I click the submit button
+    Then I should be on "choose programme confirm" page
+    And the page should be accessible
+    And percy should be sent snapshot called "Confirm materials FIP page"
+
+    When I click the submit button
+    Then I should be on "choose programme success" page
+
+    When I click on "link" containing "Continue"
     Then I should be on "schools" page
     And the page should be accessible
 
