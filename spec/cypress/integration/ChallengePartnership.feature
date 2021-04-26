@@ -26,7 +26,7 @@ Feature: Reporting an error with a partnership
     And percy should be sent snapshot called "challenge link expired"
 
   Scenario: A logged in induction tutor challenges partnership
-    Given I am logged in as user with email "test-subject@example.com"
+    Given I am logged in as existing user with email "test-subject@example.com"
     And I am on "2021 school partnerships" page
     When I click on "link" containing "report that your school has been confirmed incorrectly"
     Then I should be on "challenge partnership (any token)" page

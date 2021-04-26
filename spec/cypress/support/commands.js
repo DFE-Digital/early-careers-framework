@@ -22,17 +22,6 @@ Cypress.Commands.add("login", (...traits) => {
   cy.get('[action="/users/sign_in_with_token"] [name="commit"]').click();
 });
 
-Cypress.Commands.add("loginWithEmail", (email) => {
-  cy.visit("/users/sign_in");
-  cy.get("input[name*=email]").type(email);
-  cy.clickCommitButton();
-
-  cy.appEval(`User.find_by(email: "${email}")`).then((user) => {
-    cy.visit(`/users/confirm_sign_in?login_token=${user.login_token}`);
-  });
-  cy.get('[action="/users/sign_in_with_token"] [name="commit"]').click();
-});
-
 Cypress.Commands.add("logout", () => {
   cy.get("#navigation").contains("Logout").click();
 
