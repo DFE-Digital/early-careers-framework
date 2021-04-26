@@ -9,7 +9,11 @@ module Admin
 
     def index
       @query = params[:query]
+<<<<<<< HEAD
       @schools = policy_scope(School).includes(:induction_coordinators, :local_authority)
+=======
+      @schools = policy_scope(School).includes(:induction_coordinators, latest_school_authority: :local_authority)
+>>>>>>> Avoiding N+1 in admin school list
                                      .order(:name)
                                      .page(params[:page])
                                      .per(20)
