@@ -84,4 +84,12 @@ School.find_or_create_by!(urn: "000005") do |school|
     profile.update!(schools: [school])
   end
   SchoolCohort.find_or_create_by!(cohort: Cohort.current, school: school, induction_programme_choice: "full_induction_programme")
+  delivery_partner = DeliveryPartner.find_or_create_by!(name: "Test Delivery Partner")
+  partnership = Partnership.find_or_create_by!(cohort: Cohort.current, delivery_partner: delivery_partner, school: school, lead_provider: LeadProvider.first)
+  PartnershipNotificationEmail.find_or_create_by!(
+    partnership: partnership,
+    sent_to: "cpd-test+tutor-2#{DOMAIN}",
+    email_type: PartnershipNotificationEmail.email_types[:induction_coordinator_email],
+    token: "abc123",
+  )
 end
