@@ -35,5 +35,5 @@ Feature: Reporting an error with a partnership
     And I click the submit button
     Then I should be on "challenge partnership success" page
 
-    When I am on "2021 school partnerships" page
+    When I navigate to "2021 school partnerships" page
     Then "page body" should contain "Have you signed up with a training provider?"
