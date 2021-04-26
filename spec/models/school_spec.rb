@@ -41,7 +41,7 @@ RSpec.describe School, type: :model do
     let!(:eligible_school_type) { create(:school, school_type_code: 1) }
     let!(:ineligible_school_type) { create(:school, school_type_code: 56) }
     let!(:english_school) { create(:school, administrative_district_code: "E123") }
-    let!(:welsh_school) { create(:school, administrative_district_code: "W123") }
+    let!(:welsh_school) { create(:school, administrative_district_code: "W123", school_type_code: 30) }
     describe "#eligible?" do
       it "should be true for open schools" do
         expect(open_school.eligible?).to be true
@@ -75,6 +75,29 @@ RSpec.describe School, type: :model do
       it "should only include eligible schools" do
         expect(School.eligible.all).to include(open_school, eligible_school_type, english_school)
         expect(School.eligible.all).not_to include(closed_school, ineligible_school_type, welsh_school)
+      end
+    end
+
+    describe "#cip_only?" do
+      it "should be false for fully eligible schools" do
+        expect(open_school.cip_only?).to eql false
+        expect(eligible_school_type.cip_only?).to eql false
+        expect(english_school.cip_only?).to eql false
+      end
+
+      it "should be true for welsh schools" do
+        expect(welsh_school.cip_only?).to eql true
+      end
+
+      it "should be false for closed welsh schools" do
+        welsh_school.update!(school_status_code: 2)
+        expect(welsh_school.cip_only?).to eql false
+      end
+    end
+
+    describe "type codes" do
+      it "should have no overlap between fully eligible and CIP only codes" do
+        expect(School::CIP_ONLY_TYPE_CODES & School::ELIGIBLE_TYPE_CODES).to be_empty
       end
     end
   end
