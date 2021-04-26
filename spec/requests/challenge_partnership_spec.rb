@@ -6,7 +6,7 @@ RSpec.describe "Challenging a partnership", type: :request do
   let(:partnership_notification_email) { create(:partnership_notification_email) }
 
   describe "GET /report-incorrect-partnership?token=:token" do
-    it "renders the correct template" do
+    it "renders the challenge partnership template" do
       get "/report-incorrect-partnership", params: { token: partnership_notification_email.token }
 
       expect(response).to render_template("challenge_partnerships/show")
@@ -38,14 +38,14 @@ RSpec.describe "Challenging a partnership", type: :request do
   end
 
   describe "GET /report-incorrect-partnership/link-expired" do
-    it "renders the correct template" do
+    it "renders the link expired template" do
       get "/report-incorrect-partnership/link-expired"
       expect(response).to render_template("challenge_partnerships/link_expired")
     end
   end
 
   describe "GET /report-incorrect-partnership/already-challenged" do
-    it "renders the correct template" do
+    it "renders the already challenged template" do
       get "/report-incorrect-partnership/already-challenged"
       expect(response).to render_template("challenge_partnerships/already_challenged")
     end

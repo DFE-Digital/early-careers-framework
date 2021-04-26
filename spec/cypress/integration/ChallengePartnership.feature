@@ -37,5 +37,3 @@ Feature: Reporting an error with a partnership
 
     When I am on "2021 school partnerships" page
     Then "page body" should contain "Have you signed up with a training provider?"
-
-
