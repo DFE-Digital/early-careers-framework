@@ -38,3 +38,7 @@ Feature: Resend nominations flow
     When I am on "resend nominations limit reached" page
     Then the page should be accessible
     And percy should be sent snapshot called "Resend nominations limit reached page"
+
+    When I am on "resend nominations cip only" page
+    Then the page should be accessible
+    And percy should be sent snapshot called "Resend nominations cip only page"
