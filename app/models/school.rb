@@ -90,12 +90,9 @@ class School < ApplicationRecord
     eligible_establishment_type? && open? && in_england?
   end
 
-<<<<<<< HEAD
   def cip_only?
     open? && cip_only_establishment_type?
   end
-=======
->>>>>>> Review markups
 
   def local_authority_district
     school_local_authority_districts.latest.first&.local_authority_district
