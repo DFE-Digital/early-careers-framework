@@ -5,7 +5,7 @@ module LeadProviders
     before_action :load_form
 
     def show
-      @schools = School.where(id: @confirm_schools_form.school_ids).order(:name).includes(:latest_school_authority)
+      @schools = School.where(id: @confirm_schools_form.school_ids).order(:name).includes(:local_authority)
       @delivery_partner = DeliveryPartner.find(@confirm_schools_form.delivery_partner_id)
     end
 

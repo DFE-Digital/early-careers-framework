@@ -9,6 +9,9 @@ class School < ApplicationRecord
 
   has_many :school_local_authorities
   has_many :local_authorities, through: :school_local_authorities
+  has_one :latest_school_authority, -> { latest }, class_name: "SchoolLocalAuthority"
+  has_one :local_authority, through: :latest_school_authority
+
   has_many :school_local_authority_districts
   has_many :local_authority_districts, through: :school_local_authority_districts
 
@@ -53,9 +56,6 @@ class School < ApplicationRecord
   scope :unpartnered, lambda { |year|
     where.not(id: Partnership.joins(:cohort).where(cohorts: { start_year: year }).select(:school_id))
   }
-
-  has_one :latest_school_authority, -> { latest }, class_name: "SchoolLocalAuthority"
-  delegate :local_authority, to: :latest_school_authority, allow_nil: true
 
   def lead_provider(year)
     partnerships.joins(%i[lead_provider cohort]).find_by(cohorts: { start_year: year })&.lead_provider
