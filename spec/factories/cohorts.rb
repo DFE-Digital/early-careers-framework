@@ -5,7 +5,7 @@ FactoryBot.define do
     start_year { Faker::Number.unique.between(from: 2021, to: 2100) }
 
     trait :current do
-      start_year { Time.zone.today.year }
+      start_year { 2021 }
     end
   end
 end

@@ -45,8 +45,6 @@ module EarlyCareerFramework
     config.exceptions_app = routes
     config.action_dispatch.rescue_responses["Pundit::NotAuthorizedError"] = :forbidden
 
-    config.active_job.queue_adapter = :delayed_job
-
     config.middleware.use Rack::Deflater
   end
 end

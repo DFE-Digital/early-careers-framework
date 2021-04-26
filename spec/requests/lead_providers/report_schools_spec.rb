@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe "Report schools spec", type: :request do
   let(:user) { create(:user, :lead_provider) }
-  let!(:cohort) { create(:cohort, start_year: 2021) }
+  let!(:cohort) { create(:cohort, :current) }
 
   before do
     sign_in user

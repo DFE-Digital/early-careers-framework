@@ -69,5 +69,31 @@ RSpec.describe "Lead Provider confirmation of schools", type: :request do
                 ))
       end
     end
+
+    context "when a single partnership creation fails" do
+      let(:failing_school) { schools.sample }
+
+      def confirm!
+        put "/lead-providers/report-schools/confirm"
+      rescue StandardError # rubocop:disable Lint/SuppressedException
+      end
+
+      before do
+        allow(Partnership).to receive(:create!).and_call_original
+        allow(Partnership).to receive(:create!)
+          .with(hash_including(school_id: failing_school.id))
+          .and_raise StandardError.new(Faker::Lorem.sentence)
+      end
+
+      it "is not creating any Partnerships" do
+        expect { confirm! }.not_to change(Partnership, :count)
+      end
+
+      it "schedules no partnership notifications" do
+        confirm!
+
+        expect(PartnershipNotificationService.new).not_to delay_execution_of(:notify)
+      end
+    end
   end
 end
