@@ -3,6 +3,6 @@
 class Api::V1::ProviderEventsController < Api::ApiController
   def create
     head :created
-    # todo: define input shape
+    # TODO: define input shape
   end
 end
