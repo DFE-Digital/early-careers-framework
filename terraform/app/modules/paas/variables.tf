@@ -27,32 +27,47 @@ variable web_app_deployment_strategy {
 }
 
 variable web_app_instances {
-  default = 1
 }
 
 variable web_app_memory {
-  default = 512
 }
 
 variable web_app_start_command {
+}
+
+
+variable worker_app_start_command {
+  default = ""
+}
+
+variable worker_app_instances {
+  default = 0
+}
+
+variable worker_app_memory {
+  default = 2048
+}
+
+variable worker_app_deployment_strategy {
+  default = "standard"
 }
 
 variable logstash_url {
 }
 
 variable govuk_hostnames {
-  type = list(string)
+  type    = list(string)
   default = []
 }
 
 locals {
 
-  app_env_domain  = {
-    "DOMAIN" = "ecf-${var.environment}.london.cloudapps.digital"
-    "GIAS_API_SCHEMA" = "https://ea-edubase-api-prod.azurewebsites.net/edubase/schema/service.wsdl"
-    "GIAS_EXTRACT_ID" = 13904
-    "GIAS_API_USER" = "ecftech"
-    "GOVUK_APP_DOMAIN" = "ecf-${var.environment}.london.cloudapps.digital"
+  app_env_domain = {
+    "DOMAIN"             = "ecf-${var.environment}.london.cloudapps.digital"
+    "GIAS_API_SCHEMA"    = "https://ea-edubase-api-prod.azurewebsites.net/edubase/schema/service.wsdl"
+    "GIAS_EXTRACT_ID"    = 13904
+    "GIAS_API_USER"      = "ecftech"
+    "GOVUK_APP_DOMAIN"   = "ecf-${var.environment}.london.cloudapps.digital"
     "GOVUK_WEBSITE_ROOT" = "ecf-${var.environment}.london.cloudapps.digital"
   }
   app_environment = merge(
@@ -66,7 +81,8 @@ locals {
   app_service_bindings = concat(
     local.app_cloudfoundry_service_instances,
   )
-  logging_service_name     = "${var.service_name}-logit-${var.environment}"
-  postgres_service_name    = "${var.service_name}-postgres-${var.environment}"
-  web_app_name             = "${var.service_name}-${var.environment}"
+  logging_service_name  = "${var.service_name}-logit-${var.environment}"
+  postgres_service_name = "${var.service_name}-postgres-${var.environment}"
+  web_app_name          = "${var.service_name}-${var.environment}"
+  worker_app_name       = "${var.service_name}-${var.environment}-worker"
 }

@@ -48,6 +48,9 @@ module paas {
   web_app_instances                 = var.paas_web_app_instances
   web_app_memory                    = var.paas_web_app_memory
   web_app_start_command             = var.paas_web_app_start_command
+  worker_app_start_command          = var.paas_worker_app_start_command
+  worker_app_instances              = var.paas_worker_app_instances
+  worker_app_memory                 = var.paas_worker_app_memory
   logstash_url                      = var.logstash_url
   govuk_hostnames                   = var.govuk_hostnames
 }
