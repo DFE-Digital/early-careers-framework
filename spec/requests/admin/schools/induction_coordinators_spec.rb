@@ -14,7 +14,7 @@ RSpec.describe "Admin::Schools::InductionCoodinators", type: :request do
     it "renders the new template" do
       get "/admin/schools/#{school.id}/induction-coordinators/new"
 
-      expect(response.body).to include("Your school")
+      expect(response.body).to include("Induction tutor for #{school.name}")
       expect(response).to render_template("admin/schools/induction_coordinators/new")
     end
   end
