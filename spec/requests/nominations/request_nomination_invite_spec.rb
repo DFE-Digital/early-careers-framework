@@ -46,11 +46,20 @@ RSpec.describe "Requesting an invitation to nominate an induction tutor", type: 
     end
 
     context "when given an ineligible school" do
-      let(:school) { create(:school, administrative_district_code: "W12") }
+      let(:school) { create(:school, school_type_code: 24) }
 
       it "redirects to not eligible" do
         when_i_choose_the_school
         expect(response).to redirect_to(not_eligible_request_nomination_invite_path)
+      end
+    end
+
+    context "when given a cip eligible only school" do
+      let(:school) { create(:school, school_type_code: 10) }
+
+      it "redirects to cip_only" do
+        when_i_choose_the_school
+        expect(response).to redirect_to(cip_only_request_nomination_invite_path)
       end
     end
 
@@ -113,6 +122,13 @@ RSpec.describe "Requesting an invitation to nominate an induction tutor", type: 
     it "renders the success page" do
       get "/nominations/success"
       expect(response).to render_template(:success)
+    end
+  end
+
+  describe "cip only" do
+    it "renders the cip only page" do
+      get "/nominations/cip-only"
+      expect(response).to render_template(:cip_only)
     end
   end
 

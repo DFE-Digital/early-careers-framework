@@ -2,6 +2,7 @@
 
 class School < ApplicationRecord
   ELIGIBLE_TYPE_CODES = [1, 2, 3, 5, 6, 7, 8, 12, 14, 15, 18, 28, 31, 32, 33, 34, 35, 36, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48].freeze
+  CIP_ONLY_TYPE_CODES = [10, 11, 30, 37].freeze
   ELIGIBLE_STATUS_CODES = [1, 3].freeze
 
   belongs_to :network, optional: true
@@ -83,6 +84,10 @@ class School < ApplicationRecord
     eligible_establishment_type? && open? && in_england?
   end
 
+  def cip_only?
+    open? && cip_only_establishment_type?
+  end
+
   def local_authority
     school_local_authorities.latest.first&.local_authority
   end
@@ -125,6 +130,10 @@ private
 
   def eligible_establishment_type?
     ELIGIBLE_TYPE_CODES.include?(school_type_code)
+  end
+
+  def cip_only_establishment_type?
+    CIP_ONLY_TYPE_CODES.include?(school_type_code)
   end
 
   def in_england?
