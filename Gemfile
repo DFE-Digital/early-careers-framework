@@ -103,9 +103,9 @@ group :development, :test do
   gem "factory_bot_rails", ">= 6.1.0"
 
   # Swagger generator
-  gem "rswag"
-  gem "open_api-rswag-specs"
   gem "multi_json"
+  gem "open_api-rswag-specs"
+  gem "rswag"
 end
 
 group :development do
