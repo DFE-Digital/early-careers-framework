@@ -64,6 +64,8 @@ Rails.application.routes.draw do
 
     resource :report_schools, path: "report-schools", only: [] do
       get "start", action: :start
+      post "check-delivery-partner", action: :check_delivery_partner
+      get "choose-delivery-partner", action: :choose_delivery_partner
     end
   end
 
