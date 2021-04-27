@@ -1,0 +1,25 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Provider Events API",
+    "version": "v1",
+    "description": "Auto generated doc"
+  },
+  "basePath": "/api/v1",
+  "paths": {
+    "/provider_events": {
+      "post": {
+        "summary": "Create provider event",
+        "operationId": "api_v1_create_provider_event",
+        "tags": [
+          "provider events"
+        ],
+        "responses": {
+          "201": {
+            "description": "successful"
+          }
+        }
+      }
+    }
+  }
+}

@@ -73,6 +73,10 @@ gem "daemons"
 gem "delayed_cron_job"
 gem "delayed_job_active_record"
 
+# OpenApi Swagger
+gem "open_api-rswag-api"
+gem "open_api-rswag-ui"
+
 platform :mswin, :mingw, :x64_mingw do
   gem "wdm", ">= 0.1.0"
 end
@@ -97,6 +101,11 @@ group :development, :test do
   gem "dotenv-rails", ">= 2.7.6"
 
   gem "factory_bot_rails", ">= 6.1.0"
+
+  # Swagger generator
+  gem "rswag"
+  gem "open_api-rswag-specs"
+  gem "multi_json"
 end
 
 group :development do
@@ -110,6 +119,7 @@ end
 
 group :test do
   gem "faker"
+  gem "jsonapi-rspec"
   gem "pundit-matchers", "~> 1.6.0"
   gem "rails-controller-testing", ">= 1.0.5"
   gem "shoulda-matchers", "~> 4.4"
