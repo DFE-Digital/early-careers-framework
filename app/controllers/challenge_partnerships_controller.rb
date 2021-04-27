@@ -1,15 +1,9 @@
 # frozen_string_literal: true
 
 class ChallengePartnershipsController < ApplicationController
-  before_action :set_form, only: :create
+  before_action :set_form, only: %i[show create]
 
-  def show
-    set_form
-  rescue TokenExpiredError
-    redirect_to link_expired_challenge_partnership_path
-  rescue AlreadyChallengedError
-    redirect_to already_challenged_challenge_partnership_path(school_name: @school_name)
-  end
+  def show; end
 
   def create
     render :show and return unless @challenge_partnership_form.valid?
@@ -32,11 +26,12 @@ private
     token = params[:token] || params.dig(:challenge_partnership_form, :token)
     notification_email = PartnershipNotificationEmail.find_by(token: token)
     raise ActionController::RoutingError, "Not Found" if notification_email.blank?
-    raise TokenExpiredError if notification_email.token_expired?
+
+    redirect_to link_expired_challenge_partnership_path if notification_email.token_expired?
 
     @partnership = notification_email.partnership
     @school_name = @partnership.school.name
-    raise AlreadyChallengedError if @partnership.challenged?
+    redirect_to already_challenged_challenge_partnership_path(school_name: @school_name) if @partnership.challenged?
 
     provider_name = @partnership.delivery_partner&.name || @partnership.lead_provider.name
     @challenge_partnership_form = ChallengePartnershipForm.new(
@@ -55,7 +50,3 @@ private
     params.require(:challenge_partnership_form).permit(:challenge_reason, :token)
   end
 end
-
-class TokenExpiredError < StandardError; end
-
-class AlreadyChallengedError < StandardError; end
