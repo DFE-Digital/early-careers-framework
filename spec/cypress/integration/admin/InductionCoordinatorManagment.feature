@@ -24,3 +24,6 @@ Feature: Admin user creating induction tutor
     And the page should be accessible
     And "page body" should contain "John Smith"
     And "page body" should contain "j.smith@example.com"
+    And "notification banner" should contain "Success"
+    And "notification banner" should contain "New induction tutor added"
+    And "notification banner" should contain "They will get an email with next steps"
