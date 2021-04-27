@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_19_142255) do
+ActiveRecord::Schema.define(version: 2021_04_27_095551) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -91,6 +91,17 @@ ActiveRecord::Schema.define(version: 2021_04_19_142255) do
     t.index ["core_induction_programme_id"], name: "index_ect_profiles_on_core_induction_programme_id"
     t.index ["school_id"], name: "index_early_career_teacher_profiles_on_school_id"
     t.index ["user_id"], name: "index_early_career_teacher_profiles_on_user_id"
+  end
+
+  create_table "events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.uuid "participant_id", null: false
+    t.uuid "lead_provider_id", null: false
+    t.string "event_type", null: false
+    t.datetime "event_date", null: false
+    t.index ["lead_provider_id"], name: "index_events_on_lead_provider_id"
+    t.index ["participant_id"], name: "index_events_on_participant_id"
   end
 
   create_table "induction_coordinator_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -182,6 +193,11 @@ ActiveRecord::Schema.define(version: 2021_04_19_142255) do
     t.index ["partnership_notification_email_id"], name: "index_nomination_emails_on_partnership_notification_email_id"
     t.index ["school_id"], name: "index_nomination_emails_on_school_id"
     t.index ["token"], name: "index_nomination_emails_on_token", unique: true
+  end
+
+  create_table "participants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "partnership_notification_emails", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -353,6 +369,8 @@ ActiveRecord::Schema.define(version: 2021_04_19_142255) do
   add_foreign_key "early_career_teacher_profiles", "core_induction_programmes"
   add_foreign_key "early_career_teacher_profiles", "schools"
   add_foreign_key "early_career_teacher_profiles", "users"
+  add_foreign_key "events", "lead_providers"
+  add_foreign_key "events", "participants"
   add_foreign_key "induction_coordinator_profiles", "users"
   add_foreign_key "lead_provider_cips", "cohorts"
   add_foreign_key "lead_provider_cips", "core_induction_programmes"
