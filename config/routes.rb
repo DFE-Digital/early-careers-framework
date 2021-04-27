@@ -169,5 +169,8 @@ Rails.application.routes.draw do
   get "/422", to: "errors#unprocessable_entity", via: :all
   get "/500", to: "errors#internal_server_error", via: :all
 
+  mount OpenApi::Rswag::Ui::Engine => "/api-docs"
+  mount OpenApi::Rswag::Api::Engine => "/api-docs"
+
   resource :school_search, only: %i[show create], path: "school-search", controller: :school_search
 end
