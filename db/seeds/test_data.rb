@@ -85,3 +85,5 @@ School.find_or_create_by!(urn: "000005") do |school|
   end
   SchoolCohort.find_or_create_by!(cohort: Cohort.current, school: school, induction_programme_choice: "full_induction_programme")
 end
+
+DeliveryPartner.find_or_create_by!(name: "Amazing Delivery Partner")
