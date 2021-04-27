@@ -8,8 +8,9 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-l"><%= @cohort.display_name %> cohort</span>
-    <h1 class="govuk-heading-xl govuk-!-margin-top-2">Your induction programme</h1>
+    <h1 class="govuk-heading-xl govuk-!-margin-top-2">Choose your induction programme</h1>
     <p class="govuk-body-l">
+      <strong>You have chosen to:</strong>
       <% if @school_cohort.school_chose_cip? %>
         Use DfE accredited materials
       <% else %>
@@ -18,37 +19,41 @@
     </p>
 
     <h2 class="govuk-heading-m">Changing your programme</h2>
-    <p>Each induction programme is set up differently. Before you change your programme:</p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>make sure the <%= govuk_link_to "programme you want to change to", "https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview" %> works for your school</li>
-      <% if @school_cohort.school_chose_fip? %>
-        <li>if you have confirmed an agreement with a training provider, you need to speak to them</li>
-      <% end %>
-      <li>check the following advice on what would change on the service</li>
-    </ul>
-
-    <% unless @school_cohort.school_chose_cip? %>
-      <h3 class="govuk-heading-s">Use DfE accredited materials</h3>
+    <% if @school_cohort.school_chose_fip? %>
+      <p class="govuk-body">If your school has decided to:</p>
       <ul class="govuk-list govuk-list--bullet">
-        <li>your early career teachers and mentors would access the materials and other resources on our service.</li>
-        <li>you will need to provide email addresses for your early career teachers and mentors</li>
+        <li>use the DfE accredited materials</li>
       </ul>
-    <% end %>
-
-    <h3 class="govuk-heading-s">Design and deliver your own programme based on the early career framework (ECF)</h3>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>you no longer need to use this service</li>
-    </ul>
-
-    <% unless @school_cohort.school_chose_fip? %>
-      <h3 class="govuk-heading-s">Use an approved training provider</h3>
+      <p class="govuk-body">Or</p>
       <ul class="govuk-list govuk-list--bullet">
-        <li>your early career teachers and mentors will use the provider’s service and would not be able to sign in and access the materials on our service</li>
-        <li>you would need to confirm an agreement with an approved training provider</li>
-        <li>this is done directly with the provider so please check the next steps when you change to this programme</li>
+        <li>design your own programme based on the ECF</li>
       </ul>
-    <% end %>
 
-    <p>If you need to change your programme, contact: <br><%= render MailToSupportComponent.new %></p>
+      <p class="govuk-body">You need to:</p>
+
+      <ol class="govuk-list govuk-list--number">
+        <li>Speak to your training provider (if you have signed up with one).</li>
+        <li>Contact: <%= render MailToSupportComponent.new %>.</li>
+      </ol>
+    <% else %>
+      <p class="govuk-body">If your school wants to use an approved training provider, you should:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>contact your local Teaching School Hub</li>
+      </ul>
+      <p class="govuk-body">
+        They will talk you through how to access this support for your early career teachers and mentors.
+        Not sure? <%= govuk_link_to(
+              "Find your local Teaching School Hub",
+              "https://www.gov.uk/guidance/teaching-school-hubs#find-a-teaching-school-hub") %>.
+      </p>
+
+      <p class="govuk-body">
+        If your school has decided to design your own programme based on the early career framework (ECF), you need to:
+      </p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>contact: <%= render MailToSupportComponent.new %></li>
+      </ul>
+      <%= govuk_warning text: "If you change your programme, your early career teachers and mentors will lose their progress on the service" %>
+    <% end %>
   </div>
 </div>
