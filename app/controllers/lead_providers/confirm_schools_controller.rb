@@ -13,7 +13,7 @@ module LeadProviders
       school_id = params[:remove][:school_id]
       @confirm_schools_form.school_ids.delete(school_id)
       school = School.find school_id
-      set_success_message heading: "The school \"#{school.name}\" has been removed and won't be recruited"
+      set_success_message heading: "#{school.name} has been removed"
       redirect_to action: :show
     end
 
@@ -24,6 +24,7 @@ module LeadProviders
         source: :csv,
         school_ids: School.order(Arel.sql("RANDOM()")).limit(10).pluck(:id),
         delivery_partner_id: DeliveryPartner.order(Arel.sql("RANDOM()")).first.id,
+        cohort: 2021
       }
       redirect_to action: :show
     end
