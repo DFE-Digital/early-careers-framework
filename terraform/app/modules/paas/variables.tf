@@ -37,19 +37,15 @@ variable web_app_start_command {
 
 
 variable worker_app_start_command {
-  default = ""
 }
 
 variable worker_app_instances {
-  default = 0
 }
 
 variable worker_app_memory {
-  default = 2048
 }
 
 variable worker_app_deployment_strategy {
-  default = "standard"
 }
 
 variable logstash_url {
