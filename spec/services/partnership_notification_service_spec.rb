@@ -88,4 +88,71 @@ RSpec.describe PartnershipNotificationService do
       end
     end
   end
+
+  describe "#send_reminder" do
+    context "when the school has no induction coordinator" do
+      let(:contact_email) { Faker::Internet.email }
+      let(:school) { create(:school, primary_contact_email: contact_email) }
+
+      before(:all) do
+        RSpec::Mocks.configuration.verify_partial_doubles = false
+      end
+
+      after(:all) do
+        RSpec::Mocks.configuration.verify_partial_doubles = true
+      end
+
+      it "emails the school primary contact" do
+        expect(SchoolMailer).to receive(:school_partnership_notification_email).with(
+          hash_including(
+            provider_name: @delivery_partner.name,
+            cohort: String,
+            nominate_url: String,
+            challenge_url: String,
+            recipient: contact_email,
+          ),
+        ).and_call_original
+        allow_any_instance_of(Mail::TestMailer).to receive_message_chain(:response, :id) { notify_id }
+
+        partnership_notification_service.notify(partnership)
+
+        expect(partnership_notification_email.sent_to).to eql contact_email
+        expect(partnership_notification_email.notify_id).to eql notify_id
+      end
+    end
+
+    context "when the school has an induction coordinator" do
+      let(:contact_email) { Faker::Internet.email }
+      let(:school) { create(:school) }
+      before do
+        create(:user, :induction_coordinator, schools: [school], email: contact_email)
+      end
+
+      before(:all) do
+        RSpec::Mocks.configuration.verify_partial_doubles = false
+      end
+
+      after(:all) do
+        RSpec::Mocks.configuration.verify_partial_doubles = true
+      end
+
+      it "emails the induction coordinator" do
+        expect(SchoolMailer).to receive(:coordinator_partnership_notification_email).with(
+          hash_including(
+            provider_name: @delivery_partner.name,
+            cohort: String,
+            start_url: String,
+            challenge_url: String,
+            recipient: contact_email,
+          ),
+        ).and_call_original
+        allow_any_instance_of(Mail::TestMailer).to receive_message_chain(:response, :id) { notify_id }
+
+        partnership_notification_service.notify(partnership)
+
+        expect(partnership_notification_email.sent_to).to eql contact_email
+        expect(partnership_notification_email.notify_id).to eql notify_id
+      end
+    end
+  end
 end

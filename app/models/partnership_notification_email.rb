@@ -10,7 +10,9 @@ class PartnershipNotificationEmail < ApplicationRecord
 
   enum email_type: {
     induction_coordinator_email: "induction_coordinator_email",
+    induction_coordinator_reminder_email: "induction_coordinator_reminder_email",
     school_email: "school_email",
+    school_reminder_email: "school_reminder_email",
   }
 
   def token_expiry

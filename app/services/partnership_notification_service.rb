@@ -4,20 +4,16 @@ class PartnershipNotificationService
   def notify(partnership)
     ActiveRecord::Base.transaction do
       if partnership.school.registered?
-        notification_email = PartnershipNotificationEmail.create!(
-          token: generate_token,
-          sent_to: partnership.school.contact_email,
-          partnership: partnership,
-          email_type: PartnershipNotificationEmail.email_types[:induction_coordinator_email],
+        notification_email = create_notification_email(
+          partnership,
+          PartnershipNotificationEmail.email_types[:induction_coordinator_email],
         )
 
         send_notification_email_to_coordinator(notification_email)
       else
-        notification_email = PartnershipNotificationEmail.create!(
-          token: generate_token,
-          sent_to: partnership.school.contact_email,
-          partnership: partnership,
-          email_type: PartnershipNotificationEmail.email_types[:school_email],
+        notification_email = create_notification_email(
+          partnership,
+          PartnershipNotificationEmail.email_types[:school_email],
         )
 
         send_notification_email_to_school(notification_email)
@@ -25,7 +21,36 @@ class PartnershipNotificationService
     end
   end
 
-private
+  def send_reminder(partnership)
+    ActiveRecord::Base.transaction do
+      if partnership.school.registered?
+        notification_email = create_notification_email(
+          partnership,
+          PartnershipNotificationEmail.email_types[:induction_coordinator_reminder_email],
+        )
+
+        send_notification_email_to_coordinator(notification_email)
+      else
+        notification_email = create_notification_email(
+          partnership,
+          PartnershipNotificationEmail.email_types[:school_reminder_email],
+        )
+
+        send_notification_email_to_school(notification_email)
+      end
+    end
+  end
+
+  private
+
+  def create_notification_email(partnership, type)
+    PartnershipNotificationEmail.create!(
+      token: generate_token,
+      sent_to: partnership.school.contact_email,
+      partnership: partnership,
+      email_type: type,
+    )
+  end
 
   def generate_token
     loop do
@@ -70,7 +95,7 @@ private
   end
 
   def challenge_url(token)
-    Rails.application.routes.url_helpers.root_url( # TODO: ECF-RP-480: Update path when exists
+    Rails.application.routes.url_helpers.root_url(# TODO: ECF-RP-480: Update path when exists
       token: token,
       host: Rails.application.config.domain,
     )
