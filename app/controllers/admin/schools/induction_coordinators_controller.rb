@@ -19,7 +19,7 @@ module Admin
       render :new and return unless @nominate_induction_tutor_form.valid?
 
       @nominate_induction_tutor_form.save!
-      set_success_message(content: "New Induction tutor has been created", title: "Success")
+      set_success_message(content: "New induction tutor added. They will get an email with next steps.", title: "Success")
       redirect_to admin_school_path(@school)
     rescue UserExistsError
       redirect_to email_used_admin_school_induction_coordinators_path
