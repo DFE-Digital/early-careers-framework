@@ -205,6 +205,10 @@ ActiveRecord::Schema.define(version: 2021_04_19_142255) do
     t.uuid "school_id", null: false
     t.uuid "lead_provider_id", null: false
     t.uuid "cohort_id", null: false
+    t.string "status", default: "pending", null: false
+    t.string "reason_for_rejection"
+    t.datetime "accepted_at"
+    t.datetime "rejected_at"
     t.uuid "delivery_partner_id"
     t.index ["cohort_id"], name: "index_partnerships_on_cohort_id"
     t.index ["delivery_partner_id"], name: "index_partnerships_on_delivery_partner_id"

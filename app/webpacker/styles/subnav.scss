@@ -1,0 +1,118 @@
+/* ==========================================================================
+   #SUBNAV (mobile and desktop)
+   Taken from https://github.com/hmcts/design-system/blob/master/app/components/subnav/_subnav.scss
+   ========================================================================== */
+
+.app-subnav {
+  @include govuk-media-query($from: tablet) {
+    display: flex;
+    overflow-x: scroll;
+    padding-top: govuk-spacing(2);
+    padding-bottom: govuk-spacing(7);
+  }
+
+  @include govuk-media-query($until: tablet) {
+    display: block;
+  }
+}
+
+.app-subnav__title {
+  @include govuk-font($size: 19);
+  color: govuk-colour("dark-grey", $legacy: "grey-1");
+  font-weight: normal;
+  margin: 0;
+  padding: govuk-spacing(2);
+  padding-left: govuk-spacing(2) + 4px;
+
+  @include govuk-media-query($until: tablet) {
+    display: none;
+  }
+}
+
+.app-subnav__list {
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  @include govuk-media-query($from: tablet) {
+    display: flex;
+    margin: 0;
+    white-space: nowrap;
+
+    box-shadow: inset 0 -1px 0 $govuk-border-colour;
+  }
+
+  @include govuk-media-query($until: tablet) {
+    margin-bottom: govuk-spacing(4);
+  }
+}
+
+.app-subnav__list-item {
+  @include govuk-media-query($from: tablet) {
+    display: flex;
+
+    & + & {
+      margin-left: govuk-spacing(4);
+    }
+  }
+
+  a,
+  a:link,
+  a:visited {
+    background-color: inherit;
+    display: block;
+    text-decoration: none;
+
+    @include govuk-media-query($from: tablet) {
+      border-bottom: 5px solid transparent;
+      padding-bottom: govuk-spacing(3) - 5px; // Compensate for 5px border
+    }
+
+    @include govuk-media-query($until: tablet) {
+      background-color: inherit;
+      border-left: 5px solid transparent;
+      padding: govuk-spacing(2);
+    }
+  }
+
+  a:focus {
+    color: $govuk-focus-text-colour;
+    background-color: $govuk-focus-colour;
+    box-shadow: 0 -2px $govuk-focus-colour, 0 5px $govuk-focus-text-colour;
+    border-color: $govuk-focus-text-colour;
+    border-left-color: transparent;
+    position: relative;
+  }
+}
+
+.app-subnav__list-item--selected {
+  a,
+  a:link,
+  a:visited {
+    border-color: $govuk-brand-colour;
+    color: $govuk-text-colour;
+  }
+
+  a:focus {
+    color: $govuk-focus-text-colour;
+    background-color: $govuk-focus-colour;
+    box-shadow: 0 -2px $govuk-focus-colour, 0 5px $govuk-focus-text-colour;
+    border-color: $govuk-focus-text-colour;
+    border-left-color: transparent;
+  }
+
+  @include govuk-media-query($until: tablet) {
+    a,
+    a:link,
+    a:visited {
+      background-color: govuk-colour("light-grey", $legacy: "grey-4");
+    }
+
+    a:focus {
+      color: $govuk-focus-text-colour;
+      background-color: $govuk-focus-colour;
+      border-color: transparent;
+    }
+  }
+}

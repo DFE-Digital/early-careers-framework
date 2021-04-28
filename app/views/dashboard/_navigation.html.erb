@@ -1,8 +1,10 @@
-<%= render TabsComponent.new do |component| %>
-  <%= component.tab(path: dashboard_path) do %>
-    <strong>Overview</strong>
-  <% end %>
-  <%= component.tab(path: start_lead_providers_report_schools_path) do %>
-    <strong>Schools</strong>
+<% content_for :nav_bar do %>
+  <%= render PrimaryNavComponent.new do |component| %>
+    <%= component.nav_item(path: dashboard_path) do %>
+      Overview
+    <% end %>
+    <%= component.nav_item(path: start_lead_providers_report_schools_path) do %>
+      Schools
+    <% end %>
   <% end %>
 <% end %>
