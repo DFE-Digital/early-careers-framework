@@ -4,6 +4,7 @@
 
 ## Prerequisites
 
+- Patience
 - Ruby 2.7.2
 - PostgreSQL
 - NodeJS 14.16.0
