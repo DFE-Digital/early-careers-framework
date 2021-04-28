@@ -28,6 +28,7 @@ module LeadProviders
       redirect_to action: :show
     end
 
+    # TODO: This is temporary behaviour and will be replaced with Partnership creation
     def update
       set_success_message heading: "The list of schools has been confirmed", content: "You will be redirected to success page in another story"
       redirect_to action: :show

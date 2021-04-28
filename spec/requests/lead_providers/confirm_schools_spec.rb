@@ -33,5 +33,11 @@ RSpec.describe "Lead Provider confirmation of schools", type: :request do
 
       expect(session[:confirm_schools_form]["school_ids"]).not_to include school_to_remove.id
     end
+
+    it "sets the success flash message" do
+      post "/lead-providers/report-schools/confirm/remove", params: { remove: { school_id: school_to_remove.id } }
+
+      expect(flash[:success]).to be_present
+    end
   end
 end
