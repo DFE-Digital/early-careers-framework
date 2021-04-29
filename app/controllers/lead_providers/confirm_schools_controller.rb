@@ -24,7 +24,7 @@ module LeadProviders
         source: :csv,
         school_ids: School.order(Arel.sql("RANDOM()")).limit(10).pluck(:id),
         delivery_partner_id: DeliveryPartner.order(Arel.sql("RANDOM()")).first.id,
-        cohort: 2021
+        cohort: 2021,
       }
       redirect_to action: :show
     end
