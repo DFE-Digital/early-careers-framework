@@ -6,6 +6,8 @@ class PartnershipCsvUpload < ApplicationRecord
 
   validate :csv_validation
 
+  MAX_FILE_SIZE = 2.megabytes
+
 private
 
   def csv_validation
@@ -15,7 +17,7 @@ private
       errors[:base] << "File must be a CSV"
     end
 
-    if csv.byte_size > 2.megabytes
+    if csv.byte_size > MAX_FILE_SIZE
       errors[:base] << "File must be less than 2mb."
     end
   end
