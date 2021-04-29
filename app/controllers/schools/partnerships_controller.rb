@@ -8,12 +8,9 @@ class Schools::PartnershipsController < Schools::BaseController
     @school = current_user.induction_coordinator_profile.schools.first
     @partnership = @school.partnerships.unchallenged.find_by(cohort: cohort)
 
-    if @partnership
-      email = @partnership.partnership_notification_emails.order(:created_at).first
-      if email.present? && !email.token_expired?
-        @report_mistake_link = challenge_partnership_path(token: email.token)
-        @mistake_link_expiry = email.token_expiry.strftime("%d/%m/%Y")
-      end
+    if @partnership&.in_challenge_window?
+      @report_mistake_link = challenge_partnership_path(partnership: @partnership)
+      @mistake_link_expiry = @partnership.challenge_deadline.strftime("%d/%m/%Y")
     end
   end
 

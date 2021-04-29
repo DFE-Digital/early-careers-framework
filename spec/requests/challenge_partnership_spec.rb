@@ -4,6 +4,8 @@ require "rails_helper"
 
 RSpec.describe "Challenging a partnership", type: :request do
   let(:partnership_notification_email) { create(:partnership_notification_email) }
+  let(:partnership) { partnership_notification_email.partnership }
+  let(:induction_coordinator) { create(:user, :induction_coordinator, schools: [partnership.school]) }
 
   describe "GET /report-incorrect-partnership?token=:token" do
     it "renders the challenge partnership template" do
@@ -17,7 +19,8 @@ RSpec.describe "Challenging a partnership", type: :request do
     end
 
     context "when the link has expired" do
-      let(:partnership_notification_email) { create(:partnership_notification_email, created_at: 4.weeks.ago) }
+      let(:partnership) { create(:partnership, created_at: 4.weeks.ago) }
+      let(:partnership_notification_email) { create(:partnership_notification_email, partnership: partnership) }
 
       it "redirects to link-expired" do
         get "/report-incorrect-partnership", params: { token: partnership_notification_email.token }
@@ -27,10 +30,56 @@ RSpec.describe "Challenging a partnership", type: :request do
     end
 
     context "when the partnership has already been challenged" do
-      let(:partnership_notification_email) { create(:partnership_notification_email, :challenged) }
+      let!(:partnership_notification_email) { create(:partnership_notification_email, :challenged) }
 
       it "redirects to already-challenged" do
         get "/report-incorrect-partnership", params: { token: partnership_notification_email.token }
+
+        expect(response).to redirect_to(/\/report-incorrect-partnership\/already-challenged\?school_name=.*/)
+      end
+
+      it "redirects to already-challenged even if the token has expired" do
+        travel 15.days
+        get "/report-incorrect-partnership", params: { token: partnership_notification_email.token }
+
+        expect(response).to redirect_to(/\/report-incorrect-partnership\/already-challenged\?school_name=.*/)
+      end
+    end
+  end
+
+  describe "GET /report-incorrect-partnership?partnership=:partnership" do
+    before do
+      sign_in induction_coordinator
+    end
+
+    it "renders the challenge partnership template" do
+      get "/report-incorrect-partnership", params: { partnership: partnership.id }
+
+      expect(response).to render_template("challenge_partnerships/show")
+    end
+
+    context "when the partnership cannot be challenged" do
+      let(:partnership) { create(:partnership, created_at: 4.weeks.ago) }
+
+      it "redirects to link-expired" do
+        get "/report-incorrect-partnership", params: { partnership: partnership.id }
+
+        expect(response).to redirect_to("/report-incorrect-partnership/link-expired")
+      end
+    end
+
+    context "when the partnership has already been challenged" do
+      let!(:partnership) { create(:partnership, :challenged) }
+
+      it "redirects to already-challenged" do
+        get "/report-incorrect-partnership", params: { partnership: partnership.id }
+
+        expect(response).to redirect_to(/\/report-incorrect-partnership\/already-challenged\?school_name=.*/)
+      end
+
+      it "redirect to already-challenged even if it is outside the challenge window" do
+        travel 15.days
+        get "/report-incorrect-partnership", params: { partnership: partnership.id }
 
         expect(response).to redirect_to(/\/report-incorrect-partnership\/already-challenged\?school_name=.*/)
       end

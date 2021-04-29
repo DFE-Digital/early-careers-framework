@@ -15,7 +15,13 @@ PartnershipNotificationEmail.create!(
 
 school = FactoryBot.create(:school, name: "Test school 2")
 delivery_partner = FactoryBot.create(:delivery_partner, name: "Test delivery partner 2")
-partnership = FactoryBot.create(:partnership, school: school, cohort: cohort, delivery_partner: delivery_partner)
+partnership = FactoryBot.create(
+  :partnership,
+  school: school,
+  cohort: cohort,
+  delivery_partner: delivery_partner,
+  created_at: 20.days.ago,
+)
 PartnershipNotificationEmail.create!(
   token: "expired",
   sent_to: user.email,

@@ -59,7 +59,7 @@ RSpec.describe "Schools::Partnerships", type: :request do
           get "/schools/cohorts/#{cohort.start_year}/partnerships"
 
           expect(response.body).to include("This link will expire on")
-          expect(response.body).to include("?token=abc123")
+          expect(response.body).to include("?partnership=#{@partnership.id}")
         end
       end
 

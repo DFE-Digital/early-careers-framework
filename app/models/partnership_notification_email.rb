@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class PartnershipNotificationEmail < ApplicationRecord
-  TOKEN_LIFETIME = 14.days
-
   belongs_to :partnership
   has_one :nomination_email
   delegate :school, to: :partnership, allow_nil: false
@@ -16,10 +14,10 @@ class PartnershipNotificationEmail < ApplicationRecord
   }
 
   def token_expiry
-    created_at + TOKEN_LIFETIME
+    partnership.challenge_deadline
   end
 
   def token_expired?
-    token_expiry < Time.zone.now
+    !partnership.in_challenge_window?
   end
 end

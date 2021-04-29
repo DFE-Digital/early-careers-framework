@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ChallengePartnershipsController < ApplicationController
+  include Pundit
   before_action :set_form, only: %i[show create]
 
   def show; end
@@ -24,14 +25,23 @@ private
 
   def set_form
     token = params[:token] || params.dig(:challenge_partnership_form, :token)
-    notification_email = PartnershipNotificationEmail.find_by(token: token)
-    raise ActionController::RoutingError, "Not Found" if notification_email.blank?
+    partnership_id = params[:partnership] || params.dig(:challenge_partnership_form, :partnership)
+    if token.present?
+      notification_email = PartnershipNotificationEmail.find_by(token: token)
+      raise ActionController::RoutingError, "Not Found" if notification_email.blank?
 
-    redirect_to link_expired_challenge_partnership_path if notification_email.token_expired?
+      @partnership = notification_email.partnership
+    elsif partnership_id.present?
+      @partnership = Partnership.find(partnership_id)
+      authorize(@partnership, :update?)
+    else
+      raise ActionController::RoutingError, "Not Found"
+    end
 
-    @partnership = notification_email.partnership
     @school_name = @partnership.school.name
-    redirect_to already_challenged_challenge_partnership_path(school_name: @school_name) if @partnership.challenged?
+    redirect_to already_challenged_challenge_partnership_path(school_name: @school_name) and return if @partnership.challenged?
+
+    redirect_to link_expired_challenge_partnership_path and return unless @partnership.in_challenge_window?
 
     provider_name = @partnership.delivery_partner&.name || @partnership.lead_provider.name
     @challenge_partnership_form = ChallengePartnershipForm.new(

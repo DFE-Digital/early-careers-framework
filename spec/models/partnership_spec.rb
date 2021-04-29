@@ -63,4 +63,31 @@ RSpec.describe Partnership, type: :model do
       }.to raise_error ArgumentError
     end
   end
+
+  describe "#challenge_deadline" do
+    it "returns the correct value" do
+      travel_to Time.utc(2020, 1, 1, 13, 0, 0)
+
+      partnership = create(:partnership)
+      expect(partnership.challenge_deadline).to eql Time.utc(2020, 1, 15, 13, 0, 0)
+    end
+  end
+
+  describe "#in_challenge_window?" do
+    it "returns true when the partnership is less than 14 days old" do
+      partnership = create(:partnership)
+
+      travel 13.days
+
+      expect(partnership.in_challenge_window?).to eq true
+    end
+
+    it "returns false when the partnership is more than 14 days old" do
+      partnership = create(:partnership)
+
+      travel 15.days
+
+      expect(partnership.in_challenge_window?).to eq false
+    end
+  end
 end

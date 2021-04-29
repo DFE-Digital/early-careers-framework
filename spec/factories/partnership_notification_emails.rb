@@ -9,7 +9,7 @@ FactoryBot.define do
     email_type { "school_email" }
 
     trait :challenged do
-      partnership { build(:partnership, challenged_at: 2.days.ago, challenge_reason: "mistake") }
+      partnership { build(:partnership, :challenged) }
     end
   end
 end
