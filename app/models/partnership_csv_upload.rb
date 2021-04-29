@@ -14,11 +14,11 @@ private
     return unless csv.attached?
 
     if csv.content_type != "text/csv"
-      errors[:base] << "File must be a CSV"
+      errors.add(:base, "File must be a CSV")
     end
 
     if csv.byte_size > MAX_FILE_SIZE
-      errors[:base] << "File must be less than 2mb."
+      errors.add(:base, "File must be less than 2mb.")
     end
   end
 end
