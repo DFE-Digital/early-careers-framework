@@ -11,7 +11,7 @@
       <th scope="col" class="govuk-table__header">School</th>
       <th scope="col" class="govuk-table__header">URN</th>
       <th scope="col" class="govuk-table__header">Local Authority</th>
-      <th scope="col" class="govuk-table__header">MAT/Network</th>
+      <!-- <th scope="col" class="govuk-table__header">MAT/Network</th> -->
       <th scope="col" class="govuk-table__header">Delivery partner</th>
       <th scope="col"></th>
     </tr>
@@ -22,7 +22,7 @@
         <td class="govuk-table__cell"><strong><%= school.name %></strong></td>
         <td class="govuk-table__cell"><%= school.urn %></td>
         <td class="govuk-table__cell"><%= school.local_authority&.name %></td>
-        <td class="govuk-table__cell"><%# TODO: Add MAT/Network once implemented %></td>
+        <!-- <td class="govuk-table__cell"><%# TODO: Add MAT/Network once implemented %></td> -->
         <td class="govuk-table__cell"><%= @delivery_partner.name %></td>
         <td class="govuk-table__cell">
           <%= form_for :remove, url: { action: :remove } do |form| %>
