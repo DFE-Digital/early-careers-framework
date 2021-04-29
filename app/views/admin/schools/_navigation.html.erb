@@ -1,11 +1,11 @@
 <%= render SubnavComponent.new do |component| %>
   <%= component.nav_item(path: admin_school_path(@school)) do %>
-    <strong>Overview</strong>
+    Overview
   <% end %>
   <%= component.nav_item(path: "#") do %>
-    <strong>Participants</strong>
+    Participants
   <% end %>
   <%= component.nav_item(path: "#") do %>
-    <strong>Cohorts</strong>
+    Cohorts
   <% end %>
 <% end %>
