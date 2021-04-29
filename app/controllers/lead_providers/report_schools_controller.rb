@@ -18,7 +18,7 @@ module LeadProviders
 
       if @delivery_partner_form.valid?
         session[:delivery_partner_id] = @delivery_partner_form.delivery_partner_id
-        redirect_to action: :choose_delivery_partner
+        redirect_to action: :new_lead_providers_partnership_csv_uploads_path
       else
         @delivery_partners = current_user.lead_provider.delivery_partners
         render :choose_delivery_partner

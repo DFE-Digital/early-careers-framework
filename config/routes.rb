@@ -68,6 +68,10 @@ Rails.application.routes.draw do
       post "check-delivery-partner", action: :check_delivery_partner
       get "choose-delivery-partner", action: :choose_delivery_partner
     end
+
+    resource :partnership_csv_uploads, path: "partnership-csv-uploads", only: %i[new create] do
+      get "error-page", action: :error_page
+    end
   end
 
   namespace :admin do
