@@ -8,6 +8,8 @@ class SchoolCohort < ApplicationRecord
     not_yet_known: "not_yet_known",
   }
 
+  has_paper_trail
+
   belongs_to :cohort
   belongs_to :school
   belongs_to :core_induction_programme, optional: true
