@@ -1,0 +1,6 @@
+<%= govuk_notification_banner(title: "Important") do |banner| %>
+  <% banner.add_heading(text: "#{delivery_partner.name} has confirmed they will be delivering an induction programme to your early career teachers, starting in #{cohort.display_name}.") %>
+  <%# TODO: Add a correct link! %>
+  <p>If this is a mistake, <%= govuk_link_to "report it now", "#" %></p>
+  <p>If you do not report this by <%= challenge_deadline_date %>, your programme and next steps will change</p>
+<% end %>

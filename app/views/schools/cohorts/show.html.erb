@@ -9,6 +9,8 @@
   href: schools_dashboard_path)
 %>
 
+<%= render SchoolRecruitedTransitionComponent.new(school_cohort: @school_cohort) %>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl govuk-!-margin-bottom-3"><%= @cohort.start_year %> cohort</h1>
