@@ -6,7 +6,7 @@ Feature: Report Schools flow
 
   Scenario: Visiting the start page
     Given I am on "dashboard" page
-    When I click on "link" containing "Find and add schools"
+    When I click on "link" containing "Confirm your schools"
     Then I should be on "lead providers report schools start" page
     And "page body" should contain "2021"
     And the page should be accessible
