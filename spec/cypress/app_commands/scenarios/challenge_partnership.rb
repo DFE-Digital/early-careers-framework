@@ -21,6 +21,7 @@ partnership = FactoryBot.create(
   cohort: cohort,
   delivery_partner: delivery_partner,
   created_at: 20.days.ago,
+  challenge_deadline: 6.days.ago,
 )
 PartnershipNotificationEmail.create!(
   token: "expired",
