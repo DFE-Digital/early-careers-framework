@@ -11,4 +11,6 @@ paas_app_stopped = false
 paas_web_app_deployment_strategy = "blue-green-v2"
 paas_web_app_instances = 1
 paas_web_app_memory = 8192
+paas_worker_app_instances = 1
+paas_worker_app_start_command = "bundle exec rake jobs:work"
 govuk_hostnames = ["s-manage-training-for-early-career-teachers"]
