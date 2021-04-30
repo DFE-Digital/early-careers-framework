@@ -65,15 +65,19 @@ variable paas_web_app_start_command {
 }
 
 variable paas_worker_app_deployment_strategy {
-  default = "blue-green-v2"
+  default = "standard"
 }
 
 variable paas_worker_app_instances {
-  default = 1
+  default = 0
 }
 
 variable paas_worker_app_memory {
-  default = 512
+  default = 2048
+}
+
+variable paas_worker_app_start_command {
+  default = ""
 }
 
 variable logstash_url {
