@@ -4803,6 +4803,11 @@ cypress-cucumber-preprocessor@^4.0.1:
     minimist "^1.2.5"
     through "^2.3.8"
 
+cypress-file-upload@^5.0.6:
+  version "5.0.6"
+  resolved "https://registry.yarnpkg.com/cypress-file-upload/-/cypress-file-upload-5.0.6.tgz#90a4a49ac4d147f955a642a25b6b3f0706a767b5"
+  integrity sha512-Zop7M8xhP9WSoc5tVYJcUUn+iPn3RpsOEzHaTUKFQPiqxD5Bz19azO/BwiyuNJ5m82zPMd0i+KY/ubVog8cyGQ==
+
 cypress-intellij-reporter@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/cypress-intellij-reporter/-/cypress-intellij-reporter-0.0.6.tgz#5c396b6fe0a6fcef3b380ec6e62b9c229d62781c"

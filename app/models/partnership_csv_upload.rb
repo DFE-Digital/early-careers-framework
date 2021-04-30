@@ -2,6 +2,7 @@
 
 class PartnershipCsvUpload < ApplicationRecord
   has_one_attached :csv
+  # does this need a delivery partner reference ?
   belongs_to :lead_provider, optional: true
 
   validate :csv_validation

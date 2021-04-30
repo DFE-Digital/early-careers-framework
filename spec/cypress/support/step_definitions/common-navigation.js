@@ -74,6 +74,8 @@ const pagePaths = {
   forbidden: "/403",
   "lead providers report schools choose delivery partner":
     "/lead-providers/report-schools/choose-delivery-partner",
+  "partnership csv uploads": "/lead-providers/partnership-csv-uploads/new",
+  "csv errors": "/lead-providers/partnership-csv-uploads/error-page",
 };
 
 Given("I am on {string} page", (page) => {
