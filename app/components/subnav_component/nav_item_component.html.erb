@@ -1,0 +1,5 @@
+<li class="app-subnav__list-item<%= current_page?(path) ? " app-subnav__list-item--selected" : "" %>">
+  <%= govuk_link_to path, class: "app-subnav__link govuk-link--no-visited-state", "aria-current" => (current_page?(path) ? "page" : nil) do %>
+    <%= content %> <%= "<span class='govuk-visually-hidden'>Current page</span>".html_safe if current_page?(path) %>
+  <% end %>
+</li>

@@ -9,7 +9,7 @@ module Admin
 
     def index
       @query = params[:query]
-      @schools = policy_scope(School).includes(:local_authorities, :induction_coordinators)
+      @schools = policy_scope(School).includes(:induction_coordinators, :local_authority)
                                      .order(:name)
                                      .page(params[:page])
                                      .per(20)

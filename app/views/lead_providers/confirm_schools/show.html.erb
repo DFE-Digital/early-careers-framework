@@ -1,0 +1,49 @@
+<% content_for :title, "Confirm or remove schools" %>
+<% content_for :before_content, govuk_back_link(text: 'Back', href: dashboard_path) %>
+
+<h1 class="govuk-heading-xl">Confirm that you have an agreement with <%= @confirm_schools_form.school_ids.count %> <%= "school".pluralize(@confirm_schools_form.school_ids.count) %></h1>
+
+<%= govuk_warning text: "Only confirm schools for the cohort that starts in the next academic year (#{@confirm_schools_form.cohort})." %>
+
+<table class="govuk-table">
+  <thead>
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">School</th>
+      <th scope="col" class="govuk-table__header">URN</th>
+      <th scope="col" class="govuk-table__header">Local Authority</th>
+      <!-- <th scope="col" class="govuk-table__header">MAT/Network</th> -->
+      <th scope="col" class="govuk-table__header">Delivery partner</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    <% @schools.each do |school| %>
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell"><strong><%= school.name %></strong></td>
+        <td class="govuk-table__cell"><%= school.urn %></td>
+        <td class="govuk-table__cell"><%= school.local_authority&.name %></td>
+        <!-- <td class="govuk-table__cell"><%# TODO: Add MAT/Network once implemented %></td> -->
+        <td class="govuk-table__cell"><%= @delivery_partner.name %></td>
+        <td class="govuk-table__cell">
+          <%= form_for :remove, url: { action: :remove } do |form| %>
+            <%= form.hidden_field :school_id, value: school.id, id: "remove-school-#{school.id}" %>
+            <%= form.submit "Remove", class: "govuk-button govuk-button--secondary govuk-!-margin-0", data: { module: "govuk-button" } %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p>Once you've confirmed, schools will be notified by email.</p>
+<p>Schools will have the option to notify the Department for Education and the training provider if they think this is incorrect.</p>
+
+<%= govuk_button_to "Confirm", { action: :update }, method: :put, class: "govuk-button govuk-!-margin-bottom-3" %>
+<% if @confirm_schools_form.source == "csv" %>
+  <%# TODO: This should point to a csv upload once it is implemented %>
+  <%= govuk_link_to "Re-upload CSV", dashboard_path, class: "govuk-button govuk-button--secondary" %>
+<% end %>
+
+<%# TODO: This is for presentation only and should be removed as soon as the initial process is implemented %>
+<hr>
+<%= govuk_link_to "Restart", action: :start %>

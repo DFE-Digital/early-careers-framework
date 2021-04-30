@@ -20,6 +20,7 @@
     "@percy/cypress": "^3.0.0",
     "cypress": "6.8.0",
     "cypress-cucumber-preprocessor": "^4.0.1",
+    "cypress-file-upload": "^5.0.6",
     "cypress-intellij-reporter": "^0.0.6",
     "eslint": "^7.21.0",
     "eslint-config-airbnb-base": "^14.2.1",

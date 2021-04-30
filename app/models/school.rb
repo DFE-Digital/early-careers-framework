@@ -9,6 +9,9 @@ class School < ApplicationRecord
 
   has_many :school_local_authorities
   has_many :local_authorities, through: :school_local_authorities
+  has_one :latest_school_authority, -> { latest }, class_name: "SchoolLocalAuthority"
+  has_one :local_authority, through: :latest_school_authority
+
   has_many :school_local_authority_districts
   has_many :local_authority_districts, through: :school_local_authority_districts
 
@@ -86,10 +89,6 @@ class School < ApplicationRecord
 
   def cip_only?
     open? && cip_only_establishment_type?
-  end
-
-  def local_authority
-    school_local_authorities.latest.first&.local_authority
   end
 
   def local_authority_district
