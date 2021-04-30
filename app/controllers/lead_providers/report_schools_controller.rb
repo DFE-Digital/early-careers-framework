@@ -27,7 +27,6 @@ module LeadProviders
 
     def success
       @confirm_schools_form = ConfirmSchoolsForm.new(session.delete(:confirm_schools_form))
-      @delivery_partner = DeliveryPartner.find(@confirm_schools_form.delivery_partner_id)
     end
   end
 end

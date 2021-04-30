@@ -24,27 +24,14 @@ module LeadProviders
         source: :csv,
         school_ids: School.order(Arel.sql("RANDOM()")).limit(10).pluck(:id),
         delivery_partner_id: DeliveryPartner.order(Arel.sql("RANDOM()")).first.id,
-        cohort: 2021,
+        cohort_id: Cohort.current.id,
+        lead_provider_id: current_user.lead_provider.id,
       }
       redirect_to action: :show
     end
 
-    # TODO: This is temporary behaviour and will be replaced with Partnership creation
     def update
-      cohort = Cohort.current
-
-      ActiveRecord::Base.transaction do
-        @confirm_schools_form.school_ids.each do |school_id|
-          partnership = Partnership.create!(
-            school_id: school_id,
-            cohort: cohort,
-            delivery_partner_id: @confirm_schools_form.delivery_partner_id,
-            lead_provider: current_user.lead_provider,
-          )
-
-          PartnershipNotificationService.new.delay.notify(partnership)
-        end
-      end
+      @confirm_schools_form.save!
 
       redirect_to success_lead_providers_report_schools_path
     end
