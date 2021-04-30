@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "Lead Provider confirmation of schools", type: :request do
-  let(:schools) { create_list :school, rand(4..10) }
+  let(:schools) { create_list(:school, rand(4..10)).shuffle }
   let(:delivery_partner) { create :delivery_partner }
   let(:lead_provider) { create :user, :lead_provider }
 
@@ -26,6 +26,10 @@ RSpec.describe "Lead Provider confirmation of schools", type: :request do
 
     context "with some pre-selected schools" do
       it { is_expected.to render_template "lead_providers/confirm_schools/show" }
+
+      it "preserves the order of schools" do
+        expect(assigns(:schools).map(&:id)).to eq schools.map(&:id)
+      end
     end
 
     context "when the list of pre-selected schools is empty" do
