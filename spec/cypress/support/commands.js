@@ -66,15 +66,14 @@ Cypress.Commands.add("verifySignInEmailSentToUser", (user) => {
 });
 
 Cypress.Commands.add("chooseNameAndEmailForUser", (name, email) => {
-  cy.get("input[name*=full_name").type(name);
-  cy.get("input[name*=email").type(email);
+  cy.get("input[name*=full_name]").type(name);
+  cy.get("input[name*=email]").type(email);
   cy.clickCommitButton();
 });
 
 Cypress.Commands.add("titleShouldEqual", (title) => {
   cy.title().should(
     "equal",
-
     `${title} - Manage training for early career teachers`
   );
 });
