@@ -2,6 +2,7 @@
 
 class ChallengePartnershipsController < ApplicationController
   include Pundit
+  before_action :authorize_partnership, only: %i[show create]
   before_action :set_form, only: %i[show create]
 
   def show; end
@@ -23,11 +24,11 @@ class ChallengePartnershipsController < ApplicationController
 
 private
 
-  def set_form
-    token = params[:token] || params.dig(:challenge_partnership_form, :token)
+  def authorize_partnership
+    @token = params[:token] || params.dig(:challenge_partnership_form, :token)
     partnership_id = params[:partnership] || params.dig(:challenge_partnership_form, :partnership)
-    if token.present?
-      notification_email = PartnershipNotificationEmail.find_by(token: token)
+    if @token.present?
+      notification_email = PartnershipNotificationEmail.find_by(token: @token)
       raise ActionController::RoutingError, "Not Found" if notification_email.blank?
 
       @partnership = notification_email.partnership
@@ -37,7 +38,9 @@ private
     else
       raise ActionController::RoutingError, "Not Found"
     end
+  end
 
+  def set_form
     @school_name = @partnership.school.name
     redirect_to already_challenged_challenge_partnership_path(school_name: @school_name) and return if @partnership.challenged?
 
@@ -47,7 +50,7 @@ private
     @challenge_partnership_form = ChallengePartnershipForm.new(
       school_name: @school_name,
       provider_name: provider_name,
-      token: token,
+      token: @token,
       partnership: @partnership,
     )
 

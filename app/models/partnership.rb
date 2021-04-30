@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class Partnership < ApplicationRecord
-  CHALLENGE_WINDOW = 14.days
+  CHALLENGE_WINDOW = 14.days.freeze
+
+  before_create :set_challenge_deadline
 
   enum challenge_reason: {
     another_provider: "another_provider",
@@ -31,11 +33,13 @@ class Partnership < ApplicationRecord
     update!(challenge_reason: reason, challenged_at: Time.zone.now)
   end
 
-  def challenge_deadline
-    created_at + CHALLENGE_WINDOW
-  end
-
   def in_challenge_window?
     challenge_deadline > Time.zone.now
+  end
+
+private
+
+  def set_challenge_deadline
+    self.challenge_deadline ||= Time.zone.now + CHALLENGE_WINDOW
   end
 end

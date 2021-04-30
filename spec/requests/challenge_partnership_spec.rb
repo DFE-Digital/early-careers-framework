@@ -19,10 +19,11 @@ RSpec.describe "Challenging a partnership", type: :request do
     end
 
     context "when the link has expired" do
-      let(:partnership) { create(:partnership, created_at: 4.weeks.ago) }
-      let(:partnership_notification_email) { create(:partnership_notification_email, partnership: partnership) }
+      let!(:partnership) { create(:partnership) }
+      let!(:partnership_notification_email) { create(:partnership_notification_email, partnership: partnership) }
 
       it "redirects to link-expired" do
+        travel 4.weeks
         get "/report-incorrect-partnership", params: { token: partnership_notification_email.token }
 
         expect(response).to redirect_to("/report-incorrect-partnership/link-expired")
@@ -59,9 +60,10 @@ RSpec.describe "Challenging a partnership", type: :request do
     end
 
     context "when the partnership cannot be challenged" do
-      let(:partnership) { create(:partnership, created_at: 4.weeks.ago) }
+      let!(:partnership) { create(:partnership) }
 
       it "redirects to link-expired" do
+        travel 4.weeks
         get "/report-incorrect-partnership", params: { partnership: partnership.id }
 
         expect(response).to redirect_to("/report-incorrect-partnership/link-expired")

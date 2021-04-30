@@ -66,10 +66,24 @@ RSpec.describe Partnership, type: :model do
 
   describe "#challenge_deadline" do
     it "returns the correct value" do
-      travel_to Time.utc(2020, 1, 1, 13, 0, 0)
+      travel_to Time.zone.parse("01/01/2020 13:00")
 
       partnership = create(:partnership)
-      expect(partnership.challenge_deadline).to eql Time.utc(2020, 1, 15, 13, 0, 0)
+      expect(partnership.challenge_deadline).to eql Time.zone.parse("15/01/2020 13:00")
+    end
+
+    it "can be overridden" do
+      travel_to Time.zone.parse("01/01/2020 13:00")
+      expected_deadline = Time.zone.parse("02/01/2020 13:00")
+
+      partnership = Partnership.create!(
+        lead_provider: create(:lead_provider),
+        delivery_partner: create(:delivery_partner),
+        cohort: create(:cohort),
+        school: create(:school),
+        challenge_deadline: expected_deadline,
+      )
+      expect(partnership.challenge_deadline).to eql expected_deadline
     end
   end
 

@@ -2,7 +2,9 @@
 
 class PartnershipPolicy < ApplicationPolicy
   def update?
-    user&.induction_coordinator? && user&.schools&.include?(record.school)
+    return false unless user&.induction_coordinator?
+
+    user.schools.include?(record.school)
   end
 
   class Scope < Scope
