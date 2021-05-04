@@ -74,7 +74,7 @@ RSpec.describe "Lead Provider confirmation of schools", type: :request do
       put "/lead-providers/report-schools/confirm"
 
       schools.each do |school|
-        expect(PartnershipNotificationService.new).to delay_execution_of(:notify)
+        expect(an_instance_of(PartnershipNotificationService)).to delay_execution_of(:notify)
           .with(an_object_having_attributes(
                   class: Partnership,
                   cohort_id: cohort.id,
@@ -107,7 +107,7 @@ RSpec.describe "Lead Provider confirmation of schools", type: :request do
       it "schedules no partnership notifications" do
         confirm!
 
-        expect(PartnershipNotificationService.new).not_to delay_execution_of(:notify)
+        expect(an_instance_of(PartnershipNotificationService)).not_to delay_execution_of(:notify)
       end
     end
   end
