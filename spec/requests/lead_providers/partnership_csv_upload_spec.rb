@@ -12,7 +12,7 @@ RSpec.describe "LeadProviders::PartnershipCsvUploads", type: :request do
 
   describe "GET /lead-providers/partnership-csv-uploads/new" do
     it "should show the upload csv page to a lead provider" do
-      get new_lead_providers_partnership_csv_uploads_path
+      get new_lead_providers_report_schools_partnership_csv_uploads_path
 
       expect(response).to render_template :new
     end
@@ -22,7 +22,7 @@ RSpec.describe "LeadProviders::PartnershipCsvUploads", type: :request do
     context "with no file selected" do
       it "renders :new with error mesage" do
         form_params = {}
-        post lead_providers_partnership_csv_uploads_path, params: form_params
+        post lead_providers_report_schools_partnership_csv_uploads_path, params: form_params
 
         expect(response).to render_template :new
         expect(response.body).to include("Please select a CSV file to upload")
@@ -36,9 +36,9 @@ RSpec.describe "LeadProviders::PartnershipCsvUploads", type: :request do
             csv: Rack::Test::UploadedFile.new(file_fixture("school_urns.csv"), "text/csv"),
           },
         }
-        post lead_providers_partnership_csv_uploads_path, params: form_params
+        post lead_providers_report_schools_partnership_csv_uploads_path, params: form_params
 
-        expect(response).to redirect_to error_page_lead_providers_partnership_csv_uploads_path
+        expect(response).to redirect_to error_page_lead_providers_report_schools_partnership_csv_uploads_path
         expect(PartnershipCsvUpload.count).to eq 1
       end
     end

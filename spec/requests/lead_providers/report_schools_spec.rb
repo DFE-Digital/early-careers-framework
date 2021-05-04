@@ -39,7 +39,7 @@ RSpec.describe "Report schools spec", type: :request do
           lead_provider_delivery_partner_form: { delivery_partner_id: delivery_partner.id },
         }
 
-        expect(response).to redirect_to new_lead_providers_partnership_csv_uploads_path
+        expect(response).to redirect_to new_lead_providers_report_schools_partnership_csv_uploads_path
       end
     end
   end

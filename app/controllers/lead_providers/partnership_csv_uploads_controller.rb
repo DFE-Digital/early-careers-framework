@@ -16,7 +16,7 @@ module LeadProviders
       @partnership_csv_upload = PartnershipCsvUpload.new(upload_params.merge(lead_provider_id: current_user.lead_provider_profile.lead_provider.id))
 
       if @partnership_csv_upload.save
-        redirect_to error_page_lead_providers_partnership_csv_uploads_path
+        redirect_to error_page_lead_providers_report_schools_partnership_csv_uploads_path
       else
         render :new
       end

@@ -10,7 +10,7 @@
       <li>No other data needed</li>
       <li>Must be under 2mb</li>
     </ul>
-    <%= form_with model: @partnership_csv_upload, url: :lead_providers_partnership_csv_uploads do |f| %>
+    <%= form_with model: @partnership_csv_upload, url: :lead_providers_report_schools_partnership_csv_uploads do |f| %>
       <% if !@partnership_csv_upload.errors[:base].empty? %>
         <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
           <h2 class="govuk-error-summary__title" id="error-summary-title">
