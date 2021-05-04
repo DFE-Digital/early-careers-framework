@@ -37,6 +37,7 @@ class SchoolMailer < ApplicationMailer
     recipient:,
     provider_name:,
     cohort:,
+    school_name:,
     nominate_url:,
     challenge_url:,
     challenge_deadline:
@@ -49,6 +50,7 @@ class SchoolMailer < ApplicationMailer
       personalisation: {
         provider_name: provider_name,
         cohort: cohort,
+        school_name: school_name,
         nominate_url: nominate_url,
         challenge_url: challenge_url,
         challege_deadline: challenge_deadline,
@@ -60,6 +62,7 @@ class SchoolMailer < ApplicationMailer
     recipient:,
     provider_name:,
     cohort:,
+    school_name:,
     start_url:,
     challenge_url:,
     challenge_deadline:
@@ -72,6 +75,7 @@ class SchoolMailer < ApplicationMailer
       personalisation: {
         provider_name: provider_name,
         cohort: cohort,
+        school_name: school_name,
         start_url: start_url,
         challenge_url: challenge_url,
         challenge_deadline: challenge_deadline,

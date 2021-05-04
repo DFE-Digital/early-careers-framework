@@ -44,6 +44,7 @@ RSpec.describe SchoolMailer, type: :mailer do
   describe "#coordinator_partnership_notification_email" do
     let(:recipient) { Faker::Internet.email }
     let(:provider_name) { Faker::Company.name }
+    let(:school_name) { Faker::Company.name }
     let(:start_url) { "https://www.example.com" }
     let(:challenge_url) { "https://www.example.com?token=abc123" }
     let(:challenge_deadline) { "1/1/1970" }
@@ -54,6 +55,7 @@ RSpec.describe SchoolMailer, type: :mailer do
         recipient: recipient,
         provider_name: provider_name,
         cohort: cohort,
+        school_name: school_name,
         start_url: start_url,
         challenge_url: challenge_url,
         challenge_deadline: challenge_deadline,
@@ -69,6 +71,7 @@ RSpec.describe SchoolMailer, type: :mailer do
   describe "#school_partnership_notification_email" do
     let(:recipient) { Faker::Internet.email }
     let(:provider_name) { Faker::Company.name }
+    let(:school_name) { Faker::Company.name }
     let(:nominate_url) { "https://www.example.com?token=def456" }
     let(:challenge_url) { "https://www.example.com?token=abc123" }
     let(:challenge_deadline) { "1/1/1970" }
@@ -79,6 +82,7 @@ RSpec.describe SchoolMailer, type: :mailer do
         recipient: recipient,
         provider_name: provider_name,
         cohort: cohort,
+        school_name: school_name,
         nominate_url: nominate_url,
         challenge_url: challenge_url,
         challenge_deadline: challenge_deadline,
