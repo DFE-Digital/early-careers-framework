@@ -75,9 +75,9 @@ const pagePaths = {
   "lead providers report schools choose delivery partner":
     "/lead-providers/report-schools/choose-delivery-partner",
   "partnership csv uploads":
-    "/lead-providers/report_schools/partnership-csv-uploads/new",
+    "/lead-providers/report-schools/partnership-csv-uploads/new",
   "csv errors":
-    "/lead-providers/report_schools/partnership-csv-uploads/error-page",
+    "/lead-providers/report-schools/partnership-csv-uploads/error-page",
 };
 
 Given("I am on {string} page", (page) => {

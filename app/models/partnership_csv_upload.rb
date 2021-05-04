@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class PartnershipCsvUpload < ApplicationRecord
+  has_paper_trail
   has_one_attached :csv
   # does this need a delivery partner reference ?
   belongs_to :lead_provider, optional: true
