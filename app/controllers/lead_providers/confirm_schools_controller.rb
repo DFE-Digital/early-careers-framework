@@ -30,7 +30,7 @@ module LeadProviders
       redirect_to action: :show
     end
 
-    def update
+    def confirm
       @confirm_schools_form.save!
 
       redirect_to success_lead_providers_report_schools_path

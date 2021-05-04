@@ -51,11 +51,11 @@ RSpec.describe "Lead Provider confirmation of schools", type: :request do
     end
   end
 
-  describe "PUT /lead-providers/report-schools/confirm" do
+  describe "POST /lead-providers/report-schools/confirm" do
     let!(:cohort) { create :cohort, :current }
 
     it "creates new partnerships" do
-      put "/lead-providers/report-schools/confirm"
+      post "/lead-providers/report-schools/confirm"
 
       expect(lead_provider.partnerships).to match_array(
         schools.map do |school|
@@ -71,7 +71,7 @@ RSpec.describe "Lead Provider confirmation of schools", type: :request do
     end
 
     it "schedules partnership notifications" do
-      put "/lead-providers/report-schools/confirm"
+      post "/lead-providers/report-schools/confirm"
 
       schools.each do |school|
         expect(an_instance_of(PartnershipNotificationService)).to delay_execution_of(:notify)
@@ -89,7 +89,7 @@ RSpec.describe "Lead Provider confirmation of schools", type: :request do
       let(:failing_school) { schools.sample }
 
       def confirm!
-        put "/lead-providers/report-schools/confirm"
+        post "/lead-providers/report-schools/confirm"
       rescue StandardError # rubocop:disable Lint/SuppressedException
       end
 

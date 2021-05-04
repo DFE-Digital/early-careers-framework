@@ -80,7 +80,7 @@ module DelayedJobMatchers
         .where("handler LIKE ?", "%\nmethod_name: :#{method_name}\n%")
 
       scope.select do |job|
-        return bject == job.payload_object.object unless object.respond_to?(:matches?)
+        return object == job.payload_object.object unless object.respond_to?(:matches?)
 
         object.matches? job.payload_object.object
       end

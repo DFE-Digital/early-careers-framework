@@ -69,7 +69,8 @@ Rails.application.routes.draw do
       get :start
       get :success
 
-      resource :confirm_schools, only: %i[show update], path: "confirm" do
+      post :confirm, to: "confirm_schools#confirm"
+      resource :confirm_schools, only: %i[show], path: "confirm" do
         get :start
         post :remove
       end
