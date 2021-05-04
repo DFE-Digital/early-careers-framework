@@ -15,7 +15,7 @@ private
   def csv_validation
     return unless csv.attached?
 
-    if csv.content_type != "text/csv"
+    if csv.filename.extension != "csv"
       errors.add(:base, "File must be a CSV")
     end
 

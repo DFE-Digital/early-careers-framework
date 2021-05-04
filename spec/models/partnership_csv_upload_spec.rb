@@ -13,27 +13,23 @@ RSpec.describe PartnershipCsvUpload, type: :model do
   end
 
   describe "csv_validation" do
-    subject { build(:partnership_csv_upload, :with_csv) }
+    let(:csv_upload) { build(:partnership_csv_upload, :with_csv) }
+    let(:text_upload) { build(:partnership_csv_upload, :with_text) }
 
     context "when CSV file is too large" do
       before do
-        allow(subject.csv)
+        allow(csv_upload.csv)
         .to receive(:byte_size).and_return 3.megabytes
       end
 
       it do
-        is_expected.to be_invalid
+        expect(csv_upload).to be_invalid
       end
     end
 
-    context "when file is not type text/csv" do
-      before do
-        allow(subject.csv)
-        .to receive(:content_type).and_return("text/plain")
-      end
-
-      it do
-        is_expected.to be_invalid
+    context "when file extension is not csv" do
+      it "is invalid" do
+        expect(text_upload).to be_invalid
       end
     end
   end
