@@ -12,4 +12,12 @@ class PartnershipNotificationEmail < ApplicationRecord
     induction_coordinator_email: "induction_coordinator_email",
     school_email: "school_email",
   }
+
+  def token_expiry
+    partnership.challenge_deadline
+  end
+
+  def token_expired?
+    !partnership.in_challenge_window?
+  end
 end

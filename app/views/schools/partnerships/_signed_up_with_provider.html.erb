@@ -1,6 +1,16 @@
 <h1 class="govuk-heading-xl">Your training provider</h1>
 <p class="govuk-body-l"><%= @partnership.delivery_partner.name %> with <%= @partnership.lead_provider.name %></p>
 
-<p><!-- TODO: Add link to challenge partnership -->
-  If this doesn't look right, <%= govuk_link_to "report that your school has been confirmed incorrectly", "#" %>.
-</p>
+<% if @report_mistake_link.present? %>
+  <p class="govuk-body">
+    If this is a mistake, <%= govuk_link_to "report that your school has been confirmed incorrectly", @report_mistake_link %>.
+  </p>
+
+  <p class="govuk-body">
+    This link will expire on <%= @mistake_link_expiry %>
+  </p>
+<% else %>
+  <p class="govuk-body">
+    If this is a mistake, contact: <%= render MailToSupportComponent.new %>
+  </p>
+<% end %>

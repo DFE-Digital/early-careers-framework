@@ -1,0 +1,10 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "API documentation",
+    "version": "v1",
+    "description": "Auto generated doc",
+    "definitions": null
+  },
+  "basePath": "/api/v1"
+}

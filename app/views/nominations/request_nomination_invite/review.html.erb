@@ -13,7 +13,7 @@
 
     <div class="govuk-!-margin-bottom-9">
       <%= render partial: 'nominations/school_details', locals: { school: @nomination_request_form.school, title: "Your school" } %>
-      <%= govuk_link_to "Change school", choose_location_request_nomination_invite_path(continue: true), class: "govuk-link--no-visited-state" %>
+      <%= govuk_link_to "Change school", choose_location_request_nomination_invite_path, class: "govuk-link--no-visited-state", "data-test": "change-school" %>
     </div>
 
     <%= form_for :confirmation, url: review_request_nomination_invite_path, method: :post do |f| %>

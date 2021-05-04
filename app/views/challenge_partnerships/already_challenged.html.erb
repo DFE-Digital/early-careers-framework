@@ -1,0 +1,4 @@
+<% content_for :title, "Error: mistake reported" %>
+
+<h1 class="govuk-heading-xl">Someone at <%= @school_name %> has already reported this issue</h1>
+<p class="govuk-body">If you still need to report that your school has been confirmed incorrectly contact: <%= render MailToSupportComponent.new %></p>
