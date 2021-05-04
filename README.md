@@ -59,6 +59,14 @@ bundle exec rake
 bundle exec rspec
 ```
 
+## Running swagger doc generator
+
+It auto-generates swagger/*/api_spec.json from the schema files located in spec/docs
+
+```bash
+bundle exec rake rswag:specs:swaggerize
+```
+
 ## Linting
 
 It's best to lint just your app directories and not those belonging to the framework, e.g.
@@ -119,4 +127,3 @@ to execute this delayed job in the background.
 ```bash
 bundle exec rake 'schools:send_invites[urn1 urn2 ...]'
 ```
-
