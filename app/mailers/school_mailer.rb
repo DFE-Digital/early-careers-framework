@@ -33,7 +33,14 @@ class SchoolMailer < ApplicationMailer
     )
   end
 
-  def school_partnership_notification_email(recipient:, provider_name:, cohort:, nominate_url:, challenge_url:)
+  def school_partnership_notification_email(
+    recipient:,
+    provider_name:,
+    cohort:,
+    nominate_url:,
+    challenge_url:,
+    challenge_deadline:
+  )
     template_mail(
       SCHOOL_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE,
       to: recipient,
@@ -44,11 +51,19 @@ class SchoolMailer < ApplicationMailer
         cohort: cohort,
         nominate_url: nominate_url,
         challenge_url: challenge_url,
+        challege_deadline: challenge_deadline,
       },
     )
   end
 
-  def coordinator_partnership_notification_email(recipient:, provider_name:, cohort:, start_url:, challenge_url:)
+  def coordinator_partnership_notification_email(
+    recipient:,
+    provider_name:,
+    cohort:,
+    start_url:,
+    challenge_url:,
+    challenge_deadline:
+  )
     template_mail(
       COORDINATOR_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE,
       to: recipient,
@@ -59,6 +74,7 @@ class SchoolMailer < ApplicationMailer
         cohort: cohort,
         start_url: start_url,
         challenge_url: challenge_url,
+        challenge_deadline: challenge_deadline,
       },
     )
   end

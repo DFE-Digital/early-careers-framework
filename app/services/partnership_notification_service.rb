@@ -73,6 +73,7 @@ class PartnershipNotificationService
       cohort: notification_email.partnership.cohort.display_name,
       nominate_url: nomination_email.nomination_url,
       challenge_url: challenge_url(notification_email.token),
+      challenge_deadline: notification_email.challenge_deadline.strftime("%d/%m/%Y"),
     ).deliver_now.delivery_method.response.id
 
     notification_email.update!(notify_id: notify_id)
@@ -85,6 +86,7 @@ class PartnershipNotificationService
       cohort: notification_email.partnership.cohort.display_name,
       start_url: Rails.application.routes.url_helpers.root_url(host: Rails.application.config.domain),
       challenge_url: challenge_url(notification_email.token),
+      challenge_deadline: notification_email.challenge_deadline.strftime("%d/%m/%Y"),
     ).deliver_now.delivery_method.response.id
 
     notification_email.update!(notify_id: notify_id)
@@ -95,7 +97,7 @@ class PartnershipNotificationService
   end
 
   def challenge_url(token)
-    Rails.application.routes.url_helpers.root_url(# TODO: ECF-RP-480: Update path when exists
+    Rails.application.routes.url_helpers.challenge_partnership_url(
       token: token,
       host: Rails.application.config.domain,
     )
