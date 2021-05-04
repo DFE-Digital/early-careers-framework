@@ -7,4 +7,9 @@ FactoryBot.define do
     delivery_partner
     cohort
   end
+
+  trait :challenged do
+    challenged_at { 2.days.ago }
+    challenge_reason { "mistake" }
+  end
 end

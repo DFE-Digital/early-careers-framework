@@ -21,6 +21,18 @@ Feature: Resend nominations flow
     And the page should be accessible
     And percy should be sent snapshot called "Resend nominations review page"
 
+    # Clicking change school link should reset location input
+    When I click on "change school link"
+    Then "location input" should have value ""
+
+    When I type "test" into "location input"
+    And I click on "autocomplete dropdown item" containing "Test"
+    And I click the submit button
+    And I type "test" into "school input"
+    And I click on "autocomplete dropdown item" containing "Test"
+    And I click the submit button
+    Then I am on "resend nominations review" page
+
     When I click the submit button
     Then I am on "resend nominations success" page
     And the page should be accessible

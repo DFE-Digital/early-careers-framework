@@ -21,6 +21,13 @@ Rails.application.routes.draw do
   resource :accessibility_statement, only: :show, path: "accessibility-statement"
   resource :dashboard, controller: :dashboard, only: :show
   resource :supplier_dashboard, controller: :supplier_dashboard, only: :show
+  resource :challenge_partnership, path: "report-incorrect-partnership", only: %i[show create] do
+    collection do
+      get "link-expired", action: :link_expired
+      get "already-challenged", action: :already_challenged
+      get "success", action: :success
+    end
+  end
 
   namespace :api do
     resources :school_search, only: %i[index]
@@ -177,6 +184,9 @@ Rails.application.routes.draw do
   get "/404", to: "errors#not_found", via: :all
   get "/422", to: "errors#unprocessable_entity", via: :all
   get "/500", to: "errors#internal_server_error", via: :all
+
+  mount OpenApi::Rswag::Ui::Engine => "/api-docs"
+  mount OpenApi::Rswag::Api::Engine => "/api-docs"
 
   resource :school_search, only: %i[show create], path: "school-search", controller: :school_search
 end
