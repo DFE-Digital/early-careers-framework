@@ -5,6 +5,7 @@ require "rails_helper"
 RSpec.describe PartnershipCsvUpload, type: :model do
   describe "associations" do
     it { is_expected.to belong_to(:lead_provider).optional }
+    it { is_expected.to belong_to(:delivery_partner).optional }
   end
 
   describe "relations" do

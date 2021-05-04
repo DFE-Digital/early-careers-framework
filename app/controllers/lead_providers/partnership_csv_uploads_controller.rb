@@ -13,7 +13,10 @@ module LeadProviders
         render :new and return
       end
 
-      @partnership_csv_upload = PartnershipCsvUpload.new(upload_params.merge(lead_provider_id: current_user.lead_provider_profile.lead_provider.id))
+      @partnership_csv_upload = PartnershipCsvUpload.new(upload_params.merge(
+                                                           lead_provider_id: current_user.lead_provider_profile.lead_provider.id,
+                                                           delivery_partner_id: session[:delivery_partner_id],
+                                                         ))
 
       if @partnership_csv_upload.save
         redirect_to error_page_lead_providers_report_schools_partnership_csv_uploads_path
@@ -27,7 +30,7 @@ module LeadProviders
   private
 
     def upload_params
-      params.require(:partnership_csv_upload).permit(:lead_provider_id, :csv)
+      params.require(:partnership_csv_upload).permit(:lead_provider_id, :delivery_partner_id, :csv)
     end
   end
 end

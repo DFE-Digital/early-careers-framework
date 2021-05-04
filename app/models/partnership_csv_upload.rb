@@ -3,8 +3,8 @@
 class PartnershipCsvUpload < ApplicationRecord
   has_paper_trail
   has_one_attached :csv
-  # does this need a delivery partner reference ?
   belongs_to :lead_provider, optional: true
+  belongs_to :delivery_partner, optional: true
 
   validate :csv_validation
 
