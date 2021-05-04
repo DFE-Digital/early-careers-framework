@@ -1,0 +1,19 @@
+<% content_for :title, "Complete - error reported" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= govuk_panel(
+          title: "Your report has been submitted",
+          body: nil,
+          classes: "govuk-!-margin-bottom-8",
+          html_attributes: { "data-test": "success-panel" }
+        ) %>
+
+    <h2 class="govuk-heading-m">What happens next</h2>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>the training partner will be notified</li>
+      <li>they may also contact you to discuss any issues</li>
+      <li>if you do not hear from a training provider, your issue will be resolved directly</li>
+    </ul>
+  </div>
+</div>

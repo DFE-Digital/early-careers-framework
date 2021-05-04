@@ -7,5 +7,9 @@ FactoryBot.define do
     sent_to { Faker::Internet.email }
     notify_id { Faker::Internet.uuid }
     email_type { "school_email" }
+
+    trait :challenged do
+      partnership { build(:partnership, :challenged) }
+    end
   end
 end
