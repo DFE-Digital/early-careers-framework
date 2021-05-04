@@ -77,7 +77,7 @@ When("I click the back link", () => {
   cy.clickBackLink();
 });
 
-When("I add a csv file to the file input", () => {
+When("I add a school urn csv to the file input", () => {
   cy.get("#partnership-csv-upload-csv-field").attachFile({
     filePath: "school_urns.csv",
     mimeType: "text/csv",
@@ -141,5 +141,3 @@ Then("{string} label should be unchecked", (text) => {
 Then("the table should have {int} row(s)", (number) => {
   cy.get("tbody").find("tr").should("have.length", number);
 });
-
-Then("the ");

@@ -7,6 +7,8 @@ Feature: Lead provider should be able to upload csv
 
   Scenario: Upload a csv
     Given I am on "partnership csv uploads" page
-    When I add a csv file to the file input
+    When I add a school urn csv to the file input
     And I click the submit button
     Then I should be on "csv errors" page
+    And the page should be accessible
+    And percy should be sent snapshot
