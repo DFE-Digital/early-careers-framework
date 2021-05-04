@@ -22,7 +22,7 @@ RSpec.describe PartnershipCsvUpload, type: :model do
         .to receive(:byte_size).and_return 3.megabytes
       end
 
-      it do
+      it "is invalid" do
         expect(csv_upload).to be_invalid
       end
     end
