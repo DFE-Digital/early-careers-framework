@@ -26,6 +26,7 @@ const links = {
   "edit admin link": "[data-test=edit-admin-link]",
   "change name link": 'a:contains("Change name")',
   "edit supplier user link": "[data-test=edit-supplier-user-link]",
+  "change school link": "[data-test=change-school]",
 };
 
 const elements = {
