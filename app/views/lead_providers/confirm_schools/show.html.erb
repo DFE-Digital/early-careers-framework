@@ -1,9 +1,9 @@
-<% content_for :title, "Confirm schools" %>
+<% content_for :title, "Confirm or remove schools" %>
 <% content_for :before_content, govuk_back_link(text: 'Back', href: dashboard_path) %>
 
-<h1 class="govuk-heading-xl">Confirm recruitment of <%= @confirm_schools_form.school_ids.count %> <%= "school".pluralize(@confirm_schools_form.school_ids.count) %>, working with <%= @delivery_partner.name %>.</h1>
+<h1 class="govuk-heading-xl">Confirm that you have an agreement with <%= @schools.count %> <%= "school".pluralize(@schools.count) %></h1>
 
-<%= govuk_warning text: "Only report schools that you have signed a contract with." %>
+<%= govuk_warning text: "Only confirm schools for the cohort that starts in the next academic year (#{@cohort.display_name})." %>
 
 <table class="govuk-table">
   <thead>
@@ -11,6 +11,7 @@
       <th scope="col" class="govuk-table__header">School</th>
       <th scope="col" class="govuk-table__header">URN</th>
       <th scope="col" class="govuk-table__header">Local Authority</th>
+      <!-- <th scope="col" class="govuk-table__header">MAT/Network</th> -->
       <th scope="col" class="govuk-table__header">Delivery partner</th>
       <th scope="col"></th>
     </tr>
@@ -21,6 +22,7 @@
         <td class="govuk-table__cell"><strong><%= school.name %></strong></td>
         <td class="govuk-table__cell"><%= school.urn %></td>
         <td class="govuk-table__cell"><%= school.local_authority&.name %></td>
+        <!-- <td class="govuk-table__cell"><%# TODO: Add MAT/Network once implemented %></td> -->
         <td class="govuk-table__cell"><%= @delivery_partner.name %></td>
         <td class="govuk-table__cell">
           <%= form_for :remove, url: { action: :remove } do |form| %>
@@ -33,12 +35,13 @@
   </tbody>
 </table>
 
-<p>Once you've confirmed, schools will be notified</p>
+<p>Once you've confirmed, schools will be notified by email.</p>
+<p>Schools will have the option to notify the Department for Education and the training provider if they think this is incorrect.</p>
 
 <%= govuk_button_to "Confirm", { action: :confirm }, method: :post, class: "govuk-button govuk-!-margin-bottom-3" %>
 <% if @confirm_schools_form.source == "csv" %>
   <%# TODO: This should point to a csv upload once it is implemented %>
-  <%= govuk_link_to "Re upload CSV", dashboard_path, class: "govuk-button govuk-button--secondary" %>
+  <%= govuk_link_to "Re-upload CSV", dashboard_path, class: "govuk-button govuk-button--secondary" %>
 <% end %>
 
 <%# TODO: This is for presentation only and should be removed as soon as the initial process is implemented %>

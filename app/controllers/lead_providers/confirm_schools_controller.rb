@@ -7,6 +7,7 @@ module LeadProviders
     def show
       @schools = School.includes(:local_authority).find(@confirm_schools_form.school_ids)
       @delivery_partner = DeliveryPartner.find(@confirm_schools_form.delivery_partner_id)
+      @cohort = Cohort.find(@confirm_schools_form.cohort_id)
     end
 
     def remove
