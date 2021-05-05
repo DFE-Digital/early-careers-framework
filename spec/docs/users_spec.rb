@@ -3,7 +3,7 @@
 require "swagger_helper"
 
 describe "API", type: :request do
-  path "/api/v1/users" do
+  path "/users" do
     get "Returns all users" do
       operationId :public_api_v1_user_index
       tags "user"
