@@ -85,6 +85,10 @@ When("I add a school urn csv to the file input", () => {
   });
 });
 
+When("I click on the delivery partner radio button", () => {
+  cy.get('[type="radio"].govuk-radios__input').first().check();
+});
+
 Then("{string} should be unchecked", (element) => {
   get(element).should("not.be.checked");
 });
