@@ -44,6 +44,14 @@ class User < ApplicationRecord
     early_career_teacher_profile.present?
   end
 
+  def as_json
+    {
+      id: id,
+      full_name: full_name,
+      email: email,
+    }
+  end
+
   scope :induction_coordinators, -> { joins(:induction_coordinator_profile) }
   scope :for_lead_provider, -> { includes(:lead_provider).joins(:lead_provider) }
   scope :admins, -> { joins(:admin_profile) }
