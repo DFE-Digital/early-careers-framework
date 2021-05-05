@@ -6,5 +6,47 @@
     "description": "Auto generated doc",
     "definitions": null
   },
-  "basePath": "/api/v1"
+  "basePath": "/api/v1",
+  "paths": {
+    "/users": {
+      "get": {
+        "summary": "Returns all users",
+        "operationId": "public_api_v1_user_index",
+        "tags": [
+          "user"
+        ],
+        "responses": {
+          "200": {
+            "description": "Collection of users.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "users": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "full_name": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "email",
+                      "full_name"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }
