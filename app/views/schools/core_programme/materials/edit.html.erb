@@ -1,5 +1,7 @@
 <% content_for :before_content, govuk_back_link( text: "Back", href: { action: :info }) %>
 
+<%= render SchoolRecruitedTransitionComponent.new(school_cohort: @school_cohort) %>
+
 <span class="govuk-caption-l"><%= @cohort.start_year %> cohort</span>
 <h1 class="govuk-heading-l">Which training materials do you want this cohort to use?</h1>
 

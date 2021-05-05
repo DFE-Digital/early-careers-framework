@@ -1,5 +1,7 @@
 <% content_for :before_content, govuk_back_link( text: "Back", href: schools_cohort_path(@cohort.start_year)) %>
 
+<%= render SchoolRecruitedTransitionComponent.new(school_cohort: @school_cohort) %>
+
 <span class="govuk-caption-xl"><%= @cohort.start_year %> cohort</span>
 <h1 class="govuk-heading-xl">Choose study materials for your early career teachers</h1>
 
