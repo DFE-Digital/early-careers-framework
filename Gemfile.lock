@@ -190,6 +190,8 @@ GEM
       notifications-ruby-client (~> 5.1)
       rack (>= 2.1.4)
     marcel (1.0.0)
+    merge_db_schema (0.1.1)
+      rainbow
     method_source (1.0.0)
     mini_mime (1.0.3)
     mini_portile2 (2.5.0)
@@ -449,6 +451,7 @@ DEPENDENCIES
   lograge
   logstash-event
   mail-notify (>= 1.0.3)
+  merge_db_schema
   multi_json
   open_api-rswag-api
   open_api-rswag-specs
@@ -484,4 +487,4 @@ RUBY VERSION
    ruby 2.7.2p137
 
 BUNDLED WITH
-   2.2.8
+   2.2.14

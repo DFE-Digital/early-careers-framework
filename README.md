@@ -54,6 +54,10 @@ Run `git config core.hooksPath .githooks` to use the included git hooks.
 bundle exec rake
 ```
 
+### Configure automerge of `schema.rb`
+
+Configure `[merge_db_schema](https://github.com/pocke/merge_db_schema)` with `merge_db_schema-init --force`
+
 ## Running specs
 ```
 bundle exec rspec

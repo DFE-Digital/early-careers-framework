@@ -106,6 +106,8 @@ group :development, :test do
   gem "multi_json"
   gem "open_api-rswag-specs"
   gem "rswag"
+
+  gem "merge_db_schema"
 end
 
 group :development do
