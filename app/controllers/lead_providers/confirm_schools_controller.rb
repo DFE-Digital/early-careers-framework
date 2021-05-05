@@ -23,7 +23,7 @@ module LeadProviders
     def start
       session[:confirm_schools_form] = {
         source: :csv,
-        school_ids: School.order(Arel.sql("RANDOM()")).limit(10).pluck(:id),
+        school_ids: School.order(Arel.sql("RANDOM()")).limit(5).where.not(id: Partnership.select(:school_id)).pluck(:id),
         delivery_partner_id: DeliveryPartner.order(Arel.sql("RANDOM()")).first.id,
         cohort_id: Cohort.current.id,
         lead_provider_id: current_user.lead_provider.id,
