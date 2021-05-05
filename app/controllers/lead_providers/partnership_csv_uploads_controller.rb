@@ -7,6 +7,7 @@ module LeadProviders
     end
 
     def create
+      # TODO: do we want to catch empty session[:delivery_partner_id] ?
       if params[:partnership_csv_upload].blank?
         @partnership_csv_upload = PartnershipCsvUpload.new
         @partnership_csv_upload.errors[:base] << "Please select a CSV file to upload."
