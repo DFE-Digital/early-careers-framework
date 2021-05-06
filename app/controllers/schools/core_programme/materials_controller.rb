@@ -4,7 +4,7 @@ class Schools::CoreProgramme::MaterialsController < Schools::BaseController
   before_action :set_school_cohort
   before_action :prevent_double_submission, only: %i[advisory info edit update]
 
-  def advisory;end
+  def advisory; end
 
   def info; end
 
