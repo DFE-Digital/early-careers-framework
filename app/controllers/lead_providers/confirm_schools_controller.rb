@@ -2,7 +2,7 @@
 
 module LeadProviders
   class ConfirmSchoolsController < ApplicationController
-    before_action :load_form, except: :start
+    before_action :load_form
 
     def show
       render :no_schools and return if @confirm_schools_form.school_ids.none?
@@ -46,8 +46,19 @@ module LeadProviders
   private
 
     def load_form
-      redirect_to dashboard_path unless session[:confirm_schools_form]
-      @confirm_schools_form = ConfirmSchoolsForm.new(session[:confirm_schools_form])
+      if session[:partnership_csv_upload_id].present?
+        partnership_csv_upload = PartnershipCsvUpload.find(session[:partnership_csv_upload_id])
+        session.delete(:partnership_csv_upload_id)
+        @confirm_schools_form = ConfirmSchoolsForm.new(
+          delivery_partner_id: partnership_csv_upload.delivery_partner.id,
+          school_ids: partnership_csv_upload.valid_schools.pluck(:id),
+          source: "csv",
+          cohort: Cohort.current.start_year,
+        )
+        session[:confirm_schools_form] = @confirm_schools_form
+      elsif session[:confirm_schools_form].present?
+        @confirm_schools_form = ConfirmSchoolsForm.new(session[:confirm_schools_form])
+      end
     end
   end
 end
