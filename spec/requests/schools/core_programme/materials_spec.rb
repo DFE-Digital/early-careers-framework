@@ -13,6 +13,27 @@ RSpec.describe "Schools::CoreProgramme::Materials", type: :request do
     sign_in user
   end
 
+  describe "GET /schools/cohorts/:id/core-programme/materials/advisory" do
+    context "when cohort has no materials selected yet" do
+      it "renders the material advisory template" do
+        get "/schools/cohorts/2021/core-programme/materials/advisory"
+
+        expect(response).to render_template("schools/core_programme/materials/advisory")
+      end
+    end
+    context "when cohort already has selected materials" do
+      before do
+        school_cohort.update(core_induction_programme: cip)
+      end
+
+      it "redirects to the materials page" do
+        get "/schools/cohorts/2021/core-programme/materials/advisory"
+
+        expect(response).to redirect_to("/schools/cohorts/2021/core-programme/materials")
+      end
+    end
+  end
+
   describe "GET /schools/cohorts/:id/core-programme/materials/info" do
     context "when cohort has no materials selected yet" do
       it "renders the materials info template" do
