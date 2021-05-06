@@ -48,7 +48,7 @@ class PartnershipNotificationService
     end
   end
 
-  private
+private
 
   def create_notification_email(partnership, type)
     PartnershipNotificationEmail.create!(

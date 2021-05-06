@@ -37,7 +37,7 @@ module DelayedJobMatchers
   #   1. Matchers are not aware of jobs scheduled outside of ActiveJob, e.g. calls like
   #     `some_object.delay.some_method(argument)` is not inspectable via `enqueued_jobs`
   #   2. ActiveJob is not aware of database transactions and transactional behaviour of DelayedJob,
-  #      meaning that `enqueued_jobs` will contain jobs that has not been commited in the database.
+  #      meaning that `enqueued_jobs` will contain jobs that has not been committed in the database.
   #
   # This matchers relies on the job record being stored in the database, fixing both the issues above
   # drastically improving our confidence in the unit tests.
@@ -49,27 +49,32 @@ module DelayedJobMatchers
   # DJ creates an instance of PerformableMethod, which stores all `some_object`, `method_name` and `arguments`
   # and then stores this object in the database record serialized into YAML as `payload_object`.
   #
-  # In order to asnwer the question "was the execution of some_method on some_object enqueued for execution with
+  # In order to answer the question "was the execution of some_method on some_object enqueued for execution with
   # given arguments", we need to query enqueued_jobs from the database based on that YAML column, DJ was
-  # not desinged for querability. To do this, we recreate yaml representation of the payload_object.
+  # not designed for queriability. To do this, we recreate yaml representation of the payload_object.
   # At the time of writing, I've decided to limit the query by the some_object class and method name, as
   # it is possible that `some_object` state representation could be time sensitive.
   #
-  # Once the list of potenital jobs matching criteria is returned from the database, we filter them
+  # Once the list of potential jobs matching criteria is returned from the database, we filter them
   # down manually to ensure given arguments matches expectations
 
   define :delay_execution_of do |method_name|
     match do |actual|
       jobs = query_jobs(actual, method_name)
-      return jobs.any? unless @arguments
+      return jobs.any? unless @arguments || @at
 
       jobs.any? do |job|
         @arguments.args_match?(*job.payload_object.args)
+        job.run_at == @at if @at.present?
       end
     end
 
     chain :with do |*args|
       @arguments = RSpec::Mocks::ArgumentListMatcher.new(*args)
+    end
+
+    chain :at do |datetime|
+      @at = datetime
     end
 
   private

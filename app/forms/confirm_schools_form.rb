@@ -9,15 +9,14 @@ class ConfirmSchoolsForm
   def save!
     ActiveRecord::Base.transaction do
       school_ids.each do |school_id|
-        Partnership.create!(
+        partnership = Partnership.create!(
           school_id: school_id,
           cohort_id: cohort_id,
           delivery_partner_id: delivery_partner_id,
           lead_provider_id: lead_provider_id,
         )
 
-        # TODO: ECF-RP-564: Re-enable this
-        # PartnershipNotificationService.new.delay.notify(partnership)
+        PartnershipNotificationService.schedule_notifications(partnership)
       end
     end
   end
