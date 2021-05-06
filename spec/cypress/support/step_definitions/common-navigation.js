@@ -81,8 +81,7 @@ const pagePaths = {
     "/lead-providers/report-schools/choose-delivery-partner",
   "partnership csv uploads":
     "/lead-providers/report-schools/partnership-csv-uploads/new",
-  "csv errors":
-    "/lead-providers/report-schools/partnership-csv-uploads/error-page",
+  "csv errors": "/lead-providers/report-schools/partnership-csv-uploads/errors",
   "confirm partnerships": "/lead-providers/report-schools/confirm",
 };
 

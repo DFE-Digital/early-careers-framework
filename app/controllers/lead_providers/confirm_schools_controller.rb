@@ -24,19 +24,6 @@ module LeadProviders
       redirect_to action: :show
     end
 
-    # TODO: This action exists only for demonstration purpose and should be removed
-    # as soon as the CSV/search journey is completed
-    def start
-      session[:confirm_schools_form] = {
-        source: :csv,
-        school_ids: School.order(Arel.sql("RANDOM()")).limit(5).where.not(id: Partnership.select(:school_id)).pluck(:id),
-        delivery_partner_id: DeliveryPartner.order(Arel.sql("RANDOM()")).first.id,
-        cohort_id: Cohort.current.id,
-        lead_provider_id: current_user.lead_provider.id,
-      }
-      redirect_to action: :show
-    end
-
     def confirm
       @confirm_schools_form.save!
 
@@ -50,10 +37,11 @@ module LeadProviders
         partnership_csv_upload = PartnershipCsvUpload.find(session[:partnership_csv_upload_id])
         session.delete(:partnership_csv_upload_id)
         @confirm_schools_form = ConfirmSchoolsForm.new(
+          lead_provider_id: partnership_csv_upload.lead_provider.id,
           delivery_partner_id: partnership_csv_upload.delivery_partner.id,
           school_ids: partnership_csv_upload.valid_schools.pluck(:id),
           source: "csv",
-          cohort: Cohort.current.start_year,
+          cohort_id: Cohort.current.id,
         )
         session[:confirm_schools_form] = @confirm_schools_form
       elsif session[:confirm_schools_form].present?
