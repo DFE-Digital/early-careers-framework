@@ -85,6 +85,13 @@ When("I add a school urn csv to the file input", () => {
   });
 });
 
+When("I add a school urn csv with errors to the file input", () => {
+  cy.get("#partnership-csv-upload-csv-field").attachFile({
+    filePath: "school_urns_errors.csv",
+    mimeType: "text/csv",
+  });
+});
+
 When("I click on the delivery partner radio button", () => {
   cy.get('[type="radio"].govuk-radios__input').first().check();
 });

@@ -23,10 +23,18 @@ Feature: Report Schools flow
     When I click on the delivery partner radio button
     And I click the submit button
     Then I should be on "partnership csv uploads" page
+    And the page should be accessible
+    And percy should be sent snapshot called "Lead provider report schools upload csv page"
 
-    When I add a school urn csv to the file input
+    When I add a school urn csv with errors to the file input
     And I click the submit button
     Then I should be on "csv errors" page
     And the page should be accessible
-    And percy should be sent snapshot
+    And percy should be sent snapshot called "Lead provider report schools csv error page"
 
+    When I click on "link" containing "Re-upload CSV"
+    Then I should be on "partnership csv uploads" page
+
+    When I add a school urn csv to the file input
+    And I click the submit button
+    Then I should be on "confirm partnerships" page
