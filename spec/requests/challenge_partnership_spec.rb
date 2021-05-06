@@ -51,6 +51,7 @@ RSpec.describe "Challenging a partnership", type: :request do
   describe "GET /report-incorrect-partnership?partnership=:partnership" do
     before do
       sign_in induction_coordinator
+      Faker::Number.unique.clear
     end
 
     it "renders the challenge partnership template" do
@@ -103,6 +104,10 @@ RSpec.describe "Challenging a partnership", type: :request do
   end
 
   describe "POST /report-incorrect-partnership" do
+    before do
+      Faker::Number.unique.clear
+    end
+
     it "redirects to the success page" do
       when_i_submit_form_with_reason("mistake")
 
