@@ -5,6 +5,8 @@ module LeadProviders
     before_action :load_form
 
     def show
+      render :no_schools and return if @confirm_schools_form.school_ids.none?
+
       @schools = School.includes(:local_authority).find(@confirm_schools_form.school_ids)
       @delivery_partner = DeliveryPartner.find(@confirm_schools_form.delivery_partner_id)
     end
@@ -12,8 +14,12 @@ module LeadProviders
     def remove
       school_id = params[:remove][:school_id]
       @confirm_schools_form.school_ids.delete(school_id)
-      school = School.find school_id
-      set_success_message heading: "#{school.name} has been removed"
+
+      if @confirm_schools_form.school_ids.any?
+        school = School.find school_id
+        set_success_message heading: "#{school.name} has been removed"
+      end
+
       redirect_to action: :show
     end
 

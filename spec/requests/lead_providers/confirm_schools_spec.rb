@@ -7,6 +7,8 @@ RSpec.describe "Lead Provider confirmation of schools", type: :request do
   let(:delivery_partner) { create :delivery_partner }
   let(:lead_provider) { create :user, :lead_provider }
 
+  subject { response }
+
   before do
     sign_in lead_provider
 
@@ -18,31 +20,37 @@ RSpec.describe "Lead Provider confirmation of schools", type: :request do
   end
 
   describe "GET /lead-providers/report-schools/confirm" do
-    it "renders show template" do
+    before do
       get "/lead-providers/report-schools/confirm"
-
-      expect(response).to render_template "lead_providers/confirm_schools/show"
     end
 
-    it "preserves the order of schools" do
-      get "/lead-providers/report-schools/confirm"
+    context "with some pre-selected schools" do
+      it { is_expected.to render_template "lead_providers/confirm_schools/show" }
 
-      expect(assigns(:schools).map(&:id)).to eq schools.map(&:id)
+      it "preserves the order of schools" do
+        expect(assigns(:schools).map(&:id)).to eq schools.map(&:id)
+      end
+    end
+
+    context "when the list of pre-selected schools is empty" do
+      let(:schools) { [] }
+
+      it { is_expected.to render_template "lead_providers/confirm_schools/no_schools" }
     end
   end
 
   describe "POST /lead-providers/report-schools/confirm/remove" do
     let(:school_to_remove) { schools.sample }
 
-    it "removes given school from the list" do
+    before do
       post "/lead-providers/report-schools/confirm/remove", params: { remove: { school_id: school_to_remove.id } }
+    end
 
+    it "removes given school from the list" do
       expect(session[:confirm_schools_form]["school_ids"]).not_to include school_to_remove.id
     end
 
-    it "sets the success flash message" do
-      post "/lead-providers/report-schools/confirm/remove", params: { remove: { school_id: school_to_remove.id } }
-
+    it "displayes appropriate flash message" do
       expect(flash[:success]).to be_present
     end
   end
