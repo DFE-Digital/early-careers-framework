@@ -34,19 +34,23 @@ module LeadProviders
 
     def load_form
       if session[:partnership_csv_upload_id].present?
-        partnership_csv_upload = PartnershipCsvUpload.find(session[:partnership_csv_upload_id])
-        session.delete(:partnership_csv_upload_id)
-        @confirm_schools_form = ConfirmSchoolsForm.new(
-          lead_provider_id: partnership_csv_upload.lead_provider.id,
-          delivery_partner_id: partnership_csv_upload.delivery_partner.id,
-          school_ids: partnership_csv_upload.valid_schools.pluck(:id),
-          source: "csv",
-          cohort_id: Cohort.current.id,
-        )
-        session[:confirm_schools_form] = @confirm_schools_form
+        load_partnership_csv_upload
       elsif session[:confirm_schools_form].present?
         @confirm_schools_form = ConfirmSchoolsForm.new(session[:confirm_schools_form])
       end
+    end
+
+    def load_partnership_csv_upload
+      partnership_csv_upload = PartnershipCsvUpload.find(session[:partnership_csv_upload_id])
+      session.delete(:partnership_csv_upload_id)
+      @confirm_schools_form = ConfirmSchoolsForm.new(
+        lead_provider_id: partnership_csv_upload.lead_provider.id,
+        delivery_partner_id: partnership_csv_upload.delivery_partner.id,
+        school_ids: partnership_csv_upload.valid_schools.pluck(:id),
+        source: "csv",
+        cohort_id: Cohort.current.id,
+      )
+      session[:confirm_schools_form] = @confirm_schools_form
     end
   end
 end

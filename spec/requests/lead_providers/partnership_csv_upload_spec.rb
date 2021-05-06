@@ -47,7 +47,7 @@ RSpec.describe "LeadProviders::PartnershipCsvUploads", type: :request do
       end
 
       it "redirects to the confirm page when there are no errors" do
-        schools = 5.times.map { create(:school) }
+        schools = create_list(:school, 5)
         file = Tempfile.new
         file.write(schools.map(&:urn).join("\n"))
         file.close
