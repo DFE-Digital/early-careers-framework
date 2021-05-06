@@ -39,8 +39,7 @@ RSpec.describe "Report schools spec", type: :request do
           lead_provider_delivery_partner_form: { delivery_partner_id: delivery_partner.id },
         }
 
-        # TODO: this needs to redirect to a csv upload page when that's built
-        expect(response).to redirect_to :choose_delivery_partner_lead_providers_report_schools
+        expect(response).to redirect_to new_lead_providers_report_schools_partnership_csv_uploads_path
       end
     end
   end

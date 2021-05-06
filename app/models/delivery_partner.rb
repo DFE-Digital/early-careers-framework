@@ -3,6 +3,7 @@
 class DeliveryPartner < DiscardableRecord
   has_many :provider_relationships
   has_many :lead_providers, through: :provider_relationships
+  has_many :partnership_csv_uploads
 
   has_paper_trail
 

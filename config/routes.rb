@@ -87,6 +87,10 @@ Rails.application.routes.draw do
         get :start
         post :remove
       end
+
+      resource :partnership_csv_uploads, path: "partnership-csv-uploads", only: %i[new create] do
+        get "error-page", action: :error_page
+      end
     end
   end
 
