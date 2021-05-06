@@ -24,5 +24,9 @@ module LeadProviders
         render :choose_delivery_partner
       end
     end
+
+    def success
+      @confirm_schools_form = ConfirmSchoolsForm.new(session.delete(:confirm_schools_form))
+    end
   end
 end

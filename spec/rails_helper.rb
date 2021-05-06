@@ -90,10 +90,6 @@ RSpec.configure do |config|
   config.include ViewComponent::TestHelpers, type: :component
   config.include Rails.application.routes.url_helpers
 
-  config.before :each do
-    clear_enqueued_jobs
-  end
-
   config.before(:suite) do
     Webpacker.compile
   end
