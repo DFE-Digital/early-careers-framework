@@ -170,6 +170,7 @@ Rails.application.routes.draw do
 
       namespace :core_programme, path: "core-programme" do
         resource :materials, only: %i[edit update show] do
+          get :advisory
           get :info
           get :success
         end

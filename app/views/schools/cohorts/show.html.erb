@@ -40,7 +40,7 @@
             <li class="app-task-list__item">
               <span class="app-task-list__task-name">
                 <%= govuk_link_to "Choose your training materials",
-                  @school_cohort.core_induction_programme_id ? schools_cohort_core_programme_materials_path(@cohort.start_year) : info_schools_cohort_core_programme_materials_path(@cohort.start_year) %>
+                  @school_cohort.core_induction_programme_id ? schools_cohort_core_programme_materials_path(@cohort.start_year) : advisory_schools_cohort_core_programme_materials_path(@cohort.start_year) %>
               </span>
 
               <%= render AutoTagComponent.new(text: @school_cohort.choose_training_materials_status) %>

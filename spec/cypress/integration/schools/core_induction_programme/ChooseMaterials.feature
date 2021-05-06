@@ -9,9 +9,9 @@ Feature: Induction tutors choosing programmes
 
   Scenario: Choosing materails for Core Induction Programme
     When I click on "link" containing "Choose your training materials"
-    Then I should be on "2021 cohort CIP materials info" page
+    Then I should be on "2021 cohort CIP materials advisory" page
     And the page should be accessible
-    And percy should be sent snapshot called "2021 cohort CIP materials info page"
+    And percy should be sent snapshot called "2021 cohort CIP materials advisory page"
 
     When I click on "link" containing "Continue"
     Then I should be on "2021 cohort CIP materials selection" page

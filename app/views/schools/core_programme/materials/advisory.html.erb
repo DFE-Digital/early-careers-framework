@@ -1,0 +1,14 @@
+<% content_for :before_content, govuk_back_link(
+   text: "Back",
+   href: schools_cohort_path(@cohort.start_year)
+   ) %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-l"><%= @cohort.start_year %> cohort</span>
+    <h1 class="govuk-heading-xl">Do you know which accredited materials you want to use?</h1>
+    <p class="govuk-body">You will be choosing materials for any new early career teachers. They will access these materials on our service and complete a programme over 2 years.</p>
+    <p class="govuk-body">Not sure? <%= link_to 'Check our guidance on materials', info_schools_cohort_core_programme_materials_path(@cohort.start_year) %><p>
+
+    <%= govuk_link_to "Continue", { action: :edit }, class: "govuk-button" %>
+  </div>
+</div>
