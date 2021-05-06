@@ -27,7 +27,8 @@ const pagePaths = {
   "2021 cohort CIP materials success":
     "/schools/cohorts/2021/core-programme/materials/success",
   "2021 cohort CIP materials": "/schools/cohorts/2021/core-programme/materials",
-  "2021 cohort CIP materials advisory": "/schools/cohorts/2021/core-programme/materials/advisory",
+  "2021 cohort CIP materials advisory":
+    "/schools/cohorts/2021/core-programme/materials/advisory",
   "check account": "/check-account",
   "admin schools": "/admin/schools",
   "admin school overview": "/admin/schools/:id",
