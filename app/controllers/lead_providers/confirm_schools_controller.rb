@@ -8,7 +8,7 @@ module LeadProviders
       render :no_schools and return if @confirm_schools_form.school_ids.none?
 
       @schools = School.includes(:local_authority).find(@confirm_schools_form.school_ids)
-      @delivery_partner = DeliveryPartner.find(@confirm_schools_form.delivery_partner_id)
+      @delivery_partner = @confirm_schools_form.delivery_partner
       @cohort = Cohort.find(@confirm_schools_form.cohort_id)
     end
 

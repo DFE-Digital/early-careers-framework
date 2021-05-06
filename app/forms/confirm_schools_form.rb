@@ -21,4 +21,8 @@ class ConfirmSchoolsForm
       end
     end
   end
+
+  def delivery_partner
+    DeliveryPartner.find(delivery_partner_id)
+  end
 end
