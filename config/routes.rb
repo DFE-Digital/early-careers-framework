@@ -67,7 +67,7 @@ Rails.application.routes.draw do
   end
 
   namespace :lead_providers, path: "lead-providers" do
-    resources :your_schools, only: %i[index create]
+    resources :your_schools, path: "/your-schools", only: %i[index create]
     resources :school_details, only: %i[show]
 
     resource :report_schools, path: "report-schools", only: [] do

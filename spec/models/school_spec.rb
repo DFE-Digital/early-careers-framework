@@ -288,6 +288,51 @@ RSpec.describe School, type: :model do
     end
   end
 
+  describe "School.search_by_name_or_urn_or_delivery_partner_for_year" do
+    let(:cohort) { create(:cohort, start_year: Time.zone.now.year) }
+    let(:lead_provider) { create(:lead_provider, cohorts: [cohort]) }
+    let(:delivery_partner) { create(:delivery_partner, name: "Big Delivery Co.") }
+    let!(:school_1) { create(:school, name: "foooschool", urn: "666666") }
+    let!(:school_2) { create(:school, name: "barschool", urn: "99999") }
+
+    before do
+      create(:partnership, school: school_1, lead_provider: lead_provider, cohort: cohort)
+      create(:partnership, school: school_2, lead_provider: lead_provider, delivery_partner: delivery_partner, cohort: cohort)
+    end
+
+    it "searches correctly by partial urn" do
+      expect(School.search_by_name_or_urn_or_delivery_partner_for_year("foo", cohort.start_year)).to match_array [school_1]
+    end
+
+    it "searches correctly by partial name" do
+      expect(School.search_by_name_or_urn_or_delivery_partner_for_year("999", cohort.start_year)).to match_array [school_2]
+    end
+
+    it "searches correctly by partial delivery partner name" do
+      expect(School.search_by_name_or_urn_or_delivery_partner_for_year("del", cohort.start_year)).to match_array [school_2]
+    end
+  end
+
+  describe "School.partnered_with_lead_provider" do
+    let(:cohort) { create(:cohort, start_year: Time.zone.now.year) }
+    let(:lead_provider) { create(:lead_provider, cohorts: [cohort]) }
+    let(:schools) { create_list(:school, 2) }
+    let(:not_this_cohort_school) { create(:school) }
+
+    before do
+      create(:lead_provider_profile, lead_provider: lead_provider)
+      schools.each do |school|
+        create(:partnership, school: school, lead_provider: lead_provider, cohort: cohort)
+      end
+      create(:partnership, school: not_this_cohort_school, lead_provider: lead_provider,
+                           cohort: create(:cohort, start_year: Time.zone.now.year + 1))
+    end
+
+    it "returns schools partnered with the lead provider for the given cohort year" do
+      expect(School.partnered_with_lead_provider(lead_provider.id, cohort.start_year)).to match_array schools
+    end
+  end
+
   describe "#contact_email" do
     let(:primary_contact_email) { Faker::Internet.email }
     let(:secondary_contact_email) { Faker::Internet.email }
@@ -312,6 +357,48 @@ RSpec.describe School, type: :model do
 
       it "returns the induction coordinator's email" do
         expect(school.contact_email).to eql induction_coordinator.email
+      end
+    end
+  end
+
+  describe "#delivery_partner_for" do
+    let(:cohort_2020) { create(:cohort, start_year: 2020) }
+    let(:cohort_2021) { create(:cohort, start_year: 2021) }
+    let(:delivery_1) { create(:delivery_partner, name: "Ace Education") }
+    let(:delivery_2) { create(:delivery_partner, name: "Super Learn") }
+    let(:school) { create(:school) }
+
+    before do
+      create(:partnership, school: school, delivery_partner: delivery_1, cohort: cohort_2020)
+      create(:partnership, school: school, delivery_partner: delivery_2, cohort: cohort_2021)
+    end
+
+    it "returns the delivery partner for the given cohort year" do
+      expect(school.delivery_partner_for(2021)).to eq delivery_2
+    end
+
+    context "when there is no partner for the given cohort" do
+      it "returns nil" do
+        expect(school.delivery_partner_for(2022)).to be_nil
+      end
+    end
+  end
+
+  describe "#early_career_teacher_profiles_for" do
+    let(:cohort_2020) { create(:cohort, start_year: 2020) }
+    let(:cohort_2021) { create(:cohort, start_year: 2021) }
+    let(:school) { create(:school) }
+    let!(:teachers_2020) { create_list(:early_career_teacher_profile, 2, school: school, cohort: cohort_2020) }
+    let!(:teachers_2021) { create_list(:early_career_teacher_profile, 3, school: school, cohort: cohort_2021) }
+
+    it "returns the number of early career teachers for the given cohort year" do
+      expect(school.early_career_teacher_profiles_for(2020)).to match_array teachers_2020
+      expect(school.early_career_teacher_profiles_for(2021)).to match_array teachers_2021
+    end
+
+    context "when no early career teacher profiles are in the given cohort year" do
+      it "returns and empty collection" do
+        expect(school.early_career_teacher_profiles_for(2022)).to be_empty
       end
     end
   end
