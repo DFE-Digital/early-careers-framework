@@ -19,6 +19,7 @@ const buttons = {
   "back button": '.govuk-button:contains("Back")',
   "create supplier user button": '.govuk-button:contains("Add a new user")',
   "search button": "[data-test=search-button]",
+  "remove button": ".govuk-button[value=Remove]",
 };
 
 const links = {
@@ -60,6 +61,10 @@ When("I press enter in {string}", (element) => {
 
 When("I click on {string}", (element) => {
   get(element).click();
+});
+
+When("I click on first {string}", (element) => {
+  get(element).first().click();
 });
 
 When("I click on {string} containing {string}", (element, containing) => {

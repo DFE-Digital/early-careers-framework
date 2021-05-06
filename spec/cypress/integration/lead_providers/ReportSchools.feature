@@ -38,3 +38,16 @@ Feature: Report Schools flow
     When I add a school urn csv to the file input
     And I click the submit button
     Then I should be on "confirm partnerships" page
+    And the table should have 2 rows
+    And the page should be accessible
+    And percy should be sent snapshot called "Lead provider report schools confirm"
+
+    When I click on first "remove button"
+    Then I should be on "confirm partnerships" page
+    And the table should have 1 rows
+    And "notification banner" should contain "Success"
+
+    When I click on "input" containing "Confirm"
+    Then I should be on "partnerships success" page
+    And the page should be accessible
+    And percy should be sent snapshot called "Lead provider report schools success"

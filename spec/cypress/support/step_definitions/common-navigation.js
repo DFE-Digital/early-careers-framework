@@ -83,6 +83,7 @@ const pagePaths = {
     "/lead-providers/report-schools/partnership-csv-uploads/new",
   "csv errors": "/lead-providers/report-schools/partnership-csv-uploads/errors",
   "confirm partnerships": "/lead-providers/report-schools/confirm",
+  "partnerships success": "/lead-providers/report-schools/success",
 };
 
 Given("I am on {string} page", (page) => {
