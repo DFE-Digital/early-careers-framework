@@ -4,6 +4,13 @@ require "rails_helper"
 
 RSpec.describe "PartnershipReminderJob" do
   describe "#perform" do
+    it "calls send_reminder" do
+      partnership = create(:partnership)
+      expect_any_instance_of(PartnershipNotificationService).to receive(:send_reminder)
+
+      PartnershipReminderJob.new.perform(partnership)
+    end
+
     it "Does nothing if the partnership has been challenged" do
       partnership = create(:partnership, :challenged)
       expect_any_instance_of(PartnershipNotificationService).not_to receive(:send_reminder)
