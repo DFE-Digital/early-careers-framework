@@ -102,7 +102,7 @@ School.find_or_create_by!(urn: "000006") do |school|
     primary_contact_email: "cpd-test+school-6#{DOMAIN}",
     school_status_code: 1,
     school_type_code: 1,
-    administrative_district_code: "E123",
+    administrative_district_code: "Z123",
   )
   SchoolLocalAuthority.find_or_create_by!(school: school, local_authority: local_authority, start_year: 2019)
   user = User.find_or_create_by!(full_name: "Induction Tutor for School 6", email: "cpd-test+tutor-3#{DOMAIN}")
