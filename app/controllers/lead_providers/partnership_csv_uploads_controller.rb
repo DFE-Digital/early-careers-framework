@@ -42,7 +42,7 @@ module LeadProviders
   private
 
     def upload_params
-      params.require(:partnership_csv_upload).permit(:lead_provider_id, :delivery_partner_id, :csv)
+      params.require(:partnership_csv_upload).permit(:csv)
     end
   end
 end
