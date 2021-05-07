@@ -17,7 +17,7 @@ class PartnershipCsvUpload < ApplicationRecord
   def valid_schools
     invalid_urns = invalid_schools.map { |error| error[:urn] }
     valid_urns = urns - invalid_urns
-    School.where(urn: valid_urns)
+    valid_urns.map { |urn| School.find_by(urn: urn) } # We need to preserve order uploaded
   end
 
   def urns
