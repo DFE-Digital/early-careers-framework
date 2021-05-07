@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 class PartnershipNotificationEmail < ApplicationRecord
-  belongs_to :partnership
+  belongs_to :partnerable, polymorphic: true
   has_one :nomination_email
-  delegate :school, to: :partnership, allow_nil: false
-  delegate :lead_provider, to: :partnership, allow_nil: false
-  delegate :delivery_partner, to: :partnership, allow_nil: true
-  delegate :cohort, to: :partnership, allow_nil: false
-  delegate :challenge_deadline, to: :partnership
+  delegate :school, to: :partnerable, allow_nil: false
+  delegate :lead_provider, to: :partnerable, allow_nil: false
+  delegate :delivery_partner, to: :partnerable, allow_nil: true
+  delegate :cohort, to: :partnerable, allow_nil: false
+  delegate :challenge_deadline, to: :partnerable
 
   enum email_type: {
     induction_coordinator_email: "induction_coordinator_email",

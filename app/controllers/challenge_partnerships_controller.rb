@@ -31,9 +31,9 @@ private
       notification_email = PartnershipNotificationEmail.find_by(token: @token)
       raise ActionController::RoutingError, "Not Found" if notification_email.blank?
 
-      @partnership = notification_email.partnership
+      @partnership = notification_email.partnerable
     elsif partnership_id.present?
-      @partnership = Partnership.find(partnership_id)
+      @partnership = Partnership.find_by(id: partnership_id) || PartnershipRequest.find_by(id: partnership_id)
       authorize(@partnership, :update?)
     else
       raise ActionController::RoutingError, "Not Found"

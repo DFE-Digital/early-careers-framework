@@ -50,7 +50,7 @@ RSpec.describe "Schools::Partnerships", type: :request do
           PartnershipNotificationEmail.create!(
             token: "abc123",
             sent_to: user.email,
-            partnership: @partnership,
+            partnerable: @partnership,
             email_type: PartnershipNotificationEmail.email_types[:induction_coordinator_email],
           )
         end
@@ -68,7 +68,7 @@ RSpec.describe "Schools::Partnerships", type: :request do
           PartnershipNotificationEmail.create!(
             token: "abc123",
             sent_to: user.email,
-            partnership: @partnership,
+            partnerable: @partnership,
             email_type: PartnershipNotificationEmail.email_types[:induction_coordinator_email],
           )
         end

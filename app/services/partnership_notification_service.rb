@@ -54,7 +54,7 @@ private
     PartnershipNotificationEmail.create!(
       token: generate_token,
       sent_to: partnership.school.contact_email,
-      partnership: partnership,
+      partnerable: partnership,
       email_type: type,
     )
   end
@@ -70,14 +70,14 @@ private
     nomination_email = NominationEmail.create_nomination_email(
       sent_at: notification_email.created_at,
       sent_to: notification_email.sent_to,
-      school: notification_email.partnership.school,
+      school: notification_email.partnerable.school,
       partnership_notification_email: notification_email,
     )
 
     notify_id = SchoolMailer.school_partnership_notification_email(
       recipient: notification_email.sent_to,
       provider_name: provider_name(notification_email),
-      cohort: notification_email.partnership.cohort.display_name,
+      cohort: notification_email.partnerable.cohort.display_name,
       school_name: notification_email.school.name,
       nominate_url: nomination_email.nomination_url,
       challenge_url: challenge_url(notification_email.token),
@@ -91,7 +91,7 @@ private
     notify_id = SchoolMailer.coordinator_partnership_notification_email(
       recipient: notification_email.sent_to,
       provider_name: provider_name(notification_email),
-      cohort: notification_email.partnership.cohort.display_name,
+      cohort: notification_email.partnerable.cohort.display_name,
       school_name: notification_email.school.name,
       start_url: Rails.application.routes.url_helpers.root_url(host: Rails.application.config.domain),
       challenge_url: challenge_url(notification_email.token),

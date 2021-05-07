@@ -9,7 +9,7 @@ SchoolCohort.create!(school: school, cohort: cohort, induction_programme_choice:
 PartnershipNotificationEmail.create!(
   token: "abc123",
   sent_to: user.email,
-  partnership: partnership,
+  partnerable: partnership,
   email_type: PartnershipNotificationEmail.email_types[:induction_coordinator_email],
 )
 
@@ -26,7 +26,7 @@ partnership = FactoryBot.create(
 PartnershipNotificationEmail.create!(
   token: "expired",
   sent_to: user.email,
-  partnership: partnership,
+  partnerable: partnership,
   email_type: PartnershipNotificationEmail.email_types[:induction_coordinator_email],
   created_at: 20.days.ago,
 )

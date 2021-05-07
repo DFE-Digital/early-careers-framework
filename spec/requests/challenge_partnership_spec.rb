@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe "Challenging a partnership", type: :request do
   let(:partnership_notification_email) { create(:partnership_notification_email) }
-  let(:partnership) { partnership_notification_email.partnership }
+  let(:partnership) { partnership_notification_email.partnerable }
   let(:induction_coordinator) { create(:user, :induction_coordinator, schools: [partnership.school]) }
 
   describe "GET /report-incorrect-partnership?token=:token" do
@@ -20,7 +20,7 @@ RSpec.describe "Challenging a partnership", type: :request do
 
     context "when the link has expired" do
       let!(:partnership) { create(:partnership) }
-      let!(:partnership_notification_email) { create(:partnership_notification_email, partnership: partnership) }
+      let!(:partnership_notification_email) { create(:partnership_notification_email, partnerable: partnership) }
 
       it "redirects to link-expired" do
         travel 4.weeks
@@ -113,9 +113,9 @@ RSpec.describe "Challenging a partnership", type: :request do
       freeze_time
       when_i_submit_form_with_reason("mistake")
 
-      partnership_notification_email.partnership.reload
-      expect(partnership_notification_email.partnership.challenge_reason).to eql "mistake"
-      expect(partnership_notification_email.partnership.challenged_at).to eql Time.zone.now
+      partnership_notification_email.partnerable.reload
+      expect(partnership_notification_email.partnerable.challenge_reason).to eql "mistake"
+      expect(partnership_notification_email.partnerable.challenged_at).to eql Time.zone.now
     end
 
     it "shows an error message when no option is selected" do

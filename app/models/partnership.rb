@@ -9,8 +9,6 @@ class Partnership < BasePartnership
     mistake: "mistake",
   }
 
-  has_many :partnership_notification_emails
-
   def challenged?
     challenge_reason.present?
   end

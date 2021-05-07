@@ -11,6 +11,7 @@ class BasePartnership < ApplicationRecord
   belongs_to :lead_provider
   belongs_to :cohort
   belongs_to :delivery_partner
+  has_many :partnership_notification_emails, as: :partnerable
 
   has_paper_trail
 
