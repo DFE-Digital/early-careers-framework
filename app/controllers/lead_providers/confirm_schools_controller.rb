@@ -2,13 +2,14 @@
 
 module LeadProviders
   class ConfirmSchoolsController < ApplicationController
-    before_action :load_form
+    before_action :load_form, except: :start
 
     def show
       render :no_schools and return if @confirm_schools_form.school_ids.none?
 
       @schools = School.includes(:local_authority).find(@confirm_schools_form.school_ids)
       @delivery_partner = DeliveryPartner.find(@confirm_schools_form.delivery_partner_id)
+      @cohort = Cohort.find(@confirm_schools_form.cohort_id)
     end
 
     def remove
@@ -28,22 +29,24 @@ module LeadProviders
     def start
       session[:confirm_schools_form] = {
         source: :csv,
-        school_ids: School.order(Arel.sql("RANDOM()")).limit(10).pluck(:id),
+        school_ids: School.order(Arel.sql("RANDOM()")).limit(5).where.not(id: Partnership.select(:school_id)).pluck(:id),
         delivery_partner_id: DeliveryPartner.order(Arel.sql("RANDOM()")).first.id,
-        cohort: 2021,
+        cohort_id: Cohort.current.id,
+        lead_provider_id: current_user.lead_provider.id,
       }
       redirect_to action: :show
     end
 
-    # TODO: This is temporary behaviour and will be replaced with Partnership creation
-    def update
-      set_success_message heading: "The list of schools has been confirmed", content: "You will be redirected to success page in another story"
-      redirect_to action: :show
+    def confirm
+      @confirm_schools_form.save!
+
+      redirect_to success_lead_providers_report_schools_path
     end
 
   private
 
     def load_form
+      redirect_to dashboard_path unless session[:confirm_schools_form]
       @confirm_schools_form = ConfirmSchoolsForm.new(session[:confirm_schools_form])
     end
   end

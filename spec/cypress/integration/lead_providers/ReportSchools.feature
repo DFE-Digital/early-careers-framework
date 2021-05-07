@@ -12,7 +12,7 @@ Feature: Report Schools flow
     And the page should be accessible
     And percy should be sent snapshot called "Lead provider report schools start page"
 
-  Scenario: Selecting a delivery partner
+  Scenario: Selecting a delivery partner and upload csv
     And I am on "lead providers report schools start" page
     When I click on "link" containing "Continue"
     Then I should be on "lead providers report schools choose delivery partner" page
@@ -20,4 +20,13 @@ Feature: Report Schools flow
     And "page body" should contain "Delivery Partner 1"
     And the page should be accessible
     And percy should be sent snapshot called "Lead provider report schools choose delivery partner page"
+    When I click on the delivery partner radio button
+    And I click the submit button
+    Then I should be on "partnership csv uploads" page
+
+    When I add a school urn csv to the file input
+    And I click the submit button
+    Then I should be on "csv errors" page
+    And the page should be accessible
+    And percy should be sent snapshot
 

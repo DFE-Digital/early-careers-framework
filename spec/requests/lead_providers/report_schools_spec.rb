@@ -4,9 +4,9 @@ require "rails_helper"
 
 RSpec.describe "Report schools spec", type: :request do
   let(:user) { create(:user, :lead_provider) }
+  let!(:cohort) { create(:cohort, :current) }
 
   before do
-    create(:cohort, start_year: 2021)
     sign_in user
   end
 
@@ -39,9 +39,29 @@ RSpec.describe "Report schools spec", type: :request do
           lead_provider_delivery_partner_form: { delivery_partner_id: delivery_partner.id },
         }
 
-        # TODO: this needs to redirect to a csv upload page when that's built
-        expect(response).to redirect_to :choose_delivery_partner_lead_providers_report_schools
+        expect(response).to redirect_to new_lead_providers_report_schools_partnership_csv_uploads_path
       end
+    end
+  end
+
+  describe "GET /lead-providers/report-schools/success" do
+    let(:schools) { create_list :school, rand(3..5) }
+    let(:delivery_partner) { create :delivery_partner }
+
+    before do
+      set_session(:confirm_schools_form, { school_ids: schools.map(&:id), delivery_partner_id: delivery_partner.id })
+    end
+
+    it "displays success message" do
+      get success_lead_providers_report_schools_path
+
+      expect(response).to render_template :success
+    end
+
+    it "removes confirmation form from session" do
+      get success_lead_providers_report_schools_path
+
+      expect(session).not_to have_key(:confirm_schools_form)
     end
   end
 end

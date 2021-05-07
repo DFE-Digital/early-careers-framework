@@ -76,6 +76,22 @@ GEM
     ar-uuid (0.2.1)
       activerecord
     ast (2.4.1)
+    aws-eventstream (1.1.1)
+    aws-partitions (1.451.0)
+    aws-sdk-core (3.114.0)
+      aws-eventstream (~> 1, >= 1.0.2)
+      aws-partitions (~> 1, >= 1.239.0)
+      aws-sigv4 (~> 1.1)
+      jmespath (~> 1.0)
+    aws-sdk-kms (1.43.0)
+      aws-sdk-core (~> 3, >= 3.112.0)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-s3 (1.94.1)
+      aws-sdk-core (~> 3, >= 3.112.0)
+      aws-sdk-kms (~> 1)
+      aws-sigv4 (~> 1.1)
+    aws-sigv4 (1.2.3)
+      aws-eventstream (~> 1, >= 1.0.2)
     bcrypt (3.1.16)
     bindex (0.8.1)
     blueprinter (0.25.2)
@@ -150,6 +166,7 @@ GEM
       socksify
     i18n (1.8.9)
       concurrent-ruby (~> 1.0)
+    jmespath (1.4.0)
     json-schema (2.8.1)
       addressable (>= 2.4)
     jsonapi-rspec (0.0.11)
@@ -424,6 +441,7 @@ PLATFORMS
 
 DEPENDENCIES
   ar-uuid (~> 0.2.1)
+  aws-sdk-s3
   blueprinter
   bootsnap (>= 1.1.0)
   byebug

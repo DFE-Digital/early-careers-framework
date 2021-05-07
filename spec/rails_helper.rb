@@ -41,6 +41,9 @@ rescue ActiveRecord::PendingMigrationError => e
   exit 1
 end
 RSpec.configure do |config|
+  config.before do
+    Faker::Number.unique.clear
+  end
   config.include Devise::Test::IntegrationHelpers, type: :request
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
@@ -89,10 +92,6 @@ RSpec.configure do |config|
   config.include ActiveJob::TestHelper
   config.include ViewComponent::TestHelpers, type: :component
   config.include Rails.application.routes.url_helpers
-
-  config.before :each do
-    clear_enqueued_jobs
-  end
 
   config.before(:suite) do
     Webpacker.compile

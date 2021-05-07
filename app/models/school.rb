@@ -9,6 +9,7 @@ class School < ApplicationRecord
 
   has_many :school_local_authorities
   has_many :local_authorities, through: :school_local_authorities
+
   has_one :latest_school_authority, -> { latest }, class_name: "SchoolLocalAuthority"
   has_one :local_authority, through: :latest_school_authority
 

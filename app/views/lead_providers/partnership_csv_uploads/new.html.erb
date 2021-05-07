@@ -1,0 +1,36 @@
+<% content_for :title, "Upload partnership csv" %>
+<% content_for :before_content, govuk_back_link( text: "Back", href: choose_delivery_partner_lead_providers_report_schools_path ) %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Upload your schools using a CSV</h1>
+    <p class="govuk-body">Instructions on how to prepare your CSV:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>Enter your school URN in one column</li>
+      <li>Each school URN should be placed on a new row</li>
+      <li>No other data needed</li>
+      <li>Must be under 2mb</li>
+    </ul>
+    <%= form_with model: @partnership_csv_upload, url: :lead_providers_report_schools_partnership_csv_uploads do |f| %>
+      <% if !@partnership_csv_upload.errors[:base].empty? %>
+        <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
+          <h2 class="govuk-error-summary__title" id="error-summary-title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+            <% @partnership_csv_upload.errors[:base].each do |error| %>
+              <li>
+                <a href="#csv-error"><%= error %></a>
+              </li>
+            <% end %>
+            </ul>
+          </div>
+        </div>
+      <% end %>
+      <%= f.govuk_file_field :csv,
+       label: { text: 'CSV file' },
+       accept: 'text/csv' %>
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>
