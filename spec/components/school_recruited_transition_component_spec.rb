@@ -32,13 +32,6 @@ RSpec.describe SchoolRecruitedTransitionComponent, type: :component do
 
         it { is_expected.not_to render }
       end
-
-      describe "content" do
-        subject(:rendered) { Capybara.string(render_inline(component).to_html) }
-        let(:delivery_partner) { partnership.delivery_partner }
-
-        it { is_expected.to have_content "#{delivery_partner.name} has confirmed" }
-      end
     end
   end
 end
