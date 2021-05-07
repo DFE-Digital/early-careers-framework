@@ -21,7 +21,7 @@ class PartnershipCsvUpload < ApplicationRecord
   end
 
   def urns
-    @urns ||= csv.open { |csv| csv.readlines.map(&:chomp) }
+    @urns ||= csv.open { |csv| csv.readlines.map(&:chomp).map { |s| strip_bom(s) } }
   end
 
 private
@@ -59,5 +59,9 @@ private
     end
 
     errors
+  end
+
+  def strip_bom(string)
+    string.force_encoding("UTF-8").gsub(/\xEF\xBB\xBF/, "")
   end
 end
