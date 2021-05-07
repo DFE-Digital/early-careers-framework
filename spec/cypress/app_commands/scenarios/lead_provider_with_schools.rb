@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-profile = LeadProviderProfile.last
+profile = LeadProviderProfile.order(:created_at).last
 lead_provider = profile.lead_provider
 schools = [
   FactoryBot.create(:school, name: "Big School", urn: 900_001),

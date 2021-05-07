@@ -56,15 +56,15 @@ class School < ApplicationRecord
   }
 
   scope :partnered, lambda { |year|
-    where(id: Partnership.joins(:cohort).where(cohorts: { start_year: year }).select(:school_id))
+    where(id: Partnership.in_year(year).select(:school_id))
   }
 
   scope :partnered_with_lead_provider, lambda { |lead_provider_id, year|
-    where(id: Partnership.where(lead_provider_id: lead_provider_id).joins(:cohort).where(cohorts: { start_year: year }).select(:school_id))
+    where(id: Partnership.where(lead_provider_id: lead_provider_id).in_year(year).select(:school_id))
   }
 
   scope :unpartnered, lambda { |year|
-    where.not(id: Partnership.joins(:cohort).where(cohorts: { start_year: year }).select(:school_id))
+    where.not(id: Partnership.in_year(year).select(:school_id))
   }
 
   def lead_provider(year)
