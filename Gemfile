@@ -6,7 +6,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby File.read(".ruby-version").chomp
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 6.1.3", ">= 6.1.3.1"
+gem "rails", "~> 6.1.3", ">= 6.1.3.2"
 
 # User management and rbac
 gem "devise", ">= 4.7.3"
@@ -20,7 +20,7 @@ gem "kaminari", ">= 1.2.0"
 gem "health_check", github: "/ianheggie/health_check", ref: "0b799ead604f900ed50685e9b2d469cd2befba5b"
 
 # Cleaner logs, one line per request
-gem "lograge"
+gem "lograge", ">= 0.11.2"
 gem "logstash-event"
 
 # Use postgresql as the database for Active Record
@@ -74,8 +74,8 @@ gem "delayed_cron_job"
 gem "delayed_job_active_record"
 
 # OpenApi Swagger
-gem "open_api-rswag-api"
-gem "open_api-rswag-ui"
+gem "open_api-rswag-api", ">= 0.1.0"
+gem "open_api-rswag-ui", ">= 0.1.0"
 
 platform :mswin, :mingw, :x64_mingw do
   gem "wdm", ">= 0.1.0"
@@ -96,7 +96,7 @@ group :development, :test do
   gem "pry-byebug"
 
   # Testing framework
-  gem "rspec-rails", "~> 4.0.1"
+  gem "rspec-rails", "~> 4.0.2"
 
   gem "cypress-on-rails", "~> 1.0"
   gem "database_cleaner-active_record"
@@ -107,8 +107,8 @@ group :development, :test do
 
   # Swagger generator
   gem "multi_json"
-  gem "open_api-rswag-specs"
-  gem "rswag"
+  gem "open_api-rswag-specs", ">= 0.1.0"
+  gem "rswag", ">= 2.4.0"
 end
 
 group :development do
