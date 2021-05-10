@@ -5,7 +5,8 @@ class ApplicationController < ActionController::Base
 
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :previous_url_for_cookies_page, except: :check
-  before_action :check_privacy_policy_accepted
+  before_action :check_privacy_policy_accepted, except: :check
+  before_action :set_sentry_user, except: :check
 
   def check
     render json: { status: "OK", version: release_version, sha: ENV["SHA"], environment: Rails.env }, status: :ok
@@ -44,6 +45,8 @@ protected
   end
 
   def check_privacy_policy_accepted
+    return if current_user.blank?
+
     policy = PrivacyPolicy.current
     return if policy.nil?
 
@@ -51,5 +54,11 @@ protected
 
     session[:original_path] = request.fullpath
     redirect_to privacy_policy_path
+  end
+
+  def set_sentry_user
+    return if current_user.blank?
+
+    Sentry.set_user(id: current_user.id)
   end
 end
