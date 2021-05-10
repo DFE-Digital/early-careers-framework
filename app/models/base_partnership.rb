@@ -19,6 +19,10 @@ class BasePartnership < ApplicationRecord
     challenge_deadline > Time.zone.now
   end
 
+  def challenged?
+    false
+  end
+
 protected
 
   def set_challenge_deadline
