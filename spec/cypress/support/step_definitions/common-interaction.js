@@ -19,6 +19,7 @@ const buttons = {
   "back button": '.govuk-button:contains("Back")',
   "create supplier user button": '.govuk-button:contains("Add a new user")',
   "search button": "[data-test=search-button]",
+  "remove button": ".govuk-button[value=Remove]",
 };
 
 const links = {
@@ -62,6 +63,10 @@ When("I click on {string}", (element) => {
   get(element).click();
 });
 
+When("I click on first {string}", (element) => {
+  get(element).first().click();
+});
+
 When("I click on {string} containing {string}", (element, containing) => {
   get(element).contains(containing).click();
 });
@@ -81,6 +86,13 @@ When("I click the back link", () => {
 When("I add a school urn csv to the file input", () => {
   cy.get("#partnership-csv-upload-csv-field").attachFile({
     filePath: "school_urns.csv",
+    mimeType: "text/csv",
+  });
+});
+
+When("I add a school urn csv with errors to the file input", () => {
+  cy.get("#partnership-csv-upload-csv-field").attachFile({
+    filePath: "school_urns_errors.csv",
     mimeType: "text/csv",
   });
 });

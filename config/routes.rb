@@ -89,7 +89,7 @@ Rails.application.routes.draw do
       end
 
       resource :partnership_csv_uploads, path: "partnership-csv-uploads", only: %i[new create] do
-        get "error-page", action: :error_page
+        get :errors
       end
     end
   end

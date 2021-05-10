@@ -1,5 +1,5 @@
 <% content_for :title, "Confirm or remove schools" %>
-<% content_for :before_content, govuk_back_link(text: 'Back', href: dashboard_path) %>
+<% content_for :before_content, govuk_back_link(text: 'Back', href: new_lead_providers_report_schools_partnership_csv_uploads_path) %>
 
 <h1 class="govuk-heading-xl">Confirm that you have an agreement with <%= @schools.count %> <%= "school".pluralize(@schools.count) %></h1>
 
@@ -40,10 +40,5 @@
 
 <%= govuk_button_to "Confirm", { action: :confirm }, method: :post, class: "govuk-button govuk-!-margin-bottom-3" %>
 <% if @confirm_schools_form.source == "csv" %>
-  <%# TODO: This should point to a csv upload once it is implemented %>
-  <%= govuk_link_to "Re-upload CSV", dashboard_path, class: "govuk-button govuk-button--secondary" %>
+  <%= govuk_link_to "Re-upload CSV", new_lead_providers_report_schools_partnership_csv_uploads_path, class: "govuk-button govuk-button--secondary" %>
 <% end %>
-
-<%# TODO: This is for presentation only and should be removed as soon as the initial process is implemented %>
-<hr>
-<%= govuk_link_to "Restart", action: :start %>

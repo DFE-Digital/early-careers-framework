@@ -3,6 +3,7 @@
 FactoryBot.define do
   factory :partnership_csv_upload do
     lead_provider
+    delivery_partner
 
     trait :with_csv do
       after(:build) do |partnership_csv_upload|
