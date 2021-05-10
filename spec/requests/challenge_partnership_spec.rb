@@ -88,6 +88,32 @@ RSpec.describe "Challenging a partnership", type: :request do
     end
   end
 
+  describe "GET /report-incorrect-partnership?partnership=:partnership_request" do
+    let(:partnership_request) { create(:partnership_request) }
+    let(:induction_coordinator) { create(:user, :induction_coordinator, schools: [partnership_request.school]) }
+
+    before do
+      sign_in induction_coordinator
+    end
+
+    it "renders the challenge partnership template" do
+      get "/report-incorrect-partnership", params: { partnership: partnership_request.id }
+
+      expect(response).to render_template("challenge_partnerships/show")
+    end
+
+    context "when the partnership cannot be challenged" do
+      let!(:partnership_request) { create(:partnership_request) }
+
+      it "redirects to link-expired" do
+        travel 4.weeks
+        get "/report-incorrect-partnership", params: { partnership: partnership_request.id }
+
+        expect(response).to redirect_to("/report-incorrect-partnership/link-expired")
+      end
+    end
+  end
+
   describe "GET /report-incorrect-partnership/link-expired" do
     it "renders the link expired template" do
       get "/report-incorrect-partnership/link-expired"
@@ -123,6 +149,16 @@ RSpec.describe "Challenging a partnership", type: :request do
 
       expect(response).to render_template("challenge_partnerships/show")
       expect(response.body).to include(CGI.escapeHTML("Error"))
+    end
+
+    context "with a partnership request" do
+      let(:partnership_request) { create(:partnership_request) }
+      let(:partnership_notification_email) { create(:partnership_notification_email, partnerable: partnership_request) }
+
+      it "calls challenge on the partnership request" do
+        expect_any_instance_of(PartnershipRequest).to receive(:challenge!).with("mistake")
+        when_i_submit_form_with_reason("mistake")
+      end
     end
   end
 
