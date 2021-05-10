@@ -407,7 +407,7 @@ RSpec.describe School, type: :model do
   describe "#characteristics_for" do
     context "when pupil premium uplift applies" do
       let(:school) { create(:school, :pupil_premium_uplift) }
-      
+
       it "returns the correct characteristic for pupil premium" do
         expect(school.characteristics_for(2021)).to eq "Pupil premium above 40%"
       end
