@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PartnershipReminderJob < ApplicationJob
+  discard_on ActiveJob::DeserializationError
+
   def perform(partnership)
     return if partnership.challenged?
 

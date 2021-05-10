@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PartnershipFinalisationJob < ApplicationJob
+  discard_on ActiveJob::DeserializationError
+
   def perform(partnership_request)
     return if partnership_request.reload.blank?
 
