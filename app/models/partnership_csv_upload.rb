@@ -53,9 +53,9 @@ private
         errors << { urn: urn, message: "School not eligible for funding", school_name: school.name, row_number: index + 1 }
       elsif !school.eligible?
         errors << { urn: urn, message: "School not eligible for inductions", school_name: school.name, row_number: index + 1 }
-      elsif school.lead_provider(Cohort.current.start_year) == lead_provider
+      elsif partnered_with_current_lead_provider?(school)
         errors << { urn: urn, message: "Your school - already confirmed", school_name: school.name, row_number: index + 1 }
-      elsif school.lead_provider(Cohort.current.start_year).present?
+      elsif partnered_with_other_lead_provider?(school)
         errors << { urn: urn, message: "Recruited by other provider", school_name: school.name, row_number: index + 1 }
       end
     end
@@ -65,5 +65,15 @@ private
 
   def strip_bom(string)
     string.force_encoding("UTF-8").gsub(/\xEF\xBB\xBF/, "")
+  end
+
+  def partnered_with_current_lead_provider?(school)
+    school.lead_provider(Cohort.current.start_year) == lead_provider ||
+      PartnershipRequest.where(lead_provider: lead_provider, school: school, cohort: Cohort.current).any?
+  end
+
+  def partnered_with_other_lead_provider?(school)
+    school.lead_provider(Cohort.current.start_year).present? ||
+      PartnershipRequest.where(school: school, cohort: Cohort.current).any?
   end
 end

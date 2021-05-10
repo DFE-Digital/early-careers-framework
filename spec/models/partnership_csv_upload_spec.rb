@@ -96,9 +96,46 @@ RSpec.describe PartnershipCsvUpload, type: :model do
       )
     end
 
+    it "finds schools with a partnership request for the lead provider" do
+      partnered_school = create(:school)
+      given_the_csv_contains_urns([partnered_school.urn])
+      PartnershipRequest.create!(
+        school: partnered_school,
+        lead_provider: @subject.lead_provider,
+        delivery_partner: @subject.delivery_partner,
+        cohort: current_cohort,
+      )
+
+      expect(@subject.invalid_schools.length).to eql 1
+      expect(@subject.invalid_schools).to contain_exactly(
+        {
+          urn: partnered_school.urn,
+          row_number: 1,
+          school_name: partnered_school.name,
+          message: "Your school - already confirmed",
+        },
+      )
+    end
+
     it "finds schools already in a partnership with a different lead provider" do
       partnership = create(:partnership, cohort: current_cohort)
       partnered_school = partnership.school
+      given_the_csv_contains_urns([partnered_school.urn])
+
+      expect(@subject.invalid_schools.length).to eql 1
+      expect(@subject.invalid_schools).to contain_exactly(
+        {
+          urn: partnered_school.urn,
+          row_number: 1,
+          school_name: partnered_school.name,
+          message: "Recruited by other provider",
+        },
+      )
+    end
+
+    it "finds schools with a partnership request from a different lead provider" do
+      partnership_request = create(:partnership_request, cohort: current_cohort)
+      partnered_school = partnership_request.school
       given_the_csv_contains_urns([partnered_school.urn])
 
       expect(@subject.invalid_schools.length).to eql 1
