@@ -403,4 +403,38 @@ RSpec.describe School, type: :model do
       end
     end
   end
+
+  describe "#characteristics_for" do
+    context "when pupil premium uplift applies" do
+      let(:school) { create(:school, :pupil_premium_uplift) }
+      
+      it "returns the correct characteristic for pupil premium" do
+        expect(school.characteristics_for(2021)).to eq "Pupil premium above 40%"
+      end
+    end
+
+    context "when sparsity uplift applies" do
+      let(:school) { create(:school, :sparsity_uplift) }
+
+      it "returns the correct characteristic" do
+        expect(school.characteristics_for(2021)).to eq "Remote school"
+      end
+    end
+
+    context "when pupil premium and sparcity uplifts apply" do
+      let(:school) { create(:school, :pupil_premium_uplift, :sparsity_uplift) }
+
+      it "returns the correct characteristics" do
+        expect(school.characteristics_for(2021)).to eq "Pupil premium above 40% and Remote school"
+      end
+    end
+
+    context "when neither pupil premium nor sparcity uplifts apply" do
+      let(:school) { create(:school) }
+
+      it "returns an empty string" do
+        expect(school.characteristics_for(2021)).to be_blank
+      end
+    end
+  end
 end
