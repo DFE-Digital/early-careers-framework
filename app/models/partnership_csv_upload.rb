@@ -21,7 +21,9 @@ class PartnershipCsvUpload < ApplicationRecord
   end
 
   def urns
-    @urns ||= csv.open { |csv| csv.readlines.map(&:chomp).map { |s| strip_bom(s) } }
+    @urns ||= csv.open { |csv| csv.readlines.map(&:chomp) }
+                 .map { |s| strip_bom(s) }
+                 .uniq
   end
 
 private

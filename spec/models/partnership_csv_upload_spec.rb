@@ -114,11 +114,25 @@ RSpec.describe PartnershipCsvUpload, type: :model do
   end
 
   describe "#urns" do
-    it "returns the correct urns" do
+    it "returns the correct URNs" do
       urns = 5.times.map { Faker::Number.unique.decimal_part(digits: 7).to_s }
       given_the_csv_contains_urns(urns)
 
       expect(@subject.urns).to eql urns
+    end
+
+    it "returns unique URNs" do
+      urns = [1, 1, 2, 2, 3, 3]
+      given_the_csv_contains_urns(urns)
+
+      expect(@subject.urns).to eql %w[1 2 3]
+    end
+
+    it "removes BOM from the input" do
+      urns = %W[\xEF\xBB\xBF1 2 3]
+      given_the_csv_contains_urns(urns)
+
+      expect(@subject.urns).to eql %w[1 2 3]
     end
   end
 
