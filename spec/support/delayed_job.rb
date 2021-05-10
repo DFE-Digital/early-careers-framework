@@ -64,8 +64,7 @@ module DelayedJobMatchers
       return jobs.any? unless @arguments || @at
 
       jobs.any? do |job|
-        @arguments.args_match?(*job.payload_object.args)
-        job.run_at == @at if @at.present?
+        @arguments.args_match?(*job.payload_object.args) && (job.run_at == @at if @at.present?)
       end
     end
 
