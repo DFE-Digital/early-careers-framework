@@ -2,7 +2,6 @@
 
 class PagesController < ApplicationController
   def show
-
-    render template: "pages/#{params[:page].tr("-", "_")}"
+    render template: "pages/#{params[:page].tr('-', '_')}"
   end
 end
