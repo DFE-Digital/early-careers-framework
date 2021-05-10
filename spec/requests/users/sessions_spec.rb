@@ -31,10 +31,14 @@ RSpec.describe "Users::Sessions", type: :request do
       allow(UserMailer).to receive(:sign_in_email).and_call_original
     end
 
-    context "when email matches a user" do
-      it "renders the login_email_sent template" do
-        post "/users/sign_in", params: { user: { email: user.email } }
-        expect(response).to render_template(:login_email_sent)
+    it "renders the login_email_sent template regardless of email match" do
+      post "/users/sign_in", params: { user: { email: Faker::Internet.email } }
+      expect(response).to render_template(:login_email_sent)
+    end
+
+    context "when email case-insensitively matches a user" do
+      def randomize_case(string)
+        string.chars.map { |char| char.send(%i[upcase downcase].sample) }.join
       end
 
       it "sends a log_in email request to User Mailer" do
@@ -45,7 +49,7 @@ RSpec.describe "Users::Sessions", type: :request do
             token_expiry: token_expiry_regex,
           ),
         )
-        post "/users/sign_in", params: { user: { email: user.email } }
+        post "/users/sign_in", params: { user: { email: randomize_case(user.email) } }
       end
     end
 
