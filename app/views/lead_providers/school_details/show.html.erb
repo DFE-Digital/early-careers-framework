@@ -24,14 +24,16 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h2 class="govuk-heading-m"><%= @selected_cohort.start_year %> participants</h2>
+    <h2 class="govuk-heading-m"><%= @selected_cohort.display_name %> participants</h2>
   </div>
 </div>
 
 <div class="govuk-grid-row govuk-!-margin-bottom-6">
   <div class="govuk-grid-column-one-third">
     <div class="dashboard-numbers key-number">
-      <p class="govuk-heading-xl">0</p>
+      <p class="govuk-heading-xl">
+        <%= @school.early_career_teacher_profiles_for(@selected_cohort.start_year).count -%>
+      </p>
       <p class="govuk-heading-s">ECTs added</p>
     </div>
   </div>
