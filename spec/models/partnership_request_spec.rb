@@ -57,6 +57,14 @@ RSpec.describe PartnershipRequest, type: :model do
       partnership_request.finalise!
       expect(partnership_request.destroyed?).to be true
     end
+
+    it "associates any notification emails with the new partnership" do
+      email = create(:partnership_notification_email, partnerable: partnership_request)
+      partnership_request.finalise!
+
+      created_partnership = Partnership.order(:created_at).last
+      expect(created_partnership.partnership_notification_emails).to contain_exactly email
+    end
   end
 
   describe "challenge!" do
@@ -81,6 +89,14 @@ RSpec.describe PartnershipRequest, type: :model do
     it "should raise an error if called with a blank reason" do
       expect { partnership_request.challenge!("") }.to raise_error(ArgumentError)
       expect(partnership_request.destroyed?).to be false
+    end
+
+    it "associates any notification emails with the new partnership" do
+      email = create(:partnership_notification_email, partnerable: partnership_request)
+      partnership_request.challenge!("mistake")
+
+      created_partnership = Partnership.order(:created_at).last
+      expect(created_partnership.partnership_notification_emails).to contain_exactly email
     end
   end
 end
