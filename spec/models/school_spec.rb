@@ -315,4 +315,87 @@ RSpec.describe School, type: :model do
       end
     end
   end
+
+  describe "#lead_provider" do
+    it "returns the lead provider when there is a partnership" do
+      partnership = create(:partnership)
+      school = partnership.school
+      lead_provider = partnership.lead_provider
+      year = partnership.cohort.start_year
+
+      expect(school.lead_provider(year)).to eql lead_provider
+    end
+
+    it "returns nil when there is no partnership" do
+      school = create(:school)
+
+      expect(school.lead_provider(2021)).to be_nil
+    end
+
+    it "returns nil when there is no partnership for the specified year" do
+      partnership = create(:partnership)
+      school = partnership.school
+      year = partnership.cohort.start_year + 1
+
+      expect(school.lead_provider(year)).to be_nil
+    end
+
+    it "returns nil when the partnership has been challenged" do
+      partnership = create(:partnership, :challenged)
+      school = partnership.school
+      year = partnership.cohort.start_year
+
+      expect(school.lead_provider(year)).to be_nil
+    end
+  end
+
+  describe "scope :partnered" do
+    it "includes schools for the given year" do
+      partnership = create(:partnership)
+      school = partnership.school
+      year = partnership.cohort.start_year
+
+      expect(School.partnered(year)).to include(school)
+    end
+
+    it "does not include schools with challenged partnerships" do
+      partnership = create(:partnership, :challenged)
+      school = partnership.school
+      year = partnership.cohort.start_year
+
+      expect(School.partnered(year)).not_to include(school)
+    end
+
+    it "does not include schools only partnered in a different year" do
+      partnership = create(:partnership)
+      school = partnership.school
+      year = partnership.cohort.start_year + 1
+
+      expect(School.partnered(year)).not_to include(school)
+    end
+  end
+
+  describe "scope :unpartnered" do
+    it "includes schools with no partnership for a year" do
+      school = create(:school)
+
+      expect(School.unpartnered(2021)).to include(school)
+    end
+
+    it "includes schools with only challenged partnerships for a year" do
+      partnership = create(:partnership, :challenged)
+      school = partnership.school
+      year = partnership.cohort.start_year
+
+      expect(School.unpartnered(year)).to include(school)
+    end
+
+    it "does not include schools with an active partnership for a year" do
+      partnership = create(:partnership)
+      school = partnership.school
+      year = partnership.cohort.start_year
+
+      expect(School.unpartnered(year)).not_to include(school)
+    end
+  end
 end
