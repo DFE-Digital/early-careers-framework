@@ -10,7 +10,7 @@ Rails.application.routes.draw do
     post "/users/sign_in_with_token", to: "users/sessions#sign_in_with_token"
   end
 
-  get "/pages/:page", to: "pages#show"
+  get "/pages/:page", to: "pages#show", as: :page
   get "check" => "application#check"
 
   root "start#index"
