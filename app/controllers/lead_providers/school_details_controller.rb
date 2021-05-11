@@ -15,10 +15,7 @@ module LeadProviders
 
     def find_school
       year = selected_cohort_or_current.start_year
-      search_scope = School.eligible
-
-      search_scope = search_scope.partnered_with_lead_provider(current_user.lead_provider.id, year) if current_user.lead_provider?
-      search_scope.find(params[:id])
+      School.eligible.partnered_with_lead_provider(current_user.lead_provider.id, year).find(params[:id])
     end
   end
 end
