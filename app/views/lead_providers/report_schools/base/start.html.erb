@@ -5,18 +5,18 @@
         <%= component.nav_item(path: dashboard_path) do %>
           Overview
         <% end %>
-        <%= component.nav_item(path: start_lead_providers_report_schools_path) do %>
+        <%= component.nav_item(path: lead_providers_report_schools_start_path) do %>
           Schools
         <% end %>
       <% end %>
     <% end %>
 
     <h1 class="govuk-heading-xl">You can only confirm schools for the cohort that starts in the next academic year
-      (<%= Cohort.current.display_name %>).</h1>
+      (<%= report_schools_form.cohort.display_name %>).</h1>
 
     <p>If you want to add schools to your 2021 cohort after 31 October 2021, you need to contact:
       <%= render MailToSupportComponent.new %></p>
 
-    <%= govuk_link_to "Continue", choose_delivery_partner_lead_providers_report_schools_path, button: true%>
+    <%= govuk_link_to "Continue", lead_providers_report_schools_delivery_partner_path, button: true %>
   </div>
 </div>

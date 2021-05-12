@@ -1,0 +1,7 @@
+<% content_for :title, "All schools removed" %>
+
+<h1 class="govuk-heading-xl">You have removed all schools from the list</h1>
+
+<% if report_schools_form.source == "csv" %>
+  <%= govuk_link_to "Re-upload CSV", lead_providers_report_schools_csv_path, button: true %>
+<% end %>

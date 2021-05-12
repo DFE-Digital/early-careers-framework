@@ -1,5 +1,5 @@
 <% content_for :title, "CSV results" %>
-<% content_for :before_content, govuk_back_link(text: "Back", href: new_lead_providers_report_schools_partnership_csv_uploads_path) %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: lead_providers_report_schools_csv_path) %>
 <h1 class="govuk-heading-xl">Your CSV has errors</h1>
 
 <p class="govuk-body">We have found <%= @urns.count %> rows in your CSV:</p>
@@ -41,13 +41,15 @@
 </table>
 
 <div class="govuk-button-group">
-  <%= govuk_link_to(
-        "Continue with #{(@valid_schools.count)} #{"school".pluralize((@valid_schools.count))}",
-        lead_providers_report_schools_confirm_schools_path,
-        button: true) %>
+  <% if @valid_schools.any? %>
+    <%= govuk_button_to(
+          "Continue with #{(@valid_schools.count)} #{"school".pluralize((@valid_schools.count))}",
+          { action: :proceed },
+          button: true) %>
+  <% end %>
   <%= govuk_link_to(
         "Re-upload CSV",
-        new_lead_providers_report_schools_partnership_csv_uploads_path,
+        { action: :show },
         button: true,
         class: "govuk-button--secondary") %>
 </div>

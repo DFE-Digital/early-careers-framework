@@ -76,20 +76,18 @@ Rails.application.routes.draw do
     resources :your_schools, only: %i[index create]
     resources :school_details, only: %i[show]
 
-    resource :report_schools, path: "report-schools", only: [] do
-      post "check-delivery-partner", action: :check_delivery_partner
-      get "choose-delivery-partner", action: :choose_delivery_partner
-      get :start
-      get :success
+    namespace :report_schools, path: "report-schools" do
+      get :start, to: "base#start"
+      post "", to: "base#create"
+      get :success, to: "base#success"
 
-      post :confirm, to: "confirm_schools#confirm"
-      resource :confirm_schools, only: %i[show], path: "confirm" do
-        get :start
-        post :remove
-      end
-
-      resource :partnership_csv_uploads, path: "partnership-csv-uploads", only: %i[new create] do
+      resource :delivery_partner, only: %i[show create], path: "delivery-partner"
+      resource :csv, only: %i[show create], controller: "csv" do
         get :errors
+        post :proceed
+      end
+      resource :confirm, only: %i[show create], controller: :confirm do
+        post :remove_school
       end
     end
   end
