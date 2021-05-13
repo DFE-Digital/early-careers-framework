@@ -124,12 +124,12 @@
             </div>
           <% elsif type == "success" %>
             <%= govuk_notification_banner(
-                  title: msg["title"],
+                  title: msg[:title],
                   success: true,
                   html_attributes: { data: { test: "notification-banner" } }
                 ) do |banner| %>
-              <% banner.add_heading(text: msg["heading"]) %>
-              <% msg["content"] %>
+              <% banner.add_heading(text: msg[:heading]) %>
+              <% msg[:content] %>
             <% end %>
           <% else %>
             <div class="govuk-success-summary" aria-labelledby="success-message" tabindex="-1" role="alert">
