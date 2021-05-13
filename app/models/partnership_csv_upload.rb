@@ -47,6 +47,7 @@ private
       school = School.includes(:partnerships).find_by(urn: urn)
       school = School.find_by(urn: urn.sub!(/^[0]+/, "")) if school.blank?
 
+      # TODO: Should we dependent on `Cohort.current` here or should this model reference cohort it was used for?
       if school.blank?
         errors << { urn: urn, message: "URN is not valid", school_name: "", row_number: index + 1 }
       elsif school.cip_only?

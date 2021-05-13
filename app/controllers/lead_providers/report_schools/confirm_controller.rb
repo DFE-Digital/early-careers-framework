@@ -22,12 +22,6 @@ module LeadProviders
         redirect_to action: :show
       end
 
-      def create
-        report_schools_form.save!
-
-        redirect_to success_lead_providers_report_schools_path
-      end
-
     private
 
       def load_form

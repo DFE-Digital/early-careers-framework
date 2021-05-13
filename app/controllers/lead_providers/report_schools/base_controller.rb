@@ -2,9 +2,9 @@
 
 module LeadProviders
   module ReportSchools
-    SESSION_KEY = :lp_report_schools_form
-
     class BaseController < ::LeadProviders::BaseController
+      SESSION_KEY = :lp_report_schools_form
+
       after_action :store_form
       after_action :clean_form!, only: :success
 

@@ -14,7 +14,7 @@ RSpec.describe "Dashboard", type: :request do
     it "renders the show template" do
       get "/dashboard"
       expect(response).to render_template("dashboard/show")
-      expect(response.body).to include start_lead_providers_report_schools_path
+      expect(response.body).to include lead_providers_report_schools_start_path
     end
   end
 end

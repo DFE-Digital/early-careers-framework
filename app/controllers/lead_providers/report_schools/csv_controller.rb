@@ -11,7 +11,7 @@ module LeadProviders
         if params[:partnership_csv_upload].blank?
           @partnership_csv_upload = PartnershipCsvUpload.new
           @partnership_csv_upload.errors[:base] << "Please select a CSV file to upload."
-          render :new and return
+          render :show and return
         end
 
         @partnership_csv_upload = PartnershipCsvUpload.new(

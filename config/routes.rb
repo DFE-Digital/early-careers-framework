@@ -86,7 +86,7 @@ Rails.application.routes.draw do
         get :errors
         post :proceed
       end
-      resource :confirm, only: %i[show create], controller: :confirm do
+      resource :confirm, only: %i[show], controller: :confirm do
         post :remove_school
       end
     end
