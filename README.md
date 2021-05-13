@@ -64,7 +64,7 @@ bundle exec rspec
 It auto-generates swagger/*/api_spec.json from the schema files located in spec/docs
 
 ```bash
-bundle exec rake rswag:specs:swaggerize
+bundle exec rake rswag
 ```
 
 ## Linting
