@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_06_161800) do
+ActiveRecord::Schema.define(version: 2021_05_10_130435) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -140,6 +140,16 @@ ActiveRecord::Schema.define(version: 2021_05_06_161800) do
     t.index ["school_id"], name: "index_icp_schools_on_schools"
   end
 
+  create_table "lead_provider_api_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "lead_provider_id", null: false
+    t.string "hashed_token", null: false
+    t.datetime "last_used_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["hashed_token"], name: "index_lead_provider_api_tokens_on_hashed_token", unique: true
+    t.index ["lead_provider_id"], name: "index_lead_provider_api_tokens_on_lead_provider_id"
+  end
+
   create_table "lead_provider_cips", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "lead_provider_id", null: false
     t.uuid "cohort_id", null: false
@@ -211,6 +221,25 @@ ActiveRecord::Schema.define(version: 2021_05_06_161800) do
     t.index ["partnership_notification_email_id"], name: "index_nomination_emails_on_partnership_notification_email_id"
     t.index ["school_id"], name: "index_nomination_emails_on_school_id"
     t.index ["token"], name: "index_nomination_emails_on_token", unique: true
+  end
+
+  create_table "participant_events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "item_type", null: false
+    t.string "event", null: false
+    t.string "whodunnit"
+    t.json "object"
+    t.json "object_changes"
+    t.datetime "created_at"
+    t.uuid "item_id", null: false
+    t.index ["item_type", "item_id"], name: "index_participant_events_on_item_type_and_item_id"
+  end
+
+  create_table "participation_records", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.uuid "early_career_teacher_profile_id", null: false
+    t.string "state", default: "assigned", null: false
+    t.index ["early_career_teacher_profile_id"], name: "index_participation_records_on_early_career_teacher_profile_id"
   end
 
   create_table "partnership_csv_uploads", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -397,6 +426,7 @@ ActiveRecord::Schema.define(version: 2021_05_06_161800) do
   add_foreign_key "early_career_teacher_profiles", "schools"
   add_foreign_key "early_career_teacher_profiles", "users"
   add_foreign_key "induction_coordinator_profiles", "users"
+  add_foreign_key "lead_provider_api_tokens", "lead_providers", on_delete: :cascade
   add_foreign_key "lead_provider_cips", "cohorts"
   add_foreign_key "lead_provider_cips", "core_induction_programmes"
   add_foreign_key "lead_provider_cips", "lead_providers"
@@ -404,6 +434,7 @@ ActiveRecord::Schema.define(version: 2021_05_06_161800) do
   add_foreign_key "lead_provider_profiles", "users"
   add_foreign_key "nomination_emails", "partnership_notification_emails"
   add_foreign_key "nomination_emails", "schools"
+  add_foreign_key "participation_records", "early_career_teacher_profiles"
   add_foreign_key "partnership_notification_emails", "partnerships"
   add_foreign_key "partnerships", "cohorts"
   add_foreign_key "partnerships", "delivery_partners"
