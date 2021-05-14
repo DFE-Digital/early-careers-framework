@@ -1,5 +1,6 @@
 import "@percy/cypress";
 import OnRails from "./on-rails";
+import "cypress-file-upload";
 
 // Heads up, this is NOT used in the Cucumber specs - see factory-bot.js
 

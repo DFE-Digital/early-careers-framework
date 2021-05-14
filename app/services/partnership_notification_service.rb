@@ -2,24 +2,26 @@
 
 class PartnershipNotificationService
   def notify(partnership)
-    if partnership.school.registered?
-      notification_email = PartnershipNotificationEmail.create!(
-        token: generate_token,
-        sent_to: partnership.school.contact_email,
-        partnership: partnership,
-        email_type: PartnershipNotificationEmail.email_types[:induction_coordinator_email],
-      )
+    ActiveRecord::Base.transaction do
+      if partnership.school.registered?
+        notification_email = PartnershipNotificationEmail.create!(
+          token: generate_token,
+          sent_to: partnership.school.contact_email,
+          partnership: partnership,
+          email_type: PartnershipNotificationEmail.email_types[:induction_coordinator_email],
+        )
 
-      send_notification_email_to_coordinator(notification_email)
-    else
-      notification_email = PartnershipNotificationEmail.create!(
-        token: generate_token,
-        sent_to: partnership.school.contact_email,
-        partnership: partnership,
-        email_type: PartnershipNotificationEmail.email_types[:school_email],
-      )
+        send_notification_email_to_coordinator(notification_email)
+      else
+        notification_email = PartnershipNotificationEmail.create!(
+          token: generate_token,
+          sent_to: partnership.school.contact_email,
+          partnership: partnership,
+          email_type: PartnershipNotificationEmail.email_types[:school_email],
+        )
 
-      send_notification_email_to_school(notification_email)
+        send_notification_email_to_school(notification_email)
+      end
     end
   end
 

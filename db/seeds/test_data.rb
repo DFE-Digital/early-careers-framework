@@ -124,4 +124,10 @@ end
   end
 end
 
-DeliveryPartner.find_or_create_by!(name: "Amazing Delivery Partner")
+delivery_partner = DeliveryPartner.find_or_create_by!(name: "Amazing Delivery Partner")
+
+ProviderRelationship.find_or_create_by!(
+  lead_provider: LeadProvider.first,
+  delivery_partner: delivery_partner,
+  cohort: Cohort.current,
+)

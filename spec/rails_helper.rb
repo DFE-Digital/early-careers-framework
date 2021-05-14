@@ -6,6 +6,7 @@ SimpleCov.start
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require "spec_helper"
 ENV["RAILS_ENV"] ||= "test"
+require_relative "../app/helpers/application_helper.rb"
 require File.expand_path("../config/environment", __dir__)
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
@@ -41,6 +42,11 @@ rescue ActiveRecord::PendingMigrationError => e
   exit 1
 end
 RSpec.configure do |config|
+  config.include RSpec::DefaultHttpHeader, type: :request
+
+  config.before do
+    Faker::Number.unique.clear
+  end
   config.include Devise::Test::IntegrationHelpers, type: :request
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
@@ -89,10 +95,6 @@ RSpec.configure do |config|
   config.include ActiveJob::TestHelper
   config.include ViewComponent::TestHelpers, type: :component
   config.include Rails.application.routes.url_helpers
-
-  config.before :each do
-    clear_enqueued_jobs
-  end
 
   config.before(:suite) do
     Webpacker.compile

@@ -22,18 +22,12 @@ class SupplierUserForm
   end
 
   def save!
-    profile = LeadProviderProfile.new(lead_provider: chosen_supplier)
-
-    user = ActiveRecord::Base.transaction do
-      user = User.create!(
-        full_name: full_name,
-        email: email,
-      )
-      profile.user = user
-      profile.save!
-      user
-    end
-    user
+    LeadProviderProfile.create_lead_provider_user(
+      full_name,
+      email,
+      chosen_supplier,
+      Rails.application.routes.url_helpers.root_url(host: Rails.application.config.domain),
+    )
   end
 
 private
