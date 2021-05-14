@@ -129,7 +129,7 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
       } }
 
       expect(response).to render_template("nominations/nominate_induction_coordinator/new")
-      expect(response.body).to include(CGI.escapeHTML("Enter email"))
+      expect(response.body).to include(CGI.escapeHTML("Enter an email"))
     end
 
     it "shows a validation error when the name is blank" do

@@ -11,7 +11,7 @@ RSpec.describe NominateInductionTutorForm, type: :model do
 
   describe "validations" do
     it { is_expected.to validate_presence_of(:full_name).with_message("Enter a full name") }
-    it { is_expected.to validate_presence_of(:email).with_message("Enter email") }
+    it { is_expected.to validate_presence_of(:email).with_message("Enter an email") }
   end
 
   describe "#school" do

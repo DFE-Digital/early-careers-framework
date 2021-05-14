@@ -25,14 +25,32 @@ module Admin
       redirect_to email_used_admin_school_induction_coordinators_path
     end
 
+    def edit
+      @induction_tutor = school_induction_tutor
+    end
+
+    def update
+      @induction_tutor = school_induction_tutor
+      if @induction_tutor.update(form_params)
+        set_success_message(content: "Induction tutor details updated", title: "Success")
+        redirect_to admin_school_path(@school)
+      else
+        render :edit
+      end
+    end
+
   private
 
     def set_school
       @school = School.find params[:school_id]
     end
 
+    def school_induction_tutor
+      @school.induction_coordinators.first
+    end
+
     def form_params
-      params.require(:nominate_induction_tutor_form).permit(:full_name, :email)
+      params.require(:tutor_details).permit(:full_name, :email)
     end
   end
 end
