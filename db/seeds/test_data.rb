@@ -94,7 +94,7 @@ School.find_or_create_by!(urn: "000005") do |school|
   )
 end
 
-30.times.with_index do |idx|
+30.times do |idx|
   urn = (100 + idx).to_s.rjust(6, "0")
   item_num = 6 + idx
   School.find_or_create_by!(urn: urn) do |school|
