@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_06_161800) do
+ActiveRecord::Schema.define(version: 2021_05_14_100703) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -229,12 +229,27 @@ ActiveRecord::Schema.define(version: 2021_05_06_161800) do
     t.string "notify_id"
     t.string "notify_status"
     t.datetime "delivered_at"
-    t.uuid "partnership_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "partnerable_type"
+    t.uuid "partnerable_id"
     t.index ["notify_id"], name: "index_partnership_notification_emails_on_notify_id"
-    t.index ["partnership_id"], name: "index_partnership_notification_emails_on_partnership_id"
+    t.index ["partnerable_type", "partnerable_id"], name: "index_partnership_notification_emails_on_partnerable"
     t.index ["token"], name: "index_partnership_notification_emails_on_token", unique: true
+  end
+
+  create_table "partnership_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "lead_provider_id", null: false
+    t.uuid "delivery_partner_id", null: false
+    t.uuid "school_id", null: false
+    t.uuid "cohort_id", null: false
+    t.datetime "challenge_deadline"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["cohort_id"], name: "index_partnership_requests_on_cohort_id"
+    t.index ["delivery_partner_id"], name: "index_partnership_requests_on_delivery_partner_id"
+    t.index ["lead_provider_id"], name: "index_partnership_requests_on_lead_provider_id"
+    t.index ["school_id"], name: "index_partnership_requests_on_school_id"
   end
 
   create_table "partnerships", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -247,10 +262,12 @@ ActiveRecord::Schema.define(version: 2021_05_06_161800) do
     t.datetime "challenged_at"
     t.string "challenge_reason"
     t.datetime "challenge_deadline"
+    t.datetime "started_at"
     t.index ["cohort_id"], name: "index_partnerships_on_cohort_id"
     t.index ["delivery_partner_id"], name: "index_partnerships_on_delivery_partner_id"
     t.index ["lead_provider_id"], name: "index_partnerships_on_lead_provider_id"
     t.index ["school_id"], name: "index_partnerships_on_school_id"
+    t.index ["started_at"], name: "index_partnerships_on_started_at"
   end
 
   create_table "privacy_policies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -404,7 +421,10 @@ ActiveRecord::Schema.define(version: 2021_05_06_161800) do
   add_foreign_key "lead_provider_profiles", "users"
   add_foreign_key "nomination_emails", "partnership_notification_emails"
   add_foreign_key "nomination_emails", "schools"
-  add_foreign_key "partnership_notification_emails", "partnerships"
+  add_foreign_key "partnership_requests", "cohorts"
+  add_foreign_key "partnership_requests", "delivery_partners"
+  add_foreign_key "partnership_requests", "lead_providers"
+  add_foreign_key "partnership_requests", "schools"
   add_foreign_key "partnerships", "cohorts"
   add_foreign_key "partnerships", "delivery_partners"
   add_foreign_key "partnerships", "lead_providers"

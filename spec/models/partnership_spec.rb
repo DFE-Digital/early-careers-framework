@@ -104,4 +104,60 @@ RSpec.describe Partnership, type: :model do
       expect(partnership.in_challenge_window?).to eq false
     end
   end
+
+  describe "pending partnerships" do
+    let!(:pending_partnership) { create(:partnership, :pending) }
+    let!(:partnership) { create(:partnership) }
+    let!(:challenged_partnership) { create(:partnership, :challenged, :pending) }
+
+    it "sets started_at to creation time" do
+      freeze_time
+      partnership = Partnership.create!(
+        lead_provider: create(:lead_provider),
+        school: create(:school),
+        delivery_partner: create(:delivery_partner),
+        cohort: create(:cohort),
+      )
+      expect(partnership.started_at).to eql Time.zone.now
+    end
+
+    it "allows started_at to be overridden" do
+      freeze_time
+      expected_started_at = 3.days.from_now
+      partnership = Partnership.create!(
+        lead_provider: create(:lead_provider),
+        school: create(:school),
+        delivery_partner: create(:delivery_partner),
+        cohort: create(:cohort),
+        started_at: expected_started_at,
+      )
+      expect(partnership.started_at).to eql expected_started_at
+    end
+
+    describe "#pending?" do
+      it "returns true for pending partnerships" do
+        expect(pending_partnership.pending?).to eql true
+      end
+
+      it "returns false for challenged partnerships" do
+        expect(challenged_partnership.pending?).to eql false
+      end
+
+      it "returns false for partnerships that are not pending" do
+        expect(partnership.pending?).to eql false
+      end
+    end
+
+    describe "scope :pending" do
+      it "returns only pending partnerships, without challenged partnerships" do
+        expect(Partnership.pending).to contain_exactly(pending_partnership)
+      end
+    end
+
+    describe "scope :active" do
+      it "returns only unchallenged, not pending partnerships" do
+        expect(Partnership.active).to contain_exactly(partnership)
+      end
+    end
+  end
 end
