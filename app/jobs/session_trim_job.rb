@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SchoolDataImporterJob < CronJob
+class SessionTrimJob < CronJob
   self.cron_expression = "0 0 1 * *"
 
   queue_as :session_trim
