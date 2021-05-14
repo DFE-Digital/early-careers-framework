@@ -9,12 +9,22 @@ class ConfirmSchoolsForm
   def save!
     ActiveRecord::Base.transaction do
       school_ids.each do |school_id|
-        partnership = Partnership.create!(
-          school_id: school_id,
-          cohort_id: cohort_id,
-          delivery_partner_id: delivery_partner_id,
-          lead_provider_id: lead_provider_id,
-        )
+        partnership = if SchoolCohort.find_by(school_id: school_id, cohort_id: cohort_id)&.core_induction_programme?
+                        Partnership.create!(
+                          school_id: school_id,
+                          cohort_id: cohort_id,
+                          delivery_partner_id: delivery_partner_id,
+                          lead_provider_id: lead_provider_id,
+                          started_at: Time.zone.now + Partnership::CHALLENGE_WINDOW,
+                        )
+                      else
+                        Partnership.create!(
+                          school_id: school_id,
+                          cohort_id: cohort_id,
+                          delivery_partner_id: delivery_partner_id,
+                          lead_provider_id: lead_provider_id,
+                        )
+                      end
 
         PartnershipNotificationService.schedule_notifications(partnership)
       end

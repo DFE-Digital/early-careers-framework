@@ -47,19 +47,19 @@ class School < ApplicationRecord
   }
 
   scope :partnered, lambda { |year|
-    where(id: Partnership.joins(:cohort).where(cohorts: { start_year: year }).select(:school_id))
+    where(id: Partnership.unchallenged.joins(:cohort).where(cohorts: { start_year: year }).select(:school_id))
   }
 
   scope :partnered_with_lead_provider, lambda { |lead_provider_id|
-    where(id: Partnership.where(lead_provider_id: lead_provider_id).select(:school_id))
+    where(id: Partnership.unchallenged.where(lead_provider_id: lead_provider_id).select(:school_id))
   }
 
   scope :unpartnered, lambda { |year|
-    where.not(id: Partnership.joins(:cohort).where(cohorts: { start_year: year }).select(:school_id))
+    where.not(id: Partnership.unchallenged.joins(:cohort).where(cohorts: { start_year: year }).select(:school_id))
   }
 
   def lead_provider(year)
-    partnerships.joins(%i[lead_provider cohort]).find_by(cohorts: { start_year: year })&.lead_provider
+    partnerships.unchallenged.joins(%i[lead_provider cohort]).find_by(cohorts: { start_year: year })&.lead_provider
   end
 
   def full_address
