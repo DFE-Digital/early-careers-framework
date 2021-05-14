@@ -1,0 +1,53 @@
+<% content_for :title, "CSV results" %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: new_lead_providers_report_schools_partnership_csv_uploads_path) %>
+<h1 class="govuk-heading-xl">Your CSV has errors</h1>
+
+<p class="govuk-body">We have found <%= @urns.count %> rows in your CSV:</p>
+<ul class="govuk-list govuk-list--bullet">
+  <% if @errors.count == 1 %>
+    <li><%= @errors.count %> row has errors</li>
+  <% else %>
+    <li><%= @errors.count %> rows have errors</li>
+  <% end %>
+
+  <% if (@valid_schools.count) == 1 %>
+    <li><%= @valid_schools.count %> row matches available schools</li>
+  <% else %>
+    <li><%= @valid_schools.count %> rows match available schools</li>
+  <% end %>
+</ul>
+
+<table class="govuk-table">
+  <caption class="govuk-table__caption govuk-table__caption--m">Rows with errors</caption>
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Row</th>
+      <th scope="col" class="govuk-table__header">Your data</th>
+      <th scope="col" class="govuk-table__header">School</th>
+      <th scope="col" class="govuk-table__header">Error</th>
+    </tr>
+  </thead>
+
+  <tbody class="govuk-table__body">
+    <% @errors.each do |error| %>
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell govuk-table__cell--numeric"><%= error[:row_number] %></td>
+        <td class="govuk-table__cell"><%= error[:urn] %></td>
+        <td class="govuk-table__cell"><%= error[:school_name] %></td>
+        <td class="govuk-table__cell error-message"><%= error[:message] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="govuk-button-group">
+  <%= govuk_link_to(
+        "Continue with #{(@valid_schools.count)} #{"school".pluralize((@valid_schools.count))}",
+        lead_providers_report_schools_confirm_schools_path,
+        button: true) %>
+  <%= govuk_link_to(
+        "Re-upload CSV",
+        new_lead_providers_report_schools_partnership_csv_uploads_path,
+        button: true,
+        class: "govuk-button--secondary") %>
+</div>

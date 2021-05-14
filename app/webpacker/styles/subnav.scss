@@ -6,7 +6,7 @@
 .app-subnav {
   @include govuk-media-query($from: tablet) {
     display: flex;
-    overflow-x: scroll;
+    overflow-x: auto;
     padding-top: govuk-spacing(2);
     padding-bottom: govuk-spacing(7);
   }

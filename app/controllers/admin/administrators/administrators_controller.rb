@@ -34,7 +34,7 @@ module Admin
           render :new and return
         end
 
-        session[:administrator_user] = @user
+        session[:administrator_user] = @user.as_json
       end
 
       def create

@@ -29,9 +29,14 @@ Rails.application.routes.draw do
     end
   end
 
-  namespace :api do
+  namespace :api, defaults: { format: "json" } do
     resources :school_search, only: %i[index]
     resource :notify_callback, only: :create, path: "notify-callback"
+
+    namespace :v1 do
+      resources :early_career_teacher_participants, only: %i[create], path: "early-career-teacher-participants"
+      resources :users, only: :index unless Rails.env.staging? || Rails.env.production?
+    end
   end
 
   namespace :demo do
@@ -71,13 +76,19 @@ Rails.application.routes.draw do
     resources :school_details, only: %i[show]
 
     resource :report_schools, path: "report-schools", only: [] do
-      get "start", action: :start
       post "check-delivery-partner", action: :check_delivery_partner
       get "choose-delivery-partner", action: :choose_delivery_partner
+      get :start
+      get :success
 
-      resource :confirm_schools, only: %i[show update], path: "confirm" do
+      post :confirm, to: "confirm_schools#confirm"
+      resource :confirm_schools, only: %i[show], path: "confirm" do
         get :start
         post :remove
+      end
+
+      resource :partnership_csv_uploads, path: "partnership-csv-uploads", only: %i[new create] do
+        get :errors
       end
     end
   end
