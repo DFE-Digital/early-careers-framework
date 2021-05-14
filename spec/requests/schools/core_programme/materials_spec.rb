@@ -21,6 +21,7 @@ RSpec.describe "Schools::CoreProgramme::Materials", type: :request do
         expect(response).to render_template("schools/core_programme/materials/info")
       end
     end
+
     context "when cohort already has selected materials" do
       before do
         school_cohort.update(core_induction_programme: cip)
