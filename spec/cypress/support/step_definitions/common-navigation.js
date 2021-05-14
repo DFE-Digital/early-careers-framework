@@ -78,10 +78,10 @@ const pagePaths = {
   "internal server error": "/500",
   forbidden: "/403",
   "lead providers report schools choose delivery partner":
-    "/lead-providers/report-schools/choose-delivery-partner",
+    "/lead-providers/report-schools/delivery-partner",
   "partnership csv uploads":
-    "/lead-providers/report-schools/partnership-csv-uploads/new",
-  "csv errors": "/lead-providers/report-schools/partnership-csv-uploads/errors",
+    "/lead-providers/report-schools/csv",
+  "csv errors": "/lead-providers/report-schools/csv/errors",
   "confirm partnerships": "/lead-providers/report-schools/confirm",
   "partnerships success": "/lead-providers/report-schools/success",
 };
