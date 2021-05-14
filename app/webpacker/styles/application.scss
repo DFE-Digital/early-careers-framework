@@ -26,3 +26,7 @@ $govuk-image-url-function: frontend-image-url;
 .govuk-tag {
   white-space: nowrap;
 }
+
+.error-message {
+  color: $govuk-error-colour;
+}

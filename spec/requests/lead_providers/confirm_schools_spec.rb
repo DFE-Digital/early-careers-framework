@@ -78,7 +78,8 @@ RSpec.describe "Lead Provider confirmation of schools", type: :request do
       )
     end
 
-    it "schedules partnership notifications" do
+    # TODO: ECF-RP-564: reenable
+    xit "schedules partnership notifications" do
       post "/lead-providers/report-schools/confirm"
 
       schools.each do |school|

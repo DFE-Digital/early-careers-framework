@@ -31,8 +31,8 @@ RSpec.describe "LeadProviders::PartnershipCsvUploads", type: :request do
     end
 
     context "with csv file selected" do
-      it "creates the partnership_csv_upload and redirects to csv processing page" do
-        allow_any_instance_of(ActionDispatch::Request).to receive(:session) { { delivery_partner_id: delivery_partner.id } }
+      it "creates the partnership_csv_upload and redirects to csv error page" do
+        set_session(:delivery_partner_id, delivery_partner.id)
         form_params = {
           partnership_csv_upload: {
             csv: Rack::Test::UploadedFile.new(file_fixture("school_urns.csv"), "text/csv"),
@@ -40,11 +40,39 @@ RSpec.describe "LeadProviders::PartnershipCsvUploads", type: :request do
         }
         post lead_providers_report_schools_partnership_csv_uploads_path, params: form_params
 
-        expect(response).to redirect_to error_page_lead_providers_report_schools_partnership_csv_uploads_path
+        expect(response).to redirect_to errors_lead_providers_report_schools_partnership_csv_uploads_path
         expect(PartnershipCsvUpload.count).to eq 1
         expect(PartnershipCsvUpload.last.lead_provider_id).to eq(user.lead_provider_profile.lead_provider.id)
         expect(PartnershipCsvUpload.last.delivery_partner_id).to eq(delivery_partner.id)
       end
+
+      it "redirects to the confirm page when there are no errors" do
+        schools = create_list(:school, 5)
+        file = Tempfile.new
+        file.write(schools.map(&:urn).join("\n"))
+        file.close
+        set_session(:delivery_partner_id, delivery_partner.id)
+        form_params = {
+          partnership_csv_upload: {
+            csv: Rack::Test::UploadedFile.new(File.open(file), "text/csv", original_filename: "test.csv"),
+          },
+        }
+        post lead_providers_report_schools_partnership_csv_uploads_path, params: form_params
+
+        expect(response).to redirect_to lead_providers_report_schools_confirm_schools_path
+      end
+    end
+  end
+
+  describe "GET /lead-providers/partnership-csv-uploads/errors" do
+    before do
+      upload = create(:partnership_csv_upload, :with_csv)
+      set_session(:partnership_csv_upload_id, upload.id)
+    end
+
+    it "renders the errors template" do
+      get errors_lead_providers_report_schools_partnership_csv_uploads_path
+      expect(response).to render_template("lead_providers/partnership_csv_uploads/errors")
     end
   end
 end
