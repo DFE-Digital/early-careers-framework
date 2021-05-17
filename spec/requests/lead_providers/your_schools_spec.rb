@@ -29,6 +29,7 @@ RSpec.describe "Your schools", type: :request do
     it "should show the list of schools for the current cohort" do
       get lead_providers_your_schools_path
       expect(assigns(:selected_cohort)).to eq cohort
+      expect(assigns(:total_provider_schools)).to eq schools.size
       expect(assigns(:schools)).to match_array schools
       expect(assigns(:schools)).not_to include not_this_cohort_school
     end

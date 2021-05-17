@@ -14,7 +14,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">Your schools</h1>
-    <%= govuk_link_to 'Confirm more schools', start_lead_providers_report_schools_path, button: true %>
+    <%= govuk_link_to "Report schools you’ve recruited", start_lead_providers_report_schools_path, button: true %>
   </div>
 </div>
 
@@ -26,42 +26,70 @@
   <% end %>
 <% end %>
 
-<div class="search-container">
-  <%= form_with method: :get do |f| %>
-    <div class="school-search">
-      <div class="school-search__input">
-        <%= f.govuk_text_field(
-              :query,
-              value: @query,
-              label: { text: "Search #{@selected_cohort.start_year} schools", size: "s" },
-            )
-        %>
-      </div>
-      <%= f.govuk_submit "Search", classes: "school-search__button", "data-test": "search-button" %>
+<div class="govuk-grid-row govuk-!-margin-bottom-6">
+  <div class="govuk-grid-column-one-third">
+    <div class="dashboard-numbers key-number">
+      <p class="govuk-heading-xl">
+        3000
+      </p>
+      <p class="govuk-heading-s">Recruitment target</p>
     </div>
-  <% end %>
+  </div>
+  <div class="govuk-grid-column-one-third">
+    <div class="dashboard-numbers">
+      <p class="govuk-heading-xl"><%= @total_provider_schools %></p>
+      <p class="govuk-heading-s"><%= "School".pluralize(@total_provider_schools) %> recruited</p>
+    </div>
+  </div>
 </div>
 
-<table class="govuk-table">
-  <thead>
-    <tr class="govuk-table__row">
-      <th scope="col" class="govuk-table__header">School</th>
-      <th scope="col" class="govuk-table__header">URN</th>
-      <th scope="col" class="govuk-table__header">Delivery partner</th>
-      <th scope="col" class="govuk-table__header govuk-table__header--numeric">ECTs</th>
-      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Mentors</th>
-    </tr>
-  </thead>
-  <tbody class="govuk-table__body">
-    <% @schools.each do |school| %>
-      <tr class="govuk-table__row">
-        <td class="govuk-table__cell"><%= govuk_link_to school.name, admin_school_path(school) %></td>
-        <td class="govuk-table__cell"><%= school.urn %></td>
-        <td class="govuk-table__cell"><%= school.delivery_partner_for(@selected_cohort.start_year)&.name %></td>
-        <td class="govuk-table__cell govuk-table__cell--numeric"><%= school.early_career_teacher_profiles_for(@selected_cohort.start_year).count %></td>
-        <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
-      </tr>
+<% if @total_provider_schools.positive? %>
+  <div class="search-container">
+    <%= form_with method: :get do |f| %>
+      <div class="school-search">
+        <div class="school-search__input">
+          <%= f.govuk_text_field(
+            :query,
+            value: @query,
+            label: { text: "Search #{@selected_cohort.start_year} schools", size: "s" },
+          ) %>
+        </div>
+        <%= f.govuk_submit "Search", classes: "school-search__button", "data-test": "search-button" %>
+      </div>
     <% end %>
-  </tbody>
-</table>
-<%= govuk_paginate @schools %>
+  </div>
+
+  <% if @schools.count.zero? %>
+    <h2 class="govuk-heading-s govuk-!-margin-top-4">There are no matching results</h2>
+    <p class="govuk-body">Improve your search results by:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>double-checking your spelling</li>
+      <li>using fewer keywords</li>
+      <li>searching for something less specific</li>
+    </ul>
+  <% else %>
+    <table data-test="schools-table" class="govuk-table">
+      <thead>
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">School</th>
+          <th scope="col" class="govuk-table__header">URN</th>
+          <th scope="col" class="govuk-table__header">Delivery partner</th>
+          <th scope="col" class="govuk-table__header govuk-table__header--numeric">ECTs</th>
+          <th scope="col" class="govuk-table__header govuk-table__header--numeric">Mentors</th>
+        </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+        <% @schools.each do |school| %>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell"><%= govuk_link_to school.name, admin_school_path(school) %></td>
+            <td class="govuk-table__cell"><%= school.urn %></td>
+            <td class="govuk-table__cell"><%= school.delivery_partner_for(@selected_cohort.start_year)&.name %></td>
+            <td class="govuk-table__cell govuk-table__cell--numeric"><%= school.early_career_teacher_profiles_for(@selected_cohort.start_year).count %></td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <%= govuk_paginate @schools %>
+  <% end %>
+<% end %>

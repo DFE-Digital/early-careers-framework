@@ -40,3 +40,8 @@ Feature: Your schools flow
     And "page body" should contain "Ace Delivery Partner"
     And the table should have 3 rows
 
+    When I clear "search box"
+    And I type "banana" into "search box"
+    And I click on "search button"
+    Then "page body" should contain "There are no matching results"
+    And "schools table" should not exist
