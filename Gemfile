@@ -30,7 +30,7 @@ gem "pg", ">= 0.18", "< 2.0"
 gem "ar-uuid", "~> 0.2.1"
 
 # Use Puma as the app server
-gem "puma", "~> 5.0"
+gem "puma", "~> 5.3", ">= 5.3.1"
 
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
 gem "webpacker", ">= 5.2.1"
@@ -86,6 +86,8 @@ end
 
 # S3 adapter for active storage
 gem "aws-sdk-s3", require: false
+
+gem "activerecord-session_store"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

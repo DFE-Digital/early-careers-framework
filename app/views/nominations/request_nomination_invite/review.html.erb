@@ -8,8 +8,8 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-l">Confirm your details</h1>
     <p class="govuk-body govuk-!-margin-bottom-7">
-      An email will be sent to your school with a link to nominate an induction lead or tutor.
-    </p>
+      We will send a link to the email address your school has listed on our register, <%= govuk_link_to "Get information about schools", "https://www.get-information-schools.service.gov.uk/" %></p>
+   <p class="govuk-body govuk-!-margin-bottom-7">Your school will follow this link to nominate an induction lead or tutor.</p>
 
     <div class="govuk-!-margin-bottom-9">
       <%= render partial: 'nominations/school_details', locals: { school: @nomination_request_form.school, title: "Your school" } %>
