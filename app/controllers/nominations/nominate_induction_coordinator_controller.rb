@@ -14,7 +14,7 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
     else
       load_nominate_induction_tutor_form
       @nominate_induction_tutor_form.token = token
-      session[:nominate_induction_tutor_form] = @nominate_induction_tutor_form
+      session[:nominate_induction_tutor_form] = @nominate_induction_tutor_form.as_json
     end
   end
 
