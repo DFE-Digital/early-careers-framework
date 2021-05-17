@@ -14,6 +14,6 @@ FactoryBot.define do
   end
 
   trait :pending do
-    started_at { 2.weeks.from_now }
+    pending { true }
   end
 end

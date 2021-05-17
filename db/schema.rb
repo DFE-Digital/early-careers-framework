@@ -247,12 +247,12 @@ ActiveRecord::Schema.define(version: 2021_05_14_100703) do
     t.datetime "challenged_at"
     t.string "challenge_reason"
     t.datetime "challenge_deadline"
-    t.datetime "started_at"
+    t.boolean "pending", default: false, null: false
     t.index ["cohort_id"], name: "index_partnerships_on_cohort_id"
     t.index ["delivery_partner_id"], name: "index_partnerships_on_delivery_partner_id"
     t.index ["lead_provider_id"], name: "index_partnerships_on_lead_provider_id"
+    t.index ["pending"], name: "index_partnerships_on_pending"
     t.index ["school_id"], name: "index_partnerships_on_school_id"
-    t.index ["started_at"], name: "index_partnerships_on_started_at"
   end
 
   create_table "privacy_policies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

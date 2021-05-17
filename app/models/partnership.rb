@@ -3,7 +3,6 @@
 class Partnership < ApplicationRecord
   CHALLENGE_WINDOW = 14.days.freeze
 
-  before_create :set_started_at
   before_create :set_challenge_deadline
 
   enum challenge_reason: {
@@ -38,18 +37,9 @@ class Partnership < ApplicationRecord
     challenge_deadline > Time.zone.now
   end
 
-  def pending?
-    !challenged? && started_at > Time.zone.now
-  end
-
-  scope :pending, -> { unchallenged.where(started_at: Time.zone.now..) }
-  scope :active, -> { unchallenged.where(started_at: ..Time.zone.now) }
+  scope :active, -> { unchallenged.where(pending: false) }
 
 private
-
-  def set_started_at
-    self.started_at ||= Time.zone.now
-  end
 
   def set_challenge_deadline
     self.challenge_deadline ||= Time.zone.now + CHALLENGE_WINDOW

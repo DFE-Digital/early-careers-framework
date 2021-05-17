@@ -15,7 +15,7 @@ class ConfirmSchoolsForm
                           cohort_id: cohort_id,
                           delivery_partner_id: delivery_partner_id,
                           lead_provider_id: lead_provider_id,
-                          started_at: Time.zone.now + Partnership::CHALLENGE_WINDOW,
+                          pending: true,
                         )
                       else
                         Partnership.create!(
