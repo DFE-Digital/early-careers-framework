@@ -24,6 +24,7 @@ Rails/UnknownEnv:
     - test
     - deployed_development
     - staging
+    - sandbox
 
 Naming/VariableNumber:
   EnforcedStyle: snake_case

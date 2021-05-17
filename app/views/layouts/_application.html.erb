@@ -98,6 +98,8 @@
               Beta
             <% elsif Rails.env.staging? %>
               Staging
+            <% elsif Rails.env.sandbox? %>
+              Sandbox
             <% else %>
               Development
             <% end %>
