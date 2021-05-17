@@ -32,10 +32,17 @@ RSpec.describe ConfirmSchoolsForm, type: :model do
         created_partnership = Partnership.order(:created_at).last
         expect(created_partnership.school).to eql schools.first
       end
+
+      it "creates a school cohort with FIP" do
+        expect { form.save! }.to change { SchoolCohort.count }.by(1)
+        created_school_cohort = SchoolCohort.order(:created_at).last
+        expect(created_school_cohort.school).to eql schools.first
+        expect(created_school_cohort.induction_programme_choice).to eql "full_induction_programme"
+      end
     end
 
     context "when the school has chosen FIP" do
-      let(:school_cohort) { create(:school_cohort, cohort: cohort, induction_programme_choice: "full_induction_programme") }
+      let!(:school_cohort) { create(:school_cohort, cohort: cohort, induction_programme_choice: "full_induction_programme") }
       let(:schools) { [school_cohort.school] }
 
       it "creates a (not pending) partnership for the school" do
@@ -52,10 +59,14 @@ RSpec.describe ConfirmSchoolsForm, type: :model do
         expect(created_partnership.school).to eql schools.first
         expect(created_partnership.pending).to eql false
       end
+
+      it "does not create a school cohort" do
+        expect { form.save! }.not_to(change { SchoolCohort.count })
+      end
     end
 
     context "when the school has chosen CIP" do
-      let(:school_cohort) { create(:school_cohort, cohort: cohort, induction_programme_choice: "core_induction_programme") }
+      let!(:school_cohort) { create(:school_cohort, cohort: cohort, induction_programme_choice: "core_induction_programme") }
       let(:schools) { [school_cohort.school] }
 
       it "creates a pending partnership for the school" do
@@ -71,6 +82,10 @@ RSpec.describe ConfirmSchoolsForm, type: :model do
         created_partnership_request = Partnership.order(:created_at).last
         expect(created_partnership_request.school).to eql schools.first
         expect(created_partnership_request.pending).to eql true
+      end
+
+      it "does not create a school cohort" do
+        expect { form.save! }.not_to(change { SchoolCohort.count })
       end
     end
   end
