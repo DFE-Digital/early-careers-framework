@@ -1,5 +1,5 @@
 # Platform
-environment = "sandbox"
+environment = "sandbox-api"
 app_environment = "sandbox"
 
 # Gov.UK PaaS
