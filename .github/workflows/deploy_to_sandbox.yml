@@ -19,6 +19,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
       - name: Pin Terraform version
         uses: hashicorp/setup-terraform@v1.2.1
         with:

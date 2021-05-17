@@ -6,7 +6,9 @@ module Support
       respond_to :json
 
       def update
-        session[params[:key]] = params[:value]
+        value = params.require(:value)
+        value = value.to_unsafe_hash if value.respond_to?(:to_unsafe_hash)
+        session[params[:key]] = value
       end
     end
 
