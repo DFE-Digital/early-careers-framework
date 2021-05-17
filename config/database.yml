@@ -14,6 +14,10 @@ development:
   <<: *default
   database: 'early_careers_framework_development'
 
+sandbox:
+  <<: *default
+  database: 'early_careers_framework_sandbox'
+
 test:
   <<: *default
   database: 'early_careers_framework_test'
