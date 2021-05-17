@@ -13,7 +13,12 @@ Rails.application.routes.draw do
   get "/pages/:page", to: "pages#show", as: :page
   get "check" => "application#check"
 
-  root "start#index"
+  if Rails.env.sandbox?
+    root "sandbox#show"
+  else
+    root "start#index"
+  end
+
   get "/check-account", to: "check_account#show"
 
   resource :cookies, only: %i[show update]
