@@ -19,10 +19,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: setup-inputs
-        run: |
-          echo "ENVIRONMENT=sandbox-api" >> $GITHUB_ENV
-
       - name: Checkout code
         uses: actions/checkout@v2
 
