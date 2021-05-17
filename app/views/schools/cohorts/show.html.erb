@@ -11,16 +11,13 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-3"><%= @cohort.start_year %> cohort</h1>
-
-    <p class="govuk-body-l govuk-!-margin-bottom-8">
+    <h1 class="govuk-heading-xl">
     <% if @school_cohort.core_induction_programme? %>
-      Use DfE accredited materials
+      <%= @cohort.start_year %> cohort: use DfE accredited materials
     <% else %>
-      Use an approved training provider
+      <%= @cohort.start_year %> cohort: use an approved training provider
     <% end %>
-    </p>
-
+</h1>
     <ol class="app-task-list">
       <li>
         <h2 class="app-task-list__section">
