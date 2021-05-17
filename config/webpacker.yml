@@ -87,7 +87,7 @@ production: &production
   # Cache manifest.json for performance
   cache_manifest: true
 
-deployed_sandbox:
+sandbox:
   <<: *production
 
 deployed_development:
