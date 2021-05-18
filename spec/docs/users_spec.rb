@@ -3,7 +3,9 @@
 require "swagger_helper"
 
 describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
-  let(:Authorization) { "token" }
+  let(:token) { EngageAndLearnApiToken.create_with_random_token! }
+  let(:bearer_token) { "Bearer #{token}" }
+  let(:Authorization) { bearer_token }
 
   path "/api/v1/users" do
     get "Returns all users" do
@@ -37,6 +39,11 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
                  },
                }
 
+        run_test!
+      end
+
+      response "401", "Unauthorized" do
+        let(:Authorization) { "Bearer invalid" }
         run_test!
       end
     end
