@@ -1,7 +1,7 @@
 <% if @school_cohort.core_induction_programme? %>
-<% content_for :title, "Next steps - using materials" %>
+  <% content_for :title, "Next steps - using materials" %>
 <% else %>
-<% content_for :title, "Next steps - training provider" %>
+  <% content_for :title, "Next steps - training provider" %>
 <% end %>
 
 <% content_for :before_content, govuk_back_link(
@@ -12,12 +12,12 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">
-    <% if @school_cohort.core_induction_programme? %>
-      <%= @cohort.start_year %> cohort: use DfE accredited materials
-    <% else %>
-      <%= @cohort.start_year %> cohort: use an approved training provider
-    <% end %>
-</h1>
+      <% if @school_cohort.core_induction_programme? %>
+        <%= @cohort.start_year %> cohort: use DfE accredited materials
+      <% else %>
+        <%= @cohort.start_year %> cohort: use an approved training provider
+      <% end %>
+    </h1>
     <ol class="app-task-list">
       <li>
         <h2 class="app-task-list__section">
@@ -37,7 +37,7 @@
             <li class="app-task-list__item">
               <span class="app-task-list__task-name">
                 <%= govuk_link_to "Choose your training materials",
-                  @school_cohort.core_induction_programme_id ? schools_cohort_core_programme_materials_path(@cohort.start_year) : info_schools_cohort_core_programme_materials_path(@cohort.start_year) %>
+                                  @school_cohort.core_induction_programme_id ? schools_cohort_core_programme_materials_path(@cohort.start_year) : info_schools_cohort_core_programme_materials_path(@cohort.start_year) %>
               </span>
 
               <%= render AutoTagComponent.new(text: @school_cohort.choose_training_materials_status) %>
