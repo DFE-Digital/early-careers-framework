@@ -116,6 +116,10 @@ group :development, :test do
   gem "multi_json"
   gem "open_api-rswag-specs", ">= 0.1.0"
   gem "rswag", ">= 2.4.0"
+
+  # Automatic re-run of tests
+  gem "guard"
+  gem "guard-rspec", require: false
 end
 
 group :development do
@@ -135,9 +139,11 @@ group :test do
   gem "jsonapi-rspec"
   gem "pundit-matchers", "~> 1.6.0"
   gem "rails-controller-testing", ">= 1.0.5"
+  gem "require_all"
   gem "rspec-default_http_header"
   gem "shoulda-matchers", "~> 4.4"
   gem "simplecov"
+  gem "turnip"
   gem "webdrivers", "~> 4.4", ">= 4.4.1"
   gem "webmock"
 end

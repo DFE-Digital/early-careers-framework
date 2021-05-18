@@ -24,7 +24,7 @@ Support for Gherkin syntax rspec tests is provided by [turnip](https://github.co
 ## Architecture Decision Records
 
 * There is a cross-project ADR at <https://github.com/DFE-Digital/cpd-adr>
-* This project's ADR is in [doc/adr/](doc/adr/)
+* This project's ADR is in [documentation/adr/](documentation/adr/)
 
 ### Naming
 
