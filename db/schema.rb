@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_13_103622) do
+ActiveRecord::Schema.define(version: 2021_05_18_103603) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -120,6 +120,14 @@ ActiveRecord::Schema.define(version: 2021_05_13_103622) do
     t.index ["core_induction_programme_id"], name: "index_ect_profiles_on_core_induction_programme_id"
     t.index ["school_id"], name: "index_early_career_teacher_profiles_on_school_id"
     t.index ["user_id"], name: "index_early_career_teacher_profiles_on_user_id"
+  end
+
+  create_table "engage_and_learn_api_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "hashed_token", null: false
+    t.datetime "last_used_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["hashed_token"], name: "index_engage_and_learn_api_tokens_on_hashed_token", unique: true
   end
 
   create_table "induction_coordinator_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
