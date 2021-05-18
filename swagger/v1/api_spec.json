@@ -87,26 +87,42 @@
             "description": "Collection of users.",
             "schema": {
               "type": "object",
+              "required": [
+                "data"
+              ],
               "properties": {
-                "users": {
+                "data": {
                   "type": "array",
                   "items": {
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "type",
+                      "attributes"
+                    ],
                     "properties": {
                       "id": {
                         "type": "string"
                       },
-                      "email": {
+                      "type": {
                         "type": "string"
                       },
-                      "full_name": {
-                        "type": "string"
+                      "attributes": {
+                        "type": "object",
+                        "required": [
+                          "email",
+                          "full_name"
+                        ],
+                        "properties": {
+                          "email": {
+                            "type": "string"
+                          },
+                          "full_name": {
+                            "type": "string"
+                          }
+                        }
                       }
-                    },
-                    "required": [
-                      "id",
-                      "email",
-                      "full_name"
-                    ]
+                    }
                   }
                 }
               }

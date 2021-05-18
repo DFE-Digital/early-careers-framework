@@ -76,6 +76,8 @@ gem "delayed_job_active_record"
 # Acts as State Machine for participant states
 gem "aasm"
 
+gem "jsonapi-serializer"
+
 # OpenApi Swagger
 gem "open_api-rswag-api", ">= 0.1.0"
 gem "open_api-rswag-ui", ">= 0.1.0"

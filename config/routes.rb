@@ -8,12 +8,18 @@ Rails.application.routes.draw do
   devise_scope :user do
     get "/users/confirm_sign_in", to: "users/sessions#redirect_from_magic_link"
     post "/users/sign_in_with_token", to: "users/sessions#sign_in_with_token"
+    get "/users/link-invalid", to: "users/sessions#link_invalid"
   end
 
   get "/pages/:page", to: "pages#show", as: :page
   get "check" => "application#check"
 
-  root "start#index"
+  if Rails.env.sandbox?
+    root "sandbox#show"
+  else
+    root "start#index"
+  end
+
   get "/check-account", to: "check_account#show"
 
   resource :cookies, only: %i[show update]
@@ -35,7 +41,7 @@ Rails.application.routes.draw do
 
     namespace :v1 do
       resources :early_career_teacher_participants, only: %i[create], path: "early-career-teacher-participants"
-      resources :users, only: :index unless Rails.env.staging? || Rails.env.production?
+      resources :users, only: :index unless %w[sandbox staging production].include?(Rails.env)
     end
   end
 

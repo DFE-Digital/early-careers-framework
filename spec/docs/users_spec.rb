@@ -9,24 +9,34 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
     get "Returns all users" do
       operationId :api_v1_user_index
       tags "user"
-      produces "application/json"
+      produces "application/vnd.api+json"
       security [bearerAuth: []]
 
       response "200", "Collection of users." do
         schema type: :object,
+               required: %w[data],
                properties: {
-                 users: {
+                 data: {
                    type: :array,
                    items: {
+                     type: :object,
+                     required: %w[id type attributes],
                      properties: {
                        id: { type: :string },
-                       email: { type: :string },
-                       full_name: { type: :string },
+                       type: { type: :string },
+                       attributes: {
+                         type: :object,
+                         required: %w[email full_name],
+                         properties: {
+                           email: { type: :string },
+                           full_name: { type: :string },
+                         },
+                       },
                      },
-                     required: %w[id email full_name],
                    },
                  },
                }
+
         run_test!
       end
     end
