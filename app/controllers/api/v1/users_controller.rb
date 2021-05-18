@@ -4,7 +4,7 @@ module Api
   module V1
     class UsersController < Api::ApiController
       def index
-        render json: { users: User.all.as_json(only: %i[id email full_name]) }
+        render json: UserSerializer.new(User.all).serializable_hash.to_json
       end
     end
   end

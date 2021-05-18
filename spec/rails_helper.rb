@@ -44,6 +44,8 @@ end
 RSpec.configure do |config|
   config.include RSpec::DefaultHttpHeader, type: :request
 
+  config.include JSONAPI::RSpec
+
   config.before do
     Faker::Number.unique.clear
   end
