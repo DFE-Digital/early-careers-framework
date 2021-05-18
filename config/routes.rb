@@ -104,6 +104,8 @@ Rails.application.routes.draw do
     resources :schools, only: %i[index show] do
       resources :induction_coordinators, controller: "schools/induction_coordinators", only: %i[new create edit update], path: "induction-coordinators" do
         collection do
+          get "choose-replace-or-update", action: :choose_replace_or_update
+          post "replace-or-update", action: :replace_or_update
           get "email-used", action: :email_used
         end
       end

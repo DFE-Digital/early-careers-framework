@@ -25,6 +25,23 @@ module Admin
       redirect_to email_used_admin_school_induction_coordinators_path
     end
 
+    def choose_replace_or_update
+      @replace_or_update_tutor_form = ReplaceOrUpdateTutorForm.new
+    end
+
+    def replace_or_update
+      @replace_or_update_tutor_form = ReplaceOrUpdateTutorForm.new(replace_or_update_params)
+      if @replace_or_update_tutor_form.valid?
+        if @replace_or_update_tutor_form.replace_tutor?
+          redirect_to new_admin_school_induction_coordinator_path(@school)
+        else
+          redirect_to edit_admin_school_induction_coordinator_path(id: @school.id)
+        end
+      else
+        render "choose_replace_or_update"
+      end
+    end
+
     def edit
       @induction_tutor = school_induction_tutor
     end
@@ -51,6 +68,10 @@ module Admin
 
     def form_params
       params.require(:tutor_details).permit(:full_name, :email)
+    end
+
+    def replace_or_update_params
+      params.require(:replace_or_update_tutor_form).permit(:choice)
     end
   end
 end

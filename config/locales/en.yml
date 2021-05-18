@@ -53,6 +53,10 @@ en:
               <<: *email_error_messages
             full_name:
               <<: *full_name_error_messages
+        replace_or_update_tutor_form:
+          attributes:
+            choice:
+              blank: "Choose whether to replace or update the tutor"
   activerecord:
     errors:
       models:
