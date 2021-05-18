@@ -40,7 +40,7 @@ Rails.application.routes.draw do
 
     namespace :v1 do
       resources :early_career_teacher_participants, only: %i[create], path: "early-career-teacher-participants"
-      resources :users, only: :index unless %w[sandbox staging production].include?(Rails.env)
+      resources :users, only: :index
     end
   end
 
