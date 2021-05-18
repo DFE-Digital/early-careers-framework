@@ -6,16 +6,10 @@
 
     <h2 class="govuk-heading-m">What happens next</h2>
     <ul class="govuk-list govuk-list--bullet">
-      <li>your school will receive an email with a link to nominate an induction tutor</li>
-      <li>this link will expire in 21 days</li>
+      <li>sent to the email address your school has listed on our register, <%= govuk_link_to "Get information about schools", "https://www.get-information-schools.service.gov.uk/" %></li>
       <li>
-        we cannot disclose the email address. It will be an administration email, for example, office@, admin@ or head@
+        your school must follow this link to nominate an induction lead or tutor
       </li>
-      <li>
-        if your school does not receive this email, ensure your school email address is correct on our register,
-        <%= govuk_link_to "Get information about schools", "https://www.get-information-schools.service.gov.uk/" %>
-      </li>
-      <li>if your school does not receive this email, contact: <%= render MailToSupportComponent.new %></li>
     </ul>
   </div>
 </div>

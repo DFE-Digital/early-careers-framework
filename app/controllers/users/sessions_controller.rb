@@ -10,6 +10,16 @@ class Users::SessionsController < Devise::SessionsController
   before_action :redirect_to_dashboard, only: %i[sign_in_with_token redirect_from_magic_link]
   before_action :ensure_login_token_valid, only: %i[sign_in_with_token redirect_from_magic_link]
 
+  def new
+    super do
+      if flash.present?
+        flash.clear
+        resource.valid?
+        resource.errors.delete(:full_name)
+      end
+    end
+  end
+
   def create
     super
   rescue Devise::Strategies::PasswordlessAuthenticatable::Error
@@ -26,6 +36,10 @@ class Users::SessionsController < Devise::SessionsController
     @login_token = params[:login_token] if params[:login_token].present?
   end
 
+  def signed_out; end
+
+  def link_invalid; end
+
 private
 
   def redirect_to_dashboard
@@ -36,8 +50,7 @@ private
     @user = User.find_by(login_token: params[:login_token])
 
     if @user.blank? || login_token_expired?
-      flash[:alert] = "There was an error while logging you in. Please enter your email again."
-      redirect_to new_user_session_path
+      redirect_to users_link_invalid_path
     end
   end
 
