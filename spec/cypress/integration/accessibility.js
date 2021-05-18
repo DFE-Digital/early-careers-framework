@@ -53,4 +53,10 @@ describe("Accessibility", () => {
     cy.checkA11y();
     cy.percySnapshot("Logout page");
   });
+
+  it("Login link invalid page should be accessible", () => {
+    cy.visit("/users/link-invalid");
+    cy.checkA11y();
+    cy.percySnapshot();
+  });
 });
