@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_18_103603) do
+ActiveRecord::Schema.define(version: 2021_05_18_143026) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -52,6 +52,17 @@ ActiveRecord::Schema.define(version: 2021_05_18_103603) do
     t.datetime "discarded_at"
     t.index ["discarded_at"], name: "index_admin_profiles_on_discarded_at"
     t.index ["user_id"], name: "index_admin_profiles_on_user_id"
+  end
+
+  create_table "api_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "lead_provider_id"
+    t.string "hashed_token", null: false
+    t.datetime "last_used_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "type", default: "LeadProviderApiToken"
+    t.index ["hashed_token"], name: "index_api_tokens_on_hashed_token", unique: true
+    t.index ["lead_provider_id"], name: "index_api_tokens_on_lead_provider_id"
   end
 
   create_table "cohorts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -122,14 +133,6 @@ ActiveRecord::Schema.define(version: 2021_05_18_103603) do
     t.index ["user_id"], name: "index_early_career_teacher_profiles_on_user_id"
   end
 
-  create_table "engage_and_learn_api_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "hashed_token", null: false
-    t.datetime "last_used_at"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["hashed_token"], name: "index_engage_and_learn_api_tokens_on_hashed_token", unique: true
-  end
-
   create_table "induction_coordinator_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -146,16 +149,6 @@ ActiveRecord::Schema.define(version: 2021_05_18_103603) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["induction_coordinator_profile_id"], name: "index_icp_schools_on_icp"
     t.index ["school_id"], name: "index_icp_schools_on_schools"
-  end
-
-  create_table "lead_provider_api_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "lead_provider_id", null: false
-    t.string "hashed_token", null: false
-    t.datetime "last_used_at"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["hashed_token"], name: "index_lead_provider_api_tokens_on_hashed_token", unique: true
-    t.index ["lead_provider_id"], name: "index_lead_provider_api_tokens_on_lead_provider_id"
   end
 
   create_table "lead_provider_cips", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -435,6 +428,7 @@ ActiveRecord::Schema.define(version: 2021_05_18_103603) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "admin_profiles", "users"
+  add_foreign_key "api_tokens", "lead_providers", on_delete: :cascade
   add_foreign_key "cohorts_lead_providers", "cohorts"
   add_foreign_key "cohorts_lead_providers", "lead_providers"
   add_foreign_key "district_sparsities", "local_authority_districts"
@@ -443,7 +437,6 @@ ActiveRecord::Schema.define(version: 2021_05_18_103603) do
   add_foreign_key "early_career_teacher_profiles", "schools"
   add_foreign_key "early_career_teacher_profiles", "users"
   add_foreign_key "induction_coordinator_profiles", "users"
-  add_foreign_key "lead_provider_api_tokens", "lead_providers", on_delete: :cascade
   add_foreign_key "lead_provider_cips", "cohorts"
   add_foreign_key "lead_provider_cips", "core_induction_programmes"
   add_foreign_key "lead_provider_cips", "lead_providers"

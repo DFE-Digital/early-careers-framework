@@ -3,7 +3,7 @@
 require "rails_helper"
 
 class DummyController < Api::ApiController
-  include Api::LeadProviderAuthenticatable
+  include Api::ApiTokenAuthenticatable
 end
 
 describe DummyController, type: :controller do
