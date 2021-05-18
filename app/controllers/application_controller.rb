@@ -25,6 +25,10 @@ private
     stored_location_for(user) || helpers.profile_dashboard_path(user)
   end
 
+  def after_sign_out_path_for(_user)
+    users_signed_out_path
+  end
+
   def set_success_message(title: "Success", heading: "", content: "")
     flash[:success] = { title: title, heading: heading, content: content }
   end

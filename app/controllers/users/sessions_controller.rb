@@ -26,6 +26,8 @@ class Users::SessionsController < Devise::SessionsController
     @login_token = params[:login_token] if params[:login_token].present?
   end
 
+  def signed_out; end
+
 private
 
   def redirect_to_dashboard
