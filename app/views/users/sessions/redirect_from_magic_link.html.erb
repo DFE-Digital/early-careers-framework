@@ -1,8 +1,7 @@
 <% content_for :title, "Complete sign in" %>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-l">Sign in successful</h1>
-    <p class="govuk-body">Continue to your account for guidance, next steps and updates. </p>
+    <h1 class="govuk-heading-l">You are now signed in</h1>
     <%= form_tag(users_sign_in_with_token_path) do %>
       <div class="field">
         <%= hidden_field_tag :login_token, @login_token %>
