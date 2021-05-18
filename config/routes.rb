@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   devise_scope :user do
     get "/users/confirm_sign_in", to: "users/sessions#redirect_from_magic_link"
     post "/users/sign_in_with_token", to: "users/sessions#sign_in_with_token"
+    get "/users/signed-out", to: "users/sessions#signed_out"
     get "/users/link-invalid", to: "users/sessions#link_invalid"
   end
 

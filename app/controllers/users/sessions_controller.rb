@@ -36,6 +36,8 @@ class Users::SessionsController < Devise::SessionsController
     @login_token = params[:login_token] if params[:login_token].present?
   end
 
+  def signed_out; end
+
   def link_invalid; end
 
 private
