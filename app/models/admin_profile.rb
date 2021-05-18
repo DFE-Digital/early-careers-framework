@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-class AdminProfile < BaseProfile
+class AdminProfile < ApplicationRecord
+  has_paper_trail
+
   belongs_to :user
 
   def self.create_admin(full_name, email, sign_in_url)
