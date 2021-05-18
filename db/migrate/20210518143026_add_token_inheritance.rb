@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddTokenInheritance < ActiveRecord::Migration[6.1]
   def change
     change_table :lead_provider_api_tokens, bulk: true do |t|
