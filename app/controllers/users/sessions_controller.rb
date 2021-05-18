@@ -10,6 +10,16 @@ class Users::SessionsController < Devise::SessionsController
   before_action :redirect_to_dashboard, only: %i[sign_in_with_token redirect_from_magic_link]
   before_action :ensure_login_token_valid, only: %i[sign_in_with_token redirect_from_magic_link]
 
+  def new
+    super do
+      if flash.present?
+        flash.clear
+        resource.valid?
+        resource.errors.delete(:full_name)
+      end
+    end
+  end
+
   def create
     super
   rescue Devise::Strategies::PasswordlessAuthenticatable::Error
