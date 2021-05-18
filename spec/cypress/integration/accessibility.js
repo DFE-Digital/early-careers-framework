@@ -48,5 +48,9 @@ describe("Accessibility", () => {
     cy.get('[action="/users/sign_in_with_token"] [name="commit"]').click();
     cy.get("h1").should("contain", "User dashboard");
     cy.checkA11y();
+
+    cy.logout();
+    cy.checkA11y();
+    cy.percySnapshot("Logout page");
   });
 });
