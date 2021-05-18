@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-class LeadProviderProfile < BaseProfile
+class LeadProviderProfile < ApplicationRecord
+  has_paper_trail
+
   belongs_to :user
   belongs_to :lead_provider
 
