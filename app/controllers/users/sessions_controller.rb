@@ -26,6 +26,8 @@ class Users::SessionsController < Devise::SessionsController
     @login_token = params[:login_token] if params[:login_token].present?
   end
 
+  def link_invalid; end
+
 private
 
   def redirect_to_dashboard
@@ -36,8 +38,7 @@ private
     @user = User.find_by(login_token: params[:login_token])
 
     if @user.blank? || login_token_expired?
-      flash[:alert] = "There was an error while logging you in. Please enter your email again."
-      redirect_to new_user_session_path
+      redirect_to users_link_invalid_path
     end
   end
 
