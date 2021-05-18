@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe PartnershipCsvUpload, type: :model do
-  let!(:current_cohort) { create(:cohort, start_year: 2021) }
+  let!(:current_cohort) { create(:cohort, :current) }
   let(:valid_school) { create(:school) }
   let(:welsh_school) { create(:school, administrative_district_code: "W123", school_type_code: 30) }
   let(:closed_school) { create(:school, school_status_code: 2) }
@@ -150,8 +150,10 @@ private
     file = Tempfile.new
     file.write(urns.join("\n"))
     file.close
-    @subject = build(:partnership_csv_upload)
+    @subject = build(:partnership_csv_upload, cohort: current_cohort)
     @subject.csv.attach(io: File.open(file), filename: "test.csv", content_type: "text/csv")
     @subject.save!
+  ensure
+    file&.unlink
   end
 end

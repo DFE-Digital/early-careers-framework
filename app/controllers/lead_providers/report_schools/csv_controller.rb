@@ -16,6 +16,7 @@ module LeadProviders
 
         @partnership_csv_upload = PartnershipCsvUpload.new(
           upload_params.merge(
+            cohort_id: report_schools_form.cohort_id,
             lead_provider_id: current_user.lead_provider_profile.lead_provider.id,
             delivery_partner_id: report_schools_form.delivery_partner_id,
           ),
@@ -23,6 +24,7 @@ module LeadProviders
 
         if @partnership_csv_upload.save
           session[:partnership_csv_upload_id] = @partnership_csv_upload.id
+
           if @partnership_csv_upload.invalid_schools.empty?
             proceed
           else
