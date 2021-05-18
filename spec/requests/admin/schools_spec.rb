@@ -50,7 +50,7 @@ RSpec.describe "Admin::Schools", type: :request do
       get "/admin/schools/#{school.id}"
 
       expect(response).to render_template("admin/schools/show")
-      expect(response.body).to include(school.name)
+      expect(response.body).to include(CGI.escapeHTML(school.name))
       expect(response.body).to include("Add induction tutor")
     end
 
