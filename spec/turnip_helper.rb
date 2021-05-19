@@ -4,5 +4,5 @@
 
 include CurrencyParser
 
-Dir.glob("spec/steps/**/*steps.rb") { |f| load f, true }
-Dir.glob("spec/placeholders/**/*placeholder.rb") { |f| load f, true }
+Dir.glob("spec/**/turnip_steps/**/*steps.rb") { |f| load f, true }
+Dir.glob("spec/**/turnip_placeholders/**/*placeholder.rb") { |f| load f, true }
