@@ -28,3 +28,6 @@ User.find_or_create_by!(email: "school-leader@example.com") do |user|
     profile.update!(schools: [school])
   end
 end
+
+# We clear the database on a regular basis, but we want a stable token that E&L can use in its dev environments
+EngageAndLearnApiToken.find_or_create_by!(hashed_token: "f4a16cd7fc10918fbc7d869d7a83df36059bb98fac7c82502d797b1f1dd73e86")
