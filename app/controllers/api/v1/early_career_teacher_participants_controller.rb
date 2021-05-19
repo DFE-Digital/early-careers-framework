@@ -10,7 +10,9 @@ module Api
         return head :not_found unless params[:id]
 
         user = User.find(params[:id])
-        InductParticipant.call(user.early_career_teacher_profile)
+
+        return head :not_modified unless InductParticipant.call(user.early_career_teacher_profile)
+
         head :no_content
       end
     end

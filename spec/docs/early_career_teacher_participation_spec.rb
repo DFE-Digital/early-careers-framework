@@ -37,6 +37,15 @@ RSpec.describe "Early Career Teacher Participation", type: :request, swagger_doc
       }, description: "The unique id of the participant"
 
       response 204, "Successful" do
+        let(:fresh_user) { create(:user, :early_career_teacher) }
+        let(:params) { { "id" => fresh_user.id } }
+        run_test!
+      end
+
+      response 304, "Not Modified" do
+        before do
+          InductParticipant.call(user.early_career_teacher_profile)
+        end
         let(:params) { { "id" => user.id } }
         run_test!
       end
