@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :previous_url_for_cookies_page, except: :check
   before_action :check_privacy_policy_accepted, except: :check
-  before_action :set_sentry_user, except: :check
+  before_action :set_sentry_user, except: :check, unless: :devise_controller?
 
   def check
     render json: { status: "OK", version: release_version, sha: ENV["SHA"], environment: Rails.env }, status: :ok
