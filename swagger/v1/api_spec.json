@@ -59,6 +59,9 @@
           "204": {
             "description": "Successful"
           },
+          "304": {
+            "description": "Not Modified"
+          },
           "404": {
             "description": "Not Found"
           },
