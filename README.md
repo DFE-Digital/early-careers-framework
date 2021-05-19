@@ -135,3 +135,8 @@ bundle exec rake lead_provider:generate_token "name or id"
 ```
 
 Where `"name or id"` is a name or id from the `lead_providers` table.
+
+## Generating a token for E&L api
+1. Get into Rails console for the environment you want to generate the token for.
+2. Run `EngageAndLearnApiToken.create_with_random_token!`
+3. Rails console should output a string, that's your unhashed token, you can keep it and use it to access E&L endpoints.

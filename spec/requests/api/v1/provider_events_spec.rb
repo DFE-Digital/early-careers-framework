@@ -34,7 +34,7 @@ RSpec.describe "Early Career Teacher Participants", type: :request do
 
     context "when unauthorized" do
       it "returns 401 for invalid bearer token" do
-        default_headers[:Authorization] = "Bearer: ugLPicDrpGZdD_w7hhCL"
+        default_headers[:Authorization] = "Bearer ugLPicDrpGZdD_w7hhCL"
         post "/api/v1/early-career-teacher-participants", params: { id: payload.user_id }
         expect(response.status).to eq 401
       end

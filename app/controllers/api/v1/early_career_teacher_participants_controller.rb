@@ -3,8 +3,7 @@
 module Api
   module V1
     class EarlyCareerTeacherParticipantsController < Api::ApiController
-      include LeadProviderAuthenticatable
-      alias_method :current_user, :current_lead_provider
+      include ApiTokenAuthenticatable
       before_action :set_paper_trail_whodunnit
 
       def create
