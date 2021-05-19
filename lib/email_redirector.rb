@@ -1,20 +1,18 @@
 module EmailRedirector
   class << self
     def delivering_email(mail)
-      mail.header['personalisation'].unparsed_value[:_prefixes] = prefixes(mail)
+      add_default_personalisation(mail, :_tags, tags(mail))
       mail.to = target_email if enabled?
     end
 
   private
 
     def enabled?
-      return false
       !Rails.env.production? && !Rails.env.test? && target_email.present?
     end
 
-    def prefixes(mail)
-      return "" unless enabled?
-
+    def tags(mail)
+      return "\u200c" unless enabled?
       "[#{app_name} to:#{mail.to.join(',')}] "
     end
 
@@ -28,6 +26,10 @@ module EmailRedirector
 
     def target_email
       ENV['SEND_EMAILS_TO']
+    end
+
+    def add_default_personalisation(mail, key, value)
+      mail.header['personalisation'].unparsed_value[key] = value
     end
   end
 end
