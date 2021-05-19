@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require "payment_calculator/ecf/output_payment_per_participant"
+require "initialize_with_config"
+
 module PaymentCalculator
   module Ecf
     class OutputPaymentSchedule
@@ -31,7 +34,7 @@ module PaymentCalculator
       end
 
       def output_payment_per_participant
-        OutputPaymentPerParticipant.call(config)
+        ::PaymentCalculator::Ecf::OutputPaymentPerParticipant.call(config)
       end
     end
   end

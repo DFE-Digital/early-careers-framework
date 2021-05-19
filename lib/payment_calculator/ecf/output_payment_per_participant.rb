@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "initialize_with_config"
+
 module PaymentCalculator
   module Ecf
     class OutputPaymentPerParticipant

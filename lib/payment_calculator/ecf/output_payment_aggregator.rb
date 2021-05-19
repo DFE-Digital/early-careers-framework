@@ -1,6 +1,8 @@
 # frozen_string_literal: true
-require_relative 'output_payment_per_participant'
-require_relative 'output_payment_schedule'
+
+require "payment_calculator/ecf/output_payment_per_participant"
+require "payment_calculator/ecf/output_payment_schedule"
+require "initialize_with_config"
 
 module PaymentCalculator
   module Ecf

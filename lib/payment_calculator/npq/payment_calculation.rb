@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require "initialize_with_config"
+require "payment_calculator/npq/service_fees"
+require "payment_calculator/npq/output_payment"
+
 module PaymentCalculator
   module Npq
     class PaymentCalculation
