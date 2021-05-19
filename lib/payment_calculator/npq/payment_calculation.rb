@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-require_relative 'service_fees'
-require_relative 'output_payments'
 
 module PaymentCalculator
   module Npq

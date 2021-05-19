@@ -17,10 +17,9 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 #
 
-require "aasm/rspec"
+require_relative "../lib/payment_calculator"
 
-# payment calculation code
-require "initialize_with_config"
+require "aasm/rspec"
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
