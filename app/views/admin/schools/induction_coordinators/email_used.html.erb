@@ -6,7 +6,12 @@
       That email address is already associated with another school
     </h1>
 
-    <p class="govuk-body"> The email address <%= govuk_mail_to @email_address, @email_address %> is already used by a user at <%= govuk_link_to @another_school.name, admin_school_path(@another_school) %></p>
+    <% if @another_school.present? %>
+      <p class="govuk-body">The email address <%= govuk_mail_to @email_address, @email_address %> is already used by a user at <%= govuk_link_to @another_school.name, admin_school_path(@another_school) %></p>
+    <% else %>
+      <p class="govuk-body">The email address <%= govuk_mail_to @email_address, @email_address %> is already in use</p>
+    <% end %>
+
     <p>You need to use a different email address.</p>
     <%= govuk_link_to "Change email address",  new_admin_school_induction_coordinator_path(@school), button: true %>
   </div>
