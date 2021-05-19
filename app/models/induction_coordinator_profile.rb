@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
-class InductionCoordinatorProfile < BaseProfile
+class InductionCoordinatorProfile < ApplicationRecord
+  has_paper_trail
+
   belongs_to :user
-  has_and_belongs_to_many :schools
+  has_many :induction_coordinator_profiles_schools, dependent: :destroy
+  has_many :schools, through: :induction_coordinator_profiles_schools
 
   def self.create_induction_coordinator(full_name, email, school, start_url)
     ActiveRecord::Base.transaction do

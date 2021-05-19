@@ -17,7 +17,7 @@ class NominateInductionTutorForm
   end
 
   def save!
-    raise UserExistsError if User.with_discarded.exists?(email: email)
+    raise UserExistsError if User.exists?(email: email)
 
     InductionCoordinatorProfile.create_induction_coordinator(
       full_name,
