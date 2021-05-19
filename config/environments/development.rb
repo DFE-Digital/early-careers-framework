@@ -26,7 +26,7 @@ Rails.application.configure do
   config.gias_api_password = ENV["GIAS_API_PASSWORD"]
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
 
   config.action_mailer.notify_settings = {
     api_key: ENV.fetch("GOVUK_NOTIFY_API_KEY"),
