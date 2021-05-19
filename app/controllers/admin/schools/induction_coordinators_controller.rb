@@ -16,14 +16,50 @@ module Admin
       @nominate_induction_tutor_form = NominateInductionTutorForm.new(
         form_params.merge(school_id: params[:school_id]),
       )
-      render :new and return unless @nominate_induction_tutor_form.valid?
+      # render :new and return unless @nominate_induction_tutor_form.valid?
 
-      @nominate_induction_tutor_form.save!
-      set_success_message(content: "New induction tutor added. They will get an email with next steps.", title: "Success")
-      redirect_to admin_school_path(@school)
-    rescue UserExistsError
-      redirect_to email_used_admin_school_induction_coordinators_path
+      if @nominate_induction_tutor_form.valid?
+        if email_already_used?(@nominate_induction_tutor_form.email)
+          @email_address = @nominate_induction_tutor_form.email
+          @another_school = school_using_this_email(@email_address)
+          render "email_used"
+        else
+          create_school_induction_tutor!(school: @school,
+                                         email: @nominate_induction_tutor_form.email,
+                                         full_name: @nominate_induction_tutor_form.full_name)
+          set_success_message(content: "New induction tutor added. They will get an email with next steps.", title: "Success")
+          redirect_to admin_school_path(@school)
+        end
+      else
+        render :new
+      end
     end
+
+    def create_school_induction_tutor!(school:, email:, name:)
+      school.induction_coordinators.first.destroy! if school.induction_coordinators.first
+
+      InductionCoordinatorProfile.create_induction_coordinator(
+        name,
+        email,
+        school,
+        Rails.application.routes.url_helpers.root_url(host: Rails.application.config.domain),
+      )
+    end
+
+    def school_using_this_email(email)
+      User.find_by(email: email).schools.first
+    end
+
+    def email_already_used?(email)
+      User.exists?(email: email)
+    end
+
+    #   @nominate_induction_tutor_form.save!
+    #   set_success_message(content: "New induction tutor added. They will get an email with next steps.", title: "Success")
+    #   redirect_to admin_school_path(@school)
+    # rescue UserExistsError
+    #   redirect_to email_used_admin_school_induction_coordinators_path
+    # end
 
     def choose_replace_or_update
       @replace_or_update_tutor_form = ReplaceOrUpdateTutorForm.new

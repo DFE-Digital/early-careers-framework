@@ -17,8 +17,8 @@ class ReplaceOrUpdateTutorForm
 
   def choices
     [
-      OpenStruct.new(id: "replace", name: "Replace tutor with someone new"),
-      OpenStruct.new(id: "update", name: "Update tutor’s details"),
+      OpenStruct.new(id: "replace", name: "Replace induction tutor with someone new"),
+      OpenStruct.new(id: "update", name: "Update induction tutor’s details"),
     ]
   end
 end
