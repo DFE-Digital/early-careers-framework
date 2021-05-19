@@ -116,10 +116,6 @@ group :development, :test do
   gem "multi_json"
   gem "open_api-rswag-specs", ">= 0.1.0"
   gem "rswag", ">= 2.4.0"
-
-  # Automatic re-run of tests
-  gem "guard"
-  gem "guard-rspec", require: false
 end
 
 group :development do

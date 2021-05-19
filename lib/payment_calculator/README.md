@@ -19,8 +19,6 @@ The definitions of the calculations and the example calculations being tested ca
 
 Support for Gherkin syntax rspec tests is provided by [turnip](https://github.com/jnicklas/turnip).
 
-[Guard](https://github.com/guard/guard) is configured to automatically run tests. Start guard with `bundle exec guard`.
-
 ## Architecture Decision Records
 
 * There is a cross-project ADR at <https://github.com/DFE-Digital/cpd-adr>
