@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "meta"
 require "active_support"
 require "active_support/core_ext"
 
 module InitializeWithConfig
-  include ::Meta
   attr_accessor :config
 
   class << self
@@ -21,12 +19,15 @@ module InitializeWithConfig
   end
 
 private
-
   def initialize(config)
     self.config = config.is_a?(Hash) ? OpenStruct.new(config) : config
     config.each do |key, value|
-      meta_def(key) { value } unless allow_override? && respond_to?(key)
+      auto_define(key) { value } unless allow_override? && respond_to?(key)
     end
+  end
+
+  def auto_define(key, &value)
+    singleton_class.instance_eval { define_method key, &value }
   end
 
   def allow_override?
