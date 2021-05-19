@@ -22,7 +22,7 @@ require "aasm/rspec"
 
 # payment calculation code
 require_relative "../lib/initialize_with_config"
-require_all "lib/services"
+require_all "lib/payment_calculator"
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

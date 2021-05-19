@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Services::Npq::PaymentCalculation do
+describe PaymentCalculator::Npq::PaymentCalculation do
   let(:config) do
     {
       recruitment_target: 2000,
@@ -25,7 +25,7 @@ describe Services::Npq::PaymentCalculation do
   end
 
   describe "#service_fee_schedule" do
-    let(:result) { Services::Npq::PaymentCalculation.call(config) }
+    let(:result) { PaymentCalculator::Npq::PaymentCalculation.call(config) }
 
     it "includes config in the output" do
       expect(result[:input]).to eq(config)

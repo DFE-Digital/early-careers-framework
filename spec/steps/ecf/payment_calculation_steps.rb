@@ -31,7 +31,7 @@ module PaymentCalculationSteps
       band_a: @band_a,
       retained_participants: @retention_table&.reduce({}) { |res, hash| res.merge({ hash[:payment_type] => hash[:retained_participants] }) },
     }
-    calculator = Services::Ecf::PaymentCalculation.new(config)
+    calculator = PaymentCalculator::Ecf::PaymentCalculation.new(config)
     @result = calculator.call
   end
 

@@ -67,7 +67,7 @@ module PaymentCalculationSteps
       per_participant_price: @price_per_participant,
       retention_points: retention_points,
     }
-    Services::Npq::PaymentCalculation.call(config)
+    PaymentCalculator::Npq::PaymentCalculation.call(config)
   end
 
   step "expected output payments should be as above" do

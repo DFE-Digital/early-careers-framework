@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Services
+module PaymentCalculator
   module Npq
     class ServiceFees
       include InitializeWithConfig

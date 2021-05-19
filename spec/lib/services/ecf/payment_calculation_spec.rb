@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ::Services::Ecf::PaymentCalculation do
+describe ::PaymentCalculator::Ecf::PaymentCalculation do
   let(:config) do
     {
       recruitment_target: 2000,
@@ -15,7 +15,7 @@ describe ::Services::Ecf::PaymentCalculation do
       },
     }
   end
-  let(:result) { ::Services::Ecf::PaymentCalculation.call(config) }
+  let(:result) { ::PaymentCalculator::Ecf::PaymentCalculation.call(config) }
 
   it "returns BigDecimal for all money outputs" do
     expect(result.dig(:output, :service_fees, :service_fee_per_participant)).to be_a(BigDecimal)
