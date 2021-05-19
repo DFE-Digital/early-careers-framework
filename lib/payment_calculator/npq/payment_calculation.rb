@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require_relative 'service_fees'
+require_relative 'output_payments'
 
 module PaymentCalculator
   module Npq
@@ -9,8 +11,8 @@ module PaymentCalculator
         {
           input: config.to_h,
           output: {
-            service_fees: ServiceFees.call(config),
-            output_payment: OutputPayment.call(config),
+            service_fees: ::PaymentCalculator::Npq::ServiceFees.call(config),
+            output_payment: ::PaymentCalculator::Npq::OutputPayment.call(config),
           },
         }
       end

@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require_relative 'service_fees'
+require_relative 'output_payment_aggregator'
 
 module PaymentCalculator
   module Ecf
@@ -9,8 +11,8 @@ module PaymentCalculator
         {
           input: config.to_h,
           output: {
-            service_fees: ServiceFees.call(config),
-            output_payment: OutputPaymentAggregator.call(config),
+            service_fees: ::PaymentCalculator::Ecf::ServiceFees.call(config),
+            output_payment: ::PaymentCalculator::Ecf::OutputPaymentAggregator.call(config),
           },
         }
       end

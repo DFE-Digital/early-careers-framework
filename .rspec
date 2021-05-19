@@ -1,3 +1,5 @@
 --require rails_helper
 --require spec_helper
 --require turnip/rspec
+--require payment_calculator/ecf/payment_calculation
+--require payment_calculator/npq/payment_calculation

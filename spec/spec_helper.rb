@@ -16,13 +16,11 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 #
-require "require_all"
 
 require "aasm/rspec"
 
 # payment calculation code
-require_relative "../lib/initialize_with_config"
-require_all "lib/payment_calculator"
+require "initialize_with_config"
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

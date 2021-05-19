@@ -139,7 +139,6 @@ group :test do
   gem "jsonapi-rspec"
   gem "pundit-matchers", "~> 1.6.0"
   gem "rails-controller-testing", ">= 1.0.5"
-  gem "require_all"
   gem "rspec-default_http_header"
   gem "shoulda-matchers", "~> 4.4"
   gem "simplecov"
