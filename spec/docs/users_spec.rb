@@ -28,10 +28,18 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
                        type: { type: :string },
                        attributes: {
                          type: :object,
-                         required: %w[email full_name],
+                         required: %w[email full_name user_type core_induction_programme],
                          properties: {
                            email: { type: :string },
                            full_name: { type: :string },
+                           user_type: {
+                             type: :string,
+                             enum: USER_TYPES.keys,
+                           },
+                           core_induction_programme: {
+                             type: :string,
+                             enum: CIP_TYPES.keys,
+                           },
                          },
                        },
                      },

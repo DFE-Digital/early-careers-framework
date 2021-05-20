@@ -116,7 +116,9 @@
                             "type": "object",
                             "required": [
                               "email",
-                              "full_name"
+                              "full_name",
+                              "user_type",
+                              "core_induction_programme"
                             ],
                             "properties": {
                               "email": {
@@ -124,6 +126,23 @@
                               },
                               "full_name": {
                                 "type": "string"
+                              },
+                              "user_type": {
+                                "type": "string",
+                                "enum": [
+                                  "early_career_teacher",
+                                  "other"
+                                ]
+                              },
+                              "core_induction_programme": {
+                                "type": "string",
+                                "enum": [
+                                  "ambition",
+                                  "edt",
+                                  "teach_first",
+                                  "ucl",
+                                  "none"
+                                ]
                               }
                             }
                           }

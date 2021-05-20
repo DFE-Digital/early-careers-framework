@@ -40,7 +40,7 @@ RSpec.describe "API Users", type: :request do
 
       it "returns only email and full name in attributes" do
         get "/api/v1/users"
-        expect(parsed_response["data"][0]).to have_jsonapi_attributes(:email, :full_name).exactly
+        expect(parsed_response["data"][0]).to have_jsonapi_attributes(:email, :full_name, :user_type, :core_induction_programme).exactly
       end
     end
 
