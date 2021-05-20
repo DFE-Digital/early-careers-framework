@@ -1,3 +1,106 @@
-<%= render ::SchoolInformation::Details::BreadcrumbComponent.new(selected_cohort: @selected_cohort) %>
-<%= render ::SchoolInformation::Details::HeadComponent.new(school: @school, selected_cohort: @selected_cohort) %>
-<%= render ::SchoolInformation::Details::MainInfoComponent.new(school: @school) %>
+<% content_for :title, @school.name %>
+<% content_for :before_content, govuk_breadcrumbs(breadcrumbs: {
+  "Schools" => lead_providers_your_schools_path,
+  @school.name => nil
+}) %>
+<% content_for :nav_bar do %>
+  <%= render PrimaryNavComponent.new do |component| %>
+    <%= component.nav_item(path: dashboard_path) do %>
+      Overview
+    <% end %>
+    <%= component.nav_item(path: lead_providers_your_schools_path, selected: true) do %>
+      Schools
+    <% end %>
+  <% end %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">
+      <%= @school.name %>
+    </h1>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h2 class="govuk-heading-m"><%= @selected_cohort.display_name %> participants</h2>
+  </div>
+</div>
+
+<div class="govuk-grid-row govuk-!-margin-bottom-6">
+  <div class="govuk-grid-column-one-third">
+    <div class="dashboard-numbers key-number">
+      <p class="govuk-heading-xl">
+        <%= @school.early_career_teacher_profiles_for(@selected_cohort.start_year).count -%>
+      </p>
+      <p class="govuk-heading-s">ECTs added</p>
+    </div>
+  </div>
+  <div class="govuk-grid-column-one-third">
+    <div class="dashboard-numbers key-number">
+      <p class="govuk-heading-xl">0</p>
+      <p class="govuk-heading-s">mentors added</p>
+    </div>
+  </div>
+</div>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h2 class="govuk-heading-m govuk-!-margin-bottom-2">
+      School details
+    </h2>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          URN
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @school.urn %>
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Delivery partner
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @school.delivery_partner_for(@selected_cohort.start_year)&.name %>
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Local authority
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @school.local_authority&.name || "No local authority assigned" %>
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          MAT/Network
+        </dt>
+        <dd class="govuk-summary-list__value">
+          tbc
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Characteristics
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @school.characteristics_for(@selected_cohort.start_year) %>
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Induction tutor
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <% if @school.induction_coordinators.any? %>
+            <%= mail_to @school.induction_coordinators.first.email %>
+          <% end %>
+        </dd>
+      </div>
+    </dl>
+  </div>
+</div>

@@ -71,7 +71,7 @@ When(
           ""
         )
       );
-      cy.get("h1").should("contain", "Sign in successful");
+      cy.get("h1").should("contain", "You are now signed in");
     });
   }
 );

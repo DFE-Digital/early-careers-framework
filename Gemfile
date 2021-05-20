@@ -13,11 +13,16 @@ gem "devise", ">= 4.7.3"
 gem "paper_trail"
 gem "pundit"
 
+# Error and performance monitoring
+gem "sentry-delayed_job"
+gem "sentry-rails"
+gem "sentry-ruby"
+
 # Pagination
 gem "kaminari", ">= 1.2.0"
 
 # Adds health check functionality
-gem "health_check", github: "/ianheggie/health_check", ref: "0b799ead604f900ed50685e9b2d469cd2befba5b"
+gem "health_check", github: "ianheggie/health_check", ref: "0b799ead604f900ed50685e9b2d469cd2befba5b"
 
 # Cleaner logs, one line per request
 gem "lograge", ">= 0.11.2"
@@ -30,7 +35,7 @@ gem "pg", ">= 0.18", "< 2.0"
 gem "ar-uuid", "~> 0.2.1"
 
 # Use Puma as the app server
-gem "puma", "~> 5.0"
+gem "puma", "~> 5.3", ">= 5.3.1"
 
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
 gem "webpacker", ">= 5.2.1"
@@ -73,6 +78,11 @@ gem "daemons"
 gem "delayed_cron_job"
 gem "delayed_job_active_record"
 
+# Acts as State Machine for participant states
+gem "aasm"
+
+gem "jsonapi-serializer"
+
 # OpenApi Swagger
 gem "open_api-rswag-api", ">= 0.1.0"
 gem "open_api-rswag-ui", ">= 0.1.0"
@@ -83,6 +93,8 @@ end
 
 # S3 adapter for active storage
 gem "aws-sdk-s3", require: false
+
+gem "activerecord-session_store"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -118,6 +130,9 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem "spring"
   gem "spring-watcher-listen", "~> 2.0.0"
+
+  # State machine diagrams - https://github.com/Katee/aasm-diagram
+  gem "aasm-diagram"
 end
 
 group :test do
@@ -125,6 +140,7 @@ group :test do
   gem "jsonapi-rspec"
   gem "pundit-matchers", "~> 1.6.0"
   gem "rails-controller-testing", ">= 1.0.5"
+  gem "rspec-default_http_header"
   gem "shoulda-matchers", "~> 4.4"
   gem "simplecov"
   gem "webdrivers", "~> 4.4", ">= 4.4.1"

@@ -4,22 +4,13 @@ class User < ApplicationRecord
   devise :registerable, :trackable, :passwordless_authenticatable
   has_paper_trail
 
-  has_one :induction_coordinator_profile
+  has_one :induction_coordinator_profile, dependent: :destroy
   has_many :schools, through: :induction_coordinator_profile
-  has_one :lead_provider_profile
+  has_one :lead_provider_profile, dependent: :destroy
   has_one :lead_provider, through: :lead_provider_profile
-  has_one :admin_profile
-  has_one :early_career_teacher_profile
+  has_one :admin_profile, dependent: :destroy
+  has_one :early_career_teacher_profile, dependent: :destroy
   has_one :core_induction_programme, through: :early_career_teacher_profile
-
-  include Discard::Model
-  default_scope -> { kept }
-
-  after_discard do
-    induction_coordinator_profile&.discard! unless induction_coordinator_profile&.discarded?
-    lead_provider_profile&.discard! unless lead_provider_profile&.discarded?
-    admin_profile&.discard! unless admin_profile&.discarded?
-  end
 
   validates :full_name, presence: { message: "Enter a full name" }
   validates :email, presence: true, uniqueness: true, format: { with: Devise.email_regexp }

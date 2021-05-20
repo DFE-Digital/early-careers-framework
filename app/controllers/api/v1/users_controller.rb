@@ -2,9 +2,11 @@
 
 module Api
   module V1
-    class Api::V1::UsersController < Api::ApiController
+    class UsersController < Api::ApiController
+      include ApiTokenAuthenticatable
+
       def index
-        render json: { users: User.all.as_json(only: %i[id email full_name]) }
+        render json: UserSerializer.new(User.all).serializable_hash.to_json
       end
     end
   end

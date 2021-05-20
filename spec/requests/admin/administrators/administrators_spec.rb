@@ -137,16 +137,14 @@ RSpec.describe "Admin::Administrators::Administrators", type: :request do
   end
 
   describe "DELETE /admin/administrators/:id/" do
-    it "marks the lead_provider profile as deleted" do
+    it "deletes the admin profile" do
       delete "/admin/administrators/#{admin_user_two.id}"
 
-      admin_profile_two.reload
-      admin_user_two.reload
-      expect(admin_profile_two.discarded?).to be true
-      expect(admin_user_two.discarded?).to be true
+      expect(AdminProfile.find_by_id(admin_profile_two.id)).to be_nil
+      expect(User.find_by_id(admin_user_two.id)).to be_nil
     end
 
-    it "redirects to the lead_provider users index page" do
+    it "redirects to the admin users index page" do
       delete "/admin/administrators/#{admin_user_two.id}"
 
       expect(response).to redirect_to("/admin/administrators")
@@ -156,10 +154,8 @@ RSpec.describe "Admin::Administrators::Administrators", type: :request do
     it "does not allow deleting the current logged in admin" do
       expect { delete "/admin/administrators/#{admin_user.id}" }.to raise_error Pundit::NotAuthorizedError
 
-      admin_profile.reload
-      admin_user.reload
-      expect(admin_profile.discarded?).to be false
-      expect(admin_user.discarded?).to be false
+      expect(AdminProfile.find_by_id(admin_profile.id)).to eq admin_profile
+      expect(User.find_by_id(admin_user.id)).to eq admin_user
     end
 
     describe "when an audited action", versioning: true do
@@ -167,6 +163,11 @@ RSpec.describe "Admin::Administrators::Administrators", type: :request do
 
       before do
         delete "/admin/administrators/#{admin_user_two.id}"
+      end
+
+      it "creates a paper trail" do
+        expect(PaperTrail::Version.where(item_id: admin_user_two.id, event: "destroy")).to exist
+        expect(PaperTrail::Version.where(item_id: admin_profile_two.id, event: "destroy")).to exist
       end
 
       include_examples "audits changes"

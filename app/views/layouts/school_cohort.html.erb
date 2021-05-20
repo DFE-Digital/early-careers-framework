@@ -1,0 +1,5 @@
+<%= render layout: 'layouts/application' do %>
+  <%= render SchoolRecruitedTransitionComponent.new(school_cohort: @school_cohort) if @school_cohort %>
+
+  <%= yield %>
+<% end %>

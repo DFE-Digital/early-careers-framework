@@ -64,7 +64,7 @@ bundle exec rspec
 It auto-generates swagger/*/api_spec.json from the schema files located in spec/docs
 
 ```bash
-bundle exec rake rswag:specs:swaggerize
+bundle exec rake rswag
 ```
 
 ## Linting
@@ -127,3 +127,16 @@ to execute this delayed job in the background.
 ```bash
 bundle exec rake 'schools:send_invites[urn1 urn2 ...]'
 ```
+
+## Generating API access tokens for lead providers
+
+```bash
+bundle exec rake lead_provider:generate_token "name or id"
+```
+
+Where `"name or id"` is a name or id from the `lead_providers` table.
+
+## Generating a token for E&L api
+1. Get into Rails console for the environment you want to generate the token for.
+2. Run `EngageAndLearnApiToken.create_with_random_token!`
+3. Rails console should output a string, that's your unhashed token, you can keep it and use it to access E&L endpoints.

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_14_100703) do
+ActiveRecord::Schema.define(version: 2021_05_18_143026) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -52,6 +52,17 @@ ActiveRecord::Schema.define(version: 2021_05_14_100703) do
     t.datetime "discarded_at"
     t.index ["discarded_at"], name: "index_admin_profiles_on_discarded_at"
     t.index ["user_id"], name: "index_admin_profiles_on_user_id"
+  end
+
+  create_table "api_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "lead_provider_id"
+    t.string "hashed_token", null: false
+    t.datetime "last_used_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "type", default: "LeadProviderApiToken"
+    t.index ["hashed_token"], name: "index_api_tokens_on_hashed_token", unique: true
+    t.index ["lead_provider_id"], name: "index_api_tokens_on_lead_provider_id"
   end
 
   create_table "cohorts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -131,7 +142,7 @@ ActiveRecord::Schema.define(version: 2021_05_14_100703) do
     t.index ["user_id"], name: "index_induction_coordinator_profiles_on_user_id"
   end
 
-  create_table "induction_coordinator_profiles_schools", id: false, force: :cascade do |t|
+  create_table "induction_coordinator_profiles_schools", force: :cascade do |t|
     t.uuid "induction_coordinator_profile_id", null: false
     t.uuid "school_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -211,6 +222,25 @@ ActiveRecord::Schema.define(version: 2021_05_14_100703) do
     t.index ["partnership_notification_email_id"], name: "index_nomination_emails_on_partnership_notification_email_id"
     t.index ["school_id"], name: "index_nomination_emails_on_school_id"
     t.index ["token"], name: "index_nomination_emails_on_token", unique: true
+  end
+
+  create_table "participant_events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "item_type", null: false
+    t.string "event", null: false
+    t.string "whodunnit"
+    t.json "object"
+    t.json "object_changes"
+    t.datetime "created_at"
+    t.uuid "item_id", null: false
+    t.index ["item_type", "item_id"], name: "index_participant_events_on_item_type_and_item_id"
+  end
+
+  create_table "participation_records", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.uuid "early_career_teacher_profile_id", null: false
+    t.string "state", default: "assigned", null: false
+    t.index ["early_career_teacher_profile_id"], name: "index_participation_records_on_early_career_teacher_profile_id"
   end
 
   create_table "partnership_csv_uploads", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -359,6 +389,15 @@ ActiveRecord::Schema.define(version: 2021_05_14_100703) do
     t.index ["urn"], name: "index_schools_on_urn", unique: true
   end
 
+  create_table "sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "session_id", null: false
+    t.jsonb "data"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["session_id"], name: "index_sessions_on_session_id", unique: true
+    t.index ["updated_at"], name: "index_sessions_on_updated_at"
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "full_name", null: false
     t.citext "email", default: "", null: false
@@ -391,6 +430,7 @@ ActiveRecord::Schema.define(version: 2021_05_14_100703) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "admin_profiles", "users"
+  add_foreign_key "api_tokens", "lead_providers", on_delete: :cascade
   add_foreign_key "cohorts_lead_providers", "cohorts"
   add_foreign_key "cohorts_lead_providers", "lead_providers"
   add_foreign_key "district_sparsities", "local_authority_districts"
@@ -406,6 +446,7 @@ ActiveRecord::Schema.define(version: 2021_05_14_100703) do
   add_foreign_key "lead_provider_profiles", "users"
   add_foreign_key "nomination_emails", "partnership_notification_emails"
   add_foreign_key "nomination_emails", "schools"
+  add_foreign_key "participation_records", "early_career_teacher_profiles"
   add_foreign_key "partnership_notification_emails", "partnerships"
   add_foreign_key "partnerships", "cohorts"
   add_foreign_key "partnerships", "delivery_partners"

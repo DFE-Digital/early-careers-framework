@@ -2,28 +2,48 @@
 
 require "swagger_helper"
 
-describe "API", type: :request do
-  path "/users" do
+describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
+  let(:token) { EngageAndLearnApiToken.create_with_random_token! }
+  let(:bearer_token) { "Bearer #{token}" }
+  let(:Authorization) { bearer_token }
+
+  path "/api/v1/users" do
     get "Returns all users" do
-      operationId :public_api_v1_user_index
+      operationId :api_v1_user_index
       tags "user"
-      produces "application/json"
+      produces "application/vnd.api+json"
+      security [bearerAuth: []]
 
       response "200", "Collection of users." do
         schema type: :object,
+               required: %w[data],
                properties: {
-                 users: {
+                 data: {
                    type: :array,
                    items: {
+                     type: :object,
+                     required: %w[id type attributes],
                      properties: {
                        id: { type: :string },
-                       email: { type: :string },
-                       full_name: { type: :string },
+                       type: { type: :string },
+                       attributes: {
+                         type: :object,
+                         required: %w[email full_name],
+                         properties: {
+                           email: { type: :string },
+                           full_name: { type: :string },
+                         },
+                       },
                      },
-                     required: %w[id email full_name],
                    },
                  },
                }
+
+        run_test!
+      end
+
+      response "401", "Unauthorized" do
+        let(:Authorization) { "Bearer invalid" }
         run_test!
       end
     end

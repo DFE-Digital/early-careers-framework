@@ -61,19 +61,22 @@ RSpec.describe "Admin::LeadProviders::LeadProviderUsers", type: :request do
     end
   end
 
-  describe "DELETE /admin/suppliers/lead_providers/users/:id/" do
-    it "marks the lead_provider profile as deleted" do
+  describe "DELETE /admin/suppliers/lead_providers/users/:id/", versioning: true do
+    before do
       delete "/admin/suppliers/lead-providers/users/#{lead_provider_user_two.id}"
+    end
 
-      lead_provider_profile_two.reload
-      lead_provider_user_two.reload
-      expect(lead_provider_profile_two.discarded?).to be true
-      expect(lead_provider_user_two.discarded?).to be true
+    it "deletes the lead_provider" do
+      expect(LeadProviderProfile.find_by_id(lead_provider_profile_two.id)).to be_nil
+      expect(User.find_by_id(lead_provider_user_two.id)).to be_nil
+    end
+
+    it "creates a paper trail" do
+      expect(PaperTrail::Version.where(item_id: lead_provider_user_two.id, event: "destroy")).to exist
+      expect(PaperTrail::Version.where(item_id: lead_provider_profile_two.id, event: "destroy")).to exist
     end
 
     it "redirects to the lead_provider users index page" do
-      delete "/admin/suppliers/lead-providers/users/#{lead_provider_user_two.id}"
-
       expect(response).to redirect_to("/admin/suppliers/users")
       expect(response.body).not_to include(CGI.escapeHTML(lead_provider_profile_two.user.full_name))
     end

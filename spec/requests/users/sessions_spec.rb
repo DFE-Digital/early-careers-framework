@@ -74,21 +74,19 @@ RSpec.describe "Users::Sessions", type: :request do
       expect(response).to render_template(:redirect_from_magic_link)
     end
 
-    it "redirects to sign in when the token doesn't match" do
+    it "redirects to link invalid when the token doesn't match" do
       get "/users/confirm_sign_in?login_token=aaaaaaaaaa"
 
-      expect(response).to redirect_to "/users/sign_in"
-      expect(flash[:alert]).to eq "There was an error while logging you in. Please enter your email again."
+      expect(response).to redirect_to "/users/link-invalid"
     end
 
     context "when the token has expired" do
       before { user.update!(login_token_valid_until: 1.hour.ago) }
 
-      it "redirects to sign in" do
+      it "redirects to link invalid" do
         get "/users/confirm_sign_in?login_token=#{user.login_token}"
 
-        expect(response).to redirect_to "/users/sign_in"
-        expect(flash[:alert]).to eq "There was an error while logging you in. Please enter your email again."
+        expect(response).to redirect_to "/users/link-invalid"
       end
     end
 
@@ -143,9 +141,9 @@ RSpec.describe "Users::Sessions", type: :request do
     context "when the login_token has expired" do
       before { user.update(login_token_valid_until: 2.days.ago) }
 
-      it "redirects to sign_in page" do
+      it "redirects to link invalid page" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }
-        expect(response).to redirect_to(new_user_session_path)
+        expect(response).to redirect_to(users_link_invalid_path)
       end
     end
   end

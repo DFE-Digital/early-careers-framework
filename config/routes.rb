@@ -8,12 +8,19 @@ Rails.application.routes.draw do
   devise_scope :user do
     get "/users/confirm_sign_in", to: "users/sessions#redirect_from_magic_link"
     post "/users/sign_in_with_token", to: "users/sessions#sign_in_with_token"
+    get "/users/signed-out", to: "users/sessions#signed_out"
+    get "/users/link-invalid", to: "users/sessions#link_invalid"
   end
 
-  get "/pages/:page", to: "pages#show"
+  get "/pages/:page", to: "pages#show", as: :page
   get "check" => "application#check"
 
-  root "start#index"
+  if Rails.env.sandbox?
+    root "sandbox#show"
+  else
+    root "start#index"
+  end
+
   get "/check-account", to: "check_account#show"
 
   resource :cookies, only: %i[show update]
@@ -29,14 +36,13 @@ Rails.application.routes.draw do
     end
   end
 
-  namespace :api do
+  namespace :api, defaults: { format: "json" } do
     resources :school_search, only: %i[index]
     resource :notify_callback, only: :create, path: "notify-callback"
 
     namespace :v1 do
-      unless Rails.env.staging? || Rails.env.production?
-        resources :users, only: :index
-      end
+      resources :early_career_teacher_participants, only: %i[create], path: "early-career-teacher-participants"
+      resources :users, only: :index
     end
   end
 
@@ -73,8 +79,8 @@ Rails.application.routes.draw do
   end
 
   namespace :lead_providers, path: "lead-providers" do
-    resources :your_schools, only: %i[index create]
-    resources :school_details, only: %i[show]
+    resources :your_schools, path: "/your-schools", only: %i[index create]
+    resources :school_details, path: "school-details", only: %i[show]
 
     resource :report_schools, path: "report-schools", only: [] do
       post "check-delivery-partner", action: :check_delivery_partner

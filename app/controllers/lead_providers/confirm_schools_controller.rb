@@ -50,7 +50,7 @@ module LeadProviders
         source: "csv",
         cohort_id: Cohort.current.id,
       )
-      session[:confirm_schools_form] = @confirm_schools_form
+      session[:confirm_schools_form] = @confirm_schools_form.as_json
     end
   end
 end

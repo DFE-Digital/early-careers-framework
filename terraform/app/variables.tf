@@ -61,11 +61,11 @@ variable paas_web_app_memory {
 }
 
 variable paas_web_app_start_command {
-  default = "bundle exec rake cf:on_first_instance db:migrate && rails s"
+  default = "bundle exec rake cf:on_first_instance db:migrate cron:schedule && rails s"
 }
 
 variable paas_worker_app_deployment_strategy {
-  default = "standard"
+  default = "blue-green-v2"
 }
 
 variable paas_worker_app_instances {

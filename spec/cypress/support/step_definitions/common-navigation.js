@@ -69,6 +69,7 @@ const pagePaths = {
   "2021 school cohorts": "/schools/cohorts/2021",
   "2021 school partnerships": "/schools/cohorts/2021/partnerships",
   "lead providers report schools start": "/lead-providers/report-schools/start",
+  "lead providers your schools": "/lead-providers/your-schools",
   "challenge partnership": "/report-incorrect-partnership?token=:id",
   "challenge partnership (any token)": "/report-incorrect-partnership",
   "challenge partnership success": "/report-incorrect-partnership/success",
