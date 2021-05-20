@@ -21,8 +21,7 @@ module Dqt
 
           {
             teacher_reference_number: first_item[:trn],
-            first_name: first_item[:name].split.first,
-            surname: first_item[:name].split.last,
+            full_name: first_item[:name],
             date_of_birth: Date.parse(first_item[:doB]),
             degree_codes: [],
             national_insurance_number: first_item[:niNumber],
