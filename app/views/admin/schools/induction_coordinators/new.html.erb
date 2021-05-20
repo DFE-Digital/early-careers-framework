@@ -4,8 +4,8 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl"><%= title %></h1>
     <%= render partial: 'induction_tutor_form', locals: {
+      heading: title,
       form_object: @nominate_induction_tutor_form,
       form_url: admin_school_induction_coordinators_path(@school),
       submit_label: "Confirm new tutor"

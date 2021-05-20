@@ -12,7 +12,7 @@
             @replace_or_update_tutor_form.choices,
             :id,
             :name,
-            legend: { text: "" },
+            legend: { hidden: true },
           ) %>
       <%= f.govuk_submit "Continue" %>
     <% end %>

@@ -15,9 +15,6 @@ class User < ApplicationRecord
   validates :full_name, presence: true
   validates :email, presence: true, uniqueness: true, format: { with: Devise.email_regexp }
 
-  # validates :full_name, presence: { message: "Enter a full name" }
-  # validates :email, presence: { message: "Enter email" }, uniqueness: true, format: { with: Devise.email_regexp, message: "Enter an email address in the correct format, like name@example.com" }
-
   def admin?
     admin_profile.present?
   end
