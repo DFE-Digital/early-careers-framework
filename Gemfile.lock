@@ -534,7 +534,6 @@ DEPENDENCIES
   simplecov
   spring
   spring-watcher-listen (~> 2.0.0)
-  turnip
   tzinfo-data
   view_component
   wdm (>= 0.1.0)

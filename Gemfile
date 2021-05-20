@@ -139,7 +139,6 @@ group :test do
   gem "rutabaga"
   gem "shoulda-matchers", "~> 4.4"
   gem "simplecov"
-  gem "turnip"
   gem "webdrivers", "~> 4.4", ">= 4.4.1"
   gem "webmock"
 end
