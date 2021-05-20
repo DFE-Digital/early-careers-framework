@@ -6,7 +6,8 @@ module Api
       include ApiTokenAuthenticatable
 
       def index
-        render json: UserSerializer.new(User.all).serializable_hash.to_json
+        user_query = User.all.includes(:early_career_teacher_profile, :core_induction_programme)
+        render json: UserSerializer.new(user_query).serializable_hash.to_json
       end
     end
   end
