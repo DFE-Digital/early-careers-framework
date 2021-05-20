@@ -15,7 +15,7 @@ RSpec.describe "Admin::Schools::InductionCoodinators", type: :request do
     it "renders the new template" do
       get "/admin/schools/#{school.id}/induction-coordinators/new"
 
-      expect(response.body).to include(CGI.escapeHTML("Induction tutor for #{school.name}"))
+      expect(response.body).to include("New induction tutor for #{school.name}")
       expect(response).to render_template("admin/schools/induction_coordinators/new")
     end
   end
@@ -35,6 +35,7 @@ RSpec.describe "Admin::Schools::InductionCoodinators", type: :request do
       expect(created_user.email).to eq "jo@example.com"
       expect(created_user.induction_coordinator?).to be_truthy
       expect(response).to redirect_to admin_school_path(school.id)
+      expect(flash[:success][:content]).to eq "New induction tutor added. They will get an email with next steps."
     end
   end
 
@@ -42,10 +43,63 @@ RSpec.describe "Admin::Schools::InductionCoodinators", type: :request do
     it "renders the edit template" do
       get "/admin/schools/#{school.id}/induction-coordinators/#{induction_tutor.id}/edit"
 
-      expect(response.body).to include("Induction tutor for #{school.name}")
+      expect(response.body).to include("Update induction tutor for #{school.name}")
       expect(response.body).to include(induction_tutor.full_name)
       expect(response.body).to include(induction_tutor.email)
       expect(response).to render_template("admin/schools/induction_coordinators/edit")
+    end
+  end
+
+  describe "GET /admin/schools/:school_id/induction-coordinators/choose-replace-or-update" do
+    it "renders the choose replace or update template" do
+      get "/admin/schools/#{school.id}/induction-coordinators/choose-replace-or-update"
+
+      expect(response.body).to include("Are you replacing an induction tutor or updating their details?")
+      expect(response.body).to include("Replace induction tutor with someone new")
+      expect(response.body).to include("Update induction tutor’s details")
+      expect(response).to render_template("admin/schools/induction_coordinators/choose_replace_or_update")
+    end
+  end
+
+  describe "POST /admin/schools/:school_id/induction-coordinators/replace-or-update" do
+    context "when 'replace' is selected" do
+      it "redirects to the new induction coordinator method" do
+        form_params = {
+          replace_or_update_tutor_form: {
+            choice: "replace",
+          },
+        }
+        post "/admin/schools/#{school.id}/induction-coordinators/replace-or-update", params: form_params
+
+        expect(response).to redirect_to new_admin_school_induction_coordinator_path(school.id)
+      end
+    end
+
+    context "when 'update' is selected" do
+      it "redirects to the edit induction coordinator method" do
+        form_params = {
+          replace_or_update_tutor_form: {
+            choice: "update",
+          },
+        }
+        post "/admin/schools/#{school.id}/induction-coordinators/replace-or-update", params: form_params
+
+        expect(response).to redirect_to edit_admin_school_induction_coordinator_path(id: school.id)
+      end
+    end
+
+    context "when no choice is made" do
+      it "renders the choose replace or update template" do
+        form_params = {
+          replace_or_update_tutor_form: {
+            choice: "",
+          },
+        }
+        post "/admin/schools/#{school.id}/induction-coordinators/replace-or-update", params: form_params
+
+        expect(response).to render_template("admin/schools/induction_coordinators/choose_replace_or_update")
+        expect(response.body).to include("Choose whether to replace or update the tutor")
+      end
     end
   end
 
