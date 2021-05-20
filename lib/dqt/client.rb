@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Dqt
   class Client
     def initialize(
@@ -20,17 +22,17 @@ module Dqt
       request(method: :get, path: path, params: params, body: nil)
     end
 
-    private
+  private
 
     attr_accessor :headers, :host, :params, :port
 
     # Accessing readers with send because < Ruby 2.7
     def request(method:, path: "/", params: {}, body: {})
       headers = {
-        'Content-Type': "application/json"
+        'Content-Type': "application/json",
       }.merge(send(:headers))
 
-      body = {request: body}.to_json unless body.blank?
+      body = { request: body }.to_json if body.present?
       params = params.merge(send(:params))
 
       response = Response.new(
@@ -39,17 +41,17 @@ module Dqt
           url(path),
           headers: headers,
           params: params,
-          body: body
-        )
+          body: body,
+        ),
       )
 
-      raise ResponseError.new(response) if [*0..199, *300..599].include? response.code
+      raise ResponseError, response if [*0..199, *300..599].include? response.code
 
       response.body
     end
 
     def url(path)
-      "#{host}#{":" unless port.nil?}#{port}#{path}"
+      "#{host}#{':' unless port.nil?}#{port}#{path}"
     end
   end
 end

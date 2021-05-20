@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Dqt
   class Configuration
     class Client

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Dqt
   def self.configuration
     @configuration ||= Configuration.new

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "v1/qualified_teaching_status"
 
 module Dqt
@@ -11,7 +13,7 @@ module Dqt
         @qualified_teaching_status ||= QualifiedTeachingStatus.new(client: client)
       end
 
-      private
+    private
 
       attr_accessor :client
     end

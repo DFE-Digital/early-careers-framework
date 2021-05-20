@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Dqt
   class Client::Response
     delegate :code, to: :response
@@ -13,7 +15,7 @@ module Dqt
       @body = JSON.parse(response.body, symbolize_names: true)
     end
 
-    private
+  private
 
     attr_accessor :response
   end
