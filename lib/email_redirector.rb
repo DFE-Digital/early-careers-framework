@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module EmailRedirector
   class << self
     def delivering_email(mail)
@@ -20,20 +22,20 @@ module EmailRedirector
     end
 
     def target_email
-      ENV['SEND_EMAILS_TO']
+      ENV["SEND_EMAILS_TO"]
     end
 
   private
 
     def overide_personalisation(mail, key, &block)
-      value = mail.header['personalisation'].unparsed_value[key]
-      return unless value.present?
+      value = mail.header["personalisation"].unparsed_value[key]
+      return if value.blank?
 
-      mail.header['personalisation'].unparsed_value[key] = block.call(value)
+      mail.header["personalisation"].unparsed_value[key] = block.call(value)
     end
 
     def add_default_personalisation(mail, key, value)
-      mail.header['personalisation'].unparsed_value[key] ||= value
+      mail.header["personalisation"].unparsed_value[key] ||= value
     end
 
     def tags(mail)

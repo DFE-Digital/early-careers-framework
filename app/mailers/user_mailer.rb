@@ -12,7 +12,7 @@ class UserMailer < ApplicationMailer
       personalisation: {
         name: user.full_name,
         subject: "Test email",
-      }
+      },
     )
   end
 
