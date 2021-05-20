@@ -1,19 +1,14 @@
 module EmailRedirector
   class << self
     def delivering_email(mail)
-      add_default_personalisation(mail, :_tags, tags(mail))
+      return unless enabled?
+
+      overide_personalisation(mail, :subject) { |subject| "#{tags(mail)} #{subject}" }
       mail.to = target_email if enabled?
     end
 
-  private
-
     def enabled?
       !Rails.env.production? && !Rails.env.test? && target_email.present?
-    end
-
-    def tags(mail)
-      return "\u200c" unless enabled?
-      "[#{app_name} to:#{mail.to.join(',')}] "
     end
 
     def app_name
@@ -28,8 +23,21 @@ module EmailRedirector
       ENV['SEND_EMAILS_TO']
     end
 
+  private
+
+    def overide_personalisation(mail, key, &block)
+      value = mail.header['personalisation'].unparsed_value[key]
+      return unless value.present?
+
+      mail.header['personalisation'].unparsed_value[key] = block.call(value)
+    end
+
     def add_default_personalisation(mail, key, value)
-      mail.header['personalisation'].unparsed_value[key] = value
+      mail.header['personalisation'].unparsed_value[key] ||= value
+    end
+
+    def tags(mail)
+      "[#{app_name} to:#{mail.to.join(',')}] "
     end
   end
 end
