@@ -124,6 +124,13 @@ class School < ApplicationRecord
     local_authority_district&.sparse?(year) || false
   end
 
+  def characteristics_for(year)
+    characteristics = []
+    characteristics << "Pupil premium above 40%" if pupil_premium_uplift?(year)
+    characteristics << "Remote school" if sparsity_uplift?(year)
+    characteristics.join(" and ")
+  end
+
   scope :with_pupil_premium_uplift, lambda { |start_year|
     joins(:pupil_premiums)
       .merge(PupilPremium.only_with_uplift(start_year))

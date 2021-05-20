@@ -12,7 +12,7 @@ module LeadProviders
                            @cohorts.find_by(start_year: Time.zone.today.year)
                          end
 
-      @schools = School.partnered_with_lead_provider(@lead_provider.id, @selected_cohort.start_year)
+      @schools = School.eligible.partnered_with_lead_provider(@lead_provider.id, @selected_cohort.start_year)
         .includes(:early_career_teachers)
         .order(:name)
 

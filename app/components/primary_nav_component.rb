@@ -8,12 +8,13 @@ class PrimaryNavComponent < ViewComponent::Base
   class NavItemComponent < ViewComponent::Base
     attr_reader :path
 
-    def initialize(path:)
+    def initialize(path:, selected: false)
       @path = path
+      @selected = selected
     end
 
     def current_section?(path)
-      request.path.include?(path)
+      @selected || request.path.include?(path)
     end
   end
 end
