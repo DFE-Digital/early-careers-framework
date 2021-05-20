@@ -32,15 +32,25 @@ class School < ApplicationRecord
   scope :eligible, -> { open.eligible_establishment_type.in_england }
 
   scope :with_name_like, lambda { |search_key|
-    where("name ILIKE ?", "%#{search_key}%")
+    where("schools.name ILIKE ?", "%#{search_key}%")
   }
 
   scope :with_urn_like, lambda { |search_key|
-    where("urn ILIKE ?", "%#{search_key}%")
+    where("schools.urn ILIKE ?", "%#{search_key}%")
+  }
+
+  scope :with_delivery_partner_for_year_like, lambda { |name, year|
+    joins(partnerships: %i[delivery_partner cohort])
+      .where("cohorts.start_year = ? AND delivery_partners.name ILIKE ?", year, "%#{name}%")
   }
 
   scope :search_by_name_or_urn, lambda { |search_key|
     with_name_like(search_key).or(with_urn_like(search_key))
+  }
+
+  scope :search_by_name_or_urn_or_delivery_partner_for_year, lambda { |search_key, year|
+    joins(partnerships: %i[delivery_partner cohort])
+      .with_name_like(search_key).or(with_urn_like(search_key)).or(with_delivery_partner_for_year_like(search_key, year))
   }
 
   scope :with_local_authority, lambda { |local_authority|
@@ -49,19 +59,27 @@ class School < ApplicationRecord
   }
 
   scope :partnered, lambda { |year|
-    where(id: Partnership.joins(:cohort).where(cohorts: { start_year: year }).select(:school_id))
+    where(id: Partnership.in_year(year).select(:school_id))
   }
 
-  scope :partnered_with_lead_provider, lambda { |lead_provider_id|
-    where(id: Partnership.where(lead_provider_id: lead_provider_id).select(:school_id))
+  scope :partnered_with_lead_provider, lambda { |lead_provider_id, year|
+    where(id: Partnership.where(lead_provider_id: lead_provider_id).in_year(year).select(:school_id))
   }
 
   scope :unpartnered, lambda { |year|
-    where.not(id: Partnership.joins(:cohort).where(cohorts: { start_year: year }).select(:school_id))
+    where.not(id: Partnership.in_year(year).select(:school_id))
   }
 
   def lead_provider(year)
     partnerships.joins(%i[lead_provider cohort]).find_by(cohorts: { start_year: year })&.lead_provider
+  end
+
+  def delivery_partner_for(year)
+    partnerships.joins(%i[delivery_partner cohort]).find_by(cohorts: { start_year: year })&.delivery_partner
+  end
+
+  def early_career_teacher_profiles_for(year)
+    early_career_teacher_profiles.joins(:cohort).where(cohort: { start_year: year })
   end
 
   def full_address

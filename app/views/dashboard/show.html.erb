@@ -8,6 +8,10 @@
           <%= govuk_link_to "Confirm your schools", start_lead_providers_report_schools_path %>
         </h2>
         <p>Choose a delivery partner and upload schools using a CSV.</p>
+        <h2 class="govuk-heading-m">
+          <%= govuk_link_to "Check your schools for #{Cohort.current.display_name}", lead_providers_your_schools_path %>
+        </h2>
+        <p>See which schools have added their early career teachers and mentors.</p>
       </div>
     <% else %>
       <h1 class="govuk-heading-l">User dashboard</h1>

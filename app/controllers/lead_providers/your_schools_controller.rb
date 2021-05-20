@@ -12,34 +12,21 @@ module LeadProviders
                            @cohorts.find_by(start_year: Time.zone.today.year)
                          end
 
-      @school_search_form = SchoolSearchForm.new(*form_params_index)
-      @school_search_form.cohort_year = @selected_cohort.start_year
-      @school_search_form.lead_provider_id = @lead_provider.id
-      @school_search_form.with_school_partnerships = true
+      @schools = School.partnered_with_lead_provider(@lead_provider.id, @selected_cohort.start_year)
+        .includes(:early_career_teachers)
+        .order(:name)
 
-      @schools = @school_search_form.find_schools(params[:page])
+      @total_provider_schools = @schools.count
+
+      @query = params[:query]
+      if @query.present?
+        @schools = @schools.search_by_name_or_urn_or_delivery_partner_for_year(@query, @selected_cohort.start_year)
+      end
+
+      @schools = @schools.page(params[:page]).per(20)
     end
 
-    def create
-      redirect_to lead_providers_your_schools_path(*form_params_post)
-    end
-
-    def form_params_index
-      params.permit(*school_search_params)
-    end
-
-    def form_params_post
-      params.require(:school_search_form).permit(*school_search_params)
-    end
-
-    def school_search_params
-      %i[
-        school_name
-        cohort_year
-        lead_provider_id
-        selected_cohort_id
-      ]
-    end
+  private
 
     def set_lead_provider
       @lead_provider = current_user&.lead_provider
