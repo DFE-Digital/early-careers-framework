@@ -88,40 +88,44 @@
         "responses": {
           "200": {
             "description": "Collection of users.",
-            "schema": {
-              "type": "object",
-              "required": [
-                "data"
-              ],
-              "properties": {
-                "data": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "required": [
-                      "id",
-                      "type",
-                      "attributes"
-                    ],
-                    "properties": {
-                      "id": {
-                        "type": "string"
-                      },
-                      "type": {
-                        "type": "string"
-                      },
-                      "attributes": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
                         "type": "object",
                         "required": [
-                          "email",
-                          "full_name"
+                          "id",
+                          "type",
+                          "attributes"
                         ],
                         "properties": {
-                          "email": {
+                          "id": {
                             "type": "string"
                           },
-                          "full_name": {
+                          "type": {
                             "type": "string"
+                          },
+                          "attributes": {
+                            "type": "object",
+                            "required": [
+                              "email",
+                              "full_name"
+                            ],
+                            "properties": {
+                              "email": {
+                                "type": "string"
+                              },
+                              "full_name": {
+                                "type": "string"
+                              }
+                            }
                           }
                         }
                       }
