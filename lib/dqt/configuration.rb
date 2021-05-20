@@ -9,7 +9,6 @@ module Dqt
         self.headers = {}
         self.host = nil
         self.params = {}
-        self.port = nil
       end
     end
 

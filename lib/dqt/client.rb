@@ -5,13 +5,11 @@ module Dqt
     def initialize(
       headers: Dqt.configuration.client.headers,
       host: Dqt.configuration.client.host,
-      params: Dqt.configuration.client.params,
-      port: Dqt.configuration.client.port
+      params: Dqt.configuration.client.params
     )
       self.headers = headers
       self.host = host
       self.params = params
-      self.port = port
     end
 
     def api
@@ -19,39 +17,32 @@ module Dqt
     end
 
     def get(path: "/", params: {})
-      request(method: :get, path: path, params: params, body: nil)
-    end
+      http_client = HTTPClient.new
 
-  private
-
-    attr_accessor :headers, :host, :params, :port
-
-    # Accessing readers with send because < Ruby 2.7
-    def request(method:, path: "/", params: {}, body: {})
       headers = {
         'Content-Type': "application/json",
       }.merge(send(:headers))
 
-      body = { request: body }.to_json if body.present?
       params = params.merge(send(:params))
 
       response = Response.new(
-        response: Typhoeus.public_send(
-          method,
+        response: http_client.get(
           url(path),
-          headers: headers,
-          params: params,
-          body: body,
+          header: headers,
+          query: params,
         ),
       )
-
       raise ResponseError, response if [*0..199, *300..599].include? response.code
 
       response.body
     end
 
+  private
+
+    attr_accessor :headers, :host, :params
+
     def url(path)
-      "#{host}#{':' unless port.nil?}#{port}#{path}"
+      "#{host}#{':' unless port.nil?}#{path}"
     end
   end
 end
