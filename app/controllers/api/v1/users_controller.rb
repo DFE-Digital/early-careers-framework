@@ -3,6 +3,8 @@
 module Api
   module V1
     class UsersController < Api::ApiController
+      include ApiTokenAuthenticatable
+
       def index
         render json: UserSerializer.new(User.all).serializable_hash.to_json
       end

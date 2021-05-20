@@ -23,7 +23,7 @@ class SchoolSearchForm
 
     schools = schools.partnered(year) if with_school_partnerships
 
-    schools = schools.partnered_with_lead_provider(lead_provider_id) if lead_provider_id
+    schools = schools.partnered_with_lead_provider(lead_provider_id, year) if lead_provider_id
 
     schools = schools.where(id: Partnership.pluck(:school_id)) if filter_by_partnership_status
 

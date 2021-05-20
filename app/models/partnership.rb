@@ -25,6 +25,7 @@ class Partnership < ApplicationRecord
     challenge_reason.present?
   end
 
+  scope :in_year, ->(year) { joins(:cohort).where(cohort: { start_year: year }) }
   scope :unchallenged, -> { where(challenged_at: nil, challenge_reason: nil) }
 
   def challenge!(reason)

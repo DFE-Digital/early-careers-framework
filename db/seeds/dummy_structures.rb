@@ -28,3 +28,12 @@ User.find_or_create_by!(email: "school-leader@example.com") do |user|
     profile.update!(schools: [school])
   end
 end
+
+# We clear the database on a regular basis, but we want a stable token that E&L can use in its dev environments
+# Tokens are hashed using another secret, so hashed token with the same unhashed version will be different in different environments
+# To avoid
+if Rails.env.deployed_development?
+  EngageAndLearnApiToken.find_or_create_by!(hashed_token: "dfce9a34c6f982e8adb4b903f8b6064682e6ad1f7858c41ed8a0a7468abc8896")
+elsif Rails.env.development?
+  EngageAndLearnApiToken.find_or_create_by!(hashed_token: "f4a16cd7fc10918fbc7d869d7a83df36059bb98fac7c82502d797b1f1dd73e86")
+end

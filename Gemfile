@@ -13,6 +13,11 @@ gem "devise", ">= 4.7.3"
 gem "paper_trail"
 gem "pundit"
 
+# Error and performance monitoring
+gem "sentry-delayed_job"
+gem "sentry-rails"
+gem "sentry-ruby"
+
 # Pagination
 gem "kaminari", ">= 1.2.0"
 
