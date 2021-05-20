@@ -53,7 +53,7 @@ class SchoolMailer < ApplicationMailer
         school_name: school_name,
         nominate_url: nominate_url,
         challenge_url: challenge_url,
-        challege_deadline: challenge_deadline,
+        challenge_deadline: challenge_deadline,
       },
     )
   end

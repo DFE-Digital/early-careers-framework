@@ -62,7 +62,7 @@ class School < ApplicationRecord
     where(id: Partnership.unchallenged.in_year(year).select(:school_id))
   }
 
-  scope :partnered_with_lead_provider, lambda { |lead_provider_id|
+  scope :partnered_with_lead_provider, lambda { |lead_provider_id, year|
     where(id: Partnership.unchallenged.where(lead_provider_id: lead_provider_id).in_year(year).select(:school_id))
   }
 
