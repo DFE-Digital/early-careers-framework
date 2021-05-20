@@ -19,10 +19,7 @@ class LeadProviderMailer < ApplicationMailer
   end
 
   def partnership_challenged_email(partnership:, user:)
-    # TODO: We should not be going back to the form to fetch that!
-    reason = ChallengePartnershipForm.new.challenge_reason_options
-      .find { |option| option.id == partnership.challenge_reason }
-      .name
+    reason = ChallengePartnershipForm::CHALLANGE_REASON_OPTIONS[partnership.challenge_reason]
 
     template_mail(
       PARTNERSHIP_CHALLENGED_TEMPLATE_ID,
