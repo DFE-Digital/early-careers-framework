@@ -23,7 +23,7 @@ class CookiesController < ApplicationController
       format.json do
         render json: {
           status: "ok",
-          message: %(You've #{analytics_consent == 'on' ? 'accepted' : 'rejected'} analytics cookies.),
+          message: %(You’ve #{analytics_consent == 'on' ? 'accepted' : 'rejected'} analytics cookies.),
         }
       end
     end

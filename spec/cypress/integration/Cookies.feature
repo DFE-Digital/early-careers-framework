@@ -31,7 +31,7 @@ Feature: Cookie page
     Given I am on "start" page
 
     When I click to accept cookies
-    Then "cookie banner" should contain "You've accepted analytics cookies."
+    Then "cookie banner" should contain "You’ve accepted analytics cookies."
 
     When I hide cookie banner
     Then "cookie banner" should be hidden
@@ -44,7 +44,7 @@ Feature: Cookie page
     Given I am on "start" page
 
     When I click to reject cookies
-    Then "cookie banner" should contain "You've rejected analytics cookies."
+    Then "cookie banner" should contain "You’ve rejected analytics cookies."
 
     When I hide cookie banner
     Then "cookie banner" should be hidden
@@ -62,4 +62,3 @@ Feature: Cookie page
     And I click the submit button
     And I click on "link" containing "Back"
     Then I am on "start" page
-
