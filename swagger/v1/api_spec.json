@@ -22,12 +22,12 @@
     }
   ],
   "paths": {
-    "/api/v1/early-career-teacher-participants": {
+    "/api/v1/participant-declarations": {
       "post": {
-        "summary": "Add Early Career Teacher to Course",
+        "summary": "Create participant declarations",
         "operationId": "api_v1_create_ect_participant",
         "tags": [
-          "ect_participant"
+          "participant_declarations"
         ],
         "security": [
           {
