@@ -23,14 +23,8 @@ module Dqt
             teacher_reference_number: first_item[:trn],
             full_name: first_item[:name],
             date_of_birth: Date.parse(first_item[:doB]),
-            degree_codes: [],
             national_insurance_number: first_item[:niNumber],
             qts_date: Date.parse(first_item[:qtsAwardDate]),
-            itt_subject_codes: [
-              first_item[:ittSubject1Code],
-              first_item[:ittSubject2Code],
-              first_item[:ittSubject3Code],
-            ],
             active_alert: first_item[:activeAlert],
           }
         end
