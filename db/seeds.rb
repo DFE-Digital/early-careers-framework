@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Dir[Rails.root.join("db/seeds/initial_seed.rb")].each { |seed| load seed }
+Dir[Rails.root.join("db/seeds/initial_seed.rb")].each { |seed| load seed } unless Rails.env.sandbox?
 
 if Rails.env.development? || Rails.env.deployed_development? || Rails.env.test?
   Dir[Rails.root.join("db/seeds/test_data.rb")].each { |seed| load seed }
