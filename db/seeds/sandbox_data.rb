@@ -1,7 +1,13 @@
+# frozen_string_literal: true
+
 require 'faker'
 
-
 Faker::Config.locale = 'en'
+
+logger = Logger.new($stdout)
+logger.formatter = proc do |_severity, _datetime, _progname, msg|
+  "#{msg}\n"
+end
 
 providers = ['Capita', 'Teach First', 'UCL', 'Best Practice Network', 'Ambition', 'Education Development Trust']
 providers.each do |provider_name|
@@ -13,5 +19,5 @@ providers.each do |provider_name|
     EarlyCareerTeacherProfile.create!(user: user, school: school)
     uuids << user.id
   end
-  puts "Token for #{provider_name} is #{token}, user uuids: #{user_uuids.join(',')}"
+  logger.info "Token for #{provider_name} is #{token}, user uuids: #{user_uuids.join(',')}"
 end
