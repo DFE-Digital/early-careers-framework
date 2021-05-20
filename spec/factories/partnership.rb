@@ -12,4 +12,8 @@ FactoryBot.define do
     challenged_at { 2.days.ago }
     challenge_reason { "mistake" }
   end
+
+  trait :pending do
+    pending { true }
+  end
 end

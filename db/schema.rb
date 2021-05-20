@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_06_161800) do
+ActiveRecord::Schema.define(version: 2021_05_14_100703) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -247,9 +247,11 @@ ActiveRecord::Schema.define(version: 2021_05_06_161800) do
     t.datetime "challenged_at"
     t.string "challenge_reason"
     t.datetime "challenge_deadline"
+    t.boolean "pending", default: false, null: false
     t.index ["cohort_id"], name: "index_partnerships_on_cohort_id"
     t.index ["delivery_partner_id"], name: "index_partnerships_on_delivery_partner_id"
     t.index ["lead_provider_id"], name: "index_partnerships_on_lead_provider_id"
+    t.index ["pending"], name: "index_partnerships_on_pending"
     t.index ["school_id"], name: "index_partnerships_on_school_id"
   end
 

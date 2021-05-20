@@ -104,4 +104,38 @@ RSpec.describe Partnership, type: :model do
       expect(partnership.in_challenge_window?).to eq false
     end
   end
+
+  describe "pending partnerships" do
+    let!(:pending_partnership) { create(:partnership, :pending) }
+    let!(:partnership) { create(:partnership) }
+    let!(:challenged_partnership) { create(:partnership, :challenged, :pending) }
+
+    it "schedules a PartnershipActivationJob" do
+      freeze_time
+
+      partnership = Partnership.create!(
+        school: create(:school),
+        lead_provider: create(:lead_provider),
+        delivery_partner: create(:delivery_partner),
+        cohort: create(:cohort),
+        pending: true,
+      )
+
+      expect(an_instance_of(PartnershipActivationJob)).to delay_execution_of(:perform)
+                                                            .with(an_object_having_attributes(
+                                                                    class: Partnership,
+                                                                    cohort_id: partnership.cohort.id,
+                                                                    school_id: partnership.school.id,
+                                                                    lead_provider_id: partnership.lead_provider.id,
+                                                                    delivery_partner_id: partnership.delivery_partner.id,
+                                                                  ))
+                                                            .at(2.weeks.from_now)
+    end
+
+    describe "scope :active" do
+      it "returns only unchallenged, not pending partnerships" do
+        expect(Partnership.active).to contain_exactly(partnership)
+      end
+    end
+  end
 end

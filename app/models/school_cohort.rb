@@ -15,7 +15,7 @@ class SchoolCohort < ApplicationRecord
   belongs_to :core_induction_programme, optional: true
 
   def training_provider_status
-    school.partnerships&.unchallenged&.exists?(cohort: cohort) ? "Done" : "To do"
+    school.partnerships&.active&.exists?(cohort: cohort) ? "Done" : "To do"
   end
 
   def add_participants_status
