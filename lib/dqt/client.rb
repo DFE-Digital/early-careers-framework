@@ -42,7 +42,7 @@ module Dqt
     attr_accessor :headers, :host, :params
 
     def url(path)
-      "#{host}#{':' unless port.nil?}#{path}"
+      "#{host}#{path}"
     end
   end
 end
