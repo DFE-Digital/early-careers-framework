@@ -6,8 +6,6 @@ module Support
       extend ActiveSupport::Concern
 
       included do
-        require "capybara/rspec"
-
         subject(:rendered) { render_inline component }
         let(:_test_context) { Context.new }
       end

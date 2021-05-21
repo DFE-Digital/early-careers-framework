@@ -35,7 +35,7 @@ module Support
       def render_in(view_context)
         return super unless self.class.stubbed?
 
-        view_context.tag(:p, self.class.test_context.output_for(self), class: "stubbed-component")
+        view_context.tag.p(self.class.test_context.output_for(self), class: "stubbed-component")
       end
 
       ::ViewComponent::Base.prepend(self)
