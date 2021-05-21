@@ -28,13 +28,13 @@ RSpec.describe "Admin::Schools::InductionCoodinators", type: :request do
           email: "jo@example.com",
         },
       }
-      post admin_school_induction_coordinators_path(school.id), params: form_params
+      post admin_school_induction_coordinators_path(school), params: form_params
 
       created_user = User.order(:created_at).last
       expect(created_user.full_name).to eq "jo"
       expect(created_user.email).to eq "jo@example.com"
       expect(created_user.induction_coordinator?).to be_truthy
-      expect(response).to redirect_to admin_school_path(school.id)
+      expect(response).to redirect_to admin_school_path(school)
       expect(flash[:success][:content]).to eq "New induction tutor added. They will get an email with next steps."
     end
   end
@@ -54,9 +54,6 @@ RSpec.describe "Admin::Schools::InductionCoodinators", type: :request do
     it "renders the choose replace or update template" do
       get "/admin/schools/#{school.id}/induction-coordinators/choose-replace-or-update"
 
-      expect(response.body).to include("Are you replacing an induction tutor or updating their details?")
-      expect(response.body).to include("Replace induction tutor with someone new")
-      expect(response.body).to include("Update induction tutor’s details")
       expect(response).to render_template("admin/schools/induction_coordinators/choose_replace_or_update")
     end
   end
@@ -71,11 +68,15 @@ RSpec.describe "Admin::Schools::InductionCoodinators", type: :request do
         }
         post "/admin/schools/#{school.id}/induction-coordinators/replace-or-update", params: form_params
 
-        expect(response).to redirect_to new_admin_school_induction_coordinator_path(school.id)
+        expect(response).to redirect_to new_admin_school_induction_coordinator_path(school)
       end
     end
 
     context "when 'update' is selected" do
+      before do
+        induction_tutor
+      end
+
       it "redirects to the edit induction coordinator method" do
         form_params = {
           replace_or_update_tutor_form: {
@@ -84,7 +85,7 @@ RSpec.describe "Admin::Schools::InductionCoodinators", type: :request do
         }
         post "/admin/schools/#{school.id}/induction-coordinators/replace-or-update", params: form_params
 
-        expect(response).to redirect_to edit_admin_school_induction_coordinator_path(id: school.id)
+        expect(response).to redirect_to edit_admin_school_induction_coordinator_path(school, induction_tutor)
       end
     end
 

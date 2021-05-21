@@ -9,6 +9,8 @@ const inputs = {
   "school input": "#nomination-request-form-school-id-field",
   "supplier name input": "#supplier-user-form-supplier-field",
   "search box": "input[name=query]",
+  "replace induction tutor": "input[value=replace].govuk-radios__input",
+  "update induction tutor": "input[value=update].govuk-radios__input",
 };
 
 const buttons = {
@@ -20,8 +22,6 @@ const buttons = {
   "create supplier user button": '.govuk-button:contains("Add a new user")',
   "search button": "[data-test=search-button]",
   "remove button": ".govuk-button[value=Remove]",
-  "replace induction tutor": "input[value=replace].govuk-radios__input",
-  "update induction tutor": "input[value=update].govuk-radios__input",
 };
 
 const links = {

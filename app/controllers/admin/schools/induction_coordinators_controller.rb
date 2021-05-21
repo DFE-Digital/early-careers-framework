@@ -14,7 +14,7 @@ module Admin
 
     def create
       @nominate_induction_tutor_form = NominateInductionTutorForm.new(
-        form_params.merge(school_id: params[:school_id]),
+        tutor_form_params.merge(school_id: params[:school_id]),
       )
 
       if @nominate_induction_tutor_form.valid?
@@ -43,7 +43,7 @@ module Admin
         if @replace_or_update_tutor_form.replace_tutor?
           redirect_to new_admin_school_induction_coordinator_path(@school)
         else
-          redirect_to edit_admin_school_induction_coordinator_path(id: @school.id)
+          redirect_to edit_admin_school_induction_coordinator_path(@school, school_induction_tutor)
         end
       else
         render "choose_replace_or_update"
@@ -56,7 +56,7 @@ module Admin
 
     def update
       @induction_tutor = school_induction_tutor
-      @induction_tutor.assign_attributes(form_params)
+      @induction_tutor.assign_attributes(tutor_form_params)
       if @induction_tutor.changed?
         if @induction_tutor.email_changed?
           user = User.find_by(email: @induction_tutor.email)
@@ -115,7 +115,7 @@ module Admin
       render "email_used"
     end
 
-    def form_params
+    def tutor_form_params
       params.require(:tutor_details).permit(:full_name, :email)
     end
 
