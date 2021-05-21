@@ -141,6 +141,7 @@ group :test do
   gem "pundit-matchers", "~> 1.6.0"
   gem "rails-controller-testing", ">= 1.0.5"
   gem "rspec-default_http_header"
+  gem "rutabaga"
   gem "shoulda-matchers", "~> 4.4"
   gem "simplecov"
   gem "webdrivers", "~> 4.4", ">= 4.4.1"

@@ -1,1 +1,4 @@
 --require rails_helper
+--require spec_helper
+--require turnip/rspec
+--require payment_calculator
