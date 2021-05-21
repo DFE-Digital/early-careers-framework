@@ -15,8 +15,12 @@ Rails.application.routes.draw do
   get "/pages/:page", to: "pages#show", as: :page
   get "check" => "application#check"
 
+  unless Rails.env.production?
+    get "/sandbox", to: "sandbox#show"
+  end
+
   if Rails.env.sandbox?
-    root "sandbox#show"
+    root to: redirect("/sandbox", status: 307)
   else
     root "start#index"
   end
