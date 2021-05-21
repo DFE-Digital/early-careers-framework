@@ -88,40 +88,63 @@
         "responses": {
           "200": {
             "description": "Collection of users.",
-            "schema": {
-              "type": "object",
-              "required": [
-                "data"
-              ],
-              "properties": {
-                "data": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "required": [
-                      "id",
-                      "type",
-                      "attributes"
-                    ],
-                    "properties": {
-                      "id": {
-                        "type": "string"
-                      },
-                      "type": {
-                        "type": "string"
-                      },
-                      "attributes": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
                         "type": "object",
                         "required": [
-                          "email",
-                          "full_name"
+                          "id",
+                          "type",
+                          "attributes"
                         ],
                         "properties": {
-                          "email": {
+                          "id": {
                             "type": "string"
                           },
-                          "full_name": {
+                          "type": {
                             "type": "string"
+                          },
+                          "attributes": {
+                            "type": "object",
+                            "required": [
+                              "email",
+                              "full_name",
+                              "user_type",
+                              "core_induction_programme"
+                            ],
+                            "properties": {
+                              "email": {
+                                "type": "string"
+                              },
+                              "full_name": {
+                                "type": "string"
+                              },
+                              "user_type": {
+                                "type": "string",
+                                "enum": [
+                                  "early_career_teacher",
+                                  "other"
+                                ]
+                              },
+                              "core_induction_programme": {
+                                "type": "string",
+                                "enum": [
+                                  "ambition",
+                                  "edt",
+                                  "teach_first",
+                                  "ucl",
+                                  "none"
+                                ]
+                              }
+                            }
                           }
                         }
                       }

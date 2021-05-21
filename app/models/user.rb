@@ -38,4 +38,5 @@ class User < ApplicationRecord
   scope :induction_coordinators, -> { joins(:induction_coordinator_profile) }
   scope :for_lead_provider, -> { includes(:lead_provider).joins(:lead_provider) }
   scope :admins, -> { joins(:admin_profile) }
+  scope :early_career_teachers, -> { joins(:early_career_teacher_profile).includes(:early_career_teacher_profile) }
 end
