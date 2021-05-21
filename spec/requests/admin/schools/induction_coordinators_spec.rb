@@ -15,7 +15,6 @@ RSpec.describe "Admin::Schools::InductionCoodinators", type: :request do
     it "renders the new template" do
       get "/admin/schools/#{school.id}/induction-coordinators/new"
 
-      expect(response.body).to include("New induction tutor for #{school.name}")
       expect(response).to render_template("admin/schools/induction_coordinators/new")
     end
   end
@@ -43,10 +42,8 @@ RSpec.describe "Admin::Schools::InductionCoodinators", type: :request do
     it "renders the edit template" do
       get "/admin/schools/#{school.id}/induction-coordinators/#{induction_tutor.id}/edit"
 
-      expect(response.body).to include("Update induction tutor for #{school.name}")
-      expect(response.body).to include(induction_tutor.full_name)
-      expect(response.body).to include(induction_tutor.email)
       expect(response).to render_template("admin/schools/induction_coordinators/edit")
+      expect(assigns(:induction_tutor)).to eq induction_tutor
     end
   end
 
@@ -99,7 +96,6 @@ RSpec.describe "Admin::Schools::InductionCoodinators", type: :request do
         post "/admin/schools/#{school.id}/induction-coordinators/replace-or-update", params: form_params
 
         expect(response).to render_template("admin/schools/induction_coordinators/choose_replace_or_update")
-        expect(response.body).to include("Choose whether to replace or update the tutor")
       end
     end
   end
