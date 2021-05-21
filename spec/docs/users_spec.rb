@@ -34,11 +34,11 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
                            full_name: { type: :string },
                            user_type: {
                              type: :string,
-                             enum: USER_TYPES.keys,
+                             enum: UserSerializer::USER_TYPES.keys,
                            },
                            core_induction_programme: {
                              type: :string,
-                             enum: CIP_TYPES.keys,
+                             enum: UserSerializer::CIP_TYPES.keys,
                            },
                          },
                        },

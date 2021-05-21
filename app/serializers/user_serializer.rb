@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
-USER_TYPES = {
-  early_career_teacher: "early_career_teacher",
-  other: "other",
-}.freeze
-
-CIP_TYPES = {
-  ambition: "ambition",
-  edt: "edt",
-  teach_first: "teach_first",
-  ucl: "ucl",
-  none: "none",
-}.freeze
-
 class UserSerializer
   include JSONAPI::Serializer
+
+  USER_TYPES = {
+    early_career_teacher: "early_career_teacher",
+    other: "other",
+  }.freeze
+
+  CIP_TYPES = {
+    ambition: "ambition",
+    edt: "edt",
+    teach_first: "teach_first",
+    ucl: "ucl",
+    none: "none",
+  }.freeze
 
   set_id :id
   attributes :email, :full_name
