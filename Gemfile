@@ -120,7 +120,9 @@ group :development, :test do
   # Swagger generator
   gem "multi_json"
   gem "open_api-rswag-specs", ">= 0.1.0"
+end
 
+group :development, :deployed_development, :test, :sandbox do
   gem "faker"
 end
 
