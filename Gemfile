@@ -122,6 +122,10 @@ group :development, :test do
   gem "open_api-rswag-specs", ">= 0.1.0"
 end
 
+group :development, :deployed_development, :test, :sandbox do
+  gem "faker"
+end
+
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem "web-console", ">= 4.1.0"
@@ -135,7 +139,6 @@ group :development do
 end
 
 group :test do
-  gem "faker"
   gem "jsonapi-rspec"
   gem "pundit-matchers", "~> 1.6.0"
   gem "rails-controller-testing", ">= 1.0.5"
