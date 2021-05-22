@@ -120,6 +120,8 @@ group :development, :test do
   # Swagger generator
   gem "multi_json"
   gem "open_api-rswag-specs", ">= 0.1.0"
+
+  gem "faker"
 end
 
 group :development do
@@ -135,7 +137,6 @@ group :development do
 end
 
 group :test do
-  gem "faker"
   gem "jsonapi-rspec"
   gem "pundit-matchers", "~> 1.6.0"
   gem "rails-controller-testing", ">= 1.0.5"
