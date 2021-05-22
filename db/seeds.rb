@@ -1,9 +1,15 @@
 # frozen_string_literal: true
 
-load Rails.root.join("db/seeds/initial_seed.rb").to_s
+seed_path = %w[db seeds]
+
+load Rails.root.join(*seed_path, "initial_seed.rb").to_s
 
 if %w[development deployed_development test sandbox].include?(Rails.env)
-  %w[test_data dummy_structures sandbox_data].each do |seed|
-    load Rails.root.join("db/seeds", "#{seed}.rb").to_s
+  %w[test_data dummy_structures].each do |seed|
+    load Rails.root.join(*seed_path, "#{seed}.rb").to_s
   end
+end
+
+if %w[development deployed_development sandbox].include?(Rails.env)
+  load Rails.root.join(*seed_path, "sandbox_data.rb").to_s
 end
