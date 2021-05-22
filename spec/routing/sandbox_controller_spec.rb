@@ -19,8 +19,8 @@ RSpec.describe SandboxController do
         Rails.application.reload_routes!
       end
 
-      it "routes GET / to SandboxController#show" do
-        expect(get: "/").to route_to(controller: "sandbox", action: "show")
+      it "routes GET /sandbox to SandboxController#show" do
+        expect(get: "/sandbox").to route_to(controller: "sandbox", action: "show")
       end
     end
   end
