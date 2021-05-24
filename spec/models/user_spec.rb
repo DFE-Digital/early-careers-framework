@@ -103,4 +103,46 @@ RSpec.describe User, type: :model do
       expect(user.lead_provider?).to be false
     end
   end
+
+  describe "#changed_since" do
+    context "with no parameters" do
+      let!(:old_user) { create(:user, updated_at: 1.hour.ago) }
+      let!(:user) { create(:user, updated_at: 1.hour.ago) }
+
+      subject { User.changed_since(nil) }
+
+      it { should include user }
+      it { should include old_user }
+    end
+
+    context "with a user that was just updated" do
+      let!(:user) { create(:user, updated_at: 1.hour.ago) }
+      let!(:old_user) { create(:user, updated_at: 1.hour.ago) }
+
+      before { user.touch }
+
+      subject { User.changed_since(10.minutes.ago) }
+
+      it { should include user }
+      it { should_not include old_user }
+    end
+
+    context "with a user that has been updated less than a second after the given timestamp" do
+      let(:timestamp) { 5.minutes.ago }
+      let(:user) { create(:user, updated_at: timestamp + 0.001.seconds) }
+
+      subject { User.changed_since(timestamp) }
+
+      it { should include user }
+    end
+
+    context "with a user that has been updated exactly at the given timestamp" do
+      let(:timestamp) { 10.minutes.ago }
+      let(:user) { create(:user, updated_at: timestamp) }
+
+      subject { User.changed_since(timestamp) }
+
+      it { should_not include user }
+    end
+  end
 end

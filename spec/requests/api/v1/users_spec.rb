@@ -58,6 +58,11 @@ RSpec.describe "API Users", type: :request do
         get "/api/v1/users", params: { page: { per_page: 2, page: 2 } }
         expect(JSON.parse(response.body)["data"].size).to eql(1)
       end
+
+      it "returns users changed since a particular time, if given a changed_since parameter" do
+        User.first.update!(updated_at: 2.days.ago)
+        get "/api/v1/users", params: { filter: { changed_since: 1.day.ago.iso8601 } }
+      end
     end
 
     context "when unauthorized" do
