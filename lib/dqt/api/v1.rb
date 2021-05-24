@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "v1/qualified_teaching_status"
+require_relative "v1/dqt_record"
 
 module Dqt
   class Api
@@ -9,8 +9,8 @@ module Dqt
         self.client = client
       end
 
-      def qualified_teaching_status
-        @qualified_teaching_status ||= QualifiedTeachingStatus.new(client: client)
+      def dqt_record
+        @dqt_record ||= DQTRecord.new(client: client)
       end
 
     private

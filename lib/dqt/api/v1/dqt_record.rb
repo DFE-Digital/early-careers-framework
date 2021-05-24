@@ -3,7 +3,7 @@
 module Dqt
   class Api
     class V1
-      class QualifiedTeachingStatus
+      class DQTRecord
         def initialize(client:)
           self.client = client
         end

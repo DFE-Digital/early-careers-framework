@@ -7,13 +7,13 @@ module Dqt
     describe V1 do
       subject(:v1) { described_class.new(client: double("client")) }
 
-      describe "#qualified_teaching_status" do
-        it "returns QualifiedTeachingStatus" do
-          expect(v1.qualified_teaching_status).to be_an_instance_of(described_class::QualifiedTeachingStatus)
+      describe "#dqt_record" do
+        it "returns DQTRecord" do
+          expect(v1.dqt_record).to be_an_instance_of(described_class::DQTRecord)
         end
 
-        it "memoizes QualifiedTeachingStatus" do
-          expect(v1.qualified_teaching_status).to be(v1.qualified_teaching_status)
+        it "memoizes DQTRecord" do
+          expect(v1.dqt_record).to be(v1.dqt_record)
         end
       end
     end

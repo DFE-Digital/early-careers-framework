@@ -2,7 +2,7 @@
 
 module Dqt
   class Api
-    delegate :qualified_teaching_status, to: :v1
+    delegate :dqt_record, to: :v1
 
     def initialize(client:)
       self.client = client

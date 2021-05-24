@@ -5,11 +5,11 @@ require "rails_helper"
 module Dqt
   class Api
     class V1
-      describe QualifiedTeachingStatus do
-        subject(:qualified_teaching_status) { described_class.new(client: Client.new(host: "dqt.com")) }
+      describe DQTRecord do
+        subject(:dqt_record) { described_class.new(client: Client.new(host: "dqt.com")) }
 
         describe "#show" do
-          subject(:show) { qualified_teaching_status.show(params: params_args) }
+          subject(:show) { dqt_record.show(params: params_args) }
           let(:trn) { "1234567" }
           let(:nino) { "AA123456C" }
 
@@ -19,10 +19,10 @@ module Dqt
               national_insurance_number: nino,
             }
           end
-          let(:expected_qts) { build_qts(trn: trn, nino: nino) }
+          let(:expected_dqt_record) { build_dqt_record(trn: trn, nino: nino) }
 
           let!(:show_endpoint) do
-            stub_qualified_teaching_status_show(expected_qts: expected_qts)
+            stub_dqt_api(expected_dqt_record: expected_dqt_record)
           end
 
           it "makes correct request" do
@@ -32,13 +32,13 @@ module Dqt
           end
 
           it "returns qualified teaching status" do
-            expect(show).to eq(expected_qts)
+            expect(show).to eq(expected_dqt_record)
           end
         end
 
       private
 
-        def build_qts(trn:, nino:)
+        def build_dqt_record(trn:, nino:)
           {
             teacher_reference_number: trn,
             full_name: Faker::Name.name,
@@ -49,34 +49,34 @@ module Dqt
           }
         end
 
-        def stub_qualified_teaching_status_show(expected_qts:)
+        def stub_dqt_api(expected_dqt_record:)
           stub_request(:get, %r{/api/qualified-teachers/qualified-teaching-status}).with(
             query: WebMock::API.hash_including(
               {
-                trn: expected_qts[:teacher_reference_number],
-                ni: expected_qts[:national_insurance_number],
+                trn: expected_dqt_record[:teacher_reference_number],
+                ni: expected_dqt_record[:national_insurance_number],
               },
             ),
           ).to_return(
-            body: dqt_body(expected_qts: expected_qts),
+            body: dqt_body(expected_dqt_record: expected_dqt_record),
           )
         end
 
-        def dqt_body(expected_qts:)
+        def dqt_body(expected_dqt_record:)
           <<~JSON
             {
               "data": [
                 {
                   "id": 5,
-                  "trn": "#{expected_qts[:teacher_reference_number]}",
-                  "name": "#{expected_qts[:full_name]}",
-                  "doB": "#{expected_qts[:date_of_birth]}",
-                  "niNumber": "#{expected_qts[:national_insurance_number]}",
-                  "qtsAwardDate": "#{expected_qts[:qts_date].strftime('%Y-%m-%d %H:%M:%S')}",
+                  "trn": "#{expected_dqt_record[:teacher_reference_number]}",
+                  "name": "#{expected_dqt_record[:full_name]}",
+                  "doB": "#{expected_dqt_record[:date_of_birth]}",
+                  "niNumber": "#{expected_dqt_record[:national_insurance_number]}",
+                  "qtsAwardDate": "#{expected_dqt_record[:qts_date].strftime('%Y-%m-%d %H:%M:%S')}",
                   "ittSubject1Code": "G100",
                   "ittSubject2Code": "NULL",
                   "ittSubject3Code": "NULL",
-                  "activeAlert": #{expected_qts[:active_alert]},
+                  "activeAlert": #{expected_dqt_record[:active_alert]},
                   "qualificationName": "Professional Graduate Certificate in Education",
                   "ittStartDate": "2014-08-31T23:00:00",
                   "teacherStatus": "Assessment Only Route"

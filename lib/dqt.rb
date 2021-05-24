@@ -12,7 +12,7 @@ end
 
 require_relative "dqt/api"
 require_relative "dqt/api/v1"
-require_relative "dqt/api/v1/qualified_teaching_status"
+require_relative "dqt/api/v1/dqt_record"
 require_relative "dqt/client"
 require_relative "dqt/client/response"
 require_relative "dqt/client/response_error"

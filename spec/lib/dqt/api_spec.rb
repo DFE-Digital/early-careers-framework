@@ -6,7 +6,7 @@ module Dqt
   describe Api do
     subject(:api) { described_class.new(client: double("client")) }
 
-    it { should delegate_method(:qualified_teaching_status).to(:v1) }
+    it { should delegate_method(:dqt_record).to(:v1) }
 
     describe "#v1" do
       it "returns V1" do
