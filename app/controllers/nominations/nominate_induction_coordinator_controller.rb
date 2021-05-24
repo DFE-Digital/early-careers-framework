@@ -30,6 +30,7 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
       CreateInductionTutor.call(school: @nominate_induction_tutor_form.school,
                                 email: @nominate_induction_tutor_form.email,
                                 full_name: @nominate_induction_tutor_form.full_name)
+      redirect_to nominate_school_lead_success_nominate_induction_coordinator_path
     elsif @nominate_induction_tutor_form.email_already_taken?
       redirect_to email_used_nominate_induction_coordinator_path
     else
