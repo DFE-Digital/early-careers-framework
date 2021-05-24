@@ -22,7 +22,7 @@ RSpec.describe CreateInductionTutor do
       service.call
 
       expect(SchoolMailer).to have_received(:nomination_confirmation_email)
-        .with(user: service.profile.user, school: school, start_url: service.start_url)
+        .with(user: User.find_by(email: email), school: school, start_url: service.start_url)
     end
 
     context "when an induction coordinator exists" do
@@ -35,9 +35,10 @@ RSpec.describe CreateInductionTutor do
       it "removes the existing induction coordinator" do
         expect(school.induction_coordinator_profiles.first).to eq(existing_profile)
 
-        profile = CreateInductionTutor.call(school: school, email: email, full_name: name)
+        CreateInductionTutor.call(school: school, email: email, full_name: name)
 
-        expect(school.reload.induction_coordinator_profiles.first).to eq(profile)
+        user = User.find_by(email: email)
+        expect(school.reload.induction_coordinator_profiles.first).to eq(user.induction_coordinator_profile)
       end
     end
   end
