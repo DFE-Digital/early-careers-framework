@@ -141,11 +141,11 @@ Where `"name or id"` is a name or id from the `lead_providers` table.
 2. Run `EngageAndLearnApiToken.create_with_random_token!`
 3. Rails console should output a string, that's your unhashed token, you can keep it and use it to access E&L endpoints.
 
-## About the payment_calculator
+## payment_calculator
 
-This engine performs all payment calculations for both [ECFs (Early Career Framework)](https://www.early-career-framework.education.gov.uk/) and [the reformed NPQs (National Professional Qualification)](https://www.gov.uk/government/publications/national-professional-qualifications-frameworks-from-september-2021) so that training providers can be paid the correct amount.
+The code in [`lib/payment_calculator/`](lib/payment_calculator/) performs payment calculations for both [ECFs (Early Career Framework)](https://www.early-career-framework.education.gov.uk/) and [the reformed NPQs (National Professional Qualification)](https://www.gov.uk/government/publications/national-professional-qualifications-frameworks-from-september-2021) so that training providers can be paid the correct amount.
 
-The output of the engine includes the result of each intermediary step in the calculation so that any questions over how the final totals were reached can be answered by interested parties.
+The output includes the result of each intermediary step in the calculation so that any questions over how the final totals were reached can be answered by interested parties.
 
 ### Payment entity naming
 
