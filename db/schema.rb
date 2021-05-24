@@ -277,9 +277,11 @@ ActiveRecord::Schema.define(version: 2021_05_18_143026) do
     t.datetime "challenged_at"
     t.string "challenge_reason"
     t.datetime "challenge_deadline"
+    t.boolean "pending", default: false, null: false
     t.index ["cohort_id"], name: "index_partnerships_on_cohort_id"
     t.index ["delivery_partner_id"], name: "index_partnerships_on_delivery_partner_id"
     t.index ["lead_provider_id"], name: "index_partnerships_on_lead_provider_id"
+    t.index ["pending"], name: "index_partnerships_on_pending"
     t.index ["school_id"], name: "index_partnerships_on_school_id"
   end
 
