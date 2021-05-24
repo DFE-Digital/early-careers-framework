@@ -6,8 +6,9 @@
   <div class="govuk-grid-column-two-thirds">
     <%= render partial: 'induction_tutor_form', locals: {
       heading: title,
-      form_object: @induction_tutor,
+      form_object: @induction_tutor_form,
       form_url: admin_school_induction_coordinator_path(@school),
+      form_method: :patch,
       submit_label: "Save changes"
     } %>
   </div>

@@ -39,64 +39,17 @@ RSpec.describe "Admin::Schools::InductionCoodinators", type: :request do
   end
 
   describe "GET /admin/schools/:school_id/induction-coordinators/:id/edit" do
+    before do
+      induction_tutor
+    end
+
     it "renders the edit template" do
       get "/admin/schools/#{school.id}/induction-coordinators/#{induction_tutor.id}/edit"
 
       expect(response).to render_template("admin/schools/induction_coordinators/edit")
-      expect(assigns(:induction_tutor)).to eq induction_tutor
-    end
-  end
-
-  describe "GET /admin/schools/:school_id/induction-coordinators/choose-replace-or-update" do
-    it "renders the choose replace or update template" do
-      get "/admin/schools/#{school.id}/induction-coordinators/choose-replace-or-update"
-
-      expect(response).to render_template("admin/schools/induction_coordinators/choose_replace_or_update")
-    end
-  end
-
-  describe "POST /admin/schools/:school_id/induction-coordinators/replace-or-update" do
-    context "when 'replace' is selected" do
-      it "redirects to the new induction coordinator method" do
-        form_params = {
-          replace_or_update_tutor_form: {
-            choice: "replace",
-          },
-        }
-        post "/admin/schools/#{school.id}/induction-coordinators/replace-or-update", params: form_params
-
-        expect(response).to redirect_to new_admin_school_induction_coordinator_path(school)
-      end
-    end
-
-    context "when 'update' is selected" do
-      before do
-        induction_tutor
-      end
-
-      it "redirects to the edit induction coordinator method" do
-        form_params = {
-          replace_or_update_tutor_form: {
-            choice: "update",
-          },
-        }
-        post "/admin/schools/#{school.id}/induction-coordinators/replace-or-update", params: form_params
-
-        expect(response).to redirect_to edit_admin_school_induction_coordinator_path(school, induction_tutor)
-      end
-    end
-
-    context "when no choice is made" do
-      it "renders the choose replace or update template" do
-        form_params = {
-          replace_or_update_tutor_form: {
-            choice: "",
-          },
-        }
-        post "/admin/schools/#{school.id}/induction-coordinators/replace-or-update", params: form_params
-
-        expect(response).to render_template("admin/schools/induction_coordinators/choose_replace_or_update")
-      end
+      expect(assigns(:induction_tutor_form).user_id).to eq induction_tutor.id
+      expect(assigns(:induction_tutor_form).email).to eq induction_tutor.email
+      expect(assigns(:induction_tutor_form).full_name).to eq induction_tutor.full_name
     end
   end
 

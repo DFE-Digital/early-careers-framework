@@ -4,7 +4,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <%= form_for @replace_or_update_tutor_form, url: replace_or_update_admin_school_induction_coordinators_path(@school), method: :post do |f| %>
+    <%= form_for @replace_or_update_tutor_form, url: admin_school_replace_or_update_induction_tutor_path(@school), method: :post do |f| %>
       <%= f.govuk_error_summary %>
       <h1 class="govuk-heading-xl"><%= title %></h1>
       <%= f.govuk_collection_radio_buttons(

@@ -26,12 +26,15 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
   def create
     load_nominate_induction_tutor_form
 
-    render :new and return unless @nominate_induction_tutor_form.valid?
-
-    @nominate_induction_tutor_form.save!
-    redirect_to nominate_school_lead_success_nominate_induction_coordinator_path
-  rescue UserExistsError
-    redirect_to email_used_nominate_induction_coordinator_path
+    if @nominate_induction_tutor_form.valid?
+      CreateInductionTutor.call(school: @nominate_induction_tutor_form.school,
+                                email: @nominate_induction_tutor_form.email,
+                                full_name: @nominate_induction_tutor_form.full_name)
+    elsif @nominate_induction_tutor_form.email_already_taken?
+      redirect_to email_used_nominate_induction_coordinator_path
+    else
+      render :new
+    end
   end
 
   def link_expired

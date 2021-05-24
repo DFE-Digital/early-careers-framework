@@ -12,6 +12,14 @@ RSpec.describe NominateInductionTutorForm, type: :model do
   describe "validations" do
     it { is_expected.to validate_presence_of(:full_name).with_message("Enter a full name") }
     it { is_expected.to validate_presence_of(:email).with_message("Enter an email") }
+
+    it "validates that the email address is not in use" do
+      create(:user, email: email)
+      form = NominateInductionTutorForm.new(token: token, full_name: name, email: email)
+      expect(form).not_to be_valid
+      expect(form.errors[:email].first).to eq("This email address is already in use")
+      expect(form.email_already_taken?).to be_truthy
+    end
   end
 
   describe "#school" do
@@ -29,34 +37,6 @@ RSpec.describe NominateInductionTutorForm, type: :model do
         form = NominateInductionTutorForm.new(school_id: school.id)
 
         expect(form.school).to eql school
-      end
-    end
-  end
-
-  describe "#save!" do
-    let(:form) { NominateInductionTutorForm.new(token: token, full_name: name, email: email) }
-
-    it "creates an induction coordinator with the correct details" do
-      expect { form.save! }
-        .to change { User.count }
-              .by(1)
-              .and change { InductionCoordinatorProfile.count }.by(1)
-
-      created_user = User.find_by(email: email)
-      expect(created_user).not_to be_nil
-      expect(created_user.full_name).to eql name
-      expect(created_user.induction_coordinator_profile.schools).to contain_exactly(school)
-    end
-
-    context "when a user with the specified email already exists" do
-      before do
-        create(:user, email: email)
-      end
-
-      it "raises UserExistsError" do
-        expect { form.save! }.to raise_error(UserExistsError)
-                                   .and(not_change { User.unscoped.count })
-                                   .and(not_change { InductionCoordinatorProfile.unscoped.count })
       end
     end
   end

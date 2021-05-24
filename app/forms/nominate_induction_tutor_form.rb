@@ -3,10 +3,11 @@
 class NominateInductionTutorForm
   include ActiveModel::Model
 
-  attr_accessor :full_name, :email, :token, :school_id
+  attr_accessor :full_name, :email, :token, :school_id, :user_id
 
   validates :full_name, presence: true
   validates :email, presence: true, format: { with: Devise.email_regexp }
+  validate :email_is_not_in_use
 
   def school
     if school_id
@@ -16,19 +17,17 @@ class NominateInductionTutorForm
     end
   end
 
-  def save!
-    raise UserExistsError if User.exists?(email: email)
-
-    school.induction_coordinators.first.destroy! if school.induction_coordinators.first
-
-    InductionCoordinatorProfile.create_induction_coordinator(
-      full_name,
-      email,
-      school,
-      Rails.application.routes.url_helpers.root_url(host: Rails.application.config.domain),
-    )
+  def email_already_taken?
+    if user_id
+      User.where.not(id: user_id).exists?(email: email)
+    else
+      User.exists?(email: email)
+    end
   end
-end
 
-class UserExistsError < StandardError
+private
+
+  def email_is_not_in_use
+    errors.add(:email, :taken) if email_already_taken?
+  end
 end

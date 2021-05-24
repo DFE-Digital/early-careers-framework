@@ -6,76 +6,45 @@ module Admin
     skip_after_action :verify_policy_scoped
     before_action :set_school
 
-    def email_used; end
-
     def new
-      @nominate_induction_tutor_form = NominateInductionTutorForm.new
+      @induction_tutor_form = NominateInductionTutorForm.new
     end
 
     def create
-      @nominate_induction_tutor_form = NominateInductionTutorForm.new(
-        tutor_form_params.merge(school_id: params[:school_id]),
-      )
+      @induction_tutor_form = NominateInductionTutorForm.new(tutor_form_params)
 
-      if @nominate_induction_tutor_form.valid?
-        if email_already_used?(@nominate_induction_tutor_form.email)
-          render_email_used_page(email: @nominate_induction_tutor_form.email,
-                                 action_path: new_admin_school_induction_coordinator_path(@school))
-        else
-          create_school_induction_tutor!(school: @school,
-                                         email: @nominate_induction_tutor_form.email,
-                                         full_name: @nominate_induction_tutor_form.full_name)
-          set_success_message(content: "New induction tutor added. They will get an email with next steps.", title: "Success")
-          redirect_to admin_school_path(@school)
-        end
+      if @induction_tutor_form.valid?
+        CreateInductionTutor.call(school: @school,
+                                  email: @induction_tutor_form.email,
+                                  full_name: @induction_tutor_form.full_name)
+
+        set_success_message(content: "New induction tutor added. They will get an email with next steps.", title: "Success")
+        redirect_to admin_school_path(@school)
+      elsif @induction_tutor_form.email_already_taken?
+        render_email_used_page(email: @induction_tutor_form.email,
+                               action_path: new_admin_school_induction_coordinator_path(@school))
       else
         render :new
       end
     end
 
-    def choose_replace_or_update
-      @replace_or_update_tutor_form = ReplaceOrUpdateTutorForm.new
-    end
-
-    def replace_or_update
-      @replace_or_update_tutor_form = ReplaceOrUpdateTutorForm.new(replace_or_update_params)
-      if @replace_or_update_tutor_form.valid?
-        if @replace_or_update_tutor_form.replace_tutor?
-          redirect_to new_admin_school_induction_coordinator_path(@school)
-        else
-          redirect_to edit_admin_school_induction_coordinator_path(@school, school_induction_tutor)
-        end
-      else
-        render "choose_replace_or_update"
-      end
-    end
-
     def edit
-      @induction_tutor = school_induction_tutor
+      @induction_tutor_form = NominateInductionTutorForm.new(school_induction_tutor_attributes)
     end
 
     def update
-      @induction_tutor = school_induction_tutor
-      @induction_tutor.assign_attributes(tutor_form_params)
-      if @induction_tutor.changed?
-        if @induction_tutor.email_changed?
-          user = User.find_by(email: @induction_tutor.email)
-          if user && user.id != @induction_tutor.id
-            render_email_used_page(email: @induction_tutor.email,
-                                   action_path: edit_admin_school_induction_coordinator_path(@school))
-            return
-          end
-        end
+      @induction_tutor_form = NominateInductionTutorForm.new(school_induction_tutor_attributes.merge(tutor_form_params))
 
-        if @induction_tutor.valid?
-          @induction_tutor.save!
-          set_success_message(content: "Induction tutor details updated", title: "Success")
-          redirect_to admin_school_path(@school)
-        else
-          render :edit
-        end
-      else
+      if @induction_tutor_form.valid?
+        school_induction_tutor.update!(full_name: @induction_tutor_form.full_name,
+                                       email: @induction_tutor_form.email)
+        set_success_message(content: "Induction tutor details updated", title: "Success")
         redirect_to admin_school_path(@school)
+      elsif @induction_tutor_form.email_already_taken?
+        render_email_used_page(email: @induction_tutor_form.email,
+                               action_path: edit_admin_school_induction_coordinator_path(@school, school_induction_tutor))
+      else
+        render :edit
       end
     end
 
@@ -89,23 +58,21 @@ module Admin
       @school.induction_coordinators.first
     end
 
-    def create_school_induction_tutor!(school:, email:, full_name:)
-      school.induction_coordinators.first.destroy! if school.induction_coordinators.first
-
-      InductionCoordinatorProfile.create_induction_coordinator(
-        full_name,
-        email,
-        school,
-        Rails.application.routes.url_helpers.root_url(host: Rails.application.config.domain),
-      )
+    def school_induction_tutor_attributes
+      user = @school.induction_coordinators.first
+      if user
+        {
+          user_id: user.id,
+          email: user.email,
+          full_name: user.full_name,
+        }
+      else
+        {}
+      end
     end
 
     def school_using_this_email(email)
       User.find_by(email: email).schools.first
-    end
-
-    def email_already_used?(email)
-      User.exists?(email: email)
     end
 
     def render_email_used_page(email:, action_path:)
@@ -117,10 +84,6 @@ module Admin
 
     def tutor_form_params
       params.require(:tutor_details).permit(:full_name, :email)
-    end
-
-    def replace_or_update_params
-      params.require(:replace_or_update_tutor_form).permit(:choice)
     end
   end
 end

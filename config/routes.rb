@@ -102,13 +102,9 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resources :schools, only: %i[index show] do
-      resources :induction_coordinators, controller: "schools/induction_coordinators", only: %i[new create edit update], path: "induction-coordinators" do
-        collection do
-          get "choose-replace-or-update", action: :choose_replace_or_update
-          post "replace-or-update", action: :replace_or_update
-          get "email-used", action: :email_used
-        end
-      end
+      resources :induction_coordinators, controller: "schools/induction_coordinators", only: %i[new create edit update], path: "induction-coordinators"
+      get "/replace-or-update-induction-tutor", to: "schools/replace_or_update_induction_tutor#show"
+      post "/replace-or-update-induction-tutor", to: "schools/replace_or_update_induction_tutor#choose"
     end
 
     scope :suppliers, module: "suppliers" do

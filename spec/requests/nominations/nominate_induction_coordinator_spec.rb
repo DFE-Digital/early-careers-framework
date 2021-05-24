@@ -144,8 +144,11 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
     end
 
     context "when a user already exists with the provided email" do
+      before do
+        create(:user, email: email)
+      end
+
       it "redirects to the email-used page" do
-        expect_any_instance_of(NominateInductionTutorForm).to receive(:save!).and_raise(UserExistsError)
         expect {
           post "/nominations", params: { nominate_induction_tutor_form: {
             full_name: name,
