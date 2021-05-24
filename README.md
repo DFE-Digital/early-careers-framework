@@ -140,3 +140,22 @@ Where `"name or id"` is a name or id from the `lead_providers` table.
 1. Get into Rails console for the environment you want to generate the token for.
 2. Run `EngageAndLearnApiToken.create_with_random_token!`
 3. Rails console should output a string, that's your unhashed token, you can keep it and use it to access E&L endpoints.
+
+## About the payment_calculator
+
+This engine performs all payment calculations for both [ECFs (Early Career Framework)](https://www.early-career-framework.education.gov.uk/) and [the reformed NPQs (National Professional Qualification)](https://www.gov.uk/government/publications/national-professional-qualifications-frameworks-from-september-2021) so that training providers can be paid the correct amount.
+
+The output of the engine includes the result of each intermediary step in the calculation so that any questions over how the final totals were reached can be answered by interested parties.
+
+### Payment entity naming
+
+Here are the names we are using in the code and specs for the different concepts involved in the calculations by way of an example:
+
+> Per participant price £995 >>
+per participant service fee £398 (40%) >> monthly service fee £27k >> total service fee £796k
+>
+> Per participant price £995 >> per participant output payment £597 (60%) >> per participant output payment for a retention period £119 (20% of 60%) >> output payment subtotal for a retention period with 1900 retained participants £226k
+
+* "Participants" includes both teachers and mentors.
+* "Output payments" are payments made based on the performance of the training provider (i.e. their output). Previously known as "variable payments" in the code.
+* "Payment type" for start/retention/completion output payments.
