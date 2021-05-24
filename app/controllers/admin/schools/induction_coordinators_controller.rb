@@ -37,7 +37,7 @@ module Admin
 
       if @induction_tutor_form.valid?
         @school.induction_tutor.update!(full_name: @induction_tutor_form.full_name,
-                                       email: @induction_tutor_form.email)
+                                        email: @induction_tutor_form.email)
         set_success_message(content: "Induction tutor details updated", title: "Success")
         redirect_to admin_school_path(@school)
       elsif @induction_tutor_form.email_already_taken?
