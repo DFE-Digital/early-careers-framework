@@ -81,6 +81,9 @@ gem "delayed_job_active_record"
 # Acts as State Machine for participant states
 gem "aasm"
 
+# Pagination for API
+gem "pagy", "~> 3.13"
+
 gem "jsonapi-serializer"
 
 # OpenApi Swagger

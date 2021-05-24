@@ -42,6 +42,22 @@ RSpec.describe "API Users", type: :request do
         get "/api/v1/users"
         expect(parsed_response["data"][0]).to have_jsonapi_attributes(:email, :full_name, :user_type, :core_induction_programme).exactly
       end
+
+      it "returns the right number of users per page" do
+        get "/api/v1/users", params: { page: { per_page: 2, page: 1 } }
+        expect(parsed_response["data"].size).to eql(2)
+      end
+
+      it "returns different users for each page" do
+        User.delete_all
+        3.times { create(:user) }
+
+        get "/api/v1/users", params: { page: { per_page: 2, page: 1 } }
+        expect(parsed_response["data"].size).to eql(2)
+
+        get "/api/v1/users", params: { page: { per_page: 2, page: 2 } }
+        expect(JSON.parse(response.body)["data"].size).to eql(1)
+      end
     end
 
     context "when unauthorized" do
