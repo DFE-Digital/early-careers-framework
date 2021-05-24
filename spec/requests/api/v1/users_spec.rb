@@ -61,7 +61,8 @@ RSpec.describe "API Users", type: :request do
 
       it "returns users changed since a particular time, if given a changed_since parameter" do
         User.first.update!(updated_at: 2.days.ago)
-        get "/api/v1/users", params: { filter: { changed_since: 1.day.ago.iso8601 } }
+        get "/api/v1/users", params: { filter: { updated_since: 1.day.ago.iso8601 } }
+        expect(parsed_response["data"].size).to eql(2)
       end
     end
 
