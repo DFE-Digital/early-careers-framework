@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 module Dqt
@@ -9,15 +11,15 @@ module Dqt
         response: {
           reason_code: "ACODE",
           reason_text: "reasontext",
-          key1: "value1"
-        }
+          key1: "value1",
+        },
       }
     end
 
     let(:response_args) do
       instance_double(
         Net::HTTPResponse,
-        body: body_args.to_json
+        body: body_args.to_json,
       )
     end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 module Dqt
@@ -13,15 +15,15 @@ module Dqt
       context "with client headers" do
         before do
           client_args[:headers] = {
-            Authorization: "}N~4#V6VY->dX2p4R#~Rz%t,&5!fr}]Y[*>Rs[C{kX#GBmS.}5"
+            Authorization: "APIKEY",
           }
         end
 
         it "adds security headers" do
           stub = stub_request(method, %r{test}).with(
             headers: {
-              Authorization: "}N~4#V6VY->dX2p4R#~Rz%t,&5!fr}]Y[*>Rs[C{kX#GBmS.}5"
-            }
+              Authorization: "APIKEY",
+            },
           )
 
           client.public_send(method)
@@ -33,8 +35,8 @@ module Dqt
       it "add content type header" do
         stub = stub_request(method, %r{test}).with(
           headers: {
-            'Content-Type': "application/json"
-          }
+            'Content-Type': "application/json",
+          },
         )
 
         client.public_send(method)
@@ -45,7 +47,7 @@ module Dqt
       context "with JSON body" do
         before do
           stub_request(method, %r{test}).to_return(
-            body: body_args.to_json
+            body: body_args.to_json,
           )
         end
 
@@ -54,8 +56,8 @@ module Dqt
             response: {
               reason_code: "ACODE",
               reason_text: "sometext",
-              key1: "value1"
-            }
+              key1: "value1",
+            },
           }
         end
 
@@ -72,17 +74,6 @@ module Dqt
         end
       end
 
-      context "with port" do
-        before { client_args[:port] = 1234 }
-
-        it "makes a request to a port" do
-          stub = stub_request(method, %r{test:1234})
-          client.public_send(method)
-
-          expect(stub).to have_been_requested
-        end
-      end
-
       context "with invalid response status" do
         before { stub_request(method, %r{test}).to_return(status: response_status) }
         let(:response_status) { [*0..199, *300..599].sample }
@@ -93,11 +84,11 @@ module Dqt
       end
 
       context "with client params" do
-        before { client_args[:params] = {some_param: "somevalue"} }
+        before { client_args[:params] = { some_param: "somevalue" } }
 
         it "makes a request with those params" do
           stub = stub_request(method, %r{test}).with(
-            query: hash_including({some_param: "somevalue"})
+            query: hash_including({ some_param: "somevalue" }),
           )
 
           client.public_send(method)
@@ -110,10 +101,7 @@ module Dqt
     subject(:client) { described_class.new(**client_args) }
 
     let(:client_args) do
-      {
-        host: "test",
-        port: nil
-      }
+      { host: "test" }
     end
 
     describe "#api" do
@@ -132,18 +120,18 @@ module Dqt
       it "adds params to URL" do
         stub = stub_request(:get, "test").with(
           query: hash_including({
-            test: "value"
-          })
+            test: "value",
+          }),
         )
 
-        client.get(params: {test: "value"})
+        client.get(params: { test: "value" })
 
         expect(stub).to have_been_requested
       end
 
       it "should not send body" do
         stub = stub_request(:get, %r{test}).with(
-          body: nil
+          body: nil,
         )
 
         client.get
@@ -152,7 +140,7 @@ module Dqt
       end
 
       context "with body param" do
-        let(:params) { {body: "something"} }
+        let(:params) { { body: "something" } }
 
         it "raises an error" do
           expect { client.get(params) }.to raise_error(ArgumentError)
