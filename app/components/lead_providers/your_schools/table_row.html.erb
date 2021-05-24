@@ -1,0 +1,7 @@
+<tr class="govuk-table__row">
+  <td class="govuk-table__cell"><%= govuk_link_to school.name, lead_providers_school_detail_path(school, selected_cohort_id: cohort.id) %></td>
+  <td class="govuk-table__cell"><%= school.urn %></td>
+  <td class="govuk-table__cell"><%= school.delivery_partner_for(cohort.start_year)&.name %></td>
+  <td class="govuk-table__cell govuk-table__cell--numeric"><%= school.early_career_teacher_profiles_for(cohort.start_year).count %></td>
+  <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
+</tr>

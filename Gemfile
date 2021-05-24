@@ -136,6 +136,7 @@ group :development do
 end
 
 group :test do
+  gem "capybara"
   gem "faker"
   gem "jsonapi-rspec"
   gem "pundit-matchers", "~> 1.6.0"
