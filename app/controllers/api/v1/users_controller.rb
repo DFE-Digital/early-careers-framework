@@ -13,17 +13,17 @@ module Api
     private
 
       def updated_since
-        @updated_since ||= params.dig(:filter, :updated_since)
+        params.dig(:filter, :updated_since)
       end
 
       def users
-        @users = User.all.includes(:early_career_teacher_profile, :core_induction_programme)
+        users = User.all.includes(:early_career_teacher_profile, :core_induction_programme)
 
         if updated_since.present?
-          @users = @users.changed_since(updated_since)
+          users = users.changed_since(updated_since)
         end
 
-        @users
+        users
       end
 
       def paginate(scope)
