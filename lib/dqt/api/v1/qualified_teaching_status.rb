@@ -27,6 +27,12 @@ module Dqt
             qts_date: Date.parse(first_item[:qtsAwardDate]),
             active_alert: first_item[:activeAlert],
           }
+        rescue Dqt::Client::ResponseError => e
+          if e.response.code == 404
+            nil
+          else
+            raise e
+          end
         end
 
       private
