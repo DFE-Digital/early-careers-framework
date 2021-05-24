@@ -36,13 +36,13 @@ module Admin
       @induction_tutor_form = NominateInductionTutorForm.new(school_induction_tutor_attributes.merge(tutor_form_params))
 
       if @induction_tutor_form.valid?
-        school_induction_tutor.update!(full_name: @induction_tutor_form.full_name,
+        @school.induction_tutor.update!(full_name: @induction_tutor_form.full_name,
                                        email: @induction_tutor_form.email)
         set_success_message(content: "Induction tutor details updated", title: "Success")
         redirect_to admin_school_path(@school)
       elsif @induction_tutor_form.email_already_taken?
         render_email_used_page(email: @induction_tutor_form.email,
-                               action_path: edit_admin_school_induction_coordinator_path(@school, school_induction_tutor))
+                               action_path: edit_admin_school_induction_coordinator_path(@school, @school.induction_tutor))
       else
         render :edit
       end
@@ -54,12 +54,8 @@ module Admin
       @school = School.find params[:school_id]
     end
 
-    def school_induction_tutor
-      @school.induction_coordinators.first
-    end
-
     def school_induction_tutor_attributes
-      user = @school.induction_coordinators.first
+      user = @school.induction_tutor
       if user
         {
           user_id: user.id,

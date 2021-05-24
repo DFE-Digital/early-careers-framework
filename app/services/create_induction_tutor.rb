@@ -17,13 +17,13 @@ class CreateInductionTutor < BaseService
 
       user = User.create!(full_name: full_name, email: email)
       ic_profile = InductionCoordinatorProfile.create!(user: user, schools: [school])
-      SchoolMailer.nomination_confirmation_email(user: user, school: school, start_url: start_url).deliver_now
+      SchoolMailer.nomination_confirmation_email(user: user, school: school, start_url: start_url).deliver_later
     end
 
     self.profile = ic_profile
   end
 
   def start_url
-    @start_url ||= Rails.application.routes.url_helpers.root_url(host: Rails.application.config.domain)
+    Rails.application.routes.url_helpers.root_url(host: Rails.application.config.domain)
   end
 end

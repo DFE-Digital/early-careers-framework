@@ -143,10 +143,14 @@ class School < ApplicationRecord
 
   def contact_email
     if induction_coordinators.any?
-      induction_coordinators.first.email
+      induction_tutor.email
     else
       primary_contact_email.presence || secondary_contact_email
     end
+  end
+
+  def induction_tutor
+    induction_coordinators.first
   end
 
 private
