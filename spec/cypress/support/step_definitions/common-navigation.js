@@ -35,7 +35,7 @@ const pagePaths = {
   "edit admin school induction coordinator":
     "/admin/schools/:id/induction-coordinators/:id/edit",
   "choose replace or update induction tutor":
-    "/admin/schools/:id/induction-coordinators/choose-replace-or-update",
+    "/admin/schools/:id/replace-or-update-induction-tutor",
   "admin index": "/admin/administrators",
   "admin induction coordinator edit": "/admin/induction-coordinators/:id/edit",
   "admin creation": "/admin/administrators/new",
