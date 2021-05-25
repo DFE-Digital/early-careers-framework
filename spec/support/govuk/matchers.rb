@@ -5,11 +5,11 @@ module Support
     module ViewMatchers
       extend RSpec::Matchers::DSL
 
-      define :have_govuk_tag do |text, color: nil|
+      define :have_govuk_tag do |text, colour: nil|
         match do |rendered|
           classes = %w[.govuk-tag]
           # TODO: blue means either `govuk-tag--blue` or no `govuk-tag-*` class
-          classes << ".govuk-tag--#{color}" if color
+          classes << ".govuk-tag--#{colour}" if colour
           expect(rendered).to have_selector classes.join, text: /\A#{text}\z/i
         end
       end

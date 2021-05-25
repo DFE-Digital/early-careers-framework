@@ -15,7 +15,7 @@ RSpec.describe LeadProviders::YourSchools::TableRow, type: :view_component do
   context "when aprtnership is challanged" do
     let!(:partnership) { create :partnership, :challenged }
 
-    it { is_expected.to have_govuk_tag "REPORTED ERROR" }
+    it { is_expected.to have_govuk_tag "REPORTED ERROR", colour: :red }
   end
 
   context "with ECT in given cohort" do
