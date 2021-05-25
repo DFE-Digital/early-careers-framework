@@ -6,7 +6,6 @@ module PaymentCalculator
   module Ecf
     module Contract
       module ServiceFeeCalculations
-
         class << self
           def included(base)
             base.class_eval do
@@ -31,7 +30,7 @@ module PaymentCalculator
           band_a.per_participant * 0.4 - setup_cost_per_participant
         end
 
-        private
+      private
 
         def setup_cost_per_participant
           set_up_fee / recruitment_target

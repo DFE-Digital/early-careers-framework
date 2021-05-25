@@ -23,11 +23,11 @@ module PaymentCalculator
         end
 
         def output_payment_per_participant_for_event(event_type:)
-          event_type=event_type.parameterize.underscore.intern if(event_type.is_a?(String))
+          event_type = event_type.parameterize.underscore.intern if event_type.is_a?(String)
           send(event_type) * output_payment_per_participant
         end
 
-        private
+      private
 
         def start_and_completion_event_percentage
           0.2

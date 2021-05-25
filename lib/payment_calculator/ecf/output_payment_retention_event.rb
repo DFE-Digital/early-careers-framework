@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "payment_calculator/ecf/contract/output_payment_calculations"
 
 module PaymentCalculator

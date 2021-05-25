@@ -15,15 +15,15 @@ module PaymentCalculator
       def call(event_type:, total_participants:)
         {
           per_participant: output_payment_per_participant,
-          event_type => output_payment_retention_event.call(config, event_type: event_type, total_participants: total_participants)
+          event_type => output_payment_retention_event.call(config, event_type: event_type, total_participants: total_participants),
         }
       end
 
-      private
+    private
 
       def default_config
         {
-          output_payment_retention_event: PaymentCalculator::Ecf::OutputPaymentRetentionEvent
+          output_payment_retention_event: PaymentCalculator::Ecf::OutputPaymentRetentionEvent,
         }
       end
     end

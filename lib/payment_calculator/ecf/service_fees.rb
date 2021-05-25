@@ -17,4 +17,3 @@ module PaymentCalculator
     end
   end
 end
-

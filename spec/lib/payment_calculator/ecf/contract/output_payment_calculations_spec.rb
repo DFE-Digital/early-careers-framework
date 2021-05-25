@@ -6,11 +6,10 @@ class DummyClass
 end
 
 describe ::PaymentCalculator::Ecf::Contract::OutputPaymentCalculations do
-
   it "performs calculations of the output payments" do
-    band_a=double("Band Double", per_participant: 996.00)
-    contract=double("Contract Double", band_a: band_a)
-    call_off_contract=DummyClass.new({contract: contract})
+    band_a = double("Band Double", per_participant: 996.00)
+    contract = double("Contract Double", band_a: band_a)
+    call_off_contract = DummyClass.new({ contract: contract })
 
     expect(call_off_contract.output_payment_per_participant.round(0)).to eq(598.00)
 
