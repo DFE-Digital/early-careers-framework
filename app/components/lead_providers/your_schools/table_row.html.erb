@@ -1,5 +1,5 @@
 <tr class="govuk-table__row">
-  <td class="govuk-table__cell">
+  <td class="school-name-cell govuk-table__cell" >
     <%= govuk_link_to school.name, lead_providers_school_detail_path(school, selected_cohort_id: cohort.id) %>
     <%= govuk_tag text: "Reported error", colour: "red" if partnership.challenged? %>
   </td>
