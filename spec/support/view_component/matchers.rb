@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Support
   module ViewComponent
     module Matchers
@@ -5,7 +7,7 @@ module Support
 
       define :have_rendered_component do |component_class|
         match do |rendered|
-          @stubs = _test_context.components.select {|stubbed| stubbed.instance.is_a? component_class }
+          @stubs = _test_context.components.select { |stubbed| stubbed.instance.is_a? component_class }
           @matching = @stubs.select { |stubbed| arguments.args_match?(*stubbed.args) }
           @matching.any? do |stubbed|
             rendered.content.include?(stubbed.output)

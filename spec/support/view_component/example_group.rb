@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 module Support
   module ViewComponent
     module ExampleGroup
       extend ActiveSupport::Concern
 
       included do
-        require 'capybara/rspec'
+        require "capybara/rspec"
 
         subject(:rendered) { render_inline component }
         let(:_test_context) { Context.new }

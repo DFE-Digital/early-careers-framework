@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Support
   module ViewComponent
     module TestExtension
@@ -28,10 +30,8 @@ module Support
       def render_in(view_context)
         return super unless self.class.stubbed?
 
-        view_context.content_tag(:p, test_context.output_for(self), class: "stubbed-component")
+        view_context.tag.p(test_context.output_for(self), class: "stubbed-component")
       end
-
-    private
 
       delegate :test_context, to: :class
 

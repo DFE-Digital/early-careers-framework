@@ -31,27 +31,27 @@ class School < ApplicationRecord
 
   scope :eligible, -> { open.eligible_establishment_type.in_england }
 
-  scope :with_name_like, lambda { |search_key|
-    where("schools.name ILIKE ?", "%#{search_key}%")
-  }
-
-  scope :with_urn_like, lambda { |search_key|
-    where("schools.urn ILIKE ?", "%#{search_key}%")
-  }
-
-  scope :with_delivery_partner_for_year_like, lambda { |name, year|
-    joins(partnerships: %i[delivery_partner cohort])
-      .where("cohorts.start_year = ? AND delivery_partners.name ILIKE ?", year, "%#{name}%")
-  }
-
-  scope :search_by_name_or_urn, lambda { |search_key|
-    with_name_like(search_key).or(with_urn_like(search_key))
-  }
-
-  scope :search_by_name_or_urn_or_delivery_partner_for_year, lambda { |search_key, year|
-    joins(partnerships: %i[delivery_partner cohort])
-      .with_name_like(search_key).or(with_urn_like(search_key)).or(with_delivery_partner_for_year_like(search_key, year))
-  }
+  # scope :with_name_like, lambda { |search_key|
+  #   where("schools.name ILIKE ?", "%#{search_key}%")
+  # }
+  #
+  # scope :with_urn_like, lambda { |search_key|
+  #   where("schools.urn ILIKE ?", "%#{search_key}%")
+  # }
+  #
+  # scope :with_delivery_partner_for_year_like, lambda { |name, year|
+  #   joins(partnerships: %i[delivery_partner cohort])
+  #     .where("cohorts.start_year = ? AND delivery_partners.name ILIKE ?", year, "%#{name}%")
+  # }
+  #
+  # scope :search_by_name_or_urn, lambda { |search_key|
+  #   with_name_like(search_key).or(with_urn_like(search_key))
+  # }
+  #
+  # scope :search_by_name_or_urn_or_delivery_partner_for_year, lambda { |search_key, year|
+  #   joins(partnerships: %i[delivery_partner cohort])
+  #     .with_name_like(search_key).or(with_urn_like(search_key)).or(with_delivery_partner_for_year_like(search_key, year))
+  # }
 
   scope :with_local_authority, lambda { |local_authority|
     joins(%i[school_local_authorities local_authorities])

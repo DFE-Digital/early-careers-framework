@@ -276,44 +276,6 @@ RSpec.describe School, type: :model do
     end
   end
 
-  describe "School.search_by_name_or_urn" do
-    let!(:school_1) { create(:school, name: "foooschool", urn: "666666") }
-    let!(:school_2) { create(:school, name: "barschool", urn: "99999") }
-
-    it "searches correctly by partial urn" do
-      expect(School.search_by_name_or_urn("foo").first).eql?(school_1)
-    end
-
-    it "searches correctly by partial name" do
-      expect(School.search_by_name_or_urn("999").first).eql?(school_2)
-    end
-  end
-
-  describe "School.search_by_name_or_urn_or_delivery_partner_for_year" do
-    let(:cohort) { create(:cohort, start_year: Time.zone.now.year) }
-    let(:lead_provider) { create(:lead_provider, cohorts: [cohort]) }
-    let(:delivery_partner) { create(:delivery_partner, name: "Big Delivery Co.") }
-    let!(:school_1) { create(:school, name: "foooschool", urn: "666666") }
-    let!(:school_2) { create(:school, name: "barschool", urn: "99999") }
-
-    before do
-      create(:partnership, school: school_1, lead_provider: lead_provider, cohort: cohort)
-      create(:partnership, school: school_2, lead_provider: lead_provider, delivery_partner: delivery_partner, cohort: cohort)
-    end
-
-    it "searches correctly by partial urn" do
-      expect(School.search_by_name_or_urn_or_delivery_partner_for_year("foo", cohort.start_year)).to match_array [school_1]
-    end
-
-    it "searches correctly by partial name" do
-      expect(School.search_by_name_or_urn_or_delivery_partner_for_year("999", cohort.start_year)).to match_array [school_2]
-    end
-
-    it "searches correctly by partial delivery partner name" do
-      expect(School.search_by_name_or_urn_or_delivery_partner_for_year("del", cohort.start_year)).to match_array [school_2]
-    end
-  end
-
   describe "School.partnered_with_lead_provider" do
     let(:cohort) { create(:cohort, start_year: Time.zone.now.year) }
     let(:lead_provider) { create(:lead_provider, cohorts: [cohort]) }

@@ -42,7 +42,7 @@
         <div class="school-search__input">
           <%= f.govuk_text_field(
             :query,
-            value: @query,
+            value: params[:query],
             label: { text: "Search #{@selected_cohort.start_year} schools", size: "s" },
           ) %>
         </div>
@@ -51,7 +51,7 @@
     <% end %>
   </div>
 
-  <% if @schools.count.zero? %>
+  <% if @partnerships.count.zero? %>
     <h2 class="govuk-heading-s govuk-!-margin-top-4">There are no matching results</h2>
     <p class="govuk-body">Improve your search results by:</p>
     <ul class="govuk-list govuk-list--bullet">
@@ -60,6 +60,6 @@
       <li>searching for something less specific</li>
     </ul>
   <% else %>
-    <%= render LeadProviders::YourSchools::Table.new(schools: @schools, cohort: @selected_cohort) %>
+    <%= render LeadProviders::YourSchools::Table.new(partnerships: @partnerships) %>
   <% end %>
 <% end %>
