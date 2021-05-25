@@ -48,8 +48,8 @@ describe "InitializeWithConfig" do
     expect { MissingCallMethod.call(input) }.to raise_error(RuntimeError, "override abstract call method")
   end
 
-  it "creates an internal OpenStruct object called 'config'" do
-    expect(object.config).to be_a(OpenStruct)
+  it "creates an internal hash called 'config'" do
+    expect(object.config).to be_a(Hash)
   end
 
   it "creates methods for the input keys" do
@@ -57,7 +57,6 @@ describe "InitializeWithConfig" do
   end
 
   it "prevents local method overrides if expliticly declared" do
-    expect(object.band_a).to be(object.config.band_a)
     expect(object.band_a).to be(input[:band_a])
     expect(object.band_a).to_not be(1000)
   end
@@ -68,12 +67,11 @@ describe "InitializeWithConfig" do
   end
 
   it "creates methods that return the values of the input keys regardless of delegation" do
-    expect(object.recruitment_target).to be(object.config.recruitment_target)
-    expect(object.retained_participants).to be(object.config.retained_participants)
+    expect(object.recruitment_target).to eq(object.config[:recruitment_target])
+    expect(object.retained_participants).to eq(object.config[:retained_participants])
   end
 
   it "defaults inherited objects to allow overrides" do
-    expect(inherited_object.band_a).to_not be(object.config.band_a)
     expect(inherited_object.band_a).to_not be(input[:band_a])
     expect(inherited_object.band_a).to be(2000)
   end

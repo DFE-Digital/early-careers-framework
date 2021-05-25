@@ -65,6 +65,17 @@ ActiveRecord::Schema.define(version: 2021_05_25_120431) do
     t.index ["lead_provider_id"], name: "index_api_tokens_on_lead_provider_id"
   end
 
+  create_table "call_off_contracts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "version", default: "0.0.1", null: false
+    t.jsonb "raw"
+    t.decimal "uplift_target"
+    t.decimal "uplift_amount"
+    t.integer "recruitment_target"
+    t.decimal "set_up_fee"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "cohorts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -150,7 +161,7 @@ ActiveRecord::Schema.define(version: 2021_05_25_120431) do
     t.index ["user_id"], name: "index_induction_coordinator_profiles_on_user_id"
   end
 
-  create_table "induction_coordinator_profiles_schools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "induction_coordinator_profiles_schools", force: :cascade do |t|
     t.uuid "induction_coordinator_profile_id", null: false
     t.uuid "school_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -230,6 +241,16 @@ ActiveRecord::Schema.define(version: 2021_05_25_120431) do
     t.index ["partnership_notification_email_id"], name: "index_nomination_emails_on_partnership_notification_email_id"
     t.index ["school_id"], name: "index_nomination_emails_on_school_id"
     t.index ["token"], name: "index_nomination_emails_on_token", unique: true
+  end
+
+  create_table "participant_bands", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "call_off_contract_id", null: false
+    t.integer "min"
+    t.integer "max"
+    t.decimal "per_participant"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["call_off_contract_id"], name: "index_participant_bands_on_call_off_contract_id"
   end
 
   create_table "participant_events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -454,6 +475,7 @@ ActiveRecord::Schema.define(version: 2021_05_25_120431) do
   add_foreign_key "lead_provider_profiles", "users"
   add_foreign_key "nomination_emails", "partnership_notification_emails"
   add_foreign_key "nomination_emails", "schools"
+  add_foreign_key "participant_bands", "call_off_contracts"
   add_foreign_key "participation_records", "early_career_teacher_profiles"
   add_foreign_key "partnership_notification_emails", "partnerships"
   add_foreign_key "partnerships", "cohorts"
