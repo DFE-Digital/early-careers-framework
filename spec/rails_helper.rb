@@ -101,4 +101,10 @@ RSpec.configure do |config|
   config.before(:suite) do
     Webpacker.compile
   end
+
+  config.around(:each, :with_feature_flags) do |example|
+    FeatureFlag.set_temporary_flags(example.metadata.fetch(:with_feature_flags)) do
+      example.run
+    end
+  end
 end
