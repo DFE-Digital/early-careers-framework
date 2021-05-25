@@ -158,3 +158,42 @@ ProviderRelationship.find_or_create_by!(
   delivery_partner: delivery_partner,
   cohort: Cohort.current,
 )
+
+example_contract_data = {
+  "uplift_target": 0.33,
+  "uplift_amount": 100,
+  "recruitment_target": 2000,
+  "set-up_fees": 149_861,
+  "band_a": {
+    "max": 2000,
+    "per_participant": 995,
+  },
+  "band_b": {
+    "min": 2001,
+    "max": 4000,
+    "per_participant": 979,
+  },
+  "band_c": {
+    "min": 4001,
+    "per_participant": 966,
+  },
+}
+
+sample_call_off_contract = CallOffContract.find_or_create_by!(
+  version: example_contract_data[:version] || "0.0.1",
+  uplift_target: example_contract_data[:uplift_target],
+  uplift_amount: example_contract_data[:uplift_amount],
+  recruitment_target: example_contract_data[:recruitment_target],
+  set_up_fee: example_contract_data[:set_up_fee],
+  raw: example_contract_data.to_json,
+)
+
+%i[band_a band_b band_c].each do |band|
+  src = example_contract_data[band]
+  ParticipantBand.find_or_create_by!(
+    call_off_contract: sample_call_off_contract,
+    min: src[:min],
+    max: src[:max],
+    per_participant: src[:per_participant],
+  )
+end
