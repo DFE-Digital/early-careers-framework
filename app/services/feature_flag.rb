@@ -1,6 +1,16 @@
 # frozen_string_literal: true
 
 class FeatureFlag
+  attr_accessor :name, :description, :owner
+
+  def initialize(name:)
+    self.name = name
+  end
+
+  def feature
+    Feature.find_or_initialize_by(name: name)
+  end
+
   # Long-lived settings that are often environment-specific
   PERMANENT_SETTINGS = %i[
   ].freeze
@@ -10,28 +20,32 @@ class FeatureFlag
     add_participants
   ].freeze
 
-  FEATURES = (PERMANENT_SETTINGS + TEMPORARY_FEATURE_FLAGS).freeze
+  FEATURES = (PERMANENT_SETTINGS + TEMPORARY_FEATURE_FLAGS).index_with { |name|
+    FeatureFlag.new(name: name)
+  }.with_indifferent_access.freeze
 
   def self.activate(feature_name)
     raise unless feature_name.in?(FEATURES)
 
-    ENV["FEATURES_#{feature_name}"] = "active"
+    sync_with_database(feature_name, true)
   end
 
   def self.deactivate(feature_name)
     raise unless feature_name.in?(FEATURES)
 
-    ENV["FEATURES_#{feature_name}"] = "inactive"
+    sync_with_database(feature_name, false)
   end
 
   def self.active?(feature_name)
     raise unless feature_name.in?(FEATURES)
 
-    ENV["FEATURES_#{feature_name}"] == "active"
+    FEATURES[feature_name].feature.active?
   end
 
-  def self.inactive?(feature_name)
-    !active?(feature_name)
+  def self.sync_with_database(feature_name, active)
+    feature = Feature.find_or_initialize_by(name: feature_name)
+    feature.active = active
+    feature.save!
   end
 
   def self.set_temporary_flags(features = {})

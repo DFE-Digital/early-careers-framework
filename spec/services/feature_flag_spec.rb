@@ -9,6 +9,14 @@ RSpec.describe FeatureFlag do
         change { FeatureFlag.active?(:add_participants) }.from(false).to(true),
       )
     end
+
+    it "records the change in the database" do
+      feature = Feature.create_or_find_by!(name: "add_participants")
+      feature.update!(active: false)
+      expect { FeatureFlag.activate(:add_participants) }.to(
+        change { feature.reload.active }.from(false).to(true),
+      )
+    end
   end
 
   describe ".deactivate" do
@@ -16,6 +24,14 @@ RSpec.describe FeatureFlag do
       FeatureFlag.activate(:add_participants)
       expect { FeatureFlag.deactivate(:add_participants) }.to(
         change { FeatureFlag.active?(:add_participants) }.from(true).to(false),
+      )
+    end
+
+    it "records the change in the database" do
+      feature = Feature.create_or_find_by!(name: "add_participants")
+      feature.update!(active: true)
+      expect { FeatureFlag.deactivate(:add_participants) }.to(
+        change { feature.reload.active }.from(true).to(false),
       )
     end
   end
