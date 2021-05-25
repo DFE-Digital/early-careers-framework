@@ -7,6 +7,7 @@ module Admin
     before_action :set_school
 
     def index
+      @cohort_info = @school.school_cohorts.joins(:cohort).order("cohorts.start_year ASC")
     end
 
     def new

@@ -1,1 +1,41 @@
-Hello
+<% title = "#{@school.name} cohorts" %>
+<% content_for :title, title %>
+
+<h1 class="govuk-heading-xl"><%= title %></h1>
+<%= render partial: "admin/schools/shared/navigation" %>
+<h2 class="govuk-heading-l">Cohorts</h2>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <% @cohort_info.each do |cohort_info| %>
+      <h3 class="govuk-heading-m govuk-!-margin-bottom-2">
+        <%= cohort_info.cohort.display_name %> cohort
+      </h3>
+      <dl class="govuk-summary-list" id="<%= cohort_info.cohort.display_name %>">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Induction type
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <%= @school.urn %>
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Lead provider
+          </dt>
+          <dd class="govuk-summary-list__value">
+            My provider
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Delivery partner
+          </dt>
+          <dd class="govuk-summary-list__value">
+            ABC Training
+          </dd>
+        </div>
+      </dl>
+    <% end %>
+  </div>
+</div>
