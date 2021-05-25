@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe LeadProviders::YourSchools::TableRow, type: :view_component do
-  let(:school) { create :school }
-  let(:cohort) { create :cohort }
-  let!(:partnership) { create :partnership, school: school, cohort: cohort }
+  let(:partnership) { create :partnership }
+  let(:school) { partnership.school }
+  let(:cohort) { partnership.cohort }
 
-  let(:component) { described_class.new school: school, cohort: cohort }
+  component { described_class.new partnership: partnership }
 
   it { is_expected.to have_link school.name, href: lead_providers_school_detail_path(school, selected_cohort: cohort.id) }
   it { is_expected.to have_content school.urn }

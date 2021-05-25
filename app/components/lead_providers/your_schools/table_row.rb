@@ -3,16 +3,16 @@
 module LeadProviders
   module YourSchools
     class TableRow < BaseComponent
-      with_collection_parameter :school
+      with_collection_parameter :partnership
 
-      def initialize(school:, cohort:)
-        @school = school
-        @cohort = cohort
+      def initialize(partnership:)
+        @partnership = partnership
       end
 
     private
 
-      attr_reader :school, :cohort
+      attr_reader :partnership
+      delegate :school, :cohort, to: :partnership
     end
   end
 end

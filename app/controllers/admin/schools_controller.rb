@@ -9,13 +9,12 @@ module Admin
 
     def index
       @query = params[:query]
-      @schools = policy_scope(School).includes(:induction_coordinators, :local_authority)
-                                     .order(:name)
-                                     .page(params[:page])
-                                     .per(20)
-      if @query.present?
-        @schools = @schools.search_by_name_or_urn(@query)
-      end
+      @schools = policy_scope(School)
+        .includes(:induction_coordinators, :local_authority)
+        .order(:name)
+        .ransack(name_or_urn_cont: @query).result
+        .page(params[:page])
+        .per(20)
     end
 
     def show
