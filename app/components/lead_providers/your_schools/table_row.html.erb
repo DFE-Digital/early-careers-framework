@@ -1,6 +1,6 @@
 <tr class="govuk-table__row">
   <td class="govuk-table__cell" >
-    <%= govuk_link_to school.name, lead_providers_school_detail_path(school, selected_cohort: cohort.id) %>
+    <%= govuk_link_to school.name, lead_providers_partnership_path(partnership) %>
   </td>
   <td class="govuk-table__cell"><%= school.urn %></td>
   <td class="govuk-table__cell"><%= partnership.delivery_partner.name %></td>
