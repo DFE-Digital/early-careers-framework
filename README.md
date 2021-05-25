@@ -143,37 +143,10 @@ Where `"name or id"` is a name or id from the `lead_providers` table.
 
 ### Feature Flags
 
-Certain aspects of app behaviour are governed by a minimal implementation of Feature Flags.
-These are activated by having an environment variable FEATURES_(flag name) set to 'active', for example:
-
-```
-# start the rails server with rate limiting active
-FEATURES_rate_limiting=active bundle exec rails s
-```
+Certain aspects of app behaviour are governed by a minimal implementation of feature flags. Feature flag states are persisted in the database with a name and an active state. To activate a new feature you can run `Feature.create!(name: 'rate_limiting', active: true)`.
 
 The available flags are listed in `app/services/feature_flag.rb`, and available in the constant `FeatureFlag::FEATURES`. Each one is tested with a dedicated spec in `spec/features/feature_flags/`.
 
-To display, set and unset feature flags on GOV.UK PaaS:
-
-```
-# display the feature flags
-cf env (app name) | grep FEATURES
-
-# For example:
-cf env early-careers-framework-prod | grep FEATURES
-
-# set an env var
-cf set-env (app name) (environment variable name) (value)
-
-# For example:
-cf set-env early-careers-framework-prod FEATURES_rate_limiting active
-
-# To unset the var:
-cf unset-env (app name) (environment variable name)
-
-# For example:
-cf unset-env early-careers-framework-prod FEATURES_rate_limiting
-```
 ## payment_calculator
 
 The code in [`lib/payment_calculator/`](lib/payment_calculator/) performs payment calculations for both [ECFs (Early Career Framework)](https://www.early-career-framework.education.gov.uk/) and [the reformed NPQs (National Professional Qualification)](https://www.gov.uk/government/publications/national-professional-qualifications-frameworks-from-september-2021) so that training providers can be paid the correct amount.
