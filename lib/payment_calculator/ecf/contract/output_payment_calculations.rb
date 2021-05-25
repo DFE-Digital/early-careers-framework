@@ -15,7 +15,7 @@ module PaymentCalculator
         delegate :band_a, to: :contract
 
         def output_payment_per_participant
-          band_a.per_participant * 0.6
+          band_a.per_participant * output_payment_contribution_percentage
         end
 
         def output_payment_for_event(event_type:, total_participants:)
@@ -28,6 +28,10 @@ module PaymentCalculator
         end
 
       private
+
+        def output_payment_contribution_percentage
+          0.6
+        end
 
         def start_and_completion_event_percentage
           0.2

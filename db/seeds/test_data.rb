@@ -163,7 +163,7 @@ example_contract_data = {
   "uplift_target": 0.33,
   "uplift_amount": 100,
   "recruitment_target": 2000,
-  "set-up_fees": 149_861,
+  "set_up_fee": 149_861,
   "band_a": {
     "max": 2000,
     "per_participant": 995,

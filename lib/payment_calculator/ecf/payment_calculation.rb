@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "initialize_with_config"
 require "payment_calculator/ecf/service_fees"
 require "payment_calculator/ecf/output_payment_aggregator"
 

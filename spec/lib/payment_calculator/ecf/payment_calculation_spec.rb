@@ -24,9 +24,8 @@ describe ::PaymentCalculator::Ecf::PaymentCalculation do
     }
   end
 
-  @combined_results = nil
-
   it "returns the expected types for all outputs" do
+    @combined_results = nil
     retained_event_aggregations.each do |key, value|
       result = described_class.call(config, event_type: key, total_participants: value)
 

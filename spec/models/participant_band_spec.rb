@@ -14,15 +14,18 @@ RSpec.describe ParticipantBand, type: :model do
 
   describe "ranges" do
     it {
-      expect(band_a.number_in_range(100)).to eq(100)
-      expect(band_b.number_in_range(100)).to eq(0)
-      expect(band_c.number_in_range(100)).to eq(0)
-      expect(band_a.number_in_range(2100)).to eq(2000)
-      expect(band_b.number_in_range(2100)).to eq(100)
-      expect(band_c.number_in_range(2100)).to eq(0)
-      expect(band_a.number_in_range(10_000)).to eq(2000)
-      expect(band_b.number_in_range(10_000)).to eq(2000)
-      expect(band_c.number_in_range(10_000)).to eq(6000)
+      expect(band_a.number_of_participants_in_this_band(100)).to eq(100)
+      expect(band_b.number_of_participants_in_this_band(100)).to eq(0)
+      expect(band_c.number_of_participants_in_this_band(100)).to eq(0)
+      expect(band_a.number_of_participants_in_this_band(2000)).to eq(2000)
+      expect(band_b.number_of_participants_in_this_band(2000)).to eq(0)
+      expect(band_c.number_of_participants_in_this_band(2000)).to eq(0)
+      expect(band_a.number_of_participants_in_this_band(2001)).to eq(2000)
+      expect(band_b.number_of_participants_in_this_band(2001)).to eq(1)
+      expect(band_c.number_of_participants_in_this_band(2001)).to eq(0)
+      expect(band_a.number_of_participants_in_this_band(10_000)).to eq(2000)
+      expect(band_b.number_of_participants_in_this_band(10_000)).to eq(2000)
+      expect(band_c.number_of_participants_in_this_band(10_000)).to eq(6000)
     }
   end
 end

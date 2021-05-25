@@ -27,12 +27,16 @@ module PaymentCalculator
         end
 
         def service_fee_per_participant
-          band_a.per_participant * 0.4 - setup_cost_per_participant
+          band_a.per_participant * service_fee_payment_contribution_percentage - set_up_cost_per_participant
         end
 
       private
 
-        def setup_cost_per_participant
+        def service_fee_payment_contribution_percentage
+          0.4
+        end
+
+        def set_up_cost_per_participant
           set_up_fee / recruitment_target
         end
 
