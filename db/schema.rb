@@ -150,7 +150,7 @@ ActiveRecord::Schema.define(version: 2021_05_25_120431) do
     t.index ["user_id"], name: "index_induction_coordinator_profiles_on_user_id"
   end
 
-  create_table "induction_coordinator_profiles_schools", force: :cascade do |t|
+  create_table "induction_coordinator_profiles_schools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "induction_coordinator_profile_id", null: false
     t.uuid "school_id", null: false
     t.datetime "created_at", precision: 6, null: false
