@@ -26,7 +26,7 @@ private
   end
 
   def lower_boundary
-    min && min - 1 || 0
+    min.to_i.positive? && min - 1 || 0
   end
 
   # Fairly safe assumption ahead....
