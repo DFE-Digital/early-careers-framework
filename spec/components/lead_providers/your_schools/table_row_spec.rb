@@ -7,7 +7,7 @@ RSpec.describe LeadProviders::YourSchools::TableRow, type: :view_component do
 
   let(:component) { described_class.new partnership: partnership }
 
-  it { is_expected.to have_link school.name, href: lead_providers_school_detail_path(school, selected_cohort_id: cohort.id) }
+  it { is_expected.to have_link school.name, href: lead_providers_partnership_path(partnership) }
   it { is_expected.to have_content school.urn }
   it { is_expected.to have_content partnership.delivery_partner.name }
   it { is_expected.not_to have_govuk_tag "REPORTED ERROR" }

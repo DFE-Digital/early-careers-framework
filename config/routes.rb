@@ -80,7 +80,7 @@ Rails.application.routes.draw do
 
   namespace :lead_providers, path: "lead-providers" do
     resources :your_schools, path: "/your-schools", only: %i[index create]
-    resources :school_details, path: "school-details", only: %i[show]
+    resources :partnerships, only: %i[show]
 
     resource :report_schools, path: "report-schools", only: [] do
       post "check-delivery-partner", action: :check_delivery_partner
