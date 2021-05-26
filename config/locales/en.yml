@@ -43,15 +43,36 @@ en:
     less_than: *default_message
     greater_than_or_equal_to: *default_message
 
+  errors:
+    email: &email_error_messages
+      blank: "Enter an email"
+      taken: "This email address is already in use"
+      invalid: "Enter an email address in the correct format, like name@example.com"
+    full_name: &full_name_error_messages
+      blank: "Enter a full name"
+
+  activemodel:
+    errors:
+      models:
+        nominate_induction_tutor_form:
+          attributes:
+            email:
+              <<: *email_error_messages
+            full_name:
+              <<: *full_name_error_messages
+        replace_or_update_tutor_form:
+          attributes:
+            choice:
+              blank: "Choose whether to replace or update the tutor"
   activerecord:
     errors:
       models:
         user:
           attributes:
             email:
-              blank: "Enter an email"
-              taken: "This email address is already in use"
-              invalid: "Enter a valid email address"
+              <<: *email_error_messages
+            full_name:
+              <<: *full_name_error_messages
         school_cohort_form:
           attributes:
             estimated_mentor_count:

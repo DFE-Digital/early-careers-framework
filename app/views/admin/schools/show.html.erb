@@ -15,10 +15,9 @@
       </td>
       <td class="govuk-table__cell">
         <% if @induction_coordinator %>
-        <!-- TODO: Add link to change induction coordinator for a school -->
-        <%= govuk_link_to "Change", "#" %>
+          <%= govuk_link_to "Change", admin_school_replace_or_update_induction_tutor_path(@school) %>
         <% else %>
-        <%= govuk_link_to "Add induction tutor", new_admin_school_induction_coordinator_path(@school) %>
+          <%= govuk_link_to "Add induction tutor", new_admin_school_induction_coordinator_path(@school) %>
         <% end %>
       </td>
     </tr>
