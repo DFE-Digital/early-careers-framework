@@ -18,6 +18,14 @@ class SchoolCohort < ApplicationRecord
     school.partnerships&.active&.exists?(cohort: cohort) ? "Done" : "To do"
   end
 
+  def lead_provider
+    school.lead_provider(cohort.start_year)
+  end
+
+  def delivery_partner
+    school.delivery_partner_for(cohort.start_year)
+  end
+
   def add_participants_status
     "Cannot start yet"
   end
