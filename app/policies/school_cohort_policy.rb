@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 class SchoolCohortPolicy < ApplicationPolicy
-  def index?
-    user.admin?
-  end
-
   def show?
     return true if user.admin?
     return false unless user.induction_coordinator_profile
