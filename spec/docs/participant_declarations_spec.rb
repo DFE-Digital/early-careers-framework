@@ -2,17 +2,17 @@
 
 require "swagger_helper"
 
-RSpec.describe "Early Career Teacher Participation", type: :request, swagger_doc: "v1/api_spec.json" do
+RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_spec.json" do
   let(:user) { create(:user) }
   let(:lead_provider) { create(:lead_provider) }
   let(:token) { LeadProviderApiToken.create_with_random_token!(lead_provider: lead_provider) }
   let(:bearer_token) { "Bearer #{token}" }
   let(:Authorization) { bearer_token }
 
-  path "/api/v1/early-career-teacher-participants" do
-    post "Add Early Career Teacher to Course" do
+  path "/api/v1/participant-declarations" do
+    post "Create participant declarations" do
       operationId :api_v1_create_ect_participant
-      tags "ect_participant"
+      tags "participant_declarations"
       consumes "application/json"
       security [bearerAuth: []]
       request_body content: {
@@ -37,6 +37,15 @@ RSpec.describe "Early Career Teacher Participation", type: :request, swagger_doc
       }, description: "The unique id of the participant"
 
       response 204, "Successful" do
+        let(:fresh_user) { create(:user, :early_career_teacher) }
+        let(:params) { { "id" => fresh_user.id } }
+        run_test!
+      end
+
+      response 304, "Not Modified" do
+        before do
+          InductParticipant.call(user.early_career_teacher_profile)
+        end
         let(:params) { { "id" => user.id } }
         run_test!
       end

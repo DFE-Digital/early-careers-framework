@@ -12,7 +12,7 @@ describe("Meta test helper tests", () => {
     cy.get("h1").should("contain", "User dashboard");
 
     cy.logout();
-    cy.get("#success-message").should("contain", "Signed out successfully.");
+    cy.get("h1").should("contain", "You are now signed out");
 
     cy.login("admin");
     cy.get("h1").should("contain", "Schools");

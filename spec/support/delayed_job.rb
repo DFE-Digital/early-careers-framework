@@ -56,15 +56,19 @@ module DelayedJobMatchers
   define :delay_execution_of do |method_name|
     match do |actual|
       jobs = query_jobs(actual, method_name)
-      return jobs.any? unless @arguments
+      return jobs.any? unless @arguments || @at
 
       jobs.any? do |job|
-        @arguments.args_match?(*job.payload_object.args)
+        @arguments.args_match?(*job.payload_object.args) && (job.run_at == @at if @at.present?)
       end
     end
 
     chain :with do |*args|
       @arguments = RSpec::Mocks::ArgumentListMatcher.new(*args)
+    end
+
+    chain :at do |datetime|
+      @at = datetime
     end
 
   private
