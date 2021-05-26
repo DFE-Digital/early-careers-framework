@@ -204,4 +204,6 @@ Rails.application.routes.draw do
   mount OpenApi::Rswag::Api::Engine => "/api-docs"
 
   resource :school_search, only: %i[show create], path: "school-search", controller: :school_search
+
+  post "__session", to: "support/request_spec/session_helper#update" if Rails.env.test?
 end

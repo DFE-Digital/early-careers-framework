@@ -2,11 +2,18 @@
 
 RSpec.describe SandboxController do
   describe "Based on rails environment routes" do
+
+    before do
+      allow(Rails).to receive(:env).and_return ActiveSupport::EnvironmentInquirer.new(environment.to_s)
+      Rails.application.reload_routes!
+    end
+
+    after(:context) {
+      Rails.application.reload_routes!
+    }
+
     context "when it is not sandbox environment" do
-      before do
-        Rails.env.stub(production?: true)
-        Rails.application.reload_routes!
-      end
+      let(:environment) { %i[development test production].sample }
 
       it "routes GET / to StartController#index" do
         expect(get: "/").to route_to(controller: "start", action: "index")
@@ -14,6 +21,8 @@ RSpec.describe SandboxController do
     end
 
     context "when it is sandbox environment" do
+      let(:environment) { :sandbox }
+
       before do
         Rails.env.stub(sandbox?: true)
         Rails.application.reload_routes!
