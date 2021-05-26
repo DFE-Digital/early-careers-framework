@@ -16,6 +16,7 @@ class SchoolMailer < ApplicationMailer
         school_name: school_name,
         nomination_link: nomination_url,
         expiry_date: expiry_date,
+        subject: "Important: NQT induction changes",
       },
     )
   end
@@ -29,6 +30,7 @@ class SchoolMailer < ApplicationMailer
       personalisation: {
         school_name: school.name,
         start_url: start_url,
+        subject: "Sign in to manage induction",
       },
     )
   end
@@ -54,6 +56,7 @@ class SchoolMailer < ApplicationMailer
         nominate_url: nominate_url,
         challenge_url: challenge_url,
         challenge_deadline: challenge_deadline,
+        subject: "Provider confirmed",
       },
     )
   end
@@ -79,6 +82,7 @@ class SchoolMailer < ApplicationMailer
         start_url: start_url,
         challenge_url: challenge_url,
         challenge_deadline: challenge_deadline,
+        subject: "Provider confirmed",
       },
     )
   end
