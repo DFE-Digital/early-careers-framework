@@ -26,7 +26,10 @@ class SupplierUserForm
       full_name,
       email,
       chosen_supplier,
-      Rails.application.routes.url_helpers.root_url(host: Rails.application.config.domain),
+      Rails.application.routes.url_helpers.root_url(
+        host: Rails.application.config.domain,
+        **UTMService.email(:new_lead_provider),
+      ),
     )
   end
 

@@ -26,6 +26,7 @@ module Devise
             url = Rails.application.routes.url_helpers.users_confirm_sign_in_url(
               login_token: user.login_token,
               host: Rails.application.config.domain,
+              **UTMService.email(:sign_in),
             )
 
             UserMailer.sign_in_email(user: user, url: url, token_expiry: token_expiry.localtime.to_s(:time)).deliver_now

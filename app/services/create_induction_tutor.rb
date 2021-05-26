@@ -23,6 +23,9 @@ class CreateInductionTutor < BaseService
   end
 
   def start_url
-    Rails.application.routes.url_helpers.root_url(host: Rails.application.config.domain)
+    Rails.application.routes.url_helpers.root_url(
+      host: Rails.application.config.domain,
+      **UTMService.email(:new_induction_tutor),
+    )
   end
 end

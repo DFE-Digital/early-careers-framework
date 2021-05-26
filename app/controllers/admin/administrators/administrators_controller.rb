@@ -41,7 +41,11 @@ module Admin
         authorize User
         authorize AdminProfile
 
-        AdminProfile.create_admin(params[:user][:full_name], params[:user][:email], new_user_session_url)
+        AdminProfile.create_admin(
+          params[:user][:full_name],
+          params[:user][:email],
+          new_user_session_url(**UTMService.email(:new_admin)),
+        )
         session.delete(:administrator_user)
 
         set_success_message(heading: "User added", content: "They have been sent an email to sign in")
