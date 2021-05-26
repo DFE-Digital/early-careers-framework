@@ -8,7 +8,7 @@ RSpec.describe SandboxController do
 
   describe "Based on rails environment routes" do
     context "when it is not sandbox environment" do
-      let(:environment) { %i(development test production).sample }
+      let(:environment) { %i[development test production].sample }
 
       it "routes GET / to StartController#index" do
         expect(get: "/").to route_to(controller: "start", action: "index")

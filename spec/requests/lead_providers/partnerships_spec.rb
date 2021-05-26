@@ -14,7 +14,6 @@ RSpec.describe "Lead provider partnerships spec", type: :request do
     let(:partnership) { create :partnership, cohort: cohort }
 
     context "when the user is the lead provider for the school" do
-
       it "should show the partnership page" do
         get lead_providers_partnership_path(partnership)
 

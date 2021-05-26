@@ -1,0 +1,8 @@
+en:
+  partnerships:
+    challenge_reasons:
+      another_provider: "I have already confirmed an agreement with another provider"
+      not_confirmed: "We have not confirmed an agreement"
+      do_not_recognise: "I do not recognise this training provider"
+      no_ects: "We do not have any early career teachers this year"
+      mistake: "This looks like a mistake"
