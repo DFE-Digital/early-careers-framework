@@ -8,12 +8,14 @@ class SchoolCohort < ApplicationRecord
     not_yet_known: "not_yet_known",
   }
 
+  has_paper_trail
+
   belongs_to :cohort
   belongs_to :school
   belongs_to :core_induction_programme, optional: true
 
   def training_provider_status
-    school.partnerships&.unchallenged&.exists?(cohort: cohort) ? "Done" : "To do"
+    school.partnerships&.active&.exists?(cohort: cohort) ? "Done" : "To do"
   end
 
   def add_participants_status

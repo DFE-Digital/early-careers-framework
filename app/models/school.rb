@@ -59,19 +59,19 @@ class School < ApplicationRecord
   }
 
   scope :partnered, lambda { |year|
-    where(id: Partnership.in_year(year).select(:school_id))
+    where(id: Partnership.unchallenged.in_year(year).select(:school_id))
   }
 
   scope :partnered_with_lead_provider, lambda { |lead_provider_id, year|
-    where(id: Partnership.where(lead_provider_id: lead_provider_id).in_year(year).select(:school_id))
+    where(id: Partnership.unchallenged.where(lead_provider_id: lead_provider_id).in_year(year).select(:school_id))
   }
 
   scope :unpartnered, lambda { |year|
-    where.not(id: Partnership.in_year(year).select(:school_id))
+    where.not(id: Partnership.unchallenged.in_year(year).select(:school_id))
   }
 
   def lead_provider(year)
-    partnerships.joins(%i[lead_provider cohort]).find_by(cohorts: { start_year: year })&.lead_provider
+    partnerships.unchallenged.joins(%i[lead_provider cohort]).find_by(cohorts: { start_year: year })&.lead_provider
   end
 
   def delivery_partner_for(year)
@@ -143,10 +143,14 @@ class School < ApplicationRecord
 
   def contact_email
     if induction_coordinators.any?
-      induction_coordinators.first.email
+      induction_tutor.email
     else
       primary_contact_email.presence || secondary_contact_email
     end
+  end
+
+  def induction_tutor
+    induction_coordinators.first
   end
 
 private

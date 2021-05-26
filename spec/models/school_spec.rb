@@ -399,4 +399,22 @@ RSpec.describe School, type: :model do
       end
     end
   end
+
+  describe "#induction_tutor" do
+    let(:school) { create(:school) }
+
+    context "when an induction tutor exists" do
+      let!(:tutor) { create(:induction_coordinator_profile, schools: [school]) }
+
+      it "returns the first induction tutor" do
+        expect(school.induction_tutor).to eq(tutor.user)
+      end
+    end
+
+    context "when an induction tutor does not exist" do
+      it "returns nil" do
+        expect(school.induction_tutor).to be_nil
+      end
+    end
+  end
 end

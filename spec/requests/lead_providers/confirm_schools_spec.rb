@@ -78,20 +78,19 @@ RSpec.describe "Lead Provider confirmation of schools", type: :request do
       )
     end
 
-    # TODO: ECF-RP-564: reenable
-    xit "schedules partnership notifications" do
-      post "/lead-providers/report-schools/confirm"
-
+    it "schedules partnership notifications" do
       schools.each do |school|
-        expect(an_instance_of(PartnershipNotificationService)).to delay_execution_of(:notify)
-          .with(an_object_having_attributes(
-                  class: Partnership,
-                  cohort_id: cohort.id,
-                  school_id: school.id,
-                  lead_provider_id: lead_provider.id,
-                  delivery_partner_id: delivery_partner.id,
-                ))
+        expect(PartnershipNotificationService).to receive(:schedule_notifications)
+                                                    .with(an_object_having_attributes(
+                                                            class: Partnership,
+                                                            cohort_id: cohort.id,
+                                                            school_id: school.id,
+                                                            lead_provider_id: lead_provider.id,
+                                                            delivery_partner_id: delivery_partner.id,
+                                                          ))
       end
+
+      post "/lead-providers/report-schools/confirm"
     end
 
     context "when a single partnership creation fails" do
@@ -105,8 +104,8 @@ RSpec.describe "Lead Provider confirmation of schools", type: :request do
       before do
         allow(Partnership).to receive(:create!).and_call_original
         allow(Partnership).to receive(:create!)
-          .with(hash_including(school_id: failing_school.id))
-          .and_raise StandardError.new(Faker::Lorem.sentence)
+                                .with(hash_including(school_id: failing_school.id))
+                                .and_raise StandardError.new(Faker::Lorem.sentence)
       end
 
       it "is not creating any Partnerships" do

@@ -40,7 +40,29 @@ RSpec.describe "API Users", type: :request do
 
       it "returns only email and full name in attributes" do
         get "/api/v1/users"
-        expect(parsed_response["data"][0]).to have_jsonapi_attributes(:email, :full_name).exactly
+        expect(parsed_response["data"][0]).to have_jsonapi_attributes(:email, :full_name, :user_type, :core_induction_programme).exactly
+      end
+
+      it "returns the right number of users per page" do
+        get "/api/v1/users", params: { page: { per_page: 2, page: 1 } }
+        expect(parsed_response["data"].size).to eql(2)
+      end
+
+      it "returns different users for each page" do
+        User.delete_all
+        3.times { create(:user) }
+
+        get "/api/v1/users", params: { page: { per_page: 2, page: 1 } }
+        expect(parsed_response["data"].size).to eql(2)
+
+        get "/api/v1/users", params: { page: { per_page: 2, page: 2 } }
+        expect(JSON.parse(response.body)["data"].size).to eql(1)
+      end
+
+      it "returns users changed since a particular time, if given a changed_since parameter" do
+        User.first.update!(updated_at: 2.days.ago)
+        get "/api/v1/users", params: { filter: { updated_since: 1.day.ago.iso8601 } }
+        expect(parsed_response["data"].size).to eql(2)
       end
     end
 

@@ -18,8 +18,8 @@ RSpec.describe SandboxController do
     context "when it is sandbox environment" do
       let(:environment) { :sandbox }
 
-      it "routes GET / to SandboxController#show" do
-        expect(get: "/").to route_to(controller: "sandbox", action: "show")
+      it "routes GET /sandbox to SandboxController#show" do
+        expect(get: "/sandbox").to route_to(controller: "sandbox", action: "show")
       end
     end
   end

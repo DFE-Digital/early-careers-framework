@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_18_143026) do
+ActiveRecord::Schema.define(version: 2021_05_25_120431) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -63,6 +63,17 @@ ActiveRecord::Schema.define(version: 2021_05_18_143026) do
     t.string "type", default: "LeadProviderApiToken"
     t.index ["hashed_token"], name: "index_api_tokens_on_hashed_token", unique: true
     t.index ["lead_provider_id"], name: "index_api_tokens_on_lead_provider_id"
+  end
+
+  create_table "call_off_contracts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "version", default: "0.0.1", null: false
+    t.jsonb "raw"
+    t.decimal "uplift_target"
+    t.decimal "uplift_amount"
+    t.integer "recruitment_target"
+    t.decimal "set_up_fee"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "cohorts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -131,6 +142,14 @@ ActiveRecord::Schema.define(version: 2021_05_18_143026) do
     t.index ["core_induction_programme_id"], name: "index_ect_profiles_on_core_induction_programme_id"
     t.index ["school_id"], name: "index_early_career_teacher_profiles_on_school_id"
     t.index ["user_id"], name: "index_early_career_teacher_profiles_on_user_id"
+  end
+
+  create_table "features", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.boolean "active", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["name"], name: "index_features_on_name", unique: true
   end
 
   create_table "induction_coordinator_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -224,6 +243,16 @@ ActiveRecord::Schema.define(version: 2021_05_18_143026) do
     t.index ["token"], name: "index_nomination_emails_on_token", unique: true
   end
 
+  create_table "participant_bands", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "call_off_contract_id", null: false
+    t.integer "min"
+    t.integer "max"
+    t.decimal "per_participant"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["call_off_contract_id"], name: "index_participant_bands_on_call_off_contract_id"
+  end
+
   create_table "participant_events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "item_type", null: false
     t.string "event", null: false
@@ -279,9 +308,11 @@ ActiveRecord::Schema.define(version: 2021_05_18_143026) do
     t.datetime "challenged_at"
     t.string "challenge_reason"
     t.datetime "challenge_deadline"
+    t.boolean "pending", default: false, null: false
     t.index ["cohort_id"], name: "index_partnerships_on_cohort_id"
     t.index ["delivery_partner_id"], name: "index_partnerships_on_delivery_partner_id"
     t.index ["lead_provider_id"], name: "index_partnerships_on_lead_provider_id"
+    t.index ["pending"], name: "index_partnerships_on_pending"
     t.index ["school_id"], name: "index_partnerships_on_school_id"
   end
 
@@ -446,6 +477,7 @@ ActiveRecord::Schema.define(version: 2021_05_18_143026) do
   add_foreign_key "lead_provider_profiles", "users"
   add_foreign_key "nomination_emails", "partnership_notification_emails"
   add_foreign_key "nomination_emails", "schools"
+  add_foreign_key "participant_bands", "call_off_contracts"
   add_foreign_key "participation_records", "early_career_teacher_profiles"
   add_foreign_key "partnership_notification_emails", "partnerships"
   add_foreign_key "partnerships", "cohorts"

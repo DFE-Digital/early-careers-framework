@@ -1,8 +1,15 @@
 # frozen_string_literal: true
 
-Dir[Rails.root.join("db/seeds/initial_seed.rb")].each { |seed| load seed }
+seed_path = %w[db seeds]
 
-if Rails.env.development? || Rails.env.deployed_development? || Rails.env.test?
-  Dir[Rails.root.join("db/seeds/test_data.rb")].each { |seed| load seed }
-  Dir[Rails.root.join("db/seeds/dummy_structures.rb")].each { |seed| load seed }
+load Rails.root.join(*seed_path, "initial_seed.rb").to_s
+
+if %w[development deployed_development test sandbox].include?(Rails.env)
+  %w[test_data dummy_structures].each do |seed|
+    load Rails.root.join(*seed_path, "#{seed}.rb").to_s
+  end
+end
+
+if %w[development deployed_development sandbox].include?(Rails.env)
+  load Rails.root.join(*seed_path, "sandbox_data.rb").to_s
 end

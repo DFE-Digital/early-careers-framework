@@ -15,8 +15,12 @@ Rails.application.routes.draw do
   get "/pages/:page", to: "pages#show", as: :page
   get "check" => "application#check"
 
+  unless Rails.env.production?
+    get "/sandbox", to: "sandbox#show"
+  end
+
   if Rails.env.sandbox?
-    root "sandbox#show"
+    root to: redirect("/sandbox", status: 307)
   else
     root "start#index"
   end
@@ -102,11 +106,9 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resources :schools, only: %i[index show] do
-      resources :induction_coordinators, controller: "schools/induction_coordinators", only: %i[new create], path: "induction-coordinators" do
-        collection do
-          get "email-used", action: :email_used
-        end
-      end
+      resources :induction_coordinators, controller: "schools/induction_coordinators", only: %i[new create edit update], path: "induction-coordinators"
+      get "/replace-or-update-induction-tutor", to: "schools/replace_or_update_induction_tutor#show"
+      post "/replace-or-update-induction-tutor", to: "schools/replace_or_update_induction_tutor#choose"
     end
 
     scope :suppliers, module: "suppliers" do

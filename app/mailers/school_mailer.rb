@@ -16,6 +16,7 @@ class SchoolMailer < ApplicationMailer
         school_name: school_name,
         nomination_link: nomination_url,
         expiry_date: expiry_date,
+        subject: "Important: NQT induction changes",
       },
     )
   end
@@ -29,11 +30,20 @@ class SchoolMailer < ApplicationMailer
       personalisation: {
         school_name: school.name,
         start_url: start_url,
+        subject: "Sign in to manage induction",
       },
     )
   end
 
-  def school_partnership_notification_email(recipient:, provider_name:, cohort:, nominate_url:, challenge_url:)
+  def school_partnership_notification_email(
+    recipient:,
+    provider_name:,
+    cohort:,
+    school_name:,
+    nominate_url:,
+    challenge_url:,
+    challenge_deadline:
+  )
     template_mail(
       SCHOOL_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE,
       to: recipient,
@@ -42,13 +52,24 @@ class SchoolMailer < ApplicationMailer
       personalisation: {
         provider_name: provider_name,
         cohort: cohort,
+        school_name: school_name,
         nominate_url: nominate_url,
         challenge_url: challenge_url,
+        challenge_deadline: challenge_deadline,
+        subject: "Provider confirmed",
       },
     )
   end
 
-  def coordinator_partnership_notification_email(recipient:, provider_name:, cohort:, start_url:, challenge_url:)
+  def coordinator_partnership_notification_email(
+    recipient:,
+    provider_name:,
+    cohort:,
+    school_name:,
+    start_url:,
+    challenge_url:,
+    challenge_deadline:
+  )
     template_mail(
       COORDINATOR_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE,
       to: recipient,
@@ -57,8 +78,11 @@ class SchoolMailer < ApplicationMailer
       personalisation: {
         provider_name: provider_name,
         cohort: cohort,
+        school_name: school_name,
         start_url: start_url,
         challenge_url: challenge_url,
+        challenge_deadline: challenge_deadline,
+        subject: "Provider confirmed",
       },
     )
   end

@@ -13,6 +13,7 @@ class LeadProviderMailer < ApplicationMailer
         name: user.full_name,
         lead_provider_name: lead_provider_name,
         start_url: start_url,
+        subject: "Your account to confirm schools",
       },
     )
   end

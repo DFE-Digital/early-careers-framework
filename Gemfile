@@ -81,6 +81,9 @@ gem "delayed_job_active_record"
 # Acts as State Machine for participant states
 gem "aasm"
 
+# Pagination for API
+gem "pagy", "~> 3.13"
+
 gem "jsonapi-serializer"
 
 # OpenApi Swagger
@@ -122,7 +125,10 @@ group :development, :test do
   # Swagger generator
   gem "multi_json"
   gem "open_api-rswag-specs", ">= 0.1.0"
-  gem "rswag", ">= 2.4.0"
+end
+
+group :development, :deployed_development, :test, :sandbox do
+  gem "faker"
 end
 
 group :development do
@@ -139,7 +145,6 @@ end
 
 group :test do
   gem "capybara"
-  gem "faker"
   gem "jsonapi-rspec"
   gem "pundit-matchers", "~> 1.6.0"
   gem "rails-controller-testing", ">= 1.0.5"
