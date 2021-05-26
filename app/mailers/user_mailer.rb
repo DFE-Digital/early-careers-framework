@@ -26,6 +26,7 @@ class UserMailer < ApplicationMailer
         full_name: user.full_name,
         sign_in_url: url,
         token_expiry: token_expiry,
+        subject: "Link to sign in",
       },
     )
   end
