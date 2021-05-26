@@ -30,7 +30,7 @@ RSpec.describe User, type: :model do
       user = FactoryBot.build(:user, email: "invalid")
 
       expect(user.valid?).to be_falsey
-      expect(user.errors.full_messages[0]).to include("Enter a valid email address")
+      expect(user.errors.messages[:email]).to match_array ["Enter an email address in the correct format, like name@example.com"]
     end
   end
 

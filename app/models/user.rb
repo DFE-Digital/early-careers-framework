@@ -12,7 +12,7 @@ class User < ApplicationRecord
   has_one :early_career_teacher_profile, dependent: :destroy
   has_one :core_induction_programme, through: :early_career_teacher_profile
 
-  validates :full_name, presence: { message: "Enter a full name" }
+  validates :full_name, presence: true
   validates :email, presence: true, uniqueness: true, format: { with: Devise.email_regexp }
 
   def admin?
