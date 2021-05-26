@@ -39,4 +39,12 @@ class User < ApplicationRecord
   scope :for_lead_provider, -> { includes(:lead_provider).joins(:lead_provider) }
   scope :admins, -> { joins(:admin_profile) }
   scope :early_career_teachers, -> { joins(:early_career_teacher_profile).includes(:early_career_teacher_profile) }
+
+  scope :changed_since, lambda { |timestamp|
+    if timestamp.present?
+      where("updated_at > ?", timestamp)
+    else
+      where("updated_at is not null")
+    end.order(:updated_at, :id)
+  }
 end
