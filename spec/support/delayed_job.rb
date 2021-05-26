@@ -56,10 +56,12 @@ module DelayedJobMatchers
   define :delay_execution_of do |method_name|
     match do |actual|
       jobs = query_jobs(actual, method_name)
-      return jobs.any? unless @arguments || @at
 
       jobs.any? do |job|
-        @arguments.args_match?(*job.payload_object.args) && (job.run_at == @at if @at.present?)
+        result = true
+        result &&= @arguments.args_match?(*job.payload_object.args) if @arguments.present?
+        result &&= job.run_at == @at if @at.present?
+        result
       end
     end
 
@@ -83,6 +85,47 @@ module DelayedJobMatchers
 
         object.matches? job.payload_object.object
       end
+    end
+  end
+
+  # Usage:
+  #    expect(active_job).to be_enqueued.with(arguments / argument_matchers)
+  #
+  # Examples:
+  #    MyActiveJob.perform_later("hello")
+  #
+  #    expect(MyActiveJob).to be_enqueued.with(an_instance_of String) #=> success
+  #    expect(MyActiveJob).to be_enqueued                             #=> success
+  #    expect(MyActiveJob).to be_enqueued.with("hello")               #=> success
+  #    expect(MyActiveJob).to be_enqueued.with("Hello")               #=> failure
+  define :be_enqueued do
+    match do |job_class|
+      job_arguments = find_job_with_arguments(job_class)
+
+      job_arguments.any? do |job, args|
+        result = true
+        result &&= @arguments.args_match?(*args) if @arguments.present?
+        result &&= job.run_at == @at if @at.present?
+        result
+      end
+    end
+
+    chain :with do |*args|
+      @arguments = RSpec::Mocks::ArgumentListMatcher.new(*args)
+    end
+
+    chain :at do |datetime|
+      @at = datetime
+    end
+
+    def find_job_with_arguments(job_class)
+      Delayed::Job
+        .where("handler LIKE '--- !ruby/object:ActiveJob::QueueAdapters::DelayedJobAdapter::JobWrapper%'")
+        .where("handler LIKE ?", "%\n  job_class: #{job_class.name}\n%")
+        .index_by(&:itself)
+        .transform_values { |dj_job| ActiveJob::Base.deserialize(dj_job.payload_object.job_data) }
+        .each_value { |aj_job| aj_job.send(:deserialize_arguments_if_needed) }
+        .transform_values(&:arguments)
     end
   end
 

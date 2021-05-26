@@ -29,22 +29,25 @@ RSpec.describe PartnershipNotificationService do
       PartnershipNotificationService.schedule_notifications(partnership)
 
       expect(an_instance_of(PartnershipNotificationService)).to delay_execution_of(:notify)
-                                                                  .with(an_object_having_attributes(
-                                                                          class: Partnership,
-                                                                          cohort_id: partnership.cohort.id,
-                                                                          school_id: school.id,
-                                                                          lead_provider_id: @lead_provider.id,
-                                                                          delivery_partner_id: @delivery_partner.id,
-                                                                        ))
-                                                                  .at(Time.zone.now)
-      expect(PartnershipReminderJob).to have_been_enqueued.with(an_object_having_attributes(
-                                                                  class: Partnership,
-                                                                  cohort_id: partnership.cohort.id,
-                                                                  school_id: school.id,
-                                                                  lead_provider_id: @lead_provider.id,
-                                                                  delivery_partner_id: @delivery_partner.id,
-                                                                ))
-                                                          .at(1.week.from_now)
+        .with(
+          an_object_having_attributes(
+            class: Partnership,
+            cohort_id: partnership.cohort.id,
+            school_id: school.id,
+            lead_provider_id: @lead_provider.id,
+            delivery_partner_id: @delivery_partner.id,
+          ),
+        )
+
+      expect(PartnershipReminderJob).to be_enqueued.with(
+        an_object_having_attributes(
+          class: Partnership,
+          cohort_id: partnership.cohort.id,
+          school_id: school.id,
+          lead_provider_id: @lead_provider.id,
+          delivery_partner_id: @delivery_partner.id,
+        ),
+      ).at(1.week.from_now)
     end
   end
 
