@@ -11,6 +11,7 @@ RSpec.describe PartnershipNotificationService do
     ProviderRelationship.create!(lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort)
   end
 
+  let(:school) { create(:school) }
   let(:partnership) do
     Partnership.create!(
       lead_provider: @lead_provider,
@@ -22,7 +23,99 @@ RSpec.describe PartnershipNotificationService do
   let(:partnership_notification_email) { partnership.partnership_notification_emails.last }
   let(:notify_id) { Faker::Alphanumeric.alphanumeric(number: 16) }
 
+  describe ".schedule_notifications" do
+    it "schedules partnership notification and reminder" do
+      freeze_time
+      PartnershipNotificationService.schedule_notifications(partnership)
+
+      expect(an_instance_of(PartnershipNotificationService)).to delay_execution_of(:notify)
+                                                                  .with(an_object_having_attributes(
+                                                                          class: Partnership,
+                                                                          cohort_id: partnership.cohort.id,
+                                                                          school_id: school.id,
+                                                                          lead_provider_id: @lead_provider.id,
+                                                                          delivery_partner_id: @delivery_partner.id,
+                                                                        ))
+                                                                  .at(Time.zone.now)
+      expect(PartnershipReminderJob).to have_been_enqueued.with(an_object_having_attributes(
+                                                                  class: Partnership,
+                                                                  cohort_id: partnership.cohort.id,
+                                                                  school_id: school.id,
+                                                                  lead_provider_id: @lead_provider.id,
+                                                                  delivery_partner_id: @delivery_partner.id,
+                                                                ))
+                                                          .at(1.week.from_now)
+    end
+  end
+
   describe "#notify" do
+    context "when the school has no induction coordinator" do
+      let(:contact_email) { Faker::Internet.email }
+      let(:school) { create(:school, primary_contact_email: contact_email) }
+
+      before(:all) do
+        RSpec::Mocks.configuration.verify_partial_doubles = false
+      end
+
+      after(:all) do
+        RSpec::Mocks.configuration.verify_partial_doubles = true
+      end
+
+      it "emails the school primary contact" do
+        expect(SchoolMailer).to receive(:school_partnership_notification_email).with(
+          hash_including(
+            provider_name: @delivery_partner.name,
+            cohort: String,
+            nominate_url: String,
+            challenge_url: String,
+            recipient: contact_email,
+          ),
+        ).and_call_original
+        allow_any_instance_of(Mail::TestMailer).to receive_message_chain(:response, :id) { notify_id }
+
+        partnership_notification_service.notify(partnership)
+
+        expect(partnership_notification_email.sent_to).to eql contact_email
+        expect(partnership_notification_email.notify_id).to eql notify_id
+      end
+    end
+
+    context "when the school has an induction coordinator" do
+      let(:contact_email) { Faker::Internet.email }
+      let(:school) { create(:school) }
+      before do
+        create(:user, :induction_coordinator, schools: [school], email: contact_email)
+      end
+
+      before(:all) do
+        RSpec::Mocks.configuration.verify_partial_doubles = false
+      end
+
+      after(:all) do
+        RSpec::Mocks.configuration.verify_partial_doubles = true
+      end
+
+      it "emails the induction coordinator" do
+        expect(SchoolMailer).to receive(:coordinator_partnership_notification_email).with(
+          hash_including(
+            provider_name: @delivery_partner.name,
+            cohort: String,
+            start_url: String,
+            challenge_url: String,
+            recipient: contact_email,
+          ),
+        ).and_call_original
+        allow_any_instance_of(Mail::TestMailer).to receive_message_chain(:response, :id) { notify_id }
+
+        partnership_notification_service.notify(partnership)
+
+        expect(partnership_notification_email.sent_to).to eql contact_email
+        expect(partnership_notification_email.notify_id).to eql notify_id
+      end
+    end
+  end
+
+  describe "#send_reminder" do
     context "when the school has no induction coordinator" do
       let(:contact_email) { Faker::Internet.email }
       let(:school) { create(:school, primary_contact_email: contact_email) }

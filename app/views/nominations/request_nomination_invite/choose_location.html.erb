@@ -21,7 +21,7 @@
               @local_authorities,
               :id,
               :name,
-              label: { text: "What is your school's local authority?", class: "govuk-label govuk-label--m" },
+              label: { text: "What is your school’s local authority?", class: "govuk-label govuk-label--m" },
               hint: -> { tag.span do
                 concat("This is the authority or council in your area. For example, Gloucestershire or Barnet. Not sure? ")
                 concat(govuk_link_to("Find your school on our register", "https://get-information-schools.service.gov.uk/"))

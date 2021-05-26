@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rails_helper"
+require "aasm/rspec"
 
 RSpec.describe ParticipationRecord, type: :model do
   before :each do

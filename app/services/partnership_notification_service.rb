@@ -1,23 +1,46 @@
 # frozen_string_literal: true
 
 class PartnershipNotificationService
+  REMINDER_EMAIL_DELAY = 7.days.freeze
+
+  def self.schedule_notifications(partnership)
+    PartnershipNotificationService.new.delay.notify(partnership)
+    PartnershipReminderJob.set(wait: REMINDER_EMAIL_DELAY).perform_later(partnership)
+  end
+
   def notify(partnership)
     ActiveRecord::Base.transaction do
       if partnership.school.registered?
-        notification_email = PartnershipNotificationEmail.create!(
-          token: generate_token,
-          sent_to: partnership.school.contact_email,
-          partnership: partnership,
-          email_type: PartnershipNotificationEmail.email_types[:induction_coordinator_email],
+        notification_email = create_notification_email(
+          partnership,
+          PartnershipNotificationEmail.email_types[:induction_coordinator_email],
         )
 
         send_notification_email_to_coordinator(notification_email)
       else
-        notification_email = PartnershipNotificationEmail.create!(
-          token: generate_token,
-          sent_to: partnership.school.contact_email,
-          partnership: partnership,
-          email_type: PartnershipNotificationEmail.email_types[:school_email],
+        notification_email = create_notification_email(
+          partnership,
+          PartnershipNotificationEmail.email_types[:school_email],
+        )
+
+        send_notification_email_to_school(notification_email)
+      end
+    end
+  end
+
+  def send_reminder(partnership)
+    ActiveRecord::Base.transaction do
+      if partnership.school.registered?
+        notification_email = create_notification_email(
+          partnership,
+          PartnershipNotificationEmail.email_types[:induction_coordinator_reminder_email],
+        )
+
+        send_notification_email_to_coordinator(notification_email)
+      else
+        notification_email = create_notification_email(
+          partnership,
+          PartnershipNotificationEmail.email_types[:school_reminder_email],
         )
 
         send_notification_email_to_school(notification_email)
@@ -26,6 +49,15 @@ class PartnershipNotificationService
   end
 
 private
+
+  def create_notification_email(partnership, type)
+    PartnershipNotificationEmail.create!(
+      token: generate_token,
+      sent_to: partnership.school.contact_email,
+      partnership: partnership,
+      email_type: type,
+    )
+  end
 
   def generate_token
     loop do
@@ -46,8 +78,10 @@ private
       recipient: notification_email.sent_to,
       provider_name: provider_name(notification_email),
       cohort: notification_email.partnership.cohort.display_name,
+      school_name: notification_email.school.name,
       nominate_url: nomination_email.nomination_url,
       challenge_url: challenge_url(notification_email.token),
+      challenge_deadline: notification_email.challenge_deadline.strftime("%d/%m/%Y"),
     ).deliver_now.delivery_method.response.id
 
     notification_email.update!(notify_id: notify_id)
@@ -58,8 +92,10 @@ private
       recipient: notification_email.sent_to,
       provider_name: provider_name(notification_email),
       cohort: notification_email.partnership.cohort.display_name,
+      school_name: notification_email.school.name,
       start_url: Rails.application.routes.url_helpers.root_url(host: Rails.application.config.domain),
       challenge_url: challenge_url(notification_email.token),
+      challenge_deadline: notification_email.challenge_deadline.strftime("%d/%m/%Y"),
     ).deliver_now.delivery_method.response.id
 
     notification_email.update!(notify_id: notify_id)
@@ -70,7 +106,7 @@ private
   end
 
   def challenge_url(token)
-    Rails.application.routes.url_helpers.root_url( # TODO: ECF-RP-480: Update path when exists
+    Rails.application.routes.url_helpers.challenge_partnership_url(
       token: token,
       host: Rails.application.config.domain,
     )

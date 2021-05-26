@@ -13,6 +13,11 @@ gem "devise", ">= 4.7.3"
 gem "paper_trail"
 gem "pundit"
 
+# Error and performance monitoring
+gem "sentry-delayed_job"
+gem "sentry-rails"
+gem "sentry-ruby"
+
 # Pagination
 gem "kaminari", ">= 1.2.0"
 
@@ -76,6 +81,9 @@ gem "delayed_job_active_record"
 # Acts as State Machine for participant states
 gem "aasm"
 
+# Pagination for API
+gem "pagy", "~> 3.13"
+
 gem "jsonapi-serializer"
 
 # OpenApi Swagger
@@ -115,7 +123,10 @@ group :development, :test do
   # Swagger generator
   gem "multi_json"
   gem "open_api-rswag-specs", ">= 0.1.0"
-  gem "rswag", ">= 2.4.0"
+end
+
+group :development, :deployed_development, :test, :sandbox do
+  gem "faker"
 end
 
 group :development do
@@ -131,11 +142,11 @@ group :development do
 end
 
 group :test do
-  gem "faker"
   gem "jsonapi-rspec"
   gem "pundit-matchers", "~> 1.6.0"
   gem "rails-controller-testing", ">= 1.0.5"
   gem "rspec-default_http_header"
+  gem "rutabaga"
   gem "shoulda-matchers", "~> 4.4"
   gem "simplecov"
   gem "webdrivers", "~> 4.4", ">= 4.4.1"

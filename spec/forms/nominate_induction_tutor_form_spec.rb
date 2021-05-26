@@ -59,18 +59,5 @@ RSpec.describe NominateInductionTutorForm, type: :model do
                                    .and(not_change { InductionCoordinatorProfile.unscoped.count })
       end
     end
-
-    context "when a discarded user with the specified email exists" do
-      before do
-        user = create(:user, email: email)
-        user.discard!
-      end
-
-      it "raises UserExistsError" do
-        expect { form.save! }.to raise_error(UserExistsError)
-                                   .and(not_change { User.unscoped.count })
-                                   .and(not_change { InductionCoordinatorProfile.unscoped.count })
-      end
-    end
   end
 end

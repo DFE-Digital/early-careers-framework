@@ -26,5 +26,4 @@ RSpec.configure do |config|
       ],
     },
   }
-  config.swagger_format = :json
 end

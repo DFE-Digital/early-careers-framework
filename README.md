@@ -135,3 +135,33 @@ bundle exec rake lead_provider:generate_token "name or id"
 ```
 
 Where `"name or id"` is a name or id from the `lead_providers` table.
+
+## Generating a token for E&L api
+1. Get into Rails console for the environment you want to generate the token for.
+2. Run `EngageAndLearnApiToken.create_with_random_token!`
+3. Rails console should output a string, that's your unhashed token, you can keep it and use it to access E&L endpoints.
+
+### Feature Flags
+
+Certain aspects of app behaviour are governed by a minimal implementation of feature flags. Feature flag states are persisted in the database with a name and an active state. To activate a new feature you can run `Feature.create!(name: 'rate_limiting', active: true)`.
+
+The available flags are listed in `app/services/feature_flag.rb`, and available in the constant `FeatureFlag::FEATURES`. Each one is tested with a dedicated spec in `spec/features/feature_flags/`.
+
+## payment_calculator
+
+The code in [`lib/payment_calculator/`](lib/payment_calculator/) performs payment calculations for both [ECFs (Early Career Framework)](https://www.early-career-framework.education.gov.uk/) and [the reformed NPQs (National Professional Qualification)](https://www.gov.uk/government/publications/national-professional-qualifications-frameworks-from-september-2021) so that training providers can be paid the correct amount.
+
+The output includes the result of each intermediary step in the calculation so that any questions over how the final totals were reached can be answered by interested parties.
+
+### Payment entity naming
+
+Here are the names we are using in the code and specs for the different concepts involved in the calculations by way of an example:
+
+> Per participant price £995 >>
+per participant service fee £398 (40%) >> monthly service fee £27k >> total service fee £796k
+>
+> Per participant price £995 >> per participant output payment £597 (60%) >> per participant output payment for a retention period £119 (20% of 60%) >> output payment subtotal for a retention period with 1900 retained participants £226k
+
+* "Participants" includes both teachers and mentors.
+* "Output payments" are payments made based on the performance of the training provider (i.e. their output).
+* "Payment type" for start/retention/completion output payments.
