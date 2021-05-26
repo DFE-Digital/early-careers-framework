@@ -25,6 +25,19 @@ class SchoolDataImporter
     end
   end
 
+  def update_emails
+    files = school_data_files
+
+    CSV.foreach(files["ecf_tech.csv"].path, headers: true, encoding: "ISO-8859-1:UTF-8") do |row|
+      school = School.find_by(urn: row.fetch("URN"))
+      next if school.blank?
+
+      school.primary_contact_email = row.fetch("MainEmail")
+      school.secondary_contact_email = row.fetch("AlternativeEmail")
+      school.save!
+    end
+  end
+
 private
 
   def school_data_files
