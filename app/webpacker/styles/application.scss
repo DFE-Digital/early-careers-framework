@@ -21,6 +21,7 @@ $govuk-image-url-function: frontend-image-url;
 @import "primary-nav";
 @import "school_search";
 @import "admin/schools";
+@import "aside";
 
 .govuk-tag {
   white-space: nowrap;

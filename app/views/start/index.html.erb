@@ -24,4 +24,15 @@
     <p class="govuk-body">It has been sent to the email address your school has listed on our register, <%= govuk_link_to "Get information about schools", "https://www.get-information-schools.service.gov.uk/" %></p>
     <p class="govuk-body"><%= govuk_link_to "Resend email", choose_location_request_nomination_invite_path %></p>
   </div>
+
+  <div class="govuk-grid-column-one-third">
+    <section class='govuk-aside'>
+      <header class="govuk-aside__header">Related content</header>
+      <ul class="govuk-list govuk-aside__links">
+        <li><%= govuk_link_to "Guidance on the ECF and choosing programmes", "https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview" %></li>
+        <li><%= govuk_link_to "Choose study materials for your early career teachers", page_path("core-materials-info") %></li>
+      </ul>
+    </section>
+  </div>
+
 </div>
