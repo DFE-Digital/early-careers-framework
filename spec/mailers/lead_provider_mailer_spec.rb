@@ -21,4 +21,21 @@ RSpec.describe LeadProviderMailer, type: :mailer do
       expect(nomination_confirmation_email.from).to eq(["mail@example.com"])
     end
   end
+
+  describe "#partnership_challenged_email" do
+    let(:user) { create :user }
+    let(:partnership) { create :partnership, :challenged }
+
+    let(:nomination_confirmation_email) do
+      LeadProviderMailer.partnership_challenged_email(
+        user: user,
+        partnership: partnership,
+      ).deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(nomination_confirmation_email.to).to eq([user.email])
+      expect(nomination_confirmation_email.from).to eq(["mail@example.com"])
+    end
+  end
 end
