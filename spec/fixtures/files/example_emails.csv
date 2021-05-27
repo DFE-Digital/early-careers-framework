@@ -1,0 +1,6 @@
+"urn","email","original"
+100000,"head@example.com","mailto:head@example.com"
+100000,"admin@example.com","mailto:admin@example.com"
+100001,"info@example.com/","mailto:info@example.com"
+100002,"covid-info@example.com","mailto:covid-info@example.com"
+100003,"admissions@example.com","mailto:admission@example.com"
