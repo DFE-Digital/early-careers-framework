@@ -135,7 +135,7 @@ RSpec.describe User, type: :model do
       expect(user.core_induction_programme).to be cip
     end
 
-    it "is expected to not blow up when no cip" do
+    it "is expected to return nil when no cip" do
       user = create(:user)
       expect(user.core_induction_programme).to be_nil
     end

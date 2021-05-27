@@ -9,5 +9,5 @@ class MentorProfile < ApplicationRecord
   belongs_to :cohort, optional: true
   has_many :early_career_teacher_profiles
   has_many :early_career_teachers, through: :early_career_teacher_profiles, source: :user
-  # has_one :participation_record, dependent: :destroy
+  # TODO: Add a link to participant_record if we need to
 end
