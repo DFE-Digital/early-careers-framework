@@ -1,13 +1,14 @@
 <% content_for :title, "Choose delivery partner" %>
-<% content_for :before_content, govuk_back_link( text: "Back", href: start_lead_providers_report_schools_path) %>
+<% content_for :before_content, govuk_back_link( text: "Back", href: lead_providers_report_schools_start_path) %>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">Choose the delivery partner</h1>
     <p>Select the delivery partner that these schools have confirmed an agreement with.</p>
-    <%= form_with model: @delivery_partner_form, url: check_delivery_partner_lead_providers_report_schools_path, method: :post do |f| %>
+    <%= form_with model: report_schools_form, url: { action: :create }, method: :post do |f| %>
       <%= f.govuk_collection_radio_buttons(
         :delivery_partner_id,
-        @delivery_partners,
+        delivery_partners,
         :id,
         :name,
         legend: nil) %>

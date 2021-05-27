@@ -2,7 +2,7 @@
 
 class PartnershipNotificationEmail < ApplicationRecord
   belongs_to :partnership
-  has_one :nomination_email
+  has_one :nomination_email, dependent: :nullify
   delegate :school, to: :partnership, allow_nil: false
   delegate :lead_provider, to: :partnership, allow_nil: false
   delegate :delivery_partner, to: :partnership, allow_nil: true

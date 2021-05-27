@@ -5,6 +5,7 @@ class PartnershipCsvUpload < ApplicationRecord
   has_one_attached :csv
   belongs_to :lead_provider, optional: true
   belongs_to :delivery_partner, optional: true
+  belongs_to :cohort
 
   validate :csv_validation
 
@@ -53,9 +54,9 @@ private
         errors << { urn: urn, message: "School not eligible for funding", school_name: school.name, row_number: index + 1 }
       elsif !school.eligible?
         errors << { urn: urn, message: "School not eligible for inductions", school_name: school.name, row_number: index + 1 }
-      elsif school.lead_provider(Cohort.current.start_year) == lead_provider
+      elsif school.lead_provider(cohort.start_year) == lead_provider
         errors << { urn: urn, message: "Your school - already confirmed", school_name: school.name, row_number: index + 1 }
-      elsif school.lead_provider(Cohort.current.start_year).present?
+      elsif school.lead_provider(cohort.start_year).present?
         errors << { urn: urn, message: "Recruited by other provider", school_name: school.name, row_number: index + 1 }
       end
     end
