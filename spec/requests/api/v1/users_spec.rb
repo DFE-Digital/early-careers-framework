@@ -10,7 +10,14 @@ RSpec.describe "API Users", type: :request do
     let(:parsed_response) { JSON.parse(response.body) }
 
     before :each do
-      3.times { create(:user) }
+      # Heads up, for some reason the stored CIP IDs don't match
+      cip = create(:core_induction_programme, name: "Teach First")
+      mentor = create(:user, :mentor)
+      mentor.mentor_profile.update!(core_induction_programme: cip)
+      2.times do
+        ect = create(:user, :early_career_teacher)
+        ect.early_career_teacher_profile.update!(core_induction_programme: cip)
+      end
     end
 
     context "when authorized" do
@@ -38,9 +45,21 @@ RSpec.describe "API Users", type: :request do
         expect(parsed_response["data"][0]["id"]).to be_in(User.pluck(:id))
       end
 
-      it "returns only email and full name in attributes" do
+      it "has correct attributes" do
         get "/api/v1/users"
         expect(parsed_response["data"][0]).to have_jsonapi_attributes(:email, :full_name, :user_type, :core_induction_programme).exactly
+      end
+
+      it "returns correct user types" do
+        get "/api/v1/users"
+        expect(parsed_response["data"][0]["attributes"]["user_type"]).to eql("mentor")
+        expect(parsed_response["data"][1]["attributes"]["user_type"]).to eql("early_career_teacher")
+      end
+
+      it "returns correct CIPs" do
+        get "/api/v1/users"
+        expect(parsed_response["data"][0]["attributes"]["core_induction_programme"]).to eql("teach_first")
+        expect(parsed_response["data"][1]["attributes"]["core_induction_programme"]).to eql("teach_first")
       end
 
       it "returns the right number of users per page" do
@@ -49,9 +68,6 @@ RSpec.describe "API Users", type: :request do
       end
 
       it "returns different users for each page" do
-        User.delete_all
-        3.times { create(:user) }
-
         get "/api/v1/users", params: { page: { per_page: 2, page: 1 } }
         expect(parsed_response["data"].size).to eql(2)
 

@@ -90,6 +90,20 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe "#mentor?" do
+    it "is expected to be true when the user has a mentor profile" do
+      user = create(:user, :mentor)
+
+      expect(user.mentor?).to be true
+    end
+
+    it "is expected to be false when the user does not have a mentor profile" do
+      user = create(:user)
+
+      expect(user.mentor?).to be false
+    end
+  end
+
   describe "#lead_provider?" do
     it "is expected to be true when the user has a lead provider profile" do
       user = create(:user, :lead_provider)
@@ -101,6 +115,29 @@ RSpec.describe User, type: :model do
       user = create(:user)
 
       expect(user.lead_provider?).to be false
+    end
+  end
+
+  describe "#core_induction_programme" do
+    it "is expected to return mentor cip for mentor users" do
+      user = create(:user, :mentor)
+      cip = create(:core_induction_programme)
+      user.mentor_profile.core_induction_programme = cip
+
+      expect(user.core_induction_programme).to be cip
+    end
+
+    it "is expected to return ect cip for ect users" do
+      user = create(:user, :early_career_teacher)
+      cip = create(:core_induction_programme)
+      user.early_career_teacher_profile.core_induction_programme = cip
+
+      expect(user.core_induction_programme).to be cip
+    end
+
+    it "is expected to not blow up when no cip" do
+      user = create(:user)
+      expect(user.core_induction_programme).to be_nil
     end
   end
 

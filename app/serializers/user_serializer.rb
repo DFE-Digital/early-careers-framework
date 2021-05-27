@@ -5,6 +5,7 @@ class UserSerializer
 
   USER_TYPES = {
     early_career_teacher: "early_career_teacher",
+    mentor: "mentor",
     other: "other",
   }.freeze
 
@@ -20,9 +21,10 @@ class UserSerializer
   attributes :email, :full_name
 
   attributes :user_type do |user|
-    # TODO: Add Mentors
     if user.early_career_teacher?
       USER_TYPES[:early_career_teacher]
+    elsif user.mentor?
+      USER_TYPES[:mentor]
     else
       USER_TYPES[:other]
     end

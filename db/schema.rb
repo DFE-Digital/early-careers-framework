@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_25_120431) do
+ActiveRecord::Schema.define(version: 2021_05_27_102930) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -138,8 +138,10 @@ ActiveRecord::Schema.define(version: 2021_05_25_120431) do
     t.uuid "cohort_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.uuid "mentor_profile_id"
     t.index ["cohort_id"], name: "index_early_career_teacher_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_ect_profiles_on_core_induction_programme_id"
+    t.index ["mentor_profile_id"], name: "index_early_career_teacher_profiles_on_mentor_profile_id"
     t.index ["school_id"], name: "index_early_career_teacher_profiles_on_school_id"
     t.index ["user_id"], name: "index_early_career_teacher_profiles_on_user_id"
   end
@@ -212,6 +214,19 @@ ActiveRecord::Schema.define(version: 2021_05_25_120431) do
     t.string "code"
     t.string "name"
     t.index ["code"], name: "index_local_authority_districts_on_code", unique: true
+  end
+
+  create_table "mentor_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "school_id", null: false
+    t.uuid "core_induction_programme_id"
+    t.uuid "cohort_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["cohort_id"], name: "index_mentor_profiles_on_cohort_id"
+    t.index ["core_induction_programme_id"], name: "index_mentor_profiles_on_core_induction_programme_id"
+    t.index ["school_id"], name: "index_mentor_profiles_on_school_id"
+    t.index ["user_id"], name: "index_mentor_profiles_on_user_id"
   end
 
   create_table "networks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -302,6 +317,10 @@ ActiveRecord::Schema.define(version: 2021_05_25_120431) do
     t.uuid "school_id", null: false
     t.uuid "lead_provider_id", null: false
     t.uuid "cohort_id", null: false
+    t.string "status", default: "pending", null: false
+    t.string "reason_for_rejection"
+    t.datetime "accepted_at"
+    t.datetime "rejected_at"
     t.uuid "delivery_partner_id"
     t.datetime "challenged_at"
     t.string "challenge_reason"
@@ -465,6 +484,7 @@ ActiveRecord::Schema.define(version: 2021_05_25_120431) do
   add_foreign_key "district_sparsities", "local_authority_districts"
   add_foreign_key "early_career_teacher_profiles", "cohorts"
   add_foreign_key "early_career_teacher_profiles", "core_induction_programmes"
+  add_foreign_key "early_career_teacher_profiles", "mentor_profiles"
   add_foreign_key "early_career_teacher_profiles", "schools"
   add_foreign_key "early_career_teacher_profiles", "users"
   add_foreign_key "induction_coordinator_profiles", "users"
@@ -473,6 +493,10 @@ ActiveRecord::Schema.define(version: 2021_05_25_120431) do
   add_foreign_key "lead_provider_cips", "lead_providers"
   add_foreign_key "lead_provider_profiles", "lead_providers"
   add_foreign_key "lead_provider_profiles", "users"
+  add_foreign_key "mentor_profiles", "cohorts"
+  add_foreign_key "mentor_profiles", "core_induction_programmes"
+  add_foreign_key "mentor_profiles", "schools"
+  add_foreign_key "mentor_profiles", "users"
   add_foreign_key "nomination_emails", "partnership_notification_emails"
   add_foreign_key "nomination_emails", "schools"
   add_foreign_key "participant_bands", "call_off_contracts"
