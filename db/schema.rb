@@ -317,10 +317,6 @@ ActiveRecord::Schema.define(version: 2021_05_27_102930) do
     t.uuid "school_id", null: false
     t.uuid "lead_provider_id", null: false
     t.uuid "cohort_id", null: false
-    t.string "status", default: "pending", null: false
-    t.string "reason_for_rejection"
-    t.datetime "accepted_at"
-    t.datetime "rejected_at"
     t.uuid "delivery_partner_id"
     t.datetime "challenged_at"
     t.string "challenge_reason"
