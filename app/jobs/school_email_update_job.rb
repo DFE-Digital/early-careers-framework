@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SchoolEmailUpdateJob < CronJob
-  self.cron_expression = "0 2 * * *"
+  self.cron_expression = "30 6 * * *"
 
   queue_as :update_emails
 
