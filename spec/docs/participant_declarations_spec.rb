@@ -44,7 +44,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
 
       response 304, "Not Modified" do
         before do
-          InductParticipant.call(user.early_career_teacher_profile)
+          InductParticipant.call(early_career_teacher_profile: user.early_career_teacher_profile)
         end
         let(:params) { { "id" => user.id } }
         run_test!
