@@ -1,20 +1,15 @@
-<% content_for :title, "Add or change induction tutor" %>
+<% title = "New induction tutor for #{@school.name}" %>
+<% content_for :title, title %>
 <% content_for :before_content, govuk_back_link(text: "Back", href: admin_school_path(@school)) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">Induction tutor for <%= @school.name %></h1>
-    <%= form_for(@nominate_induction_tutor_form, url: admin_school_induction_coordinators_path(@school)) do |f| %>
-      <%= f.govuk_error_summary %>
-      <%= f.govuk_text_field(
-            :full_name,
-            label: { text: "Full name" })
-      %>
-      <%= f.govuk_email_field(
-            :email,
-            label: { text: "Email" })
-      %>
-      <%= f.govuk_submit "Save" %>
-    <% end %>
+    <%= render partial: 'induction_tutor_form', locals: {
+      heading: title,
+      form_object: @induction_tutor_form,
+      form_url: admin_school_induction_coordinators_path(@school),
+      form_method: :post,
+      submit_label: "Confirm new tutor"
+    } %>
   </div>
 </div>

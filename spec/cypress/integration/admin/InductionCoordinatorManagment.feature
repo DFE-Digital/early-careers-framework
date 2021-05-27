@@ -3,10 +3,11 @@ Feature: Admin user creating induction tutor
 
   Background:
     Given I am logged in as an "admin"
-    And scenario "school_with_local_authority" has been run
-    And I am on "admin schools" page
 
   Scenario: Create an induction tutor
+    Given scenario "school_with_local_authority" has been run
+    And I am on "admin schools" page
+
     When I click on "link" containing "Test school"
     Then I should be on "admin school overview" page
     And "page body" should contain "Test school"
@@ -24,6 +25,71 @@ Feature: Admin user creating induction tutor
     And the page should be accessible
     And "page body" should contain "John Smith"
     And "page body" should contain "j.smith@example.com"
+    And "notification banner" should contain "Success"
+    And "notification banner" should contain "New induction tutor added"
+    And "notification banner" should contain "They will get an email with next steps"
+
+  Scenario: Update an induction tutor
+    Given scenario "school_with_induction_tutor" has been run
+    And I am on "admin schools" page
+
+    When I click on "link" containing "Induction High School"
+    Then I should be on "admin school overview" page
+    And "page body" should contain "Induction High School"
+    And the page should be accessible
+
+    When I click on "link" containing "Change"
+    Then I should be on "choose replace or update induction tutor" page
+    And the page should be accessible
+    And percy should be sent snapshot called "choose replace or update induction tutor"
+
+    When I click on "update induction tutor" 
+    And I click the submit button
+    Then I should be on "edit admin school induction coordinator" page
+    And "name input" should have value "Brenda Walsh"
+    And "email input" should have value "brenda.walsh@school.org"
+    And the page should be accessible
+    And percy should be sent snapshot called "update induction tutor"
+
+    When I clear "name input"
+    And I type "Brenda Jones" into "name input"
+    And I clear "email input"
+    And I type "brenda.jones@school.org" into "email input"
+    And I click the submit button
+    Then I should be on "admin school overview" page
+    And the page should be accessible
+    And "page body" should contain "Brenda Jones"
+    And "page body" should contain "brenda.jones@school.org"
+    And "notification banner" should contain "Success"
+    And "notification banner" should contain "Induction tutor details updated"
+
+  Scenario: Replace an induction tutor
+    Given scenario "school_with_induction_tutor" has been run
+    And I am on "admin schools" page
+
+    When I click on "link" containing "Induction High School"
+    Then I should be on "admin school overview" page
+    And "page body" should contain "Induction High School"
+    And the page should be accessible
+
+    When I click on "link" containing "Change"
+    Then I should be on "choose replace or update induction tutor" page
+    And the page should be accessible
+
+    When I click on "replace induction tutor" 
+    And I click the submit button
+    Then I should be on "new admin school induction coordinator" page
+
+    When I type "Megan Johnson" into "name input"
+    And I clear "email input"
+    And I type "megan.johnson@school.org" into "email input"
+    And I click the submit button
+    Then I should be on "admin school overview" page
+    And the page should be accessible
+    And "page body" should contain "Megan Johnson"
+    And "page body" should contain "megan.johnson@school.org"
+    And "page body" should not contain "Brenda Walsh"
+    And "page body" should not contain "brenda.walsh@school.org"
     And "notification banner" should contain "Success"
     And "notification banner" should contain "New induction tutor added"
     And "notification banner" should contain "They will get an email with next steps"

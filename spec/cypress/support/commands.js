@@ -26,7 +26,7 @@ Cypress.Commands.add("login", (...traits) => {
 Cypress.Commands.add("logout", () => {
   cy.get("#navigation").contains("Logout").click();
 
-  cy.location("pathname").should("eq", "/");
+  cy.location("pathname").should("eq", "/users/signed-out");
 });
 
 Cypress.Commands.add("clickBackLink", () => {

@@ -32,6 +32,10 @@ const pagePaths = {
   "admin school overview": "/admin/schools/:id",
   "new admin school induction coordinator":
     "/admin/schools/:id/induction-coordinators/new",
+  "edit admin school induction coordinator":
+    "/admin/schools/:id/induction-coordinators/:id/edit",
+  "choose replace or update induction tutor":
+    "/admin/schools/:id/replace-or-update-induction-tutor",
   "admin index": "/admin/administrators",
   "admin induction coordinator edit": "/admin/induction-coordinators/:id/edit",
   "admin creation": "/admin/administrators/new",
@@ -69,6 +73,7 @@ const pagePaths = {
   "2021 school cohorts": "/schools/cohorts/2021",
   "2021 school partnerships": "/schools/cohorts/2021/partnerships",
   "lead providers report schools start": "/lead-providers/report-schools/start",
+  "lead providers your schools": "/lead-providers/your-schools",
   "challenge partnership": "/report-incorrect-partnership?token=:id",
   "challenge partnership (any token)": "/report-incorrect-partnership",
   "challenge partnership success": "/report-incorrect-partnership/success",
@@ -122,7 +127,7 @@ const assertOnPage = (page) => {
 
   if (path.includes(":id")) {
     const pathRegex = new RegExp(
-      path.replace(/\//g, "\\/").replace(":id", "[^/]+")
+      path.replace(/\//g, "\\/").replace(/:id/g, "[^/]+")
     );
     cy.location("pathname").should("match", pathRegex);
   } else {

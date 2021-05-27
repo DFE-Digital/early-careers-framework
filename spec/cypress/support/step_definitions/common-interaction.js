@@ -9,6 +9,8 @@ const inputs = {
   "school input": "#nomination-request-form-school-id-field",
   "supplier name input": "#supplier-user-form-supplier-field",
   "search box": "input[name=query]",
+  "replace induction tutor": "input[value=replace].govuk-radios__input",
+  "update induction tutor": "input[value=update].govuk-radios__input",
 };
 
 const buttons = {
@@ -39,6 +41,7 @@ const elements = {
   "notification banner": "[data-test=notification-banner]",
   "autocomplete dropdown item": ".autocomplete__menu li",
   "success panel": "[data-test=success-panel]",
+  "schools table": "[data-test=schools-table]",
 };
 
 const get = (element) => cy.get(elements[element] || element);

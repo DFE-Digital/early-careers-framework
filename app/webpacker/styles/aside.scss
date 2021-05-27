@@ -1,0 +1,14 @@
+.govuk-aside {
+  border-top: 2px solid $govuk-link-colour;
+
+  &__header {
+    font-size: 19px;
+    margin: 15px 0 10px;
+    font-weight: 700;
+  }
+
+  &__links li {
+    margin-top: 15px;
+    font-size: 16px;
+  }
+}

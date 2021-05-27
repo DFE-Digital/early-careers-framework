@@ -1,0 +1,20 @@
+<% title = "Are you replacing an induction tutor or updating their details?" %>
+<% content_for :title, title %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: admin_school_path(@school)) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for @replace_or_update_tutor_form, url: admin_school_replace_or_update_induction_tutor_path(@school), method: :post do |f| %>
+      <%= f.govuk_error_summary %>
+      <h1 class="govuk-heading-xl"><%= title %></h1>
+      <%= f.govuk_collection_radio_buttons(
+            :choice,
+            @replace_or_update_tutor_form.choices,
+            :id,
+            :name,
+            legend: { hidden: true },
+          ) %>
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

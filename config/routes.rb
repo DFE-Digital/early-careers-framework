@@ -8,14 +8,19 @@ Rails.application.routes.draw do
   devise_scope :user do
     get "/users/confirm_sign_in", to: "users/sessions#redirect_from_magic_link"
     post "/users/sign_in_with_token", to: "users/sessions#sign_in_with_token"
+    get "/users/signed-out", to: "users/sessions#signed_out"
     get "/users/link-invalid", to: "users/sessions#link_invalid"
   end
 
   get "/pages/:page", to: "pages#show", as: :page
   get "check" => "application#check"
 
+  unless Rails.env.production?
+    get "/sandbox", to: "sandbox#show"
+  end
+
   if Rails.env.sandbox?
-    root "sandbox#show"
+    root to: redirect("/sandbox", status: 307)
   else
     root "start#index"
   end
@@ -40,8 +45,8 @@ Rails.application.routes.draw do
     resource :notify_callback, only: :create, path: "notify-callback"
 
     namespace :v1 do
-      resources :early_career_teacher_participants, only: %i[create], path: "early-career-teacher-participants"
-      resources :users, only: :index unless %w[sandbox staging production].include?(Rails.env)
+      resources :participant_declarations, only: %i[create], path: "participant-declarations"
+      resources :users, only: :index
     end
   end
 
@@ -78,8 +83,8 @@ Rails.application.routes.draw do
   end
 
   namespace :lead_providers, path: "lead-providers" do
-    resources :your_schools, only: %i[index create]
-    resources :school_details, only: %i[show]
+    resources :your_schools, path: "/your-schools", only: %i[index create]
+    resources :school_details, path: "school-details", only: %i[show]
 
     namespace :report_schools, path: "report-schools" do
       get :start, to: "base#start"
@@ -99,11 +104,9 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resources :schools, only: %i[index show] do
-      resources :induction_coordinators, controller: "schools/induction_coordinators", only: %i[new create], path: "induction-coordinators" do
-        collection do
-          get "email-used", action: :email_used
-        end
-      end
+      resources :induction_coordinators, controller: "schools/induction_coordinators", only: %i[new create edit update], path: "induction-coordinators"
+      get "/replace-or-update-induction-tutor", to: "schools/replace_or_update_induction_tutor#show"
+      post "/replace-or-update-induction-tutor", to: "schools/replace_or_update_induction_tutor#choose"
     end
 
     scope :suppliers, module: "suppliers" do

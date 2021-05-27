@@ -10,6 +10,7 @@ class AdminMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
+        subject: "Sign in to ECF",
         full_name: admin.full_name,
         sign_in_link: url,
       },

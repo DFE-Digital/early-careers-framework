@@ -16,6 +16,8 @@ Rails.application.configure do
   # Show full error reports.
   config.consider_all_requests_local = true
 
+  config.active_job.queue_adapter = :delayed_job
+
   config.domain = ENV["DOMAIN"]
 
   config.support_email = "continuing-professional-development@digital.education.gov.uk"
@@ -26,7 +28,7 @@ Rails.application.configure do
   config.gias_api_password = ENV["GIAS_API_PASSWORD"]
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  # config.action_mailer.raise_delivery_errors = true
 
   config.action_mailer.notify_settings = {
     api_key: ENV.fetch("GOVUK_NOTIFY_API_KEY"),

@@ -6,7 +6,7 @@ class Schools::PartnershipsController < Schools::BaseController
 
   def index
     @school = current_user.induction_coordinator_profile.schools.first
-    @partnership = @school.partnerships.unchallenged.find_by(cohort: cohort)
+    @partnership = @school.partnerships.active.find_by(cohort: cohort)
 
     if @partnership&.in_challenge_window?
       @report_mistake_link = challenge_partnership_path(partnership: @partnership)

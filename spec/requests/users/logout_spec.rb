@@ -10,16 +10,15 @@ RSpec.describe "Users::Sessions", type: :request do
   end
 
   describe "GET /users/sign_out" do
-    it "logs out the user and redirects to the homepage" do
+    it "logs out the user and redirects to the signed out page" do
       # visit authenticated route
       get "/dashboard"
       expect(controller.current_user).to eq user
 
       get "/users/sign_out"
 
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(users_signed_out_path)
       expect(controller.current_user).to be_nil
-      expect(flash[:notice]).to eq "Signed out successfully."
     end
   end
 end

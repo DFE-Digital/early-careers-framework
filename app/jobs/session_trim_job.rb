@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SessionTrimJob < CronJob
-  self.cron_expression = "0 0 1 * *"
+  self.cron_expression = "0 1 * * *"
 
   queue_as :session_trim
 

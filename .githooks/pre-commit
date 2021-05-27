@@ -28,6 +28,7 @@ KEY=$(
 if [ "$KEY" != "" ]; then
     echo "Found patterns for AWS_ACCESS_KEY_ID/AWS_SECRET_ACCESS_KEY"
     echo "Please check your code and remove API keys."
+    echo "$KEY"
     exit 1
 fi
 
