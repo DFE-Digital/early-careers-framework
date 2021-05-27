@@ -52,8 +52,20 @@ RSpec.describe "API Users", type: :request do
 
       it "returns correct user types" do
         get "/api/v1/users"
-        expect(parsed_response["data"][0]["attributes"]["user_type"]).to eql("mentor")
-        expect(parsed_response["data"][1]["attributes"]["user_type"]).to eql("early_career_teacher")
+        mentors = 0
+        ects = 0
+
+        parsed_response["data"].each do |user|
+          user_type = user["attributes"]["user_type"]
+          if user_type == "mentor"
+            mentors += 1
+          elsif user_type == "early_career_teacher"
+            ects += 1
+          end
+        end
+
+        expect(mentors).to eql(1)
+        expect(ects).to eql(2)
       end
 
       it "returns correct CIPs" do
