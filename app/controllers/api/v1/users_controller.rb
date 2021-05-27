@@ -17,7 +17,7 @@ module Api
       end
 
       def users
-        users = User.all.includes(:early_career_teacher_profile, :core_induction_programme)
+        users = User.all.includes(early_career_teacher_profile: [:core_induction_programme], mentor_profile: [:core_induction_programme])
 
         if updated_since.present?
           users = users.changed_since(updated_since)
