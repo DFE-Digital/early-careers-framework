@@ -18,6 +18,10 @@
     <%= stylesheet_pack_tag 'application', media: 'all' %>
     <%= javascript_pack_tag 'application', defer: true unless params[:nojs] === "nojs" %>
 
+    <script>
+      dataLayer = <%= data_layer.to_json.html_safe %>;
+    </script>
+
     <!-- Google Tag Manager (doesn't store personal info until permission given) -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
