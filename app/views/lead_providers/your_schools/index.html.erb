@@ -60,6 +60,6 @@
       <li>searching for something less specific</li>
     </ul>
   <% else %>
-    <%= render LeadProviders::YourSchools::Table.new(schools: @schools, cohort: @selected_cohort) %>
+    <%= render LeadProviders::YourSchools::Table.new(schools: @schools, cohort: @selected_cohort, page: params[:page]) %>
   <% end %>
 <% end %>

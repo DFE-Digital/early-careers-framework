@@ -19,11 +19,10 @@ module LeadProviders
       @total_provider_schools = @schools.count
 
       @query = params[:query]
+
       if @query.present?
         @schools = @schools.search_by_name_or_urn_or_delivery_partner_for_year(@query, @selected_cohort.start_year)
       end
-
-      @schools = @schools.page(params[:page]).per(20)
     end
 
   private

@@ -2,11 +2,10 @@
 
 module Support
   module ViewComponent
-    module ExampleGroup
+    module StubbingHelper
       extend ActiveSupport::Concern
 
       included do
-        subject(:rendered) { render_inline component }
         let(:_test_context) { Context.new }
       end
 
@@ -19,12 +18,6 @@ module Support
             component_class.unstub!
           end
         end
-      end
-
-      RSpec.configure do |rspec|
-        rspec.include ::ViewComponent::TestHelpers, type: :view_component
-        rspec.include self, type: :view_component
-        rspec.include Capybara::RSpecMatchers, type: :view_component
       end
     end
   end

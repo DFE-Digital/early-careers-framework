@@ -3,8 +3,6 @@
 module LeadProviders
   module YourSchools
     class TableRow < BaseComponent
-      include PaginationHelper
-
       with_collection_parameter :school
 
       def initialize(school:, cohort:)

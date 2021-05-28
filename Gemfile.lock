@@ -462,7 +462,7 @@ GEM
     tzinfo-data (1.2020.6)
       tzinfo (>= 1.0.0)
     unicode-display_width (1.7.0)
-    view_component (2.24.0)
+    view_component (2.32.0)
       activesupport (>= 5.0.0, < 7.0)
     warden (1.2.9)
       rack (>= 2.0.9)

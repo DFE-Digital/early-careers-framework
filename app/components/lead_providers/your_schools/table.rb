@@ -5,8 +5,8 @@ module LeadProviders
     class Table < BaseComponent
       include PaginationHelper
 
-      def initialize(schools:, cohort:)
-        @schools = schools
+      def initialize(schools:, cohort:, page:)
+        @schools = schools.page(page).per(20)
         @cohort = cohort
       end
 
