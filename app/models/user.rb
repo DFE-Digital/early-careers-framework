@@ -44,7 +44,7 @@ class User < ApplicationRecord
     return mentor_profile.core_induction_programme if mentor?
   end
 
-  def user_type
+  def user_description
     if admin?
       "DfE admin"
     elsif induction_coordinator?

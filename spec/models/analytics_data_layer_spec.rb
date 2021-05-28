@@ -18,7 +18,7 @@ RSpec.describe AnalyticsDataLayer, type: :model do
 
     it "adds the user type to the analytics data" do
       data_layer.add_user_info(user)
-      expect(data_layer.analytics_data[:userType]).to eq(user.user_type)
+      expect(data_layer.analytics_data[:userType]).to eq(user.user_description)
     end
 
     context "when the user is a lead provider" do

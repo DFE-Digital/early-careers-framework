@@ -29,7 +29,7 @@ class AnalyticsDataLayer
   end
 
   def add_user_info(user)
-    @analytics_data[:userType] = user.user_type if user
+    @analytics_data[:userType] = user.user_description if user
     @analytics_data[:providerName] = user.lead_provider.name if user&.lead_provider?
   end
 
