@@ -74,4 +74,74 @@ RSpec.describe SchoolCohort, type: :model do
       end
     end
   end
+
+  describe "#lead_provider" do
+    subject(:school_cohort) { create(:school_cohort) }
+
+    context "when the school has chosen FIP for the cohort" do
+      let(:lead_provider) { create(:lead_provider) }
+      let(:delivery_partner) { create(:delivery_partner) }
+
+      before do
+        Partnership.create!(
+          cohort: school_cohort.cohort,
+          lead_provider: lead_provider,
+          school: school_cohort.school,
+          delivery_partner: delivery_partner,
+        )
+      end
+
+      it "returns the lead provider" do
+        expect(school_cohort.lead_provider).to eq(lead_provider)
+      end
+    end
+
+    context "when the school has chosen CIP for the cohort" do
+      let(:cip) { create(:core_induction_programme) }
+
+      before do
+        school_cohort.update!(induction_programme_choice: "core_induction_programme",
+                              core_induction_programme: cip)
+      end
+
+      it "returns nil" do
+        expect(school_cohort.lead_provider).to be_nil
+      end
+    end
+  end
+
+  describe "#delivery_partner" do
+    subject(:school_cohort) { create(:school_cohort) }
+
+    context "when the school has chosen FIP for the cohort" do
+      let(:lead_provider) { create(:lead_provider) }
+      let(:delivery_partner) { create(:delivery_partner) }
+
+      before do
+        Partnership.create!(
+          cohort: school_cohort.cohort,
+          lead_provider: lead_provider,
+          school: school_cohort.school,
+          delivery_partner: delivery_partner,
+        )
+      end
+
+      it "returns the delivery partner" do
+        expect(school_cohort.delivery_partner).to eq(delivery_partner)
+      end
+    end
+
+    context "when the school has chosen CIP for the cohort" do
+      let(:cip) { create(:core_induction_programme) }
+
+      before do
+        school_cohort.update!(induction_programme_choice: "core_induction_programme",
+                              core_induction_programme: cip)
+      end
+
+      it "returns nil" do
+        expect(school_cohort.delivery_partner).to be_nil
+      end
+    end
+  end
 end

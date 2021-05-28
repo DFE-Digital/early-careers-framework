@@ -1,0 +1,19 @@
+<% content_for :title, "#{@school.name} cohorts" %>
+
+<h1 class="govuk-heading-xl"><%= @school.name %></h1>
+<%= render partial: "admin/schools/shared/navigation" %>
+<h2 class="govuk-heading-l">Cohorts</h2>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <% @school_cohorts.each do |school_cohort| %>
+      <h3 class="govuk-heading-m govuk-!-margin-bottom-2">
+        <%= school_cohort.cohort.display_name %> cohort
+      </h3>
+      <% if school_cohort.core_induction_programme? %>
+        <%= render partial: 'cip_info', locals: { school_cohort: school_cohort } %>
+      <% elsif school_cohort.full_induction_programme? %>
+        <%= render partial: 'fip_info', locals: { school_cohort: school_cohort } %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

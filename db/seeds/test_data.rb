@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 DOMAIN = "@digital.education.gov.uk" # Prevent low effort email scraping
+cohort_2022 = Cohort.find_or_create_by!(start_year: 2022)
 
 local_authority = LocalAuthority.find_or_create_by!(name: "ZZ Test Local Authority", code: "ZZTEST")
 
@@ -65,7 +66,8 @@ School.find_or_create_by!(urn: "000004") do |school|
   InductionCoordinatorProfile.find_or_create_by!(user: user) do |profile|
     profile.update!(schools: [school])
   end
-  SchoolCohort.find_or_create_by!(cohort: Cohort.current, school: school, induction_programme_choice: "core_induction_programme")
+  cip = CoreInductionProgramme.first
+  SchoolCohort.find_or_create_by!(cohort: Cohort.current, school: school, induction_programme_choice: "core_induction_programme", core_induction_programme: cip)
 end
 
 School.find_or_create_by!(urn: "000005") do |school|
@@ -112,6 +114,7 @@ end
     InductionCoordinatorProfile.find_or_create_by!(user: user) do |profile|
       profile.schools << school
     end
+
     SchoolCohort.find_or_create_by!(cohort: Cohort.current, school: school, induction_programme_choice: "full_induction_programme")
     delivery_partner = DeliveryPartner.find_or_create_by!(name: "Mega Delivery Partner")
     partnership = Partnership.find_or_create_by!(cohort: Cohort.current, delivery_partner: delivery_partner, school: school, lead_provider: LeadProvider.first)
@@ -121,6 +124,11 @@ end
       email_type: PartnershipNotificationEmail.email_types[:induction_coordinator_email],
       token: "abc424#{item_num}",
     )
+
+    if idx.even?
+      cip = CoreInductionProgramme.all.sample
+      SchoolCohort.find_or_create_by!(cohort: cohort_2022, school: school, induction_programme_choice: "core_induction_programme", core_induction_programme: cip)
+    end
   end
 end
 

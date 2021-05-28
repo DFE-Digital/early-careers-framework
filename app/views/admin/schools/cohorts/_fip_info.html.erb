@@ -1,0 +1,26 @@
+<dl class="govuk-summary-list" id="<%= school_cohort.cohort.display_name %>">
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Induction programme
+    </dt>
+    <dd class="govuk-summary-list__value">
+      Use an approved training provider
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Lead provider
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= school_cohort.lead_provider&.name %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Delivery partner
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= school_cohort.delivery_partner&.name %>
+    </dd>
+  </div>
+</dl>

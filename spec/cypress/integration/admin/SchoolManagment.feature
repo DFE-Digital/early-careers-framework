@@ -14,6 +14,18 @@ Feature: Admin user managing schools
     And "page body" should contain "Test local authority"
     And the page should be accessible
 
+  Scenario: Viewing a school's cohorts
+    When I click on "link" containing "Cohort School"
+    Then I should be on "admin school overview" page
+
+    When I click on "link" containing "Cohorts"
+    Then I should be on "admin school cohorts" page
+    And "page body" should contain "Cohort School"
+    And "page body" should contain "CIP Programme 1"
+    And "page body" should contain "CIP Programme 2"
+    And the page should be accessible
+    And percy should be sent snapshot
+
   Scenario: Viewing a list of schools
     Then the table should have 20 rows
     And the page should be accessible
