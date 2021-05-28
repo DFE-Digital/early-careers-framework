@@ -1,0 +1,33 @@
+<% content_for :title, "School detail: participants" %>
+
+<h1 class="govuk-heading-xl"><%= @school.name %></h1>
+<%= render partial: "admin/schools/shared/navigation" %>
+
+<h2 class="govuk-heading-l">Participants</h2>
+
+<% if @participants.present? %>
+  <table class="govuk-table">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">Full name</th>
+        <th scope="col" class="govuk-table__header">Type</th>
+        <th scope="col" class="govuk-table__header">Cohort</th>
+        <th scope="col" class="govuk-table__header">Validation status</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+      <% @participants.each do |participant| %>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header"><%= govuk_link_to participant.full_name, "#" %></th>
+          <td class="govuk-table__cell"><%= participant.user_description %></td>
+          <td class="govuk-table__cell"><%= participant.cohort&.start_year %></td>
+          <td class="govuk-table__cell">
+            <%= render GovukComponent::Tag.new(text: "Not started", colour: "grey") %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p class="govuk-body">No participants found for this school.</p>
+<% end %>

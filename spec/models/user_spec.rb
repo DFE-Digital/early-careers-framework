@@ -141,6 +141,52 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe "#cohort" do
+    it "is expected to return mentor cohort for mentor users" do
+      user = create(:user, :mentor)
+      cohort = create(:cohort)
+      user.mentor_profile.cohort = cohort
+
+      expect(user.cohort).to be cohort
+    end
+
+    it "is expected to return ect cohort for ect users" do
+      user = create(:user, :early_career_teacher)
+      cohort = create(:cohort)
+      user.early_career_teacher_profile.cohort = cohort
+
+      expect(user.cohort).to be cohort
+    end
+
+    it "is expected to return nil when no cohort" do
+      user = create(:user)
+      expect(user.cohort).to be_nil
+    end
+  end
+
+  describe "#school" do
+    it "is expected to return mentor school for mentor users" do
+      user = create(:user, :mentor)
+      school = create(:school)
+      user.mentor_profile.school = school
+
+      expect(user.school).to be school
+    end
+
+    it "is expected to return ect school for ect users" do
+      user = create(:user, :early_career_teacher)
+      school = create(:school)
+      user.early_career_teacher_profile.school = school
+
+      expect(user.school).to be school
+    end
+
+    it "is expected to return nil when no school" do
+      user = create(:user)
+      expect(user.school).to be_nil
+    end
+  end
+
   describe "#changed_since" do
     context "with no parameters" do
       let!(:old_user) { create(:user, updated_at: 1.hour.ago) }

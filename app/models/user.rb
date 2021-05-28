@@ -15,6 +15,14 @@ class User < ApplicationRecord
   validates :full_name, presence: true
   validates :email, presence: true, uniqueness: true, format: { with: Devise.email_regexp }
 
+  scope :is_participant, lambda {
+    where.not(early_career_teacher_profile: { id: nil }).or(User.where.not(mentor_profile: { id: nil }))
+  }
+
+  scope :in_school, lambda { |school|
+    where(early_career_teacher_profile: { school_id: school }).or(User.where(mentor_profile: { school_id: school }))
+  }
+
   def admin?
     admin_profile.present?
   end
@@ -58,6 +66,16 @@ class User < ApplicationRecord
     else
       "Unknown"
     end
+  end
+
+  def cohort
+    return early_career_teacher_profile.cohort if early_career_teacher?
+    return mentor_profile.cohort if mentor?
+  end
+
+  def school
+    return early_career_teacher_profile.school if early_career_teacher?
+    return mentor_profile.school if mentor?
   end
 
   scope :induction_coordinators, -> { joins(:induction_coordinator_profile) }
