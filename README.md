@@ -141,6 +141,18 @@ Where `"name or id"` is a name or id from the `lead_providers` table.
 2. Run `EngageAndLearnApiToken.create_with_random_token!`
 3. Rails console should output a string, that's your unhashed token, you can keep it and use it to access E&L endpoints.
 
+## Generating html payment information
+
+```bash
+bundle exec rails console
+```
+
+```ruby
+PaymentService.new().generate_html({ service_fee: BigDecimal(123, 2), output_payment: BigDecimal(345, 2), total_payment: BigDecimal(567, 2) })
+```
+
+This will in future aggregate received events and do the payment calculations. Currently it just outputs the supplied numbers in html to "standard out" ready for copying into an email for finance etc. to review.
+
 ### Feature Flags
 
 Certain aspects of app behaviour are governed by a minimal implementation of feature flags. Feature flag states are persisted in the database with a name and an active state. To activate a new feature you can run `Feature.create!(name: 'rate_limiting', active: true)`.

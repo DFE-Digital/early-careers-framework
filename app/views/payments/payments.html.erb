@@ -1,0 +1,22 @@
+<table>
+  <thead>
+    <tr>
+      <th>Payment type</th>
+      <th>Payment amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Service fee (monthly)</th>
+      <td>£<%= payment[:service_fee] %></td>
+    </tr>
+    <tr>
+      <th>Output payment (started)</th>
+      <td>£<%= payment[:output_payment] %></td>
+    </tr>
+    <tr>
+      <th>Total payment amount</th>
+      <td>£<%= payment[:total_payment] %></td>
+    </tr>
+  </tbody>
+</table>
