@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_27_113042) do
+ActiveRecord::Schema.define(version: 2021_05_27_151451) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -172,7 +172,7 @@ ActiveRecord::Schema.define(version: 2021_05_27_113042) do
     t.index ["user_id"], name: "index_induction_coordinator_profiles_on_user_id"
   end
 
-  create_table "induction_coordinator_profiles_schools", force: :cascade do |t|
+  create_table "induction_coordinator_profiles_schools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "induction_coordinator_profile_id", null: false
     t.uuid "school_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -293,7 +293,9 @@ ActiveRecord::Schema.define(version: 2021_05_27_113042) do
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "early_career_teacher_profile_id", null: false
     t.string "state", default: "assigned", null: false
+    t.uuid "lead_provider_id"
     t.index ["early_career_teacher_profile_id"], name: "index_participation_records_on_early_career_teacher_profile_id"
+    t.index ["lead_provider_id"], name: "index_participation_records_on_lead_provider_id"
   end
 
   create_table "partnership_csv_uploads", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -509,6 +511,7 @@ ActiveRecord::Schema.define(version: 2021_05_27_113042) do
   add_foreign_key "nomination_emails", "schools"
   add_foreign_key "participant_bands", "call_off_contracts"
   add_foreign_key "participation_records", "early_career_teacher_profiles"
+  add_foreign_key "participation_records", "lead_providers"
   add_foreign_key "partnership_notification_emails", "partnerships"
   add_foreign_key "partnerships", "cohorts"
   add_foreign_key "partnerships", "delivery_partners"

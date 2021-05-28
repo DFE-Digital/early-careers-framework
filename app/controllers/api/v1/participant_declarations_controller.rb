@@ -13,7 +13,7 @@ module Api
 
         # TODO: Switch on declaration type
         # TODO: Confirm that this participant is relevant to this lead provider
-        return head :not_modified unless InductParticipant.call(early_career_teacher_profile: user.early_career_teacher_profile)
+        return head :not_modified unless InductParticipant.call({lead_provider: current_user, early_career_teacher_profile: user.early_career_teacher_profile})
 
         head :no_content
       end
