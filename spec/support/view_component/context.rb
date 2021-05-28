@@ -9,7 +9,7 @@ module Support
         components << StubbedComponent.new(
           instance,
           args,
-          Faker::Lorem.paragraphs.join(" "),
+          "--#{Random.uuid}--",
         )
       end
 
