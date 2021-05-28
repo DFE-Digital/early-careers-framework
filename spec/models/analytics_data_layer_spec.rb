@@ -24,9 +24,9 @@ RSpec.describe AnalyticsDataLayer, type: :model do
     context "when the user is a lead provider" do
       let(:user) { create(:user, :lead_provider) }
 
-      it "add the associated lead provider id to the analytics data" do
+      it "add the associated lead provider name to the analytics data" do
         data_layer.add_user_info(user)
-        expect(data_layer.analytics_data[:providerId]).to eq(user.lead_provider.id)
+        expect(data_layer.analytics_data[:providerName]).to eq(user.lead_provider.name)
       end
     end
 
@@ -57,14 +57,14 @@ RSpec.describe AnalyticsDataLayer, type: :model do
   describe "#to_json" do
     before do
       data_layer.add(schoolId: "012345",
-                     providerId: "12345-12345-12345",
+                     providerName: "Super Provider Inc.",
                      errors: { a: "error", b: "bad file" })
     end
 
     it "returns the analytics data as an array of key value pairs in JSON format" do
       result = JSON.parse(data_layer.to_json)
       expect(result).to match_array [{ "schoolId" => "012345" },
-                                     { "providerId" => "12345-12345-12345" },
+                                     { "providerName" => "Super Provider Inc." },
                                      { "errors" => { "a" => "error", "b" => "bad file" } }]
     end
   end

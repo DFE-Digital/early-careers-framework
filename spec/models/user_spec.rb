@@ -216,6 +216,14 @@ RSpec.describe User, type: :model do
       end
     end
 
+    context "when the user is a mentor" do
+      subject(:user) { create(:user, :mentor) }
+
+      it "returns Mentor" do
+        expect(user.user_type).to eq("Mentor")
+      end
+    end
+
     context "when the user does not have an identified role" do
       subject(:user) { create(:user) }
 

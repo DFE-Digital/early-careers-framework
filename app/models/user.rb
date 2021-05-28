@@ -53,6 +53,8 @@ class User < ApplicationRecord
       "Lead provider"
     elsif early_career_teacher?
       "Early career teacher"
+    elsif mentor?
+      "Mentor"
     else
       "Unknown"
     end
