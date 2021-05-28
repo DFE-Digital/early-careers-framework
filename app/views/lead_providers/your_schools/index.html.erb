@@ -60,28 +60,6 @@
       <li>searching for something less specific</li>
     </ul>
   <% else %>
-    <table data-test="schools-table" class="govuk-table">
-      <thead>
-        <tr class="govuk-table__row">
-          <th scope="col" class="govuk-table__header">School</th>
-          <th scope="col" class="govuk-table__header">URN</th>
-          <th scope="col" class="govuk-table__header">Delivery partner</th>
-          <th scope="col" class="govuk-table__header govuk-table__header--numeric">ECTs</th>
-          <th scope="col" class="govuk-table__header govuk-table__header--numeric">Mentors</th>
-        </tr>
-      </thead>
-      <tbody class="govuk-table__body">
-        <% @schools.each do |school| %>
-          <tr class="govuk-table__row">
-            <td class="govuk-table__cell"><%= govuk_link_to school.name, lead_providers_school_detail_path(school, selected_cohort_id: @selected_cohort.id) %></td>
-            <td class="govuk-table__cell"><%= school.urn %></td>
-            <td class="govuk-table__cell"><%= school.delivery_partner_for(@selected_cohort.start_year)&.name %></td>
-            <td class="govuk-table__cell govuk-table__cell--numeric"><%= school.early_career_teacher_profiles_for(@selected_cohort.start_year).count %></td>
-            <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-    <%= govuk_paginate @schools %>
+    <%= render LeadProviders::YourSchools::Table.new(schools: @schools, cohort: @selected_cohort, page: params[:page]) %>
   <% end %>
 <% end %>
