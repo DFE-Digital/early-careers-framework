@@ -7,10 +7,7 @@ module Admin
     before_action :set_school
 
     def index
-      @participants = User.order(:full_name)
-        .includes(early_career_teacher_profile: %i[cohort school], mentor_profile: %i[cohort school])
-        .is_participant
-        .in_school(@school.id)
+      @participants = User.order(:full_name).is_participant.in_school(@school.id)
     end
 
   private

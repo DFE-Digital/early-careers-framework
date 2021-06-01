@@ -1,0 +1,46 @@
+<% content_for :title, "Participant detail" %>
+
+<h1 class="govuk-heading-l"><%= @participant.full_name %></h1>
+
+<h2 class="govuk-heading-m">Details</h2>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-half">
+    <table class="govuk-table">
+      <tbody class="govuk-table__body">
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">Full name</th>
+          <td class="govuk-table__cell"><%= @participant.full_name %></td>
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">Email address</th>
+          <td class="govuk-table__cell"><%= @participant.email %></td>
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">Participant type</th>
+          <td class="govuk-table__cell"><%= @participant.user_description %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="govuk-grid-column-one-half">
+    <table class="govuk-table">
+      <tbody class="govuk-table__body">
+        <% if @participant.early_career_teacher? %>
+          <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header">Mentor</th>
+            <td class="govuk-table__cell"><%= @participant.early_career_teacher_profile.mentor&.full_name&.presence || 'Not yet assigned' %></td>
+          </tr>
+        <% end %>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">School</th>
+          <td class="govuk-table__cell"><%= @participant.school.name %></td>
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">Cohort</th>
+          <td class="govuk-table__cell"><%= @participant.cohort&.start_year || 'No cohort' %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

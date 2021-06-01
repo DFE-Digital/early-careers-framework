@@ -113,6 +113,8 @@ Rails.application.routes.draw do
       resources :participants, controller: "schools/participants", only: :index
     end
 
+    resources :participants, only: :show
+
     scope :suppliers, module: "suppliers" do
       resources :suppliers, only: :index, path: "/"
       scope "new" do
