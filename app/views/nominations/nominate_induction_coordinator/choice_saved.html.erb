@@ -1,0 +1,17 @@
+<% content_for :title, "Choice saved" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= govuk_panel(
+          title: "Your choice has been saved for 2021",
+          body: nil,
+          classes: "govuk-!-margin-bottom-8",
+          html_attributes: { "data-test": "success-panel" }
+        ) %>
+
+    <h2 class="govuk-heading-m">What happens next</h2>
+    <p class="govuk-body">
+    We will contact you in the next academic year. If you do employ early career teachers later this year, you can <%= govuk_link_to "nominate someone to set up your programme", "#" %>.
+    </p>
+  </div>
+</div>
