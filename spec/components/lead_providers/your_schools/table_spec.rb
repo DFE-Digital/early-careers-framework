@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe LeadProviders::YourSchools::Table, type: :view_component do
-  let(:partnerships) { Array.new(rand(20..30)) { |i| double "Partnership #{i}" } }
+  let(:partnerships) { Array.new(rand(21..30)) { |i| double "Partnership #{i}" } }
   let(:page) { rand(1..2) }
 
   component { described_class.new partnerships: Kaminari.paginate_array(partnerships), page: page }
