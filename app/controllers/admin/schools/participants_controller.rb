@@ -6,7 +6,7 @@ module Admin
     skip_after_action :verify_policy_scoped
     before_action :set_school
 
-    def show
+    def index
       @participants = User.order(:full_name)
         .includes(early_career_teacher_profile: %i[cohort school], mentor_profile: %i[cohort school])
         .is_participant

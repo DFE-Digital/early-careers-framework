@@ -15,14 +15,6 @@ class User < ApplicationRecord
   validates :full_name, presence: true
   validates :email, presence: true, uniqueness: true, format: { with: Devise.email_regexp }
 
-  scope :is_participant, lambda {
-    where.not(early_career_teacher_profile: { id: nil }).or(User.where.not(mentor_profile: { id: nil }))
-  }
-
-  scope :in_school, lambda { |school|
-    where(early_career_teacher_profile: { school_id: school }).or(User.where(mentor_profile: { school_id: school }))
-  }
-
   def admin?
     admin_profile.present?
   end
@@ -89,5 +81,13 @@ class User < ApplicationRecord
     else
       where("updated_at is not null")
     end.order(:updated_at, :id)
+  }
+
+  scope :is_participant, lambda {
+    where.not(early_career_teacher_profile: { id: nil }).or(User.where.not(mentor_profile: { id: nil }))
+  }
+
+  scope :in_school, lambda { |school_id|
+    where(early_career_teacher_profile: { school_id: school_id }).or(User.where(mentor_profile: { school_id: school_id }))
   }
 end
