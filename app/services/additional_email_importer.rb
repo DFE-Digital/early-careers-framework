@@ -33,7 +33,7 @@ private
     email.gsub!(/[\/:]/, "")
     return unless email_good?(email)
 
-    AdditionalSchoolEmail.find_or_create_by!(school: school, email: email)
+    AdditionalSchoolEmail.find_or_create_by!(school: school, email_address: email)
   end
 
   def email_good?(email)

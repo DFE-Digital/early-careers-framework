@@ -47,9 +47,10 @@ ActiveRecord::Schema.define(version: 2021_05_27_113042) do
 
   create_table "additional_school_emails", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "school_id", null: false
-    t.string "email", null: false
+    t.string "email_address", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["email_address", "school_id"], name: "index_additional_school_emails_on_email_address_and_school_id", unique: true
     t.index ["school_id"], name: "index_additional_school_emails_on_school_id"
   end
 
