@@ -1,26 +1,39 @@
 # frozen_string_literal: true
 
 class Nominations::NominateInductionCoordinatorController < ApplicationController
-  def start
-    token = params[:token]
-    nomination_email = NominationEmail.find_by(token: token)
+  before_action :check_token_status, only: :start
 
-    if nomination_email.nil?
-      redirect_to link_invalid_nominate_induction_coordinator_path
-    elsif nomination_email.expired?
-      redirect_to link_expired_nominate_induction_coordinator_path(school_id: nomination_email.school_id)
-    elsif nomination_email.school.registered?
-      redirect_to already_nominated_request_nomination_invite_path
+  def start
+    @how_to_continue_form = NominateHowToContinueForm.new(token: params[:token])
+  end
+
+  def how_to_continue
+    @how_to_continue_form = NominateHowToContinueForm.new(how_to_continue_form_params)
+    if @how_to_continue_form.valid?
+      # record_nomination_email_opened
+      if @how_to_continue_form.how_to_continue == "no"
+        redirect_to "#"
+      else
+        redirect_to start_nominate_induction_coordinator_path(token: @how_to_continue_form.token)
+      end
     else
-      load_nominate_induction_tutor_form
-      @nominate_induction_tutor_form.token = token
-      session[:nominate_induction_tutor_form] = @nominate_induction_tutor_form.as_json
+      render :start
     end
+  end
+
+  def choice_saved
+  end
+
+  def start_nomination
+    token = params[:token]
+    load_nominate_induction_tutor_form
+    @nominate_induction_tutor_form.token = token
+    session[:nominate_induction_tutor_form] = @nominate_induction_tutor_form.as_json
   end
 
   def new
     load_nominate_induction_tutor_form
-    record_nomination_email_opened
+    # record_nomination_email_opened
   end
 
   def create
@@ -59,6 +72,19 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
 
 private
 
+  def check_token_status
+    token = params[:token]
+    nomination_email = NominationEmail.find_by(token: token)
+
+    if nomination_email.nil?
+      redirect_to link_invalid_nominate_induction_coordinator_path
+    elsif nomination_email.expired?
+      redirect_to link_expired_nominate_induction_coordinator_path(school_id: nomination_email.school_id)
+    elsif nomination_email.school.registered?
+      redirect_to already_nominated_request_nomination_invite_path
+    end
+  end
+
   def load_nominate_induction_tutor_form
     @nominate_induction_tutor_form = ::NominateInductionTutorForm.new(session[:nominate_induction_tutor_form])
     @nominate_induction_tutor_form.assign_attributes(nominate_induction_tutor_form_params)
@@ -68,6 +94,10 @@ private
     return {} unless params.key?(:nominate_induction_tutor_form)
 
     params.require(:nominate_induction_tutor_form).permit(:full_name, :email, :token)
+  end
+
+  def how_to_continue_form_params
+    params.require(:nominate_how_to_continue_form).permit(:how_to_continue, :token)
   end
 
   def record_nomination_email_opened
