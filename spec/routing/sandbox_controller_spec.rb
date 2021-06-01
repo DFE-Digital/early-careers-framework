@@ -2,15 +2,14 @@
 
 RSpec.describe SandboxController do
   describe "Based on rails environment routes" do
-
     before do
       allow(Rails).to receive(:env).and_return ActiveSupport::EnvironmentInquirer.new(environment.to_s)
       Rails.application.reload_routes!
     end
 
-    after(:context) {
+    after(:context) do
       Rails.application.reload_routes!
-    }
+    end
 
     context "when it is not sandbox environment" do
       let(:environment) { %i[development test production].sample }
