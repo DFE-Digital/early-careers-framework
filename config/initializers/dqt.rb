@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "dqt"
+
 Dqt.configure do |config|
   def json_to_hash(json)
     JSON.parse(json.gsub("=>", ":"), symbolize_names: true)

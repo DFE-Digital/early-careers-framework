@@ -19,8 +19,6 @@ require "rails/test_unit/railtie"
 
 require "govuk/components"
 
-require_relative "../lib/dqt"
-
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
