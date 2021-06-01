@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ApiToken < ApplicationRecord
+  self.abstract_class = true
+
   def self.create_with_random_token!(**options)
     unhashed_token, hashed_token = Devise.token_generator.generate(ApiToken, :hashed_token)
     create!(hashed_token: hashed_token, **options)
