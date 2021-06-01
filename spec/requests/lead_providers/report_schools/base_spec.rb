@@ -90,6 +90,22 @@ RSpec.describe "Lead Provider school reporting", type: :request do
       end
     end
 
+    context "when reporting previously challenged partnership" do
+      let(:partnership) { create :partnership, :challenged, lead_provider: lead_provider, cohort: cohort }
+      let(:schools) { [partnership.school] }
+
+      it "does not create a new partnership record" do
+        expect { post "/lead-providers/report-schools" }
+          .not_to change(Partnership, :count)
+      end
+
+      it "unchallenges the existing partnership" do
+        expect { post "/lead-providers/report-schools" and partnership.reload }
+          .to change { partnership.challenged? }.from(true).to(false)
+          .and change { partnership.delivery_partner }.to delivery_partner
+      end
+    end
+
     context "when a single partnership creation fails" do
       let(:failing_school) { schools.sample }
 

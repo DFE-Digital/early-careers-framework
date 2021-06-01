@@ -23,6 +23,12 @@ class ChallengePartnershipForm
   def challenge!
     ActiveRecord::Base.transaction do
       partnership.challenge!(challenge_reason)
+      partnership.event_logs.create!(
+        event: :challenged,
+        data: {
+          reason: challenge_reason,
+        },
+      )
 
       partnership.lead_provider.users.each do |lead_provider_user|
         LeadProviderMailer.partnership_challenged_email(

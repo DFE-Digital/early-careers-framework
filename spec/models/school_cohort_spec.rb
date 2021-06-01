@@ -55,23 +55,6 @@ RSpec.describe SchoolCohort, type: :model do
           expect(subject.training_provider_status).to eq "To do"
         end
       end
-
-      context "when one partnership has been challenged, and one hasn't" do
-        before do
-          Partnership.create!(
-            cohort: school_cohort.cohort,
-            lead_provider: lead_provider,
-            school: school_cohort.school,
-            delivery_partner: delivery_partner,
-            challenged_at: Time.zone.now,
-            challenge_reason: "mistake",
-          )
-        end
-
-        it "returns 'Done'" do
-          expect(subject.training_provider_status).to eq "Done"
-        end
-      end
     end
   end
 
