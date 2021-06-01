@@ -83,11 +83,15 @@ class User < ApplicationRecord
     end.order(:updated_at, :id)
   }
 
+  scope :includes_school, lambda {
+    includes(early_career_teacher_profile: %i[cohort school], mentor_profile: %i[cohort school])
+  }
+
   scope :is_participant, lambda {
-    where.not(early_career_teacher_profile: { id: nil }).or(User.where.not(mentor_profile: { id: nil }))
+    includes_school.where.not(early_career_teacher_profile: { id: nil }).or(User.where.not(mentor_profile: { id: nil }))
   }
 
   scope :in_school, lambda { |school_id|
-    where(early_career_teacher_profile: { school_id: school_id }).or(User.where(mentor_profile: { school_id: school_id }))
+    includes_school.where(early_career_teacher_profile: { school_id: school_id }).or(User.where(mentor_profile: { school_id: school_id }))
   }
 end

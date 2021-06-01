@@ -54,7 +54,7 @@ beforeEach(() => {
 });
 
 Cypress.on("after:run", () => {
-  reset();
+  // reset();
 });
 
 // comment this out if you do not want to attempt to log additional info on test fail

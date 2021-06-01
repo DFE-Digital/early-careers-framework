@@ -37,6 +37,7 @@ const elements = {
   ...buttons,
   ...links,
   "page body": "main",
+  "page title": "h1",
   "cookie banner": ".js-cookie-banner",
   "notification banner": "[data-test=notification-banner]",
   "autocomplete dropdown item": ".autocomplete__menu li",

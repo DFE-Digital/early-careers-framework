@@ -18,7 +18,7 @@
     <tbody class="govuk-table__body">
       <% @participants.each do |participant| %>
         <tr class="govuk-table__row">
-          <th scope="row" class="govuk-table__header"><%= govuk_link_to participant.full_name, "#" %></th>
+          <th scope="row" class="govuk-table__header"><%= govuk_link_to participant.full_name, admin_participant_path(participant) %></th>
           <td class="govuk-table__cell"><%= participant.user_description %></td>
           <td class="govuk-table__cell"><%= participant.cohort&.start_year %></td>
           <td class="govuk-table__cell">
