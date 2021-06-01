@@ -12,17 +12,20 @@ module LeadProviders
                            @cohorts.find_by(start_year: Time.zone.today.year)
                          end
 
-      @schools = School.eligible.partnered_with_lead_provider(@lead_provider.id, @selected_cohort.start_year)
-        .includes(:early_career_teachers)
-        .order(:name)
+      @partnerships = Partnership
+        .includes(school: :early_career_teachers)
+        .order("schools.name")
+        .where(
+          cohort: @selected_cohort,
+          lead_provider: @lead_provider,
+        )
 
-      @total_provider_schools = @schools.count
+      @total_provider_schools = @partnerships.count
 
       @query = params[:query]
-
-      if @query.present?
-        @schools = @schools.search_by_name_or_urn_or_delivery_partner_for_year(@query, @selected_cohort.start_year)
-      end
+      @partnerships = @partnerships.ransack(
+        school_name_or_school_urn_or_delivery_partner_name_cont: @query,
+      ).result
     end
 
   private

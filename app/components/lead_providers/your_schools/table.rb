@@ -5,14 +5,13 @@ module LeadProviders
     class Table < BaseComponent
       include PaginationHelper
 
-      def initialize(schools:, cohort:, page:)
-        @schools = schools.page(page).per(20)
-        @cohort = cohort
+      def initialize(partnerships:, page:)
+        @partnerships = partnerships.page(page).per(20)
       end
 
     private
 
-      attr_reader :schools, :cohort
+      attr_reader :partnerships
     end
   end
 end

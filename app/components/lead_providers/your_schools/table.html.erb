@@ -9,8 +9,8 @@
     </tr>
   </thead>
   <tbody class="govuk-table__body">
-    <%= render LeadProviders::YourSchools::TableRow.with_collection(schools, cohort: cohort) %>
+    <%= render LeadProviders::YourSchools::TableRow.with_collection(partnerships) %>
   </tbody>
 </table>
 
-<%= govuk_paginate schools %>
+<%= govuk_paginate partnerships %>
