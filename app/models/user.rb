@@ -44,6 +44,22 @@ class User < ApplicationRecord
     return mentor_profile.core_induction_programme if mentor?
   end
 
+  def user_description
+    if admin?
+      "DfE admin"
+    elsif induction_coordinator?
+      "Induction tutor"
+    elsif lead_provider?
+      "Lead provider"
+    elsif early_career_teacher?
+      "Early career teacher"
+    elsif mentor?
+      "Mentor"
+    else
+      "Unknown"
+    end
+  end
+
   scope :induction_coordinators, -> { joins(:induction_coordinator_profile) }
   scope :for_lead_provider, -> { includes(:lead_provider).joins(:lead_provider) }
   scope :admins, -> { joins(:admin_profile) }

@@ -182,4 +182,54 @@ RSpec.describe User, type: :model do
       it { should_not include user }
     end
   end
+
+  describe "#user_description" do
+    context "when the user is an admin" do
+      subject(:user) { create(:user, :admin) }
+
+      it "returns DfE admin" do
+        expect(user.user_description).to eq("DfE admin")
+      end
+    end
+
+    context "when the user is an induction tutor" do
+      subject(:user) { create(:user, :induction_coordinator) }
+
+      it "returns Induction tutor" do
+        expect(user.user_description).to eq("Induction tutor")
+      end
+    end
+
+    context "when the user is a lead provider" do
+      subject(:user) { create(:user, :lead_provider) }
+
+      it "returns Lead provider" do
+        expect(user.user_description).to eq("Lead provider")
+      end
+    end
+
+    context "when the user is an early career teacher" do
+      subject(:user) { create(:user, :early_career_teacher) }
+
+      it "returns Early career teacher" do
+        expect(user.user_description).to eq("Early career teacher")
+      end
+    end
+
+    context "when the user is a mentor" do
+      subject(:user) { create(:user, :mentor) }
+
+      it "returns Mentor" do
+        expect(user.user_description).to eq("Mentor")
+      end
+    end
+
+    context "when the user does not have an identified role" do
+      subject(:user) { create(:user) }
+
+      it "returns Unknown" do
+        expect(user.user_description).to eq("Unknown")
+      end
+    end
+  end
 end
