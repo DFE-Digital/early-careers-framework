@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_27_113042) do
+ActiveRecord::Schema.define(version: 2021_06_01_181158) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -153,6 +153,16 @@ ActiveRecord::Schema.define(version: 2021_05_27_113042) do
     t.index ["mentor_profile_id"], name: "index_early_career_teacher_profiles_on_mentor_profile_id"
     t.index ["school_id"], name: "index_early_career_teacher_profiles_on_school_id"
     t.index ["user_id"], name: "index_early_career_teacher_profiles_on_user_id"
+  end
+
+  create_table "event_logs", id: false, force: :cascade do |t|
+    t.string "owner_type", null: false
+    t.uuid "owner_id", null: false
+    t.string "event", null: false
+    t.json "data", default: {}
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["owner_type", "owner_id"], name: "index_event_logs_on_owner"
   end
 
   create_table "features", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -337,6 +347,7 @@ ActiveRecord::Schema.define(version: 2021_05_27_113042) do
     t.index ["delivery_partner_id"], name: "index_partnerships_on_delivery_partner_id"
     t.index ["lead_provider_id"], name: "index_partnerships_on_lead_provider_id"
     t.index ["pending"], name: "index_partnerships_on_pending"
+    t.index ["school_id", "lead_provider_id", "cohort_id"], name: "unique_partnerships", unique: true
     t.index ["school_id"], name: "index_partnerships_on_school_id"
   end
 
