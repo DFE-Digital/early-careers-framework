@@ -2,7 +2,7 @@
 
 class CallOffContract < ApplicationRecord
   has_many :participant_bands
-  has_many :lead_providers
+  belongs_to :lead_provider
 
   def band_a
     participant_bands.order(:min).first

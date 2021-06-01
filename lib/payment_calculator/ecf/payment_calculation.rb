@@ -13,7 +13,8 @@ module PaymentCalculator
       # @param [Integer] total_participants
       # This is end number of participants who will be used to make the payment calculation.
       # All invalid users will have already been filtered out before this number is generated and passed here.
-      def call(event_type: :start, total_participants: 0)
+      def call(total_participants: 0, event_type: :start)
+        config[:contract] ||= lead_provider.call_off_contract
         {
           service_fees: service_fee_calculator.call(config),
           output_payment: output_payment_calculator.call(config, event_type: event_type, total_participants: total_participants),

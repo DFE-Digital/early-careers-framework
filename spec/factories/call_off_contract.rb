@@ -27,6 +27,9 @@ FactoryBot.define do
         }.to_json,
       }
     end
+    after(:build) do |contract|
+      contract.lead_provider = build(:lead_provider)
+    end
     after(:create) do |contract|
       create(:participant_band, :band_a, { call_off_contract: contract })
       create(:participant_band, :band_b, { call_off_contract: contract })

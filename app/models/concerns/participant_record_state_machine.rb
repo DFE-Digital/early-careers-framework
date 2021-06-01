@@ -17,7 +17,7 @@ module Concerns
         class_name: "ParticipantEvent",
       }
 
-      scope :active, -> { where(state: active) }
+      scope :active, -> { where(state: "active") }
 
       aasm column: :state
 

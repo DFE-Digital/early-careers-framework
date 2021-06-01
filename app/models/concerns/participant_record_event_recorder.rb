@@ -9,7 +9,7 @@ module Concerns
   module ParticipantRecordEventRecorder
     extend ActiveSupport::Concern
     included do
-      scope :active, ->{ where(event_type: 'Start').order(created_at: desc).distinct_on(:early_career_teacher_profile_id) }
+      scope :active, -> { where(event_type: "Start").order(created_at: desc).distinct_on(:early_career_teacher_profile_id) }
     end
   end
 end

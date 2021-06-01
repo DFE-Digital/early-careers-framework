@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_27_151451) do
+ActiveRecord::Schema.define(version: 2021_05_28_151644) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -83,6 +83,8 @@ ActiveRecord::Schema.define(version: 2021_05_27_151451) do
     t.decimal "set_up_fee"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.uuid "lead_provider_id", default: -> { "gen_random_uuid()" }, null: false
+    t.index ["lead_provider_id"], name: "index_call_off_contracts_on_lead_provider_id"
   end
 
   create_table "cohorts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -293,7 +295,7 @@ ActiveRecord::Schema.define(version: 2021_05_27_151451) do
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "early_career_teacher_profile_id", null: false
     t.string "state", default: "assigned", null: false
-    t.uuid "lead_provider_id"
+    t.uuid "lead_provider_id", null: false
     t.index ["early_career_teacher_profile_id"], name: "index_participation_records_on_early_career_teacher_profile_id"
     t.index ["lead_provider_id"], name: "index_participation_records_on_lead_provider_id"
   end
@@ -489,6 +491,7 @@ ActiveRecord::Schema.define(version: 2021_05_27_151451) do
   add_foreign_key "additional_school_emails", "schools"
   add_foreign_key "admin_profiles", "users"
   add_foreign_key "api_tokens", "lead_providers", on_delete: :cascade
+  add_foreign_key "call_off_contracts", "lead_providers"
   add_foreign_key "cohorts_lead_providers", "cohorts"
   add_foreign_key "cohorts_lead_providers", "lead_providers"
   add_foreign_key "district_sparsities", "local_authority_districts"
