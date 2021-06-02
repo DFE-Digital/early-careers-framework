@@ -18,6 +18,7 @@ module Concerns
       }
 
       scope :active, -> { where(state: "active") }
+      scope :changed_between, lambda { |start_date, end_date| where(updated_at: start_date..end_date)}
 
       aasm column: :state
 
