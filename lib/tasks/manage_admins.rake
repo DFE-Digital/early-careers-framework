@@ -8,7 +8,7 @@ namespace :admin do
     default_url_options[:host] = Rails.configuration.domain
 
     puts "Creating user"
-    AdminProfile.create_admin(args[:full_name], args[:email], new_user_session_url)
+    AdminProfile.create_admin(args[:full_name], args[:email], new_user_session_url(**UTMService.email(:new_admin)))
     puts "User created; email sent"
   end
 end

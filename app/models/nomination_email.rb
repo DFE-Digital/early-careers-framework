@@ -28,6 +28,7 @@ class NominationEmail < ApplicationRecord
     Rails.application.routes.url_helpers.start_nominate_induction_coordinator_url(
       token: token,
       host: Rails.application.config.domain,
+      **UTMService.email(:nominate_tutor),
     )
   end
 

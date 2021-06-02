@@ -93,7 +93,7 @@ RSpec.describe "Admin::Administrators::Administrators", type: :request do
     end
 
     it "sends new admin an account created email" do
-      url = "http://www.example.com/users/sign_in"
+      url = "http://www.example.com/users/sign_in?utm_campaign=new-admin&utm_medium=email&utm_source=cpdservice"
       allow(AdminMailer).to receive(:account_created_email).and_call_original
 
       given_a_user_is_created

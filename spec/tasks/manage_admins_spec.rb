@@ -7,7 +7,7 @@ RSpec.describe "rake admin:create", type: :task do
   let(:email) { Faker::Internet.email }
 
   it "calls create_admin" do
-    url = "http://www.example.com/users/sign_in"
+    url = "http://www.example.com/users/sign_in?utm_campaign=new-admin&utm_medium=email&utm_source=cpdservice"
     expect(AdminProfile).to receive(:create_admin).with(name, email, url)
 
     capture_output { task.execute(to_task_arguments(name, email)) }

@@ -93,7 +93,10 @@ private
       provider_name: provider_name(notification_email),
       cohort: notification_email.partnership.cohort.display_name,
       school_name: notification_email.school.name,
-      start_url: Rails.application.routes.url_helpers.root_url(host: Rails.application.config.domain),
+      start_url: Rails.application.routes.url_helpers.root_url(
+        host: Rails.application.config.domain,
+        **UTMService.email(:partnership_notification),
+      ),
       challenge_url: challenge_url(notification_email.token),
       challenge_deadline: notification_email.challenge_deadline.strftime("%d/%m/%Y"),
     ).deliver_now.delivery_method.response.id
@@ -109,6 +112,7 @@ private
     Rails.application.routes.url_helpers.challenge_partnership_url(
       token: token,
       host: Rails.application.config.domain,
+      **UTMService.email(:challenge_partnership),
     )
   end
 end
