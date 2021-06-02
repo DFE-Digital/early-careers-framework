@@ -1,16 +1,29 @@
-<h1 class="govuk-heading-xl">Your training provider</h1>
-<p class="govuk-body-l"><%= @partnership.delivery_partner.name %> with <%= @partnership.lead_provider.name %></p>
+<h1 class="govuk-heading-xl">Sign up with a training provider</h1>
+
+<table class="govuk-table">
+  <caption class="govuk-table__caption govuk-table__caption--m">Your provider details</caption>
+  <tbody class="govuk-table__body">
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">Delivery partner</th>
+      <td class="govuk-table__cell"><%= @partnership.delivery_partner.name %></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">Lead provider</th>
+      <td class="govuk-table__cell"><%= @partnership.lead_provider.name %></td>
+    </tr>
+  </tbody>
+</table>
 
 <% if @report_mistake_link.present? %>
   <p class="govuk-body">
-    If this is a mistake, <%= govuk_link_to "report that your school has been confirmed incorrectly", @report_mistake_link %>.
+    If this doesn’t look right, <%= govuk_link_to "report that your school has been confirmed incorrectly", @report_mistake_link %>.
   </p>
 
   <p class="govuk-body">
-    This link will expire on <%= @mistake_link_expiry %>
+    This link will expire on <%= @mistake_link_expiry %>.
   </p>
 <% else %>
   <p class="govuk-body">
-    If this is a mistake, contact: <%= render MailToSupportComponent.new %>
+    If this doesn’t look right, contact: <%= render MailToSupportComponent.new %>
   </p>
 <% end %>
