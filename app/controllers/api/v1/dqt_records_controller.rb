@@ -8,7 +8,11 @@ module Api
       def show
         hash = Dqt::Client.new.api.dqt_record.show(params: { teacher_reference_number: params[:id] })
 
-        render json: DqtRecordSerializer.new(OpenStruct.new(hash)).serializable_hash.to_json
+        if hash.present?
+          render json: DqtRecordSerializer.new(OpenStruct.new(hash)).serializable_hash.to_json
+        else
+          head :not_found
+        end
       end
     end
   end
