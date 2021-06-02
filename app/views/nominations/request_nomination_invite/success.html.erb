@@ -6,10 +6,12 @@
 
     <h2 class="govuk-heading-m">What happens next</h2>
     <ul class="govuk-list govuk-list--bullet">
-      <li>sent to the email address your school has listed on our register, <%= govuk_link_to "Get information about schools", "https://www.get-information-schools.service.gov.uk/" %></li>
+      <li>we have sent a link to your school’s email address on our register, Get information about schools (GIAS)
+gister, </li>
       <li>
-        your school must follow this link to nominate an induction lead or tutor
+       it will be an administration email, for example, office@, admin@ or head@
       </li>
+       <li>If you don't receive an email, <%= govuk_link_to "sign in to DfE", "https://services.signin.education.gov.uk/" %> and make sure that your GIAS email address is up to date. When this has been updated you can <%= govuk_link_to "send a new link", choose_location_request_nomination_invite_path %></li>
     </ul>
   </div>
 </div>
