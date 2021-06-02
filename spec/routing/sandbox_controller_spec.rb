@@ -4,7 +4,7 @@ RSpec.describe SandboxController do
   describe "Based on rails environment routes" do
     context "when it is not sandbox environment" do
       before do
-        Rails.env.stub(production?: true)
+        allow(Rails.env).to receive(:production?).and_return(true)
         Rails.application.reload_routes!
       end
 
@@ -15,7 +15,7 @@ RSpec.describe SandboxController do
 
     context "when it is sandbox environment" do
       before do
-        Rails.env.stub(sandbox?: true)
+        allow(Rails.env).to receive(:sandbox?).and_return(true)
         Rails.application.reload_routes!
       end
 
