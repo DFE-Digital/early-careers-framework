@@ -51,16 +51,5 @@ module Concerns
     def before_all_events
       self.paper_trail_event = aasm.current_event
     end
-
-    def payment_event_to_state(event)
-      {
-        start: :active,
-        # retention_1: :active,
-        # retention_2: :active,
-        # retention_3: :active,
-        # retention_4: :active,
-        # completion: :active || :complete,
-      }[event]
-    end
   end
 end
