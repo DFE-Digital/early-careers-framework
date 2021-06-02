@@ -9,7 +9,7 @@ RSpec.describe "DQT records api endpoint", type: :request do
     let(:trn) { "1000000" }
     let(:parsed_response) { JSON.parse(response.body) }
     let(:mock_client) { instance_double("Dqt::Client.new") }
-    let(:hash_response) do
+    let(:client_response) do
       {
         teacher_reference_number: "1000000",
         full_name: "John Doe",
@@ -21,7 +21,7 @@ RSpec.describe "DQT records api endpoint", type: :request do
     end
 
     before do
-      allow(mock_client).to receive_message_chain("api.dqt_record.show") { hash_response }
+      allow(mock_client).to receive_message_chain("api.dqt_record.show") { client_response }
       allow(Dqt::Client).to receive(:new).and_return(mock_client)
     end
 
@@ -43,8 +43,17 @@ RSpec.describe "DQT records api endpoint", type: :request do
       it "has correct attributes" do
         get "/api/v1/dqt-records/#{trn}"
 
-        expect(parsed_response["data"]["id"]).to eql(hash_response[:teacher_reference_number])
+        expect(parsed_response["data"]["id"]).to eql(client_response[:teacher_reference_number])
         expect(parsed_response["data"]).to have_jsonapi_attributes(:teacher_reference_number, :full_name, :date_of_birth, :national_insurance_number, :qts_date, :active_alert).exactly
+      end
+
+      context "when no record is found for given teacher_reference_number" do
+        let(:client_response) { nil }
+
+        it "returns a 404" do
+          get "/api/v1/dqt-records/#{trn}"
+          expect(response).to be_not_found
+        end
       end
     end
 
