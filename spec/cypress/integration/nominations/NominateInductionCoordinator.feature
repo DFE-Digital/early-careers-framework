@@ -32,7 +32,7 @@ Feature: Nominate induction tutor
   Scenario: Nomination Link was sent for which Induction Tutor was already nominated for the same school
     Given nomination_email was created as "already_nominated_induction_tutor" with token "foo-bar-baz"
     When I am on "start nominations with token" page
-    Then "page body" should contain "An induction lead/tutor has already been nominated"
+    Then "page body" should contain "An induction tutor has already been nominated"
     And the page should be accessible
     And percy should be sent snapshot called "Start nominations already nominated page"
 
