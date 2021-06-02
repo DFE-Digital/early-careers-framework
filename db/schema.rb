@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_27_102930) do
+ActiveRecord::Schema.define(version: 2021_05_27_113042) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -43,6 +43,15 @@ ActiveRecord::Schema.define(version: 2021_05_27_102930) do
     t.uuid "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "additional_school_emails", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "school_id", null: false
+    t.string "email_address", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["email_address", "school_id"], name: "index_additional_school_emails_on_email_address_and_school_id", unique: true
+    t.index ["school_id"], name: "index_additional_school_emails_on_school_id"
   end
 
   create_table "admin_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -475,6 +484,7 @@ ActiveRecord::Schema.define(version: 2021_05_27_102930) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "additional_school_emails", "schools"
   add_foreign_key "admin_profiles", "users"
   add_foreign_key "api_tokens", "lead_providers", on_delete: :cascade
   add_foreign_key "cohorts_lead_providers", "cohorts"

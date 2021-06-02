@@ -23,7 +23,7 @@ RSpec.describe SandboxController do
       let(:environment) { :sandbox }
 
       before do
-        Rails.env.stub(sandbox?: true)
+        allow(Rails.env).to receive(:sandbox?).and_return(true)
         Rails.application.reload_routes!
       end
 

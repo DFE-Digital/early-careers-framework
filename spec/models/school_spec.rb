@@ -34,6 +34,7 @@ RSpec.describe School, type: :model do
     it { is_expected.to have_many(:local_authorities).through(:school_local_authorities) }
     it { is_expected.to have_many(:school_local_authority_districts) }
     it { is_expected.to have_many(:local_authority_districts).through(:school_local_authority_districts) }
+    it { is_expected.to have_many(:additional_school_emails) }
   end
 
   describe "eligibility" do
