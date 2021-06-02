@@ -64,7 +64,7 @@ module InitializeWithConfig
   end
 
   def default_config
-    {}
+    HashWithIndifferentAccess.new
   end
 
 private

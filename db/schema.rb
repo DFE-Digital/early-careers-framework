@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_28_151644) do
+ActiveRecord::Schema.define(version: 2021_06_02_094835) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -279,6 +279,18 @@ ActiveRecord::Schema.define(version: 2021_05_28_151644) do
     t.index ["call_off_contract_id"], name: "index_participant_bands_on_call_off_contract_id"
   end
 
+  create_table "participant_declarations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "lead_provider_id", null: false
+    t.uuid "early_career_teacher_profile_id", null: false
+    t.string "declaration_type"
+    t.datetime "declaration_date"
+    t.jsonb "raw_event"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["early_career_teacher_profile_id"], name: "participant_declarations_ect_profile_id"
+    t.index ["lead_provider_id"], name: "index_participant_declarations_on_lead_provider_id"
+  end
+
   create_table "participant_events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "item_type", null: false
     t.string "event", null: false
@@ -513,6 +525,8 @@ ActiveRecord::Schema.define(version: 2021_05_28_151644) do
   add_foreign_key "nomination_emails", "partnership_notification_emails"
   add_foreign_key "nomination_emails", "schools"
   add_foreign_key "participant_bands", "call_off_contracts"
+  add_foreign_key "participant_declarations", "early_career_teacher_profiles"
+  add_foreign_key "participant_declarations", "lead_providers"
   add_foreign_key "participation_records", "early_career_teacher_profiles"
   add_foreign_key "participation_records", "lead_providers"
   add_foreign_key "partnership_notification_emails", "partnerships"

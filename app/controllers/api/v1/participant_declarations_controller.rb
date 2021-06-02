@@ -3,20 +3,38 @@
 module Api
   module V1
     class ParticipantDeclarationsController < Api::ApiController
+      include ActionController::StrongParameters
       include ApiTokenAuthenticatable
-      before_action :set_paper_trail_whodunnit
+      wrap_parameters format: [:json]
 
       def create
-        return head :not_found unless params[:id]
-
-        user = User.find(params[:id])
-
-        # TODO: Switch on declaration type
-        # TODO: Confirm that this participant is relevant to this lead provider
-        return head :not_modified unless InductParticipant.call({ lead_provider: current_user, early_career_teacher_profile: user.early_career_teacher_profile })
-
-        head :no_content
+        config=HashWithIndifferentAccess.new(raw_event: request.raw_post).merge(declaration_params)
+        return head(RecordParticipantEvent.call(config)) if check_config(config)
+        raise ActionController::ParameterMissing.new(missing_params(config))
       end
+
+      private
+
+      def permitted_params
+        RecordParticipantEvent.required_params
+      end
+
+      def required_params
+        %w[participant_uuid declaration_date declaration_type]
+      end
+
+      def missing_params(config)
+        required_params - config.keys
+      end
+
+      def check_config(config)
+        missing_params(config).empty?
+      end
+
+      def declaration_params
+        params.permit(:participant_uuid, :declaration_date, :declaration_type)
+      end
+
     end
   end
 end

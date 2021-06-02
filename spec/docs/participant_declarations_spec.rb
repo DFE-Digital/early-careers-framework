@@ -20,37 +20,136 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
           "schema": {
             "type": "object",
             "properties": {
-              "name": "id",
-              "type": "string",
+              "participant_uuid": {
+                "type": "string",
+              },
+              "declaration_type": {
+                "enum": ["Start"]
+              },
+              "declaration_date": {
+                "type": "string",
+                "format": "date"
+              }
             },
+            "required": ["participant_uuid", "declaration_type", "declaration_date"],
             "example": {
-              "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+              "participant_uuid": "db3a7848-7308-4879-942a-c4a70ced400a",
+              "declaration_type": "Start",
+              "declaration_date": "2021-05-31"
             },
           },
         },
       }
-      parameter name: :params, in: :body, required: false, schema: {
+      parameter name: :params, in: :body, required: true, schema: {
         type: :object,
         properties: {
-          id: { type: :string },
+          participant_uuid: { type: :string },
         },
       }, description: "The unique id of the participant"
 
+      parameter name: :params, in: :body, required: false, schema: {
+        type: :object,
+        properties: {
+          declaration_type: { enum: ["Start"] },
+        },
+      }, description: "The event declaration type"
+
+      parameter name: :params, in: :body, required: false, schema: {
+        type: :object,
+        properties: {
+          declaration_date: { type: :string, format: "date" },
+        },
+      }, description: "The event declaration date"
+
       response 204, "Successful" do
         let(:fresh_user) { create(:user, :early_career_teacher) }
-        let(:params) { { "id" => fresh_user.id } }
+        let(:params) {
+          {
+            "participant_uuid" => fresh_user.id,
+            "declaration_type" => "Start",
+            "declaration_date" => "2021-05-31"
+          } }
         run_test!
       end
 
-      response 304, "Not Modified" do
+      # response 304, "Not Modified" do
+      #   let(:params) {
+      #     {
+      #       "participant_uuid" => user.id,
+      #       "declaration_type" => "Start",
+      #       "declaration_date" => "2021-05-31"
+      #     } }
+      #
+      #   before do
+      #     RecordParticipantEvent.call(params.merge({lead_provider: lead_provider}))
+      #   end
+      #
+      #   run_test!
+      # end
+
+      response 204, "Duplicate successful" do
+        let(:params) {
+          {
+            "participant_uuid" => user.id,
+            "declaration_type" => "Start",
+            "declaration_date" => "2021-05-31"
+          } }
+
         before do
-          InductParticipant.call({ lead_provider: lead_provider, early_career_teacher_profile: user.early_career_teacher_profile })
+          RecordParticipantEvent.call(params.merge({lead_provider: lead_provider}))
         end
-        let(:params) { { "id" => user.id } }
+
+        run_test!
+      end
+
+      response "404", "Missing ID value" do
+        let(:params) {
+          {
+            "participant_uuid" => nil,
+            "declaration_type" => "",
+            "declaration_date" => ""
+          } }
         run_test!
       end
 
       response "404", "Not Found" do
+        let(:fresh_user) { build(:user, :early_career_teacher) }
+        let(:params) {
+          {
+            "participant_uuid" => fresh_user.id,
+            "declaration_type" => "",
+            "declaration_date" => ""
+          } }
+        run_test!
+      end
+
+      response "422", "Missing parameter" do
+        let(:fresh_user) { build(:user, :early_career_teacher) }
+        let(:params) {
+          {
+            "declaration_type" => "Start",
+            "declaration_date" => "2021-05-21"
+          } }
+        run_test!
+      end
+
+      response "422", "Missing parameter" do
+        let(:fresh_user) { create(:user, :early_career_teacher) }
+        let(:params) {
+          {
+            "participant_uuid" => fresh_user.id,
+            "declaration_date" => "2021-05-21"
+          } }
+        run_test!
+      end
+
+      response "422", "Missing parameter" do
+        let(:fresh_user) { create(:user, :early_career_teacher) }
+        let(:params) {
+          {
+            "participant_uuid" => fresh_user.id,
+            "declaration_type" => "Start",
+          } }
         run_test!
       end
 
