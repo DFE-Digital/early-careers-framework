@@ -15,6 +15,18 @@ RSpec.describe InviteSchools do
     )
   end
 
+  before(:all) do
+    RSpec::Mocks.configuration.verify_partial_doubles = false
+  end
+
+  before(:each) do
+    allow_any_instance_of(Mail::TestMailer).to receive_message_chain(:response, :id) { "notify_id" }
+  end
+
+  after(:all) do
+    RSpec::Mocks.configuration.verify_partial_doubles = true
+  end
+
   describe "#run" do
     let(:nomination_email) { school.nomination_emails.last }
 
@@ -43,6 +55,11 @@ RSpec.describe InviteSchools do
       ).and_call_original
 
       invite_schools.run [school.urn]
+    end
+
+    it "sets the notify id on the nomination email record" do
+      invite_schools.run [school.urn]
+      expect(nomination_email.notify_id).to eq "notify_id"
     end
 
     context "when school primary contact email is empty" do
@@ -123,6 +140,37 @@ RSpec.describe InviteSchools do
           expect(invite_schools.sent_email_recently?(school)).to eq false
         end
       end
+    end
+  end
+
+  describe "#send_chasers" do
+    it "does not send emails to schools who have nominated tutors" do
+      # Given there is a school with an induction coordinator
+      create(:user, :induction_coordinator)
+      expect(School.count).to eq 1
+      expect(School.without_induction_coordinator.count).to eq 0
+
+      expect(SchoolMailer).not_to receive(:nomination_email)
+      expect { invite_schools.send_chasers }.not_to(change { NominationEmail.count })
+    end
+
+    it "sends emails to all available addresses" do
+      school = create(:school, primary_contact_email: "primary@example.com", secondary_contact_email: "secondary@example.com")
+      AdditionalSchoolEmail.create!(school: school, email_address: "additional1@example.com")
+      AdditionalSchoolEmail.create!(school: school, email_address: "additional2@example.com")
+
+      expect(SchoolMailer).to receive(:nomination_email).exactly(4).times.and_call_original
+      expect { invite_schools.send_chasers }.to change { NominationEmail.count }.by(4)
+    end
+
+    it "does not send emails to schools that are not eligible" do
+      # Given an ineligible school
+      create(:school, school_type_code: 56)
+      expect(School.count).to eql 1
+      expect(School.eligible.count).to eql 0
+
+      expect(SchoolMailer).not_to receive(:nomination_email)
+      expect { invite_schools.send_chasers }.not_to(change { NominationEmail.count })
     end
   end
 end
