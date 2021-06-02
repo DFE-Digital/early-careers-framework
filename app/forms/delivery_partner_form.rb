@@ -37,16 +37,15 @@ class DeliveryPartnerForm
   end
 
   def chosen_provider_relationships(delivery_partner = nil)
-    chosen_provider_relationships = provider_relationships
-      &.filter { |relationship_params| lead_provider_ids&.include?(relationship_params["lead_provider_id"]) }
-      &.map { |relationship_params| ProviderRelationship.find_or_initialize_by(relationship_params) }
-    if delivery_partner.present?
-      chosen_provider_relationships&.select! do |relationship|
-        relationship.delivery_partner.nil? || relationship.delivery_partner == delivery_partner
-      end
+    filtered_provider_relationships = provider_relationships
+                                        &.filter { |relationship_params| lead_provider_ids&.include?(relationship_params["lead_provider_id"]) }
+    if delivery_partner.nil?
+      filtered_provider_relationships
+        &.map { |relationship_params| ProviderRelationship.new(relationship_params) }
+    else
+      filtered_provider_relationships
+        &.map { |relationship_params| ProviderRelationship.find_or_initialize_by(delivery_partner: delivery_partner, **relationship_params) }
     end
-
-    chosen_provider_relationships
   end
 
   def display_lead_provider_details
