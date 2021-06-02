@@ -72,10 +72,16 @@ Rails.application.routes.draw do
         get "already-nominated", action: :already_nominated
       end
     end
+    # resource :choose_how_to_continue, controller: :choose_how_to_continue, only: %i[new create], path: "/"
+    get "/choose-how-to-continue", to: "choose_how_to_continue#new"
+    post "/choose-how-to-continue", to: "choose_how_to_continue#create"
+    get "/choice-saved", to: "choose_how_to_continue#choice_saved"
+
     resource :nominate_induction_coordinator, controller: :nominate_induction_coordinator, only: %i[new create], path: "/" do
       collection do
-        get "start", action: :start
-        post "choose-how-to-continue", action: :how_to_continue
+        get "start", to: redirect(path: "/nominations/choose-how-to-continue")
+        # post "choose-how-to-continue", action: :how_to_continue
+        # get "choice-saved", action: :choice_saved
         get "start-nomination", action: :start_nomination
         get "email-used", action: :email_used
         get "link-expired", action: :link_expired

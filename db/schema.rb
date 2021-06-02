@@ -418,6 +418,7 @@ ActiveRecord::Schema.define(version: 2021_06_09_094438) do
     t.integer "estimated_teacher_count"
     t.integer "estimated_mentor_count"
     t.uuid "core_induction_programme_id"
+    t.boolean "opt_out_of_updates", default: false, null: false
     t.index ["cohort_id"], name: "index_school_cohorts_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_school_cohorts_on_core_induction_programme_id"
     t.index ["school_id"], name: "index_school_cohorts_on_school_id"
