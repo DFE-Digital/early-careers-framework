@@ -184,6 +184,7 @@
                                 "type": "string",
                                 "enum": [
                                   "early_career_teacher",
+                                  "mentor",
                                   "other"
                                 ]
                               },
