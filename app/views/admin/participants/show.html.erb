@@ -26,10 +26,12 @@
   <div class="govuk-grid-column-one-half">
     <table class="govuk-table">
       <tbody class="govuk-table__body">
-        <tr class="govuk-table__row">
-          <th scope="row" class="govuk-table__header">Mentor</th>
-          <td class="govuk-table__cell"><%= @participant.early_career_teacher? ? @participant.early_career_teacher_profile.mentor&.full_name&.presence || 'Not yet assigned' : '-' %></td>
-        </tr>
+        <% if @participant.early_career_teacher? %>
+          <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header">Mentor</th>
+            <td class="govuk-table__cell"><%= @participant.early_career_teacher_profile.mentor&.full_name&.presence || 'Not yet assigned' %></td>
+          </tr>
+        <% end %>
         <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header">School</th>
           <td class="govuk-table__cell"><%= @participant.school.name %></td>

@@ -1,7 +1,7 @@
 Feature: Admin users viewing school participants
-  As a… DfE Admin 
-  I need… to oversee the process of school induction tutors adding participant details
-  So that… I can view which schools have added their participants and
+  As a DfE Admin 
+  I need to oversee the process of school induction tutors adding participant details
+  So that I can view which schools have added their participants and
 
   Background:
     Given I am logged in as an "admin"
