@@ -6,7 +6,7 @@ Feature: Nominate induction tutor
     Then the page should be accessible
     And percy should be sent snapshot called "Start nominations"
 
-    When I click on "link" containing "Continue"
+    When I click on "link" containing "Start"
     Then the page should be accessible
     And percy should be sent snapshot called "Nominate tutor"
 
@@ -39,7 +39,7 @@ Feature: Nominate induction tutor
   Scenario: Nomination Link was sent for which Induction Tutor was already nominated for another school
     Given nomination_email was created as "email_address_already_used_for_another_school" with token "foo-bar-baz"
     When I am on "start nominations with token" page
-    Then I click on "link" containing "Continue"
+    Then I click on "link" containing "Start"
     Then I type "John Wick" into "name input"
     And I type "john-wick@example.com" into "email input"
 
