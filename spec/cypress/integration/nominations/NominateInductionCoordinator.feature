@@ -13,7 +13,7 @@ Feature: Nominate induction tutor
     When I type "John Smith" into "name input"
     And I type "john-smith@example.com" into "email input"
     And I click the submit button
-    Then "success panel" should contain "Induction lead or tutor nominated"
+    Then "success panel" should contain "Induction tutor nominated"
     And Email should be sent to Nominated School Induction Coordinator to email "john-smith@example.com"
     And the page should be accessible
     And percy should be sent snapshot called "Induction lead nominated"
