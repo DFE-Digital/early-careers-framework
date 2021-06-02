@@ -22,6 +22,104 @@
     }
   ],
   "paths": {
+    "/api/v1/dqt-records/{teacher_reference_number}": {
+      "get": {
+        "summary": "Returns a specific DQT record",
+        "operationId": "api_v1_dqt_record_show",
+        "tags": [
+          "dqt_record"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "teacher_reference_number",
+            "in": "path",
+            "required": true,
+            "description": "Teacher Reference Number",
+            "example": "1234567",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A DQT record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "id",
+                        "type",
+                        "attributes"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "attributes": {
+                          "type": "object",
+                          "required": [
+                            "teacher_reference_number",
+                            "full_name",
+                            "date_of_birth",
+                            "national_insurance_number",
+                            "qts_date",
+                            "active_alert"
+                          ],
+                          "properties": {
+                            "teacher_reference_number": {
+                              "type": "string"
+                            },
+                            "full_name": {
+                              "type": "string"
+                            },
+                            "date_of_birth": {
+                              "type": "string"
+                            },
+                            "national_insurance_number": {
+                              "type": "string"
+                            },
+                            "qts_date": {
+                              "type": "string"
+                            },
+                            "active_alert": {
+                              "type": "boolean"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No DQT record found for Teacher Reference Number"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
     "/api/v1/participant-declarations": {
       "post": {
         "summary": "Create participant declarations",
@@ -114,7 +212,7 @@
             "in": "query",
             "schema": {
               "type": "object",
-              "descripiton": "This schema used to paginate through a collection.",
+              "description": "This schema used to paginate through a collection.",
               "properties": {
                 "page": {
                   "type": "integer",
@@ -184,6 +282,7 @@
                                 "type": "string",
                                 "enum": [
                                   "early_career_teacher",
+                                  "mentor",
                                   "other"
                                 ]
                               },
