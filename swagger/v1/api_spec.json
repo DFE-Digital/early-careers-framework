@@ -114,7 +114,7 @@
             "in": "query",
             "schema": {
               "type": "object",
-              "descripiton": "This schema used to paginate through a collection.",
+              "description": "This schema used to paginate through a collection.",
               "properties": {
                 "page": {
                   "type": "integer",
