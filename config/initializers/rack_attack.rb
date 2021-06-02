@@ -2,6 +2,10 @@
 
 # Throttle general requests by IP
 class Rack::Attack
+  safelist("Allow notify callbacks at any rate") do |request|
+    request.path == "/api/notify-callback" && request.post?
+  end
+
   throttle("General requests by ip", limit: 300, period: 5.minutes, &:ip)
 
   throttle("Login attempts by ip", limit: 5, period: 20.seconds) do |request|
