@@ -134,6 +134,12 @@ bundle exec rake 'schools:send_invites[urn1 urn2 ...]'
 bundle exec rake lead_provider:generate_token "name or id"
 ```
 
+## Run payment calculator for a given lead provider to generate the payment breakdown
+
+```bash
+bundle exec rake payment_calculation:breakdown "name or id"
+```
+
 Where `"name or id"` is a name or id from the `lead_providers` table.
 
 ## Generating a token for E&L api
@@ -151,7 +157,7 @@ The available flags are listed in `app/services/feature_flag.rb`, and available 
 
 The code in[`lib/payment_calculator/ecf/`](lib/payment_calculator/ecf/)performs payment calculations for [ECFs (Early Career Framework)](https://www.early-career-framework.education.gov.uk/) using commercial information so that training providers can be paid the correct amount.
 
-The calculator can generate each intermediary step in the calculation so that any questions over how the final totals were reached can be answered by interested parties. 
+The calculator can generate each intermediary step in the calculation so that any questions over how the final totals were reached can be answered by interested parties.
 
 Output from `PaymentCalculation.new(contract: <ContractObject>)` will instantiate a calculator for that specific contract. This can then be called, passing in the retention event type, and total number of participants to calculate for. (There is also a class level call shortcut for this.) which means that for a one off calculation you can call `PaymentCalculation.new(contract: <ContractObject>).call(event_type:, total_participants:)`, or `PaymentCalculation.call({contract: <ContractObject>}, event_type:, total_participants:)`. (Note the brackets around the first hash. In this call format, that is what determines what is passed to the initializer and what goes to the call.)
 
