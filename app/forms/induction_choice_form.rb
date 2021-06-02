@@ -14,8 +14,8 @@ class InductionChoiceForm
 
   def programme_choices
     [
-      OpenStruct.new(id: "full_induction_programme", name: "Use an approved training provider"),
-      OpenStruct.new(id: "core_induction_programme", name: "Use the DfE accredited materials"),
+      OpenStruct.new(id: "full_induction_programme", name: "Use a training provider, funded by the DfE"),
+      OpenStruct.new(id: "core_induction_programme", name: "Deliver your own programme using DfE accredited materials"),
     ]
   end
 end
