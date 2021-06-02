@@ -14,7 +14,7 @@ module PaymentCalculator
       # All invalid users will have already been filtered out before this number is generated and passed here.
       def call(event_type:, total_participants:)
         {
-          per_participant: output_payment_per_participant,
+          per_participant: output_payment_per_participant.round(2),
           event_type => output_payment_retention_event.call(config, event_type: event_type, total_participants: total_participants),
         }
       end

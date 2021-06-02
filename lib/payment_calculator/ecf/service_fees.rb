@@ -9,9 +9,9 @@ module PaymentCalculator
 
       def call
         {
-          service_fee_per_participant: service_fee_per_participant,
-          service_fee_total: service_fee_total,
-          service_fee_monthly: service_fee_monthly,
+          service_fee_per_participant: service_fee_per_participant.round(2),
+          service_fee_total: service_fee_total.round(2),
+          service_fee_monthly: service_fee_monthly.round(2),
         }
       end
     end
