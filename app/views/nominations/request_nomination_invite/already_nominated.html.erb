@@ -7,14 +7,13 @@
     <p class="govuk-body">Your school has already nominated an induction tutor to use our service.</p>
     <p class="govuk-body">We have sent links to schools using their email address on our register, Get Information about Schools (GIAS). </p>
     <p class="govuk-body">It will be an administration email, for example, office@, admin@ or head@.</p>
-
     <h2 class="govuk-heading-m">
       What you can do
     </h2>
     <ul class="govuk-list govuk-list--bullet">
       <li>if you were nominated, <%= govuk_link_to "sign in", new_user_session_path %></li>
       <li>check with your colleagues</li>
-      <li>if you are still not sure, contact: <%= render MailToSupportComponent.new %></li>
+      <li><%= govuk_link_to "Sign in to DfE to check your school’s email address ", "https://interactions.signin.education.gov.uk//b1563ae6-e207-4f09-857f-a3817c852520/usernamepassword?clientid=services&redirect_uri=https://services.signin.education.gov.uk:443/auth/cb@" %></li>
     </ul>
   </div>
 </div>
