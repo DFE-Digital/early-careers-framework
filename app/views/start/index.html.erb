@@ -1,28 +1,16 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">Manage training for early career teachers</h1>
-    <p class="govuk-body">This service is for induction leads/tutors nominated by their school.</p>
+    <p class="govuk-body">This service is for induction tutors who have been nominated by their school.</p>
 
     <p>Use this service to manage your school’s statutory induction programme for early career teachers.</p>
-
-    <p>Only use this service if your school wants to:</p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>use an approved training provider</li>
-    </ul>
-    <p>Or</p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>use the DfE accredited materials</li>
-    </ul>
-
     <p>Your school must complete these steps before your early career teachers (ECTs) start their statutory induction programme.
       For example, if your ECTs are starting in September, you need to complete these steps before then.</p>
 
     <%= govuk_link_to "Start", new_user_session_path, button: true %>
 
     <h2 class="govuk-heading-m">Do you have an account?</h2>
-    <p class="govuk-body">Your school has been sent an email to nominate an induction lead or tutor. This is someone who manages statutory inductions at your school.</p>
-    <p class="govuk-body">It has been sent to the email address your school has listed on our register, <%= govuk_link_to "Get information about schools", "https://www.get-information-schools.service.gov.uk/" %></p>
-    <p class="govuk-body"><%= govuk_link_to "Resend email", choose_location_request_nomination_invite_path %></p>
+    <p class="govuk-body">You must be nominated or sent sign in details to access this service. <%= govuk_link_to "Find out how to get an account", check_account_path %></p>
   </div>
 
   <div class="govuk-grid-column-one-third">
@@ -30,7 +18,7 @@
       <header class="govuk-aside__header">Related content</header>
       <ul class="govuk-list govuk-aside__links">
         <li><%= govuk_link_to "Guidance on the ECF and choosing programmes", "https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview" %></li>
-        <li><%= govuk_link_to "Choose study materials for your early career teachers", page_path("core-materials-info") %></li>
+        <li><%= govuk_link_to "Choose accredited study materials for your early career teachers", page_path("core-materials-info") %></li>
       </ul>
     </section>
   </div>
