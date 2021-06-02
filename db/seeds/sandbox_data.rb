@@ -18,15 +18,16 @@ def generate_provider_token(lead_provider, cohort, logger)
   existing_user_uuids = lead_provider.partnerships.map(&:school).map { |s| s.early_career_teacher_profiles.first&.user_id }
 
   unless existing_user_uuids.any?
-    user_uuids = 10.times.each_with_object([]) do |_i, uuids|
+    user_uuids = 10.times.each_with_object([]) do |i, uuids|
       user = User.create!(full_name: Faker::Name.name, email: Faker::Internet.email)
 
-      school = School.create!(
-        urn: Faker::Internet.uuid,
-        name: Faker::Company.name,
-        address_line1: Faker::Address.street_address,
-        postcode: Faker::Address.postcode,
-      )
+      school = School.find_or_create_by!(
+        urn: sprintf("%06d", (10_000 + i)),
+      ) do |s|
+        s.name = Faker::Company.name
+        s.address_line1 = Faker::Address.street_address
+        s.postcode = Faker::Address.postcode
+      end
 
       Partnership.create!(
         school: school,
