@@ -1,29 +1,10 @@
 # frozen_string_literal: true
 
 class Nominations::NominateInductionCoordinatorController < ApplicationController
-  before_action :check_token_status, only: :start
+  before_action :check_token_status, only: :start_nomination
 
-  def start
-    @how_to_continue_form = NominateHowToContinueForm.new(token: params[:token])
-  end
-
-  def how_to_continue
-    @how_to_continue_form = NominateHowToContinueForm.new(how_to_continue_form_params)
-    if @how_to_continue_form.valid?
-      # record_nomination_email_opened
-      if @how_to_continue_form.how_to_continue == "no"
-        redirect_to "#"
-      else
-        redirect_to start_nominate_induction_coordinator_path(token: @how_to_continue_form.token)
-      end
-    else
-      render :start
-    end
-  end
-
-  def choice_saved
-  end
-
+  # start method is redirected in the routes to Nominations::ChooseHowToContinueController#new
+  # because URL was given in email to schools, so entry point is now start_nomination
   def start_nomination
     token = params[:token]
     load_nominate_induction_tutor_form
@@ -33,7 +14,6 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
 
   def new
     load_nominate_induction_tutor_form
-    # record_nomination_email_opened
   end
 
   def create
@@ -73,9 +53,6 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
 private
 
   def check_token_status
-    token = params[:token]
-    nomination_email = NominationEmail.find_by(token: token)
-
     if nomination_email.nil?
       redirect_to link_invalid_nominate_induction_coordinator_path
     elsif nomination_email.expired?
@@ -83,6 +60,10 @@ private
     elsif nomination_email.school.registered?
       redirect_to already_nominated_request_nomination_invite_path
     end
+  end
+
+  def nomination_email
+    @nomination_email ||= NominationEmail.find_by(token: params[:token])
   end
 
   def load_nominate_induction_tutor_form
@@ -94,16 +75,6 @@ private
     return {} unless params.key?(:nominate_induction_tutor_form)
 
     params.require(:nominate_induction_tutor_form).permit(:full_name, :email, :token)
-  end
-
-  def how_to_continue_form_params
-    params.require(:nominate_how_to_continue_form).permit(:how_to_continue, :token)
-  end
-
-  def record_nomination_email_opened
-    NominationEmail
-      .where(token: @nominate_induction_tutor_form.token, opened_at: nil)
-      .update_all(opened_at: Time.zone.now)
   end
 
   def build_nomination_request_form
