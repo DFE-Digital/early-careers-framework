@@ -11,7 +11,7 @@
       <li>no other delivery partners</li>
       <li>no other data</li>
     </ul>
-    <p class="govuk-body"><strong>Maxiumum file size:</strong> 2MB</p>
+    <p class="govuk-body"><strong>Maximum file size:</strong> 2MB</p>
 
     <%= form_with model: @partnership_csv_upload, url: { action: :create } do |f| %>
       <% if !@partnership_csv_upload.errors[:base].empty? %>
