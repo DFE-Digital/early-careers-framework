@@ -7,7 +7,6 @@ class InviteSchools
     logger.info "Emailing schools"
 
     school_urns.each do |urn|
-      rate_limit
       school = School.eligible.find_by(urn: urn)
 
       if school.nil?
@@ -21,6 +20,9 @@ class InviteSchools
         school: school,
       )
 
+      send_nomination_email(nomination_email)
+    rescue Notifications::Client::RateLimitError
+      sleep(1)
       send_nomination_email(nomination_email)
     rescue StandardError
       logger.info "Error emailing school, urn: #{urn} ... skipping"
@@ -43,12 +45,14 @@ class InviteSchools
                  .uniq
 
       emails.each do |email|
-        rate_limit
         nomination_email = NominationEmail.create_nomination_email(
           sent_at: Time.zone.now,
           sent_to: email,
           school: school,
         )
+        send_nomination_email(nomination_email)
+      rescue Notifications::Client::RateLimitError
+        sleep(1)
         send_nomination_email(nomination_email)
       rescue StandardError
         logger.info "Error emailing school, urn: #{school.urn}, email: #{email} ... skipping"
@@ -74,21 +78,6 @@ private
 
   def email_expiry_date
     NominationEmail::NOMINATION_EXPIRY_TIME.from_now.strftime("%d/%m/%Y")
-  end
-
-  # Notify gives us a 3000/min rate limit. Limit this to 1800/min to allow for other calls and leeway
-  def rate_limit
-    @second_start ||= Time.zone.now
-    @calls_in_second ||= 0
-
-    if @second_start < 1.second.ago
-      @second_start = Time.zone.now
-      @calls_in_second = 1
-      return
-    end
-
-    @calls_in_second += 1
-    sleep((@second_start + 1.second) - Time.zone.now) if @calls_in_second >= 30
   end
 
   def logger
