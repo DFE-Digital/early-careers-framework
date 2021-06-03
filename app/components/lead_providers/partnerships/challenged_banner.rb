@@ -7,10 +7,6 @@ module LeadProviders
         @partnership = partnership
       end
 
-      def render?
-        partnership.challenged?
-      end
-
     private
 
       attr_reader :partnership

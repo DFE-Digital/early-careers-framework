@@ -14,11 +14,13 @@
   <% end %>
 <% end %>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <%= render LeadProviders::Partnerships::ChallengedBanner.new(partnership: @partnership) %>
+<% if @partnership.challenged? %>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <%= render LeadProviders::Partnerships::ChallengedBanner.new(partnership: @partnership) %>
+    </div>
   </div>
-</div>
+<% end %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
