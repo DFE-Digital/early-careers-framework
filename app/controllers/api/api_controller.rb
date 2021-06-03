@@ -17,7 +17,7 @@ module Api
     end
 
     def missing_parameter_response(exception)
-      render json: exception, status: :unprocessable_entity
+      render json: {missing_parameter: exception.param}, status: :unprocessable_entity
     end
 
   end

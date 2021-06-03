@@ -43,12 +43,7 @@ RSpec.describe "Participant Declarations", type: :request do
         default_headers[:Authorization] = bearer_token
       end
 
-      it "returns 404 when trying to create with no id" do
-        post "/api/v1/participant-declarations", params: missing_user_id
-        expect(response.status).to eq 404
-      end
-
-      it "returns 204 status" do
+      it "returns 204 status when successful" do
         post "/api/v1/participant-declarations", params: params
         expect(response.status).to eq 204
       end
@@ -58,10 +53,15 @@ RSpec.describe "Participant Declarations", type: :request do
         expect(response.status).to eq 404
       end
 
+      it "returns 404 when trying to create with no id" do
+        post "/api/v1/participant-declarations", params: missing_user_id
+        expect(response.status).to eq 404
+      end
+
       it "returns 422 when a required parameter is missing" do
         post "/api/v1/participant-declarations", params: missing_required_parameter
         expect(response.status).to eq 422
-        expect(response.body).to eq({"params is missing or the value is empty" => ["participant_uuid"]})
+        expect(response.body).to eq({missing_parameter: ["participant_uuid"]}.to_json)
       end
     end
 
