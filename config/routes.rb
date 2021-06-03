@@ -72,7 +72,7 @@ Rails.application.routes.draw do
         get "already-nominated", action: :already_nominated
       end
     end
-    # resource :choose_how_to_continue, controller: :choose_how_to_continue, only: %i[new create], path: "/"
+
     get "/choose-how-to-continue", to: "choose_how_to_continue#new"
     post "/choose-how-to-continue", to: "choose_how_to_continue#create"
     get "/choice-saved", to: "choose_how_to_continue#choice_saved"
@@ -80,8 +80,6 @@ Rails.application.routes.draw do
     resource :nominate_induction_coordinator, controller: :nominate_induction_coordinator, only: %i[new create], path: "/" do
       collection do
         get "start", to: redirect(path: "/nominations/choose-how-to-continue")
-        # post "choose-how-to-continue", action: :how_to_continue
-        # get "choice-saved", action: :choice_saved
         get "start-nomination", action: :start_nomination
         get "email-used", action: :email_used
         get "link-expired", action: :link_expired
@@ -187,6 +185,8 @@ Rails.application.routes.draw do
       get :advisory
 
       get :confirm_programme, path: "confirm-programme"
+      get :choice_saved_design_our_own, path: "design-your-programme"
+      get :choice_saved_no_early_career_teachers, path: "no-early-career-teachers"
       post :save_programme, path: "save-programme"
       get :success
     end
