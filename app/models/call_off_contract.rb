@@ -5,6 +5,12 @@ class CallOffContract < ApplicationRecord
   belongs_to :lead_provider
 
   def band_a
-    participant_bands.order(:min).first
+    bands.first
+  end
+
+private
+
+  def bands
+    participant_bands.min_nulls_first
   end
 end
