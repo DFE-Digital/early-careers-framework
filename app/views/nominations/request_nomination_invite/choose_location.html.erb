@@ -1,18 +1,8 @@
-<% content_for :title, "Nominate tutor - school location" %>
+<% content_for :title, "Find school location" %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: resend_email_request_nomination_invite_path) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">Nominate an induction lead or tutor</h1>
-    <p>Your induction lead or tutor will use our online service to manage their statutory induction programme and
-      receive any notifications.</p>
-    <p>You only need to nominate someone if your school wants to:</p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>use an approved training provider</li>
-    </ul>
-    <p>Or</p>
-    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-8">
-      <li>use the DfE accredited materials</li>
-    </ul>
     <%= form_with model: @nomination_request_form, url: choose_location_request_nomination_invite_path, method: :post do |f| %>
       <%= f.govuk_error_summary %>
       <div class="govuk-input--width-30">
@@ -21,7 +11,7 @@
               @local_authorities,
               :id,
               :name,
-              label: { text: "What is your school’s local authority?", class: "govuk-label govuk-label--m" },
+              label: { text: "What is your school’s local authority?", tag: "h1", size: "l" },
               hint: -> { tag.span do
                 concat("This is the authority or council in your area. For example, Gloucestershire or Barnet. Not sure? ")
                 concat(govuk_link_to("Find your school on our register", "https://get-information-schools.service.gov.uk/"))

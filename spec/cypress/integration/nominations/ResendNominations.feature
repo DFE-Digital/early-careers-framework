@@ -3,21 +3,26 @@ Feature: Resend nominations flow
 
   Scenario: Resending nomination email
     Given scenario "school_with_local_authority" has been run
-    And I am on "resend nominations choose location" page
+    And I am on "resend nominations start" page
     Then the page should be accessible
+    And percy should be sent snapshot called "Resend nominations start page"
+
+    When I click on "link" containing "Continue"
+    Then I should be on "resend nominations choose location" page
+    And the page should be accessible
     And percy should be sent snapshot called "Resend nominations choose location page"
 
     When I type "test" into "location input"
     And I click on "autocomplete dropdown item" containing "Test"
     And I click the submit button
-    Then I am on "resend nominations choose school" page
+    Then I should be on "resend nominations choose school" page
     And the page should be accessible
     And percy should be sent snapshot called "Resend nominations choose school page"
 
     When I type "test" into "school input"
     And I click on "autocomplete dropdown item" containing "Test"
     And I click the submit button
-    Then I am on "resend nominations review" page
+    Then I should be on "resend nominations review" page
     And the page should be accessible
     And percy should be sent snapshot called "Resend nominations review page"
 
@@ -31,10 +36,10 @@ Feature: Resend nominations flow
     And I type "test" into "school input"
     And I click on "autocomplete dropdown item" containing "Test"
     And I click the submit button
-    Then I am on "resend nominations review" page
+    Then I should be on "resend nominations review" page
 
     When I click the submit button
-    Then I am on "resend nominations success" page
+    Then I should be on "resend nominations success" page
     And the page should be accessible
     And percy should be sent snapshot called "Resend nominations success page"
 
