@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class Nominations::RequestNominationInviteController < ApplicationController
-  before_action :load_nomination_request_form, except: %i[choose_location]
+  before_action :load_nomination_request_form, except: %i[resend_email choose_location]
+
+  def resend_email; end
 
   def choose_location
     @local_authorities = LocalAuthority.all
