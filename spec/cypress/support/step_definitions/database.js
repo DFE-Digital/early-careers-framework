@@ -82,3 +82,12 @@ Given("I am logged in as existing user with {}", (argsStr) => {
 
   cy.get('[action="/users/sign_in_with_token"] [name="commit"]').click();
 });
+
+const setFeature = (feature, isActive) => {
+  cy.appEval(
+    `Feature.find_or_create_by(name: "${feature}").update!(active: ${isActive})`
+  );
+};
+
+Given("feature {word} is active", (feature) => setFeature(feature, true));
+Given("feature {word} is not active", (feature) => setFeature(feature, false));

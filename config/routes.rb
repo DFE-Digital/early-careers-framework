@@ -186,6 +186,12 @@ Rails.application.routes.draw do
       resources :partnerships, only: :index
       resource :programme, only: %i[edit], controller: "choose_programme"
 
+      resources :participants, only: %i[index show], constraints: ->(_request) { FeatureFlag.active?(:induction_tutor_manage_participants) } do
+        get :edit_details, path: "edit-details"
+        get :edit_mentor, path: "edit-mentor"
+        put :update_mentor, path: "update-mentor"
+      end
+
       namespace :core_programme, path: "core-programme" do
         resource :materials, only: %i[edit update show] do
           get :info
