@@ -22,7 +22,9 @@ class Nominations::ChooseHowToContinueController < ApplicationController
   end
 
   def choice_saved
-    token
+    @cohort = cohort
+    @school = school
+    render "shared/choice_saved_no_early_career_teachers"
   end
 
 private
@@ -51,7 +53,6 @@ private
 
   def record_opt_out_state_and_redirect!
     opt_out = @how_to_continue_form.opt_out?
- 
 
     if opt_out
       school.school_cohorts.find_or_create_by!(cohort: cohort) do |school_cohort|

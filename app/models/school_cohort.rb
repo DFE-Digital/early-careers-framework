@@ -5,6 +5,7 @@ class SchoolCohort < ApplicationRecord
     full_induction_programme: "full_induction_programme",
     core_induction_programme: "core_induction_programme",
     design_our_own: "design_our_own",
+    no_early_career_teachers: "no_early_career_teachers",
     not_yet_known: "not_yet_known",
   }
 
@@ -37,10 +38,15 @@ class SchoolCohort < ApplicationRecord
   end
 
   def status
-    if core_induction_programme?
+    case induction_programme_choice
+    when :core_induction_programme
       cip_status
-    else
+    when :full_induction_programme
       fip_status
+    when :not_yet_known
+      "To do"
+    else
+      ""
     end
   end
 
