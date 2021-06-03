@@ -155,7 +155,7 @@ ActiveRecord::Schema.define(version: 2021_06_01_181158) do
     t.index ["user_id"], name: "index_early_career_teacher_profiles_on_user_id"
   end
 
-  create_table "event_logs", id: false, force: :cascade do |t|
+  create_table "event_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "owner_type", null: false
     t.uuid "owner_id", null: false
     t.string "event", null: false

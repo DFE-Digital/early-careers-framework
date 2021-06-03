@@ -23,7 +23,7 @@ RSpec.describe SchoolRecruitedTransitionComponent, type: :component do
     end
 
     context "with fip partnership within challenge window" do
-      let!(:partnership) { create :partnership, school: school, cohort: cohort }
+      let!(:partnership) { create :partnership, :in_challenge_window, school: school, cohort: cohort }
 
       it { is_expected.to render }
 

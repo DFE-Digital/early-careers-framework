@@ -2,7 +2,7 @@
 
 class CreateEventLogs < ActiveRecord::Migration[6.1]
   def change
-    create_table :event_logs, id: false do |t|
+    create_table :event_logs, id: :uuid do |t|
       t.references :owner, polymorphic: true, index: true
       t.string :event, null: false
       t.json :data, default: {}

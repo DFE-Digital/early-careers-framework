@@ -3,8 +3,8 @@
 require "rails_helper"
 
 RSpec.describe "Challenging a partnership", type: :request do
-  let(:partnership_notification_email) { create(:partnership_notification_email) }
-  let(:partnership) { partnership_notification_email.partnership }
+  let(:partnership_notification_email) { create :partnership_notification_email, partnership: partnership }
+  let(:partnership) { create :partnership, :in_challenge_window }
   let(:induction_coordinator) { create(:user, :induction_coordinator, schools: [partnership.school]) }
 
   describe "GET /report-incorrect-partnership?token=:token" do
@@ -31,7 +31,7 @@ RSpec.describe "Challenging a partnership", type: :request do
     end
 
     context "when the partnership has already been challenged" do
-      let!(:partnership_notification_email) { create(:partnership_notification_email, :challenged) }
+      let!(:partnership) { create(:partnership, :challenged) }
 
       it "redirects to already-challenged" do
         get "/report-incorrect-partnership", params: { token: partnership_notification_email.token }

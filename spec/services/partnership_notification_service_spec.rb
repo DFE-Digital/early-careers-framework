@@ -13,7 +13,7 @@ RSpec.describe PartnershipNotificationService do
 
   let(:school) { create(:school) }
   let(:partnership) do
-    Partnership.create!(
+    create(:partnership,
       lead_provider: @lead_provider,
       delivery_partner: @delivery_partner,
       cohort: @cohort,
@@ -22,34 +22,6 @@ RSpec.describe PartnershipNotificationService do
   end
   let(:partnership_notification_email) { partnership.partnership_notification_emails.last }
   let(:notify_id) { Faker::Alphanumeric.alphanumeric(number: 16) }
-
-  describe ".schedule_notifications" do
-    it "schedules partnership notification and reminder" do
-      freeze_time
-      PartnershipNotificationService.schedule_notifications(partnership)
-
-      expect(an_instance_of(PartnershipNotificationService)).to delay_execution_of(:notify)
-        .with(
-          an_object_having_attributes(
-            class: Partnership,
-            cohort_id: partnership.cohort.id,
-            school_id: school.id,
-            lead_provider_id: @lead_provider.id,
-            delivery_partner_id: @delivery_partner.id,
-          ),
-        )
-
-      expect(PartnershipReminderJob).to be_enqueued.with(
-        an_object_having_attributes(
-          class: Partnership,
-          cohort_id: partnership.cohort.id,
-          school_id: school.id,
-          lead_provider_id: @lead_provider.id,
-          delivery_partner_id: @delivery_partner.id,
-        ),
-      ).at(1.week.from_now)
-    end
-  end
 
   describe "#notify" do
     context "when the school has no induction coordinator" do

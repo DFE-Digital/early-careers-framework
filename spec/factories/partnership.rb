@@ -6,6 +6,8 @@ FactoryBot.define do
     lead_provider
     delivery_partner
     cohort
+
+    challenge_deadline { rand(-21..21).days.from_now }
   end
 
   trait :challenged do
@@ -15,5 +17,9 @@ FactoryBot.define do
 
   trait :pending do
     pending { true }
+  end
+
+  trait :in_challenge_window do
+    challenge_deadline { rand(1..21).days.from_now }
   end
 end

@@ -17,21 +17,12 @@ module LeadProviders
     def save!
       ActiveRecord::Base.transaction do
         school_ids.each do |school_id|
-          partnership = Partnership.find_or_initialize_by(
+          Partnerships::Report.call(
             school_id: school_id,
             cohort_id: cohort_id,
-            lead_provider_id: lead_provider_id,
+            delivery_partner_id: delivery_partner_id,
+            lead_provider_id: lead_provider_id
           )
-
-          partnership.challenge_reason = partnership.challenged_at = nil
-          partnership.delivery_partner_id = delivery_partner_id
-          partnership.save!
-
-          partnership.event_logs.create!(
-            event: :reported,
-          )
-
-          PartnershipNotificationService.new.delay.notify(partnership)
         end
       end
     end
