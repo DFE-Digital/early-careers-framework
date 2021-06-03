@@ -3,7 +3,6 @@
 RSpec.describe LeadProviders::Partnerships::ChallengedBanner, type: :view_component do
   let(:component) { described_class.new(partnership: partnership) }
 
-
   let(:partnership) { create :partnership, :challenged }
 
   it "renders expected notification banner" do

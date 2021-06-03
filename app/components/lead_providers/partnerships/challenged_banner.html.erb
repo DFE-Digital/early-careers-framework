@@ -1,4 +1,4 @@
-<%= govuk_notification_banner title: "Important", classes: %w(govuk-notification-banner--red) do %>
-  <p class="govuk-!-margin-top-0"><strong><%= t '.header' %></strong></p>
-  <p><%= t ".content", reason: challenge_reason %>
+<%= govuk_notification_banner title: "Important", classes: "govuk-notification-banner--red" do %>
+  <p class="govuk-!-margin-top-0"><strong><%= t ".header" %></strong></p>
+  <p><%= t ".content", reason: challenge_reason %></p>
 <% end %>
