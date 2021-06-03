@@ -29,7 +29,7 @@ RSpec.describe Partnerships::Report do
       lead_provider_id: lead_provider.id,
       delivery_partner_id: delivery_partner.id,
       pending: false,
-      challenge_deadline: described_class::CHALLENGE_WINDOW.from_now
+      challenge_deadline: described_class::CHALLENGE_WINDOW.from_now,
     )
   end
 
@@ -41,10 +41,12 @@ RSpec.describe Partnerships::Report do
   end
 
   it "schedules partnership reminder" do
+    freeze_time
     result
 
     expect(PartnershipReminderJob)
-      .to be_enqueued.with(result).at(described_class::REMINDER_EMAIL_DELAY.from_now)
+      .to be_enqueued.with(partnership: result, report_id: result.report_id)
+      .at(described_class::REMINDER_EMAIL_DELAY.from_now)
   end
 
   it "does not schedule activation job" do
@@ -52,7 +54,7 @@ RSpec.describe Partnerships::Report do
   end
 
   it "produces correct event log" do
-    expect(result.event_logs.map(&:event)).to eq %w(reported)
+    expect(result.event_logs.map(&:event)).to eq %w[reported]
   end
 
   context "with previous, challanged partnership between school and provider for the same cohort" do
@@ -77,8 +79,12 @@ RSpec.describe Partnerships::Report do
         lead_provider_id: lead_provider.id,
         delivery_partner_id: delivery_partner.id,
         pending: false,
-        challenge_deadline: described_class::CHALLENGE_WINDOW.from_now
+        challenge_deadline: described_class::CHALLENGE_WINDOW.from_now,
       )
+    end
+
+    it "updates partnership's report_id" do
+      expect { result }.to change { partnership.reload.report_id }
     end
   end
 
@@ -101,10 +107,9 @@ RSpec.describe Partnerships::Report do
   context "when the school has already signed up for CIP" do
     before do
       create(:school_cohort,
-        school: school,
-        cohort: cohort,
-        induction_programme_choice: "core_induction_programme",
-      )
+             school: school,
+             cohort: cohort,
+             induction_programme_choice: "core_induction_programme")
     end
 
     it "marks partnership as pending" do
@@ -114,7 +119,8 @@ RSpec.describe Partnerships::Report do
     it "schedules an activation job" do
       result
 
-      expect(an_instance_of(PartnershipActivationJob)).to delay_execution_of(:perform).with(result)
+      expect(an_instance_of(PartnershipActivationJob)).to delay_execution_of(:perform)
+        .with(partnership: result, report_id: result.report_id)
     end
   end
 end

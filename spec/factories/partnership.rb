@@ -8,6 +8,7 @@ FactoryBot.define do
     cohort
 
     challenge_deadline { rand(-21..21).days.from_now }
+    report_id { Random.uuid }
   end
 
   trait :challenged do

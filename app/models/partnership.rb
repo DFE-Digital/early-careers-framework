@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Partnership < ApplicationRecord
-
   enum challenge_reason: {
     another_provider: "another_provider",
     not_confirmed: "not_confirmed",

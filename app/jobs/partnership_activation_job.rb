@@ -3,8 +3,8 @@
 class PartnershipActivationJob < ApplicationJob
   discard_on ActiveJob::DeserializationError
 
-  def perform(partnership)
-    return if partnership.challenged?
+  def perform(partnership:, report_id:)
+    return if partnership.challenged? || partnership.report_id != report_id
     return unless partnership.pending
 
     ActiveRecord::Base.transaction do

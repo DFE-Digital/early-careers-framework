@@ -21,7 +21,7 @@ module LeadProviders
             school_id: school_id,
             cohort_id: cohort_id,
             delivery_partner_id: delivery_partner_id,
-            lead_provider_id: lead_provider_id
+            lead_provider_id: lead_provider_id,
           )
         end
       end

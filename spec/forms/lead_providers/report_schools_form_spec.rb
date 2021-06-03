@@ -8,7 +8,7 @@ RSpec.describe LeadProviders::ReportSchoolsForm, type: :model do
   end
 
   describe "#save!" do
-    let(:school_ids) { Array.new(rand 5..10) { Random.uuid } }
+    let(:school_ids) { Array.new(rand(5..10)) { Random.uuid } }
     let(:cohort_id) { Random.uuid }
     let(:lead_provider_id) { Random.uuid }
     let(:delivery_partner_id) { Random.uuid }
@@ -25,7 +25,6 @@ RSpec.describe LeadProviders::ReportSchoolsForm, type: :model do
     before do
       allow(Partnerships::Report).to receive(:call)
     end
-
 
     it "reports partnership with all the given school ids" do
       subject.save!

@@ -29,20 +29,18 @@ RSpec.describe "Schools::Partnerships", type: :request do
       let(:delivery_partners) { create_list(:delivery_partner, 5) }
       let!(:partnership) do
         create(:partnership,
-          cohort: cohort,
-          lead_provider: lead_provider,
-          school: school,
-          delivery_partner: delivery_partner1
-        )
+               cohort: cohort,
+               lead_provider: lead_provider,
+               school: school,
+               delivery_partner: delivery_partner1)
       end
 
       before do
         create(:partnership,
-          cohort: cohort,
-          lead_provider: lead_provider,
-          school: another_school,
-          delivery_partner: delivery_partner2
-        )
+               cohort: cohort,
+               lead_provider: lead_provider,
+               school: another_school,
+               delivery_partner: delivery_partner2)
 
         delivery_partners.each do |partner|
           ProviderRelationship.create!(cohort: cohort, lead_provider: lead_provider, delivery_partner: partner)
@@ -60,11 +58,10 @@ RSpec.describe "Schools::Partnerships", type: :request do
       context "when the school has recently entered a partnership" do
         let!(:partnership) do
           create(:partnership, :in_challenge_window,
-            cohort: cohort,
-            lead_provider: lead_provider,
-            school: school,
-            delivery_partner: delivery_partner1
-          )
+                 cohort: cohort,
+                 lead_provider: lead_provider,
+                 school: school,
+                 delivery_partner: delivery_partner1)
         end
 
         it "shows the challenge link" do

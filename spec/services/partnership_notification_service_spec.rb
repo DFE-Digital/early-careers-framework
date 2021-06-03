@@ -14,11 +14,10 @@ RSpec.describe PartnershipNotificationService do
   let(:school) { create(:school) }
   let(:partnership) do
     create(:partnership,
-      lead_provider: @lead_provider,
-      delivery_partner: @delivery_partner,
-      cohort: @cohort,
-      school: school,
-    )
+           lead_provider: @lead_provider,
+           delivery_partner: @delivery_partner,
+           cohort: @cohort,
+           school: school)
   end
   let(:partnership_notification_email) { partnership.partnership_notification_emails.last }
   let(:notify_id) { Faker::Alphanumeric.alphanumeric(number: 16) }
