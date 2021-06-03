@@ -29,6 +29,9 @@ class School < ApplicationRecord
   has_many :early_career_teacher_profiles
   has_many :early_career_teachers, through: :early_career_teacher_profiles, source: :user
 
+  has_many :mentor_profiles
+  has_many :mentors, through: :mentor_profiles, source: :user
+
   scope :eligible, -> { open.eligible_establishment_type.in_england }
 
   scope :with_local_authority, lambda { |local_authority|

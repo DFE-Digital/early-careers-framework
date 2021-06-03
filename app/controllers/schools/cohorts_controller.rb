@@ -7,6 +7,4 @@ class Schools::CohortsController < Schools::BaseController
   before_action :set_school_cohort
 
   def show; end
-
-  def add_participants; end
 end

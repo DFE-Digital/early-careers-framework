@@ -30,17 +30,31 @@ User.find_or_create_by!(email: "school-leader@example.com") do |user|
   end
 end
 
+mentor = User.find_or_create_by!(email: "rp-mentor-ambition@example.com") do |user|
+  user.update!(full_name: "Sally Mentor")
+  MentorProfile.find_or_create_by!(user: user) do |profile|
+    profile.update!(school: school, core_induction_programme: CoreInductionProgramme.find_by(name: "Ambition Institute"))
+  end
+end
+
+User.find_or_create_by!(email: "rp-mentor-ucl@example.com") do |user|
+  user.update!(full_name: "Abdul Mentor")
+  MentorProfile.find_or_create_by!(user: user) do |profile|
+    profile.update!(school: school, core_induction_programme: CoreInductionProgramme.find_by(name: "UCL Institute of Education"))
+  end
+end
+
 User.find_or_create_by!(email: "rp-ect-ambition@example.com") do |user|
   user.update!(full_name: "Joe Bloggs")
   EarlyCareerTeacherProfile.find_or_create_by!(user: user) do |profile|
-    profile.update!(school: school, core_induction_programme: CoreInductionProgramme.find_by(name: "Ambition Institute"))
+    profile.update!(school: school, core_induction_programme: CoreInductionProgramme.find_by(name: "Ambition Institute"), mentor_profile: mentor.mentor_profile)
   end
 end
 
 User.find_or_create_by!(email: "rp-ect-ucl@example.com") do |user|
   user.update!(full_name: "Dan Smith")
   EarlyCareerTeacherProfile.find_or_create_by!(user: user) do |profile|
-    profile.update!(school: school, core_induction_programme: CoreInductionProgramme.find_by(name: "UCL Institute of Education"))
+    profile.update!(school: school, core_induction_programme: CoreInductionProgramme.find_by(name: "UCL Institute of Education"), mentor_profile: mentor.mentor_profile)
   end
 end
 

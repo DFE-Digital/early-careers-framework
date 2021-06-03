@@ -183,6 +183,10 @@ Rails.application.routes.draw do
     resources :cohorts, only: :show do
       resources :partnerships, only: :index
       resource :programme, only: %i[edit], controller: "choose_programme"
+      resources :participants, only: %i[index show update] do
+        get :edit_details, path: "edit-details"
+        get :edit_mentor, path: "edit-mentor"
+      end
 
       namespace :core_programme, path: "core-programme" do
         resource :materials, only: %i[edit update show] do
@@ -193,7 +197,6 @@ Rails.application.routes.draw do
 
       member do
         get "programme-choice", as: :programme_choice
-        get "add-participants", as: :add_participants
       end
     end
   end

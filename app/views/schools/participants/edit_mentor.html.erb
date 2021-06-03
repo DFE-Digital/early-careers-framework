@@ -1,0 +1,22 @@
+<% content_for :title, "Change mentor" %>
+
+<% content_for :before_content, govuk_back_link(
+  text: "Back",
+  href: schools_cohort_participant_path(@cohort.start_year, @participant))
+%>
+
+<%= form_for @mentor_form, url: schools_cohort_participant_path(@cohort.start_year, @participant), method: :put do |f| %>
+  <%= f.govuk_radio_buttons_fieldset :mentor_id,
+    legend: { text: "Who is the mentor for #{@participant.full_name}?", tag: 'h1', size: 'xl' },
+    hint: { text: "If you don't know, or haven't added them yet you can do this later." } do %>
+    <% @mentors.each do |mentor, i| %>
+      <%= f.govuk_radio_button :mentor_id, mentor.id, label: { text: mentor.full_name }, link_errors: i == 0 %>
+    <% end %>
+
+    <%= f.govuk_radio_divider %>
+
+    <%= f.govuk_radio_button :mentor_id, "later", label: { text: 'Assign mentor later' } %>
+  <% end %>
+
+  <%= f.govuk_submit %>
+<% end %>
