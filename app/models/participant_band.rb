@@ -2,6 +2,7 @@
 
 class ParticipantBand < ApplicationRecord
   belongs_to :call_off_contract
+  scope :min_nulls_first, -> { order("min asc nulls first") }
 
   def number_of_participants_in_this_band(total_number_of_participants)
     if smaller_than_lower_boundary(total_number_of_participants)

@@ -1,9 +1,9 @@
-<% content_for :title, "Nominate induction tutor" %>
+<% content_for :title, "Induction tutor details" %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    <h1 class="govuk-heading-xl">Nominate an induction lead or tutor</h1>
+    <h1 class="govuk-heading-xl">Enter details to nominate your induction tutor</h1>
 
     <div class="govuk-!-margin-bottom-9">
       <%= render partial: 'nominations/school_details', locals: { school: @nominate_induction_tutor_form.school, title: "Your school" } %>
@@ -12,6 +12,7 @@
       <%= f.govuk_error_summary %>
       <div class="govuk-form-group">
         <h2 class="govuk-heading-m">Who do you want to nominate?</h2>
+        <p class="govuk-body">If you think this is your role, you can nominate yourself.</p>
         <div class="govuk-form-group">
           <%= f.govuk_text_field(:full_name, label: { text: "Full name" }) %>
         </div>

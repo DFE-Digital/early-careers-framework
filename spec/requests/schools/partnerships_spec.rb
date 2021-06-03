@@ -52,7 +52,7 @@ RSpec.describe "Schools::Partnerships", type: :request do
 
         expect(response.body).to include(CGI.escapeHTML(lead_provider.name))
         expect(response.body).to include(CGI.escapeHTML(delivery_partner1.name))
-        expect(response.body).to include(CGI.escapeHTML("Your training provider"))
+        expect(response.body).to include(CGI.escapeHTML("Signed up with a training provider"))
       end
 
       context "when the school has recently entered a partnership" do

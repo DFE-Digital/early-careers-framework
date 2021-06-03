@@ -36,10 +36,16 @@ class DeliveryPartnerForm
     LeadProvider.where(id: lead_provider_ids).joins(:cohorts).includes(:cohorts)
   end
 
-  def chosen_provider_relationships
-    provider_relationships
-      &.filter { |relationship_params| lead_provider_ids&.include?(relationship_params["lead_provider_id"]) }
-      &.map { |relationship_params| ProviderRelationship.find_or_initialize_by(relationship_params) }
+  def chosen_provider_relationships(delivery_partner = nil)
+    filtered_provider_relationships = provider_relationships
+                                        &.filter { |relationship_params| lead_provider_ids&.include?(relationship_params["lead_provider_id"]) }
+    if delivery_partner.nil?
+      filtered_provider_relationships
+        &.map { |relationship_params| ProviderRelationship.new(relationship_params) }
+    else
+      filtered_provider_relationships
+        &.map { |relationship_params| ProviderRelationship.find_or_initialize_by(delivery_partner: delivery_partner, **relationship_params) }
+    end
   end
 
   def display_lead_provider_details
@@ -53,8 +59,8 @@ class DeliveryPartnerForm
 
   def provider_relationships
     provider_relationship_hashes
-        &.filter { |hash| hash.present? }
-        &.map { |provider_relationship_hash| JSON.parse(provider_relationship_hash) }
+      &.filter { |hash| hash.present? }
+      &.map { |provider_relationship_hash| JSON.parse(provider_relationship_hash) }
   end
 
   def save!(delivery_partner = nil)
@@ -63,7 +69,7 @@ class DeliveryPartnerForm
       ActiveRecord::Base.transaction do
         delivery_partner.name = name
         delivery_partner.provider_relationships.where.not(id: chosen_provider_relationships).discard_all!
-        delivery_partner.provider_relationships = chosen_provider_relationships
+        delivery_partner.provider_relationships = chosen_provider_relationships(delivery_partner)
         delivery_partner.save!
       end
     end

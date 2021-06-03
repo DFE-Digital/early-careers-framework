@@ -1,4 +1,4 @@
-<% content_for :title, "Choose Programme" %>
+<% content_for :title, "Choose your programme" %>
 <% content_for :before_content, govuk_back_link(
   text: "Back",
   href: advisory_schools_choose_programme_path)
@@ -12,10 +12,13 @@
             @induction_choice_form.programme_choices,
             :id,
             :name,
-            legend: { text: "How do you want to run your induction programme this year?", size: "l", tag: "h1" },
+            legend: { text: "How do you want to run your 2021/22 induction for early career teachers?", size: "l", tag: "h1" },
             hint: -> { tag.p do
-              concat(govuk_link_to("See our guidance on programmes", "https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview"))
-              concat(" if you’re not sure.")
+              concat("Not sure? ")
+              concat(govuk_link_to("Check our guidance", "https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview"))
+              concat(", contact your ")
+              concat(govuk_link_to("local Teaching School Hub", "https://www.gov.uk/guidance/teaching-school-hubs#find-a-teaching-school-hub"))
+              concat(" or appropriate body.")
             end }
           ) %>
       <%= f.govuk_submit "Continue" %>

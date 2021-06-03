@@ -418,4 +418,14 @@ RSpec.describe School, type: :model do
       end
     end
   end
+
+  describe "scope :without_induction_coordinator" do
+    let!(:school_with_coordinator) { create(:user, :induction_coordinator).schools.first }
+    let!(:school_without_coordinator) { create(:school) }
+
+    it "returns only schools without induction coordinators" do
+      expect(School.without_induction_coordinator).to include school_without_coordinator
+      expect(School.without_induction_coordinator).not_to include school_with_coordinator
+    end
+  end
 end

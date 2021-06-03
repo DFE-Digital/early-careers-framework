@@ -4,9 +4,13 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">How to get an account for this service</h1>
     <h2 class="govuk-heading-m">Schools</h2>
-    <p class="govuk-body">Your school has been sent an email to nominate someone who manages statutory inductions at your school.</p>
-    <p class="govuk-body">It has been sent to the email address your school has listed on our register, <%= govuk_link_to "Get information about schools", "https://www.get-information-schools.service.gov.uk/" %></p>
-    <p><%= govuk_link_to "Resend email", choose_location_request_nomination_invite_path %></p>
+    <p class="govuk-body">We have sent schools a link to nominate someone.</p>
+    <p class="govuk-body">These emails were sent to the school’s email address on our register, Get Information about Schools (GIAS).</p>
+    <p class="govuk-body">If your school has not received the email:</p>
+    <ul>
+      <li><%= govuk_link_to "sign in to DfE", "https://services.signin.education.gov.uk/" %> and check that your GIAS email is up to date.</li>
+      <li><%= govuk_link_to "send a new link", resend_email_request_nomination_invite_path %></li>
+      </ul>
     <h2 class="govuk-heading-m">New teachers or mentors</h2>
     <p class="govuk-body">You only need to sign in if you’re using our accredited training materials. We will send you sign in details before you start your programme.</p>
     <h2 class="govuk-heading-m">Training providers</h2>

@@ -38,6 +38,7 @@ const elements = {
   ...links,
   "page body": "main",
   "cookie banner": ".js-cookie-banner",
+  "page title": "h1",
   "notification banner": "[data-test=notification-banner]",
   "autocomplete dropdown item": ".autocomplete__menu li",
   "success panel": "[data-test=success-panel]",

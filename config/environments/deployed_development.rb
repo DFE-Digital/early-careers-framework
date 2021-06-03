@@ -57,6 +57,10 @@ Rails.application.configure do
   config.gias_api_user = ENV["GIAS_API_USER"]
   config.gias_api_password = Rails.application.credentials.GIAS_API_PASSWORD
 
+  config.dqt_client_api_key = Rails.application.credentials.DQT_CLIENT_API_KEY
+  config.dqt_client_host = Rails.application.credentials.DQT_CLIENT_HOST
+  config.dqt_client_params = Rails.application.credentials.DQT_CLIENT_PARAMS
+
   config.action_mailer.perform_caching = false
   config.action_mailer.delivery_method = :notify
   config.action_mailer.notify_settings = {

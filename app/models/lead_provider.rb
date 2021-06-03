@@ -12,6 +12,8 @@ class LeadProvider < ApplicationRecord
   has_many :core_induction_programmes, through: :lead_provider_cips
   has_many :partnership_csv_uploads
   has_many :lead_provider_api_tokens
+  has_many :participation_records
+  has_one :call_off_contract
 
   validates :name, presence: { message: "Enter a name" }
 end

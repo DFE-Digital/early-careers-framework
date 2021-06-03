@@ -50,6 +50,10 @@ class School < ApplicationRecord
     where.not(id: Partnership.unchallenged.in_year(year).select(:school_id))
   }
 
+  scope :without_induction_coordinator, lambda {
+    left_outer_joins(:induction_coordinators).where(induction_coordinators: { id: nil })
+  }
+
   def lead_provider(year)
     partnerships.unchallenged.joins(%i[lead_provider cohort]).find_by(cohorts: { start_year: year })&.lead_provider
   end

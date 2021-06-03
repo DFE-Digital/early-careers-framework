@@ -36,4 +36,4 @@ Feature: Reporting an error with a partnership
     Then I should be on "challenge partnership success" page
 
     When I navigate to "2021 school partnerships" page
-    Then "page body" should contain "Have you signed up with a training provider?"
+    Then "page body" should contain "Signing up with a training provider"

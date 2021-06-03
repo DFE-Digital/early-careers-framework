@@ -47,6 +47,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :participant_declarations, only: %i[create], path: "participant-declarations"
       resources :users, only: :index
+      resources :dqt_records, only: :show, path: "dqt-records"
     end
   end
 
@@ -57,6 +58,7 @@ Rails.application.routes.draw do
   scope :nominations, module: :nominations do
     resource :request_nomination_invite, controller: :request_nomination_invite, only: [], path: "/" do
       collection do
+        get "resend-email", action: :resend_email
         get "choose-location", action: :choose_location
         post "choose-location", action: :receive_location
         get "choose-school", action: :choose_school

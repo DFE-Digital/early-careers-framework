@@ -27,6 +27,10 @@ Rails.application.configure do
   config.gias_api_user = ENV["GIAS_API_USER"]
   config.gias_api_password = ENV["GIAS_API_PASSWORD"]
 
+  config.dqt_client_api_key = ENV["DQT_CLIENT_API_KEY"]
+  config.dqt_client_host = ENV["DQT_CLIENT_HOST"]
+  config.dqt_client_params = ENV["DQT_CLIENT_PARAMS"]
+
   # Don't care if the mailer can't send.
   # config.action_mailer.raise_delivery_errors = true
 

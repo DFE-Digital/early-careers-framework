@@ -1,21 +1,19 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">Nominate an induction lead or tutor
+    <h1 class="govuk-heading-xl">Nominate an induction tutor
       for <%= @nominate_induction_tutor_form.school.name %></h1>
 
-    <p class="govuk-body">Your induction lead or tutor will use our online service to manage your school’s statutory
-      induction programme and receive any notifications.</p>
-
-    <p class="govuk-body">You <strong>only</strong> need to nominate someone if your school wants to:</p>
-
+    <p class="govuk-body">Your induction tutor will use our online service to:</p>
     <ul class="govuk-list govuk-list--bullet">
-      <li>use an approved training provider</li>
+      <li>choose how your school wants to run an induction for early career teachers</li>
+      <li>complete some steps to set up a programme</li>
     </ul>
-    <p class="govuk-body">Or</p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>use the DfE accredited materials</li>
-    </ul>
+    <p class="govuk-body">They will also receive any future updates about the service.</p>
+    <p class="govuk-body">Your induction tutor is someone at your school who usually manages statutory inductions for
+      early career teachers.</p>
+    <p class="govuk-body">They coordinate the training, support and assessment these new teachers receive.</p>
+    <p class="govuk-body">If you think this is your role, you can nominate yourself.</p>
 
-    <%= govuk_link_to "Continue", { action: :new }, class: 'govuk-button' %>
+    <%= govuk_link_to "Start", { action: :new }, class: 'govuk-button' %>
   </div>
 </div>
