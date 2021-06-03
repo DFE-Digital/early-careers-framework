@@ -2,6 +2,7 @@
 
 module Api
   class ApiController < ActionController::API
+    include ActionController::MimeResponds
     before_action :set_jsonapi_content_type_header
     rescue_from ActiveRecord::RecordNotFound, with: :not_found
     rescue_from ActionController::ParameterMissing, with: :missing_parameter_response
