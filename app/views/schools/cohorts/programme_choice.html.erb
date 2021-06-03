@@ -8,13 +8,13 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-l"><%= @cohort.display_name %> cohort</span>
-    <h1 class="govuk-heading-xl govuk-!-margin-top-2">Choose your induction programme</h1>
+    <h1 class="govuk-heading-xl govuk-!-margin-top-2">Choose an induction programme</h1>
     <p class="govuk-body-l">
       <strong>You have chosen to:</strong>
       <% if @school_cohort.school_chose_cip? %>
-        Use DfE accredited materials
+        deliver your own programme using the DfE accredited materials
       <% else %>
-        Use an approved training provider
+        use a training provider, funded by the DfE
       <% end %>
     </p>
 
@@ -22,11 +22,11 @@
     <% if @school_cohort.school_chose_fip? %>
       <p class="govuk-body">If your school has decided to:</p>
       <ul class="govuk-list govuk-list--bullet">
-        <li>use the DfE accredited materials</li>
+        <li>deliver your own programme using the DfE accredited materials</li>
       </ul>
       <p class="govuk-body">Or</p>
       <ul class="govuk-list govuk-list--bullet">
-        <li>design your own programme based on the ECF</li>
+        <li>design your own programme based on the Early Career Framework (ECF)</li>
       </ul>
 
       <p class="govuk-body">You need to:</p>
@@ -36,7 +36,7 @@
         <li>Contact: <%= render MailToSupportComponent.new %>.</li>
       </ol>
     <% else %>
-      <p class="govuk-body">If your school wants to use an approved training provider, you should:</p>
+      <p class="govuk-body">If your school wants to use a training provider, funded by the DfE, you should:</p>
       <ul class="govuk-list govuk-list--bullet">
         <li>contact your local Teaching School Hub</li>
       </ul>
@@ -48,7 +48,7 @@
       </p>
 
       <p class="govuk-body">
-        If your school has decided to design your own programme based on the early career framework (ECF), you need to:
+        If your school has decided to design and deliver your own programme based on the Early Career Framework (ECF), you need to:
       </p>
       <ul class="govuk-list govuk-list--bullet">
         <li>contact: <%= render MailToSupportComponent.new %></li>

@@ -39,7 +39,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
                 in: :query,
                 schema: {
                   type: :object,
-                  descripiton: "This schema used to paginate through a collection.",
+                  description: "This schema used to paginate through a collection.",
                   properties: {
                     page: {
                       type: :integer,

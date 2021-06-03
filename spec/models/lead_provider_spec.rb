@@ -17,5 +17,7 @@ RSpec.describe LeadProvider, type: :model do
     it { is_expected.to have_many(:provider_relationships) }
     it { is_expected.to have_many(:delivery_partners).through(:provider_relationships) }
     it { is_expected.to have_many(:partnership_csv_uploads) }
+    it { is_expected.to have_many(:participation_records) }
+    it { is_expected.to have_one(:call_off_contract) }
   end
 end

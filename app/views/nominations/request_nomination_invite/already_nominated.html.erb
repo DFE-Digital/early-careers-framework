@@ -2,19 +2,18 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-header-xl">An induction lead/tutor has already been nominated</h1>
+    <h1 class="govuk-header-xl">An induction tutor has already been nominated</h1>
 
-    <p class="govuk-body">Your school has already nominated an induction lead or tutor to use our service.</p>
-    <p class="govuk-body">An email would have been sent to your school, with a link to nominate someone.</p>
-    <p class="govuk-body">We cannot disclose the email address. It will be an administration email, for example, office@, admin@ or head@</p>
-
+    <p class="govuk-body">Your school has already nominated an induction tutor to use our service.</p>
+    <p class="govuk-body">We have sent links to schools using their email address on our register, Get Information about Schools (GIAS).</p>
+    <p class="govuk-body">It will be an administration email, for example, office@, admin@ or head@.</p>
     <h2 class="govuk-heading-m">
       What you can do
     </h2>
     <ul class="govuk-list govuk-list--bullet">
       <li>if you were nominated, <%= govuk_link_to "sign in", new_user_session_path %></li>
-      <li>check with your colleagues</li>
-      <li>if you are still not sure, contact: <%= render MailToSupportComponent.new %></li>
+      <li>if you were not nominated, check with your colleagues first</li>
+      <li>if you don’t know where the email was sent, <%= govuk_link_to "sign in to DfE", "https://services.signin.education.gov.uk/" %> and check your GIAS email address</li>
     </ul>
   </div>
 </div>
