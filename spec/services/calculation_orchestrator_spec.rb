@@ -7,16 +7,16 @@ RSpec.describe CalculationOrchestrator do
   let(:expected_result) do
     {
       service_fees: {
-        service_fee_monthly: 21_846.52,
-        service_fee_per_participant: 316.77,
-        service_fee_total: 633_549.00,
+        service_fee_monthly: 22_287.90,
+        service_fee_per_participant: 323.17,
+        service_fee_total: 646_349.0,
       },
       output_payment: {
-        per_participant: 587.40,
+        per_participant: 597.0,
         start: {
-          per_participant: 117.48,
+          per_participant: 119.4,
           retained_participants: 10,
-          subtotal: 1_174.80,
+          subtotal: 1_194.0,
         },
       },
     }
