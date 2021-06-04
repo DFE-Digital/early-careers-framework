@@ -20,6 +20,10 @@ RSpec.describe ChallengePartnershipForm, type: :model do
       expect { subject.challenge! }.to change { partnership.reload.challenged? }.to true
     end
 
+    it "stores :challenged event in the partnership event log" do
+      expect { subject.challenge! }.to change { partnership.event_logs.map(&:event) }.by %w[challenged]
+    end
+
     it "schedules partnership challenged emails" do
       subject.challenge!
 

@@ -1,13 +1,6 @@
 # frozen_string_literal: true
 
 class PartnershipNotificationService
-  REMINDER_EMAIL_DELAY = 7.days.freeze
-
-  def self.schedule_notifications(partnership)
-    PartnershipNotificationService.new.delay.notify(partnership)
-    PartnershipReminderJob.set(wait: REMINDER_EMAIL_DELAY).perform_later(partnership)
-  end
-
   def notify(partnership)
     ActiveRecord::Base.transaction do
       if partnership.school.registered?

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_28_151644) do
+ActiveRecord::Schema.define(version: 2021_06_03_094324) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -157,6 +157,16 @@ ActiveRecord::Schema.define(version: 2021_05_28_151644) do
     t.index ["user_id"], name: "index_early_career_teacher_profiles_on_user_id"
   end
 
+  create_table "event_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "owner_type", null: false
+    t.uuid "owner_id", null: false
+    t.string "event", null: false
+    t.json "data", default: {}
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["owner_type", "owner_id"], name: "index_event_logs_on_owner"
+  end
+
   create_table "features", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.boolean "active", default: false, null: false
@@ -174,7 +184,7 @@ ActiveRecord::Schema.define(version: 2021_05_28_151644) do
     t.index ["user_id"], name: "index_induction_coordinator_profiles_on_user_id"
   end
 
-  create_table "induction_coordinator_profiles_schools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "induction_coordinator_profiles_schools", force: :cascade do |t|
     t.uuid "induction_coordinator_profile_id", null: false
     t.uuid "school_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -337,10 +347,12 @@ ActiveRecord::Schema.define(version: 2021_05_28_151644) do
     t.string "challenge_reason"
     t.datetime "challenge_deadline"
     t.boolean "pending", default: false, null: false
+    t.uuid "report_id"
     t.index ["cohort_id"], name: "index_partnerships_on_cohort_id"
     t.index ["delivery_partner_id"], name: "index_partnerships_on_delivery_partner_id"
     t.index ["lead_provider_id"], name: "index_partnerships_on_lead_provider_id"
     t.index ["pending"], name: "index_partnerships_on_pending"
+    t.index ["school_id", "lead_provider_id", "cohort_id"], name: "unique_partnerships", unique: true
     t.index ["school_id"], name: "index_partnerships_on_school_id"
   end
 

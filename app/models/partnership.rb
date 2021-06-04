@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 class Partnership < ApplicationRecord
-  CHALLENGE_WINDOW = 14.days.freeze
-
-  before_create :set_challenge_deadline
-  after_create :schedule_activation
-
   enum challenge_reason: {
     another_provider: "another_provider",
     not_confirmed: "not_confirmed",
@@ -19,6 +14,7 @@ class Partnership < ApplicationRecord
   belongs_to :cohort
   belongs_to :delivery_partner
   has_many :partnership_notification_emails, dependent: :destroy
+  has_many :event_logs, as: :owner
 
   has_paper_trail
 
@@ -40,16 +36,4 @@ class Partnership < ApplicationRecord
   end
 
   scope :active, -> { unchallenged.where(pending: false) }
-
-private
-
-  def set_challenge_deadline
-    self.challenge_deadline ||= Time.zone.now + CHALLENGE_WINDOW
-  end
-
-  def schedule_activation
-    return unless pending
-
-    PartnershipActivationJob.new.delay(run_at: CHALLENGE_WINDOW.from_now).perform(self)
-  end
 end

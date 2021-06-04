@@ -17,6 +17,10 @@ Style/FrozenStringLiteralComment:
 Layout/EndOfLine:
   EnforcedStyle: lf
 
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - 'spec/**/*_spec.rb'
+
 Rails/UnknownEnv:
   Environments:
     - production

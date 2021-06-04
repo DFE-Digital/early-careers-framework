@@ -64,78 +64,27 @@ RSpec.describe Partnership, type: :model do
     end
   end
 
-  describe "#challenge_deadline" do
-    it "returns the correct value" do
-      travel_to Time.zone.parse("01/01/2020 13:00")
-
-      partnership = create(:partnership)
-      expect(partnership.challenge_deadline).to eql Time.zone.parse("15/01/2020 13:00")
-    end
-
-    it "can be overridden" do
-      travel_to Time.zone.parse("01/01/2020 13:00")
-      expected_deadline = Time.zone.parse("02/01/2020 13:00")
-
-      partnership = Partnership.create!(
-        lead_provider: create(:lead_provider),
-        delivery_partner: create(:delivery_partner),
-        cohort: create(:cohort),
-        school: create(:school),
-        challenge_deadline: expected_deadline,
-      )
-      expect(partnership.challenge_deadline).to eql expected_deadline
-    end
-  end
-
   describe "#in_challenge_window?" do
-    it "returns true when the partnership is less than 14 days old" do
-      partnership = create(:partnership)
+    it "returns true when the challenge deadline is ahead" do
+      partnership = create(:partnership, challenge_deadline: rand(1..100).days.from_now)
 
-      travel 13.days
-
-      expect(partnership.in_challenge_window?).to eq true
+      expect(partnership).to be_in_challenge_window
     end
 
-    it "returns false when the partnership is more than 14 days old" do
-      partnership = create(:partnership)
+    it "returns false when the challenge deadline has lapsed" do
+      partnership = create(:partnership, challenge_deadline: rand(1..100).days.ago)
 
-      travel 15.days
-
-      expect(partnership.in_challenge_window?).to eq false
+      expect(partnership).not_to be_in_challenge_window
     end
   end
 
-  describe "pending partnerships" do
+  describe "scope :active" do
     let!(:pending_partnership) { create(:partnership, :pending) }
     let!(:partnership) { create(:partnership) }
     let!(:challenged_partnership) { create(:partnership, :challenged, :pending) }
 
-    it "schedules a PartnershipActivationJob" do
-      freeze_time
-
-      partnership = Partnership.create!(
-        school: create(:school),
-        lead_provider: create(:lead_provider),
-        delivery_partner: create(:delivery_partner),
-        cohort: create(:cohort),
-        pending: true,
-      )
-
-      expect(an_instance_of(PartnershipActivationJob)).to delay_execution_of(:perform)
-                                                            .with(an_object_having_attributes(
-                                                                    class: Partnership,
-                                                                    cohort_id: partnership.cohort.id,
-                                                                    school_id: partnership.school.id,
-                                                                    lead_provider_id: partnership.lead_provider.id,
-                                                                    delivery_partner_id: partnership.delivery_partner.id,
-                                                                  ))
-                                                            .at(2.weeks.from_now)
-    end
-
-    describe "scope :active" do
-      it "returns only unchallenged, not pending partnerships" do
-        expect(Partnership.active).to contain_exactly(partnership)
-      end
+    it "returns only unchallenged, not pending partnerships" do
+      expect(Partnership.active).to contain_exactly(partnership)
     end
   end
 end
