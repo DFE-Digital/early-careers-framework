@@ -26,7 +26,7 @@ RSpec.describe PartnershipActivationJob do
       expect(school_cohort.reload.induction_programme_choice).to eql "full_induction_programme"
     end
 
-    context "when aprtnership has been challenged" do
+    context "when partnership has been challenged" do
       let(:partnership) { create(:partnership, :pending, :challenged) }
 
       it "does nothing" do

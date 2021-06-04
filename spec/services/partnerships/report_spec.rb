@@ -34,22 +34,19 @@ RSpec.describe Partnerships::Report do
   end
 
   it "schedules partnership notifications" do
-    result
-
     expect(an_instance_of(PartnershipNotificationService))
       .to delay_execution_of(:notify).with(result)
   end
 
   it "schedules partnership reminder" do
-    freeze_time
-    result
-
     expect(PartnershipReminderJob)
       .to be_enqueued.with(partnership: result, report_id: result.report_id)
       .at(described_class::REMINDER_EMAIL_DELAY.from_now)
   end
 
   it "does not schedule activation job" do
+    result
+
     expect(an_instance_of(PartnershipActivationJob)).not_to delay_execution_of(:perform)
   end
 

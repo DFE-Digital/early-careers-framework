@@ -4,11 +4,10 @@ require "rails_helper"
 
 RSpec.describe "Schools::Partnerships", type: :request do
   let(:user) { create(:user, :induction_coordinator) }
-  let(:school) { user.induction_coordinator_profile.schools.first }
+  let!(:school) { user.induction_coordinator_profile.schools.first }
   let(:cohort) { create(:cohort, start_year: 2021) }
 
   before do
-    school
     sign_in user
   end
 
@@ -55,7 +54,7 @@ RSpec.describe "Schools::Partnerships", type: :request do
         expect(response.body).to include(CGI.escapeHTML("Signed up with a training provider"))
       end
 
-      context "when the school has recently entered a partnership" do
+      context "when the partnership is still within its challenge window" do
         let!(:partnership) do
           create(:partnership, :in_challenge_window,
                  cohort: cohort,

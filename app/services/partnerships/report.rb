@@ -17,7 +17,7 @@ module Partnerships
     end
 
     def call
-      Partnership.transaction do
+      ActiveRecord::Base.transaction do
         partnership = Partnership.find_or_initialize_by(
           school_id: school_id,
           cohort_id: cohort_id,
