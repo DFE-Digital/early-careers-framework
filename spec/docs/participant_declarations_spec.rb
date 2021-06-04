@@ -3,7 +3,8 @@
 require "swagger_helper"
 
 RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_spec.json" do
-  let(:user) { create(:user) }
+  let(:early_career_teacher_profile) { create(:early_career_teacher_profile) }
+  let(:user) { early_career_teacher_profile.user }
   let(:lead_provider) { create(:lead_provider) }
   let(:token) { LeadProviderApiToken.create_with_random_token!(lead_provider: lead_provider) }
   let(:bearer_token) { "Bearer #{token}" }
@@ -20,7 +21,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
           "schema": {
             "type": "object",
             "properties": {
-              "participant_uuid": {
+              "participant_id": {
                 "type": "string",
               },
               "declaration_type": {
@@ -31,9 +32,9 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
                 "format": "date"
               }
             },
-            "required": ["participant_uuid", "declaration_type", "declaration_date"],
+            "required": ["participant_id", "declaration_type", "declaration_date"],
             "example": {
-              "participant_uuid": "db3a7848-7308-4879-942a-c4a70ced400a",
+              "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
               "declaration_type": "Start",
               "declaration_date": "2021-05-31"
             },
@@ -43,7 +44,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
       parameter name: :params, in: :body, required: true, schema: {
         type: :object,
         properties: {
-          participant_uuid: { type: :string },
+          participant_id: { type: :string },
         },
       }, description: "The unique id of the participant"
 
@@ -65,7 +66,8 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
         let(:fresh_user) { create(:user, :early_career_teacher) }
         let(:params) {
           {
-            "participant_uuid" => fresh_user.id,
+            "lead_provider" => lead_provider,
+            "participant_id" => fresh_user.id,
             "declaration_type" => "Start",
             "declaration_date" => "2021-05-31"
           } }
@@ -75,7 +77,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
       # response 304, "Not Modified" do
       #   let(:params) {
       #     {
-      #       "participant_uuid" => user.id,
+      #       "participant_id" => user.id,
       #       "declaration_type" => "Start",
       #       "declaration_date" => "2021-05-31"
       #     } }
@@ -90,13 +92,13 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
       response 204, "Duplicate successful" do
         let(:params) {
           {
-            "participant_uuid" => user.id,
+            "participant_id" => user.id,
             "declaration_type" => "Start",
             "declaration_date" => "2021-05-31"
           } }
 
         before do
-          RecordParticipantEvent.call(params.merge({lead_provider: lead_provider}))
+          RecordParticipantEvent.call(HashWithIndifferentAccess.new({lead_provider: lead_provider}).merge(params))
         end
 
         run_test!
@@ -105,7 +107,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
       response "404", "Missing ID value" do
         let(:params) {
           {
-            "participant_uuid" => nil,
+            "participant_id" => nil,
             "declaration_type" => "",
             "declaration_date" => ""
           } }
@@ -116,7 +118,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
         let(:fresh_user) { build(:user, :early_career_teacher) }
         let(:params) {
           {
-            "participant_uuid" => fresh_user.id,
+            "participant_id" => fresh_user.id,
             "declaration_type" => "",
             "declaration_date" => ""
           } }
@@ -137,7 +139,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
         let(:fresh_user) { create(:user, :early_career_teacher) }
         let(:params) {
           {
-            "participant_uuid" => fresh_user.id,
+            "participant_id" => fresh_user.id,
             "declaration_date" => "2021-05-21"
           } }
         run_test!
@@ -147,7 +149,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
         let(:fresh_user) { create(:user, :early_career_teacher) }
         let(:params) {
           {
-            "participant_uuid" => fresh_user.id,
+            "participant_id" => fresh_user.id,
             "declaration_type" => "Start",
           } }
         run_test!

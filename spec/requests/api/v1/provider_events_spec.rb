@@ -10,21 +10,21 @@ RSpec.describe "Participant Declarations", type: :request do
     let(:payload) { create(:early_career_teacher_profile) }
     let(:params) {
       {
-        participant_uuid: payload.user_id,
+        participant_id: payload.user_id,
         declaration_type: "Start",
         declaration_date: (DateTime.now-1.week).iso8601
       }
     }
     let(:invalid_user_id) {
       {
-        participant_uuid: payload.id,
+        participant_id: payload.id,
         declaration_type: "Start",
         declaration_date: (DateTime.now-1.week).iso8601
       }
     }
     let(:missing_user_id) {
       {
-        participant_uuid: nil,
+        participant_id: nil,
         declaration_type: "Start",
         declaration_date: (DateTime.now-1.week).iso8601
       }
@@ -61,7 +61,7 @@ RSpec.describe "Participant Declarations", type: :request do
       it "returns 422 when a required parameter is missing" do
         post "/api/v1/participant-declarations", params: missing_required_parameter
         expect(response.status).to eq 422
-        expect(response.body).to eq({missing_parameter: ["participant_uuid"]}.to_json)
+        expect(response.body).to eq({missing_parameter: ["participant_id"]}.to_json)
       end
     end
 
