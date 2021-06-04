@@ -9,22 +9,23 @@ class RecordParticipantEvent
   end
 
   def call
-    ( set_config_ect_profile || :not_found ) &&
-      ( create_record || :unprocessable_entity ) &&
-      ( invalid_provider || :unprocessable_entity ) &&
+    (set_config_ect_profile || :not_found) &&
+      (create_record || :unprocessable_entity) &&
+      (invalid_provider || :unprocessable_entity) &&
       :no_content
   end
 
 private
+
   def default_config
     HashWithIndifferentAccess.new(
       recorder: ParticipantDeclaration,
       user_model: User,
-      )
+    )
   end
 
   def set_config_ect_profile
-    config[:early_career_teacher_profile]=early_career_teacher_profile
+    config[:early_career_teacher_profile] = early_career_teacher_profile
   end
 
   def early_career_teacher_profile

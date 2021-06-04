@@ -11,8 +11,8 @@ module Concerns
     included do
       scope :unique_early_career_teacher_profile_id, -> { select(:early_career_teacher_profile_id).distinct }
       scope :active, -> { where(declaration_type: "Start").order(declaration_date: "desc").unique_early_career_teacher_profile_id }
-      scope :declared_as_between, lambda { |start_date, end_date| where(declaration_date: start_date..end_date)}
-      scope :submitted_between, lambda { |start_date, end_date| where(created_at: start_date..end_date)}
+      scope :declared_as_between, ->(start_date, end_date) { where(declaration_date: start_date..end_date) }
+      scope :submitted_between, ->(start_date, end_date) { where(created_at: start_date..end_date) }
     end
   end
 end

@@ -18,7 +18,6 @@ RSpec.describe ParticipantEventAggregator do
   let(:lead_provider) { create(:lead_provider) }
 
   context "event declarations" do
-
     before do
       10.times do
         participant_declaration = create(:participant_declaration, lead_provider: lead_provider)

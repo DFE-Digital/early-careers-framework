@@ -6,7 +6,7 @@ module Api
     rescue_from ActiveRecord::RecordNotFound, with: :not_found
     rescue_from ActionController::ParameterMissing, with: :missing_parameter_response
 
-    private
+  private
 
     def not_found
       head :not_found
@@ -17,8 +17,7 @@ module Api
     end
 
     def missing_parameter_response(exception)
-      render json: {missing_parameter: exception.param}, status: :unprocessable_entity
+      render json: { missing_parameter: exception.param }, status: :unprocessable_entity
     end
-
   end
 end
