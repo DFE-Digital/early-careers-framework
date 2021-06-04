@@ -8,33 +8,33 @@ RSpec.describe "Participant Declarations", type: :request do
     let(:token) { LeadProviderApiToken.create_with_random_token!(lead_provider: lead_provider) }
     let(:bearer_token) { "Bearer #{token}" }
     let(:payload) { create(:early_career_teacher_profile) }
-    let(:params) {
+    let(:params) do
       {
         participant_id: payload.user_id,
         declaration_type: "Start",
-        declaration_date: (DateTime.now-1.week).iso8601
+        declaration_date: (Time.zone.now - 1.week).iso8601,
       }
-    }
-    let(:invalid_user_id) {
+    end
+    let(:invalid_user_id) do
       {
         participant_id: payload.id,
         declaration_type: "Start",
-        declaration_date: (DateTime.now-1.week).iso8601
+        declaration_date: (Time.zone.now - 1.week).iso8601,
       }
-    }
-    let(:missing_user_id) {
+    end
+    let(:missing_user_id) do
       {
         participant_id: nil,
         declaration_type: "Start",
-        declaration_date: (DateTime.now-1.week).iso8601
+        declaration_date: (Time.zone.now - 1.week).iso8601,
       }
-    }
-    let(:missing_required_parameter) {
+    end
+    let(:missing_required_parameter) do
       {
         declaration_type: "Start",
-        declaration_date: (DateTime.now-1.week).iso8601
+        declaration_date: (Time.zone.now - 1.week).iso8601,
       }
-    }
+    end
 
     let(:parsed_response) { JSON.parse(response.body) }
 
@@ -61,7 +61,7 @@ RSpec.describe "Participant Declarations", type: :request do
       it "returns 422 when a required parameter is missing" do
         post "/api/v1/participant-declarations", params: missing_required_parameter
         expect(response.status).to eq 422
-        expect(response.body).to eq({missing_parameter: ["participant_id"]}.to_json)
+        expect(response.body).to eq({ missing_parameter: %w[participant_id] }.to_json)
       end
     end
 
