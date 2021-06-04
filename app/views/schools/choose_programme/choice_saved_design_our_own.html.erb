@@ -15,26 +15,6 @@
       <li>you do not need to sign in to the service to set up your programme</li>
       <li>if you change your mind about how you want to run your inductions, contact: <%= render MailToSupportComponent.new %></li>
     </ul>
-    <h2 class="govuk-heading-m">What you can do now</h2>
-    <p class="govuk-body">
-      The Early Career Framework covers 8 standards. For every standard there are statements for early career teachers to “learn that” and “learn how to”.</p>
-    <p class="govuk-body">
-      You need to design training that covers all of these statements.
-    </p>
-    <p class="govuk-body">
-      You must also ask your appropriate body what evidence you need to supply to demonstrate that your programe is:
-      <ul class="govuk-list govuk-list--bullet">
-        <li>based on the ECF</li>
-        <li>meets the statutory requirements</li>
-      </ul>
-    </p>
-    <h2 class="govuk-heading-m">What you need to do before your induction starts</h2>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>make sure your early career teacher has enough time off in their timetable to complete training</li>
-      <li>make sure that your induction tutor and mentor have the time to carry out their roles</li>
-    </ul>
-    <p class="govuk-body">
-    See the <%= govuk_link_to "statutory induction guidance for early career teachers", "https://www.gov.uk/government/publications/induction-for-early-career-teachers-england" %> for details on time off, roles and responsiblilites</p>
-    </p>
+    <%= render partial: 'shared/diy_what_you_can_do_now_info' %>
   </div>
 </div>

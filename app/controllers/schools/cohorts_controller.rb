@@ -6,7 +6,15 @@ class Schools::CohortsController < Schools::BaseController
 
   before_action :set_school_cohort
 
-  def show; end
+  def show
+    if @school_cohort.design_our_own?
+      render "programme_choice_design_our_own"
+    elsif @school_cohort.no_early_career_teachers?
+      render "programme_choice_no_early_career_teachers"
+    else
+      render
+    end
+  end
 
   def add_participants; end
 end
