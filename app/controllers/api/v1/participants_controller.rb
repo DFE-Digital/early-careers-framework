@@ -10,9 +10,10 @@ module Api
       skip_before_action :set_jsonapi_content_type_header
 
       def index
+        participant_hash = ParticipantSerializer.new(paginate(participants)).serializable_hash
         respond_to do |format|
-          format.json { render json: ParticipantSerializer.new(paginate(participants)).serializable_hash.to_json }
-          format.csv { render body: "Not Implemented", status: :not_implemented }
+          format.json { render json: participant_hash.to_json }
+          format.csv { render body: to_csv(participant_hash) }
         end
       end
 
@@ -20,6 +21,20 @@ module Api
 
       def ensure_lead_provider
         head :forbidden unless current_user.class == LeadProvider
+      end
+
+      def to_csv(hash)
+        output = "id, "
+        attributes = hash[:data].first[:attributes].keys
+        output += attributes.join(", ")
+        output += "\n"
+        hash[:data].each do |item|
+          output += "#{item[:id]}, "
+          output += attributes.map { |attribute| item[:attributes][attribute] }.join(", ")
+          output += "\n"
+        end
+
+        output
       end
 
       def updated_since
