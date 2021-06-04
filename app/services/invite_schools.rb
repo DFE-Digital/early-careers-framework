@@ -63,6 +63,12 @@ class InviteSchools
     logger.info "Nomination email count after: #{NominationEmail.count}"
   end
 
+  def send_ministerial_letters(recipients)
+    recipients.each do |recipient|
+      delay(queue: "mailers", priority: 1).send_ministerial_letter(recipient)
+    end
+  end
+
 private
 
   def send_nomination_email(nomination_email)
@@ -74,6 +80,13 @@ private
     ).deliver_now.delivery_method.response.id
 
     nomination_email.update!(notify_id: notify_id)
+  end
+
+  def send_ministerial_letter(recipient)
+    SchoolMailer.ministerial_letter_email(recipient: recipient).deliver_now
+  rescue Notifications::Client::RateLimitError
+    sleep(1)
+    SchoolMailer.ministerial_letter_email(recipient: recipient).deliver_now
   end
 
   def email_expiry_date
