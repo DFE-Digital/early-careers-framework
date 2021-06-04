@@ -206,4 +206,6 @@ Rails.application.routes.draw do
   mount OpenApi::Rswag::Api::Engine => "/api-docs"
 
   resource :school_search, only: %i[show create], path: "school-search", controller: :school_search
+
+  get "/ministerial-letter", to: redirect("ECF%20Letter.pdf")
 end
