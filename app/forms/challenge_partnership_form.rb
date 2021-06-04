@@ -6,17 +6,9 @@ class ChallengePartnershipForm
   attr_accessor :challenge_reason, :token, :school_name, :provider_name, :partnership
   validates :challenge_reason, presence: { message: "Select a reason why you think this confirmation is incorrect" }
 
-  CHALLANGE_REASON_OPTIONS = {
-    another_provider: "I have already confirmed an agreement with another provider",
-    not_confirmed: "We have not confirmed an agreement",
-    do_not_recognise: "I do not recognise this training provider",
-    no_ects: "We do not have any early career teachers this year",
-    mistake: "This looks like a mistake",
-  }.freeze
-
   def challenge_reason_options
-    CHALLANGE_REASON_OPTIONS.map do |key, value|
-      OpenStruct.new(id: key, name: value)
+    %w[another_provider not_confirmed do_not_recognise no_ects mistake].map do |key|
+      OpenStruct.new(id: key, name: I18n.t(key, scope: "partnerships.challenge_reasons"))
     end
   end
 

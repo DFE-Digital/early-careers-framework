@@ -25,6 +25,8 @@ module Support
       end
     end
 
+    delegate :t, :translate, to: :component
+
     RSpec.configure do |rspec|
       rspec.include ::ViewComponent::TestHelpers, type: :view_component
       rspec.include StubbingHelper, type: :view_component
