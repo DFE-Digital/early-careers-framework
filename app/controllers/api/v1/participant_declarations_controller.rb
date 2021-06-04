@@ -8,7 +8,7 @@ module Api
       wrap_parameters format: [:json]
 
       def create
-        config=HashWithIndifferentAccess.new(raw_event: request.raw_post).merge(declaration_params)
+        config=HashWithIndifferentAccess.new({raw_event: request.raw_post, lead_provider: current_user}).merge(declaration_params)
         return head(RecordParticipantEvent.call(config)) if check_config(config)
         raise ActionController::ParameterMissing.new(missing_params(config))
       end
@@ -20,7 +20,7 @@ module Api
       end
 
       def required_params
-        %w[participant_uuid declaration_date declaration_type]
+        %w[participant_id declaration_date declaration_type]
       end
 
       def missing_params(config)
@@ -32,7 +32,7 @@ module Api
       end
 
       def declaration_params
-        params.permit(:participant_uuid, :declaration_date, :declaration_type)
+        params.permit(:participant_id, :declaration_date, :declaration_type)
       end
 
     end
