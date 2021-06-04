@@ -63,9 +63,11 @@ class InviteSchools
     logger.info "Nomination email count after: #{NominationEmail.count}"
   end
 
-  def send_ministerial_letters(recipients)
-    recipients.each do |recipient|
-      delay(queue: "mailers", priority: 1).send_ministerial_letter(recipient)
+  def send_ministerial_letters
+    School.eligible.each do |school|
+      recipient = school.primary_contact_email.presence || school.secondary_contact_email
+
+      delay(queue: "mailers", priority: 1).send_ministerial_letter(recipient) if recipient.present?
     end
   end
 
