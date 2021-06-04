@@ -17,7 +17,7 @@ module LeadProviders
     def save!
       ActiveRecord::Base.transaction do
         school_ids.each do |school_id|
-          Partnerships::Report.call(
+          ::Partnerships::Report.call(
             school_id: school_id,
             cohort_id: cohort_id,
             delivery_partner_id: delivery_partner_id,
