@@ -10,8 +10,9 @@ class Nominations::ChooseHowToContinueController < ApplicationController
   end
 
   def create
-    record_nomination_email_opened
     @how_to_continue_form = NominateHowToContinueForm.new(how_to_continue_form_params)
+    record_nomination_email_opened
+
     if @how_to_continue_form.valid?
       record_opt_out_state_and_redirect!
     else
@@ -69,7 +70,9 @@ private
   end
 
   def how_to_continue_form_params
-    params.require(:nominate_how_to_continue_form).permit(:how_to_continue, :token)
+    form_params = params.require(:nominate_how_to_continue_form).permit(:how_to_continue, :token)
+    @token = form_params[:token]
+    form_params
   end
 
   def record_nomination_email_opened

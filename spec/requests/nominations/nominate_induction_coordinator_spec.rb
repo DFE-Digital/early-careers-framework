@@ -4,13 +4,20 @@ require "rails_helper"
 
 RSpec.describe "Nominating an induction coordinator", type: :request do
   describe "GET /nominations/start" do
-    it "redirects to link-invalid when no token is provided" do
+    it "redirects to choose how to continue" do
       get "/nominations/start"
+      expect(response).to redirect_to("/nominations/choose-how-to-continue")
+    end
+  end
+
+  describe "GET /nominations/start-nomination" do
+    it "redirects to link-invalid when no token is provided" do
+      get "/nominations/start-nomination"
       expect(response).to redirect_to("/nominations/link-invalid")
     end
 
     it "redirects to link-invalid when an invalid token is provided" do
-      get "/nominations/start?token=abc123"
+      get "/nominations/start-nomination?token=abc123"
       expect(response).to redirect_to("/nominations/link-invalid")
     end
 
@@ -19,9 +26,9 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
       let(:token) { nomination_email.token }
 
       it "renders the start nomination template" do
-        get "/nominations/start?token=#{token}"
+        get "/nominations/start-nomination?token=#{token}"
 
-        expect(response).to render_template("nominations/nominate_induction_coordinator/start")
+        expect(response).to render_template("nominations/nominate_induction_coordinator/start_nomination")
       end
 
       context "when an induction tutor for the school has already been nominated" do
@@ -31,7 +38,7 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
         end
 
         it "redirects to already-nominated" do
-          get "/nominations/start?token=#{token}"
+          get "/nominations/start-nomination?token=#{token}"
 
           expect(response).to redirect_to("/nominations/already-nominated")
           follow_redirect!
@@ -45,7 +52,7 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
       let(:token) { nomination_email.token }
 
       it "redirects to link-expired" do
-        get "/nominations/start?token=#{token}"
+        get "/nominations/start-nomination?token=#{token}"
 
         expect(response).to redirect_to("/nominations/link-expired?school_id=#{nomination_email.school.id}")
       end
@@ -56,43 +63,24 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
       let(:token) { nomination_email.token }
 
       it "renders the start nomination template" do
-        get "/nominations/start?token=#{token}"
+        get "/nominations/start-nomination?token=#{token}"
 
-        expect(response).to render_template("nominations/nominate_induction_coordinator/start")
+        expect(response).to render_template("nominations/nominate_induction_coordinator/start_nomination")
       end
     end
   end
 
   describe "GET /nominations/new" do
-    let(:now) { rand(-100..100).hours.ago }
-    let(:nomination_email) { create :nomination_email, opened_at: now - rand(1..10).hours }
+    let(:nomination_email) { create(:nomination_email) }
 
     around do |example|
-      travel_to now do
-        get "/nominations/start?token=#{nomination_email.token}"
-        example.run
-      end
+      get "/nominations/start-nomination?token=#{nomination_email.token}"
+      example.run
     end
 
     it "renders the new template" do
       get "/nominations/new"
       expect(response).to render_template("nominations/nominate_induction_coordinator/new")
-    end
-
-    context "when opening nomination page for the first time" do
-      let(:nomination_email) { create :nomination_email, opened_at: nil }
-
-      it "records opened_at on the nomination_email" do
-        get "/nominations/new"
-        expect(nomination_email.reload.opened_at).to be_within(1.second).of(now)
-      end
-    end
-
-    context "when opening nomination page for another time" do
-      it "records opened_at on the nomination_email" do
-        expect { get "/nominations/new" }
-          .not_to(change { nomination_email.reload.opened_at })
-      end
     end
   end
 

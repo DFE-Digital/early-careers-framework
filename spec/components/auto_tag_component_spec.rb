@@ -20,4 +20,9 @@ RSpec.describe AutoTagComponent, type: :component do
     expect(rendered_component).to include("Test string")
     expect(rendered_component).to include("grey")
   end
+
+  it "renders nothing if the text is blank" do
+    rendered_component = render_inline(described_class.new(text: "")).to_html
+    expect(rendered_component).to be_blank
+  end
 end
