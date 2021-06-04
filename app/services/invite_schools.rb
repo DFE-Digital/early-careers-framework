@@ -65,8 +65,7 @@ class InviteSchools
 
   def send_ministerial_letters
     School.eligible.each do |school|
-      recipient = school.primary_contact_email.presence || school.secondary_contact_email
-
+      recipient = school.contact_email
       delay(queue: "mailers", priority: 1).send_ministerial_letter(recipient) if recipient.present?
     end
   end
