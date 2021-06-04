@@ -5,6 +5,12 @@ module Support
     module Matchers
       extend RSpec::Matchers::DSL
 
+      define :render do
+        match do |rendered|
+          rendered.children.any?
+        end
+      end
+
       define :have_rendered_component do |component_class|
         match do |rendered|
           @stubs = _test_context.components.select { |stubbed| stubbed.instance.is_a? component_class }

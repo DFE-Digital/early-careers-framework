@@ -1,0 +1,6 @@
+en:
+  lead_providers:
+    partnerships:
+      challenged_banner:
+        header: "This school reported they did not confirm an agreement with you"
+        content: "They gave this reason: \"%{reason}\". If you think this is a mistake, contact the school directly. If resolved, you can add the school again."

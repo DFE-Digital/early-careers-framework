@@ -48,5 +48,7 @@ module EarlyCareerFramework
     config.active_job.queue_adapter = :delayed_job
 
     config.middleware.use Rack::Deflater
+
+    config.i18n.load_path += Dir[Rails.root.join("config/locales/**/*.{rb,yml}")]
   end
 end

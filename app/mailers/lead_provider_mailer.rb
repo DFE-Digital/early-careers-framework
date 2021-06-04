@@ -20,7 +20,7 @@ class LeadProviderMailer < ApplicationMailer
   end
 
   def partnership_challenged_email(partnership:, user:)
-    reason = ChallengePartnershipForm::CHALLANGE_REASON_OPTIONS[partnership.challenge_reason.to_sym]
+    reason = I18n.t(partnership.challenge_reason, scope: "partnerships.challenge_reasons")
 
     template_mail(
       PARTNERSHIP_CHALLENGED_TEMPLATE_ID,
