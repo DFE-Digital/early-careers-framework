@@ -15,7 +15,7 @@ class SchoolCohort < ApplicationRecord
   belongs_to :school
   belongs_to :core_induction_programme, optional: true
 
-  scope :for_year, ->(year) { joins(:cohort).find_by(cohort: { start_year: year }) }
+  scope :for_year, ->(year) { joins(:cohort).where(cohort: { start_year: year }) }
 
   def training_provider_status
     school.partnerships&.active&.exists?(cohort: cohort) ? "Done" : "To do"
@@ -38,12 +38,11 @@ class SchoolCohort < ApplicationRecord
   end
 
   def status
-    case induction_programme_choice
-    when :core_induction_programme
+    if core_induction_programme?
       cip_status
-    when :full_induction_programme
+    elsif full_induction_programme?
       fip_status
-    when :not_yet_known
+    elsif not_yet_known?
       "To do"
     else
       ""

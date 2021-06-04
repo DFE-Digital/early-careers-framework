@@ -19,7 +19,7 @@ RSpec.shared_examples "redirects to start nomination" do |how_to_continue|
 
     it "resets the opt out choice" do
       post "/nominations/choose-how-to-continue", params: form_params
-      expect(school.school_cohorts.for_year(cohort.start_year)).not_to be_opt_out_of_updates
+      expect(school.school_cohorts.for_year(cohort.start_year).first).not_to be_opt_out_of_updates
     end
   end
 end
@@ -108,14 +108,6 @@ RSpec.describe "Choosing how to continue with nominations", type: :request do
         { nominate_how_to_continue_form: { how_to_continue: "no", token: token } }
       end
 
-      # let(:now) { rand(-100..100).hours.ago }
-
-      # around do |example|
-      #   travel_to now do
-      #     example.run
-      #   end
-      # end
-
       context "when making a choice for the first time" do
         let(:nomination_email) { create :nomination_email, opened_at: nil }
         let(:now) { rand(-100..100).hours.ago }
@@ -145,7 +137,7 @@ RSpec.describe "Choosing how to continue with nominations", type: :request do
 
       it "records the opt out choice" do
         post "/nominations/choose-how-to-continue", params: form_params
-        expect(school.school_cohorts.for_year(cohort.start_year)).to be_opt_out_of_updates
+        expect(school.school_cohorts.for_year(cohort.start_year).first).to be_opt_out_of_updates
       end
     end
 

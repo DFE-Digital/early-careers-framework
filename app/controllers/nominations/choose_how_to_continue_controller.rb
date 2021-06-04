@@ -62,7 +62,7 @@ private
       end
       redirect_to choice_saved_path(token: @how_to_continue_form.token)
     else
-      school_cohort = school.school_cohorts.for_year(cohort.start_year)
+      school_cohort = school.school_cohorts.for_year(cohort.start_year).first
       school_cohort.update!(opt_out_of_updates: false) if school_cohort.present?
 
       redirect_to start_nomination_nominate_induction_coordinator_path(token: @how_to_continue_form.token)
