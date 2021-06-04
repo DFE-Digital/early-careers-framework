@@ -208,4 +208,5 @@ Rails.application.routes.draw do
   resource :school_search, only: %i[show create], path: "school-search", controller: :school_search
 
   get "/ministerial-letter", to: redirect("ECF%20Letter.pdf")
+  get "/ecf-leaflet", to: redirect("ECFleaflet2021.pdf")
 end

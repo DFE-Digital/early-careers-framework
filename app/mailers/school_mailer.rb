@@ -96,9 +96,8 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        pdf_url: Rails.application.routes.url_helpers.ministerial_letter_url(
-          host: Rails.application.config.domain,
-        ),
+        letter_url: Rails.application.routes.url_helpers.ministerial_letter_url(host: Rails.application.config.domain),
+        leaflet_url: Rails.application.routes.url_helpers.ecf_leaflet_url(host: Rails.application.config.domain),
       },
     )
   end
