@@ -15,6 +15,7 @@ class AutoTagComponent < ViewComponent::Base
 
   def call
     return "" if @text.blank?
+
     render GovukComponent::Tag.new(text: @text, colour: @colour)
   end
 end

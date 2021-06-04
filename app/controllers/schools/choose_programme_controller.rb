@@ -13,7 +13,6 @@ class Schools::ChooseProgrammeController < Schools::BaseController
   def create
     render :show and return unless @induction_choice_form.valid?
 
-
     if @induction_choice_form.opt_out_choice_selected?
       save_school_choice!
       redirect_to action: "choice_saved_#{@induction_choice_form.programme_choice}"
