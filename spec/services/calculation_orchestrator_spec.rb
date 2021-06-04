@@ -24,14 +24,13 @@ RSpec.describe CalculationOrchestrator do
 
   before do
     10.times do
-      pr = create(:participant_declaration, lead_provider: call_off_contract.lead_provider)
-      #      pr.join!
-      create(:participant_declaration, lead_provider: call_off_contract.lead_provider)
+      participant_declaration = create(:participant_declaration, lead_provider: call_off_contract.lead_provider)
+      create(:participant_declaration, early_career_teacher_profile: participant_declaration.early_career_teacher_profile, lead_provider: call_off_contract.lead_provider)
     end
   end
 
   context ".call" do
-    xit "returns the total calculation" do
+    it "returns the total calculation" do
       expect(described_class.call({ lead_provider: call_off_contract.lead_provider }, event_type: :start)).to eq(expected_result)
     end
   end
