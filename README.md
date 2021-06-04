@@ -134,10 +134,10 @@ bundle exec rake 'schools:send_invites[urn1 urn2 ...]'
 bundle exec rake lead_provider:generate_token "name or id"
 ```
 
-## Run payment calculator for a given lead provider to generate the payment breakdown
+## Run payment calculator for a given lead provider with an optional number of participants (default is 2,000) to generate the payment breakdown
 
 ```bash
-bundle exec rake payment_calculation:breakdown "name or id"
+bundle exec rake payment_calculation:breakdown "<name or id>" "<number of participants>"
 ```
 
 Where `"name or id"` is a name or id from the `lead_providers` table.

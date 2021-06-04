@@ -17,7 +17,7 @@ namespace :payment_calculation do
       lead_provider = LeadProvider.find_by(name: ARGV[1])
     end
 
-    total_participants = ARGV[2].to_i || 2000
+    total_participants = (ARGV[2] || 2000).to_i
     per_participant = number_to_delimited(lead_provider.call_off_contract.band_a.per_participant.to_i)
 
     breakdown = PaymentCalculator::Ecf::PaymentCalculation.call(
