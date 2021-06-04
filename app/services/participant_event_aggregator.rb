@@ -13,7 +13,7 @@ private
 
   def default_config
     {
-      recorder: ParticipationRecord,
+      recorder: ParticipantDeclaration,
       start: :count_active_for_lead_provider,
     }
   end
