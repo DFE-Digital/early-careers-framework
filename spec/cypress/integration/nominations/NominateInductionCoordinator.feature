@@ -6,7 +6,6 @@ Feature: Nominate induction tutor
     Given nomination_email was created with token "foo-bar-baz"
     And I am on "start nominations with token" page
     Then the page should be accessible
-    And percy should be sent snapshot called "Choose how to continue"
 
     When I click on "nominate induction tutor radio button"
     And I click the submit button
