@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Nominations::NominateInductionCoordinatorController < ApplicationController
+  include NominationEmailTokenConsumer
+
   before_action :check_token_status, only: :start_nomination
 
   # start method is redirected in the routes to Nominations::ChooseHowToContinueController#new
@@ -51,20 +53,6 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
   def nominate_school_lead_success; end
 
 private
-
-  def check_token_status
-    if nomination_email.nil?
-      redirect_to link_invalid_nominate_induction_coordinator_path
-    elsif nomination_email.expired?
-      redirect_to link_expired_nominate_induction_coordinator_path(school_id: nomination_email.school_id)
-    elsif nomination_email.school.registered?
-      redirect_to already_nominated_request_nomination_invite_path
-    end
-  end
-
-  def nomination_email
-    @nomination_email ||= NominationEmail.find_by(token: params[:token])
-  end
 
   def load_nominate_induction_tutor_form
     @nominate_induction_tutor_form = ::NominateInductionTutorForm.new(session[:nominate_induction_tutor_form])

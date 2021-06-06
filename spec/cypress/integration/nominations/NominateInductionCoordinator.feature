@@ -1,8 +1,15 @@
 Feature: Nominate induction tutor
+  Background:
+    Given cohort was created with start_year "2021"
 
   Scenario: Valid Nomination Link was sent
     Given nomination_email was created with token "foo-bar-baz"
     And I am on "start nominations with token" page
+    Then the page should be accessible
+    And percy should be sent snapshot called "Choose how to continue"
+
+    When I click on "nominate induction tutor radio button"
+    And I click the submit button
     Then the page should be accessible
     And percy should be sent snapshot called "Start nominations"
 
@@ -39,7 +46,9 @@ Feature: Nominate induction tutor
   Scenario: Nomination Link was sent for which Induction Tutor was already nominated for another school
     Given nomination_email was created as "email_address_already_used_for_another_school" with token "foo-bar-baz"
     When I am on "start nominations with token" page
-    Then I click on "link" containing "Start"
+    Then I click on "nominate induction tutor radio button"
+    And I click the submit button
+    And I click on "link" containing "Continue"
     Then I type "John Wick" into "name input"
     And I type "john-wick@example.com" into "email input"
 
