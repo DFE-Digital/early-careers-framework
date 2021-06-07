@@ -18,7 +18,7 @@ def generate_provider_token(lead_provider, cohort, logger)
   existing_user_uuids = lead_provider.partnerships.map(&:school).map { |s| s.early_career_teacher_profiles.first&.user_id }
 
   unless existing_user_uuids.any?
-    user_uuids = 10.times.each_with_object([]) do |_i, uuids|
+    user_uuids = 10.times.each_with_object([]) do |i, uuids|
       user = User.create!(full_name: Faker::Name.name, email: Faker::Internet.email)
 
       school = School.find_or_create_by!(
@@ -36,7 +36,7 @@ def generate_provider_token(lead_provider, cohort, logger)
         delivery_partner: DeliveryPartner.find_or_create_by!(name: Faker::Company.name),
       )
 
-      EarlyCareerTeacherProfile.create!(user: user, school: school)
+      EarlyCareerTeacherProfile.create!(user: user, school: school, cohort: cohort)
       uuids << user.id
     end
   end
