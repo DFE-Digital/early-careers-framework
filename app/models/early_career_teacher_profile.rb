@@ -10,4 +10,5 @@ class EarlyCareerTeacherProfile < ApplicationRecord
   belongs_to :mentor_profile, optional: true
   has_one :mentor, through: :mentor_profile, source: :user
   has_one :participation_record, dependent: :destroy
+  has_many :participant_declarations
 end

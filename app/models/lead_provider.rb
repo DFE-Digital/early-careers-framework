@@ -14,6 +14,7 @@ class LeadProvider < ApplicationRecord
   has_many :lead_provider_api_tokens
   has_many :participation_records
   has_one :call_off_contract
+  has_many :participant_declarations
 
   validates :name, presence: { message: "Enter a name" }
 end
