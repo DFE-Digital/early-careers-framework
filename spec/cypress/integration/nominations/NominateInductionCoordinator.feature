@@ -47,7 +47,7 @@ Feature: Nominate induction tutor
     When I am on "start nominations with token" page
     Then I click on "nominate induction tutor radio button"
     And I click the submit button
-    And I click on "link" containing "Continue"
+    And I click on "link" containing "Start"
     Then I type "John Wick" into "name input"
     And I type "john-wick@example.com" into "email input"
 
