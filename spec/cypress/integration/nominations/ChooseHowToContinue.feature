@@ -10,7 +10,7 @@ Feature: Choose how to continue nomination
 
     When I click on "nominate induction tutor radio button"
     And I click the submit button
-    Then "page body" should contain "Nominate an induction lead or tutor"
+    Then "page body" should contain "Nominate an induction tutor"
 
   Scenario: School does not have any early career teachers this year
     Given nomination_email was created with token "foo-bar-baz"
@@ -28,5 +28,5 @@ Feature: Choose how to continue nomination
 
     When I click on "nominate someone for updates radio button"
     And I click the submit button
-    Then "page body" should contain "Nominate an induction lead or tutor"
+    Then "page body" should contain "Nominate an induction tutor"
 
