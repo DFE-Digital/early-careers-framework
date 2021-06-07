@@ -25,11 +25,11 @@ namespace :payment_calculation do
         lead_provider: lead_provider,
       },
       total_participants: total_participants,
-      event_type: :start,
+      event_type: :started,
     )
 
     service_fee = number_to_delimited(breakdown.dig(:service_fees, :service_fee_monthly).to_i)
-    output_payment = number_to_delimited(breakdown.dig(:output_payment, :start, :subtotal).to_i)
+    output_payment = number_to_delimited(breakdown.dig(:output_payment, :started, :subtotal).to_i)
 
     output = <<-RESULT
       ---------------------------------------------
