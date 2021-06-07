@@ -12,6 +12,26 @@
         "type": "http",
         "scheme": "bearer"
       }
+    },
+    "schemas": {
+      "error_response": {
+        "type": "object",
+        "properties": {
+          "missing_parameter": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "participant_id",
+                "declaration_date",
+                "declaration_type"
+              ]
+            },
+            "uniqueItems": true,
+            "minItems": 1
+          }
+        }
+      }
     }
   },
   "security": [
@@ -140,11 +160,28 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "name": "id",
-                  "type": "string"
+                  "participant_id": {
+                    "type": "string"
+                  },
+                  "declaration_type": {
+                    "enum": [
+                      "started"
+                    ]
+                  },
+                  "declaration_date": {
+                    "type": "string",
+                    "format": "date"
+                  }
                 },
+                "required": [
+                  "participant_id",
+                  "declaration_type",
+                  "declaration_date"
+                ],
                 "example": {
-                  "id": "db3a7848-7308-4879-942a-c4a70ced400a"
+                  "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                  "declaration_type": "started",
+                  "declaration_date": "2021-05-31"
                 }
               }
             }
@@ -155,13 +192,20 @@
         ],
         "responses": {
           "204": {
-            "description": "Successful"
-          },
-          "304": {
-            "description": "Not Modified"
+            "description": "Duplicate successful"
           },
           "404": {
             "description": "Not Found"
+          },
+          "422": {
+            "description": "Missing parameter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_response"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"

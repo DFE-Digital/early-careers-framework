@@ -7,7 +7,7 @@ Feature: ECF payment calculation engine
       And Band A per-participant price is £995
       And there are the following retention numbers:
         | Payment Type | Month    | Retained Participants | Expected Per-Participant Output Payment | Expected Output Payment Subtotal |
-        | Start        | Jan 2021 | 1900                  | £119.40                                 | £226,860                         |
+        | Started      | Jan 2021 | 1900                  | £119.40                                 | £226,860                         |
         | Retention 1  | Jun 2021 | 1700                  | £89.55                                  | £152,235                         |
         | Retention 2  | Feb 2022 | 1500                  | £89.55                                  | £134,325                         |
         | Retention 3  | Jul 2022 | 1000                  | £89.55                                  | £89,550                          |
@@ -23,7 +23,7 @@ Feature: ECF payment calculation engine
       And Band A per-participant price is £1,350
       And there are the following retention numbers:
         | Payment Type | Month    | Retained Participants | Expected Per-Participant Output Payment | Expected Output Payment Subtotal |
-        | Start        | Jan 2021 | 1900                  | £162.00                                 | £307,800                         |
+        | Started      | Jan 2021 | 1900                  | £162.00                                 | £307,800                         |
         | Retention 1  | Jun 2021 | 1700                  | £121.50                                 | £206,550                         |
         | Retention 2  | Feb 2022 | 1500                  | £121.50                                 | £182,250                         |
         | Retention 3  | Jul 2022 | 1000                  | £121.50                                 | £121,500                         |

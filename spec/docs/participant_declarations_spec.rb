@@ -3,7 +3,8 @@
 require "swagger_helper"
 
 RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_spec.json" do
-  let(:user) { create(:user) }
+  let(:early_career_teacher_profile) { create(:early_career_teacher_profile) }
+  let(:user) { early_career_teacher_profile.user }
   let(:lead_provider) { create(:lead_provider) }
   let(:token) { LeadProviderApiToken.create_with_random_token!(lead_provider: lead_provider) }
   let(:bearer_token) { "Bearer #{token}" }
@@ -20,37 +21,104 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
           "schema": {
             "type": "object",
             "properties": {
-              "name": "id",
-              "type": "string",
+              "participant_id": {
+                "type": "string",
+              },
+              "declaration_type": {
+                "enum": %w[started],
+              },
+              "declaration_date": {
+                "type": "string",
+                "format": "date-time",
+              },
             },
+            "required": %w[participant_id declaration_type declaration_date],
             "example": {
-              "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+              "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+              "declaration_type": "started",
+              "declaration_date": "2021-05-31",
             },
           },
         },
       }
-      parameter name: :params, in: :body, required: false, schema: {
+      parameter name: :params, in: :body, required: true, schema: {
         type: :object,
         properties: {
-          id: { type: :string },
+          participant_id: { type: :string },
         },
       }, description: "The unique id of the participant"
 
+      parameter name: :params, in: :body, required: false, schema: {
+        type: :object,
+        properties: {
+          declaration_type: { enum: %w[started] },
+        },
+      }, description: "The event declaration type"
+
+      parameter name: :params, in: :body, required: false, schema: {
+        type: :object,
+        properties: {
+          declaration_date: { type: :string, format: "date" },
+        },
+      }, description: "The event declaration date"
+
       response 204, "Successful" do
         let(:fresh_user) { create(:user, :early_career_teacher) }
-        let(:params) { { "id" => fresh_user.id } }
+        let(:params) do
+          {
+            "lead_provider" => lead_provider,
+            "participant_id" => fresh_user.id,
+            "declaration_type" => "started",
+            "declaration_date" => "2021-05-31T15:50+00Z",
+          }
+        end
         run_test!
       end
 
-      response 304, "Not Modified" do
-        before do
-          InductParticipant.call({ lead_provider: lead_provider, early_career_teacher_profile: user.early_career_teacher_profile })
+      response 204, "Duplicate successful" do
+        let(:params) do
+          {
+            "participant_id" => user.id,
+            "declaration_type" => "started",
+            "declaration_date" => "2021-05-31T15:50+00Z",
+          }
         end
-        let(:params) { { "id" => user.id } }
+
+        before do
+          RecordParticipantEvent.call(HashWithIndifferentAccess.new({ lead_provider: lead_provider }).merge(params))
+        end
+
+        run_test!
+      end
+
+      response "404", "Missing ID value" do
+        let(:params) do
+          {
+            "participant_id" => nil,
+            "declaration_type" => "",
+            "declaration_date" => "",
+          }
+        end
         run_test!
       end
 
       response "404", "Not Found" do
+        let(:fresh_user) { build(:user, :early_career_teacher) }
+        let(:params) do
+          {
+            "participant_id" => fresh_user.id,
+            "declaration_type" => "",
+            "declaration_date" => "",
+          }
+        end
+        run_test!
+      end
+
+      response "422", "Missing parameter" do
+        let(:user) { build(:user, :early_career_teacher) }
+
+        schema "$ref": "#/components/schemas/error_response"
+
         run_test!
       end
 

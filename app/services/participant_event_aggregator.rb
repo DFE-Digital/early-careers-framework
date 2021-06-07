@@ -5,7 +5,7 @@ require "initialize_with_config"
 class ParticipantEventAggregator
   include InitializeWithConfig
 
-  def call(event_type: :start)
+  def call(event_type: :started)
     recorder.send(config[event_type], lead_provider)
   end
 
@@ -13,8 +13,8 @@ private
 
   def default_config
     {
-      recorder: ParticipationRecord,
-      start: :count_active_for_lead_provider,
+      recorder: ParticipantDeclaration,
+      started: :count_active_for_lead_provider,
     }
   end
 end

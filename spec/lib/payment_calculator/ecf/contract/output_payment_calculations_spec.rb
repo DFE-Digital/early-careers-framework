@@ -13,7 +13,7 @@ describe ::PaymentCalculator::Ecf::Contract::OutputPaymentCalculations do
 
     expect(call_off_contract.output_payment_per_participant.round(0)).to eq(598.00)
 
-    %i[start completion].each do |event_type|
+    %i[started completion].each do |event_type|
       expect(call_off_contract.output_payment_per_participant_for_event(event_type: event_type).round(0)).to eq(120.00)
     end
 
