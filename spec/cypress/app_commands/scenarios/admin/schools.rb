@@ -3,7 +3,9 @@
 school = FactoryBot.create(:school, name: "Include this school", urn: 123_456)
 local_authority = FactoryBot.create(:local_authority)
 SchoolLocalAuthority.create!(school: school, local_authority: local_authority, start_year: 2021)
-FactoryBot.create(:user, :induction_coordinator, full_name: "Sarah Smith", email: "sarah.smith@example.com", schools: [school])
+coordinator = FactoryBot.create(:user, :induction_coordinator, full_name: "Sarah Smith", email: "sarah.smith@example.com")
+coordinator.induction_coordinator_profile.schools.first.destroy!
+coordinator.induction_coordinator_profile.schools = [school]
 
 school_with_cohorts = FactoryBot.create(:school, name: "Cohort School", urn: 900_123)
 cohort_2021 = Cohort.find_or_create_by!(start_year: 2021)
@@ -16,5 +18,5 @@ FactoryBot.create(:school_cohort, cohort: cohort_2022, school: school_with_cohor
 
 Faker::UniqueGenerator.clear
 Faker::Config.random = Random.new(42)
-FactoryBot.create_list(:school, 20)
+FactoryBot.create_list(:school, 10)
 Faker::Config.random = nil
