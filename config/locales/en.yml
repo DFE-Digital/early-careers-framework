@@ -31,7 +31,7 @@
 
 en:
   event_types:
-    start: Start
+    started: Started
     retention_1: Retention 1
     retention_2: Retention 2
     retention_3: Retention 3

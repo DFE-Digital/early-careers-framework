@@ -25,17 +25,17 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
                 "type": "string",
               },
               "declaration_type": {
-                "enum": %w[Start],
+                "enum": %w[started],
               },
               "declaration_date": {
                 "type": "string",
-                "format": "date",
+                "format": "date-time",
               },
             },
             "required": %w[participant_id declaration_type declaration_date],
             "example": {
               "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
-              "declaration_type": "Start",
+              "declaration_type": "started",
               "declaration_date": "2021-05-31",
             },
           },
@@ -51,7 +51,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
       parameter name: :params, in: :body, required: false, schema: {
         type: :object,
         properties: {
-          declaration_type: { enum: %w[Start] },
+          declaration_type: { enum: %w[started] },
         },
       }, description: "The event declaration type"
 
@@ -68,8 +68,8 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
           {
             "lead_provider" => lead_provider,
             "participant_id" => fresh_user.id,
-            "declaration_type" => "Start",
-            "declaration_date" => "2021-05-31",
+            "declaration_type" => "started",
+            "declaration_date" => "2021-05-31T15:50+00Z",
           }
         end
         run_test!
@@ -79,8 +79,8 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
         let(:params) do
           {
             "participant_id" => user.id,
-            "declaration_type" => "Start",
-            "declaration_date" => "2021-05-31",
+            "declaration_type" => "started",
+            "declaration_date" => "2021-05-31T15:50+00Z",
           }
         end
 

@@ -9,10 +9,11 @@ class RecordParticipantEvent
   end
 
   def call
-    (set_config_ect_profile || :not_found) &&
-      (create_record || :unprocessable_entity) &&
-      (invalid_provider || :unprocessable_entity) &&
-      :no_content
+    return :not_found unless set_config_ect_profile
+    return :unprocessable_entity unless create_record
+    return :not_found unless valid_provider
+
+    :no_content
   end
 
 private
@@ -40,8 +41,8 @@ private
     SchoolCohort.find_by(school: early_career_teacher_profile.school, cohort: early_career_teacher_profile.cohort)&.lead_provider
   end
 
-  def invalid_provider
-    actual_lead_provider.nil? || lead_provider != actual_lead_provider
+  def valid_provider
+    actual_lead_provider.nil? || lead_provider == actual_lead_provider
   end
 
   def required_params

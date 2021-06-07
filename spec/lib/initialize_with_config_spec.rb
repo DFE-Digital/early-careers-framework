@@ -31,7 +31,7 @@ describe "InitializeWithConfig" do
       recruitment_target: 2000,
       band_a: BigDecimal(995, 10),
       retained_participants: HashWithIndifferentAccess.new({
-        "Start" => 1900,
+        "Started" => 1900,
         "Retention 1" => 1700,
         "Retention 2" => 1500,
         "Retention 3" => 1000,

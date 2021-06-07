@@ -165,7 +165,7 @@
                   },
                   "declaration_type": {
                     "enum": [
-                      "Start"
+                      "started"
                     ]
                   },
                   "declaration_date": {
@@ -180,7 +180,7 @@
                 ],
                 "example": {
                   "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                  "declaration_type": "Start",
+                  "declaration_type": "started",
                   "declaration_date": "2021-05-31"
                 }
               }

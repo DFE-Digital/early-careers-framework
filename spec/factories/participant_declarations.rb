@@ -5,6 +5,6 @@ FactoryBot.define do
     early_career_teacher_profile
     lead_provider
     declaration_date { Time.zone.now - 1.week }
-    declaration_type { "Start" }
+    declaration_type { "started" }
   end
 end

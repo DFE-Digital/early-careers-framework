@@ -11,27 +11,27 @@ RSpec.describe "Participant Declarations", type: :request do
     let(:params) do
       {
         participant_id: payload.user_id,
-        declaration_type: "Start",
+        declaration_type: "started",
         declaration_date: (Time.zone.now - 1.week).iso8601,
       }
     end
     let(:invalid_user_id) do
       {
         participant_id: payload.id,
-        declaration_type: "Start",
+        declaration_type: "started",
         declaration_date: (Time.zone.now - 1.week).iso8601,
       }
     end
     let(:missing_user_id) do
       {
         participant_id: nil,
-        declaration_type: "Start",
+        declaration_type: "started",
         declaration_date: (Time.zone.now - 1.week).iso8601,
       }
     end
     let(:missing_required_parameter) do
       {
-        declaration_type: "Start",
+        declaration_type: "started",
         declaration_date: (Time.zone.now - 1.week).iso8601,
       }
     end
