@@ -37,7 +37,7 @@ private
 
     if opt_out
       school.school_cohorts.find_or_create_by!(cohort: cohort) do |school_cohort|
-        school_cohort.induction_programme_choice = :not_yet_known
+        school_cohort.induction_programme_choice = :no_early_career_teachers
         school_cohort.opt_out_of_updates = true
       end
       redirect_to choice_saved_path(token: @how_to_continue_form.token)
