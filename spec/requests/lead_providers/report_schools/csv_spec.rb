@@ -81,5 +81,15 @@ RSpec.describe "Lead Provider school reporting: uploading csv", type: :request d
       get "/lead-providers/report-schools/csv/errors"
       expect(response).to render_template :errors
     end
+
+    it "adds the correct values to the data layer" do
+      expect_any_instance_of(AnalyticsDataLayer).to receive(:add).with(
+        csv_rows_with_errors: 4,
+        csv_valid_rows: 0,
+        csv_errors: { "urn_is_not_valid" => 4 },
+      )
+
+      get "/lead-providers/report-schools/csv/errors"
+    end
   end
 end

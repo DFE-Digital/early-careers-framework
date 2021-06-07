@@ -1,5 +1,10 @@
 <% content_for :title, "CSV results" %>
 <% content_for :before_content, govuk_back_link(text: "Back", href: lead_providers_report_schools_csv_path) %>
+<% data_layer.add(
+     csv_rows_with_errors: @errors.count,
+     csv_valid_rows: @valid_schools.count,
+     csv_errors: @errors.map {|error| error[:message].parameterize.underscore}.tally,
+   ) %>
 <h1 class="govuk-heading-xl">Your CSV has errors</h1>
 
 <p class="govuk-body">We have found <%= @urns.count %> rows in your CSV:</p>
