@@ -61,15 +61,15 @@ RSpec.describe SchoolCohort, type: :model do
 
     context "when design our own programme is selected" do
       subject(:school_cohort) { create(:school_cohort, induction_programme_choice: "design_our_own") }
-      it "returns an empty string" do
-        expect(school_cohort.status).to eq ""
+      it "returns nil" do
+        expect(school_cohort.status).to be_nil
       end
     end
 
     context "when no early career teachers is selected" do
       subject(:school_cohort) { create(:school_cohort, induction_programme_choice: "no_early_career_teachers") }
-      it "returns an empty string" do
-        expect(school_cohort.status).to eq ""
+      it "returns nil" do
+        expect(school_cohort.status).to be_nil
       end
     end
   end

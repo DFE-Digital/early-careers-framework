@@ -79,6 +79,8 @@ Rails.application.routes.draw do
 
     resource :nominate_induction_coordinator, controller: :nominate_induction_coordinator, only: %i[new create], path: "/" do
       collection do
+        # start method is redirected to Nominations::ChooseHowToContinueController#new
+        # because URL was given in email to schools, so entry point here is now start_nomination
         get "start", to: redirect(path: "/nominations/choose-how-to-continue")
         get "start-nomination", action: :start_nomination
         get "email-used", action: :email_used

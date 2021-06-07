@@ -48,8 +48,6 @@ class SchoolCohort < ApplicationRecord
       fip_status
     elsif not_yet_known?
       "To do"
-    else
-      ""
     end
   end
 

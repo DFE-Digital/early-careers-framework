@@ -25,7 +25,7 @@
           <%= t(school_cohort.induction_programme_choice, scope: %i[manage_your_training induction_programmes]) %>
         </td>
         <td class="govuk-table__cell">
-          <%= render AutoTagComponent.new(text: school_cohort.status) %>
+          <%= render AutoTagComponent.new(text: school_cohort.status) unless school_cohort.status.blank? %>
         </td>
       </tr>
     <% end %>
