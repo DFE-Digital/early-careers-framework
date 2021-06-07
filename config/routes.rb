@@ -182,6 +182,7 @@ Rails.application.routes.draw do
       post :save_programme, path: "save-programme"
       get :success
     end
+
     resources :cohorts, only: :show do
       resources :partnerships, only: :index
       resource :programme, only: %i[edit], controller: "choose_programme"
@@ -190,6 +191,15 @@ Rails.application.routes.draw do
         get :edit_details, path: "edit-details"
         get :edit_mentor, path: "edit-mentor"
         put :update_mentor, path: "update-mentor"
+
+        collection do
+          get :add, to: "add_participants/base#start"
+
+          namespace :add_participants, path: "add" do
+            resource :type, only: %i[show update]
+            resource :details, only: %i[show update]
+          end
+        end
       end
 
       namespace :core_programme, path: "core-programme" do

@@ -8,6 +8,8 @@
 <span class="govuk-caption-l"><%= @cohort.display_name %> cohort</span>
 <h1 class="govuk-heading-l">Your early career teachers (ECTs) and mentors</h1>
 
+<%= govuk_link_to "Add participants", add_schools_cohort_participants_path, button: true %>
+
 <% if @participants.present? %>
   <table class="govuk-table">
     <thead class="govuk-table__head">
