@@ -11,8 +11,6 @@ class Schools::CohortsController < Schools::BaseController
       render "programme_choice_design_our_own"
     elsif @school_cohort.no_early_career_teachers?
       render "programme_choice_no_early_career_teachers"
-    else
-      render
     end
   end
 

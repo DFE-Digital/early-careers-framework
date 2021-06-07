@@ -5,8 +5,6 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
 
   before_action :check_token_status, only: :start_nomination
 
-  # start method is redirected in the routes to Nominations::ChooseHowToContinueController#new
-  # because URL was given in email to schools, so entry point is now start_nomination
   def start_nomination
     token = params[:token]
     load_nominate_induction_tutor_form

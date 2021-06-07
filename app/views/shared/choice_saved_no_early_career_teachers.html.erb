@@ -4,10 +4,10 @@
   <div class="govuk-grid-column-two-thirds">
     <%= govuk_panel(
       title: "Your choice has been saved for #{@cohort.academic_year}",
-          body: nil,
-          classes: "govuk-!-margin-bottom-8",
-          html_attributes: { "data-test": "success-panel" }
-        ) %>
+      body: nil,
+      classes: "govuk-!-margin-bottom-8",
+      html_attributes: { "data-test": "success-panel" }
+    ) %>
 
     <h2 class="govuk-heading-m">What happens next</h2>
     <p class="govuk-body">We will contact <%= @school.name %> in the next academic year.</p>
