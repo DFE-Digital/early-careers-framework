@@ -26,7 +26,6 @@ Feature: Admin user managing schools
     And the page should be accessible
     And percy should be sent snapshot
 
-  @focus
   Scenario: Viewing a list of schools
     Then the table should have 12 rows
     And the page should be accessible
