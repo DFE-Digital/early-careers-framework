@@ -18,6 +18,7 @@ class FeatureFlag
   # Short-lived feature flags
   TEMPORARY_FEATURE_FLAGS = %i[
     add_participants
+    add_participants
   ].freeze
 
   FEATURES = (PERMANENT_SETTINGS + TEMPORARY_FEATURE_FLAGS).index_with { |name|
