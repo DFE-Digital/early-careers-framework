@@ -1,9 +1,6 @@
 Feature: Induction tutors choosing programmes
   Background:
-    Given cohort was created with start_year "2021"
-    And school was created with name "Really awesome school"
-    And school_cohort was created with created cohort, created school and induction_programme_choice "core_induction_programme"
-    And core_induction_programme was created with name "Awesome induction course"
+    Given scenario "cip_cohort_with_school" has been run
     And I am logged in as an induction coordinator for created school
     And I navigate to "2021 school cohorts" page
 
