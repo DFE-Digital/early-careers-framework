@@ -36,6 +36,7 @@ def generate_provider_token(lead_provider, cohort, logger)
         delivery_partner: DeliveryPartner.find_or_create_by!(name: Faker::Company.name),
       )
 
+      SchoolCohort.create!(school: school, cohort: cohort, induction_programme_choice: 'full_induction_programme')
       EarlyCareerTeacherProfile.create!(user: user, school: school, cohort: cohort)
       uuids << user.id
     end
