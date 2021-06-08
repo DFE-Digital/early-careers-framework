@@ -25,6 +25,6 @@ FactoryBot.create(
   cohort: cohort,
   delivery_partner: delivery_partner,
   lead_provider: lead_provider,
-  created_at: 2.days.ago,
-  challenge_deadline: 6.days.from_now,
+  created_at: Date.new(2021, 6, 7),
+  challenge_deadline: Date.new(2025, 6, 7),
 )
