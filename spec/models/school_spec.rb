@@ -428,4 +428,16 @@ RSpec.describe School, type: :model do
       expect(School.without_induction_coordinator).not_to include school_with_coordinator
     end
   end
+
+  describe "scope :not_opted_out" do
+    let!(:cohort) { create(:cohort, :current) }
+    let!(:opted_out_school) { create(:school_cohort, opt_out_of_updates: true, induction_programme_choice: "design_our_own", cohort: cohort).school }
+    let!(:school_without_cohort) { create(:school) }
+    let!(:cip_school) { create(:school_cohort, induction_programme_choice: "core_induction_programme", cohort: cohort).school }
+
+    it "returns only schools who have not opted out" do
+      expect(School.not_opted_out).to include(school_without_cohort, cip_school)
+      expect(School.not_opted_out).not_to include opted_out_school
+    end
+  end
 end
