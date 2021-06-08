@@ -75,7 +75,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
         run_test!
       end
 
-      response 204, "Duplicate successful" do
+      response 204, "Successful" do
         let(:params) do
           {
             "participant_id" => user.id,

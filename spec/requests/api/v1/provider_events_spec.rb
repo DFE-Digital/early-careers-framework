@@ -61,7 +61,7 @@ RSpec.describe "Participant Declarations", type: :request do
       it "returns 422 when a required parameter is missing" do
         post "/api/v1/participant-declarations", params: missing_required_parameter
         expect(response.status).to eq 422
-        expect(response.body).to eq({ missing_parameter: %w[participant_id] }.to_json)
+        expect(response.body).to eq({ missing_parameters: %w[participant_id] }.to_json)
       end
     end
 
