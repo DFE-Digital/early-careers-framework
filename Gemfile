@@ -154,4 +154,5 @@ group :test do
   gem "simplecov"
   gem "webdrivers", "~> 4.4", ">= 4.4.1"
   gem "webmock"
+  gem "with_model"
 end
