@@ -170,7 +170,7 @@
                   },
                   "declaration_date": {
                     "type": "string",
-                    "format": "date"
+                    "format": "date-time"
                   }
                 },
                 "required": [
@@ -192,7 +192,7 @@
         ],
         "responses": {
           "204": {
-            "description": "Duplicate successful"
+            "description": "Successful"
           },
           "404": {
             "description": "Not Found"
