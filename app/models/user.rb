@@ -13,7 +13,7 @@ class User < ApplicationRecord
   has_one :mentor_profile, dependent: :destroy
 
   validates :full_name, presence: true
-  validates :email, presence: true, uniqueness: true, format: { with: Devise.email_regexp }
+  validates :email, presence: true, uniqueness: true, notify_email: true
 
   def admin?
     admin_profile.present?
