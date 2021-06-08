@@ -1,5 +1,9 @@
 <% content_for :title, "Upload partnership csv" %>
-<% content_for :before_content, govuk_back_link( text: "Back", href: lead_providers_report_schools_delivery_partner_path ) %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: lead_providers_report_schools_delivery_partner_path) %>
+
+<% data_layer.add(
+  csv_file_errors: @partnership_csv_upload.errors.map { |error| error.type.parameterize.underscore }
+) if @partnership_csv_upload.errors.any? %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -21,11 +25,11 @@
           </h2>
           <div class="govuk-error-summary__body">
             <ul class="govuk-list govuk-error-summary__list">
-            <% @partnership_csv_upload.errors[:base].each do |error| %>
-              <li>
-                <a href="#csv-error"><%= error %></a>
-              </li>
-            <% end %>
+              <% @partnership_csv_upload.errors[:base].each do |error| %>
+                <li>
+                  <a href="#csv-error"><%= error %></a>
+                </li>
+              <% end %>
             </ul>
           </div>
         </div>
