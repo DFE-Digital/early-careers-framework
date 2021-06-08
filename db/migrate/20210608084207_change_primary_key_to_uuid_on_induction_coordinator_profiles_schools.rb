@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ChangePrimaryKeyToUuidOnInductionCoordinatorProfilesSchools < ActiveRecord::Migration[6.1]
   def up
     add_column :induction_coordinator_profiles_schools, :uuid_id, :uuid, default: "gen_random_uuid()", null: false
