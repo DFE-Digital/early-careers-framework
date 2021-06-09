@@ -12,6 +12,9 @@ module Schools
 
     def start
       session.delete(FORM_SESSION_KEY)
+      session[FORM_SESSION_KEY] = {
+        school_cohort_id: @school_cohort.id
+      }
       redirect_to action: :show, step: :type
     end
 
@@ -60,7 +63,7 @@ module Schools
     end
 
     def add_participant_form_params
-      params.require(FORM_PARAM_KEY).permit(:type, :full_name, :email)
+      params.require(FORM_PARAM_KEY).permit(:type, :full_name, :email, :mentor_id)
     end
 
     helper_method :back_link_path

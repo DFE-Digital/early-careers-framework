@@ -6,7 +6,7 @@ module Schools
     include ActiveModel::Attributes
     include ActiveModel::Serialization
 
-    STEPS = %i[type details confirm not_implemented].freeze
+    STEPS = %i[type details choose_mentor confirm not_implemented].freeze
 
     TYPE_OPTIONS = {
       ect: "Early Career Teacher",
@@ -17,11 +17,13 @@ module Schools
     attribute :type
     attribute :full_name
     attribute :email
+    attribute :school_cohort_id
+    attribute :mentor_id
 
     validates :type,
               on: :type,
               presence: { message: "Please select type of the new participant" },
-              inclusion: { in: TYPE_OPTIONS.keys.map(&:to_s), allow_blank: true }
+              inclusion: { in: TYPE_OPTIONS.keys, allow_blank: true }
 
     validates :full_name,
               on: :details,
@@ -32,8 +34,17 @@ module Schools
               presence: true,
               format: { with: Devise.email_regexp, allow_blank: true }
 
+    validates :mentor_id,
+              on: :choose_mentor,
+              presence: true,
+              inclusion: { in: ->(form) { form.mentor_options.map(&:id) + %w[later] } }
+
     def type_options
       TYPE_OPTIONS
+    end
+
+    def mentor_options
+      @mentor_options ||= school_cohort.school.mentors
     end
 
     def previous_step(current_step)
@@ -45,7 +56,16 @@ module Schools
     end
 
     def next_step(step)
-      STEPS[STEPS.index(step) + 1]
+      case step
+      when :type then :details
+      when :details
+        if type == :ect && mentor_options.any?
+          :choose_mentor
+        else
+          :confirm
+        end
+      else :not_implemented
+      end
     end
 
     def record_completed_step(step)
@@ -54,6 +74,14 @@ module Schools
 
     def completed_steps=(value)
       super(value.map(&:to_sym))
+    end
+
+    def type=(value)
+      super(value&.to_sym)
+    end
+
+    def school_cohort
+      @school_cohort ||= SchoolCohort.find(school_cohort_id)
     end
   end
 end
