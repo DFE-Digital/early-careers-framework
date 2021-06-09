@@ -7,8 +7,6 @@ module Schools
       FORM_PARAM_KEY = :schools_add_participant_form
 
       skip_after_action :verify_authorized
-      skip_after_action :verify_policy_scoped
-
       before_action :set_school_cohort
 
       helper_method :add_participant_form
