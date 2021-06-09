@@ -25,6 +25,10 @@ class InheritedStructure < CorrectStructure
   end
 end
 
+class MissingParameter < CorrectStructure
+  required_config :version, :event
+end
+
 describe "InitializeWithConfig" do
   let(:input) do
     {
@@ -46,6 +50,10 @@ describe "InitializeWithConfig" do
 
   it "creates an exception if the #call method is not defined for the class" do
     expect { MissingCallMethod.call(input) }.to raise_error(RuntimeError, "override abstract call method")
+  end
+
+  it "creates an exception if a required configuration parameter is not specified" do
+    expect { MissingParameter.call(input) }.to raise_error(::InitializeWithConfig::MissingRequiredArguments, "missing required dependency injected items [:version, :event] in class MissingParameter")
   end
 
   it "creates an internal hash called 'config'" do
