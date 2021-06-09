@@ -48,6 +48,9 @@ Rails.application.routes.draw do
       resources :participant_declarations, only: %i[create], path: "participant-declarations"
       resources :users, only: :index
       resources :dqt_records, only: :show, path: "dqt-records"
+      namespace :data_studio, path: "data-studio" do
+        get "/school-rollout", to: "school_rollout#index"
+      end
     end
   end
 
