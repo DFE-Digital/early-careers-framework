@@ -42,11 +42,8 @@ module Schools
       completed_steps[completed_steps.index(current_step) - 1]
     end
 
-    def next_step(step = completed_steps.last)
-      case step
-      when :type then :details
-      else :not_implemented
-      end
+    def next_step(step)
+      STEPS[STEPS.index(step) + 1]
     end
 
     def record_completed_step(step)
