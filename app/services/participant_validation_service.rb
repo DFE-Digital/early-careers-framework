@@ -4,9 +4,10 @@ class ParticipantValidationService
   def validate(trn:, nino:, full_name:, dob:)
     dqt_record = dqt_client.api.dqt_record.show(params: { teacher_reference_number: trn, national_insurance_number: nino })
     return false if dqt_record.nil?
-    return false unless identity_matches?(trn, nino, full_name, dob, dqt_record)
 
-    eligible?(dqt_record)
+    identity_matches?(trn, nino, full_name, dob, dqt_record)
+
+    # eligible?(dqt_record)
   end
 
 private

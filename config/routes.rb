@@ -53,6 +53,7 @@ Rails.application.routes.draw do
 
   namespace :demo do
     resources :school_search, only: %i[index]
+    resources :participant_validation, only: %i[new create], path: "participant-validation", constraints: ->(_request) { FeatureFlag.active?(:participant_validation_demo) }
   end
 
   scope :nominations, module: :nominations do
