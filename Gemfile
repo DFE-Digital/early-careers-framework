@@ -14,9 +14,9 @@ gem "paper_trail"
 gem "pundit"
 
 # Error and performance monitoring
-gem "sentry-delayed_job"
-gem "sentry-rails"
-gem "sentry-ruby"
+gem "sentry-delayed_job", ">= 4.5.1"
+gem "sentry-rails", ">= 4.5.1"
+gem "sentry-ruby", ">= 4.5.1"
 
 # Pagination
 gem "kaminari", ">= 1.2.0"
