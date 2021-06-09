@@ -84,6 +84,9 @@ gem "aasm"
 # Pagination for API
 gem "pagy", "~> 3.13"
 
+# Json Schema for api validation
+gem "json-schema"
+
 gem "jsonapi-serializer"
 
 # OpenApi Swagger
