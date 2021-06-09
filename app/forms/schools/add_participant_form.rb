@@ -37,9 +37,11 @@ module Schools
     end
 
     def previous_step(current_step)
-      return completed_steps.last unless current_step.in?(completed_steps)
+      step_index = completed_steps.index(current_step)
+      return completed_steps.last if step_index.nil?
+      return if step_index.zero?
 
-      completed_steps[completed_steps.index(current_step) - 1]
+      completed_steps[step_index - 1]
     end
 
     def next_step(step)
