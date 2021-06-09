@@ -14,6 +14,12 @@ module Api
           head :not_found
         end
       end
+
+    private
+
+      def access_scope
+        ApiToken.where(private_api_access: true)
+      end
     end
   end
 end

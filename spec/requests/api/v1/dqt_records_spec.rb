@@ -64,5 +64,15 @@ RSpec.describe "DQT records api endpoint", type: :request do
         expect(response.status).to eq 401
       end
     end
+
+    context "using token from different scope" do
+      let(:other_token) { EngageAndLearnApiToken.create_with_random_token! }
+
+      it "returns 401 for invalid bearer token" do
+        default_headers[:Authorization] = "Bearer #{other_token}"
+        get "/api/v1/dqt-records/#{trn}"
+        expect(response.status).to eq 401
+      end
+    end
   end
 end
