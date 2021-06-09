@@ -39,6 +39,10 @@ class User < ApplicationRecord
     mentor_profile.present?
   end
 
+  def participant?
+    early_career_teacher? || mentor?
+  end
+
   def core_induction_programme
     return early_career_teacher_profile.core_induction_programme if early_career_teacher?
     return mentor_profile.core_induction_programme if mentor?
@@ -68,12 +72,14 @@ class User < ApplicationRecord
   def school
     return early_career_teacher_profile.school if early_career_teacher?
     return mentor_profile.school if mentor?
+    return induction_coordinator_profile.schools.first if induction_coordinator?
   end
 
   scope :induction_coordinators, -> { joins(:induction_coordinator_profile) }
   scope :for_lead_provider, -> { includes(:lead_provider).joins(:lead_provider) }
   scope :admins, -> { joins(:admin_profile) }
   scope :early_career_teachers, -> { joins(:early_career_teacher_profile).includes(:early_career_teacher_profile) }
+  scope :mentors, -> { joins(:mentor_profile).includes(:mentor_profile) }
 
   scope :changed_since, lambda { |timestamp|
     if timestamp.present?

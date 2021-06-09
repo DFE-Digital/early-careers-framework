@@ -6,14 +6,13 @@ module Admin
 
     before_action :load_participant, only: :show
 
-    def show
-      authorize @participant
-    end
+    def show; end
 
   private
 
     def load_participant
       @participant = User.is_participant.find(params[:id])
+      authorize @participant, policy_class: ParticipantPolicy
     end
   end
 end
