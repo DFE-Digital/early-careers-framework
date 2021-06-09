@@ -2,6 +2,7 @@
 
 module Demo
   class ParticipantValidationController < ApplicationController
+    http_basic_authenticate_with name: Rails.application.config.demo_password, password: Rails.application.config.demo_password
     def new
       @form = DemoParticipantValidationForm.new
     end
