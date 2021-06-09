@@ -7,7 +7,6 @@ module Api
       include Pagy::Backend
 
       before_action :ensure_lead_provider
-      skip_before_action :set_jsonapi_content_type_header
 
       def index
         participant_hash = ParticipantSerializer.new(paginate(participants)).serializable_hash
