@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_03_094324) do
+ActiveRecord::Schema.define(version: 2021_06_08_084207) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -184,7 +184,7 @@ ActiveRecord::Schema.define(version: 2021_06_03_094324) do
     t.index ["user_id"], name: "index_induction_coordinator_profiles_on_user_id"
   end
 
-  create_table "induction_coordinator_profiles_schools", force: :cascade do |t|
+  create_table "induction_coordinator_profiles_schools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "induction_coordinator_profile_id", null: false
     t.uuid "school_id", null: false
     t.datetime "created_at", precision: 6, null: false
