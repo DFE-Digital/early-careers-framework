@@ -75,7 +75,7 @@ RSpec.describe "Lead Provider school reporting: uploading csv", type: :request d
 
   describe "GET /lead-providers/report-schools/csv/errors" do
     before do
-      upload = create(:partnership_csv_upload, :with_csv)
+      upload = create(:partnership_csv_upload, :with_csv, cohort: cohort, lead_provider: user.lead_provider, delivery_partner: delivery_partner)
       set_session(:partnership_csv_upload_id, upload.id)
     end
 
