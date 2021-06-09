@@ -16,6 +16,7 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 #
+require "with_model"
 
 RSpec.configure do |config|
   # Configure rutabaga/turnip to find features outside of /features/ folders in
@@ -102,4 +103,5 @@ RSpec.configure do |config|
   #   # test failures related to randomization by passing the same `--seed` value
   #   # as the one that triggered the failure.
   #   Kernel.srand config.seed
+  config.extend WithModel
 end

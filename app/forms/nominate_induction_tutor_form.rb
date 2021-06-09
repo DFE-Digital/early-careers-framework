@@ -6,7 +6,7 @@ class NominateInductionTutorForm
   attr_accessor :full_name, :email, :token, :school_id, :user_id
 
   validates :full_name, presence: true
-  validates :email, presence: true, format: { with: Devise.email_regexp }
+  validates :email, presence: true, notify_email: true
   validate :email_is_not_in_use
 
   def school

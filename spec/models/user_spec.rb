@@ -27,7 +27,7 @@ RSpec.describe User, type: :model do
     }
 
     it "rejects an invalid email" do
-      user = FactoryBot.build(:user, email: "invalid")
+      user = FactoryBot.build(:user, email: "invalid@email,com")
 
       expect(user.valid?).to be_falsey
       expect(user.errors.messages[:email]).to match_array ["Enter an email address in the correct format, like name@example.com"]

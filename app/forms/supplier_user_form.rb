@@ -9,7 +9,7 @@ class SupplierUserForm
   validates :full_name, presence: { message: "Enter a name" }, on: :details
   validates :email,
             presence: { message: "Enter email" },
-            format: { with: Devise.email_regexp, message: "Enter an email address in the correct format, like name@example.com" },
+            notify_email: true,
             on: :details
   validate :email_not_taken, on: :details
 
