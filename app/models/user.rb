@@ -60,6 +60,16 @@ class User < ApplicationRecord
     end
   end
 
+  def cohort
+    return early_career_teacher_profile.cohort if early_career_teacher?
+    return mentor_profile.cohort if mentor?
+  end
+
+  def school
+    return early_career_teacher_profile.school if early_career_teacher?
+    return mentor_profile.school if mentor?
+  end
+
   scope :induction_coordinators, -> { joins(:induction_coordinator_profile) }
   scope :for_lead_provider, -> { includes(:lead_provider).joins(:lead_provider) }
   scope :admins, -> { joins(:admin_profile) }
@@ -71,5 +81,17 @@ class User < ApplicationRecord
     else
       where("updated_at is not null")
     end.order(:updated_at, :id)
+  }
+
+  scope :includes_school, lambda {
+    includes(early_career_teacher_profile: %i[cohort school], mentor_profile: %i[cohort school])
+  }
+
+  scope :is_participant, lambda {
+    includes_school.where.not(early_career_teacher_profile: { id: nil }).or(User.where.not(mentor_profile: { id: nil }))
+  }
+
+  scope :in_school, lambda { |school_id|
+    includes_school.where(early_career_teacher_profile: { school_id: school_id }).or(User.where(mentor_profile: { school_id: school_id }))
   }
 end

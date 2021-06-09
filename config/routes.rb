@@ -110,7 +110,10 @@ Rails.application.routes.draw do
       get "/replace-or-update-induction-tutor", to: "schools/replace_or_update_induction_tutor#show"
       post "/replace-or-update-induction-tutor", to: "schools/replace_or_update_induction_tutor#choose"
       resources :cohorts, controller: "schools/cohorts", only: :index
+      resources :participants, controller: "schools/participants", only: :index
     end
+
+    resources :participants, only: :show
 
     scope :suppliers, module: "suppliers" do
       resources :suppliers, only: :index, path: "/"
