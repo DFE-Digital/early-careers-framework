@@ -19,7 +19,7 @@ coordinator.induction_coordinator_profile.schools = [school]
 mentor = FactoryBot.create(:user, :mentor, full_name: "Abdul Mentor")
 mentor.mentor_profile.update!(school: school)
 
-FactoryBot.create(:user, :mentor, full_name: "Unrelated user")
+FactoryBot.create(:user, :mentor, full_name: "Unrelated user", email: "unrelated@example.com")
 
 ect_1 = FactoryBot.create(:user, :early_career_teacher, full_name: "Joe Bloggs")
 ect_1.early_career_teacher_profile.update!(school: school, mentor_profile: mentor.mentor_profile)

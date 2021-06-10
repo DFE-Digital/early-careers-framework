@@ -32,6 +32,8 @@ module Schools
               presence: true,
               format: { with: Devise.email_regexp, allow_blank: true }
 
+    validate :email_not_taken, on: :details
+
     def type_options
       TYPE_OPTIONS
     end
@@ -54,6 +56,16 @@ module Schools
 
     def completed_steps=(value)
       super(value.map(&:to_sym))
+    end
+
+    def email_already_taken?
+      User.exists?(email: email)
+    end
+
+  private
+
+    def email_not_taken
+      errors.add(:email, :taken) if email_already_taken?
     end
   end
 end

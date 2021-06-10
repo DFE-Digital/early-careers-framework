@@ -24,6 +24,9 @@ module Schools
         add_participant_form.record_completed_step current_step
         store_form_in_session
         redirect_to action: :show, step: step_param(add_participant_form.next_step(current_step))
+      elsif add_participant_form.email_already_taken?
+        @is_same_school = User.find_by(email: add_participant_form.email).school == current_user.school
+        render "email_taken"
       else
         render current_step
       end
