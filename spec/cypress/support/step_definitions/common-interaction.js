@@ -12,6 +12,7 @@ const inputs = {
   "replace induction tutor": "input[value=replace].govuk-radios__input",
   "update induction tutor": "input[value=update].govuk-radios__input",
   "new participant type radio": '[name="schools_add_participant_form[type]"]',
+  "new participant mentor radio": '[name="schools_add_participant_form[mentor_id]"]',
 };
 
 const buttons = {

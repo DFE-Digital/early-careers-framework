@@ -47,6 +47,12 @@ module Schools
       @mentor_options ||= school_cohort.school.mentors
     end
 
+    def mentor
+      return @mentor if defined? @mentor
+
+      @mentor = (User.find(mentor_id) if mentor_id.present? && mentor_id != "later")
+    end
+
     def previous_step(current_step)
       step_index = completed_steps.index(current_step)
       return completed_steps.last if step_index.nil?
@@ -64,6 +70,7 @@ module Schools
         else
           :confirm
         end
+      when :choose_mentor then :confirm
       else :not_implemented
       end
     end

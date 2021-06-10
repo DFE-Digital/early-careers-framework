@@ -13,7 +13,7 @@ module Schools
     def start
       session.delete(FORM_SESSION_KEY)
       session[FORM_SESSION_KEY] = {
-        school_cohort_id: @school_cohort.id
+        school_cohort_id: @school_cohort.id,
       }
       redirect_to action: :show, step: :type
     end
