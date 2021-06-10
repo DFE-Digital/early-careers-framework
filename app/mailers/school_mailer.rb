@@ -38,7 +38,8 @@ class SchoolMailer < ApplicationMailer
 
   def school_partnership_notification_email(
     recipient:,
-    provider_name:,
+    lead_provider_name:,
+    delivery_partner_name:,
     cohort:,
     school_name:,
     nominate_url:,
@@ -51,7 +52,9 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        provider_name: provider_name,
+        provider_name: lead_provider_name, # TODO: remove once template updated
+        lead_provider_name: lead_provider_name,
+        delivery_partner_name: delivery_partner_name,
         cohort: cohort,
         school_name: school_name,
         nominate_url: nominate_url,
@@ -64,7 +67,8 @@ class SchoolMailer < ApplicationMailer
 
   def coordinator_partnership_notification_email(
     recipient:,
-    provider_name:,
+    lead_provider_name:,
+    delivery_partner_name:,
     cohort:,
     school_name:,
     start_url:,
@@ -77,7 +81,9 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        provider_name: provider_name,
+        provider_name: lead_provider_name, # TODO: remove once template updated
+        lead_provider_name: lead_provider_name,
+        delivery_partner_name: delivery_partner_name,
         cohort: cohort,
         school_name: school_name,
         start_url: start_url,

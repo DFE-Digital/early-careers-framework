@@ -53,7 +53,8 @@ RSpec.describe SchoolMailer, type: :mailer do
     let(:partnership_notification_email) do
       SchoolMailer.coordinator_partnership_notification_email(
         recipient: recipient,
-        provider_name: provider_name,
+        lead_provider_name: provider_name,
+        delivery_partner_name: provider_name,
         cohort: cohort,
         school_name: school_name,
         start_url: start_url,
@@ -80,7 +81,8 @@ RSpec.describe SchoolMailer, type: :mailer do
     let(:partnership_notification_email) do
       SchoolMailer.school_partnership_notification_email(
         recipient: recipient,
-        provider_name: provider_name,
+        lead_provider_name: provider_name,
+        delivery_partner_name: provider_name,
         cohort: cohort,
         school_name: school_name,
         nominate_url: nominate_url,
