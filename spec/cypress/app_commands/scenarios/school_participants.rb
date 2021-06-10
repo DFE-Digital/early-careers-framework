@@ -16,7 +16,7 @@ FactoryBot.create(
 coordinator = FactoryBot.create(:user, :induction_coordinator, email: "school-leader@example.com", full_name: "Ms School Leader")
 coordinator.induction_coordinator_profile.schools = [school]
 
-mentor = FactoryBot.create(:user, :mentor, full_name: "Abdul Mentor")
+mentor = FactoryBot.create(:user, :mentor, full_name: "Abdul Mentor", id: "51223b41-a562-4d94-b50c-0ce59a8bb34d")
 mentor.mentor_profile.update!(school: school)
 
 FactoryBot.create(:user, :mentor, full_name: "Unrelated user", email: "unrelated@example.com")

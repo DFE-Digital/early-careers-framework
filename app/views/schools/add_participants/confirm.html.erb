@@ -23,6 +23,7 @@
           <% end %>
         </dd>
       </div>
+
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
           Type
@@ -37,25 +38,28 @@
         </dd>
       </div>
 
-      <%# <% if @add_participant_form.type == "ect" %1> %>
-      <%#   <div class="govuk-summary-list__row"> %>
-      <%#     <dt class="govuk-summary-list__key"> %>
-      <%#       Mentor %>
-      <%#     </dt> %>
-      <%#     <dd class="govuk-summary-list__value"> %>
-      <%#       <% if @mentor %1> %>
-      <%#         <%= @mentor.full_name %1> %>
-      <%#       <% else %1> %>
-      <%#         Not yet assigned %>
-      <%#       <% end %1> %>
-      <%#     </dd> %>
-      <%#     <dd class="govuk-summary-list__actions"> %>
-      <%#       <%= govuk_link_to({ action: :show, step: "mentor" }) do %1> %>
-      <%#         Change <span class="govuk-visually-hidden">mentor</span> %>
-      <%#       <% end %1> %>
-      <%#     </dd> %>
-      <%#   </div> %>
-      <%# <% end %1> %>
+      <% if add_participant_form.type == :ect %>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Mentor
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <div>
+              <% if add_participant_form.mentor %>
+                <%= add_participant_form.mentor.full_name %>
+              <% else %>
+                <i>To be assigned later</i>
+              <% end %>
+            </div>
+          </dd>
+          <dd class="govuk-summary-list__actions">
+            <%= govuk_link_to({ action: :show, step: "details" }) do %>
+              Change <span class="govuk-visually-hidden">personal details</span>
+            <% end %>
+          </dd>
+        </div>
+      <% end %>
+
     </dl>
 
     <%= form_for add_participant_form, url: { action: :update }, method: :post do |f| %>
