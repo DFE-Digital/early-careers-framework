@@ -15,28 +15,35 @@ module Api
       private
 
         def rollout_data
+          schools = School.arel_table
+          nomination_emails = NominationEmail.arel_table
+          induction_coordinator_profiles = InductionCoordinatorProfile.arel_table
+          school_cohorts = SchoolCohort.arel_table
+          partnerships = Partnership.arel_table
+          users = User.arel_table
+
           School
             .eligible
-            .joins(:nomination_emails)
+            .left_joins(:nomination_emails)
             .left_joins(:induction_coordinator_profiles_schools)
             .left_joins(:induction_coordinator_profiles)
             .left_joins(induction_coordinator_profiles: :user)
             .left_joins(:school_cohorts)
             .left_joins(:partnerships)
-            .select("schools.id",
-                    "schools.name",
-                    "schools.urn",
-                    "nomination_emails.sent_at AS sent_at",
-                    "nomination_emails.opened_at AS opened_at",
-                    "nomination_emails.notify_status AS notify_status",
-                    "(induction_coordinator_profiles.id IS NOT NULL) AS induction_tutor_nominated",
-                    "induction_coordinator_profiles.created_at AS tutor_nominated_time",
-                    "(users.current_sign_in_at IS NOT NULL) AS induction_tutor_signed_in",
-                    "school_cohorts.induction_programme_choice",
-                    "school_cohorts.created_at AS programme_chosen_time",
-                    "(partnerships.id IS NOT NULL) AS in_partnership",
-                    "partnerships.created_at AS partnership_time")
-            .order("schools.urn ASC")
+            .select(
+              schools[:id],
+              schools[:name],
+              schools[:urn],
+              nomination_emails[:sent_at],
+              nomination_emails[:opened_at],
+              nomination_emails[:notify_status],
+              induction_coordinator_profiles[:created_at].as("tutor_nominated_time"),
+              users[:current_sign_in_at].as("induction_tutor_signed_in"),
+              school_cohorts[:induction_programme_choice],
+              school_cohorts[:created_at].as("programme_chosen_time"),
+              partnerships[:created_at].as("partnership_time")
+            )
+            .order(schools[:urn].asc)
         end
 
         def paginate(scope)
@@ -59,6 +66,10 @@ module Api
 
         def page
           params.fetch(:page, 1).to_i
+        end
+
+        def access_scope
+          ApiToken.where(private_api_access: true)
         end
       end
     end
