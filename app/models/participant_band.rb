@@ -14,6 +14,10 @@ class ParticipantBand < ApplicationRecord
     end
   end
 
+  def deduction_for_setup?
+    lower_boundary.zero?
+  end
+
 private
 
   def smaller_than_lower_boundary(total_number_of_participants)

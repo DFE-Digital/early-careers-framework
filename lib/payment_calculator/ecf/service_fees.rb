@@ -1,18 +1,19 @@
 # frozen_string_literal: true
 
-require "payment_calculator/ecf/contract/service_fee_calculations"
+require "initialize_with_config"
+require "payment_calculator/ecf/service_fees_for_band"
 
 module PaymentCalculator
   module Ecf
     class ServiceFees
-      include PaymentCalculator::Ecf::Contract::ServiceFeeCalculations
+      include InitializeWithConfig
+      # required_config :contract # TODO: Uncomment this when the updated InitializeWithConfig is added from the other PR
+      delegate :bands, to: :contract
 
       def call
-        {
-          service_fee_per_participant: service_fee_per_participant.round(2),
-          service_fee_total: service_fee_total.round(2),
-          service_fee_monthly: service_fee_monthly.round(2),
-        }
+        bands.map do |band|
+          Ecf::ServiceFeesForBand.call(config, band: band)
+        end
       end
     end
   end
