@@ -6,6 +6,11 @@ class Schools::ParticipantsController < Schools::BaseController
 
   def index
     @participants = User.order(:full_name).is_participant.in_school(@school.id)
+
+    if @participants.empty?
+      redirect_to add_schools_cohort_participants_path
+    end
+
     authorize @participants, policy_class: ParticipantPolicy
   end
 
