@@ -4,7 +4,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <% if @is_same_school %>
+    <% if email_used_in_the_same_school? %>
       <h1 class="govuk-heading-xl govuk-!-margin-bottom-7">This email has already been added</h1>
 
       <p class="govuk-body">This email address has already been used to add an early career teacher or mentor.</p>

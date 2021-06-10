@@ -6,6 +6,7 @@ module Schools
     FORM_PARAM_KEY = :schools_add_participant_form
 
     skip_after_action :verify_authorized
+    before_action :ensure_form_present, except: :start
     before_action :set_school_cohort
 
     helper_method :add_participant_form
@@ -27,18 +28,16 @@ module Schools
         add_participant_form.record_completed_step current_step
         store_form_in_session
         redirect_to action: :show, step: step_param(add_participant_form.next_step(current_step))
-      elsif add_participant_form.email_already_taken?
-        @is_same_school = User.find_by(email: add_participant_form.email).school == current_user.school
-        render "email_taken"
       else
         render current_step
       end
     end
 
     def complete
-      add_participant_form.save
-      
-      render html: :complete, layout: true
+      @participant = add_participant_form.save!
+      @type = add_participant_form.type
+
+      session.delete(FORM_SESSION_KEY)
     end
 
   private
@@ -75,6 +74,15 @@ module Schools
       params.require(FORM_PARAM_KEY).permit(:type, :full_name, :email, :mentor_id)
     end
 
+    def email_used_in_the_same_school?
+      User.find_by(email: add_participant_form.email).school == add_participant_form.school_cohort.school
+    end
+
+    def ensure_form_present
+      redirect_to schools_cohort_participants_path unless session.key?(FORM_SESSION_KEY)
+    end
+
     helper_method :back_link_path
+    helper_method :email_used_in_the_same_school?
   end
 end

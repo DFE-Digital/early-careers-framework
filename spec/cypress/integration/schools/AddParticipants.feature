@@ -25,7 +25,7 @@ Feature: School leaders should be able to manage participants
     Then "page body" should contain "can't be blank"
 
     When I type "James Bond" into field labelled "Full name"
-    And I type "james.bond.007@.secret.gov.uk" into field labelled "Email"
+    And I type "james.bond.007@secret.gov.uk" into field labelled "Email"
     And I click the submit button
     Then I should be on "2021 school choose etc mentor" page
     And the page should be accessible
@@ -41,7 +41,10 @@ Feature: School leaders should be able to manage participants
     And percy should be sent snapshot called "school ect participant confirmation page"
 
     When I click the submit button
-    Then "page body" should contain "Further steps not implemented"
+    Then "page body" should contain "James Bond has been added as an ECT to the 2021 cohort"
+    And the page should be accessible
+    And percy should be sent snapshot called "school ect participant added"
+
 
   Scenario: Should be able to add a new mentor participant
     When I click the submit button
@@ -57,18 +60,19 @@ Feature: School leaders should be able to manage participants
     Then "page body" should contain "can't be blank"
 
     When I type "James Bond" into field labelled "Full name"
-    And I type "james.bond.007@.secret.gov.uk" into field labelled "Email"
+    And I type "james.bond.007@secret.gov.uk" into field labelled "Email"
     And I click the submit button
     Then I should be on "2021 school participant confirm" page
     And the page should be accessible
     And percy should be sent snapshot called "school mentor participant confirmation page"
 
     When I click the submit button
-    Then "page body" should contain "Further steps not implemented"
-  
+    Then "page body" should contain "James Bond has been added as a mentor to the 2021 cohort"
+    And the page should be accessible
+    And percy should be sent snapshot called "school mentor participant added"
+
   Scenario: Should see errors when email already used
-    When I click on "link" containing "Add participants"
-    And I set "new participant type radio" to "ect"
+    When I set "new participant type radio" to "ect"
     And I click the submit button
     And I type "Already exists" into field labelled "Full name"
     And I type "unrelated@example.com" into field labelled "Email"

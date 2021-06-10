@@ -6,7 +6,7 @@ module Schools
     include ActiveModel::Attributes
     include ActiveModel::Serialization
 
-    STEPS = %i[type details choose_mentor confirm not_implemented].freeze
+    STEPS = %i[type details choose_mentor email_taken confirm not_implemented].freeze
 
     TYPE_OPTIONS = {
       ect: "Early Career Teacher",
@@ -32,9 +32,7 @@ module Schools
     validates :email,
               on: :details,
               presence: true,
-              format: { with: Devise.email_regexp, allow_blank: true }
-
-    validate :email_not_taken, on: :details
+              notify_email: { allow_blank: true }
 
     validates :mentor_id,
               on: :choose_mentor,
@@ -67,6 +65,8 @@ module Schools
       case step
       when :type then :details
       when :details
+        return :email_taken if email_already_taken?
+
         if type == :ect && mentor_options.any?
           :choose_mentor
         else
@@ -78,7 +78,11 @@ module Schools
     end
 
     def record_completed_step(step)
-      completed_steps << step unless completed_steps.include? step
+      if completed_steps.include? step
+        self.completed_steps = completed_steps[0..completed_steps.index(step)]
+      else
+        completed_steps << step
+      end
     end
 
     def completed_steps=(value)
@@ -97,7 +101,7 @@ module Schools
       @school_cohort ||= SchoolCohort.find(school_cohort_id)
     end
 
-    def save
+    def save!
       ActiveRecord::Base.transaction do
         user = User.create!(full_name: full_name, email: email)
 
@@ -105,18 +109,11 @@ module Schools
         profile = profile_class.new(
           user: user,
           school_id: school_cohort.school_id,
-          cohort_id: school_cohort.cohort_id
+          cohort_id: school_cohort.cohort_id,
         )
         profile.mentor_profile = mentor&.mentor_profile if type == :ect
-        profile.save!
+        profile.tap(&:save!)
       end
     end
-
-  private
-
-    def email_not_taken
-      errors.add(:email, :taken) if email_already_taken?
-    end
-
   end
 end
