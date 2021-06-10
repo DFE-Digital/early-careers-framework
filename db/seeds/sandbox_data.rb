@@ -15,14 +15,17 @@ providers_names = ["Capita", "Teach First", "UCL", "Best Practice Network", "Amb
 
 def generate_provider_token(lead_provider, school, cohort, logger)
   token = LeadProviderApiToken.create_with_random_token!(lead_provider: lead_provider)
-  existing_user_uuids = lead_provider.partnerships.map(&:school).map { |s| s.early_career_teacher_profiles.first&.user_id }
+  existing_user_uuids = User.participants_for_lead_provider(lead_provider).map(&:id)
 
   unless existing_user_uuids.any?
     user_uuids = 10.times.each_with_object([]) do |_i, uuids|
-      user = User.create!(full_name: Faker::Name.name, email: Faker::Internet.email)
+      mentor = User.create!(full_name: Faker::Name.name, email: Faker::Internet.email)
+      mentor_profile = MentorProfile.create!(user: mentor, school: school, cohort: cohort)
+      uuids << mentor.id
 
-      EarlyCareerTeacherProfile.create!(user: user, school: school, cohort: cohort)
-      uuids << user.id
+      ect = User.create!(full_name: Faker::Name.name, email: Faker::Internet.email)
+      EarlyCareerTeacherProfile.create!(user: ect, school: school, cohort: cohort, mentor_profile: mentor_profile)
+      uuids << ect.id
     end
   end
   output_uuids = user_uuids || existing_user_uuids

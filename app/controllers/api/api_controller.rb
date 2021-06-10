@@ -2,7 +2,8 @@
 
 module Api
   class ApiController < ActionController::API
-    before_action :set_jsonapi_content_type_header
+    include ActionController::MimeResponds
+    before_action :remove_charset
     rescue_from ActiveRecord::RecordNotFound, with: :not_found
     rescue_from ActionController::ParameterMissing, with: :missing_parameter_response
 
@@ -12,8 +13,8 @@ module Api
       head :not_found
     end
 
-    def set_jsonapi_content_type_header
-      headers["Content-Type"] = "application/vnd.api+json"
+    def remove_charset
+      ActionDispatch::Response.default_charset = nil
     end
 
     def missing_parameter_response(exception)
