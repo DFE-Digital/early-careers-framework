@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "csv"
+
 module Api
   module V1
     class ParticipantsController < Api::ApiController
@@ -28,17 +30,16 @@ module Api
       end
 
       def to_csv(hash)
-        output = "id,"
+        headers = %w[id]
         attributes = hash[:data].first[:attributes].keys
-        output += attributes.join(",")
-        output += "\n"
-        hash[:data].each do |item|
-          output += "#{item[:id]},"
-          output += attributes.map { |attribute| item[:attributes][attribute] }.join(",")
-          output += "\n"
+        headers.concat(attributes.map(&:to_s))
+        CSV.generate(headers: headers, write_headers: true) do |csv|
+          hash[:data].each do |item|
+            row = [item[:id]]
+            row.concat(attributes.map { |attribute| item[:attributes][attribute].to_s })
+            csv << row
+          end
         end
-
-        output
       end
 
       def updated_since

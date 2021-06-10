@@ -112,7 +112,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           expect(mentor_row).not_to be_nil
           expect(mentor_row["email"]).to eql mentor.email
           expect(mentor_row["full_name"]).to eql mentor.full_name
-          expect(mentor_row["mentor_id"]).to be_nil
+          expect(mentor_row["mentor_id"]).to eql ""
           expect(mentor_row["school_urn"]).to eql partnership.school.urn
           expect(mentor_row["participant_type"]).to eql "mentor"
           expect(mentor_row["cohort"]).to eql partnership.cohort.start_year.to_s
