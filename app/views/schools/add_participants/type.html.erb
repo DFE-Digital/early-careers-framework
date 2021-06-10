@@ -4,7 +4,7 @@
 
 <span class="govuk-caption-l"><%= @school.name %>, <%= @cohort.display_name %> cohort</span>
 
-<%= form_for add_participant_form, url: { action: :update } do |f| %>
+<%= form_for add_participant_form, url: { action: :update }, method: :patch do |f| %>
   <%= f.govuk_collection_radio_buttons(
         :type,
         f.object.type_options,

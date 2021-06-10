@@ -97,6 +97,21 @@ module Schools
       @school_cohort ||= SchoolCohort.find(school_cohort_id)
     end
 
+    def save
+      ActiveRecord::Base.transaction do
+        user = User.create!(full_name: full_name, email: email)
+
+        profile_class = type == :ect ? EarlyCareerTeacherProfile : MentorProfile
+        profile = profile_class.new(
+          user: user,
+          school_id: school_cohort.school_id,
+          cohort_id: school_cohort.cohort_id
+        )
+        profile.mentor_profile = mentor&.mentor_profile if type == :ect
+        profile.save!
+      end
+    end
+
   private
 
     def email_not_taken

@@ -215,7 +215,8 @@ Rails.application.routes.draw do
             },
           ) do
             get ":step", action: :show
-            post ":step", action: :update
+            patch ":step", action: :update
+            post :complete
           end
         end
       end

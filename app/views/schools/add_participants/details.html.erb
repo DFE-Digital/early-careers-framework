@@ -7,7 +7,7 @@
     <span class="govuk-caption-l"><%= @school.name %>, <%= @cohort.display_name %> cohort</span>
     <h1 class="govuk-heading-l">Enter their personal details</h1>
 
-    <%= form_for add_participant_form, url: { action: :update }, method: :post do |f| %>
+    <%= form_for add_participant_form, url: { action: :update }, method: :patch do |f| %>
       <%= f.govuk_text_field :full_name, label: { text: "Full name" } %>
       <%= f.govuk_email_field :email, label: { text: "Email address" } %>
 

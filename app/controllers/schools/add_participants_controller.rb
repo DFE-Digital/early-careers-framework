@@ -35,6 +35,12 @@ module Schools
       end
     end
 
+    def complete
+      add_participant_form.save
+      
+      render html: :complete, layout: true
+    end
+
   private
 
     def add_participant_form
