@@ -8,8 +8,6 @@ class CallOffContract < ApplicationRecord
     bands.first
   end
 
-private
-
   def bands
     participant_bands.min_nulls_first
   end
