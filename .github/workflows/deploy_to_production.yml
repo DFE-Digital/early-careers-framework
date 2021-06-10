@@ -21,6 +21,8 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.version }}
 
       - name: Pin Terraform version
         uses: hashicorp/setup-terraform@v1.2.1
