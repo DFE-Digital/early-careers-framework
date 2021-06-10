@@ -30,9 +30,9 @@ describe ::PaymentCalculator::Ecf::PaymentCalculation do
       result = described_class.call(lead_provider: contract.lead_provider, event_type: key, total_participants: value)
 
       if @combined_results.nil?
-        expect(result.dig(:service_fees, :service_fee_per_participant)).to be_a(BigDecimal)
-        expect(result.dig(:service_fees, :service_fee_total)).to be_a(BigDecimal)
-        expect(result.dig(:service_fees, :service_fee_monthly)).to be_a(BigDecimal)
+        expect(result.dig(:service_fees, 0, :service_fee_per_participant)).to be_a(BigDecimal)
+        expect(result.dig(:service_fees, 1, :service_fee_total)).to be_a(BigDecimal)
+        expect(result.dig(:service_fees, 2, :service_fee_monthly)).to be_a(BigDecimal)
         expect(result.dig(:output_payment, :per_participant)).to be_a(BigDecimal)
       end
 

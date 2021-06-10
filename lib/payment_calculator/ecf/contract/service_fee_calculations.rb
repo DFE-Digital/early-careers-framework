@@ -13,8 +13,7 @@ module PaymentCalculator
         end
 
         delegate :recruitment_target,
-                 :set_up_fee,
-                 :band_a, to: :contract
+                 :set_up_fee, to: :contract
 
         def service_fee_total(band)
           band.number_of_participants_in_this_band(recruitment_target) * service_fee_per_participant(band)

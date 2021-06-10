@@ -8,7 +8,9 @@ end
 
 describe ::PaymentCalculator::Ecf::Contract::ServiceFeeCalculations do
   it "performs calculations of the service fees" do
-    band_a = double("Band Double", per_participant: 996.00).mock(number_of_participants_in_this_band: 2000)
+    band_a = double("Band Double", per_participant: 996.00,
+                                   number_of_participants_in_this_band: 2000,
+                                   deduction_for_setup?: true)
     contract = double("Contract Double", recruitment_target: 2000, set_up_fee: 149_651.00, band_a: band_a)
     call_off_contract = DummyClass.new({ contract: contract })
 
