@@ -83,7 +83,7 @@
                 "example": {
                   "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
                   "declaration_type": "started",
-                  "declaration_date": "2021-05-31"
+                  "declaration_date": "2021-05-31T02:21:32"
                 }
               }
             }
@@ -100,7 +100,7 @@
             "description": "Not Found"
           },
           "422": {
-            "description": "Missing parameter",
+            "description": "Bad or Missing parameter",
             "content": {
               "application/json": {
                 "schema": {

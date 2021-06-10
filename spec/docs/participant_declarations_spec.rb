@@ -36,7 +36,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
             "example": {
               "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
               "declaration_type": "started",
-              "declaration_date": "2021-05-31",
+              "declaration_date": "2021-05-31T02:21:32",
             },
           },
         },
@@ -58,7 +58,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
       parameter name: :params, in: :body, required: false, schema: {
         type: :object,
         properties: {
-          declaration_date: { type: :string, format: "date" },
+          declaration_date: { type: :string, format: "date-time" },
         },
       }, description: "The event declaration date"
 
@@ -66,10 +66,9 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
         let(:fresh_user) { create(:user, :early_career_teacher) }
         let(:params) do
           {
-            "lead_provider" => lead_provider,
             "participant_id" => fresh_user.id,
             "declaration_type" => "started",
-            "declaration_date" => "2021-05-31T15:50+00Z",
+            "declaration_date" => "2021-05-31T15:50:00Z",
           }
         end
         run_test!
@@ -80,12 +79,12 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
           {
             "participant_id" => user.id,
             "declaration_type" => "started",
-            "declaration_date" => "2021-05-31T15:50+00Z",
+            "declaration_date" => "2021-05-31T15:50:00Z",
           }
         end
 
         before do
-          RecordParticipantEvent.call(HashWithIndifferentAccess.new({ lead_provider: lead_provider }).merge(params))
+          RecordParticipantEvent.call(HashWithIndifferentAccess.new({ lead_provider: lead_provider, raw_event: params.to_json }).merge(params))
         end
 
         run_test!
@@ -94,27 +93,26 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
       response "404", "Missing ID value" do
         let(:params) do
           {
-            "participant_id" => nil,
-            "declaration_type" => "",
-            "declaration_date" => "",
+            "participant_id" => "",
+            "declaration_type" => "started",
+            "declaration_date" => "2021-05-31T13:00:00Z",
           }
         end
         run_test!
       end
 
       response "404", "Not Found" do
-        let(:fresh_user) { build(:user, :early_career_teacher) }
         let(:params) do
           {
-            "participant_id" => fresh_user.id,
-            "declaration_type" => "",
-            "declaration_date" => "",
+            "participant_id" => "db3a7848-7308-4879-942a-c4a70ced400a",
+            "declaration_type" => "started",
+            "declaration_date" => "2021-05-31T13:00:00Z",
           }
         end
         run_test!
       end
 
-      response "422", "Missing parameter" do
+      response "422", "Bad or Missing parameter" do
         let(:user) { build(:user, :early_career_teacher) }
 
         schema "$ref": "#/components/schemas/error_response"

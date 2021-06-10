@@ -1,16 +1,14 @@
 # frozen_string_literal: true
 
 require "initialize_with_config"
+require "json_schema/validate_participant_event"
 
 class RecordParticipantEvent
   include InitializeWithConfig
-  class << self
-    def required_params
-      %i[participant_id lead_provider declaration_type declaration_date raw_event]
-    end
-  end
+  required_config :participant_id, :lead_provider, :declaration_type, :declaration_date, :raw_event
 
   def call
+    return :unprocessable_entity unless schema_validation
     return :not_found unless set_config_ect_profile
     return :unprocessable_entity unless create_record
     return :not_found unless valid_provider
@@ -20,11 +18,19 @@ class RecordParticipantEvent
 
 private
 
+  def schema_validation
+    errors = participant_event_validator.call(config, body: raw_event)
+    raise ActionController::ParameterMissing, errors unless errors.empty?
+
+    true
+  end
+
   def default_config
-    HashWithIndifferentAccess.new(
+    {
       recorder: ParticipantDeclaration,
       user_model: User,
-    )
+      participant_event_validator: JsonSchema::ValidateParticipantEvent,
+    }
   end
 
   def set_config_ect_profile
@@ -48,6 +54,6 @@ private
   end
 
   def required_params
-    (self.class.required_params - [:participant_id]) << :early_career_teacher_profile
+    (self.class.required_config - [:participant_id]) << :early_career_teacher_profile
   end
 end
