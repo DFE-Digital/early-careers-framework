@@ -1,7 +1,7 @@
 {
   "$id": "https://digital.education.gov.uk/schema/ecf/participant_declarations/create/request_schema.json/#",
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "$ref": "https://digital.education.gov.uk/schema/",
+  "$ref": "https://digital.education.gov.uk/schema/participant_declarations",
   "type": "object",
   "properties": {
     "id": {
