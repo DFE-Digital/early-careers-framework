@@ -13,7 +13,7 @@ describe JsonSchema::VersionEventFileName do
       expect { described_class.call }.to raise_error(ArgumentError)
       expect { described_class.call({}) }.to raise_error(::InitializeWithConfig::MissingRequiredArguments, "missing required dependency injected items [:version, :event] in class JsonSchema::VersionEventFileName")
       expect { described_class.call(version: current) }.to raise_error(::InitializeWithConfig::MissingRequiredArguments, "missing required dependency injected items [:event] in class JsonSchema::VersionEventFileName")
-      expect { described_class.call(event: event) }.to raise_error(::InitializeWithConfig::MissingRequiredArguments, "missing required  dependency injected items [:version] in class JsonSchema::VersionEventFileName")
+      expect { described_class.call(event: event) }.to raise_error(::InitializeWithConfig::MissingRequiredArguments, "missing required dependency injected items [:version] in class JsonSchema::VersionEventFileName")
     end
 
     it "maps to the participant_declarations schema for the required version" do

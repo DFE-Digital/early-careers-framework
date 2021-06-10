@@ -8,7 +8,7 @@ describe ::JsonSchema::VersionedSchemaReader do
   let(:parsed_schema_file) { ::JSON::Util::URI.normalized_uri(original_schema_file) }
   let(:current_schema_file) { Rails.root.join("etc/schema/1.0/ecf/contracts/create/request_schema.json").to_s }
   let(:versioned_schema_file) { Rails.root.join("etc/schema/0.2/ecf/contracts/create/request_schema.json").to_s }
-  let(:minimal_url_file) { "https://digital.education.gov.uk/schema/../../../swagger/v1/api_spec.json" }
+  let(:minimal_url_file) { "https://digital.education.gov.uk/schema/ecf/contracts/create/request_schema.json" }
 
   it "maps uri to default path when passed an empty config" do
     mapper = described_class.new
@@ -20,9 +20,9 @@ describe ::JsonSchema::VersionedSchemaReader do
     expect(mapper.send(:uri_to_file, parsed_schema_file.path)).to eq(versioned_schema_file)
   end
 
-  it "reads the disk based file when passed an mappable url" do
+  it "reads the disk based file when passed a mappable url" do
     mapper = described_class.new
-    swagger_schema = mapper.read(URI(minimal_url_file))
-    expect(swagger_schema).to be_a(JSON::Schema)
+    test_schema = mapper.read(URI(minimal_url_file))
+    expect(test_schema).to be_a(JSON::Schema)
   end
 end
