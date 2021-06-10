@@ -18,9 +18,9 @@ module OutputPaymentsSteps
   end
 
   step "I run each calculation" do
-    band_a = double("Band Double", per_participant: @band_a)
-    contract = double("Contract Double", recruitment_target: @recruitment_target, set_up_fee: @set_up_fee, band_a: band_a)
-    @call_off_contract = DummyClass.new({ contract: contract })
+    @band_a = double("Band Double", per_participant: @per_participant_value, number_of_participants_in_this_band: 2000, deduction_for_setup?: true)
+    contract = double("Contract Double", recruitment_target: @recruitment_target, set_up_fee: @set_up_fee, band_a: @band_a)
+    @call_off_contract = DummyClass.new({ contract: contract, bands: [@band_a] })
     lead_provider = double("Lead Provider", call_off_contract: @call_off_contract)
     calculator = PaymentCalculator::Ecf::PaymentCalculation.new(lead_provider: lead_provider)
     @result = @retention_table.map do |row|
