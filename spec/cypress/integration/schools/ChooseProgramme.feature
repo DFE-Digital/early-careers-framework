@@ -63,3 +63,24 @@ Feature: Induction tutors choosing programmes
     Then I am on "2021 school cohorts" page
     And "page body" should contain "Add early career teachers"
     And "page body" should not contain "Choose your training"
+
+  Scenario: Choosing to design and deliver our own programme
+    When I click on "link" containing "Continue"
+    Then I should be on "choose programme" page
+
+    When I click on "design and deliver our own programme radio button"
+    And I click the submit button
+    Then I should be on "design your programme success" page
+    And the page should be accessible
+    And percy should be sent snapshot called "Choose design and deliver success"
+
+  Scenario: Choosing there are no early career teachers for this year
+    When I click on "link" containing "Continue"
+    Then I should be on "choose programme" page
+
+    When I click on "no early career teachers radio button"
+    And I click the submit button
+    Then I should be on "no early career teachers success" page
+    And the page should be accessible
+    And percy should be sent snapshot called "Choose no early career teachers success"
+

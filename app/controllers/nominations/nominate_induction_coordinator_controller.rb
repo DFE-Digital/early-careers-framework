@@ -1,26 +1,19 @@
 # frozen_string_literal: true
 
 class Nominations::NominateInductionCoordinatorController < ApplicationController
-  def start
-    token = params[:token]
-    nomination_email = NominationEmail.find_by(token: token)
+  include NominationEmailTokenConsumer
 
-    if nomination_email.nil?
-      redirect_to link_invalid_nominate_induction_coordinator_path
-    elsif nomination_email.expired?
-      redirect_to link_expired_nominate_induction_coordinator_path(school_id: nomination_email.school_id)
-    elsif nomination_email.school.registered?
-      redirect_to already_nominated_request_nomination_invite_path
-    else
-      load_nominate_induction_tutor_form
-      @nominate_induction_tutor_form.token = token
-      session[:nominate_induction_tutor_form] = @nominate_induction_tutor_form.as_json
-    end
+  before_action :check_token_status, only: :start_nomination
+
+  def start_nomination
+    token = params[:token]
+    load_nominate_induction_tutor_form
+    @nominate_induction_tutor_form.token = token
+    session[:nominate_induction_tutor_form] = @nominate_induction_tutor_form.as_json
   end
 
   def new
     load_nominate_induction_tutor_form
-    record_nomination_email_opened
   end
 
   def create
@@ -68,12 +61,6 @@ private
     return {} unless params.key?(:nominate_induction_tutor_form)
 
     params.require(:nominate_induction_tutor_form).permit(:full_name, :email, :token)
-  end
-
-  def record_nomination_email_opened
-    NominationEmail
-      .where(token: @nominate_induction_tutor_form.token, opened_at: nil)
-      .update_all(opened_at: Time.zone.now)
   end
 
   def build_nomination_request_form

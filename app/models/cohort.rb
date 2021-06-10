@@ -12,4 +12,9 @@ class Cohort < ApplicationRecord
   def display_name
     start_year.to_s
   end
+
+  def academic_year
+    # e.g. 2021/22
+    "#{start_year}/#{start_year - 1999}"
+  end
 end
