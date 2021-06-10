@@ -24,11 +24,10 @@ RSpec.configure do |config|
           error_response: {
             type: "object",
             properties: {
-              missing_parameter: {
+              bad_or_missing_parameter: {
                 type: "array",
                 items: {
                   type: "string",
-                  enum: %w[participant_id declaration_date declaration_type],
                 },
                 uniqueItems: true,
                 minItems: 1,
