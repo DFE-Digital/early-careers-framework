@@ -9,10 +9,15 @@ module Api
       before_action :ensure_lead_provider
 
       def index
-        participant_hash = ParticipantSerializer.new(paginate(participants)).serializable_hash
         respond_to do |format|
-          format.json { render json: participant_hash.to_json }
-          format.csv { render body: to_csv(participant_hash) }
+          format.json do
+            participant_hash = ParticipantSerializer.new(paginate(participants)).serializable_hash
+            render json: participant_hash.to_json
+          end
+          format.csv do
+            participant_hash = ParticipantSerializer.new(participants).serializable_hash
+            render body: to_csv(participant_hash)
+          end
         end
       end
 
@@ -23,13 +28,13 @@ module Api
       end
 
       def to_csv(hash)
-        output = "id, "
+        output = "id,"
         attributes = hash[:data].first[:attributes].keys
-        output += attributes.join(", ")
+        output += attributes.join(",")
         output += "\n"
         hash[:data].each do |item|
-          output += "#{item[:id]}, "
-          output += attributes.map { |attribute| item[:attributes][attribute] }.join(", ")
+          output += "#{item[:id]},"
+          output += attributes.map { |attribute| item[:attributes][attribute] }.join(",")
           output += "\n"
         end
 
