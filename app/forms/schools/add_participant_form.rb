@@ -6,7 +6,7 @@ module Schools
     include ActiveModel::Attributes
     include ActiveModel::Serialization
 
-    STEPS = %i[type details not_implemented].freeze
+    STEPS = %i[type details confirm not_implemented].freeze
 
     TYPE_OPTIONS = {
       ect: "Early Career Teacher",
