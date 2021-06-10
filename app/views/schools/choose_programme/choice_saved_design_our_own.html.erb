@@ -1,0 +1,20 @@
+<% content_for :title, "Choice saved - design your programme" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= govuk_panel(
+      title: "Your choice has been saved for #{@cohort.academic_year}",
+      body: nil,
+      classes: "govuk-!-margin-bottom-8",
+      html_attributes: { "data-test": "success-panel" }
+    ) %>
+
+    <h2 class="govuk-heading-m">What happens next</h2>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>we will send you any relevant updates</li>
+      <li>you do not need to sign in to the service to set up your programme</li>
+      <li>if you change your mind about how you want to run your inductions, contact: <%= render MailToSupportComponent.new %></li>
+    </ul>
+    <%= render partial: 'shared/diy_what_you_can_do_now_info' %>
+  </div>
+</div>

@@ -534,6 +534,7 @@ DEPENDENCIES
   govuk_design_system_formbuilder (~> 2.3.0b1)
   health_check!
   httpclient (~> 2.8, >= 2.8.3)
+  json-schema
   jsonapi-rspec
   jsonapi-serializer
   kaminari (>= 1.2.0)

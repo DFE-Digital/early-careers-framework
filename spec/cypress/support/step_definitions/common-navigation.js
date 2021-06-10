@@ -63,6 +63,7 @@ const pagePaths = {
   "resend nominations already nominated": "nominations/already-nominated",
   "resend nominations limit reached": "nominations/limit-reached",
   "resend nominations cip only": "nominations/cip-only",
+  "choose how to continue nominations": "/nominations/choose-how-to-continue",
   "start nominations with token": "/nominations/start?token=foo-bar-baz",
   "lead provider users index": "/admin/suppliers/users",
   "new lead provider user": "/admin/suppliers/users/new",
@@ -73,6 +74,10 @@ const pagePaths = {
   "choose programme advisory": "/schools/choose-programme/advisory",
   "choose programme confirm": "/schools/choose-programme/confirm-programme",
   "choose programme success": "/schools/choose-programme/success",
+  "design your programme success":
+    "/schools/choose-programme/design-your-programme",
+  "no early career teachers success":
+    "/schools/choose-programme/no-early-career-teachers",
   schools: "/schools",
   "2021 school cohorts": "/schools/cohorts/2021",
   "2021 school partnerships": "/schools/cohorts/2021/partnerships",

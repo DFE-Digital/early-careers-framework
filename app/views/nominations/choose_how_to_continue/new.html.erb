@@ -1,0 +1,17 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for @how_to_continue_form, url: choose_how_to_continue_path(token: @how_to_continue_form.token) do |f| %>
+      <%= f.govuk_error_summary %>
+      <%= f.govuk_collection_radio_buttons(
+        :how_to_continue,
+        @how_to_continue_form.choices,
+        :id,
+        :name,
+        legend: { text: "Do you expect to have any early career teachers at #{@how_to_continue_form.school.name} this year?", size: "xl", tag: "h1" },
+        hint: { text: "These are teachers who have finished their initial teacher training" },
+      ) %>
+      <%= f.hidden_field :token %>
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>
