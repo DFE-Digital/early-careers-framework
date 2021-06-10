@@ -36,17 +36,31 @@ FactoryBot.define do
       early_career_teacher_profile { build(:early_career_teacher_profile) }
       transient do
         mentor {}
+        school {}
       end
 
       after(:build) do |user, evaluator|
         if evaluator.mentor.present?
           user.early_career_teacher_profile.mentor_profile = evaluator.mentor.mentor_profile
         end
+        if evaluator.school.present?
+          user.early_career_teacher_profile.school = evaluator.school
+        end
       end
     end
 
     trait :mentor do
       mentor_profile { build(:mentor_profile) }
+
+      transient do
+        school {}
+      end
+
+      after(:build) do |user, evaluator|
+        if evaluator.school.present?
+          user.mentor_profile.school = evaluator.school
+        end
+      end
     end
   end
 end
