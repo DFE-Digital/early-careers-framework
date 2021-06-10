@@ -4,7 +4,8 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">Report that your school has been signed up incorrectly</h1>
     <p class="govuk-body"><%= @challenge_partnership_form.school_name %>  has received a confirmation
-      from <%= @challenge_partnership_form.provider_name %> but you believe this is incorrect.</p>
+      from <%= @challenge_partnership_form.delivery_partner_name %>,
+      with <%= @challenge_partnership_form.lead_provider_name %>, but you believe this is incorrect.</p>
 
     <%= form_for @challenge_partnership_form, url: challenge_partnership_path do |f| %>
       <%= f.hidden_field :token %>
