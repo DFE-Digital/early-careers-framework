@@ -7,9 +7,7 @@ class ParticipantSerializer
   attributes :email, :full_name
 
   attributes :mentor_id do |user|
-    if user.early_career_teacher?
-      user.early_career_teacher_profile.mentor&.id
-    end
+    user&.early_career_teacher_profile&.mentor&.id
   end
 
   attributes :school_urn do |user|
