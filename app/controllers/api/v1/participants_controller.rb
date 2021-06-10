@@ -30,6 +30,8 @@ module Api
       end
 
       def to_csv(hash)
+        return "" if hash[:data].empty?
+
         headers = %w[id]
         attributes = hash[:data].first[:attributes].keys
         headers.concat(attributes.map(&:to_s))

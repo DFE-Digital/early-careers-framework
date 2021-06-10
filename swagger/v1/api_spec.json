@@ -213,6 +213,205 @@
         }
       }
     },
+    "/api/v1/participants": {
+      "get": {
+        "summary": "Returns all participants",
+        "operationId": "api_v1_participants_index",
+        "tags": [
+          "participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "type": "object",
+              "example": "",
+              "description": "This schema is used to search within collections to return more specific results.",
+              "properties": {
+                "updated_since": {
+                  "description": "Return participants that have been updated since the date (ISO 8601 date format)",
+                  "type": "string",
+                  "example": "2021-05-13T11:21:55Z"
+                }
+              }
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "description": "Refine participants to return.",
+            "example": {
+              "updated_since": "2020-11-13T11:21:55Z"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "object",
+              "description": "This schema used to paginate through a collection.",
+              "properties": {
+                "page": {
+                  "type": "integer",
+                  "description": "The page number to paginate to in the collection. If no value is specified it defaults to the first page.",
+                  "example": 3
+                },
+                "per_page": {
+                  "type": "integer",
+                  "description": "The number items to display on a page. Defaults to 100. Maximum is 500, if the value is greater that the maximum allowed it will fallback to 500.",
+                  "example": 10
+                }
+              }
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "example": {
+              "page": 2,
+              "per_page": 10
+            },
+            "description": "Pagination options to navigate through the collection."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Collection of participants.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "type",
+                          "attributes"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "attributes": {
+                            "type": "object",
+                            "required": [
+                              "email",
+                              "full_name",
+                              "mentor_id",
+                              "school_urn",
+                              "participant_type",
+                              "cohort"
+                            ],
+                            "properties": {
+                              "email": {
+                                "type": "string"
+                              },
+                              "full_name": {
+                                "type": "string"
+                              },
+                              "mentor_id": {
+                                "type": "string"
+                              },
+                              "school_urn": {
+                                "type": "string"
+                              },
+                              "participant_type": {
+                                "type": "string",
+                                "enum": [
+                                  "mentor",
+                                  "ect"
+                                ]
+                              },
+                              "cohort": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/participants.csv": {
+      "get": {
+        "summary": "Returns all participants",
+        "operationId": "api_v1_participants_index",
+        "tags": [
+          "participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "type": "object",
+              "example": "",
+              "description": "This schema is used to search within collections to return more specific results.",
+              "properties": {
+                "updated_since": {
+                  "description": "Return participants that have been updated since the date (ISO 8601 date format)",
+                  "type": "string",
+                  "example": "2021-05-13T11:21:55Z"
+                }
+              }
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "description": "Refine participants to return.",
+            "example": {
+              "updated_since": "2020-11-13T11:21:55Z"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Collection of participants.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
     "/api/v1/users": {
       "get": {
         "summary": "Returns all users",
