@@ -49,6 +49,8 @@ require "active_support"
 require "active_support/core_ext"
 
 module InitializeWithConfig
+  class MissingRequiredArguments < RuntimeError; end
+
   attr_accessor :config
 
   class << self
@@ -64,17 +66,31 @@ module InitializeWithConfig
   end
 
   def default_config
-    HashWithIndifferentAccess.new
+    {}
+  end
+
+  def required_config
+    self.class.required_config
   end
 
 private
 
   # @param [Hash] config
   def initialize(config)
-    self.config = config.respond_to?(:[]) ? default_config.merge(config) : default_config
+    self.class.externally_injected ||= []
+    self.config = HashWithIndifferentAccess.new(config.respond_to?(:[]) ? default_config.merge(config) : default_config)
     self.config.each do |key, value|
       auto_define(key) { value } unless allow_override? && respond_to?(key)
     end
+    check_required
+  end
+
+  def check_required
+    raise ::InitializeWithConfig::MissingRequiredArguments, "missing required dependency injected items #{missing_required_params} in class #{self.class.name}" unless missing_required_params.empty?
+  end
+
+  def missing_required_params
+    self.class.externally_injected.reject { |name| respond_to?(name) }
   end
 
   def auto_define(key, &value)
@@ -87,10 +103,16 @@ private
 
   module InitialiseClassConfig
     include ActiveSupport
-    attr_accessor :prevent_override
+    attr_accessor :prevent_override, :externally_injected
 
     def prevent_local_override
       self.prevent_override = true
+    end
+
+    def required_config(*args)
+      return @externally_injected || [] if args.nil?
+
+      self.externally_injected = args
     end
 
     # @param [Hash] config
