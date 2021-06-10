@@ -37,7 +37,7 @@ module Api
       end
 
       def updated_since
-        params[:updated_since]
+        params.dig(:filter, :updated_since)
       end
 
       def participants
