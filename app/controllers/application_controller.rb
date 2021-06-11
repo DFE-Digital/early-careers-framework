@@ -50,6 +50,9 @@ protected
     policy = PrivacyPolicy.current
     return if policy.nil?
 
+    return if request.format == "application/json"
+    return if controller_name == "cookies"
+
     return unless policy.acceptance_required?(current_user)
 
     session[:original_path] = request.fullpath
