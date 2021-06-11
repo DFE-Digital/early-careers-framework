@@ -51,7 +51,6 @@ protected
     return if policy.nil?
 
     return if request.format == "application/json"
-    return if controller_name == "cookies"
 
     return unless policy.acceptance_required?(current_user)
 

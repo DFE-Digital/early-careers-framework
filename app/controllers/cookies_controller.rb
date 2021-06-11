@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class CookiesController < ApplicationController
+  skip_before_action :check_privacy_policy_accepted
+
   before_action :set_cookie_form, only: :show
 
   def show
