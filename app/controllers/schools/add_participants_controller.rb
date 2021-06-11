@@ -34,7 +34,7 @@ module Schools
     end
 
     def complete
-      @participant = add_participant_form.save!
+      @participant_profile = add_participant_form.save!
       @type = add_participant_form.type
 
       session.delete(FORM_SESSION_KEY)
@@ -56,11 +56,11 @@ module Schools
     end
 
     def current_step
-      params[:step].tr("-", "_").to_sym
+      params[:step].underscore.to_sym
     end
 
     def step_param(step)
-      step.to_s.tr("_", "-")
+      step.to_s.dasherize
     end
 
     def back_link_path

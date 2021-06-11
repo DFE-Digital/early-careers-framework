@@ -8,17 +8,13 @@
       <h1 class="govuk-heading-xl govuk-!-margin-bottom-7">This email has already been added</h1>
 
       <p class="govuk-body">This email address has already been used to add an early career teacher or mentor.</p>
-
-      <ul class="govuk-list govuk-list--bullet">
-        <li>if they are an early career teacher, see if they have been added to another cohort</li>
-        <li>if they are a mentor, you just need <%= govuk_link_to "add them to this cohort", "#" %></li>
-      </ul>
     <% else %>
       <h1 class="govuk-heading-xl govuk-!-margin-bottom-7">This email is being used by someone at another school</h1>
 
       <p class="govuk-body govuk-!-margin-bottom-7">Contact them directly to check whether they need to be transferred to your school.</p>
 
-      <%= govuk_link_to "Add participants", add_schools_cohort_participants_path, button: true %>
     <% end %>
+
+    <%= govuk_link_to "Add participants", add_schools_cohort_participants_path, button: true %>
   </div>
 </div>

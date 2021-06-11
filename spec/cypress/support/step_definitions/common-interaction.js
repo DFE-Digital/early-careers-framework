@@ -72,7 +72,8 @@ When("I type {string} into {string}", (value, element) => {
 });
 
 When("I type {string} into field labelled {string}", (value, label) => {
-  cy.get("label").contains(label).click().type(value);
+  cy.get("label").contains(label).click();
+  cy.focused().clear().type(value);
 });
 
 When("I press enter in {string}", (element) => {

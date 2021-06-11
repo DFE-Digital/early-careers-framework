@@ -1,6 +1,6 @@
-<% content_for :title, "Core induction materials selected" %>
+<% content_for :title, "Participant added" %>
 
-<%= govuk_panel title: "#{@participant.user.full_name} has been added as #{@type == :ect ? 'an ECT' : 'a mentor'} to the #{@cohort.display_name} cohort", body: nil, classes: "govuk-!-margin-bottom-8" %>
+<%= govuk_panel title: "#{@participant_profile.user.full_name} has been added as #{@type == :ect ? 'an ECT' : 'a mentor'} to the #{@cohort.display_name} cohort", body: nil, classes: "govuk-!-margin-bottom-8" %>
 
 <h2 class="govuk-heading-m">What happens next</h2>
 <ul class="govuk-list govuk-list--bullet">

@@ -34,17 +34,26 @@ Feature: School leaders should be able to manage participants
     When I click the submit button
     Then "page body" should contain "can't be blank"
 
-    When I set "new participant mentor radio" to "51223b41-a562-4d94-b50c-0ce59a8bb34d"
+    When I click on "Abdul Mentor" label
     And I click the submit button
     Then I should be on "2021 school participant confirm" page
     And the page should be accessible
     And percy should be sent snapshot called "school ect participant confirmation page"
 
+    When I click on "link" containing "Change personal details"
+    Then I should be on "2021 school participant details" page
+
+    When I type "James Herbert Bond" into field labelled "Full name"
+    And I click the submit button
+    Then I should be on "2021 school choose etc mentor" page
+
     When I click the submit button
-    Then "page body" should contain "James Bond has been added as an ECT to the 2021 cohort"
+    Then I should be on "2021 school participant confirm" page
+
+    When I click the submit button
+    Then "page body" should contain "James Herbert Bond has been added as an ECT to the 2021 cohort"
     And the page should be accessible
     And percy should be sent snapshot called "school ect participant added"
-
 
   Scenario: Should be able to add a new mentor participant
     When I click the submit button

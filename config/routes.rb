@@ -210,7 +210,7 @@ Rails.application.routes.draw do
             path: "add",
             constraints: {
               step: Regexp.union(
-                *Schools::AddParticipantForm::STEPS.map { |step| step.to_s.tr("_", "-") },
+                *Schools::AddParticipantForm::STEPS.map { |step| step.to_s.dasherize },
               ),
             },
           ) do

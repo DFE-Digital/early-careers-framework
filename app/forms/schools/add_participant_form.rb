@@ -6,7 +6,7 @@ module Schools
     include ActiveModel::Attributes
     include ActiveModel::Serialization
 
-    STEPS = %i[type details choose_mentor email_taken confirm not_implemented].freeze
+    STEPS = %i[type details choose_mentor email_taken confirm].freeze
 
     TYPE_OPTIONS = {
       ect: "Early Career Teacher",
@@ -73,7 +73,7 @@ module Schools
           :confirm
         end
       when :choose_mentor then :confirm
-      else :not_implemented
+      else raise "No next step defined"
       end
     end
 
