@@ -204,11 +204,20 @@ Rails.application.routes.draw do
         put :update_mentor, path: "update-mentor"
 
         collection do
-          get :add, to: "add_participants/base#start"
+          get :add, to: "add_participants#start"
 
-          namespace :add_participants, path: "add" do
-            resource :type, only: %i[show update]
-            resource :details, only: %i[show update]
+          scope(
+            controller: "add_participants",
+            path: "add",
+            constraints: {
+              step: Regexp.union(
+                *Schools::AddParticipantForm::STEPS.map { |step| step.to_s.dasherize },
+              ),
+            },
+          ) do
+            get ":step", action: :show
+            patch ":step", action: :update
+            post :complete
           end
         end
       end

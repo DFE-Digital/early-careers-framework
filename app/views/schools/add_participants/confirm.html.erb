@@ -1,0 +1,69 @@
+<% content_for :title, "Confirm details" %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: back_link_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">Confirm these details</h1>
+
+    <p class="govuk-body">We will send this person an email to sign in and add any further details.</p>
+
+    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Details
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <div><%= add_participant_form.full_name %></div>
+          <div><%= add_participant_form.email %></div>
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <%= govuk_link_to({ action: :show, step: "details" }) do %>
+            Change <span class="govuk-visually-hidden">personal details</span>
+          <% end %>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Type
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= add_participant_form.type_options[add_participant_form.type.to_sym] %>
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <%= govuk_link_to({ action: :show, step: "type" }) do %>
+            Change <span class="govuk-visually-hidden">participant type</span>
+          <% end %>
+        </dd>
+      </div>
+
+      <% if add_participant_form.type == :ect %>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Mentor
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <div>
+              <% if add_participant_form.mentor %>
+                <%= add_participant_form.mentor.full_name %>
+              <% else %>
+                <i>To be assigned later</i>
+              <% end %>
+            </div>
+          </dd>
+          <dd class="govuk-summary-list__actions">
+            <%= govuk_link_to({ action: :show, step: "details" }) do %>
+              Change <span class="govuk-visually-hidden">personal details</span>
+            <% end %>
+          </dd>
+        </div>
+      <% end %>
+
+    </dl>
+
+    <%= form_for add_participant_form, url: { action: :complete }, method: :post do |f| %>
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

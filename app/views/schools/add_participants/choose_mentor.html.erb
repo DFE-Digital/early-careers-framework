@@ -1,0 +1,22 @@
+<% content_for :title, "Add early career teacher - choose mentor" %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: back_link_path) %>
+
+<span class="govuk-caption-l"><%= @school.name %>, <%= @cohort.display_name %> cohort</span>
+
+<%= form_for add_participant_form, url: { action: :update }, method: :patch do |f| %>
+<%= f.govuk_radio_buttons_fieldset :mentor_id,
+  legend: { text: "Who is the mentor for this Early Career Teacher?", tag: 'h1', size: 'xl' },
+  hint: { text: "If you don't know, or haven't added them yet you can do this later." } do %>
+
+    <% add_participant_form.mentor_options.each_with_index do |mentor, i| %>
+      <%= f.govuk_radio_button :mentor_id, mentor.id, label: { text: mentor.full_name }, link_errors: i == 0 %>
+    <% end %>
+
+    <%= f.govuk_radio_divider %>
+
+    <%= f.govuk_radio_button :mentor_id, "later", label: { text: 'Assign mentor later' } %>
+  <% end %>
+
+  <%= f.govuk_submit "Continue" %>
+<% end %>

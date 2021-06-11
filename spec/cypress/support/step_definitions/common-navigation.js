@@ -83,6 +83,13 @@ const pagePaths = {
   "2021 school partnerships": "/schools/cohorts/2021/partnerships",
   "2021 school participants": "/schools/cohorts/2021/participants",
   "2021 school participant": "/schools/cohorts/2021/participants/:id",
+  "2021 school participant type": "/schools/cohorts/2021/participants/:id/type",
+  "2021 school participant details":
+    "/schools/cohorts/2021/participants/:id/details",
+  "2021 school choose etc mentor":
+    "/schools/cohorts/2021/participants/add/choose-mentor",
+  "2021 school participant confirm":
+    "/schools/cohorts/2021/participants/add/confirm",
   "lead providers report schools start": "/lead-providers/report-schools/start",
   "lead providers your schools": "/lead-providers/your-schools",
   "challenge partnership": "/report-incorrect-partnership?token=:id",
