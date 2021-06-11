@@ -6,16 +6,14 @@ module Api
       include ApiTokenAuthenticatable
       include Pagy::Backend
 
-      before_action :ensure_engage_and_learn
-
       def index
         render json: UserSerializer.new(paginate(users)).serializable_hash.to_json
       end
 
     private
 
-      def ensure_engage_and_learn
-        head :forbidden unless current_user == "Engage and learn application"
+      def access_scope
+        ApiToken.where(private_api_access: true)
       end
 
       def updated_since

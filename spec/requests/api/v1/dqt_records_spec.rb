@@ -58,20 +58,20 @@ RSpec.describe "DQT records api endpoint", type: :request do
     end
 
     context "when unauthorized" do
-      it "returns 401 for invalid bearer token" do
+      it "returns 401" do
         default_headers[:Authorization] = "Bearer ugLPicDrpGZdD_w7hhCL"
         get "/api/v1/dqt-records/#{trn}"
         expect(response.status).to eq 401
       end
     end
 
-    context "using token from different scope" do
-      let(:other_token) { EngageAndLearnApiToken.create_with_random_token! }
+    context "using valid token but for different scope" do
+      let(:other_token) { ApiToken.create_with_random_token! }
 
-      it "returns 401 for invalid bearer token" do
+      it "returns 403" do
         default_headers[:Authorization] = "Bearer #{other_token}"
         get "/api/v1/dqt-records/#{trn}"
-        expect(response.status).to eq 401
+        expect(response.status).to eq 403
       end
     end
   end
