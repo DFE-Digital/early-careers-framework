@@ -106,6 +106,7 @@ end
 if Rails.env.deployed_development?
   EngageAndLearnApiToken.find_or_create_by!(hashed_token: "dfce9a34c6f982e8adb4b903f8b6064682e6ad1f7858c41ed8a0a7468abc8896")
   NpqRegistrationApiToken.find_or_create_by!(hashed_token: "1dae3836ed90df4b796eff1f4a4713247ac5bc8a00352ea46eee621d74cd4fcf")
+  DataStudioApiToken.find_or_create_by!(hashed_token: "21f6f8a9593b37566d7ae71eaace6e32636d3c6f4e2fc099c9c7ddd163cdc82d")
 elsif Rails.env.development?
   EngageAndLearnApiToken.find_or_create_by!(hashed_token: "f4a16cd7fc10918fbc7d869d7a83df36059bb98fac7c82502d797b1f1dd73e86")
 end
