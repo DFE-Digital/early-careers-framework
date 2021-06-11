@@ -33,7 +33,7 @@ PartnershipNotificationEmail.create!(
 
 school = FactoryBot.create(:school, name: "Test school 3")
 user = FactoryBot.create(:user, :induction_coordinator, schools: [school], email: "test-subject2@example.com")
-partnership = FactoryBot.create(:partnership, :in_challenge_window, school: school, cohort: cohort, delivery_partner: delivery_partner, pending: true)
+partnership = FactoryBot.create(:partnership, challenge_deadline: Time.utc(2099, 1, 1), school: school, cohort: cohort, delivery_partner: delivery_partner, pending: true)
 SchoolCohort.create!(school: school, cohort: cohort, induction_programme_choice: "core_induction_programme")
 PartnershipNotificationEmail.create!(
   token: "abc1234",
