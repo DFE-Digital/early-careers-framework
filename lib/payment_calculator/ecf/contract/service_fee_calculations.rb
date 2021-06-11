@@ -30,15 +30,15 @@ module PaymentCalculator
       private
 
         def deduction_for_band(band)
-          band.deduction_for_setup? ? set_up_cost_per_participant : 0
+          band.deduction_for_setup? ? set_up_cost_per_participant(band) : 0
         end
 
         def service_fee_payment_contribution_percentage
           0.4
         end
 
-        def set_up_cost_per_participant
-          set_up_fee / recruitment_target
+        def set_up_cost_per_participant(band)
+          set_up_fee / band.number_of_participants_in_this_band(recruitment_target)
         end
 
         def number_of_service_fee_payments

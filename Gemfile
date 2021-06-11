@@ -95,6 +95,10 @@ gem "open_api-rswag-ui", ">= 0.1.0"
 
 gem "ransack"
 
+# Payment breackdown
+
+gem "terminal-table"
+
 platform :mswin, :mingw, :x64_mingw do
   gem "wdm", ">= 0.1.0"
 end
