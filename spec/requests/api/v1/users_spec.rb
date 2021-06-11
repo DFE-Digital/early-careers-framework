@@ -52,17 +52,9 @@ RSpec.describe "API Users", type: :request do
 
       it "returns correct user types" do
         get "/api/v1/users"
-        mentors = 0
-        ects = 0
 
-        parsed_response["data"].each do |user|
-          user_type = user["attributes"]["user_type"]
-          if user_type == "mentor"
-            mentors += 1
-          elsif user_type == "early_career_teacher"
-            ects += 1
-          end
-        end
+        mentors = parsed_response["data"].count { |hash| hash["attributes"]["user_type"] == "mentor" }
+        ects = parsed_response["data"].count { |hash| hash["attributes"]["user_type"] == "early_career_teacher" }
 
         expect(mentors).to eql(1)
         expect(ects).to eql(2)
