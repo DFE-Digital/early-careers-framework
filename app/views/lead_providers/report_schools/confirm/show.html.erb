@@ -16,7 +16,7 @@
       <th scope="col" class="govuk-table__header">Local Authority</th>
       <!-- <th scope="col" class="govuk-table__header">MAT/Network</th> -->
       <th scope="col" class="govuk-table__header">Delivery partner</th>
-      <th scope="col"></th>
+      <th scope="col" class="govuk-table__header"></th>
     </tr>
   </thead>
   <tbody class="govuk-table__body">
@@ -41,7 +41,10 @@
 <p>Once you’ve confirmed, schools will be notified by email.</p>
 <p>Schools will have the option to notify the Department for Education and the training provider if they think this is incorrect.</p>
 
-<%= govuk_button_to "Confirm", lead_providers_report_schools_path, class: "govuk-button govuk-!-margin-bottom-3" %>
-<% if report_schools_form.source == "csv" %>
-  <%= govuk_link_to "Re-upload CSV", lead_providers_report_schools_csv_path, class: "govuk-button govuk-button--secondary" %>
+<%= form_with url: lead_providers_report_schools_path, class: "govuk-button-group" do |f| %>
+  <%= f.govuk_submit "Confirm" %>
+
+  <% if report_schools_form.source == "csv" %>
+    <%= govuk_link_to "Re-upload CSV", lead_providers_report_schools_csv_path, class: "govuk-button govuk-button--secondary govuk-!-margin-0" %>
+  <% end %>
 <% end %>
