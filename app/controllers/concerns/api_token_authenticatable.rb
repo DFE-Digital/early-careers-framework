@@ -6,11 +6,12 @@ module ApiTokenAuthenticatable
 
   included do
     before_action :authenticate
+    before_action :check_access_scope
   end
 
   def authenticate
     authenticate_or_request_with_http_token do |unhashed_token|
-      @current_api_token = ApiToken.merge(access_scope).find_by_unhashed_token(unhashed_token)
+      @current_api_token = ApiToken.find_by_unhashed_token(unhashed_token)
       if @current_api_token
         @current_api_token.update!(
           last_used_at: Time.zone.now,
@@ -24,6 +25,10 @@ module ApiTokenAuthenticatable
   end
 
 private
+
+  def check_access_scope
+    head :forbidden unless access_scope.include?(@current_api_token)
+  end
 
   def access_scope
     ApiToken.all
