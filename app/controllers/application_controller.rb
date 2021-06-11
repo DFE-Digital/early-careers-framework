@@ -50,7 +50,7 @@ protected
     policy = PrivacyPolicy.current
     return if policy.nil?
 
-    return if request.format == "application/json"
+    return if request.format.json?
 
     return unless policy.acceptance_required?(current_user)
 
