@@ -3,7 +3,7 @@
   <p>This means they will be delivering an induction programme to your early career teachers, starting in
     <%= cohort.start_year %>.</p>
   <p>If this is a
-    mistake, <%= govuk_link_to "report it now", challenge_partnership_path(partnership: partnership.id) %>.</p>
+    mistake, <%= govuk_link_to "report it now", challenge_partnership_path(partnership: partnership) %>.</p>
   <p>If you do not report this by <%= partnership.challenge_deadline.to_s(:govuk) %>, your programme and next steps will
     change.</p>
 <% end %>
