@@ -23,6 +23,7 @@ private
     )
   end
 
+  delegate :lead_provider, to: :partnership
   delegate :delivery_partner, to: :partnership
   delegate :cohort, to: :school_cohort
 end
