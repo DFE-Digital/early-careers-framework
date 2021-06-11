@@ -1,24 +1,23 @@
 # frozen_string_literal: true
 
-require "initialize_with_config"
-
 module JsonSchema
   class VersionEventFileName
-    include InitializeWithConfig
-    required_config :version, :event
+    class << self
+      def call(schema_root: "etc/schema", schema_path: "ecf/participant_declarations", schema_file: "request_schema.json", version: "1.0", event: :create)
+        new(schema_path: schema_path, schema_root: schema_root, schema_file: schema_file).call(version: version, event: event)
+      end
+    end
 
-    def call
-      Rails.root.join(schema_root, version.to_s, schema_path, event.to_s, schema_file)
+    def call(version:, event:)
+      Rails.root.join(@schema_root, version.to_s, @schema_path, event.to_s, @schema_file)
     end
 
   private
 
-    def default_config
-      {
-        schema_root: "etc/schema",
-        schema_path: "ecf/participant_declarations",
-        schema_file: "request_schema.json",
-      }
+    def initialize(schema_root: "etc/schema", schema_path: "ecf/participant_declarations", schema_file: "request_schema.json")
+      @schema_root = schema_root
+      @schema_path = schema_path
+      @schema_file = schema_file
     end
   end
 end

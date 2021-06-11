@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require "initialize_with_config"
+require "has_di_parameters"
 require "payment_calculator/ecf/payment_calculation"
 
 class ContractEventPaymentCalculator
-  include InitializeWithConfig
+  include HasDIParameters
 
   # @param [Symbol] event_type
   # @param [Integer] total_participants
@@ -20,10 +20,10 @@ class ContractEventPaymentCalculator
   # #contract must respond to :recruitment_target, :set_up_fee and :band_a, where #band_a also responds to
   # :per_participant
   def call(total_participants:, event_type:)
-    payment_calculator.call(config, total_participants: total_participants, event_type: event_type)
+    payment_calculator.call(params, total_participants: total_participants, event_type: event_type)
   end
 
-  def default_config
+  def default_params
     {
       payment_calculator: ::PaymentCalculator::Ecf::PaymentCalculation,
     }

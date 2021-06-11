@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
-require "initialize_with_config"
+require "has_di_parameters"
 require "participant_event_aggregator"
 require "contract_event_payment_calculator"
 
 class CalculationOrchestrator
-  include InitializeWithConfig
+  include HasDIParameters
 
   def call(event_type:)
-    total_participants = aggregator.call(config, event_type: event_type)
-    calculator.call(config, total_participants: total_participants, event_type: event_type)
+    total_participants = aggregator.call(params, event_type: event_type)
+    calculator.call(params, total_participants: total_participants, event_type: event_type)
   end
 
 private
 
-  def default_config
+  def default_params
     {
       aggregator: ::ParticipantEventAggregator,
       calculator: ::ContractEventPaymentCalculator,

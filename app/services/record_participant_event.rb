@@ -1,15 +1,21 @@
 # frozen_string_literal: true
 
-require "initialize_with_config"
-require "json_schema/validate_participant_event"
+require "has_di_parameters"
+require "json_schema/validate_body_against_schema"
 
 class RecordParticipantEvent
-  include InitializeWithConfig
-  required_config :participant_id, :lead_provider, :declaration_type, :declaration_date, :raw_event
+  include HasDIParameters
+  required_params :participant_id, :lead_provider, :declaration_type, :declaration_date, :raw_event
+
+  class << self
+    def call(params)
+      new(params).call
+    end
+  end
 
   def call
-    return :unprocessable_entity unless schema_validation
-    return :not_found unless set_config_ect_profile
+    validate_schema!
+    return :not_found unless add_ect_profile_params
     return :unprocessable_entity unless create_record
     return :not_found unless valid_provider
 
@@ -18,23 +24,32 @@ class RecordParticipantEvent
 
 private
 
-  def schema_validation
-    errors = participant_event_validator.call(config, body: raw_event)
+  def initialize(params)
+    inject_params(params)
+  end
+
+  def default_params
+    {
+      recorder: ParticipantDeclaration,
+      user_model: User,
+      schema_validator: JsonSchema::ValidateBodyAgainstSchema,
+      json_schema_file_location: JsonSchema::VersionEventFileName,
+    }
+  end
+
+  def validate_schema!
+    errors = schema_validator.call(schema: schema, body: raw_event)
     raise ActionController::ParameterMissing, errors unless errors.empty?
 
     true
   end
 
-  def default_config
-    {
-      recorder: ParticipantDeclaration,
-      user_model: User,
-      participant_event_validator: JsonSchema::ValidateParticipantEvent,
-    }
+  def schema
+    JSON.parse(File.read(json_schema_file_location.call(version: "0.2")))
   end
 
-  def set_config_ect_profile
-    config[:early_career_teacher_profile] = early_career_teacher_profile
+  def add_ect_profile_params
+    params[:early_career_teacher_profile] = early_career_teacher_profile
   end
 
   def early_career_teacher_profile
@@ -42,7 +57,7 @@ private
   end
 
   def create_record
-    recorder.create(config.slice(*required_params))
+    recorder.create(params.slice(*required_params))
   end
 
   def actual_lead_provider
@@ -54,6 +69,6 @@ private
   end
 
   def required_params
-    (self.class.required_config - [:participant_id]) << :early_career_teacher_profile
+    (self.class.required_params - [:participant_id]) << :early_career_teacher_profile
   end
 end

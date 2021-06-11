@@ -18,7 +18,7 @@ describe ::PaymentCalculator::Ecf::PaymentCalculation do
     }
   end
 
-  let(:config) do
+  let(:params) do
     {
       contract: contract,
     }
@@ -27,7 +27,7 @@ describe ::PaymentCalculator::Ecf::PaymentCalculation do
   it "returns the expected types for all outputs" do
     @combined_results = nil
     retained_event_aggregations.each do |key, value|
-      result = described_class.call(config, event_type: key, total_participants: value)
+      result = described_class.call(params, event_type: key, total_participants: value)
 
       if @combined_results.nil?
         expect(result.dig(:service_fees, :service_fee_per_participant)).to be_a(BigDecimal)

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 #
-# The InitializeWithConfig module is used to allow for a hash of key/value pairs to be passed in for initialization
+# The HasDIParameters module is used to allow for a hash of key/value pairs to be passed in for initialization
 # and create methods corresponding to these automatically. Optionally, default key/value pairs can be set. (see below)
 #
 # The purpose of this is to simplify interfaces and allow for configuration methods to be called directly.
@@ -48,10 +48,10 @@
 require "active_support"
 require "active_support/core_ext"
 
-module InitializeWithConfig
+module HasDIParameters
   class MissingRequiredArguments < RuntimeError; end
 
-  attr_accessor :config
+  attr_accessor :params
 
   class << self
     def included(base)
@@ -65,28 +65,32 @@ module InitializeWithConfig
     raise "override abstract call method"
   end
 
-  def default_config
+  def default_params
     {}
   end
 
-  def required_config
-    self.class.required_config
+  def required_params
+    self.class.required_params
   end
 
 private
 
   # @param [Hash] config
   def initialize(config)
+    inject_params(config)
+  end
+
+  def inject_params(config)
     self.class.externally_injected ||= []
-    self.config = HashWithIndifferentAccess.new(config.respond_to?(:[]) ? default_config.merge(config) : default_config)
-    self.config.each do |key, value|
+    self.params = HashWithIndifferentAccess.new(config.respond_to?(:[]) ? default_params.merge(config) : default_params)
+    params.each do |key, value|
       auto_define(key) { value } unless allow_override? && respond_to?(key)
     end
     check_required
   end
 
   def check_required
-    raise ::InitializeWithConfig::MissingRequiredArguments, "missing required dependency injected items #{missing_required_params} in class #{self.class.name}" unless missing_required_params.empty?
+    raise ::HasDIParameters::MissingRequiredArguments, "missing required dependency injected items #{missing_required_params} in class #{self.class.name}" unless missing_required_params.empty?
   end
 
   def missing_required_params
@@ -109,7 +113,7 @@ private
       self.prevent_override = true
     end
 
-    def required_config(*args)
+    def required_params(*args)
       return @externally_injected || [] if args.nil?
 
       self.externally_injected = args

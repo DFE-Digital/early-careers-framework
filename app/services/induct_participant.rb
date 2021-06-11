@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require "initialize_with_config"
+require "has_di_parameters"
 
 class InductParticipant
-  include InitializeWithConfig
+  include HasDIParameters
 
   def call
     recorder.find_or_initialize_by(lead_provider: lead_provider, early_career_teacher_profile: early_career_teacher_profile).join!
@@ -13,7 +13,7 @@ class InductParticipant
 
 private
 
-  def default_config
+  def default_params
     {
       recorder: ParticipationRecord,
     }
