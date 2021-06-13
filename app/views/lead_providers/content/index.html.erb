@@ -1,0 +1,46 @@
+<%= content_for :body_class, 'app-start-page' %>
+
+<div class="app-masthead">
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <h1 class="app-masthead__title govuk-heading-xl">Manage your records quickly and easily</h1>
+        <div class="app-masthead__description">
+          <p class="govuk-body-l">Try our new service to see how easy it is to use. It’s available to all lead providers.</p>
+        </div>
+        <%= govuk_start_now_button(
+          text: 'Get started',
+          href: @provider_dashboard_url,
+          classes: 'govuk-!-margin-bottom-0 app-button--inverted',
+        ) %>
+      </div>
+      <div class="govuk-grid-column-one-third">
+        <div class="app-masthead__image">
+          <img src="/lead-provider/hero.svg" alt="" role="presentation">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="govuk-width-container">
+  <section class="app-section">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        <h2 class="govuk-heading-m">Check the schools you’ve recruited</h2>
+        <p class="govuk-body">Confirm all the schools you have recruited.</p>
+        <p class="govuk-body">List your confirmed schools with their ECT and mentor numbers.</p>
+        <p class="govuk-body">See school details including their induction tutor contact.</p>
+
+        <%= govuk_start_now_button(
+          text: 'Learn to manage partnerships',
+          href: './lead-providers/partnership-guide',
+          classes: 'govuk-!-margin-bottom-0',
+        ) %>
+      </div>
+      <div class="govuk-grid-column-one-half">
+        <img src="/lead-provider/schools.png" alt="A screenshot of the service showing a list of applications and their statuses.">
+      </div>
+    </div>
+  </section>
+</div>

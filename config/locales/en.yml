@@ -91,3 +91,7 @@ en:
             estimated_teacher_count:
               <<: *defaults
               blank: "enter your expected number of teachers"
+  page_titles:
+    lead_providers:
+      content:
+        partnership_guide: "Guide for providers to manage their schools on the ECF service"
