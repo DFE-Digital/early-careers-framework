@@ -41,7 +41,7 @@ def create_school_and_associations(lead_provider, cohort, index)
     s.postcode = Faker::Address.postcode
   end
 
-  Partnership.create!(
+  Partnership.find_or_create_by!(
     school: school,
     lead_provider: lead_provider,
     cohort: cohort,

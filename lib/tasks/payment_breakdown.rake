@@ -23,9 +23,7 @@ namespace :payment_calculation do
     per_participant_in_bands = lead_provider.call_off_contract.bands.each_with_index.map { |b, i| "£#{b.per_participant.to_i} per participant in #{band_name_from_index(i)}" }.join(", ")
 
     breakdown = PaymentCalculator::Ecf::PaymentCalculation.call(
-      {
-        lead_provider: lead_provider,
-      },
+      lead_provider: lead_provider,
       total_participants: total_participants,
       event_type: :started,
     )
