@@ -38,6 +38,7 @@ en:
     retention_4: Retention 4
     completion: Completion
   parameter_required: Parameter is required
+  invalid_participant: "The property '#/participant_id' must be a valid Participant ID"
   estimate_participants_default_message: &default_message "Enter a number between 0 and 1000"
   estimate_participants_defaults: &defaults
     not_a_number: *default_message
