@@ -7,7 +7,7 @@ module Multistep
       @next_step = next_step
     end
 
-    attr_reader :attibutes
+    attr_reader :attributes
 
     def next_step(form)
       return if @next_step.blank?
