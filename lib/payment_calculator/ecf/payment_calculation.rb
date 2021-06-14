@@ -19,7 +19,7 @@ module PaymentCalculator
       def call(total_participants: 0, event_type: :started)
         {
           service_fees: @service_fee_calculator.call(contract: contract),
-          output_payment: @output_payment_calculator.call({ contract: contract }, event_type: event_type, total_participants: total_participants),
+          output_payments: @output_payment_calculator.call({ contract: contract }, event_type: event_type, total_participants: total_participants),
         }
       end
 
