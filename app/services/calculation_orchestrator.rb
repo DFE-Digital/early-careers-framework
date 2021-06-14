@@ -11,7 +11,7 @@ class CalculationOrchestrator
   end
 
   def call(event_type:)
-    total_participants = @aggregator.call({ lead_provider: @lead_provider }, event_type: event_type)
+    total_participants = @aggregator.call(@lead_provider)
     @calculator.call(lead_provider: @lead_provider, total_participants: total_participants, event_type: event_type)
   end
 
