@@ -19,7 +19,7 @@ module CallOffContractSteps
   end
 
   step "I setup the contract" do
-    @band_a = double("Band Double", number_of_participants_in_this_band: 2000, per_participant: @per_participant_value, deduction_for_setup?: true)
+    @band_a = double("Band Double", number_of_participants_in_this_band: 2000, per_participant: @per_participant_value, deduction_for_setup?: true, upper_boundary: 2000)
     contract = double("Contract Double", recruitment_target: @recruitment_target, set_up_fee: @set_up_fee, band_a: @band_a)
     @call_off_contract = DummyClass.new({ contract: contract })
   end
