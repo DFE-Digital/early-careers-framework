@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "initialize_with_config"
+require "has_di_parameters"
 
 module PaymentCalculator
   module Ecf
@@ -9,7 +9,7 @@ module PaymentCalculator
         extend ActiveSupport::Concern
 
         included do
-          include InitializeWithConfig
+          include HasDIParameters
         end
 
         delegate :band_a, to: :contract

@@ -1,17 +1,15 @@
 # frozen_string_literal: true
 
-require "initialize_with_config"
+require "has_di_parameters"
 
 module PaymentCalculator
   module Ecf
     module Contract
       module ServiceFeeCalculations
-        class << self
-          def included(base)
-            base.class_eval do
-              include InitializeWithConfig
-            end
-          end
+        extend ActiveSupport::Concern
+
+        included do
+          include HasDIParameters
         end
 
         delegate :recruitment_target,

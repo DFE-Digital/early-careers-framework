@@ -1,17 +1,23 @@
 # frozen_string_literal: true
 
-require "initialize_with_config"
+require "json_schema/validate_body_against_schema"
 
 class RecordParticipantEvent
-  include InitializeWithConfig
+  attr_accessor :params
+
   class << self
+    def call(params)
+      new(params).call
+    end
+
     def required_params
       %i[participant_id lead_provider declaration_type declaration_date raw_event]
     end
   end
 
   def call
-    return :not_found unless set_config_ect_profile
+    validate_schema!
+    return :not_found unless add_ect_profile_params
     return :unprocessable_entity unless create_record
     return :not_found unless valid_provider
 
@@ -20,23 +26,31 @@ class RecordParticipantEvent
 
 private
 
-  def default_config
-    HashWithIndifferentAccess.new(
-      recorder: ParticipantDeclaration,
-      user_model: User,
-    )
+  def initialize(params)
+    @params = params
   end
 
-  def set_config_ect_profile
-    config[:early_career_teacher_profile] = early_career_teacher_profile
+  def validate_schema!
+    errors = JsonSchema::ValidateBodyAgainstSchema.call(schema: schema, body: @params[:raw_event])
+    raise ActionController::ParameterMissing, errors unless errors.empty?
+
+    true
+  end
+
+  def schema
+    JSON.parse(File.read(JsonSchema::VersionEventFileName.call(version: "0.2")))
+  end
+
+  def add_ect_profile_params
+    @params[:early_career_teacher_profile] = early_career_teacher_profile
   end
 
   def early_career_teacher_profile
-    user_model.find(participant_id)&.early_career_teacher_profile
+    User.find(@params[:participant_id])&.early_career_teacher_profile
   end
 
   def create_record
-    recorder.create(config.slice(*required_params))
+    ParticipantDeclaration.create(@params.slice(*required_params))
   end
 
   def actual_lead_provider
