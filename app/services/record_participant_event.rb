@@ -1,15 +1,17 @@
 # frozen_string_literal: true
 
-require "has_di_parameters"
 require "json_schema/validate_body_against_schema"
 
 class RecordParticipantEvent
-  include HasDIParameters
-  required_params :participant_id, :lead_provider, :declaration_type, :declaration_date, :raw_event
+  attr_accessor :params
 
   class << self
     def call(params)
       new(params).call
+    end
+
+    def required_params
+      %i[participant_id lead_provider declaration_type declaration_date raw_event]
     end
   end
 
@@ -25,39 +27,30 @@ class RecordParticipantEvent
 private
 
   def initialize(params)
-    inject_params(params)
-  end
-
-  def default_params
-    {
-      recorder: ParticipantDeclaration,
-      user_model: User,
-      schema_validator: JsonSchema::ValidateBodyAgainstSchema,
-      json_schema_file_location: JsonSchema::VersionEventFileName,
-    }
+    @params = params
   end
 
   def validate_schema!
-    errors = schema_validator.call(schema: schema, body: raw_event)
+    errors = JsonSchema::ValidateBodyAgainstSchema.call(schema: schema, body: @params[:raw_event])
     raise ActionController::ParameterMissing, errors unless errors.empty?
 
     true
   end
 
   def schema
-    JSON.parse(File.read(json_schema_file_location.call(version: "0.2")))
+    JSON.parse(File.read(JsonSchema::VersionEventFileName.call(version: "0.2")))
   end
 
   def add_ect_profile_params
-    params[:early_career_teacher_profile] = early_career_teacher_profile
+    @params[:early_career_teacher_profile] = early_career_teacher_profile
   end
 
   def early_career_teacher_profile
-    user_model.find(participant_id)&.early_career_teacher_profile
+    User.find(@params[:participant_id])&.early_career_teacher_profile
   end
 
   def create_record
-    recorder.create(params.slice(*required_params))
+    ParticipantDeclaration.create(@params.slice(*required_params))
   end
 
   def actual_lead_provider

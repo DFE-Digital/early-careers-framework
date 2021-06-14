@@ -8,7 +8,7 @@
 #
 # For example, given the simple class:
 # class Base
-#   include InitializeWithConfig
+#   include HasDIParameters
 #
 #   def call
 #     puts json

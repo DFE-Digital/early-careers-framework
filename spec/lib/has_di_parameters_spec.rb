@@ -29,7 +29,7 @@ class MissingParameter < CorrectStructure
   required_params :version, :event
 end
 
-describe "InitializeWithConfig" do
+describe HasDIParameters do
   let(:input) do
     {
       recruitment_target: 2000,

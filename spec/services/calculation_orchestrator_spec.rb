@@ -31,7 +31,7 @@ RSpec.describe CalculationOrchestrator do
 
   context ".call" do
     it "returns the total calculation" do
-      expect(described_class.call({ lead_provider: call_off_contract.lead_provider }, event_type: :started)).to eq(expected_result)
+      expect(described_class.call(lead_provider: call_off_contract.lead_provider, event_type: :started)).to eq(expected_result)
     end
   end
 end
