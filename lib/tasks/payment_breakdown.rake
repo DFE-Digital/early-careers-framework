@@ -33,8 +33,8 @@ namespace :payment_calculation do
     service_fees = breakdown.dig(:service_fees).each_with_object([]) do |hash, bands|
       bands << [
         band_name_from_index(bands.length),
-        "£#{number_to_delimited(hash[:service_fee_monthly].to_i)}",
         "£#{number_to_delimited(hash[:service_fee_per_participant].to_i)}",
+        "£#{number_to_delimited(hash[:service_fee_monthly].to_i)}",
       ]
     end
     output_payment = number_to_delimited(breakdown.dig(:output_payment, :started, :subtotal).to_i)
