@@ -12,11 +12,16 @@ RSpec.describe "API Users", type: :request do
     before :each do
       # Heads up, for some reason the stored CIP IDs don't match
       cip = create(:core_induction_programme, name: "Teach First")
+      cohort = create(:cohort)
+      school = create(:school)
+      create(:school_cohort, school: school, cohort: cohort)
       mentor = create(:user, :mentor)
       mentor.mentor_profile.update!(core_induction_programme: cip)
+      mentor.mentor_profile.update!(school: school)
       2.times do
         ect = create(:user, :early_career_teacher)
         ect.early_career_teacher_profile.update!(core_induction_programme: cip)
+        ect.early_career_teacher_profile.update!(school: school)
       end
     end
 
@@ -47,7 +52,7 @@ RSpec.describe "API Users", type: :request do
 
       it "has correct attributes" do
         get "/api/v1/users"
-        expect(parsed_response["data"][0]).to have_jsonapi_attributes(:email, :full_name, :user_type, :core_induction_programme).exactly
+        expect(parsed_response["data"][0]).to have_jsonapi_attributes(:email, :full_name, :user_type, :core_induction_programme, :induction_programme_choice).exactly
       end
 
       it "returns correct user types" do

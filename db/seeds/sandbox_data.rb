@@ -38,14 +38,14 @@ def create_school_and_associations(lead_provider, cohort, index)
     s.postcode = Faker::Address.postcode
   end
 
-  Partnership.create!(
+  Partnership.find_or_create_by!(
     school: school,
     lead_provider: lead_provider,
     cohort: cohort,
     delivery_partner: DeliveryPartner.find_or_create_by!(name: Faker::Company.name),
   )
 
-  SchoolCohort.create!(school: school, cohort: cohort, induction_programme_choice: "full_induction_programme")
+  SchoolCohort.find_or_create_by!(school: school, cohort: cohort, induction_programme_choice: "full_induction_programme")
 
   school
 end

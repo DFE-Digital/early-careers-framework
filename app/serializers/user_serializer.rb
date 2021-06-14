@@ -17,6 +17,12 @@ class UserSerializer
     none: "none",
   }.freeze
 
+  PROGRAMME_TYPES = {
+    core_induction_programme: "core_induction_programme",
+    full_induction_programme: "full_induction_programme",
+    not_yet_known: "not_yet_known",
+  }.freeze
+
   set_id :id
   attributes :email, :full_name
 
@@ -42,6 +48,20 @@ class UserSerializer
       CIP_TYPES[:ucl]
     else
       CIP_TYPES[:none]
+    end
+  end
+
+  attributes :induction_programme_choice do |user|
+    if user.participant?
+      school_cohort = SchoolCohort.find_by(school: user.school)
+      case school_cohort.induction_programme_choice
+      when "full_induction_programme"
+        PROGRAMME_TYPES[:full_induction_programme]
+      when "core_induction_programme"
+        PROGRAMME_TYPES[:core_induction_programme]
+      when "not_yet_known"
+        PROGRAMME_TYPES[:not_yet_known]
+      end
     end
   end
 end
