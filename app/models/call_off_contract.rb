@@ -11,4 +11,6 @@ class CallOffContract < ApplicationRecord
   def bands
     participant_bands.min_nulls_first
   end
+
+  delegate :set_up_recruitment_basis, to: :band_a
 end
