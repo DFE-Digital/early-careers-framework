@@ -12,11 +12,8 @@ module Schools
     helper_method :add_participant_form
 
     def start
-      session.delete(FORM_SESSION_KEY)
-      session[FORM_SESSION_KEY] = {
-        school_cohort_id: @school_cohort.id,
-      }
-      redirect_to action: :show, step: :type
+      reset_form
+      redirect_to action: :show, step: add_participant_form.next_step
     end
 
     def show
@@ -27,7 +24,7 @@ module Schools
       if add_participant_form.valid?(current_step)
         add_participant_form.record_completed_step current_step
         store_form_in_session
-        redirect_to action: :show, step: step_param(add_participant_form.next_step(current_step))
+        redirect_to action: :show, step: step_param(add_participant_form.next_step)
       else
         render current_step
       end
@@ -41,6 +38,14 @@ module Schools
     end
 
   private
+
+    def reset_form
+      session.delete(FORM_SESSION_KEY)
+      @add_participant_form = AddParticipantForm.new(
+        school_cohort_id: @school_cohort.id,
+      )
+      store_form_in_session
+    end
 
     def add_participant_form
       return @add_participant_form if defined?(@add_participant_form)
@@ -64,7 +69,7 @@ module Schools
     end
 
     def back_link_path
-      previous_step = add_participant_form.previous_step(current_step)
+      previous_step = add_participant_form.previous_step(from: current_step)
       return schools_cohort_participants_path unless previous_step
 
       { action: :show, step: step_param(previous_step) }

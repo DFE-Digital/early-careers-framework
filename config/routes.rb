@@ -209,11 +209,7 @@ Rails.application.routes.draw do
           scope(
             controller: "add_participants",
             path: "add",
-            constraints: {
-              step: Regexp.union(
-                *Schools::AddParticipantForm::STEPS.map { |step| step.to_s.dasherize },
-              ),
-            },
+            constraints: { step: Schools::AddParticipantForm.step_route_constraint },
           ) do
             get ":step", action: :show
             patch ":step", action: :update

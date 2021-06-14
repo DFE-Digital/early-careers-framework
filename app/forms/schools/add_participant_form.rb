@@ -3,19 +3,13 @@
 module Schools
   class AddParticipantForm
     include ActiveModel::Model
-    include ActiveModel::Attributes
-    include ActiveModel::Serialization
-
     include Multistep::Form
-
-    STEPS = %i[type details choose_mentor email_taken confirm].freeze
 
     TYPE_OPTIONS = {
       ect: "Early Career Teacher",
       mentor: "Mentor",
     }.freeze
 
-    attribute :completed_steps, default: []
     attribute :school_cohort_id
 
     step :type do
@@ -24,6 +18,8 @@ module Schools
       validates :type,
                 presence: { message: "Please select type of the new participant" },
                 inclusion: { in: TYPE_OPTIONS.keys, allow_blank: true }
+
+      next_step :details
     end
 
     step :details do
@@ -35,6 +31,16 @@ module Schools
       validates :email,
                 presence: true,
                 notify_email: { allow_blank: true }
+
+      next_step do
+        if email_already_taken?
+          :email_taken
+        elsif type == :ect && mentor_options.any?
+          :choose_mentor
+        else
+          :confirm
+        end
+      end
     end
 
     step :choose_mentor do
@@ -43,7 +49,13 @@ module Schools
       validates :mentor_id,
                 presence: true,
                 inclusion: { in: ->(form) { form.mentor_options.map(&:id) + %w[later] } }
+
+      next_step :confirm
     end
+
+    step :email_taken
+
+    step :confirm
 
     def type_options
       TYPE_OPTIONS
@@ -59,42 +71,6 @@ module Schools
       @mentor = (User.find(mentor_id) if mentor_id.present? && mentor_id != "later")
     end
 
-    def previous_step(current_step)
-      step_index = completed_steps.index(current_step)
-      return completed_steps.last if step_index.nil?
-      return if step_index.zero?
-
-      completed_steps[step_index - 1]
-    end
-
-    def next_step(step)
-      case step
-      when :type then :details
-      when :details
-        return :email_taken if email_already_taken?
-
-        if type == :ect && mentor_options.any?
-          :choose_mentor
-        else
-          :confirm
-        end
-      when :choose_mentor then :confirm
-      else raise "No next step defined"
-      end
-    end
-
-    def record_completed_step(step)
-      if completed_steps.include? step
-        self.completed_steps = completed_steps[0..completed_steps.index(step)]
-      else
-        completed_steps << step
-      end
-    end
-
-    def completed_steps=(value)
-      super(value.map(&:to_sym))
-    end
-
     def email_already_taken?
       User.exists?(email: email)
     end
@@ -104,7 +80,7 @@ module Schools
     end
 
     def school_cohort
-      @school_cohort ||= SchoolCohort.find(school_cohort_id)
+      @school_cohort ||= SchoolCohort.find_by(id: school_cohort_id)
     end
 
     def save!
