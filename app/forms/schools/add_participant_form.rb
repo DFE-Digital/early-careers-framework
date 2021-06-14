@@ -6,6 +6,8 @@ module Schools
     include ActiveModel::Attributes
     include ActiveModel::Serialization
 
+    include Multistep::Form
+
     STEPS = %i[type details choose_mentor email_taken confirm].freeze
 
     TYPE_OPTIONS = {
@@ -14,30 +16,34 @@ module Schools
     }.freeze
 
     attribute :completed_steps, default: []
-    attribute :type
-    attribute :full_name
-    attribute :email
     attribute :school_cohort_id
-    attribute :mentor_id
 
-    validates :type,
-              on: :type,
-              presence: { message: "Please select type of the new participant" },
-              inclusion: { in: TYPE_OPTIONS.keys, allow_blank: true }
+    step :type do
+      attribute :type
 
-    validates :full_name,
-              on: :details,
-              presence: true
+      validates :type,
+                presence: { message: "Please select type of the new participant" },
+                inclusion: { in: TYPE_OPTIONS.keys, allow_blank: true }
+    end
 
-    validates :email,
-              on: :details,
-              presence: true,
-              notify_email: { allow_blank: true }
+    step :details do
+      attribute :full_name
+      attribute :email
 
-    validates :mentor_id,
-              on: :choose_mentor,
-              presence: true,
-              inclusion: { in: ->(form) { form.mentor_options.map(&:id) + %w[later] } }
+      validates :full_name, presence: true
+
+      validates :email,
+                presence: true,
+                notify_email: { allow_blank: true }
+    end
+
+    step :choose_mentor do
+      attribute :mentor_id
+
+      validates :mentor_id,
+                presence: true,
+                inclusion: { in: ->(form) { form.mentor_options.map(&:id) + %w[later] } }
+    end
 
     def type_options
       TYPE_OPTIONS
