@@ -11,14 +11,14 @@ describe ::PaymentCalculator::Ecf::Contract::OutputPaymentCalculations do
     contract = double("Contract Double", band_a: band_a)
     call_off_contract = DummyClass.new({ contract: contract })
 
-    expect(call_off_contract.output_payment_per_participant.round(0)).to eq(598.00)
+    expect(call_off_contract.output_payment_per_participant(band_a).round(0)).to eq(598.00)
 
     %i[started completion].each do |event_type|
-      expect(call_off_contract.output_payment_per_participant_for_event(event_type: event_type).round(0)).to eq(120.00)
+      expect(call_off_contract.output_payment_per_participant_for_event(event_type: event_type, band: band_a).round(0)).to eq(120.00)
     end
 
     %i[retention_1 retention_2 retention_3 retention_4].each do |event_type|
-      expect(call_off_contract.output_payment_per_participant_for_event(event_type: event_type).round(0)).to eq(90.00)
+      expect(call_off_contract.output_payment_per_participant_for_event(event_type: event_type, band: band_a).round(0)).to eq(90.00)
     end
   end
 end

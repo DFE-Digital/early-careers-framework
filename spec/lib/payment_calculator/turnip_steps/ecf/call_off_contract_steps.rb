@@ -25,7 +25,7 @@ module CallOffContractSteps
                       set_up_fee: @set_up_fee,
                       band_a: @band_a,
                       set_up_recruitment_basis: 2000)
-    @call_off_contract = DummyClass.new({ contract: contract })
+    @call_off_contract = DummyClass.new({ contract: contract, per_participant: @per_participant_value })
   end
 
   step :assert_service_fee_per_participant, "the per-participant service fee should be reduced to £:decimal_placeholder"
@@ -43,11 +43,15 @@ module CallOffContractSteps
   step :assert_output_per_participant, "the output payment per-participant should be unchanged at £:decimal_placeholder"
 
   def assert_service_fee_per_participant(expected_value)
+<<<<<<< HEAD
     expect(@call_off_contract.service_fee_per_participant(@band_a).round(2)).to eq(expected_value)
+=======
+    expect(@call_off_contract.service_fee_per_participant.round(0)).to eq(expected_value)
+>>>>>>> Rebase
   end
 
   def assert_output_per_participant(expected_value)
-    expect(@call_off_contract.output_payment_per_participant.round(2)).to eq(expected_value)
+    expect(@call_off_contract.output_payment_per_participant(@band_a).round(0)).to eq(expected_value)
   end
 end
 

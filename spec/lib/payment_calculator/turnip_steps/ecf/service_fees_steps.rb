@@ -12,6 +12,7 @@ module ServiceFeeSteps
                       recruitment_target: @recruitment_target,
                       set_up_fee: @set_up_fee,
                       band_a: @band_a,
+                      bands: [@band_a],
                       set_up_recruitment_basis: 2000)
     @call_off_contract = DummyClass.new({ contract: contract,
                                           bands: [@band_a] })
