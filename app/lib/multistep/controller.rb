@@ -33,11 +33,19 @@ module Multistep
         end
       end
 
-      def escape_route(&block)
+      def abandon_journey_path(&block)
         if block
-          @escape_route = block
+          @abandon_journey_path = block
         else
-          @escape_route || raise("Escape route not defined!")
+          @abandon_journey_path || raise("Abandon path not defined!")
+        end
+      end
+
+      def setup_form(&block)
+        if block
+          @setup_form = block
+        else
+          @setup_form
         end
       end
 
@@ -77,7 +85,7 @@ module Multistep
     end
 
     def complete
-      @result = add_participant_form.save!
+      @result = form.save!
     end
 
   private
@@ -88,6 +96,11 @@ module Multistep
       setup_form(form)
       @form = form
       store_form_in_session
+    end
+
+    def setup_form(form)
+      return unless (setup = self.class.setup_form)
+      instance_exec(form, &setup)
     end
 
     def form
@@ -102,28 +115,24 @@ module Multistep
       params[:step].underscore.to_sym
     end
 
-    def setup_form(form)
-      # noop
-    end
-
     def back_link_path
-      previous_step = add_participant_form.previous_step(from: current_step)
-      return escape_route unless previous_step
+      previous_step = form.previous_step(from: current_step)
+      return abandon_journey_path unless previous_step
 
       { action: :show, step: step_param(previous_step) }
     end
 
     def form_params
       attributes = form.class.steps[current_step].attributes
-      params.require(self.class.params_key).permit(*attributes)
+      params[self.class.params_key]&.permit(*attributes) || {}
     end
 
     def ensure_form_present
       redirect_to escape_route unless session.key?(self.class.session_key)
     end
 
-    def escape_route
-      instance_exec(&self.class.escape_route)
+    def abandon_journey_path
+      instance_exec(&self.class.abandon_journey_path)
     end
 
     def step_param(step)
