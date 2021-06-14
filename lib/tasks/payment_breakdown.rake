@@ -20,6 +20,7 @@ namespace :payment_calculation do
     end
 
     total_participants = (ARGV[2] || 2000).to_i
+    uplift_participants = (ARGV[3] || 200).to_i
     per_participant_in_bands = lead_provider.call_off_contract.bands.each_with_index.map { |b, i| "£#{b.per_participant.to_i} per participant in #{band_name_from_index(i)}" }.join(", ")
 
     breakdown = PaymentCalculator::Ecf::PaymentCalculation.call(
@@ -27,6 +28,13 @@ namespace :payment_calculation do
       total_participants: total_participants,
       event_type: :started,
     )
+    uplift_calculation = PaymentCalculator::Ecf::UpliftCalculation.call(
+      lead_provider: lead_provider,
+      total_participants: uplift_participants,
+      event_type: :started,
+    )
+
+    puts "*** breakdown #{JSON.pretty_generate(breakdown)}"
 
     service_fees = breakdown.dig(:service_fees).each_with_object([]) do |hash, bands|
       bands << [
