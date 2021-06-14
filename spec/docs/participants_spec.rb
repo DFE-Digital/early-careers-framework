@@ -57,7 +57,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
                 style: :deepObject,
                 explode: true,
                 required: false,
-                example: { page: 2, per_page: 10 },
+                example: { page: 1, per_page: 5 },
                 description: "Pagination options to navigate through the collection."
 
       response "200", "Collection of participants." do
