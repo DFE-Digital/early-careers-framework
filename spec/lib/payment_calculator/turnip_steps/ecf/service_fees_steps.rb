@@ -7,7 +7,7 @@ module ServiceFeeSteps
   end
 
   step "I run the calculation" do
-    @band_a = double("Band Double", per_participant: @per_participant_value, number_of_participants_in_this_band: 2000, deduction_for_setup?: true, upper_boundary: 2000)
+    @band_a = double("Band Double", per_participant: @per_participant_value, number_of_participants_in_this_band: 2000, deduction_for_setup?: true)
     contract = double("Contract Double",
                       recruitment_target: @recruitment_target,
                       set_up_fee: @set_up_fee,
