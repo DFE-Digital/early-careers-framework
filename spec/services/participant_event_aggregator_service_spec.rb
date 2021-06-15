@@ -7,17 +7,35 @@ RSpec.describe ParticipantEventAggregator do
 
   context "event declarations" do
     before do
-      10.times do
+      # TODO: DRY
+      6.times do
         participant_declaration = create(:participant_declaration, lead_provider: lead_provider)
         create(:participant_declaration, early_career_teacher_profile: participant_declaration.early_career_teacher_profile, lead_provider: lead_provider)
+
+        participant_record = create(:participation_record, lead_provider: lead_provider)
+        participant_record.join!
+      end
+      4.times do
+        early_career_teacher_profile = create(:early_career_teacher_profile, uplift: true)
+        participant_declaration = create(:participant_declaration, lead_provider: lead_provider, early_career_teacher_profile: early_career_teacher_profile)
+        create(:participant_declaration, early_career_teacher_profile: participant_declaration.early_career_teacher_profile, lead_provider: lead_provider)
+
         participant_record = create(:participation_record, lead_provider: lead_provider)
         participant_record.join!
       end
     end
 
     describe ".call" do
-      it "returns a count of the unique started events" do
-        expect(described_class.call(lead_provider)).to eq(10)
+      context "aggregate using ParticipationRecorder" do
+        it "returns a count of the active participants" do
+          active, = described_class.call(lead_provider)
+          expect(active).to eq(10)
+        end
+
+        it "returns a count of the participants eligible for uplift payments" do
+          _, uplift = described_class.call(lead_provider)
+          expect(uplift).to eq(4)
+        end
       end
     end
   end
