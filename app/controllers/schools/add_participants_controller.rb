@@ -64,10 +64,12 @@ module Schools
     end
 
     def back_link_path
-      previous_step = add_participant_form.previous_step(current_step)
-      return schools_cohort_participants_path unless previous_step
-
-      { action: :show, step: step_param(previous_step) }
+      if (previous_step = add_participant_form.previous_step(current_step))
+        { action: :show, step: step_param(previous_step) }
+      else
+        participants = User.order(:full_name).is_participant.in_school(@school.id)
+        participants.any? ? schools_cohort_participants_path : schools_cohort_path(id: @cohort.start_year)
+      end
     end
 
     def add_participant_form_params
