@@ -15,6 +15,8 @@ private
 
   def ensure_school_user
     raise Pundit::NotAuthorizedError, "Forbidden" unless current_user.induction_coordinator?
+
+    authorize(active_school, :show?) if active_school.present?
   end
 
   def active_school
