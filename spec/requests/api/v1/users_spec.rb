@@ -3,12 +3,11 @@
 require "rails_helper"
 
 RSpec.describe "API Users", type: :request do
+  let(:parsed_response) { JSON.parse(response.body) }
+  let(:token) { EngageAndLearnApiToken.create_with_random_token! }
+  let(:bearer_token) { "Bearer #{token}" }
+
   describe "#index" do
-    let(:token) { EngageAndLearnApiToken.create_with_random_token! }
-    let(:bearer_token) { "Bearer #{token}" }
-
-    let(:parsed_response) { JSON.parse(response.body) }
-
     before :each do
       # Heads up, for some reason the stored CIP IDs don't match
       cip = create(:core_induction_programme, name: "Teach First")
@@ -71,12 +70,14 @@ RSpec.describe "API Users", type: :request do
         expect(parsed_response["data"].size).to eql(2)
       end
 
-      it "returns different users for each page" do
+      it "returns different users for first page" do
         get "/api/v1/users", params: { page: { per_page: 2, page: 1 } }
         expect(parsed_response["data"].size).to eql(2)
+      end
 
+      it "returns different users for second page" do
         get "/api/v1/users", params: { page: { per_page: 2, page: 2 } }
-        expect(JSON.parse(response.body)["data"].size).to eql(1)
+        expect(parsed_response["data"].size).to eql(1)
       end
 
       it "returns users changed since a particular time, if given a changed_since parameter" do
@@ -101,6 +102,76 @@ RSpec.describe "API Users", type: :request do
         default_headers[:Authorization] = bearer_token
         get "/api/v1/users"
         expect(response.status).to eq 403
+      end
+    end
+  end
+
+  describe "#create" do
+    context "when authorized" do
+      before do
+        default_headers[:Authorization] = bearer_token
+        default_headers["Content-Type"] = "application/vnd.api+json"
+      end
+
+      let(:json) do
+        {
+          data: {
+            type: "user",
+            attributes: {
+              full_name: "John Doe",
+              email: "john.doe@example.com",
+            },
+          },
+        }.to_json
+      end
+
+      it "returns a 201" do
+        post "/api/v1/users.json", params: json
+        expect(response).to be_created
+      end
+
+      it "returns correct jsonapi content type header" do
+        post "/api/v1/users.json", params: json
+        expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
+      end
+
+      it "creates a user record" do
+        expect {
+          post "/api/v1/users", params: json
+        }.to change(User, :count).by(1)
+
+        user = User.order(:created_at).last
+
+        expect(user.full_name).to eql("John Doe")
+        expect(user.email).to eql("john.doe@example.com")
+      end
+
+      it "returns the created user resource" do
+        post "/api/v1/users.json", params: json
+
+        user = User.order(:created_at).last
+
+        expect(parsed_response["data"]["type"]).to eql("user")
+        expect(parsed_response["data"]["id"]).to eql(user.id)
+        expect(parsed_response["data"]["attributes"]["full_name"]).to eql("John Doe")
+        expect(parsed_response["data"]["attributes"]["email"]).to eql("john.doe@example.com")
+      end
+
+      context "when user with email address already exists" do
+        before do
+          User.create!(email: "john.doe@example.com", full_name: "John Doeeeeee")
+        end
+
+        it "returns a 409" do
+          post "/api/v1/users.json", params: json
+          expect(response.code).to eql("409")
+        end
+
+        it "does not create another record" do
+          expect {
+            post "/api/v1/users", params: json
+          }.not_to change(User, :count)
+        end
       end
     end
   end

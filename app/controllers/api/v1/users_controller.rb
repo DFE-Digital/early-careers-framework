@@ -10,6 +10,32 @@ module Api
         render json: UserSerializer.new(paginate(users)).serializable_hash.to_json
       end
 
+      def create
+        user = User.find_by(email: params[:data][:attributes][:email])
+
+        if user.present?
+          user.errors.add(:email, :taken)
+
+          hash = {
+            errors: [{
+              status: "409",
+              title: user.errors.full_messages.join(", "),
+            }],
+          }
+
+          render json: hash, status: :conflict and return
+        end
+
+        user = User.create!(
+          email: params[:data][:attributes][:email],
+          full_name: params[:data][:attributes][:full_name],
+        )
+
+        hash = UserSerializer.new(user).serializable_hash
+
+        render json: hash, status: :created
+      end
+
     private
 
       def access_scope
