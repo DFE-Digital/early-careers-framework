@@ -112,6 +112,10 @@ const pagePaths = {
   "csv errors": "/lead-providers/report-schools/csv/errors",
   "confirm partnerships": "/lead-providers/report-schools/confirm",
   "partnerships success": "/lead-providers/report-schools/success",
+  "the sandbox landing page": "/sandbox",
+  "the Lead Provider landing page": "/lead-providers",
+  "Partnership guidance": "/lead-providers/partnership-guidance",
+  "API Documentation": "/api-docs/index.html",
 };
 
 Given("I am on {string} page", (page) => {
