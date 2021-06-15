@@ -1,7 +1,8 @@
 import { Given } from "cypress-cucumber-preprocessor/steps";
 import OnRails from "../on-rails";
 
-const parseArgs = (argsString) => {
+// eslint-disable-next-line import/prefer-default-export
+export const parseArgs = (argsString) => {
   const args = {};
   argsString.split(/ and |, /).forEach((argString) => {
     if (argString.split(" ").includes("created")) {
