@@ -5,7 +5,7 @@ We’ve created an online service for training providers to:
 
 Our service should help you through each step but here is a quick guide to get you up to speed.
 
-##Contents
+## Contents
 
 - [How to sign into your account](#how-to-sign-in-to-your-account)
 - [How to confirm the schools you have recruited](#how-to-confirm-the-schools-you-have-recruited)
@@ -13,7 +13,7 @@ Our service should help you through each step but here is a quick guide to get y
 - [When a school reports they have been confirmed incorrectly](#when-a-school-reports-that-they-have-been-confirmed-incorrectly)
 - [Check the schools you’ve recruited](#check-the-schools-you-ve-recruited)
 
-##How to sign in to your account
+## How to sign in to your account
 
 1. If your organisation has provided us with your name and email address, we will create an account for you.
 2. We will send a notification to your email address that your account has been created. You can use this email address to sign in.
@@ -34,7 +34,7 @@ Our service should help you through each step but here is a quick guide to get y
   </div>
 </div>
 
-##How to confirm the schools you have recruited
+## How to confirm the schools you have recruited
 
 When you have confirmed an agreement with a school or a number of schools, you can upload them using a CSV file. This updates the DfE so that we can process your payments.
 
@@ -65,7 +65,7 @@ Here’s an example CSV:
   </div>
 </div>
 
-##Checking errors and updating your CSV
+## Checking errors and updating your CSV
 When you upload your CSV, we will show you if there are any errors. These could be:
 
 - Recruited by other provider
@@ -81,7 +81,7 @@ You can choose to:
 
 When you have confirmed your schools, they will be sent a confirmation email. This includes a link to report if they have been confirmed incorrectly.
 
-##When a school reports that they have been confirmed incorrectly
+## When a school reports that they have been confirmed incorrectly
 Every school you confirm on our service will receive a confirmation email like this:
 
 <div class="govuk-inset-text">
@@ -114,7 +114,7 @@ They must select one of these reasons in our form:
 - We do not have any early career teachers this year
 - This looks like a mistake
 
-###When they have submitted this form
+### When they have submitted this form
 You and any colleagues using the service will receive an email notification like this:
 
 ![Example email notification of a school rejecting a partnership](/lead-provider/email-notification.png)
@@ -130,7 +130,7 @@ When you click on that school, you will see a banner at the top of the page incl
 ![Example of a reson being reported](/lead-provider/reported-reason.png)
 
 
-###If you think the school has made a mistake reporting this
+### If you think the school has made a mistake reporting this
 
 You should contact the school directly (you do not need to contact the DfE) 
 
@@ -147,7 +147,7 @@ if the matter is resolved, upload the school again
   </div>
 </div>
 
-##Check the schools you’ve recruited
+## Check the schools you’ve recruited
 
 When you have signed into the service, you can:
 
@@ -173,16 +173,16 @@ You can click on any school to see more details:
   </div>
 </div>
 
-##Help, support and feedback
+## Help, support and feedback
 
-###See a demo
+### See a demo
 
 To request a remote demonstration of the service as a whole or a particular feature, email us on <continuing-professional-development@digital.education.gov.uk>.
 
-###Report a problem
+### Report a problem
 To report a problem or get help, email us on <continuing-professional-development@digital.education.gov.uk>.
 
-###Take part in user research and give feedback
+### Take part in user research and give feedback
 We welcome feedback on all aspects of Manage continuing professional development. When you participate in user research, you help shape current and future service features.
 
 Please [complete this 30-second form](https://forms.office.com/Pages/ResponsePage.aspx?id=yXfS-grGoU2187O4s0qC-VlIdprT6TlEmsOS8-ufjHVUQzgyQVVOSERHWkZYV045RVYxSTBQWlNUSi4u) and we’ll be in touch. Or, simply give us your feedback over email at <continuing-professional-development@digital.education.gov.uk>.
