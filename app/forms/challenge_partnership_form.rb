@@ -3,7 +3,7 @@
 class ChallengePartnershipForm
   include ActiveModel::Model
 
-  attr_accessor :challenge_reason, :token, :school_name, :provider_name, :partnership
+  attr_accessor :challenge_reason, :token, :school_name, :lead_provider_name, :delivery_partner_name, :partnership
   validates :challenge_reason, presence: { message: "Select a reason why you think this confirmation is incorrect" }
 
   def challenge_reason_options

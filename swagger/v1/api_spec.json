@@ -17,15 +17,10 @@
       "error_response": {
         "type": "object",
         "properties": {
-          "missing_parameter": {
+          "bad_or_missing_parameter": {
             "type": "array",
             "items": {
-              "type": "string",
-              "enum": [
-                "participant_id",
-                "declaration_date",
-                "declaration_type"
-              ]
+              "type": "string"
             },
             "uniqueItems": true,
             "minItems": 1
@@ -42,104 +37,6 @@
     }
   ],
   "paths": {
-    "/api/v1/dqt-records/{teacher_reference_number}": {
-      "get": {
-        "summary": "Returns a specific DQT record",
-        "operationId": "api_v1_dqt_record_show",
-        "tags": [
-          "dqt_record"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "teacher_reference_number",
-            "in": "path",
-            "required": true,
-            "description": "Teacher Reference Number",
-            "example": "1234567",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A DQT record",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "data"
-                  ],
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "required": [
-                        "id",
-                        "type",
-                        "attributes"
-                      ],
-                      "properties": {
-                        "id": {
-                          "type": "string"
-                        },
-                        "type": {
-                          "type": "string"
-                        },
-                        "attributes": {
-                          "type": "object",
-                          "required": [
-                            "teacher_reference_number",
-                            "full_name",
-                            "date_of_birth",
-                            "national_insurance_number",
-                            "qts_date",
-                            "active_alert"
-                          ],
-                          "properties": {
-                            "teacher_reference_number": {
-                              "type": "string"
-                            },
-                            "full_name": {
-                              "type": "string"
-                            },
-                            "date_of_birth": {
-                              "type": "string"
-                            },
-                            "national_insurance_number": {
-                              "type": "string"
-                            },
-                            "qts_date": {
-                              "type": "string"
-                            },
-                            "active_alert": {
-                              "type": "boolean"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "No DQT record found for Teacher Reference Number"
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        }
-      }
-    },
     "/api/v1/participant-declarations": {
       "post": {
         "summary": "Create participant declarations",
@@ -165,7 +62,12 @@
                   },
                   "declaration_type": {
                     "enum": [
-                      "started"
+                      "started",
+                      "retained_1",
+                      "retained_2",
+                      "retained_3",
+                      "retained_4",
+                      "completed"
                     ]
                   },
                   "declaration_date": {
@@ -181,7 +83,7 @@
                 "example": {
                   "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
                   "declaration_type": "started",
-                  "declaration_date": "2021-05-31"
+                  "declaration_date": "2021-05-31T02:21:32Z"
                 }
               }
             }
@@ -194,11 +96,8 @@
           "204": {
             "description": "Successful"
           },
-          "404": {
-            "description": "Not Found"
-          },
           "422": {
-            "description": "Missing parameter",
+            "description": "Bad or Missing parameter",
             "content": {
               "application/json": {
                 "schema": {
@@ -213,12 +112,12 @@
         }
       }
     },
-    "/api/v1/users": {
+    "/api/v1/participants": {
       "get": {
-        "summary": "Returns all users",
-        "operationId": "api_v1_user_index",
+        "summary": "Returns all participants",
+        "operationId": "api_v1_participants_index",
         "tags": [
-          "user"
+          "participant"
         ],
         "security": [
           {
@@ -237,7 +136,7 @@
               "description": "This schema is used to search within collections to return more specific results.",
               "properties": {
                 "updated_since": {
-                  "description": "Return users that have been updated since the date (ISO 8601 date format)",
+                  "description": "Return participants that have been updated since the date (ISO 8601 date format)",
                   "type": "string",
                   "example": "2021-05-13T11:21:55Z"
                 }
@@ -246,7 +145,7 @@
             "style": "deepObject",
             "explode": true,
             "required": false,
-            "description": "Refine users to return.",
+            "description": "Refine participants to return.",
             "example": {
               "updated_since": "2020-11-13T11:21:55Z"
             }
@@ -274,15 +173,15 @@
             "explode": true,
             "required": false,
             "example": {
-              "page": 2,
-              "per_page": 10
+              "page": 1,
+              "per_page": 5
             },
             "description": "Pagination options to navigate through the collection."
           }
         ],
         "responses": {
           "200": {
-            "description": "Collection of users.",
+            "description": "Collection of participants.",
             "content": {
               "application/json": {
                 "schema": {
@@ -312,8 +211,10 @@
                             "required": [
                               "email",
                               "full_name",
-                              "user_type",
-                              "core_induction_programme"
+                              "mentor_id",
+                              "school_urn",
+                              "participant_type",
+                              "cohort"
                             ],
                             "properties": {
                               "email": {
@@ -322,23 +223,21 @@
                               "full_name": {
                                 "type": "string"
                               },
-                              "user_type": {
+                              "mentor_id": {
+                                "type": "string"
+                              },
+                              "school_urn": {
+                                "type": "string"
+                              },
+                              "participant_type": {
                                 "type": "string",
                                 "enum": [
-                                  "early_career_teacher",
                                   "mentor",
-                                  "other"
+                                  "ect"
                                 ]
                               },
-                              "core_induction_programme": {
-                                "type": "string",
-                                "enum": [
-                                  "ambition",
-                                  "edt",
-                                  "teach_first",
-                                  "ucl",
-                                  "none"
-                                ]
+                              "cohort": {
+                                "type": "string"
                               }
                             }
                           }
@@ -346,6 +245,62 @@
                       }
                     }
                   }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/participants.csv": {
+      "get": {
+        "summary": "Returns all participants",
+        "operationId": "api_v1_participants_index",
+        "tags": [
+          "participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "type": "object",
+              "example": "",
+              "description": "This schema is used to search within collections to return more specific results.",
+              "properties": {
+                "updated_since": {
+                  "description": "Return participants that have been updated since the date (ISO 8601 date format)",
+                  "type": "string",
+                  "example": "2021-05-13T11:21:55Z"
+                }
+              }
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "description": "Refine participants to return.",
+            "example": {
+              "updated_since": "2020-11-13T11:21:55Z"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Collection of participants.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }

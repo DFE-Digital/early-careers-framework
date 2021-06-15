@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
-require "initialize_with_config"
+require "has_di_parameters"
 
 class ParticipantEventAggregator
-  include InitializeWithConfig
+  include HasDIParameters
 
   def call(event_type: :started)
-    recorder.send(config[event_type], lead_provider)
+    recorder.send(params[event_type], lead_provider)
   end
 
 private
 
-  def default_config
+  def default_params
     {
       recorder: ParticipantDeclaration,
       started: :count_active_for_lead_provider,

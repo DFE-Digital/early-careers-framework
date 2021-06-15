@@ -11,6 +11,18 @@ const inputs = {
   "search box": "input[name=query]",
   "replace induction tutor": "input[value=replace].govuk-radios__input",
   "update induction tutor": "input[value=update].govuk-radios__input",
+  "new participant type radio": '[name="schools_add_participant_form[type]"]',
+  "nominate induction tutor radio button":
+    "input[value=yes].govuk-radios__input",
+  "opt out of updates radio button": "input[value=no].govuk-radios__input",
+  "nominate someone for updates radio button":
+    "input[value=i_dont_know].govuk-radios__input",
+  "design and deliver our own programme radio button":
+    "input[value=design_our_own].govuk-radios__input",
+  "no early career teachers radio button":
+    "input[value=no_early_career_teachers].govuk-radios__input",
+  "new participant mentor radio":
+    '[name="schools_add_participant_form[mentor_id]"]',
 };
 
 const buttons = {
@@ -57,6 +69,11 @@ When("I clear {string}", (element) => {
 
 When("I type {string} into {string}", (value, element) => {
   get(element).type(value);
+});
+
+When("I type {string} into field labelled {string}", (value, label) => {
+  cy.get("label").contains(label).click();
+  cy.focused().clear().type(value);
 });
 
 When("I press enter in {string}", (element) => {

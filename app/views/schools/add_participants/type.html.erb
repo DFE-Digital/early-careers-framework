@@ -1,0 +1,18 @@
+<% content_for :title, "Add early career teacher or mentor - participant type" %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: back_link_path) %>
+
+<span class="govuk-caption-l"><%= @school.name %>, <%= @cohort.display_name %> cohort</span>
+
+<%= form_for add_participant_form, url: { action: :update }, method: :patch do |f| %>
+  <%= f.govuk_collection_radio_buttons(
+        :type,
+        f.object.type_options,
+        :first,
+        :last,
+        legend: { text: "What type of participant do you want to add to this cohort?", size: "l", tag: "h1" },
+      )
+  %>
+
+  <%= f.govuk_submit "Continue" %>
+<% end %>

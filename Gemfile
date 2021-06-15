@@ -14,9 +14,9 @@ gem "paper_trail"
 gem "pundit"
 
 # Error and performance monitoring
-gem "sentry-delayed_job"
-gem "sentry-rails"
-gem "sentry-ruby"
+gem "sentry-delayed_job", ">= 4.5.1"
+gem "sentry-rails", ">= 4.5.1"
+gem "sentry-ruby", ">= 4.5.1"
 
 # Pagination
 gem "kaminari", ">= 1.2.0"
@@ -84,6 +84,9 @@ gem "aasm"
 # Pagination for API
 gem "pagy", "~> 3.13"
 
+# Json Schema for api validation
+gem "json-schema"
+
 gem "jsonapi-serializer"
 
 # OpenApi Swagger
@@ -91,6 +94,10 @@ gem "open_api-rswag-api", ">= 0.1.0"
 gem "open_api-rswag-ui", ">= 0.1.0"
 
 gem "ransack"
+
+# Payment breackdown
+
+gem "terminal-table"
 
 platform :mswin, :mingw, :x64_mingw do
   gem "wdm", ">= 0.1.0"

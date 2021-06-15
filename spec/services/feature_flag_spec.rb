@@ -3,6 +3,10 @@
 require "rails_helper"
 
 RSpec.describe FeatureFlag do
+  before do
+    stub_const("FeatureFlag::FEATURES", { add_participants: described_class.new(name: :add_participants) })
+  end
+
   describe ".activate" do
     it "activates a feature" do
       expect { FeatureFlag.activate(:add_participants) }.to(

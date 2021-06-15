@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 class MissingCallMethod
-  include InitializeWithConfig
+  include HasDIParameters
 end
 
 class CorrectStructure
-  include InitializeWithConfig
+  include HasDIParameters
   prevent_local_override
 
   def call
-    config.to_h
+    params.to_h
   end
 
   # Local override of input method - prevented by the prevent_local_override class level declaration
@@ -25,7 +25,11 @@ class InheritedStructure < CorrectStructure
   end
 end
 
-describe "InitializeWithConfig" do
+class MissingParameter < CorrectStructure
+  required_params :version, :event
+end
+
+describe HasDIParameters do
   let(:input) do
     {
       recruitment_target: 2000,
@@ -48,8 +52,12 @@ describe "InitializeWithConfig" do
     expect { MissingCallMethod.call(input) }.to raise_error(RuntimeError, "override abstract call method")
   end
 
+  it "creates an exception if a required configuration parameter is not specified" do
+    expect { MissingParameter.call(input) }.to raise_error(::HasDIParameters::MissingRequiredArguments, "missing required dependency injected items [:version, :event] in class MissingParameter")
+  end
+
   it "creates an internal hash called 'config'" do
-    expect(object.config).to be_a(Hash)
+    expect(object.params).to be_a(Hash)
   end
 
   it "creates methods for the input keys" do
@@ -67,8 +75,8 @@ describe "InitializeWithConfig" do
   end
 
   it "creates methods that return the values of the input keys regardless of delegation" do
-    expect(object.recruitment_target).to eq(object.config[:recruitment_target])
-    expect(object.retained_participants).to eq(object.config[:retained_participants])
+    expect(object.recruitment_target).to eq(object.params[:recruitment_target])
+    expect(object.retained_participants).to eq(object.params[:retained_participants])
   end
 
   it "defaults inherited objects to allow overrides" do

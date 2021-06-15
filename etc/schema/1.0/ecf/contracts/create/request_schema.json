@@ -1,0 +1,87 @@
+{
+  "$id": "https://digital.education.gov.uk/schema/ecf/contracts/create/request_schema.json/#",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "uplift_target": {
+      "type": "number"
+    },
+    "uplift_amount": {
+      "type": "number"
+    },
+    "recruitment_target": {
+      "type": "integer"
+    },
+    "set-up_fees": {
+      "type": "number"
+    },
+    "band_a": {
+      "type": "object",
+      "properties": {
+        "min": {
+          "type": "integer"
+        },
+        "max": {
+          "type": "integer"
+        },
+        "per_participant": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "max",
+        "per_participant"
+      ]
+    },
+    "band_b": {
+      "type": "object",
+      "properties": {
+        "min": {
+          "type": "integer"
+        },
+        "max": {
+          "type": "integer"
+        },
+        "per_participant": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "min",
+        "max",
+        "per_participant"
+      ]
+    },
+    "band_c": {
+      "type": "object",
+      "properties": {
+        "min": {
+          "type": "integer"
+        },
+        "max": {
+          "type": "integer"
+        },
+        "per_participant": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "min",
+        "per_participant"
+      ]
+    }
+  },
+  "required": [
+    "name",
+    "uplift_target",
+    "uplift_amount",
+    "recruitment_target",
+    "set-up_fees",
+    "band_a",
+    "band_b",
+    "band_c"
+  ]
+}

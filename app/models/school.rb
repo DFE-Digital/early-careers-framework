@@ -29,6 +29,9 @@ class School < ApplicationRecord
   has_many :early_career_teacher_profiles
   has_many :early_career_teachers, through: :early_career_teacher_profiles, source: :user
 
+  has_many :mentor_profiles
+  has_many :mentors, through: :mentor_profiles, source: :user
+
   has_many :additional_school_emails
 
   scope :eligible, -> { open.eligible_establishment_type.in_england }
@@ -52,6 +55,10 @@ class School < ApplicationRecord
 
   scope :without_induction_coordinator, lambda {
     left_outer_joins(:induction_coordinators).where(induction_coordinators: { id: nil })
+  }
+
+  scope :not_opted_out, lambda { |cohort = Cohort.current|
+    left_outer_joins(:school_cohorts).where(school_cohorts: { cohort_id: [cohort.id, nil], opt_out_of_updates: [false, nil] })
   }
 
   def lead_provider(year)

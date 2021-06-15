@@ -7,11 +7,11 @@ module PaymentCalculator
     class OutputPaymentRetentionEvent
       include PaymentCalculator::Ecf::Contract::OutputPaymentCalculations
 
-      def call(total_participants:, event_type:)
+      def call(total_participants:, event_type:, band:)
         {
           retained_participants: total_participants,
-          per_participant: output_payment_per_participant_for_event(event_type: event_type).round(2),
-          subtotal: output_payment_for_event(total_participants: total_participants, event_type: event_type).round(2),
+          per_participant: output_payment_per_participant_for_event(event_type: event_type, band: band).round(0),
+          subtotal: output_payment_for_event(total_participants: total_participants, event_type: event_type, band: band).round(0),
         }
       end
     end

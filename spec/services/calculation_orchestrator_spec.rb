@@ -6,19 +6,49 @@ RSpec.describe CalculationOrchestrator do
   let(:call_off_contract) { create(:call_off_contract) }
   let(:expected_result) do
     {
-      service_fees: {
-        service_fee_monthly: 22_287.90,
-        service_fee_per_participant: 323.17,
-        service_fee_total: 646_349.0,
-      },
-      output_payment: {
-        per_participant: 597.0,
-        started: {
-          per_participant: 119.4,
-          retained_participants: 10,
-          subtotal: 1_194.0,
+      service_fees: [
+        {
+          service_fee_monthly: 22_288.0,
+          service_fee_per_participant: 323.0,
+          service_fee_total: 646_349.0,
         },
-      },
+        {
+          service_fee_monthly: 0.0,
+          service_fee_per_participant: 392.0,
+          service_fee_total: 0.0,
+        },
+        {
+          service_fee_monthly: 0.0,
+          service_fee_per_participant: 386.0,
+          service_fee_total: 0.0,
+        },
+      ],
+      output_payments: [
+        {
+          per_participant: 597.0,
+          started: {
+            retained_participants: 10,
+            per_participant: 119.0,
+            subtotal: 1194.0,
+          },
+        },
+        {
+          per_participant: 587.0,
+          started: {
+            retained_participants: 10,
+            per_participant: 117.0,
+            subtotal: 1175.0,
+          },
+        },
+        {
+          per_participant: 580.0,
+          started: {
+            retained_participants: 10,
+            per_participant: 116.0,
+            subtotal: 1159.0,
+          },
+        },
+      ],
     }
   end
 
@@ -31,7 +61,7 @@ RSpec.describe CalculationOrchestrator do
 
   context ".call" do
     it "returns the total calculation" do
-      expect(described_class.call({ lead_provider: call_off_contract.lead_provider }, event_type: :started)).to eq(expected_result)
+      expect(described_class.call(lead_provider: call_off_contract.lead_provider, event_type: :started)).to eq(expected_result)
     end
   end
 end

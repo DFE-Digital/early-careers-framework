@@ -38,11 +38,20 @@ en:
     retention_4: Retention 4
     completion: Completion
   parameter_required: Parameter is required
+  invalid_participant: "The property '#/participant_id' must be a valid Participant ID"
   estimate_participants_default_message: &default_message "Enter a number between 0 and 1000"
   estimate_participants_defaults: &defaults
     not_a_number: *default_message
     less_than: *default_message
     greater_than_or_equal_to: *default_message
+
+  manage_your_training:
+    induction_programmes:
+      full_induction_programme: "Use a training provider funded by the DfE"
+      core_induction_programme: "Use DfE accredited materials"
+      design_our_own: "Design and deliver your own programme based on the Early Career Framework (ECF)"
+      no_early_career_teachers: "No early career teachers for this cohort"
+      not_yet_known: "Not yet decided"
 
   errors:
     email: &email_error_messages

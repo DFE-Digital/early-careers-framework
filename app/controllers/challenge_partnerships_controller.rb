@@ -46,10 +46,10 @@ private
 
     redirect_to link_expired_challenge_partnership_path and return unless @partnership.in_challenge_window?
 
-    provider_name = @partnership.delivery_partner&.name || @partnership.lead_provider.name
     @challenge_partnership_form = ChallengePartnershipForm.new(
       school_name: @school_name,
-      provider_name: provider_name,
+      lead_provider_name: @partnership.lead_provider.name,
+      delivery_partner_name: @partnership.delivery_partner.name,
       token: @token,
       partnership: @partnership,
     )

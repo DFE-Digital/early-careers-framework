@@ -6,6 +6,7 @@ module ApiTokenAuthenticatable
 
   included do
     before_action :authenticate
+    before_action :check_access_scope
   end
 
   def authenticate
@@ -21,5 +22,15 @@ module ApiTokenAuthenticatable
 
   def current_user
     @current_api_token.owner
+  end
+
+private
+
+  def check_access_scope
+    head :forbidden unless access_scope.include?(@current_api_token)
+  end
+
+  def access_scope
+    ApiToken.all
   end
 end

@@ -63,6 +63,7 @@ const pagePaths = {
   "resend nominations already nominated": "nominations/already-nominated",
   "resend nominations limit reached": "nominations/limit-reached",
   "resend nominations cip only": "nominations/cip-only",
+  "choose how to continue nominations": "/nominations/choose-how-to-continue",
   "start nominations with token": "/nominations/start?token=foo-bar-baz",
   "lead provider users index": "/admin/suppliers/users",
   "new lead provider user": "/admin/suppliers/users/new",
@@ -73,9 +74,22 @@ const pagePaths = {
   "choose programme advisory": "/schools/choose-programme/advisory",
   "choose programme confirm": "/schools/choose-programme/confirm-programme",
   "choose programme success": "/schools/choose-programme/success",
+  "design your programme success":
+    "/schools/choose-programme/design-your-programme",
+  "no early career teachers success":
+    "/schools/choose-programme/no-early-career-teachers",
   schools: "/schools",
   "2021 school cohorts": "/schools/cohorts/2021",
   "2021 school partnerships": "/schools/cohorts/2021/partnerships",
+  "2021 school participants": "/schools/cohorts/2021/participants",
+  "2021 school participant": "/schools/cohorts/2021/participants/:id",
+  "2021 school participant type": "/schools/cohorts/2021/participants/:id/type",
+  "2021 school participant details":
+    "/schools/cohorts/2021/participants/:id/details",
+  "2021 school choose etc mentor":
+    "/schools/cohorts/2021/participants/add/choose-mentor",
+  "2021 school participant confirm":
+    "/schools/cohorts/2021/participants/add/confirm",
   "lead providers report schools start": "/lead-providers/report-schools/start",
   "lead providers your schools": "/lead-providers/your-schools",
   "challenge partnership": "/report-incorrect-partnership?token=:id",

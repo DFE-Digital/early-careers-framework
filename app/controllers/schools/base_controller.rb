@@ -19,7 +19,7 @@ private
 
   def set_school_cohort
     @school = current_user.induction_coordinator_profile.schools.first
-    @cohort = Cohort.find_by(start_year: params[:id] || params[:cohort_id])
+    @cohort = Cohort.find_by(start_year: params[:cohort_id] || params[:id])
 
     @school_cohort = policy_scope(SchoolCohort).find_by(
       cohort: @cohort,

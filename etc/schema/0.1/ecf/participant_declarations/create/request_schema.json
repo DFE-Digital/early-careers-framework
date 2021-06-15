@@ -1,0 +1,13 @@
+{
+  "$id": "https://digital.education.gov.uk/schema/ecf/participant_declarations/create/request_schema.json/#",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id"
+  ]
+}

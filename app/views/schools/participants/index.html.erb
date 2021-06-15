@@ -1,0 +1,36 @@
+<% content_for :title, "Early career teachers and mentors" %>
+
+<% content_for :before_content, govuk_back_link(
+  text: "Back",
+  href: schools_cohort_path(@cohort.display_name))
+%>
+
+<span class="govuk-caption-l"><%= @cohort.display_name %> cohort</span>
+<h1 class="govuk-heading-l">Your early career teachers (ECTs) and mentors</h1>
+
+<%= govuk_link_to "Add participants", add_schools_cohort_participants_path, button: true %>
+
+<% if @participants.present? %>
+  <table class="govuk-table">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">Full name</th>
+        <th scope="col" class="govuk-table__header">Type</th>
+        <th scope="col" class="govuk-table__header">Status</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+      <% @participants.each do |participant| %>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header"><%= govuk_link_to participant.full_name, schools_cohort_participant_path(@cohort.start_year, participant) %></th>
+          <td class="govuk-table__cell"><%= participant.user_description %></td>
+          <td class="govuk-table__cell">
+            <%= render GovukComponent::Tag.new(text: "Not started", colour: "grey") %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p class="govuk-body">No participants found for this school.</p>
+<% end %>

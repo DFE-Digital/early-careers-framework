@@ -13,6 +13,7 @@ RSpec.describe SchoolCohort, type: :model do
       full_induction_programme: "full_induction_programme",
       core_induction_programme: "core_induction_programme",
       design_our_own: "design_our_own",
+      no_early_career_teachers: "no_early_career_teachers",
       not_yet_known: "not_yet_known",
     ).backed_by_column_of_type(:string)
   }
@@ -21,6 +22,57 @@ RSpec.describe SchoolCohort, type: :model do
   it { is_expected.to respond_to(:add_participants_status) }
   it { is_expected.to respond_to(:choose_training_materials_status) }
   it { is_expected.to respond_to(:status) }
+
+  describe ".for_year" do
+    let(:school) { create(:school) }
+    let(:cohort) { create(:cohort, start_year: 2020) }
+    subject(:school_cohort) { create(:school_cohort, school: school, cohort: cohort) }
+
+    before do
+      school_cohort
+    end
+
+    it "returns the school cohort for the given year" do
+      expect(school.school_cohorts.for_year(2020).first).to eq school_cohort
+    end
+  end
+
+  describe "#status" do
+    context "when core induction programme is selected" do
+      subject(:school_cohort) { create(:school_cohort, induction_programme_choice: "core_induction_programme") }
+      it "returns the result of #cip_status" do
+        expect(school_cohort.status).to eq school_cohort.send(:cip_status)
+      end
+    end
+
+    context "when full induction programme is selected" do
+      subject(:school_cohort) { create(:school_cohort, induction_programme_choice: "full_induction_programme") }
+      it "returns the result of #fip_status" do
+        expect(school_cohort.status).to eq school_cohort.send(:fip_status)
+      end
+    end
+
+    context "when a choice hasn't been made" do
+      subject(:school_cohort) { create(:school_cohort, induction_programme_choice: "not_yet_known") }
+      it "returns 'To do'" do
+        expect(school_cohort.status).to eq "To do"
+      end
+    end
+
+    context "when design our own programme is selected" do
+      subject(:school_cohort) { create(:school_cohort, induction_programme_choice: "design_our_own") }
+      it "returns nil" do
+        expect(school_cohort.status).to be_nil
+      end
+    end
+
+    context "when no early career teachers is selected" do
+      subject(:school_cohort) { create(:school_cohort, induction_programme_choice: "no_early_career_teachers") }
+      it "returns nil" do
+        expect(school_cohort.status).to be_nil
+      end
+    end
+  end
 
   describe "#training_provider_status" do
     subject(:school_cohort) { create(:school_cohort) }

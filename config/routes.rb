@@ -45,6 +45,7 @@ Rails.application.routes.draw do
     resource :notify_callback, only: :create, path: "notify-callback"
 
     namespace :v1 do
+      resources :participants, only: :index, constraints: ->(_request) { FeatureFlag.active?(:participant_data_api) }
       resources :participant_declarations, only: %i[create], path: "participant-declarations"
       resources :users, only: :index
       resources :dqt_records, only: :show, path: "dqt-records"
@@ -73,9 +74,17 @@ Rails.application.routes.draw do
         get "already-nominated", action: :already_nominated
       end
     end
+
+    get "/choose-how-to-continue", to: "choose_how_to_continue#new"
+    post "/choose-how-to-continue", to: "choose_how_to_continue#create"
+    get "/choice-saved", to: "choose_how_to_continue#choice_saved"
+
     resource :nominate_induction_coordinator, controller: :nominate_induction_coordinator, only: %i[new create], path: "/" do
       collection do
-        get "start", action: :start
+        # start method is redirected to Nominations::ChooseHowToContinueController#new
+        # because URL was given in email to schools, so entry point here is now start_nomination
+        get "start", to: redirect(path: "/nominations/choose-how-to-continue")
+        get "start-nomination", action: :start_nomination
         get "email-used", action: :email_used
         get "link-expired", action: :link_expired
         post "link-expired", action: :resend_email_after_link_expired
@@ -180,12 +189,39 @@ Rails.application.routes.draw do
       get :advisory
 
       get :confirm_programme, path: "confirm-programme"
+      get :choice_saved_design_our_own, path: "design-your-programme"
+      get :choice_saved_no_early_career_teachers, path: "no-early-career-teachers"
       post :save_programme, path: "save-programme"
       get :success
     end
+
     resources :cohorts, only: :show do
       resources :partnerships, only: :index
       resource :programme, only: %i[edit], controller: "choose_programme"
+
+      resources :participants, only: %i[index show], constraints: ->(_request) { FeatureFlag.active?(:induction_tutor_manage_participants) } do
+        get :edit_details, path: "edit-details"
+        get :edit_mentor, path: "edit-mentor"
+        put :update_mentor, path: "update-mentor"
+
+        collection do
+          get :add, to: "add_participants#start"
+
+          scope(
+            controller: "add_participants",
+            path: "add",
+            constraints: {
+              step: Regexp.union(
+                *Schools::AddParticipantForm::STEPS.map { |step| step.to_s.dasherize },
+              ),
+            },
+          ) do
+            get ":step", action: :show
+            patch ":step", action: :update
+            post :complete
+          end
+        end
+      end
 
       namespace :core_programme, path: "core-programme" do
         resource :materials, only: %i[edit update show] do

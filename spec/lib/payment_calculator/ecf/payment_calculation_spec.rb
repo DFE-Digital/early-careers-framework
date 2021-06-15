@@ -7,6 +7,9 @@ describe ::PaymentCalculator::Ecf::PaymentCalculation do
     FactoryBot.create(:call_off_contract)
   end
 
+  let(:start_event_name) { "Started" }
+  let(:participant_for_event) { 1900 }
+
   let(:retained_event_aggregations) do
     {
       "Started" => 1900,
@@ -18,33 +21,28 @@ describe ::PaymentCalculator::Ecf::PaymentCalculation do
     }
   end
 
-  let(:config) do
+  let(:params) do
     {
       contract: contract,
     }
   end
 
   it "returns the expected types for all outputs" do
-    @combined_results = nil
     retained_event_aggregations.each do |key, value|
-      result = described_class.call(config, event_type: key, total_participants: value)
+      result = described_class.call(lead_provider: contract.lead_provider, event_type: key, total_participants: value)
 
-      if @combined_results.nil?
-        expect(result.dig(:service_fees, :service_fee_per_participant)).to be_a(BigDecimal)
-        expect(result.dig(:service_fees, :service_fee_total)).to be_a(BigDecimal)
-        expect(result.dig(:service_fees, :service_fee_monthly)).to be_a(BigDecimal)
-        expect(result.dig(:output_payment, :per_participant)).to be_a(BigDecimal)
+      result.dig(:service_fees).each do |service_fee|
+        expect(service_fee[:service_fee_per_participant]).to be_a(BigDecimal)
+        expect(service_fee[:service_fee_total]).to be_a(BigDecimal)
+        expect(service_fee[:service_fee_monthly]).to be_a(BigDecimal)
       end
-
-      @combined_results ||= { service_fees: result[:service_fees], output_payment: {} }
-      @combined_results[:output_payment][key] = result.dig(:output_payment, key)
     end
 
-    @combined_results[:output_payment].each do |key, value|
-      expect(key).to be_a(String)
-      expect(value[:retained_participants]).to be_an(Integer)
-      expect(value[:per_participant]).to be_a(BigDecimal)
-      expect(value[:subtotal]).to be_a(BigDecimal)
+    result = described_class.call(lead_provider: contract.lead_provider, event_type: start_event_name, total_participants: participant_for_event)
+
+    result.dig(:output_payments).each do |output_payment|
+      expect(output_payment.dig(start_event_name, :retained_participants)).to be_an(Integer)
+      expect(output_payment.dig(start_event_name, :per_participant)).to be_an(BigDecimal)
     end
   end
 end

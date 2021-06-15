@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "initialize_with_config"
+require "has_di_parameters"
 
 module PaymentCalculator
   module Ecf
@@ -9,22 +9,22 @@ module PaymentCalculator
         extend ActiveSupport::Concern
 
         included do
-          include InitializeWithConfig
+          include HasDIParameters
         end
 
-        delegate :band_a, to: :contract
+        delegate :bands, to: :contract
 
-        def output_payment_per_participant
-          band_a.per_participant * output_payment_contribution_percentage
+        def output_payment_per_participant(band)
+          band.per_participant * output_payment_contribution_percentage
         end
 
-        def output_payment_for_event(event_type:, total_participants:)
-          total_participants * output_payment_per_participant_for_event(event_type: event_type)
+        def output_payment_for_event(event_type:, total_participants:, band:)
+          total_participants * output_payment_per_participant_for_event(event_type: event_type, band: band)
         end
 
-        def output_payment_per_participant_for_event(event_type:)
+        def output_payment_per_participant_for_event(event_type:, band:)
           event_type = event_type.parameterize.underscore.intern if event_type.is_a?(String)
-          send(event_type) * output_payment_per_participant
+          send(event_type) * output_payment_per_participant(band)
         end
 
       private
