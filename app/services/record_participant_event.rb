@@ -20,7 +20,7 @@ class RecordParticipantEvent
     add_ect_profile_params!
     return :unprocessable_entity unless create_record
 
-    valid_provider!
+    validate_provider!
 
     :no_content
   end
@@ -58,7 +58,7 @@ private
     SchoolCohort.find_by(school: early_career_teacher_profile.school, cohort: early_career_teacher_profile.cohort)&.lead_provider
   end
 
-  def valid_provider!
+  def validate_provider!
     raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless actual_lead_provider.nil? || lead_provider == actual_lead_provider
   end
 
