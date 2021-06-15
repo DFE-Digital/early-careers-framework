@@ -144,14 +144,14 @@ RSpec.describe InviteSchools do
   end
 
   describe "#send_chasers" do
+    let!(:cohort) { create(:cohort, :current) }
     it "does not send emails to schools who have nominated tutors" do
       # Given there is a school with an induction coordinator
       create(:user, :induction_coordinator)
       expect(School.count).to eq 1
       expect(School.without_induction_coordinator.count).to eq 0
 
-      expect(SchoolMailer).not_to receive(:nomination_email)
-      expect { invite_schools.send_chasers }.not_to(change { NominationEmail.count })
+      expect(an_instance_of(InviteSchools)).not_to delay_execution_of(:create_and_send_nomination_email)
     end
 
     it "sends emails to all available addresses" do
@@ -159,8 +159,11 @@ RSpec.describe InviteSchools do
       AdditionalSchoolEmail.create!(school: school, email_address: "additional1@example.com")
       AdditionalSchoolEmail.create!(school: school, email_address: "additional2@example.com")
 
-      expect(SchoolMailer).to receive(:nomination_email).exactly(4).times.and_call_original
-      expect { invite_schools.send_chasers }.to change { NominationEmail.count }.by(4)
+      invite_schools.send_chasers
+      expect(an_instance_of(InviteSchools)).to delay_execution_of(:create_and_send_nomination_email).with("primary@example.com", school)
+      expect(an_instance_of(InviteSchools)).to delay_execution_of(:create_and_send_nomination_email).with("secondary@example.com", school)
+      expect(an_instance_of(InviteSchools)).to delay_execution_of(:create_and_send_nomination_email).with("additional1@example.com", school)
+      expect(an_instance_of(InviteSchools)).to delay_execution_of(:create_and_send_nomination_email).with("additional2@example.com", school)
     end
 
     it "does not send emails to schools that are not eligible" do
@@ -169,8 +172,7 @@ RSpec.describe InviteSchools do
       expect(School.count).to eql 1
       expect(School.eligible.count).to eql 0
 
-      expect(SchoolMailer).not_to receive(:nomination_email)
-      expect { invite_schools.send_chasers }.not_to(change { NominationEmail.count })
+      expect(an_instance_of(InviteSchools)).not_to delay_execution_of(:create_and_send_nomination_email)
     end
   end
 end

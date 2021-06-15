@@ -69,14 +69,6 @@ RSpec.describe "Schools::Participants", type: :request do
     end
   end
 
-  describe "GET /schools/cohorts/:start_year/participants/:id/edit-details" do
-    it "renders edit details template" do
-      get "/schools/cohorts/#{cohort.start_year}/participants/#{ect_user.id}/edit-details"
-
-      expect(response).to render_template("schools/participants/edit_details")
-    end
-  end
-
   describe "GET /schools/cohorts/:start_year/participants/:id/edit-mentor" do
     it "renders edit mentor template" do
       get "/schools/cohorts/#{cohort.start_year}/participants/#{ect_user.id}/edit-mentor"

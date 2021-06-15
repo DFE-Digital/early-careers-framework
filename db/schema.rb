@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_09_094438) do
+ActiveRecord::Schema.define(version: 2021_06_11_141524) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -69,7 +69,7 @@ ActiveRecord::Schema.define(version: 2021_06_09_094438) do
     t.datetime "last_used_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "type", default: "LeadProviderApiToken"
+    t.string "type", default: "ApiToken"
     t.boolean "private_api_access", default: false
     t.index ["hashed_token"], name: "index_api_tokens_on_hashed_token", unique: true
     t.index ["lead_provider_id"], name: "index_api_tokens_on_lead_provider_id"

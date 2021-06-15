@@ -9,13 +9,6 @@ describe JsonSchema::VersionEventFileName do
     let(:current) { 0.2 }
     let(:event) { :create }
 
-    it "requires both version and event to be specified in the config hash" do
-      expect { described_class.call }.to raise_error(ArgumentError)
-      expect { described_class.call({}) }.to raise_error(::InitializeWithConfig::MissingRequiredArguments, "missing required dependency injected items [:version, :event] in class JsonSchema::VersionEventFileName")
-      expect { described_class.call(version: current) }.to raise_error(::InitializeWithConfig::MissingRequiredArguments, "missing required dependency injected items [:event] in class JsonSchema::VersionEventFileName")
-      expect { described_class.call(event: event) }.to raise_error(::InitializeWithConfig::MissingRequiredArguments, "missing required dependency injected items [:version] in class JsonSchema::VersionEventFileName")
-    end
-
     it "maps to the participant_declarations schema for the required version" do
       expect(described_class.call(version: current, event: event)).to eq Rails.root.join("etc/schema/0.2/ecf/participant_declarations/create/request_schema.json")
       expect(described_class.call(version: previous_version, event: event)).to eq Rails.root.join("etc/schema/0.1/ecf/participant_declarations/create/request_schema.json")

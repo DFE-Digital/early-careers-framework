@@ -12,6 +12,10 @@ module Api
 
     private
 
+      def access_scope
+        ApiToken.where(private_api_access: true)
+      end
+
       def updated_since
         params.dig(:filter, :updated_since)
       end

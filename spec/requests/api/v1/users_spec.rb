@@ -103,5 +103,15 @@ RSpec.describe "API Users", type: :request do
         expect(response.status).to eq 401
       end
     end
+
+    context "when using a lead provider token" do
+      let(:token) { LeadProviderApiToken.create_with_random_token!(lead_provider: create(:lead_provider)) }
+
+      it "returns 401 for invalid bearer token" do
+        default_headers[:Authorization] = bearer_token
+        get "/api/v1/users"
+        expect(response.status).to eq 403
+      end
+    end
   end
 end

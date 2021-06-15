@@ -1,24 +1,22 @@
-.lead-provider-your-schools-table {
-  .school-name-cell {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
+.school-name-with-tag {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
 
-    @include govuk-media-query($from: desktop) {
-      flex-direction: row;
-      align-items: center;
+  a {
+    flex: 1;
+  }
 
-      .govuk-tag {
-        margin-top: 0;
-      }
-    }
+  .govuk-tag {
+    margin-top: 0.2em;
+  }
 
-    a {
-      flex: 1;
-    }
+  @include govuk-media-query($from: desktop) {
+    flex-direction: row;
+    align-items: center;
 
     .govuk-tag {
-      margin-top: 0.2em;
+      margin-top: 0;
     }
   }
 }

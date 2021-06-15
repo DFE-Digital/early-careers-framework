@@ -80,6 +80,15 @@ class User < ApplicationRecord
   scope :admins, -> { joins(:admin_profile) }
   scope :early_career_teachers, -> { joins(:early_career_teacher_profile).includes(:early_career_teacher_profile) }
   scope :mentors, -> { joins(:mentor_profile).includes(:mentor_profile) }
+  scope :early_career_teachers_for_lead_provider, lambda { |lead_provider|
+    where(id: lead_provider.schools.joins(:early_career_teachers).distinct.select(:user_id))
+  }
+  scope :mentors_for_lead_provider, lambda { |lead_provider|
+    where(id: lead_provider.schools.joins(:mentors).distinct.select(:user_id))
+  }
+  scope :participants_for_lead_provider, lambda { |lead_provider|
+    early_career_teachers_for_lead_provider(lead_provider).or(mentors_for_lead_provider(lead_provider))
+  }
 
   scope :changed_since, lambda { |timestamp|
     if timestamp.present?

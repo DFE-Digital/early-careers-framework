@@ -37,7 +37,7 @@ class InviteSchools
   def send_chasers
     logger.info "Sending chaser emails"
     logger.info "Nomination email count before: #{NominationEmail.count}"
-    School.eligible.without_induction_coordinator.each do |school|
+    School.eligible.not_opted_out.without_induction_coordinator.each do |school|
       additional_emails = school.additional_school_emails.pluck(:email_address)
       emails = [school.primary_contact_email, school.secondary_contact_email, *additional_emails]
                  .reject(&:blank?)
@@ -45,22 +45,13 @@ class InviteSchools
                  .uniq
 
       emails.each do |email|
-        nomination_email = NominationEmail.create_nomination_email(
-          sent_at: Time.zone.now,
-          sent_to: email,
-          school: school,
-        )
-        send_nomination_email(nomination_email)
-      rescue Notifications::Client::RateLimitError
-        sleep(1)
-        send_nomination_email(nomination_email)
+        delay(queue: "mailers", priority: 1).create_and_send_nomination_email(email, school)
       rescue StandardError
         logger.info "Error emailing school, urn: #{school.urn}, email: #{email} ... skipping"
       end
     end
 
     logger.info "Chaser emails sent"
-    logger.info "Nomination email count after: #{NominationEmail.count}"
   end
 
   def send_ministerial_letters
@@ -71,6 +62,18 @@ class InviteSchools
   end
 
 private
+
+  def create_and_send_nomination_email(email, school)
+    nomination_email = NominationEmail.create_nomination_email(
+      sent_at: Time.zone.now,
+      sent_to: email,
+      school: school,
+    )
+    send_nomination_email(nomination_email)
+  rescue Notifications::Client::RateLimitError
+    sleep(1)
+    send_nomination_email(nomination_email)
+  end
 
   def send_nomination_email(nomination_email)
     notify_id = SchoolMailer.nomination_email(

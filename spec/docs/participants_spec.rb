@@ -2,15 +2,15 @@
 
 require "swagger_helper"
 
-describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
-  let(:token) { EngageAndLearnApiToken.create_with_random_token! }
+describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_flags: { participant_data_api: "active" } do
+  let(:token) { LeadProviderApiToken.create_with_random_token!(lead_provider: create(:lead_provider)) }
   let(:bearer_token) { "Bearer #{token}" }
   let(:Authorization) { bearer_token }
 
-  path "/api/v1/users" do
-    get "Returns all users" do
-      operationId :api_v1_user_index
-      tags "user"
+  path "/api/v1/participants" do
+    get "Returns all participants" do
+      operationId :api_v1_participants_index
+      tags "participant"
       produces "application/vnd.api+json"
       security [bearerAuth: []]
 
@@ -22,7 +22,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
                   description: "This schema is used to search within collections to return more specific results.",
                   properties: {
                     updated_since: {
-                      description: "Return users that have been updated since the date (ISO 8601 date format)",
+                      description: "Return participants that have been updated since the date (ISO 8601 date format)",
                       type: :string,
                       example: "2021-05-13T11:21:55Z",
                     },
@@ -32,7 +32,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
                 style: :deepObject,
                 explode: true,
                 required: false,
-                description: "Refine users to return.",
+                description: "Refine participants to return.",
                 example: { updated_since: "2020-11-13T11:21:55Z" }
 
       parameter name: :page,
@@ -57,10 +57,10 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
                 style: :deepObject,
                 explode: true,
                 required: false,
-                example: { page: 2, per_page: 10 },
+                example: { page: 1, per_page: 5 },
                 description: "Pagination options to navigate through the collection."
 
-      response "200", "Collection of users." do
+      response "200", "Collection of participants." do
         schema type: :object,
                required: %w[data],
                properties: {
@@ -74,18 +74,17 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
                        type: { type: :string },
                        attributes: {
                          type: :object,
-                         required: %w[email full_name user_type core_induction_programme],
+                         required: %w[email full_name mentor_id school_urn participant_type cohort],
                          properties: {
                            email: { type: :string },
                            full_name: { type: :string },
-                           user_type: {
+                           mentor_id: { type: :string },
+                           school_urn: { type: :string },
+                           participant_type: {
                              type: :string,
-                             enum: UserSerializer::USER_TYPES.keys,
+                             enum: %w[mentor ect],
                            },
-                           core_induction_programme: {
-                             type: :string,
-                             enum: UserSerializer::CIP_TYPES.keys,
-                           },
+                           cohort: { type: :string },
                          },
                        },
                      },
@@ -93,6 +92,46 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
                  },
                }
 
+        run_test!
+      end
+
+      response "401", "Unauthorized" do
+        let(:Authorization) { "Bearer invalid" }
+        run_test!
+      end
+    end
+  end
+
+  path "/api/v1/participants.csv" do
+    get "Returns all participants" do
+      operationId :api_v1_participants_index
+      tags "participant"
+      produces "text/csv"
+      security [bearerAuth: []]
+
+      parameter name: :filter,
+                in: :query,
+                schema: {
+                  type: :object,
+                  example: "",
+                  description: "This schema is used to search within collections to return more specific results.",
+                  properties: {
+                    updated_since: {
+                      description: "Return participants that have been updated since the date (ISO 8601 date format)",
+                      type: :string,
+                      example: "2021-05-13T11:21:55Z",
+                    },
+                  },
+                },
+                type: :object,
+                style: :deepObject,
+                explode: true,
+                required: false,
+                description: "Refine participants to return.",
+                example: { updated_since: "2020-11-13T11:21:55Z" }
+
+      response "200", "Collection of participants." do
+        schema type: :string
         run_test!
       end
 

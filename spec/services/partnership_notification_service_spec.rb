@@ -38,7 +38,8 @@ RSpec.describe PartnershipNotificationService do
       it "emails the school primary contact" do
         expect(SchoolMailer).to receive(:school_partnership_notification_email).with(
           hash_including(
-            provider_name: @delivery_partner.name,
+            lead_provider_name: @lead_provider.name,
+            delivery_partner_name: @delivery_partner.name,
             cohort: String,
             nominate_url: String,
             challenge_url: String,
@@ -72,7 +73,8 @@ RSpec.describe PartnershipNotificationService do
       it "emails the induction coordinator" do
         expect(SchoolMailer).to receive(:coordinator_partnership_notification_email).with(
           hash_including(
-            provider_name: @delivery_partner.name,
+            lead_provider_name: @lead_provider.name,
+            delivery_partner_name: @delivery_partner.name,
             cohort: String,
             start_url: String,
             challenge_url: String,
@@ -105,7 +107,8 @@ RSpec.describe PartnershipNotificationService do
       it "emails the school primary contact" do
         expect(SchoolMailer).to receive(:school_partnership_notification_email).with(
           hash_including(
-            provider_name: @delivery_partner.name,
+            lead_provider_name: @lead_provider.name,
+            delivery_partner_name: @delivery_partner.name,
             cohort: String,
             nominate_url: String,
             challenge_url: String,
@@ -139,7 +142,8 @@ RSpec.describe PartnershipNotificationService do
       it "emails the induction coordinator" do
         expect(SchoolMailer).to receive(:coordinator_partnership_notification_email).with(
           hash_including(
-            provider_name: @delivery_partner.name,
+            lead_provider_name: @lead_provider.name,
+            delivery_partner_name: @delivery_partner.name,
             cohort: String,
             start_url: String,
             challenge_url: String,

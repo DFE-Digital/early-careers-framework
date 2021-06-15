@@ -45,6 +45,7 @@ Rails.application.routes.draw do
     resource :notify_callback, only: :create, path: "notify-callback"
 
     namespace :v1 do
+      resources :participants, only: :index, constraints: ->(_request) { FeatureFlag.active?(:participant_data_api) }
       resources :participant_declarations, only: %i[create], path: "participant-declarations"
       resources :users, only: :index
       resources :dqt_records, only: :show, path: "dqt-records"
@@ -203,11 +204,20 @@ Rails.application.routes.draw do
         put :update_mentor, path: "update-mentor"
 
         collection do
-          get :add, to: "add_participants/base#start"
+          get :add, to: "add_participants#start"
 
-          namespace :add_participants, path: "add" do
-            resource :type, only: %i[show update]
-            resource :details, only: %i[show update]
+          scope(
+            controller: "add_participants",
+            path: "add",
+            constraints: {
+              step: Regexp.union(
+                *Schools::AddParticipantForm::STEPS.map { |step| step.to_s.dasherize },
+              ),
+            },
+          ) do
+            get ":step", action: :show
+            patch ":step", action: :update
+            post :complete
           end
         end
       end

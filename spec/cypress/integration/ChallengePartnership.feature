@@ -25,7 +25,7 @@ Feature: Reporting an error with a partnership
     And the page should be accessible
     And percy should be sent snapshot called "challenge link expired"
 
-  Scenario: A logged in induction tutor challenges partnership
+  Scenario: A logged in induction tutor for FIP school challenges partnership
     Given I am logged in as existing user with email "test-subject@example.com"
     And I am on "2021 school partnerships" page
     When I click on "link" containing "report that your school has been confirmed incorrectly"
@@ -37,3 +37,20 @@ Feature: Reporting an error with a partnership
 
     When I navigate to "2021 school partnerships" page
     Then "page body" should contain "Signing up with a training provider"
+
+  Scenario: A logged in induction tutor for CIP school challenges partnership
+    Given I am logged in as existing user with email "test-subject2@example.com"
+    And I am on "2021 school cohorts" page
+    Then the page should be accessible
+    And percy should be sent snapshot called "partnership notification banner"
+
+    When I click on "link" containing "report it now"
+    Then I should be on "challenge partnership (any token)" page
+
+    When I click on "I do not recognise this training provider" label
+    And I click the submit button
+    Then I should be on "challenge partnership success" page
+
+    When I navigate to "2021 school partnerships" page
+    Then "page body" should contain "Signing up with a training provider"
+    And "page body" should not contain "report it now"

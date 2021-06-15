@@ -1,0 +1,14 @@
+<% content_for :title, "Participant added" %>
+
+<%= govuk_panel title: "#{@participant_profile.user.full_name} has been added as #{@type == :ect ? 'an ECT' : 'a mentor'} to the #{@cohort.display_name} cohort", body: nil, classes: "govuk-!-margin-bottom-8" %>
+
+<h2 class="govuk-heading-m">What happens next</h2>
+<ul class="govuk-list govuk-list--bullet">
+  <li>The participant will be notified and asked to sign in and add further details</li>
+  <li>You will be able to check their progress by viewing the participants in this cohort</li>
+</ul>
+
+<div class="govuk-button-group">
+  <%= govuk_link_to "Add another participant", add_schools_cohort_participants_path, button: true %>
+  <%= govuk_link_to "View participants", schools_cohort_participants_path %>
+</div>
