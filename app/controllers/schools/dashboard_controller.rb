@@ -10,7 +10,7 @@ class Schools::DashboardController < Schools::BaseController
 private
 
   def set_school_cohorts
-    @school = current_user.induction_coordinator_profile.schools.first
+    @school = active_school
 
     cohort_list = [Cohort.current]
     @school_cohorts = @school.school_cohorts.where(cohort: cohort_list)

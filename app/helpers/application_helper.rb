@@ -26,9 +26,8 @@ private
 
   def induction_coordinator_dashboard_path(user)
     school = user.induction_coordinator_profile.schools.first
+    return advisory_schools_choose_programme_path(school_id: school.id) unless school.chosen_programme?(Cohort.current)
 
-    return advisory_schools_choose_programme_path unless school.chosen_programme?(Cohort.current)
-
-    schools_dashboard_path
+    schools_dashboard_path(school_id: school.id)
   end
 end

@@ -6,7 +6,9 @@ class Schools::ChooseProgrammeController < Schools::BaseController
   before_action :load_programme_form
   before_action :verify_programme_chosen, only: %i[advisory show]
 
-  def advisory; end
+  def advisory
+    @school = school
+  end
 
   def show; end
 
@@ -69,7 +71,7 @@ private
   end
 
   def school
-    @school ||= current_user.induction_coordinator_profile.schools.first
+    @school ||= active_school
   end
 
   def cohort

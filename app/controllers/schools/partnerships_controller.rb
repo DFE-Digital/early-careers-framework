@@ -5,7 +5,7 @@ class Schools::PartnershipsController < Schools::BaseController
   skip_after_action :verify_policy_scoped
 
   def index
-    @school = current_user.induction_coordinator_profile.schools.first
+    @school = active_school
     @partnership = @school.partnerships.active.find_by(cohort: cohort)
 
     if @partnership&.in_challenge_window?

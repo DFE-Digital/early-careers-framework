@@ -68,7 +68,7 @@ module Schools
         { action: :show, step: step_param(previous_step) }
       else
         participants = User.order(:full_name).is_participant.in_school(@school.id)
-        participants.any? ? schools_cohort_participants_path : schools_cohort_path(id: @cohort.start_year)
+        participants.any? ? schools_participants_path : schools_cohort_path(id: @cohort.start_year)
       end
     end
 

@@ -11,11 +11,11 @@ RSpec.describe "Schools::Partnerships", type: :request do
     sign_in user
   end
 
-  describe "GET /schools/cohorts/:start_year/partnerships" do
+  describe "GET /schools/:school_id/cohorts/:start_year/partnerships" do
     let(:header) { "Have you signed up with a training provider?" }
 
     it "renders the partnerships template" do
-      get "/schools/cohorts/#{cohort.start_year}/partnerships"
+      get "/schools/#{school.id}/cohorts/#{cohort.start_year}/partnerships"
 
       expect(response).to render_template("schools/partnerships/index")
     end
@@ -47,7 +47,7 @@ RSpec.describe "Schools::Partnerships", type: :request do
       end
 
       it "renders partnership details" do
-        get "/schools/cohorts/#{cohort.start_year}/partnerships"
+        get "/schools/#{school.id}/cohorts/#{cohort.start_year}/partnerships"
 
         expect(response.body).to include(CGI.escapeHTML(lead_provider.name))
         expect(response.body).to include(CGI.escapeHTML(delivery_partner1.name))
@@ -64,7 +64,7 @@ RSpec.describe "Schools::Partnerships", type: :request do
         end
 
         it "shows the challenge link" do
-          get "/schools/cohorts/#{cohort.start_year}/partnerships"
+          get "/schools/#{school.id}/cohorts/#{cohort.start_year}/partnerships"
 
           expect(response.body).to include("This link will expire on")
           expect(response.body).to include("?partnership=#{partnership.id}")
@@ -83,7 +83,7 @@ RSpec.describe "Schools::Partnerships", type: :request do
 
         it "does not show the challenge link" do
           travel_to 6.weeks.from_now
-          get "/schools/cohorts/#{cohort.start_year}/partnerships"
+          get "/schools/#{school.id}/cohorts/#{cohort.start_year}/partnerships"
 
           expect(response.body).not_to include("This link will expire on")
           expect(response.body).not_to include("?token=abc123")

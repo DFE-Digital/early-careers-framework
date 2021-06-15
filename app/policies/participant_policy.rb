@@ -21,6 +21,6 @@ private
   def user_can_access?(participant)
     return false unless participant.participant?
 
-    user.school == participant.school
+    user.schools.include?(participant.school)
   end
 end

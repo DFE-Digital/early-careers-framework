@@ -183,55 +183,58 @@ Rails.application.routes.draw do
   end
 
   namespace :schools do
-    resource :dashboard, controller: :dashboard, only: :show, path: "/"
-    resource :choose_programme, controller: :choose_programme, only: %i[show create], path: "choose-programme" do
-      get :advisory
+    resources :dashboard, controller: :dashboard, only: :show, path: "/", param: :school_id
 
-      get :confirm_programme, path: "confirm-programme"
-      get :choice_saved_design_our_own, path: "design-your-programme"
-      get :choice_saved_no_early_career_teachers, path: "no-early-career-teachers"
-      post :save_programme, path: "save-programme"
-      get :success
-    end
+    scope "/:school_id" do
+      resource :choose_programme, controller: :choose_programme, only: %i[show create], path: "choose-programme" do
+        get :advisory
 
-    resources :cohorts, only: :show do
-      resources :partnerships, only: :index
-      resource :programme, only: %i[edit], controller: "choose_programme"
+        get :confirm_programme, path: "confirm-programme"
+        get :choice_saved_design_our_own, path: "design-your-programme"
+        get :choice_saved_no_early_career_teachers, path: "no-early-career-teachers"
+        post :save_programme, path: "save-programme"
+        get :success
+      end
 
-      resources :participants, only: %i[index show], constraints: ->(_request) { FeatureFlag.active?(:induction_tutor_manage_participants) } do
-        get :edit_details, path: "edit-details"
-        get :edit_mentor, path: "edit-mentor"
-        put :update_mentor, path: "update-mentor"
+      resources :cohorts, only: :show, param: :cohort_id do
+        member do
+          resources :partnerships, only: :index
+          resource :programme, only: %i[edit], controller: "choose_programme"
 
-        collection do
-          get :add, to: "add_participants#start"
+          resources :participants, only: %i[index show], constraints: ->(_request) { FeatureFlag.active?(:induction_tutor_manage_participants) } do
+            get :edit_details, path: "edit-details"
+            get :edit_mentor, path: "edit-mentor"
+            put :update_mentor, path: "update-mentor"
 
-          scope(
-            controller: "add_participants",
-            path: "add",
-            constraints: {
-              step: Regexp.union(
-                *Schools::AddParticipantForm::STEPS.map { |step| step.to_s.dasherize },
-              ),
-            },
-          ) do
-            get ":step", action: :show
-            patch ":step", action: :update
-            post :complete
+            collection do
+              get :add, to: "add_participants#start"
+
+              scope(
+                controller: "add_participants",
+                path: "add",
+                constraints: {
+                  step: Regexp.union(
+                    *Schools::AddParticipantForm::STEPS.map { |step| step.to_s.dasherize },
+                  ),
+                },
+              ) do
+                get ":step", action: :show
+                patch ":step", action: :update
+                post :complete
+              end
+            end
           end
-        end
-      end
 
-      namespace :core_programme, path: "core-programme" do
-        resource :materials, only: %i[edit update show] do
-          get :info
-          get :success
-        end
-      end
+          namespace :core_programme, path: "core-programme" do
+            resource :materials, only: %i[edit update show] do
+              get :info
+              get :success
+            end
+          end
 
-      member do
-        get "programme-choice", as: :programme_choice
-        get "add-participants", as: :add_participants
+          get "programme-choice", as: :programme_choice
+          get "add-participants", as: :add_participants
+        end
       end
     end
   end
