@@ -44,4 +44,11 @@ class UserSerializer
       CIP_TYPES[:none]
     end
   end
+
+  attributes :induction_programme_choice do |user|
+    if user.participant?
+      school_cohort = SchoolCohort.find_by(school: user.school, cohort: user.cohort)
+      school_cohort.induction_programme_choice
+    end
+  end
 end
