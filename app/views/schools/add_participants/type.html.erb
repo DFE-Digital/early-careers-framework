@@ -10,6 +10,8 @@
 
     <p class="govuk-body">You need to add details of the early career teachers and mentors in this cohort.</p>
 
+    <p class="govuk-body">You should do this as soon as possible, before they start their induction programme.</p>
+
     <details class="govuk-details" data-module="govuk-details">
       <summary class="govuk-details__summary">
         <span class="govuk-details__summary-text">Why do I need to do this?</span>
@@ -24,9 +26,6 @@
         </ul>
       </div>
     </details>
-
-    <p class="govuk-body">You should do this as soon as possible, before they start their induction programme.</p>
-
 
     <%= form_for add_participant_form, url: { action: :update }, method: :patch do |f| %>
       <%= f.govuk_collection_radio_buttons(
