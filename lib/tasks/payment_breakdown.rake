@@ -28,6 +28,8 @@ namespace :payment_calculation do
       event_type: :started,
     )
 
+    puts "*** breakdown #{JSON.pretty_generate(breakdown)}"
+
     service_fees = breakdown.dig(:service_fees).each_with_object([]) do |hash, bands|
       bands << [
         band_name_from_index(bands.length),
@@ -35,7 +37,14 @@ namespace :payment_calculation do
         "£#{number_to_delimited(hash[:service_fee_monthly].to_i)}",
       ]
     end
-    output_payment = number_to_delimited(breakdown.dig(:output_payment, :started, :subtotal).to_i)
+
+    output_payments = breakdown.dig(:output_payments).each_with_object([]) do |hash, bands|
+      bands << [
+        band_name_from_index(bands.length),
+        "£#{number_to_delimited(hash.dig(:started, :per_participant).to_i)}",
+        "£#{number_to_delimited(hash.dig(:started, :subtotal).to_i)}",
+      ]
+    end
 
     table = Terminal::Table.new(
       title: "Breakdown Payments",
@@ -43,9 +52,12 @@ namespace :payment_calculation do
       rows: service_fees,
     )
     table.style = { alignment: :center }
+    table.add_separator
+    table.add_row ["Banding", "Output price  (PP)", "Output price  (monthly)"]
+    table.add_separator
+    output_payments.each { |row| table.add_row(row) }
 
     output = <<~RESULT
-      Output payment (started) £#{output_payment}
       Based on #{number_to_delimited(total_participants.to_i)} participants and #{per_participant_in_bands}
     RESULT
 

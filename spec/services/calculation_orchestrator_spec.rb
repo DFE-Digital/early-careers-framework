@@ -6,12 +6,23 @@ RSpec.describe CalculationOrchestrator do
   let(:call_off_contract) { create(:call_off_contract) }
   let(:expected_result) do
     {
-      service_fees: [{
-        service_fee_monthly: 22_288.0,
-        service_fee_per_participant: 323.0,
-        service_fee_total: 646_349.0,
-        service_fee_monthly: 22_287.9,
-      },
+      service_fees: [
+        {
+          service_fee_monthly: 22_288.0,
+          service_fee_per_participant: 323.0,
+          service_fee_total: 646_349.0,
+        },
+        {
+          service_fee_monthly: 0.0,
+          service_fee_per_participant: 392.0,
+          service_fee_total: 0.0,
+        },
+        {
+          service_fee_monthly: 0.0,
+          service_fee_per_participant: 386.0,
+          service_fee_total: 0.0,
+        },
+      ],
       output_payments: [
         {
           per_participant: 597.0,
