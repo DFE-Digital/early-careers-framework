@@ -27,7 +27,8 @@ const pagePaths = {
     "/schools/:id/cohorts/2021/core-programme/materials/edit",
   "2021 cohort CIP materials success":
     "/schools/:id/cohorts/2021/core-programme/materials/success",
-  "2021 cohort CIP materials": "/schools/:id/cohorts/2021/core-programme/materials",
+  "2021 cohort CIP materials":
+    "/schools/:id/cohorts/2021/core-programme/materials",
   "check account": "/check-account",
   "admin schools": "/admin/schools",
   "admin school overview": "/admin/schools/:id",
@@ -84,8 +85,10 @@ const pagePaths = {
   "2021 school cohorts": "/schools/:id/cohorts/2021",
   "2021 school partnerships": "/schools/:id/cohorts/2021/partnerships",
   "2021 school participants": "/schools/:id/cohorts/2021/participants",
-  "2021 school participant": "/schools/:school_id/cohorts/2021/participants/:id",
-  "2021 school participant type": "/schools/:id/cohorts/2021/participants/:id/type",
+  "2021 school participant":
+    "/schools/:school_id/cohorts/2021/participants/:id",
+  "2021 school participant type":
+    "/schools/:id/cohorts/2021/participants/:id/type",
   "2021 school participant details":
     "/schools/:id/cohorts/2021/participants/:id/details",
   "2021 school choose etc mentor":
