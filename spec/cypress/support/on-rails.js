@@ -52,26 +52,26 @@ const reset = () => {
 beforeEach(() => {
   reset();
 });
-
-Cypress.on("after:run", () => {
-  reset();
-});
+//
+// Cypress.on("after:run", () => {
+//   reset();
+// });
 
 // comment this out if you do not want to attempt to log additional info on test fail
-Cypress.on("fail", (err, runnable) => {
-  // allow app to generate additional logging data
-  Cypress.$.ajax({
-    url: "/__cypress__/command",
-    data: JSON.stringify({
-      name: "log_fail",
-      options: {
-        error_message: err.message,
-        runnable_full_title: runnable.fullTitle(),
-      },
-    }),
-    async: false,
-    method: "POST",
-  });
-
-  throw err;
-});
+// Cypress.on("fail", (err, runnable) => {
+//   // allow app to generate additional logging data
+//   Cypress.$.ajax({
+//     url: "/__cypress__/command",
+//     data: JSON.stringify({
+//       name: "log_fail",
+//       options: {
+//         error_message: err.message,
+//         runnable_full_title: runnable.fullTitle(),
+//       },
+//     }),
+//     async: false,
+//     method: "POST",
+//   });
+//
+//   throw err;
+// });

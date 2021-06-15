@@ -4,7 +4,7 @@ Feature: School leaders should be able to manage participants
     Given scenario "school_participants" has been run
     And feature induction_tutor_manage_participants is active
     And I am logged in as existing user with email "school-leader@example.com"
-    And I am on "2021 school participants" page
+    And I am on "2021 school participants" page with id "00041221-d612-46a8-a096-87ad63ff3a7d"
 
   Scenario: Should be able to view participants
     Then the table should have 3 rows

@@ -81,7 +81,7 @@ module Schools
     end
 
     def ensure_form_present
-      redirect_to schools_cohort_participants_path unless session.key?(FORM_SESSION_KEY)
+      redirect_to schools_participants_path unless session.key?(FORM_SESSION_KEY)
     end
 
     helper_method :back_link_path
