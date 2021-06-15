@@ -6,7 +6,6 @@ module PaymentCalculator
   module Ecf
     class ServiceFees
       include PaymentCalculator::Ecf::Contract::ServiceFeeCalculations
-      # required_config :contract # TODO: Uncomment this when the updated InitializeWithConfig is added from the other PR
       delegate :bands, to: :contract
 
       def call
