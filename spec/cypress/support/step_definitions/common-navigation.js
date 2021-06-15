@@ -1,4 +1,5 @@
 import { Given, When, Then } from "cypress-cucumber-preprocessor/steps";
+import { parseArgs } from "./database";
 
 Given("I am logged in as a {string}", (user) => cy.login(user));
 Given("I am logged in as an {string}", (user) => cy.login(user));
@@ -121,8 +122,11 @@ Given("I am on {string} error page", (page) => {
   });
 });
 
-Given("I am on {string} page with id {string}", (page, id) => {
-  const path = pagePaths[page].replace(":id", id);
+const ID_REGEX = /:([a-z_]+)/g;
+
+Given("I am on {string} page with {}", (page, argsString) => {
+  const args = parseArgs(argsString);
+  const path = pagePaths[page].replace(ID_REGEX, (_, key) => args[key]);
   cy.visit(path);
 });
 
@@ -143,9 +147,9 @@ const assertOnPage = (page) => {
     throw new Error(`Path not found for ${page}`);
   }
 
-  if (path.includes(":id")) {
+  if (path.includes(":")) {
     const pathRegex = new RegExp(
-      path.replace(/\//g, "\\/").replace(/:id/g, "[^/]+")
+      path.replace(/\//g, "\\/").replace(ID_REGEX, "[^/]+")
     );
     cy.location("pathname").should("match", pathRegex);
   } else {
