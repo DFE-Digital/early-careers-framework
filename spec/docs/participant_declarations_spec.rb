@@ -25,7 +25,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
                 "type": "string",
               },
               "declaration_type": {
-                "enum": %w[started],
+                "enum": %w[started retained_1 retained_2 retained_3 retained_4 completed],
               },
               "declaration_date": {
                 "type": "string",
@@ -36,7 +36,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
             "example": {
               "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
               "declaration_type": "started",
-              "declaration_date": "2021-05-31T02:21:32",
+              "declaration_date": "2021-05-31T02:21:32Z",
             },
           },
         },
@@ -51,7 +51,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
       parameter name: :params, in: :body, required: false, schema: {
         type: :object,
         properties: {
-          declaration_type: { enum: %w[started] },
+          declaration_type: { enum: %w[started retained_1 retained_2 retained_3 retained_4 completed] },
         },
       }, description: "The event declaration type"
 
@@ -87,28 +87,6 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
           RecordParticipantEvent.call(HashWithIndifferentAccess.new({ lead_provider: lead_provider, raw_event: params.to_json }).merge(params))
         end
 
-        run_test!
-      end
-
-      response "404", "Missing ID value" do
-        let(:params) do
-          {
-            "participant_id" => "",
-            "declaration_type" => "started",
-            "declaration_date" => "2021-05-31T13:00:00Z",
-          }
-        end
-        run_test!
-      end
-
-      response "404", "Not Found" do
-        let(:params) do
-          {
-            "participant_id" => "db3a7848-7308-4879-942a-c4a70ced400a",
-            "declaration_type" => "started",
-            "declaration_date" => "2021-05-31T13:00:00Z",
-          }
-        end
         run_test!
       end
 

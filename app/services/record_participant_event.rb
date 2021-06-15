@@ -17,9 +17,10 @@ class RecordParticipantEvent
 
   def call
     validate_schema!
-    return :not_found unless add_ect_profile_params
+    add_ect_profile_params!
     return :unprocessable_entity unless create_record
-    return :not_found unless valid_provider
+
+    validate_provider!
 
     :no_content
   end
@@ -32,16 +33,16 @@ private
 
   def validate_schema!
     errors = JsonSchema::ValidateBodyAgainstSchema.call(schema: schema, body: @params[:raw_event])
-    raise ActionController::ParameterMissing, errors unless errors.empty?
-
-    true
+    raise ActionController::ParameterMissing, (errors.map { |error| error.sub(/\sin schema.*$/, "") }) unless errors.empty?
   end
 
   def schema
     JSON.parse(File.read(JsonSchema::VersionEventFileName.call(version: "0.2")))
   end
 
-  def add_ect_profile_params
+  def add_ect_profile_params!
+    raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless early_career_teacher_profile
+
     @params[:early_career_teacher_profile] = early_career_teacher_profile
   end
 
@@ -57,8 +58,8 @@ private
     SchoolCohort.find_by(school: early_career_teacher_profile.school, cohort: early_career_teacher_profile.cohort)&.lead_provider
   end
 
-  def valid_provider
-    actual_lead_provider.nil? || lead_provider == actual_lead_provider
+  def validate_provider!
+    raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless actual_lead_provider.nil? || lead_provider == actual_lead_provider
   end
 
   def required_params
