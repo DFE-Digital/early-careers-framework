@@ -13,7 +13,7 @@ module Admin
   private
 
     def set_school
-      @school = School.friendly.find params[:school_id]
+      @school = School.find params[:school_id]
     end
   end
 end

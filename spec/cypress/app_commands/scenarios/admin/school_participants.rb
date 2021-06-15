@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-school = FactoryBot.create(:school, name: "Test School", slug: "test-school")
+school = FactoryBot.create(:school, name: "Test School", id: "a4dc302c-ab71-4d7b-a10a-3116a778e8d5")
 cohort = FactoryBot.create(:cohort, start_year: 2021)
 
 user_1 = FactoryBot.create(:user, :mentor, full_name: "Mentor User 1")
