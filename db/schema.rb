@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_11_141524) do
+ActiveRecord::Schema.define(version: 2021_06_15_135010) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -166,6 +166,17 @@ ActiveRecord::Schema.define(version: 2021_06_11_141524) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["owner_type", "owner_id"], name: "index_event_logs_on_owner"
+  end
+
+  create_table "feature_selected_objects", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "object_type", null: false
+    t.uuid "object_id", null: false
+    t.uuid "feature_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["feature_id"], name: "index_feature_selected_objects_on_feature_id"
+    t.index ["object_id", "feature_id", "object_type"], name: "unique_selected_object", unique: true
+    t.index ["object_type", "object_id"], name: "index_feature_selected_objects_on_object"
   end
 
   create_table "features", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -526,6 +537,7 @@ ActiveRecord::Schema.define(version: 2021_06_11_141524) do
   add_foreign_key "early_career_teacher_profiles", "mentor_profiles"
   add_foreign_key "early_career_teacher_profiles", "schools"
   add_foreign_key "early_career_teacher_profiles", "users"
+  add_foreign_key "feature_selected_objects", "features"
   add_foreign_key "induction_coordinator_profiles", "users"
   add_foreign_key "lead_provider_cips", "cohorts"
   add_foreign_key "lead_provider_cips", "core_induction_programmes"
