@@ -97,8 +97,8 @@ Rails.application.routes.draw do
   end
 
   namespace :lead_providers, path: "lead-providers" do
-    get "/", to: "content#index", as: :lead_provider_index
-    get "/partnership-guide", to: "content#partnership_guide", as: :lead_providers_partnership_guide
+    get "/", to: "content#index", as: :landing_page
+    get "/partnership-guide", to: "content#partnership_guide", as: :partnership_guide
 
     resources :your_schools, path: "/your-schools", only: %i[index create]
     resources :partnerships, only: %i[show]
