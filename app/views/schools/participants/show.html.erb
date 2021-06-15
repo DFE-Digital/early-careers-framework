@@ -23,9 +23,6 @@
           <%= @participant.full_name %>
         </dd>
         <dd class="govuk-summary-list__actions">
-          <%= govuk_link_to schools_cohort_participant_edit_details_path(@cohort.start_year, @participant) do %>
-            Change <span class="govuk-visually-hidden">personal details</span>
-          <% end %>
         </dd>
       </div>
       <div class="govuk-summary-list__row">
@@ -36,9 +33,6 @@
           <%= @participant.email %>
         </dd>
         <dd class="govuk-summary-list__actions">
-          <%= govuk_link_to schools_cohort_participant_edit_details_path(@cohort.start_year, @participant) do %>
-            Change <span class="govuk-visually-hidden">personal details</span>
-          <% end %>
         </dd>
       </div>
       <div class="govuk-summary-list__row">
@@ -49,9 +43,6 @@
           <%= @participant.user_description %>
         </dd>
         <dd class="govuk-summary-list__actions">
-          <%= govuk_link_to "#" do %>
-            Change <span class="govuk-visually-hidden">participant type</span>
-          <% end %>
         </dd>
       </div>
 
