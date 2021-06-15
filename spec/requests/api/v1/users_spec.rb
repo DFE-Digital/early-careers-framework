@@ -12,16 +12,13 @@ RSpec.describe "API Users", type: :request do
     before :each do
       # Heads up, for some reason the stored CIP IDs don't match
       cip = create(:core_induction_programme, name: "Teach First")
-      cohort = create(:cohort)
       school = create(:school)
-      create(:school_cohort, school: school, cohort: cohort)
-      mentor = create(:user, :mentor)
+      school_cohort = create(:school_cohort, school: school)
+      mentor = create(:user, :mentor, school: school, cohort: school_cohort.cohort)
       mentor.mentor_profile.update!(core_induction_programme: cip)
-      mentor.mentor_profile.update!(school: school)
       2.times do
-        ect = create(:user, :early_career_teacher)
+        ect = create(:user, :early_career_teacher, school: school, cohort: school_cohort.cohort)
         ect.early_career_teacher_profile.update!(core_induction_programme: cip)
-        ect.early_career_teacher_profile.update!(school: school)
       end
     end
 

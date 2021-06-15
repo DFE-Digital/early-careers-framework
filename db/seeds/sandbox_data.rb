@@ -42,8 +42,9 @@ def create_school_and_associations(lead_provider, cohort, index)
     school: school,
     lead_provider: lead_provider,
     cohort: cohort,
-    delivery_partner: DeliveryPartner.find_or_create_by!(name: Faker::Company.name),
-  )
+  ) do |partnership|
+    partnership.delivery_partner = DeliveryPartner.create!(name: Faker::Company.name)
+  end
 
   SchoolCohort.find_or_create_by!(school: school, cohort: cohort, induction_programme_choice: "full_induction_programme")
 
