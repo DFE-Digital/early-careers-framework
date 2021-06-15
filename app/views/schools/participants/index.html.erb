@@ -8,7 +8,7 @@
 <span class="govuk-caption-l"><%= @cohort.display_name %> cohort</span>
 <h1 class="govuk-heading-l">Your early career teachers (ECTs) and mentors</h1>
 
-<%= govuk_link_to "Add participants", add_schools_cohort_participants_path, button: true %>
+<%= govuk_link_to "Add a new ECT or mentor", add_schools_cohort_participants_path, button: true %>
 
 <% if @participants.present? %>
   <table class="govuk-table">
@@ -25,7 +25,7 @@
           <th scope="row" class="govuk-table__header"><%= govuk_link_to participant.full_name, schools_cohort_participant_path(@cohort.start_year, participant) %></th>
           <td class="govuk-table__cell"><%= participant.user_description %></td>
           <td class="govuk-table__cell">
-            <%= render GovukComponent::Tag.new(text: "Not started", colour: "grey") %>
+            <%= render GovukComponent::Tag.new(text: "Pending", colour: "grey") %>
           </td>
         </tr>
       <% end %>
