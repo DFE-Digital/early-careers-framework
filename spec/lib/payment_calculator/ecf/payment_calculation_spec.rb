@@ -31,16 +31,14 @@ describe ::PaymentCalculator::Ecf::PaymentCalculation do
     retained_event_aggregations.each do |key, value|
       result = described_class.call(lead_provider: contract.lead_provider, event_type: key, total_participants: value)
 
-      expect(result.dig(:service_fees, :service_fee_per_participant)).to be_a(BigDecimal)
-      expect(result.dig(:service_fees, :service_fee_total)).to be_a(BigDecimal)
-      expect(result.dig(:service_fees, :service_fee_monthly)).to be_a(BigDecimal)
+      result.dig(:service_fees).each do |service_fee|
+        expect(service_fee[:service_fee_per_participant]).to be_a(BigDecimal)
+        expect(service_fee[:service_fee_total]).to be_a(BigDecimal)
+        expect(service_fee[:service_fee_monthly]).to be_a(BigDecimal)
+      end
     end
 
     result = described_class.call(lead_provider: contract.lead_provider, event_type: start_event_name, total_participants: participant_for_event)
-
-    expect(result.dig(:service_fees, :service_fee_per_participant)).to be_a(BigDecimal)
-    expect(result.dig(:service_fees, :service_fee_total)).to be_a(BigDecimal)
-    expect(result.dig(:service_fees, :service_fee_monthly)).to be_a(BigDecimal)
 
     result.dig(:output_payments).each do |output_payment|
       expect(output_payment.dig(start_event_name, :retained_participants)).to be_an(Integer)

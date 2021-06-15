@@ -43,11 +43,7 @@ module CallOffContractSteps
   step :assert_output_per_participant, "the output payment per-participant should be unchanged at £:decimal_placeholder"
 
   def assert_service_fee_per_participant(expected_value)
-<<<<<<< HEAD
     expect(@call_off_contract.service_fee_per_participant(@band_a).round(2)).to eq(expected_value)
-=======
-    expect(@call_off_contract.service_fee_per_participant.round(0)).to eq(expected_value)
->>>>>>> Rebase
   end
 
   def assert_output_per_participant(expected_value)
