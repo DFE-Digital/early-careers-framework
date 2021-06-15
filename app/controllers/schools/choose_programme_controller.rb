@@ -6,7 +6,9 @@ class Schools::ChooseProgrammeController < Schools::BaseController
   before_action :load_programme_form
   before_action :verify_programme_chosen, only: %i[advisory show]
 
-  def advisory; end
+  def advisory
+    @cohort = cohort
+  end
 
   def show; end
 
