@@ -6,7 +6,7 @@ Feature: School leaders should be able to manage participants
     And I am logged in as existing user with email "school-leader@example.com"
     And I am on "2021 school participants" page
 
-    When I click on "link" containing "Add participants"
+    When I click on "link" containing "Add a new ECT or mentor"
     Then I should be on "2021 school participant type" page
     And the page should be accessible
     And percy should be sent snapshot called "school participant type page"
@@ -51,7 +51,7 @@ Feature: School leaders should be able to manage participants
     Then I should be on "2021 school participant confirm" page
 
     When I click the submit button
-    Then "page body" should contain "James Herbert Bond has been added as an ECT to the 2021 cohort"
+    Then "page body" should contain "You have added James Herbert Bond to the 2021 cohort"
     And the page should be accessible
     And percy should be sent snapshot called "school ect participant added"
 
@@ -76,7 +76,7 @@ Feature: School leaders should be able to manage participants
     And percy should be sent snapshot called "school mentor participant confirmation page"
 
     When I click the submit button
-    Then "page body" should contain "James Bond has been added as a mentor to the 2021 cohort"
+    Then "page body" should contain "You have added James Bond to the 2021 cohort"
     And the page should be accessible
     And percy should be sent snapshot called "school mentor participant added"
 
@@ -90,8 +90,8 @@ Feature: School leaders should be able to manage participants
     And the page should be accessible
     And percy should be sent snapshot called "School participant email already added different school"
 
-    When I click on "link" containing "Add participants"
-    Then "Early Career Teacher" label should be unchecked
+    When I click on "link" containing "Add a new ECT or mentor"
+    Then "Early career teacher" label should be unchecked
 
     When I set "new participant type radio" to "ect"
     And I click the submit button

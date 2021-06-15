@@ -1,4 +1,4 @@
-<% content_for :title, "Early career teachers and mentors" %>
+<% content_for :title, @participant.full_name %>
 
 <% content_for :before_content, govuk_back_link(
   text: "Back",
@@ -8,10 +8,10 @@
 <span class="govuk-caption-l"><%= @cohort.display_name %> cohort</span>
 <h1 class="govuk-heading-l"><%= @participant.full_name %> <%= render GovukComponent::Tag.new(text: "Not started", colour: "grey") %></h1>
 
-<p class="govuk-inset-text">This person has not signed in and added further details.</p>
-
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+    <p class="govuk-inset-text">We will let you know if we need any more details, such as their Teacher Reference Number (TRN). We will also update you on their status.</p>
+
     <h2 class="govuk-heading-m">Participant details</h2>
 
     <dl class="govuk-summary-list govuk-!-margin-bottom-9">

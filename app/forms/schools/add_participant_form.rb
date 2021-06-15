@@ -9,7 +9,7 @@ module Schools
     STEPS = %i[type details choose_mentor email_taken confirm].freeze
 
     TYPE_OPTIONS = {
-      ect: "Early Career Teacher",
+      ect: "Early career teacher",
       mentor: "Mentor",
     }.freeze
 
