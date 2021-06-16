@@ -30,7 +30,7 @@ class SchoolCohort < ApplicationRecord
   end
 
   def add_participants_status
-    if FeatureFlag.active?(:induction_tutor_manage_participants)
+    if FeatureFlag.active?(:induction_tutor_manage_participants, for: school)
       "To do"
     else
       "Cannot start yet"
