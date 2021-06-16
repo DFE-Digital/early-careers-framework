@@ -154,12 +154,6 @@ class School < ApplicationRecord
     ]
   end
 
-# This temporary code is temporarily commented out during development
-# # This is temporary so that nothing breaks until the slugs are generated
-# def to_param
-#   id
-# end
-
 private
 
   def open?
