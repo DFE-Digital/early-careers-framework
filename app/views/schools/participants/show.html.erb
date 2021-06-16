@@ -53,13 +53,13 @@
           </dt>
           <dd class="govuk-summary-list__value">
             <% if @mentor %>
-              <%= govuk_link_to @mentor.full_name, schools_cohort_participant_path(@cohort.start_year, @mentor) %>
+              <%= govuk_link_to @mentor.full_name, schools_cohort_participant_path(@cohort, @mentor) %>
             <% else %>
               Not yet assigned
             <% end %>
           </dd>
           <dd class="govuk-summary-list__actions">
-            <%= govuk_link_to schools_cohort_participant_edit_mentor_path(@cohort.start_year, @participant) do %>
+            <%= govuk_link_to schools_cohort_participant_edit_mentor_path(@cohort, @participant) do %>
               Change <span class="govuk-visually-hidden">mentor</span>
             <% end %>
           </dd>

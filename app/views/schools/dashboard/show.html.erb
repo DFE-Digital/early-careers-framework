@@ -19,7 +19,7 @@
     <% @school_cohorts.each do |school_cohort| %>
       <tr class="govuk-table__row">
         <td class="govuk-table__cell">
-          <%= govuk_link_to school_cohort.cohort.start_year, schools_cohort_path(school_cohort.cohort.start_year) %>
+          <%= govuk_link_to school_cohort.cohort.start_year, schools_cohort_path(school_cohort.cohort) %>
         </td>
         <td class="govuk-table__cell">
           <%= t(school_cohort.induction_programme_choice, scope: %i[manage_your_training induction_programmes]) %>

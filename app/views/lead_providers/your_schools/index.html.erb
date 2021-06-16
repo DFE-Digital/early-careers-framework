@@ -18,10 +18,13 @@
   </div>
 </div>
 
-<%= render SubnavComponent.new do |component| %>
-  <% @cohorts.each do |cohort| %>
-    <%= component.nav_item(path: lead_providers_your_schools_path(selected_cohort_id: cohort.id)) do %>
-      <%= cohort.start_year %> cohort
+<% if @cohorts.length > 1 %>
+  <%= render SubnavComponent.new do |component| %>
+    <% @cohorts.each do |cohort| %>
+      <%# Use a query param to access cohorts other than the current one %>
+      <%= component.nav_item(path: lead_providers_your_schools_path(cohort: cohort == Cohort.current ? nil : cohort)) do %>
+        <%= cohort.start_year %> cohort
+      <% end %>
     <% end %>
   <% end %>
 <% end %>

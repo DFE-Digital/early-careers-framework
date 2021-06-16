@@ -17,4 +17,8 @@ class Cohort < ApplicationRecord
     # e.g. 2021/22
     "#{start_year}/#{start_year - 1999}"
   end
+
+  def to_param
+    start_year.to_s
+  end
 end

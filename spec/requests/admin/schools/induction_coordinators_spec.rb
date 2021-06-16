@@ -61,9 +61,9 @@ RSpec.describe "Admin::Schools::InductionCoodinators", type: :request do
           email: "arthur.chigley@example.com",
         },
       }
-      patch admin_school_induction_coordinator_path(school.id, induction_tutor.id), params: form_params
+      patch admin_school_induction_coordinator_path(school, induction_tutor.id), params: form_params
 
-      expect(response).to redirect_to admin_school_path(school.id)
+      expect(response).to redirect_to admin_school_path(school)
       expect(flash[:success][:content]).to eq "Induction tutor details updated"
       induction_tutor.reload
       expect(induction_tutor.full_name).to eq "Arthur Chigley"

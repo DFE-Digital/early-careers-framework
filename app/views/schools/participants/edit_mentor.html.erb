@@ -2,10 +2,10 @@
 
 <% content_for :before_content, govuk_back_link(
   text: "Back",
-  href: schools_cohort_participant_path(@cohort.start_year, @participant))
+  href: schools_cohort_participant_path(@cohort, @participant))
 %>
 
-<%= form_with model: @mentor_form, url: schools_cohort_participant_update_mentor_path(@cohort.start_year, @participant), method: :put, id: "school-cohort-participant-update-mentor" do |f| %>
+<%= form_with model: @mentor_form, url: schools_cohort_participant_update_mentor_path(@cohort, @participant), method: :put, id: "school-cohort-participant-update-mentor" do |f| %>
   <%= f.govuk_error_summary %>
 
   <%= f.govuk_radio_buttons_fieldset :mentor_id,
