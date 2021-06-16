@@ -204,17 +204,7 @@ Rails.application.routes.draw do
         put :update_mentor, path: "update-mentor"
 
         collection do
-          get :add, to: "add_participants#start"
-
-          scope(
-            controller: "add_participants",
-            path: "add",
-            constraints: { step: Schools::AddParticipantForm.step_route_constraint },
-          ) do
-            get ":step", action: :show
-            patch ":step", action: :update
-            post :complete
-          end
+          multistep_form :add, Schools::AddParticipantForm, controller: :add_participants
         end
       end
 

@@ -26,14 +26,6 @@ module Multistep
       def steps
         @steps ||= {}
       end
-
-      def step_route_constraint
-        step_names = steps.keys
-          .map(&:to_s)
-          .map(&:dasherize)
-
-        Regexp.union(step_names)
-      end
     end
 
     def record_completed_step(step)

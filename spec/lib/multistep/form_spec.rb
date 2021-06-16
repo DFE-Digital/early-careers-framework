@@ -42,18 +42,6 @@ RSpec.describe Multistep::Form do
     expect(subject.attributes).to include("generic_attribute", "first_step_attribute", "second_step_attribute")
   end
 
-  describe ".step_route_constraint" do
-    # Route constraint cannot contain anchors, as rails automatically anchors the entire route regex
-    subject(:constraint) { /\A#{form_class.step_route_constraint}\z/ }
-
-    it "matches all the dasherized step names" do
-      expect(constraint).to match "first-step"
-      expect(constraint).to match "second-step"
-      expect(constraint).to match "interim-step"
-      expect(constraint).to match "final-step"
-    end
-  end
-
   describe "#next_step" do
     context "when no step has been completed" do
       it "returns first defined step as the next step" do
