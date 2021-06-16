@@ -16,4 +16,4 @@ FactoryBot.create(:partnership,
                   delivery_partner: delivery_partner,
                   lead_provider: lead_provider,
                   school: school,
-                  cohort: Cohort.current) 
+                  cohort: Cohort.current)
