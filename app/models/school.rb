@@ -150,7 +150,6 @@ class School < ApplicationRecord
 
   def slug_candidates
     [
-      :name,
       %i[urn name],
     ]
   end
