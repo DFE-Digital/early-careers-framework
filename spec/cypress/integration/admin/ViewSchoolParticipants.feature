@@ -6,7 +6,7 @@ Feature: Admin users viewing school participants
   Background:
     Given I am logged in as an "admin"
     And scenario "admin/school_participants" has been run
-    And I am on "admin school participants" page with id "a4dc302c-ab71-4d7b-a10a-3116a778e8d5"
+    And I am on "admin school participants" page with id "test-school"
 
   Scenario: Admin school participants page should list school participants
     Then "page body" should contain "ECT User 1"

@@ -26,7 +26,7 @@ module Admin
   private
 
     def set_school
-      @school = School.find params[:school_id]
+      @school = School.friendly.find params[:school_id]
     end
 
     def school_induction_tutor
