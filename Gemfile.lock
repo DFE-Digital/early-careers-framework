@@ -205,6 +205,10 @@ GEM
     jmespath (1.4.0)
     json-schema (2.8.1)
       addressable (>= 2.4)
+    jsonapi-resources (0.10.5)
+      activerecord (>= 4.1)
+      concurrent-ruby
+      railties (>= 4.1)
     jsonapi-rspec (0.0.11)
       rspec-core
       rspec-expectations
@@ -537,6 +541,7 @@ DEPENDENCIES
   health_check!
   httpclient (~> 2.8, >= 2.8.3)
   json-schema
+  jsonapi-resources
   jsonapi-rspec
   jsonapi-serializer
   kaminari (>= 1.2.0)

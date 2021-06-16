@@ -11,6 +11,7 @@ class User < ApplicationRecord
   has_one :admin_profile, dependent: :destroy
   has_one :early_career_teacher_profile, dependent: :destroy
   has_one :mentor_profile, dependent: :destroy
+  has_many :npq_profiles, dependent: :destroy
 
   validates :full_name, presence: true
   validates :email, presence: true, uniqueness: true, notify_email: true

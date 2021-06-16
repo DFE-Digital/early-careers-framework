@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_15_135010) do
+ActiveRecord::Schema.define(version: 2021_06_16_144524) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -289,6 +289,34 @@ ActiveRecord::Schema.define(version: 2021_06_15_135010) do
     t.index ["partnership_notification_email_id"], name: "index_nomination_emails_on_partnership_notification_email_id"
     t.index ["school_id"], name: "index_nomination_emails_on_school_id"
     t.index ["token"], name: "index_nomination_emails_on_token", unique: true
+  end
+
+  create_table "npq_courses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.text "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "npq_lead_providers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.text "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "npq_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "npq_lead_provider_id", null: false
+    t.uuid "npq_course_id", null: false
+    t.date "date_of_birth"
+    t.text "teacher_reference_number"
+    t.boolean "teacher_reference_number_verified", default: false
+    t.text "school_urn"
+    t.text "headteacher_status"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["npq_course_id"], name: "index_npq_profiles_on_npq_course_id"
+    t.index ["npq_lead_provider_id"], name: "index_npq_profiles_on_npq_lead_provider_id"
+    t.index ["user_id"], name: "index_npq_profiles_on_user_id"
   end
 
   create_table "participant_bands", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
