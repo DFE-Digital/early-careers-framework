@@ -10,7 +10,9 @@ class PartnershipActivationJob < ApplicationJob
     ActiveRecord::Base.transaction do
       partnership.update!(pending: false)
       school_cohort = SchoolCohort.find_by!(school_id: partnership.school_id, cohort_id: partnership.cohort_id)
-      school_cohort.update!(induction_programme_choice: "full_induction_programme", core_induction_programme: nil)
+      school_cohort.update!(induction_programme_choice: "full_induction_programme",
+                            core_induction_programme: nil,
+                            opt_out_of_updates: false)
     end
   end
 end

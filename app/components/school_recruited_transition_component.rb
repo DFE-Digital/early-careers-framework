@@ -6,8 +6,8 @@ class SchoolRecruitedTransitionComponent < BaseComponent
   end
 
   def render?
-    return false unless school_cohort.school_chose_cip?
     return false if partnership.blank?
+    return false unless could_show_banner_for_programme_choice?
 
     partnership.in_challenge_window? && !partnership.challenged?
   end
@@ -21,6 +21,10 @@ private
       school_id: school_cohort.school_id,
       cohort_id: school_cohort.cohort_id,
     )
+  end
+
+  def could_show_banner_for_programme_choice?
+    school_cohort.induction_programme_choice.in? %w[core_induction_programme design_our_own no_early_career_teachers]
   end
 
   delegate :lead_provider, to: :partnership
