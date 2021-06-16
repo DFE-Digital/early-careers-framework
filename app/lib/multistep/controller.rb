@@ -57,7 +57,6 @@ module Multistep
 
     included do
       helper_method :back_link_path
-      before_action :ensure_form_present, only: %i[show update complete]
       after_action :remove_form, only: :complete
     end
 
@@ -69,10 +68,20 @@ module Multistep
     end
 
     def show
+      unless session.key?(self.class.session_key)
+        redirect_to abandon_journey_path
+        return
+      end
+
       render current_step
     end
 
     def update
+      unless session.key?(self.class.session_key)
+        redirect_to abandon_journey_path
+        return
+      end
+
       form.assign_attributes(form_params)
 
       if form.valid?(current_step)
@@ -85,6 +94,11 @@ module Multistep
     end
 
     def complete
+      unless session.key?(self.class.session_key)
+        redirect_to abandon_journey_path
+        return
+      end
+
       @result = form.save!
     end
 
@@ -126,10 +140,6 @@ module Multistep
     def form_params
       attributes = form.class.steps[current_step].attributes
       params[self.class.params_key]&.permit(*attributes) || {}
-    end
-
-    def ensure_form_present
-      redirect_to escape_route unless session.key?(self.class.session_key)
     end
 
     def abandon_journey_path
