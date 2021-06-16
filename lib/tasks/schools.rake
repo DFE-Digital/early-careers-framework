@@ -10,4 +10,9 @@ namespace :schools do
   task send_chasers: :environment do
     InviteSchools.new.send_chasers
   end
+
+  desc "Send private beta invitations to schools"
+  task :invite_to_beta, [:school_urns] => :environment do |_task, args|
+    InviteSchools.new.invite_to_beta(args.school_urns.split)
+  end
 end

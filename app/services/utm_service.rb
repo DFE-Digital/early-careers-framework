@@ -9,11 +9,17 @@ class UTMService
     sign_in: "sign-in",
     challenge_partnership: "challenge-partnership",
     partnership_notification: "partnership-notification",
+    june_private_beta: "june-private-beta",
   }.freeze
 
-  def self.email(campaign)
+  SOURCES = {
+    service: "cpdservice",
+    private_beta: "cpdprivatebeta",
+  }.freeze
+
+  def self.email(campaign, source = :service)
     {
-      utm_source: "cpdservice",
+      utm_source: SOURCES[source] || "cpdservice",
       utm_medium: "email",
       utm_campaign: CAMPAIGNS[campaign] || "none",
     }
