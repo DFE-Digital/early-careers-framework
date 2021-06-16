@@ -1,31 +1,31 @@
 # frozen_string_literal: true
 
-require "initialize_with_config"
 require "payment_calculator/ecf/payment_calculation"
 
 class ContractEventPaymentCalculator
-  include InitializeWithConfig
+  class << self
+    def call(lead_provider:, total_participants:, event_type: :started, payment_calculator: ::PaymentCalculator::Ecf::PaymentCalculation)
+      new(lead_provider: lead_provider, payment_calculator: payment_calculator).call(total_participants: total_participants, event_type: event_type)
+    end
+  end
 
   # @param [Symbol] event_type
   # @param [Integer] total_participants
   # Call the payment_calculator class that performs the actual contracted calculation passing in the total number
   # of filtered participants and the event type
-  # Instantiate with new({contract: CallOffContract.xxx}) or pass that as the first parameter to the class level
+  # Instantiate with new(lead_provider: <#lead_provider_instance>) or pass that as the named parameter to the class level
   # call, e.g.
   #
-  # ContractEventPaymentCalculator.call({contract: CallOffContract.first}, total_participants: 2000, event_type: :started)
+  # ContractEventPaymentCalculator.call(lead_provider: <#lead_provider_instance>, total_participants: 2000, event_type: :started)
   #
-  # A default is set, but only returns the first created contract.
-  #
-  # #contract must respond to :recruitment_target, :set_up_fee and :band_a, where #band_a also responds to
-  # :per_participant
   def call(total_participants:, event_type:)
-    payment_calculator.call(config, total_participants: total_participants, event_type: event_type)
+    @payment_calculator.call(lead_provider: @lead_provider, total_participants: total_participants, event_type: event_type)
   end
 
-  def default_config
-    {
-      payment_calculator: ::PaymentCalculator::Ecf::PaymentCalculation,
-    }
+private
+
+  def initialize(lead_provider:, payment_calculator: ::PaymentCalculator::Ecf::PaymentCalculation)
+    @lead_provider = lead_provider
+    @payment_calculator = payment_calculator
   end
 end

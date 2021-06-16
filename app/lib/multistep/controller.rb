@@ -100,6 +100,7 @@ module Multistep
 
     def setup_form(form)
       return unless (setup = self.class.setup_form)
+
       instance_exec(form, &setup)
     end
 

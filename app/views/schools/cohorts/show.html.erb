@@ -15,7 +15,7 @@
       <% if @school_cohort.core_induction_programme? %>
         <%= @cohort.start_year %> cohort: use DfE accredited materials
       <% else %>
-        <%= @cohort.start_year %> cohort: use an approved training provider
+        <%= @cohort.start_year %> cohort: use a training provider
       <% end %>
     </h1>
     <ol class="app-task-list">
@@ -55,7 +55,7 @@
           <li class="app-task-list__item">
             <span class="app-task-list__task-name">
               <%= govuk_link_to "Add early career teachers and mentors",
-                FeatureFlag.active?(:induction_tutor_manage_participants) ?
+                FeatureFlag.active?(:induction_tutor_manage_participants, for: @school) ?
                   schools_cohort_participants_path(@cohort.start_year) :
                   add_participants_schools_cohort_path(@cohort.start_year) %>
             </span>

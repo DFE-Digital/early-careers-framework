@@ -460,6 +460,8 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    terminal-table (3.0.1)
+      unicode-display_width (>= 1.1.1, < 3)
     thor (1.1.0)
     thread_safe (0.3.6)
     turnip (4.3.0)
@@ -571,6 +573,7 @@ DEPENDENCIES
   simplecov
   spring
   spring-watcher-listen (~> 2.0.0)
+  terminal-table
   tzinfo-data
   view_component
   wdm (>= 0.1.0)

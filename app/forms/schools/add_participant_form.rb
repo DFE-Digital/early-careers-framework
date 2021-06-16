@@ -6,7 +6,7 @@ module Schools
     include Multistep::Form
 
     TYPE_OPTIONS = {
-      ect: "Early Career Teacher",
+      ect: "Early career teacher",
       mentor: "Mentor",
     }.freeze
 

@@ -47,7 +47,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :participants, only: :index, constraints: ->(_request) { FeatureFlag.active?(:participant_data_api) }
       resources :participant_declarations, only: %i[create], path: "participant-declarations"
-      resources :users, only: :index
+      resources :users, only: %i[index create]
       resources :dqt_records, only: :show, path: "dqt-records"
     end
   end
@@ -198,7 +198,7 @@ Rails.application.routes.draw do
       resources :partnerships, only: :index
       resource :programme, only: %i[edit], controller: "choose_programme"
 
-      resources :participants, only: %i[index show], constraints: ->(_request) { FeatureFlag.active?(:induction_tutor_manage_participants) } do
+      resources :participants, only: %i[index show] do
         get :edit_details, path: "edit-details"
         get :edit_mentor, path: "edit-mentor"
         put :update_mentor, path: "update-mentor"

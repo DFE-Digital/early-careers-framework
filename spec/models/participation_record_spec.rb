@@ -7,7 +7,7 @@ RSpec.describe ParticipationRecord, type: :model do
   before :each do
     @participation_record = create(:participation_record)
   end
-  let(:set_config_ect_profile) { create(:early_career_teacher_profile) }
+  let(:add_ect_profile_params) { create(:early_career_teacher_profile) }
 
   describe "state transitions" do
     it "should have an initial state of assigned" do

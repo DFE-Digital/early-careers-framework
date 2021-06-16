@@ -1,7 +1,6 @@
 {
   "$id": "https://digital.education.gov.uk/schema/ecf/contracts/create/request_schema.json/#",
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "$ref": "https://digital.education.gov.uk/schema/",
   "type": "object",
   "properties": {
     "name": {

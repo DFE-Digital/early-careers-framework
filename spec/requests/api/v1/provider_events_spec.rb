@@ -16,24 +16,13 @@ RSpec.describe "Participant Declarations", type: :request do
       }
     end
     let(:invalid_user_id) do
-      {
-        participant_id: payload.id,
-        declaration_type: "started",
-        declaration_date: (Time.zone.now - 1.week).iso8601,
-      }
+      params.merge({ participant_id: payload.id })
     end
     let(:missing_user_id) do
-      {
-        participant_id: nil,
-        declaration_type: "started",
-        declaration_date: (Time.zone.now - 1.week).iso8601,
-      }
+      params.merge({ participant_id: "" })
     end
     let(:missing_required_parameter) do
-      {
-        declaration_type: "started",
-        declaration_date: (Time.zone.now - 1.week).iso8601,
-      }
+      params.except(:participant_id)
     end
 
     let(:parsed_response) { JSON.parse(response.body) }
@@ -41,34 +30,35 @@ RSpec.describe "Participant Declarations", type: :request do
     context "when authorized" do
       before do
         default_headers[:Authorization] = bearer_token
+        default_headers[:CONTENT_TYPE] = "application/json"
       end
 
       it "returns 204 status when successful" do
-        post "/api/v1/participant-declarations", params: params
+        post "/api/v1/participant-declarations", params: params.to_json
         expect(response.status).to eq 204
       end
 
       it "returns 404 when trying to create for an invalid user id" do # Expectes the user uuid. Pass the early_career_teacher_profile_id
-        post "/api/v1/participant-declarations", params: invalid_user_id
+        post "/api/v1/participant-declarations", params: invalid_user_id.to_json
         expect(response.status).to eq 404
       end
 
       it "returns 404 when trying to create with no id" do
-        post "/api/v1/participant-declarations", params: missing_user_id
+        post "/api/v1/participant-declarations", params: missing_user_id.to_json
         expect(response.status).to eq 404
       end
 
       it "returns 422 when a required parameter is missing" do
-        post "/api/v1/participant-declarations", params: missing_required_parameter
+        post "/api/v1/participant-declarations", params: missing_required_parameter.to_json
         expect(response.status).to eq 422
-        expect(response.body).to eq({ missing_parameters: %w[participant_id] }.to_json)
+        expect(response.body).to eq({ bad_or_missing_parameters: %w[participant_id] }.to_json)
       end
     end
 
     context "when unauthorized" do
       it "returns 401 for invalid bearer token" do
         default_headers[:Authorization] = "Bearer ugLPicDrpGZdD_w7hhCL"
-        post "/api/v1/participant-declarations", params: params
+        post "/api/v1/participant-declarations", params: params.to_json
         expect(response.status).to eq 401
       end
     end

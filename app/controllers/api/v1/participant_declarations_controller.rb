@@ -6,20 +6,20 @@ module Api
       include ApiTokenAuthenticatable
 
       def create
-        config = HashWithIndifferentAccess.new({ raw_event: request.raw_post, lead_provider: current_user }).merge(permitted_params)
-        return head(RecordParticipantEvent.call(config)) if check_config(config)
+        params = HashWithIndifferentAccess.new({ raw_event: request.raw_post, lead_provider: current_user }).merge(permitted_params)
+        return head(RecordParticipantEvent.call(params)) if check_config(params)
 
-        raise ActionController::ParameterMissing, missing_params(config)
+        raise ActionController::ParameterMissing, missing_params(params)
       end
 
     private
 
-      def check_config(config)
-        missing_params(config).empty?
+      def check_config(params)
+        missing_params(params).empty?
       end
 
-      def missing_params(config)
-        required_params - config.keys
+      def missing_params(params)
+        required_params - params.keys
       end
 
       def permitted_params

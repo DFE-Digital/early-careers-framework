@@ -17,15 +17,10 @@
       "error_response": {
         "type": "object",
         "properties": {
-          "missing_parameter": {
+          "bad_or_missing_parameter": {
             "type": "array",
             "items": {
-              "type": "string",
-              "enum": [
-                "participant_id",
-                "declaration_date",
-                "declaration_type"
-              ]
+              "type": "string"
             },
             "uniqueItems": true,
             "minItems": 1
@@ -67,7 +62,12 @@
                   },
                   "declaration_type": {
                     "enum": [
-                      "started"
+                      "started",
+                      "retained_1",
+                      "retained_2",
+                      "retained_3",
+                      "retained_4",
+                      "completed"
                     ]
                   },
                   "declaration_date": {
@@ -83,7 +83,7 @@
                 "example": {
                   "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
                   "declaration_type": "started",
-                  "declaration_date": "2021-05-31"
+                  "declaration_date": "2021-05-31T02:21:32Z"
                 }
               }
             }
@@ -96,11 +96,8 @@
           "204": {
             "description": "Successful"
           },
-          "404": {
-            "description": "Not Found"
-          },
           "422": {
-            "description": "Missing parameter",
+            "description": "Bad or Missing parameter",
             "content": {
               "application/json": {
                 "schema": {
