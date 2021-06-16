@@ -16,7 +16,9 @@ module Schools
     end
 
     def add_participants
-      redirect_to schools_participants_path(@cohort.start_year) if FeatureFlag.active?(:induction_tutor_manage_participants)
+      if FeatureFlag.active?(:induction_tutor_manage_participants, for: @school)
+        redirect_to schools_participants_path(@cohort)
+      end
     end
   end
 end

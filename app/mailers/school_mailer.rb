@@ -6,6 +6,7 @@ class SchoolMailer < ApplicationMailer
   SCHOOL_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE = "99991fd9-fb41-48cf-846d-98a1fee7762a"
   COORDINATOR_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE = "076e8486-cbcc-44ee-8a6e-d2a721ee1460"
   MINISTERIAL_LETTER_EMAIL_TEMPLATE = "f1310917-aa50-4789-b8c2-8cc5e9b91485"
+  BETA_INVITE_EMAIL_TEMPLATE = "0ae827de-3caa-4a93-b464-c434cbbd02c0"
 
   def nomination_email(recipient:, school_name:, nomination_url:, expiry_date:)
     template_mail(
@@ -104,6 +105,20 @@ class SchoolMailer < ApplicationMailer
       personalisation: {
         letter_url: Rails.application.routes.url_helpers.ministerial_letter_url(host: Rails.application.config.domain),
         leaflet_url: Rails.application.routes.url_helpers.ecf_leaflet_url(host: Rails.application.config.domain),
+      },
+    )
+  end
+
+  def beta_invite_email(recipient:, name:, school_name:, start_url:)
+    template_mail(
+      BETA_INVITE_EMAIL_TEMPLATE,
+      to: recipient,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        name: name,
+        school_name: school_name,
+        start_url: start_url,
       },
     )
   end

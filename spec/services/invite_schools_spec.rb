@@ -175,4 +175,40 @@ RSpec.describe InviteSchools do
       expect(an_instance_of(InviteSchools)).not_to delay_execution_of(:create_and_send_nomination_email)
     end
   end
+
+  describe "#invite_to_beta" do
+    let!(:cohort) { create(:cohort, :current) }
+    let(:induction_coordinator) { create(:user, :induction_coordinator) }
+    let(:school) { induction_coordinator.schools.first }
+
+    it "enables the feature flag for the school" do
+      expect(FeatureFlag.active?(:induction_tutor_manage_participants, for: school)).to be false
+
+      InviteSchools.new.invite_to_beta([school.urn])
+      expect(FeatureFlag.active?(:induction_tutor_manage_participants, for: school)).to be true
+    end
+
+    it "emails the induction coordinator" do
+      InviteSchools.new.invite_to_beta([school.urn])
+      expect(SchoolMailer).to delay_email_delivery_of(:beta_invite_email)
+                                .with(hash_including(
+                                        recipient: induction_coordinator.email,
+                                        name: induction_coordinator.full_name,
+                                        school_name: school.name,
+                                      ))
+    end
+
+    it "does not email the induction coordinator when the school has already been added" do
+      FeatureFlag.activate(:induction_tutor_manage_participants, for: school)
+
+      InviteSchools.new.invite_to_beta([school.urn])
+      expect(SchoolMailer).not_to delay_email_delivery_of(:beta_invite_email)
+    end
+
+    it "does not enable the feature flag when there is no induction coordinator" do
+      school = create(:school)
+      InviteSchools.new.invite_to_beta([school.urn])
+      expect(FeatureFlag.active?(:induction_tutor_manage_participants, for: school)).to be false
+    end
+  end
 end

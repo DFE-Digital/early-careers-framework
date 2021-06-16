@@ -61,6 +61,42 @@ class InviteSchools
     end
   end
 
+  def invite_to_beta(school_urns)
+    start_url = Rails.application.routes.url_helpers.root_url(
+      host: Rails.application.config.domain,
+      **UTMService.email(:june_private_beta, :private_beta),
+    )
+
+    school_urns.each do |urn|
+      school = School.find_by(urn: urn)
+      if school.nil?
+        logger.info "School not found, urn: #{urn} ... skipping"
+        next
+      end
+
+      if FeatureFlag.active?(:induction_tutor_manage_participants, for: school)
+        logger.info "School urn: #{urn} already added to beta ... skipping"
+        next
+      end
+
+      induction_coordinator = school.induction_coordinators.first
+      if induction_coordinator.nil?
+        logger.info "Induction coordinator not found, urn: #{urn} ... skipping"
+        next
+      end
+
+      FeatureFlag.activate(:induction_tutor_manage_participants, for: school)
+      SchoolMailer.beta_invite_email(
+        recipient: induction_coordinator.email,
+        name: induction_coordinator.full_name,
+        school_name: school.name,
+        start_url: start_url,
+      ).deliver_later
+    rescue StandardError
+      logger.info "Error emailing school, urn: #{urn} ... skipping"
+    end
+  end
+
 private
 
   def create_and_send_nomination_email(email, school)

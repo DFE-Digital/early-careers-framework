@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
   get "/pages/:page", to: "pages#show", as: :page
   get "check" => "application#check"
+  get "healthcheck" => "healthcheck#check"
 
   unless Rails.env.production?
     get "/sandbox", to: "sandbox#show"
@@ -201,27 +202,14 @@ Rails.application.routes.draw do
           resources :partnerships, only: :index
           resource :programme, only: %i[edit], controller: "choose_programme"
 
-          resources :participants, only: %i[index show], constraints: ->(_request) { FeatureFlag.active?(:induction_tutor_manage_participants) } do
+          resources :participants, only: %i[index show] do
             get :edit_details, path: "edit-details"
             get :edit_mentor, path: "edit-mentor"
             put :update_mentor, path: "update-mentor"
 
             collection do
-              get :add, to: "add_participants#start"
-
-              scope(
-                controller: "add_participants",
-                path: "add",
-                constraints: {
-                  step: Regexp.union(
-                    *Schools::AddParticipantForm::STEPS.map { |step| step.to_s.dasherize },
-                  ),
-                },
-              ) do
-                get ":step", action: :show
-                patch ":step", action: :update
-                post :complete
-              end
+              multistep_form :add,
+                Schools::AddParticipantForm, controller: :add_participants
             end
           end
 

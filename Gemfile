@@ -21,9 +21,6 @@ gem "sentry-ruby", ">= 4.5.1"
 # Pagination
 gem "kaminari", ">= 1.2.0"
 
-# Adds health check functionality
-gem "health_check", github: "ianheggie/health_check", ref: "0b799ead604f900ed50685e9b2d469cd2befba5b"
-
 # Cleaner logs, one line per request
 gem "lograge", ">= 0.11.2"
 gem "logstash-event"
@@ -98,6 +95,8 @@ gem "ransack"
 # Payment breackdown
 
 gem "terminal-table"
+
+gem "friendly_id", "~> 5.4.0"
 
 platform :mswin, :mingw, :x64_mingw do
   gem "wdm", ">= 0.1.0"

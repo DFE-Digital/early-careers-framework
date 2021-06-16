@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_11_141524) do
+ActiveRecord::Schema.define(version: 2021_06_15_135010) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -168,12 +168,34 @@ ActiveRecord::Schema.define(version: 2021_06_11_141524) do
     t.index ["owner_type", "owner_id"], name: "index_event_logs_on_owner"
   end
 
+  create_table "feature_selected_objects", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "object_type", null: false
+    t.uuid "object_id", null: false
+    t.uuid "feature_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["feature_id"], name: "index_feature_selected_objects_on_feature_id"
+    t.index ["object_id", "feature_id", "object_type"], name: "unique_selected_object", unique: true
+    t.index ["object_type", "object_id"], name: "index_feature_selected_objects_on_object"
+  end
+
   create_table "features", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.boolean "active", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["name"], name: "index_features_on_name", unique: true
+  end
+
+  create_table "friendly_id_slugs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "slug", null: false
+    t.integer "sluggable_id", null: false
+    t.string "sluggable_type", limit: 50
+    t.string "scope"
+    t.datetime "created_at"
+    t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true
+    t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
+    t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
   end
 
   create_table "induction_coordinator_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -469,8 +491,10 @@ ActiveRecord::Schema.define(version: 2021_06_11_141524) do
     t.string "primary_contact_email"
     t.string "administrative_district_code"
     t.string "administrative_district_name"
+    t.string "slug"
     t.index ["name"], name: "index_schools_on_name"
     t.index ["network_id"], name: "index_schools_on_network_id"
+    t.index ["slug"], name: "index_schools_on_slug", unique: true
     t.index ["urn"], name: "index_schools_on_urn", unique: true
   end
 
@@ -526,6 +550,7 @@ ActiveRecord::Schema.define(version: 2021_06_11_141524) do
   add_foreign_key "early_career_teacher_profiles", "mentor_profiles"
   add_foreign_key "early_career_teacher_profiles", "schools"
   add_foreign_key "early_career_teacher_profiles", "users"
+  add_foreign_key "feature_selected_objects", "features"
   add_foreign_key "induction_coordinator_profiles", "users"
   add_foreign_key "lead_provider_cips", "cohorts"
   add_foreign_key "lead_provider_cips", "core_induction_programmes"

@@ -6,11 +6,14 @@ module LeadProviders
 
     def index
       @cohorts ||= @lead_provider.cohorts
-      @selected_cohort = if params[:selected_cohort_id]
-                           @cohorts.find(params[:selected_cohort_id])
-                         else
-                           @cohorts.find_by(start_year: Time.zone.today.year)
-                         end
+
+      # Don't break old URLs
+      if params[:selected_cohort_id]
+        redirect_to cohort: params[:selected_cohort_id]
+        return
+      end
+
+      @selected_cohort = params[:cohort] ? @cohorts.find_by(start_year: params[:cohort]) : Cohort.current
 
       @partnerships = Partnership
         .includes(school: :early_career_teachers)

@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
 class School < ApplicationRecord
+  extend FriendlyId
+
   ELIGIBLE_TYPE_CODES = [1, 2, 3, 5, 6, 7, 8, 12, 14, 15, 18, 28, 31, 32, 33, 34, 35, 36, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48].freeze
   CIP_ONLY_TYPE_CODES = [10, 11, 30, 37].freeze
   ELIGIBLE_STATUS_CODES = [1, 3].freeze
+
+  friendly_id :slug_candidates
 
   belongs_to :network, optional: true
 
@@ -142,6 +146,12 @@ class School < ApplicationRecord
 
   def induction_tutor
     induction_coordinators.first
+  end
+
+  def slug_candidates
+    [
+      %i[urn name],
+    ]
   end
 
 private

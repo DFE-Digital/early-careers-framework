@@ -3,6 +3,7 @@
 class Schools::ParticipantsController < Schools::BaseController
   before_action :set_school_cohort
   before_action :set_participant, except: :index
+  before_action :check_feature_flag
 
   def index
     @participants = User.order(:full_name).is_participant.in_school(@school.id)
@@ -17,8 +18,6 @@ class Schools::ParticipantsController < Schools::BaseController
   def show
     @mentor = @participant.early_career_teacher_profile&.mentor
   end
-
-  def edit_details; end
 
   def edit_mentor
     @mentor_form = ParticipantMentorForm.new(
@@ -41,6 +40,12 @@ class Schools::ParticipantsController < Schools::BaseController
   end
 
 private
+
+  def check_feature_flag
+    return if FeatureFlag.active?(:induction_tutor_manage_participants, for: @school)
+
+    raise ActionController::RoutingError, "Not enabled for this school"
+  end
 
   def set_participant
     @participant = User.find(params[:participant_id] || params[:id])

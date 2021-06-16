@@ -17,7 +17,6 @@ class FeatureFlag
 
   # Short-lived feature flags
   TEMPORARY_FEATURE_FLAGS = %i[
-    add_participants
     participant_data_api
     induction_tutor_manage_participants
   ].freeze
@@ -26,28 +25,50 @@ class FeatureFlag
     FeatureFlag.new(name: name)
   }.with_indifferent_access.freeze
 
-  def self.activate(feature_name)
+  def self.activate(feature_name, **opts)
     raise unless feature_name.in?(FEATURES)
 
-    sync_with_database(feature_name, true)
+    if opts.key?(:for).present?
+      sync_with_database_with_object(feature_name, opts[:for], true)
+    else
+      sync_with_database(feature_name, true)
+    end
   end
 
-  def self.deactivate(feature_name)
+  def self.deactivate(feature_name, **opts)
     raise unless feature_name.in?(FEATURES)
 
-    sync_with_database(feature_name, false)
+    if opts.key?(:for).present?
+      sync_with_database_with_object(feature_name, opts[:for], false)
+    else
+      sync_with_database(feature_name, false)
+    end
   end
 
-  def self.active?(feature_name)
+  def self.active?(feature_name, **opts)
     raise unless feature_name.in?(FEATURES)
 
-    FEATURES[feature_name].feature.active?
+    feature = FEATURES[feature_name].feature
+    feature.active? || (opts.key?(:for) && feature.selected_objects.exists?(object: opts[:for]))
   end
 
   def self.sync_with_database(feature_name, active)
     feature = Feature.find_or_initialize_by(name: feature_name)
     feature.active = active
     feature.save!
+  end
+
+  def self.sync_with_database_with_object(feature_name, object, active)
+    ActiveRecord::Base.transaction do
+      feature = Feature.find_or_create_by!(name: feature_name)
+      if active
+        feature.selected_objects.find_or_create_by!(object: object)
+      else
+        scope = feature.selected_objects
+        scope = scope.where(object: object) unless object == :all
+        scope.destroy_all
+      end
+    end
   end
 
   def self.set_temporary_flags(features = {})

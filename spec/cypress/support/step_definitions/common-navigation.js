@@ -31,15 +31,15 @@ const pagePaths = {
     "/schools/:id/cohorts/2021/core-programme/materials",
   "check account": "/check-account",
   "admin schools": "/admin/schools",
-  "admin school overview": "/admin/schools/:id",
-  "admin school cohorts": "/admin/schools/:id/cohorts",
+  "admin school overview": "/admin/schools/:slug",
+  "admin school cohorts": "/admin/schools/:slug/cohorts",
   "new admin school induction coordinator":
-    "/admin/schools/:id/induction-coordinators/new",
+    "/admin/schools/:slug/induction-coordinators/new",
   "edit admin school induction coordinator":
-    "/admin/schools/:id/induction-coordinators/:id/edit",
+    "/admin/schools/:slug/induction-coordinators/:id/edit",
   "choose replace or update induction tutor":
-    "/admin/schools/:id/replace-or-update-induction-tutor",
-  "admin school participants": "/admin/schools/:id/participants",
+    "/admin/schools/:slug/replace-or-update-induction-tutor",
+  "admin school participants": "/admin/schools/:slug/participants",
   "admin index": "/admin/administrators",
   "admin participants participant": "/admin/participants/:id",
   "admin induction coordinator edit": "/admin/induction-coordinators/:id/edit",

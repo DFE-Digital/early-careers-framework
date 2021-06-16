@@ -8,6 +8,7 @@ class Schools::ChooseProgrammeController < Schools::BaseController
 
   def advisory
     @school = school
+    @cohort = cohort
   end
 
   def show; end
