@@ -1,0 +1,12 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Participant validation demo</h1>
+    <%= form_for @form, url: demo_participant_validation_index_path do |f| %>
+      <%= f.govuk_text_field(:full_name, label: { text: "Full name" }) %>
+      <%= f.govuk_date_field :dob, date_of_birth: true, legend: { text: 'Date of birth' }, hint: { text: 'For example, 31 3 1980' } %>
+      <%= f.govuk_text_field(:trn, label: { text: "Teacher Reference Number" }) %>
+      <%= f.govuk_text_field(:nino, label: { text: "National Insurance number (Optional)" }, hint: { text: "For example, 'QQ 12 34 56 C'" }) %>
+      <%= f.govuk_submit "Check details" %>
+    <% end %>
+  </div>
+</div>

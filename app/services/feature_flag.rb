@@ -18,6 +18,7 @@ class FeatureFlag
   # Short-lived feature flags
   TEMPORARY_FEATURE_FLAGS = %i[
     add_participants
+    participant_validation_demo
     participant_data_api
     induction_tutor_manage_participants
   ].freeze
