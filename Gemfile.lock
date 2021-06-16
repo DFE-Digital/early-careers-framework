@@ -1,11 +1,3 @@
-GIT
-  remote: https://github.com/ianheggie/health_check.git
-  revision: 0b799ead604f900ed50685e9b2d469cd2befba5b
-  ref: 0b799ead604f900ed50685e9b2d469cd2befba5b
-  specs:
-    health_check (4.0.0.pre)
-      rails (>= 4.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -534,7 +526,6 @@ DEPENDENCIES
   foreman
   govuk-components (>= 1.1.5)
   govuk_design_system_formbuilder (~> 2.3.0b1)
-  health_check!
   httpclient (~> 2.8, >= 2.8.3)
   json-schema
   jsonapi-rspec

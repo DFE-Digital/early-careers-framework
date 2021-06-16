@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
   get "/pages/:page", to: "pages#show", as: :page
   get "check" => "application#check"
+  get "healthcheck" => "healthcheck#check"
 
   unless Rails.env.production?
     get "/sandbox", to: "sandbox#show"
