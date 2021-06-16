@@ -154,11 +154,6 @@ class School < ApplicationRecord
     ]
   end
 
-  # This is temporary so that nothing breaks until the slugs are generated
-  def to_param
-    id
-  end
-
 private
 
   def open?
