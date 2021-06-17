@@ -66,13 +66,10 @@ RSpec.describe SchoolDataImporter do
         ])
       end
 
-      it "updates the local authority" do
-        school_data_importer.run
-        existing_school.reload
-
-        expect(existing_school.school_local_authorities.count).to be 2
-        expect(existing_school.school_local_authorities.where(end_year: nil).count).to be 1
-        expect(existing_school.school_local_authorities.where(end_year: 2021).count).to be 1
+      # This is temporary behaviour until we manage that change correctly
+      it "ignores changes to the local authority" do
+        expect { school_data_importer.run }
+          .not_to change { existing_school.reload.school_local_authorities.count }
       end
     end
 
@@ -83,13 +80,9 @@ RSpec.describe SchoolDataImporter do
         ])
       end
 
-      it "updates the local authority district" do
-        school_data_importer.run
-        existing_school.reload
-
-        expect(existing_school.school_local_authority_districts.count).to be 2
-        expect(existing_school.school_local_authority_districts.where(end_year: nil).count).to be 1
-        expect(existing_school.school_local_authority_districts.where(end_year: 2021).count).to be 1
+      it "ignores changes to the local authority" do
+        expect { school_data_importer.run }
+          .not_to change { existing_school.reload.school_local_authority_districts.count }
       end
     end
 
@@ -101,33 +94,6 @@ RSpec.describe SchoolDataImporter do
         existing_school.reload
 
         expect(existing_school.name).to eql("The Starship Children's Centre")
-      end
-    end
-  end
-
-  describe "#update_emails" do
-    context "when the school does not exist" do
-      it "does nothing" do
-        expect { school_data_importer.update_emails }.not_to(change { School.count })
-      end
-    end
-
-    context "when the school exists" do
-      let!(:existing_school) { create(:school, urn: 20_001, name: "NOT The Starship Children's Centre") }
-
-      it "updates the email address" do
-        school_data_importer.update_emails
-        existing_school.reload
-
-        expect(existing_school.primary_contact_email).to eql("1@example.com")
-        expect(existing_school.secondary_contact_email).to eql("2@example.com")
-      end
-
-      it "does not update other fields" do
-        school_data_importer.update_emails
-        existing_school.reload
-
-        expect(existing_school.name).to eql("NOT The Starship Children's Centre")
       end
     end
   end

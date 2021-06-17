@@ -57,10 +57,11 @@ private
     def call
       ActiveRecord::Base.transaction do
         record_school_details
-        return unless new_school?
 
-        link_school_to_local_authority
-        link_school_to_local_district_authority
+        if new_school?
+          link_school_to_local_authority
+          link_school_to_local_district_authority
+        end
       end
     end
 
