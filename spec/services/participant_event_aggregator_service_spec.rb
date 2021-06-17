@@ -30,22 +30,22 @@ RSpec.describe ParticipantEventAggregator do
     describe ".call" do
       context "aggregate using ParticipationRecorder" do
         it "returns a count of the active participants" do
-          expect(described_class.call({ recorder: ParticipationRecord, lead_provider: lead_provider })).to eq(10)
+          expect(described_class.call({ recorder: ParticipationRecord }, lead_provider: lead_provider)).to eq(10)
         end
       end
 
       context "aggregate using ParticipantDeclaration" do
         it "returns a count of the unique started events" do
-          expect(described_class.call({ lead_provider: lead_provider })).to eq(10)
+          expect(described_class.call({}, lead_provider: lead_provider)).to eq(10)
         end
       end
 
       it "can be injected with a different recorder" do
-        expect(described_class.call({ recorder: DummyRecorder, lead_provider: lead_provider })).to eq(100)
+        expect(described_class.call({ recorder: DummyRecorder }, lead_provider: lead_provider)).to eq(100)
       end
 
       it "can be injected with a different recorder and different scope" do
-        expect(described_class.call({ recorder: DummyRecorder, started: :count_something_else, lead_provider: lead_provider })).to eq(40)
+        expect(described_class.call({ recorder: DummyRecorder, started: :count_something_else }, lead_provider: lead_provider)).to eq(40)
       end
     end
   end

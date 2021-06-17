@@ -5,7 +5,7 @@ require "has_di_parameters"
 class ParticipantEventAggregator
   include HasDIParameters
 
-  def call(event_type: :started)
+  def call(event_type: :started, lead_provider:)
     recorder.send(params[event_type], lead_provider)
   end
 
