@@ -15,9 +15,9 @@ RSpec.describe "Schools::Cohort", type: :request do
     sign_in user
   end
 
-  describe "GET /schools/cohorts/:start_year/add-participants" do
+  describe "GET /schools/:school_id/cohorts/:start_year/add-participants" do
     it "renders the add-participants template" do
-      get "/schools/cohorts/#{cohort.start_year}/add-participants"
+      get "/schools/#{school.id}/cohorts/#{cohort.start_year}/add-participants"
 
       expect(response).to render_template("schools/cohorts/add_participants")
       expect(response.body).to include(CGI.escapeHTML("Add early career teachers and mentors"))

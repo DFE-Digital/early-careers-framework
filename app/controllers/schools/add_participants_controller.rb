@@ -12,7 +12,7 @@ module Schools
 
     abandon_journey_path do
       participants = User.order(:full_name).is_participant.in_school(@school.id)
-      participants.any? ? schools_participants_path : schools_cohort_path(id: @cohort.start_year)
+      participants.any? ? schools_participants_path : schools_cohort_path
     end
 
     setup_form do |form|

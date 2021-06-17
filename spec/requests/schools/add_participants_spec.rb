@@ -34,7 +34,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
           get "/schools/#{school.id}/cohorts/#{cohort.start_year}/participants/add/#{step.to_s.dasherize}"
         end
 
-        it { is_expected.to redirect_to schools_cohort_path(cohort.start_year) }
+        it { is_expected.to redirect_to schools_cohort_path(school.id, cohort.start_year) }
       end
 
       context "when form has been set up in the session" do
@@ -59,7 +59,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
         get "/schools/#{school.id}/cohorts/#{cohort.start_year}/participants/add/email-taken"
       end
 
-      it { is_expected.to redirect_to schools_cohort_path(school_id: school.id, id: cohort.start_year) }
+      it { is_expected.to redirect_to schools_cohort_path(school_id: school.id, cohort_id: cohort.start_year) }
     end
 
     context "when form has been set up in the session" do
