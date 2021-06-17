@@ -34,3 +34,28 @@ LeadProviderCip.find_or_create_by!(lead_provider: ucl, cohort: cohort_2021, core
 PrivacyPolicy.find_or_initialize_by(major_version: 1, minor_version: 0)
   .tap { |pp| pp.html = Rails.root.join("db/seeds/privacy_policy_1.0.html").read }
   .save!
+
+[
+  "Ambition Institute",
+  "Best Practice Network",
+  "Church of England",
+  "Education Development Trust",
+  "School-Led Network",
+  "Leadership Learning South East",
+  "Teacher Development Trust",
+  "Teach First",
+  "UCL Institute of Education",
+].each do |npq_lead_provider_name|
+  NpqLeadProvider.find_or_create_by!(name: npq_lead_provider_name)
+end
+
+[
+  "NPQ Leading Teaching (NPQLT)",
+  "NPQ Leading Behaviour and Culture (NPQLBC)",
+  "NPQ Leading Teacher Development (NPQLTD)",
+  "NPQ for Senior Leadership (NPQSL)",
+  "NPQ for Headship (NPQH)",
+  "NPQ for Executive Leadership (NPQEL)",
+].each do |course_name|
+  NpqCourse.find_or_create_by!(name: course_name)
+end

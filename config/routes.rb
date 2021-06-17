@@ -50,6 +50,8 @@ Rails.application.routes.draw do
       resources :participant_declarations, only: %i[create], path: "participant-declarations"
       resources :users, only: %i[index create]
       resources :dqt_records, only: :show, path: "dqt-records"
+
+      jsonapi_resources :npq_profiles, only: [:create]
     end
   end
 
