@@ -1,9 +1,12 @@
 <% content_for :title, "ECT or mentor details" %>
 
-<% content_for :before_content, govuk_back_link(
-  text: "Back",
-  href: schools_participants_path)
-%>
+<% content_for :before_content, govuk_breadcrumbs(
+  breadcrumbs: {
+    @school.name => schools_dashboard_path,
+    "#{@cohort.display_name} cohort" => schools_cohort_path,
+    "Early career teachers and mentors" => schools_participants_path
+  }
+) %>
 
 <span class="govuk-caption-l"><%= @cohort.display_name %> cohort</span>
 <h1 class="govuk-heading-l"><%= @participant.full_name %> <%= render GovukComponent::Tag.new(text: "Not started", colour: "grey") %></h1>

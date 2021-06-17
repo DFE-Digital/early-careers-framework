@@ -4,10 +4,9 @@
 <% content_for :title, "Confirm with provider" %>
 <% end %>
 
-<% content_for :before_content, govuk_back_link(
-  text: "Back",
-  href: schools_cohort_path(@cohort.display_name))
-%>
+<% content_for :before_content, govuk_breadcrumbs(
+  breadcrumbs: { @school.name => schools_dashboard_path, "#{@cohort.display_name} cohort" => schools_cohort_path }
+) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">

@@ -1,9 +1,8 @@
 <% content_for :title, "Early career teachers and mentors" %>
 
-<% content_for :before_content, govuk_back_link(
-  text: "Back",
-  href: schools_cohort_path)
-%>
+<% content_for :before_content, govuk_breadcrumbs(
+  breadcrumbs: { @school.name => schools_dashboard_path, "#{@cohort.display_name} cohort" => schools_cohort_path }
+) %>
 
 <span class="govuk-caption-l"><%= @cohort.display_name %> cohort</span>
 <h1 class="govuk-heading-l">Your early career teachers (ECTs) and mentors</h1>
