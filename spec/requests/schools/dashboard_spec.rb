@@ -12,9 +12,9 @@ RSpec.describe "Schools::Dashboard", type: :request do
 
   describe "GET /schools/:school_id" do
     it "should redirect to programme selection if programme not chosen" do
-      get "/schools/#{school.id}"
+      get "/schools/#{school.slug}"
 
-      expect(response).to redirect_to("/schools/#{school.id}/choose-programme/advisory")
+      expect(response).to redirect_to("/schools/#{school.slug}/choose-programme/advisory")
     end
 
     context "when the programme has been chosen" do
@@ -24,7 +24,7 @@ RSpec.describe "Schools::Dashboard", type: :request do
       end
 
       it "should render the dashboard when programme chosen" do
-        get "/schools/#{school.id}"
+        get "/schools/#{school.slug}"
 
         expect(response).to render_template("schools/dashboard/show")
       end

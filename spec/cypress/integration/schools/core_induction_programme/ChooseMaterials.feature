@@ -2,7 +2,7 @@ Feature: Induction tutors choosing programmes
   Background:
     Given scenario "cip_cohort_with_school" has been run
     And I am logged in as an induction coordinator for created school
-    And I navigate to "2021 school cohorts" page with id "00041221-d612-46a8-a096-87ad63ff3a7d"
+    And I navigate to "2021 school cohorts" page with id "111111-outstanding-school"
 
   Scenario: Choosing materials for Core Induction Programme
     When I click on "link" containing "Choose your training materials"

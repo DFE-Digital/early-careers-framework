@@ -16,7 +16,7 @@ RSpec.describe "Schools::CoreProgramme::Materials", type: :request do
   describe "GET /schools/cohorts/:id/core-programme/materials/info" do
     context "when cohort has no materials selected yet" do
       it "renders the materials info template" do
-        get "/schools/#{school.id}/cohorts/2021/core-programme/materials/info"
+        get "/schools/#{school.slug}/cohorts/2021/core-programme/materials/info"
 
         expect(response).to render_template("schools/core_programme/materials/info")
       end
@@ -28,9 +28,9 @@ RSpec.describe "Schools::CoreProgramme::Materials", type: :request do
       end
 
       it "redirects to the materials page" do
-        get "/schools/#{school.id}/cohorts/2021/core-programme/materials/info"
+        get "/schools/#{school.slug}/cohorts/2021/core-programme/materials/info"
 
-        expect(response).to redirect_to("/schools/#{school.id}/cohorts/2021/core-programme/materials")
+        expect(response).to redirect_to("/schools/#{school.slug}/cohorts/2021/core-programme/materials")
       end
     end
   end
@@ -38,7 +38,7 @@ RSpec.describe "Schools::CoreProgramme::Materials", type: :request do
   describe "GET /schools/cohorts/:id/core-programme/materials/edit" do
     context "when cohort has no materials selected yet" do
       it "renders the materials edit template" do
-        get "/schools/#{school.id}/cohorts/2021/core-programme/materials/edit"
+        get "/schools/#{school.slug}/cohorts/2021/core-programme/materials/edit"
 
         expect(response).to render_template("schools/core_programme/materials/edit")
       end
@@ -49,9 +49,9 @@ RSpec.describe "Schools::CoreProgramme::Materials", type: :request do
       end
 
       it "redirects to the materials page" do
-        get "/schools/#{school.id}/cohorts/2021/core-programme/materials/edit"
+        get "/schools/#{school.slug}/cohorts/2021/core-programme/materials/edit"
 
-        expect(response).to redirect_to("/schools/#{school.id}/cohorts/2021/core-programme/materials")
+        expect(response).to redirect_to("/schools/#{school.slug}/cohorts/2021/core-programme/materials")
       end
     end
   end
@@ -59,7 +59,7 @@ RSpec.describe "Schools::CoreProgramme::Materials", type: :request do
   describe "PUT /schools/cohorts/:id/core-programme/materials" do
     def update!
       put(
-        "/schools/#{school.id}/cohorts/2021/core-programme/materials",
+        "/schools/#{school.slug}/cohorts/2021/core-programme/materials",
         params: {
           core_induction_programme_choice_form: {
             core_induction_programme_id: cip.id,
@@ -76,7 +76,7 @@ RSpec.describe "Schools::CoreProgramme::Materials", type: :request do
 
       it "redirects to success page" do
         update!
-        expect(response).to redirect_to("/schools/#{school.id}/cohorts/2021/core-programme/materials/success")
+        expect(response).to redirect_to("/schools/#{school.slug}/cohorts/2021/core-programme/materials/success")
       end
     end
 
@@ -94,14 +94,14 @@ RSpec.describe "Schools::CoreProgramme::Materials", type: :request do
 
       it "redirects to the materials page" do
         update!
-        expect(response).to redirect_to("/schools/#{school.id}/cohorts/2021/core-programme/materials")
+        expect(response).to redirect_to("/schools/#{school.slug}/cohorts/2021/core-programme/materials")
       end
     end
   end
 
   describe "GET /schools/:school_id/cohorts/:id/core-programme/materials/success" do
     it "renders the materials success template" do
-      get "/schools/#{school.id}/cohorts/2021/core-programme/materials/success"
+      get "/schools/#{school.slug}/cohorts/2021/core-programme/materials/success"
 
       expect(response).to render_template("schools/core_programme/materials/success")
     end

@@ -4,7 +4,7 @@ Feature: School leaders should be able to manage participants
     Given scenario "school_participants" has been run
     And feature induction_tutor_manage_participants is active
     And I am logged in as existing user with email "school-leader@example.com"
-    And I am on "2021 school participants" page with id "00041221-d612-46a8-a096-87ad63ff3a7d"
+    And I am on "2021 school participants" page with id "111111-hogwarts-academy"
 
     When I click on "link" containing "Add a new ECT or mentor"
     Then I should be on "2021 school participant type" page

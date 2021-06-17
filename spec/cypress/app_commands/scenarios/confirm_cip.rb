@@ -2,7 +2,7 @@
 
 cohort = FactoryBot.create(:cohort, start_year: 2021)
 
-unconfirmed_school = FactoryBot.create(:school, id: "00041221-d612-46a8-a096-87ad63ff3a7d")
+unconfirmed_school = FactoryBot.create(:school, name: "Test Town Primary", slug: "test-town-primary")
 FactoryBot.create(:user, :induction_coordinator, email: "confirm-provider@example.com", school_ids: [unconfirmed_school.id])
 SchoolCohort.find_or_create_by!(
   cohort: cohort,
@@ -10,7 +10,7 @@ SchoolCohort.find_or_create_by!(
   induction_programme_choice: "full_induction_programme",
 )
 
-confirmed_school = FactoryBot.create(:school, id: "0000bd75-31d0-4eb3-8df3-07f866e41d51")
+confirmed_school = FactoryBot.create(:school, name: "Test Town Secondary", slug: "test-town-secondary")
 FactoryBot.create(:user, :induction_coordinator, email: "signed-up-provider@example.com", school_ids: [confirmed_school.id])
 SchoolCohort.find_or_create_by!(
   cohort: cohort,

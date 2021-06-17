@@ -4,7 +4,7 @@ Feature: Induction tutors choosing programmes
 
   Background:
     Given cohort was created with start_year "2021"
-    And school was created with id "00041221-d612-46a8-a096-87ad63ff3a7d"
+    And school was created with name "Test School" and slug "test-school"
     And I am logged in as an induction coordinator for created school
     Then I should be on "choose programme advisory" page
     And the page should be accessible
@@ -33,7 +33,7 @@ Feature: Induction tutors choosing programmes
     And the page should be accessible
     And percy should be sent snapshot called "Schools page"
 
-    When I navigate to "choose programme" page with id "00041221-d612-46a8-a096-87ad63ff3a7d"
+    When I navigate to "choose programme" page with id "test-school"
     Then I should have been redirected to "school cohorts" page
 
     When I click on "link" containing "2021"

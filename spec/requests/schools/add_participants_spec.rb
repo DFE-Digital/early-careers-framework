@@ -17,7 +17,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
 
   describe "GET /schools/:school_id/cohorts/:cohort_id/participants/add" do
     before do
-      get "/schools/#{school.id}/cohorts/#{cohort.start_year}/participants/add"
+      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add"
     end
 
     it { is_expected.to redirect_to(action: :show, step: :type) }
@@ -31,10 +31,10 @@ RSpec.describe "Schools::AddParticipant", type: :request do
     describe "GET /schools/:school_id/cohort/:cohort_id/participants/add/#{step.to_s.dasherize}" do
       context "when session has not been set up with the form" do
         before do
-          get "/schools/#{school.id}/cohorts/#{cohort.start_year}/participants/add/#{step.to_s.dasherize}"
+          get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/#{step.to_s.dasherize}"
         end
 
-        it { is_expected.to redirect_to schools_cohort_path(school.id, cohort.start_year) }
+        it { is_expected.to redirect_to schools_cohort_path(school.slug, cohort.start_year) }
       end
 
       context "when form has been set up in the session" do
@@ -45,7 +45,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
                       email: Faker::Internet.email,
                       mentor_id: "later",
                       school_cohort_id: school_cohort.id)
-          get "/schools/#{school.id}/cohorts/#{cohort.start_year}/participants/add/#{step.to_s.dasherize}"
+          get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/#{step.to_s.dasherize}"
         end
 
         it { is_expected.to render_template step }
@@ -56,10 +56,10 @@ RSpec.describe "Schools::AddParticipant", type: :request do
   describe "GET /schools/cohort/:cohort_id/participants/add/email_taken" do
     context "when session has not been set up with the form" do
       before do
-        get "/schools/#{school.id}/cohorts/#{cohort.start_year}/participants/add/email-taken"
+        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/email-taken"
       end
 
-      it { is_expected.to redirect_to schools_cohort_path(school_id: school.id, cohort_id: cohort.start_year) }
+      it { is_expected.to redirect_to schools_cohort_path(school_id: school.slug, cohort_id: cohort.start_year) }
     end
 
     context "when form has been set up in the session" do
@@ -73,7 +73,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
                     email: email,
                     mentor_id: "later",
                     school_cohort_id: school_cohort.id)
-        get "/schools/#{school.id}/cohorts/#{cohort.start_year}/participants/add/email-taken"
+        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/email-taken"
       end
 
       it { is_expected.to render_template :email_taken }

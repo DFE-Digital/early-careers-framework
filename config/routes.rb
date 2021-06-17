@@ -208,8 +208,7 @@ Rails.application.routes.draw do
             put :update_mentor, path: "update-mentor"
 
             collection do
-              multistep_form :add,
-                Schools::AddParticipantForm, controller: :add_participants
+              multistep_form :add, Schools::AddParticipantForm, controller: :add_participants
             end
           end
 
