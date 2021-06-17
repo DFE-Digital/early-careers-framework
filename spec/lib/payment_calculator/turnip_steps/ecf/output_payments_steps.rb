@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require "./app/models/lead_provider"
+require "./app/models/participant_band"
+require "./app/models/call_off_contract"
+
 module OutputPaymentsSteps
   class DummyClass
     include PaymentCalculator::Ecf::Contract::ServiceFeeCalculations
@@ -18,10 +22,18 @@ module OutputPaymentsSteps
   end
 
   step "I run each calculation" do
-    @band_a = double("Band Double", per_participant: @per_participant_value, number_of_participants_in_this_band: 2000, deduction_for_setup?: true)
-    contract = double("Contract Double", recruitment_target: @recruitment_target, set_up_fee: @set_up_fee, band_a: @band_a, set_up_recruitment_basis: 2000, bands: [@band_a])
+    lead_provider = LeadProvider.create!(name: "Lead Provider")
+    contract = CallOffContract.create!(
+      lead_provider: lead_provider,
+      recruitment_target: 2000,
+      set_up_fee: 150_000,
+    )
+    @band_a = ParticipantBand.create!(call_off_contract: contract,
+                                      min: 0,
+                                      max: 2000,
+                                      per_participant: @per_participant_value)
+
     @call_off_contract = DummyClass.new({ contract: contract, bands: [@band_a] })
-    lead_provider = double("Lead Provider", call_off_contract: @call_off_contract)
     calculator = PaymentCalculator::Ecf::PaymentCalculation.new(lead_provider: lead_provider)
     @result = @retention_table.map do |row|
       calculator.call(event_type: row[:payment_type], total_participants: row[:retained_participants])

@@ -28,8 +28,6 @@ namespace :payment_calculation do
       event_type: :started,
     )
 
-    puts "*** breakdown #{JSON.pretty_generate(breakdown)}"
-
     service_fees = breakdown.dig(:service_fees).each_with_object([]) do |hash, bands|
       bands << [
         band_name_from_index(bands.length),
