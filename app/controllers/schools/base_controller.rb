@@ -9,6 +9,8 @@ class Schools::BaseController < ApplicationController
   after_action :verify_authorized
   after_action :verify_policy_scoped
 
+  helper_method :breadcrumbs
+
   layout "school_cohort"
 
 private
@@ -37,5 +39,16 @@ private
     )
 
     redirect_to advisory_schools_choose_programme_path unless @school_cohort
+  end
+
+  def breadcrumbs(*args)
+    breadcrumbs = base_breadcrumbs
+    breadcrumbs.merge!({ active_school.name => schools_dashboard_path }) if args.include?(:school)
+    breadcrumbs.merge!({ "#{active_cohort.display_name} cohort" => schools_cohort_path }) if args.include?(:cohort)
+    breadcrumbs
+  end
+
+  def base_breadcrumbs
+    current_user.schools.count > 1 ? { "Manage your schools" => schools_dashboard_index_path } : {}
   end
 end

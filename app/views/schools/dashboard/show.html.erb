@@ -1,5 +1,9 @@
 <% content_for :title, "Manage training" %>
 
+<% if breadcrumbs.any? %>
+  <% content_for :before_content, govuk_breadcrumbs(breadcrumbs: breadcrumbs) %>
+<% end %>
+
 <span class="govuk-caption-l"><%= @school.name %></span>
 <h1 class="govuk-heading-xl govuk-!-margin-bottom-7">Manage your training</h1>
 
