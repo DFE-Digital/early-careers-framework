@@ -12,12 +12,12 @@ RSpec.shared_examples "school has chosen a challengable programme" do |induction
   end
 
   context "with fip partnership within challenge window" do
-    let!(:partnership) { create :partnership, :in_challenge_window, school: school, cohort: cohort }
+    let!(:partnership) { create :partnership, :in_challenge_window, :pending, school: school, cohort: cohort }
 
     it { is_expected.to render }
 
     context "and the partnership has been challenged" do
-      let!(:partnership) { create :partnership, :challenged, school: school, cohort: cohort }
+      let!(:partnership) { create :partnership, :challenged, :pending, school: school, cohort: cohort }
 
       it { is_expected.not_to render }
     end
