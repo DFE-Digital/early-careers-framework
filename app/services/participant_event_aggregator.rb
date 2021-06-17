@@ -2,8 +2,8 @@
 
 class ActiveParticipantAggregator
   class << self
-    def call(lead_provider:)
-      new.call(lead_provider: lead_provider)
+    def call(participant_declaration_class: ParticipantDeclaration, lead_provider:)
+      new(participant_declaration_class).call(lead_provider: lead_provider)
     end
   end
 
