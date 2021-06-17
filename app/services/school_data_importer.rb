@@ -17,14 +17,19 @@ class SchoolDataImporter
     la_cache = {}
     lad_cache = {}
 
-    CSV.foreach(files["ecf_tech.csv"].path, headers: true, encoding: "ISO-8859-1:UTF-8").with_index do |row|
-      SchoolHandler.new(
-        data: row,
-        logger: logger,
-        start_year: start_year,
-        la_cache: la_cache,
-        lad_cache: lad_cache
-      ).call
+    CSV.foreach(files["ecf_tech.csv"].path, headers: true, encoding: "ISO-8859-1:UTF-8").each_slice(1000) do |rows|
+      schools = School.where(urn: rows.map { |row| row.fetch("URN") }).index_by(&:urn)
+
+      rows.each do |row|
+        SchoolHandler.new(
+          school: schools[row.fetch("URN")] || School.new(urn: row.fetch("URN")),
+          data: row,
+          logger: logger,
+          start_year: start_year,
+          la_cache: la_cache,
+          lad_cache: lad_cache,
+        ).call
+      end
     end
   end
 
@@ -39,14 +44,14 @@ private
   class SchoolHandler
     attr_reader :school, :data, :logger, :start_year
 
-    def initialize(data:, logger:, start_year:, la_cache:, lad_cache:)
+    def initialize(school:, data:, logger:, start_year:, la_cache:, lad_cache:)
+      @school = school
+      @new_school = school.new_record?
       @logger = logger
       @data = data
       @start_year = start_year
       @la_cache = la_cache
       @lad_cache = lad_cache
-
-      find_school
     end
 
     def call
@@ -63,11 +68,6 @@ private
 
     def new_school?
       @new_school
-    end
-
-    def find_school
-      @school = School.find_or_initialize_by(urn: data.fetch("URN"))
-      @new_school = @school.new_record?
     end
 
     def record_school_details
