@@ -19,7 +19,7 @@ module PaymentCalculator
         end
 
         def output_payment_for_event(event_type:, total_participants:, band:)
-          total_participants * output_payment_per_participant_for_event(event_type: event_type, band: band)
+          [band.number_of_participants_in_this_band(total_participants), total_participants].min * output_payment_per_participant_for_event(event_type: event_type, band: band)
         end
 
         def output_payment_per_participant_for_event(event_type:, band:)
