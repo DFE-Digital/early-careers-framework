@@ -37,7 +37,7 @@ RSpec.describe CalculationOrchestrator do
           started: {
             retained_participants: 10,
             per_participant: 117.0,
-            subtotal: 1175.0,
+            subtotal: 0.0,
           },
         },
         {
@@ -45,7 +45,7 @@ RSpec.describe CalculationOrchestrator do
           started: {
             retained_participants: 10,
             per_participant: 116.0,
-            subtotal: 1159.0,
+            subtotal: 0.0,
           },
         },
       ],

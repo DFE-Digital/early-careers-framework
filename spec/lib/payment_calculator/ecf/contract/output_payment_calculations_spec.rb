@@ -6,19 +6,37 @@ class DummyClass
 end
 
 describe ::PaymentCalculator::Ecf::Contract::OutputPaymentCalculations do
-  it "performs calculations of the output payments" do
-    band_a = double("Band Double", per_participant: 996.00)
-    contract = double("Contract Double", band_a: band_a)
-    call_off_contract = DummyClass.new({ contract: contract })
+  let(:contract) { create(:call_off_contract) }
+  let(:call_off_contract) { DummyClass.new({ contract: contract }) }
 
-    expect(call_off_contract.output_payment_per_participant(band_a).round(0)).to eq(598.00)
+  context "when calculating output payments" do
+    let(:band_a) { create(:participant_band, min: 0, max: 100, per_participant: 996, call_off_contract: contract) }
 
-    %i[started completion].each do |event_type|
-      expect(call_off_contract.output_payment_per_participant_for_event(event_type: event_type, band: band_a).round(0)).to eq(120.00)
+    it "performs calculations of the output payments" do
+      expect(call_off_contract.output_payment_per_participant(band_a).round(0)).to eq(598.00)
+
+      %i[started completion].each do |event_type|
+        expect(call_off_contract.output_payment_per_participant_for_event(event_type: event_type, band: band_a).round(0)).to eq(120.00)
+      end
+
+      %i[retention_1 retention_2 retention_3 retention_4].each do |event_type|
+        expect(call_off_contract.output_payment_per_participant_for_event(event_type: event_type, band: band_a).round(0)).to eq(90.00)
+      end
     end
+  end
 
-    %i[retention_1 retention_2 retention_3 retention_4].each do |event_type|
-      expect(call_off_contract.output_payment_per_participant_for_event(event_type: event_type, band: band_a).round(0)).to eq(90.00)
+  context "when calculating output payment with total participants in multiple bands" do
+    let(:band_a) { create(:participant_band, min: 0, max: 200, per_participant: 100, call_off_contract: contract) }
+    let(:band_b) { create(:participant_band, min: 201, max: 400, per_participant: 200, call_off_contract: contract) }
+    let(:band_c) { create(:participant_band, min: 401, max: 500, per_participant: 300, call_off_contract: contract) }
+
+    it "calculates subtotal based on banding total participants" do
+      expect(call_off_contract.output_payment_for_event(event_type: :started, total_participants: 500, band: band_a)).to eq(2400.00)
+      expect(call_off_contract.output_payment_for_event(event_type: :started, total_participants: 500, band: band_b)).to eq(4800.00)
+      expect(call_off_contract.output_payment_for_event(event_type: :started, total_participants: 500, band: band_c)).to eq(3600.00)
+
+      expect(call_off_contract.output_payment_for_event(event_type: :started, total_participants: 50, band: band_a)).to eq(600.00)
+      expect(call_off_contract.output_payment_for_event(event_type: :started, total_participants: 90, band: band_a)).to eq(1080.00)
     end
   end
 end

@@ -7,8 +7,8 @@ module PaymentCalculator
   module Ecf
     class PaymentCalculation
       class << self
-        def call(lead_provider:, service_fee_calculator: ::PaymentCalculator::Ecf::ServiceFees, output_payment_calculator: ::PaymentCalculator::Ecf::OutputPaymentAggregator, total_participants: 0, event_type: :started)
-          new(lead_provider: lead_provider, service_fee_calculator: service_fee_calculator, output_payment_calculator: output_payment_calculator).call(total_participants: total_participants, event_type: event_type)
+        def call(lead_provider:, service_fee_calculator: ::PaymentCalculator::Ecf::ServiceFees, output_payment_aggregator: ::PaymentCalculator::Ecf::OutputPaymentAggregator, total_participants: 0, event_type: :started)
+          new(lead_provider: lead_provider, service_fee_calculator: service_fee_calculator, output_payment_aggregator: output_payment_aggregator).call(total_participants: total_participants, event_type: event_type)
         end
       end
 
@@ -19,15 +19,15 @@ module PaymentCalculator
       def call(total_participants: 0, event_type: :started)
         {
           service_fees: @service_fee_calculator.call(contract: contract),
-          output_payments: @output_payment_calculator.call({ contract: contract }, event_type: event_type, total_participants: total_participants),
+          output_payments: @output_payment_aggregator.call({ contract: contract }, event_type: event_type, total_participants: total_participants),
         }
       end
 
     private
 
-      def initialize(lead_provider:, service_fee_calculator: ::PaymentCalculator::Ecf::ServiceFees, output_payment_calculator: ::PaymentCalculator::Ecf::OutputPaymentAggregator)
+      def initialize(lead_provider:, service_fee_calculator: ::PaymentCalculator::Ecf::ServiceFees, output_payment_aggregator: ::PaymentCalculator::Ecf::OutputPaymentAggregator)
         @service_fee_calculator = service_fee_calculator
-        @output_payment_calculator = output_payment_calculator
+        @output_payment_aggregator = output_payment_aggregator
         @lead_provider = lead_provider
       end
 
