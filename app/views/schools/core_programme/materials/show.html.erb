@@ -1,5 +1,7 @@
 <% content_for :title, "Core induction materials" %>
-<% content_for :before_content, govuk_back_link( text: "Back", href: schools_cohort_path(@cohort)) %>
+<% content_for :before_content, govuk_breadcrumbs(
+  breadcrumbs: { @school.name => schools_dashboard_path, "#{@cohort.display_name} cohort" => schools_cohort_path }
+) %>
 
 <span class="govuk-caption-l"><%= @cohort.start_year %> cohort</span>
 <h1 class="govuk-heading-xl">Your accredited materials</h1>

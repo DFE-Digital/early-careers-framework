@@ -9,7 +9,7 @@ class Schools::ParticipantsController < Schools::BaseController
     @participants = User.order(:full_name).is_participant.in_school(@school.id)
 
     if @participants.empty?
-      redirect_to add_schools_cohort_participants_path
+      redirect_to add_schools_participants_path
     end
 
     authorize @participants, policy_class: ParticipantPolicy
@@ -33,7 +33,7 @@ class Schools::ParticipantsController < Schools::BaseController
       @participant.early_career_teacher_profile.update!(mentor_profile: @mentor_form.mentor ? @mentor_form.mentor.mentor_profile : nil)
 
       flash[:success] = { title: "Success", heading: "The mentor for this participant has been updated" }
-      redirect_to schools_cohort_participant_path(@cohort.start_year, @participant)
+      redirect_to schools_participant_path(id: @participant)
     else
       render :edit_mentor
     end

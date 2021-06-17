@@ -15,9 +15,9 @@ RSpec.describe "Schools::ProgrammeChoice", type: :request do
     sign_in user
   end
 
-  describe "GET /schools/cohorts/:start_year" do
+  describe "GET /schools/:school_id/cohorts/:start_year" do
     it "renders the show template" do
-      get "/schools/cohorts/#{cohort.start_year}"
+      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}"
       expect(response).to render_template("schools/cohorts/show")
     end
 
@@ -27,7 +27,7 @@ RSpec.describe "Schools::ProgrammeChoice", type: :request do
       end
 
       it "renders the no early career teachers template" do
-        get "/schools/cohorts/#{cohort.start_year}"
+        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}"
         expect(response).to render_template("schools/cohorts/programme_choice_no_early_career_teachers")
       end
     end
@@ -38,15 +38,15 @@ RSpec.describe "Schools::ProgrammeChoice", type: :request do
       end
 
       it "renders the no early career teachers template" do
-        get "/schools/cohorts/#{cohort.start_year}"
+        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}"
         expect(response).to render_template("schools/cohorts/programme_choice_design_our_own")
       end
     end
   end
 
-  describe "GET /schools/cohorts/:start_year/programme-choice" do
+  describe "GET /schools/:school_id/cohorts/:start_year/programme-choice" do
     it "renders the programme-choice template" do
-      get "/schools/cohorts/#{cohort.start_year}/programme-choice"
+      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/programme-choice"
 
       expect(response).to render_template("schools/cohorts/programme_choice")
       expect(response.body).to include(CGI.escapeHTML("Your induction programme"))

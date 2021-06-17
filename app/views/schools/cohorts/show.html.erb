@@ -4,10 +4,7 @@
   <% content_for :title, "Next steps - training provider" %>
 <% end %>
 
-<% content_for :before_content, govuk_back_link(
-  text: "Back",
-  href: schools_dashboard_path)
-%>
+<% content_for :before_content, govuk_breadcrumbs(breadcrumbs: { @school.name => schools_dashboard_path }) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -27,7 +24,7 @@
 
           <li class="app-task-list__item">
             <span class="app-task-list__task-name">
-              <%= govuk_link_to "Choose your induction programme", programme_choice_schools_cohort_path(@cohort) %>
+              <%= govuk_link_to "Choose your induction programme", programme_choice_schools_cohort_path %>
             </span>
 
             <%= render AutoTagComponent.new(text: "Done") %>
@@ -37,7 +34,7 @@
             <li class="app-task-list__item">
               <span class="app-task-list__task-name">
                 <%= govuk_link_to "Choose your training materials",
-                                  @school_cohort.core_induction_programme_id ? schools_cohort_core_programme_materials_path(@cohort) : info_schools_cohort_core_programme_materials_path(@cohort) %>
+                                  @school_cohort.core_induction_programme_id ? schools_core_programme_materials_path : info_schools_core_programme_materials_path %>
               </span>
 
               <%= render AutoTagComponent.new(text: @school_cohort.choose_training_materials_status) %>
@@ -45,7 +42,7 @@
           <% else %>
             <li class="app-task-list__item">
               <span class="app-task-list__task-name">
-                <%= govuk_link_to "Sign up with a training provider", schools_cohort_partnerships_path(@cohort) %>
+                <%= govuk_link_to "Sign up with a training provider", schools_partnerships_path %>
               </span>
 
               <%= render AutoTagComponent.new(text: @school_cohort.training_provider_status) %>
@@ -56,8 +53,8 @@
             <span class="app-task-list__task-name">
               <%= govuk_link_to "Add early career teachers and mentors",
                 FeatureFlag.active?(:induction_tutor_manage_participants, for: @school) ?
-                  schools_cohort_participants_path(@cohort) :
-                  add_participants_schools_cohort_path(@cohort) %>
+                  schools_participants_path :
+                  add_participants_schools_cohort_path %>
             </span>
 
             <%= render AutoTagComponent.new(text: @school_cohort.add_participants_status) %>

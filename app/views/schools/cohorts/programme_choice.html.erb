@@ -1,9 +1,8 @@
 <% content_for :title, "Your induction programme" %>
 
-<% content_for :before_content, govuk_back_link(
-  text: "Back",
-  href: schools_cohort_path(@cohort.display_name))
-%>
+<% content_for :before_content, govuk_breadcrumbs(
+  breadcrumbs: { @school.name => schools_dashboard_path, "#{@cohort.display_name} cohort" => schools_cohort_path }
+) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -43,12 +42,13 @@
       <p class="govuk-body">
         They will talk you through how to access this support for your early career teachers and mentors.
         Not sure? <%= govuk_link_to(
-              "Find your local Teaching School Hub",
-              "https://www.gov.uk/guidance/teaching-school-hubs#find-a-teaching-school-hub") %>.
+                        "Find your local Teaching School Hub",
+                        "https://www.gov.uk/guidance/teaching-school-hubs#find-a-teaching-school-hub") %>.
       </p>
 
       <p class="govuk-body">
-        If your school has decided to design and deliver your own programme based on the Early Career Framework (ECF), you need to:
+        If your school has decided to design and deliver your own programme based on the Early Career Framework (ECF),
+        you need to:
       </p>
       <ul class="govuk-list govuk-list--bullet">
         <li>contact: <%= render MailToSupportComponent.new %></li>

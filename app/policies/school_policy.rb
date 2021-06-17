@@ -6,7 +6,13 @@ class SchoolPolicy < ApplicationPolicy
   end
 
   def show?
-    admin_only
+    return true if admin_only
+
+    if user.induction_coordinator?
+      return user.schools.include?(record)
+    end
+
+    false
   end
 
   class Scope < Scope

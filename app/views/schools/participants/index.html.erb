@@ -1,14 +1,13 @@
 <% content_for :title, "Early career teachers and mentors" %>
 
-<% content_for :before_content, govuk_back_link(
-  text: "Back",
-  href: schools_cohort_path(@cohort.display_name))
-%>
+<% content_for :before_content, govuk_breadcrumbs(
+  breadcrumbs: { @school.name => schools_dashboard_path, "#{@cohort.display_name} cohort" => schools_cohort_path }
+) %>
 
 <span class="govuk-caption-l"><%= @cohort.display_name %> cohort</span>
 <h1 class="govuk-heading-l">Your early career teachers (ECTs) and mentors</h1>
 
-<%= govuk_link_to "Add a new ECT or mentor", add_schools_cohort_participants_path, button: true %>
+<%= govuk_link_to "Add a new ECT or mentor", add_schools_participants_path, button: true %>
 
 <% if @participants.present? %>
   <table class="govuk-table">
@@ -22,7 +21,7 @@
     <tbody class="govuk-table__body">
       <% @participants.each do |participant| %>
         <tr class="govuk-table__row">
-          <th scope="row" class="govuk-table__header"><%= govuk_link_to participant.full_name, schools_cohort_participant_path(@cohort, participant) %></th>
+          <th scope="row" class="govuk-table__header"><%= govuk_link_to participant.full_name, schools_participant_path(id: participant) %></th>
           <td class="govuk-table__cell"><%= participant.user_description %></td>
           <td class="govuk-table__cell">
             <%= render GovukComponent::Tag.new(text: "Pending", colour: "grey") %>

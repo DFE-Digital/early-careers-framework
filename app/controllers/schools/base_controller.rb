@@ -15,11 +15,21 @@ private
 
   def ensure_school_user
     raise Pundit::NotAuthorizedError, "Forbidden" unless current_user.induction_coordinator?
+
+    authorize(active_school, :show?) if active_school.present?
+  end
+
+  def active_school
+    School.friendly.find(params[:school_id])
+  end
+
+  def active_cohort
+    Cohort.find_by(start_year: params[:cohort_id])
   end
 
   def set_school_cohort
-    @school = current_user.induction_coordinator_profile.schools.first
-    @cohort = Cohort.find_by(start_year: params[:cohort_id] || params[:id])
+    @school = active_school
+    @cohort = active_cohort
 
     @school_cohort = policy_scope(SchoolCohort).find_by(
       cohort: @cohort,

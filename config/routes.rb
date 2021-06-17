@@ -186,41 +186,44 @@ Rails.application.routes.draw do
   end
 
   namespace :schools do
-    resource :dashboard, controller: :dashboard, only: :show, path: "/"
-    resource :choose_programme, controller: :choose_programme, only: %i[show create], path: "choose-programme" do
-      get :advisory
+    resources :dashboard, controller: :dashboard, only: :show, path: "/", param: :school_id
 
-      get :confirm_programme, path: "confirm-programme"
-      get :choice_saved_design_our_own, path: "design-your-programme"
-      get :choice_saved_no_early_career_teachers, path: "no-early-career-teachers"
-      post :save_programme, path: "save-programme"
-      get :success
-    end
+    scope "/:school_id" do
+      resource :choose_programme, controller: :choose_programme, only: %i[show create], path: "choose-programme" do
+        get :advisory
 
-    resources :cohorts, only: :show do
-      resources :partnerships, only: :index
-      resource :programme, only: %i[edit], controller: "choose_programme"
-
-      resources :participants, only: %i[index show] do
-        get :edit_details, path: "edit-details"
-        get :edit_mentor, path: "edit-mentor"
-        put :update_mentor, path: "update-mentor"
-
-        collection do
-          multistep_form :add, Schools::AddParticipantForm, controller: :add_participants
-        end
+        get :confirm_programme, path: "confirm-programme"
+        get :choice_saved_design_our_own, path: "design-your-programme"
+        get :choice_saved_no_early_career_teachers, path: "no-early-career-teachers"
+        post :save_programme, path: "save-programme"
+        get :success
       end
 
-      namespace :core_programme, path: "core-programme" do
-        resource :materials, only: %i[edit update show] do
-          get :info
-          get :success
-        end
-      end
+      resources :cohorts, only: :show, param: :cohort_id do
+        member do
+          resources :partnerships, only: :index
+          resource :programme, only: %i[edit], controller: "choose_programme"
 
-      member do
-        get "programme-choice", as: :programme_choice
-        get "add-participants", as: :add_participants
+          resources :participants, only: %i[index show] do
+            get :edit_details, path: "edit-details"
+            get :edit_mentor, path: "edit-mentor"
+            put :update_mentor, path: "update-mentor"
+
+            collection do
+              multistep_form :add, Schools::AddParticipantForm, controller: :add_participants
+            end
+          end
+
+          namespace :core_programme, path: "core-programme" do
+            resource :materials, only: %i[edit update show] do
+              get :info
+              get :success
+            end
+          end
+
+          get "programme-choice", as: :programme_choice
+          get "add-participants", as: :add_participants
+        end
       end
     end
   end

@@ -22,12 +22,13 @@ const pagePaths = {
   accessibility: "/accessibility-statement",
   dashboard: "/dashboard",
   "2021 cohort CIP materials info":
-    "/schools/cohorts/2021/core-programme/materials/info",
+    "/schools/:id/cohorts/2021/core-programme/materials/info",
   "2021 cohort CIP materials selection":
-    "/schools/cohorts/2021/core-programme/materials/edit",
+    "/schools/:id/cohorts/2021/core-programme/materials/edit",
   "2021 cohort CIP materials success":
-    "/schools/cohorts/2021/core-programme/materials/success",
-  "2021 cohort CIP materials": "/schools/cohorts/2021/core-programme/materials",
+    "/schools/:id/cohorts/2021/core-programme/materials/success",
+  "2021 cohort CIP materials":
+    "/schools/:id/cohorts/2021/core-programme/materials",
   "check account": "/check-account",
   "admin schools": "/admin/schools",
   "admin school overview": "/admin/schools/:slug",
@@ -71,26 +72,29 @@ const pagePaths = {
   "new lead provider user details": "/admin/suppliers/users/new/user-details",
   "new lead provider user review": "/admin/suppliers/users/new/review",
   "lead provider user delete": "/lead-providers/users/:id/delete",
-  "choose programme": "/schools/choose-programme",
-  "choose programme advisory": "/schools/choose-programme/advisory",
-  "choose programme confirm": "/schools/choose-programme/confirm-programme",
-  "choose programme success": "/schools/choose-programme/success",
+  "choose programme": "/schools/:id/choose-programme",
+  "choose programme advisory": "/schools/:id/choose-programme/advisory",
+  "choose programme confirm": "/schools/:id/choose-programme/confirm-programme",
+  "choose programme success": "/schools/:id/choose-programme/success",
   "design your programme success":
-    "/schools/choose-programme/design-your-programme",
+    "/schools/:id/choose-programme/design-your-programme",
   "no early career teachers success":
-    "/schools/choose-programme/no-early-career-teachers",
+    "/schools/:id/choose-programme/no-early-career-teachers",
   schools: "/schools",
-  "2021 school cohorts": "/schools/cohorts/2021",
-  "2021 school partnerships": "/schools/cohorts/2021/partnerships",
-  "2021 school participants": "/schools/cohorts/2021/participants",
-  "2021 school participant": "/schools/cohorts/2021/participants/:id",
-  "2021 school participant type": "/schools/cohorts/2021/participants/:id/type",
+  "school cohorts": "/schools/:id",
+  "2021 school cohorts": "/schools/:id/cohorts/2021",
+  "2021 school partnerships": "/schools/:id/cohorts/2021/partnerships",
+  "2021 school participants": "/schools/:id/cohorts/2021/participants",
+  "2021 school participant":
+    "/schools/:school_id/cohorts/2021/participants/:id",
+  "2021 school participant type":
+    "/schools/:id/cohorts/2021/participants/:id/type",
   "2021 school participant details":
-    "/schools/cohorts/2021/participants/:id/details",
+    "/schools/:id/cohorts/2021/participants/:id/details",
   "2021 school choose etc mentor":
-    "/schools/cohorts/2021/participants/add/choose-mentor",
+    "/schools/:id/cohorts/2021/participants/add/choose-mentor",
   "2021 school participant confirm":
-    "/schools/cohorts/2021/participants/add/confirm",
+    "/schools/:id/cohorts/2021/participants/add/confirm",
   "lead providers report schools start": "/lead-providers/report-schools/start",
   "lead providers your schools": "/lead-providers/your-schools",
   "challenge partnership": "/report-incorrect-partnership?token=:id",
@@ -137,6 +141,12 @@ Given("I am on {string} page without JavaScript", (page) => {
 
 When("I navigate to {string} page", (page) => {
   const path = pagePaths[page];
+  cy.visit(path);
+});
+
+When("I navigate to {string} page with {}", (page, argsString) => {
+  const args = parseArgs(argsString);
+  const path = pagePaths[page].replace(ID_REGEX, (_, key) => args[key]);
   cy.visit(path);
 });
 
