@@ -20,7 +20,7 @@ private
   end
 
   def active_school
-    School.find(params[:school_id])
+    School.friendly.find(params[:school_id])
   end
 
   def active_cohort

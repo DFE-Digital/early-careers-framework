@@ -25,16 +25,16 @@ RSpec.describe "Schools::ChooseProgramme", type: :request do
       end
 
       it "redirects to the dashboard" do
-        get "/schools/#{school.id}/choose-programme"
+        get "/schools/#{school.slug}/choose-programme"
 
-        expect(response).to redirect_to("/schools/#{school.id}")
+        expect(response).to redirect_to("/schools/#{school.slug}")
       end
     end
   end
 
   describe "GET /schools/choose-programme/advisory" do
     it "renders the choose programme advisory template" do
-      get "/schools/#{school.id}/choose-programme/advisory"
+      get "/schools/#{school.slug}/choose-programme/advisory"
 
       expect(response).to render_template("schools/choose_programme/advisory")
     end
@@ -45,9 +45,9 @@ RSpec.describe "Schools::ChooseProgramme", type: :request do
       end
 
       it "redirects to the dashboard" do
-        get "/schools/#{school.id}/choose-programme/advisory"
+        get "/schools/#{school.slug}/choose-programme/advisory"
 
-        expect(response).to redirect_to("/schools/#{school.id}")
+        expect(response).to redirect_to("/schools/#{school.slug}")
       end
     end
   end
