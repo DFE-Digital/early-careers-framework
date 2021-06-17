@@ -77,7 +77,6 @@ private
       school.address_line2 = data.fetch("Locality")
       school.address_line3 = data.fetch("Town")
       school.postcode = data.fetch("Postcode")
-      school.ukprn = data.fetch("UKPRN")
       school.school_phase_type = data.fetch("PhaseOfEducation (code)").to_i
       school.school_phase_name = data.fetch("PhaseOfEducation (name)")
       school.school_website = data.fetch("SchoolWebsite")
@@ -86,6 +85,8 @@ private
 
       # Changes to properties below carries major consequences and must be avoided until we know how to handle them
       if new_school?
+        school.ukprn = data.fetch("UKPRN")
+
         school.school_type_code = data.fetch("TypeOfEstablishment (code)").to_i
         school.school_type_name = data.fetch("TypeOfEstablishment (name)")
 
