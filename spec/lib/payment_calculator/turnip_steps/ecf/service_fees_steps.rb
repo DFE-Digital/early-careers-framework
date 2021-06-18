@@ -4,6 +4,7 @@ module ServiceFeeSteps
   class DummyClass
     include PaymentCalculator::Ecf::Contract::ServiceFeeCalculations
     include PaymentCalculator::Ecf::Contract::OutputPaymentCalculations
+    include PaymentCalculator::Ecf::Contract::UpliftPaymentCalculations
   end
 
   step "I run the calculation" do
@@ -13,11 +14,11 @@ module ServiceFeeSteps
                       set_up_fee: @set_up_fee,
                       band_a: @band_a,
                       bands: [@band_a],
+                      uplift_amount: 100,
                       set_up_recruitment_basis: 2000)
     @call_off_contract = DummyClass.new({ contract: contract,
                                           bands: [@band_a] })
-    lead_provider = double("Lead Provider", call_off_contract: @call_off_contract)
-    calculator = PaymentCalculator::Ecf::PaymentCalculation.new(lead_provider: lead_provider)
+    calculator = PaymentCalculator::Ecf::PaymentCalculation.new(contract: @call_off_contract)
     @result = calculator.call
   end
 end

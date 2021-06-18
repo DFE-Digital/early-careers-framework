@@ -15,7 +15,7 @@ describe ::PaymentCalculator::Ecf::Contract::UpliftPaymentCalculations do
     if @combined_results.nil?
       expect(call_off_contract.uplift_payment_per_participant.round(2)).to be_a(BigDecimal)
       expect(call_off_contract.uplift_payment_per_participant_for_event(event_type: event_type)).to be_a(BigDecimal)
-      expect(call_off_contract.uplift_payment_for_event(event_type: event_type, total_participants: 100)).to be_a(BigDecimal)
+      expect(call_off_contract.uplift_payment_for_event(event_type: event_type, uplift_participants: 100)).to be_a(BigDecimal)
     end
   end
 
@@ -28,12 +28,12 @@ describe ::PaymentCalculator::Ecf::Contract::UpliftPaymentCalculations do
 
     %i[started].each do |event_type|
       expect(call_off_contract.uplift_payment_per_participant_for_event(event_type: event_type).round(2)).to eq(100.00)
-      expect(call_off_contract.uplift_payment_for_event(event_type: event_type, total_participants: total_participants).round(2)).to eq(33_000.00)
+      expect(call_off_contract.uplift_payment_for_event(event_type: event_type, uplift_participants: total_participants).round(2)).to eq(33_000.00)
     end
 
     %i[retention_1 retention_2 retention_3 retention_4 completion].each do |event_type|
       expect(call_off_contract.uplift_payment_per_participant_for_event(event_type: event_type).round(2)).to eq(0.00)
-      expect(call_off_contract.uplift_payment_for_event(event_type: event_type, total_participants: total_participants.round(2))).to eq(0.00)
+      expect(call_off_contract.uplift_payment_for_event(event_type: event_type, uplift_participants: total_participants.round(2))).to eq(0.00)
     end
   end
 end
