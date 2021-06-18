@@ -46,9 +46,10 @@ class UserSerializer
   end
 
   attributes :induction_programme_choice do |user|
+    @school_cohorts ||= SchoolCohort.all.to_a
     if user.participant?
-      school_cohort = SchoolCohort.find_by(school: user.school, cohort: user.cohort)
-      school_cohort.induction_programme_choice
+      school_cohort = @school_cohorts.find { |sc| (sc.school_id == user.school&.id) && (sc.cohort_id == user.cohort&.id) }
+      school_cohort&.induction_programme_choice
     end
   end
 end
