@@ -50,15 +50,15 @@ RSpec.describe CalculationOrchestrator do
         },
       ],
       uplift: {
-        sub_total: 300.0,
         per_participant: 100.0,
+        sub_total: 1000.0,
       },
     }
   end
 
   before do
     10.times do
-      participant_declaration = create(:participant_declaration, lead_provider: call_off_contract.lead_provider)
+      participant_declaration = create(:participant_declaration, :sparsity_uplift, lead_provider: call_off_contract.lead_provider)
       create(:participant_declaration, early_career_teacher_profile: participant_declaration.early_career_teacher_profile, lead_provider: call_off_contract.lead_provider)
     end
   end
