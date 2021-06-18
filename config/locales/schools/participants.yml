@@ -1,6 +1,6 @@
 en:
   schools:
-    add_participant:
-      participant_type:
+    participants:
+      type:
         ect: "Early career teacher"
         mentor: "Mentor"

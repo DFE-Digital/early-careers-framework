@@ -32,8 +32,8 @@
       <%= f.govuk_radio_buttons_fieldset :type,
         legend: { text: "Do you want to add an early career teacher (ECT) or a mentor?" } do %>
 
-        <%= f.govuk_radio_button :type, :ect, label: { text: t("schools.add_participant.participant_type.ect") } %>
-        <%= f.govuk_radio_button :type, :mentor, label: { text: t("schools.add_participant.participant_type.mentor") } %>
+        <%= f.govuk_radio_button :type, :ect, label: { text: t("schools.participants.type.ect") } %>
+        <%= f.govuk_radio_button :type, :mentor, label: { text: t("schools.participants.type.mentor") } %>
 
         <% if add_participant_form.can_add_self? %>
           <%= f.govuk_radio_divider %>
