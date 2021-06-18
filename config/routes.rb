@@ -11,8 +11,8 @@ Rails.application.routes.draw do
     get "/users/signed-out", to: "users/sessions#signed_out"
     get "/users/link-invalid", to: "users/sessions#link_invalid"
   end
-
   get "/pages/:page", to: "pages#show", as: :page
+  get "/induction-tutor-materials/:provider/:year", to: "pages#induction_tutor_materials", as: :induction_tutor_materials
   get "check" => "application#check"
   get "healthcheck" => "healthcheck#check"
 
