@@ -151,6 +151,8 @@ ActiveRecord::Schema.define(version: 2021_06_23_082855) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "mentor_profile_id"
+    t.boolean "sparsity_uplift", default: false, null: false
+    t.boolean "pupil_premium_uplift", default: false, null: false
     t.index ["cohort_id"], name: "index_early_career_teacher_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_ect_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_early_career_teacher_profiles_on_mentor_profile_id"
