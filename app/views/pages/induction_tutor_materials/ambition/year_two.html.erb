@@ -10,11 +10,11 @@
     <ul class="govuk-list govuk-list--spaced">
       <li>
         <%= govuk_link_to "ECF Programme Handbook (PDF, 107 KB, 10 pages)",
-                          href = "https://www.early-career-framework.education.gov.uk/ambition/wp-content/uploads/sites/3/2020/08/Ambition-EarlyCareerTeachers_2020_ProgrammeHandbook.pdf" %>
+                          "https://www.early-career-framework.education.gov.uk/ambition/wp-content/uploads/sites/3/2020/08/Ambition-EarlyCareerTeachers_2020_ProgrammeHandbook.pdf" %>
       </li>
       <li>
         <%= govuk_link_to "ECF Lead Handbook (PDF, 102 KB, 12 pages)",
-                          href = "https://www.early-career-framework.education.gov.uk/ambition/wp-content/uploads/sites/3/2020/09/Ambition-EarlyCareerTeachers_2020_LeadHandbook_Guidebook_Edit-1-1.pdf" %>
+                          "https://www.early-career-framework.education.gov.uk/ambition/wp-content/uploads/sites/3/2020/09/Ambition-EarlyCareerTeachers_2020_LeadHandbook_Guidebook_Edit-1-1.pdf" %>
       </li>
     </ul>
 
@@ -24,29 +24,19 @@
       dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
       aliqua. </p>
 
-    <%= render SubnavComponent.new do |component| %>
-      <%= component.nav_item(path: induction_tutor_materials_path(provider: "ambition", year: "year-one")) do %>
-        Year 1
-      <% end %>
-      <%= component.nav_item(path: induction_tutor_materials_path(provider: "ambition", year: "year-two")) do %>
-        Year 2
-      <% end %>
-    <% end %>
+    <%= render partial: "pages/induction_tutor_materials/course_year_sub_nav", locals: { provider: "ambition" } %>
 
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-three-quarters">
-        <h3 class="govuk-heading-m govuk-!-margin-top-4">Autumn term: behaviour</h3>
-      </div>
-    </div>
+    <h3 class="govuk-heading-m govuk-!-margin-top-4">Autumn term: behaviour</h3>
+
     <p class="govuk-!-margin-bottom-2 govuk-!-font-weight-bold">First half-term</p>
     <ul class="govuk-list govuk-list--spaced">
       <li>
         <%= govuk_link_to "Conference 2: wellbeing and implementing change (PDF, 72 KB, 5 pages)",
-                          href = "https://www.early-career-framework.education.gov.uk/ambition/wp-content/uploads/sites/3/2020/08/Ambition-P4-Conf-2-EarlyCareerTeachers_2020_ClinicTimetables_Conference2_Dev1_AK.pdf" %>
+                          "https://www.early-career-framework.education.gov.uk/ambition/wp-content/uploads/sites/3/2020/08/Ambition-P4-Conf-2-EarlyCareerTeachers_2020_ClinicTimetables_Conference2_Dev1_AK.pdf" %>
       </li>
       <li>
         <%= govuk_link_to "Clinic 7: pupil wellbeing (PDF, 50 KB, 5 pages)",
-                          href = "https://www.early-career-framework.education.gov.uk/ambition/wp-content/uploads/sites/3/2020/08/Ambition-P4-C07-EarlyCareerTeachers_2020_ClinicTimetables_Clinic7_Dev1_AK.pdf" %>
+                          "https://www.early-career-framework.education.gov.uk/ambition/wp-content/uploads/sites/3/2020/08/Ambition-P4-C07-EarlyCareerTeachers_2020_ClinicTimetables_Clinic7_Dev1_AK.pdf" %>
       </li>
     </ul>
 
@@ -54,23 +44,19 @@
     <ul class="govuk-list govuk-list--spaced">
       <li>
         <%= govuk_link_to "Clinic 8: implementing change: prepare (PDF, 550 KB, 5 pages)",
-                          href = "https://drive.google.com/file/d/19N1TRvjseUQVzIvSMxm3Zxo1Suuq0n3Z/view" %>
+                          "https://drive.google.com/file/d/19N1TRvjseUQVzIvSMxm3Zxo1Suuq0n3Z/view" %>
       </li>
     </ul>
 
     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-three-quarters">
-        <h3 class="govuk-heading-m">Spring term: instruction</h3>
-      </div>
-    </div>
+    <h3 class="govuk-heading-m">Spring term: instruction</h3>
 
     <p class="govuk-!-margin-bottom-2 govuk-!-font-weight-bold">First half-term</p>
     <ul class="govuk-list govuk-list--spaced">
       <li>
         <%= govuk_link_to "Clinic 9: support and interventions (PDF, 53 KB, 4 pages)",
-                          href = "https://www.early-career-framework.education.gov.uk/ambition/wp-content/uploads/sites/3/2020/08/Ambition-P4-C09-EarlyCareerTeachers_2020_ClinicTimetables_Clinic9_Dev1_AK.pdf" %>
+                          "https://www.early-career-framework.education.gov.uk/ambition/wp-content/uploads/sites/3/2020/08/Ambition-P4-C09-EarlyCareerTeachers_2020_ClinicTimetables_Clinic9_Dev1_AK.pdf" %>
       </li>
     </ul>
 
@@ -78,23 +64,19 @@
     <ul class="govuk-list govuk-list--spaced">
       <li>
         <%= govuk_link_to "Clinic 10: implementing change: deliver (PDF, 67 KB, 5 pages)",
-                          href = "https://www.early-career-framework.education.gov.uk/ambition/wp-content/uploads/sites/3/2020/08/Ambition-P4-C10-EarlyCareerTeachers_2020_ClinicTimetables_Clinic10_Dev1_AK.pdf" %>
+                          "https://www.early-career-framework.education.gov.uk/ambition/wp-content/uploads/sites/3/2020/08/Ambition-P4-C10-EarlyCareerTeachers_2020_ClinicTimetables_Clinic10_Dev1_AK.pdf" %>
       </li>
     </ul>
 
     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-three-quarters">
-        <h3 class="govuk-heading-m">Summer term: subject</h3>
-      </div>
-    </div>
+    <h3 class="govuk-heading-m">Summer term: subject</h3>
 
     <p class="govuk-!-margin-bottom-2 govuk-!-font-weight-bold">First half-term</p>
     <ul class="govuk-list govuk-list--spaced">
       <li>
         <%= govuk_link_to "Clinic 11: early literacy 2 (PDF, 57 KB, 6 pages)",
-                          href = "https://www.early-career-framework.education.gov.uk/ambition/wp-content/uploads/sites/3/2020/08/Ambition-P4-C11-EarlyCareerTeachers_2020_ClinicTimetables_Clinic11_Dev1_AK.pdf" %>
+                          "https://www.early-career-framework.education.gov.uk/ambition/wp-content/uploads/sites/3/2020/08/Ambition-P4-C11-EarlyCareerTeachers_2020_ClinicTimetables_Clinic11_Dev1_AK.pdf" %>
       </li>
     </ul>
 
@@ -102,7 +84,7 @@
     <ul class="govuk-list govuk-list--spaced">
       <li>
         <%= govuk_link_to "Clinic 12: implementing change: sustain (PDF, 48 KB, 5 pages)",
-                          href = "https://www.early-career-framework.education.gov.uk/ambition/wp-content/uploads/sites/3/2020/08/Ambition-P4-C12-EarlyCareerTeachers_2020_ClinicTimetables_Clinic12_Dev1_AK.pdf" %>
+                          "https://www.early-career-framework.education.gov.uk/ambition/wp-content/uploads/sites/3/2020/08/Ambition-P4-C12-EarlyCareerTeachers_2020_ClinicTimetables_Clinic12_Dev1_AK.pdf" %>
       </li>
     </ul>
 

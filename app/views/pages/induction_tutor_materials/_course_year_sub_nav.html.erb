@@ -1,0 +1,8 @@
+<%= render SubnavComponent.new do |component| %>
+  <%= component.nav_item(path: induction_tutor_materials_path(provider: provider, year: "year-one")) do %>
+    Year 1
+  <% end %>
+  <%= component.nav_item(path: induction_tutor_materials_path(provider: provider, year: "year-two")) do %>
+    Year 2
+  <% end %>
+<% end %>
