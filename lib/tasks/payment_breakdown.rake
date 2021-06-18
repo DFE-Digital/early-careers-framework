@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "payment_calculator/ecf/payment_calculation"
+require "payment_calculator/ecf/uplift_calculation"
 require "terminal-table"
 
 include ActiveSupport::NumberHelper
@@ -24,13 +25,9 @@ namespace :payment_calculation do
     per_participant_in_bands = lead_provider.call_off_contract.bands.each_with_index.map { |b, i| "£#{b.per_participant.to_i} per participant in #{band_name_from_index(i)}" }.join(", ")
 
     breakdown = PaymentCalculator::Ecf::PaymentCalculation.call(
-      lead_provider: lead_provider,
+      contract: lead_provider.call_off_contract,
       total_participants: total_participants,
-      event_type: :started,
-    )
-    uplift_calculation = PaymentCalculator::Ecf::UpliftCalculation.call(
-      lead_provider: lead_provider,
-      total_participants: uplift_participants,
+      uplift_participants: uplift_participants,
       event_type: :started,
     )
 
@@ -52,6 +49,10 @@ namespace :payment_calculation do
       ]
     end
 
+    uplift_payment = breakdown[:uplift].each_with_object({}) do |(k, v), h|
+      h[k] = "£#{number_to_delimited(v.to_i)}"
+    end
+
     table = Terminal::Table.new(
       title: "Breakdown Payments",
       headings: ["Banding", "Service fee (PP)", "Service fee (monthly)"],
@@ -62,6 +63,10 @@ namespace :payment_calculation do
     table.add_row ["Banding", "Output price  (PP)", "Output price  (monthly)"]
     table.add_separator
     output_payments.each { |row| table.add_row(row) }
+    table.add_separator
+    table.add_row ["", "Per participant", "Total Uplift"]
+    table.add_separator
+    table.add_row(["Uplift", uplift_payment[:per_participant], uplift_payment[:sub_total]])
 
     output = <<~RESULT
       Based on #{number_to_delimited(total_participants.to_i)} participants and #{per_participant_in_bands}
@@ -69,8 +74,9 @@ namespace :payment_calculation do
 
     logger.info table
     logger.info output
-  rescue StandardError
-    logger.info "Lead provider for '#{ARGV[1]}' not found"
+  rescue StandardError => e
+    puts e.message
+    puts e.backtrace
   ensure
     exit(0)
   end

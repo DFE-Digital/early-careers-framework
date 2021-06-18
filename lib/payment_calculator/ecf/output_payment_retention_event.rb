@@ -9,7 +9,7 @@ module PaymentCalculator
 
       def call(total_participants:, event_type:, band:)
         {
-          retained_participants: total_participants,
+          retained_participants: band.number_of_participants_in_this_band(total_participants),
           per_participant: output_payment_per_participant_for_event(event_type: event_type, band: band).round(0),
           subtotal: output_payment_for_event(total_participants: total_participants, event_type: event_type, band: band).round(0),
         }
