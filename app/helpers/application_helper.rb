@@ -25,6 +25,8 @@ module ApplicationHelper
 private
 
   def induction_coordinator_dashboard_path(user)
+    return schools_dashboard_index_path if user.schools.count > 1
+
     school = user.induction_coordinator_profile.schools.first
     return advisory_schools_choose_programme_path(school_id: school.slug) unless school.chosen_programme?(Cohort.current)
 

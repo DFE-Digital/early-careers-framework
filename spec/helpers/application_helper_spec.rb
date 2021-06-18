@@ -28,6 +28,17 @@ RSpec.describe ApplicationHelper, type: :helper do
         expect(helper.profile_dashboard_path(induction_coordinator)).to eq("/schools/#{school.slug}")
       end
     end
+
+    context "when the induction coordinator has more than one school" do
+      before do
+        second_school = create(:school)
+        induction_coordinator.induction_coordinator_profile.schools << second_school
+      end
+
+      it "return the schools dashboard path (index)" do
+        expect(helper.profile_dashboard_path(induction_coordinator)).to eq("/schools")
+      end
+    end
   end
 
   describe "#data_layer" do

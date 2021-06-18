@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
 class Schools::DashboardController < Schools::BaseController
+  before_action :set_school_cohorts, only: :show
   skip_after_action :verify_authorized
   skip_after_action :verify_policy_scoped
-  before_action :set_school_cohorts
+
+  def index
+    @schools = current_user.induction_coordinator_profile.schools
+  end
 
   def show; end
 

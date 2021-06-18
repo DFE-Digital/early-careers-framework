@@ -186,7 +186,7 @@ Rails.application.routes.draw do
   end
 
   namespace :schools do
-    resources :dashboard, controller: :dashboard, only: :show, path: "/", param: :school_id
+    resources :dashboard, controller: :dashboard, only: %i[index show], path: "/", param: :school_id
 
     scope "/:school_id" do
       resource :choose_programme, controller: :choose_programme, only: %i[show create], path: "choose-programme" do
