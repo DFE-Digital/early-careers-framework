@@ -11,12 +11,13 @@ module Schools
     result as: :participant_profile
 
     abandon_journey_path do
-      participants = User.order(:full_name).is_participant.in_school(@school.id)
+      participants = User.is_participant.in_school(@school.id)
       participants.any? ? schools_participants_path : schools_cohort_path
     end
 
     setup_form do |form|
       form.school_cohort_id = @school_cohort.id
+      form.current_user_id = current_user.id
     end
 
   private

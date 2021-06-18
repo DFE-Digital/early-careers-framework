@@ -16,8 +16,10 @@
           <div><%= add_participant_form.email %></div>
         </dd>
         <dd class="govuk-summary-list__actions">
-          <%= govuk_link_to({ action: :show, step: "details" }) do %>
-            Change <span class="govuk-visually-hidden">personal details</span>
+          <% unless add_participant_form.type == :self %>
+            <%= govuk_link_to({ action: :show, step: "details" }) do %>
+              Change <span class="govuk-visually-hidden">personal details</span>
+            <% end %>
           <% end %>
         </dd>
       </div>
@@ -27,11 +29,13 @@
           Type
         </dt>
         <dd class="govuk-summary-list__value">
-          <%= add_participant_form.type_options[add_participant_form.type.to_sym] %>
+          <%= t add_participant_form.participant_type, scope: "schools.add_participant.participant_type" %>
         </dd>
         <dd class="govuk-summary-list__actions">
-          <%= govuk_link_to({ action: :show, step: "type" }) do %>
-            Change <span class="govuk-visually-hidden">participant type</span>
+          <% unless add_participant_form.type == :self %>
+            <%= govuk_link_to({ action: :show, step: "type" }) do %>
+              Change <span class="govuk-visually-hidden">participant type</span>
+            <% end %>
           <% end %>
         </dd>
       </div>
@@ -51,8 +55,10 @@
             </div>
           </dd>
           <dd class="govuk-summary-list__actions">
-            <%= govuk_link_to({ action: :show, step: "details" }) do %>
-              Change <span class="govuk-visually-hidden">personal details</span>
+            <% unless add_participant_form.type == :self %>
+              <%= govuk_link_to({ action: :show, step: "details" }) do %>
+                Change <span class="govuk-visually-hidden">personal details</span>
+              <% end %>
             <% end %>
           </dd>
         </div>

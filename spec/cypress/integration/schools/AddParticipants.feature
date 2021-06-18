@@ -103,3 +103,18 @@ Feature: School leaders should be able to manage participants
     Then "page title" should contain "This email has already been added"
     And the page should be accessible
     And percy should be sent snapshot called "School participant email already added same school"
+
+  Scenario: Should be able to add myself as a mentor
+    When I set "new participant type radio" to "self"
+    And I click the submit button
+    Then I should be on "2021 school participant confirm" page
+    And "page body" should contain "school-leader@example.com"
+    And "page body" should contain "Ms School Leader"
+    And "page body" should contain "Mentor"
+    And the page should be accessible
+    And percy should be sent snapshot called "school self as a mentor confirmation page"
+
+    When I click the submit button
+    Then "page body" should contain "You have been added to the 2021 cohort"
+    And the page should be accessible
+    And percy should be sent snapshot called "school self as a mentor participant added"
