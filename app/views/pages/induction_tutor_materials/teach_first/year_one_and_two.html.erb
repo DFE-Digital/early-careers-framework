@@ -1,0 +1,130 @@
+<% content_for :before_content, govuk_back_link(text: 'Back', href: current_user ? dashboard_path : root_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-9">Teach First's handbooks and training outlines</h1>
+
+    <h2 class="govuk-heading-l govuk-!-margin-bottom-3">Handbooks</h2>
+    <ul class="govuk-list govuk-list--spaced">
+      <li>
+        <%= govuk_link_to "ECF Sequence (PDF, 289 KB, 17 pages)",
+                          href = "https://www.early-career-framework.education.gov.uk/teachfirst/wp-content/uploads/sites/4/2020/09/2.-ECF-Sequence.pdf" %>
+      </li>
+      <li>
+        <%= govuk_link_to "ECF SLT and Induction Lead Implementation Guidance (PDF, 652 KB, 30 pages)",
+                          href = "https://www.early-career-framework.education.gov.uk/teachfirst/wp-content/uploads/sites/4/2020/10/Early-Career-Framework-Programme-SLT-and-Induction-Lead-Handbook-1.pdf" %>
+      </li>
+    </ul>
+
+    <h2 class="govuk-heading-l govuk-!-margin-top-6 govuk-!-margin-bottom-3">Training outlines</h2>
+    <p class="govuk-!-margin-bottom-1">
+      Here is a placholder of contextual blurb about training outlines. Lorem ipsum
+      dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+      aliqua.
+    </p>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-three-quarters">
+        <h3 class="govuk-heading-m govuk-!-margin-top-4">Autumn term</h3>
+      </div>
+    </div>
+    <h4 class="govuk-heading-s govuk-!-margin-bottom-2">
+      <%= govuk_link_to "First half-term: how can you create an effective learning environment? (PDF, 237 KB, 5 pages)",
+                        href = "https://www.early-career-framework.education.gov.uk/teachfirst/wp-content/uploads/sites/4/2020/09/ECF-Module-1-ECT-training-basic-programme-session-plan.pdf" %>
+    </h4>
+    <ul class="govuk-list">
+      <li>
+        Week 5: using praise and consequences effectively
+      </li>
+      <li>
+        Week 7: holding high expectations of all pupils
+      </li>
+    </ul>
+    <h4 class="govuk-heading-s govuk-!-margin-bottom-2">
+      <%= govuk_link_to "Second half-term: how do pupils learn? (PDF, 163 KB, 4 pages)",
+                        href = "https://www.early-career-framework.education.gov.uk/teachfirst/wp-content/uploads/sites/4/2020/09/ECF-Module-2-ECT-training-basic-programme-webinar-session-plan.pdf" %>
+    </h4>
+    <ul class="govuk-list">
+      <li>
+        Week 3: avoiding working memory overload
+      </li>
+      <li>
+        Week 6: building well organised mental models
+      </li>
+    </ul>
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-three-quarters">
+        <h3 class="govuk-heading-m govuk-!-margin-top-4">Spring term</h3>
+      </div>
+    </div>
+    <h4 class="govuk-heading-s govuk-!-margin-bottom-2">
+      <%= govuk_link_to "First half-term: what makes classroom practice effective? (PDF, 273 KB, 5 pages)",
+                        href = "https://www.early-career-framework.education.gov.uk/teachfirst/wp-content/uploads/sites/4/2020/09/ECF-Module-3-ECT-training-basic-programme-webinar-session-plan.pdf" %>
+    </h4>
+    <ul class="govuk-list">
+      <li>
+        Week 2: using examples and non-examples
+      </li>
+      <li>
+        Week 5: using questioning to extend and challenge pupils
+      </li>
+    </ul>
+    <h4 class="govuk-heading-s govuk-!-margin-bottom-2">
+      <%= govuk_link_to "Second half-term: : how can you use assessment and feedback to greatest effect? (PDF, 181 KB, 5 pages)",
+                        href = "https://www.early-career-framework.education.gov.uk/teachfirst/wp-content/uploads/sites/4/2020/09/ECF-Module-4-ECT-training-basic-programme-session-plan.pdf" %>
+    </h4>
+    <ul class="govuk-list">
+      <li>
+        Week 2: structuring questioning to anticipate and identify misconceptions
+      </li>
+      <li>
+        Week 5: peer and self assessment
+      </li>
+    </ul>
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-three-quarters">
+        <h3 class="govuk-heading-m govuk-!-margin-top-4">Summer term</h3>
+      </div>
+    </div>
+    <h4 class="govuk-heading-s govuk-!-margin-bottom-2">
+      <%= govuk_link_to "First half-term: how can you support all pupils to succeed? (PDF, 191 KB, 5 pages)",
+                        href = "https://www.early-career-framework.education.gov.uk/teachfirst/wp-content/uploads/sites/4/2020/09/ECF-Module-5-ECT-training-basic-programme-webinar-sessions-plan.pdf" %>
+    </h4>
+    <ul class="govuk-list">
+      <li>
+      <li>Week 3: Developing pupils’ language comprehension and writing in your subject or phase</li>
+      <li>Week 6: High-quality universal provision and the graduated approach</li>
+      </li>
+    </ul>
+
+    <h4 class="govuk-heading-s govuk-!-margin-bottom-2">
+      <%= govuk_link_to "Second half-term: how can you plan a coherent curriculum? (PDF, 181 KB, 5 pages)",
+                        href = "https://www.early-career-framework.education.gov.uk/teachfirst/wp-content/uploads/sites/4/2020/09/ECF-Module-6-ECT-training-basic-programme-webinar-session-plan.pdf" %>
+    </h4>
+    <ul class="govuk-list">
+      <li>Week 2: identifying the essential concepts, knowledge and skills of a subject</li>
+      <li>Week 6: critical thinking in a subject area</li>
+    </ul>
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-three-quarters">
+        <h3 class="govuk-heading-m">Year 2</h3>
+      </div>
+    </div>
+
+    <p>For more information on Year 2 training please refer to the
+      <%= govuk_link_to "ECF SLT and Induction Lead Implementation Guidance (PDF, 652 KB, 30 pages)",
+                        href = "https://www.early-career-framework.education.gov.uk/teachfirst/wp-content/uploads/sites/4/2020/10/Early-Career-Framework-Programme-SLT-and-Induction-Lead-Handbook-1.pdf" %>
+    </p>
+
+  </div>
+</div>
