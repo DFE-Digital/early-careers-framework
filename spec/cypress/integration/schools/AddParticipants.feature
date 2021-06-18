@@ -37,6 +37,7 @@ Feature: School leaders should be able to manage participants
     When I click on "Abdul Mentor" label
     And I click the submit button
     Then I should be on "2021 school participant confirm" page
+    And "page body" should contain "Change mentor"
     And the page should be accessible
     And percy should be sent snapshot called "school ect participant confirmation page"
 
@@ -118,3 +119,22 @@ Feature: School leaders should be able to manage participants
     Then "page body" should contain "You have been added to the 2021 cohort"
     And the page should be accessible
     And percy should be sent snapshot called "school self as a mentor participant added"
+
+  Scenario: Should not have change link when no mentors available
+    Given scenario "no_mentors_for_participants" has been run
+
+    When I click the submit button
+    Then "page body" should contain "Please select type of the new participant"
+
+    When I set "new participant type radio" to "ect"
+    And I click the submit button
+    Then I should be on "2021 school participant details" page
+
+    When I type "Arthur Hall" into field labelled "Full name"
+    And I type "arthur.hall@school.gov.uk" into field labelled "Email"
+    And I click the submit button
+
+    Then I should be on "2021 school participant confirm" page
+    And "page body" should not contain "Change mentor"
+    And the page should be accessible
+    And percy should be sent snapshot called "school ect participant without mentor confirmation page"
