@@ -2,6 +2,7 @@
 
 require "payment_calculator/ecf/payment_calculation"
 
+# we are only testing return types here because the actual numbers are checked in the turnip features
 describe ::PaymentCalculator::Ecf::PaymentCalculation do
   let(:contract) do
     FactoryBot.create(:call_off_contract)
@@ -44,5 +45,8 @@ describe ::PaymentCalculator::Ecf::PaymentCalculation do
       expect(output_payment.dig(start_event_name, :retained_participants)).to be_an(Integer)
       expect(output_payment.dig(start_event_name, :per_participant)).to be_an(BigDecimal)
     end
+
+    expect(result.dig(:uplift_payment, :per_participant)).to be_an(BigDecimal)
+    expect(result.dig(:uplift_payment, :total)).to be_an(Integer)
   end
 end

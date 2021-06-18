@@ -12,7 +12,10 @@ class CalculationOrchestrator
 
   def call(event_type:)
     total_participants = @aggregator.call({ lead_provider: @lead_provider }, event_type: event_type)
-    @calculator.call(lead_provider: @lead_provider, total_participants: total_participants, event_type: event_type)
+    # TODO: need uplift count here?
+    uplift_participants = @aggregator.call({ lead_provider: @lead_provider, started: :uplift_count_active_for_lead_provider }, event_type: event_type)
+    # TODO: do something with uplift
+    @calculator.call(lead_provider: @lead_provider, total_participants: total_participants, uplift_participants: uplift_participants, event_type: event_type)
   end
 
 private

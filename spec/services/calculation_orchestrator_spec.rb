@@ -49,6 +49,10 @@ RSpec.describe CalculationOrchestrator do
           },
         },
       ],
+      uplift_payment: {
+        per_participant: 100.0,
+        total: 10,
+      },
     }
   end
 
