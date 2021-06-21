@@ -36,6 +36,57 @@ RSpec.describe "Admin::Schools::InductionCoodinators", type: :request do
       expect(response).to redirect_to admin_school_path(school)
       expect(flash[:success][:content]).to eq "New induction tutor added. They will get an email with next steps."
     end
+
+    context "when an induction tutor already exists with that email address" do
+      let!(:existing_induction_coordinator) { create(:user, :induction_coordinator) }
+
+      it "adds the school to their list of school" do
+        expect {
+          post admin_school_induction_coordinators_path(school), params: {
+            tutor_details: {
+              full_name: existing_induction_coordinator.full_name,
+              email: existing_induction_coordinator.email,
+            },
+          }
+        }.not_to change { User.count }
+
+        expect(existing_induction_coordinator.schools.count).to eql 2
+        expect(existing_induction_coordinator.schools).to include school
+        expect(response).to redirect_to admin_school_path(school)
+      end
+
+      it "renders name_different when the name is different" do
+        expect {
+          post admin_school_induction_coordinators_path(school), params: {
+            tutor_details: {
+              full_name: "Different Name",
+              email: existing_induction_coordinator.email,
+            },
+          }
+        }.not_to change { User.count }
+
+        expect(existing_induction_coordinator.schools.count).to eql 1
+        expect(existing_induction_coordinator.schools).not_to include school
+        expect(response).to render_template :name_different
+      end
+    end
+
+    context "when a different user type already exists with that email address" do
+      let!(:existing_user) { create(:user) }
+
+      it "renders to email_used" do
+        expect {
+          post admin_school_induction_coordinators_path(school), params: {
+            tutor_details: {
+              full_name: name,
+              email: existing_user.email,
+            },
+          }
+        }.not_to change { User.count }
+
+        expect(response).to render_template :email_used
+      end
+    end
   end
 
   describe "GET /admin/schools/:school_id/induction-coordinators/:id/edit" do

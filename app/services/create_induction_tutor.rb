@@ -13,8 +13,14 @@ class CreateInductionTutor < BaseService
     ActiveRecord::Base.transaction do
       school.induction_coordinators.first.destroy! if school.induction_coordinators.first
 
-      user = User.create!(full_name: full_name, email: email)
-      InductionCoordinatorProfile.create!(user: user, schools: [school])
+      if (user = User.find_by(email: email))&.induction_coordinator?
+        raise if user.full_name != full_name
+
+        user.induction_coordinator_profile.schools << school
+      else
+        user = User.create!(full_name: full_name, email: email)
+        InductionCoordinatorProfile.create!(user: user, schools: [school])
+      end
 
       # TODO: This should really be using deliver_later, but this can't be tested via Cypress
       # After discussion leaving this as deliver_now with  this comment

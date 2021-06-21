@@ -27,7 +27,7 @@ FactoryBot.define do
     trait :email_address_already_used_for_another_school do
       after(:build) do
         create(:school, name: "Another Registered School") do |school|
-          create(:user, :induction_coordinator, email: "john-wick@example.com", schools: [school])
+          create(:user, :induction_coordinator, full_name: "John Smith", email: "john-smith@example.com", schools: [school])
         end
       end
     end

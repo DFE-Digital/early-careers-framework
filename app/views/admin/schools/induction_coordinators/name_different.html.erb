@@ -1,0 +1,14 @@
+<% content_for :title, "Error: name different" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-header-xl">
+      The name does not match
+    </h1>
+
+      <p class="govuk-body">An induction coordinator with that email address is already registered as <%= @existing_name %>.</p>
+
+    <p>Either change the name to match, or contact the Register and Partner team</p>
+    <%= govuk_link_to "Change name",  @action_path, button: true %>
+  </div>
+</div>
