@@ -88,6 +88,7 @@ Rails.application.routes.draw do
         get "start", to: redirect(path: "/nominations/choose-how-to-continue")
         get "start-nomination", action: :start_nomination
         get "email-used", action: :email_used
+        get "name-different", action: :name_different
         get "link-expired", action: :link_expired
         post "link-expired", action: :resend_email_after_link_expired
         get "link-invalid", action: :link_invalid
