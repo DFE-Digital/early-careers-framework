@@ -31,8 +31,6 @@ namespace :payment_calculation do
       event_type: :started,
     )
 
-    puts "*** breakdown #{JSON.pretty_generate(breakdown)}"
-
     service_fees = breakdown.dig(:service_fees).each_with_object([]) do |hash, bands|
       bands << [
         band_name_from_index(bands.length),
@@ -49,8 +47,8 @@ namespace :payment_calculation do
       ]
     end
 
-    uplift_payment = breakdown[:uplift].each_with_object({}) do |(k, v), h|
-      h[k] = "£#{number_to_delimited(v.to_i)}"
+    uplift_payment = breakdown[:uplift].each_with_object({}) do |(type, value), hash|
+      hash[type] = "£#{number_to_delimited(value.to_i)}"
     end
 
     table = Terminal::Table.new(
@@ -75,8 +73,8 @@ namespace :payment_calculation do
     logger.info table
     logger.info output
   rescue StandardError => e
-    puts e.message
-    puts e.backtrace
+    logger.error e.message
+    logger.error e.backtrace
   ensure
     exit(0)
   end
