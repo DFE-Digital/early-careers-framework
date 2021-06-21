@@ -142,8 +142,7 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
             email: email,
             token: token,
           } }
-        }
-          .not_to(change { User.count })
+        }.not_to(change { User.count })
 
         expect(existing_induction_coordinator.schools.count).to eql 2
         expect(existing_induction_coordinator.schools).to include nomination_email.school
@@ -157,8 +156,7 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
             email: email,
             token: token,
           } }
-        }
-          .not_to(change { User.count })
+        }.not_to(change { User.count })
 
         expect(existing_induction_coordinator.schools.count).to eql 1
         expect(existing_induction_coordinator.schools).not_to include nomination_email.school
@@ -176,8 +174,7 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
             email: email,
             token: token,
           } }
-        }
-          .not_to(change { User.count })
+        }.not_to(change { User.count })
 
         expect(response).to redirect_to("/nominations/email-used")
       end
