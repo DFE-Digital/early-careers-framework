@@ -1,3 +1,6 @@
+variable environment {
+}
+
 variable paas_api_url {
   default = "https://api.london.cloud.service.gov.uk"
 }
@@ -12,6 +15,12 @@ variable paas_user {
 }
 
 variable paas_password {
+}
+
+variable app_name {
+}
+
+variable alertmanager_slack_url {
 }
 
 variable google_client_id {

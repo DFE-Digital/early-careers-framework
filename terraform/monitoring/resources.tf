@@ -6,6 +6,12 @@ module "prometheus_all" {
   monitoring_space_name = var.paas_space_name
   paas_exporter_username = var.paas_user
   paas_exporter_password = var.paas_password
+  alert_rules = templatefile("${path.module}/config/alert.rules.yml", {
+    environment = var.environment,
+    app_name = var.app_name
+  })
+  alertmanager_slack_url = var.alertmanager_slack_url
+  alertmanager_slack_channel = "cpd-dev-alerts"
   grafana_admin_password = var.grafana_admin_password
   grafana_google_client_id = var.google_client_id
   grafana_google_client_secret = var.google_client_secret
