@@ -68,11 +68,50 @@ Here’s an example CSV:
 ## Checking errors and updating your CSV
 When you upload your CSV, we will show you if there are any errors. These could be:
 
-- Recruited by other provider
-- URN is not valid
-- Your school - already confirmed
-- School not eligible for inductions
-- School not eligible for funding
+<dl class="govuk-summary-list">
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Recruited by other provider
+    </dt>
+    <dd class="govuk-summary-list__value">
+      Another training provider has confirmed this school
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      URL is not valid
+    </dt>
+    <dd class="govuk-summary-list__value">
+      The unique reference number (URN) does not match this school
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Your school - already confirmed
+    </dt>
+    <dd class="govuk-summary-list__value">
+      You have already confirmed this school and it’s on your list
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      School not eligible for inductions
+    </dt>
+    <dd class="govuk-summary-list__value">
+      School is not an eligible establishment type and/or isn’t in England and/or isn’t open as per our GIAS snapshot
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      School not eligible for funding
+    </dt>
+    <dd class="govuk-summary-list__value">
+      This school is not eligible to receive funding from the DfE. (Other independent special schools, Welsh establishments, British schools overseas etc.)<br/><br/>
+      They can only use the accredited materials (core induction programme).
+    </dd>
+  </div>
+</dl>
+
 
 You can choose to:
 
