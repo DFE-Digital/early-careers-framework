@@ -31,20 +31,14 @@ RSpec.describe "Admin::Schools", type: :request do
       it "filters the list of schools by name" do
         get "/admin/schools", params: { query: "include" }
         expect(assigns(:schools)).to match_array [included_school]
-        # expect(response.body).to include(included_school.urn)
-        # expect(response.body).not_to include(excluded_school.urn)
       end
 
       it "filters the list of schools by urn" do
         get "/admin/schools", params: { query: "901" }
         expect(assigns(:schools)).to match_array [included_school]
-        # expect(response.body).to include(included_school.urn)
-        # expect(response.body).not_to include(excluded_school.urn)
       end
 
       it "filters the list by induction tutor email" do
-        # included_school = create(:school, name: "Include Me")
-        # excluded_school = create(:school, name: "Exclude Me")
         create(:user, :induction_coordinator, email: "mary@schools.org", schools: [included_school])
 
         get "/admin/schools", params: { query: "mary" }
