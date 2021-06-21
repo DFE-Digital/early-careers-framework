@@ -57,7 +57,7 @@
             </div>
           </dd>
           <dd class="govuk-summary-list__actions">
-            <% unless add_participant_form.type == :self || add_participant_form.mentor_options.blank? %>
+            <% if add_participant_form.type != :self && add_participant_form.mentor_options.any? %>
               <%# govuk_link_to issue: https://github.com/DFE-Digital/govuk-components/issues/193 %>
               <%= govuk_link_to({ action: :show, step: "choose-mentor" }, button: false) do %>
                 Change <span class="govuk-visually-hidden">mentor</span>
