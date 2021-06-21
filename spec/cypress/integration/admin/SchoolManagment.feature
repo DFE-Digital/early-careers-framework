@@ -28,6 +28,7 @@ Feature: Admin user managing schools
 
   Scenario: Viewing a list of schools
     Then the table should have 12 rows
+    And "page body" should contain "Enter the school’s name, URN or tutor email"
     And the page should be accessible
     And percy should be sent snapshot
 
