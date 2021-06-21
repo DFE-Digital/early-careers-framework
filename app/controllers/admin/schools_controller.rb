@@ -12,7 +12,7 @@ module Admin
 
       @schools = policy_scope(School)
         .includes(:induction_coordinators, :local_authority)
-        .yield_self(&method(:search_query))
+        .ransack(induction_coordinators_email_or_urn_or_name_cont: @query).result
         .order(:name)
         .page(params[:page])
         .per(20)
@@ -27,20 +27,6 @@ module Admin
 
     def load_school
       @school = School.eligible.friendly.find(params[:id])
-    end
-
-    def search_query(relation)
-      if @query.present?
-        search_value = "%#{@query}%"
-
-        relation
-          .left_joins(:induction_coordinators)
-          .where(School.arel_table[:name].matches(search_value)
-            .or(School.arel_table[:urn].matches(search_value))
-            .or(User.arel_table[:email].matches(search_value)))
-      else
-        relation
-      end
     end
   end
 end
