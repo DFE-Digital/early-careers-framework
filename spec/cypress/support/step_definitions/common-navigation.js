@@ -114,7 +114,7 @@ const pagePaths = {
   "partnerships success": "/lead-providers/report-schools/success",
   "the sandbox landing page": "/sandbox",
   "the Lead Provider landing page": "/lead-providers",
-  "Partnership guidance": "/lead-providers/partnership-guidance",
+  "Partnership guidance": "/lead-providers/partnership-guide",
   "API Documentation": "/api-docs/index.html",
 };
 
