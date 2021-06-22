@@ -175,9 +175,9 @@ You should contact the school directly (you do not need to contact the DfE)
 
 if the matter is resolved, upload the school again
 
-<div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+<div class="govuk-notification-banner" role="region" aria-labelledby="note-one-title" data-module="govuk-notification-banner">
   <div class="govuk-notification-banner__header">
-    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">Note</h2>  
+    <h2 class="govuk-notification-banner__title" id="note-one-title">Note</h2>  
   </div>
   <div class="govuk-notification-banner__content">
     <p class="govuk-notification-banner__heading">
@@ -201,9 +201,9 @@ You can click on any school to see more details:
 
 ![Example showing the details known about a school](/lead-provider/school-page.png)
 
-<div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+<div class="govuk-notification-banner" role="region" aria-labelledby="note-two-title" data-module="govuk-notification-banner">
   <div class="govuk-notification-banner__header">
-    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">Note</h2>  
+    <h2 class="govuk-notification-banner__title" id="note-two-title">Note</h2>  
   </div>
   <div class="govuk-notification-banner__content">
     <p class="govuk-notification-banner__heading">
