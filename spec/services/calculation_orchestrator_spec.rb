@@ -56,16 +56,46 @@ RSpec.describe CalculationOrchestrator do
     }
   end
 
-  before do
-    10.times do
-      participant_declaration = create(:participant_declaration, :sparsity_uplift, lead_provider: call_off_contract.lead_provider)
-      create(:participant_declaration, early_career_teacher_profile: participant_declaration.early_career_teacher_profile, lead_provider: call_off_contract.lead_provider)
-    end
-  end
-
   context ".call" do
-    it "returns the total calculation" do
-      expect(described_class.call(contract: call_off_contract, lead_provider: call_off_contract.lead_provider, event_type: :started)).to eq(expected_result)
+    context "when only sparsity_uplift flag was set" do
+      before do
+        create_list(:participant_declaration, 10, :sparsity_uplift, lead_provider: call_off_contract.lead_provider)
+      end
+
+      it "returns the total calculation" do
+        expect(described_class.call(contract: call_off_contract, lead_provider: call_off_contract.lead_provider, event_type: :started)).to eq(expected_result)
+      end
+    end
+
+    context "when only pupil_premium_uplift flag was set" do
+      before do
+        create_list(:participant_declaration, 10, :pupil_premium_uplift, lead_provider: call_off_contract.lead_provider)
+      end
+
+      it "returns the total calculation" do
+        expect(described_class.call(contract: call_off_contract, lead_provider: call_off_contract.lead_provider, event_type: :started)).to eq(expected_result)
+      end
+    end
+
+    context "when both sparsity_uplift and pupil_premium_uplift flags were set" do
+      before do
+        create_list(:participant_declaration, 10, :uplift_flags, lead_provider: call_off_contract.lead_provider)
+      end
+
+      it "returns the total calculation" do
+        expect(described_class.call(contract: call_off_contract, lead_provider: call_off_contract.lead_provider, event_type: :started)).to eq(expected_result)
+      end
+    end
+
+    context "when no uplift flags were set" do
+      before do
+        create_list(:participant_declaration, 10, lead_provider: call_off_contract.lead_provider)
+        expected_result.tap { |hash| hash[:uplift][:sub_total] = 0.0 }
+      end
+
+      it "returns the total calculation" do
+        expect(described_class.call(contract: call_off_contract, lead_provider: call_off_contract.lead_provider, event_type: :started)).to eq(expected_result)
+      end
     end
   end
 end
