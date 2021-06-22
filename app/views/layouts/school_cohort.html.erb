@@ -1,4 +1,4 @@
-<%= render layout: 'layouts/application' do %>
+<%= render layout: 'layouts/width_container' do %>
   <%= render SchoolRecruitedTransitionComponent.new(school_cohort: @school_cohort) if @school_cohort %>
 
   <%= yield %>

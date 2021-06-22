@@ -18,6 +18,9 @@ $govuk-image-url-function: frontend-image-url;
 @import "lead_providers/dashboard_numbers";
 @import "lead_providers/index_group";
 @import "lead_providers/your_schools";
+@import "lead_providers/masthead";
+@import "lead_providers/app_button_inverted";
+@import "lead_providers/app_section";
 @import "pagination";
 @import "subnav";
 @import "primary-nav";
@@ -31,4 +34,8 @@ $govuk-image-url-function: frontend-image-url;
 
 .error-message {
   color: $govuk-error-colour;
+}
+
+.lead-provider-content img {
+  max-width: 629px;
 }
