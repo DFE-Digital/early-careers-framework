@@ -79,7 +79,7 @@ When you upload your CSV, we will show you if there are any errors. These could 
   </div>
   <div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key">
-      URL is not valid
+      URN is not valid
     </dt>
     <dd class="govuk-summary-list__value">
       The unique reference number (URN) does not match this school
