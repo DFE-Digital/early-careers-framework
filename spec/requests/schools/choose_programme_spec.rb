@@ -74,7 +74,7 @@ RSpec.describe "Schools::ChooseProgramme", type: :request do
       get "/schools/#{school.slug}/choose-programme/confirm-programme"
 
       expect(response).to render_template(:confirm_programme)
-      expect(response.body).to include("Use a training provider, funded by the DfE")
+      expect(response.body).to include I18n.t("schools.induction_choice_form.confirmation_options.#{induction_programme_choice}")
     end
 
     it "should render the show template when selecting CIP" do
@@ -83,7 +83,7 @@ RSpec.describe "Schools::ChooseProgramme", type: :request do
       get "/schools/#{school.slug}/choose-programme/confirm-programme"
 
       expect(response).to render_template(:confirm_programme)
-      expect(response.body).to include("Deliver your own programme using DfE accredited materials")
+      expect(response.body).to include I18n.t("schools.induction_choice_form.confirmation_options.#{induction_programme_choice}")
     end
   end
 
