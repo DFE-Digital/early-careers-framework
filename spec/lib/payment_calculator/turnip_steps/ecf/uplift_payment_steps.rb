@@ -9,8 +9,8 @@ module UpliftPaymentsSteps
     @uplift_amount = value
   end
 
-  step "there are :value participants who have started that are eligible for the uplift payment" do |value|
-    @uplift_eligible_participants = value.to_i
+  step "there are :sparsity sparsity and :pupil_premium pupil premium participants who have started that are eligible for the uplift payment" do |sparsity, pupil_premium|
+    @uplift_eligible_participants = sparsity.to_i + pupil_premium.to_i
   end
 
   step "I setup the contract with uplift payment" do
