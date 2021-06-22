@@ -38,14 +38,14 @@ RSpec.describe "Participant Declarations", type: :request do
         expect(response.status).to eq 204
       end
 
-      it "returns 404 when trying to create for an invalid user id" do # Expectes the user uuid. Pass the early_career_teacher_profile_id
+      it "returns 422 when trying to create for an invalid user id" do # Expectes the user uuid. Pass the early_career_teacher_profile_id
         post "/api/v1/participant-declarations", params: invalid_user_id.to_json
-        expect(response.status).to eq 404
+        expect(response.status).to eq 422
       end
 
-      it "returns 404 when trying to create with no id" do
+      it "returns 422 when trying to create with no id" do
         post "/api/v1/participant-declarations", params: missing_user_id.to_json
-        expect(response.status).to eq 404
+        expect(response.status).to eq 422
       end
 
       it "returns 422 when a required parameter is missing" do
