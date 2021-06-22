@@ -76,6 +76,9 @@ gem "daemons"
 gem "delayed_cron_job"
 gem "delayed_job_active_record"
 
+# Strong migration checker for database migrations
+gem "strong_migrations"
+
 # Acts as State Machine for participant states
 gem "aasm"
 
