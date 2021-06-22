@@ -1,6 +1,6 @@
 <% content_for :title, "Early career teachers and mentors" %>
 
-<% content_for :before_content, govuk_breadcrumbs(breadcrumbs: breadcrumbs(:school, :cohort)) %>
+<% content_for :before_content, govuk_breadcrumbs(breadcrumbs: breadcrumbs(@school, @cohort)) %>
 
 <span class="govuk-caption-l"><%= @cohort.display_name %> cohort</span>
 <h1 class="govuk-heading-l">Your early career teachers (ECTs) and mentors</h1>

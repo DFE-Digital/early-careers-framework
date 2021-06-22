@@ -1,5 +1,5 @@
 <% content_for :title, "Core induction materials" %>
-<% content_for :before_content, govuk_breadcrumbs(breadcrumbs: breadcrumbs(:school, :cohort)) %>
+<% content_for :before_content, govuk_breadcrumbs(breadcrumbs: breadcrumbs(@school, @cohort)) %>
 
 <span class="govuk-caption-l"><%= @cohort.start_year %> cohort</span>
 <h1 class="govuk-heading-xl">Your accredited materials</h1>
