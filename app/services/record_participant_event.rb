@@ -47,7 +47,7 @@ private
   end
 
   def early_career_teacher_profile
-    User.find(@params[:participant_id])&.early_career_teacher_profile
+    User.find_by(id: @params[:participant_id])&.early_career_teacher_profile
   end
 
   def create_record
