@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   end
 
   get "/pages/:page", to: "pages#show", as: :page
+  get "/induction-tutor-materials/:provider/:year", to: "pages#induction_tutor_materials", as: :induction_tutor_materials
   get "check" => "application#check"
   get "healthcheck" => "healthcheck#check"
 
