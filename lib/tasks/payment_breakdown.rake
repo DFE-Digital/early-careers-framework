@@ -52,13 +52,14 @@ namespace :payment_calculation do
     end
 
     table = Terminal::Table.new(
-      title: "Breakdown Payments",
-      headings: ["Banding", "Service fee (PP)", "Service fee (monthly)"],
+      title: "Started Event Payments",
+      headings: ["", "Service fee\nPer Participant", "Service fee\nThis month"],
       rows: service_fees,
     )
     table.style = { alignment: :center }
     table.add_separator
-    table.add_row ["Banding", "Output price  (PP)", "Output price  (monthly)"]
+    table.add_row ["", "Output price", "Output price"]
+    table.add_row ["", "Per Participant", "Sub-total"]
     table.add_separator
     output_payments.each { |row| table.add_row(row) }
     table.add_separator
@@ -69,14 +70,8 @@ namespace :payment_calculation do
     output = <<~RESULT
       Based on #{number_to_delimited(total_participants.to_i)} participants and #{per_participant_in_bands}
     RESULT
-
     logger.info table
     logger.info output
-  rescue StandardError => e
-    logger.error e.message
-    logger.error e.backtrace
-  ensure
-    exit(0)
   end
 end
 
