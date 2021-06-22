@@ -2,6 +2,6 @@
 
 class ChangeEarlyCareerTeacherProfileToMakeCohortsRequired < ActiveRecord::Migration[6.1]
   def change
-    change_column_null :early_career_teacher_profiles, :cohort_id, false, Cohort.current.id
+    add_check_constraint :early_career_teacher_profiles, "cohort_id IS NOT NULL", name: "early_career_teacher_profiles_cohort_id_null", validate: false
   end
 end
