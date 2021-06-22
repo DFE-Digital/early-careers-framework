@@ -1,7 +1,7 @@
 Feature: Lead Providers Guidance
   Scenario: Visiting the Lead Providers landing page
     Given I am on "the Lead Provider landing page" page
-    And the page should be accessible
+    Then the page should be accessible
     And percy should be sent snapshot
 
   Scenario: Learning how to manage partnerships
