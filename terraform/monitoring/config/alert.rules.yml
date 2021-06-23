@@ -1,0 +1,70 @@
+groups:
+  - name: Request-rates
+    rules:
+      - alert: RequestsFailuresElevated
+        # Condition for alerting
+        expr: (sum(rate(requests{app="${app_name}", status_range=~"0xx|4xx|5xx"}[5m]))) / (sum(rate(requests{app="${app_name}"}[5m])) ) > 0.1
+        # Annotation - additional informational labels to store more information
+        annotations:
+          summary: High rate of failing requests
+          description: "${app_name}: The proportion of failed HTTP requests in the past 5 min is above 10% (current value: {{ humanizePercentage $value }})"
+        # Labels - additional labels to be attached to the alert
+        labels:
+          environment: ${environment}
+          severity: high
+
+  - name: CPU-usage
+    rules:
+      - alert: AppCPUHigh
+        expr: avg by ( app ) (cpu{app="${app_name}"}) > 60
+        for: 5m
+        annotations:
+          summary: App CPU usage high
+          description: "App CPU usage at least 60% for more than 5 minutes (current value: {{ $value }})"
+        labels:
+          environment: ${environment}
+          severity: high
+      - alert: WorkerCPUHigh
+        expr: avg by ( app ) (cpu{app="${app_name}-worker"}) > 75
+        for: 10m
+        annotations:
+          summary: Worker CPU usage high
+          description: "${app_name}: Worker CPU usage at least 75% for more than 10 minutes (current value: {{ $value }})"
+        labels:
+          environment: ${environment}
+          severity: high
+
+  - name: Disk-utilisation
+    rules:
+      - alert: DiskUtilisationHigh
+        expr: avg by ( app ) ( disk_utilization{ app=~"${app_name}" }) > 60
+        for: 5m
+        annotations:
+          summary: Disk Utilization High
+          description: "${app_name}: Disk utilization at least 60% for more than 5 minutes (current value: {{ $value }})"
+        labels:
+          environment: ${environment}
+          severity: high
+
+  - name: Memory-utilisation
+    rules:
+      - alert: MemoryUtilizationHigh
+        expr: avg by ( app ) (memory_utilization{app=~"${app_name}"}) > 60
+        for: 5m
+        annotations:
+          summary: Memory Utilization High
+          description: "${app_name}: Memory utilization at least 60% for more than 5 minutes (current value: {{ $value }})"
+        labels:
+          environment: ${environment}
+          severity: high
+
+  - name: Crashed-apps
+    rules:
+      - alert: AppsCrashed
+        expr: rate(crash{app=~"${app_name}"}[1m])*60 > 1
+        annotations:
+          summary: Crashed Apps non-zero
+          description: "${app_name}: At least 1 crashed app (current value: {{ $value }})"
+        labels:
+          environment: ${environment}
+          severity: high
