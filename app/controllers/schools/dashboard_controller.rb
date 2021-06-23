@@ -7,6 +7,9 @@ class Schools::DashboardController < Schools::BaseController
 
   def index
     @schools = current_user.induction_coordinator_profile.schools
+                           .order(:name)
+                           .page(params[:page])
+                           .per(10)
   end
 
   def show; end
