@@ -23,6 +23,7 @@ module Admin
       elsif @induction_tutor_form.name_different?
         render_name_different_page(
           existing_name: @induction_tutor_form.existing_name,
+          new_name: @induction_tutor_form.full_name,
           action_path: new_admin_school_induction_coordinator_path(@school),
         )
       elsif @induction_tutor_form.email_already_taken?
@@ -85,8 +86,9 @@ module Admin
       render "email_used"
     end
 
-    def render_name_different_page(existing_name:, action_path:)
+    def render_name_different_page(existing_name:, new_name:, action_path:)
       @existing_name = existing_name
+      @new_name = new_name
       @action_path = action_path
       render "name_different"
     end
