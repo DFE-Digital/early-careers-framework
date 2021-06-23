@@ -18,5 +18,5 @@ FactoryBot.create(:school_cohort, cohort: cohort_2022, school: school_with_cohor
 
 Faker::UniqueGenerator.clear
 Faker::Config.random = Random.new(42)
-FactoryBot.create_list(:school, 10)
+FactoryBot.create_list(:school, 7)
 Faker::Config.random = nil

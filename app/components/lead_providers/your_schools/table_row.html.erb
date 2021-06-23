@@ -1,12 +1,25 @@
-<tr class="govuk-table__row">
-  <td class="govuk-table__cell" >
+<tr class="govuk-table__row nhsuk-table__row">
+  <td class="govuk-table__cell nhsuk-table__cell">
+    <span class="nhsuk-table-responsive__heading">School</span>
     <div class="school-name-with-tag">
       <%= govuk_link_to school.name, lead_providers_partnership_path(partnership) %>
       <%= govuk_tag text: "Reported error", colour: "red" if partnership.challenged? %>
     </div>
   </td>
-  <td class="govuk-table__cell"><%= school.urn %></td>
-  <td class="govuk-table__cell"><%= partnership.delivery_partner.name %></td>
-  <td class="govuk-table__cell govuk-table__cell--numeric"><%= school.early_career_teacher_profiles_for(cohort.start_year).count %></td>
-  <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
+  <td class="govuk-table__cell nhsuk-table__cell">
+    <span class="nhsuk-table-responsive__heading">URN</span>
+    <%= school.urn %>
+  </td>
+  <td class="govuk-table__cell nhsuk-table__cell">
+    <span class="nhsuk-table-responsive__heading">Delivery partner</span>
+    <%= partnership.delivery_partner.name %>
+  </td>
+  <td class="govuk-table__cell nhsuk-table__cell govuk-table__cell--numeric">
+    <span class="nhsuk-table-responsive__heading">ECTs</span>
+    <%= school.early_career_teacher_profiles_for(cohort.start_year).count %>
+  </td>
+  <td class="govuk-table__cell nhsuk-table__cell govuk-table__cell--numeric">
+    <span class="nhsuk-table-responsive__heading">Mentors</span>
+    0
+  </td>
 </tr>

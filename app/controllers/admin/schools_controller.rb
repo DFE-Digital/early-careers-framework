@@ -15,7 +15,7 @@ module Admin
         .ransack(induction_coordinators_email_or_urn_or_name_cont: @query).result
         .order(:name)
         .page(params[:page])
-        .per(20)
+        .per(10)
     end
 
     def show

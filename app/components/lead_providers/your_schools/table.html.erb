@@ -1,16 +1,18 @@
-<table data-test="schools-table" class="govuk-table lead-provider-your-schools-table">
-  <thead>
-    <tr class="govuk-table__row">
-      <th scope="col" class="govuk-table__header">School</th>
-      <th scope="col" class="govuk-table__header">URN</th>
-      <th scope="col" class="govuk-table__header">Delivery partner</th>
-      <th scope="col" class="govuk-table__header govuk-table__header--numeric">ECTs</th>
-      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Mentors</th>
-    </tr>
-  </thead>
-  <tbody class="govuk-table__body">
-    <%= render LeadProviders::YourSchools::TableRow.with_collection(partnerships) %>
-  </tbody>
-</table>
+<div class="nhsuk-table-container">
+  <table data-test="schools-table" class="govuk-table nhsuk-table-responsive lead-provider-your-schools-table">
+    <thead  class="nhsuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">School</th>
+        <th scope="col" class="govuk-table__header">URN</th>
+        <th scope="col" class="govuk-table__header">Delivery partner</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric">ECTs</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Mentors</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body nhsuk-table__body">
+      <%= render LeadProviders::YourSchools::TableRow.with_collection(partnerships) %>
+    </tbody>
+  </table>
+</div>
 
 <%= govuk_paginate partnerships %>

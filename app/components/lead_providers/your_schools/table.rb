@@ -6,7 +6,7 @@ module LeadProviders
       include PaginationHelper
 
       def initialize(partnerships:, page:)
-        @partnerships = partnerships.page(page).per(20)
+        @partnerships = partnerships.page(page).per(10)
       end
 
     private
