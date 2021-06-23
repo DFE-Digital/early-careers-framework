@@ -1,0 +1,93 @@
+# This builds the silence URL.  We exclude the alertname in the range
+# to avoid the issue of having trailing comma separator (%2C) at the end
+# of the generated URL
+#
+# This file was copied from https://gist.github.com/milesbxf/e2744fc90e9c41b47aa47925f8ff6512
+# Thank you :)
+
+{{ define "__alert_silence_link" -}}
+    {{ .ExternalURL }}/#/silences/new?filter=%7B
+    {{- range .CommonLabels.SortedPairs -}}
+        {{- if ne .Name "alertname" -}}
+            {{- .Name }}%3D"{{- .Value -}}"%2C%20
+        {{- end -}}
+    {{- end -}}
+    alertname%3D"{{ .CommonLabels.alertname }}"%7D
+{{- end }}
+
+
+
+{{ define "__alert_severity_prefix" -}}
+    {{ if ne .Status "firing" -}}
+      :white_check_mark:
+    {{- else if eq .Labels.severity "high" -}}
+      :fire:
+    {{- else if eq .Labels.severity "medium" -}}
+      :warning:
+    {{- else -}}
+      :question:
+    {{- end }}
+{{- end }}
+
+{{ define "__alert_severity_prefix_title" -}}
+    {{ if ne .Status "firing" -}}
+      :white_check_mark:
+    {{- else if eq .CommonLabels.severity "high" -}}
+      :fire:
+    {{- else if eq .CommonLabels.severity "medium" -}}
+      :warning:
+    {{- else if eq .CommonLabels.severity "low" -}}
+      :information_source:
+    {{- else -}}
+      :question:
+    {{- end }}
+{{- end }}
+
+
+{{/* First line of Slack alerts */}}
+{{ define "slack.monzo.title" -}}
+  [{{ .Status | toUpper -}}
+  {{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{- end -}}
+  ] {{ template "__alert_severity_prefix_title" . }} {{ .CommonLabels.alertname }}
+{{- end }}
+
+
+{{/* Color of Slack attachment (appears as line next to alert )*/}}
+{{ define "slack.monzo.color" -}}
+    {{ if eq .Status "firing" -}}
+        {{ if eq .CommonLabels.severity "medium" -}}
+          warning
+        {{- else if eq .CommonLabels.severity "high" -}}
+          danger
+        {{- else -}}
+          #439FE0
+        {{- end -}}
+    {{ else -}}
+      good
+    {{- end }}
+{{- end }}
+
+{{/* The test to display in the pretext */}}
+{{ define "slack.monzo.pretext" -}}
+    {{ range .Alerts }}
+        {{- if .Annotations.summary }}
+          {{- if eq .CommonLabels.severity "high" -}}
+            <!channel> *{{ .Annotations.summary }}*
+          {{- else -}}
+            *{{ .Annotations.summary }}*
+          {{- end }}
+        {{- end }}
+    {{- end }}
+{{- end }}
+
+
+{{/* The test to display in the alert */}}
+{{ define "slack.monzo.text" -}}
+    {{ if eq .Status "firing" -}}
+        {{ range .Alerts }}
+            {{- if .Annotations.description }}
+                {{ .Annotations.description }}
+            {{- end }}
+        {{- end }}
+    {{- end }}
+{{- end }}
