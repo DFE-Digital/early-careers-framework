@@ -22,7 +22,7 @@ Feature: Admin user creating induction tutor
     When I type "John Smith" into "name input"
     And I type "existing_induction_coordinator@example.com" into "email input"
     And I click the submit button
-    Then "page body" should contain "The name does not match"
+    Then "page body" should contain "The name you entered does not match our records"
     And the page should be accessible
     And percy should be sent snapshot called "Admin add induction coordinator name different"
 
