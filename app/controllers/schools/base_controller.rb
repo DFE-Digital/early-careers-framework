@@ -20,10 +20,14 @@ private
   end
 
   def active_school
+    return if params[:school_id].blank?
+
     School.friendly.find(params[:school_id])
   end
 
   def active_cohort
+    return if params[:cohort_id].blank?
+
     Cohort.find_by(start_year: params[:cohort_id])
   end
 

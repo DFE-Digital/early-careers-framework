@@ -10,6 +10,20 @@ RSpec.describe "Schools::Dashboard", type: :request do
     sign_in user
   end
 
+  describe "GET /schools" do
+    let(:second_school) { create(:school) }
+    before do
+      user.induction_coordinator_profile.schools << second_school
+    end
+
+    it "renders the index schools template" do
+      get "/schools"
+      expect(response).to render_template("schools/dashboard/index")
+      expect(response.body).to include(CGI.escapeHTML(school.name))
+      expect(response.body).to include(CGI.escapeHTML(second_school.name))
+    end
+  end
+
   describe "GET /schools/:school_id" do
     it "should redirect to programme selection if programme not chosen" do
       get "/schools/#{school.slug}"

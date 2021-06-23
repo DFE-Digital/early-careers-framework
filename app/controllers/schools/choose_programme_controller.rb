@@ -9,6 +9,9 @@ class Schools::ChooseProgrammeController < Schools::BaseController
   def advisory
     @school = school
     @cohort = cohort
+    if current_user.schools.count > 1
+      @show_back_link = true
+    end
   end
 
   def show; end

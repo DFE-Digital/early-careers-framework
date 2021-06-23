@@ -1,0 +1,27 @@
+<%= content_for :title, "Manage your schools" %>
+
+<h1 class="govuk-heading-xl">Manage your schools</h1>
+
+<h2 class="govuk-heading-m govuk-!-margin-bottom-1">Your schools</h2>
+
+<table class="govuk-table">
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th class="govuk-table__header" scope="col">Name</th>
+      <th class="govuk-table__header" scope="col">URN</th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    <% @schools.each do |school| %>
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell">
+          <%= govuk_link_to school.name, schools_dashboard_path(school_id: school.slug) %>
+        </td>
+        <td class="govuk-table__cell">
+          <%= school.urn %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= govuk_paginate @schools %>

@@ -1,4 +1,5 @@
 Feature: Nominate induction tutor
+
   Background:
     Given cohort was created with start_year "2021"
 
@@ -42,16 +43,31 @@ Feature: Nominate induction tutor
     And the page should be accessible
     And percy should be sent snapshot called "Start nominations already nominated page"
 
-  Scenario: Nomination Link was sent for which Induction Tutor was already nominated for another school
+  Scenario: Nominating an induction tutors with details that are not acceptable
     Given nomination_email was created as "email_address_already_used_for_another_school" with token "foo-bar-baz"
-    When I am on "start nominations with token" page
-    Then I click on "nominate induction tutor radio button"
+    And I am on "start nominations with token" page
+    When I click on "nominate induction tutor radio button"
     And I click the submit button
     And I click on "link" containing "Start"
-    Then I type "John Wick" into "name input"
-    And I type "john-wick@example.com" into "email input"
+    And I type "John Wick" into "name input"
+    And I type "john-smith@example.com" into "email input"
+    And I click the submit button
+    Then "page body" should contain "The name you entered does not match our records"
+    And the page should be accessible
+    And percy should be sent snapshot called "Start nominations name different"
 
-    When I click the submit button
+    Given user was created with email "different-user-type@example.com"
+    When I click on "link" containing "Change the name"
+    And I type "John Wick" into "name input"
+    And I type "different-user-type@example.com" into "email input"
+    And I click the submit button
     Then "page body" should contain "The email you entered is used by another school"
     And the page should be accessible
     And percy should be sent snapshot called "Start nominations email already used"
+
+    When I click on "link" containing "Change email address"
+    And I type "John Smith" into "name input"
+    And I type "john-smith@example.com" into "email input"
+    And I click the submit button
+    Then "success panel" should contain "Induction tutor nominated"
+    And Email should be sent to Nominated School Induction Coordinator to email "john-smith@example.com"

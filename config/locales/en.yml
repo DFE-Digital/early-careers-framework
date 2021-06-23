@@ -60,6 +60,7 @@ en:
       invalid: "Enter an email address in the correct format, like name@example.com"
     full_name: &full_name_error_messages
       blank: "Enter a full name"
+      does_not_match: "The name you entered does not match our records"
 
   activemodel:
     errors:

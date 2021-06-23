@@ -1,3 +1,7 @@
+<% if @show_back_link %>
+  <% content_for :before_content, govuk_back_link(text: "Back", href: schools_dashboard_index_path) %>
+<% end %>
+
 <% content_for :title, "Check guidance" %>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">

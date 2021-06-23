@@ -24,8 +24,10 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
                                 email: @nominate_induction_tutor_form.email,
                                 full_name: @nominate_induction_tutor_form.full_name)
       redirect_to nominate_school_lead_success_nominate_induction_coordinator_path
+    elsif @nominate_induction_tutor_form.name_different?
+      redirect_to action: :name_different
     elsif @nominate_induction_tutor_form.email_already_taken?
-      redirect_to email_used_nominate_induction_coordinator_path
+      redirect_to action: :email_used
     else
       render :new
     end
@@ -44,9 +46,9 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
     redirect_to limit_reached_request_nomination_invite_path
   end
 
-  def email_used
-    @token = params[:token]
-  end
+  def email_used; end
+
+  def name_different; end
 
   def nominate_school_lead_success; end
 

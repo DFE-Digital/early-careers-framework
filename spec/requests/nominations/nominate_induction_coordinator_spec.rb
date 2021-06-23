@@ -107,6 +107,7 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
       expect(created_user).not_to be_nil
       expect(created_user.full_name).to eql name
       expect(created_user.induction_coordinator_profile.schools).to contain_exactly(school)
+      expect(response).to redirect_to("/nominations/nominate-school-lead-success")
     end
 
     it "shows a validation error when the email is blank" do
@@ -131,10 +132,40 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
       expect(response.body).to include(CGI.escapeHTML("Enter a full name"))
     end
 
-    context "when a user already exists with the provided email" do
-      before do
-        create(:user, email: email)
+    context "when an induction coordinator already exists with the provided email" do
+      let!(:existing_induction_coordinator) { create(:user, :induction_coordinator, email: email) }
+
+      it "adds the schools to their list of schools" do
+        expect {
+          post "/nominations", params: { nominate_induction_tutor_form: {
+            full_name: existing_induction_coordinator.full_name,
+            email: email,
+            token: token,
+          } }
+        }.not_to(change { User.count })
+
+        expect(existing_induction_coordinator.schools.count).to eql 2
+        expect(existing_induction_coordinator.schools).to include nomination_email.school
+        expect(response).to redirect_to("/nominations/nominate-school-lead-success")
       end
+
+      it "redirects to the name-different page when the name is different" do
+        expect {
+          post "/nominations", params: { nominate_induction_tutor_form: {
+            full_name: "Different Name",
+            email: email,
+            token: token,
+          } }
+        }.not_to(change { User.count })
+
+        expect(existing_induction_coordinator.schools.count).to eql 1
+        expect(existing_induction_coordinator.schools).not_to include nomination_email.school
+        expect(response).to redirect_to("/nominations/name-different")
+      end
+    end
+
+    context "when a different user type already exists with the provided email" do
+      let!(:existing_user) { create(:user, email: email) }
 
       it "redirects to the email-used page" do
         expect {
@@ -143,8 +174,7 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
             email: email,
             token: token,
           } }
-        }
-          .not_to(change { User.count })
+        }.not_to(change { User.count })
 
         expect(response).to redirect_to("/nominations/email-used")
       end

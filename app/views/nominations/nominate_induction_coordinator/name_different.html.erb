@@ -1,0 +1,10 @@
+<% content_for :title, "Error: email address used" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-header-xl"><%= t('errors.full_name.does_not_match') %></h1>
+
+    <p class="govuk-body">An induction tutor has already been nominated using this email address, but the name does not match our records.</p>
+    <p class="govuk-body"><%= govuk_link_to "Change the name", new_nominate_induction_coordinator_path %> or contact: <%= render MailToSupportComponent.new %></p>
+  </div>
+</div>
