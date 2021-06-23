@@ -116,8 +116,9 @@ RSpec.describe Partnerships::Report do
     it "schedules an activation job" do
       result
 
-      expect(an_instance_of(PartnershipActivationJob)).to delay_execution_of(:perform)
-        .with(partnership: result, report_id: result.report_id)
+      expect(PartnershipActivationJob)
+        .to be_enqueued.with(partnership: result, report_id: result.report_id)
+                       .at(Partnerships::Report::CHALLENGE_WINDOW.from_now)
     end
   end
 end
