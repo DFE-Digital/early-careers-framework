@@ -108,18 +108,25 @@ module Schools
     end
 
     def save!
-      ActiveRecord::Base.transaction do
-        # TODO: What if email matches but with different name?
-        user = User.find_or_create_by!(full_name: full_name, email: email)
-
-        profile_class = type == :ect ? EarlyCareerTeacherProfile : MentorProfile
-        profile = profile_class.new(
-          user: user,
-          school_id: school_cohort.school_id,
+      if type == :ect
+        EarlyCareerTeachers::Create.call(
+          full_name: full_name,
+          email: email,
           cohort_id: school_cohort.cohort_id,
+          school_id: school_cohort.school_id,
+          mentor_profile_id: mentor&.mentor_profile&.id,
         )
-        profile.mentor_profile = mentor&.mentor_profile if type == :ect
-        profile.tap(&:save!)
+      else
+        ActiveRecord::Base.transaction do
+          # TODO: What if email matches but with different name?
+          user = User.find_or_create_by!(full_name: full_name, email: email)
+
+          MentorProfile.create!(
+            user: user,
+            school_id: school_cohort.school_id,
+            cohort_id: school_cohort.cohort_id,
+          )
+        end
       end
     end
   end
