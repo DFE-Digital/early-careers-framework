@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_23_082855) do
+ActiveRecord::Schema.define(version: 2021_06_23_120047) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -147,7 +147,7 @@ ActiveRecord::Schema.define(version: 2021_06_23_082855) do
     t.uuid "user_id", null: false
     t.uuid "school_id", null: false
     t.uuid "core_induction_programme_id"
-    t.uuid "cohort_id"
+    t.uuid "cohort_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "mentor_profile_id"
