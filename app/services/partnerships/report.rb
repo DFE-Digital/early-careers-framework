@@ -42,7 +42,7 @@ module Partnerships
         )
 
         if partnership.pending?
-          PartnershipActivationJob.new.delay(run_at: partnership.challenge_deadline).perform(
+          PartnershipActivationJob.set(wait_until: partnership.challenge_deadline).perform_later(
             partnership: partnership,
             report_id: partnership.report_id,
           )
