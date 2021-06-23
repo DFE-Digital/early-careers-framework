@@ -6,6 +6,7 @@ module Api
       attributes :date_of_birth,
                  :teacher_reference_number,
                  :teacher_reference_number_verified,
+                 :active_alert,
                  :school_urn,
                  :headteacher_status
 

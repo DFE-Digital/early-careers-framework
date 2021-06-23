@@ -25,6 +25,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
             attributes: {
               teacher_reference_number: "1234567",
               teacher_reference_number_verified: true,
+              active_alert: true,
               date_of_birth: "1990-12-13",
               school_urn: "123456",
               headteacher_status: "no",
@@ -65,6 +66,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
         expect(profile.date_of_birth).to eql(Date.new(1990, 12, 13))
         expect(profile.teacher_reference_number).to eql("1234567")
         expect(profile.teacher_reference_number_verified).to be_truthy
+        expect(profile.active_alert).to be_truthy
         expect(profile.school_urn).to eql("123456")
         expect(profile.headteacher_status).to eql("no")
         expect(profile.npq_course).to eql(npq_course)
