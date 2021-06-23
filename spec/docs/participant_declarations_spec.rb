@@ -4,6 +4,7 @@ require "swagger_helper"
 
 RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_spec.json" do
   let(:early_career_teacher_profile) { create(:early_career_teacher_profile) }
+  let(:cohort) { early_career_teacher_profile.cohort }
   let(:user) { early_career_teacher_profile.user }
   let(:lead_provider) { create(:lead_provider) }
   let(:token) { LeadProviderApiToken.create_with_random_token!(lead_provider: lead_provider) }
