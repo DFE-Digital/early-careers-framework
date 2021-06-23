@@ -9,11 +9,7 @@
     <p class="govuk-body">You have chosen to:</p>
 
     <ul class="govuk-list govuk-list--bullet">
-      <% if @induction_choice_form.programme_choice == "full_induction_programme" %>
-        <li>Use a training provider, funded by the DfE</li>
-      <% else %>
-        <li>Deliver your own programme using DfE accredited materials</li>
-      <% end %>
+      <li><%= t @induction_choice_form.programme_choice, scope: "schools.induction_choice_form.confirmation_options", cohort: @induction_choice_form.cohort.display_name %></li>
     </ul>
 
     <%= form_for @induction_choice_form, url: save_programme_schools_choose_programme_path do |f| %>

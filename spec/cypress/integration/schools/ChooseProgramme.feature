@@ -71,6 +71,12 @@ Feature: Induction tutors choosing programmes
 
     When I click on "design and deliver our own programme radio button"
     And I click the submit button
+    Then I should be on "choose programme confirm" page
+    And the page should be accessible
+    And percy should be sent snapshot called "Confirm materials DIY page"
+
+    When I click the submit button
+
     Then I should be on "design your programme success" page
     And the page should be accessible
     And percy should be sent snapshot called "Choose design and deliver success"
@@ -81,7 +87,11 @@ Feature: Induction tutors choosing programmes
 
     When I click on "no early career teachers radio button"
     And I click the submit button
+    Then I should be on "choose programme confirm" page
+    And the page should be accessible
+    And percy should be sent snapshot called "Confirm materials no ECT page"
+
+    When I click the submit button
     Then I should be on "no early career teachers success" page
     And the page should be accessible
     And percy should be sent snapshot called "Choose no early career teachers success"
-

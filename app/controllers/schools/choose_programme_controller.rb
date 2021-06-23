@@ -16,13 +16,8 @@ class Schools::ChooseProgrammeController < Schools::BaseController
   def create
     render :show and return unless @induction_choice_form.valid?
 
-    if @induction_choice_form.opt_out_choice_selected?
-      save_school_choice!
-      redirect_to action: "choice_saved_#{@induction_choice_form.programme_choice}"
-    else
-      session[:induction_choice_form] = @induction_choice_form.serializable_hash
-      redirect_to action: :confirm_programme
-    end
+    session[:induction_choice_form] = @induction_choice_form.serializable_hash
+    redirect_to action: :confirm_programme
   end
 
   def choice_saved_design_our_own
@@ -42,7 +37,12 @@ class Schools::ChooseProgrammeController < Schools::BaseController
     save_school_choice!
 
     session.delete(:induction_choice_form)
-    redirect_to success_schools_choose_programme_path
+
+    if @induction_choice_form.opt_out_choice_selected?
+      redirect_to action: "choice_saved_#{@induction_choice_form.programme_choice}"
+    else
+      redirect_to success_schools_choose_programme_path
+    end
   end
 
   def success; end

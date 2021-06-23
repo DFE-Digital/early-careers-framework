@@ -16,7 +16,7 @@ RSpec.describe InductionChoiceForm, type: :model do
 
     it "provides options for the programme choices" do
       options = SchoolCohort.induction_programme_choices.except("not_yet_known").keys
-      expect(form.programme_choices.map(&:id)).to match_array options
+      expect(form.programme_choices.map(&:id)).to match_array options.map(&:to_sym)
     end
   end
 
