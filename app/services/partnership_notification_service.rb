@@ -46,7 +46,7 @@ private
   def create_notification_email(partnership, type)
     PartnershipNotificationEmail.create!(
       token: generate_token,
-      sent_to: partnership.school.contact_email,
+      sent_to: partnership.school.contact_email.presence || "ecf-tech@digital.education.gov.uk",
       partnership: partnership,
       email_type: type,
     )
