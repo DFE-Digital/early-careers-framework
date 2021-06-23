@@ -5,21 +5,20 @@ module Schools
     include ActiveModel::Model
     include Multistep::Form
 
-    TYPE_OPTIONS = {
-      ect: "Early career teacher",
-      mentor: "Mentor",
-    }.freeze
-
     attribute :school_cohort_id
+    attribute :current_user_id
+    attribute :participant_type
 
     step :type do
       attribute :type
 
       validates :type,
                 presence: { message: "Please select type of the new participant" },
-                inclusion: { in: TYPE_OPTIONS.keys, allow_blank: true }
+                inclusion: { in: :type_options, allow_blank: true }
 
-      next_step :details
+      next_step do
+        type == :self ? :confirm : :details
+      end
     end
 
     step :details do
@@ -58,7 +57,15 @@ module Schools
     step :confirm
 
     def type_options
-      TYPE_OPTIONS
+      [
+        :ect,
+        :mentor,
+        (:self if can_add_self?),
+      ].compact
+    end
+
+    def can_add_self?
+      User.is_participant.in_school(school_cohort.school).exclude? current_user
     end
 
     def mentor_options
@@ -76,6 +83,19 @@ module Schools
     end
 
     def type=(value)
+      reset_steps(:details, :choose_mentor) if value.to_s != type
+
+      super(value&.to_sym)
+      if type == :self
+        self.full_name = current_user.full_name
+        self.email = current_user.email
+        self.participant_type = :mentor
+      else
+        self.participant_type = type
+      end
+    end
+
+    def participant_type=(value)
       super(value&.to_sym)
     end
 
@@ -83,9 +103,14 @@ module Schools
       @school_cohort ||= SchoolCohort.find_by(id: school_cohort_id)
     end
 
+    def current_user
+      @current_user ||= User.find_by(id: current_user_id)
+    end
+
     def save!
       ActiveRecord::Base.transaction do
-        user = User.create!(full_name: full_name, email: email)
+        # TODO: What if email matches but with different name?
+        user = User.find_or_create_by!(full_name: full_name, email: email)
 
         profile_class = type == :ect ? EarlyCareerTeacherProfile : MentorProfile
         profile = profile_class.new(

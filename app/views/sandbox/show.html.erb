@@ -1,27 +1,47 @@
 <% content_for :title, "API sandbox" %>
 
 <div class="govuk-width-container">
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <h1 class="govuk-heading-xl">Use our sandbox to test the Teacher CPD Service </h1>
-            <p>This is an API test environment which lets you simulate the Manage Induction for Early Career Teachers service as a training provider.</p>
-            <p>You can:</p>
-            <ul class="govuk-list govuk-list--bullet">
-                <li>authenticate as a training provider and confirm the start of an applicant's course</li>
-            </ul>
-            <p>You can give us feedback at any time to help us improve the service.</p>
-            <h2 class="govuk-heading-m">Get started</h2>
-            <p>The Manage CPD service for learning providers allows you to integrate your software with ours and test it. This is an initial version of the API for you to provide feedback on, and is subject to change. We will provide confirmation of final API specifications to support your own development in the coming weeks/months.</p>
-            <p>In the sandbox, to avoid testers having to use real users, we’ve enabled fake users with ID references that have been provided to you. You can confirm the start of an applicant’s course using these IDs.</p>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">Use our sandbox to test Manage teacher CPD</h1>
 
-            <h2 class="govuk-heading-m">Getting started with the API</h2>
+      <p class="govuk-body">The Manage teacher CPD sandbox is a test environment which allows you to experience the service as a school induction tutor, lead provider and software vendor.</p>
 
-            <p>You should have received an authentication token by email.</p>
-            <p><a href="/api-docs/">Review our API documentation</a>.</p>
+      <p class="govuk-body">You can:</p>
 
-            <h2 class="govuk-heading-m">Help and support</h2>
-            <p>Email us at <%= render MailToSupportComponent.new %>
-              for support using this sandbox.</p>
-        </div>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>act as a lead provider and manage a list of school partnerships</li>
+        <li>act as a lead provider and confirm the start of an applicant's course</li>
+        <li>test Manage teacher CPD’s <%= govuk_link_to 'API integrations', '/api-docs' %></li>
+      </ul>
+
+      <p class="govuk-body">Throughout, you’ll be able to give us feedback so we can improve the service.</p>
+
+      <h2 class="govuk-heading-l">Get started as a lead provider</h2>
+
+      <p class="govuk-body">To test the service as a lead provider, you’ll need to contact us  by email on <%= render MailToSupportComponent.new %>.</p>
+
+      <p class="govuk-body">From the provider interface in the sandbox, you’ll be able to sign in as yourself. To avoid testers having to use real users, we’ve enabled fake users with ID references that have been provided to you. You can confirm the start of an applicant’s course using these IDs.</p>
+
+      <%= govuk_start_now_button(
+            text: 'Continue as a training provider',
+            href: '/lead-providers',
+            ) %>
+
+      <h2 class="govuk-heading-l">Get started with the API</h2>
+
+      <p class="govuk-body">Our API allows you to integrate your software with our service.</p>
+
+      <p class="govuk-body">In the sandbox, you’ll be able to test your integration. You’ll also be able to generate dummy applications to process as a training provider.</p>
+
+      <%= govuk_start_now_button(
+        text: 'Review our API documentation',
+        href: '/api-docs',
+      ) %>
+
+      <h2 class="govuk-heading-l">Help and support</h2>
+
+      <p class="govuk-body">Email us at <%= render MailToSupportComponent.new %> for support using Apply sandbox or any other aspect of the Manage teacher CPD service.</p>
     </div>
+  </div>
 </div>

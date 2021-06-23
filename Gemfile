@@ -63,6 +63,7 @@ gem "blueprinter"
 
 gem "govuk-components", ">= 1.1.5"
 gem "govuk_design_system_formbuilder", "~> 2.3.0b1"
+gem "govuk_markdown", "~> 0.4.0"
 gem "view_component", require: "view_component/engine"
 
 # Fetching from APIs

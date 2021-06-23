@@ -18,6 +18,7 @@ Given("scenario {string} has been run", (scenario) => cy.appScenario(scenario));
 const pagePaths = {
   cookie: "/cookies",
   start: "/",
+  sandbox: "/sandbox",
   privacy: "/privacy-policy",
   accessibility: "/accessibility-statement",
   dashboard: "/dashboard",
@@ -104,6 +105,21 @@ const pagePaths = {
   "already challenged": "/report-incorrect-partnership/already-challenged",
   "not found": "/404",
   "internal server error": "/500",
+  pages: "/pages",
+  "ambition year one induction tutor materials":
+    "/induction-tutor-materials/ambition/year-one",
+  "ambition year two induction tutor materials":
+    "/induction-tutor-materials/ambition/year-two",
+  "edt year one induction tutor materials":
+    "/induction-tutor-materials/educational-development-trust/year-one",
+  "edt year two induction tutor materials":
+    "/induction-tutor-materials/educational-development-trust/year-two",
+  "teach first year one and two induction tutor materials":
+    "/induction-tutor-materials/teach-first/year-one-and-two",
+  "ucl year one induction tutor materials":
+    "/induction-tutor-materials/ucl/year-one",
+  "ucl year two induction tutor materials":
+    "/induction-tutor-materials/ucl/year-two",
   forbidden: "/403",
   "lead providers report schools choose delivery partner":
     "/lead-providers/report-schools/delivery-partner",
@@ -111,6 +127,10 @@ const pagePaths = {
   "csv errors": "/lead-providers/report-schools/csv/errors",
   "confirm partnerships": "/lead-providers/report-schools/confirm",
   "partnerships success": "/lead-providers/report-schools/success",
+  "the sandbox landing page": "/sandbox",
+  "the Lead Provider landing page": "/lead-providers",
+  "Partnership guidance": "/lead-providers/partnership-guide",
+  "API Documentation": "/api-docs/index.html",
 };
 
 Given("I am on {string} page", (page) => {

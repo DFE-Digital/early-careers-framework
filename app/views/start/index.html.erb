@@ -7,7 +7,7 @@
     <p>Your school must complete these steps before your early career teachers (ECTs) start their statutory induction programme.
       For example, if your ECTs are starting in September, you need to complete these steps before then.</p>
 
-    <%= govuk_link_to "Start", new_user_session_path, button: true %>
+    <%= govuk_start_now_button text: "Start now", href: new_user_session_path %>
 
     <h2 class="govuk-heading-m">Do you have an account?</h2>
     <p class="govuk-body">You must be nominated or sent sign in details to access this service. <%= govuk_link_to "Find out how to get an account", check_account_path %></p>

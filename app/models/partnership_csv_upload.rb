@@ -18,7 +18,10 @@ class PartnershipCsvUpload < ApplicationRecord
   def valid_schools
     invalid_urns = invalid_schools.map { |error| error[:urn] }
     valid_urns = urns - invalid_urns
-    valid_urns.map { |urn| School.find_by(urn: urn) } # We need to preserve order uploaded
+    # We need to preserve order uploaded
+    valid_schools = valid_urns.map { |urn| School.find_by(urn: urn).presence || School.find_by(urn: urn.sub!(/^[0]+/, "")) }
+    Sentry.capture_message("Found nil schools in `valid_schools`") if valid_schools.any?(&:nil?)
+    valid_schools.compact
   end
 
   def urns
@@ -46,7 +49,7 @@ private
 
     urns.each_with_index do |urn, index|
       school = School.includes(:partnerships).find_by(urn: urn)
-      school = School.find_by(urn: urn.sub!(/^[0]+/, "")) if school.blank?
+      school = School.find_by(urn: urn.sub(/^[0]+/, "")) if school.blank?
 
       if school.blank?
         errors << { urn: urn, message: "URN is not valid", school_name: "", row_number: index + 1 }

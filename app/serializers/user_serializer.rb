@@ -31,7 +31,9 @@ class UserSerializer
   end
 
   attributes :core_induction_programme do |user|
-    case user.core_induction_programme&.name
+    core_induction_programme = user.core_induction_programme || find_school_cohort(user)&.core_induction_programme
+
+    case core_induction_programme&.name
     when "Ambition Institute"
       CIP_TYPES[:ambition]
     when "Education Development Trust"
@@ -46,9 +48,13 @@ class UserSerializer
   end
 
   attributes :induction_programme_choice do |user|
+    find_school_cohort(user)&.induction_programme_choice
+  end
+
+  def self.find_school_cohort(user)
+    @school_cohorts ||= SchoolCohort.all.to_a
     if user.participant?
-      school_cohort = SchoolCohort.find_by(school: user.school, cohort: user.cohort)
-      school_cohort.induction_programme_choice
+      @school_cohorts.find { |sc| (sc.school_id == user.school&.id) && (sc.cohort_id == user.cohort&.id) }
     end
   end
 end

@@ -34,7 +34,7 @@ module OutputPaymentsSteps
                                       per_participant: @per_participant_value)
 
     @call_off_contract = DummyClass.new({ contract: contract, bands: [@band_a] })
-    calculator = PaymentCalculator::Ecf::PaymentCalculation.new(lead_provider: lead_provider)
+    calculator = PaymentCalculator::Ecf::PaymentCalculation.new(contract: @call_off_contract)
     @result = @retention_table.map do |row|
       calculator.call(event_type: row[:payment_type], total_participants: row[:retained_participants])
     end

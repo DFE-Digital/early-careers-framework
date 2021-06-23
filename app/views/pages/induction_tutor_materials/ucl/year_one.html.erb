@@ -1,0 +1,101 @@
+<% content_for :before_content, govuk_back_link(text: 'Back', href: current_user ? dashboard_path : root_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <%= render partial: "pages/induction_tutor_materials/ucl/handbooks_and_outlines" %>
+
+    <%= render partial: "pages/induction_tutor_materials/course_year_sub_nav", locals: { provider: "ucl" } %>
+
+    <h3 class="govuk-heading-m govuk-!-margin-top-4 govuk-!-font-weight-bold">Autumn term</h3>
+
+    <p class="govuk-!-margin-bottom-2 govuk-!-font-weight-bold">First half-term: enabling pupil learning</p>
+    <ul class="govuk-list govuk-list--spaced">
+      <li>
+        <%= govuk_link_to "Week 2: annual conference (part 1) (PDF, 176 KB, 6 pages)",
+                          "https://www.early-career-framework.education.gov.uk/ucl/wp-content/uploads/sites/5/2020/09/Annual-Conference-a.pdf" %>
+      </li>
+      <li>
+        <%= govuk_link_to "Week 2: annual conference (part 2) (PDF, 152 KB, 4 pages)",
+                          "https://www.early-career-framework.education.gov.uk/ucl/wp-content/uploads/sites/5/2020/09/Annual-Conference-b-.pdf" %>
+      </li>
+      <li>
+        <%= govuk_link_to "Week 4: understanding disadvantage (PDF, 163 KB, 9 pages)",
+                          "https://www.early-career-framework.education.gov.uk/ucl/wp-content/uploads/sites/5/2020/09/Module-1-training-.pdf" %>
+      </li>
+      <li>
+        <%= govuk_link_to "Week 7: exploring yourself as a role model (online learning community) (PDF, 150 KB, 8 pages)",
+                          "https://www.early-career-framework.education.gov.uk/ucl/wp-content/uploads/sites/5/2020/09/Module-1-training-OLC.pdf" %>
+      </li>
+    </ul>
+
+    <p class="govuk-!-margin-bottom-2 govuk-!-font-weight-bold">Second half-term: engaging pupils in learning</p>
+    <ul class="govuk-list govuk-list--spaced">
+    <li>
+        <%= govuk_link_to "Week 1: curriculum, knowledge and learning (PDF, 183 KB, 6 pages)",
+                          "https://www.early-career-framework.education.gov.uk/ucl/wp-content/uploads/sites/5/2020/09/Module-2-Training-Session.pdf" %>
+      </li>
+      <li>
+        <%= govuk_link_to "Week 7: the role of powerful disciplinary knowledge (online learning community) (PDF, 117 KB, 4 pages)",
+                          "https://www.early-career-framework.education.gov.uk/ucl/wp-content/uploads/sites/5/2020/09/Module-2-Training-OLC.pdf" %>
+      </li>
+    </ul>
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+    <h3 class="govuk-heading-m govuk-!-margin-top-4 govuk-!-font-weight-bold">Spring term</h3>
+
+    <p class="govuk-!-margin-bottom-2 govuk-!-font-weight-bold">First half-term: developing quality pedagogy (part 1)</p>
+    <ul class="govuk-list govuk-list--spaced">
+      <li>
+        <%= govuk_link_to "Week 1: learning through practice/questioning (PDF, 154 KB, 7 pages)",
+                          "https://www.early-career-framework.education.gov.uk/ucl/wp-content/uploads/sites/5/2020/12/Module-3-Training-Session-1-Updated.pdf" %>
+      </li>
+      <li>
+        <%= govuk_link_to "Week 6: adaptive teaching (online learning community) (PDF, 174 KB, 6 pages)",
+                          "https://www.early-career-framework.education.gov.uk/ucl/wp-content/uploads/sites/5/2020/09/Module-3-Training-OLC1.pdf" %>
+      </li>
+    </ul>
+
+    <p class="govuk-!-margin-bottom-2 govuk-!-font-weight-bold">Second half-term: developing quality pedagogy (part 2)</p>
+    <ul class="govuk-list govuk-list--spaced">
+      <li>
+        <%= govuk_link_to "Week 1: adaptive teaching (PDF, 166 KB, 9 pages)",
+                          "https://www.early-career-framework.education.gov.uk/ucl/wp-content/uploads/sites/5/2020/09/Module-3-Training-Session-2.pdf" %>
+      </li>
+      <li>
+        <%= govuk_link_to "Week 6: effective use of adaptive teaching (online learning community) (PDF, 131 KB, 6 pages)",
+                          "https://www.early-career-framework.education.gov.uk/ucl/wp-content/uploads/sites/5/2020/09/Module-3-Training-OLC2.pdf" %>
+      </li>
+    </ul>
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+    <h3 class="govuk-heading-m govuk-!-margin-top-4 govuk-!-font-weight-bold">Summer term</h3>
+
+    <p class="govuk-!-margin-bottom-2 govuk-!-font-weight-bold">First half-term: making productive use of assessment</p>
+    <ul class="govuk-list govuk-list--spaced">
+      <li>
+        <%= govuk_link_to "Week 2: fundamental principles of effective assessment (PDF, 164 KB, 7 pages)",
+                          "https://www.early-career-framework.education.gov.uk/ucl/wp-content/uploads/sites/5/2020/09/Module-4-Training-Session.pdf" %>
+      </li>
+      <li>
+        <%= govuk_link_to "Week 6: assessment and patterns of performance (online learning community) (PDF, 115 KB, 4 pages)",
+                          "https://www.early-career-framework.education.gov.uk/ucl/wp-content/uploads/sites/5/2020/09/Module-4-Training-OLC.pdf" %>
+      </li>
+    </ul>
+
+    <p class="govuk-!-margin-bottom-2 govuk-!-font-weight-bold">Second half-term: fulfilling professional responsibilities</p>
+    <ul class="govuk-list govuk-list--spaced">
+      <li>
+        <%= govuk_link_to "Week 1: effective professional development (PDF, 159 KB, 11 pages)",
+                          "https://www.early-career-framework.education.gov.uk/ucl/wp-content/uploads/sites/5/2020/09/Module-5-Training-Session.pdf" %>
+      </li>
+      <li>
+        <%= govuk_link_to "Week 5: building professional relationships (online learning community) (PDF, 127 KB, 6 pages)",
+                          "https://www.early-career-framework.education.gov.uk/ucl/wp-content/uploads/sites/5/2020/09/Module-5-Training-OLC.pdf" %>
+      </li>
+    </ul>
+
+  </div>
+</div>

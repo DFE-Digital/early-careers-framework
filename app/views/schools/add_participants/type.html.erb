@@ -17,25 +17,23 @@
         <span class="govuk-details__summary-text">Why do I need to do this?</span>
       </summary>
       <div class="govuk-details__text">
-        <p class="govuk-body">This is so we can:</p>
-
-        <ul class="govuk-list govuk-list--bullet">
-          <li>check that their details match our records</li>
-          <li>make sure they have Qualified Teacher Status (QTS)</li>
-          <li>ensure they are eligible to complete their induction or act as a mentor</li>
-        </ul>
+        <p class="govuk-body">We need to make sure they have Qualified Teacher Status and are eligible to complete an induction or act as a mentor.</p>
       </div>
     </details>
 
     <%= form_for add_participant_form, url: { action: :update }, method: :patch do |f| %>
-      <%= f.govuk_collection_radio_buttons(
-            :type,
-            f.object.type_options,
-            :first,
-            :last,
-            legend: { text: "Do you want to add an early career teacher (ECT) or a mentor?" },
-          )
-      %>
+      <%= f.hidden_field :type, value: '' %>
+      <%= f.govuk_radio_buttons_fieldset :type,
+        legend: { text: "Do you want to add an early career teacher (ECT) or a mentor?" } do %>
+
+        <%= f.govuk_radio_button :type, :ect, label: { text: t("schools.participants.type.ect") } %>
+        <%= f.govuk_radio_button :type, :mentor, label: { text: t("schools.participants.type.mentor") } %>
+
+        <% if add_participant_form.can_add_self? %>
+          <%= f.govuk_radio_divider %>
+          <%= f.govuk_radio_button :type, "self", label: { text: 'Myself as a mentor' } %>
+        <% end %>
+      <% end %>
 
       <%= f.govuk_submit "Continue" %>
     <% end %>

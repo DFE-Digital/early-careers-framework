@@ -35,7 +35,7 @@ RSpec.describe CalculationOrchestrator do
         {
           per_participant: 587.0,
           started: {
-            retained_participants: 10,
+            retained_participants: 0,
             per_participant: 117.0,
             subtotal: 0.0,
           },
@@ -43,12 +43,16 @@ RSpec.describe CalculationOrchestrator do
         {
           per_participant: 580.0,
           started: {
-            retained_participants: 10,
+            retained_participants: 0,
             per_participant: 116.0,
             subtotal: 0.0,
           },
         },
       ],
+      uplift: {
+        sub_total: 300.0,
+        per_participant: 100.0,
+      },
     }
   end
 
@@ -61,7 +65,7 @@ RSpec.describe CalculationOrchestrator do
 
   context ".call" do
     it "returns the total calculation" do
-      expect(described_class.call(lead_provider: call_off_contract.lead_provider, event_type: :started)).to eq(expected_result)
+      expect(described_class.call(contract: call_off_contract, lead_provider: call_off_contract.lead_provider, event_type: :started)).to eq(expected_result)
     end
   end
 end

@@ -30,10 +30,16 @@ module Multistep
 
     def record_completed_step(step)
       if completed_steps.include? step
-        self.completed_steps = completed_steps[0..completed_steps.index(step)]
+        self.completed_steps = completed_steps[0..(completed_steps.index(step))]
       else
         completed_steps << step
       end
+    end
+
+    def reset_steps(*steps)
+      new_form = self.class.new
+      attributes = self.class.steps.values_at(*steps).flat_map(&:attributes).map(&:to_s)
+      assign_attributes(new_form.attributes.slice(*attributes))
     end
 
     def previous_step(from: nil)

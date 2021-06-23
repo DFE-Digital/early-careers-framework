@@ -142,6 +142,13 @@ RSpec.describe PartnershipCsvUpload, type: :model do
 
       expect(@subject.valid_schools).to contain_exactly(valid_school)
     end
+
+    it "deals with leading zeros in URNs" do
+      school_with_leading_zero = create(:school, urn: "20001")
+      given_the_csv_contains_urns(%w[020001])
+
+      expect(@subject.valid_schools).to contain_exactly(school_with_leading_zero)
+    end
   end
 
 private

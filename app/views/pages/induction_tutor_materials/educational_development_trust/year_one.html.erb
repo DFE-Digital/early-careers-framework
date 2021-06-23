@@ -1,0 +1,74 @@
+<% content_for :before_content, govuk_back_link(text: 'Back', href: current_user ? dashboard_path : root_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <%= render partial: "pages/induction_tutor_materials/educational_development_trust/handbooks_and_outlines" %>
+
+    <%= render partial: "pages/induction_tutor_materials/course_year_sub_nav", locals: { provider: "educational-development-trust" } %>
+
+    <h3 class="govuk-heading-m govuk-!-margin-top-4">Autumn term</h3>
+
+    <h4 class="govuk-heading-s govuk-!-margin-bottom-2">
+      <%= govuk_link_to "First half-term: establishing a positive climate for learning (PDF, 320 KB, 19 pages)",
+                        "https://www.early-career-framework.education.gov.uk/edt/wp-content/uploads/sites/2/2020/08/Training-Session-Outline-Block-1.pdf" %>
+    </h4>
+    <ul class="govuk-list">
+      <li>Week 2: setting clear expectations</li>
+      <li>Week 3: early and least-intrusive interventions</li>
+      <li>Week 4: least-intrusive interventions and building relationships</li>
+    </ul>
+
+    <h4 class="govuk-heading-s govuk-!-margin-bottom-2">
+      <%= govuk_link_to "Second half-term: how pupils learn – memory and cognition (PDF, 485 KB, 22 pages)",
+                        "https://www.early-career-framework.education.gov.uk/edt/wp-content/uploads/sites/2/2020/08/Training-Session-Outline-Block-2.pdf" %>
+    </h4>
+    <ul class="govuk-list">
+      <li>Week 2: cognitive load and implications for your practice</li>
+      <li>Week 3: prior knowledge, misconceptions & worked examples</li>
+    </ul>
+
+    <h3 class="govuk-heading-m govuk-!-margin-top-4">Spring term</h3>
+
+    <h4 class="govuk-heading-s govuk-!-margin-bottom-2">
+      <%= govuk_link_to "First half-term: developing effective classroom practice – teaching & adapting (PDF, 475 KB, 20 pages)",
+                        "https://www.early-career-framework.education.gov.uk/edt/wp-content/uploads/sites/2/2020/08/Training-Session-Outline-Block-3.pdf" %>
+    </h4>
+    <ul class="govuk-list">
+      <li>Week 2: structuring lessons for progress</li>
+      <li>Week 3: practice makes perfect</li>
+      <li>Week 4: adapting teaching</li>
+    </ul>
+
+    <h4 class="govuk-heading-s govuk-!-margin-bottom-2">
+      <%= govuk_link_to "Second half-term: the importance of subject & curriculum knowledge (PDF, 323 KB, 12 pages)",
+                        "https://www.early-career-framework.education.gov.uk/edt/wp-content/uploads/sites/2/2020/08/Training-Session-Outline-Block-4.pdf" %>
+    </h4>
+    <ul class="govuk-list">
+      <li>Week 3: developing pupils’ literacy</li>
+      <li>Week 4: improving literacy skills through oral language & written tasks</li>
+    </ul>
+
+    <h3 class="govuk-heading-m govuk-!-margin-top-4">Summer term</h3>
+
+    <h4 class="govuk-heading-s govuk-!-margin-bottom-2">
+      <%= govuk_link_to "First half-term: assessment, feedback & questioning (PDF, 391 KB, 20 pages)",
+                        "https://www.early-career-framework.education.gov.uk/edt/wp-content/uploads/sites/2/2020/08/Training-Session-Outline-Block-5.pdf" %>
+    </h4>
+    <ul class="govuk-list">
+      <li>Week 2: effective assessment</li>
+      <li>Week 4: using questioning</li>
+      <li>Week 5: providing verbal feedback</li>
+    </ul>
+
+    <h4 class="govuk-heading-s govuk-!-margin-bottom-2">
+      <%= govuk_link_to "Second half-term: a people profession (PDF, 324 KB, 12 pages)",
+                        "https://www.early-career-framework.education.gov.uk/edt/wp-content/uploads/sites/2/2020/08/Training-Session-Outline-Block-6.pdf" %>
+    </h4>
+    <ul class="govuk-list">
+      <li>Week 1: building effective relationships with parents, carers & families</li>
+      <li>Week 2: building trusting relationships with pupils</li>
+    </ul>
+
+  </div>
+</div>

@@ -4,34 +4,40 @@
   <% content_for :before_content, govuk_breadcrumbs(breadcrumbs: breadcrumbs) %>
 <% end %>
 
-<span class="govuk-caption-l"><%= @school.name %></span>
-<h1 class="govuk-heading-xl govuk-!-margin-bottom-7">Manage your training</h1>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-l"><%= @school.name %></span>
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-7">Manage your training</h1>
 
-<p class="govuk-body-l govuk-!-margin-bottom-5">Check and complete steps for every academic year/cohort</p>
+    <p class="govuk-body-l govuk-!-margin-bottom-5">
+      Check and complete steps for every academic year/cohort
+    </p>
 
-<h2 class="govuk-heading-m govuk-!-margin-bottom-1">Your cohorts</h2>
+    <h2 class="govuk-heading-m govuk-!-margin-bottom-1">Your cohorts</h2>
 
-<table class="govuk-table">
-  <thead class="govuk-table__head">
-    <tr class="govuk-table__row">
-      <th class="govuk-table__header" scope="col">Year</th>
-      <th class="govuk-table__header" scope="col">Programme</th>
-      <th class="govuk-table__header" scope="col">Status</th>
-    </tr>
-  </thead>
-  <tbody class="govuk-table__body">
-    <% @school_cohorts.each do |school_cohort| %>
-      <tr class="govuk-table__row">
-        <td class="govuk-table__cell">
-          <%= govuk_link_to school_cohort.cohort.start_year, schools_cohort_path(cohort_id: school_cohort.cohort) %>
-        </td>
-        <td class="govuk-table__cell">
-          <%= t(school_cohort.induction_programme_choice, scope: %i[manage_your_training induction_programmes]) %>
-        </td>
-        <td class="govuk-table__cell">
-          <%= render AutoTagComponent.new(text: school_cohort.status) unless school_cohort.status.blank? %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+    <table class="govuk-table">
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th class="govuk-table__header" scope="col">Year</th>
+          <th class="govuk-table__header" scope="col">Programme</th>
+          <th class="govuk-table__header" scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+        <% @school_cohorts.each do |school_cohort| %>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+              <%= govuk_link_to school_cohort.cohort.start_year, schools_cohort_path(cohort_id: school_cohort.cohort) %>
+            </td>
+            <td class="govuk-table__cell">
+              <%= t(school_cohort.induction_programme_choice, scope: %i[manage_your_training induction_programmes]) %>
+            </td>
+            <td class="govuk-table__cell">
+              <%= render AutoTagComponent.new(text: school_cohort.status) unless school_cohort.status.blank? %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
