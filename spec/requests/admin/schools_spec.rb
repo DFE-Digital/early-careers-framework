@@ -24,22 +24,26 @@ RSpec.describe "Admin::Schools", type: :request do
       expect(response.body).not_to include(ineligible_school.urn)
     end
 
-    it "filters the list of schools by name" do
-      included_school = create(:school, name: "Include Me")
-      excluded_school = create(:school, name: "Exclude Me")
+    context "filtering the school list" do
+      let!(:included_school) { create(:school, name: "Include Me", urn: "090120") }
+      let!(:excluded_school) { create(:school, name: "Exclude Me", urn: "333333") }
 
-      get "/admin/schools", params: { query: "include" }
-      expect(response.body).to include(included_school.urn)
-      expect(response.body).not_to include(excluded_school.urn)
-    end
+      it "filters the list of schools by name" do
+        get "/admin/schools", params: { query: "include" }
+        expect(assigns(:schools)).to match_array [included_school]
+      end
 
-    it "filters the list of schools by urn" do
-      included_school = create(:school, name: "Include Me")
-      excluded_school = create(:school, name: "Exclude Me")
+      it "filters the list of schools by urn" do
+        get "/admin/schools", params: { query: "901" }
+        expect(assigns(:schools)).to match_array [included_school]
+      end
 
-      get "/admin/schools", params: { query: included_school.urn }
-      expect(response.body).to include(included_school.urn)
-      expect(response.body).not_to include(excluded_school.urn)
+      it "filters the list by induction tutor email" do
+        create(:user, :induction_coordinator, email: "mary@schools.org", schools: [included_school])
+
+        get "/admin/schools", params: { query: "mary" }
+        expect(assigns(:schools)).to match_array [included_school]
+      end
     end
   end
 

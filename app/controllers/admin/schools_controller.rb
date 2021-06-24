@@ -9,10 +9,11 @@ module Admin
 
     def index
       @query = params[:query]
+
       @schools = policy_scope(School)
         .includes(:induction_coordinators, :local_authority)
+        .ransack(induction_coordinators_email_or_urn_or_name_cont: @query).result
         .order(:name)
-        .ransack(name_or_urn_cont: @query).result
         .page(params[:page])
         .per(20)
     end
