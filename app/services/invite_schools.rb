@@ -97,6 +97,32 @@ class InviteSchools
     end
   end
 
+  def invite_mats(school_urns)
+    school_urns.each do |urn|
+      school = School.eligible.find_by(urn: urn)
+
+      if school.nil?
+        logger.info "School not found, urn: #{urn} ... skipping"
+        next
+      end
+
+      if school.contact_email.blank?
+        logger.info "No contact details for school urn: #{urn} ... skipping"
+        next
+      end
+
+      nomination_email = NominationEmail.create_nomination_email(
+        sent_at: Time.zone.now,
+        sent_to: school.contact_email,
+        school: school,
+      )
+
+      delay(queue: "mailers", priority: 1).send_mat_invite_email(nomination_email)
+    rescue StandardError
+      logger.info "Error emailing school, urn: #{urn} ... skipping"
+    end
+  end
+
 private
 
   def create_and_send_nomination_email(email, school)
@@ -131,6 +157,16 @@ private
 
   def email_expiry_date
     NominationEmail::NOMINATION_EXPIRY_TIME.from_now.strftime("%d/%m/%Y")
+  end
+
+  def send_mat_invite_email(nomination_email)
+    notify_id = SchoolMailer.mat_invite_email(
+      recipient: nomination_email.sent_to,
+      school_name: nomination_email.school.name,
+      nomination_url: nomination_email.nomination_url,
+    ).deliver_now.delivery_method.response.id
+
+    nomination_email.update!(notify_id: notify_id)
   end
 
   def logger

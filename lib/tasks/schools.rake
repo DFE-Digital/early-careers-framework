@@ -15,4 +15,9 @@ namespace :schools do
   task :invite_to_beta, [:school_urns] => :environment do |_task, args|
     InviteSchools.new.invite_to_beta(args.school_urns.split)
   end
+
+  desc "Send nomination links to MAT schools"
+  task :invite_mats, [:school_urns] => :environment do |_task, args|
+    InviteSchools.new.invite_mats(args.school_urns.split)
+  end
 end

@@ -7,6 +7,7 @@ class SchoolMailer < ApplicationMailer
   COORDINATOR_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE = "076e8486-cbcc-44ee-8a6e-d2a721ee1460"
   MINISTERIAL_LETTER_EMAIL_TEMPLATE = "f1310917-aa50-4789-b8c2-8cc5e9b91485"
   BETA_INVITE_EMAIL_TEMPLATE = "0ae827de-3caa-4a93-b464-c434cbbd02c0"
+  MAT_INVITE_EMAIL_TEMPLATE = "f856f50e-6f49-441e-8018-f8303367eb5c"
 
   def nomination_email(recipient:, school_name:, nomination_url:, expiry_date:)
     template_mail(
@@ -119,6 +120,19 @@ class SchoolMailer < ApplicationMailer
         name: name,
         school_name: school_name,
         start_url: start_url,
+      },
+    )
+  end
+
+  def mat_invite_email(recipient:, school_name:, nomination_url:)
+    template_mail(
+      MAT_INVITE_EMAIL_TEMPLATE,
+      to: recipient,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        school_name: school_name,
+        nomination_url: nomination_url,
       },
     )
   end
