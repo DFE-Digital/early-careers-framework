@@ -46,11 +46,19 @@ module Api
         params.dig(:filter, :updated_since)
       end
 
+      def email
+        params.dig(:filter, :email)
+      end
+
       def users
         users = User.includes_school
 
         if updated_since.present?
           users = users.changed_since(updated_since)
+        end
+
+        if email.present?
+          users = users.where(email: email)
         end
 
         users

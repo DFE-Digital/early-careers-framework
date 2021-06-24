@@ -87,6 +87,21 @@ RSpec.describe "API Users", type: :request do
         get "/api/v1/users", params: { filter: { updated_since: 1.day.ago.iso8601 } }
         expect(parsed_response["data"].size).to eql(2)
       end
+
+      context "when filtering by email" do
+        it "returns users that match" do
+          email = User.all.sample.email
+          get "/api/v1/users", params: { filter: { email: email } }
+          expect(parsed_response["data"].size).to eql(1)
+          expect(parsed_response.dig("data", 0, "attributes", "email")).to eql(email)
+        end
+
+        it "returns no users if no matches" do
+          email = "dontexist@example.com"
+          get "/api/v1/users", params: { filter: { email: email } }
+          expect(parsed_response["data"].size).to eql(0)
+        end
+      end
     end
 
     context "when unauthorized" do
