@@ -10,10 +10,16 @@ RSpec.describe EarlyCareerTeachers::Create do
   let(:mentor_profile) { create :mentor_profile }
 
   it "creates an Early Career Teacher Profile record" do
-    before_count = EarlyCareerTeacherProfile.count
+    expect { described_class.call(email: user.email, full_name: user.full_name, school_id: school.id, cohort_id: cohort.id, mentor_profile_id: mentor_profile.id) }.to change { EarlyCareerTeacherProfile.count }.by(1)
+  end
+
+  it "sets the correct mentor profile" do
     early_career_teacher_profile = described_class.call(email: user.email, full_name: user.full_name, school_id: school.id, cohort_id: cohort.id, mentor_profile_id: mentor_profile.id)
-    after_count = EarlyCareerTeacherProfile.count
-    expect(after_count).to eq(before_count + 1)
+    expect(early_career_teacher_profile.mentor_profile).to eq(mentor_profile)
+  end
+
+  it "has no uplift if the school has not uplift set" do
+    early_career_teacher_profile = described_class.call(email: user.email, full_name: user.full_name, school_id: school.id, cohort_id: cohort.id, mentor_profile_id: mentor_profile.id)
     expect(early_career_teacher_profile.pupil_premium_uplift).to be(false)
     expect(early_career_teacher_profile.sparsity_uplift).to be(false)
   end
