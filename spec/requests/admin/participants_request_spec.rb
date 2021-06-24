@@ -29,8 +29,8 @@ RSpec.describe "Admin::Participants", type: :request do
 
     it "shows the correct participant" do
       get "/admin/participants/#{ect_user.id}"
-      expect(response.body).to include(ect_user.full_name)
-      expect(response.body).to include(mentor_user.full_name)
+      expect(response.body).to include(CGI.escapeHTML(ect_user.full_name))
+      expect(response.body).to include(CGI.escapeHTML(mentor_user.full_name))
     end
   end
 end
