@@ -13,6 +13,7 @@ RSpec.describe NominationRequestForm, type: :model do
                        .with_message("The details you entered do not match any schools")
                        .on(%i[local_authority save])
     }
+
     it {
       is_expected.to validate_presence_of(:school_id)
                        .with_message("The details you entered do not match any schools")
@@ -20,32 +21,17 @@ RSpec.describe NominationRequestForm, type: :model do
     }
   end
 
-  describe "#email_limit_reached?" do
-    context "when the school has been emailed in the last 24 hours" do
-      before do
-        create(:nomination_email, school: school)
-      end
-
-      it "returns true" do
-        expect(nomination_request_form.email_limit_reached?).to eq true
-      end
+  describe "#reached_email_limit" do
+    before do
+      allow_any_instance_of(InviteSchools)
+        .to receive(:reached_limit).with(school)
+        .and_return service_limit
     end
 
-    context "when the school has not been emailed" do
-      it "returns false" do
-        expect(nomination_request_form.email_limit_reached?).to eq false
-      end
-    end
+    let(:service_limit) { double("service limit") }
+    subject { nomination_request_form.reached_email_limit }
 
-    context "when the school has been emailed more than 24 hours ago" do
-      before do
-        create(:nomination_email, school: school, sent_at: 25.hours.ago)
-      end
-
-      it "returns false" do
-        expect(nomination_request_form.email_limit_reached?).to eq false
-      end
-    end
+    it { is_expected.to be service_limit }
   end
 
   describe "#save!" do

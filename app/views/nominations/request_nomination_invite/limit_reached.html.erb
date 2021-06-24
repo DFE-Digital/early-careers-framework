@@ -2,9 +2,8 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-header-xl">You can only send one email per day</h1>
-    <p>You have already sent an email today to nominate your induction lead or tutor.</p>
-    <p>You can try again tomorrow.</p>
+    <h1 class="govuk-header-xl">You can only send <%= @limit[:max] %> <%= "email".pluralize(@limit[:max]) %> per <%= @limit[:within].inspect %></h1>
+    <p>You can try again later.</p>
 
     <h2 class="govuk-heading-m">If your school has not received this email</h2>
     <p> <%= govuk_link_to "Sign in to DfE", "https://www.get-information-schools.service.gov.uk/" %> and make sure that your GIAS email address is up to date.

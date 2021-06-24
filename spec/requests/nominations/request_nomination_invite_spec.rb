@@ -74,9 +74,9 @@ RSpec.describe "Requesting an invitation to nominate an induction tutor", type: 
       end
     end
 
-    context "when given an eligible school emailed within the last 24 hours" do
+    context "when sending an email would violate sendine limits" do
       before do
-        create(:nomination_email, school: school, sent_at: 1.hour.ago)
+        allow_any_instance_of(NominationRequestForm).to receive(:reached_email_limit).and_return double
       end
 
       it "redirects to limit reached" do
@@ -138,6 +138,12 @@ RSpec.describe "Requesting an invitation to nominate an induction tutor", type: 
   end
 
   describe "email limit reached" do
+    let(:limit) { { max: rand(1..10), within: rand(1..600).minutes } }
+
+    before do
+      allow_any_instance_of(NominationRequestForm).to receive(:reached_email_limit).and_return limit
+    end
+
     it "renders the email limit reached page" do
       get "/nominations/limit-reached"
       expect(response).to render_template(:limit_reached)

@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 class InviteSchools
-  EMAIL_COOLDOWN_PERIOD = 24.hours
+  EMAIL_LIMITS = [
+    { max: 5, within: 24.hours },
+    { max: 1, within: 5.minutes },
+  ].freeze
 
   def run(school_urns)
     logger.info "Emailing schools"
@@ -29,9 +32,10 @@ class InviteSchools
     end
   end
 
-  def sent_email_recently?(school)
-    latest_nomination_email = NominationEmail.where(school: school).order(sent_at: :desc).first
-    latest_nomination_email&.sent_within_last?(EMAIL_COOLDOWN_PERIOD) || false
+  def reached_limit(school)
+    EMAIL_LIMITS.find do |max:, within:|
+      NominationEmail.where(school: school, sent_at: within.ago..Float::INFINITY).count >= max
+    end
   end
 
   def send_chasers
