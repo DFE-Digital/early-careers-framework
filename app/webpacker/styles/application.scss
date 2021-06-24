@@ -27,6 +27,7 @@ $govuk-image-url-function: frontend-image-url;
 @import "school_search";
 @import "admin/schools";
 @import "aside";
+@import "vendor/nhs_tables";
 
 .govuk-tag {
   white-space: nowrap;

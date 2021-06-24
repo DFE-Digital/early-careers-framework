@@ -10,7 +10,7 @@ RSpec.describe LeadProviders::YourSchools::Table, type: :view_component do
   stub_component LeadProviders::YourSchools::TableRow
 
   it "renders table row for each school" do
-    expected_partnerships = partnerships.each_slice(20).to_a[page - 1]
+    expected_partnerships = partnerships.each_slice(10).to_a[page - 1]
 
     expected_partnerships.each do |partnership|
       expect(rendered).to have_rendered(LeadProviders::YourSchools::TableRow).with(partnership: partnership)

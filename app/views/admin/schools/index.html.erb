@@ -16,26 +16,43 @@
   <% end %>
 </div>
 
-<table class="govuk-table">
-  <thead>
-    <tr class="govuk-table__row">
-      <th scope="col" class="govuk-table__header">School</th>
-      <th scope="col" class="govuk-table__header">URN</th>
-      <th scope="col" class="govuk-table__header">Local Authority</th>
-      <th scope="col" class="govuk-table__header">Group/network</th>
-      <th scope="col" class="govuk-table__header">Induction tutor</th>
-    </tr>
-  </thead>
-  <tbody class="govuk-table__body">
-    <% @schools.each do |school| %>
+<div class="nhsuk-table-container">
+  <table class="govuk-table nhsuk-table-responsive">
+    <thead class="nhsuk-table__head">
       <tr class="govuk-table__row">
-        <td class="govuk-table__cell"><%= govuk_link_to school.name, admin_school_path(school) %></td>
-        <td class="govuk-table__cell"><%= school.urn %></td>
-        <td class="govuk-table__cell"><%= school.local_authority&.name %></td>
-        <td class="govuk-table__cell">- <span class='govuk-visually-hidden'>No group or network</span></td>
-        <td class="govuk-table__cell"><%= school.induction_coordinators.first&.email || "- <span class='govuk-visually-hidden'>No induction tutor</span>".html_safe %></td>
+        <th scope="col" class="govuk-table__header">School</th>
+        <th scope="col" class="govuk-table__header">URN</th>
+        <th scope="col" class="govuk-table__header">Local Authority</th>
+        <th scope="col" class="govuk-table__header">Group/network</th>
+        <th scope="col" class="govuk-table__header">Induction tutor</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody class="govuk-table__body nhsuk-table__body">
+      <% @schools.each do |school| %>
+        <tr class="govuk-table__row nhsuk-table__row">
+          <td class="govuk-table__cell nhsuk-table__cell">
+            <span class="nhsuk-table-responsive__heading">School</span>
+            <%= govuk_link_to school.name, admin_school_path(school) %>
+          </td>
+          <td class="govuk-table__cell nhsuk-table__cell">
+            <span class="nhsuk-table-responsive__heading">URN</span>
+            <%= school.urn %>
+          </td>
+          <td class="govuk-table__cell nhsuk-table__cell">
+            <span class="nhsuk-table-responsive__heading">Local Authority</span>
+            <%= school.local_authority&.name %>
+          </td>
+          <td class="govuk-table__cell nhsuk-table__cell">
+            <span class="nhsuk-table-responsive__heading">Group/network</span>
+            - <span class='govuk-visually-hidden'>No group or network</span>
+          </td>
+          <td class="govuk-table__cell nhsuk-table__cell">
+            <span class="nhsuk-table-responsive__heading">Induction tutor</span>
+            <%= school.induction_coordinators.first&.email || "- <span class='govuk-visually-hidden'>No induction tutor</span>".html_safe %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 <%= govuk_paginate @schools %>
