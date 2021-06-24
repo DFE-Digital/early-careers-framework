@@ -9,7 +9,7 @@ module "prometheus_all" {
   alert_rules = file("${path.module}/config/${var.environment}/alert.rules.yml")
   alertmanager_slack_url = var.alertmanager_slack_url
   alertmanager_slack_channel = "cpd-dev-alerts"
-  alertmanager_slack_template = file("${path.module}/config/")
+  alertmanager_slack_template = file("${path.module}/config/slack.tmpl")
   grafana_admin_password = var.grafana_admin_password
   grafana_google_client_id = var.google_client_id
   grafana_google_client_secret = var.google_client_secret
