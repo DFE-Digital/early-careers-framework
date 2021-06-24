@@ -34,6 +34,14 @@ RSpec.configure do |config|
               },
             },
           },
+          id: {
+            type: "object",
+            properties: {
+              id: {
+                type: "string",
+              },
+            },
+          },
         },
       },
       security: [

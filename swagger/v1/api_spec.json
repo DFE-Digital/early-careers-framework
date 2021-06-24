@@ -26,6 +26,14 @@
             "minItems": 1
           }
         }
+      },
+      "id": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
       }
     }
   },
@@ -93,8 +101,15 @@
 
         ],
         "responses": {
-          "204": {
-            "description": "Successful"
+          "200": {
+            "description": "Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/id"
+                }
+              }
+            }
           },
           "422": {
             "description": "Bad or Missing parameter",

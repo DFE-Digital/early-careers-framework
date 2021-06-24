@@ -8,7 +8,7 @@ module Api
       def create
         params = HashWithIndifferentAccess.new({ raw_event: request.raw_post, lead_provider: current_user }).merge(permitted_params)
         validate_params!(params)
-        head(RecordParticipantEvent.call(params))
+        render json: RecordParticipantEvent.call(params)
       end
 
     private
