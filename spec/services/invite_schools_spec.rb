@@ -211,4 +211,54 @@ RSpec.describe InviteSchools do
       expect(FeatureFlag.active?(:induction_tutor_manage_participants, for: school)).to be false
     end
   end
+
+  describe "#invite_mats" do
+    context "when the is an induction coordinator" do
+      let(:induction_coordinator) { create(:user, :induction_coordinator) }
+      let(:school) { induction_coordinator.schools.first }
+
+      it "sends the email to the induction coordinator" do
+        expect { InviteSchools.new.invite_mats([school.urn]) }.to change { NominationEmail.count }.by(1)
+        expect(an_instance_of(InviteSchools)).to delay_execution_of(:send_mat_invite_email).with(
+          an_object_having_attributes(
+            class: NominationEmail,
+            sent_to: induction_coordinator.email,
+            school: school,
+          ),
+        )
+      end
+    end
+
+    context "when the school has a primary contact email" do
+      let(:primary_email) { "primary@example.com" }
+      let(:school) { create(:school, primary_contact_email: primary_email) }
+
+      it "sends an email to the primary contact" do
+        expect { InviteSchools.new.invite_mats([school.urn]) }.to change { NominationEmail.count }.by(1)
+        expect(an_instance_of(InviteSchools)).to delay_execution_of(:send_mat_invite_email).with(
+          an_object_having_attributes(
+            class: NominationEmail,
+            sent_to: primary_email,
+            school: school,
+          ),
+        )
+      end
+    end
+
+    context "when the school has a secondary contact email" do
+      let(:secondary_email) { "secondary@example.com" }
+      let(:school) { create(:school, primary_contact_email: nil, secondary_contact_email: secondary_email) }
+
+      it "sends an email to the secondary contact" do
+        expect { InviteSchools.new.invite_mats([school.urn]) }.to change { NominationEmail.count }.by(1)
+        expect(an_instance_of(InviteSchools)).to delay_execution_of(:send_mat_invite_email).with(
+          an_object_having_attributes(
+            class: NominationEmail,
+            sent_to: secondary_email,
+            school: school,
+          ),
+        )
+      end
+    end
+  end
 end
