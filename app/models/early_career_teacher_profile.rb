@@ -11,4 +11,8 @@ class EarlyCareerTeacherProfile < ApplicationRecord
   has_one :mentor, through: :mentor_profile, source: :user
   has_one :participation_record, dependent: :destroy
   has_many :participant_declarations
+
+  scope :sparsity, -> { where(sparsity_uplift: true) }
+  scope :pupil_premium, -> { where(pupil_premium_uplift: true) }
+  scope :uplift, -> { sparsity.or(pupil_premium) }
 end
