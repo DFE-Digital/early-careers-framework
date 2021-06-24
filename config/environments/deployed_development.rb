@@ -97,6 +97,9 @@ Rails.application.configure do
   logger.formatter = config.log_formatter
   config.logger = ActiveSupport::TaggedLogging.new(logger)
 
+  # Remove colour codes from debug logging
+  config.colorize_logging = false
+
   # Use Lograge for cleaner logging
   config.lograge.enabled = true
   config.lograge.base_controller_class = ["ActionController::API", "ActionController::Base"]
