@@ -69,15 +69,19 @@
 
 {{/* The test to display in the pretext */}}
 {{ define "slack.monzo.pretext" -}}
-    {{ range .Alerts }}
-        {{- if .Annotations.summary }}
-          {{- if eq .CommonLabels.severity "high" -}}
-            <!channel> *{{ .Annotations.summary }}*
-          {{- else -}}
-            *{{ .Annotations.summary }}*
-          {{- end }}
+    {{ if eq .CommonLabels.severity "high" }}
+        {{ range .Alerts }}
+            {{- if .Annotations.summary }}
+              <!channel> *{{ .Annotations.summary }}*
+            {{- end }}
         {{- end }}
-    {{- end }}
+    {{else}}
+        {{ range .Alerts }}
+            {{- if .Annotations.summary }}
+              *{{ .Annotations.summary }}*
+            {{- end }}
+        {{- end }}
+    {{ end }}
 {{- end }}
 
 
