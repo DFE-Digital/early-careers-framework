@@ -29,6 +29,8 @@ Rails.application.routes.draw do
 
   get "/check-account", to: "check_account#show"
 
+  resource :csp_reports, only: %i[create]
+
   resource :cookies, only: %i[show update]
   resource :privacy_policy, only: %i[show update], path: "privacy-policy"
   resource :accessibility_statement, only: :show, path: "accessibility-statement"
