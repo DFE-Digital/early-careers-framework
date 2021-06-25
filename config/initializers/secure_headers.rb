@@ -12,8 +12,8 @@ SecureHeaders::Configuration.default do |config|
   google_analytics = %w[www.google-analytics.com ssl.google-analytics.com *.googletagmanager.com tagmanager.google.com *.googleusercontent.com *.gstatic.com]
 
   config.csp = {
-    default_src: %w['self' http: https: data: 'unsafe-inline'],
-    script_src: %w['self' http: https: 'unsafe-inline'],
+    default_src: %w[* data: 'unsafe-inline'],
+    script_src: %w[* 'unsafe-inline'],
   }
 
   config.csp_report_only = {
