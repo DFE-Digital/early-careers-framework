@@ -29,6 +29,8 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
               date_of_birth: "1990-12-13",
               school_urn: "123456",
               headteacher_status: "no",
+              eligible_for_funding: true,
+              funding_choice: "school",
             },
             relationships: {
               user: {
@@ -70,6 +72,8 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
         expect(profile.school_urn).to eql("123456")
         expect(profile.headteacher_status).to eql("no")
         expect(profile.npq_course).to eql(npq_course)
+        expect(profile.eligible_for_funding).to eql(true)
+        expect(profile.funding_choice).to eql("school")
       end
 
       it "returns a 201" do
@@ -98,6 +102,8 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
           :headteacher_status,
           :date_of_birth,
           :school_urn,
+          :eligible_for_funding,
+          :funding_choice,
         )
       end
     end

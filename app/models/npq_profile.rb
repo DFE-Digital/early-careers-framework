@@ -10,4 +10,11 @@ class NpqProfile < ApplicationRecord
     yes_in_first_two_years: "yes_in_first_two_years",
     yes_over_two_years: "yes_over_two_years",
   }
+
+  enum funding_choice: {
+    school: "school",
+    trust: "trust",
+    self: "self",
+    another: "another",
+  }
 end
