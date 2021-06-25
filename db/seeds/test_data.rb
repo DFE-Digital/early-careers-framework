@@ -87,7 +87,7 @@ School.find_or_create_by!(urn: "000005") do |school|
   end
   SchoolCohort.find_or_create_by!(cohort: Cohort.current, school: school, induction_programme_choice: "full_induction_programme")
   delivery_partner = DeliveryPartner.find_or_create_by!(name: "Test Delivery Partner")
-  partnership = Partnership.find_or_create_by!(cohort: Cohort.current, delivery_partner: delivery_partner, school: school, lead_provider: LeadProvider.first, challenge_deadline: 2.weeks.from_now)
+  partnership = Partnership.find_or_create_by!(cohort: Cohort.current, delivery_partner: delivery_partner, school: school, lead_provider: LeadProvider.find_by(name: "Ambition"), challenge_deadline: 2.weeks.from_now)
   PartnershipNotificationEmail.find_or_create_by!(
     partnership: partnership,
     sent_to: "cpd-pentest-4#{DOMAIN}",
