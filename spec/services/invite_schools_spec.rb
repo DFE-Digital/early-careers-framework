@@ -201,6 +201,43 @@ RSpec.describe InviteSchools do
     end
   end
 
+  describe "#send_beta_chasers" do
+    let(:beta_school_without_participants) { create(:school) }
+    let!(:expected_induction_coordinator) { create(:user, :induction_coordinator, school_ids: [beta_school_without_participants.id]) }
+    let(:beta_school_with_ect) { create(:school) }
+    let(:beta_school_with_mentor) { create(:school) }
+    let(:non_beta_school) { create(:school) }
+    let!(:unexpected_induction_coordinator) { create(:user, :induction_coordinator, school_ids: [beta_school_with_ect.id, beta_school_with_mentor.id, non_beta_school.id]) }
+
+    before do
+      create(:user, :early_career_teacher, school: beta_school_with_ect)
+      create(:user, :mentor, school: beta_school_with_mentor)
+      FeatureFlag.activate(:induction_tutor_manage_participants, for: beta_school_with_ect)
+      FeatureFlag.activate(:induction_tutor_manage_participants, for: beta_school_with_mentor)
+      FeatureFlag.activate(:induction_tutor_manage_participants, for: beta_school_without_participants)
+      create(:user, :early_career_teacher, school: non_beta_school)
+    end
+
+    it "sends emails to beta schools without participants" do
+      InviteSchools.new.send_beta_chasers
+      expect(SchoolMailer).to delay_email_delivery_of(:beta_invite_email)
+                                .with(hash_including(
+                                        recipient: expected_induction_coordinator.email,
+                                        name: expected_induction_coordinator.full_name,
+                                        school_name: beta_school_without_participants.name,
+                                      ))
+    end
+
+    it "does not send emails to other types of school" do
+      InviteSchools.new.send_beta_chasers
+      expect(SchoolMailer).not_to delay_email_delivery_of(:beta_invite_email)
+                                .with(hash_including(
+                                        recipient: unexpected_induction_coordinator.email,
+                                        name: unexpected_induction_coordinator.full_name,
+                                      ))
+    end
+  end
+
   describe "#invite_mats" do
     context "when the is an induction coordinator" do
       let(:induction_coordinator) { create(:user, :induction_coordinator) }
