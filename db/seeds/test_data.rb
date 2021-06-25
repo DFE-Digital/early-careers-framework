@@ -225,9 +225,11 @@ bpn = LeadProvider.find_by(name: "Best Practice Network")
 User.find_or_create_by!(email: "cpd-pentest-7#{DOMAIN}") do |user|
   user.update!(full_name: "Lead ProviderUser1")
   LeadProviderProfile.find_or_create_by!(user: user, lead_provider: ambition)
+  LeadProviderApiToken.create!(lead_provider: ambition, hashed_token: "bfb452de196962338cd45dffc96060df2da6b397c3d9c9a0e4b4ec927695f12d")
 end
 
 User.find_or_create_by!(email: "cpd-pentest-8#{DOMAIN}") do |user|
   user.update!(full_name: "Lead ProviderUser2")
   LeadProviderProfile.find_or_create_by!(user: user, lead_provider: bpn)
+  LeadProviderApiToken.create!(lead_provider: bpn, hashed_token: "f47af3fcff81205f908854fc8db2bd2c175ccb781936f24a153471a871a7a620")
 end
