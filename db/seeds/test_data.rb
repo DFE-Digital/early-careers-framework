@@ -233,3 +233,6 @@ User.find_or_create_by!(email: "cpd-pentest-8#{DOMAIN}") do |user|
   LeadProviderProfile.find_or_create_by!(user: user, lead_provider: bpn)
   LeadProviderApiToken.create!(lead_provider: bpn, hashed_token: "f47af3fcff81205f908854fc8db2bd2c175ccb781936f24a153471a871a7a620")
 end
+
+FeatureFlag.activate(:participant_data_api)
+FeatureFlag.activate(:induction_tutor_manage_participants)
