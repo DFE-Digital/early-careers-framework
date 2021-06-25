@@ -36,7 +36,7 @@ class Nominations::RequestNominationInviteController < ApplicationController
       redirect_to not_eligible_request_nomination_invite_path
     elsif @nomination_request_form.school.registered?
       redirect_to already_nominated_request_nomination_invite_path
-    elsif @nomination_request_form.email_limit_reached?
+    elsif @nomination_request_form.reached_email_limit.present?
       redirect_to limit_reached_request_nomination_invite_path
     else
       redirect_to review_request_nomination_invite_path
@@ -49,7 +49,9 @@ class Nominations::RequestNominationInviteController < ApplicationController
 
   def already_nominated; end
 
-  def limit_reached; end
+  def limit_reached
+    @limit = @nomination_request_form.reached_email_limit
+  end
 
   def review; end
 

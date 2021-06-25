@@ -91,55 +91,44 @@ RSpec.describe InviteSchools do
     end
   end
 
-  describe "#sent_email_recently?" do
-    it "is false when the school has not been emailed" do
-      expect(invite_schools.sent_email_recently?(school)).to eq false
+  describe "#reached_limit" do
+    subject { invite_schools.reached_limit(school) }
+
+    context "when the school has not been emailed yet" do
+      it { is_expected.to be_nil }
     end
 
-    context "when the school has been emailed more than 24 hours ago" do
+    context "when the school has been emailed more than 5 minutes ago" do
       before do
-        create(:nomination_email, school: school, sent_at: 25.hours.ago)
+        create(:nomination_email, school: school, sent_at: 6.minutes.ago)
       end
 
-      it "returns false" do
-        expect(invite_schools.sent_email_recently?(school)).to eq false
-      end
+      it { is_expected.to be nil }
     end
 
-    context "when the school has been emailed within the last 24 hours" do
+    context "when the school has been emailed within the last 5 minutes" do
       before do
-        create(:nomination_email, school: school)
+        create(:nomination_email, school: school, sent_at: 4.minutes.ago)
       end
 
-      it "returns true" do
-        expect(invite_schools.sent_email_recently?(school)).to eq true
-      end
+      it { is_expected.to eq(max: 1, within: 5.minutes) }
     end
 
-    context "when the school has been emailed more than one" do
+    context "when the school has been emailed four times in the last 24 hours" do
       before do
-        create(:nomination_email, school: school, sent_at: 5.days.ago)
+        create_list(:nomination_email, 4, school: school, sent_at: 22.hours.ago)
       end
 
-      context "and have been emailed within the last 24 hours" do
-        before do
-          create(:nomination_email, school: school)
-        end
+      it { is_expected.to be nil }
+    end
 
-        it "returns true" do
-          expect(invite_schools.sent_email_recently?(school)).to eq true
-        end
+    context "when the school has been emailed five times in the last 24 hours" do
+      before do
+        create_list(:nomination_email, 4, school: school, sent_at: 22.hours.ago)
+        create(:nomination_email, school: school, sent_at: 3.minutes.ago)
       end
 
-      context "and the school has not been emailed within the last 24 hours" do
-        before do
-          create(:nomination_email, school: school, sent_at: 25.hours.ago)
-        end
-
-        it "returns false" do
-          expect(invite_schools.sent_email_recently?(school)).to eq false
-        end
-      end
+      it { is_expected.to eq(max: 5, within: 24.hours) }
     end
   end
 

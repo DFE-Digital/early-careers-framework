@@ -26,14 +26,14 @@ class NominationRequestForm
     School.find(school_id)
   end
 
-  def email_limit_reached?
-    invite_schools_service.sent_email_recently?(school)
+  def reached_email_limit
+    invite_schools_service.reached_limit(school)
   end
 
   def save!
     if valid?(:save)
       ActiveRecord::Base.transaction do
-        raise TooManyEmailsError if email_limit_reached?
+        raise TooManyEmailsError if reached_email_limit
 
         invite_schools_service.run([school.urn])
       end

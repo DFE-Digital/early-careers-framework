@@ -52,10 +52,22 @@ Feature: Resend nominations flow
     Then the page should be accessible
     And percy should be sent snapshot called "Resend nominations already nominated page"
 
-    When I am on "resend nominations limit reached" page
-    Then the page should be accessible
-    And percy should be sent snapshot called "Resend nominations limit reached page"
-
     When I am on "resend nominations cip only" page
     Then the page should be accessible
     And percy should be sent snapshot called "Resend nominations cip only page"
+
+  Scenario: Resending limits
+    Given scenario "school_with_local_authority" has been run
+    And scenario "nomination_limit_reached" has been run
+    When I am on "resend nominations start" page
+    And I click on "link" containing "Continue"
+    And I type "test" into "location input"
+    And I click on "autocomplete dropdown item" containing "Test"
+    And I click the submit button
+    And I type "test" into "school input"
+    And I click on "autocomplete dropdown item" containing "Test"
+    And I click the submit button
+
+    Then I should be on "resend nominations limit reached" page
+    Then the page should be accessible
+    And percy should be sent snapshot called "Resend nominations limit reached page"
