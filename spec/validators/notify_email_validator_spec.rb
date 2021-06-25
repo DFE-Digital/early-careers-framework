@@ -43,6 +43,7 @@ RSpec.describe NotifyEmailValidator do
       '"quoted@domain.com"',
       "lots-of-dots@domain..gov..uk",
       "two-dots..in-local@domain.com",
+      "trailing-dot-in-domain@domain.com.",
       "multiple@domains@domain.com",
       "spaces in local@domain.com",
       "spaces-in-domain@dom ain.com",
