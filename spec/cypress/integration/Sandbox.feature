@@ -13,5 +13,4 @@ Feature: Sandbox landing page
     Given I am on "the sandbox landing page" page
     When I click on "link" containing "Review our API documentation"
     Then I should be on "API Documentation" page
-    And the page should be accessible
     And percy should be sent snapshot
