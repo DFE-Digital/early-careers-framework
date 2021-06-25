@@ -8,7 +8,9 @@ module Api
                  :teacher_reference_number_verified,
                  :active_alert,
                  :school_urn,
-                 :headteacher_status
+                 :headteacher_status,
+                 :eligible_for_funding,
+                 :funding_choice
 
       has_one :user
       has_one :npq_lead_provider
