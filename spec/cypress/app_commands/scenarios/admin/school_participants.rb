@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 school = FactoryBot.create(:school, name: "Test School", slug: "test-school")
-cohort = FactoryBot.create(:cohort, start_year: 2021)
+cohort = Cohort.find_or_create_by!(start_year: 2021)
 
 user_1 = FactoryBot.create(:user, :mentor, full_name: "Mentor User 1")
 user_1.mentor_profile.update!(school: school, cohort: cohort)
