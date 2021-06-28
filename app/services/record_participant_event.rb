@@ -59,7 +59,7 @@ private
   end
 
   def validate_provider!
-    raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless actual_lead_provider.nil? || lead_provider == actual_lead_provider
+    raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless actual_lead_provider.nil? || @params[:lead_provider] == actual_lead_provider
   end
 
   def required_params

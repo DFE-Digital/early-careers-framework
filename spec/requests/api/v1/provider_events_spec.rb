@@ -8,6 +8,15 @@ RSpec.describe "Participant Declarations", type: :request do
     let(:token) { LeadProviderApiToken.create_with_random_token!(lead_provider: lead_provider) }
     let(:bearer_token) { "Bearer #{token}" }
     let(:payload) { create(:early_career_teacher_profile) }
+    let(:delivery_partner) { create(:delivery_partner) }
+    let!(:school_cohort) { create(:school_cohort, school: payload.school, cohort: payload.cohort) }
+    let!(:partnership) do
+      create(:partnership,
+             school: payload.school,
+             lead_provider: lead_provider,
+             cohort: payload.cohort,
+             delivery_partner: delivery_partner)
+    end
     let(:params) do
       {
         participant_id: payload.user_id,
