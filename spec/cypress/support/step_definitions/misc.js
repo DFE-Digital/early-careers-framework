@@ -15,3 +15,7 @@ Then("percy should be sent snapshot", () => {
 Then("percy should be sent snapshot called {string}", (name) => {
   cy.percySnapshot(name);
 });
+
+Then("the Swagger documentation should be visible", () => {
+  cy.get("section.models").should("be.visible");
+});

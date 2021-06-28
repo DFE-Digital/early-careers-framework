@@ -22,7 +22,7 @@ SecureHeaders::Configuration.default do |config|
     font_src: %w['self' *.gov.uk fonts.gstatic.com],
     form_action: %w['self'],
     frame_ancestors: %w['self'],
-    frame_src: %w['self'],
+    frame_src: %w['self'] + google_analytics,
     img_src: %W['self' data: *.gov.uk] + google_analytics,
     manifest_src: %w['self'],
     media_src: %w['self'],
