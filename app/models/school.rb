@@ -2,10 +2,7 @@
 
 class School < ApplicationRecord
   extend FriendlyId
-
-  ELIGIBLE_TYPE_CODES = [1, 2, 3, 5, 6, 7, 8, 12, 14, 15, 18, 28, 31, 32, 33, 34, 35, 36, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48].freeze
-  CIP_ONLY_TYPE_CODES = [10, 11, 30, 37].freeze
-  ELIGIBLE_STATUS_CODES = [1, 3].freeze
+  include GiasHelpers
 
   friendly_id :slug_candidates
 
@@ -37,8 +34,6 @@ class School < ApplicationRecord
   has_many :mentors, through: :mentor_profiles, source: :user
 
   has_many :additional_school_emails
-
-  scope :eligible, -> { open.eligible_establishment_type.in_england }
 
   scope :with_local_authority, lambda { |local_authority|
     joins(%i[school_local_authorities local_authorities])
@@ -156,23 +151,7 @@ class School < ApplicationRecord
 
 private
 
-  def open?
-    ELIGIBLE_STATUS_CODES.include?(school_status_code)
-  end
-
-  def eligible_establishment_type?
-    ELIGIBLE_TYPE_CODES.include?(school_type_code)
-  end
-
   def cip_only_establishment_type?
     CIP_ONLY_TYPE_CODES.include?(school_type_code)
   end
-
-  def in_england?
-    administrative_district_code.match?(/^[Ee]/)
-  end
-
-  scope :open, -> { where(school_status_code: ELIGIBLE_STATUS_CODES) }
-  scope :eligible_establishment_type, -> { where(school_type_code: ELIGIBLE_TYPE_CODES) }
-  scope :in_england, -> { where("administrative_district_code ILIKE 'E%'") }
 end
