@@ -26,7 +26,7 @@ RSpec.describe RecordParticipantEvent do
   end
 
   context "when lead providers don't match" do
-    it "should make recording participant event raise an error" do
+    it "raises a ParameterMissing error" do
       expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing)
     end
   end
