@@ -25,4 +25,9 @@ namespace :schools do
   task :invite_mats, [:school_urns] => :environment do |_task, args|
     InviteSchools.new.invite_mats(args.school_urns.split)
   end
+
+  desc "Send nomination links to federation schools"
+  task :invite_federations, [:school_urns] => :environment do |_task, args|
+    InviteSchools.new.invite_federations(args.school_urns.split)
+  end
 end

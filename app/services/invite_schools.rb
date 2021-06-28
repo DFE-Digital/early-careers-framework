@@ -113,25 +113,11 @@ class InviteSchools
   end
 
   def invite_mats(school_urns)
-    school_urns.each do |urn|
-      school = find_eligible_school(urn)
-      next if school.nil?
+    invite_group(school_urns, :send_mat_invite_email)
+  end
 
-      if school.contact_email.blank?
-        logger.info "No contact details for school urn: #{urn} ... skipping"
-        next
-      end
-
-      nomination_email = NominationEmail.create_nomination_email(
-        sent_at: Time.zone.now,
-        sent_to: school.contact_email,
-        school: school,
-      )
-
-      delay(queue: "mailers", priority: 1).send_mat_invite_email(nomination_email)
-    rescue StandardError
-      logger.info "Error emailing school, urn: #{urn} ... skipping"
-    end
+  def invite_federations(school_urns)
+    invite_group(school_urns, :send_federation_invite_email)
   end
 
 private
@@ -183,8 +169,40 @@ private
     NominationEmail::NOMINATION_EXPIRY_TIME.from_now.strftime("%d/%m/%Y")
   end
 
+  def invite_group(school_urns, send_method)
+    school_urns.each do |urn|
+      school = find_eligible_school(urn)
+      next if school.nil?
+
+      if school.contact_email.blank?
+        logger.info "No contact details for school urn: #{urn} ... skipping"
+        next
+      end
+
+      nomination_email = NominationEmail.create_nomination_email(
+        sent_at: Time.zone.now,
+        sent_to: school.contact_email,
+        school: school,
+      )
+
+      delay(queue: "mailers", priority: 1).__send__(send_method, nomination_email)
+    rescue StandardError
+      logger.info "Error emailing school, urn: #{urn} ... skipping"
+    end
+  end
+
   def send_mat_invite_email(nomination_email)
     notify_id = SchoolMailer.mat_invite_email(
+      recipient: nomination_email.sent_to,
+      school_name: nomination_email.school.name,
+      nomination_url: nomination_email.nomination_url,
+    ).deliver_now.delivery_method.response.id
+
+    nomination_email.update!(notify_id: notify_id)
+  end
+
+  def send_federation_invite_email(nomination_email)
+    notify_id = SchoolMailer.federation_invite_email(
       recipient: nomination_email.sent_to,
       school_name: nomination_email.school.name,
       nomination_url: nomination_email.nomination_url,
