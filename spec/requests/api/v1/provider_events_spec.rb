@@ -49,7 +49,7 @@ RSpec.describe "Participant Declarations", type: :request do
           post "/api/v1/participant-declarations", params: params.to_json
         }.to change(ParticipantDeclaration, :count).by(1)
         expect(response.status).to eq 200
-        expect(parsed_response["id"]).to eq(ParticipantDeclaration.last.id)
+        expect(parsed_response["id"]).to eq(ParticipantDeclaration.order(:created_at).last.id)
       end
 
       it "returns 422 when trying to create for an invalid user id" do # Expectes the user uuid. Pass the early_career_teacher_profile_id
