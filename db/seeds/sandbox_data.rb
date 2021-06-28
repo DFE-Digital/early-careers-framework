@@ -21,7 +21,6 @@ def generate_provider_token(lead_provider, school, cohort, logger)
     user_uuids = 10.times.each_with_object([]) do |_i, uuids|
       mentor = User.create!(full_name: Faker::Name.name, email: Faker::Internet.email)
       mentor_profile = MentorProfile.create!(user: mentor, school: school, cohort: cohort)
-      uuids << mentor.id
 
       ect = User.create!(full_name: Faker::Name.name, email: Faker::Internet.email)
       EarlyCareerTeacherProfile.create!(user: ect, school: school, cohort: cohort, mentor_profile: mentor_profile)
