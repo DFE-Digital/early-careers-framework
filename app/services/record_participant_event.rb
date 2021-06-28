@@ -18,11 +18,9 @@ class RecordParticipantEvent
   def call
     validate_schema!
     add_ect_profile_params!
-    return :unprocessable_entity unless create_record
-
+    declaration = create_record!
     validate_provider!
-
-    :no_content
+    { id: declaration.id }
   end
 
 private
@@ -50,8 +48,8 @@ private
     User.find_by(id: @params[:participant_id])&.early_career_teacher_profile
   end
 
-  def create_record
-    ParticipantDeclaration.create(@params.slice(*required_params))
+  def create_record!
+    ParticipantDeclaration.create!(@params.slice(*required_params))
   end
 
   def lead_provider

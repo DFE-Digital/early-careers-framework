@@ -37,14 +37,19 @@ RSpec.describe "Participant Declarations", type: :request do
     let(:parsed_response) { JSON.parse(response.body) }
 
     context "when authorized" do
+      let(:parsed_response) { JSON.parse(response.body) }
+
       before do
         default_headers[:Authorization] = bearer_token
         default_headers[:CONTENT_TYPE] = "application/json"
       end
 
-      it "returns 204 status when successful" do
-        post "/api/v1/participant-declarations", params: params.to_json
-        expect(response.status).to eq 204
+      it "create declaration record and return id when successful" do
+        expect {
+          post "/api/v1/participant-declarations", params: params.to_json
+        }.to change(ParticipantDeclaration, :count).by(1)
+        expect(response.status).to eq 200
+        expect(parsed_response["id"]).to eq(ParticipantDeclaration.order(:created_at).last.id)
       end
 
       it "returns 422 when trying to create for an invalid user id" do # Expectes the user uuid. Pass the early_career_teacher_profile_id
