@@ -54,6 +54,10 @@ private
     ParticipantDeclaration.create(@params.slice(*required_params))
   end
 
+  def lead_provider
+    params[:lead_provider]
+  end
+
   def actual_lead_provider
     SchoolCohort.find_by(school: early_career_teacher_profile.school, cohort: early_career_teacher_profile.cohort)&.lead_provider
   end
