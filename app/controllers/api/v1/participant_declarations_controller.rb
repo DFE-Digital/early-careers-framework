@@ -7,15 +7,14 @@ module Api
 
       def create
         params = HashWithIndifferentAccess.new({ raw_event: request.raw_post, lead_provider: current_user }).merge(permitted_params)
-        return head(RecordParticipantEvent.call(params)) if check_config(params)
-
-        raise ActionController::ParameterMissing, missing_params(params)
+        validate_params!(params)
+        head(RecordParticipantEvent.call(params))
       end
 
     private
 
-      def check_config(params)
-        missing_params(params).empty?
+      def validate_params!(params)
+        raise ActionController::ParameterMissing, missing_params(params) unless missing_params(params).empty?
       end
 
       def missing_params(params)
