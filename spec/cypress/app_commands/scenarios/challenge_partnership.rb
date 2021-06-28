@@ -2,7 +2,7 @@
 
 school = FactoryBot.create(:school, name: "Test school", slug: "111111-test-school")
 delivery_partner = FactoryBot.create(:delivery_partner, name: "Test delivery partner")
-cohort = FactoryBot.create(:cohort, start_year: 2021)
+cohort = Cohort.find_or_create_by!(start_year: 2021)
 user = FactoryBot.create(:user, :induction_coordinator, schools: [school], email: "test-subject@example.com")
 partnership = FactoryBot.create(:partnership, :in_challenge_window, school: school, cohort: cohort, delivery_partner: delivery_partner)
 SchoolCohort.create!(school: school, cohort: cohort, induction_programme_choice: "full_induction_programme")

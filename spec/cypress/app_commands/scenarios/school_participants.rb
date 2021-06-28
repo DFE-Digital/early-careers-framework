@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-cohort = FactoryBot.create(:cohort, start_year: 2021)
+cohort = Cohort.find_or_create_by!(start_year: 2021)
 school = FactoryBot.create(:school, name: "Hogwarts Academy", slug: "111111-hogwarts-academy")
 
 FactoryBot.create(:school_cohort, cohort: cohort, school: school, induction_programme_choice: "full_induction_programme")

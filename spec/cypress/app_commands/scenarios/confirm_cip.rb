@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-cohort = FactoryBot.create(:cohort, start_year: 2021)
+cohort = Cohort.find_or_create_by!(start_year: 2021)
 
 unconfirmed_school = FactoryBot.create(:school, name: "Test Town Primary", slug: "test-town-primary")
 FactoryBot.create(:user, :induction_coordinator, email: "confirm-provider@example.com", school_ids: [unconfirmed_school.id])

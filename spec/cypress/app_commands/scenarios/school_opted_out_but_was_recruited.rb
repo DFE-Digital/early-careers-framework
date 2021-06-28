@@ -12,7 +12,7 @@ SchoolCohort.create!(school: school,
                      cohort: Cohort.current)
 
 FactoryBot.create(:partnership,
-                  :in_challenge_window,
+                  challenge_deadline: Time.utc(2099, 1, 1),
                   delivery_partner: delivery_partner,
                   lead_provider: lead_provider,
                   school: school,
