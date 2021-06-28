@@ -13,6 +13,13 @@ class RecordParticipantEvent
     def required_params
       %i[participant_id lead_provider declaration_type declaration_date raw_event]
     end
+
+    def user_type_profile_recorders
+      {
+        early_career_teacher_profile: EarlyCareerTeacherProfileDeclaration,
+        mentor_profile: MentorProfileDeclaration,
+      }
+    end
   end
 
   def call
@@ -27,6 +34,7 @@ private
 
   def initialize(params)
     @params = params
+    @params[:user_id] = params[:participant_id]
   end
 
   def validate_schema!
@@ -39,17 +47,47 @@ private
   end
 
   def add_ect_profile_params!
-    raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless early_career_teacher_profile
-
-    @params[:early_career_teacher_profile] = early_career_teacher_profile
+    raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless user && profile_type
   end
 
-  def early_career_teacher_profile
-    User.find_by(id: @params[:participant_id])&.early_career_teacher_profile
+  def user_id
+    params[:user_id]
   end
 
-  def create_record!
-    ParticipantDeclaration.create!(@params.slice(*required_params))
+  def user
+    @user ||= User.find_by(id: user_id)
+  end
+
+  def profile_type
+    if user.early_career_teacher?
+      :early_career_teacher_profile
+    elsif user.mentor?
+      :mentor_profile
+    else
+      false
+    end
+  end
+
+  def user_profile
+    case
+    when user.early_career_teacher?
+      user.early_career_teacher_profile
+    when user.mentor?
+      user.mentor_profile
+    else
+      false
+    end
+  end
+
+  def create_record
+    ActiveRecord::Base.transaction do
+      participant_declaration = ParticipantDeclaration.create(params.slice(*required_params))
+      ProfileDeclaration.create!(
+        participant_declaration: participant_declaration,
+        lead_provider: lead_provider,
+        declarable: self.class.user_type_profile_recorders[profile_type].new(profile_type=>user_profile)
+      )
+    end
   end
 
   def lead_provider
@@ -65,6 +103,6 @@ private
   end
 
   def required_params
-    (self.class.required_params - [:participant_id]) << :early_career_teacher_profile
+    (self.class.required_params - [:participant_id] + [:user_id])
   end
 end

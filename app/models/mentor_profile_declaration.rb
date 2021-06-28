@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-class MentorProfileDeclaration < ParticipantProfile
-  include Declarable
-
+class MentorProfileDeclaration < ApplicationRecord
+  has_one :profile_declaration, as: :declarable, touch: true
   belongs_to :mentor_profile
 
   scope :unique_id, -> { select(:mentor_profile_id).distinct }
+  scope :uplift, -> { joins(:mentor_profile).merge(MentorProfile.uplift) }
 end
