@@ -38,7 +38,7 @@ private
   end
 
   def validate_schema!
-    errors = JsonSchema::ValidateBodyAgainstSchema.call(schema: schema, body: @params[:raw_event])
+    errors = JsonSchema::ValidateBodyAgainstSchema.call(schema: schema, body: params[:raw_event])
     raise ActionController::ParameterMissing, (errors.map { |error| error.sub(/\sin schema.*$/, "") }) unless errors.empty?
   end
 
@@ -69,10 +69,9 @@ private
   end
 
   def user_profile
-    case
-    when user.early_career_teacher?
+    if user.early_career_teacher?
       user.early_career_teacher_profile
-    when user.mentor?
+    elsif user.mentor?
       user.mentor_profile
     else
       false
@@ -85,7 +84,7 @@ private
       ProfileDeclaration.create!(
         participant_declaration: participant_declaration,
         lead_provider: lead_provider,
-        declarable: self.class.user_type_profile_recorders[profile_type].new(profile_type=>user_profile)
+        declarable: self.class.user_type_profile_recorders[profile_type].new(profile_type => user_profile),
       )
     end
   end

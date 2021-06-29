@@ -10,4 +10,8 @@ class MentorProfile < ApplicationRecord
   has_many :early_career_teacher_profiles
   has_many :early_career_teachers, through: :early_career_teacher_profiles, source: :user
   has_many :mentor_profile_declarations
+
+  scope :sparsity, -> { where(sparsity_uplift: true) }
+  scope :pupil_premium, -> { where(pupil_premium_uplift: true) }
+  scope :uplift, -> { sparsity.or(pupil_premium) }
 end

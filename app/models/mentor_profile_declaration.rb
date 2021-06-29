@@ -2,7 +2,7 @@
 
 class MentorProfileDeclaration < ApplicationRecord
   belongs_to :mentor_profile
+  include Declarable
 
-  scope :unique_id, -> { select(:mentor_profile_id).distinct }
   scope :uplift, -> { joins(:mentor_profile).merge(MentorProfile.uplift) }
 end

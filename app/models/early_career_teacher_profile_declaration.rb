@@ -2,7 +2,7 @@
 
 class EarlyCareerTeacherProfileDeclaration < ApplicationRecord
   belongs_to :early_career_teacher_profile
+  include Declarable
 
-  scope :unique_id, -> { select(:early_career_teacher_profile_id).distinct }
   scope :uplift, -> { joins(:early_career_teacher_profile).merge(EarlyCareerTeacherProfile.uplift) }
 end
