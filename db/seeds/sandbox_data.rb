@@ -23,7 +23,7 @@ def generate_provider_token(lead_provider, school, cohort, logger)
       mentor_profile = MentorProfile.create!(user: mentor, school: school, cohort: cohort)
 
       ect = User.create!(full_name: Faker::Name.name, email: Faker::Internet.email)
-      EarlyCareerTeacherProfile.create!(user: ect, school: school, cohort: cohort, mentor_profile: mentor_profile)
+      ParticipantProfile::ECT.create!(user: ect, school: school, cohort: cohort, mentor_profile: mentor_profile)
       uuids << ect.id
     end
   end

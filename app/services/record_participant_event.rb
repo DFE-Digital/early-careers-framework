@@ -45,7 +45,7 @@ private
   end
 
   def early_career_teacher_profile
-    User.find_by(id: @params[:participant_id])&.early_career_teacher_profile
+    ParticipantProfile::ECT.find_by(user_id: params[:participant_id])
   end
 
   def create_record!

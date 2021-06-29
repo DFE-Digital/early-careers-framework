@@ -7,7 +7,7 @@
 
 <%= govuk_link_to "Add a new ECT or mentor", add_schools_participants_path, button: true %>
 
-<% if @participants.present? %>
+<% if @participant_profiles.any? %>
   <table class="govuk-table">
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
@@ -17,10 +17,10 @@
       </tr>
     </thead>
     <tbody class="govuk-table__body">
-      <% @participants.each do |participant| %>
+      <% @participant_profiles.each do |profile| %>
         <tr class="govuk-table__row">
-          <th scope="row" class="govuk-table__header"><%= govuk_link_to participant.full_name, schools_participant_path(id: participant) %></th>
-          <td class="govuk-table__cell"><%= t(participant.mentor? ? :mentor : :ect, scope: "schools.participants.type") %></td>
+          <th scope="row" class="govuk-table__header"><%= govuk_link_to profile.user.full_name, schools_participant_path(id: profile.user.id) %></th>
+          <td class="govuk-table__cell"><%= t(profile.mentor? ? :mentor : :ect, scope: "schools.participants.type") %></td>
           <td class="govuk-table__cell">
             <%= render GovukComponent::Tag.new(text: "Pending", colour: "grey") %>
           </td>

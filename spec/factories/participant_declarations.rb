@@ -9,17 +9,17 @@ FactoryBot.define do
 
     trait :sparsity_uplift do
       with_profile
-      association :early_career_teacher_profile, :sparsity_uplift
-    end
-
-    trait :pupil_premium_uplift do
-      with_profile
-      association :early_career_teacher_profile, :pupil_premium_uplift
+      association :early_career_teacher_profile, factory: %i[participant_profile ect sparsity_uplift]
     end
 
     trait :uplift_flags do
       with_profile
-      association :early_career_teacher_profile, :uplift_flags
+      association :early_career_teacher_profile, factory: %i[participant_profile ect uplift_flags]
+    end
+
+    trait :pupil_premium_uplift do
+      with_profile
+      association :early_career_teacher_profile, factory: %i[participant_profile ect pupil_premium_uplift]
     end
 
     trait :with_profile do

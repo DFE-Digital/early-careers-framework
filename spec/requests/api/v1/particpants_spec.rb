@@ -12,9 +12,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
 
     before :each do
       mentor = create(:user, :mentor, school: partnership.school, cohort: partnership.cohort)
-      2.times do
-        create(:user, :early_career_teacher, mentor: mentor, school: partnership.school, cohort: partnership.cohort)
-      end
+      create_list(:user, 2, :early_career_teacher, mentor: mentor, school: partnership.school, cohort: partnership.cohort)
     end
 
     context "when authorized" do
@@ -107,7 +105,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
         end
 
         it "returns the correct values" do
-          mentor = MentorProfile.first.user
+          mentor = ParticipantProfile::Mentor.first.user
           mentor_row = parsed_response.find { |row| row["id"] == mentor.id }
           expect(mentor_row).not_to be_nil
           expect(mentor_row["email"]).to eql mentor.email
@@ -117,7 +115,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           expect(mentor_row["participant_type"]).to eql "mentor"
           expect(mentor_row["cohort"]).to eql partnership.cohort.start_year.to_s
 
-          ect = EarlyCareerTeacherProfile.first.user
+          ect = ParticipantProfile::ECT.first.user
           ect_row = parsed_response.find { |row| row["id"] == ect.id }
           expect(ect_row).not_to be_nil
           expect(ect_row["email"]).to eql ect.email

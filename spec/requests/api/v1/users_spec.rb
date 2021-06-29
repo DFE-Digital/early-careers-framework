@@ -8,17 +8,21 @@ RSpec.describe "API Users", type: :request do
   let(:bearer_token) { "Bearer #{token}" }
 
   describe "#index" do
-    before :each do
-      # Heads up, for some reason the stored CIP IDs don't match
-      cip = create(:core_induction_programme, name: "Teach First")
-      school = create(:school)
-      school_cohort = create(:school_cohort, school: school)
-      mentor = create(:user, :mentor, school: school, cohort: school_cohort.cohort)
-      mentor.mentor_profile.update!(core_induction_programme: cip)
-      2.times do
-        ect = create(:user, :early_career_teacher, school: school, cohort: school_cohort.cohort)
-        ect.early_career_teacher_profile.update!(core_induction_programme: cip)
-      end
+    let(:cip) { create :core_induction_programme, name: "Teach First" }
+    let(:school_cohort) { create :school_cohort }
+    let!(:mentor_profile) do
+      create :participant_profile, :mentor,
+             school: school_cohort.school,
+             cohort: school_cohort.cohort,
+             core_induction_programme: cip
+    end
+
+    let!(:ect_profiles) do
+      create_list :participant_profile, 2, :ect,
+                  school: school_cohort.school,
+                  cohort: school_cohort.cohort,
+                  core_induction_programme: cip,
+                  mentor_profile: mentor_profile
     end
 
     context "when authorized" do

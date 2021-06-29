@@ -51,7 +51,7 @@ module Api
       def participants
         participants = User.participants_for_lead_provider(current_user)
                            .includes(
-                             early_career_teacher_profile: %i[cohort mentor school],
+                             early_career_teacher_profile: %i[cohort mentor_profile school],
                              mentor_profile: %i[cohort school],
                            )
 

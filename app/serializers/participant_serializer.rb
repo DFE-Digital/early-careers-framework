@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# TODO: This should serialize ParticipantProfile, not User
 class ParticipantSerializer
   include JSONAPI::Serializer
 
@@ -7,7 +8,7 @@ class ParticipantSerializer
   attributes :email, :full_name
 
   attributes :mentor_id do |user|
-    user&.early_career_teacher_profile&.mentor&.id
+    user&.early_career_teacher_profile&.mentor_profile&.user_id
   end
 
   attributes :school_urn do |user|

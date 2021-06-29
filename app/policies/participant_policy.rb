@@ -3,7 +3,7 @@
 class ParticipantPolicy < UserPolicy
   def index?
     return true if admin_only
-    return @record.all? { |participant| user_can_access?(participant) } if user.induction_coordinator?
+    return @record.all? { |participant_profile| user_can_access?(participant_profile) } if user.induction_coordinator?
   end
 
   def show?
@@ -18,9 +18,7 @@ class ParticipantPolicy < UserPolicy
 
 private
 
-  def user_can_access?(participant)
-    return false unless participant.participant?
-
-    user.schools.include?(participant.school)
+  def user_can_access?(participant_profile)
+    user.schools.include?(participant_profile.school)
   end
 end

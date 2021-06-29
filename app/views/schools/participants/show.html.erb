@@ -5,7 +5,7 @@
 ) %>
 
 <span class="govuk-caption-l"><%= @cohort.display_name %> cohort</span>
-<h1 class="govuk-heading-l"><%= @participant.full_name %> <%= render GovukComponent::Tag.new(text: "Not started", colour: "grey") %></h1>
+<h1 class="govuk-heading-l"><%= @participant_profile.user.full_name %> <%= render GovukComponent::Tag.new(text: "Not started", colour: "grey") %></h1>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -19,7 +19,7 @@
           Full name
         </dt>
         <dd class="govuk-summary-list__value">
-          <%= @participant.full_name %>
+          <%= @participant_profile.user.full_name %>
         </dd>
         <dd class="govuk-summary-list__actions">
         </dd>
@@ -29,7 +29,7 @@
           Email address
         </dt>
         <dd class="govuk-summary-list__value">
-          <%= @participant.email %>
+          <%= @participant_profile.user.email %>
         </dd>
         <dd class="govuk-summary-list__actions">
         </dd>
@@ -39,26 +39,27 @@
           Type
         </dt>
         <dd class="govuk-summary-list__value">
-          <%= @participant.user_description %>
+          <%# TODO: This should be just participant type based on profile type, not user description %>
+          <%= @participant_profile.user.user_description %>
         </dd>
         <dd class="govuk-summary-list__actions">
         </dd>
       </div>
 
-      <% if @participant.early_career_teacher? %>
+      <% if @participant_profile.ect? %>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">
             Mentor
           </dt>
           <dd class="govuk-summary-list__value">
-            <% if @mentor %>
-              <%= govuk_link_to @mentor.full_name, schools_participant_path(id: @mentor.id) %>
+            <% if @mentor_profile %>
+              <%= govuk_link_to @mentor_profile.user.full_name, schools_participant_path(id: @mentor_profile.user_id) %>
             <% else %>
               Not yet assigned
             <% end %>
           </dd>
           <dd class="govuk-summary-list__actions">
-            <%= govuk_link_to schools_participant_edit_mentor_path(participant_id: @participant.id) do %>
+            <%= govuk_link_to schools_participant_edit_mentor_path(participant_id: @participant_profile.user_id) do %>
               Change <span class="govuk-visually-hidden">mentor</span>
             <% end %>
           </dd>

@@ -6,7 +6,7 @@ module EarlyCareerTeachers
       ActiveRecord::Base.transaction do
         # TODO: What if email matches but with different name?
         user = User.find_or_create_by!(full_name: full_name, email: email)
-        EarlyCareerTeacherProfile.create!({ user: user }.merge(ect_attributes))
+        ParticipantProfile::ECT.create!({ user: user }.merge(ect_attributes))
       end
     end
 

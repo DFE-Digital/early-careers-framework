@@ -30,10 +30,13 @@ class School < ApplicationRecord
   has_many :induction_coordinator_profiles, through: :induction_coordinator_profiles_schools
   has_many :induction_coordinators, through: :induction_coordinator_profiles, source: :user
 
-  has_many :early_career_teacher_profiles
+  has_many :participant_profiles
+
+  # TODO: Legacy
+  has_many :early_career_teacher_profiles, class_name: "ParticipantProfile::ECT"
   has_many :early_career_teachers, through: :early_career_teacher_profiles, source: :user
 
-  has_many :mentor_profiles
+  has_many :mentor_profiles, class_name: "ParticipantProfile::Mentor"
   has_many :mentors, through: :mentor_profiles, source: :user
 
   has_many :additional_school_emails
@@ -74,7 +77,7 @@ class School < ApplicationRecord
   end
 
   def early_career_teacher_profiles_for(year)
-    early_career_teacher_profiles.joins(:cohort).where(cohort: { start_year: year })
+    participant_profiles.ects.where(cohort_id: Cohort.where(start_year: year).select(:id))
   end
 
   def full_address

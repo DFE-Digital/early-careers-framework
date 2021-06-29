@@ -7,7 +7,7 @@ module Admin
     before_action :set_school
 
     def index
-      @participants = User.order(:full_name).is_participant.in_school(@school.id)
+      @participant_profiles = @school.participant_profiles
     end
 
   private

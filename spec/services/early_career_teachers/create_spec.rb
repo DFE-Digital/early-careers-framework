@@ -10,7 +10,8 @@ RSpec.describe EarlyCareerTeachers::Create do
   let(:mentor_profile) { create :mentor_profile }
 
   it "creates an Early Career Teacher Profile record" do
-    expect { described_class.call(email: user.email, full_name: user.full_name, school_id: school.id, cohort_id: cohort.id, mentor_profile_id: mentor_profile.id) }.to change { EarlyCareerTeacherProfile.count }.by(1)
+    expect { described_class.call(email: user.email, full_name: user.full_name, school_id: school.id, cohort_id: cohort.id, mentor_profile_id: mentor_profile.id) }
+      .to change { ParticipantProfile::ECT.count }.by(1)
   end
 
   it "sets the correct mentor profile" do

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_29_104700) do
+ActiveRecord::Schema.define(version: 2021_06_29_170845) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -615,15 +615,15 @@ ActiveRecord::Schema.define(version: 2021_06_29_104700) do
   add_foreign_key "nomination_emails", "partnership_notification_emails"
   add_foreign_key "nomination_emails", "schools"
   add_foreign_key "participant_bands", "call_off_contracts"
-  add_foreign_key "participant_declarations", "early_career_teacher_profiles"
   add_foreign_key "participant_declarations", "lead_providers"
+  add_foreign_key "participant_declarations", "participant_profiles", column: "early_career_teacher_profile_id"
   add_foreign_key "participant_profiles", "cohorts"
   add_foreign_key "participant_profiles", "core_induction_programmes"
-  add_foreign_key "participant_profiles", "mentor_profiles"
+  add_foreign_key "participant_profiles", "participant_profiles", column: "mentor_profile_id"
   add_foreign_key "participant_profiles", "schools"
   add_foreign_key "participant_profiles", "users"
-  add_foreign_key "participation_records", "early_career_teacher_profiles"
   add_foreign_key "participation_records", "lead_providers"
+  add_foreign_key "participation_records", "participant_profiles", column: "early_career_teacher_profile_id"
   add_foreign_key "partnership_notification_emails", "partnerships"
   add_foreign_key "partnerships", "cohorts"
   add_foreign_key "partnerships", "delivery_partners"

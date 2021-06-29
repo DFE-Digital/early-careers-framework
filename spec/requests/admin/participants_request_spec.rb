@@ -6,16 +6,9 @@ RSpec.describe "Admin::Participants", type: :request do
   let(:admin_user) { create(:user, :admin) }
   let(:cohort) { create(:cohort) }
   let(:school) { create(:school) }
-  let!(:mentor_user) do
-    user = create(:user, :mentor)
-    user.mentor_profile.update!(school: school)
-    user
-  end
-  let!(:ect_user) do
-    user = create(:user, :early_career_teacher)
-    user.early_career_teacher_profile.update!(school: school, cohort: cohort, mentor_profile: mentor_user.mentor_profile)
-    user
-  end
+
+  let!(:mentor_profile) { create :participant_profile, :mentor }
+  let!(:ect_profile) { create :participant_profile, :ect, mentor_profile: mentor_profile }
 
   before do
     sign_in admin_user
@@ -23,14 +16,14 @@ RSpec.describe "Admin::Participants", type: :request do
 
   describe "GET /admin/participants/:id" do
     it "renders the show template" do
-      get "/admin/participants/#{mentor_user.id}"
+      get "/admin/participants/#{mentor_profile.user.id}"
       expect(response).to render_template("admin/participants/show")
     end
 
     it "shows the correct participant" do
-      get "/admin/participants/#{ect_user.id}"
-      expect(response.body).to include(CGI.escapeHTML(ect_user.full_name))
-      expect(response.body).to include(CGI.escapeHTML(mentor_user.full_name))
+      get "/admin/participants/#{ect_profile.user.id}"
+      expect(response.body).to include(CGI.escapeHTML(ect_profile.user.full_name))
+      expect(response.body).to include(CGI.escapeHTML(mentor_profile.user.full_name))
     end
   end
 end

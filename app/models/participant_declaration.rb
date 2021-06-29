@@ -2,13 +2,13 @@
 
 class ParticipantDeclaration < ApplicationRecord
   belongs_to :lead_provider
-  belongs_to :early_career_teacher_profile
+  belongs_to :early_career_teacher_profile, class_name: "ParticipantProfile::ECT"
 
   # Helper scopes
   scope :for_lead_provider, ->(lead_provider) { where(lead_provider: lead_provider) }
   scope :for_declaration, ->(declaration_type) { where(declaration_type: declaration_type) }
   scope :started, -> { for_declaration("started").order(declaration_date: "desc").unique_early_career_teacher_profile_id }
-  scope :uplift, -> { joins(:early_career_teacher_profile).merge(EarlyCareerTeacherProfile.uplift) }
+  scope :uplift, -> { joins(:early_career_teacher_profile).merge(ParticipantProfile.uplift) }
   scope :unique_early_career_teacher_profile_id, -> { select(:early_career_teacher_profile_id).distinct }
   scope :active_for_lead_provider, ->(lead_provider) { started.for_lead_provider(lead_provider).unique_early_career_teacher_profile_id }
 

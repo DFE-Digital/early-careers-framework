@@ -65,11 +65,13 @@ module Schools
     end
 
     def can_add_self?
-      User.is_participant.in_school(school_cohort.school).exclude? current_user
+      ParticipantProfile
+        .where(school: school_cohort.school)
+        .none?
     end
 
     def mentor_options
-      @mentor_options ||= school_cohort.school.mentors
+      @mentor_options ||= school_cohort.school.participant_profiles.mentors
     end
 
     def mentor
@@ -121,7 +123,7 @@ module Schools
           # TODO: What if email matches but with different name?
           user = User.find_or_create_by!(full_name: full_name, email: email)
 
-          MentorProfile.create!(
+          ParticipantProfile::Mentor.create!(
             user: user,
             school_id: school_cohort.school_id,
             cohort_id: school_cohort.cohort_id,

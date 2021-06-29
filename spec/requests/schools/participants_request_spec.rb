@@ -7,23 +7,13 @@ RSpec.describe "Schools::Participants", type: :request do
   let(:school) { user.induction_coordinator_profile.schools.first }
   let(:cohort) { create(:cohort) }
   let!(:school_cohort) { create(:school_cohort, school: school, cohort: cohort) }
-  let!(:mentor_user) do
-    user = create(:user, :mentor)
-    user.mentor_profile.update!(school: school)
-    user
-  end
-  let!(:mentor_user_2) do
-    user = create(:user, :mentor)
-    user.mentor_profile.update!(school: school)
-    user
-  end
-  let!(:ect_user) do
-    user = create(:user, :early_career_teacher)
-    user.early_career_teacher_profile.update!(school: school, mentor_profile: mentor_user.mentor_profile)
-    user
-  end
-  let!(:unrelated_mentor) { create(:user, :mentor) }
-  let!(:unrelated_ect) { create(:user, :early_career_teacher) }
+
+  let!(:mentor_profile) { create :participant_profile, :mentor, school: school }
+  let!(:mentor_profile_2) { create :participant_profile, :mentor, school: school }
+  let!(:ect_profile) { create :participant_profile, :ect, school: school, mentor_profile: mentor_profile }
+
+  let!(:unrelated_mentor_profile) { create :participant_profile, :mentor }
+  let!(:unrelated_ect_profile) { create :participant_profile, :ect }
 
   before do
     FeatureFlag.activate(:induction_tutor_manage_participants)
@@ -47,51 +37,51 @@ RSpec.describe "Schools::Participants", type: :request do
     it "renders participant details" do
       get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants"
 
-      expect(response.body).to include(CGI.escapeHTML(ect_user.full_name))
-      expect(response.body).to include(CGI.escapeHTML(mentor_user.full_name))
-      expect(response.body).not_to include(CGI.escapeHTML(unrelated_mentor.full_name))
-      expect(response.body).not_to include(CGI.escapeHTML(unrelated_ect.full_name))
+      expect(response.body).to include(CGI.escapeHTML(ect_profile.user.full_name))
+      expect(response.body).to include(CGI.escapeHTML(mentor_profile.user.full_name))
+      expect(response.body).not_to include(CGI.escapeHTML(unrelated_mentor_profile.user.full_name))
+      expect(response.body).not_to include(CGI.escapeHTML(unrelated_ect_profile.user.full_name))
     end
   end
 
   describe "GET /schools/cohorts/:start_year/participants/:id" do
     it "renders participant template" do
-      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_user.id}"
+      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.user.id}"
 
       expect(response).to render_template("schools/participants/show")
     end
 
     it "renders participant details" do
-      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_user.id}"
+      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.user.id}"
 
-      expect(response.body).to include(CGI.escapeHTML(ect_user.full_name))
-      expect(response.body).to include(CGI.escapeHTML(mentor_user.full_name))
+      expect(response.body).to include(CGI.escapeHTML(ect_profile.user.full_name))
+      expect(response.body).to include(CGI.escapeHTML(mentor_profile.user.full_name))
     end
   end
 
   describe "GET /schools/cohorts/:start_year/participants/:id/edit-mentor" do
     it "renders edit mentor template" do
-      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_user.id}/edit-mentor"
+      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.user.id}/edit-mentor"
 
       expect(response).to render_template("schools/participants/edit_mentor")
     end
 
     it "renders correct mentors" do
-      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_user.id}/edit-mentor"
+      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.user.id}/edit-mentor"
 
-      expect(response.body).to include(CGI.escapeHTML(mentor_user.full_name))
-      expect(response.body).not_to include(CGI.escapeHTML(unrelated_mentor.full_name))
+      expect(response.body).to include(CGI.escapeHTML(mentor_profile.user.full_name))
+      expect(response.body).not_to include(CGI.escapeHTML(unrelated_mentor_profile.user.full_name))
     end
   end
 
   describe "PUT /schools/cohorts/:start_year/participants/:id/update-mentor" do
     it "updates mentor" do
-      params = { participant_mentor_form: { mentor_id: mentor_user_2.id } }
-      put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_user.id}/update-mentor", params: params
+      params = { participant_mentor_form: { mentor_id: mentor_profile_2.user_id } }
+      put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.user.id}/update-mentor", params: params
 
-      expect(response).to redirect_to(schools_participant_path(id: ect_user))
-      expect(flash[:success][:title]).to eq("Success")
-      expect(ect_user.reload.early_career_teacher_profile.mentor).to eq(mentor_user_2)
+      expect(response).to redirect_to(schools_participant_path(id: ect_profile.user_id))
+      expect(flash[:success][:title]).to eq "Success"
+      expect(ect_profile.reload.mentor_profile_id).to eq mentor_profile_2.id
     end
   end
 end

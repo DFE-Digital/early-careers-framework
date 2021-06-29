@@ -14,8 +14,15 @@ class ParticipantProfile < ApplicationRecord
     false
   end
 
+  scope :mentors, -> { where(type: Mentor.name) }
+  scope :ects, -> { where(type: ECT.name) }
+
+  scope :sparsity, -> { where(sparsity_uplift: true) }
+  scope :pupil_premium, -> { where(pupil_premium_uplift: true) }
+  scope :uplift, -> { sparsity.or(pupil_premium) }
+
   class ECT < self
-    belongs_to :mentor_profile
+    belongs_to :mentor_profile, class_name: "Mentor", optional: true
 
     def ect?
       true
@@ -23,6 +30,8 @@ class ParticipantProfile < ApplicationRecord
   end
 
   class Mentor < self
+    self.ignored_columns = %i[mentor_profile_id]
+
     def mentor?
       true
     end

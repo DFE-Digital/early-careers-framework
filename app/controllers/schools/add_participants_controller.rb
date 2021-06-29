@@ -11,8 +11,7 @@ module Schools
     result as: :participant_profile
 
     abandon_journey_path do
-      participants = User.is_participant.in_school(@school.id)
-      participants.any? ? schools_participants_path : schools_cohort_path
+      @school.participant_profiles.any? ? schools_participants_path : schools_cohort_path
     end
 
     setup_form do |form|
