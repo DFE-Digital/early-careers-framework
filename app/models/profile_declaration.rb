@@ -15,16 +15,20 @@ class ProfileDeclaration < ApplicationRecord
   # Declaration aggregation scopes
   scope :count_active_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).count }
   scope :count_active_uplift_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).uplift.count }
-  scope :uplift, -> { joins(
+  scope :ect_profiles, -> { joins(
     "left join early_career_teacher_profile_declarations
        on declarable_type='EarlyCareerTeacherProfileDeclaration'
        and declarable_id=early_career_teacher_profile_declarations.id
     left join early_career_teacher_profiles
-       on early_career_teacher_profile_declarations.early_career_teacher_profile_id = early_career_teacher_profiles.id
-    left join mentor_profile_declarations
-      on declarable_type='MentorProfileDeclaration'
-      and declarable_id=mentor_profile_declarations.id
-    left join mentor_profiles on
-      mentor_profile_declarations.mentor_profile_id = mentor_profiles.id"
-  ).merge(EarlyCareerTeacherProfile.uplift.or(merge(MentorProfile.uplift))) }
+       on early_career_teacher_profile_declarations.early_career_teacher_profile_id = early_career_teacher_profiles.id"
+  )}
+  scope :mentor_profiles, -> { joins(
+    "left join mentor_profile_declarations
+  on declarable_type='MentorProfileDeclaration'
+  and declarable_id=mentor_profile_declarations.id
+  left join mentor_profiles on
+  mentor_profile_declarations.mentor_profile_id = mentor_profiles.id"
+  )}
+
+  scope :uplift, -> { ect_profiles.mentor_profiles.merge(EarlyCareerTeacherProfile.uplift.or(merge(MentorProfile.uplift))) }
 end
