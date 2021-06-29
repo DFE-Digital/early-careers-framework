@@ -9,6 +9,7 @@ class SchoolMailer < ApplicationMailer
   BETA_INVITE_EMAIL_TEMPLATE = "0ae827de-3caa-4a93-b464-c434cbbd02c0"
   MAT_INVITE_EMAIL_TEMPLATE = "f856f50e-6f49-441e-8018-f8303367eb5c"
   FEDERATION_INVITE_EMAIL_TEMPLATE = "9269c50d-b579-425b-b55b-4c93f67074d4"
+  COORDINATOR_SIGN_IN_CHASER_EMAIL_TEMPLATE = "b5c318a4-2171-4ded-809a-af72dd87e7a7"
 
   def nomination_email(recipient:, school_name:, nomination_url:, expiry_date:)
     template_mail(
@@ -147,6 +148,20 @@ class SchoolMailer < ApplicationMailer
       personalisation: {
         school_name: school_name,
         nomination_url: nomination_url,
+      },
+    )
+  end
+
+  def induction_coordinator_sign_in_chaser_email(recipient:, name:, school_name:, start_url:)
+    template_mail(
+      COORDINATOR_SIGN_IN_CHASER_EMAIL_TEMPLATE,
+      to: recipient,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        name: name,
+        school_name: school_name,
+        start_url: start_url,
       },
     )
   end
