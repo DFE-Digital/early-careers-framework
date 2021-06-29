@@ -32,7 +32,9 @@ module DataStage
     end
 
     def log_changes
-      school_changes.create!(attribute_changes: changes, status: :changed) if changes.any?
+      relevant_changes = changes.except(:updated_at, :school_status_code, :school_status_name)
+
+      school_changes.create!(attribute_changes: relevant_changes, status: :changed) if relevant_changes.any?
     end
   end
 end

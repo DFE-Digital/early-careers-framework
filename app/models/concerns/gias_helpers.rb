@@ -18,6 +18,10 @@ module GiasHelpers
     }, _suffix: "status"
   end
 
+  def name_and_urn
+    "#{name} (#{urn})"
+  end
+
 private
 
   def open?

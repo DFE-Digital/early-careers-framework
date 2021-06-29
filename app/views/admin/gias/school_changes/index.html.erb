@@ -1,0 +1,35 @@
+<% content_for :title, "Schools with changes" %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: admin_gias_home_index_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Schools with changes</h1>
+
+    <% if @changed_schools.any? %>
+      <table class="govuk-table govuk-!-margin-bottom-8">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">URN</th>
+            <th scope="col" class="govuk-table__header">Name</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          <% @changed_schools.each do |school| %>
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell">
+                <%= govuk_link_to admin_gias_school_change_path(id: school.urn) do %>
+                  <span class="govuk-visually-hidden">View changes to school </span><%= school.urn %>
+              <% end %>
+              </td>
+              <td class="govuk-table__cell">
+                <%= school.name %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="govuk-body">No new changes</p>
+    <% end %>
+  </div>
+</div>

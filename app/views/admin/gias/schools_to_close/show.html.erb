@@ -1,0 +1,32 @@
+<% content_for :title, @school.name_and_urn %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: admin_gias_schools_to_close_index_path) %>
+
+<span class="govuk-caption-l"><%= @school.name_and_urn %></span>
+<h1 class="govuk-heading-xl">School details</h1>
+<dl class="govuk-summary-list">
+  <% @school.counterpart.attributes.except("id", "created_at", "updated_at").each do |k,v| %>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        <%= k.humanize %>
+      </dt>
+      <dd class="govuk-summary-list__value">
+        <%= v %>
+      </dd>
+    </div>
+  <% end %>
+</dl>
+<% if @school.school_links.any? %>
+  <h2 class="govuk-heading-l">School links</h2>
+  <dl class="govuk-summary-list">
+    <% @school.school_links.order(created_at: :desc).each do |link| %>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          <%= link.link_type %>
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= link.link_school&.name_and_urn || "URN: #{link.link_urn} (not on service)" %>
+        </dd>
+      </div>
+    <% end %>
+  </dl>
+<% end %>
