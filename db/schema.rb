@@ -143,6 +143,13 @@ ActiveRecord::Schema.define(version: 2021_06_30_000200) do
     t.index ["local_authority_district_id"], name: "index_district_sparsities_on_local_authority_district_id"
   end
 
+  create_table "early_career_teacher_profile_declarations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "early_career_teacher_profile_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["early_career_teacher_profile_id"], name: "profile_declaration_ect_profiles"
+  end
+
   create_table "early_career_teacher_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "school_id", null: false
@@ -262,6 +269,13 @@ ActiveRecord::Schema.define(version: 2021_06_30_000200) do
     t.index ["code"], name: "index_local_authority_districts_on_code", unique: true
   end
 
+  create_table "mentor_profile_declarations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "mentor_profile_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["mentor_profile_id"], name: "index_mentor_profile_declarations_on_mentor_profile_id"
+  end
+
   create_table "mentor_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "school_id", null: false
@@ -349,14 +363,14 @@ ActiveRecord::Schema.define(version: 2021_06_30_000200) do
 
   create_table "participant_declarations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "lead_provider_id", null: false
-    t.uuid "early_career_teacher_profile_id", null: false
     t.string "declaration_type"
     t.datetime "declaration_date"
     t.jsonb "raw_event"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["early_career_teacher_profile_id"], name: "participant_declarations_ect_profile_id"
+    t.uuid "user_id", null: false
     t.index ["lead_provider_id"], name: "index_participant_declarations_on_lead_provider_id"
+    t.index ["user_id"], name: "index_participant_declarations_on_user_id"
   end
 
   create_table "participant_events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -611,7 +625,6 @@ ActiveRecord::Schema.define(version: 2021_06_30_000200) do
   add_foreign_key "nomination_emails", "partnership_notification_emails"
   add_foreign_key "nomination_emails", "schools"
   add_foreign_key "participant_bands", "call_off_contracts"
-  add_foreign_key "participant_declarations", "early_career_teacher_profiles"
   add_foreign_key "participant_declarations", "lead_providers"
   add_foreign_key "participation_records", "early_career_teacher_profiles"
   add_foreign_key "participation_records", "lead_providers"

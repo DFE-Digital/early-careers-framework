@@ -80,7 +80,7 @@ private
 
   def create_record
     ActiveRecord::Base.transaction do
-      participant_declaration = ParticipantDeclaration.create(params.slice(*required_params))
+      participant_declaration = ParticipantDeclaration.create!(params.slice(*required_params))
       ProfileDeclaration.create!(
         participant_declaration: participant_declaration,
         lead_provider: lead_provider,
