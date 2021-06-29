@@ -1,0 +1,26 @@
+<%= content_for :title, t("page_titles.lead_providers.reference.#{@page_name}") %>
+<% content_for :nav_bar do %>
+  <%= render PrimaryNavComponent.new do |component| %>
+    <%= component.nav_item(path: lead_providers_home_path) do %>
+      Home
+    <% end %>
+    <%= component.nav_item(path: lead_providers_reference_path) do %>
+      API reference
+    <% end %>
+    <%= component.nav_item(path: lead_providers_release_notes_path) do %>
+      Release notes
+    <% end %>
+    <%= component.nav_item(path: lead_providers_help_path) do %>
+      Get help
+    <% end %>
+  <% end %>
+<% end %>
+
+<h1 class="govuk-heading-xl"><%= t("page_titles.lead_providers.reference.#{@page_name}") %></h1>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds lead-provider-content">
+
+    <%= @converted_markdown %>
+  </div>
+</div>

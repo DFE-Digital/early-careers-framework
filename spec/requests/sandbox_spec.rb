@@ -34,7 +34,7 @@ RSpec.describe "Sandbox landing page", type: :request do
       get sandbox_path
 
       expect(response.body).to include "Review our API documentation"
-      expect(response.body).to include "/api-docs"
+      expect(response.body).to include "/lead-providers/reference"
     end
   end
 end

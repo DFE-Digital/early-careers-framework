@@ -1,0 +1,9 @@
+description: "Authorization information is missing or invalid"
+type: object
+required:
+  - error
+properties:
+  error:
+    type: string
+    description: "An error message describing the problem"
+    example: "Please provide a valid authentication token"

@@ -1,39 +1,38 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "API documentation",
-    "version": "v1",
-    "description": "API for DfE CPD's participant service"
-  },
-  "components": {
-    "securitySchemes": {
-      "bearerAuth": {
-        "bearerFormat": "string",
-        "type": "http",
-        "scheme": "bearer"
-      }
+    "version": "0.0.1",
+    "title": "Manage teacher CPD - lead provider API",
+    "contact": {
+      "name": "DfE",
+      "email": "continuing-professional-development@digital.education.gov.uk"
     },
-    "schemas": {
-      "error_response": {
-        "type": "object",
-        "properties": {
-          "bad_or_missing_parameter": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "uniqueItems": true,
-            "minItems": 1
-          }
+    "description": "The lead provider API for DfE's manage teacher CPD service"
+  },
+  "servers": [
+    {
+      "url": "https://manage-training-for-early-career-teachers.education.gov.uk/api/{version}",
+      "description": "Production url",
+      "variables": {
+        "version": {
+          "enum": [
+            "v1"
+          ],
+          "default": "v1"
         }
       }
-    }
-  },
-  "security": [
+    },
     {
-      "bearerAuth": [
-
-      ]
+      "url": "https://ecf-sandbox.london.cloudapps.digital/api/{version}",
+      "description": "Sandbox url",
+      "variables": {
+        "version": {
+          "enum": [
+            "v1"
+          ],
+          "default": "v1"
+        }
+      }
     }
   ],
   "paths": {
@@ -52,70 +51,58 @@
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "participant_id": {
-                    "type": "string"
-                  },
-                  "declaration_type": {
-                    "enum": [
-                      "started",
-                      "retained_1",
-                      "retained_2",
-                      "retained_3",
-                      "retained_4",
-                      "completed"
-                    ]
-                  },
-                  "declaration_date": {
-                    "type": "string",
-                    "format": "date-time"
-                  }
-                },
-                "required": [
-                  "participant_id",
-                  "declaration_type",
-                  "declaration_date"
-                ],
-                "example": {
-                  "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                  "declaration_type": "started",
-                  "declaration_date": "2021-05-31T02:21:32Z"
-                }
+                "$ref": "#/components/schemas/ParticipantDeclaration"
+              },
+              "example": {
+                "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                "declaration_type": "started",
+                "declaration_date": "2021-05-31T15:50:00Z"
               }
             }
           }
         },
-        "parameters": [
-
-        ],
         "responses": {
           "204": {
-            "description": "Successful"
+            "description": "Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantDeclarationRecordedResponse"
+                }
+              }
+            }
           },
           "422": {
             "description": "Bad or Missing parameter",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/error_response"
+                  "$ref": "#/components/schemas/BadOrParameterMissingParameterResponse"
                 }
               }
             }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/v1/participants": {
       "get": {
-        "summary": "Returns all participants",
-        "operationId": "api_v1_participants_index",
+        "summary": "Retrieve multiple participants",
+        "operationId": "api_v1_participants",
         "tags": [
           "participant"
         ],
@@ -131,16 +118,7 @@
             "name": "filter",
             "in": "query",
             "schema": {
-              "type": "object",
-              "example": "",
-              "description": "This schema is used to search within collections to return more specific results.",
-              "properties": {
-                "updated_since": {
-                  "description": "Return participants that have been updated since the date (ISO 8601 date format)",
-                  "type": "string",
-                  "example": "2021-05-13T11:21:55Z"
-                }
-              }
+              "$ref": "#/components/schemas/ParticipantFilter"
             },
             "style": "deepObject",
             "explode": true,
@@ -181,84 +159,32 @@
         ],
         "responses": {
           "200": {
-            "description": "Collection of participants.",
+            "description": "An array of participants",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "required": [
-                    "data"
-                  ],
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "required": [
-                          "id",
-                          "type",
-                          "attributes"
-                        ],
-                        "properties": {
-                          "id": {
-                            "type": "string"
-                          },
-                          "type": {
-                            "type": "string"
-                          },
-                          "attributes": {
-                            "type": "object",
-                            "required": [
-                              "email",
-                              "full_name",
-                              "mentor_id",
-                              "school_urn",
-                              "participant_type",
-                              "cohort"
-                            ],
-                            "properties": {
-                              "email": {
-                                "type": "string"
-                              },
-                              "full_name": {
-                                "type": "string"
-                              },
-                              "mentor_id": {
-                                "type": "string"
-                              },
-                              "school_urn": {
-                                "type": "string"
-                              },
-                              "participant_type": {
-                                "type": "string",
-                                "enum": [
-                                  "mentor",
-                                  "ect"
-                                ]
-                              },
-                              "cohort": {
-                                "type": "string"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/MultipleParticipantResponse"
                 }
               }
             }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/v1/participants.csv": {
       "get": {
-        "summary": "Returns all participants",
-        "operationId": "api_v1_participants_index",
+        "summary": "Retrieve multiple participants in CSV format",
+        "operationId": "api_v1_participants_csv",
         "tags": [
           "participant"
         ],
@@ -296,20 +222,228 @@
         ],
         "responses": {
           "200": {
-            "description": "Collection of participants.",
+            "description": "A CSV file of participants",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/MultipleParticipantCsvResponse"
                 }
               }
             }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
           }
         }
       }
     }
-  }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "bearerFormat": "string",
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "BadOrParameterMissingParameterResponse": {
+        "description": "Request was missing data or contained invalid data",
+        "type": "object",
+        "required": [
+          "bad_or_missing_parameter"
+        ],
+        "properties": {
+          "bad_or_missing_parameter": {
+            "type": "array",
+            "description": "An error message for each bad or missing attribute describing the problems",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true,
+            "example": [
+              "param is missing or the value is empty: parameter_name"
+            ]
+          }
+        }
+      },
+      "MultipleParticipantCsvResponse": {
+        "description": "A list of participants in the Comma Seperated Value (CSV) format",
+        "type": "string",
+        "format": "base64",
+        "example": "id,type,email,full_name,mentor_id,school_urn,participant_type,cohort\ndb3a7848-7308-4879-942a-c4a70ced400a,participant,jane.smith@some-school.example.com,Jane Smith,bb36d74a-68a7-47b6-86b6-1fd0d141c590,106286,ect,2021\n"
+      },
+      "MultipleParticipantResponse": {
+        "description": "A list of participants",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Participant"
+            }
+          }
+        }
+      },
+      "Participant": {
+        "description": "The details of a participant",
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "id": {
+            "description": "The unique identifier of the participant record",
+            "type": "string",
+            "format": "uuid",
+            "example": "db3a7848-7308-4879-942a-c4a70ced400a"
+          },
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "participant"
+          },
+          "attributes": {
+            "type": "object",
+            "required": [
+              "email",
+              "full_name",
+              "mentor_id",
+              "school_urn",
+              "participant_type",
+              "cohort"
+            ],
+            "properties": {
+              "email": {
+                "description": "The email registered for this participant",
+                "type": "string",
+                "example": "jane.smith@some-school.example.com"
+              },
+              "full_name": {
+                "description": "The full name of the participant",
+                "type": "string",
+                "example": "Jane Smith"
+              },
+              "mentor_id": {
+                "description": "The unique identifier of the participants mentor",
+                "type": "string",
+                "example": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
+                "format": "uuid"
+              },
+              "school_urn": {
+                "description": "The Unique Reference Number (URN) of the school the submitted this participant",
+                "type": "string",
+                "example": "106286"
+              },
+              "participant_type": {
+                "description": "The type of participant this record refers to either ECT or Mentor",
+                "type": "string",
+                "example": "ect",
+                "enum": [
+                  "mentor",
+                  "ect"
+                ]
+              },
+              "cohort": {
+                "description": "Which cohort this participant is associated with",
+                "type": "string",
+                "example": "2021"
+              }
+            }
+          }
+        }
+      },
+      "ParticipantDeclaration": {
+        "description": "A participant declaration",
+        "type": "object",
+        "properties": {
+          "participant_id": {
+            "description": "The unique id of the participant",
+            "type": "string",
+            "format": "uuid",
+            "example": "db3a7848-7308-4879-942a-c4a70ced400a"
+          },
+          "declaration_type": {
+            "description": "The event declaration type",
+            "enum": [
+              "started",
+              "retained_1",
+              "retained_2",
+              "retained_3",
+              "retained_4",
+              "completed"
+            ],
+            "example": "started"
+          },
+          "declaration_date": {
+            "description": "The event declaration date",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:21:32.000Z"
+          }
+        },
+        "required": [
+          "participant_id",
+          "declaration_type",
+          "declaration_date"
+        ],
+        "example": {
+          "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+          "declaration_type": "started",
+          "declaration_date": "2021-05-31T02:21:32.000Z"
+        }
+      },
+      "ParticipantDeclarationRecordedResponse": {
+        "description": "The participant declaration has been recorded successfully",
+        "type": "string",
+        "properties": {
+        }
+      },
+      "ParticipantFilter": {
+        "description": "Filter a list of participants to return more specific results",
+        "type": "object",
+        "properties": {
+          "updated_since": {
+            "description": "Return participants that have been updated since the date (ISO 8601 date format)",
+            "type": "string",
+            "example": "2021-05-13T11:21:55Z"
+          }
+        }
+      },
+      "UnauthorizedResponse": {
+        "description": "Authorization information is missing or invalid",
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "An error message describing the problem",
+            "example": "Please provide a valid authentication token"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": [
+
+      ]
+    }
+  ]
 }

@@ -91,8 +91,10 @@ gem "json-schema"
 gem "jsonapi-serializer"
 
 # OpenApi Swagger
+gem "openapi3_parser", "0.9.0"
 gem "open_api-rswag-api", ">= 0.1.0"
 gem "open_api-rswag-ui", ">= 0.1.0"
+gem "rouge"
 
 gem "ransack"
 

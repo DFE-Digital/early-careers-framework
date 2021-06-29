@@ -101,6 +101,11 @@ Rails.application.routes.draw do
   namespace :lead_providers, path: "lead-providers" do
     get "/", to: "content#index", as: :landing_page
     get "/partnership-guide", to: "content#partnership_guide", as: :partnership_guide
+    get "/home" => "reference#home", as: :home
+    get "/reference" => "reference#reference", as: :reference
+    get "/release-notes" => "reference#release_notes", as: :release_notes
+    get "/help" => "reference#help", as: :help
+    get "/api-docs/v1/api_spec.yml" => "openapi#api_docs", as: :api_docs
 
     resources :your_schools, path: "/your-schools", only: %i[index create]
     resources :partnerships, only: %i[show]
