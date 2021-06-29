@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PopulateParticipantProfiles < ActiveRecord::Migration[6.1]
   class EarlyCareerTeacherProfile < ApplicationRecord
   end
@@ -20,7 +22,7 @@ class PopulateParticipantProfiles < ActiveRecord::Migration[6.1]
         sparsity_uplift: ect_profile.sparsity_uplift,
         pupil_premium_uplift: ect_profile.pupil_premium_uplift,
         core_induction_programme_id: ect_profile.core_induction_programme_id,
-        mentor_profile_id: ect_profile.mentor_profile_id
+        mentor_profile_id: ect_profile.mentor_profile_id,
       )
     end
 
