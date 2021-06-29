@@ -46,7 +46,9 @@ module EarlyCareerFramework
 
     config.exceptions_app = routes
     config.action_dispatch.rescue_responses["Pundit::NotAuthorizedError"] = :forbidden
-
+    config.action_dispatch.default_headers = {
+      "X-XSS-Protection" => "0",
+    }
     config.active_job.queue_adapter = :delayed_job
 
     config.middleware.use Rack::Deflater
