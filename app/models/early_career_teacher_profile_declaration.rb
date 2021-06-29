@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class EarlyCareerTeacherProfileDeclaration < ApplicationRecord
-  has_one :profile_declaration, as: :declarable, touch: true
   belongs_to :early_career_teacher_profile
 
   scope :unique_id, -> { select(:early_career_teacher_profile_id).distinct }

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class MentorProfileDeclaration < ApplicationRecord
-  has_one :profile_declaration, as: :declarable, touch: true
   belongs_to :mentor_profile
 
   scope :unique_id, -> { select(:mentor_profile_id).distinct }

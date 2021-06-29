@@ -95,7 +95,7 @@ private
   end
 
   def actual_lead_provider
-    SchoolCohort.find_by(school: early_career_teacher_profile.school, cohort: early_career_teacher_profile.cohort)&.lead_provider
+    SchoolCohort.find_by(school: user_profile.school, cohort: user_profile.cohort)&.lead_provider
   end
 
   def validate_provider!
