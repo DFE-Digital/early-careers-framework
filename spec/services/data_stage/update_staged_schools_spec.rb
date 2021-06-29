@@ -33,6 +33,10 @@ RSpec.describe DataStage::UpdateStagedSchools do
       expect(imported_school.school_status_code).to eql(1)
     end
 
+    it "generates school change records for the new schools" do
+      expect { service.call(files) }.to change { DataStage::SchoolChange.status_added.count }.by 3
+    end
+
     it "correctly handles any Latin1 encoded characters in the data file" do
       service.call(files)
 
@@ -48,6 +52,10 @@ RSpec.describe DataStage::UpdateStagedSchools do
         existing_school.reload
 
         expect(existing_school.name).to eql("The Starship Children's Centre")
+      end
+
+      it "a school change record is created" do
+        expect { service.call(files) }.to change { DataStage::SchoolChange.status_changed.count }.by 1
       end
     end
 
