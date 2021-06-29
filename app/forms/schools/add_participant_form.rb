@@ -115,7 +115,13 @@ module Schools
     end
 
     def save!
-      creators[participant_type].call(
+      creator = case type
+                when :ect
+                  EarlyCareerTeachers::Create
+                when :mentor
+                  Mentors::Create
+                end
+      creator.constantize.call(
         full_name: full_name,
         email: email,
         cohort_id: school_cohort.cohort_id,
