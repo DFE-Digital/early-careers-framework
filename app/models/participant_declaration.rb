@@ -3,6 +3,7 @@
 class ParticipantDeclaration < ApplicationRecord
   has_one :profile_declaration
   belongs_to :lead_provider
+  belongs_to :user
 
   # Basic scopes for local fields
   scope :uplift, -> { joins(:profile_declaration).merge(ProfileDeclaration.uplift) }
@@ -15,4 +16,5 @@ class ParticipantDeclaration < ApplicationRecord
 
   scope :active_for_lead_provider, ->(lead_provider) { started.for_lead_provider(lead_provider).unique_id }
   scope :count_active_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).count }
+  scope :count_active_uplift_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).uplift.count }
 end
