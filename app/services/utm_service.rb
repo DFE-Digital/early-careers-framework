@@ -10,6 +10,7 @@ class UTMService
     challenge_partnership: "challenge-partnership",
     partnership_notification: "partnership-notification",
     june_private_beta: "june-private-beta",
+    sign_in_reminder: "sign-in-reminder",
   }.freeze
 
   SOURCES = {

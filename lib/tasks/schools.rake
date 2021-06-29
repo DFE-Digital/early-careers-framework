@@ -30,4 +30,9 @@ namespace :schools do
   task :invite_federations, [:school_urns] => :environment do |_task, args|
     InviteSchools.new.invite_federations(args.school_urns.split)
   end
+
+  desc "Send chasers to induction coordinators who have not signed in"
+  task send_induction_coordinator_sign_in_chasers: :environment do
+    InviteSchools.new.send_induction_coordinator_sign_in_chasers
+  end
 end
