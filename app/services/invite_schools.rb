@@ -120,12 +120,33 @@ class InviteSchools
     invite_group(school_urns, :send_federation_invite_email)
   end
 
+  def send_induction_coordinator_sign_in_chasers
+    induction_coordinators_never_signed_in = User.joins(:induction_coordinator_profile).where(last_sign_in_at: nil)
+    induction_coordinators_never_signed_in.each do |induction_coordinator|
+      SchoolMailer.induction_coordinator_sign_in_chaser_email(
+        recipient: induction_coordinator.email,
+        name: induction_coordinator.full_name,
+        school_name: induction_coordinator.schools.first.name,
+        start_url: sign_in_chaser_start_url,
+      ).deliver_later
+    rescue StandardError
+      logger.info "Error emailing induction coordinator, email: #{induction_coordinator.email} ... skipping"
+    end
+  end
+
 private
 
   def private_beta_start_url
     Rails.application.routes.url_helpers.root_url(
       host: Rails.application.config.domain,
       **UTMService.email(:june_private_beta, :private_beta),
+    )
+  end
+
+  def sign_in_chaser_start_url
+    Rails.application.routes.url_helpers.root_url(
+      host: Rails.application.config.domain,
+      **UTMService.email(:sign_in_reminder),
     )
   end
 
