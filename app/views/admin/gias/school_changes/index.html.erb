@@ -5,7 +5,7 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">Schools with changes</h1>
 
-    <% if @changed_schools.any? %>
+    <% if @schools.any? %>
       <table class="govuk-table govuk-!-margin-bottom-8">
         <thead class="govuk-table__head">
           <tr class="govuk-table__row">
@@ -14,7 +14,7 @@
           </tr>
         </thead>
         <tbody class="govuk-table__body">
-          <% @changed_schools.each do |school| %>
+          <% @schools.each do |school| %>
             <tr class="govuk-table__row">
               <td class="govuk-table__cell">
                 <%= govuk_link_to admin_gias_school_change_path(id: school.urn) do %>
