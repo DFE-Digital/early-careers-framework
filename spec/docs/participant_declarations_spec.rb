@@ -32,6 +32,12 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
         },
       }
 
+      parameter name: :params,
+                in: :body,
+                schema: {
+                  "$ref": "#/components/schemas/ParticipantDeclaration",
+                }
+
       response 200, "Successful" do
         let(:fresh_user) { create(:user, :early_career_teacher) }
         let(:params) do
@@ -62,7 +68,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
 
         schema "$ref": "#/components/schemas/ParticipantDeclarationRecordedResponse"
 
-        #run_test!
+        run_test!
       end
 
       response "422", "Bad or Missing parameter" do
@@ -70,7 +76,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
 
         schema "$ref": "#/components/schemas/BadOrParameterMissingParameterResponse"
 
-        #run_test!
+        run_test!
       end
 
       response "401", "Unauthorized" do

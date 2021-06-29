@@ -32,14 +32,6 @@
           ],
           "default": "v1"
         }
-      },
-      "id": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          }
-        }
       }
     }
   ],
@@ -73,6 +65,9 @@
             }
           }
         },
+        "parameters": [
+
+        ],
         "responses": {
           "200": {
             "description": "Successful",
@@ -266,10 +261,10 @@
         "description": "Request was missing data or contained invalid data",
         "type": "object",
         "required": [
-          "bad_or_missing_parameter"
+          "bad_or_missing_parameters"
         ],
         "properties": {
-          "bad_or_missing_parameter": {
+          "bad_or_missing_parameters": {
             "type": "array",
             "description": "An error message for each bad or missing attribute describing the problems",
             "minItems": 1,
@@ -278,7 +273,9 @@
             },
             "uniqueItems": true,
             "example": [
-              "param is missing or the value is empty: parameter_name"
+              "participant_id",
+              "declaration_date",
+              "declaration_type"
             ]
           }
         }
@@ -416,8 +413,17 @@
       },
       "ParticipantDeclarationRecordedResponse": {
         "description": "The participant declaration has been recorded successfully",
-        "type": "string",
+        "type": "object",
+        "required": [
+          "id"
+        ],
         "properties": {
+          "id": {
+            "description": "A unique identifier to reference the declaration in future actions",
+            "type": "string",
+            "format": "uuid",
+            "example": "b0f657a7-9a81-4a89-a6b0-627c774ff753"
+          }
         }
       },
       "ParticipantFilter": {
@@ -433,17 +439,8 @@
       },
       "UnauthorizedResponse": {
         "description": "Authorization information is missing or invalid",
-        "type": "object",
-        "required": [
-          "error"
-        ],
-        "properties": {
-          "error": {
-            "type": "string",
-            "description": "An error message describing the problem",
-            "example": "Please provide a valid authentication token"
-          }
-        }
+        "type": "string",
+        "example": "HTTP Token: Access denied."
       }
     }
   },
