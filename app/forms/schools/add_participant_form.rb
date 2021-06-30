@@ -107,14 +107,15 @@ module Schools
       @current_user ||= User.find_by(id: current_user_id)
     end
 
+    def creators
+      {
+        ect: EarlyCareerTeachers::Create,
+        mentor: Mentors::Create,
+      }
+    end
+
     def save!
-      creator = case type
-                when :ect
-                  EarlyCareerTeachers::Create
-                when :mentor
-                  Mentors::Create
-                end
-      creator.constantize.call(
+      creators[participant_type]&.call(
         full_name: full_name,
         email: email,
         cohort_id: school_cohort.cohort_id,
