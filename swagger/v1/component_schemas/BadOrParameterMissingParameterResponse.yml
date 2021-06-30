@@ -1,9 +1,9 @@
 description: "Request was missing data or contained invalid data"
 type: object
 required:
-  - bad_or_missing_parameter
+  - bad_or_missing_parameters
 properties:
-  bad_or_missing_parameter:
+  bad_or_missing_parameters:
     type: array
     description: "An error message for each bad or missing attribute describing the problems"
     minItems: 1
@@ -11,4 +11,6 @@ properties:
       type: string
     uniqueItems: true
     example:
-      - "param is missing or the value is empty: parameter_name"
+      - "participant_id"
+      - "declaration_date"
+      - "declaration_type"

@@ -4,6 +4,12 @@
     <%= component.nav_item(path: lead_providers_home_path) do %>
       Home
     <% end %>
+    <%= component.nav_item(path: lead_providers_ecf_usage_path) do %>
+      ECF usage guide
+    <% end %>
+    <%= component.nav_item(path: lead_providers_npq_usage_path) do %>
+      NPQ usage guide
+    <% end %>
     <%= component.nav_item(path: lead_providers_reference_path) do %>
       API reference
     <% end %>
@@ -18,9 +24,6 @@
 
 <h1 class="govuk-heading-xl"><%= t("page_titles.lead_providers.reference.#{@page_name}") %></h1>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds lead-provider-content">
-
-    <%= @converted_markdown %>
-  </div>
+<div class="lead-provider-content">
+  <%= @converted_markdown %>
 </div>

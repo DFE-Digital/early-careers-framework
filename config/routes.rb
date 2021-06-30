@@ -103,6 +103,8 @@ Rails.application.routes.draw do
     get "/partnership-guide", to: "content#partnership_guide", as: :partnership_guide
     get "/home" => "reference#home", as: :home
     get "/reference" => "reference#reference", as: :reference
+    get "/ecf-usage" => "reference#ecf_usage", as: :ecf_usage
+    get "/npq-usage" => "reference#npq_usage", as: :npq_usage
     get "/release-notes" => "reference#release_notes", as: :release_notes
     get "/help" => "reference#help", as: :help
     get "/api-docs/v1/api_spec.yml" => "openapi#api_docs", as: :api_docs

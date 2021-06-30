@@ -12,6 +12,14 @@ module LeadProviders
       render_content_page :home
     end
 
+    def ecf_usage
+      render_content_page :ecf_usage
+    end
+
+    def npq_usage
+      render_content_page :npq_usage
+    end
+
     def release_notes
       render_content_page :release_notes
     end
