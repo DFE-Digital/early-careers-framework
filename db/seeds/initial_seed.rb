@@ -7,29 +7,19 @@ edt_cip = CoreInductionProgramme.find_or_create_by!(name: "Education Development
 teach_first_cip = CoreInductionProgramme.find_or_create_by!(name: "Teach First")
 ucl_cip = CoreInductionProgramme.find_or_create_by!(name: "UCL Institute of Education")
 
-ambition = LeadProvider.find_or_create_by!(name: "Ambition Institute")
-ambition.update!(cohorts: [cohort_2021]) unless ambition.cohorts.any?
-LeadProviderCip.find_or_create_by!(lead_provider: ambition, cohort: cohort_2021, core_induction_programme: ambition_cip)
-
-bpn = LeadProvider.find_or_create_by!(name: "Best Practice Network")
-bpn.update!(cohorts: [cohort_2021]) unless bpn.cohorts.any?
-LeadProviderCip.find_or_create_by!(lead_provider: bpn, cohort: cohort_2021, core_induction_programme: ucl_cip)
-
-capita = LeadProvider.find_or_create_by!(name: "Capita")
-capita.update!(cohorts: [cohort_2021]) unless capita.cohorts.any?
-LeadProviderCip.find_or_create_by!(lead_provider: capita, cohort: cohort_2021, core_induction_programme: ambition_cip)
-
-edt = LeadProvider.find_or_create_by!(name: "Education Development Trust")
-edt.update!(cohorts: [cohort_2021]) unless edt.cohorts.any?
-LeadProviderCip.find_or_create_by!(lead_provider: edt, cohort: cohort_2021, core_induction_programme: edt_cip)
-
-teach_first = LeadProvider.find_or_create_by!(name: "Teach First")
-teach_first.update!(cohorts: [cohort_2021]) unless teach_first.cohorts.any?
-LeadProviderCip.find_or_create_by!(lead_provider: teach_first, cohort: cohort_2021, core_induction_programme: teach_first_cip)
-
-ucl = LeadProvider.find_or_create_by!(name: "UCL Institute of Education")
-ucl.update!(cohorts: [cohort_2021]) unless ucl.cohorts.any?
-LeadProviderCip.find_or_create_by!(lead_provider: ucl, cohort: cohort_2021, core_induction_programme: ucl_cip)
+[
+  { provider_name: "Ambition Institute", cip: ambition_cip, token: "ambition-token" },
+  { provider_name: "Best Practice Network", cip: ucl_cip, token: "best-practice-token" },
+  { provider_name: "Capita", cip: ambition_cip, token: "capita-token" },
+  { provider_name: "Education Development Trust", cip: edt_cip, token: "edt-token" },
+  { provider_name: "Teach First", cip: teach_first_cip, token: "teach-first-token" },
+  { provider_name: "UCL Institute of Education", cip: ucl_cip, token: "ucl-token" },
+].each do |seed|
+  provider = LeadProvider.find_or_create_by!(name: seed[:provider_name])
+  provider.update!(cohorts: [cohort_2021]) unless provider.cohorts.any?
+  LeadProviderCip.find_or_create_by!(lead_provider: provider, cohort: cohort_2021, core_induction_programme: seed[:cip])
+  LeadProviderApiToken.create_with_known_token!(seed[:token], lead_provider: provider)
+end
 
 PrivacyPolicy.find_or_initialize_by(major_version: 1, minor_version: 0)
   .tap { |pp| pp.html = Rails.root.join("db/seeds/privacy_policy_1.0.html").read }
@@ -58,13 +48,4 @@ end
   { name: "NPQ for Executive Leadership (NPQEL)", id: "aef853f2-9b48-4b6a-9d2a-91b295f5ca9a" },
 ].each do |hash|
   NpqCourse.find_or_create_by!(name: hash[:name], id: hash[:id])
-end
-
-if Rails.env.development?
-  LeadProviderApiToken.create_with_known_token!("_488ase4rzqrLo6p3Kzy", lead_provider: ambition)
-  LeadProviderApiToken.create_with_known_token!("KCC_Frtiy79M3zLNMhic", lead_provider: bpn)
-  LeadProviderApiToken.create_with_known_token!("bBvWZ5dr6wmbUNqidnY-", lead_provider: capita)
-  LeadProviderApiToken.create_with_known_token!("kDyukqzjhuPw7j3kgLT2", lead_provider: edt)
-  LeadProviderApiToken.create_with_known_token!("usQncFvBGym5UoGcbsMs", lead_provider: teach_first)
-  LeadProviderApiToken.create_with_known_token!("RCxkriTrzw4yhnn8zjyy", lead_provider: ucl)
 end
