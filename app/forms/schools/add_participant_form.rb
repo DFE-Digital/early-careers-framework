@@ -115,7 +115,7 @@ module Schools
     end
 
     def save!
-      creators[participant_type]&.call(
+      creators[participant_type].call(
         full_name: full_name,
         email: email,
         cohort_id: school_cohort.cohort_id,
