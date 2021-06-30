@@ -2,6 +2,11 @@
 
 # Throttle general requests by IP
 class Rack::Attack
+  # Throttle /csp_reports requests by IP (5rpm)
+  throttle("csp_reports req/ip", limit: 5, period: 1.minute) do |req|
+    req.ip if req.path == "/csp_reports"
+  end
+
   safelist("Allow notify callbacks at any rate") do |request|
     request.path == "/api/notify-callback" && request.post?
   end
