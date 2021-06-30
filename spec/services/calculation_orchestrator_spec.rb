@@ -59,10 +59,7 @@ RSpec.describe CalculationOrchestrator do
   context ".call" do
     context "when only sparsity_uplift flag was set" do
       before do
-        10.times do
-          participant_declaration = create(:participant_declaration, lead_provider: call_off_contract.lead_provider)
-          create(:profile_declaration, participant_declaration: participant_declaration, declarable: create(:early_career_teacher_profile_declaration, :sparsity_uplift))
-        end
+        create_list(:participant_declaration, 10, :sparsity_uplift, lead_provider: call_off_contract.lead_provider)
       end
 
       it "returns the total calculation" do
@@ -72,10 +69,7 @@ RSpec.describe CalculationOrchestrator do
 
     context "when only pupil_premium_uplift flag was set" do
       before do
-        10.times do
-          participant_declaration = create(:participant_declaration, lead_provider: call_off_contract.lead_provider)
-          create(:profile_declaration, participant_declaration: participant_declaration, declarable: create(:early_career_teacher_profile_declaration, :pupil_premium_uplift))
-        end
+        create_list(:participant_declaration, 10, :pupil_premium_uplift, lead_provider: call_off_contract.lead_provider)
       end
 
       it "returns the total calculation" do
@@ -85,10 +79,7 @@ RSpec.describe CalculationOrchestrator do
 
     context "when both sparsity_uplift and pupil_premium_uplift flags were set" do
       before do
-        10.times do
-          participant_declaration = create(:participant_declaration, lead_provider: call_off_contract.lead_provider)
-          create(:profile_declaration, participant_declaration: participant_declaration, declarable: create(:early_career_teacher_profile_declaration, :uplift_flags))
-        end
+        create_list(:participant_declaration, 10, :uplift_flags, lead_provider: call_off_contract.lead_provider)
       end
 
       it "returns the total calculation" do

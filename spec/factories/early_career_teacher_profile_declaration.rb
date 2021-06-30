@@ -2,6 +2,8 @@
 
 FactoryBot.define do
   factory :early_career_teacher_profile_declaration do
+    early_career_teacher_profile
+
     trait :sparsity_uplift do
       association :early_career_teacher_profile, :sparsity_uplift
     end

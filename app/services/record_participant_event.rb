@@ -81,11 +81,11 @@ private
   def create_record!
     ActiveRecord::Base.transaction do
       ParticipantDeclaration.create!(params.slice(*required_params)).tap do |participant_declaration|
-      ProfileDeclaration.create!(
-        participant_declaration: participant_declaration,
-        lead_provider: lead_provider,
-        declarable: self.class.user_type_profile_recorders[profile_type].new(profile_type => user_profile),
-      )
+        ProfileDeclaration.create!(
+          participant_declaration: participant_declaration,
+          lead_provider: lead_provider,
+          declarable: self.class.user_type_profile_recorders[profile_type].new(profile_type => user_profile),
+        )
       end
     end
   end
