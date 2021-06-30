@@ -107,27 +107,21 @@ module Schools
       @current_user ||= User.find_by(id: current_user_id)
     end
 
-    def save!
-      if type == :ect
-        EarlyCareerTeachers::Create.call(
-          full_name: full_name,
-          email: email,
-          cohort_id: school_cohort.cohort_id,
-          school_id: school_cohort.school_id,
-          mentor_profile_id: mentor&.mentor_profile&.id,
-        )
-      else
-        ActiveRecord::Base.transaction do
-          # TODO: What if email matches but with different name?
-          user = User.find_or_create_by!(full_name: full_name, email: email)
+    def creators
+      {
+        ect: EarlyCareerTeachers::Create,
+        mentor: Mentors::Create,
+      }
+    end
 
-          MentorProfile.create!(
-            user: user,
-            school_id: school_cohort.school_id,
-            cohort_id: school_cohort.cohort_id,
-          )
-        end
-      end
+    def save!
+      creators[participant_type].call(
+        full_name: full_name,
+        email: email,
+        cohort_id: school_cohort.cohort_id,
+        school_id: school_cohort.school_id,
+        mentor_profile_id: mentor&.mentor_profile&.id,
+      )
     end
   end
 end
