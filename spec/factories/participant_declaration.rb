@@ -8,17 +8,17 @@ FactoryBot.define do
     declaration_type { "started" }
 
     trait :sparsity_uplift do
-      with_profile_declaration
+      with_random_profile_declaration
       uplift { :sparsity_uplift }
     end
 
     trait :pupil_premium_uplift do
-      with_profile_declaration
+      with_random_profile_declaration
       uplift { :pupil_premium_uplift }
     end
 
     trait :uplift_flags do
-      with_profile_declaration
+      with_random_profile_declaration
       uplift { :uplift_flags }
     end
 
@@ -26,7 +26,7 @@ FactoryBot.define do
       uplift { :sparsity_uplift }
     end
 
-    trait :with_profile_declaration do
+    trait :with_random_profile_declaration do
       after(:create) do |participant_declaration, evaluator|
         create(:profile_declaration,
                participant_declaration: participant_declaration,
