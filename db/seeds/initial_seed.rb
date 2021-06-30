@@ -59,3 +59,12 @@ end
 ].each do |hash|
   NpqCourse.find_or_create_by!(name: hash[:name], id: hash[:id])
 end
+
+if Rails.env.development?
+  LeadProviderApiToken.create_with_known_token!("_488ase4rzqrLo6p3Kzy", lead_provider: ambition)
+  LeadProviderApiToken.create_with_known_token!("KCC_Frtiy79M3zLNMhic", lead_provider: bpn)
+  LeadProviderApiToken.create_with_known_token!("bBvWZ5dr6wmbUNqidnY-", lead_provider: capita)
+  LeadProviderApiToken.create_with_known_token!("kDyukqzjhuPw7j3kgLT2", lead_provider: edt)
+  LeadProviderApiToken.create_with_known_token!("usQncFvBGym5UoGcbsMs", lead_provider: teach_first)
+  LeadProviderApiToken.create_with_known_token!("RCxkriTrzw4yhnn8zjyy", lead_provider: ucl)
+end
