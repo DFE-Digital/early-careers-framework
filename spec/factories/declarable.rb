@@ -2,11 +2,11 @@
 
 FactoryBot.define do
   factory :declarable do
-    trait :early_career_teacher_profile_declaration do
-      early_career_teacher_profile_declaration
+    trait :early_career_teacher_profile do
+      early_career_teacher_profile
     end
-    trait :mentor_profile_declaration do
-      mentor_profile_declaration
+    trait :mentor_profile do
+      mentor_profile
     end
   end
 end
