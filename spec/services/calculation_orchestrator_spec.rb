@@ -100,7 +100,7 @@ RSpec.describe CalculationOrchestrator do
 
     context "when only mentor profile declaration records available" do
       before do
-        create_list(:participant_declaration, 10, :only_mentor_profile_declarations, lead_provider: call_off_contract.lead_provider)
+        create_list(:participant_declaration, 10, :only_mentor_profile, lead_provider: call_off_contract.lead_provider)
       end
 
       it "returns the total calculation" do
@@ -110,7 +110,7 @@ RSpec.describe CalculationOrchestrator do
 
     context "when only ect profile declaration records available" do
       before do
-        create_list(:participant_declaration, 10, :only_ect_profile_declarations, lead_provider: call_off_contract.lead_provider)
+        create_list(:participant_declaration, 10, :only_ect_profile, lead_provider: call_off_contract.lead_provider)
       end
 
       it "returns the total calculation" do
@@ -120,8 +120,8 @@ RSpec.describe CalculationOrchestrator do
 
     context "when both mentor profile and ect profile declaration records available" do
       before do
-        create_list(:participant_declaration, 5, :only_ect_profile_declarations, lead_provider: call_off_contract.lead_provider)
-        create_list(:participant_declaration, 5, :only_ect_profile_declarations, lead_provider: call_off_contract.lead_provider)
+        create_list(:participant_declaration, 5, :only_ect_profile, lead_provider: call_off_contract.lead_provider)
+        create_list(:participant_declaration, 5, :only_ect_profile, lead_provider: call_off_contract.lead_provider)
       end
 
       it "returns the total calculation" do

@@ -16,8 +16,8 @@ class RecordParticipantEvent
 
     def user_type_profile_recorders
       {
-        early_career_teacher_profile: EarlyCareerTeacherProfileDeclaration,
-        mentor_profile: MentorProfileDeclaration,
+        early_career_teacher_profile: EarlyCareerTeacherProfile,
+        mentor_profile: MentorProfile,
       }
     end
   end
@@ -84,7 +84,7 @@ private
         ProfileDeclaration.create!(
           participant_declaration: participant_declaration,
           lead_provider: lead_provider,
-          declarable: self.class.user_type_profile_recorders[profile_type].new(profile_type => user_profile),
+          declarable: user_profile,
         )
       end
     end
