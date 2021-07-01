@@ -370,6 +370,24 @@ ActiveRecord::Schema.define(version: 2021_06_30_000110) do
     t.index ["item_type", "item_id"], name: "index_participant_events_on_item_type_and_item_id"
   end
 
+  create_table "participant_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "type", null: false
+    t.uuid "user_id", null: false
+    t.uuid "school_id", null: false
+    t.uuid "core_induction_programme_id"
+    t.uuid "cohort_id", null: false
+    t.uuid "mentor_profile_id"
+    t.boolean "sparsity_uplift", default: false, null: false
+    t.boolean "pupil_premium_uplift", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
+    t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
+    t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"
+    t.index ["school_id"], name: "index_participant_profiles_on_school_id"
+    t.index ["user_id"], name: "index_participant_profiles_on_user_id"
+  end
+
   create_table "participation_records", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -601,6 +619,10 @@ ActiveRecord::Schema.define(version: 2021_06_30_000110) do
   add_foreign_key "participant_bands", "call_off_contracts"
   add_foreign_key "participant_declarations", "early_career_teacher_profiles"
   add_foreign_key "participant_declarations", "lead_providers"
+  add_foreign_key "participant_profiles", "cohorts"
+  add_foreign_key "participant_profiles", "core_induction_programmes"
+  add_foreign_key "participant_profiles", "schools"
+  add_foreign_key "participant_profiles", "users"
   add_foreign_key "participation_records", "early_career_teacher_profiles"
   add_foreign_key "participation_records", "lead_providers"
   add_foreign_key "partnership_notification_emails", "partnerships"
