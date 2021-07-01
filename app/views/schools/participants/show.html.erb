@@ -22,6 +22,9 @@
           <%= @participant.full_name %>
         </dd>
         <dd class="govuk-summary-list__actions">
+          <%= govuk_link_to schools_participant_edit_name_path(participant_id: @participant) do %>
+            Change <span class="govuk-visually-hidden">name</span>
+          <% end %>
         </dd>
       </div>
       <div class="govuk-summary-list__row">
@@ -32,6 +35,9 @@
           <%= @participant.email %>
         </dd>
         <dd class="govuk-summary-list__actions">
+          <%= govuk_link_to schools_participant_edit_email_path(participant_id: @participant) do %>
+            Change <span class="govuk-visually-hidden">email</span>
+          <% end %>
         </dd>
       </div>
       <div class="govuk-summary-list__row">

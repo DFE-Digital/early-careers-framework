@@ -23,3 +23,37 @@ Feature: School leaders should be able to manage participants
     Then I should be on "2021 school participant" page
     And "page body" should contain "Abdul Mentor"
     And "page body" should not contain "Dan Smith"
+
+  Scenario: Updating details of a participant
+    When I click on "link" containing "Dan Smith"
+    Then I should be on "2021 school participant" page
+
+    When I click on "link" containing "Change email"
+    Then I should be on "2021 school participant edit email" page
+    And the page should be accessible
+    And percy should be sent snapshot called "induction tutor edit participant email"
+
+    When I type "james.bond.007@secret.gov.uk" into field labelled "Email"
+    And I click the submit button
+    Then I should be on "2021 school participant" page
+    And "page body" should contain "Dan Smith"
+    And "page body" should contain "james.bond.007@secret.gov.uk"
+    And "page body" should contain "The participant's email address has been updated"
+    And "page body" should not contain "dan-smith@example.com"
+
+    When I click on "link" containing "Change name"
+    Then I should be on "2021 school participant edit name" page
+    And the page should be accessible
+    And percy should be sent snapshot called "induction tutor edit participant name"
+
+    When I type "New Name" into field labelled "Full name"
+    And I click the submit button
+    Then I should be on "2021 school participant" page
+    And "page body" should contain "New Name"
+    And "page body" should contain "james.bond.007@secret.gov.uk"
+    And "page body" should contain "The participant's name has been updated"
+    And "page body" should not contain "Dan Smith"
+
+    Given I am on "2021 school participant edit email used" page with school_slug "111111-hogwarts-academy" and participant_id "51223b41-a562-4d94-b50c-0ce59a8bb34d"
+    Then the page should be accessible
+    And percy should be sent snapshot called "induction tutor edit participant email used in same school"
