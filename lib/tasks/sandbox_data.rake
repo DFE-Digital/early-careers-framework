@@ -32,7 +32,7 @@ def generate_mentors(lead_provider, school, cohort, logger)
 end
 
 def create_school_and_associations(lead_provider, cohort, index)
-  school = School.find_by!(
+  school = School.find_or_create_by!(
     urn: sprintf("%06d", (10_000 + index)),
   ) do |s|
     s.name = Faker::Company.name
@@ -40,7 +40,7 @@ def create_school_and_associations(lead_provider, cohort, index)
     s.postcode = Faker::Address.postcode
   end
 
-  Partnership.find_by!(
+  Partnership.find_or_create_by!(
     school: school,
     lead_provider: lead_provider,
     cohort: cohort,
@@ -48,7 +48,7 @@ def create_school_and_associations(lead_provider, cohort, index)
     partnership.delivery_partner = DeliveryPartner.create!(name: Faker::Company.name)
   end
 
-  SchoolCohort.find_by!(school: school, cohort: cohort, induction_programme_choice: "full_induction_programme")
+  SchoolCohort.find_or_create_by!(school: school, cohort: cohort, induction_programme_choice: "full_induction_programme")
 
   school
 end
