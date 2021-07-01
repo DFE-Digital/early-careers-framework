@@ -21,9 +21,11 @@ module DataStage
     after_create :log_create
     before_update :log_changes
 
-    scope :schools_to_add, -> { currently_open.joins("LEFT JOIN schools s ON (data_stage_schools.urn = s.urn)").where("s.urn IS NULL") }
+    scope :schools_to_add, -> { currently_open.left_joins(:counterpart).where(counterpart: { urn: nil }) }
 
-    scope :schools_to_close, -> { closed_status.joins("LEFT JOIN schools s ON (data_stage_schools.urn = s.urn)").where("s.school_status_code IN (?)", ELIGIBLE_STATUS_CODES) }
+    scope :schools_to_close, -> { closed_status.left_joins(:counterpart).where(counterpart: { school_status_code: GiasTypes::ELIGIBLE_STATUS_CODES }) }
+
+    scope :schools_with_changes, -> { includes(:school_changes).where(school_changes: { status: :changed, handled: false }) }
 
   private
 

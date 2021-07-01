@@ -22,8 +22,7 @@ module Admin
       end
 
       def schools_with_changes_count
-        schools_scope.includes(:school_changes)
-          .where(school_changes: { status: :changed, handled: false }).count
+        schools_scope.schools_with_changes.count
       end
 
       def schools_scope

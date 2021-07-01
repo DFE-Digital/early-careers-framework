@@ -4,13 +4,13 @@
 <span class="govuk-caption-l"><%= @school.name_and_urn %></span>
 <h1 class="govuk-heading-xl">School details</h1>
 <dl class="govuk-summary-list">
-  <% @school.attributes.except("id", "created_at", "updated_at").each do |k,v| %>
+  <% @school.attributes.except("id", "created_at", "updated_at").each do |attribute_name, value| %>
     <div class="govuk-summary-list__row">
       <dt class="govuk-summary-list__key">
-        <%= k.humanize %>
+        <%= attribute_name.humanize %>
       </dt>
       <dd class="govuk-summary-list__value">
-        <%= v %>
+        <%= value %>
       </dd>
     </div>
   <% end %>

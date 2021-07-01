@@ -6,8 +6,7 @@ module Admin
       before_action { authorize :gias }
 
       def index
-        @schools = schools_scope.includes(:school_changes)
-          .where(school_changes: { status: :changed, handled: false })
+        @schools = schools_scope.schools_with_changes.order(urn: :asc)
       end
 
       def show
