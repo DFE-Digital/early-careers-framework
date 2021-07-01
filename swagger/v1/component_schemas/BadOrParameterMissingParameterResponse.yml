@@ -4,8 +4,8 @@ required:
   - bad_or_missing_parameters
 properties:
   bad_or_missing_parameters:
-    type: array
     description: "An error message for each bad or missing attribute describing the problems"
+    type: array
     minItems: 1
     items:
       type: string

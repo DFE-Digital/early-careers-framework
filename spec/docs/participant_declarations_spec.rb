@@ -24,11 +24,6 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
           "schema": {
             "$ref": "#/components/schemas/ParticipantDeclaration",
           },
-          "example": {
-            "participant_id" => "db3a7848-7308-4879-942a-c4a70ced400a",
-            "declaration_type" => "started",
-            "declaration_date" => "2021-05-31T15:50:00Z",
-          },
         },
       }
 

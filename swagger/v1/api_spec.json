@@ -51,16 +51,10 @@
           }
         ],
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ParticipantDeclaration"
-              },
-              "example": {
-                "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                "declaration_type": "started",
-                "declaration_date": "2021-05-31T15:50:00Z"
               }
             }
           }
@@ -265,8 +259,8 @@
         ],
         "properties": {
           "bad_or_missing_parameters": {
-            "type": "array",
             "description": "An error message for each bad or missing attribute describing the problems",
+            "type": "array",
             "minItems": 1,
             "items": {
               "type": "string"
