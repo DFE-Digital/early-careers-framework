@@ -13,7 +13,7 @@ module UpliftPaymentsSteps
     @uplift_eligible_participants = value.to_i
   end
 
-  step "And there are :value pupil premium participants who have started that are eligible for the uplift payment" do |value|
+  step "there are :value pupil premium participants who have started that are eligible for the uplift payment" do |value|
     @uplift_eligible_participants += value.to_i
   end
 
