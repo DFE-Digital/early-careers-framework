@@ -18,7 +18,9 @@ ucl_cip = CoreInductionProgramme.find_or_create_by!(name: "UCL Institute of Educ
   provider = LeadProvider.find_or_create_by!(name: seed[:provider_name])
   provider.update!(cohorts: [cohort_2021]) unless provider.cohorts.any?
   LeadProviderCip.find_or_create_by!(lead_provider: provider, cohort: cohort_2021, core_induction_programme: seed[:cip])
-  LeadProviderApiToken.create_with_known_token!(seed[:token], lead_provider: provider)
+  if Rails.env.development?
+    LeadProviderApiToken.create_with_known_token!(seed[:token], lead_provider: provider)
+  end
 end
 
 PrivacyPolicy.find_or_initialize_by(major_version: 1, minor_version: 0)
