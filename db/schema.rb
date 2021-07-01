@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_30_000220) do
+ActiveRecord::Schema.define(version: 2021_06_30_000200) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -143,13 +143,6 @@ ActiveRecord::Schema.define(version: 2021_06_30_000220) do
     t.index ["local_authority_district_id"], name: "index_district_sparsities_on_local_authority_district_id"
   end
 
-  create_table "early_career_teacher_profile_declarations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "early_career_teacher_profile_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["early_career_teacher_profile_id"], name: "profile_declaration_ect_profiles"
-  end
-
   create_table "early_career_teacher_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "school_id", null: false
@@ -267,13 +260,6 @@ ActiveRecord::Schema.define(version: 2021_06_30_000220) do
     t.string "code"
     t.string "name"
     t.index ["code"], name: "index_local_authority_districts_on_code", unique: true
-  end
-
-  create_table "mentor_profile_declarations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "mentor_profile_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["mentor_profile_id"], name: "index_mentor_profile_declarations_on_mentor_profile_id"
   end
 
   create_table "mentor_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
