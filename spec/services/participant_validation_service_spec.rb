@@ -3,8 +3,6 @@
 require "rails_helper"
 
 RSpec.describe ParticipantValidationService do
-  subject(:participant_validation_service) { ParticipantValidationService.new }
-
   describe "#validate" do
     let(:trn) { "1234567" }
     let(:nino) { "QQ123456A" }
@@ -20,14 +18,14 @@ RSpec.describe ParticipantValidationService do
         qts_date: qts_date,
         active_alert: alert }
     end
-    let(:validation_result) { participant_validation_service.validate(trn: trn, nino: nino, full_name: full_name, dob: dob) }
+    let(:validation_result) { ParticipantValidationService.validate(trn: trn, nino: nino, full_name: full_name, date_of_birth: dob) }
 
     it "calls show on the DQT API client" do
       expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).with(
         { params: { teacher_reference_number: trn, national_insurance_number: nino } },
       )
 
-      participant_validation_service.validate(trn: trn, nino: nino, full_name: full_name, dob: dob)
+      ParticipantValidationService.validate(trn: trn, nino: nino, full_name: full_name, date_of_birth: dob)
     end
 
     context "when the participant cannot be found" do
@@ -35,28 +33,36 @@ RSpec.describe ParticipantValidationService do
         expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(nil)
       end
 
-      it "returns false" do
-        expect(validation_result).to eql false
+      it "returns nil" do
+        expect(validation_result).to eql nil
       end
     end
 
     context "when the participant has qts and no active flags" do
       before do
-        expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).at_least(1).times.and_return(dqt_record)
+        expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(dqt_record)
       end
 
       it "returns true when all fields match" do
-        expect(validation_result).to eql true
+        expect(validation_result).to eql({ trn: trn, qts: true, active_alert: false })
       end
 
-      it "returns true when three fields match" do
-        [
-          { trn: trn, nino: nino, full_name: full_name, dob: Date.new(1980, 1, 2) },
-          { trn: trn, nino: nino, full_name: "John Smithe", dob: dob },
-          { trn: trn, nino: "AA654321A", full_name: full_name, dob: dob },
-        ].each do |params|
-          expect(participant_validation_service.validate(**params)).to eql true
-        end
+      it "returns the validated details when date of birth is wrong" do
+        expect(
+          ParticipantValidationService.validate(trn: trn, nino: nino, full_name: full_name, date_of_birth: Date.new(1980, 1, 2)),
+        ).to eql({ trn: trn, qts: true, active_alert: false })
+      end
+
+      it "returns the validated details when nino is wrong" do
+        expect(
+          ParticipantValidationService.validate(trn: trn, nino: nino, full_name: "John Smithe", date_of_birth: dob),
+        ).to eql({ trn: trn, qts: true, active_alert: false })
+      end
+
+      it "returns the validated details when name is wrong" do
+        expect(
+          ParticipantValidationService.validate(trn: trn, nino: "AA654321A", full_name: full_name, date_of_birth: dob),
+        ).to eql({ trn: trn, qts: true, active_alert: false })
       end
     end
 
@@ -75,13 +81,13 @@ RSpec.describe ParticipantValidationService do
                                                              .and_return(record_for_other_trn, dqt_record)
       end
 
-      it "returns true" do
-        expect(participant_validation_service.validate(
+      it "returns the correct details" do
+        expect(ParticipantValidationService.validate(
                  trn: other_trn,
                  nino: nino,
                  full_name: full_name,
-                 dob: dob,
-               )).to eql true
+                 date_of_birth: dob,
+               )).to eql({ trn: trn, qts: true, active_alert: false })
       end
     end
 
@@ -91,8 +97,8 @@ RSpec.describe ParticipantValidationService do
         expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(dqt_record)
       end
 
-      it "returns false" do
-        expect(validation_result).to eql false
+      it "returns correct QTS information" do
+        expect(validation_result).to eql({ trn: trn, qts: false, active_alert: false })
       end
     end
 
@@ -102,8 +108,8 @@ RSpec.describe ParticipantValidationService do
         expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(dqt_record)
       end
 
-      it "returns false" do
-        expect(validation_result).to eql false
+      it "returns returns the correct alert details" do
+        expect(validation_result).to eql({ trn: trn, qts: true, active_alert: true })
       end
     end
   end
