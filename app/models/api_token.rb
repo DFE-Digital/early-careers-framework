@@ -15,6 +15,11 @@ class ApiToken < ApplicationRecord
     find_by(hashed_token: hashed_token)
   end
 
+  def self.create_with_known_token!(token, **options)
+    hashed_token = Devise.token_generator.digest(ApiToken, :hashed_token, token)
+    find_or_create_by!(hashed_token: hashed_token, **options)
+  end
+
   def owner
     raise NotImplementedError
   end

@@ -13,8 +13,7 @@ cohort_2021 = Cohort.find_or_create_by!(start_year: "2021")
 
 providers_names = ["Capita", "Teach First", "UCL", "Best Practice Network", "Ambition", "Education Development Trust"]
 
-def generate_provider_token(lead_provider, school, cohort, logger)
-  token = LeadProviderApiToken.create_with_random_token!(lead_provider: lead_provider)
+def generate_participants(lead_provider, school, cohort, logger)
   existing_user_uuids = User.participants_for_lead_provider(lead_provider).map(&:id)
 
   unless existing_user_uuids.any?
@@ -28,7 +27,7 @@ def generate_provider_token(lead_provider, school, cohort, logger)
     end
   end
   output_uuids = user_uuids || existing_user_uuids
-  logger.info "Token for #{lead_provider.name} is #{token}, user uuids: #{output_uuids.join(',')}"
+  logger.info "#{lead_provider.name} user uuids: #{output_uuids.join(',')}"
 end
 
 def create_school_and_associations(lead_provider, cohort, index)
@@ -56,5 +55,5 @@ end
 providers_names.each_with_index do |provider_name, i|
   lead_provider = LeadProvider.find_or_create_by!(name: provider_name)
   school = create_school_and_associations(lead_provider, cohort_2021, i)
-  generate_provider_token(lead_provider, school, cohort_2021, logger)
+  generate_participants(lead_provider, school, cohort_2021, logger)
 end
