@@ -7,6 +7,7 @@ class NpqProfile < ApplicationRecord
 
   enum headteacher_status: {
     no: "no",
+    yes_when_course_starts: "yes_when_course_starts",
     yes_in_first_two_years: "yes_in_first_two_years",
     yes_over_two_years: "yes_over_two_years",
   }
