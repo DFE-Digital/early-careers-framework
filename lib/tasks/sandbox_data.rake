@@ -21,14 +21,23 @@ namespace :lead_provider do
 end
 
 def generate_mentors(lead_provider, school, cohort, logger)
-  existing_count = User.mentors_for_lead_provider(lead_provider).count
+  existing_mentor_count = User.mentors_for_lead_provider(lead_provider).count
+  existing_ect_count = User.early_career_teachers_for_lead_provider(lead_provider).count
   10.times do
     mentor = User.create!(full_name: Faker::Name.name, email: Faker::Internet.email)
-    MentorProfile.create!(user: mentor, school: school, cohort: cohort)
-    logger.info(" Mentor with user_id #{mentor.id} generated")
+    mentor_profile = MentorProfile.create!(user: mentor, school: school, cohort: cohort)
+
+    ect_count = rand(0..3)
+    ect_count.times do
+      ect = User.create!(full_name: Faker::Name.name, email: Faker::Internet.email)
+      EarlyCareerTeacherProfile.create!(user: ect, school: school, cohort: cohort, mentor_profile: mentor_profile)
+    end
+    logger.info(" Mentor with user_id #{mentor.id} generated with #{ect_count} ECTs")
   end
-  new_count = User.mentors_for_lead_provider(lead_provider).count
-  logger.info(" Before: #{existing_count}, after: #{new_count}")
+  new_mentor_count = User.mentors_for_lead_provider(lead_provider).count
+  logger.info(" Before: #{existing_mentor_count} mentors, after: #{new_mentor_count}")
+  new_ect_count = User.early_career_teachers_for_lead_provider(lead_provider).count
+  logger.info(" Before: #{existing_ect_count} ECTs, after: #{new_ect_count}")
 end
 
 def create_school_and_associations(lead_provider, cohort, index)
