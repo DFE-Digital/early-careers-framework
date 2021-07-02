@@ -8,7 +8,7 @@ namespace :lead_provider do
       "#{msg}\n"
     end
 
-    providers_names = ["Capita", "Teach First", "UCL", "Best Practice Network", "Ambition", "Education Development Trust"]
+    providers_names = ["Capita", "Teach First", "UCL Institute of Education", "Best Practice Network", "Ambition Institute", "Education Development Trust"]
     cohort_2021 = Cohort.find_by!(start_year: "2021")
 
     providers_names.each_with_index do |provider_name, index|
