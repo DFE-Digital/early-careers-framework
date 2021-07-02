@@ -8,7 +8,7 @@ FactoryBot.define do
     login_token_valid_until { 1.hour.from_now }
 
     trait :admin do
-      admin_profile { build(:admin_profile) }
+      admin_profile
     end
 
     trait :induction_coordinator do
@@ -29,11 +29,12 @@ FactoryBot.define do
     end
 
     trait :lead_provider do
-      lead_provider_profile { build(:lead_provider_profile) }
+      lead_provider_profile
     end
 
     trait :early_career_teacher do
-      early_career_teacher_profile { build(:early_career_teacher_profile) }
+      early_career_teacher_profile
+
       transient do
         mentor {}
         school {}
@@ -54,7 +55,7 @@ FactoryBot.define do
     end
 
     trait :mentor do
-      mentor_profile { build(:mentor_profile) }
+      mentor_profile
 
       transient do
         school {}

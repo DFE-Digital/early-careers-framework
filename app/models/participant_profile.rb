@@ -32,6 +32,8 @@ class ParticipantProfile < ApplicationRecord
   class Mentor < self
     self.ignored_columns = %i[mentor_profile_id]
 
+    has_many :mentee_profiles, class_name: "ParticipantProfile::ECT", foreign_key: :mentor_profile_id, dependent: :nullify
+
     def mentor?
       true
     end
