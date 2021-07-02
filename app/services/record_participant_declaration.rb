@@ -47,7 +47,7 @@ private
   end
 
   def add_participant_profile_params!
-    raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless user && profile_type
+    raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless user&.participant?
   end
 
   def user_id
