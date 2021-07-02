@@ -212,7 +212,11 @@ Rails.application.routes.draw do
           resource :programme, only: %i[edit], controller: "choose_programme"
 
           resources :participants, only: %i[index show] do
-            get :edit_details, path: "edit-details"
+            get :edit_name, path: "edit-name"
+            put :update_name, path: "update-name"
+            get :edit_email, path: "edit-email"
+            put :update_email, path: "update-email"
+            get :email_used, path: "email-used"
             get :edit_mentor, path: "edit-mentor"
             put :update_mentor, path: "update-mentor"
 

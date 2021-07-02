@@ -2,7 +2,7 @@
 
 class Schools::ParticipantsController < Schools::BaseController
   before_action :set_school_cohort
-  before_action :set_participant, except: :index
+  before_action :set_participant, except: %i[index email_used]
   before_action :check_feature_flag
 
   def index
@@ -18,6 +18,33 @@ class Schools::ParticipantsController < Schools::BaseController
   def show
     @mentor = @participant.early_career_teacher_profile&.mentor
   end
+
+  def edit_name; end
+
+  def update_name
+    if @participant.update(params.require(:user).permit(:full_name))
+      set_success_message(heading: "The participant's name has been updated")
+      redirect_to schools_participant_path(id: @participant)
+    else
+      render "schools/participants/edit_name"
+    end
+  end
+
+  def edit_email; end
+
+  def update_email
+    @participant.assign_attributes(params.require(:user).permit(:email))
+    redirect_to action: :email_used and return if email_used?
+
+    if @participant.save
+      set_success_message(heading: "The participant's email address has been updated")
+      redirect_to schools_participant_path(id: @participant)
+    else
+      render "schools/participants/edit_email"
+    end
+  end
+
+  def email_used; end
 
   def edit_mentor
     @mentor_form = ParticipantMentorForm.new(
@@ -54,5 +81,9 @@ private
 
   def participant_mentor_form_params
     params.require(:participant_mentor_form).permit(:mentor_id)
+  end
+
+  def email_used?
+    User.where.not(id: @participant.id).where(email: @participant.email).any?
   end
 end

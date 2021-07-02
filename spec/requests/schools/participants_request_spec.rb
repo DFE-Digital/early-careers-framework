@@ -30,7 +30,7 @@ RSpec.describe "Schools::Participants", type: :request do
     sign_in user
   end
 
-  describe "GET /schools/cohorts/:start_year/participants" do
+  describe "GET /schools/:school_id/cohorts/:start_year/participants" do
     it "shouldn't be available when feature flag turned off" do
       FeatureFlag.deactivate(:induction_tutor_manage_participants)
       expect {
@@ -54,7 +54,7 @@ RSpec.describe "Schools::Participants", type: :request do
     end
   end
 
-  describe "GET /schools/cohorts/:start_year/participants/:id" do
+  describe "GET /schools/:school_id/cohorts/:start_year/participants/:id" do
     it "renders participant template" do
       get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_user.id}"
 
@@ -69,7 +69,7 @@ RSpec.describe "Schools::Participants", type: :request do
     end
   end
 
-  describe "GET /schools/cohorts/:start_year/participants/:id/edit-mentor" do
+  describe "GET /schools/:school_id/cohorts/:start_year/participants/:id/edit-mentor" do
     it "renders edit mentor template" do
       get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_user.id}/edit-mentor"
 
@@ -84,7 +84,7 @@ RSpec.describe "Schools::Participants", type: :request do
     end
   end
 
-  describe "PUT /schools/cohorts/:start_year/participants/:id/update-mentor" do
+  describe "PUT /schools/:school_id/cohorts/:start_year/participants/:id/update-mentor" do
     it "updates mentor" do
       params = { participant_mentor_form: { mentor_id: mentor_user_2.id } }
       put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_user.id}/update-mentor", params: params
@@ -92,6 +92,120 @@ RSpec.describe "Schools::Participants", type: :request do
       expect(response).to redirect_to(schools_participant_path(id: ect_user))
       expect(flash[:success][:title]).to eq("Success")
       expect(ect_user.reload.early_career_teacher_profile.mentor).to eq(mentor_user_2)
+    end
+  end
+
+  describe "GET /schools/:school_id/cohorts/:start_year/participants/:id/edit-name" do
+    it "renders the edit name template with the correct name for an ECT" do
+      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_user.id}/edit-name"
+
+      expect(response).to render_template("schools/participants/edit_name")
+      expect(response.body).to include(CGI.escapeHTML(ect_user.full_name))
+    end
+
+    it "renders the edit name template with the correct name for a mentor" do
+      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_user.id}/edit-name"
+
+      expect(response).to render_template("schools/participants/edit_name")
+      expect(response.body).to include(CGI.escapeHTML(mentor_user.full_name))
+    end
+  end
+
+  describe "PUT /schools/:school_id/cohorts/:start_year/participants/:id/update-name" do
+    it "updates the name of an ECT" do
+      expect {
+        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_user.id}/update-name", params: {
+          user: { full_name: "Joe Bloggs" },
+        }
+      }.to change { ect_user.reload.full_name }.to("Joe Bloggs")
+    end
+
+    it "updates the name of a mentor" do
+      expect {
+        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_user.id}/update-name", params: {
+          user: { full_name: "Sally Mentor" },
+        }
+      }.to change { mentor_user.reload.full_name }.to("Sally Mentor")
+    end
+
+    it "rejects a blank name" do
+      expect {
+        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_user.id}/update-name", params: {
+          user: { full_name: "" },
+        }
+      }.not_to change { mentor_user.reload.full_name }
+
+      expect(response).to render_template("schools/participants/edit_name")
+    end
+  end
+
+  describe "GET /schools/:school_id/cohorts/:start_year/participants/:id/edit-email" do
+    it "renders the edit email template with the correct name for an ECT" do
+      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_user.id}/edit-email"
+
+      expect(response).to render_template("schools/participants/edit_email")
+      expect(response.body).to include(CGI.escapeHTML(ect_user.email))
+    end
+
+    it "renders the edit email template with the correct name for a mentor" do
+      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_user.id}/edit-email"
+
+      expect(response).to render_template("schools/participants/edit_email")
+      expect(response.body).to include(CGI.escapeHTML(mentor_user.email))
+    end
+  end
+
+  describe "PUT /schools/:school_id/cohorts/:start_year/participants/:id/update-email" do
+    it "updates the email of an ECT" do
+      expect {
+        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_user.id}/update-email", params: {
+          user: { email: "new@email.com" },
+        }
+      }.to change { ect_user.reload.email }.to("new@email.com")
+    end
+
+    it "updates the email of a mentor" do
+      expect {
+        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_user.id}/update-email", params: {
+          user: { email: "new@email.com" },
+        }
+      }.to change { mentor_user.reload.email }.to("new@email.com")
+    end
+
+    it "rejects a blank email" do
+      expect {
+        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_user.id}/update-email", params: {
+          user: { email: "" },
+        }
+      }.not_to change { mentor_user.reload.email }
+      expect(response).to render_template("schools/participants/edit_email")
+    end
+
+    it "rejects a malformed email" do
+      expect {
+        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_user.id}/update-email", params: {
+          user: { email: "nonsense" },
+        }
+      }.not_to change { mentor_user.reload.email }
+      expect(response).to render_template("schools/participants/edit_email")
+    end
+
+    it "rejects an email in use by another user" do
+      other_user = create(:user)
+      expect {
+        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_user.id}/update-email", params: {
+          user: { email: other_user.email },
+        }
+      }.not_to change { mentor_user.reload.email }
+      expect(response).to redirect_to("/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_user.id}/email-used")
+    end
+  end
+
+  describe "GET /schools/:school_id/cohorts/:start_year/participants/:id/email-used" do
+    it "renders the email used in same school template" do
+      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_user.id}/email-used"
+
+      expect(response).to render_template("schools/participants/email_used")
     end
   end
 end
