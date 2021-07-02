@@ -13,6 +13,13 @@ class RecordParticipantEvent
     def required_params
       %i[participant_id lead_provider declaration_type declaration_date raw_event]
     end
+
+    def user_type_profile_recorders
+      {
+        early_career_teacher_profile: EarlyCareerTeacherProfile,
+        mentor_profile: MentorProfile,
+      }
+    end
   end
 
   def call
@@ -27,10 +34,11 @@ private
 
   def initialize(params)
     @params = params
+    @params[:user_id] = params[:participant_id]
   end
 
   def validate_schema!
-    errors = JsonSchema::ValidateBodyAgainstSchema.call(schema: schema, body: @params[:raw_event])
+    errors = JsonSchema::ValidateBodyAgainstSchema.call(schema: schema, body: params[:raw_event])
     raise ActionController::ParameterMissing, (errors.map { |error| error.sub(/\sin schema.*$/, "") }) unless errors.empty?
   end
 
@@ -39,17 +47,46 @@ private
   end
 
   def add_ect_profile_params!
-    raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless early_career_teacher_profile
-
-    @params[:early_career_teacher_profile] = early_career_teacher_profile
+    raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless user && profile_type
   end
 
-  def early_career_teacher_profile
-    User.find_by(id: @params[:participant_id])&.early_career_teacher_profile
+  def user_id
+    params[:user_id]
+  end
+
+  def user
+    @user ||= User.find_by(id: user_id)
+  end
+
+  def profile_type
+    if user.early_career_teacher?
+      :early_career_teacher_profile
+    elsif user.mentor?
+      :mentor_profile
+    else
+      false
+    end
+  end
+
+  def user_profile
+    if user.early_career_teacher?
+      user.early_career_teacher_profile
+    elsif user.mentor?
+      user.mentor_profile
+    else
+      false
+    end
   end
 
   def create_record!
-    ParticipantDeclaration.create!(@params.slice(*required_params))
+    ActiveRecord::Base.transaction do
+      ParticipantDeclaration.create!(params.slice(*required_params)).tap do |participant_declaration|
+        ProfileDeclaration.create!(
+          participant_declaration: participant_declaration,
+          declarable: user_profile,
+        )
+      end
+    end
   end
 
   def lead_provider
@@ -57,7 +94,7 @@ private
   end
 
   def actual_lead_provider
-    SchoolCohort.find_by(school: early_career_teacher_profile.school, cohort: early_career_teacher_profile.cohort)&.lead_provider
+    SchoolCohort.find_by(school: user_profile.school, cohort: user_profile.cohort)&.lead_provider
   end
 
   def validate_provider!
@@ -65,6 +102,6 @@ private
   end
 
   def required_params
-    (self.class.required_params - [:participant_id]) << :early_career_teacher_profile
+    (self.class.required_params - [:participant_id] + [:user_id])
   end
 end
