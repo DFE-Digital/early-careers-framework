@@ -9,8 +9,7 @@ class EarlyCareerTeacherProfile < ApplicationRecord
   belongs_to :cohort
   belongs_to :mentor_profile, optional: true
   has_one :mentor, through: :mentor_profile, source: :user
-  has_one :participation_record, dependent: :destroy
-  has_many :participant_declarations
+  has_many :profile_declarations
 
   scope :sparsity, -> { where(sparsity_uplift: true) }
   scope :pupil_premium, -> { where(pupil_premium_uplift: true) }

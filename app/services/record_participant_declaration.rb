@@ -2,7 +2,7 @@
 
 require "json_schema/validate_body_against_schema"
 
-class RecordParticipantEvent
+class RecordParticipantDeclaration
   attr_accessor :params
 
   class << self
@@ -24,7 +24,7 @@ class RecordParticipantEvent
 
   def call
     validate_schema!
-    add_ect_profile_params!
+    add_participant_profile_params!
     declaration = create_record!
     validate_provider!
     { id: declaration.id }
@@ -46,7 +46,7 @@ private
     JSON.parse(File.read(JsonSchema::VersionEventFileName.call(version: "0.2")))
   end
 
-  def add_ect_profile_params!
+  def add_participant_profile_params!
     raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless user && profile_type
   end
 

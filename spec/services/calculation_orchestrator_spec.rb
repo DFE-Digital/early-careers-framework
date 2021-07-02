@@ -57,33 +57,33 @@ RSpec.describe CalculationOrchestrator do
   end
 
   context ".call" do
-    context "when only sparsity_uplift flag was set" do
+    context "when uplift flags were set" do
+      let(:with_uplift) { :sparsity_uplift }
+
       before do
-        create_list(:participant_declaration, 10, :sparsity_uplift, lead_provider: call_off_contract.lead_provider)
+        create_list(:participant_declaration, 10, with_uplift, lead_provider: call_off_contract.lead_provider)
       end
 
-      it "returns the total calculation" do
-        expect(described_class.call(contract: call_off_contract, lead_provider: call_off_contract.lead_provider, event_type: :started)).to eq(expected_result)
-      end
-    end
-
-    context "when only pupil_premium_uplift flag was set" do
-      before do
-        create_list(:participant_declaration, 10, :pupil_premium_uplift, lead_provider: call_off_contract.lead_provider)
+      context "when only sparsity_uplift flag was set" do
+        it "returns the total calculation" do
+          expect(described_class.call(contract: call_off_contract, lead_provider: call_off_contract.lead_provider, event_type: :started)).to eq(expected_result)
+        end
       end
 
-      it "returns the total calculation" do
-        expect(described_class.call(contract: call_off_contract, lead_provider: call_off_contract.lead_provider, event_type: :started)).to eq(expected_result)
-      end
-    end
+      context "when only pupil_premium_uplift flag was set" do
+        let(:with_uplift) { :pupil_premium_uplift }
 
-    context "when both sparsity_uplift and pupil_premium_uplift flags were set" do
-      before do
-        create_list(:participant_declaration, 10, :uplift_flags, lead_provider: call_off_contract.lead_provider)
+        it "returns the total calculation" do
+          expect(described_class.call(contract: call_off_contract, lead_provider: call_off_contract.lead_provider, event_type: :started)).to eq(expected_result)
+        end
       end
 
-      it "returns the total calculation" do
-        expect(described_class.call(contract: call_off_contract, lead_provider: call_off_contract.lead_provider, event_type: :started)).to eq(expected_result)
+      context "when both sparsity_uplift and pupil_premium_uplift flags were set" do
+        let(:with_uplift) { :uplift_flags }
+
+        it "returns the total calculation" do
+          expect(described_class.call(contract: call_off_contract, lead_provider: call_off_contract.lead_provider, event_type: :started)).to eq(expected_result)
+        end
       end
     end
 
@@ -91,6 +91,16 @@ RSpec.describe CalculationOrchestrator do
       before do
         create_list(:participant_declaration, 10, lead_provider: call_off_contract.lead_provider)
         expected_result.tap { |hash| hash[:uplift][:sub_total] = 0.0 }
+      end
+
+      it "returns the total calculation" do
+        expect(described_class.call(contract: call_off_contract, lead_provider: call_off_contract.lead_provider, event_type: :started)).to eq(expected_result)
+      end
+    end
+
+    context "when only ect profile declaration records available" do
+      before do
+        create_list(:participant_declaration, 10, :only_ect_profile, lead_provider: call_off_contract.lead_provider)
       end
 
       it "returns the total calculation" do
