@@ -68,12 +68,13 @@ RSpec.describe "School rollout data endpoint", type: :request do
     end
 
     context "using public token from different scope" do
-      let(:other_token) { EngageAndLearnApiToken.create_with_random_token! }
+      let(:lead_provider) { create(:lead_provider) }
+      let(:other_token) { LeadProviderApiToken.create_with_random_token!(lead_provider: lead_provider) }
 
-      it "returns 401 for invalid bearer token" do
+      it "returns 403 for public bearer token" do
         default_headers[:Authorization] = "Bearer #{other_token}"
         get "/api/v1/data-studio/school-rollout"
-        expect(response.status).to eq 401
+        expect(response.status).to eq 403
       end
     end
   end
