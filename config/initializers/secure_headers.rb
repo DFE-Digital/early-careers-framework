@@ -18,7 +18,7 @@ SecureHeaders::Configuration.default do |config|
     base_uri: %w['self'],
     block_all_mixed_content: true, # see http://www.w3.org/TR/mixed-content/
     child_src: %w['self'],
-    connect_src: %W['self'] + google_analytics,
+    connect_src: %W['self' *.ingest.sentry.io] + google_analytics,
     font_src: %w['self' *.gov.uk fonts.gstatic.com],
     form_action: %w['self'],
     frame_ancestors: %w['self'],
