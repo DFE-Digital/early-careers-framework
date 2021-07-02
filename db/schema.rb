@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_30_000200) do
+ActiveRecord::Schema.define(version: 2021_07_01_000300) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -463,13 +463,11 @@ ActiveRecord::Schema.define(version: 2021_06_30_000200) do
 
   create_table "profile_declarations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_declaration_id", null: false
-    t.uuid "lead_provider_id", null: false
     t.string "declarable_type", null: false
     t.uuid "declarable_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["declarable_type", "declarable_id"], name: "index_profile_declarations_on_declarable"
-    t.index ["lead_provider_id"], name: "index_profile_declarations_on_lead_provider_id"
     t.index ["participant_declaration_id"], name: "index_profile_declarations_on_participant_declaration_id"
   end
 
