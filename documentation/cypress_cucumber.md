@@ -124,6 +124,46 @@ same test you'll need to give it a name manually:
 And percy should be sent snapshot called "page name"
 ```
 
+When the accessibility tests fail, the error logged to the console won't say
+what caused the actual problem. To see the error you'll need to be in an
+interactive Cypress session (`cypress open`) and click on the warning above
+the error in the Cypress console, which will then output the errors to the
+browser console.
+
+#### Dangling state
+
+Dangling state can be a really useful tool with Cypress—you can write half a
+test, run it, and then click around in the browser to test stuff or figure out
+what to write next in your tests.
+
+Unfortunately, cypress-cucumber-preprocessor makes it a bit more complicated
+than it usually is. Usually with Cypress you'd run a single test by adding
+`.only` to an `it()` call, like this:
+
+```js
+it.only("should do the thing", () => {
+  // ...
+});
+```
+
+Then no other test will run and the state will be preserved at the end of the
+run.
+
+cypress-cucumber-preprocess, in theory, adds a similar feature. You can add a
+`@focus` tag to a spec to only run that test:
+
+```
+  @focus
+  Scenario: Doing a thing
+```
+
+In practice, while this looks the same when you run the test, it doesn't work
+in the same way as it still runs the `beforeEach` blocks of the tests after
+it—which resets the state.
+
+If you do require dangling state, you'll need to either ensure you're focusing
+the last scenario in a file, or comment out all the tests below it.
+
 [Cypress]: https://docs.cypress.io/guides/overview/why-cypress
 [CypressOnRails]: https://github.com/TheBrainFamily/cypress-cucumber-preprocessor
 [cypress-cucumber-preprocessor]: https://github.com/TheBrainFamily/cypress-cucumber-preprocessor
