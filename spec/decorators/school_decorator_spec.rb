@@ -2,9 +2,9 @@
 
 require "rails_helper"
 
-RSpec.describe Decorators::SchoolDecorator do
+RSpec.describe SchoolDecorator do
   let(:school) { create(:school, name: "Western Armstrong", address_line1: "52634 Gloria Circle", address_line2: "Pagac Extensions", postcode: "SE23 1SA") }
-  let(:school_decorator) { Decorators::SchoolDecorator.new(school) }
+  let(:school_decorator) { SchoolDecorator.new(school) }
 
   describe "#name_with_address" do
     let(:expected_name_with_address) do
