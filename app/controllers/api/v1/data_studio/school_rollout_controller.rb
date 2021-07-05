@@ -27,6 +27,11 @@ module Api
         end
 
         def school_query
+          # NOTE: This is left as a SQL query to help analysts understand it and enable them to make changes
+          # without needing to understand Ruby/ActiveRecord/Arel etc.
+          # Also, this will return ~25k+ rows and there is a performance/memory overhead if this instantiates
+          # School and associated objects and then serializes all of them in a similar fashion to the other API
+          # endpoints.
           query = <<~SQL
             SELECT
               schools.id,
