@@ -4,6 +4,7 @@ FactoryBot.define do
   factory :mentor_profile do
     user
     school
+    cohort
 
     trait :sparsity_uplift do
       sparsity_uplift { true }

@@ -14,8 +14,16 @@ Cypress.Commands.add("appCommands", (body) => {
 
 let createdRecords = {};
 export default {
-  getCreatedRecord(factory, index = 0) {
-    return createdRecords[factory] && createdRecords[factory][index];
+  getCreatedRecord(factory, givenIndex = -1) {
+    if (!createdRecords[factory]) {
+      return null;
+    }
+
+    let index = givenIndex;
+    if (index < 0) {
+      index = createdRecords[factory].length + index;
+    }
+    return createdRecords[factory][index];
   },
 };
 

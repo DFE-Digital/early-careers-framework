@@ -11,10 +11,8 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
     let(:bearer_token) { "Bearer #{token}" }
 
     before :each do
-      mentor = create(:user, :mentor, school: partnership.school, cohort: partnership.cohort)
-      2.times do
-        create(:user, :early_career_teacher, mentor: mentor, school: partnership.school, cohort: partnership.cohort)
-      end
+      mentor_profile = create(:mentor_profile, school: partnership.school, cohort: partnership.cohort)
+      create_list :early_career_teacher_profile, 2, mentor_profile: mentor_profile, school: partnership.school, cohort: partnership.cohort
     end
 
     context "when authorized" do

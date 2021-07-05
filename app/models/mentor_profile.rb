@@ -14,4 +14,20 @@ class MentorProfile < ApplicationRecord
   scope :sparsity, -> { where(sparsity_uplift: true) }
   scope :pupil_premium, -> { where(pupil_premium_uplift: true) }
   scope :uplift, -> { sparsity.or(pupil_premium) }
+  # TODO: Add a link to participant_record if we need to
+
+  after_save :save_participant_profile
+  before_destroy :destroy_participant_profile
+
+private
+
+  def save_participant_profile
+    profile = ParticipantProfile::Mentor.find_or_initialize_by(id: id)
+    profile.assign_attributes(attributes)
+    profile.save!
+  end
+
+  def destroy_participant_profile
+    ParticipantProfile::Mentor.where(id: id).destroy_all
+  end
 end

@@ -1,4 +1,4 @@
-Feature: School leaders should be able to manage participants
+Feature: School leaders should be able to add participants
 
   Background:
     Given scenario "school_participants" has been run

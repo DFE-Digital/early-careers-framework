@@ -630,6 +630,7 @@ ActiveRecord::Schema.define(version: 2021_07_01_000430) do
   add_foreign_key "participant_declarations", "lead_providers"
   add_foreign_key "participant_profiles", "cohorts"
   add_foreign_key "participant_profiles", "core_induction_programmes"
+  add_foreign_key "participant_profiles", "participant_profiles", column: "mentor_profile_id"
   add_foreign_key "participant_profiles", "schools"
   add_foreign_key "participant_profiles", "users"
   add_foreign_key "participation_records", "early_career_teacher_profiles"

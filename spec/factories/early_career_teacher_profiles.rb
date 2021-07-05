@@ -4,7 +4,7 @@ FactoryBot.define do
   factory :early_career_teacher_profile do
     user
     school
-    cohort { build(:cohort, :current) }
+    cohort
 
     trait :sparsity_uplift do
       sparsity_uplift { true }
