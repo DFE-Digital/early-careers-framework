@@ -1,0 +1,17 @@
+code {
+  background-color: govuk-colour("light-grey");
+  font-family: monospace;
+  padding: 2px 5px;
+
+  .govuk-panel--confirmation & {
+    background-color: transparent;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+}
