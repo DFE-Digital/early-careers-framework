@@ -7,7 +7,7 @@ RSpec.describe RecordParticipantDeclaration do
   let(:another_lead_provider) { create(:lead_provider, name: "Unknown") }
   let(:ect_profile) { create(:early_career_teacher_profile) }
   let(:mentor_profile) { create(:mentor_profile) }
-  let(:induction_coordinator_profile) { create(:induction_coordinator_profile)}
+  let(:induction_coordinator_profile) { create(:induction_coordinator_profile) }
   let(:params) do
     {
       raw_event: "{\"participant_id\":\"37b300a8-4e99-49f1-ae16-0235672b6708\",\"declaration_type\":\"started\",\"declaration_date\":\"2021-06-21T08:57:31Z\"}",

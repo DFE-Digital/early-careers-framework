@@ -24,6 +24,7 @@ class RecordParticipantDeclaration
   end
 
 private
+
   delegate :participant?, :early_career_teacher?, :mentor?, to: :user, allow_nil: true
   delegate :early_career_teacher_profile, :mentor_profile, to: :user
   delegate :school, :cohort, to: :user_profile
