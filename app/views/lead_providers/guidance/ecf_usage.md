@@ -21,9 +21,9 @@ Get the participant records.
 GET /api/v1/participants
 ```
 
-This will return [multiple participant records](/api-docs#multipleparticipantresponse-object).
+This will return [multiple participant records](/lead-providers/guidance/reference#multipleparticipantresponse-object).
 
-See [retrieve multiple participants](/api-docs#get-api-v1-participants) endpoint.
+See [retrieve multiple participants](/lead-providers/guidance/reference#get-api-v1-participants) endpoint.
 
 ### 2. Participant enters registration details on register for early career framework service
 
@@ -44,9 +44,9 @@ Get updated participant records.
 GET /api/v1/participants?filter={updated_since:"2021-05-13T11:21:55Z"}
 ```
 
-This will return [multiple participant records](/lead-providers/reference#multipleparticipantresponse-object) with the updates to the record included.
+This will return [multiple participant records](/lead-providers/guidance/reference#multipleparticipantresponse-object) with the updates to the record included.
 
-See [retrieve multiple participants](/api-docs#get-api-v1-participants) endpoint.
+See [retrieve multiple participants](/lead-providers/guidance/reference#get-api-v1-participants) endpoint.
 
 ### 3. Provider confirms completion of registration process
 
@@ -56,11 +56,11 @@ Confirm a participant is ready to start their training.
 POST /api/v1/... TBC
 ```
 
-With a [request body containing confirmation details](/api-docs).
+With a [request body containing confirmation details](/lead-providers/guidance/reference).
 
-This returns [Success](/api-docs).
+This returns [Success](/lead-providers/guidance/reference).
 
-See [confirm registration complete](/api-docs) endpoint.
+See [confirm registration complete](/lead-providers/guidance/reference) endpoint.
 
 ## Declaring that a participant has started their induction
 
@@ -74,8 +74,8 @@ Confirm a participant has started their induction training before Milestone 1.
 POST /api/v1/participant_declarations
 ```
 
-With a [request body containing a participant declaration](/api-docs#participantdeclaration-object).
+With a [request body containing a participant declaration](/lead-providers/guidance/reference#participantdeclaration-object).
 
-This returns [participant declaration recorded](/api-docs#participantdeclarationrecordedresponse-object).
+This returns [participant declaration recorded](/lead-providers/guidance/reference#participantdeclarationrecordedresponse-object).
 
-See [confirm participant declarations](/api-docs#post-api-v1-participant-declarations) endpoint.
+See [confirm participant declarations](/lead-providers/guidance/reference#post-api-v1-participant-declarations) endpoint.
