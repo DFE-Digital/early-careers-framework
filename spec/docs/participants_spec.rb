@@ -99,6 +99,9 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
 
       response "401", "Unauthorized" do
         let(:Authorization) { "Bearer invalid" }
+
+        schema "$ref": "#/components/schemas/UnauthorisedResponse"
+
         run_test!
       end
     end
@@ -139,6 +142,9 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
 
       response "401", "Unauthorized" do
         let(:Authorization) { "Bearer invalid" }
+
+        schema "$ref": "#/components/schemas/UnauthorisedResponse"
+
         run_test!
       end
     end
