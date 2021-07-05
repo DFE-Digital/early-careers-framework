@@ -1,4 +1,4 @@
-Feature: Lead Providers Guidance
+Feature: Lead Providers Partnership Management
   Scenario: Visiting the Lead Providers landing page
     Given I am on "the Lead Provider landing page" page
     Then the page should be accessible

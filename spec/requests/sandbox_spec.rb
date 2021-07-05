@@ -33,7 +33,7 @@ RSpec.describe "Sandbox landing page", type: :request do
     it "should signpost visitors to API documentation" do
       get sandbox_path
 
-      expect(response.body).to include "Review our API documentation"
+      expect(response.body).to include "Review our API guidance"
       expect(response.body).to include "/api-docs"
     end
   end
