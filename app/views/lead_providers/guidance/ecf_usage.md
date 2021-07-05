@@ -79,3 +79,21 @@ With a [request body containing a participant declaration](/lead-providers/guida
 This returns [participant declaration recorded](/lead-providers/guidance/reference#participantdeclarationrecordedresponse-object).
 
 See [confirm participant declarations](/lead-providers/guidance/reference#post-api-v1-participant-declarations) endpoint.
+
+## Voiding a participant declaration
+
+This scenario begins after a participant declaration has been submitted which will return an identifier for the participant declaration.
+
+### 1. Provider voids a participant declaration
+
+Confirm a participant declaration was submitted in error or with incorrect details.
+
+```
+POST /api/v1/participant_declarations/{id}/void
+```
+
+With a [request body containing a void participant declaration](/lead-providers/guidance/reference#voidparticipantdeclaration-object).
+
+This returns [participant declaration voided](/lead-providers/guidance/reference#participantdeclarationvoidedresponse-object).
+
+See [void participant declarations](/lead-providers/guidance/reference#post-api-v1-void-participant-declarations) endpoint.
