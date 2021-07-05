@@ -1,6 +1,7 @@
+<% content_for :before_content, govuk_back_link( text: "Back", href: schools_participant_path(id: @participant)) %>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">Change participant's email address</h1>
+    <h1 class="govuk-heading-xl">Change <%= @participant.early_career_teacher? ? "ECT's" : "mentor's" %> email address</h1>
     <%= form_for @participant, url: schools_participant_update_email_path, method: :put do |f| %>
       <%= f.govuk_text_field :email, label: { text: "Email address" } %>
       <%= f.govuk_submit %>
