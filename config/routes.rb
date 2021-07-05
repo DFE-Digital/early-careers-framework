@@ -55,6 +55,10 @@ Rails.application.routes.draw do
       resources :dqt_records, only: :show, path: "dqt-records"
 
       jsonapi_resources :npq_profiles, only: [:create]
+
+      namespace :data_studio, path: "data-studio" do
+        get "/school-rollout", to: "school_rollout#index"
+      end
     end
   end
 
