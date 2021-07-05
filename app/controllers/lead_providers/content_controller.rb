@@ -2,6 +2,8 @@
 
 module LeadProviders
   class ContentController < ApplicationController
+    include MarkdownHelper
+
     layout :resolve_layout
 
     def index
@@ -24,7 +26,7 @@ module LeadProviders
     end
 
     def render_content_page(page_name)
-      @converted_markdown = GovukMarkdown.render(File.read("app/views/lead_providers/content/#{page_name}.md")).html_safe
+      @converted_markdown = markdown_to_html File.read("app/views/lead_providers/content/#{page_name}.md")
       @page_name = page_name
 
       render "rendered_markdown_template"
