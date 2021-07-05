@@ -8,17 +8,17 @@ FactoryBot.define do
     declaration_type { "started" }
 
     trait :sparsity_uplift do
-      only_ect_profile
+      with_random_profile
       uplift { :sparsity_uplift }
     end
 
     trait :pupil_premium_uplift do
-      only_ect_profile
+      with_random_profile
       uplift { :pupil_premium_uplift }
     end
 
     trait :uplift_flags do
-      only_ect_profile
+      with_random_profile
       uplift { :uplift_flags }
     end
 
