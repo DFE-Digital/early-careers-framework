@@ -29,41 +29,41 @@ module Api
         def school_query
           query = <<~SQL
             SELECT
-              s.id,
-              s.name,
-              s.urn,
-              ne.sent_at,
-              ne.opened_at,
-              ne.notify_status,
+              schools.id,
+              schools.name,
+              schools.urn,
+              nomination_emails.sent_at,
+              nomination_emails.opened_at,
+              nomination_emails.notify_status,
               (icp.id IS NOT NULL) AS induction_tutor_nominated,
               icp.created_at AS tutor_nominated_time,
-              (u.current_sign_in_at IS NOT NULL) AS induction_tutor_signed_in,
-              sc.induction_programme_choice,
-              sc.created_at AS programme_chosen_time,
-              (p.id IS NOT NULL) AS in_partnership,
-              p.created_at AS partnership_time,
-              p.challenge_reason AS partnership_challenge_reason,
-              p.challenged_at AS partnership_challenge_time,
-              lp.name AS lead_provider,
-              dp.name AS delivery_partner,
+              (users.current_sign_in_at IS NOT NULL) AS induction_tutor_signed_in,
+              school_cohorts.induction_programme_choice,
+              school_cohorts.created_at AS programme_chosen_time,
+              (partnerships.id IS NOT NULL) AS in_partnership,
+              partnerships.created_at AS partnership_time,
+              partnerships.challenge_reason AS partnership_challenge_reason,
+              partnerships.challenged_at AS partnership_challenge_time,
+              lead_providers.name AS lead_provider,
+              delivery_partners.name AS delivery_partner,
               cip.name AS chosen_cip,
-              sc.updated_at AS cip_chosen_time 
+              school_cohorts.updated_at AS cip_chosen_time 
             FROM
-              schools s
-              FULL OUTER JOIN nomination_emails ne ON s.id = ne.school_id
-              LEFT OUTER JOIN induction_coordinator_profiles_schools icps ON s.id = icps.school_id
+              schools
+              FULL OUTER JOIN nomination_emails ON schools.id = nomination_emails.school_id
+              LEFT OUTER JOIN induction_coordinator_profiles_schools icps ON schools.id = icps.school_id
               LEFT OUTER JOIN induction_coordinator_profiles icp ON icps.induction_coordinator_profile_id = icp.id
-              LEFT OUTER JOIN users u on icp.user_id = u.id
-              LEFT OUTER JOIN school_cohorts sc on s.id = sc.school_id
-              LEFT OUTER JOIN partnerships p on s.id = p.school_id
-              LEFT OUTER JOIN core_induction_programmes cip on sc.core_induction_programme_id = cip.id
-              LEFT OUTER JOIN lead_providers lp on p.lead_provider_id = lp.id
-              LEFT OUTER JOIN delivery_partners dp on p.delivery_partner_id = dp.id 
+              LEFT OUTER JOIN users ON icp.user_id = users.id
+              LEFT OUTER JOIN school_cohorts ON schools.id = school_cohorts.school_id
+              LEFT OUTER JOIN partnerships ON schools.id = partnerships.school_id
+              LEFT OUTER JOIN core_induction_programmes cip ON school_cohorts.core_induction_programme_id = cip.id
+              LEFT OUTER JOIN lead_providers ON partnerships.lead_provider_id = lead_providers.id
+              LEFT OUTER JOIN delivery_partners ON partnerships.delivery_partner_id = delivery_partners.id 
             WHERE
-              s.school_status_code IN (1, 3)
-              AND s.school_type_code IN (1, 2, 3, 5, 6, 7, 8, 12, 14, 15, 18, 28, 31, 32, 33, 34, 35, 36, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48)
-              AND s.administrative_district_code ILIKE 'E%'
-            ORDER BY s.urn
+              schools.school_status_code IN (1, 3)
+              AND schools.school_type_code IN (1, 2, 3, 5, 6, 7, 8, 12, 14, 15, 18, 28, 31, 32, 33, 34, 35, 36, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48)
+              AND schools.administrative_district_code ILIKE 'E%'
+            ORDER BY schools.urn
           SQL
           ActiveRecord::Base.connection.select_all(query)
         end
