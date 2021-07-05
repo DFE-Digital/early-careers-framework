@@ -89,7 +89,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
           RecordParticipantDeclaration.call(HashWithIndifferentAccess.new({ lead_provider: lead_provider, raw_event: params.to_json }).merge(params))
         end
 
-        schema "$ref": "#/components/schemas/id"
+        schema "$ref": "#/components/schemas/ParticipantDeclarationRecordedResponse"
 
         run_test!
       end
@@ -97,13 +97,16 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
       response "422", "Bad or Missing parameter" do
         let(:user) { build(:user, :early_career_teacher) }
 
-        schema "$ref": "#/components/schemas/error_response"
+        schema "$ref": "#/components/schemas/BadOrMissingParametersResponse"
 
         run_test!
       end
 
       response "401", "Unauthorized" do
         let(:Authorization) { "Bearer invalid" }
+
+        schema "$ref": "#/components/schemas/UnauthorisedResponse"
+
         run_test!
       end
     end

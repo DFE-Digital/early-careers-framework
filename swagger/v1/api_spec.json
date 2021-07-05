@@ -1,47 +1,38 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "API documentation",
-    "version": "v1",
-    "description": "API for DfE CPD's participant service"
+    "version": "0.0.1",
+    "title": "Manage teacher CPD - lead provider API",
+    "contact": {
+      "name": "DfE",
+      "email": "continuing-professional-development@digital.education.gov.uk"
+    },
+    "description": "The lead provider API for DfE's manage teacher CPD service"
   },
-  "components": {
-    "securitySchemes": {
-      "bearerAuth": {
-        "bearerFormat": "string",
-        "type": "http",
-        "scheme": "bearer"
+  "servers": [
+    {
+      "url": "https://manage-training-for-early-career-teachers.education.gov.uk/api/{version}",
+      "description": "Production url",
+      "variables": {
+        "version": {
+          "enum": [
+            "v1"
+          ],
+          "default": "v1"
+        }
       }
     },
-    "schemas": {
-      "error_response": {
-        "type": "object",
-        "properties": {
-          "bad_or_missing_parameter": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "uniqueItems": true,
-            "minItems": 1
-          }
-        }
-      },
-      "id": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          }
+    {
+      "url": "https://ecf-sandbox.london.cloudapps.digital/api/{version}",
+      "description": "Sandbox url",
+      "variables": {
+        "version": {
+          "enum": [
+            "v1"
+          ],
+          "default": "v1"
         }
       }
-    }
-  },
-  "security": [
-    {
-      "bearerAuth": [
-
-      ]
     }
   ],
   "paths": {
@@ -67,31 +58,7 @@
                 "properties": {
                   "participant_id": {
                     "type": "string"
-                  },
-                  "declaration_type": {
-                    "enum": [
-                      "started",
-                      "retained_1",
-                      "retained_2",
-                      "retained_3",
-                      "retained_4",
-                      "completed"
-                    ]
-                  },
-                  "declaration_date": {
-                    "type": "string",
-                    "format": "date-time"
                   }
-                },
-                "required": [
-                  "participant_id",
-                  "declaration_type",
-                  "declaration_date"
-                ],
-                "example": {
-                  "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                  "declaration_type": "started",
-                  "declaration_date": "2021-05-31T02:21:32Z"
                 }
               }
             }
@@ -106,7 +73,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/id"
+                  "$ref": "#/components/schemas/ParticipantDeclarationRecordedResponse"
                 }
               }
             }
@@ -116,13 +83,20 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/error_response"
+                  "$ref": "#/components/schemas/BadOrMissingParametersResponse"
                 }
               }
             }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -265,7 +239,14 @@
             }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -321,10 +302,78 @@
             }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
           }
         }
       }
     }
-  }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "bearerFormat": "string",
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "BadOrMissingParametersResponse": {
+        "description": "Request was missing data or contained invalid data",
+        "type": "object",
+        "required": [
+          "bad_or_missing_parameters"
+        ],
+        "properties": {
+          "bad_or_missing_parameters": {
+            "description": "An error message for each bad or missing attribute describing the problems",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true,
+            "example": [
+              "participant_id",
+              "declaration_date",
+              "declaration_type"
+            ]
+          }
+        }
+      },
+      "ParticipantDeclarationRecordedResponse": {
+        "description": "The participant declaration has been recorded successfully",
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "description": "A unique identifier to reference the declaration in future actions",
+            "type": "string",
+            "format": "uuid",
+            "example": "b0f657a7-9a81-4a89-a6b0-627c774ff753"
+          }
+        }
+      },
+      "UnauthorisedResponse": {
+        "description": "Authorization information is missing or invalid",
+        "type": "string",
+        "example": "HTTP Token: Access denied."
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": [
+
+      ]
+    }
+  ]
 }
