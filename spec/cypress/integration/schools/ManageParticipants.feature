@@ -14,7 +14,7 @@ Feature: School leaders should be able to manage participants
     And the page should be accessible
     And percy should be sent snapshot called "Participants index page"
 
-    When I click on "link" containing "Dan Smith"
+    When I click on "link" containing "Joe Bloggs"
     Then I should be on "2021 school participant" page
     And the page should be accessible
     And percy should be sent snapshot called "Participant show page"
@@ -22,7 +22,22 @@ Feature: School leaders should be able to manage participants
     When I click on "link" containing "Abdul Mentor"
     Then I should be on "2021 school participant" page
     And "page body" should contain "Abdul Mentor"
-    And "page body" should not contain "Dan Smith"
+    And "page body" should not contain "Joe Bloggs"
+
+  Scenario: Assigning a mentor
+    When I click on "link" containing "Assign mentor"
+    Then I should be on "2021 school edit ect mentor" page
+    And the page should be accessible
+    And percy should be sent snapshot
+
+    When I click on "Abdul Mentor" label
+    And I click the submit button
+    Then I should be on "2021 school participant" page
+    And "page body" should contain "The mentor for this participant has been updated"
+    And "page body" should contain "Abdul Mentor"
+
+    When I navigate to "2021 school participants" page with id "111111-hogwarts-academy"
+    Then "page body" should not contain "Assign mentor"
 
   Scenario: Updating details of a participant
     When I click on "link" containing "Dan Smith"
