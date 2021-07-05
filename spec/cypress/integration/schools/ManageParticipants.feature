@@ -38,7 +38,7 @@ Feature: School leaders should be able to manage participants
     Then I should be on "2021 school participant" page
     And "page body" should contain "Dan Smith"
     And "page body" should contain "james.bond.007@secret.gov.uk"
-    And "page body" should contain "The participant's email address has been updated"
+    And "page body" should contain "The ECT’s email address has been updated"
     And "page body" should not contain "dan-smith@example.com"
 
     When I click on "link" containing "Change name"
@@ -51,7 +51,7 @@ Feature: School leaders should be able to manage participants
     Then I should be on "2021 school participant" page
     And "page body" should contain "New Name"
     And "page body" should contain "james.bond.007@secret.gov.uk"
-    And "page body" should contain "The participant's name has been updated"
+    And "page body" should contain "The ECT’s name has been updated"
     And "page body" should not contain "Dan Smith"
 
     Given I am on "2021 school participant edit email used" page with school_slug "111111-hogwarts-academy" and participant_id "51223b41-a562-4d94-b50c-0ce59a8bb34d"
