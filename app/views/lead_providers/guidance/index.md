@@ -6,9 +6,9 @@ Once a participant has been added by a school induction tutor, the participant r
 
 Providers can then use the API for:
 
-- [Retrieving a list of ECF participants](/api-docs#get-api-v1-participants)
-- [Retrieving a CSV file of ECF participants](/api-docs#get-api-v1-participants-csv)
-- [Declaring an ECF participant has started](/api-docs#post-api-v1-participant-declarations)
+- [Retrieving a list of ECF participants](./reference#get-api-v1-participants)
+- [Retrieving a CSV file of ECF participants](./reference#get-api-v1-participants-csv)
+- [Declaring an ECF participant has started](./reference#post-api-v1-participant-declarations)
 
 ## How do I connect to this API?
 
@@ -18,7 +18,7 @@ Requests to the API must be accompanied by an authentication token.
 
 Each token is associated with a single provider. It will grant access to participants for courses offered by that provider. You can get a token by writing to <continuing-professional-development@digital.education.gov.uk>.
 
-For instructions on how to authenticate see the [API reference](/api-docs#authentication).
+For instructions on how to authenticate see the [API reference](./reference#authentication).
 
 ### Versioning
 

@@ -98,7 +98,7 @@ en:
         index: "Manage teacher continuing professional development"
         ecf_usage: "Usage scenarios for ECF Lead Providers"
         npq_usage: "Usage scenarios for NPQ Lead Providers"
-        api_reference: "API reference"
+        reference: "API reference"
         release_notes: "Release notes"
         help: "Get help"
       content:
