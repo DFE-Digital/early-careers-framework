@@ -39,7 +39,6 @@ Feature: School leaders should be able to manage participants
     When I navigate to "2021 school participants" page with id "111111-hogwarts-academy"
     Then "page body" should not contain "Assign mentor"
 
-
   Scenario: Updating details of a participant
     When I click on "link" containing "Dan Smith"
     Then I should be on "2021 school participant" page
