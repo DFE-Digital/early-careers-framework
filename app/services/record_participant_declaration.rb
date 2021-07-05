@@ -13,13 +13,6 @@ class RecordParticipantDeclaration
     def required_params
       %i[participant_id lead_provider declaration_type declaration_date raw_event]
     end
-
-    def user_type_profile_recorders
-      {
-        early_career_teacher_profile: EarlyCareerTeacherProfile,
-        mentor_profile: MentorProfile,
-      }
-    end
   end
 
   def call
@@ -31,6 +24,9 @@ class RecordParticipantDeclaration
   end
 
 private
+  delegate :participant?, :early_career_teacher?, :mentor?, to: :user, allow_nil: true
+  delegate :early_career_teacher_profile, :mentor_profile, to: :user
+  delegate :school, :cohort, to: :user_profile
 
   def initialize(params)
     @params = params
@@ -47,7 +43,7 @@ private
   end
 
   def add_participant_profile_params!
-    raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless user&.participant?
+    raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless participant?
   end
 
   def user_id
@@ -58,21 +54,11 @@ private
     @user ||= User.find_by(id: user_id)
   end
 
-  def profile_type
-    if user.early_career_teacher?
-      :early_career_teacher_profile
-    elsif user.mentor?
-      :mentor_profile
-    else
-      false
-    end
-  end
-
   def user_profile
-    if user.early_career_teacher?
-      user.early_career_teacher_profile
-    elsif user.mentor?
-      user.mentor_profile
+    if early_career_teacher?
+      early_career_teacher_profile
+    elsif mentor?
+      mentor_profile
     else
       false
     end
@@ -89,16 +75,16 @@ private
     end
   end
 
-  def lead_provider
+  def lead_provider_from_token
     params[:lead_provider]
   end
 
   def actual_lead_provider
-    SchoolCohort.find_by(school: user_profile.school, cohort: user_profile.cohort)&.lead_provider
+    SchoolCohort.find_by(school: school, cohort: cohort)&.lead_provider
   end
 
   def validate_provider!
-    raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless actual_lead_provider.nil? || lead_provider == actual_lead_provider
+    raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless actual_lead_provider.nil? || lead_provider_from_token == actual_lead_provider
   end
 
   def required_params
