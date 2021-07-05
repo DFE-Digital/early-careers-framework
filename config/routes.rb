@@ -109,6 +109,11 @@ Rails.application.routes.draw do
     get "/", to: "content#index", as: :landing_page
     get "/partnership-guide", to: "content#partnership_guide", as: :partnership_guide
 
+    get "/guidance/home" => "guidance#index", as: :guidance_home
+    get "/guidance/ecf-usage" => "guidance#ecf_usage", as: :guidance_ecf_usage
+    get "/guidance/release-notes" => "guidance#release_notes", as: :guidance_release_notes
+    get "/guidance/help" => "guidance#help", as: :guidance_help
+
     resources :your_schools, path: "/your-schools", only: %i[index create]
     resources :partnerships, only: %i[show]
 
