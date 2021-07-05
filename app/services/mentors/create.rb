@@ -7,7 +7,7 @@ module Mentors
       ActiveRecord::Base.transaction do
         # TODO: What if email matches but with different name?
         user = User.find_or_create_by!(full_name: full_name, email: email)
-        MentorProfile.create!({ user: user }.merge(mentor_attributes))
+        ParticipantProfile::Mentor.create!({ user: user }.merge(mentor_attributes))
       end
     end
 

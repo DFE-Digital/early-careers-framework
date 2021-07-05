@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-class MentorProfile < ApplicationRecord
+class LegacyMentorProfile < ApplicationRecord
+  self.table_name = "mentor_profiles"
   has_paper_trail
 
   belongs_to :user

@@ -27,10 +27,13 @@ class School < ApplicationRecord
   has_many :induction_coordinator_profiles, through: :induction_coordinator_profiles_schools
   has_many :induction_coordinators, through: :induction_coordinator_profiles, source: :user
 
-  has_many :early_career_teacher_profiles
-  has_many :early_career_teachers, through: :early_career_teacher_profiles, source: :user
+  has_many :participant_profiles
 
-  has_many :mentor_profiles
+  # TODO: Legacy association, to be removed
+  has_many :early_career_teacher_profiles, class_name: "ParticipantProfile::ECT"
+  has_many :mentor_profiles, class_name: "ParticipantProfile::Mentor"
+
+  has_many :early_career_teachers, through: :early_career_teacher_profiles, source: :user
   has_many :mentors, through: :mentor_profiles, source: :user
 
   has_many :additional_school_emails

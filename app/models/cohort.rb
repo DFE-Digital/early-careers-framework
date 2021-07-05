@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Cohort < ApplicationRecord
-  has_many :early_career_teacher_profiles
+  # TODO: Are those at all used?
+  has_many :early_career_teacher_profiles, class_name: "ParticipantProfile::ECT"
   has_many :early_career_teachers, through: :early_career_teacher_profiles, source: :user
 
   def self.current
