@@ -1,0 +1,10 @@
+description: "The participant declaration has been recorded successfully"
+type: object
+required:
+  - id
+properties:
+  id:
+    description: "A unique identifier to reference the declaration in future actions"
+    type: string
+    format: uuid
+    example: "b0f657a7-9a81-4a89-a6b0-627c774ff753"

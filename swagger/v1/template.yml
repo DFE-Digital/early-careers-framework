@@ -1,0 +1,34 @@
+---
+openapi: 3.0.1
+info:
+  version: 0.0.1
+  title: "Manage teacher CPD - lead provider API"
+  contact:
+    name: DfE
+    email: continuing-professional-development@digital.education.gov.uk
+  description: "The lead provider API for DfE's manage teacher CPD service"
+servers:
+  - url: https://manage-training-for-early-career-teachers.education.gov.uk/api/{version}
+    description: "Production url"
+    variables:
+      version:
+        enum:
+          - v1
+        default: v1
+  - url: https://ecf-sandbox.london.cloudapps.digital/api/{version}
+    description: "Sandbox url"
+    variables:
+      version:
+        enum:
+          - v1
+        default: v1
+paths:
+components:
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: string
+      type: http
+      scheme: bearer
+  schemas:
+security:
+  - "bearerAuth": []
