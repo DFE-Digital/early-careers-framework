@@ -23,7 +23,11 @@ class Schools::ParticipantsController < Schools::BaseController
 
   def update_name
     if @participant.update(params.require(:user).permit(:full_name))
-      set_success_message(heading: "The participant's name has been updated")
+      if @participant.early_career_teacher?
+        set_success_message(heading: "The ECT’s name has been updated")
+      else
+        set_success_message(heading: "The mentor’s name has been updated")
+      end
       redirect_to schools_participant_path(id: @participant)
     else
       render "schools/participants/edit_name"
@@ -37,7 +41,11 @@ class Schools::ParticipantsController < Schools::BaseController
     redirect_to action: :email_used and return if email_used?
 
     if @participant.save
-      set_success_message(heading: "The participant's email address has been updated")
+      if @participant.early_career_teacher?
+        set_success_message(heading: "The ECT’s email address has been updated")
+      else
+        set_success_message(heading: "The mentor’s email address has been updated")
+      end
       redirect_to schools_participant_path(id: @participant)
     else
       render "schools/participants/edit_email"
