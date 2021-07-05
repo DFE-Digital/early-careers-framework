@@ -9,7 +9,3 @@ if %w[development deployed_development test sandbox].include?(Rails.env)
     load Rails.root.join(*seed_path, "#{seed}.rb").to_s
   end
 end
-
-if %w[development deployed_development sandbox].include?(Rails.env)
-  load Rails.root.join(*seed_path, "sandbox_data.rb").to_s
-end
