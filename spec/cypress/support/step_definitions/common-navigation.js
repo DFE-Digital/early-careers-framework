@@ -100,6 +100,8 @@ const pagePaths = {
     "/schools/:school_slug/cohorts/2021/participants/:participant_id/email-used",
   "2021 school choose etc mentor":
     "/schools/:id/cohorts/2021/participants/add/choose-mentor",
+  "2021 school edit ect mentor":
+    "/schools/:school_slug/cohorts/2021/participants/:participant_id/edit-mentor",
   "2021 school participant confirm":
     "/schools/:id/cohorts/2021/participants/add/confirm",
   "lead providers report schools start": "/lead-providers/report-schools/start",

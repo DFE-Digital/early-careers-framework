@@ -24,4 +24,4 @@ FactoryBot.create(:user, :mentor, full_name: "Unrelated user", email: "unrelated
 ect_1 = FactoryBot.create(:user, :early_career_teacher, full_name: "Joe Bloggs")
 ect_1.early_career_teacher_profile.update!(school: school, mentor_profile: mentor.mentor_profile)
 ect_2 = FactoryBot.create(:user, :early_career_teacher, full_name: "Dan Smith", email: "dan-smith@example.com")
-ect_2.early_career_teacher_profile.update!(school: school, mentor_profile: mentor.mentor_profile)
+ect_2.early_career_teacher_profile.update!(school: school)
