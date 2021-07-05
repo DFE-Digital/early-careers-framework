@@ -134,6 +134,13 @@ Rails.application.routes.draw do
 
     resources :participants, only: :show
 
+    namespace :gias do
+      resources :home, only: :index, path: "/"
+      resources :school_changes, only: %i[index show], path: "school-changes"
+      resources :schools_to_add, only: %i[index show], path: "schools-to-add"
+      resources :schools_to_close, only: %i[index show], path: "schools-to-close"
+    end
+
     scope :suppliers, module: "suppliers" do
       resources :suppliers, only: :index, path: "/"
       scope "new" do

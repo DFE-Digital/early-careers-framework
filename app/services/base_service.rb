@@ -2,6 +2,6 @@
 
 class BaseService
   def self.call(*args, &block)
-    new(*args, &block).call
+    new(*args).call(&block)
   end
 end

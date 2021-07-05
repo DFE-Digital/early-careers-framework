@@ -110,6 +110,51 @@ ActiveRecord::Schema.define(version: 2021_07_01_000430) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "data_stage_school_changes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "data_stage_school_id", null: false
+    t.json "attribute_changes"
+    t.string "status", default: "changed", null: false
+    t.boolean "handled", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["data_stage_school_id"], name: "index_data_stage_school_changes_on_data_stage_school_id"
+    t.index ["status"], name: "index_data_stage_school_changes_on_status"
+  end
+
+  create_table "data_stage_school_links", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "data_stage_school_id", null: false
+    t.string "link_urn", null: false
+    t.string "link_type", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["data_stage_school_id", "link_urn"], name: "data_stage_school_links_uniq_idx", unique: true
+    t.index ["data_stage_school_id"], name: "index_data_stage_school_links_on_data_stage_school_id"
+  end
+
+  create_table "data_stage_schools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "urn", null: false
+    t.string "name", null: false
+    t.string "ukprn"
+    t.integer "school_phase_type"
+    t.string "school_phase_name"
+    t.integer "school_type_code"
+    t.string "school_type_name"
+    t.integer "school_status_code"
+    t.string "school_status_name"
+    t.string "administrative_district_code"
+    t.string "administrative_district_name"
+    t.string "address_line1", null: false
+    t.string "address_line2"
+    t.string "address_line3"
+    t.string "postcode", null: false
+    t.string "primary_contact_email"
+    t.string "secondary_contact_email"
+    t.string "school_website"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["urn"], name: "index_data_stage_schools_on_urn", unique: true
+  end
+
   create_table "delayed_jobs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.integer "priority", default: 0, null: false
     t.integer "attempts", default: 0, null: false
@@ -607,6 +652,8 @@ ActiveRecord::Schema.define(version: 2021_07_01_000430) do
   add_foreign_key "call_off_contracts", "lead_providers"
   add_foreign_key "cohorts_lead_providers", "cohorts"
   add_foreign_key "cohorts_lead_providers", "lead_providers"
+  add_foreign_key "data_stage_school_changes", "data_stage_schools"
+  add_foreign_key "data_stage_school_links", "data_stage_schools"
   add_foreign_key "district_sparsities", "local_authority_districts"
   add_foreign_key "early_career_teacher_profiles", "cohorts"
   add_foreign_key "early_career_teacher_profiles", "core_induction_programmes"

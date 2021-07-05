@@ -1,0 +1,28 @@
+<% content_for :title, "Changes to #{@school.name_and_urn}" %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: admin_gias_school_changes_path) %>
+
+<span class="govuk-caption-l"><%= @school.name_and_urn %></span>
+<h1 class="govuk-heading-xl">School details changes</h1>
+<table class="govuk-table">
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Attribute</th>
+      <th scope="col" class="govuk-table__header">Current value</th>
+      <th scope="col" class="govuk-table__header">New value</th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    <% @school.attributes.except("id", "created_at", "updated_at", "urn").each do |attribute_name, value| %>
+      <% current_value = @school.counterpart.read_attribute(attribute_name) %>
+      <% if current_value != value && !(current_value.blank? && value.blank?) %>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header"><%= attribute_name.humanize %></th>
+          <td class="govuk-table__cell"><%= current_value %></td>
+          <td class="govuk-table__cell">
+              <strong><em><%= value %></em></strong>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
