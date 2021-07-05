@@ -17,52 +17,22 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
       operationId :api_v1_create_ect_participant
       tags "participant_declarations"
       consumes "application/json"
+      produces "application/json"
       security [bearerAuth: []]
+
       request_body content: {
         "application/json": {
           "schema": {
-            "type": "object",
-            "properties": {
-              "participant_id": {
-                "type": "string",
-              },
-              "declaration_type": {
-                "enum": %w[started retained_1 retained_2 retained_3 retained_4 completed],
-              },
-              "declaration_date": {
-                "type": "string",
-                "format": "date-time",
-              },
-            },
-            "required": %w[participant_id declaration_type declaration_date],
-            "example": {
-              "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
-              "declaration_type": "started",
-              "declaration_date": "2021-05-31T02:21:32Z",
-            },
+            "$ref": "#/components/schemas/ParticipantDeclaration",
           },
         },
       }
-      parameter name: :params, in: :body, required: true, schema: {
-        type: :object,
-        properties: {
-          participant_id: { type: :string },
-        },
-      }, description: "The unique id of the participant"
 
-      parameter name: :params, in: :body, required: false, schema: {
-        type: :object,
-        properties: {
-          declaration_type: { enum: %w[started retained_1 retained_2 retained_3 retained_4 completed] },
-        },
-      }, description: "The event declaration type"
-
-      parameter name: :params, in: :body, required: false, schema: {
-        type: :object,
-        properties: {
-          declaration_date: { type: :string, format: "date-time" },
-        },
-      }, description: "The event declaration date"
+      parameter name: :params,
+                in: :body,
+                schema: {
+                  "$ref": "#/components/schemas/ParticipantDeclaration",
+                }
 
       response 200, "Successful" do
         let(:fresh_user) { create(:user, :early_career_teacher) }
