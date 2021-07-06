@@ -32,7 +32,7 @@ module Dqt
           query: params,
         ),
       )
-      raise ResponseError.new("DQT request failed", response) if [*0..199, *300..599].include? response.code
+      raise ResponseError.new("DQT request failed with code #{response.code}", response) if [*0..199, *300..599].include? response.code
 
       response.body
     end
