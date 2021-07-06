@@ -95,7 +95,7 @@ Store the returned participant declaration id for future management tasks.
 
 This scenario begins after a participant declaration has been submitted and an identifier for the participant declaration was collected.
 
-### 1. Provider voids a participant declaration
+### 1. Provider voids a participant because it was made in error
 
 Confirm a participant declaration was submitted in error or with incorrect details.
 
@@ -113,7 +113,7 @@ See [void participant declarations](/lead-providers/guidance/reference#post-api-
 
 This scenario begins after a participant declaration has been submitted with incorrect details and an identifier for the participant declaration was collected.
 
-### 1. Provider voids a participant declaration
+### 1. Provider voids a participant declaration because it is incorrect
 
 Confirm a participant declaration was submitted in error or with incorrect details.
 
@@ -141,7 +141,7 @@ This returns [participant declaration recorded](/lead-providers/guidance/referen
 
 See [confirm participant declarations](/lead-providers/guidance/reference#post-api-v1-participant-declarations) endpoint.
 
-### 3. Provider records the participant declaration id
+### 3. Provider records the new participant declaration id
 
 Store the returned participant declaration id for future management tasks.
 
