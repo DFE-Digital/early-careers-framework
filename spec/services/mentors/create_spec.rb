@@ -9,8 +9,24 @@ RSpec.describe Mentors::Create do
   let(:cohort) { create :cohort, :current }
 
   it "creates a Mentor record" do
-    expect { described_class.call(email: user.email, full_name: user.full_name, school_id: school.id, cohort_id: cohort.id) }.to change { MentorProfile.count }.by(1)
-    expect { described_class.call(email: user.email, full_name: user.full_name, school_id: school.id, cohort_id: cohort.id, mentor_id: "random discardable") }.to change { MentorProfile.count }.by(1)
+    expect {
+      described_class.call(
+        email: user.email,
+        full_name: user.full_name,
+        school_id: school.id,
+        cohort_id: cohort.id,
+      )
+    }.to change { ParticipantProfile::Mentor.count }.by(1)
+
+    expect {
+      described_class.call(
+        email: user.email,
+        full_name: user.full_name,
+        school_id: school.id,
+        cohort_id: cohort.id,
+        mentor_id: "random discardable",
+      )
+    }.to change { ParticipantProfile::Mentor.count }.by(1)
   end
 
   it "has no uplift if the school has not uplift set" do

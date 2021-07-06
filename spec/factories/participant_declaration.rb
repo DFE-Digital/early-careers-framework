@@ -41,7 +41,7 @@ FactoryBot.define do
       after(:create) do |participant_declaration, evaluator|
         create(:profile_declaration,
                participant_declaration: participant_declaration,
-               declarable: create(
+               participant_profile: create(
                  %i[early_career_teacher_profile mentor_profile].sample,
                  evaluator.uplift,
                ))
@@ -52,7 +52,7 @@ FactoryBot.define do
       after(:create) do |participant_declaration, evaluator|
         create(:profile_declaration,
                participant_declaration: participant_declaration,
-               declarable: create(
+               participant_profile: create(
                  evaluator.profile_type,
                  evaluator.uplift,
                ))

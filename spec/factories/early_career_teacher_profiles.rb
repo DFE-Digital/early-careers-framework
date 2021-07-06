@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :early_career_teacher_profile do
+  factory :early_career_teacher_profile, class: ParticipantProfile::ECT do
     user
     school
     cohort

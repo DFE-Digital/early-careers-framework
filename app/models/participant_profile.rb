@@ -23,6 +23,7 @@ class ParticipantProfile < ApplicationRecord
 
   class ECT < self
     belongs_to :mentor_profile, class_name: "Mentor", optional: true
+    has_one :mentor, through: :mentor_profile, source: :user
 
     def ect?
       true
@@ -32,7 +33,11 @@ class ParticipantProfile < ApplicationRecord
   class Mentor < self
     self.ignored_columns = %i[mentor_profile_id]
 
-    has_many :mentee_profiles, class_name: "ParticipantProfile::ECT", foreign_key: :mentor_profile_id, dependent: :nullify
+    has_many :mentee_profiles,
+             class_name: "ParticipantProfile::ECT",
+             foreign_key: :mentor_profile_id,
+             dependent: :nullify
+    has_many :mentees, through: :mentee_profiles, source: :user
 
     def mentor?
       true

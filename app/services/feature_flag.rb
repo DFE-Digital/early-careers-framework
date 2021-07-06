@@ -36,7 +36,7 @@ class FeatureFlag
   end
 
   def self.deactivate(feature_name, **opts)
-    raise unless feature_name.in?(FEATURES)
+    raise "Unknown feature: #{feature_name}" unless feature_name.in?(FEATURES)
 
     if opts.key?(:for).present?
       sync_with_database_with_object(feature_name, opts[:for], false)

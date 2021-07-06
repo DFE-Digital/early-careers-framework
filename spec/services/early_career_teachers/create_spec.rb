@@ -10,35 +10,43 @@ RSpec.describe EarlyCareerTeachers::Create do
   let(:mentor_profile) { create :mentor_profile }
 
   it "creates an Early Career Teacher Profile record" do
-    expect { described_class.call(email: user.email, full_name: user.full_name, school_id: school.id, cohort_id: cohort.id, mentor_profile_id: mentor_profile.id) }.to change { EarlyCareerTeacherProfile.count }.by(1)
+    expect {
+      described_class.call(
+        email: user.email,
+        full_name: user.full_name,
+        school_id: school.id,
+        cohort_id: cohort.id,
+        mentor_profile_id: mentor_profile.id,
+      )
+    }.to change { ParticipantProfile::ECT.count }.by(1)
   end
 
   it "sets the correct mentor profile" do
-    early_career_teacher_profile = described_class.call(email: user.email, full_name: user.full_name, school_id: school.id, cohort_id: cohort.id, mentor_profile_id: mentor_profile.id)
-    expect(early_career_teacher_profile.mentor_profile).to eq(mentor_profile)
+    participant_profile = described_class.call(email: user.email, full_name: user.full_name, school_id: school.id, cohort_id: cohort.id, mentor_profile_id: mentor_profile.id)
+    expect(participant_profile.mentor_profile).to eq(mentor_profile)
   end
 
   it "has no uplift if the school has not uplift set" do
-    early_career_teacher_profile = described_class.call(email: user.email, full_name: user.full_name, school_id: school.id, cohort_id: cohort.id, mentor_profile_id: mentor_profile.id)
-    expect(early_career_teacher_profile.pupil_premium_uplift).to be(false)
-    expect(early_career_teacher_profile.sparsity_uplift).to be(false)
+    participant_profile = described_class.call(email: user.email, full_name: user.full_name, school_id: school.id, cohort_id: cohort.id, mentor_profile_id: mentor_profile.id)
+    expect(participant_profile.pupil_premium_uplift).to be(false)
+    expect(participant_profile.sparsity_uplift).to be(false)
   end
 
   it "has only pupil_premium_uplift set when the school has only pupil_premium_uplift set" do
-    early_career_teacher_profile = described_class.call(email: user.email, full_name: user.full_name, school_id: pupil_premium_school.id, cohort_id: cohort.id, mentor_profile_id: mentor_profile.id)
-    expect(early_career_teacher_profile.pupil_premium_uplift).to be(true)
-    expect(early_career_teacher_profile.sparsity_uplift).to be(false)
+    participant_profile = described_class.call(email: user.email, full_name: user.full_name, school_id: pupil_premium_school.id, cohort_id: cohort.id, mentor_profile_id: mentor_profile.id)
+    expect(participant_profile.pupil_premium_uplift).to be(true)
+    expect(participant_profile.sparsity_uplift).to be(false)
   end
 
   it "has only sparsity_uplift set when the school has only sparsity_uplift set" do
-    early_career_teacher_profile = described_class.call(email: user.email, full_name: user.full_name, school_id: sparsity_school.id, cohort_id: cohort.id, mentor_profile_id: mentor_profile.id)
-    expect(early_career_teacher_profile.pupil_premium_uplift).to be(false)
-    expect(early_career_teacher_profile.sparsity_uplift).to be(true)
+    participant_profile = described_class.call(email: user.email, full_name: user.full_name, school_id: sparsity_school.id, cohort_id: cohort.id, mentor_profile_id: mentor_profile.id)
+    expect(participant_profile.pupil_premium_uplift).to be(false)
+    expect(participant_profile.sparsity_uplift).to be(true)
   end
 
   it "has both sparsity_uplift and pupil_premium_uplift set when the school has both pupil_premium_uplift and sparsity_uplift set" do
-    early_career_teacher_profile = described_class.call(email: user.email, full_name: user.full_name, school_id: uplift_school.id, cohort_id: cohort.id, mentor_profile_id: mentor_profile.id)
-    expect(early_career_teacher_profile.pupil_premium_uplift).to be(true)
-    expect(early_career_teacher_profile.sparsity_uplift).to be(true)
+    participant_profile = described_class.call(email: user.email, full_name: user.full_name, school_id: uplift_school.id, cohort_id: cohort.id, mentor_profile_id: mentor_profile.id)
+    expect(participant_profile.pupil_premium_uplift).to be(true)
+    expect(participant_profile.sparsity_uplift).to be(true)
   end
 end

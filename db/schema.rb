@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_05_095448) do
+ActiveRecord::Schema.define(version: 2021_07_05_131817) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -508,11 +508,9 @@ ActiveRecord::Schema.define(version: 2021_07_05_095448) do
 
   create_table "profile_declarations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_declaration_id", null: false
-    t.string "declarable_type", null: false
-    t.uuid "declarable_id", null: false
+    t.uuid "participant_profile_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["declarable_type", "declarable_id"], name: "index_profile_declarations_on_declarable"
     t.index ["participant_declaration_id"], name: "index_profile_declarations_on_participant_declaration_id"
   end
 
@@ -680,13 +678,14 @@ ActiveRecord::Schema.define(version: 2021_07_05_095448) do
   add_foreign_key "participant_profiles", "participant_profiles", column: "mentor_profile_id"
   add_foreign_key "participant_profiles", "schools"
   add_foreign_key "participant_profiles", "users"
-  add_foreign_key "participation_records", "early_career_teacher_profiles"
   add_foreign_key "participation_records", "lead_providers"
+  add_foreign_key "participation_records", "participant_profiles", column: "early_career_teacher_profile_id"
   add_foreign_key "partnership_notification_emails", "partnerships"
   add_foreign_key "partnerships", "cohorts"
   add_foreign_key "partnerships", "delivery_partners"
   add_foreign_key "partnerships", "lead_providers"
   add_foreign_key "partnerships", "schools"
+  add_foreign_key "profile_declarations", "participant_profiles"
   add_foreign_key "provider_relationships", "cohorts"
   add_foreign_key "provider_relationships", "delivery_partners"
   add_foreign_key "provider_relationships", "lead_providers"

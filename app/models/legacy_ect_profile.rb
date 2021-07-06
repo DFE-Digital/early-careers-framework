@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-class EarlyCareerTeacherProfile < ApplicationRecord
+class LegacyECTeacherProfile < ApplicationRecord
+  self.table_name = "early_career_teacher_profiles"
   has_paper_trail
 
   belongs_to :user

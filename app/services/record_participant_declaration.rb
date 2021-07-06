@@ -70,7 +70,7 @@ private
       ParticipantDeclaration.create!(params.slice(*required_params)).tap do |participant_declaration|
         ProfileDeclaration.create!(
           participant_declaration: participant_declaration,
-          declarable: user_profile,
+          participant_profile: user_profile,
         )
       end
     end

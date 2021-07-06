@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :mentor_profile do
+  factory :mentor_profile, class: ParticipantProfile::Mentor do
     user
     school
     cohort
