@@ -2,10 +2,7 @@
 
 <ol class="app-contents-list__list">
   <li class="app-contents-list__list-item app-contents-list__list-item--parent"><a class="govuk-link app-contents-list__link" href="#continuing-the-registration-process">Continuing the registration process</a></li>
-  <li class="app-contents-list__list-item app-contents-list__list-item--parent"><a class="govuk-link app-contents-list__link" href="#completing-the-registration-process">Completing the registration process</a></li>
   <li class="app-contents-list__list-item app-contents-list__list-item--parent"><a class="govuk-link app-contents-list__link" href="#declaring-that-a-participant-has-started-their-induction">Declaring that a participant has started their induction</a></li>
-  <li class="app-contents-list__list-item app-contents-list__list-item--parent"><a class="govuk-link app-contents-list__link" href="#voiding-a-participant-declaration">Voiding a participant declaration</a></li>
-  <li class="app-contents-list__list-item app-contents-list__list-item--parent"><a class="govuk-link app-contents-list__link" href="#changing-a-previous-participant-declaration">Changing a previous participant declaration</a></li>
 </ol>
 
 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6">
@@ -51,24 +48,6 @@ This will return [multiple participant records](/lead-providers/guidance/referen
 
 See [retrieve multiple participants](/lead-providers/guidance/reference#get-api-v1-participants) endpoint.
 
-## Completing the registration process
-
-This scenario begins when a participant has been fully onboarded by the Provider and they are in a position to start their training.
-
-### 1. Provider confirms completion of registration process
-
-Confirm a participant is ready to start their training.
-
-```
-POST /api/v1/... TBC
-```
-
-With a [request body containing confirmation details](/lead-providers/guidance/reference).
-
-This returns [Success](/lead-providers/guidance/reference).
-
-See [confirm registration complete](/lead-providers/guidance/reference) endpoint.
-
 ## Declaring that a participant has started their induction
 
 This scenario begins after it has been confirmed that a participant is ready to begin their induction training.
@@ -90,58 +69,3 @@ See [confirm participant declarations](/lead-providers/guidance/reference#post-a
 ### 2. Provider records the participant declaration id
 
 Store the returned participant declaration id for future management tasks.
-
-## Voiding a participant declaration
-
-This scenario begins after a participant declaration has been submitted and an identifier for the participant declaration was collected.
-
-### 1. Provider voids a participant because it was made in error
-
-Confirm a participant declaration was submitted in error or with incorrect details.
-
-```
-POST /api/v1/participant_declarations/{id}/void
-```
-
-With a [request body containing a void participant declaration](/lead-providers/guidance/reference#voidparticipantdeclaration-object).
-
-This returns [participant declaration voided](/lead-providers/guidance/reference#participantdeclarationvoidedresponse-object).
-
-See [void participant declarations](/lead-providers/guidance/reference#post-api-v1-void-participant-declarations) endpoint.
-
-## Changing a previous participant declaration
-
-This scenario begins after a participant declaration has been submitted with incorrect details and an identifier for the participant declaration was collected.
-
-### 1. Provider voids a participant declaration because it is incorrect
-
-Confirm a participant declaration was submitted in error or with incorrect details.
-
-```
-POST /api/v1/participant_declarations/{id}/void
-```
-
-With a [request body containing a void participant declaration](/lead-providers/guidance/reference#voidparticipantdeclaration-object).
-
-This returns [participant declaration voided](/lead-providers/guidance/reference#participantdeclarationvoidedresponse-object).
-
-See [void participant declarations](/lead-providers/guidance/reference#post-api-v1-void-participant-declarations) endpoint.
-
-### 2. Provider reconfirms a participant has started with correct details
-
-Confirm a participant has started their induction training before Milestone 1.
-
-```
-POST /api/v1/participant_declarations
-```
-
-With a [request body containing a participant declaration](/lead-providers/guidance/reference#participantdeclaration-object).
-
-This returns [participant declaration recorded](/lead-providers/guidance/reference#participantdeclarationrecordedresponse-object).
-
-See [confirm participant declarations](/lead-providers/guidance/reference#post-api-v1-participant-declarations) endpoint.
-
-### 3. Provider records the new participant declaration id
-
-Store the returned participant declaration id for future management tasks.
-
