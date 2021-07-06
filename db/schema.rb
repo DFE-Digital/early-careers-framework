@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_05_131817) do
+ActiveRecord::Schema.define(version: 2021_07_06_113050) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -188,23 +188,6 @@ ActiveRecord::Schema.define(version: 2021_07_05_131817) do
     t.index ["local_authority_district_id"], name: "index_district_sparsities_on_local_authority_district_id"
   end
 
-  create_table "early_career_teacher_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "user_id", null: false
-    t.uuid "school_id", null: false
-    t.uuid "core_induction_programme_id"
-    t.uuid "cohort_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.uuid "mentor_profile_id"
-    t.boolean "sparsity_uplift", default: false, null: false
-    t.boolean "pupil_premium_uplift", default: false, null: false
-    t.index ["cohort_id"], name: "index_early_career_teacher_profiles_on_cohort_id"
-    t.index ["core_induction_programme_id"], name: "index_ect_profiles_on_core_induction_programme_id"
-    t.index ["mentor_profile_id"], name: "index_early_career_teacher_profiles_on_mentor_profile_id"
-    t.index ["school_id"], name: "index_early_career_teacher_profiles_on_school_id"
-    t.index ["user_id"], name: "index_early_career_teacher_profiles_on_user_id"
-  end
-
   create_table "event_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "owner_type", null: false
     t.uuid "owner_id", null: false
@@ -305,21 +288,6 @@ ActiveRecord::Schema.define(version: 2021_07_05_131817) do
     t.string "code"
     t.string "name"
     t.index ["code"], name: "index_local_authority_districts_on_code", unique: true
-  end
-
-  create_table "mentor_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "user_id", null: false
-    t.uuid "school_id", null: false
-    t.uuid "core_induction_programme_id"
-    t.uuid "cohort_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.boolean "sparsity_uplift", default: false, null: false
-    t.boolean "pupil_premium_uplift", default: false, null: false
-    t.index ["cohort_id"], name: "index_mentor_profiles_on_cohort_id"
-    t.index ["core_induction_programme_id"], name: "index_mentor_profiles_on_core_induction_programme_id"
-    t.index ["school_id"], name: "index_mentor_profiles_on_school_id"
-    t.index ["user_id"], name: "index_mentor_profiles_on_user_id"
   end
 
   create_table "networks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -653,11 +621,6 @@ ActiveRecord::Schema.define(version: 2021_07_05_131817) do
   add_foreign_key "data_stage_school_changes", "data_stage_schools"
   add_foreign_key "data_stage_school_links", "data_stage_schools"
   add_foreign_key "district_sparsities", "local_authority_districts"
-  add_foreign_key "early_career_teacher_profiles", "cohorts"
-  add_foreign_key "early_career_teacher_profiles", "core_induction_programmes"
-  add_foreign_key "early_career_teacher_profiles", "mentor_profiles"
-  add_foreign_key "early_career_teacher_profiles", "schools"
-  add_foreign_key "early_career_teacher_profiles", "users"
   add_foreign_key "feature_selected_objects", "features"
   add_foreign_key "induction_coordinator_profiles", "users"
   add_foreign_key "lead_provider_cips", "cohorts"
@@ -665,10 +628,6 @@ ActiveRecord::Schema.define(version: 2021_07_05_131817) do
   add_foreign_key "lead_provider_cips", "lead_providers"
   add_foreign_key "lead_provider_profiles", "lead_providers"
   add_foreign_key "lead_provider_profiles", "users"
-  add_foreign_key "mentor_profiles", "cohorts"
-  add_foreign_key "mentor_profiles", "core_induction_programmes"
-  add_foreign_key "mentor_profiles", "schools"
-  add_foreign_key "mentor_profiles", "users"
   add_foreign_key "nomination_emails", "partnership_notification_emails"
   add_foreign_key "nomination_emails", "schools"
   add_foreign_key "participant_bands", "call_off_contracts"
