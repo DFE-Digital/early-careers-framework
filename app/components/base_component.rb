@@ -5,13 +5,15 @@ class BaseComponent < ViewComponent::Base
     @translation_key ||= name.snakecase.gsub("/", ".")
   end
 
-  def component_form_with(**options, &block)
-    form_with(**options.merge(builder: GOVUKDesignSystemFormBuilder::FormBuilder), &block)
-  end
-
   def t(key, **options)
     return super unless key.start_with?(".")
 
     super(self.class.translation_key + key, **options)
+  end
+
+private
+
+  def default_form_builder
+    GOVUKDesignSystemFormBuilder::FormBuilder
   end
 end

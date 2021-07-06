@@ -1,16 +1,16 @@
-.search-container {
+.admin-search-box {
   background-color: govuk-colour("light-grey");
   padding: govuk-spacing(4) govuk-spacing(3);
-}
 
-.school-search__button {
-  margin-bottom: 0;
-}
+  &__button {
+    margin-bottom: 0;
+  }
 
-@include govuk-media-query($from: tablet) {
-  .school-search {
-    display: flex;
-    align-items: flex-end;
+  @include govuk-media-query($from: tablet) {
+    &__form {
+      display: flex;
+      align-items: flex-end;
+    }
 
     &__input {
       flex-grow: 1;
@@ -23,8 +23,7 @@
     &__button {
       flex-grow: 0;
       margin-left: govuk-spacing(3);
-      transform: translateY(-2px);
+     transform: translateY(-2px);
     }
   }
 }
-
