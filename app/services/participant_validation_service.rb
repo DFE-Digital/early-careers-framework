@@ -46,7 +46,7 @@ private
     matches += 1 if name_matches
     dob_matches = dob == dqt_record[:date_of_birth]
     matches += 1 if dob_matches
-    nino_matches = nino == dqt_record[:national_insurance_number]
+    nino_matches = nino.downcase == dqt_record[:national_insurance_number]&.downcase
     matches += 1 if nino_matches
 
     return dqt_record if matches >= 3
