@@ -72,7 +72,11 @@ The precommit hook will ensure linting passes. See [the hook](./.githooks/pre-co
 
 ## End to end tests
 
-To set up:
+We use Cypress for end-to-end tests. This integrates with Axe for automated accessibility tests, and Percy for snapshot testing.
+
+We aim to have an accessibility and snapshot test for every page on the service.
+
+### Setup
 
 ```
 RAILS_ENV=test bin/rake db:create db:schema:load
