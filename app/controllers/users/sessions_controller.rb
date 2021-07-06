@@ -3,10 +3,29 @@
 class Users::SessionsController < Devise::SessionsController
   include ApplicationHelper
 
-  TEST_USERS = %w[admin@example.com lead-provider@example.com school-leader@example.com early-career-teacher@example.com].freeze
+  TEST_DOMAINS = %w[
+    example.com
+    ambition.org.uk
+    churchofengland.org
+    pracedo.com
+    ucl.ac.uk
+    tribalgroup.com
+    teachfirst.org.uk
+    educationdevelopmenttrust.com
+    capita.com
+    bestpracticenet.co.uk
+    aircury.com
+    setsquaresolutions.com
+    harrisfederation.org.uk
+    harrischaffordhundred.org.uk
+    llse.org.uk
+    realgroup.co.uk
+    teacherdevelopmenttrust.org 
+    uclconsultants.com
+  ].freeze
 
   skip_before_action :check_privacy_policy_accepted
-  before_action :mock_login, only: :create, if: -> { Rails.env.development? || Rails.env.deployed_development? }
+  before_action :mock_login, only: :create, if: -> { Rails.env.development? || Rails.env.deployed_development? || Rails.env.sandbox? }
   before_action :redirect_to_dashboard, only: %i[sign_in_with_token redirect_from_magic_link]
   before_action :ensure_login_token_valid, only: %i[sign_in_with_token redirect_from_magic_link]
 
@@ -60,7 +79,7 @@ private
 
   def mock_login
     email = params.dig(:user, :email)
-    return unless TEST_USERS.include?(email)
+    return unless TEST_DOMAINS.any? { |domain| email.include?(domain) }
 
     user = User.find_by_email(email)
     sign_in(user, scope: :user)
