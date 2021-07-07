@@ -11,7 +11,7 @@ class CreateInductionTutor < BaseService
 
   def call
     ActiveRecord::Base.transaction do
-      school.induction_coordinators.first.destroy! if school.induction_coordinators.first
+      remove_existing_induction_coordinator
 
       if (user = User.find_by(email: email))&.induction_coordinator?
         raise if user.full_name != full_name
@@ -33,5 +33,20 @@ class CreateInductionTutor < BaseService
       host: Rails.application.config.domain,
       **UTMService.email(:new_induction_tutor),
     )
+  end
+
+private
+
+  def remove_existing_induction_coordinator
+    existing_induction_coordinator = school.induction_coordinators.first
+    return if existing_induction_coordinator.nil?
+
+    if existing_induction_coordinator.induction_coordinator_profile.schools.count > 1
+      existing_induction_coordinator.induction_coordinator_profile.schools.delete(school)
+    elsif existing_induction_coordinator.mentor?
+      existing_induction_coordinator.induction_coordinator_profile.destroy!
+    else
+      existing_induction_coordinator.destroy!
+    end
   end
 end
