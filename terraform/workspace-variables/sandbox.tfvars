@@ -13,4 +13,3 @@ paas_web_app_instances = 1
 paas_web_app_memory = 8192
 paas_worker_app_instances = 1
 paas_worker_app_start_command = "/app/bin/delayed_job --pool=mailers --pool=*:2 start && bundle exec rake jobs:work"
-govuk_hostnames = ["sandbox-manage-training-for-early-career-teachers"]
