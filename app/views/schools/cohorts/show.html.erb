@@ -67,7 +67,7 @@
     <% if @school_cohort.core_induction_programme.present? %>
       <div class="govuk-inset-text">Use these handbooks and training materials to help you plan your school’s
         <%= govuk_link_to @school_cohort.core_induction_programme.name, induction_tutor_materials_path(
-          provider: @school_cohort.core_induction_programme.name.downcase.tr(" ", "-"), year: :year_one
+          provider: @school_cohort.core_induction_programme.name.downcase.tr(" ", "-"), year: "year-one"
         ) %>
         induction programme.
       </div>
