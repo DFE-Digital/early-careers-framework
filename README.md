@@ -3,17 +3,14 @@
 
 # Early careers framework
 
-## Prerequisites
+## Z2H
+### Prerequisites
 
 - Ruby 2.7.2
-- PostgreSQL
+- PostgreSQL (we deploy on 11.x)
 - NodeJS 14.16.0
 - Yarn 1.12.x
 - Docker
-
-## Setting up the app in development
-
-We have a requirement for commits to be signed: https://docs.github.com/en/github/authenticating-to-github/signing-commits
 
 ### Without docker
 
@@ -24,6 +21,7 @@ We have a requirement for commits to be signed: https://docs.github.com/en/githu
 5. Run `bin/rails db:setup` to set up the database development and test schemas, and seed with test data
 6. Run `bundle exec rails server` to launch the app on http://localhost:3000
 7. Run `./bin/webpack-dev-server` in a separate shell for faster compilation of assets
+8. For most work, you will need to seed the database with `rails db:seed`. For school data, see [Importing School data](#importing-school-data)
 
 ### With docker
 
@@ -70,15 +68,15 @@ bundle exec rake rswag:specs:swaggerize
 
 ## Linting
 
-It's best to lint just your app directories and not those belonging to the framework, e.g.
-
-```bash
-bundle exec rake lint:ruby
-```
+The precommit hook will ensure linting passes. See [the hook](./.githooks/pre-commit) for details.
 
 ## End to end tests
 
-To set up:
+We use Cypress for end-to-end tests. This integrates with Axe for automated accessibility tests, and Percy for snapshot testing.
+
+We aim to have an accessibility and snapshot test for every page on the service.
+
+### Setup
 
 ```
 RAILS_ENV=test bin/rake db:create db:schema:load
@@ -97,8 +95,23 @@ yarn cypress:open
 ## Review apps
 Review apps are automatically created when a PR is opened. A link to the app will be posted on the review.
 
-## Deploying on GOV.UK PaaS
-Check the [documentation](./documentation/terraform.md) for detailed information on terraform.
+The database of the review app will be truncated and reseeded on each commit and subsequent deploy.
+This is to aid in manual testing using scenarios set up using seeds.
+
+## Deployment infrastructure
+
+Aside from review apps (above), we have four deployed environments:
+
+- [dev](https://ecf-dev.london.cloudapps.digital/), which has RAILS_ENV=deployed_development
+- [staging](https://s-manage-training-for-early-career-teachers.education.gov.uk/), which has RAILS_ENV=staging
+- [sandbox](https://ecf-sandbox.london.cloudapps.digital/sandbox), which has RAILS_ENV=sandbox
+- [production](https://manage-training-for-early-career-teachers.education.gov.uk/), which has RAILS_ENV=production
+
+These are deployed using terraform. See the documentation for [details on terraform](./documentation/terraform.md) and [debugging in deployed environments](./documentation/debugging_in_govpaas.md).
+
+In addition to a web app, some environments have a worker app for running background jobs. For details, see the terraform code.
+
+The `/heathcheck` endpoint on each deployed app will give details on things like version number, commit SHA, delayed jobs, and database migrations.
 
 ### Creating an initial admin user
 1. Follow the [debugging instructions](./documentation/debugging_in_govpaas.md) to gain SSH access to the instance and cd to the app dir
@@ -119,11 +132,18 @@ to execute this delayed job in the background.
 
 ## Resetting the database on a dev environment
 
-1. Make sure you are ok with the content in seed files to be created in your db.
-2. Run `cf login -a api.london.cloud.service.gov.uk -u USERNAME`, `USERNAME` is your personal GOV.UK PaaS account email address
-3. Run `cf run-task ecf-dev "cd .. && cd app && ../usr/local/bundle/bin/bundle exec rails db:safe_reset"` to start the task.
+Much like review apps, the dev database is truncated and reseeded on every merge to develop.
 
-## Sending school nomination invites
+If the database needs to be reset for testing, there is a github action for this called `Run task in dev space`. 
+The default parameters will reset the dev database. This action can also be used to run a rake task on dev or any review app.
+
+## Sending emails
+
+We use [Gov.UK Notify](https://www.notifications.service.gov.uk/) to send emails.
+
+### Mailshots to schools
+We have a variety of emails that we send to schools on a regular basis. This are currently triggered manually, via rake task.
+The rake tasks are defined in [schools.rake](./lib/tasks/schools.rake), for example:
 
 ```bash
 bundle exec rake 'schools:send_invites[urn1 urn2 ...]'
@@ -174,3 +194,15 @@ per participant service fee £398 (40%) >> monthly service fee £27k >> total se
 * "Participants" includes both teachers and mentors.
 * "Output payments" are payments made based on the performance of the training provider (i.e. their output).
 * "Payment type" for start/retention_x/completion output payments.
+
+## Monitoring, logging, and alerting
+### Sentry
+We use [sentry.io](https://sentry.io/) for error tracking and performance monitoring. Ask a team member for access - this is done through digi-tools.
+### Logit
+We use a [logit.io](https://logit.io/) ELK stack for log aggregation. This contains logs from all environments, and is useful for debugging failed deployments.
+Ask a team member for access - this is done through digi-tools.
+### Grafana
+We have a prometheus/grafana stack for metrics and alerting - [production metrics](https://grafana-cpd-monitoring-prod.london.cloudapps.digital/).
+Your DfE google account should work using SSO. See the [terraform](./terraform/monitoring) for details.
+### Statuscake
+We use statuscake for uptime monitoring. Ask a team member for access - this is done with a service now ticket.
