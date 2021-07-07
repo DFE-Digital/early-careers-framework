@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ParticipationRecord < ApplicationRecord
-  include Concerns::ParticipantRecordStateMachine
+  include ParticipantRecordStateMachine
   belongs_to :early_career_teacher_profile, class_name: "ParticipantProfile::ECT"
   belongs_to :lead_provider
 

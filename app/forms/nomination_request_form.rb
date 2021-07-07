@@ -18,7 +18,7 @@ class NominationRequestForm
 
   def available_schools
     School.currently_open.joins(:school_local_authorities).where(school_local_authorities: { local_authority_id: local_authority_id }).map do |sch|
-      Decorators::SchoolDecorator.new(sch)
+      SchoolDecorator.new(sch)
     end
   end
 
