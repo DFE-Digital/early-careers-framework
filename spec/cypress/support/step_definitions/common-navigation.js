@@ -123,7 +123,7 @@ const pagePaths = {
   "edt year two induction tutor materials":
     "/induction-tutor-materials/educational-development-trust/year-two",
   "teach first year one and two induction tutor materials":
-    "/induction-tutor-materials/teach-first/year-one-and-two",
+    "/induction-tutor-materials/teach-first/year-one",
   "ucl year one induction tutor materials":
     "/induction-tutor-materials/ucl-institute-of-education/year-one",
   "ucl year two induction tutor materials":
