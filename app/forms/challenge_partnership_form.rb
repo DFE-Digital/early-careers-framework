@@ -22,6 +22,12 @@ class ChallengePartnershipForm
         },
       )
 
+      if partnership.no_ects?
+        school_cohort = partnership.school.school_cohorts.find_by(cohort: partnership.cohort)
+        school_cohort.update!(induction_programme_choice: :no_early_career_teachers,
+                              opt_out_of_updates: true)
+      end
+
       partnership.lead_provider.users.each do |lead_provider_user|
         LeadProviderMailer.partnership_challenged_email(
           partnership: partnership,
