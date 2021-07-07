@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_07_120216) do
+ActiveRecord::Schema.define(version: 2021_07_07_123715) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -278,6 +278,8 @@ ActiveRecord::Schema.define(version: 2021_07_07_120216) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "name", null: false
+    t.uuid "cpd_lead_provider_id"
+    t.index ["cpd_lead_provider_id"], name: "index_lead_providers_on_cpd_lead_provider_id"
   end
 
   create_table "local_authorities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -335,6 +337,8 @@ ActiveRecord::Schema.define(version: 2021_07_07_120216) do
     t.text "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.uuid "cpd_lead_provider_id"
+    t.index ["cpd_lead_provider_id"], name: "index_npq_lead_providers_on_cpd_lead_provider_id"
   end
 
   create_table "npq_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -634,8 +638,10 @@ ActiveRecord::Schema.define(version: 2021_07_07_120216) do
   add_foreign_key "lead_provider_cips", "lead_providers"
   add_foreign_key "lead_provider_profiles", "lead_providers"
   add_foreign_key "lead_provider_profiles", "users"
+  add_foreign_key "lead_providers", "cpd_lead_providers"
   add_foreign_key "nomination_emails", "partnership_notification_emails"
   add_foreign_key "nomination_emails", "schools"
+  add_foreign_key "npq_lead_providers", "cpd_lead_providers"
   add_foreign_key "participant_bands", "call_off_contracts"
   add_foreign_key "participant_declarations", "lead_providers"
   add_foreign_key "participant_profiles", "cohorts"
