@@ -25,12 +25,12 @@ def generate_mentors(lead_provider, school, cohort, logger)
   existing_ect_count = User.early_career_teachers_for_lead_provider(lead_provider).count
   10.times do
     mentor = User.create!(full_name: Faker::Name.name, email: Faker::Internet.email)
-    mentor_profile = MentorProfile.create!(user: mentor, school: school, cohort: cohort)
+    mentor_profile = ParticipantProfile::Mentor.create!(user: mentor, school: school, cohort: cohort)
 
     ect_count = rand(0..3)
     ect_count.times do
       ect = User.create!(full_name: Faker::Name.name, email: Faker::Internet.email)
-      EarlyCareerTeacherProfile.create!(user: ect, school: school, cohort: cohort, mentor_profile: mentor_profile)
+      ParticipantProfile::ECT.create!(user: ect, school: school, cohort: cohort, mentor_profile: mentor_profile)
     end
     logger.info(" Mentor with user_id #{mentor.id} generated with #{ect_count} ECTs")
   end
