@@ -54,6 +54,7 @@ RSpec.describe CreateInductionTutor do
           expect(InductionCoordinatorProfile.exists?(existing_profile.id)).to be true
           expect(User.exists?(existing_user.id)).to be true
           expect(existing_user.schools).to contain_exactly(other_school)
+          expect(School.exists?(school.id)).to be true
         end
 
         context "when the induction coordinator is also a mentor" do
@@ -70,6 +71,7 @@ RSpec.describe CreateInductionTutor do
             expect(User.exists?(existing_user.id)).to be true
             expect(ParticipantProfile::Mentor.exists?(mentor_profile.id)).to be true
             expect(existing_user.schools).to contain_exactly(other_school)
+            expect(School.exists?(school.id)).to be true
           end
         end
       end
