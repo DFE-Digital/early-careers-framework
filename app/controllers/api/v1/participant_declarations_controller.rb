@@ -6,12 +6,16 @@ module Api
       include ApiTokenAuthenticatable
 
       def create
-        params = HashWithIndifferentAccess.new({ raw_event: request.raw_post, lead_provider: current_user }).merge(permitted_params)
+        params = HashWithIndifferentAccess.new({ raw_event: request.raw_post, lead_provider: lead_provider }).merge(permitted_params)
         validate_params!(params)
         render json: RecordParticipantDeclaration.call(params)
       end
 
     private
+
+      def lead_provider
+        current_user.lead_provider
+      end
 
       def validate_params!(params)
         raise ActionController::ParameterMissing, missing_params(params) unless missing_params(params).empty?

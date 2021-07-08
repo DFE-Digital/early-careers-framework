@@ -4,8 +4,9 @@ require "rails_helper"
 
 RSpec.describe "Participant Declarations", type: :request do
   describe "participant-declarations" do
+    let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: lead_provider) }
     let(:lead_provider) { create(:lead_provider) }
-    let(:token) { LeadProviderApiToken.create_with_random_token!(lead_provider: lead_provider) }
+    let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
     let(:bearer_token) { "Bearer #{token}" }
     let(:payload) { create(:early_career_teacher_profile) }
     let(:delivery_partner) { create(:delivery_partner) }
