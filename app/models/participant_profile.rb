@@ -3,6 +3,11 @@
 class ParticipantProfile < ApplicationRecord
   belongs_to :user
 
+  enum status: {
+    active: "active",
+    withdrawn: "withdrawn",
+  }
+
   def ect?
     false
   end
