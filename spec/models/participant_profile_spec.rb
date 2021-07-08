@@ -4,6 +4,12 @@ require "rails_helper"
 
 RSpec.describe ParticipantProfile, type: :model do
   it { is_expected.to belong_to(:user) }
+  it {
+    is_expected.to define_enum_for(:status).with_values(
+      active: "active",
+      withdrawn: "withdrawn",
+    ).backed_by_column_of_type(:text)
+  }
 
   describe described_class::Mentor do
     it { is_expected.to belong_to(:cohort) }

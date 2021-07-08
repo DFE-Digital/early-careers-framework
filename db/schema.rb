@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_08_091751) do
+ActiveRecord::Schema.define(version: 2021_07_08_125502) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -404,6 +404,7 @@ ActiveRecord::Schema.define(version: 2021_07_08_091751) do
     t.boolean "pupil_premium_uplift", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.text "status", default: "active", null: false
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"
