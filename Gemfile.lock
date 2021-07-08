@@ -525,7 +525,7 @@ DEPENDENCIES
   bootsnap (>= 1.1.0)
   byebug
   canonical-rails (>= 0.2.11)
-  capybara
+  capybara (>= 3.35.3)
   cypress-on-rails (~> 1.0)
   daemons
   database_cleaner-active_record
@@ -542,7 +542,7 @@ DEPENDENCIES
   govuk_design_system_formbuilder (~> 2.3.0b1)
   govuk_markdown (~> 0.4.0)
   httpclient (~> 2.8, >= 2.8.3)
-  json-schema
+  json-schema (>= 2.8.1)
   jsonapi-resources
   jsonapi-rspec
   jsonapi-serializer
@@ -588,7 +588,7 @@ DEPENDENCIES
   wdm (>= 0.1.0)
   web-console (>= 4.1.0)
   webdrivers (~> 4.4, >= 4.4.1)
-  webmock
+  webmock (>= 3.10.0)
   webpacker (>= 5.2.1)
   with_model
 
