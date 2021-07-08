@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class NpqProfileResource < JSONAPI::Resource
+    class NPQProfileResource < JSONAPI::Resource
       attributes :date_of_birth,
                  :teacher_reference_number,
                  :teacher_reference_number_verified,

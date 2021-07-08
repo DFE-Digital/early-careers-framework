@@ -3,8 +3,7 @@
 FactoryBot.define do
   factory :participant_profile do
     user
-    cohort
-    school
+
     type do
       case participant_type
       when :ect then "ParticipantProfile::ECT"
@@ -19,10 +18,16 @@ FactoryBot.define do
     end
 
     trait :ect do
+      cohort
+      school
+
       participant_type { :ect }
     end
 
     trait :mentor do
+      cohort
+      school
+
       participant_type { :mentor }
     end
 

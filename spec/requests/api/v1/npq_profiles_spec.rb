@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "NPQ profiles api endpoint", type: :request do
-  let(:token) { NpqRegistrationApiToken.create_with_random_token! }
+  let(:token) { NPQRegistrationApiToken.create_with_random_token! }
   let(:bearer_token) { "Bearer #{token}" }
   let(:parsed_response) { JSON.parse(response.body) }
 
@@ -59,9 +59,9 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
       it "creates the npq_profile" do
         expect {
           post "/api/v1/npq-profiles", params: json
-        }.to change(NpqProfile, :count).by(1)
+        }.to change(NPQProfile, :count).by(1)
 
-        profile = NpqProfile.order(created_at: :desc).first
+        profile = NPQProfile.order(created_at: :desc).first
 
         expect(profile.user).to eql(user)
         expect(profile.npq_lead_provider).to eql(npq_lead_provider)
@@ -94,7 +94,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
       it "response has correct attributes" do
         post "/api/v1/npq-profiles", params: json
 
-        profile = NpqProfile.order(created_at: :desc).first
+        profile = NPQProfile.order(created_at: :desc).first
 
         expect(parsed_response["data"]["id"]).to eql(profile.id)
         expect(parsed_response["data"]).to have_jsonapi_attributes(

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AddFundingFieldsToNpqProfile < ActiveRecord::Migration[6.1]
+class AddFundingFieldsToNPQProfile < ActiveRecord::Migration[6.1]
   def change
     safety_assured do
       change_table :npq_profiles, bulk: true do |t|

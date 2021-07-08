@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_07_151757) do
+ActiveRecord::Schema.define(version: 2021_07_08_091751) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -396,9 +396,9 @@ ActiveRecord::Schema.define(version: 2021_07_07_151757) do
   create_table "participant_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "type", null: false
     t.uuid "user_id", null: false
-    t.uuid "school_id", null: false
+    t.uuid "school_id"
     t.uuid "core_induction_programme_id"
-    t.uuid "cohort_id", null: false
+    t.uuid "cohort_id"
     t.uuid "mentor_profile_id"
     t.boolean "sparsity_uplift", default: false, null: false
     t.boolean "pupil_premium_uplift", default: false, null: false

@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class NpqCourseResource < JSONAPI::Resource
+    class NPQCourseResource < JSONAPI::Resource
       has_many :npq_profiles
     end
   end

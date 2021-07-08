@@ -38,7 +38,7 @@ PrivacyPolicy.find_or_initialize_by(major_version: 1, minor_version: 0)
   { name: "Teach First", id: "a02ae582-f939-462f-90bc-cebf20fa8473" },
   { name: "UCL Institute of Education", id: "ef687b3d-c1c0-4566-a295-16d6fa5d0fa7" },
 ].each do |hash|
-  NpqLeadProvider.find_or_create_by!(name: hash[:name], id: hash[:id])
+  NPQLeadProvider.find_or_create_by!(name: hash[:name], id: hash[:id])
 end
 
 [
@@ -49,5 +49,5 @@ end
   { name: "NPQ for Headship (NPQH)", id: "0f7d6578-a12c-4498-92a0-2ee0f18e0768" },
   { name: "NPQ for Executive Leadership (NPQEL)", id: "aef853f2-9b48-4b6a-9d2a-91b295f5ca9a" },
 ].each do |hash|
-  NpqCourse.find_or_create_by!(name: hash[:name], id: hash[:id])
+  NPQCourse.find_or_create_by!(name: hash[:name], id: hash[:id])
 end

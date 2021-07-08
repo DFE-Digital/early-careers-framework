@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CreateNpqProfiles < ActiveRecord::Migration[6.1]
+class CreateNPQProfiles < ActiveRecord::Migration[6.1]
   def change
     create_table :npq_profiles do |t|
       t.references :user

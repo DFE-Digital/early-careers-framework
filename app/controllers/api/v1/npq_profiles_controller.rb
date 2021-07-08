@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class NpqProfilesController < Api::ApiController
+    class NPQProfilesController < Api::ApiController
       include ApiTokenAuthenticatable
       include JSONAPI::ActsAsResourceController
 
