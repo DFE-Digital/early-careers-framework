@@ -6,7 +6,7 @@ Cypress.Commands.overwrite("injectAxe", () => {
   // https://github.com/component-driven/cypress-axe/issues/6#issuecomment-726986454
   cy.window({ log: false }).then((win) => {
     // eslint-disable-next-line global-require
-    const axe = require("axe-core/axe.js");
+    const axe = require("axe-core/axe");
     const script = win.document.createElement("script");
     script.innerHTML = axe.source;
     win.document.head.appendChild(script);
