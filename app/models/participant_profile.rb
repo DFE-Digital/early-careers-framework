@@ -24,6 +24,7 @@ class ParticipantProfile < ApplicationRecord
   class ECT < self
     belongs_to :mentor_profile, class_name: "Mentor", optional: true
     has_one :mentor, through: :mentor_profile, source: :user
+    has_paper_trail
 
     def ect?
       true
@@ -32,6 +33,7 @@ class ParticipantProfile < ApplicationRecord
 
   class Mentor < self
     self.ignored_columns = %i[mentor_profile_id]
+    has_paper_trail
 
     has_many :mentee_profiles,
              class_name: "ParticipantProfile::ECT",
