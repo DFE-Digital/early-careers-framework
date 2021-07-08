@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe "participant validation api endpoint", type: :request do
   describe "#show" do
-    let(:token) { NpqRegistrationApiToken.create_with_random_token! }
+    let(:token) { NPQRegistrationApiToken.create_with_random_token! }
     let(:bearer_token) { "Bearer #{token}" }
     let(:parsed_response) { JSON.parse(response.body) }
     let(:trn) { rand(1_000_000..9_999_999).to_s }

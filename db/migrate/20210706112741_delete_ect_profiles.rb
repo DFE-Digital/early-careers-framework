@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class DeleteEctProfiles < ActiveRecord::Migration[6.1]
+class DeleteECTProfiles < ActiveRecord::Migration[6.1]
   def up
     drop_table :early_career_teacher_profiles
   end

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe NpqLeadProvider, type: :model do
+RSpec.describe NPQLeadProvider, type: :model do
   it "can be created" do
     expect {
       described_class.create(name: "Test Lead Provider")

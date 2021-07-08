@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-class NpqCourse < ApplicationRecord
+class NPQCourse < ApplicationRecord
   has_many :npq_profiles
 end

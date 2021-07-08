@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class NpqProfile < ApplicationRecord
+class NPQProfile < ApplicationRecord
   belongs_to :user
   belongs_to :npq_lead_provider
   belongs_to :npq_course
@@ -18,4 +18,15 @@ class NpqProfile < ApplicationRecord
     self: "self",
     another: "another",
   }
+
+  after_save :update_participant_profile
+
+private
+
+  def update_participant_profile
+    profile = ParticipantProfile::NPQ.find_or_initialize_by(id: id)
+    profile.school = School.find_by(urn: school_urn)
+    profile.user_id = user_id
+    profile.save!
+  end
 end
