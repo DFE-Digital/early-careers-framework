@@ -352,7 +352,7 @@ RSpec.describe InviteSchools do
     end
 
     it "does not email induction coordinators who have signed in" do
-      create(:user, :induction_coordinator, last_sign_in_at: Time.zone.now, current_sign_in_at: Time.zone.now)
+      create_signed_in_induction_tutor
       InviteSchools.new.send_induction_coordinator_sign_in_chasers
       expect(SchoolMailer).not_to delay_email_delivery_of(:induction_coordinator_sign_in_chaser_email)
     end
@@ -360,7 +360,7 @@ RSpec.describe InviteSchools do
 
   describe "#send_induction_coordinator_choose_route_chasers" do
     it "emails coordinators with a school who has not chosen a route" do
-      induction_coordinator = create(:user, :induction_coordinator, last_sign_in_at: Time.zone.now, current_sign_in_at: Time.zone.now)
+      induction_coordinator = create_signed_in_induction_tutor
       InviteSchools.new.send_induction_coordinator_choose_route_chasers
       expect(SchoolMailer).to delay_email_delivery_of(:induction_coordinator_reminder_to_choose_route_email)
                                 .with(hash_including(
@@ -378,7 +378,7 @@ RSpec.describe InviteSchools do
     end
 
     it "does not email coordinators who have chosen routes for all their schools" do
-      induction_coordinator = create(:user, :induction_coordinator, last_sign_in_at: Time.zone.now, current_sign_in_at: Time.zone.now)
+      induction_coordinator = create_signed_in_induction_tutor
       create(:school_cohort, school: induction_coordinator.schools.first, cohort: cohort)
       InviteSchools.new.send_induction_coordinator_choose_route_chasers
       expect(SchoolMailer).not_to delay_email_delivery_of(:induction_coordinator_reminder_to_choose_route_email)
@@ -401,7 +401,7 @@ RSpec.describe InviteSchools do
 
   describe "#send_induction_coordinator_choose_provider_chasers" do
     it "emails coordinators with a school who has not chosen a provider" do
-      induction_coordinator = create(:user, :induction_coordinator, last_sign_in_at: Time.zone.now, current_sign_in_at: Time.zone.now)
+      induction_coordinator = create_signed_in_induction_tutor
       create(:school_cohort, school: induction_coordinator.schools.first, induction_programme_choice: "full_induction_programme", cohort: cohort)
       InviteSchools.new.send_induction_coordinator_choose_provider_chasers
       expect(SchoolMailer).to delay_email_delivery_of(:induction_coordinator_reminder_to_choose_provider_email)
@@ -414,7 +414,7 @@ RSpec.describe InviteSchools do
     end
 
     it "does not email coordinators who have chosen providers for all their schools" do
-      induction_coordinator = create(:user, :induction_coordinator, last_sign_in_at: Time.zone.now, current_sign_in_at: Time.zone.now)
+      induction_coordinator = create_signed_in_induction_tutor
       create(:school_cohort, school: induction_coordinator.schools.first, induction_programme_choice: "full_induction_programme", cohort: cohort)
       create(:partnership, school: induction_coordinator.schools.first, cohort: cohort)
       InviteSchools.new.send_induction_coordinator_choose_provider_chasers
@@ -422,7 +422,7 @@ RSpec.describe InviteSchools do
     end
 
     it "does not email coordinators who only have CIP schools" do
-      induction_coordinator = create(:user, :induction_coordinator, last_sign_in_at: Time.zone.now, current_sign_in_at: Time.zone.now)
+      induction_coordinator = create_signed_in_induction_tutor
       create(:school_cohort, school: induction_coordinator.schools.first, induction_programme_choice: "core_induction_programme", cohort: cohort)
       InviteSchools.new.send_induction_coordinator_choose_provider_chasers
       expect(SchoolMailer).not_to delay_email_delivery_of(:induction_coordinator_reminder_to_choose_provider_email)
@@ -479,7 +479,7 @@ RSpec.describe InviteSchools do
     end
 
     it "does not email coordinators who only have FIP schools" do
-      induction_coordinator = create(:user, :induction_coordinator, last_sign_in_at: Time.zone.now, current_sign_in_at: Time.zone.now)
+      induction_coordinator = create_signed_in_induction_tutor
       create(:school_cohort, school: induction_coordinator.schools.first, induction_programme_choice: "full_induction_programme", cohort: cohort)
       InviteSchools.new.send_induction_coordinator_choose_materials_chasers
       expect(SchoolMailer).not_to delay_email_delivery_of(:induction_coordinator_reminder_to_choose_materials_email)
@@ -504,5 +504,11 @@ RSpec.describe InviteSchools do
                                         sign_in_url: String,
                                       ))
     end
+  end
+
+private
+
+  def create_signed_in_induction_tutor
+    create(:user, :induction_coordinator, last_sign_in_at: Time.zone.now, current_sign_in_at: Time.zone.now)
   end
 end

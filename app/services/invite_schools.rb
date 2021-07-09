@@ -169,7 +169,7 @@ class InviteSchools
     induction_coordinators_not_in_partnership.find_each do |induction_coordinator|
       school_without_provider = induction_coordinator.schools.first do |school|
         school.school_cohorts.first.induction_programme_choice == "full_induction_programme" &&
-          school.partnerships.none? { |partnership| partnership.challenge_reason.nil? }
+          !school.partnered?(Cohort.current)
       end
       SchoolMailer.induction_coordinator_reminder_to_choose_provider_email(
         recipient: induction_coordinator.email,

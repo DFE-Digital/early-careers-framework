@@ -63,6 +63,10 @@ class School < ApplicationRecord
     left_outer_joins(:school_cohorts).where(school_cohorts: { cohort_id: [cohort.id, nil], opt_out_of_updates: [false, nil] })
   }
 
+  def partnered?(cohort)
+    partnerships.unchallenged.where(cohort: cohort).any?
+  end
+
   def lead_provider(year)
     partnerships.unchallenged.joins(%i[lead_provider cohort]).find_by(cohorts: { start_year: year })&.lead_provider
   end
