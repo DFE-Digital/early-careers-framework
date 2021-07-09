@@ -3,6 +3,8 @@
 module Api
   module V1
     class NPQProfileResource < JSONAPI::Resource
+      model_name "NPQValidationData"
+
       attributes :date_of_birth,
                  :teacher_reference_number,
                  :teacher_reference_number_verified,
