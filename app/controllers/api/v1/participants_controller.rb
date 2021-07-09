@@ -8,8 +8,6 @@ module Api
       include ApiTokenAuthenticatable
       include Pagy::Backend
 
-      before_action :ensure_lead_provider
-
       def index
         respond_to do |format|
           format.json do
@@ -25,8 +23,8 @@ module Api
 
     private
 
-      def ensure_lead_provider
-        head :forbidden unless current_user.class == LeadProvider
+      def access_scope
+        LeadProviderApiToken.all
       end
 
       def to_csv(hash)
@@ -48,8 +46,12 @@ module Api
         params.dig(:filter, :updated_since)
       end
 
+      def lead_provider
+        current_user.lead_provider
+      end
+
       def participants
-        participants = User.participants_for_lead_provider(current_user)
+        participants = User.participants_for_lead_provider(lead_provider)
                            .includes(
                              early_career_teacher_profile: %i[cohort mentor school],
                              mentor_profile: %i[cohort school],

@@ -71,6 +71,8 @@ ActiveRecord::Schema.define(version: 2021_07_08_125502) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "type", default: "ApiToken"
     t.boolean "private_api_access", default: false
+    t.uuid "cpd_lead_provider_id"
+    t.index ["cpd_lead_provider_id"], name: "index_api_tokens_on_cpd_lead_provider_id"
     t.index ["hashed_token"], name: "index_api_tokens_on_hashed_token", unique: true
     t.index ["lead_provider_id"], name: "index_api_tokens_on_lead_provider_id"
   end
@@ -625,6 +627,7 @@ ActiveRecord::Schema.define(version: 2021_07_08_125502) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "additional_school_emails", "schools"
   add_foreign_key "admin_profiles", "users"
+  add_foreign_key "api_tokens", "cpd_lead_providers"
   add_foreign_key "api_tokens", "lead_providers", on_delete: :cascade
   add_foreign_key "call_off_contracts", "lead_providers"
   add_foreign_key "cohorts_lead_providers", "cohorts"
