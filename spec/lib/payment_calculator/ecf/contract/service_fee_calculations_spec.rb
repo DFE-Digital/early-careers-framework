@@ -42,10 +42,11 @@ describe ::PaymentCalculator::Ecf::Contract::ServiceFeeCalculations do
                         set_up_recruitment_basis: 2000)
       call_off_contract = ModuleTestHarness.new({ contract: contract })
 
-    aggregate_failures do
-      expect(call_off_contract.service_fee_total(band_a).round(2)).to eq(example[:expected_total])
-      expect(call_off_contract.service_fee_monthly(band_a).round(2)).to eq(example[:expected_monthly])
-      expect(call_off_contract.service_fee_per_participant(band_a).round(2)).to eq(example[:expected_per_participant])
+      aggregate_failures do
+        expect(call_off_contract.service_fee_total(band_a).round(2)).to eq(example[:expected_total])
+        expect(call_off_contract.service_fee_monthly(band_a).round(2)).to eq(example[:expected_monthly])
+        expect(call_off_contract.service_fee_per_participant(band_a).round(2)).to eq(example[:expected_per_participant])
+      end
     end
   end
 end
