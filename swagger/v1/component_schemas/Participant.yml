@@ -15,40 +15,4 @@ properties:
     type: string
     example: participant
   attributes:
-    type: :object
-    required:
-      - email
-      - full_name
-      - mentor_id
-      - school_urn
-      - participant_type
-      - cohort
-    properties:
-      email:
-        description: "The email registered for this participant"
-        type: string
-        example: "jane.smith@some-school.example.com"
-      full_name:
-        description: "The full name of the participant"
-        type: string
-        example: "Jane Smith"
-      mentor_id:
-        description: "The unique identifier of the participants mentor"
-        type: string
-        example: bb36d74a-68a7-47b6-86b6-1fd0d141c590
-        format: uuid
-      school_urn:
-        description: "The Unique Reference Number (URN) of the school the submitted this participant"
-        type: string
-        example: "106286"
-      participant_type:
-        description: "The type of participant this record refers to either ECT or Mentor"
-        type: string
-        example: ect
-        enum:
-          - mentor
-          - ect
-      cohort:
-        description: "Which cohort this participant is associated with"
-        type: string
-        example: "2021"
+    $ref: "#/components/schemas/ParticipantAttributes"
