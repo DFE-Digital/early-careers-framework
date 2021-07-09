@@ -40,9 +40,10 @@ RSpec.describe PartnershipNotificationService do
           hash_including(
             lead_provider_name: @lead_provider.name,
             delivery_partner_name: @delivery_partner.name,
-            cohort: String,
+            school_name: school.name,
             nominate_url: String,
             challenge_url: String,
+            challenge_deadline: String,
             recipient: contact_email,
           ),
         ).and_call_original
@@ -58,9 +59,7 @@ RSpec.describe PartnershipNotificationService do
     context "when the school has an induction coordinator" do
       let(:contact_email) { Faker::Internet.email }
       let(:school) { create(:school) }
-      before do
-        create(:user, :induction_coordinator, schools: [school], email: contact_email)
-      end
+      let!(:coordinator) { create(:user, :induction_coordinator, schools: [school], email: contact_email) }
 
       before(:all) do
         RSpec::Mocks.configuration.verify_partial_doubles = false
@@ -73,11 +72,13 @@ RSpec.describe PartnershipNotificationService do
       it "emails the induction coordinator" do
         expect(SchoolMailer).to receive(:coordinator_partnership_notification_email).with(
           hash_including(
+            name: coordinator.full_name,
             lead_provider_name: @lead_provider.name,
             delivery_partner_name: @delivery_partner.name,
             cohort: String,
-            start_url: String,
+            sign_in_url: String,
             challenge_url: String,
+            challenge_deadline: String,
             recipient: contact_email,
           ),
         ).and_call_original
@@ -107,11 +108,12 @@ RSpec.describe PartnershipNotificationService do
       it "emails the school primary contact" do
         expect(SchoolMailer).to receive(:school_partnership_notification_email).with(
           hash_including(
+            school_name: school.name,
             lead_provider_name: @lead_provider.name,
             delivery_partner_name: @delivery_partner.name,
-            cohort: String,
             nominate_url: String,
             challenge_url: String,
+            challenge_deadline: String,
             recipient: contact_email,
           ),
         ).and_call_original
@@ -127,10 +129,7 @@ RSpec.describe PartnershipNotificationService do
     context "when the school has an induction coordinator" do
       let(:contact_email) { Faker::Internet.email }
       let(:school) { create(:school) }
-      before do
-        create(:user, :induction_coordinator, schools: [school], email: contact_email)
-      end
-
+      let!(:coordinator) { create(:user, :induction_coordinator, schools: [school], email: contact_email) }
       before(:all) do
         RSpec::Mocks.configuration.verify_partial_doubles = false
       end
@@ -142,11 +141,13 @@ RSpec.describe PartnershipNotificationService do
       it "emails the induction coordinator" do
         expect(SchoolMailer).to receive(:coordinator_partnership_notification_email).with(
           hash_including(
+            name: coordinator.full_name,
             lead_provider_name: @lead_provider.name,
             delivery_partner_name: @delivery_partner.name,
             cohort: String,
-            start_url: String,
+            sign_in_url: String,
             challenge_url: String,
+            challenge_deadline: String,
             recipient: contact_email,
           ),
         ).and_call_original
