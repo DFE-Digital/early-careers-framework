@@ -10,7 +10,7 @@ module Api
           # We are building the whole JSON result in the database as a single text field
           # so we do not want Rails attempt to try and process it any further so we
           # use render :plain and specify the content-type explicitly
-          render plain: json_data.rows.first, content_type: 'application/vnd.api+json'
+          render plain: json_data.rows.first, content_type: "application/vnd.api+json"
         end
 
       private
@@ -45,15 +45,15 @@ module Api
                   'delivery_partner', delivery_partners.name
                 ) as attributes
               FROM schools
-              LEFT OUTER JOIN nomination_emails on schools.id = nomination_emails.school_id
-              LEFT OUTER JOIN nomination_emails nomination_emails2 on schools.id = nomination_emails2.school_id
-              LEFT OUTER JOIN induction_coordinator_profiles_schools icps on schools.id = icps.school_id
-              LEFT OUTER JOIN induction_coordinator_profiles icp on icps.induction_coordinator_profile_id = icp.id
-              LEFT OUTER JOIN users on icp.user_id = users.id
-              LEFT OUTER JOIN school_cohorts on schools.id = school_cohorts.school_id
-              LEFT OUTER JOIN partnerships on schools.id = partnerships.school_id
-              LEFT OUTER JOIN lead_providers on partnerships.lead_provider_id = lead_providers.id
-              LEFT OUTER JOIN delivery_partners on partnerships.delivery_partner_id = delivery_partners.id
+              LEFT OUTER JOIN nomination_emails ON schools.id = nomination_emails.school_id
+              LEFT OUTER JOIN nomination_emails nomination_emails2 ON schools.id = nomination_emails2.school_id
+              LEFT OUTER JOIN induction_coordinator_profiles_schools icps ON schools.id = icps.school_id
+              LEFT OUTER JOIN induction_coordinator_profiles icp ON icps.induction_coordinator_profile_id = icp.id
+              LEFT OUTER JOIN users ON icp.user_id = users.id
+              LEFT OUTER JOIN school_cohorts ON schools.id = school_cohorts.school_id
+              LEFT OUTER JOIN partnerships ON schools.id = partnerships.school_id
+              LEFT OUTER JOIN lead_providers ON partnerships.lead_provider_id = lead_providers.id
+              LEFT OUTER JOIN delivery_partners ON partnerships.delivery_partner_id = delivery_partners.id
               WHERE schools.school_status_code IN (1, 3)
               AND schools.school_type_code IN (1, 2, 3, 5, 6, 7, 8, 12, 14, 15, 18, 28, 31, 32, 33, 34, 35, 36, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48)
               AND schools.administrative_district_code ILIKE 'E%'
