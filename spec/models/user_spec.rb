@@ -16,6 +16,20 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_one(:early_career_teacher_profile) }
   end
 
+  describe "before_validation" do
+    let(:user) { build(:user, full_name: "\t  Gordon Banks \n", email: " \tgordo@example.com \n ") }
+
+    it "strips whitespace from :full_name" do
+      user.valid?
+      expect(user.full_name).to eq "Gordon Banks"
+    end
+
+    it "strips whitespace from :email" do
+      user.valid?
+      expect(user.email).to eq "gordo@example.com"
+    end
+  end
+
   describe "validations" do
     subject { FactoryBot.create(:user) }
     it { is_expected.to validate_presence_of(:full_name).with_message("Enter a full name") }
