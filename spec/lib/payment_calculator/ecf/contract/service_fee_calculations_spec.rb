@@ -29,6 +29,22 @@ describe ::PaymentCalculator::Ecf::Contract::ServiceFeeCalculations do
       expected_monthly: 32_068.97,
       expected_per_participant: 465.00,
     },
+    {
+      # service fee variation 1
+      set_up_fee: 0,
+      band_a_per_participant_price: 1_400.00,
+      expected_total: 1_120_000.00,
+      expected_monthly: 38_620.69,
+      expected_per_participant: 560.00,
+    },
+    {
+      # service fee variation 2
+      set_up_fee: 150_000,
+      band_a_per_participant_price: 1_400.00, # unchanged from 1
+      expected_total: 970_000.00,
+      expected_monthly: 33_448.28,
+      expected_per_participant: 485.00, # reduced from 1 by service fee component
+    },
   ].each do |example|
     it "performs calculations of the service fees (set_up_fee: #{example[:set_up_fee]}, band_a_per_participant_price: #{example[:band_a_per_participant_price]})" do
       band_a = double("Band Double",
