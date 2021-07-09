@@ -2,14 +2,14 @@
 
 require "payment_calculator/ecf/contract/uplift_payment_calculations"
 
-class DummyClass
+class ModuleTestHarness
   include PaymentCalculator::Ecf::Contract::UpliftPaymentCalculations
 end
 
 describe ::PaymentCalculator::Ecf::Contract::UpliftPaymentCalculations do
   it "returns the expected types for uplift" do
     contract = double("Contract Double", uplift_amount: BigDecimal(100.00, 2))
-    call_off_contract = DummyClass.new({ contract: contract })
+    call_off_contract = ModuleTestHarness.new({ contract: contract })
     event_type = :started
 
     if @combined_results.nil?
@@ -21,7 +21,7 @@ describe ::PaymentCalculator::Ecf::Contract::UpliftPaymentCalculations do
 
   it "performs calculations of the uplift payments" do
     contract = double("Contract Double", uplift_amount: 100)
-    call_off_contract = DummyClass.new({ contract: contract })
+    call_off_contract = ModuleTestHarness.new({ contract: contract })
     total_participants = 330
 
     expect(call_off_contract.uplift_payment_per_participant.round(0)).to eq(100.00)

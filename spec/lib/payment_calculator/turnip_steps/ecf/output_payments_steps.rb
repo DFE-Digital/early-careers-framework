@@ -5,7 +5,7 @@ require "./app/models/participant_band"
 require "./app/models/call_off_contract"
 
 module OutputPaymentsSteps
-  class DummyClass
+  class ModuleTestHarness
     include PaymentCalculator::Ecf::Contract::ServiceFeeCalculations
     include PaymentCalculator::Ecf::Contract::OutputPaymentCalculations
   end
@@ -33,7 +33,7 @@ module OutputPaymentsSteps
                                       max: 2000,
                                       per_participant: @per_participant_value)
 
-    @call_off_contract = DummyClass.new({ contract: contract, bands: [@band_a] })
+    @call_off_contract = ModuleTestHarness.new({ contract: contract, bands: [@band_a] })
     calculator = PaymentCalculator::Ecf::PaymentCalculation.new(contract: @call_off_contract)
     @result = @retention_table.map do |row|
       calculator.call(event_type: row[:payment_type], total_participants: row[:retained_participants])

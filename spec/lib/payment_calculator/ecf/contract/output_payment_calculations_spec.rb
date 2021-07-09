@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 require "payment_calculator/ecf/contract/output_payment_calculations"
-class DummyClass
+class ModuleTestHarness
   include PaymentCalculator::Ecf::Contract::OutputPaymentCalculations
 end
 
 describe ::PaymentCalculator::Ecf::Contract::OutputPaymentCalculations do
   let(:contract) { create(:call_off_contract) }
-  let(:call_off_contract) { DummyClass.new({ contract: contract }) }
+  let(:call_off_contract) { ModuleTestHarness.new({ contract: contract }) }
 
   context "when calculating output payments" do
     let(:band_a) { create(:participant_band, min: 0, max: 100, per_participant: 996, call_off_contract: contract) }

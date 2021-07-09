@@ -2,7 +2,7 @@
 
 require "payment_calculator/ecf/contract/service_fee_calculations"
 
-class DummyClass
+class ModuleTestHarness
   include PaymentCalculator::Ecf::Contract::ServiceFeeCalculations
 end
 
@@ -17,7 +17,7 @@ describe ::PaymentCalculator::Ecf::Contract::ServiceFeeCalculations do
                       set_up_fee: 149_651.00,
                       band_a: band_a,
                       set_up_recruitment_basis: 2000)
-    call_off_contract = DummyClass.new({ contract: contract })
+    call_off_contract = ModuleTestHarness.new({ contract: contract })
 
     expect(call_off_contract.service_fee_total(band_a).round(2)).to eq(647_149.00)
     expect(call_off_contract.service_fee_monthly(band_a).round(2)).to eq(22_315.48)

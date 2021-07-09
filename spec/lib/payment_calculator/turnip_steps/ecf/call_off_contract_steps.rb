@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module CallOffContractSteps
-  class DummyClass
+  class ModuleTestHarness
     include PaymentCalculator::Ecf::Contract::ServiceFeeCalculations
     include PaymentCalculator::Ecf::Contract::OutputPaymentCalculations
   end
@@ -25,7 +25,7 @@ module CallOffContractSteps
                       set_up_fee: @set_up_fee,
                       band_a: @band_a,
                       set_up_recruitment_basis: 2000)
-    @call_off_contract = DummyClass.new({ contract: contract, per_participant: @per_participant_value })
+    @call_off_contract = ModuleTestHarness.new({ contract: contract, per_participant: @per_participant_value })
   end
 
   step :assert_service_fee_per_participant, "the per-participant service fee should be reduced to £:decimal_placeholder"
