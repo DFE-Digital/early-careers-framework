@@ -4,29 +4,14 @@ module Api
   module V1
     class ParticipantDeclarationsController < Api::ApiController
       include ApiTokenAuthenticatable
+      include JSONAPI::ActsAsResourceController
 
-      def create
-        params = HashWithIndifferentAccess.new({ raw_event: request.raw_post, lead_provider: current_user }).merge(permitted_params)
-        validate_params!(params)
-        render json: RecordParticipantDeclaration.call(params)
-      end
+      def context
+        {
+          lead_provider: current_user,
+          raw_event: request.raw_post
+        }
 
-    private
-
-      def validate_params!(params)
-        raise ActionController::ParameterMissing, missing_params(params) unless missing_params(params).empty?
-      end
-
-      def missing_params(params)
-        required_params - params.keys
-      end
-
-      def permitted_params
-        params.permit(*required_params)
-      end
-
-      def required_params
-        %w[participant_id declaration_date declaration_type]
       end
     end
   end

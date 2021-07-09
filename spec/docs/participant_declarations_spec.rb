@@ -11,7 +11,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
   let(:bearer_token) { "Bearer #{token}" }
   let(:Authorization) { bearer_token }
 
-  path "/api/v1/participant-declarations" do
+  path "/participant-declarations" do
     post "Create participant declarations" do
       operationId :api_v1_create_ect_participant
       tags "participant_declarations"

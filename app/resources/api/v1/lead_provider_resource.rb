@@ -2,8 +2,7 @@
 
 module Api
   module V1
-    class UserResource < JSONAPI::Resource
-      has_many :npq_profiles
+    class LeadProviderResource < JSONAPI::Resource
       has_many :participant_declarations
     end
   end

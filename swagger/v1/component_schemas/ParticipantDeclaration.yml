@@ -8,14 +8,9 @@ properties:
     example: db3a7848-7308-4879-942a-c4a70ced400a
   declaration_type:
     description: "The event declaration type"
-    enum:
-      - started
-      - retained_1
-      - retained_2
-      - retained_3
-      - retained_4
-      - completed
-    example: started
+    oneOf:
+      - $ref: "#/components/schemas/ECFDeclarationType"
+      - $ref: "#/components/schemas/NPQDeclarationType"
   declaration_date:
     description: "The event declaration date"
     type: string

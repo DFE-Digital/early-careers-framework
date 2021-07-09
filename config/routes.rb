@@ -50,11 +50,11 @@ Rails.application.routes.draw do
 
     namespace :v1 do
       resources :participants, only: :index, constraints: ->(_request) { FeatureFlag.active?(:participant_data_api) }
-      resources :participant_declarations, only: %i[create], path: "participant-declarations"
       resources :users, only: %i[index create]
       resources :dqt_records, only: :show, path: "dqt-records"
       resources :participant_validation, only: :show, path: "participant-validation"
 
+      jsonapi_resources :participant_declarations, only: %i[create], path: "participant-declarations"
       jsonapi_resources :npq_profiles, only: [:create]
 
       namespace :data_studio, path: "data-studio" do

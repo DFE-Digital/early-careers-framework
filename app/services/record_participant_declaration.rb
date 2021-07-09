@@ -16,7 +16,7 @@ class RecordParticipantDeclaration
   end
 
   def call
-    validate_schema!
+    #validate_schema!
     add_participant_profile_params!
     declaration = create_record!
     validate_provider!

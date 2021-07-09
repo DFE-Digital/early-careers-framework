@@ -11,7 +11,7 @@
   },
   "servers": [
     {
-      "url": "https://manage-training-for-early-career-teachers.education.gov.uk/api/{version}",
+      "url": "https://manage-training-for-early-career-teachers.education.gov.uk/api/{version}/",
       "description": "Production url",
       "variables": {
         "version": {
@@ -23,8 +23,20 @@
       }
     },
     {
-      "url": "https://ecf-sandbox.london.cloudapps.digital/api/{version}",
+      "url": "https://ecf-sandbox.london.cloudapps.digital/api/{version}/",
       "description": "Sandbox url",
+      "variables": {
+        "version": {
+          "enum": [
+            "v1"
+          ],
+          "default": "v1"
+        }
+      }
+    },
+    {
+      "url": "http://localhost:3000/api/{version}/",
+      "description": "Local development url",
       "variables": {
         "version": {
           "enum": [
@@ -36,7 +48,7 @@
     }
   ],
   "paths": {
-    "/api/v1/participant-declarations": {
+    "/participant-declarations": {
       "post": {
         "summary": "Create participant declarations",
         "operationId": "api_v1_create_ect_participant",
@@ -252,6 +264,21 @@
           }
         }
       },
+      "ECFDeclarationType": {
+        "description": "An ECF declaration type",
+        "type": "string",
+        "properties": {
+          "enum": [
+            "started",
+            "retained-1",
+            "retained-2",
+            "retained-3",
+            "retained-4",
+            "completed"
+          ]
+        },
+        "example": "started"
+      },
       "MultipleParticipantCsvResponse": {
         "description": "A list of participants in the Comma Seperated Value (CSV) format",
         "type": "string",
@@ -272,6 +299,23 @@
             }
           }
         }
+      },
+      "NPQDeclarationType": {
+        "description": "A NPQ declaration type",
+        "type": "string",
+        "properties": {
+          "enum": [
+            "accepted",
+            "rejected",
+            "started",
+            "retained-1",
+            "retained-2",
+            "retained-3",
+            "retained-4",
+            "completed"
+          ]
+        },
+        "example": "started"
       },
       "Pagination": {
         "type": "object",
@@ -371,15 +415,14 @@
           },
           "declaration_type": {
             "description": "The event declaration type",
-            "enum": [
-              "started",
-              "retained_1",
-              "retained_2",
-              "retained_3",
-              "retained_4",
-              "completed"
-            ],
-            "example": "started"
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ECFDeclarationType"
+              },
+              {
+                "$ref": "#/components/schemas/NPQDeclarationType"
+              }
+            ]
           },
           "declaration_date": {
             "description": "The event declaration date",
