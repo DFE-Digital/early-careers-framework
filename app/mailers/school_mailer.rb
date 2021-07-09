@@ -10,6 +10,9 @@ class SchoolMailer < ApplicationMailer
   MAT_INVITE_EMAIL_TEMPLATE = "f856f50e-6f49-441e-8018-f8303367eb5c"
   FEDERATION_INVITE_EMAIL_TEMPLATE = "9269c50d-b579-425b-b55b-4c93f67074d4"
   COORDINATOR_SIGN_IN_CHASER_EMAIL_TEMPLATE = "b5c318a4-2171-4ded-809a-af72dd87e7a7"
+  COORDINATOR_REMINDER_TO_CHOOSE_ROUTE_EMAIL_TEMPLATE = "c939c27a-9951-4ac3-817d-56b7bf343fb4"
+  COORDINATOR_REMINDER_TO_CHOOSE_PROVIDER_EMAIL_TEMPLATE = "e7a60b68-334e-4a25-8adf-55ebc70622f9"
+  COORDINATOR_REMINDER_TO_CHOOSE_MATERIALS_EMAIL_TEMPLATE = "43baf25c-6a46-437b-9f30-77c57d68a59e"
 
   def nomination_email(recipient:, school_name:, nomination_url:, expiry_date:)
     template_mail(
@@ -44,7 +47,6 @@ class SchoolMailer < ApplicationMailer
     recipient:,
     lead_provider_name:,
     delivery_partner_name:,
-    cohort:,
     school_name:,
     nominate_url:,
     challenge_url:,
@@ -56,26 +58,25 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        provider_name: lead_provider_name, # TODO: remove once template updated
         lead_provider_name: lead_provider_name,
         delivery_partner_name: delivery_partner_name,
-        cohort: cohort,
         school_name: school_name,
         nominate_url: nominate_url,
         challenge_url: challenge_url,
         challenge_deadline: challenge_deadline,
-        subject: "Provider confirmed",
+        subject: "FAO: NQT coordinator. Training provider confirmed.",
       },
     )
   end
 
   def coordinator_partnership_notification_email(
     recipient:,
+    name:,
     lead_provider_name:,
     delivery_partner_name:,
     cohort:,
     school_name:,
-    start_url:,
+    sign_in_url:,
     challenge_url:,
     challenge_deadline:
   )
@@ -85,15 +86,15 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        provider_name: lead_provider_name, # TODO: remove once template updated
+        name: name,
         lead_provider_name: lead_provider_name,
         delivery_partner_name: delivery_partner_name,
-        cohort: cohort,
+        cohort: cohort, # TODO: remove once template updated
         school_name: school_name,
-        start_url: start_url,
+        sign_in_url: sign_in_url,
         challenge_url: challenge_url,
         challenge_deadline: challenge_deadline,
-        subject: "Provider confirmed",
+        subject: "Training provider confirmed: add your ECTs and mentors",
       },
     )
   end
@@ -162,6 +163,48 @@ class SchoolMailer < ApplicationMailer
         name: name,
         school_name: school_name,
         start_url: start_url,
+      },
+    )
+  end
+
+  def induction_coordinator_reminder_to_choose_route_email(recipient:, name:, school_name:, sign_in_url:)
+    template_mail(
+      COORDINATOR_REMINDER_TO_CHOOSE_ROUTE_EMAIL_TEMPLATE,
+      to: recipient,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        name: name,
+        school_name: school_name,
+        sign_in_url: sign_in_url,
+      },
+    )
+  end
+
+  def induction_coordinator_reminder_to_choose_provider_email(recipient:, name:, school_name:, sign_in_url:)
+    template_mail(
+      COORDINATOR_REMINDER_TO_CHOOSE_PROVIDER_EMAIL_TEMPLATE,
+      to: recipient,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        name: name,
+        school_name: school_name,
+        sign_in_url: sign_in_url,
+      },
+    )
+  end
+
+  def induction_coordinator_reminder_to_choose_materials_email(recipient:, name:, school_name:, sign_in_url:)
+    template_mail(
+      COORDINATOR_REMINDER_TO_CHOOSE_MATERIALS_EMAIL_TEMPLATE,
+      to: recipient,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        name: name,
+        school_name: school_name,
+        sign_in_url: sign_in_url,
       },
     )
   end

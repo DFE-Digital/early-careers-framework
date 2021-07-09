@@ -9,7 +9,8 @@ class PartnershipNotificationService
           PartnershipNotificationEmail.email_types[:induction_coordinator_email],
         )
 
-        send_notification_email_to_coordinator(notification_email)
+        coordinator_name = partnership.school.induction_coordinators.first.full_name
+        send_notification_email_to_coordinator(notification_email, coordinator_name)
       else
         notification_email = create_notification_email(
           partnership,
@@ -71,7 +72,6 @@ private
       recipient: notification_email.sent_to,
       lead_provider_name: notification_email.lead_provider.name,
       delivery_partner_name: notification_email.delivery_partner.name,
-      cohort: notification_email.partnership.cohort.display_name,
       school_name: notification_email.school.name,
       nominate_url: nomination_email.nomination_url,
       challenge_url: challenge_url(notification_email.token),
@@ -81,16 +81,17 @@ private
     notification_email.update!(notify_id: notify_id)
   end
 
-  def send_notification_email_to_coordinator(notification_email)
+  def send_notification_email_to_coordinator(notification_email, coordinator_name)
     notify_id = SchoolMailer.coordinator_partnership_notification_email(
       recipient: notification_email.sent_to,
+      name: coordinator_name,
       lead_provider_name: notification_email.lead_provider.name,
       delivery_partner_name: notification_email.delivery_partner.name,
       cohort: notification_email.partnership.cohort.display_name,
       school_name: notification_email.school.name,
-      start_url: Rails.application.routes.url_helpers.root_url(
+      sign_in_url: Rails.application.routes.url_helpers.new_user_session_url(
         host: Rails.application.config.domain,
-        **UTMService.email(:partnership_notification),
+        **UTMService.email(:partnership_notification, :partnership_notification),
       ),
       challenge_url: challenge_url(notification_email.token),
       challenge_deadline: notification_email.challenge_deadline.strftime("%d/%m/%Y"),
