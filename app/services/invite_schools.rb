@@ -134,6 +134,75 @@ class InviteSchools
     end
   end
 
+  def send_induction_coordinator_choose_route_chasers
+    induction_coordinators_not_chosen_route = User.includes(:induction_coordinator_profile, schools: :school_cohorts)
+                                                  .joins(:induction_coordinator_profile)
+                                                  .left_outer_joins(schools: :school_cohorts)
+                                                  .where(school_cohorts: { id: nil })
+                                                  .where.not(last_sign_in_at: nil)
+    induction_coordinators_not_chosen_route.find_each do |induction_coordinator|
+      school_without_cohort = induction_coordinator.schools
+                                                   .first { |school| school.school_cohorts.none? }
+      SchoolMailer.induction_coordinator_reminder_to_choose_route_email(
+        recipient: induction_coordinator.email,
+        name: induction_coordinator.full_name,
+        school_name: school_without_cohort.name,
+        sign_in_url: choose_route_chaser_sign_in_url,
+      ).deliver_later
+    rescue StandardError
+      logger.info "Error emailing induction coordinator, email: #{induction_coordinator.email} ... skipping"
+    end
+  end
+
+  def send_induction_coordinator_choose_provider_chasers
+    induction_coordinators_not_in_partnership = User.includes(
+      :induction_coordinator_profile,
+      schools: %i[school_cohorts partnerships],
+    ).where(
+      id:
+        School.unpartnered(Cohort.current.start_year)
+              .joins(:school_cohorts, :induction_coordinator_profiles)
+              .where(school_cohorts: { induction_programme_choice: "full_induction_programme" })
+              .pluck(:user_id),
+    )
+
+    induction_coordinators_not_in_partnership.find_each do |induction_coordinator|
+      school_without_provider = induction_coordinator.schools.first do |school|
+        school.school_cohorts.first.induction_programme_choice == "full_induction_programme" &&
+          !school.partnered?(Cohort.current)
+      end
+      SchoolMailer.induction_coordinator_reminder_to_choose_provider_email(
+        recipient: induction_coordinator.email,
+        name: induction_coordinator.full_name,
+        school_name: school_without_provider.name,
+        sign_in_url: choose_provider_chaser_sign_in_url,
+      ).deliver_later
+    rescue StandardError
+      logger.info "Error emailing induction coordinator, email: #{induction_coordinator.email} ... skipping"
+    end
+  end
+
+  def send_induction_coordinator_choose_materials_chasers
+    induction_coordinators_not_chosen_materials = User.includes(:induction_coordinator_profile, schools: :school_cohorts)
+                                                      .joins(:induction_coordinator_profile, schools: :school_cohorts)
+                                                      .where(school_cohorts: {
+                                                        induction_programme_choice: "core_induction_programme",
+                                                        core_induction_programme_id: nil,
+                                                      })
+    induction_coordinators_not_chosen_materials.find_each do |induction_coordinator|
+      school_without_cohort = induction_coordinator.schools
+                                                   .first { |school| school.school_cohorts.any? { |school_cohort| school_cohort.core_induction_programme? && school_cohort.core_induction_programme_id.nil? } }
+      SchoolMailer.induction_coordinator_reminder_to_choose_materials_email(
+        recipient: induction_coordinator.email,
+        name: induction_coordinator.full_name,
+        school_name: school_without_cohort.name,
+        sign_in_url: choose_materials_chaser_sign_in_url,
+      ).deliver_later
+    rescue StandardError
+      logger.info "Error emailing induction coordinator, email: #{induction_coordinator.email} ... skipping"
+    end
+  end
+
 private
 
   def private_beta_start_url
@@ -146,8 +215,27 @@ private
   def sign_in_chaser_start_url
     Rails.application.routes.url_helpers.root_url(
       host: Rails.application.config.domain,
-      **UTMService.email(:sign_in_reminder),
+      **UTMService.email(:sign_in_reminder, :sign_in_reminder),
     )
+  end
+
+  def sign_in_url_with_campaign(campaign)
+    Rails.application.routes.url_helpers.new_user_session_url(
+      host: Rails.application.config.domain,
+      **UTMService.email(campaign, campaign),
+    )
+  end
+
+  def choose_route_chaser_sign_in_url
+    sign_in_url_with_campaign(:choose_route)
+  end
+
+  def choose_provider_chaser_sign_in_url
+    sign_in_url_with_campaign(:choose_provider)
+  end
+
+  def choose_materials_chaser_sign_in_url
+    sign_in_url_with_campaign(:choose_materials)
   end
 
   def find_eligible_school(urn)

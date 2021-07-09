@@ -440,4 +440,35 @@ RSpec.describe School, type: :model do
       expect(School.not_opted_out).not_to include opted_out_school
     end
   end
+
+  describe "#partnered" do
+    it "returns true when the school is in a partnership" do
+      partnership = create(:partnership)
+      expect(partnership.school.partnered?(partnership.cohort)).to be true
+    end
+
+    it "returns false when the school is not in a partnership" do
+      school = create(:school)
+      expect(school.partnered?(create(:cohort))).to be false
+    end
+
+    it "returns false when the school is not in a partnership for the specified cohort" do
+      partnership = create(:partnership)
+      expect(partnership.school.partnered?(create(:cohort))).to be false
+    end
+
+    it "returns false when the partnership has been challenged" do
+      partnership = create(:partnership, :challenged)
+      expect(partnership.school.partnered?(partnership.cohort)).to be false
+    end
+
+    it "returns true when the school has a challenged and unchallenged partnership" do
+      cohort = create(:cohort)
+      school = create(:school)
+      create(:partnership, school: school, cohort: cohort)
+      create(:partnership, :challenged, school: school, cohort: cohort)
+
+      expect(school.partnered?(cohort)).to be true
+    end
+  end
 end
