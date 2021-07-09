@@ -4,7 +4,7 @@ require "payment_calculator/ecf/payment_calculation"
 
 describe ::PaymentCalculator::Ecf::PaymentCalculation do
   let(:contract) do
-    FactoryBot.create(:call_off_contract)
+    FactoryBot.build_stubbed(:call_off_contract)
   end
 
   let(:start_event_name) { "Started" }
