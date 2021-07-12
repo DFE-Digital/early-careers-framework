@@ -13,6 +13,7 @@ class SchoolMailer < ApplicationMailer
   COORDINATOR_REMINDER_TO_CHOOSE_ROUTE_EMAIL_TEMPLATE = "c939c27a-9951-4ac3-817d-56b7bf343fb4"
   COORDINATOR_REMINDER_TO_CHOOSE_PROVIDER_EMAIL_TEMPLATE = "e7a60b68-334e-4a25-8adf-55ebc70622f9"
   COORDINATOR_REMINDER_TO_CHOOSE_MATERIALS_EMAIL_TEMPLATE = "43baf25c-6a46-437b-9f30-77c57d68a59e"
+  ADD_PARTICIPANTS_EMAIL_TEMPLATE = "721787d0-74bc-42a0-a064-ee0c1cb58edb"
 
   def nomination_email(recipient:, school_name:, nomination_url:, expiry_date:)
     template_mail(
@@ -204,6 +205,19 @@ class SchoolMailer < ApplicationMailer
       personalisation: {
         name: name,
         school_name: school_name,
+        sign_in_url: sign_in_url,
+      },
+    )
+  end
+
+  def induction_coordinator_add_participants_email(recipient:, name:, sign_in_url:)
+    template_mail(
+      ADD_PARTICIPANTS_EMAIL_TEMPLATE,
+      to: recipient,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        name: name,
         sign_in_url: sign_in_url,
       },
     )
