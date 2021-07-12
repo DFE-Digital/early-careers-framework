@@ -34,8 +34,6 @@ When non-breaking changes are made to the API, this will not result in a version
 
 Information about deprecations (for instance attributes/endpoints that will be modified/removed) will be included in the API response through a ‘Warning’ header.
 
-We will update our [release notes](./release-notes) with all breaking and non-breaking changes.
-
 ## Testing
 
 To get familiar with our system and perform testing, you can use [our sandbox environment](https://ecf-sandbox.london.cloudapps.digital).
