@@ -75,7 +75,6 @@ class SchoolMailer < ApplicationMailer
     name:,
     lead_provider_name:,
     delivery_partner_name:,
-    cohort:,
     school_name:,
     sign_in_url:,
     challenge_url:,
@@ -90,7 +89,6 @@ class SchoolMailer < ApplicationMailer
         name: name,
         lead_provider_name: lead_provider_name,
         delivery_partner_name: delivery_partner_name,
-        cohort: cohort, # TODO: remove once template updated
         school_name: school_name,
         sign_in_url: sign_in_url,
         challenge_url: challenge_url,
