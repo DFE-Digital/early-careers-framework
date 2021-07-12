@@ -10,7 +10,6 @@ RSpec.describe "Pages for induction tutor materials for existing CIPs", type: :r
   end
 
   describe "GET /induction-tutor-materials/:provider/:year" do
-
     it "renders the materials template for Ambition" do
       provider = CoreInductionProgramme.find_by!(name: "Ambition Institute")
       get induction_tutor_materials_path(provider: provider.name.downcase.tr(" ", "-"), year: "year-one")
