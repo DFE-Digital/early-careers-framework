@@ -64,7 +64,8 @@
 
 <p>View Ambition’s programme handbook in PDF format:</p>
 <ul class="govuk-list govuk-list--bullet">
-  <li><%= govuk_link_to "Ambition (PDF, 10 pages)", "https://www.early-career-framework.education.gov.uk/ambition/wp-content/uploads/sites/3/2020/08/Ambition-EarlyCareerTeachers_2020_ProgrammeHandbook.pdf" %></li>
+  <li><%= govuk_link_to "Ambition (PDF, 10 pages)",
+                        "#{Rails.application.config.cip_resource_bucket}/Ambition-EarlyCareerTeachers_2020_ProgrammeHandbook.pdf" %></li>
 </ul>
 
 <h2 class="govuk-heading-l">Education Development Trust</h2>
@@ -76,7 +77,8 @@
   <li>reflect on their development and identify ways to improve</li>
 </ul>
 
-<p><%= govuk_link_to "See an example of an Education Development Trust topic", "https://www.early-career-framework.education.gov.uk/edt/edt-early-career-framework/self-directed-study-materials/establishing-a-positive-climate-for-learning/1-3-learning-about-classroom-routines/" %>
+<p><%= govuk_link_to "See an example of an Education Development Trust topic",
+                     "https://www.early-career-framework.education.gov.uk/edt/edt-early-career-framework/self-directed-study-materials/establishing-a-positive-climate-for-learning/1-3-learning-about-classroom-routines/" %>
 
 <%= govuk_accordion do |accordion| %>
   <% accordion.add_section title: "Module 1: establishing a positive climate for learning" do %>
@@ -126,7 +128,8 @@
 
 <p>View Education Development Trust’s programme handbook in PDF format:</p>
 <ul class="govuk-list govuk-list--bullet">
-  <li><%= govuk_link_to "Education Development Trust (PDF, 2 pages)", "https://www.early-career-framework.education.gov.uk/edt/edt-early-career-framework/self-directed-study-materials/establishing-a-positive-climate-for-learning/1-3-learning-about-classroom-routines/" %></li>
+  <li><%= govuk_link_to "Education Development Trust (PDF, 2 pages)",
+                        "#{Rails.application.config.cip_resource_bucket}/edt-Overview-of-EDTs-Core-Induction-Programme.pdf" %></li>
 </ul>
 
 <h2 class='govuk-heading-l'>Teach First</h2>
@@ -139,7 +142,8 @@
   <li>answer questions which they can then discuss with their mentor</li>
 </ul>
 
-<p><%= govuk_link_to "See an example of a Teach First topic", "https://www.early-career-framework.education.gov.uk/teachfirst/teach-first/self-directed-study-material/1-how-can-you-create-an-effective-learning-environment/1-establishing-effective-routines-51-minutes/" %></p>
+<p><%= govuk_link_to "See an example of a Teach First topic",
+                     "https://www.early-career-framework.education.gov.uk/teachfirst/teach-first/self-directed-study-material/1-how-can-you-create-an-effective-learning-environment/1-establishing-effective-routines-51-minutes/" %></p>
 
 <%= govuk_accordion do |accordion| %>
   <% accordion.add_section title: "Module 1: how to create an effective learning environment" do %>
@@ -169,7 +173,8 @@
 
 <p>View Teach First’s programme handbook in PDF format:</p>
 <ul class="govuk-list govuk-list--bullet">
-  <li><%= govuk_link_to "Teach First (PDF, 30 pages)", "https://www.early-career-framework.education.gov.uk/teachfirst/wp-content/uploads/sites/4/2020/10/Early-Career-Framework-Programme-SLT-and-Induction-Lead-Handbook-1.pdf" %></li>
+  <li><%= govuk_link_to "Teach First (PDF, 30 pages)",
+                        "#{Rails.application.config.cip_resource_bucket}/teach-first-Early-Career-Framework-Programme-SLT-and-Induction-Lead-Handbook-1.pdf" %></li>
 </ul>
 
 <h2 class="govuk-heading-l">UCL Early Career Teacher Consortium</h2>
@@ -181,7 +186,8 @@
   <li>reflect on what they’ve learnt</li>
 </ul>
 
-<p><%= govuk_link_to "See an example of a UCL topic", "https://www.early-career-framework.education.gov.uk/ucl/ucl/2-understanding-teachers-as-role-models/4-making-productive-use-of-assessment/5-planning-effective-and-manageable-marking-and-feedback/" %></p>
+<p><%= govuk_link_to "See an example of a UCL topic",
+                     "https://www.early-career-framework.education.gov.uk/ucl/ucl/2-understanding-teachers-as-role-models/4-making-productive-use-of-assessment/5-planning-effective-and-manageable-marking-and-feedback/" %></p>
 
 <%= govuk_accordion do |accordion| %>
   <% accordion.add_section title: "Module 1: enabling pupil learning" do %>
@@ -219,7 +225,8 @@
 
 <p>View UCL’s programme handbook in PDF format:</p>
 <ul class="govuk-list givuk-list-bullet">
-  <li><%= govuk_link_to "UCL Early Career Teacher Consortium (PDF, 74 pages)", "https://www.early-career-framework.education.gov.uk/ucl/wp-content/uploads/sites/5/2020/12/Programme-Handbook-Updated.pdf" %></li>
+  <li><%= govuk_link_to "UCL Early Career Teacher Consortium (PDF, 74 pages)",
+                        "#{Rails.application.config.cip_resource_bucket}/ucl-Programme-Handbook-Updated.pdf" %></li>
 </ul>
 
 <p>If you’re still not sure, you can <%= govuk_link_to "contact us", "mailto:continuing-professional-development@digital.education.gov.uk" %> for more information</p>
