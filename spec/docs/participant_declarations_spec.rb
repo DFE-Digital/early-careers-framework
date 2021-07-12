@@ -16,6 +16,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
     post "Create participant declarations" do
       operationId :api_v1_create_participant_declarations
       tags "participant_declarations"
+      consumes "application/json"
       security [bearerAuth: []]
 
       request_body content: {
