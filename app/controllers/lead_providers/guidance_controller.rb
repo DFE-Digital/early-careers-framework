@@ -4,33 +4,38 @@ require "lead_provider_api_specification"
 
 module LeadProviders
   class GuidanceController < ApplicationController
-    include MarkdownHelper
+    layout :resolve_layout
 
     def index
-      render_content_page :index
+      @page_name = :index
     end
 
     def ecf_usage
-      render_content_page :ecf_usage
+      @page_name = :ecf_usage
     end
 
     def reference
+      @page_name = :reference
       @api_reference = ApiDocs::ApiReference.new(LeadProviderApiSpecification.as_hash)
     end
 
     def release_notes
-      render_content_page :release_notes
+      @page_name = :release_notes
     end
 
     def help
-      render_content_page :help
+      @page_name = :help
     end
 
-    def render_content_page(page_name)
-      @converted_markdown = markdown_to_html File.read("app/views/lead_providers/guidance/#{page_name}.md")
-      @page_name = page_name
+  private
 
-      render "rendered_markdown_template"
+    def resolve_layout
+      case action_name
+      when "reference"
+        "application"
+      else
+        "guidance_markdown"
+      end
     end
   end
 end

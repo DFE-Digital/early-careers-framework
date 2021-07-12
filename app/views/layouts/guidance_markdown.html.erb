@@ -1,4 +1,5 @@
 <%= content_for :title, t("page_titles.lead_providers.guidance.#{@page_name}") %>
+
 <% content_for :nav_bar do %>
   <%= render PrimaryNavComponent.new do |component| %>
     <%= component.nav_item(path: lead_providers_guidance_home_path) do %>
@@ -19,8 +20,10 @@
   <% end %>
 <% end %>
 
-<h1 class="govuk-heading-xl"><%= t("page_titles.lead_providers.guidance.#{@page_name}") %></h1>
+<%= render layout: "layouts/width_container" do %>
+  <h1 class="govuk-heading-xl"><%= t("page_titles.lead_providers.guidance.#{@page_name}") %></h1>
 
-<div class="lead-provider-content">
-  <%= @converted_markdown %>
-</div>
+  <div class="lead-provider-content">
+    <%= yield %>
+  </div>
+<% end %>

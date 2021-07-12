@@ -1,9 +1,7 @@
-<h2 class="app-contents-list__title">Contents</h2>
+## Contents
 
-<ol class="app-contents-list__list">
-  <li class="app-contents-list__list-item app-contents-list__list-item--parent"><a class="govuk-link app-contents-list__link" href="#continuing-the-registration-process">Continuing the registration process</a></li>
-  <li class="app-contents-list__list-item app-contents-list__list-item--parent"><a class="govuk-link app-contents-list__link" href="#declaring-that-a-participant-has-started-their-induction">Declaring that a participant has started their induction</a></li>
-</ol>
+- [Continuing the registration process](#continuing-the-registration-process)
+- [Declaring that a participant has started their induction](#declaring-that-a-participant-has-started-their-induction)
 
 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6">
 
@@ -69,3 +67,4 @@ See [confirm participant declarations](/lead-providers/guidance/reference#post-a
 ### 2. Provider records the participant declaration id
 
 Store the returned participant declaration id for future management tasks.
+
