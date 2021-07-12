@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# source: https://github.com/DFE-Digital/teacher-training-api/blob/master/spec/swagger_helper.rb
+
 require "rails_helper"
 
 RSpec.configure do |config|
