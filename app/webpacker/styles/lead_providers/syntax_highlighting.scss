@@ -224,3 +224,14 @@ $code-delete-bg: #FADDDD;
     font-weight: bold;
   }
 }
+
+.app-csv-code-sample {
+  background: $code-00;
+  color: $code-05;
+  // color: #a71d5d;
+  padding: 3px 5px;
+  border-radius: 1px;
+  font-family: monaco, Consolas, "Lucida Console", monospace;
+  font-size: 15px;
+  overflow: scroll;
+}

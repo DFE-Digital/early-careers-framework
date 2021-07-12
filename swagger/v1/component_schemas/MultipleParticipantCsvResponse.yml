@@ -1,6 +1,13 @@
 description: "A list of participants in the Comma Seperated Value (CSV) format"
 type: string
 format: base64
+required:
+  - data
+properties:
+  data:
+    type: array
+    items:
+      $ref: "#/components/schemas/ParticipantCsvRow"
 example: |
   id,type,email,full_name,mentor_id,school_urn,participant_type,cohort
   db3a7848-7308-4879-942a-c4a70ced400a,participant,jane.smith@some-school.example.com,Jane Smith,bb36d74a-68a7-47b6-86b6-1fd0d141c590,106286,ect,2021

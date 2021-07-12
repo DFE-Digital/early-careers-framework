@@ -1,12 +1,23 @@
-description: "The data attributes associated with an Early Career Teacher"
+description: "The details of a participant"
 type: object
 required:
+  - id
+  - type
   - email
   - full_name
   - school_urn
   - participant_type
   - cohort
 properties:
+  id:
+    description: "The unique identifier of the participant record"
+    type: string
+    format: uuid
+    example: db3a7848-7308-4879-942a-c4a70ced400a
+  type:
+    description: "The data type"
+    type: string
+    example: participant
   email:
     description: "The email registered for this participant"
     type: string

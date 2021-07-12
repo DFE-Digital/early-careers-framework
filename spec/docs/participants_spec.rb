@@ -13,7 +13,6 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
     get "Retrieve multiple participants" do
       operationId :api_v1_participants
       tags "participant"
-      produces "application/vnd.api+json"
       security [bearerAuth: []]
 
       parameter name: :filter,
@@ -60,7 +59,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
     get "Retrieve multiple participants in CSV format" do
       operationId :api_v1_participants_csv
       tags "participant"
-      produces "text/csv"
+      produces
       security [bearerAuth: []]
 
       parameter name: :filter,
@@ -76,7 +75,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
                 example: { updated_since: "2020-11-13T11:21:55Z" }
 
       response "200", "A CSV file of participants" do
-        schema "$ref": "#/components/schemas/MultipleParticipantCsvResponse"
+        schema({ "$ref": "#/components/schemas/MultipleParticipantCsvResponse" }, content_type: "text/csv")
 
         run_test!
       end
