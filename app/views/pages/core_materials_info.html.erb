@@ -65,7 +65,7 @@
 <p>View Ambition’s programme handbook in PDF format:</p>
 <ul class="govuk-list govuk-list--bullet">
   <li><%= govuk_link_to "Ambition (PDF, 10 pages)",
-                        "https://paas-s3-broker-prod-lon-ac28a7a5-2bc2-4d3b-8d16-a88eaef65526.s3.amazonaws.com/Ambition-EarlyCareerTeachers_2020_ProgrammeHandbook.pdf" %></li>
+                        "#{Rails.application.config.cip_resource_bucket}/Ambition-EarlyCareerTeachers_2020_ProgrammeHandbook.pdf" %></li>
 </ul>
 
 <h2 class="govuk-heading-l">Education Development Trust</h2>
@@ -129,7 +129,7 @@
 <p>View Education Development Trust’s programme handbook in PDF format:</p>
 <ul class="govuk-list govuk-list--bullet">
   <li><%= govuk_link_to "Education Development Trust (PDF, 2 pages)",
-                        "https://paas-s3-broker-prod-lon-ac28a7a5-2bc2-4d3b-8d16-a88eaef65526.s3.amazonaws.com/edt-Overview-of-EDTs-Core-Induction-Programme.pdf" %></li>
+                        "#{Rails.application.config.cip_resource_bucket}/edt-Overview-of-EDTs-Core-Induction-Programme.pdf" %></li>
 </ul>
 
 <h2 class='govuk-heading-l'>Teach First</h2>
@@ -174,7 +174,7 @@
 <p>View Teach First’s programme handbook in PDF format:</p>
 <ul class="govuk-list govuk-list--bullet">
   <li><%= govuk_link_to "Teach First (PDF, 30 pages)",
-                        "https://paas-s3-broker-prod-lon-ac28a7a5-2bc2-4d3b-8d16-a88eaef65526.s3.amazonaws.com/teach-first-Early-Career-Framework-Programme-SLT-and-Induction-Lead-Handbook-1.pdf" %></li>
+                        "#{Rails.application.config.cip_resource_bucket}/teach-first-Early-Career-Framework-Programme-SLT-and-Induction-Lead-Handbook-1.pdf" %></li>
 </ul>
 
 <h2 class="govuk-heading-l">UCL Early Career Teacher Consortium</h2>
@@ -226,7 +226,7 @@
 <p>View UCL’s programme handbook in PDF format:</p>
 <ul class="govuk-list givuk-list-bullet">
   <li><%= govuk_link_to "UCL Early Career Teacher Consortium (PDF, 74 pages)",
-                        "https://paas-s3-broker-prod-lon-ac28a7a5-2bc2-4d3b-8d16-a88eaef65526.s3.amazonaws.com/ucl-Programme-Handbook-Updated.pdf" %></li>
+                        "#{Rails.application.config.cip_resource_bucket}/ucl-Programme-Handbook-Updated.pdf" %></li>
 </ul>
 
 <p>If you’re still not sure, you can <%= govuk_link_to "contact us", "mailto:continuing-professional-development@digital.education.gov.uk" %> for more information</p>
