@@ -4,9 +4,7 @@ module LeadProviders
   class ContentController < ApplicationController
     layout :resolve_layout
 
-    def index
-      @provider_dashboard_url = dashboard_path
-    end
+    def index; end
 
     def partnership_guide
       @page_name = :partnership_guide
