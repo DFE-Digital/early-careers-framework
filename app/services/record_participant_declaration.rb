@@ -40,7 +40,7 @@ private
   end
 
   def schema
-    JSON.parse(File.read(JsonSchema::VersionEventFileName.call(version: "0.2")))
+    JSON.parse(File.read(JsonSchema::VersionEventFileName.call(version: "0.3")))
   end
 
   def add_participant_profile_params!
