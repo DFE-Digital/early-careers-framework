@@ -13,7 +13,7 @@ describe ::PaymentCalculator::Ecf::Contract::OutputPaymentCalculations do
     let(:band_a) { build_stubbed(:participant_band, min: 0, max: 100, per_participant: 996, call_off_contract: contract) }
 
     it "performs calculations of the output payments" do
-      expect(call_off_contract.output_payment_per_participant(band_a).round(0)).to eq(598.00)
+      expect(call_off_contract.output_payment_per_participant(band_a)).to eq(597.60)
 
       %i[started completion].each do |event_type|
         expect(call_off_contract.output_payment_per_participant_for_event(event_type: event_type, band: band_a).round(0)).to eq(120.00)
