@@ -55,7 +55,8 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
         end
 
         before do
-          RecordParticipantDeclaration.call(HashWithIndifferentAccess.new({ lead_provider: lead_provider, raw_event: params.to_json }).merge(params))
+          params[:data][:attributes].merge!({ lead_provider: lead_provider, raw_event: params.to_json })
+          RecordParticipantDeclaration.call(params)
         end
 
         schema "$ref": "#/components/schemas/ParticipantDeclarationRecordedResponse"

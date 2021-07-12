@@ -2,13 +2,27 @@
   "$id": "https://digital.education.gov.uk/schema/participant_declarations/create/request_schema.json",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
-  "oneOf": [
-    {
-      "$ref": "#/ecf/participant_declarations/create/request_schema.json"
-    },
-    {
-      "$ref": "#/npq/participant_declarations/create/accepted_schema.json"
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "participant_declaration"
+          ]
+        },
+        "attributes": {
+          "oneOf": [
+            {
+              "$ref": "#/ecf/participant_declarations/create/request_schema.json"
+            },
+            {
+              "$ref": "#/npq/participant_declarations/create/accepted_schema.json"
+            }
+          ],
+          "additionalProperties": false
+        }
+      }
     }
-  ],
-  "additionalProperties": false
+  }
 }

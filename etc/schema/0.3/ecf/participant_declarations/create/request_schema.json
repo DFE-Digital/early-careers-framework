@@ -12,7 +12,7 @@
         "attributes": {
           "programme_type": {
             "enum": [
-              "ecf-early-career-teacher",
+              "ecf-induction",
               "ecf-mentor"
             ]
           },

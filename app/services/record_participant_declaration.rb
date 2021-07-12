@@ -7,11 +7,11 @@ class RecordParticipantDeclaration
 
   class << self
     def call(params)
-      new(params).call
+      new(params[:data][:attributes]).call
     end
 
     def required_params
-      %i[participant_id lead_provider declaration_type declaration_date raw_event]
+      %i[participant_id lead_provider declaration_type declaration_date course_type raw_event]
     end
   end
 
