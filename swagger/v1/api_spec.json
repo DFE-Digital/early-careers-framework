@@ -11,35 +11,19 @@
   },
   "servers": [
     {
-      "url": "https://manage-training-for-early-career-teachers.education.gov.uk/api/{version}",
-      "description": "Production url",
-      "variables": {
-        "version": {
-          "enum": [
-            "v1"
-          ],
-          "default": "v1"
-        }
-      }
+      "url": "https://manage-training-for-early-career-teachers.education.gov.uk",
+      "description": "Production url"
     },
     {
-      "url": "https://ecf-sandbox.london.cloudapps.digital/api/{version}",
-      "description": "Sandbox url",
-      "variables": {
-        "version": {
-          "enum": [
-            "v1"
-          ],
-          "default": "v1"
-        }
-      }
+      "url": "https://ecf-sandbox.london.cloudapps.digital",
+      "description": "Sandbox url"
     }
   ],
   "paths": {
     "/api/v1/participant-declarations": {
       "post": {
         "summary": "Create participant declarations",
-        "operationId": "api_v1_create_ect_participant",
+        "operationId": "api_v1_create_participant_declarations",
         "tags": [
           "participant_declarations"
         ],
@@ -199,7 +183,7 @@
           "200": {
             "description": "A CSV file of participants",
             "content": {
-              "application/json": {
+              "text/csv": {
                 "schema": {
                   "$ref": "#/components/schemas/MultipleParticipantCsvResponse"
                 }
@@ -256,6 +240,17 @@
         "description": "A list of participants in the Comma Seperated Value (CSV) format",
         "type": "string",
         "format": "base64",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ParticipantCsvRow"
+            }
+          }
+        },
         "example": "id,type,email,full_name,mentor_id,school_urn,participant_type,cohort\ndb3a7848-7308-4879-942a-c4a70ced400a,participant,jane.smith@some-school.example.com,Jane Smith,bb36d74a-68a7-47b6-86b6-1fd0d141c590,106286,ect,2021\nbb36d74a-68a7-47b6-86b6-1fd0d141c590,participant,martin.jones@some-school.example.com,Martin Jones,,106286,mentor,2021\n"
       },
       "MultipleParticipantResponse": {
@@ -345,12 +340,72 @@
         "required": [
           "email",
           "full_name",
-          "mentor_id",
           "school_urn",
           "participant_type",
           "cohort"
         ],
         "properties": {
+          "email": {
+            "description": "The email registered for this participant",
+            "type": "string",
+            "example": "jane.smith@some-school.example.com"
+          },
+          "full_name": {
+            "description": "The full name of the participant",
+            "type": "string",
+            "example": "Jane Smith"
+          },
+          "mentor_id": {
+            "description": "The unique identifier of the participants mentor",
+            "type": "string",
+            "example": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
+            "format": "uuid"
+          },
+          "school_urn": {
+            "description": "The Unique Reference Number (URN) of the school the submitted this participant",
+            "type": "string",
+            "example": "106286"
+          },
+          "participant_type": {
+            "description": "The type of participant this record refers to either ECT or Mentor",
+            "type": "string",
+            "example": "ect",
+            "enum": [
+              "ect",
+              "mentor"
+            ]
+          },
+          "cohort": {
+            "description": "Which cohort this participant is associated with",
+            "type": "string",
+            "example": "2021"
+          }
+        }
+      },
+      "ParticipantCsvRow": {
+        "description": "The details of a participant",
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "email",
+          "full_name",
+          "school_urn",
+          "participant_type",
+          "cohort"
+        ],
+        "properties": {
+          "id": {
+            "description": "The unique identifier of the participant record",
+            "type": "string",
+            "format": "uuid",
+            "example": "db3a7848-7308-4879-942a-c4a70ced400a"
+          },
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "participant"
+          },
           "email": {
             "description": "The email registered for this participant",
             "type": "string",

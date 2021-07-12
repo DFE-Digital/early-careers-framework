@@ -31,7 +31,11 @@ module ApiDocs
     end
 
     def example
-      SchemaExample.new(schema).as_json
+      if schema[:type] == "string"
+        schema["example"]
+      else
+        SchemaExample.new(schema).as_json
+      end
     end
 
     def name
