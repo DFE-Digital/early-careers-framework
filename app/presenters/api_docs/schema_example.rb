@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# source: https://github.com/DFE-Digital/apply-for-teacher-training/blob/main/app/presenters/api_docs/schema_example.rb
+
 module ApiDocs
   class SchemaExample
     attr_reader :main_schema
