@@ -10,6 +10,8 @@ RSpec.describe LeadProvider, type: :model do
   end
 
   describe "associations" do
+    it { is_expected.to belong_to(:cpd_lead_provider).required(false) }
+
     it { is_expected.to have_many(:partnerships) }
     it { is_expected.to have_many(:schools).through(:partnerships) }
     it { is_expected.to have_many(:lead_provider_profiles) }

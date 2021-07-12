@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_06_113050) do
+ActiveRecord::Schema.define(version: 2021_07_08_125502) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -71,6 +71,8 @@ ActiveRecord::Schema.define(version: 2021_07_06_113050) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "type", default: "ApiToken"
     t.boolean "private_api_access", default: false
+    t.uuid "cpd_lead_provider_id"
+    t.index ["cpd_lead_provider_id"], name: "index_api_tokens_on_cpd_lead_provider_id"
     t.index ["hashed_token"], name: "index_api_tokens_on_hashed_token", unique: true
     t.index ["lead_provider_id"], name: "index_api_tokens_on_lead_provider_id"
   end
@@ -106,6 +108,12 @@ ActiveRecord::Schema.define(version: 2021_07_06_113050) do
 
   create_table "core_induction_programmes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "cpd_lead_providers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.text "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -272,6 +280,8 @@ ActiveRecord::Schema.define(version: 2021_07_06_113050) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "name", null: false
+    t.uuid "cpd_lead_provider_id"
+    t.index ["cpd_lead_provider_id"], name: "index_lead_providers_on_cpd_lead_provider_id"
   end
 
   create_table "local_authorities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -329,6 +339,8 @@ ActiveRecord::Schema.define(version: 2021_07_06_113050) do
     t.text "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.uuid "cpd_lead_provider_id"
+    t.index ["cpd_lead_provider_id"], name: "index_npq_lead_providers_on_cpd_lead_provider_id"
   end
 
   create_table "npq_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -386,14 +398,15 @@ ActiveRecord::Schema.define(version: 2021_07_06_113050) do
   create_table "participant_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "type", null: false
     t.uuid "user_id", null: false
-    t.uuid "school_id", null: false
+    t.uuid "school_id"
     t.uuid "core_induction_programme_id"
-    t.uuid "cohort_id", null: false
+    t.uuid "cohort_id"
     t.uuid "mentor_profile_id"
     t.boolean "sparsity_uplift", default: false, null: false
     t.boolean "pupil_premium_uplift", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.text "status", default: "active", null: false
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"
@@ -614,6 +627,7 @@ ActiveRecord::Schema.define(version: 2021_07_06_113050) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "additional_school_emails", "schools"
   add_foreign_key "admin_profiles", "users"
+  add_foreign_key "api_tokens", "cpd_lead_providers"
   add_foreign_key "api_tokens", "lead_providers", on_delete: :cascade
   add_foreign_key "call_off_contracts", "lead_providers"
   add_foreign_key "cohorts_lead_providers", "cohorts"
@@ -628,8 +642,10 @@ ActiveRecord::Schema.define(version: 2021_07_06_113050) do
   add_foreign_key "lead_provider_cips", "lead_providers"
   add_foreign_key "lead_provider_profiles", "lead_providers"
   add_foreign_key "lead_provider_profiles", "users"
+  add_foreign_key "lead_providers", "cpd_lead_providers"
   add_foreign_key "nomination_emails", "partnership_notification_emails"
   add_foreign_key "nomination_emails", "schools"
+  add_foreign_key "npq_lead_providers", "cpd_lead_providers"
   add_foreign_key "participant_bands", "call_off_contracts"
   add_foreign_key "participant_declarations", "lead_providers"
   add_foreign_key "participant_profiles", "cohorts"

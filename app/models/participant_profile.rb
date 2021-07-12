@@ -2,9 +2,11 @@
 
 class ParticipantProfile < ApplicationRecord
   belongs_to :user
-  belongs_to :school
-  belongs_to :cohort
-  belongs_to :core_induction_programme, optional: true
+
+  enum status: {
+    active: "active",
+    withdrawn: "withdrawn",
+  }
 
   scope :mentors, -> { where(type: Mentor.name) }
   scope :ects, -> { where(type: ECT.name) }
@@ -23,37 +25,15 @@ class ParticipantProfile < ApplicationRecord
     false
   end
 
-  class ECT < self
-    @participant_type = :ect
-    belongs_to :mentor_profile, class_name: "Mentor", optional: true
-    has_one :mentor, through: :mentor_profile, source: :user
-
-    def ect?
-      true
-    end
-
-    def participant_type
-      :ect
-    end
+  def npq?
+    false
   end
 
-  class Mentor < self
-    @participant_type = :mentor
+  scope :mentors, -> { where(type: Mentor.name) }
+  scope :ects, -> { where(type: ECT.name) }
+  scope :npqs, -> { where(type: NPQ.name) }
 
-    self.ignored_columns = %i[mentor_profile_id]
-
-    has_many :mentee_profiles,
-             class_name: "ParticipantProfile::ECT",
-             foreign_key: :mentor_profile_id,
-             dependent: :nullify
-    has_many :mentees, through: :mentee_profiles, source: :user
-
-    def mentor?
-      true
-    end
-
-    def participant_type
-      :mentor
-    end
-  end
+  scope :sparsity, -> { where(sparsity_uplift: true) }
+  scope :pupil_premium, -> { where(pupil_premium_uplift: true) }
+  scope :uplift, -> { sparsity.or(pupil_premium) }
 end

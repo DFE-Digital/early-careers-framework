@@ -53,15 +53,21 @@ RSpec.describe ParticipantValidationService do
         ).to eql({ trn: trn, qts: true, active_alert: false })
       end
 
-      it "returns the validated details when nino is wrong" do
+      it "returns the validated details when name is wrong" do
         expect(
           ParticipantValidationService.validate(trn: trn, nino: nino, full_name: "John Smithe", date_of_birth: dob),
         ).to eql({ trn: trn, qts: true, active_alert: false })
       end
 
-      it "returns the validated details when name is wrong" do
+      it "returns the validated details when nino is wrong" do
         expect(
           ParticipantValidationService.validate(trn: trn, nino: "AA654321A", full_name: full_name, date_of_birth: dob),
+        ).to eql({ trn: trn, qts: true, active_alert: false })
+      end
+
+      it "returns the validated details when name is wrong and nino is cased differently" do
+        expect(
+          ParticipantValidationService.validate(trn: trn, nino: nino.downcase, full_name: "John Smithe", date_of_birth: dob),
         ).to eql({ trn: trn, qts: true, active_alert: false })
       end
     end

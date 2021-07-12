@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class LeadProvider < ApplicationRecord
+  belongs_to :cpd_lead_provider, optional: true
+
   has_many :partnerships
   has_many :schools, through: :partnerships
   has_many :lead_provider_profiles

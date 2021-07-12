@@ -3,29 +3,42 @@
 FactoryBot.define do
   factory :participant_profile do
     initialize_with do
-      klass = case participant_type
-              when :ect then ParticipantProfile::ECT
-              when :mentor then ParticipantProfile::Mentor
-              else
-                raise "Unknown participant type: #{participant_type}"
-              end
-      klass.new(attributes)
+      if participant_type.nil?
+        build :participant_profile, %i[ect mentor npq].sample, attributes
+      else
+        klass = case participant_type
+                when :ect then ParticipantProfile::ECT
+                when :mentor then ParticipantProfile::Mentor
+                when :npq then ParticipantProfile::NPQ
+                else
+                  raise "Unknown participant type: #{participant_type}"
+                end
+        klass.new(attributes)
+      end
     end
 
     user
-    cohort
-    school
 
     transient do
-      participant_type { %i[ect mentor].sample }
+      participant_type {}
     end
 
     trait :ect do
+      cohort
+      school
+
       participant_type { :ect }
     end
 
     trait :mentor do
+      cohort
+      school
+
       participant_type { :mentor }
+    end
+
+    trait :npq do
+      participant_type { :npq }
     end
 
     trait :sparsity_uplift do

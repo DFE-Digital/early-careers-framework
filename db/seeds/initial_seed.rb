@@ -8,19 +8,16 @@ teach_first_cip = CoreInductionProgramme.find_or_create_by!(name: "Teach First")
 ucl_cip = CoreInductionProgramme.find_or_create_by!(name: "UCL Institute of Education")
 
 [
-  { provider_name: "Ambition Institute", cip: ambition_cip, token: "ambition-token" },
-  { provider_name: "Best Practice Network", cip: ucl_cip, token: "best-practice-token" },
-  { provider_name: "Capita", cip: ambition_cip, token: "capita-token" },
-  { provider_name: "Education Development Trust", cip: edt_cip, token: "edt-token" },
-  { provider_name: "Teach First", cip: teach_first_cip, token: "teach-first-token" },
-  { provider_name: "UCL Institute of Education", cip: ucl_cip, token: "ucl-token" },
+  { provider_name: "Ambition Institute", cip: ambition_cip },
+  { provider_name: "Best Practice Network", cip: ucl_cip },
+  { provider_name: "Capita", cip: ambition_cip },
+  { provider_name: "Education Development Trust", cip: edt_cip },
+  { provider_name: "Teach First", cip: teach_first_cip },
+  { provider_name: "UCL Institute of Education", cip: ucl_cip },
 ].each do |seed|
   provider = LeadProvider.find_or_create_by!(name: seed[:provider_name])
   provider.update!(cohorts: [cohort_2021]) unless provider.cohorts.any?
   LeadProviderCip.find_or_create_by!(lead_provider: provider, cohort: cohort_2021, core_induction_programme: seed[:cip])
-  if Rails.env.development?
-    LeadProviderApiToken.create_with_known_token!(seed[:token], lead_provider: provider)
-  end
 end
 
 PrivacyPolicy.find_or_initialize_by(major_version: 1, minor_version: 0)
@@ -38,7 +35,7 @@ PrivacyPolicy.find_or_initialize_by(major_version: 1, minor_version: 0)
   { name: "Teach First", id: "a02ae582-f939-462f-90bc-cebf20fa8473" },
   { name: "UCL Institute of Education", id: "ef687b3d-c1c0-4566-a295-16d6fa5d0fa7" },
 ].each do |hash|
-  NpqLeadProvider.find_or_create_by!(name: hash[:name], id: hash[:id])
+  NPQLeadProvider.find_or_create_by!(name: hash[:name], id: hash[:id])
 end
 
 [
@@ -49,5 +46,33 @@ end
   { name: "NPQ for Headship (NPQH)", id: "0f7d6578-a12c-4498-92a0-2ee0f18e0768" },
   { name: "NPQ for Executive Leadership (NPQEL)", id: "aef853f2-9b48-4b6a-9d2a-91b295f5ca9a" },
 ].each do |hash|
-  NpqCourse.find_or_create_by!(name: hash[:name], id: hash[:id])
+  NPQCourse.find_or_create_by!(name: hash[:name], id: hash[:id])
+end
+
+all_provider_names = (LeadProvider.pluck(:name) + NPQLeadProvider.pluck(:name)).uniq
+
+all_provider_names.each do |name|
+  CpdLeadProvider.find_or_create_by!(name: name)
+end
+
+LeadProvider.all.each do |lp|
+  lp.update!(cpd_lead_provider: CpdLeadProvider.find_by(name: lp.name))
+end
+
+NPQLeadProvider.all.each do |lp|
+  lp.update!(cpd_lead_provider: CpdLeadProvider.find_by(name: lp.name))
+end
+
+if Rails.env.development?
+  [
+    { name: "Ambition Institute", token: "ambition-token" },
+    { name: "Best Practice Network", token: "best-practice-token" },
+    { name: "Capita", token: "capita-token" },
+    { name: "Education Development Trust", token: "edt-token" },
+    { name: "Teach First", token: "teach-first-token" },
+    { name: "UCL Institute of Education", token: "ucl-token" },
+  ].each do |hash|
+    cpd_lead_provider = CpdLeadProvider.find_by(name: hash[:name])
+    LeadProviderApiToken.create_with_known_token!(hash[:token], cpd_lead_provider: cpd_lead_provider)
+  end
 end

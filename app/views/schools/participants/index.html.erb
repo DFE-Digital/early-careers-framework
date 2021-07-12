@@ -2,10 +2,19 @@
 
 <% content_for :before_content, govuk_breadcrumbs(breadcrumbs: breadcrumbs(@school, @cohort)) %>
 
-<span class="govuk-caption-l"><%= @cohort.display_name %> cohort</span>
-<h1 class="govuk-heading-l">Your early career teachers (ECTs) and mentors</h1>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-three-quarters">
+    <span class="govuk-caption-l"><%= @cohort.display_name %> cohort</span>
+    <h1 class="govuk-heading-l">Your early career teachers (ECTs) and mentors</h1>
 
-<%= govuk_link_to "Add a new ECT or mentor", add_schools_participants_path, button: true %>
+    <%= govuk_link_to "Add a new ECT or mentor", add_schools_participants_path, button: true %>
+
+    <p class="govuk-body">
+      We will verify your ECTs and mentors. Here you can check their status or select a name for more details.
+    </p>
+  </div>
+</div>
+
 
 <% if @participants.present? %>
   <table class="govuk-table">
@@ -39,5 +48,5 @@
     </tbody>
   </table>
 <% else %>
-  <p class="govuk-body">No participants found for this school.</p>
+  <p class="govuk-body-l">No participants found for this school.</p>
 <% end %>

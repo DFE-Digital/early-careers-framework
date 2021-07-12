@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe NpqProfile, type: :model do
+RSpec.describe NPQValidationData, type: :model do
   it {
     is_expected.to define_enum_for(:headteacher_status).with_values(
       no: "no",

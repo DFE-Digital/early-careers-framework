@@ -5,9 +5,10 @@ require "csv"
 
 RSpec.describe "Participants API", type: :request, with_feature_flags: { participant_data_api: "active" } do
   describe "GET /api/v1/participants" do
+    let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: lead_provider) }
     let(:lead_provider) { create(:lead_provider) }
     let(:partnership) { create(:partnership, lead_provider: lead_provider) }
-    let(:token) { LeadProviderApiToken.create_with_random_token!(lead_provider: lead_provider) }
+    let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
     let(:bearer_token) { "Bearer #{token}" }
 
     before :each do

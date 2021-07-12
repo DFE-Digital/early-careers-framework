@@ -19,4 +19,7 @@
 
 ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.irregular "pupil_premium", "pupil_premiums"
+  inflect.acronym "UTM"
+  inflect.acronym "ECT"
+  inflect.acronym "NPQ"
 end

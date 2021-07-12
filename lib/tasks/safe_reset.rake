@@ -3,7 +3,7 @@
 namespace :db do
   desc "Remove all database content, then seed it. Only for dev environments."
   task safe_reset: :environment do
-    if Rails.env.development? || Rails.env.deployed_development?
+    if Rails.env.development? || Rails.env.deployed_development? || Rails.env.sandbox?
       connection = ActiveRecord::Base.connection
       tables = connection
                    .execute("SELECT * FROM pg_catalog.pg_tables;")

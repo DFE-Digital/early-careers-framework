@@ -7,7 +7,7 @@ class Api::SchoolSearchController < Api::ApiController
         .eligible
         .ransack(name_or_urn_cont: params[:search_key]).result
         .limit(10)
-      decorated_schools = schools.map { |school| ::Decorators::SchoolDecorator.new(school) }
+      decorated_schools = schools.map { |school| SchoolDecorator.new(school) }
       render json: SchoolSerializer.render(decorated_schools)
     else
       render json: []

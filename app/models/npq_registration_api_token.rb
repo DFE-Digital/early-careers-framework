@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class NpqRegistrationApiToken < ApiToken
+class NPQRegistrationApiToken < ApiToken
   attribute :private_api_access, default: true
 
   def owner

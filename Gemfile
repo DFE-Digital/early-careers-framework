@@ -88,7 +88,7 @@ gem "aasm"
 gem "pagy", "~> 3.13"
 
 # Json Schema for api validation
-gem "json-schema"
+gem "json-schema", ">= 2.8.1"
 
 gem "jsonapi-serializer"
 
@@ -158,7 +158,7 @@ group :development do
 end
 
 group :test do
-  gem "capybara"
+  gem "capybara", ">= 3.35.3"
   gem "jsonapi-rspec"
   gem "pundit-matchers", "~> 1.6.0"
   gem "rails-controller-testing", ">= 1.0.5"
@@ -167,6 +167,6 @@ group :test do
   gem "shoulda-matchers", "~> 4.4"
   gem "simplecov"
   gem "webdrivers", "~> 4.4", ">= 4.4.1"
-  gem "webmock"
+  gem "webmock", ">= 3.10.0"
   gem "with_model"
 end

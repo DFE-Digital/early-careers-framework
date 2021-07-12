@@ -5,7 +5,7 @@
 ) %>
 
 <span class="govuk-caption-l"><%= @cohort.display_name %> cohort</span>
-<h1 class="govuk-heading-l"><%= @participant.full_name %> <%= render GovukComponent::Tag.new(text: "Not started", colour: "grey") %></h1>
+<h1 class="govuk-heading-l"><%= @participant.full_name %> <%= render GovukComponent::Tag.new(text: "Pending", colour: "grey") %></h1>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">

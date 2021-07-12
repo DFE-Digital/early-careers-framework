@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe "DQT records api endpoint", type: :request do
   describe "#show" do
-    let(:token) { NpqRegistrationApiToken.create_with_random_token! }
+    let(:token) { NPQRegistrationApiToken.create_with_random_token! }
     let(:bearer_token) { "Bearer #{token}" }
     let(:trn) { "1000000" }
     let(:parsed_response) { JSON.parse(response.body) }

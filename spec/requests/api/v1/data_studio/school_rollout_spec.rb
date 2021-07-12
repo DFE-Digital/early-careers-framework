@@ -57,7 +57,7 @@ RSpec.describe "School rollout data endpoint", type: :request do
     end
 
     context "using a private token from different scope" do
-      let(:other_private_token) { NpqRegistrationApiToken.create_with_random_token! }
+      let(:other_private_token) { NPQRegistrationApiToken.create_with_random_token! }
 
       it "returns data successfully" do
         default_headers[:Authorization] = "Bearer #{other_private_token}"
@@ -80,6 +80,6 @@ RSpec.describe "School rollout data endpoint", type: :request do
   end
 
   def school_rollout_attributes
-    %i[urn name sent_at opened_at notify_status induction_tutor_nominated tutor_nominated_time induction_tutor_signed_in induction_programme_choice programme_chosen_time in_partnership partnership_time partnership_challenge_reason partnership_challenge_time lead_provider delivery_partner chosen_cip cip_chosen_time]
+    %i[urn name sent_at opened_at notify_status induction_tutor_nominated tutor_nominated_time induction_tutor_signed_in induction_programme_choice programme_chosen_time in_partnership partnership_time partnership_challenge_reason partnership_challenge_time lead_provider delivery_partner]
   end
 end
