@@ -4,11 +4,16 @@ require "rails_helper"
 
 RSpec.describe "Lead Provider partnership guide", type: :request do
   describe "GET /lead-providers/partnership-guide" do
+    it "should not contain raw markdown syntax" do
+      get lead_providers_partnership_guide_path
+
+      expect(response.body).not_to include("##")
+    end
+
     it "should show the Lead Provider partnership guide" do
       get lead_providers_partnership_guide_path
 
-      expect(response).to render_template :rendered_markdown_template
-      expect(response.body).to include("We’ve created an online service for training providers")
+      expect(response.body).not_to include("##")
     end
 
     it "should explain how to confirm the schools you have recruited" do
