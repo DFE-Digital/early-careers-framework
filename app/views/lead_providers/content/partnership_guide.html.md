@@ -23,16 +23,12 @@ Our service should help you through each step but here is a quick guide to get y
 
 ![Example of a Lead Provider start page](/lead-provider/start-page.png)
 
-<div class="govuk-notification-banner" aria-labelledby="note-one-title" data-module="govuk-notification-banner">
-  <div class="govuk-notification-banner__header">
-    <h2 class="govuk-notification-banner__title" id="note-one-title">Note</h2>  
-  </div>
-  <div class="govuk-notification-banner__content">
-    <p class="govuk-notification-banner__heading">
-      If you go to the start page called ‘Manage training for early career teachers’, ignore the copy for induction tutors. Just press ‘Start’ to get to the sign in page.
-    </p>
-  </div>
-</div>
+<%= render GovukComponent::NotificationBanner.new(title: 'Note', disable_auto_focus: true) do |notification_banner|
+    notification_banner.slot(
+        :heading,
+        text: 'If you go to the start page called ‘Manage training for early career teachers’, ignore the copy for induction tutors. Just press ‘Start’ to get to the sign in page.'
+    )
+end %>
 
 ## How to confirm the schools you have recruited
 
@@ -54,64 +50,43 @@ Here’s an example CSV:
 
 ![Example CSV containing a list of school URNs](/lead-provider/example-csv.png)
 
-<div class="govuk-notification-banner" aria-labelledby="note-two-title" data-module="govuk-notification-banner">
-  <div class="govuk-notification-banner__header">
-    <h2 class="govuk-notification-banner__title" id="note-two-title">Note</h2>  
-  </div>
-  <div class="govuk-notification-banner__content">
-    <p class="govuk-notification-banner__heading">
-      you upload a CSV for each delivery partner you have confirmed schools for.
-    </p>
-  </div>
-</div>
+<%= render GovukComponent::NotificationBanner.new(title: 'Note', disable_auto_focus: true) do |notification_banner|
+    notification_banner.slot(
+        :heading,
+        text: 'you upload a CSV for each delivery partner you have confirmed schools for.'
+    )
+end %>
 
 ## Checking errors and updating your CSV
 When you upload your CSV, we will show you if there are any errors. These could be:
 
-<dl class="govuk-summary-list">
-  <div class="govuk-summary-list__row">
-    <dt class="govuk-summary-list__key">
-      Recruited by other provider
-    </dt>
-    <dd class="govuk-summary-list__value">
-      Another training provider has confirmed this school
-    </dd>
-  </div>
-  <div class="govuk-summary-list__row">
-    <dt class="govuk-summary-list__key">
-      URN is not valid
-    </dt>
-    <dd class="govuk-summary-list__value">
-      The unique reference number (URN) does not match this school
-    </dd>
-  </div>
-  <div class="govuk-summary-list__row">
-    <dt class="govuk-summary-list__key">
-      Your school - already confirmed
-    </dt>
-    <dd class="govuk-summary-list__value">
-      You have already confirmed this school and it’s on your list
-    </dd>
-  </div>
-  <div class="govuk-summary-list__row">
-    <dt class="govuk-summary-list__key">
-      School not eligible for inductions
-    </dt>
-    <dd class="govuk-summary-list__value">
-      School is not an eligible establishment type and/or isn’t in England and/or isn’t open as per our GIAS snapshot
-    </dd>
-  </div>
-  <div class="govuk-summary-list__row">
-    <dt class="govuk-summary-list__key">
-      School not eligible for funding
-    </dt>
-    <dd class="govuk-summary-list__value">
-      This school is not eligible to receive funding from the DfE. (Other independent special schools, Welsh establishments, British schools overseas etc.)<br/><br/>
-      They can only use the accredited materials (core induction programme).
-    </dd>
-  </div>
-</dl>
-
+<%= render GovukComponent::SummaryList.new do |component|
+    component.slot(
+        :row,
+        key: 'Recruited by other provider',
+        value: 'Another training provider has confirmed this school'
+    )
+    component.slot(
+        :row,
+        key: 'URN is not valid',
+        value: 'The unique reference number (URN) does not match this school'
+    )
+    component.slot(
+        :row,
+        key: 'Your school - already confirmed',
+        value: 'You have already confirmed this school and it’s on your list'
+    )
+    component.slot(
+        :row,
+        key: 'School not eligible for inductions',
+        value: 'School is not an eligible establishment type and/or isn’t in England and/or isn’t open as per our GIAS snapshot'
+    )
+    component.slot(
+        :row,
+        key: 'School not eligible for funding',
+        value: 'This school is not eligible to receive funding from the DfE. (Other independent special schools, Welsh establishments, British schools overseas etc.)<br/><br/>They can only use the accredited materials (core induction programme).'.html_safe
+    )
+end %>
 
 You can choose to:
 
@@ -123,18 +98,19 @@ When you have confirmed your schools, they will be sent a confirmation email. Th
 ## When a school reports that they have been confirmed incorrectly
 Every school you confirm on our service will receive a confirmation email like this:
 
-<div class="govuk-inset-text">
-Hello,<br/>
-<br/>
-<code>&lt;Delivery partner name&gt;</code>, with <code>&lt;Lead provider name&gt;</code>, has confirmed they will be delivering an induction programme to early career teachers at <code>&lt;School name&gt;</code>, starting in 2021.<br/>
-
-<h3>If this is a mistake</h3>
-
-If you have not confirmed an agreement with this provider or you have signed up with someone else, report this now:<br/>
-<br/>
-<code>&lt;URL&gt;</code><br/>
-<br/>
-This link will expire in 14 days
+<div>
+    <%= render GovukComponent::InsetText.new(text: 'Hello,<br/>
+        <br/>
+        <code>&lt;Delivery partner name&gt;</code>, with <code>&lt;Lead provider name&gt;</code>, has confirmed they will be delivering an induction programme to early career teachers at <code>&lt;School name&gt;</code>, starting in 2021.<br/>
+        
+        <h3>If this is a mistake</h3>
+        
+        If you have not confirmed an agreement with this provider or you have signed up with someone else, report this now:<br/>
+        <br/>
+        <code>&lt;URL&gt;</code><br/>
+        <br/>
+        This link will expire in 14 days'.html_safe)
+    %>
 </div>
 
 They will also:
@@ -175,16 +151,12 @@ You should contact the school directly (you do not need to contact the DfE)
 
 if the matter is resolved, upload the school again
 
-<div class="govuk-notification-banner" aria-labelledby="note-three-title" data-module="govuk-notification-banner">
-  <div class="govuk-notification-banner__header">
-    <h2 class="govuk-notification-banner__title" id="note-three-title">Note</h2>  
-  </div>
-  <div class="govuk-notification-banner__content">
-    <p class="govuk-notification-banner__heading">
-      You will not receive payment for this school until resolved and re-uploaded.
-    </p>
-  </div>
-</div>
+<%= render GovukComponent::NotificationBanner.new(title: 'Note', disable_auto_focus: true) do |notification_banner|
+    notification_banner.slot(
+        :heading,
+        text: 'You will not receive payment for this school until resolved and re-uploaded.'
+    )
+end %>
 
 ## Check the schools you’ve recruited
 
@@ -201,16 +173,12 @@ You can click on any school to see more details:
 
 ![Example showing the details known about a school](/lead-provider/school-page.png)
 
-<div class="govuk-notification-banner" aria-labelledby="note-four-title" data-module="govuk-notification-banner">
-  <div class="govuk-notification-banner__header">
-    <h2 class="govuk-notification-banner__title" id="note-four-title">Note</h2>  
-  </div>
-  <div class="govuk-notification-banner__content">
-    <p class="govuk-notification-banner__heading">
-      ECT and mentor numbers will be zero (0) until we gather this data from schools. We will update all providers before schools start adding them to the service.
-    </p>
-  </div>
-</div>
+<%= render GovukComponent::NotificationBanner.new(title: 'Note', disable_auto_focus: true) do |notification_banner|
+    notification_banner.slot(
+        :heading,
+        text: 'ECT and mentor numbers will be zero (0) until we gather this data from schools. We will update all providers before schools start adding them to the service.'
+    )
+end %>
 
 ## Help, support and feedback
 

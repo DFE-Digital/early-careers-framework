@@ -2,8 +2,6 @@
 
 module LeadProviders
   class ContentController < ApplicationController
-    include MarkdownHelper
-
     layout :resolve_layout
 
     def index
@@ -11,7 +9,7 @@ module LeadProviders
     end
 
     def partnership_guide
-      render_content_page :partnership_guide
+      @page_name = :partnership_guide
     end
 
   private
@@ -21,15 +19,8 @@ module LeadProviders
       when "index"
         "basic"
       else
-        "application"
+        "content_markdown"
       end
-    end
-
-    def render_content_page(page_name)
-      @converted_markdown = markdown_to_html File.read("app/views/lead_providers/content/#{page_name}.md")
-      @page_name = page_name
-
-      render "rendered_markdown_template"
     end
   end
 end
