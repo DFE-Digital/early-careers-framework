@@ -44,13 +44,13 @@ module ApiDocs
   private
 
     def flatten_hash(hash)
-      hash.each_with_object({}) do |(k, v), h|
-        if v.is_a? Hash
-          flatten_hash(v).map do |h_k, h_v|
-            h["#{k}.#{h_k}"] = h_v
+      hash.each_with_object({}) do |(key, value), return_hash|
+        if value.is_a? Hash
+          flatten_hash(value).each do |hash_key, hash_value|
+            return_hash["#{key}.#{hash_key}"] = hash_value
           end
         else
-          h[k] = v
+          return_hash[key] = value
         end
       end
     end
