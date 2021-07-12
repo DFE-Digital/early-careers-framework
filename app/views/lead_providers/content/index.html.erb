@@ -10,7 +10,7 @@
         </div>
         <%= govuk_start_now_button(
           text: 'Get started',
-          href: @provider_dashboard_url,
+          href: :dashboard,
           classes: 'govuk-!-margin-bottom-0 app-button--inverted',
         ) %>
       </div>
@@ -34,7 +34,7 @@
 
         <%= govuk_start_now_button(
           text: 'Learn to manage partnerships',
-          href: './lead-providers/partnership-guide',
+          href: :lead_providers_partnership_guide,
           classes: 'govuk-!-margin-bottom-0',
         ) %>
       </div>
