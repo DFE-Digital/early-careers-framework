@@ -6,6 +6,7 @@ RSpec.describe InviteSchools do
   subject(:invite_schools) { described_class.new }
   let(:primary_contact_email) { Faker::Internet.email }
   let(:secondary_contact_email) { Faker::Internet.email }
+  let!(:cohort) { create(:cohort, :current) }
 
   let(:school) do
     create(
@@ -231,10 +232,10 @@ RSpec.describe InviteSchools do
     it "does not send emails to other types of school" do
       InviteSchools.new.send_beta_chasers
       expect(SchoolMailer).not_to delay_email_delivery_of(:beta_invite_email)
-                                .with(hash_including(
-                                        recipient: unexpected_induction_coordinator.email,
-                                        name: unexpected_induction_coordinator.full_name,
-                                      ))
+                                    .with(hash_including(
+                                            recipient: unexpected_induction_coordinator.email,
+                                            name: unexpected_induction_coordinator.full_name,
+                                          ))
     end
   end
 
@@ -336,5 +337,178 @@ RSpec.describe InviteSchools do
         )
       end
     end
+  end
+
+  describe "#send_induction_coordinator_sign_in_chasers" do
+    it "emails induction coordinators yet to sign in" do
+      induction_coordinator = create(:user, :induction_coordinator)
+      InviteSchools.new.send_induction_coordinator_sign_in_chasers
+      expect(SchoolMailer).to delay_email_delivery_of(:induction_coordinator_sign_in_chaser_email)
+                                .with(hash_including(
+                                        recipient: induction_coordinator.email,
+                                        name: induction_coordinator.full_name,
+                                        start_url: String,
+                                      ))
+    end
+
+    it "does not email induction coordinators who have signed in" do
+      create_signed_in_induction_tutor
+      InviteSchools.new.send_induction_coordinator_sign_in_chasers
+      expect(SchoolMailer).not_to delay_email_delivery_of(:induction_coordinator_sign_in_chaser_email)
+    end
+  end
+
+  describe "#send_induction_coordinator_choose_route_chasers" do
+    it "emails coordinators with a school who has not chosen a route" do
+      induction_coordinator = create_signed_in_induction_tutor
+      InviteSchools.new.send_induction_coordinator_choose_route_chasers
+      expect(SchoolMailer).to delay_email_delivery_of(:induction_coordinator_reminder_to_choose_route_email)
+                                .with(hash_including(
+                                        recipient: induction_coordinator.email,
+                                        name: induction_coordinator.full_name,
+                                        school_name: induction_coordinator.schools.first.name,
+                                        sign_in_url: String,
+                                      ))
+    end
+
+    it "does not email coordinators who have not signed in" do
+      create(:user, :induction_coordinator)
+      InviteSchools.new.send_induction_coordinator_choose_route_chasers
+      expect(SchoolMailer).not_to delay_email_delivery_of(:induction_coordinator_reminder_to_choose_route_email)
+    end
+
+    it "does not email coordinators who have chosen routes for all their schools" do
+      induction_coordinator = create_signed_in_induction_tutor
+      create(:school_cohort, school: induction_coordinator.schools.first, cohort: cohort)
+      InviteSchools.new.send_induction_coordinator_choose_route_chasers
+      expect(SchoolMailer).not_to delay_email_delivery_of(:induction_coordinator_reminder_to_choose_route_email)
+    end
+
+    it "uses the name of a school without a route chosen" do
+      cip_schools = create_list(:school_cohort, 10).map(&:school)
+      target_school = create(:school)
+      induction_coordinator = create(:user, :induction_coordinator, school_ids: [target_school.id, *cip_schools.map(&:id)], last_sign_in_at: Time.zone.now, current_sign_in_at: Time.zone.now)
+      InviteSchools.new.send_induction_coordinator_choose_route_chasers
+      expect(SchoolMailer).to delay_email_delivery_of(:induction_coordinator_reminder_to_choose_route_email)
+                                .with(hash_including(
+                                        recipient: induction_coordinator.email,
+                                        name: induction_coordinator.full_name,
+                                        school_name: target_school.name,
+                                        sign_in_url: String,
+                                      ))
+    end
+  end
+
+  describe "#send_induction_coordinator_choose_provider_chasers" do
+    it "emails coordinators with a school who has not chosen a provider" do
+      induction_coordinator = create_signed_in_induction_tutor
+      create(:school_cohort, school: induction_coordinator.schools.first, induction_programme_choice: "full_induction_programme", cohort: cohort)
+      InviteSchools.new.send_induction_coordinator_choose_provider_chasers
+      expect(SchoolMailer).to delay_email_delivery_of(:induction_coordinator_reminder_to_choose_provider_email)
+                                .with(hash_including(
+                                        recipient: induction_coordinator.email,
+                                        name: induction_coordinator.full_name,
+                                        school_name: induction_coordinator.schools.first.name,
+                                        sign_in_url: String,
+                                      ))
+    end
+
+    it "does not email coordinators who have chosen providers for all their schools" do
+      induction_coordinator = create_signed_in_induction_tutor
+      create(:school_cohort, school: induction_coordinator.schools.first, induction_programme_choice: "full_induction_programme", cohort: cohort)
+      create(:partnership, school: induction_coordinator.schools.first, cohort: cohort)
+      InviteSchools.new.send_induction_coordinator_choose_provider_chasers
+      expect(SchoolMailer).not_to delay_email_delivery_of(:induction_coordinator_reminder_to_choose_provider_email)
+    end
+
+    it "does not email coordinators who only have CIP schools" do
+      induction_coordinator = create_signed_in_induction_tutor
+      create(:school_cohort, school: induction_coordinator.schools.first, induction_programme_choice: "core_induction_programme", cohort: cohort)
+      InviteSchools.new.send_induction_coordinator_choose_provider_chasers
+      expect(SchoolMailer).not_to delay_email_delivery_of(:induction_coordinator_reminder_to_choose_provider_email)
+    end
+
+    it "uses the name of a school without a provider chosen" do
+      partnered_schools = create_list(
+        :school_cohort,
+        10,
+        induction_programme_choice: "full_induction_programme",
+        cohort: cohort,
+      ).map(&:school)
+      partnered_schools.each { |school| create(:partnership, school: school, cohort: cohort) }
+      target_school = create(:school_cohort, induction_programme_choice: "full_induction_programme", cohort: cohort).school
+      induction_coordinator = create(:user, :induction_coordinator, school_ids: [target_school.id, *partnered_schools.map(&:id)])
+      InviteSchools.new.send_induction_coordinator_choose_provider_chasers
+      expect(SchoolMailer).to delay_email_delivery_of(:induction_coordinator_reminder_to_choose_provider_email)
+                                .with(hash_including(
+                                        recipient: induction_coordinator.email,
+                                        name: induction_coordinator.full_name,
+                                        school_name: target_school.name,
+                                        sign_in_url: String,
+                                      ))
+    end
+  end
+
+  describe "#send_induction_coordinator_choose_materials_chasers" do
+    it "emails coordinators with a school who has not chosen materials" do
+      induction_coordinator = create(:user, :induction_coordinator)
+      create(:school_cohort,
+             school: induction_coordinator.schools.first,
+             induction_programme_choice: "core_induction_programme",
+             cohort: cohort,
+             core_induction_programme: nil)
+      InviteSchools.new.send_induction_coordinator_choose_materials_chasers
+      expect(SchoolMailer).to delay_email_delivery_of(:induction_coordinator_reminder_to_choose_materials_email)
+                                .with(hash_including(
+                                        recipient: induction_coordinator.email,
+                                        name: induction_coordinator.full_name,
+                                        school_name: induction_coordinator.schools.first.name,
+                                        sign_in_url: String,
+                                      ))
+    end
+
+    it "does not email coordinators who have chosen materials for all their schools" do
+      induction_coordinator = create(:user, :induction_coordinator)
+      create(:school_cohort,
+             school: induction_coordinator.schools.first,
+             induction_programme_choice: "core_induction_programme",
+             cohort: cohort,
+             core_induction_programme: create(:core_induction_programme))
+      InviteSchools.new.send_induction_coordinator_choose_materials_chasers
+      expect(SchoolMailer).not_to delay_email_delivery_of(:induction_coordinator_reminder_to_choose_materials_email)
+    end
+
+    it "does not email coordinators who only have FIP schools" do
+      induction_coordinator = create_signed_in_induction_tutor
+      create(:school_cohort, school: induction_coordinator.schools.first, induction_programme_choice: "full_induction_programme", cohort: cohort)
+      InviteSchools.new.send_induction_coordinator_choose_materials_chasers
+      expect(SchoolMailer).not_to delay_email_delivery_of(:induction_coordinator_reminder_to_choose_materials_email)
+    end
+
+    it "uses the name of a school without materials chosen" do
+      chosen_cip_schools = create_list(
+        :school_cohort,
+        10,
+        induction_programme_choice: "core_induction_programme",
+        core_induction_programme: create(:core_induction_programme),
+        cohort: cohort,
+      ).map(&:school)
+      target_school = create(:school_cohort, induction_programme_choice: "core_induction_programme", cohort: cohort).school
+      induction_coordinator = create(:user, :induction_coordinator, school_ids: [target_school.id, *chosen_cip_schools.map(&:id)])
+      InviteSchools.new.send_induction_coordinator_choose_materials_chasers
+      expect(SchoolMailer).to delay_email_delivery_of(:induction_coordinator_reminder_to_choose_materials_email)
+                                .with(hash_including(
+                                        recipient: induction_coordinator.email,
+                                        name: induction_coordinator.full_name,
+                                        school_name: target_school.name,
+                                        sign_in_url: String,
+                                      ))
+    end
+  end
+
+private
+
+  def create_signed_in_induction_tutor
+    create(:user, :induction_coordinator, last_sign_in_at: Time.zone.now, current_sign_in_at: Time.zone.now)
   end
 end

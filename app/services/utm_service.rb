@@ -11,11 +11,21 @@ class UTMService
     partnership_notification: "partnership-notification",
     june_private_beta: "june-private-beta",
     sign_in_reminder: "sign-in-reminder",
+    choose_route: "choose-route",
+    choose_provider: "choose-provider",
+    choose_materials: "choose-materials",
   }.freeze
 
+  # Campaigns aren't showing up in GA at the moment, so use specific sources
   SOURCES = {
     service: "cpdservice",
     private_beta: "cpdprivatebeta",
+    partnership_notification: "partnership-notification",
+    nominate_tutor: "nominate-tutor",
+    sign_in_reminder: "sign-in-reminder",
+    choose_route: "choose-route",
+    choose_provider: "choose-provider",
+    choose_materials: "choose-materials",
   }.freeze
 
   def self.email(campaign, source = :service)

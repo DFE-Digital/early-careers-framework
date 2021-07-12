@@ -119,9 +119,9 @@ const pagePaths = {
   "ambition year two induction tutor materials":
     "/induction-tutor-materials/ambition-institute/year-two",
   "edt year one induction tutor materials":
-    "/induction-tutor-materials/educational-development-trust/year-one",
+    "/induction-tutor-materials/education-development-trust/year-one",
   "edt year two induction tutor materials":
-    "/induction-tutor-materials/educational-development-trust/year-two",
+    "/induction-tutor-materials/education-development-trust/year-two",
   "teach first year one and two induction tutor materials":
     "/induction-tutor-materials/teach-first/year-one",
   "ucl year one induction tutor materials":
