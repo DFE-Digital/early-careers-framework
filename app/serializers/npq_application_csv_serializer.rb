@@ -2,7 +2,7 @@
 
 require "csv"
 
-class NpqApplicationCsvSerializer
+class NPQApplicationCsvSerializer
   attr_reader :scope
 
   def self.headers

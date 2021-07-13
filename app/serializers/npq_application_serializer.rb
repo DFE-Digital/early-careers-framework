@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class NpqApplicationSerializer
+class NPQApplicationSerializer
   include JSONAPI::Serializer
 
   attributes :participant_id,

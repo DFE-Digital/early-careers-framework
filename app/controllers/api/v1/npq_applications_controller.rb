@@ -11,11 +11,11 @@ module Api
       def index
         respond_to do |format|
           format.json do
-            render json: NpqApplicationSerializer.new(paginate(scope)).serializable_hash
+            render json: NPQApplicationSerializer.new(paginate(scope)).serializable_hash
           end
 
           format.csv do
-            render body: NpqApplicationCsvSerializer.new(scope).call
+            render body: NPQApplicationCsvSerializer.new(scope).call
           end
         end
       end
