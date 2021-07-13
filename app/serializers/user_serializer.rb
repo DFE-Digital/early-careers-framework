@@ -51,6 +51,10 @@ class UserSerializer
     find_school_cohort(user)&.induction_programme_choice
   end
 
+  attributes :registration_completed do
+    false
+  end
+
   def self.find_school_cohort(user)
     @school_cohorts ||= SchoolCohort.all.to_a
     if user.participant?
