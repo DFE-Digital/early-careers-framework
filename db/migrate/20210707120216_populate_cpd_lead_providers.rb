@@ -1,11 +1,23 @@
 # frozen_string_literal: true
 
+class MigrationLeadProvider < ApplicationRecord
+  self.table_name = "lead_providers"
+end
+
+class MigrationNPQLeadProvider < ApplicationRecord
+  self.table_name = "npq_lead_providers"
+end
+
+class MigrationCpdLeadProvider < ApplicationRecord
+  self.table_name = "cpd_lead_providers"
+end
+
 class PopulateCpdLeadProviders < ActiveRecord::Migration[6.1]
   def up
-    all_provider_names = (LeadProvider.pluck(:name) + NPQLeadProvider.pluck(:name)).uniq
+    all_provider_names = (MigrationLeadProvider.pluck(:name) + MigrationNPQLeadProvider.pluck(:name)).uniq
 
     all_provider_names.each do |name|
-      CpdLeadProvider.create!(name: name)
+      MigrationCpdLeadProvider.create!(name: name)
     end
   end
 
