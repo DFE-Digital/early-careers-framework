@@ -118,7 +118,7 @@ RSpec.describe PartnershipNotificationService do
         ).and_call_original
         allow_any_instance_of(Mail::TestMailer).to receive_message_chain(:response, :id) { notify_id }
 
-        partnership_notification_service.notify(partnership)
+        partnership_notification_service.send_reminder(partnership)
 
         expect(partnership_notification_email.sent_to).to eql contact_email
         expect(partnership_notification_email.notify_id).to eql notify_id
@@ -151,7 +151,7 @@ RSpec.describe PartnershipNotificationService do
         ).and_call_original
         allow_any_instance_of(Mail::TestMailer).to receive_message_chain(:response, :id) { notify_id }
 
-        partnership_notification_service.notify(partnership)
+        partnership_notification_service.send_reminder(partnership)
 
         expect(partnership_notification_email.sent_to).to eql contact_email
         expect(partnership_notification_email.notify_id).to eql notify_id
