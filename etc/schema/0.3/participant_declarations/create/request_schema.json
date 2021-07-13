@@ -12,17 +12,21 @@
           ]
         },
         "attributes": {
-          "oneOf": [
-            {
-              "$ref": "#/ecf/participant_declarations/create/request_schema.json"
-            },
-            {
-              "$ref": "#/npq/participant_declarations/create/accepted_schema.json"
-            }
-          ],
-          "additionalProperties": false
+          "$ref": "#/components/request_attributes"
         }
       }
+    }
+  },
+  "components": {
+    "request_attributes": {
+      "oneOf": [
+        {
+          "$ref": "https://digital.education.gov.uk/schema/ecf/participant_declarations/create/request_schema.json"
+        },
+        {
+          "$ref": "https://digital.education.gov.uk/schema/npq/participant_declarations/create/request_schema.json"
+        }
+      ]
     }
   }
 }

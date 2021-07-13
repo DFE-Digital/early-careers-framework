@@ -37,26 +37,42 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
         let(:fresh_user) { create(:user, :early_career_teacher) }
         let(:params) do
           {
-            "participant_id" => fresh_user.id,
-            "declaration_type" => "started",
-            "declaration_date" => "2021-05-31T15:50:00Z",
+            "data": {
+              "type": "participant_declaration",
+              "attributes": {
+                "participant_id" => fresh_user.id,
+                "declaration_type" => "started",
+                "declaration_date" => "2021-05-31T15:50:00Z",
+                "course_type" => "ecf-induction"
+              }
+            }
           }
         end
         run_test!
       end
 
       response 200, "Successful" do
-        let(:params) do
+        let(:attributes) do
           {
             "participant_id" => user.id,
             "declaration_type" => "started",
             "declaration_date" => "2021-05-31T15:50:00Z",
+            "course_type" => "ecf-induction"
+          }
+        end
+
+        let(:params) do
+          {
+            "data": {
+              "type": "participant_declaration",
+              "attributes": attributes
+            }
           }
         end
 
         before do
-          params[:data][:attributes].merge!({ lead_provider: lead_provider, raw_event: params.to_json })
-          RecordParticipantDeclaration.call(params)
+          attributes.merge!({ lead_provider: lead_provider, raw_event: params.to_json })
+          RecordParticipantDeclaration.call(HashWithIndifferentAccess.new(attributes))
         end
 
         schema "$ref": "#/components/schemas/ParticipantDeclarationRecordedResponse"

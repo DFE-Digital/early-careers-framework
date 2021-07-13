@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_08_125502) do
+ActiveRecord::Schema.define(version: 2021_07_13_094716) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -380,6 +380,7 @@ ActiveRecord::Schema.define(version: 2021_07_08_125502) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "user_id", null: false
+    t.string "course_type", default: "ecf-induction", null: false
     t.index ["lead_provider_id"], name: "index_participant_declarations_on_lead_provider_id"
     t.index ["user_id"], name: "index_participant_declarations_on_user_id"
   end

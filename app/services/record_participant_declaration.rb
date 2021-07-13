@@ -7,7 +7,7 @@ class RecordParticipantDeclaration
 
   class << self
     def call(params)
-      new(params[:data][:attributes]).call
+      new(params).call
     end
 
     def required_params

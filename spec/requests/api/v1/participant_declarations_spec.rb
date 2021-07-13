@@ -2,8 +2,8 @@
 
 require "rails_helper"
 
-RSpec.describe "Participant Declarations", type: :request do
-  describe "participant-declarations" do
+RSpec.describe "participant-declarations endpoint spec", type: :request do
+  describe "post" do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: lead_provider) }
     let(:lead_provider) { create(:lead_provider) }
     let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
@@ -19,20 +19,32 @@ RSpec.describe "Participant Declarations", type: :request do
              delivery_partner: delivery_partner)
     end
     let(:params) do
-      {
-        participant_id: payload.user_id,
-        declaration_type: "started",
-        declaration_date: (Time.zone.now - 1.week).iso8601,
-      }
+      { data: {
+        type: "participant_declaration",
+        attributes: {
+          participant_id: payload.user_id,
+          declaration_type: "started",
+          declaration_date: (Time.zone.now - 1.week).iso8601,
+          course_type: "ecf-induction",
+        },
+      } }
     end
     let(:invalid_user_id) do
-      params.merge({ participant_id: payload.id })
+      params[:data][:attributes].merge({ participant_id: payload.id })
     end
     let(:missing_user_id) do
-      params.merge({ participant_id: "" })
+      params[:data][:attributes].merge({ participant_id: "" })
+    end
+    let(:missing_attribute) do
+      params[:data][:attributes].except(:participant_id)
     end
     let(:missing_required_parameter) do
-      params.except(:participant_id)
+      {
+        data: {
+          type: "participant_declaration",
+          attributes: missing_attribute,
+        },
+      }
     end
 
     let(:parsed_response) { JSON.parse(response.body) }
