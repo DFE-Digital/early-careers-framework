@@ -16,9 +16,9 @@ class NpqApplicationSerializer
              :course_id,
              :course_name
 
-  attribute(:participant_id) do |object|
-    object.user_id
-  end
+  attribute(:participant_id, &:user_id)
+  attribute(:teacher_reference_number_validated, &:teacher_reference_number_verified)
+  attribute(:course_id, &:npq_course_id)
 
   attribute(:full_name) do |object|
     object.user.full_name
@@ -28,16 +28,8 @@ class NpqApplicationSerializer
     object.user.email
   end
 
-  attribute(:email_validated) do |object|
+  attribute(:email_validated) do
     true
-  end
-
-  attribute(:teacher_reference_number_validated) do |object|
-    object.teacher_reference_number_verified
-  end
-
-  attribute(:course_id) do |object|
-    object.npq_course_id
   end
 
   attribute(:course_name) do |object|
