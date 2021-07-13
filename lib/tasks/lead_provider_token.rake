@@ -10,10 +10,13 @@ namespace :lead_provider do
 
     begin
       lead_provider = LeadProvider.find(ARGV[1])
+      cpd_lead_provider = lead_provider.cpd_lead_provider
     rescue StandardError
       lead_provider = LeadProvider.find_by(name: ARGV[1])
+      cpd_lead_provider = lead_provider.cpd_lead_provider
     end
-    token = LeadProviderApiToken.create_with_random_token!(lead_provider: lead_provider)
+
+    token = LeadProviderApiToken.create_with_random_token!(lead_provider: lead_provider, cpd_lead_provider: cpd_lead_provider)
 
     logger.info "Generated API token for lead provider (#{lead_provider.id}): #{token}"
   rescue StandardError
