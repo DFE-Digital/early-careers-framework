@@ -30,7 +30,8 @@ class PartnershipNotificationService
           PartnershipNotificationEmail.email_types[:induction_coordinator_reminder_email],
         )
 
-        send_notification_email_to_coordinator(notification_email)
+        coordinator_name = partnership.school.induction_coordinators.first.full_name
+        send_notification_email_to_coordinator(notification_email, coordinator_name)
       else
         notification_email = create_notification_email(
           partnership,
