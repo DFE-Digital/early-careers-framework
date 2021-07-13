@@ -12,8 +12,8 @@ RSpec.describe "NPQ Applications API", type: :request, with_feature_flags: { par
     let(:bearer_token) { "Bearer #{token}" }
 
     before :each do
-      create_list :npq_profile, 3, npq_lead_provider: npq_lead_provider
-      create_list :npq_profile, 2, npq_lead_provider: other_npq_lead_provider
+      create_list :npq_validation_data, 3, npq_lead_provider: npq_lead_provider
+      create_list :npq_validation_data, 2, npq_lead_provider: other_npq_lead_provider
     end
 
     context "when authorized" do
@@ -42,9 +42,9 @@ RSpec.describe "NPQ Applications API", type: :request, with_feature_flags: { par
         it "returns correct data" do
           get "/api/v1/npq-applications"
 
-          expect(parsed_response["data"][0]["id"]).to be_in(NPQProfile.pluck(:id))
+          expect(parsed_response["data"][0]["id"]).to be_in(NPQValidationData.pluck(:id))
 
-          profile = NPQProfile.find(parsed_response["data"][0]["id"])
+          profile = NPQValidationData.find(parsed_response["data"][0]["id"])
           user = User.find(parsed_response["data"][0]["attributes"]["participant_id"])
 
           expect(parsed_response["data"][0]["attributes"]["full_name"]).to eql(user.full_name)
@@ -73,7 +73,7 @@ RSpec.describe "NPQ Applications API", type: :request, with_feature_flags: { par
 
         context "filtering" do
           before do
-            create_list :npq_profile, 2, npq_lead_provider: npq_lead_provider, updated_at: 10.days.ago
+            create_list :npq_validation_data, 2, npq_lead_provider: npq_lead_provider, updated_at: 10.days.ago
           end
 
           it "returns content updated after specified timestamp" do
@@ -95,7 +95,7 @@ RSpec.describe "NPQ Applications API", type: :request, with_feature_flags: { par
         end
 
         it "returns scoped profiles" do
-          expect(parsed_response.length).to eql(NPQProfile.where(npq_lead_provider: npq_lead_provider).count)
+          expect(parsed_response.length).to eql(NPQValidationData.where(npq_lead_provider: npq_lead_provider).count)
         end
 
         it "returns the correct headers" do
