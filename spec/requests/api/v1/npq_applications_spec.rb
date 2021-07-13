@@ -70,6 +70,17 @@ RSpec.describe "NPQ Applications API", type: :request, with_feature_flags: { par
           get "/api/v1/npq-applications", params: { page: { per_page: 2, page: 2 } }
           expect(JSON.parse(response.body)["data"].size).to eql(1)
         end
+
+        context "filtering" do
+          before do
+            create_list :npq_profile, 2, npq_lead_provider: npq_lead_provider, updated_at: 10.days.ago
+          end
+
+          it "returns content updated after specified timestamp" do
+            get "/api/v1/npq-applications", params: { filter: { updated_since: 2.days.ago.iso8601 } }
+            expect(parsed_response["data"].size).to eql(3)
+          end
+        end
       end
 
       describe "CSV API" do

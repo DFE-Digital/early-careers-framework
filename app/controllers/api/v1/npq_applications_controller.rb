@@ -27,7 +27,17 @@ module Api
       end
 
       def scope
-        npq_lead_provider.npq_profiles.includes(:user, :npq_course)
+        s = npq_lead_provider.npq_profiles.includes(:user, :npq_course)
+        s = s.where("updated_at > ?", Time.iso8601(updated_since_filter)) if updated_since_filter.present?
+        s
+      end
+
+      def filter
+        params[:filter] ||= {}
+      end
+
+      def updated_since_filter
+        filter[:updated_since]
       end
 
       def access_scope
