@@ -10,10 +10,14 @@ class ParticipantProfile::Mentor < ParticipantProfile
   has_many :mentees, through: :mentee_profiles, source: :user
 
   belongs_to :cohort
-  belongs_to :school
+  belongs_to :school, optional: false
   belongs_to :core_induction_programme, optional: true
 
   def mentor?
     true
+  end
+
+  def participant_type
+    :mentor
   end
 end

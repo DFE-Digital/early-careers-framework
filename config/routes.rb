@@ -137,7 +137,7 @@ Rails.application.routes.draw do
       resources :participants, controller: "schools/participants", only: :index
     end
 
-    resources :participants, only: :show
+    resources :participants, only: %i[show index]
 
     namespace :gias do
       resources :home, only: :index, path: "/"

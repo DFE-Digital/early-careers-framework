@@ -1,0 +1,4 @@
+<h1 class="govuk-header-xl">Participants</h1>
+
+<%= render SearchBox.new(query: params[:query], title: "Search participants", hint: "Enter the participant’s name, school’s name or URN") %>
+<%= render Admin::Participants::Table.new(profiles: @participant_profiles, page: params.fetch(:page, 1)) %>

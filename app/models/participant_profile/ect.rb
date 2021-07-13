@@ -5,10 +5,14 @@ class ParticipantProfile::ECT < ParticipantProfile
   has_one :mentor, through: :mentor_profile, source: :user
 
   belongs_to :cohort
-  belongs_to :school
+  belongs_to :school, optional: false
   belongs_to :core_induction_programme, optional: true
 
   def ect?
     true
+  end
+
+  def participant_type
+    :ect
   end
 end

@@ -19,6 +19,7 @@ class FeatureFlag
   TEMPORARY_FEATURE_FLAGS = %i[
     participant_data_api
     induction_tutor_manage_participants
+    admin_participants
   ].freeze
 
   FEATURES = (PERMANENT_SETTINGS + TEMPORARY_FEATURE_FLAGS).index_with { |name|

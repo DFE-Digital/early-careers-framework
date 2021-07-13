@@ -39,20 +39,7 @@
 </div>
 
 <% if @total_provider_schools.positive? %>
-  <div class="search-container">
-    <%= form_with method: :get do |f| %>
-      <div class="school-search">
-        <div class="school-search__input">
-          <%= f.govuk_text_field(
-            :query,
-            value: @query,
-            label: { text: "Search #{@selected_cohort.start_year} schools", size: "s" },
-          ) %>
-        </div>
-        <%= f.govuk_submit "Search", classes: "school-search__button", "data-test": "search-button" %>
-      </div>
-    <% end %>
-  </div>
+  <%= render SearchBox.new(query: params[:query], title: "Search schools in the #{@selected_cohort.display_name} cohort") %>
 
   <% if @partnerships.count.zero? %>
     <h2 class="govuk-heading-s govuk-!-margin-top-4">There are no matching results</h2>

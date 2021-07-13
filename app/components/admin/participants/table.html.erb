@@ -1,0 +1,19 @@
+<div class="nhsuk-table-container">
+  <table data-test="admin-participants-table" class="govuk-table nhsuk-table-responsive">
+    <thead  class="nhsuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">Full name</th>
+        <th scope="col" class="govuk-table__header">Type</th>
+        <th scope="col" class="govuk-table__header">School</th>
+        <th scope="col" class="govuk-table__header">School URN</th>
+        <th scope="col" class="govuk-table__header">Date added</th>
+        <th scope="col" class="govuk-table__header">Validation status</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body nhsuk-table__body">
+      <%= render Admin::Participants::TableRow.with_collection(profiles) %>
+    </tbody>
+  </table>
+</div>
+
+<%= govuk_paginate profiles %>

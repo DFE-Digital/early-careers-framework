@@ -1,16 +1,40 @@
 # frozen_string_literal: true
 
-school = FactoryBot.create(:school, name: "Test School", slug: "test-school")
-cohort = Cohort.find_or_create_by!(start_year: 2021)
+school = FactoryBot.create :school, name: "Test School", slug: "test-school", urn: "123456"
+cohort = FactoryBot.create :cohort, start_year: 2021
 
-user_1 = FactoryBot.create(:user, :mentor, full_name: "Mentor User 1")
-user_1.mentor_profile.update!(school: school, cohort: cohort)
-user_2 = FactoryBot.create(:user, :mentor, full_name: "Mentor User 2")
-user_2.mentor_profile.update!(school: school, cohort: cohort)
-user_3 = FactoryBot.create(:user, :early_career_teacher, full_name: "ECT User 1", email: "young_prosacco@crist.net")
-user_3.early_career_teacher_profile.update!(school: school, cohort: cohort, mentor_profile: user_1.mentor_profile)
-user_4 = FactoryBot.create(:user, :early_career_teacher, full_name: "ECT User 2")
-user_4.early_career_teacher_profile.update!(school: school, cohort: cohort, mentor_profile: user_1.mentor_profile)
+mentor_1 = FactoryBot.create :participant_profile,
+                             :mentor,
+                             user: FactoryBot.create(:user, full_name: "Mentor User 1"),
+                             school: school,
+                             cohort: cohort
 
-FactoryBot.create(:user, :early_career_teacher, full_name: "Unrelated user 1")
-FactoryBot.create(:user, :mentor, full_name: "Unrelated user 2")
+FactoryBot.create :participant_profile,
+                  :mentor,
+                  user: FactoryBot.create(:user, full_name: "Mentor User 2"),
+                  school: school,
+                  cohort: cohort
+
+FactoryBot.create :participant_profile,
+                  :ect,
+                  user: FactoryBot.create(:user, full_name: "ECT User 1", email: "young_prosacco@crist.net"),
+                  mentor_profile: mentor_1,
+                  school: school,
+                  cohort: cohort
+
+FactoryBot.create :participant_profile,
+                  :ect,
+                  user: FactoryBot.create(:user, full_name: "ECT User 2"),
+                  mentor_profile: mentor_1,
+                  school: school,
+                  cohort: cohort
+
+FactoryBot.create :participant_profile,
+                  :mentor,
+                  user: FactoryBot.create(:user, full_name: "Unrelated mentor"),
+                  school: FactoryBot.create(:school, name: "Some other school", urn: "222222")
+
+FactoryBot.create :participant_profile,
+                  :ect,
+                  user: FactoryBot.create(:user, full_name: "Unrelated ect"),
+                  school: FactoryBot.create(:school, name: "Some other school", urn: "111111")

@@ -1,0 +1,14 @@
+<div class="search-box">
+  <%= form_with method: :get, class: "search-box__form" do |f| %>
+    <div class="search-box__input">
+      <%= f.govuk_text_field(
+            param_name,
+            value: query,
+            label: { text: title, size: "s" },
+            hint: { text: hint },
+          )
+      %>
+    </div>
+    <%= f.govuk_submit "Search", classes: "search-box__button", "data-test": "search-button" %>
+  <% end %>
+</div>
