@@ -12,8 +12,6 @@ module PaymentCalculator
           include HasDIParameters
         end
 
-        delegate :bands, to: :contract
-
         def output_payment_per_participant(band)
           band.per_participant * output_payment_contribution_percentage
         end
