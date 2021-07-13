@@ -51,6 +51,7 @@ class UserSerializer
     find_school_cohort(user)&.induction_programme_choice
   end
 
+  # TODO: CPDRP-508 use the actual users registration completed value as part of participant validation journey
   attributes :registration_completed do
     false
   end
