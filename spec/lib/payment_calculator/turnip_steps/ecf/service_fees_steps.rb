@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module ServiceFeeSteps
-  class DummyClass
+  class ModuleTestHarness
     include PaymentCalculator::Ecf::Contract::ServiceFeeCalculations
     include PaymentCalculator::Ecf::Contract::OutputPaymentCalculations
     include PaymentCalculator::Ecf::Contract::UpliftPaymentCalculations
@@ -16,8 +16,8 @@ module ServiceFeeSteps
                       bands: [@band_a],
                       uplift_amount: 100,
                       set_up_recruitment_basis: 2000)
-    @call_off_contract = DummyClass.new({ contract: contract,
-                                          bands: [@band_a] })
+    @call_off_contract = ModuleTestHarness.new({ contract: contract,
+                                                 bands: [@band_a] })
     calculator = PaymentCalculator::Ecf::PaymentCalculation.new(contract: @call_off_contract)
     @result = calculator.call
   end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module UpliftPaymentsSteps
-  class DummyClass
+  class ModuleTestHarness
     include PaymentCalculator::Ecf::Contract::UpliftPaymentCalculations
   end
 
@@ -19,7 +19,7 @@ module UpliftPaymentsSteps
 
   step "I setup the contract with uplift payment" do
     contract = double("Contract Double", uplift_amount: @uplift_amount)
-    @call_off_contract = DummyClass.new({ contract: contract, bands: [] })
+    @call_off_contract = ModuleTestHarness.new({ contract: contract, bands: [] })
     calculator = PaymentCalculator::Ecf::PaymentCalculation.new(contract: @call_off_contract)
     @result = calculator.call(uplift_participants: @uplift_eligible_participants)
   end
