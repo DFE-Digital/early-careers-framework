@@ -3,8 +3,7 @@
 class NpqApplicationSerializer
   include JSONAPI::Serializer
 
-  attributes :id,
-             :participant_id,
+  attributes :participant_id,
              :full_name,
              :email,
              :email_validated,
