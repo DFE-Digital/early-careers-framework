@@ -203,6 +203,29 @@ class InviteSchools
     end
   end
 
+  def send_induction_coordinator_add_participants_email
+    induction_coordinators_chosen_route = User.distinct
+                                              .joins(:induction_coordinator_profile, schools: :school_cohorts)
+                                              .left_outer_joins(schools: :participant_profiles)
+                                              .where(
+                                                school_cohorts: {
+                                                  induction_programme_choice: %w[core_induction_programme full_induction_programme],
+                                                  opt_out_of_updates: false,
+                                                },
+                                                participant_profiles: { id: nil },
+                                              )
+
+    induction_coordinators_chosen_route.find_each do |induction_coordinator|
+      SchoolMailer.induction_coordinator_add_participants_email(
+        recipient: induction_coordinator.email,
+        name: induction_coordinator.full_name,
+        sign_in_url: add_participants_chaser_sign_in_url,
+      ).deliver_later
+    rescue StandardError
+      logger.info "Error emailing induction coordinator, email: #{induction_coordinator.email} ... skipping"
+    end
+  end
+
 private
 
   def private_beta_start_url
@@ -236,6 +259,10 @@ private
 
   def choose_materials_chaser_sign_in_url
     sign_in_url_with_campaign(:choose_materials)
+  end
+
+  def add_participants_chaser_sign_in_url
+    sign_in_url_with_campaign(:add_participants)
   end
 
   def find_eligible_school(urn)

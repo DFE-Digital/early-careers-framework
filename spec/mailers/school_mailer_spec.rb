@@ -49,7 +49,6 @@ RSpec.describe SchoolMailer, type: :mailer do
     let(:sign_in_url) { "https://www.example.com/sign-in" }
     let(:challenge_url) { "https://www.example.com?token=abc123" }
     let(:challenge_deadline) { "1/1/1970" }
-    let(:cohort) { create(:cohort) }
 
     let(:partnership_notification_email) do
       SchoolMailer.coordinator_partnership_notification_email(
@@ -57,7 +56,6 @@ RSpec.describe SchoolMailer, type: :mailer do
         name: name,
         lead_provider_name: provider_name,
         delivery_partner_name: provider_name,
-        cohort: cohort,
         school_name: school_name,
         sign_in_url: sign_in_url,
         challenge_url: challenge_url,

@@ -87,7 +87,6 @@ private
       name: coordinator_name,
       lead_provider_name: notification_email.lead_provider.name,
       delivery_partner_name: notification_email.delivery_partner.name,
-      cohort: notification_email.partnership.cohort.display_name,
       school_name: notification_email.school.name,
       sign_in_url: Rails.application.routes.url_helpers.new_user_session_url(
         host: Rails.application.config.domain,

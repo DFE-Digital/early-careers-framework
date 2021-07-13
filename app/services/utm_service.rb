@@ -14,6 +14,7 @@ class UTMService
     choose_route: "choose-route",
     choose_provider: "choose-provider",
     choose_materials: "choose-materials",
+    add_participants: "add-participants",
   }.freeze
 
   # Campaigns aren't showing up in GA at the moment, so use specific sources
@@ -26,6 +27,7 @@ class UTMService
     choose_route: "choose-route",
     choose_provider: "choose-provider",
     choose_materials: "choose-materials",
+    add_participants: "add-participants",
   }.freeze
 
   def self.email(campaign, source = :service)
