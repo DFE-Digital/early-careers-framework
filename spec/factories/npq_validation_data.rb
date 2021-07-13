@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :npq_profile do
+  factory :npq_validation_data do
     user
     npq_course
     npq_lead_provider

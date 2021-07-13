@@ -9,14 +9,16 @@ class User < ApplicationRecord
   has_one :lead_provider_profile, dependent: :destroy
   has_one :lead_provider, through: :lead_provider_profile
   has_one :admin_profile, dependent: :destroy
-  has_many :npq_profiles, dependent: :destroy
 
   has_one :participant_profile, dependent: :destroy
-  # TODO: Legacy association, to be removed
+  # TODO: Legacy associations, to be removed
   has_one :early_career_teacher_profile, class_name: "ParticipantProfile::ECT"
   has_one :mentor_profile, class_name: "ParticipantProfile::Mentor"
+  has_many :npq_profiles, class_name: "ParticipantProfile::NPQ", dependent: :destroy
+  # end: TODO
 
   before_validation :strip_whitespace
+
   validates :full_name, presence: true
   validates :email, presence: true, uniqueness: true, notify_email: true
 

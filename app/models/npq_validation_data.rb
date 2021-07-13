@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
-class NPQProfile < ApplicationRecord
+class NPQValidationData < ApplicationRecord
+  # TODO: Rename table
+  self.table_name = "npq_profiles"
+
+  has_one :profile, class_name: "ParticipantProfile::NPQ", foreign_key: :id
   belongs_to :user
   belongs_to :npq_lead_provider
   belongs_to :npq_course
