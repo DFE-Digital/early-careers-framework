@@ -13,7 +13,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
     get "Retrieve multiple participants" do
       operationId :participants
       tags "participant"
-      consumes "application/json"
+      produces "application/vnd.api+json"
       security [bearerAuth: []]
 
       parameter name: :filter,
@@ -60,7 +60,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
     get "Retrieve multiple participants in CSV format" do
       operationId :participants_csv
       tags "participant"
-      consumes "application/json"
+      produces "text/csv"
       security [bearerAuth: []]
 
       parameter name: :filter,

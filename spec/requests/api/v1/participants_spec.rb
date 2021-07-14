@@ -46,7 +46,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
 
         it "has correct attributes" do
           get "/api/v1/participants"
-          expect(parsed_response["data"][0]).to have_jsonapi_attributes(:email, :full_name, :mentor_id, :school_urn, :participant_type, :cohort).exactly
+          expect(parsed_response["data"][0]).to have_jsonapi_attributes(:email, :full_name, :mentor_id, :school_urn, :participant_type, :cohort, :status).exactly
         end
 
         it "returns correct user types" do
@@ -102,7 +102,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
         end
 
         it "returns the correct headers" do
-          expect(parsed_response.headers).to match_array(%w[id email full_name mentor_id school_urn participant_type cohort])
+          expect(parsed_response.headers).to match_array(%w[id email full_name mentor_id school_urn participant_type cohort status])
         end
 
         it "returns the correct values" do

@@ -255,7 +255,7 @@
             }
           }
         },
-        "example": "id,type,email,full_name,mentor_id,school_urn,participant_type,cohort\ndb3a7848-7308-4879-942a-c4a70ced400a,participant,jane.smith@some-school.example.com,Jane Smith,bb36d74a-68a7-47b6-86b6-1fd0d141c590,106286,ect,2021\nbb36d74a-68a7-47b6-86b6-1fd0d141c590,participant,martin.jones@some-school.example.com,Martin Jones,,106286,mentor,2021\n"
+        "example": "id,type,email,full_name,mentor_id,school_urn,participant_type,cohort,status\ndb3a7848-7308-4879-942a-c4a70ced400a,participant,jane.smith@some-school.example.com,Jane Smith,bb36d74a-68a7-47b6-86b6-1fd0d141c590,106286,ect,2021,active\nbb36d74a-68a7-47b6-86b6-1fd0d141c590,participant,martin.jones@some-school.example.com,Martin Jones,,106286,mentor,2021,active\n"
       },
       "MultipleParticipantResponse": {
         "description": "A list of participants",
@@ -279,7 +279,8 @@
                   "mentor_id": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
                   "school_urn": "106286",
                   "participant_type": "ect",
-                  "cohort": "2021"
+                  "cohort": "2021",
+                  "status": "active"
                 }
               },
               {
@@ -290,7 +291,8 @@
                   "full_name": "Martin jones",
                   "school_urn": "106286",
                   "participant_type": "mentor",
-                  "cohort": "2021"
+                  "cohort": "2021",
+                  "status": "active"
                 }
               }
             ]
@@ -346,7 +348,8 @@
           "full_name",
           "school_urn",
           "participant_type",
-          "cohort"
+          "cohort",
+          "status"
         ],
         "properties": {
           "email": {
@@ -383,6 +386,15 @@
             "description": "Which cohort this participant is associated with",
             "type": "string",
             "example": "2021"
+          },
+          "status": {
+            "description": "The status of the participant",
+            "type": "string",
+            "example": "active",
+            "enum": [
+              "active",
+              "withdrawn"
+            ]
           }
         }
       },
@@ -396,7 +408,8 @@
           "full_name",
           "school_urn",
           "participant_type",
-          "cohort"
+          "cohort",
+          "status"
         ],
         "properties": {
           "id": {
@@ -444,6 +457,14 @@
             "description": "Which cohort this participant is associated with",
             "type": "string",
             "example": "2021"
+          },
+          "status": {
+            "description": "The status of the participant",
+            "type": "string",
+            "example": "active",
+            "enum": [
+              "active"
+            ]
           }
         }
       },
