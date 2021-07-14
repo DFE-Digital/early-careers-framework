@@ -17,6 +17,7 @@ properties:
           school_urn: "106286"
           participant_type: ect
           cohort: "2021"
+          status: active
       - id: bb36d74a-68a7-47b6-86b6-1fd0d141c590
         type: participant
         attributes:
@@ -25,3 +26,4 @@ properties:
           school_urn: "106286"
           participant_type: mentor
           cohort: "2021"
+          status: active

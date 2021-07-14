@@ -6,6 +6,7 @@ required:
   - school_urn
   - participant_type
   - cohort
+  - status
 properties:
   email:
     description: "The email registered for this participant"
@@ -35,3 +36,10 @@ properties:
     description: "Which cohort this participant is associated with"
     type: string
     example: "2021"
+  status:
+    description: "The status of the participant"
+    type: string
+    example: active
+    enum:
+      - active
+      - withdrawn
