@@ -120,7 +120,7 @@ class InviteSchools
     invite_group(school_urns, :send_federation_invite_email)
   end
 
-  def send_induction_coordinator_sign_in_chasers
+  def send_induction_coordinator_sign_in_chasers(send_at: Time.zone.now)
     induction_coordinators_never_signed_in = User.joins(:induction_coordinator_profile).where("last_sign_in_at IS NULL and users.created_at < ?", 2.days.ago)
     induction_coordinators_never_signed_in.each do |induction_coordinator|
       SchoolMailer.induction_coordinator_sign_in_chaser_email(
@@ -128,7 +128,7 @@ class InviteSchools
         name: induction_coordinator.full_name,
         school_name: induction_coordinator.schools.first.name,
         sign_in_url: sign_in_url_with_campaign(:sign_in_reminder),
-      ).deliver_later
+      ).deliver_later(wait_until: send_at)
     rescue StandardError
       logger.info "Error emailing induction coordinator, email: #{induction_coordinator.email} ... skipping"
     end
