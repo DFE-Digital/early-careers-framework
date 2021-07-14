@@ -54,6 +54,7 @@ Rails.application.routes.draw do
       resources :users, only: %i[index create]
       resources :dqt_records, only: :show, path: "dqt-records"
       resources :participant_validation, only: :show, path: "participant-validation"
+      resources :npq_applications, only: :index, path: "npq-applications", constraints: ->(_request) { FeatureFlag.active?(:participant_data_api) }
 
       jsonapi_resources :npq_profiles, only: [:create]
 
