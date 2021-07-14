@@ -92,12 +92,7 @@ class InviteSchools
   def send_beta_chasers
     beta_school_ids = FeatureFlag.new(name: :induction_tutor_manage_participants).feature.selected_objects.pluck(:object_id)
     beta_schools = School.where(id: beta_school_ids)
-    beta_schools_without_participants = beta_schools.left_outer_joins(:early_career_teacher_profiles)
-                                                    .left_outer_joins(:mentor_profiles)
-                                                    .where(
-                                                      early_career_teacher_profiles: { id: nil },
-                                                      mentor_profiles: { id: nil },
-                                                    )
+    beta_schools_without_participants = beta_schools.where.not(id: ParticipantProfile.ecf.select(:school_id))
 
     beta_schools_without_participants.each do |school|
       induction_coordinator = school.induction_coordinators.first

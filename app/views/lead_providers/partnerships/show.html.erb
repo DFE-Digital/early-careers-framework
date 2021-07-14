@@ -40,14 +40,16 @@
   <div class="govuk-grid-column-one-third">
     <div class="dashboard-numbers key-number">
       <p class="govuk-heading-xl">
-        <%= @school.early_career_teacher_profiles_for(@selected_cohort.start_year).count -%>
+        <%= @school.early_career_teacher_profiles_for(@selected_cohort).count -%>
       </p>
       <p class="govuk-heading-s">ECTs added</p>
     </div>
   </div>
   <div class="govuk-grid-column-one-third">
     <div class="dashboard-numbers key-number">
-      <p class="govuk-heading-xl">0</p>
+      <p class="govuk-heading-xl">
+        <%= @school.mentor_profiles_for(@selected_cohort).count -%>
+      </p>
       <p class="govuk-heading-s">mentors added</p>
     </div>
   </div>
@@ -72,7 +74,7 @@
           Delivery partner
         </dt>
         <dd class="govuk-summary-list__value">
-          <%= @school.delivery_partner_for(@selected_cohort.start_year)&.name %>
+          <%= @delivery_partner&.name %>
         </dd>
       </div>
       <div class="govuk-summary-list__row">

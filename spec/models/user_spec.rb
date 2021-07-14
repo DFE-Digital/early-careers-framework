@@ -102,6 +102,11 @@ RSpec.describe User, type: :model do
 
       expect(user.early_career_teacher?).to be false
     end
+
+    it "is false when the ect profile is withdrawn" do
+      user = create(:early_career_teacher_profile, status: "withdrawn").user
+      expect(user.early_career_teacher?).to be false
+    end
   end
 
   describe "#mentor?" do
@@ -114,6 +119,11 @@ RSpec.describe User, type: :model do
     it "is expected to be false when the user does not have a mentor profile" do
       user = create(:user)
 
+      expect(user.mentor?).to be false
+    end
+
+    it "is false when the mentor profile is withdrawn" do
+      user = create(:mentor_profile, status: "withdrawn").user
       expect(user.mentor?).to be false
     end
   end
@@ -290,6 +300,24 @@ RSpec.describe User, type: :model do
       it "returns Unknown" do
         expect(user.user_description).to eq("Unknown")
       end
+    end
+  end
+
+  describe "scope :is_participant" do
+    it "includes participants" do
+      ect = create(:participant_profile, :ect).user
+      mentor = create(:participant_profile, :mentor).user
+      npq = create(:participant_profile, :npq).user
+
+      expect(User.is_participant).to include(ect, mentor, npq)
+    end
+
+    it "does not include other user types" do
+      admin = create(:user, :admin)
+      lp = create(:user, :lead_provider)
+
+      expect(User.is_participant).not_to include(admin)
+      expect(User.is_participant).not_to include(lp)
     end
   end
 end

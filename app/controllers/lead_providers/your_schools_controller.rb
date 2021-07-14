@@ -16,7 +16,7 @@ module LeadProviders
       @selected_cohort = params[:cohort] ? @cohorts.find_by(start_year: params[:cohort]) : Cohort.current
 
       @partnerships = Partnership
-        .includes(school: :early_career_teachers)
+        .includes(:delivery_partner, :cohort, :school)
         .order("schools.name")
         .where(
           cohort: @selected_cohort,

@@ -27,6 +27,7 @@ private
 
   def user_can_access?(participant)
     return false unless participant.participant?
+    return false if participant.participant_profile.withdrawn?
 
     user.schools.include?(participant.school)
   end

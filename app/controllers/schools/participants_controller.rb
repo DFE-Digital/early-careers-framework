@@ -6,7 +6,7 @@ class Schools::ParticipantsController < Schools::BaseController
   before_action :check_feature_flag
 
   def index
-    @participants = User.order(:full_name).is_participant.in_school(@school.id)
+    @participants = @school.participants_for(@cohort).order(:full_name)
 
     if @participants.empty?
       redirect_to add_schools_participants_path
@@ -58,11 +58,12 @@ class Schools::ParticipantsController < Schools::BaseController
     @mentor_form = ParticipantMentorForm.new(
       mentor_id: @participant.early_career_teacher_profile.mentor&.id,
       school_id: @school.id,
+      cohort_id: @cohort.id,
     )
   end
 
   def update_mentor
-    @mentor_form = ParticipantMentorForm.new(participant_mentor_form_params.merge(school_id: @school.id))
+    @mentor_form = ParticipantMentorForm.new(participant_mentor_form_params.merge(school_id: @school.id, cohort_id: @cohort.id))
 
     if @mentor_form.valid?
       @participant.early_career_teacher_profile.update!(mentor_profile: @mentor_form.mentor ? @mentor_form.mentor.mentor_profile : nil)

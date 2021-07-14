@@ -27,7 +27,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
         end
       end
 
-      context "for eearly career teacher was created" do
+      context "for early career teacher was created" do
         let(:profile_type) { :early_career_teacher_profile }
 
         it "includes declaration with mentor profile" do
