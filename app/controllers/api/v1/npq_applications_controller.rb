@@ -41,7 +41,7 @@ module Api
       end
 
       def access_scope
-        LeadProviderApiToken.all
+        LeadProviderApiToken.joins(cpd_lead_provider: [:npq_lead_provider])
       end
     end
   end

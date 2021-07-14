@@ -128,6 +128,19 @@ RSpec.describe "NPQ Applications API", type: :request, with_feature_flags: { par
       end
     end
 
+    context "when token belongs to provider that does not handle NPQs" do
+      let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: lead_provider) }
+      let(:lead_provider) { create(:lead_provider) }
+      let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
+      let(:bearer_token) { "Bearer #{token}" }
+
+      it "returns 403" do
+        default_headers[:Authorization] = bearer_token
+        get "/api/v1/npq-applications"
+        expect(response.status).to eq 403
+      end
+    end
+
     context "when using a engage and learn token" do
       let(:token) { EngageAndLearnApiToken.create_with_random_token! }
 
