@@ -14,14 +14,15 @@ namespace :payment_calculation do
       "#{msg}\n"
     end
 
-    begin
-      lead_provider = LeadProvider.find(ARGV[1])
-    rescue StandardError
-      lead_provider = LeadProvider.find_by(name: ARGV[1])
-    end
+    lead_provider = begin
+                      LeadProvider.find(ARGV[1])
+                    rescue StandardError
+                      LeadProvider.find_by(name: ARGV[1])
+                    end
+    raise "Unknown lead provider: #{ARGV[1]}" if lead_provider.nil?
 
-    total_participants = (ARGV[2] || 2000).to_i
-    uplift_participants = (ARGV[3] || 200).to_i
+    total_participants = (ARGV[2] || ParticipantEventAggregator.call({ lead_provider: lead_provider })).to_i
+    uplift_participants = (ARGV[3] || ParticipantUpliftAggregator.call({ lead_provider: lead_provider })).to_i
     per_participant_in_bands = lead_provider.call_off_contract.bands.each_with_index.map { |b, i| "£#{b.per_participant.to_i} per participant in #{band_name_from_index(i)}" }.join(", ")
 
     breakdown = PaymentCalculator::Ecf::PaymentCalculation.call(
@@ -72,6 +73,10 @@ namespace :payment_calculation do
     RESULT
     logger.info table
     logger.info output
+  rescue StandardError => e
+    logger.error e.message
+  ensure
+    exit
   end
 end
 
