@@ -1,0 +1,34 @@
+description: "An ECF started and completed participant declaration"
+type: object
+properties:
+  participant_id:
+    description: "The unique id of the participant"
+    type: string
+    format: uuid
+    example: db3a7848-7308-4879-942a-c4a70ced400a
+  declaration_type:
+    description: "The event declaration type"
+    enum:
+      - started
+      - completed
+    example: started
+  declaration_date:
+    description: "The event declaration date"
+    type: string
+    format: date-time
+    example: 2021-05-31T02:21:32Z
+  course_type:
+    enum:
+      - ecf-induction
+      - ecf-mentor
+    example: ecf-induction
+required:
+  - participant_id
+  - declaration_type
+  - declaration_date
+  - course_type
+example:
+  participant_id: db3a7848-7308-4879-942a-c4a70ced400a
+  declaration_type: started
+  declaration_date: 2021-05-31T02:21:32Z
+  course_type: ecf-mentor
