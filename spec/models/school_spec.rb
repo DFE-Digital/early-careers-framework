@@ -529,10 +529,10 @@ RSpec.describe School, type: :model do
       expect(school.mentor_profiles_for(cohort)).not_to include mentor_profile
     end
 
-    it "does not include mentors" do
-      mentor_profile = create(:early_career_teacher_profile, school: school, cohort: cohort)
+    it "does not include ECTs" do
+      ect_profile = create(:early_career_teacher_profile, school: school, cohort: cohort)
 
-      expect(school.mentor_profiles_for(cohort)).not_to include mentor_profile
+      expect(school.mentor_profiles_for(cohort)).not_to include ect_profile
     end
   end
 end
