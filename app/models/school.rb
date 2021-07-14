@@ -75,8 +75,20 @@ class School < ApplicationRecord
     partnerships.joins(%i[delivery_partner cohort]).find_by(cohorts: { start_year: year })&.delivery_partner
   end
 
-  def early_career_teacher_profiles_for(year)
-    early_career_teacher_profiles.joins(:cohort).where(cohort: { start_year: year })
+  def participants_for(cohort)
+    User.where(id: participant_profiles.active.where(cohort_id: cohort.id).select(:user_id))
+  end
+
+  def early_career_teacher_profiles_for(cohort)
+    participant_profiles.ects
+                        .active
+                        .where(cohort_id: cohort.id)
+  end
+
+  def mentor_profiles_for(cohort)
+    participant_profiles.mentors
+                        .active
+                        .where(cohort_id: cohort.id)
   end
 
   def full_address

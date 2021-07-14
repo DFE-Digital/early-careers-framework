@@ -33,6 +33,7 @@ class ParticipantProfile < ApplicationRecord
   scope :mentors, -> { where(type: Mentor.name) }
   scope :ects, -> { where(type: ECT.name) }
   scope :npqs, -> { where(type: NPQ.name) }
+  scope :ecf, -> { where(type: [ECT.name, Mentor.name]) }
 
   scope :sparsity, -> { where(sparsity_uplift: true) }
   scope :pupil_premium, -> { where(pupil_premium_uplift: true) }

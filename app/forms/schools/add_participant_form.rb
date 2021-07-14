@@ -69,7 +69,9 @@ module Schools
     end
 
     def mentor_options
-      @mentor_options ||= school_cohort.school.mentors
+      @mentor_options ||= User.where(
+        id: school_cohort.school.mentor_profiles_for(school_cohort.cohort).select(:user_id),
+      ).order(:full_name)
     end
 
     def mentor

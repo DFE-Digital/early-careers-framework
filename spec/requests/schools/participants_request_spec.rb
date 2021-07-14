@@ -7,23 +7,12 @@ RSpec.describe "Schools::Participants", type: :request do
   let(:school) { user.induction_coordinator_profile.schools.first }
   let(:cohort) { create(:cohort) }
   let!(:school_cohort) { create(:school_cohort, school: school, cohort: cohort) }
-  let!(:mentor_user) do
-    user = create(:user, :mentor)
-    user.mentor_profile.update!(school: school)
-    user
-  end
-  let!(:mentor_user_2) do
-    user = create(:user, :mentor)
-    user.mentor_profile.update!(school: school)
-    user
-  end
-  let!(:ect_user) do
-    user = create(:user, :early_career_teacher)
-    user.early_career_teacher_profile.update!(school: school, mentor_profile: mentor_user.mentor_profile)
-    user
-  end
-  let!(:unrelated_mentor) { create(:user, :mentor) }
-  let!(:unrelated_ect) { create(:user, :early_career_teacher) }
+  let!(:mentor_user) { create(:user, :mentor, school: school, cohort: cohort) }
+  let!(:mentor_user_2) { create(:user, :mentor, school: school, cohort: cohort) }
+  let!(:ect_user) { create(:user, :early_career_teacher, mentor: mentor_user, school: school, cohort: cohort) }
+  let!(:withdrawn_ect) { create(:early_career_teacher_profile, status: "withdrawn", school: school, cohort: cohort).user }
+  let!(:unrelated_mentor) { create(:user, :mentor, cohort: cohort) }
+  let!(:unrelated_ect) { create(:user, :early_career_teacher, cohort: cohort) }
 
   before do
     FeatureFlag.activate(:induction_tutor_manage_participants)
@@ -51,6 +40,12 @@ RSpec.describe "Schools::Participants", type: :request do
       expect(response.body).to include(CGI.escapeHTML(mentor_user.full_name))
       expect(response.body).not_to include(CGI.escapeHTML(unrelated_mentor.full_name))
       expect(response.body).not_to include(CGI.escapeHTML(unrelated_ect.full_name))
+    end
+
+    it "does not list withdrawn participants" do
+      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants"
+
+      expect(response.body).not_to include(CGI.escapeHTML(withdrawn_ect.full_name))
     end
   end
 

@@ -39,11 +39,11 @@ class User < ApplicationRecord
   end
 
   def early_career_teacher?
-    early_career_teacher_profile.present?
+    early_career_teacher_profile&.active? || false
   end
 
   def mentor?
-    mentor_profile.present?
+    mentor_profile&.active? || false
   end
 
   def participant?
@@ -85,36 +85,25 @@ class User < ApplicationRecord
   scope :induction_coordinators, -> { joins(:induction_coordinator_profile) }
   scope :for_lead_provider, -> { includes(:lead_provider).joins(:lead_provider) }
   scope :admins, -> { joins(:admin_profile) }
-  scope :early_career_teachers, -> { joins(:early_career_teacher_profile).includes(:early_career_teacher_profile) }
-  scope :mentors, -> { joins(:mentor_profile).includes(:mentor_profile) }
-  scope :early_career_teachers_for_lead_provider, lambda { |lead_provider|
-    where(id: lead_provider.schools.joins(:early_career_teachers).distinct.select(:user_id))
-  }
-  scope :mentors_for_lead_provider, lambda { |lead_provider|
-    where(id: lead_provider.schools.joins(:mentors).distinct.select(:user_id))
-  }
-  scope :participants_for_lead_provider, lambda { |lead_provider|
-    early_career_teachers_for_lead_provider(lead_provider).or(mentors_for_lead_provider(lead_provider))
-  }
 
   scope :changed_since, lambda { |timestamp|
     if timestamp.present?
-      where("updated_at > ?", timestamp)
+      where("users.updated_at > ?", timestamp)
     else
-      where("updated_at is not null")
+      where("users.updated_at is not null")
     end.order(:updated_at, :id)
   }
 
   scope :includes_school, lambda {
-    includes(early_career_teacher_profile: %i[cohort school], mentor_profile: %i[cohort school])
+    includes(participant_profile: %i[cohort school])
   }
 
   scope :is_participant, lambda {
-    includes_school.where.not(early_career_teacher_profile: { id: nil }).or(User.where.not(mentor_profile: { id: nil }))
+    includes_school.joins(:participant_profile).merge(ParticipantProfile.active)
   }
 
   scope :in_school, lambda { |school_id|
-    includes_school.where(early_career_teacher_profile: { school_id: school_id }).or(User.where(mentor_profile: { school_id: school_id }))
+    includes_school.where(participant_profiles: { school_id: school_id })
   }
 
 private

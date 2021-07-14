@@ -3,7 +3,7 @@
 class ParticipantMentorForm
   include ActiveModel::Model
 
-  attr_accessor :mentor_id, :school_id, :user_id
+  attr_accessor :mentor_id, :school_id, :user_id, :cohort_id
 
   validate :mentor_exists
 
@@ -12,7 +12,9 @@ class ParticipantMentorForm
   end
 
   def available_mentors
-    school.mentors.order(:full_name)
+    User.where(
+      id: school.mentor_profiles_for(Cohort.find(cohort_id)).select(:user_id),
+    ).order(:full_name)
   end
 
 private
