@@ -17,8 +17,8 @@ module Admin
   private
 
     def load_participant
-      @participant = User.is_participant.find(params[:id])
-      authorize @participant, policy_class: ParticipantPolicy
+      @participant_profile = ParticipantProfile.find(params[:id])
+      authorize @participant_profile, policy_class: ParticipantProfilePolicy
     end
   end
 end

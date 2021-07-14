@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class ParticipantProfilePolicy < ApplicationPolicy
+  def show?
+    return true if admin?
+  end
+
   class Scope < Scope
     def resolve
       return scope.all if user.admin?
