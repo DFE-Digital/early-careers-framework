@@ -127,7 +127,7 @@ class InviteSchools
         recipient: induction_coordinator.email,
         name: induction_coordinator.full_name,
         school_name: induction_coordinator.schools.first.name,
-        sign_in_url: sign_in_chaser_sign_in_url,
+        sign_in_url: sign_in_url_with_campaign(:sign_in_reminder),
       ).deliver_later
     rescue StandardError
       logger.info "Error emailing induction coordinator, email: #{induction_coordinator.email} ... skipping"
@@ -232,13 +232,6 @@ private
     Rails.application.routes.url_helpers.root_url(
       host: Rails.application.config.domain,
       **UTMService.email(:june_private_beta, :private_beta),
-    )
-  end
-
-  def sign_in_chaser_sign_in_url
-    Rails.application.routes.url_helpers.new_user_session_url(
-      host: Rails.application.config.domain,
-      **UTMService.email(:sign_in_reminder, :sign_in_reminder),
     )
   end
 
