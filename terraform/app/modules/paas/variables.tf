@@ -65,6 +65,8 @@ locals {
     "GIAS_API_USER"      = "ecftech"
     "GOVUK_APP_DOMAIN"   = "ecf-${var.environment}.london.cloudapps.digital"
     "GOVUK_WEBSITE_ROOT" = "ecf-${var.environment}.london.cloudapps.digital"
+    "PHIL_PASS"          = "${var.phil_user}"
+    "PHIL_USER"          = "${var.phil_pass}"
   }
   app_environment = merge(
     local.app_env_domain,
