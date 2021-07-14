@@ -4,9 +4,6 @@ module ApiPagination
   extend ActiveSupport::Concern
   include Pagy::Backend
 
-  included do
-  end
-
 private
 
   def paginate(scope)

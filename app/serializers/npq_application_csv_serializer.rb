@@ -5,7 +5,23 @@ require "csv"
 class NPQApplicationCsvSerializer
   attr_reader :scope
 
-  def self.headers
+  def initialize(scope)
+    @scope = scope
+  end
+
+  def call
+    CSV.generate do |csv|
+      csv << csv_headers
+
+      scope.each do |record|
+        csv << to_row(record)
+      end
+    end
+  end
+
+private
+
+  def csv_headers
     %w[
       id
       participant_id
@@ -22,22 +38,6 @@ class NPQApplicationCsvSerializer
       course_name
     ]
   end
-
-  def initialize(scope)
-    @scope = scope
-  end
-
-  def call
-    CSV.generate do |csv|
-      csv << self.class.headers
-
-      scope.each do |record|
-        csv << to_row(record)
-      end
-    end
-  end
-
-private
 
   def to_row(record)
     [

@@ -11,11 +11,11 @@ module Api
       def index
         respond_to do |format|
           format.json do
-            render json: NPQApplicationSerializer.new(paginate(scope)).serializable_hash
+            render json: NPQApplicationSerializer.new(paginate(query_scope)).serializable_hash
           end
 
           format.csv do
-            render body: NPQApplicationCsvSerializer.new(scope).call
+            render body: NPQApplicationCsvSerializer.new(query_scope).call
           end
         end
       end
@@ -26,10 +26,10 @@ module Api
         current_api_token.cpd_lead_provider.npq_lead_provider
       end
 
-      def scope
-        s = npq_lead_provider.npq_profiles.includes(:user, :npq_course)
-        s = s.where("updated_at > ?", Time.iso8601(updated_since_filter)) if updated_since_filter.present?
-        s
+      def query_scope
+        scope = npq_lead_provider.npq_profiles.includes(:user, :npq_course)
+        scope = scope.where("updated_at > ?", Time.iso8601(updated_since_filter)) if updated_since_filter.present?
+        scope
       end
 
       def filter
