@@ -253,6 +253,7 @@
           },
           "declaration_type": {
             "description": "The event declaration type",
+            "type": "string",
             "enum": [
               "retained-1",
               "retained-2",
@@ -268,6 +269,8 @@
             "example": "2021-05-31T02:21:32.000Z"
           },
           "course_type": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
             "enum": [
               "ecf-induction",
               "ecf-mentor"
@@ -275,6 +278,8 @@
             "example": "ecf-induction"
           },
           "evidence_held": {
+            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
+            "type": "string",
             "enum": [
               "training-event-attended",
               "self-study-material-completed"
@@ -309,6 +314,7 @@
           },
           "declaration_type": {
             "description": "The event declaration type",
+            "type": "string",
             "enum": [
               "started",
               "completed"
@@ -322,6 +328,8 @@
             "example": "2021-05-31T02:21:32.000Z"
           },
           "course_type": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
             "enum": [
               "ecf-induction",
               "ecf-mentor"
@@ -411,6 +419,7 @@
           },
           "declaration_type": {
             "description": "The event declaration type",
+            "type": "string",
             "enum": [
               "retained-1",
               "retained-2",
@@ -426,6 +435,8 @@
             "example": "2021-05-31T02:21:32.000Z"
           },
           "course_type": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
             "enum": [
               "npq-leading-teaching",
               "npq-leading-teaching-development",
@@ -437,6 +448,8 @@
             "example": "npq-headship"
           },
           "evidence_held": {
+            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
+            "type": "string",
             "enum": [
               "training-event-attended",
               "self-study-material-completed"
@@ -471,6 +484,7 @@
           },
           "declaration_type": {
             "description": "The event declaration type",
+            "type": "string",
             "enum": [
               "started",
               "completed"
@@ -484,6 +498,8 @@
             "example": "2021-05-31T02:21:32.000Z"
           },
           "course_type": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
             "enum": [
               "npq-leading-teaching",
               "npq-leading-teaching-development",
@@ -674,7 +690,13 @@
           {
             "$ref": "#/components/schemas/NPQParticipantRetainedDeclaration"
           }
-        ]
+        ],
+        "example": {
+          "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+          "declaration_type": "started",
+          "declaration_date": "2021-05-31T02:21:32.000Z",
+          "course_type": "ecf-mentor"
+        }
       },
       "ParticipantDeclarationRecordedResponse": {
         "description": "The participant declaration has been recorded successfully",

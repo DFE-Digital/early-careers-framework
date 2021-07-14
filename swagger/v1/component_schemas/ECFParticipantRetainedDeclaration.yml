@@ -8,6 +8,7 @@ properties:
     example: db3a7848-7308-4879-942a-c4a70ced400a
   declaration_type:
     description: "The event declaration type"
+    type: string
     enum:
       - retained-1
       - retained-2
@@ -20,11 +21,15 @@ properties:
     format: date-time
     example: 2021-05-31T02:21:32Z
   course_type:
+    description: "The type of course the participant is enrolled in"
+    type: string
     enum:
       - ecf-induction
       - ecf-mentor
     example: ecf-induction
   evidence_held:
+    description: "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period"
+    type: string
     enum:
       - training-event-attended
       - self-study-material-completed

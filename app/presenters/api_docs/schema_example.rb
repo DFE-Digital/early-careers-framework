@@ -31,7 +31,7 @@ module ApiDocs
         example_data[property_key] = generate_example_value_for_property(property)
       end
 
-      example_data
+      example_data.presence || schema_data.example || {}
     end
 
     def generate_example_value_for_property(property)
