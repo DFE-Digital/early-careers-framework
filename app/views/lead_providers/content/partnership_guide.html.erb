@@ -28,12 +28,9 @@
 
 <p class="govuk-body-m"><img src="/lead-provider/start-page.png" alt="Example of a Lead Provider start page"></p>
 
-<%= render GovukComponent::NotificationBanner.new(title: 'Note', disable_auto_focus: true) do |notification_banner|
-    notification_banner.slot(
-        :heading,
-        text: 'If you go to the start page called ‘Manage training for early career teachers’, ignore the copy for induction tutors. Just press ‘Start’ to get to the sign in page.'
-    )
-end %>
+<%= render GovukComponent::NotificationBanner.new(title: 'Note about signing in', title_id: "note-about-signing-in", disable_auto_focus: true) do %>
+    If you go to the start page called ‘Manage training for early career teachers’, ignore the copy for induction tutors. Just press ‘Start’ to get to the sign in page.
+<% end %>
 
 <h2 id="how-to-confirm-the-schools-you-have-recruited" class="govuk-heading-l">How to confirm the schools you have recruited</h2>
 <p class="govuk-body-m">When you have confirmed an agreement with a school or a number of schools, you can upload them using a CSV file. This updates the DfE so that we can process your payments.</p>
@@ -60,12 +57,9 @@ end %>
 
 <p class="govuk-body-m"><img src="/lead-provider/example-csv.png" alt="Example CSV containing a list of school URNs"></p>
 
-<%= render GovukComponent::NotificationBanner.new(title: 'Note', disable_auto_focus: true) do |notification_banner|
-    notification_banner.slot(
-        :heading,
-        text: 'you upload a CSV for each delivery partner you have confirmed schools for.'
-    )
-end %>
+<%= render GovukComponent::NotificationBanner.new(title: 'Note on uploading CSVs for delivery partners', title_id: "note-about-uploading-csv", disable_auto_focus: true) do %>
+  you upload a CSV for each delivery partner you have confirmed schools for.
+<% end %>
 
 <h2 id="checking-errors-and-updating-your-csv" class="govuk-heading-l">Checking errors and updating your CSV</h2>
 <p class="govuk-body-m">When you upload your CSV, we will show you if there are any errors. These could be:</p>
@@ -162,12 +156,9 @@ end %>
 
 <p class="govuk-body-m">if the matter is resolved, upload the school again</p>
 
-<%= render GovukComponent::NotificationBanner.new(title: 'Note', disable_auto_focus: true) do |notification_banner|
-    notification_banner.slot(
-        :heading,
-        text: 'You will not receive payment for this school until resolved and re-uploaded.'
-    )
-end %>
+<%= render GovukComponent::NotificationBanner.new(title: 'Note on receiving payments', title_id: "note-on-receiving-payments", disable_auto_focus: true) do %>
+    You will not receive payment for this school until resolved and re-uploaded.
+<% end %>
 
 <h2 id="check-the-schools-you-ve-recruited" class="govuk-heading-l">Check the schools you’ve recruited</h2>
 <p class="govuk-body-m">When you have signed into the service, you can:</p>
@@ -185,12 +176,9 @@ end %>
 
 <p class="govuk-body-m"><img src="/lead-provider/school-page.png" alt="Example showing the details known about a school"></p>
 
-<%= render GovukComponent::NotificationBanner.new(title: 'Note', disable_auto_focus: true) do |notification_banner|
-    notification_banner.slot(
-        :heading,
-        text: 'ECT and mentor numbers will be zero (0) until we gather this data from schools. We will update all providers before schools start adding them to the service.'
-    )
-end %>
+<%= render GovukComponent::NotificationBanner.new(title: 'Note about ECT and Mentor numbers', title_id: "note-about-ect-mentor-numbers", disable_auto_focus: true) do %>
+    ECT and mentor numbers will be zero (0) until we gather this data from schools. We will update all providers before schools start adding them to the service.
+<% end %>
 
 <h2 id="help-support-and-feedback" class="govuk-heading-l">Help, support and feedback</h2>
 
