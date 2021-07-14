@@ -1,0 +1,37 @@
+<p class="govuk-body-m">This is API documentation for the Department for Education (DfE)’s new Manage teacher continuing professional development service.</p>
+
+<h2 class="govuk-heading-l">What this API is for</h2>
+<p class="govuk-body-m">Once a participant has been added by a school induction tutor, the participant record will become available over the API.</p>
+
+<p class="govuk-body-m">Providers can then use the API for:</p>
+
+<ul class="govuk-list govuk-list--bullet">
+  <li><a href="./reference#get-api-v1-participants" class="govuk-link">Retrieving a list of ECF participants</a></li>
+  <li><a href="./reference#get-api-v1-participants-csv" class="govuk-link">Retrieving a CSV file of ECF participants</a></li>
+  <li><a href="./reference#post-api-v1-participant-declarations" class="govuk-link">Declaring an ECF participant has started</a></li>
+</ul>
+
+<h2 class="govuk-heading-l">How do I connect to this API?</h2>
+
+<h3 class="govuk-heading-m">Authentication and authorisation</h3>
+<p class="govuk-body-m">Requests to the API must be accompanied by an authentication token.</p>
+
+<p class="govuk-body-m">Each token is associated with a single provider. It will grant access to participants for courses offered by that provider. You can get a token by writing to <a href="mailto:continuing-professional-development@digital.education.gov.uk" class="govuk-link">continuing-professional-development@digital.education.gov.uk</a>.</p>
+
+<p class="govuk-body-m">For instructions on how to authenticate see the <%= govuk_link_to "API reference", "./reference#authentication" %>.</p>
+
+<h3 class="govuk-heading-m">Versioning</h3>
+<p class="govuk-body-m">The version of the API is specified in the URL <code>/api/v{n}/</code>. For example: <code>/api/v1/</code>, <code>/api/v2/</code>, <code>/api/v3/</code>, ...</p>
+
+<p class="govuk-body-m">When the API changes in a way that is backwards-incompatible, a new version number of the API will be published.</p>
+
+<p class="govuk-body-m">When a new version, for example <code>/api/v2</code>, is published, both the previous <strong>v1</strong> and the current <strong>v2</strong> versions will be supported.</p>
+
+<p class="govuk-body-m">We, however, only support one version back, so if the <strong>v3</strong> is published, the <strong>v1</strong> will be discontinued.</p>
+
+<p class="govuk-body-m">When non-breaking changes are made to the API, this will not result in a version bump. An example of a non-breaking change could be the introduction of a new field without removing an existing field.</p>
+
+<p class="govuk-body-m">Information about deprecations (for instance attributes/endpoints that will be modified/removed) will be included in the API response through a ‘Warning’ header.</p>
+
+<h2 class="govuk-heading-l">Testing</h2>
+<p class="govuk-body-m">To get familiar with our system and perform testing, you can use <%= govuk_link_to "our sandbox environment", "https://ecf-sandbox.london.cloudapps.digital" %>.</p>
