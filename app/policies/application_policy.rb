@@ -60,8 +60,8 @@ class ApplicationPolicy
 private
 
   def admin_only
-    return true if user&.admin?
-
-    false
+    !!user&.admin?
   end
+
+  alias_method :admin?, :admin_only
 end
