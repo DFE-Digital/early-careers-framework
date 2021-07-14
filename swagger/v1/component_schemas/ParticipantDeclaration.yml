@@ -8,6 +8,7 @@ properties:
     example: db3a7848-7308-4879-942a-c4a70ced400a
   declaration_type:
     description: "The event declaration type"
+    type: string
     enum:
       - started
       - retained_1
