@@ -110,3 +110,7 @@ if Rails.env.deployed_development?
 elsif Rails.env.development?
   EngageAndLearnApiToken.find_or_create_by!(hashed_token: "f4a16cd7fc10918fbc7d869d7a83df36059bb98fac7c82502d797b1f1dd73e86")
 end
+
+if Rails.env.sandbox?
+  NPQRegistrationApiToken.find_or_create_by!(hashed_token: "166eaa39950ad15f2f36041cb9062cc8fa9f109945fe9b8378bf904fe35369bc")
+end
