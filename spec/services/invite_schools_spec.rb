@@ -341,9 +341,15 @@ RSpec.describe InviteSchools do
 
   describe "#send_induction_coordinator_sign_in_chasers" do
     it "emails induction coordinators yet to sign in" do
-      induction_coordinator = create(:user, :induction_coordinator)
+      induction_coordinator = create(:user, :induction_coordinator, created_at: 5.days.ago)
       InviteSchools.new.send_induction_coordinator_sign_in_chasers
       expect_sign_in_chaser_email(induction_coordinator)
+    end
+
+    it "does not email induction coordinators who were created within the last 2 days" do
+      induction_coordinator = create(:user, :induction_coordinator, created_at: 1.day.ago)
+      InviteSchools.new.send_induction_coordinator_sign_in_chasers
+      expect(SchoolMailer).not_to delay_email_delivery_of(:induction_coordinator_sign_in_chaser_email)
     end
 
     it "does not email induction coordinators who have signed in" do
@@ -612,7 +618,7 @@ private
   end
 
   def expect_sign_in_chaser_email(induction_coordinator)
-    expect_email(:induction_coordinator_sign_in_chaser_email, induction_coordinator, start_url: String)
+    expect_email(:induction_coordinator_sign_in_chaser_email, induction_coordinator, sign_in_url: String)
   end
 
   def expect_email(method, induction_coordinator, **params)

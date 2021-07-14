@@ -152,7 +152,7 @@ class SchoolMailer < ApplicationMailer
     )
   end
 
-  def induction_coordinator_sign_in_chaser_email(recipient:, name:, school_name:, start_url:)
+  def induction_coordinator_sign_in_chaser_email(recipient:, name:, school_name:, sign_in_url:)
     template_mail(
       COORDINATOR_SIGN_IN_CHASER_EMAIL_TEMPLATE,
       to: recipient,
@@ -161,7 +161,7 @@ class SchoolMailer < ApplicationMailer
       personalisation: {
         name: name,
         school_name: school_name,
-        start_url: start_url,
+        sign_in_url: sign_in_url,
       },
     )
   end
