@@ -459,6 +459,7 @@
           },
           "declaration_type": {
             "description": "The event declaration type",
+            "type": "string",
             "enum": [
               "started",
               "retained_1",
