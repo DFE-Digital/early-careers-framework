@@ -347,7 +347,7 @@ RSpec.describe InviteSchools do
     end
 
     it "does not email induction coordinators who were created within the last 2 days" do
-      induction_coordinator = create(:user, :induction_coordinator, created_at: 1.day.ago)
+      create(:user, :induction_coordinator, created_at: 1.day.ago)
       InviteSchools.new.send_induction_coordinator_sign_in_chasers
       expect(SchoolMailer).not_to delay_email_delivery_of(:induction_coordinator_sign_in_chaser_email)
     end
