@@ -27,7 +27,8 @@ private
 
   def user_can_access?(participant)
     return false unless participant.participant?
-    return false if participant.participant_profile.withdrawn?
+    # TODO: is this correct? assumes we're only looking at mentors and ECTs?
+    return false if participant.participant_profiles.ecf.first.withdrawn?
 
     user.schools.include?(participant.school)
   end
