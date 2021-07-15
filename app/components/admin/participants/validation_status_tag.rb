@@ -2,19 +2,20 @@
 
 module Admin
   module Participants
-    class TableRow < BaseComponent
-      with_collection_parameter :profile
-
+    class ValidationStatusTag < BaseComponent
       def initialize(profile:)
         @profile = profile
+      end
+
+      def call
+        govuk_tag tag_attributes
       end
 
     private
 
       attr_reader :profile
-      delegate :school, to: :profile
 
-      def validation_status
+      def tag_attributes
         return { text: "Not ready", colour: "grey" } unless profile.npq?
 
         { text: "Pending", colour: "yellow" }

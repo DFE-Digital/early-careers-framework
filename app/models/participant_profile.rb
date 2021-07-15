@@ -11,6 +11,7 @@ class ParticipantProfile < ApplicationRecord
 
   scope :mentors, -> { where(type: Mentor.name) }
   scope :ects, -> { where(type: ECT.name) }
+  scope :npqs, -> { where(type: NPQ.name) }
 
   scope :sparsity, -> { where(sparsity_uplift: true) }
   scope :pupil_premium, -> { where(pupil_premium_uplift: true) }
@@ -29,12 +30,4 @@ class ParticipantProfile < ApplicationRecord
   def npq?
     false
   end
-
-  scope :mentors, -> { where(type: Mentor.name) }
-  scope :ects, -> { where(type: ECT.name) }
-  scope :npqs, -> { where(type: NPQ.name) }
-
-  scope :sparsity, -> { where(sparsity_uplift: true) }
-  scope :pupil_premium, -> { where(pupil_premium_uplift: true) }
-  scope :uplift, -> { sparsity.or(pupil_premium) }
 end
