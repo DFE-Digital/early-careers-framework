@@ -1,5 +1,8 @@
 <% content_for :title, "Participant detail" %>
 
-<h1 class="govuk-heading-l"><%= @participant_profile.user.full_name %></h1>
+<h1 class="govuk-heading-l">
+  <%= @participant_profile.user.full_name %>
+  <%= render Admin::Participants::ValidationStatusTag.new(profile: @participant_profile) %>
+</h1>
 
 <%= render Admin::Participants::Details.new(profile: @participant_profile) %>
