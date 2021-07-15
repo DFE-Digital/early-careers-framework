@@ -26,6 +26,10 @@ module ApiTokenAuthenticatable
 
 private
 
+  def current_api_token
+    @current_api_token
+  end
+
   def check_access_scope
     head :forbidden unless access_scope.include?(@current_api_token)
   end
