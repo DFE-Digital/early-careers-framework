@@ -5,6 +5,7 @@ class ParticipantMentorForm
 
   attr_accessor :mentor_id, :school_id, :user_id, :cohort_id
 
+  validates :mentor_id, presence: { message: "Choose one" }
   validate :mentor_exists
 
   def mentor
@@ -24,7 +25,7 @@ private
   end
 
   def mentor_exists
-    if mentor && available_mentors.exclude?(mentor)
+    if mentor_id && mentor && available_mentors.exclude?(mentor)
       errors.add(:mentor_id, :not_authorized)
     end
   end
