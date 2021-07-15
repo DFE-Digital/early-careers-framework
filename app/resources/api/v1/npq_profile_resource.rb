@@ -14,6 +14,8 @@ module Api
                  :eligible_for_funding,
                  :funding_choice
 
+      attribute :national_insurance_number, delegate: :nino
+
       has_one :user
       has_one :npq_lead_provider
       has_one :npq_course
