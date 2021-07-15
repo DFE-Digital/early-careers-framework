@@ -8,20 +8,15 @@ namespace :lead_provider do
       "#{msg}\n"
     end
 
-    begin
-      lead_provider = LeadProvider.find(ARGV[1])
-      cpd_lead_provider = lead_provider.cpd_lead_provider
-    rescue StandardError
-      lead_provider = LeadProvider.find_by(name: ARGV[1])
-      cpd_lead_provider = lead_provider.cpd_lead_provider
-    end
+    name_or_id = ARGV[1]
 
-    token = LeadProviderApiToken.create_with_random_token!(lead_provider: lead_provider, cpd_lead_provider: cpd_lead_provider)
+    lead_provider = CpdLeadProvider.find_by(id: name_or_id) || CpdLeadProvider.find_by(name: name_or_id)
 
-    logger.info "Generated API token for lead provider (#{lead_provider.id}): #{token}"
-  rescue StandardError
-    logger.info "Lead provider for '#{ARGV[1]}' not found"
-  ensure
-    exit(0)
+    raise "CpdLeadProvider '#{name_or_id}' not found" unless lead_provider
+
+    token = LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: lead_provider)
+    logger.info "Generated LeadProviderApiToken for CpdLeadProvider (#{lead_provider.id}): #{token}"
+
+    exit(0) # to prevent re-processing args as additional rake tasks
   end
 end
