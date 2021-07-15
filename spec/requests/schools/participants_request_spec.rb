@@ -3,10 +3,10 @@
 require "rails_helper"
 
 RSpec.describe "Schools::Participants", type: :request do
-  let(:user) { create(:user, :induction_coordinator) }
-  let(:school) { user.induction_coordinator_profile.schools.first }
+  let(:user) { create(:user, :induction_coordinator, school_ids: [school.id]) }
+  let(:school) { school_cohort.school }
   let(:cohort) { create(:cohort) }
-  let!(:school_cohort) { create(:school_cohort, school: school, cohort: cohort) }
+  let!(:school_cohort) { create(:school_cohort, cohort: cohort) }
   let!(:mentor_user) { create(:user, :mentor, school: school, cohort: cohort) }
   let!(:mentor_user_2) { create(:user, :mentor, school: school, cohort: cohort) }
   let!(:ect_user) { create(:user, :early_career_teacher, mentor: mentor_user, school: school, cohort: cohort) }
@@ -46,6 +46,20 @@ RSpec.describe "Schools::Participants", type: :request do
       get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants"
 
       expect(response.body).not_to include(CGI.escapeHTML(withdrawn_ect.full_name))
+    end
+
+    context "when there are no mentors" do
+      let(:ect_profile) { create(:participant_profile, :ect) }
+      let(:other_school) { ect_profile.school }
+      let!(:other_school_cohort) { create(:school_cohort, school: other_school, cohort: cohort) }
+      let(:cohort) { ect_profile.cohort }
+      let(:user) { create(:user, :induction_coordinator, school_ids: [other_school.id]) }
+      it "does not show the assign mentor link" do
+        get "/schools/#{other_school.slug}/cohorts/#{cohort.start_year}/participants"
+
+        expect(response.body).to include "No mentors added"
+        expect(response.body).not_to include "Assign mentor"
+      end
     end
   end
 
@@ -87,6 +101,13 @@ RSpec.describe "Schools::Participants", type: :request do
       expect(response).to redirect_to(schools_participant_path(id: ect_user))
       expect(flash[:success][:title]).to eq("Success")
       expect(ect_user.reload.early_career_teacher_profile.mentor).to eq(mentor_user_2)
+    end
+
+    it "shows error when a blank form is submitted" do
+      ect_user = create(:user, :early_career_teacher, school: school, cohort: cohort)
+      put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_user.id}/update-mentor"
+      expect(response).to render_template("schools/participants/edit_mentor")
+      expect(response.body).to include "Choose one"
     end
   end
 
