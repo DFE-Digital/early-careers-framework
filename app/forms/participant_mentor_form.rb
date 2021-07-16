@@ -12,9 +12,7 @@ class ParticipantMentorForm
   end
 
   def available_mentors
-    User.where(
-      id: school.mentor_profiles_for(Cohort.find(cohort_id)).select(:user_id),
-    ).order(:full_name)
+    SchoolCohort.find_by(school_id: school_id, cohort_id: cohort_id).mentors.order(:full_name)
   end
 
 private

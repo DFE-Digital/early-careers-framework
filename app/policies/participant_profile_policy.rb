@@ -6,7 +6,7 @@ class ParticipantProfilePolicy < ApplicationPolicy
       return scope.all if user.admin?
       return scope.none unless user.induction_coordinator?
 
-      scope.where(school_id: user.induction_coordinator_profile.schools.select(:id))
+      scope.includes(school_cohort: :school).where(school_cohort: { school: user.induction_coordinator_profile.schools })
     end
   end
 end

@@ -6,7 +6,7 @@ class Schools::ParticipantsController < Schools::BaseController
   before_action :check_feature_flag
 
   def index
-    @participants = @school.participants_for(@cohort).order(:full_name)
+    @participants = @school_cohort.active_participants.order(:full_name)
 
     if @participants.empty?
       redirect_to add_schools_participants_path
