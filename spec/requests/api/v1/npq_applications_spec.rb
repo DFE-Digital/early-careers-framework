@@ -59,8 +59,7 @@ RSpec.describe "NPQ Applications API", type: :request do
 
           expect(parsed_response["data"][0]["attributes"]["eligible_for_funding"]).to eql(profile.eligible_for_funding)
 
-          expect(parsed_response["data"][0]["attributes"]["course_id"]).to eql(profile.npq_course_id)
-          expect(parsed_response["data"][0]["attributes"]["course_name"]).to eql(profile.npq_course.name)
+          expect(parsed_response["data"][0]["attributes"]["course_identifier"]).to eql(profile.npq_course.identifier)
         end
 
         it "can return paginated data" do

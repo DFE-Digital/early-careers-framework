@@ -39,12 +39,12 @@ PrivacyPolicy.find_or_initialize_by(major_version: 1, minor_version: 0)
 end
 
 [
-  { name: "NPQ Leading Teaching (NPQLT)", id: "15c52ed8-06b5-426e-81a2-c2664978a0dc" },
-  { name: "NPQ Leading Behaviour and Culture (NPQLBC)", id: "7d47a0a6-fa74-4587-92cc-cd1e4548a2e5" },
-  { name: "NPQ Leading Teacher Development (NPQLTD)", id: "29fee78b-30ce-4b93-ba21-80be2fde286f" },
-  { name: "NPQ for Senior Leadership (NPQSL)", id: "a42736ad-3d0b-401d-aebe-354ef4c193ec" },
-  { name: "NPQ for Headship (NPQH)", id: "0f7d6578-a12c-4498-92a0-2ee0f18e0768" },
-  { name: "NPQ for Executive Leadership (NPQEL)", id: "aef853f2-9b48-4b6a-9d2a-91b295f5ca9a" },
+  { name: "NPQ Leading Teaching (NPQLT)", id: "15c52ed8-06b5-426e-81a2-c2664978a0dc", identifier: "npq-leading-teaching" },
+  { name: "NPQ Leading Behaviour and Culture (NPQLBC)", id: "7d47a0a6-fa74-4587-92cc-cd1e4548a2e5", identifier: "npq-leading-behaviour-culture" },
+  { name: "NPQ Leading Teacher Development (NPQLTD)", id: "29fee78b-30ce-4b93-ba21-80be2fde286f", identifier: "npq-leading-teaching-development" },
+  { name: "NPQ for Senior Leadership (NPQSL)", id: "a42736ad-3d0b-401d-aebe-354ef4c193ec", identifier: "npq-senior-leadership" },
+  { name: "NPQ for Headship (NPQH)", id: "0f7d6578-a12c-4498-92a0-2ee0f18e0768", identifier: "npq-headship" },
+  { name: "NPQ for Executive Leadership (NPQEL)", id: "aef853f2-9b48-4b6a-9d2a-91b295f5ca9a", identifier: "npq-executive-leadership" },
 ].each do |hash|
   NPQCourse.find_or_create_by!(name: hash[:name], id: hash[:id])
 end

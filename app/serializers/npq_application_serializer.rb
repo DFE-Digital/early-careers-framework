@@ -13,12 +13,10 @@ class NPQApplicationSerializer
              :headteacher_status,
              :eligible_for_funding,
              :funding_choice,
-             :course_id,
-             :course_name
+             :course_identifier
 
   attribute(:participant_id, &:user_id)
   attribute(:teacher_reference_number_validated, &:teacher_reference_number_verified)
-  attribute(:course_id, &:npq_course_id)
 
   attribute(:full_name) do |object|
     object.user.full_name
@@ -32,7 +30,7 @@ class NPQApplicationSerializer
     true
   end
 
-  attribute(:course_name) do |object|
-    object.npq_course.name
+  attribute(:course_identifier) do |object|
+    object.npq_course.identifier
   end
 end
