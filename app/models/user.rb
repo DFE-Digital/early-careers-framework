@@ -95,7 +95,11 @@ class User < ApplicationRecord
   }
 
   scope :includes_school, lambda {
-    includes(participant_profile: %i[cohort school])
+    includes(
+      early_career_teacher_profile: %i[cohort school],
+      mentor_profile: %i[cohort school],
+      npq_profiles: :school,
+    )
   }
 
   scope :is_participant, lambda {

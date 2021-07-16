@@ -7,7 +7,12 @@ module Admin
     before_action :set_school
 
     def index
-      @participants = User.order(:full_name).is_participant.in_school(@school.id)
+      @participants = User.where(id: @school.participant_profiles
+                                            .active
+                                            .ecf
+                                            .select(:user_id))
+                          .order(:full_name)
+                          .includes(participant_profile: %i[cohort school])
     end
 
   private
