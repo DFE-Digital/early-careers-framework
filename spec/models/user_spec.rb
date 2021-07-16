@@ -303,21 +303,22 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe "scope :is_participant" do
-    it "includes participants" do
+  describe "scope :is_ecf_participant" do
+    it "includes ecf participants" do
       ect = create(:participant_profile, :ect).user
       mentor = create(:participant_profile, :mentor).user
-      npq = create(:participant_profile, :npq).user
 
-      expect(User.is_participant).to include(ect, mentor, npq)
+      expect(User.is_ecf_participant).to include(ect, mentor)
     end
 
     it "does not include other user types" do
       admin = create(:user, :admin)
       lp = create(:user, :lead_provider)
+      npq = create(:participant_profile, :npq).user
 
-      expect(User.is_participant).not_to include(admin)
-      expect(User.is_participant).not_to include(lp)
+      expect(User.is_ecf_participant).not_to include(admin)
+      expect(User.is_ecf_participant).not_to include(lp)
+      expect(User.is_ecf_participant).not_to include(npq)
     end
   end
 end

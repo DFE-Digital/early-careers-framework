@@ -61,7 +61,7 @@ RSpec.describe LeadProvider, type: :model do
       end
 
       it "should not include NPQ participants" do
-        participant_profile = create(:participant_profile, :npq, school_cohort: school_cohort)
+        participant_profile = create(:participant_profile, :npq, school: school)
         expect(lead_provider.participant_profiles).not_to include participant_profile
       end
     end
@@ -83,7 +83,7 @@ RSpec.describe LeadProvider, type: :model do
       end
 
       it "should not include NPQ participants" do
-        participant_profile = create(:participant_profile, :npq, school_cohort: school_cohort)
+        participant_profile = create(:participant_profile, :npq, school: school)
         expect(lead_provider.active_participant_profiles).not_to include participant_profile
       end
     end

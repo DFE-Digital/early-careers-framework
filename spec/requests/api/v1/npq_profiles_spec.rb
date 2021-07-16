@@ -6,8 +6,6 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
   let(:token) { NPQRegistrationApiToken.create_with_random_token! }
   let(:bearer_token) { "Bearer #{token}" }
   let(:parsed_response) { JSON.parse(response.body) }
-  let!(:school) { create(:school, urn: "123456") }
-  let!(:cohort) { create(:cohort, :current) }
 
   describe "#create" do
     let(:user) { create(:user) }

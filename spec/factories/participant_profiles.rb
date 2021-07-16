@@ -23,17 +23,21 @@ FactoryBot.define do
       participant_type {}
     end
 
-    school_cohort
-
     trait :ect do
+      school_cohort
+
       participant_type { :ect }
     end
 
     trait :mentor do
+      school_cohort
+
       participant_type { :mentor }
     end
 
     trait :npq do
+      school
+
       participant_type { :npq }
     end
 

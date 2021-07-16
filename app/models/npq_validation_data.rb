@@ -30,11 +30,7 @@ private
   def update_participant_profile
     profile = ParticipantProfile::NPQ.find_or_initialize_by(id: id)
     school = School.find_by(urn: school_urn)
-    cohort = profile.school_cohort&.cohort || Cohort.current
-    school_cohort = SchoolCohort.find_or_create_by!(school: school, cohort: cohort) do |new_school_cohort|
-      new_school_cohort.update!(induction_programme_choice: "not_yet_known")
-    end
-    profile.school_cohort = school_cohort
+    profile.school = school
     profile.user_id = user_id
     profile.save!
   end

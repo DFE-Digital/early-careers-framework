@@ -10,8 +10,6 @@ RSpec.describe "NPQ Applications API", type: :request do
     let(:other_npq_lead_provider) { create(:npq_lead_provider) }
     let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
     let(:bearer_token) { "Bearer #{token}" }
-    let!(:school) { create(:school, urn: "123456") }
-    let!(:cohort) { create(:cohort, :current) }
 
     before :each do
       create_list :npq_validation_data, 3, npq_lead_provider: npq_lead_provider, school_urn: "123456"
