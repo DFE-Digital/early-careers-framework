@@ -3,6 +3,10 @@
 class ParticipantProfile::Mentor < ParticipantProfile
   self.ignored_columns = %i[mentor_profile_id]
 
+  belongs_to :school_cohort
+  has_one :school, through: :school_cohort
+  has_one :cohort, through: :school_cohort
+
   has_many :mentee_profiles,
            class_name: "ParticipantProfile::ECT",
            foreign_key: :mentor_profile_id,

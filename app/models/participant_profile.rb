@@ -2,9 +2,6 @@
 
 class ParticipantProfile < ApplicationRecord
   belongs_to :user
-  belongs_to :school_cohort
-  has_one :school, through: :school_cohort
-  has_one :cohort, through: :school_cohort
 
   enum status: {
     active: "active",

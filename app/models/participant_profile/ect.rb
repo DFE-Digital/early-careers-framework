@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class ParticipantProfile::ECT < ParticipantProfile
+  belongs_to :school_cohort
+  has_one :school, through: :school_cohort
+  has_one :cohort, through: :school_cohort
+
   belongs_to :mentor_profile, class_name: "Mentor", optional: true
   has_one :mentor, through: :mentor_profile, source: :user
 
