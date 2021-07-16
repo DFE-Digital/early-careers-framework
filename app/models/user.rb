@@ -102,8 +102,8 @@ class User < ApplicationRecord
     includes_school.joins(:participant_profile).merge(ParticipantProfile.active)
   }
 
-  scope :in_school, lambda { |school_id|
-    includes_school.where(participant_profiles: { school_id: school_id })
+  scope :in_school_cohort, lambda { |school_cohort_id|
+    includes_school.where(participant_profiles: { school_cohort_id: school_cohort_id })
   }
 
 private
