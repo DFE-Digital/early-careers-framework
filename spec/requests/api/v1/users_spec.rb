@@ -13,11 +13,9 @@ RSpec.describe "API Users", type: :request do
       cip = create(:core_induction_programme, name: "Teach First")
       school = create(:school)
       school_cohort = create(:school_cohort, school: school)
-      create(:mentor_profile, school: school, cohort: school_cohort.cohort, core_induction_programme: cip).user
-      create_list :early_career_teacher_profile, 2,
-                  school: school,
-                  cohort: school_cohort.cohort,
-                  core_induction_programme: cip
+      create(:mentor_profile, school_cohort: school_cohort, core_induction_programme: cip)
+      create(:participant_profile, :npq, school_cohort: school_cohort)
+      create(:early_career_teacher_profile, school_cohort: school_cohort, core_induction_programme: cip)
     end
 
     context "when authorized" do
@@ -55,15 +53,17 @@ RSpec.describe "API Users", type: :request do
 
         mentors = parsed_response["data"].count { |hash| hash["attributes"]["user_type"] == "mentor" }
         ects = parsed_response["data"].count { |hash| hash["attributes"]["user_type"] == "early_career_teacher" }
+        others = parsed_response["data"].count { |hash| hash["attributes"]["user_type"] == "other" }
 
         expect(mentors).to eql(1)
-        expect(ects).to eql(2)
+        expect(ects).to eql(1)
+        expect(others).to eql(1)
       end
 
       it "returns correct CIPs" do
         get "/api/v1/users"
         expect(parsed_response["data"][0]["attributes"]["core_induction_programme"]).to eql("teach_first")
-        expect(parsed_response["data"][1]["attributes"]["core_induction_programme"]).to eql("teach_first")
+        expect(parsed_response["data"][2]["attributes"]["core_induction_programme"]).to eql("teach_first")
       end
 
       it "returns the right number of users per page" do
