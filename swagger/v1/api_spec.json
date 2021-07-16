@@ -81,14 +81,21 @@
             }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/v1/npq-applications.csv": {
       "get": {
-        "summary": "Returns all NPQ applications for the current lead provider",
+        "summary": "Retrieve all NPQ applications in CSV format",
         "operationId": "npq_applications_csv",
         "tags": [
           "NPQ applications"
@@ -281,7 +288,7 @@
     },
     "/api/v1/participants.csv": {
       "get": {
-        "summary": "Retrieve multiple participants in CSV format",
+        "summary": "Retrieve all participants in CSV format",
         "operationId": "ecf_participants_csv",
         "tags": [
           "ECF participants"

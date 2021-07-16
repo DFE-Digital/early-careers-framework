@@ -46,6 +46,9 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
 
       response "401", "Unauthorized" do
         let(:Authorization) { "Bearer invalid" }
+
+        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" }, content_type: "application/vnd.api+json")
+
         run_test!
       end
     end
