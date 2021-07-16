@@ -15,11 +15,11 @@ end
 class PopulateLpAndCpdLpAssocs < ActiveRecord::Migration[6.1]
   def up
     MigrationLeadProvider2.all.each do |lp|
-      lp.update!(cpd_lead_provider: MigrationCpdLeadProvider2.find_by(name: lp.name))
+      lp.update!(cpd_lead_provider_id: MigrationCpdLeadProvider2.find_by(name: lp.name)&.id)
     end
 
     MigrationNPQLeadProvider2.all.each do |lp|
-      lp.update!(cpd_lead_provider: MigrationCpdLeadProvider2.find_by(name: lp.name))
+      lp.update!(cpd_lead_provider_id: MigrationCpdLeadProvider2.find_by(name: lp.name)&.id)
     end
   end
 
