@@ -1,4 +1,4 @@
-description: "An NPQ participant declaration"
+description: "An NPQ started and completed participant declaration"
 type: object
 properties:
   participant_id:
