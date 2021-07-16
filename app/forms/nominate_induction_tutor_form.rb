@@ -19,9 +19,7 @@ class NominateInductionTutorForm
   end
 
   def email_already_taken?
-    User.left_outer_joins(:induction_coordinator_profile)
-        .where(induction_coordinator_profile: { id: nil })
-        .exists?(email: email)
+    ParticipantProfile.ecf.joins(:user).where(user: { email: email }).any?
   end
 
   def name_different?
