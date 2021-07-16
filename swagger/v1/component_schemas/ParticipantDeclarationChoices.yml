@@ -1,0 +1,12 @@
+description: "A participant declaration"
+type: object
+oneOf:
+  - $ref: "#/components/schemas/ECFParticipantStartedDeclaration"
+  - $ref: "#/components/schemas/ECFParticipantRetainedDeclaration"
+  - $ref: "#/components/schemas/NPQParticipantStartedDeclaration"
+  - $ref: "#/components/schemas/NPQParticipantRetainedDeclaration"
+example:
+  participant_id: db3a7848-7308-4879-942a-c4a70ced400a
+  declaration_type: started
+  declaration_date: 2021-05-31T02:21:32Z
+  course_type: ecf-mentor

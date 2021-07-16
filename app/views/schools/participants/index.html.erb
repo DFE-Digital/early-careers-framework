@@ -32,12 +32,16 @@
           <th scope="row" class="govuk-table__header"><%= govuk_link_to participant.full_name, schools_participant_path(id: participant) %></th>
           <td class="govuk-table__cell"><%= t(participant.mentor? ? :mentor : :ect, scope: "schools.participants.type") %></td>
           <td class="govuk-table__cell">
-            <% if participant.early_career_teacher? %>
-              <%= (mentor = participant.early_career_teacher_profile.mentor) ?
-                    mentor.full_name :
-                    govuk_link_to("Assign mentor", schools_participant_edit_mentor_path(participant_id: participant.id)) %>
+            <% if @mentors_added %>
+              <% if participant.early_career_teacher? %>
+                <%= (mentor = participant.early_career_teacher_profile.mentor) ?
+                      mentor.full_name :
+                      govuk_link_to("Assign mentor", schools_participant_edit_mentor_path(participant_id: participant.id)) %>
+              <% else %>
+                - <span class="govuk-visually-hidden">Not applicable</span>
+              <% end %>
             <% else %>
-              - <span class="govuk-visually-hidden">Not applicable</span>
+              No mentors added
             <% end %>
           </td>
           <td class="govuk-table__cell">

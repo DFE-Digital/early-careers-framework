@@ -9,7 +9,8 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <p class="govuk-inset-text">We will let you know if we need any more details, such as their Teacher Reference Number (TRN). We will also update you on their status.</p>
+    <p class="govuk-inset-text">We will let you know if we need any more details, such as their Teacher Reference Number
+      (TRN). We will also update you on their status.</p>
 
     <h2 class="govuk-heading-m">Participant details</h2>
 
@@ -64,8 +65,10 @@
             <% end %>
           </dd>
           <dd class="govuk-summary-list__actions">
-            <%= govuk_link_to schools_participant_edit_mentor_path(participant_id: @participant.id) do %>
-              Change <span class="govuk-visually-hidden">mentor</span>
+            <% if @mentors_added %>
+              <%= govuk_link_to schools_participant_edit_mentor_path(participant_id: @participant.id) do %>
+                Change <span class="govuk-visually-hidden">mentor</span>
+              <% end %>
             <% end %>
           </dd>
         </div>

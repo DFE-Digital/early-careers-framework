@@ -6,7 +6,7 @@ module Api
       include ApiTokenAuthenticatable
 
       def create
-        params = HashWithIndifferentAccess.new({ raw_event: request.raw_post, lead_provider: lead_provider }).merge(permitted_params)
+        params = HashWithIndifferentAccess.new({ raw_event: request.raw_post, lead_provider: lead_provider }).merge(permitted_params["attributes"] || {})
         validate_params!(params)
         render json: RecordParticipantDeclaration.call(params)
       end
@@ -26,11 +26,17 @@ module Api
       end
 
       def permitted_params
-        params.permit(*required_params)
+        params.require(:data).permit(:type, { attributes: required_params })
+      rescue ActionController::ParameterMissing => e
+        if e.param == :data
+          raise ActionController::BadRequest, I18n.t(:invalid_data_structure)
+        else
+          raise
+        end
       end
 
       def required_params
-        %w[participant_id declaration_date declaration_type]
+        %w[participant_id declaration_date declaration_type course_type]
       end
     end
   end

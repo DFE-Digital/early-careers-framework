@@ -3,7 +3,7 @@
 module JsonSchema
   class VersionEventFileName
     class << self
-      def call(schema_root: "etc/schema", schema_path: "ecf/participant_declarations", schema_file: "request_schema.json", version: "1.0", event: :create)
+      def call(schema_root: "etc/schema", schema_path: "participant_declarations", schema_file: "request_schema.json", version: "0.3", event: :create)
         new(schema_path: schema_path, schema_root: schema_root, schema_file: schema_file).call(version: version, event: event)
       end
     end
@@ -14,7 +14,7 @@ module JsonSchema
 
   private
 
-    def initialize(schema_root: "etc/schema", schema_path: "ecf/participant_declarations", schema_file: "request_schema.json")
+    def initialize(schema_root: "etc/schema", schema_path: "participant_declarations", schema_file: "request_schema.json")
       @schema_root = schema_root
       @schema_path = schema_path
       @schema_file = schema_file

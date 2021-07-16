@@ -357,6 +357,7 @@ ActiveRecord::Schema.define(version: 2021_07_15_091917) do
     t.boolean "active_alert", default: false
     t.boolean "eligible_for_funding", default: false, null: false
     t.text "funding_choice"
+    t.text "nino"
     t.index ["npq_course_id"], name: "index_npq_profiles_on_npq_course_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_profiles_on_npq_lead_provider_id"
     t.index ["user_id"], name: "index_npq_profiles_on_user_id"
@@ -380,6 +381,7 @@ ActiveRecord::Schema.define(version: 2021_07_15_091917) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "user_id", null: false
+    t.string "course_type", default: "ecf-induction", null: false
     t.index ["lead_provider_id"], name: "index_participant_declarations_on_lead_provider_id"
     t.index ["user_id"], name: "index_participant_declarations_on_user_id"
   end

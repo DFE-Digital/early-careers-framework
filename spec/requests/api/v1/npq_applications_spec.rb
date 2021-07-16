@@ -3,7 +3,7 @@
 require "rails_helper"
 require "csv"
 
-RSpec.describe "NPQ Applications API", type: :request, with_feature_flags: { participant_data_api: "active" } do
+RSpec.describe "NPQ Applications API", type: :request do
   describe "GET /api/v1/npq-applications" do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider: npq_lead_provider) }
     let(:npq_lead_provider) { create(:npq_lead_provider) }
@@ -151,16 +151,6 @@ RSpec.describe "NPQ Applications API", type: :request, with_feature_flags: { par
         get "/api/v1/npq-applications"
         expect(response.status).to eq 403
       end
-    end
-  end
-end
-
-RSpec.describe "NPQ Applications API without feature flag", type: :request do
-  describe "GET /api/v1/npq-applications" do
-    it "does not route" do
-      expect {
-        get "/api/v1/npq-applications"
-      }.to raise_error(ActionController::RoutingError)
     end
   end
 end

@@ -11,7 +11,7 @@ class RecordParticipantDeclaration
     end
 
     def required_params
-      %i[participant_id lead_provider declaration_type declaration_date raw_event]
+      %i[participant_id lead_provider declaration_type declaration_date course_type raw_event]
     end
   end
 
@@ -40,19 +40,29 @@ private
   end
 
   def schema
-    JSON.parse(File.read(JsonSchema::VersionEventFileName.call(version: "0.2")))
+    JSON.parse(File.read(JsonSchema::VersionEventFileName.call(version: "0.3")))
   end
 
   def add_participant_profile_params!
-    raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless participant?
+    raise ActionController::ParameterMissing, [I18n.t(:invalid_participant)] unless participant?
+    raise ActionController::ParameterMissing, [I18n.t(:invalid_course)] unless course_valid_for_participant?
   end
 
   def user_id
     params[:user_id]
   end
 
+  def course
+    params[:course_type]
+  end
+
   def user
     @user ||= User.find_by(id: user_id)
+  end
+
+  def course_valid_for_participant?
+    early_career_teacher? && course == "ecf-induction" ||
+      mentor? && course == "ecf-mentor"
   end
 
   def user_profile

@@ -1,0 +1,188 @@
+{
+  "$id": "https://digital.education.gov.uk/schema/participant_declarations/create/request_schema.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "participant-declaration"
+          ]
+        },
+        "attributes": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ecf/participant_started_declarations"
+            },
+            {
+              "$ref": "#/definitions/ecf/participant_retained_declarations"
+            },
+            {
+              "$ref": "#/definitions/npq/participant_started_declarations"
+            },
+            {
+              "$ref": "#/definitions/npq/participant_retained_declarations"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "definitions": {
+    "date-time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "payment_events": {
+      "started_completed": {
+        "enum": [
+          "started",
+          "completed"
+        ]
+      },
+      "retained": {
+        "enum": [
+          "retained-1",
+          "retained-2",
+          "retained-3",
+          "retained-4"
+        ]
+      }
+    },
+    "evidence_type": {
+      "enum": [
+        "training-event-attended",
+        "self-study-material-completed"
+      ]
+    },
+    "ecf": {
+      "courses": {
+        "enum": [
+          "ecf-induction",
+          "ecf-mentor"
+        ]
+      },
+      "participant_started_declarations": {
+        "type": "object",
+        "properties": {
+          "declaration_date": {
+            "$ref": "#/definitions/date-time"
+          },
+          "declaration_type": {
+            "$ref": "#/definitions/payment_events/started_completed"
+          },
+          "participant_id": {
+            "$ref": "#/definitions/uuid"
+          },
+          "course_type": {
+            "$ref": "#/definitions/ecf/courses"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "declaration_date",
+          "declaration_type",
+          "participant_id",
+          "course_type"
+        ]
+      },
+      "participant_retained_declarations": {
+        "type": "object",
+        "properties": {
+          "declaration_date": {
+            "$ref": "#/definitions/date-time"
+          },
+          "declaration_type": {
+            "$ref": "#/definitions/payment_events/retained"
+          },
+          "participant_id": {
+            "$ref": "#/definitions/uuid"
+          },
+          "course_type": {
+            "$ref": "#/definitions/ecf/courses"
+          },
+          "evidence_held": {
+            "$ref": "#/definitions/evidence_type"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "declaration_date",
+          "declaration_type",
+          "participant_id",
+          "course_type",
+          "evidence_held"
+        ]
+      }
+    },
+    "npq": {
+      "courses": {
+        "enum": [
+          "npq-leading-teaching",
+          "npq-leading-teaching-development",
+          "npq-leading-behaviour-culture",
+          "npq-headship",
+          "npq-senior-leadership",
+          "npq-executive-leadership"
+        ]
+      },
+      "participant_started_declarations": {
+        "properties": {
+          "declaration_date": {
+            "$ref": "#/definitions/date-time"
+          },
+          "declaration_type": {
+            "$ref": "#/definitions/payment_events/started_completed"
+          },
+          "participant_id": {
+            "$ref": "#/definitions/uuid"
+          },
+          "course_type": {
+            "$ref": "#/definitions/npq/courses"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "declaration_date",
+          "declaration_type",
+          "participant_id",
+          "course_type"
+        ]
+      },
+      "participant_retained_declarations": {
+        "type": "object",
+        "properties": {
+          "declaration_date": {
+            "$ref": "#/definitions/date-time"
+          },
+          "declaration_type": {
+            "$ref": "#/definitions/payment_events/retained"
+          },
+          "participant_id": {
+            "$ref": "#/definitions/uuid"
+          },
+          "course_type": {
+            "$ref": "#/definitions/npq/courses"
+          },
+          "evidence_held": {
+            "$ref": "#/definitions/evidence_type"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "declaration_date",
+          "declaration_type",
+          "participant_id",
+          "course_type",
+          "evidence_held"
+        ]
+      }
+    }
+  }
+}

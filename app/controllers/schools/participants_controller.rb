@@ -4,6 +4,8 @@ class Schools::ParticipantsController < Schools::BaseController
   before_action :set_school_cohort
   before_action :set_participant, except: %i[index email_used]
   before_action :check_feature_flag
+  before_action :build_mentor_form, only: :edit_mentor
+  before_action :set_mentors_added, only: %i[index show]
 
   def index
     @participants = @school_cohort.active_participants.order(:full_name)
@@ -54,15 +56,15 @@ class Schools::ParticipantsController < Schools::BaseController
 
   def email_used; end
 
-  def edit_mentor
-    @mentor_form = ParticipantMentorForm.new(
-      mentor_id: @participant.early_career_teacher_profile.mentor&.id,
-      school_id: @school.id,
-      cohort_id: @cohort.id,
-    )
-  end
+  def edit_mentor; end
 
   def update_mentor
+    if params[:participant_mentor_form].blank?
+      build_mentor_form
+      @mentor_form.valid?
+      render :edit_mentor and return
+    end
+
     @mentor_form = ParticipantMentorForm.new(participant_mentor_form_params.merge(school_id: @school.id, cohort_id: @cohort.id))
 
     if @mentor_form.valid?
@@ -76,6 +78,18 @@ class Schools::ParticipantsController < Schools::BaseController
   end
 
 private
+
+  def set_mentors_added
+    @mentors_added = @school.mentor_profiles_for(@cohort).any?
+  end
+
+  def build_mentor_form
+    @mentor_form = ParticipantMentorForm.new(
+      mentor_id: @participant.early_career_teacher_profile.mentor&.id,
+      school_id: @school.id,
+      cohort_id: @cohort.id,
+    )
+  end
 
   def check_feature_flag
     return if FeatureFlag.active?(:induction_tutor_manage_participants, for: @school)
