@@ -381,6 +381,7 @@ ActiveRecord::Schema.define(version: 2021_07_15_085835) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "user_id", null: false
+    t.string "course_type", default: "ecf-induction", null: false
     t.index ["lead_provider_id"], name: "index_participant_declarations_on_lead_provider_id"
     t.index ["user_id"], name: "index_participant_declarations_on_user_id"
   end

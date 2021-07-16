@@ -6,6 +6,7 @@ module Api
     before_action :remove_charset
     rescue_from ActiveRecord::RecordNotFound, with: :not_found
     rescue_from ActionController::ParameterMissing, with: :missing_parameter_response
+    rescue_from ActionController::BadRequest, with: :bad_request_response
 
   private
 
@@ -19,6 +20,10 @@ module Api
 
     def missing_parameter_response(exception)
       render json: { bad_or_missing_parameters: exception.param }, status: :unprocessable_entity
+    end
+
+    def bad_request_response(exception)
+      render json: { bad_request: exception.message }, status: :bad_request
     end
   end
 end
