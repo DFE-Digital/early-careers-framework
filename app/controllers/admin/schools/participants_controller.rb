@@ -7,7 +7,7 @@ module Admin
     before_action :set_school
 
     def index
-      @participants = @school.participants.ecf.order(:full_name)
+      @participants = @school.participants.order(:full_name)
     end
 
   private
