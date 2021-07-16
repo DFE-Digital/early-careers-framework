@@ -21,7 +21,7 @@ describe ::JsonSchema::VersionedSchemaReader do
   end
 
   it "reads the disk based file when passed a mappable url" do
-    mapper = described_class.new
+    mapper = described_class.new(version: "1.0")
     test_schema = mapper.read(URI(minimal_url_file))
     expect(test_schema).to be_a(JSON::Schema)
   end
