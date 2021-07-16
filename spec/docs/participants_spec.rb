@@ -56,7 +56,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
   end
 
   path "/api/v1/participants.csv" do
-    get "Retrieve multiple participants in CSV format" do
+    get "Retrieve all participants in CSV format" do
       operationId :ecf_participants_csv
       tags "ECF participants"
       security [bearerAuth: []]

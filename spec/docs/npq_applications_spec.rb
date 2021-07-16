@@ -52,7 +52,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
   end
 
   path "/api/v1/npq-applications.csv" do
-    get "Returns all NPQ applications for the current lead provider" do
+    get "Retrieve all NPQ applications in CSV format" do
       operationId :npq_applications_csv
       tags "NPQ applications"
       security [bearerAuth: []]
