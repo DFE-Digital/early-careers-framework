@@ -87,8 +87,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
                            headteacher_status
                            eligible_for_funding
                            funding_choice
-                           course_id
-                           course_name
+                           course_identifier
                          ],
                          properties: {
                            id: { type: :string },
@@ -108,8 +107,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
                              type: :string,
                              enum: %w[school trust self another],
                            },
-                           course_id: { type: :string },
-                           course_name: { type: :string },
+                           course_identifier: { type: :string },
                          },
                        },
                      },

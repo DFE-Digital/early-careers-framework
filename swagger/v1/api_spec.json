@@ -134,8 +134,7 @@
                               "headteacher_status",
                               "eligible_for_funding",
                               "funding_choice",
-                              "course_id",
-                              "course_name"
+                              "course_identifier"
                             ],
                             "properties": {
                               "id": {
@@ -183,10 +182,7 @@
                                   "another"
                                 ]
                               },
-                              "course_id": {
-                                "type": "string"
-                              },
-                              "course_name": {
+                              "course_identifier": {
                                 "type": "string"
                               }
                             }
