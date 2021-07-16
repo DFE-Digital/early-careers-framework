@@ -410,9 +410,11 @@ ActiveRecord::Schema.define(version: 2021_07_16_120023) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.text "status", default: "active", null: false
+    t.uuid "school_cohort_id"
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"
+    t.index ["school_cohort_id"], name: "index_participant_profiles_on_school_cohort_id"
     t.index ["school_id"], name: "index_participant_profiles_on_school_id"
     t.index ["user_id"], name: "index_participant_profiles_on_user_id"
   end
@@ -654,6 +656,7 @@ ActiveRecord::Schema.define(version: 2021_07_16_120023) do
   add_foreign_key "participant_profiles", "cohorts"
   add_foreign_key "participant_profiles", "core_induction_programmes"
   add_foreign_key "participant_profiles", "participant_profiles", column: "mentor_profile_id"
+  add_foreign_key "participant_profiles", "school_cohorts"
   add_foreign_key "participant_profiles", "schools"
   add_foreign_key "participant_profiles", "users"
   add_foreign_key "participation_records", "lead_providers"
