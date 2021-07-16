@@ -27,8 +27,8 @@ private
 
   def user_can_access?(participant)
     return false unless participant.participant?
-    # TODO: is this correct? assumes we're only looking at mentors and ECTs?
-    return false if participant.participant_profiles.ecf.first.withdrawn?
+    # Prevent NPQ only participants from being accessed
+    return false unless participant.participant_profiles.ecf.active.any?
 
     user.schools.include?(participant.school)
   end
