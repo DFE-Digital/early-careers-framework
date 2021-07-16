@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :school_cohort do
-    cohort
+    cohort { create(:cohort, :current) }
     school
     induction_programme_choice { "core_induction_programme" }
   end

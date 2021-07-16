@@ -3,8 +3,7 @@
 FactoryBot.define do
   factory :mentor_profile, class: ParticipantProfile::Mentor do
     user
-    school
-    cohort
+    school_cohort
 
     trait :sparsity_uplift do
       sparsity_uplift { true }
