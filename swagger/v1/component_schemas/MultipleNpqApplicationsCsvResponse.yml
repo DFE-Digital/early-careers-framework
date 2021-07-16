@@ -9,6 +9,5 @@ properties:
     items:
       $ref: "#/components/schemas/NpqApplicationCsvRow"
 example: |
-  id,type,email,full_name,mentor_id,school_urn,participant_type,cohort,status
-  db3a7848-7308-4879-942a-c4a70ced400a,participant,jane.smith@some-school.example.com,Jane Smith,bb36d74a-68a7-47b6-86b6-1fd0d141c590,106286,ect,2021,active
-  bb36d74a-68a7-47b6-86b6-1fd0d141c590,participant,martin.jones@some-school.example.com,Martin Jones,,106286,mentor,2021,active
+  id,type,participant_id,full_name,email,email_validated,email_validated,teacher_reference_number,teacher_reference_number_validated,school_urn,headteacher_status,eligible_for_funding,funding_choice,course_id,course_name
+  db3a7848-7308-4879-942a-c4a70ced400a,npq-application,7a8fef46-3c43-42c0-b3d5-1ba5904ba562,Isabelle MacDonald,isabelle.macdonald2@some-school.example.com,true,1234567,true,106286,no,true,trust,619763a6-849c-4e3f-b947-f8a6fc5a0db0,NPQ Leading Teaching (NPQLT)
