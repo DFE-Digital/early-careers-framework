@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class OpenApiExampleSpec
+class OpenApiExampleSpecification
   BOILERPLATE = <<~YAML
     openapi: '3.0.1'
     info:

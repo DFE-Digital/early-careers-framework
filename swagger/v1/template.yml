@@ -8,12 +8,13 @@ info:
     email: continuing-professional-development@digital.education.gov.uk
   description: "The lead provider API for DfE's manage teacher CPD service"
 servers:
-  - url: https://manage-training-for-early-career-teachers.education.gov.uk
-    description: "Production url"
   - url: https://ecf-sandbox.london.cloudapps.digital
-    description: "Sandbox url"
+    description: "Sandbox"
   - url: /
-    description: "Current environment url"
+    description: "Current environment"
+  - url: https://manage-training-for-early-career-teachers.education.gov.uk
+    description: "Production"
+
 paths:
 components:
   securitySchemes:
