@@ -664,7 +664,7 @@
         }
       },
       "NPQParticipantRetainedDeclaration": {
-        "description": "An ECF retained participant declaration",
+        "description": "An NPQ retained participant declaration",
         "type": "object",
         "properties": {
           "participant_id": {
@@ -729,7 +729,7 @@
         }
       },
       "NPQParticipantStartedDeclaration": {
-        "description": "An NPQ participant declaration",
+        "description": "An NPQ started and completed participant declaration",
         "type": "object",
         "properties": {
           "participant_id": {
