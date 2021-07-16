@@ -7,12 +7,13 @@ RSpec.describe "Schools::Participants", type: :request do
   let(:school) { user.induction_coordinator_profile.schools.first }
   let(:cohort) { create(:cohort) }
   let!(:school_cohort) { create(:school_cohort, school: school, cohort: cohort) }
-  let!(:mentor_user) { create(:user, :mentor, school: school, cohort: cohort) }
-  let!(:mentor_user_2) { create(:user, :mentor, school: school, cohort: cohort) }
-  let!(:ect_user) { create(:user, :early_career_teacher, mentor: mentor_user, school: school, cohort: cohort) }
-  let!(:withdrawn_ect) { create(:early_career_teacher_profile, status: "withdrawn", school: school, cohort: cohort).user }
-  let!(:unrelated_mentor) { create(:user, :mentor, cohort: cohort) }
-  let!(:unrelated_ect) { create(:user, :early_career_teacher, cohort: cohort) }
+  let!(:another_cohort) { create(:school_cohort) }
+  let!(:mentor_user) { create(:user, :mentor, school_cohort: school_cohort) }
+  let!(:mentor_user_2) { create(:user, :mentor, school_cohort: school_cohort) }
+  let!(:ect_user) { create(:user, :early_career_teacher, mentor: mentor_user, school_cohort: school_cohort) }
+  let!(:withdrawn_ect) { create(:early_career_teacher_profile, status: "withdrawn", school_cohort: school_cohort).user }
+  let!(:unrelated_mentor) { create(:user, :mentor, school_cohort: another_cohort) }
+  let!(:unrelated_ect) { create(:user, :early_career_teacher, school_cohort: another_cohort) }
 
   before do
     FeatureFlag.activate(:induction_tutor_manage_participants)
