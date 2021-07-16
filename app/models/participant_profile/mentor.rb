@@ -3,9 +3,9 @@
 class ParticipantProfile::Mentor < ParticipantProfile
   self.ignored_columns = %i[mentor_profile_id]
 
-  belongs_to :school_cohort, optional: true
-  belongs_to :school
-  belongs_to :cohort
+  belongs_to :school_cohort
+  has_one :school, through: :school_cohort
+  has_one :cohort, through: :school_cohort
 
   has_many :mentee_profiles,
            class_name: "ParticipantProfile::ECT",
@@ -21,9 +21,5 @@ class ParticipantProfile::Mentor < ParticipantProfile
 
   def participant_type
     :mentor
-  end
-
-  before_save do |profile|
-    profile.school_cohort = SchoolCohort.find_by(school: profile.school, cohort: profile.cohort)
   end
 end

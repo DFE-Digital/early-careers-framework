@@ -205,18 +205,18 @@ RSpec.describe InviteSchools do
   describe "#send_beta_chasers" do
     let(:beta_school_without_participants) { create(:school) }
     let!(:expected_induction_coordinator) { create(:user, :induction_coordinator, school_ids: [beta_school_without_participants.id]) }
-    let(:beta_school_with_ect) { create(:school) }
-    let(:beta_school_with_mentor) { create(:school) }
-    let(:non_beta_school) { create(:school) }
-    let!(:unexpected_induction_coordinator) { create(:user, :induction_coordinator, school_ids: [beta_school_with_ect.id, beta_school_with_mentor.id, non_beta_school.id]) }
+    let(:beta_school_with_ect) { create(:school_cohort) }
+    let(:beta_school_with_mentor) { create(:school_cohort) }
+    let(:non_beta_school) { create(:school_cohort) }
+    let!(:unexpected_induction_coordinator) { create(:user, :induction_coordinator, school_ids: [beta_school_with_ect.school.id, beta_school_with_mentor.school.id, non_beta_school.school.id]) }
 
     before do
-      create(:user, :early_career_teacher, school: beta_school_with_ect)
-      create(:user, :mentor, school: beta_school_with_mentor)
+      create(:user, :early_career_teacher, school_cohort: beta_school_with_ect)
+      create(:user, :mentor, school_cohort: beta_school_with_mentor)
       FeatureFlag.activate(:induction_tutor_manage_participants, for: beta_school_with_ect)
       FeatureFlag.activate(:induction_tutor_manage_participants, for: beta_school_with_mentor)
       FeatureFlag.activate(:induction_tutor_manage_participants, for: beta_school_without_participants)
-      create(:user, :early_career_teacher, school: non_beta_school)
+      create(:user, :early_career_teacher, school_cohort: non_beta_school)
     end
 
     it "sends emails to beta schools without participants" do
@@ -551,8 +551,8 @@ RSpec.describe InviteSchools do
 
     it "does not send emails to tutors who have participants at all of their schools" do
       induction_coordinator = create(:user, :induction_coordinator)
-      create(:school_cohort, school: induction_coordinator.schools.first, induction_programme_choice: "core_induction_programme")
-      create(:user, :early_career_teacher, school: induction_coordinator.schools.first)
+      school_cohort = create(:school_cohort, school: induction_coordinator.schools.first, induction_programme_choice: "core_induction_programme")
+      create(:user, :early_career_teacher, school_cohort: school_cohort)
 
       InviteSchools.new.send_induction_coordinator_add_participants_email
       expect(SchoolMailer).not_to delay_email_delivery_of(:induction_coordinator_add_participants_email)
@@ -561,8 +561,8 @@ RSpec.describe InviteSchools do
     it "sends emails to tutors with schools without participants" do
       schools_with_participants = create_list(:school, 10)
       schools_with_participants.each do |school|
-        create(:school_cohort, school: school, induction_programme_choice: "core_induction_programme")
-        create(:user, :early_career_teacher, school: school)
+        school_cohort = create(:school_cohort, school: school, induction_programme_choice: "core_induction_programme")
+        create(:user, :early_career_teacher, school_cohort: school_cohort)
       end
       school_without_participants = create(:school)
       create(:school_cohort, school: school_without_participants, induction_programme_choice: "core_induction_programme")

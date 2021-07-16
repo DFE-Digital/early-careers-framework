@@ -15,6 +15,15 @@ class SchoolCohort < ApplicationRecord
   belongs_to :school
   belongs_to :core_induction_programme, optional: true
 
+  has_many :participant_profiles
+  has_many :participants, through: :participant_profiles, source: :user
+
+  has_many :active_participant_profiles, -> { active }, class_name: "ParticipantProfile"
+  has_many :active_participants, through: :active_participant_profiles, source: :user
+
+  has_many :mentor_profiles, -> { mentors }, class_name: "ParticipantProfile"
+  has_many :mentors, through: :mentor_profiles, source: :user
+
   scope :for_year, ->(year) { joins(:cohort).where(cohort: { start_year: year }) }
 
   def training_provider_status
