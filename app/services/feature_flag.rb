@@ -17,6 +17,7 @@ class FeatureFlag
 
   # Short-lived feature flags
   TEMPORARY_FEATURE_FLAGS = %i[
+    npq_applications_api
     participant_data_api
     induction_tutor_manage_participants
     admin_participants

@@ -2,7 +2,7 @@
 
 require "swagger_helper"
 
-describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_flags: { participant_data_api: "active" } do
+describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_flags: { npq_applications_api: "active" } do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider: npq_lead_provider) }
   let(:npq_lead_provider) { create(:npq_lead_provider) }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }

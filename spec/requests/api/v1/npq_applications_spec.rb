@@ -3,7 +3,7 @@
 require "rails_helper"
 require "csv"
 
-RSpec.describe "NPQ Applications API", type: :request, with_feature_flags: { participant_data_api: "active" } do
+RSpec.describe "NPQ Applications API", type: :request, with_feature_flags: { npq_applications_api: "active" } do
   describe "GET /api/v1/npq-applications" do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider: npq_lead_provider) }
     let(:npq_lead_provider) { create(:npq_lead_provider) }
