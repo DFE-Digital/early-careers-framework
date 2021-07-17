@@ -10,15 +10,36 @@
       <p class="govuk-body">You can:</p>
 
       <ul class="govuk-list govuk-list--bullet">
+        <li>act as a School and setup inductions for Early Career Teacher</li>
+        <li>act as a Teacher and register for an NPQ</li>
         <li>act as a lead provider and manage a list of school partnerships</li>
-        <li>act as a lead provider and confirm the start of an applicant's course</li>
+        <li>act as a lead provider and as list of participants</li>
+        <li>act as a lead provider and confirm the start of an applicant's training</li>
         <li>test Manage teacher CPD’s <%= govuk_link_to 'API integrations', '/api-docs' %></li>
       </ul>
 
       <p class="govuk-body">Throughout, you’ll be able to give us feedback so we can improve the service.</p>
 
-      <h2 class="govuk-heading-l">Get started as a lead provider</h2>
+      <h2 class="govuk-heading-l">Get started as an NPQ participant</h2>
+      <p class="govuk-body">You’ll be asked to enter your email address during the NPQ registration process on Teacher CPD sandbox.</p>
 
+      <p class="govuk-body">Please do not use real addresses, unless it is your own, as the system will record the real email addresses as part of the test.</p>
+
+      <p class="govuk-body">To avoid testers having to use the One Time Password emails, we’ve
+        enabled a whitelist of emails ending <code>@your-domain.com</code> and <code>@example.com</code> that will by
+        pass the One Time Password (OTP) email and just provide the OTP code on screen.</p>
+
+      <p class="govuk-body">Any data you enter should be anonymised or invented.</p>
+
+      <h3 class="govuk-heading-m">A note on email addresses</h3>
+
+
+      <%= govuk_start_now_button(
+            text: 'Continue as an NPQ participant',
+            href: 'https://npq-registration-sandbox.london.cloudapps.digital',
+            ) %>
+
+      <h2 class="govuk-heading-l">Get started as a lead provider</h2>
       <p class="govuk-body">To test the service as a lead provider, you’ll need to contact us  by email on <%= render MailToSupportComponent.new %>.</p>
 
       <p class="govuk-body">From the provider interface in the sandbox, you’ll be able to sign in as yourself. To avoid testers having to use real users, we’ve enabled fake users with ID references that have been provided to you. You can confirm the start of an applicant’s course using these IDs.</p>
@@ -29,7 +50,6 @@
             ) %>
 
       <h2 class="govuk-heading-l">Get started with the API</h2>
-
       <p class="govuk-body">Our API allows you to integrate your software with our service.</p>
 
       <p class="govuk-body">In the sandbox, you’ll be able to test your integration. You’ll also be able to generate dummy applications to process as a training provider.</p>
