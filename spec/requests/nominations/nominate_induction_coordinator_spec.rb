@@ -164,8 +164,8 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
       end
     end
 
-    context "when a different user type already exists with the provided email" do
-      let!(:existing_user) { create(:user, email: email) }
+    context "when an ECT user already exists with the provided email" do
+      let!(:existing_user) { create(:user, :early_career_teacher, email: email) }
 
       it "redirects to the email-used page" do
         expect {
@@ -177,6 +177,39 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
         }.not_to(change { User.count })
 
         expect(response).to redirect_to("/nominations/email-used")
+      end
+    end
+
+    context "when a Mentor user already exists with the provided email" do
+      let!(:existing_user) { create(:user, :mentor, email: email) }
+
+      it "redirects to the email-used page" do
+        expect {
+          post "/nominations", params: { nominate_induction_tutor_form: {
+            full_name: name,
+            email: email,
+            token: token,
+          } }
+        }.not_to(change { User.count })
+
+        expect(response).to redirect_to("/nominations/email-used")
+      end
+    end
+
+    context "when a NPQ registrant already exists with that email address" do
+      let(:existing_user) { create(:user, email: email) }
+      let!(:npq_profile) { create(:participant_profile, :npq, user: existing_user) }
+
+      it "adds an induction tutor profile to the existing user" do
+        expect {
+          post "/nominations", params: { nominate_induction_tutor_form: {
+            full_name: name,
+            email: email,
+            token: token,
+          } }
+        }.not_to change { User.count }
+
+        expect(existing_user.schools).to match_array [nomination_email.school]
       end
     end
   end
