@@ -65,7 +65,7 @@ module Schools
     end
 
     def can_add_self?
-      school_cohort.participants.exclude? current_user
+      school_cohort.active_participants.exclude? current_user
     end
 
     def mentor_options

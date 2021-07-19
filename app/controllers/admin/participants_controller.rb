@@ -19,7 +19,7 @@ module Admin
   private
 
     def load_participant
-      @participant = User.is_ecf_participant.find(params[:id])
+      @participant = User.is_participant.find(params[:id])
       authorize @participant, policy_class: ParticipantPolicy
     end
   end

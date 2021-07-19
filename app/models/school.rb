@@ -29,6 +29,8 @@ class School < ApplicationRecord
 
   has_many :participant_profiles, through: :school_cohorts
   has_many :participants, through: :participant_profiles, source: :user
+  has_many :active_participant_profiles, through: :school_cohorts
+  has_many :active_participants, through: :active_participant_profiles, source: :user
 
   has_many :additional_school_emails
 

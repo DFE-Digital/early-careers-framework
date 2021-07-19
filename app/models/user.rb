@@ -100,6 +100,10 @@ class User < ApplicationRecord
     includes(participant_profile: :school_cohort).joins(:participant_profile).merge(ParticipantProfile.ecf.active)
   }
 
+  scope :is_participant, lambda {
+    joins(:participant_profile).merge(ParticipantProfile.active)
+  }
+
 private
 
   def strip_whitespace
