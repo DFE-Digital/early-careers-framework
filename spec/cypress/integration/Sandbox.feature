@@ -6,7 +6,7 @@ Feature: Sandbox landing page
 
   Scenario: Continuing as a Lead Provider
     Given I am on "the sandbox landing page" page
-    When I click on "link" containing "Continue as a training provider"
+    When I click on "link" containing "Continue as an ECF training provider"
     Then I should be on "the Lead Provider landing page" page
 
   Scenario: Continuing as a Lead Provider
