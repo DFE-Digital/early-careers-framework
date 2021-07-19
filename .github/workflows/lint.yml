@@ -5,8 +5,25 @@ on:
 
 jobs:
   lint:
+
     env:
+      RAILS_ENV: test
+      DB_USERNAME: postgres
+      DB_PASSWORD: ''
+      DB_HOSTNAME: 127.0.0.1
+      DB_PORT: 5432
       GOVUK_NOTIFY_API_KEY: Test
+
+    services:
+      postgres:
+        image: postgres:11.6-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ''
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -21,6 +38,8 @@ jobs:
           ruby-version: 2.7.2
       - name: Install dependencies
         run: bundle install
+      - name: Set up dummy database for initialisers
+        run: bin/rails db:create db:schema:load
       - name: Create mail log file
         run: mkdir log && touch log/mail.log
       - name: Lint ruby
