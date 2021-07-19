@@ -10,6 +10,8 @@ class ParticipantDeclaration < ApplicationRecord
   scope :for_declaration, ->(declaration_type) { where(declaration_type: declaration_type) }
   scope :started, -> { for_declaration("started").order(declaration_date: "desc").unique_id }
   scope :uplift, -> { joins(:profile_declaration).merge(ProfileDeclaration.uplift) }
+  scope :ect, -> { joins(:profile_declaration).merge(ProfileDeclaration.ect_profiles) }
+  scope :mentor, -> { joins(:profile_declaration).merge(ProfileDeclaration.mentor_profiles) }
   scope :unique_id, -> { select(:user_id).distinct }
   scope :active_for_lead_provider, ->(lead_provider) { started.for_lead_provider(lead_provider).unique_id }
 
@@ -18,6 +20,8 @@ class ParticipantDeclaration < ApplicationRecord
   scope :submitted_between, ->(start_date, end_date) { where(created_at: start_date..end_date) }
 
   # Declaration aggregation scopes
+  scope :count_active_ects_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).ect.count }
+  scope :count_active_mentors_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).mentor.count }
   scope :count_active_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).count }
   scope :count_active_uplift_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).uplift.count }
 end
