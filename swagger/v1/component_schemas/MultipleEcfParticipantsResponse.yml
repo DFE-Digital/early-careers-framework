@@ -27,3 +27,13 @@ properties:
           participant_type: mentor
           cohort: "2021"
           status: active
+      - id: eb475531-bf08-48ae-b0ef-c2ff5e5bdef0
+        type: participant
+        attributes:
+          email: null,
+          full_name: null
+          mentor_id: null
+          school_urn: null
+          participant_type: ect
+          cohort: null
+          status: withdrawn
