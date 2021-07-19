@@ -39,7 +39,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
                 example: { page: 1, per_page: 5 },
                 description: "Pagination options to navigate through the list of ECF participants."
 
-      response "200", "An list of ECF participants" do
+      response "200", "A list of ECF participants" do
         schema({ "$ref": "#/components/schemas/MultipleEcfParticipantsResponse" }, content_type: "application/vnd.api+json")
 
         run_test!
