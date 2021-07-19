@@ -13,7 +13,7 @@ class ParticipantMentorForm
   end
 
   def available_mentors
-    SchoolCohort.find_by(school_id: school_id, cohort_id: cohort_id).mentors.order(:full_name)
+    SchoolCohort.find_by(school_id: school_id, cohort_id: cohort_id).active_mentors.order(:full_name)
   end
 
 private

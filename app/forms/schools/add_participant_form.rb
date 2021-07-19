@@ -65,11 +65,11 @@ module Schools
     end
 
     def can_add_self?
-      school_cohort.active_participants.exclude? current_user
+      school_cohort.active_ecf_participants.exclude? current_user
     end
 
     def mentor_options
-      @mentor_options ||= school_cohort.mentors.order(:full_name)
+      @mentor_options ||= school_cohort.active_mentors.order(:full_name)
     end
 
     def mentor

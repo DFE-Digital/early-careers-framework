@@ -7,7 +7,7 @@ module Admin
     before_action :set_school
 
     def index
-      @participants = @school.active_participants.order(:full_name).includes(
+      @participants = @school.active_ecf_participants.order(:full_name).includes(
         early_career_teacher_profile: [:mentor, school_cohort: %i[school cohort]],
         mentor_profile: [school_cohort: %i[school cohort]],
       )

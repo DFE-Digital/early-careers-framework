@@ -11,7 +11,7 @@ module Schools
     result as: :participant_profile
 
     abandon_journey_path do
-      @school_cohort.active_participants.any? ? schools_participants_path : schools_cohort_path
+      @school_cohort.active_ecf_participants.any? ? schools_participants_path : schools_cohort_path
     end
 
     setup_form do |form|

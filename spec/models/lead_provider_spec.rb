@@ -47,26 +47,26 @@ RSpec.describe LeadProvider, type: :model do
 
       it "should include active participants" do
         participant_profile = create(:participant_profile, :ect, school_cohort: school_cohort)
-        expect(lead_provider.participant_profiles).to include participant_profile
+        expect(lead_provider.ecf_participant_profiles).to include participant_profile
       end
 
       it "should include withdrawn participants" do
         participant_profile = create(:participant_profile, :ect, status: "withdrawn", school_cohort: school_cohort)
-        expect(lead_provider.participant_profiles).to include participant_profile
+        expect(lead_provider.ecf_participant_profiles).to include participant_profile
       end
 
       it "should include mentors" do
         participant_profile = create(:participant_profile, :mentor, school_cohort: school_cohort)
-        expect(lead_provider.participant_profiles).to include participant_profile
+        expect(lead_provider.ecf_participant_profiles).to include participant_profile
       end
 
       it "should not include NPQ participants" do
         participant_profile = create(:participant_profile, :npq, school: school)
-        expect(lead_provider.participant_profiles).not_to include participant_profile
+        expect(lead_provider.ecf_participant_profiles).not_to include participant_profile
       end
     end
 
-    describe "active_participant_profiles" do
+    describe "active_ecf_participant_profiles" do
       let(:partnership) { create(:partnership) }
       let(:school) { partnership.school }
       let(:lead_provider) { partnership.lead_provider }
@@ -74,17 +74,17 @@ RSpec.describe LeadProvider, type: :model do
 
       it "should include active participants" do
         participant_profile = create(:participant_profile, :ect, school_cohort: school_cohort)
-        expect(lead_provider.active_participant_profiles).to include participant_profile
+        expect(lead_provider.active_ecf_participant_profiles).to include participant_profile
       end
 
       it "should not include withdrawn participants" do
         participant_profile = create(:participant_profile, :ect, school_cohort: school_cohort, status: "withdrawn")
-        expect(lead_provider.active_participant_profiles).not_to include participant_profile
+        expect(lead_provider.active_ecf_participant_profiles).not_to include participant_profile
       end
 
       it "should not include NPQ participants" do
         participant_profile = create(:participant_profile, :npq, school: school)
-        expect(lead_provider.active_participant_profiles).not_to include participant_profile
+        expect(lead_provider.active_ecf_participant_profiles).not_to include participant_profile
       end
     end
   end

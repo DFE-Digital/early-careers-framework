@@ -36,4 +36,18 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
       end
     end
   end
+
+  describe "mentor_options" do
+    it "does not include withdrawn mentors" do
+      withdrawn_mentor = create(:participant_profile, :mentor, school_cohort: school_cohort, status: "withdrawn").user
+
+      expect(subject.mentor_options).not_to include(withdrawn_mentor)
+    end
+
+    it "includes active mentors" do
+      withdrawn_mentor = create(:participant_profile, :mentor, school_cohort: school_cohort).user
+
+      expect(subject.mentor_options).to include(withdrawn_mentor)
+    end
+  end
 end

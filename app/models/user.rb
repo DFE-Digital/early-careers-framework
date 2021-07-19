@@ -6,7 +6,6 @@ class User < ApplicationRecord
 
   has_one :induction_coordinator_profile, dependent: :destroy
   has_many :schools, through: :induction_coordinator_profile
-  has_many :managed_participant_profiles, through: :schools, source: :participant_profiles
 
   has_one :lead_provider_profile, dependent: :destroy
   has_one :lead_provider, through: :lead_provider_profile
