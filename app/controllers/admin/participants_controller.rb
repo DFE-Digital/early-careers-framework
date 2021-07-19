@@ -10,8 +10,10 @@ module Admin
     def show; end
 
     def index
-      @participant_profiles = policy_scope(ParticipantProfile)
-        .ransack(user_full_name_or_school_name_or_school_urn_cont: params[:query]).result
+      school_cohort_ids = SchoolCohort.ransack(school_name_or_school_urn_cont: params[:query]).result.pluck(:id)
+      query = "%#{(params[:query] || '').downcase}%"
+      @participant_profiles = policy_scope(ParticipantProfile).joins(:user)
+                                  .where("lower(users.full_name) LIKE ? OR school_cohort_id IN (?)", query, school_cohort_ids)
     end
 
   private
