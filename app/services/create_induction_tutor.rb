@@ -18,8 +18,8 @@ class CreateInductionTutor < BaseService
 
         user.induction_coordinator_profile.schools << school
       else
-        user = User.find_or_create_by!(email: email) do |user|
-          user.full_name = full_name
+        user = User.find_or_create_by!(email: email) do |induction_tutor|
+          induction_tutor.full_name = full_name
         end
         InductionCoordinatorProfile.create!(user: user, schools: [school])
       end
