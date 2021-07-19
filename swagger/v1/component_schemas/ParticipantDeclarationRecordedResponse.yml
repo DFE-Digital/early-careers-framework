@@ -1,4 +1,4 @@
-description: "The participant declaration has been recorded successfully"
+description: "A confirmation that the participant declaration has been recorded successfully"
 type: object
 required:
   - id

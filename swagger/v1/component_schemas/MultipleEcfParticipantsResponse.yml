@@ -1,4 +1,4 @@
-description: "A list of participants"
+description: "A list of ECF participants"
 type: object
 required:
   - data
@@ -6,7 +6,7 @@ properties:
   data:
     type: array
     items:
-      $ref: "#/components/schemas/Participant"
+      $ref: "#/components/schemas/EcfParticipant"
     example:
       - id: db3a7848-7308-4879-942a-c4a70ced400a
         type: participant

@@ -1,4 +1,4 @@
-description: "A list of participants in the Comma Separated Value (CSV) format"
+description: "A list of ECF participants in the Comma Separated Value (CSV) format"
 type: string
 format: base64
 required:
@@ -7,7 +7,7 @@ properties:
   data:
     type: array
     items:
-      $ref: "#/components/schemas/ParticipantCsvRow"
+      $ref: "#/components/schemas/EcfParticipantCsvRow"
 example: |
   id,type,email,full_name,mentor_id,school_urn,participant_type,cohort,status
   db3a7848-7308-4879-942a-c4a70ced400a,participant,jane.smith@some-school.example.com,Jane Smith,bb36d74a-68a7-47b6-86b6-1fd0d141c590,106286,ect,2021,active

@@ -15,7 +15,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
   path "/api/v1/participant-declarations" do
     post "Declare a participant has reached a milestone" do
       operationId :participant_declarations
-      tags "participant_declarations"
+      tags "Participant declarations"
       consumes "application/json"
       security [bearerAuth: []]
 

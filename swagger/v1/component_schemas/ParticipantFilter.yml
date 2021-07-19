@@ -1,7 +1,0 @@
-description: "Filter a list of participants to return more specific results"
-type: object
-properties:
-  updated_since:
-    description: "Return participants that have been updated since the date (ISO 8601 date format)"
-    type: :string
-    example: "2021-05-13T11:21:55Z"

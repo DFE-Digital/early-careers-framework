@@ -9,25 +9,15 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
   let(:Authorization) { "Bearer #{token}" }
 
   path "/api/v1/npq-applications" do
-    get "Returns all NPQ applications for current lead provider" do
-      operationId :api_v1_npq_applications_index
-      tags "npq_applications"
-      produces "application/vnd.api+json"
+    get "Retrieve multiple NPQ applications" do
+      operationId :npq_applications
+      tags "NPQ applications"
       security [bearerAuth: []]
 
       parameter name: :filter,
                 in: :query,
                 schema: {
-                  type: :object,
-                  description: "This schema is used to search within collections to return more specific results.",
-                  example: { updated_since: "2020-11-13T11:21:55Z" },
-                  properties: {
-                    updated_since: {
-                      description: "Return participants that have been updated since the specified timestamp (ISO 8601 format)",
-                      type: :string,
-                      example: "2021-05-13T11:21:55Z",
-                    },
-                  },
+                  "$ref": "#/components/schemas/ListFilter",
                 },
                 type: :object,
                 style: :deepObject,
@@ -39,111 +29,41 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
       parameter name: :page,
                 in: :query,
                 schema: {
-                  type: :object,
-                  description: "This schema used to paginate through a collection.",
-                  properties: {
-                    page: {
-                      type: :integer,
-                      description: "The page number to paginate to in the collection. If no value is specified it defaults to the first page.",
-                      example: 3,
-                    },
-                    per_page: {
-                      type: :integer,
-                      description: "The number items to display on a page. Defaults to 100. Maximum is 500, if the value is greater that the maximum allowed it will fallback to 100.",
-                      example: 10,
-                    },
-                  },
+                  "$ref": "#/components/schemas/Pagination",
                 },
                 type: :object,
                 style: :deepObject,
                 explode: true,
                 required: false,
                 example: { page: 1, per_page: 5 },
-                description: "Pagination options to navigate through the collection."
+                description: "Pagination options to navigate through the list of NPQ applications."
 
-      response "200", "Collection of NPQ applications." do
-        schema type: :object,
-               required: %w[data],
-               properties: {
-                 data: {
-                   type: :array,
-                   items: {
-                     type: :object,
-                     required: %w[id type attributes],
-                     properties: {
-                       id: { type: :string },
-                       type: { type: :string },
-                       attributes: {
-                         type: :object,
-                         required: %w[
-                           id
-                           participant_id
-                           full_name
-                           email
-                           email_validated
-                           teacher_reference_number
-                           teacher_reference_number_validated
-                           school_urn
-                           headteacher_status
-                           eligible_for_funding
-                           funding_choice
-                           course_identifier
-                         ],
-                         properties: {
-                           id: { type: :string },
-                           participant_id: { type: :string },
-                           full_name: { type: :string },
-                           email: { type: :string },
-                           email_validated: { type: :boolean },
-                           teacher_reference_number: { type: :string },
-                           teacher_reference_number_validated: { type: :boolean },
-                           school_urn: { type: :string },
-                           headteacher_status: {
-                             type: :string,
-                             enum: %w[no yes_when_course_starts yes_in_first_two_years yes_over_two_years],
-                           },
-                           eligible_for_funding: { type: :boolean },
-                           funding_choice: {
-                             type: :string,
-                             enum: %w[school trust self another],
-                           },
-                           course_identifier: { type: :string },
-                         },
-                       },
-                     },
-                   },
-                 },
-               }
+      response "200", "An list of NPQ applications" do
+        schema({ "$ref": "#/components/schemas/MultipleNpqApplicationsResponse" }, content_type: "application/vnd.api+json")
+
         run_test!
       end
 
       response "401", "Unauthorized" do
         let(:Authorization) { "Bearer invalid" }
+
+        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" }, content_type: "application/vnd.api+json")
+
         run_test!
       end
     end
   end
 
   path "/api/v1/npq-applications.csv" do
-    get "Returns all NPQ applications for the current lead provider" do
-      operationId :api_v1_npq_applications_index_csv
-      tags "npq_applications"
-      produces "text/csv"
+    get "Retrieve all NPQ applications in CSV format" do
+      operationId :npq_applications_csv
+      tags "NPQ applications"
       security [bearerAuth: []]
 
       parameter name: :filter,
                 in: :query,
                 schema: {
-                  type: :object,
-                  example: "",
-                  description: "This schema is used to search within collections to return more specific results.",
-                  properties: {
-                    updated_since: {
-                      description: "Return participants that have been updated since the specified timestamp (ISO 8601 format)",
-                      type: :string,
-                      example: "2021-05-13T11:21:55Z",
-                    },
-                  },
+                  "$ref": "#/components/schemas/ListFilter",
                 },
                 type: :object,
                 style: :deepObject,
@@ -152,13 +72,17 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
                 description: "Refine NPQ applications to return.",
                 example: { updated_since: "2020-11-13T11:21:55Z" }
 
-      response "200", "Collection of participants." do
-        schema type: :string
+      response "200", "A CSV file of NPQ application" do
+        schema({ "$ref": "#/components/schemas/MultipleNpqApplicationsCsvResponse" }, content_type: "text/csv")
+
         run_test!
       end
 
       response "401", "Unauthorized" do
         let(:Authorization) { "Bearer invalid" }
+
+        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" }, content_type: "application/vnd.api+json")
+
         run_test!
       end
     end

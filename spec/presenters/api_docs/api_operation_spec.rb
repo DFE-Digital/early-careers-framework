@@ -13,7 +13,7 @@ RSpec.describe ApiDocs::ApiOperation do
   let(:response_mime_type) { "application/json" }
 
   let :spec do
-    OpenApiExampleSpec.build_with <<~YAML
+    OpenApiExampleSpecification.build_with <<~YAML
       paths:
         "/post-a-string":
           post:

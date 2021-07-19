@@ -1,0 +1,20 @@
+description: "The details of an NPQ Applications"
+type: object
+required:
+  - id
+  - type
+  - attributes
+properties:
+  id:
+    description: "The unique identifier of the NPQ Application record"
+    type: string
+    format: uuid
+    example: db3a7848-7308-4879-942a-c4a70ced400a
+  type:
+    description: "The data type"
+    type: string
+    example: npq-application
+    enum:
+      - npq-application
+  attributes:
+    $ref: "#/components/schemas/NpqApplicationAttributes"

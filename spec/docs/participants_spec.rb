@@ -12,20 +12,19 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
   path "/api/v1/participants" do
     get "Retrieve multiple participants" do
       operationId :participants
-      tags "participant"
-      produces "application/vnd.api+json"
+      tags "ECF participants"
       security [bearerAuth: []]
 
       parameter name: :filter,
                 in: :query,
                 schema: {
-                  "$ref": "#/components/schemas/ParticipantFilter",
+                  "$ref": "#/components/schemas/ListFilter",
                 },
                 type: :object,
                 style: :deepObject,
                 explode: true,
                 required: false,
-                description: "Refine participants to return.",
+                description: "Refine ECF participants to return.",
                 example: { updated_since: "2020-11-13T11:21:55Z" }
 
       parameter name: :page,
@@ -38,10 +37,10 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
                 explode: true,
                 required: false,
                 example: { page: 1, per_page: 5 },
-                description: "Pagination options to navigate through the collection."
+                description: "Pagination options to navigate through the list of ECF participants."
 
-      response "200", "An array of participants" do
-        schema "$ref": "#/components/schemas/MultipleParticipantResponse"
+      response "200", "An list of ECF participants" do
+        schema({ "$ref": "#/components/schemas/MultipleEcfParticipantsResponse" }, content_type: "application/vnd.api+json")
 
         run_test!
       end
@@ -49,7 +48,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
       response "401", "Unauthorized" do
         let(:Authorization) { "Bearer invalid" }
 
-        schema "$ref": "#/components/schemas/UnauthorisedResponse"
+        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" }, content_type: "application/vnd.api+json")
 
         run_test!
       end
@@ -57,26 +56,25 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
   end
 
   path "/api/v1/participants.csv" do
-    get "Retrieve multiple participants in CSV format" do
-      operationId :participants_csv
-      tags "participant"
-      produces "text/csv"
+    get "Retrieve all participants in CSV format" do
+      operationId :ecf_participants_csv
+      tags "ECF participants"
       security [bearerAuth: []]
 
       parameter name: :filter,
                 in: :query,
                 schema: {
-                  "$ref": "#/components/schemas/ParticipantFilter",
+                  "$ref": "#/components/schemas/ListFilter",
                 },
                 type: :object,
                 style: :deepObject,
                 explode: true,
                 required: false,
-                description: "Refine participants to return.",
+                description: "Refine ECF participants to return.",
                 example: { updated_since: "2020-11-13T11:21:55Z" }
 
-      response "200", "A CSV file of participants" do
-        schema({ "$ref": "#/components/schemas/MultipleParticipantCsvResponse" }, content_type: "text/csv")
+      response "200", "A CSV file of ECF participants" do
+        schema({ "$ref": "#/components/schemas/MultipleEcfParticipantsCsvResponse" }, content_type: "text/csv")
 
         run_test!
       end
@@ -84,7 +82,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
       response "401", "Unauthorized" do
         let(:Authorization) { "Bearer invalid" }
 
-        schema "$ref": "#/components/schemas/UnauthorisedResponse"
+        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" }, content_type: "application/vnd.api+json")
 
         run_test!
       end
