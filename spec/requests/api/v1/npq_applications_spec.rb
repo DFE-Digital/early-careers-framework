@@ -111,10 +111,27 @@ RSpec.describe "NPQ Applications API", type: :request do
               headteacher_status
               eligible_for_funding
               funding_choice
-              course_id
-              course_name
+              course_identifier
             ],
           )
+        end
+
+        it "returns correct data" do
+          profile = npq_lead_provider.npq_profiles[0]
+          row = parsed_response[0]
+
+          expect(row["id"]).to eql(profile.id)
+          expect(row["participant_id"]).to eql(profile.user.id)
+          expect(row["full_name"]).to eql(profile.user.full_name)
+          expect(row["email"]).to eql(profile.user.email)
+          expect(row["email_validated"]).to eql("true")
+          expect(row["teacher_reference_number"]).to eql(profile.teacher_reference_number)
+          expect(row["teacher_reference_number_validated"]).to eql(profile.teacher_reference_number_verified.to_s)
+          expect(row["school_urn"]).to eql(profile.school_urn)
+          expect(row["headteacher_status"]).to eql(profile.headteacher_status)
+          expect(row["eligible_for_funding"]).to eql(profile.eligible_for_funding.to_s)
+          expect(row["funding_choice"]).to eql(profile.funding_choice)
+          expect(row["course_identifier"]).to eql(profile.npq_course.identifier)
         end
       end
     end

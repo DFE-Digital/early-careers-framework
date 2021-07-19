@@ -34,8 +34,7 @@ private
       headteacher_status
       eligible_for_funding
       funding_choice
-      course_id
-      course_name
+      course_identifier
     ]
   end
 
@@ -52,8 +51,7 @@ private
       record.headteacher_status,
       record.eligible_for_funding,
       record.funding_choice,
-      record.npq_course_id,
-      record.npq_course.name,
+      record.npq_course.identifier,
     ]
   end
 end
