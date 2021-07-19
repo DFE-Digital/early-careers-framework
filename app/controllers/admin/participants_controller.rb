@@ -14,6 +14,7 @@ module Admin
       query = "%#{(params[:query] || '').downcase}%"
       @participant_profiles = policy_scope(ParticipantProfile).joins(:user)
                                   .where("lower(users.full_name) LIKE ? OR school_cohort_id IN (?)", query, school_cohort_ids)
+                                  .order("users.full_name")
     end
 
   private
