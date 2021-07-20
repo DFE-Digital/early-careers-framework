@@ -30,10 +30,10 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
     let(:invalid_user_id) do
       valid_params.merge({ participant_id: payload.id })
     end
-    let(:incorrect_course_type) do
+    let(:incorrect_course_identifier) do
       valid_params.merge({ course_identifier: "typoed-course-name" })
     end
-    let(:invalid_course_type) do
+    let(:invalid_course_identifier) do
       valid_params.merge({ course_identifier: "ecf-mentor" })
     end
     let(:missing_user_id) do
@@ -87,12 +87,12 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       end
 
       it "returns 422 when supplied an incorrect course type" do
-        post "/api/v1/participant-declarations", params: build_params(incorrect_course_type)
+        post "/api/v1/participant-declarations", params: build_params(incorrect_course_identifier)
         expect(response.status).to eq 422
       end
 
       it "returns 422 when a participant type doesn't match the course type" do
-        post "/api/v1/participant-declarations", params: build_params(invalid_course_type)
+        post "/api/v1/participant-declarations", params: build_params(invalid_course_identifier)
         expect(response.status).to eq 422
         expect(response.body).to eq({ bad_or_missing_parameters: ["The property '#/course_identifier' must be an available course to '#/participant_id'"] }.to_json)
       end

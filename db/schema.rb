@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_20_070427) do
+ActiveRecord::Schema.define(version: 2021_07_20_153624) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -421,16 +421,6 @@ ActiveRecord::Schema.define(version: 2021_07_20_070427) do
     t.index ["user_id"], name: "index_participant_profiles_on_user_id"
   end
 
-  create_table "participation_records", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.uuid "early_career_teacher_profile_id", null: false
-    t.string "state", default: "assigned", null: false
-    t.uuid "lead_provider_id", null: false
-    t.index ["early_career_teacher_profile_id"], name: "index_participation_records_on_early_career_teacher_profile_id"
-    t.index ["lead_provider_id"], name: "index_participation_records_on_lead_provider_id"
-  end
-
   create_table "partnership_csv_uploads", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "lead_provider_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -660,8 +650,6 @@ ActiveRecord::Schema.define(version: 2021_07_20_070427) do
   add_foreign_key "participant_profiles", "school_cohorts"
   add_foreign_key "participant_profiles", "schools"
   add_foreign_key "participant_profiles", "users"
-  add_foreign_key "participation_records", "lead_providers"
-  add_foreign_key "participation_records", "participant_profiles", column: "early_career_teacher_profile_id"
   add_foreign_key "partnership_notification_emails", "partnerships"
   add_foreign_key "partnerships", "cohorts"
   add_foreign_key "partnerships", "delivery_partners"

@@ -1,23 +1,22 @@
 # frozen_string_literal: true
+class ParticipantDeclaration < ApplicationRecord
+  belongs_to :cpd_lead_provider
+end
+
+class ParticipantDeclaration::ECF < ParticipantDeclaration
+  belongs_to :cpd_lead_provider
+  belongs_to :lead_provider
+end
+
+class LeadProvider < ApplicationRecord
+  has_many :participant_declarations
+  belongs_to :cpd_lead_provider
+end
 
 class ConvertParticipantDeclarationsLeadProviderToCpdLeadProvider < ActiveRecord::Migration[6.1]
-  class ParticipantDeclarations < ApplicationRecord
-    belongs_to :cpd_lead_provider
-  end
-
-  class LeadProvider < ApplicationRecord
-    has_many :participant_declarations
-    belongs_to :cpd_lead_provider
-  end
-
   class CPDLeadProvider < ApplicationRecord
     has_many :participant_declarations
     has_one :lead_provider
-  end
-
-  class ParticipantDeclaration::ECF < ParticipantDeclaration
-    belongs_to :cpd_lead_provider
-    belongs_to :lead_provider
   end
 
   def up
