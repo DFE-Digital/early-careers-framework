@@ -18,7 +18,7 @@ RSpec.describe User, type: :model do
   end
 
   describe "before_validation" do
-    let(:user) { build(:user, full_name: "\t  Gordon Banks \n", email: " \tgordo@example.com \n ") }
+    let(:user) { build(:user, full_name: "\t  Gordon \tBanks \n", email: " \tgordo@example.com \n ") }
 
     it "strips whitespace from :full_name" do
       user.valid?

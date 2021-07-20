@@ -106,7 +106,7 @@ class User < ApplicationRecord
 private
 
   def strip_whitespace
-    full_name&.strip!
-    email&.strip!
+    full_name&.squish!
+    email&.squish!
   end
 end
