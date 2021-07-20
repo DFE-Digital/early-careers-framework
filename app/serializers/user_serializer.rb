@@ -58,7 +58,7 @@ class UserSerializer
 
   def self.find_school_cohort(user)
     if user.participant?
-      user.participant_profile.school_cohort
+      user.participant_profiles.ecf.active.first&.school_cohort
     end
   end
 end
