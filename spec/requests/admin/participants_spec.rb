@@ -6,11 +6,29 @@ RSpec.describe "Admin::Participants", type: :request do
   let(:admin_user) { create(:user, :admin) }
   let(:cohort) { create(:cohort) }
   let(:school) { create(:school) }
-  let!(:mentor_profile) { create :participant_profile, :mentor, school: school }
-  let!(:ect_profile) { create :participant_profile, :ect, school: school, cohort: cohort, mentor_profile: mentor_profile }
+  let(:school_cohort) { create(:school_cohort, school: school, cohort: cohort) }
+  let!(:mentor_profile) { create :participant_profile, :mentor, school_cohort: school_cohort }
+  let!(:ect_profile) { create :participant_profile, :ect, school_cohort: school_cohort, mentor_profile: mentor_profile }
+  let!(:npq_profile) { create(:participant_profile, :npq, school: school) }
+  let!(:withdrawn_ect_profile) { create(:participant_profile, :ect, status: "withdrawn", school_cohort: school_cohort) }
 
   before do
     sign_in admin_user
+  end
+
+  describe "GET /admin/participants" do
+    it "renders the index participants template" do
+      get "/admin/participants"
+      expect(response).to render_template "admin/participants/index"
+    end
+
+    it "only includes active participants" do
+      get "/admin/participants"
+      expect(assigns(:participant_profiles)).to include ect_profile
+      expect(assigns(:participant_profiles)).to include mentor_profile
+      expect(assigns(:participant_profiles)).to include npq_profile
+      expect(assigns(:participant_profiles)).not_to include withdrawn_ect_profile
+    end
   end
 
   describe "GET /admin/participants/:id" do
