@@ -2,7 +2,11 @@
 
 class ParticipantProfilePolicy < ApplicationPolicy
   def show?
-    return true if admin?
+    admin_only
+  end
+
+  def destroy?
+    admin? && (record.ect? || record.mentor?)
   end
 
   class Scope < Scope
