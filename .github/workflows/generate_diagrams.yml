@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     env:
-      RAILS_ENV: test
+      RAILS_ENV: development
 
     steps:
       - name: Checkout Code
@@ -29,10 +29,10 @@ jobs:
       - name: Create ERD PDF
         run: bundle exec erd --filetype=pdf
 
-      - name: Publish ERD
+      - name: Publish diagrams
         uses: actions/upload-artifact@v2
         with:
-          name: Continuing Professional Development ERD Dotfile
+          name: Teacher CPD - entity relationship Diagram
           path: tmp/entity-relationship-diagram.*
 
   deployment-architecture:
@@ -63,4 +63,10 @@ jobs:
         run: terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-7f2ca242-9929-4662-a79c-c454ea56ea7b"
 
       - name: Run terraform graph
-        run: terraform graph
+        run: terraform graph -type=validate | dot -Tsvg > tmp/deployment-architecture.pdf
+
+      - name: Publish diagrams
+        uses: actions/upload-artifact@v2
+        with:
+          name: Teacher CPD - deployment architecture
+          path: tmp/deployment-architecture.*

@@ -15,13 +15,15 @@ title: Continuing Professional Development ERD
 exclude:
   - PaperTrail::Version
   - AdminProfile
-  - Partnership
-  - LeadProviderCip
-  - LeadProviderProfile
-  - SchoolLocalAuthorityDistrict
-  - SchoolLocalAuthority
-  - SchoolCohort
-  - User
+  - ActiveStorage::Blob
+  - ActiveStorage::VariantRecord
+  - ActiveStorage::Attachment
+  - Feature
+  - Feature::SelectedObject
+  - DataStage::SchoolLink
+  - DataStage::School
+  - DataStage::SchoolChange
+  - ActionMailbox::InboundEmail
 only: null
 only_recursion_depth: null
 prepend_primary: false
