@@ -72,6 +72,9 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
+      - name: Setup Graphviz
+        uses: ts-graphviz/setup-graphviz@v1
+
       - name: Pin Terraform version
         uses: hashicorp/setup-terraform@v1.2.1
         with:
