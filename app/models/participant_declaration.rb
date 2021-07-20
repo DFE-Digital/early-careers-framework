@@ -2,7 +2,7 @@
 
 class ParticipantDeclaration < ApplicationRecord
   has_one :profile_declaration
-  belongs_to :lead_provider
+  belongs_to :cpd_lead_provider
   belongs_to :user
 
   # Helper scopes

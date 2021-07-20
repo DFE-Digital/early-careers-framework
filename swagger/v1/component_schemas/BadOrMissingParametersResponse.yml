@@ -14,4 +14,4 @@ properties:
       - "participant_id"
       - "declaration_date"
       - "declaration_type"
-      - "course_type"
+      - "course_identifier"

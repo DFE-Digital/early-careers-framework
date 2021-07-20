@@ -23,7 +23,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         participant_id: payload.user_id,
         declaration_type: "started",
         declaration_date: (Time.zone.now - 1.week).iso8601,
-        course_type: "ecf-induction",
+        course_identifier: "ecf-induction",
       }
     end
 
@@ -31,10 +31,10 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       valid_params.merge({ participant_id: payload.id })
     end
     let(:incorrect_course_type) do
-      valid_params.merge({ course_type: "typoed-course-name" })
+      valid_params.merge({ course_identifier: "typoed-course-name" })
     end
     let(:invalid_course_type) do
-      valid_params.merge({ course_type: "ecf-mentor" })
+      valid_params.merge({ course_identifier: "ecf-mentor" })
     end
     let(:missing_user_id) do
       valid_params.merge({ participant_id: "" })
@@ -94,7 +94,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       it "returns 422 when a participant type doesn't match the course type" do
         post "/api/v1/participant-declarations", params: build_params(invalid_course_type)
         expect(response.status).to eq 422
-        expect(response.body).to eq({ bad_or_missing_parameters: ["The property '#/course_type' must be an available course to '#/participant_id'"] }.to_json)
+        expect(response.body).to eq({ bad_or_missing_parameters: ["The property '#/course_identifier' must be an available course to '#/participant_id'"] }.to_json)
       end
 
       it "returns 400 when the data block is incorrect" do

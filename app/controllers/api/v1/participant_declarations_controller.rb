@@ -6,15 +6,15 @@ module Api
       include ApiTokenAuthenticatable
 
       def create
-        params = HashWithIndifferentAccess.new({ raw_event: request.raw_post, lead_provider: lead_provider }).merge(permitted_params["attributes"] || {})
+        params = HashWithIndifferentAccess.new({ raw_event: request.raw_post, cpd_lead_provider: cpd_lead_provider }).merge(permitted_params["attributes"] || {})
         validate_params!(params)
         render json: RecordParticipantDeclaration.call(params)
       end
 
     private
 
-      def lead_provider
-        current_user.lead_provider
+      def cpd_lead_provider
+        current_user
       end
 
       def validate_params!(params)
@@ -36,7 +36,7 @@ module Api
       end
 
       def required_params
-        %w[participant_id declaration_date declaration_type course_type]
+        %w[participant_id declaration_date declaration_type course_identifier]
       end
     end
   end

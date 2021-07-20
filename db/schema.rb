@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_16_120023) do
+ActiveRecord::Schema.define(version: 2021_07_20_070427) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -375,15 +375,17 @@ ActiveRecord::Schema.define(version: 2021_07_16_120023) do
   end
 
   create_table "participant_declarations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "lead_provider_id", null: false
     t.string "declaration_type"
     t.datetime "declaration_date"
     t.jsonb "raw_event"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "user_id", null: false
-    t.string "course_type", default: "ecf-induction", null: false
-    t.index ["lead_provider_id"], name: "index_participant_declarations_on_lead_provider_id"
+    t.string "course_identifier"
+    t.string "evidence_held"
+    t.string "type", default: "ParticipantDeclaration::ECF"
+    t.uuid "cpd_lead_provider_id"
+    t.index ["cpd_lead_provider_id"], name: "index_participant_declarations_on_cpd_lead_provider_id"
     t.index ["user_id"], name: "index_participant_declarations_on_user_id"
   end
 
@@ -652,7 +654,6 @@ ActiveRecord::Schema.define(version: 2021_07_16_120023) do
   add_foreign_key "nomination_emails", "schools"
   add_foreign_key "npq_lead_providers", "cpd_lead_providers"
   add_foreign_key "participant_bands", "call_off_contracts"
-  add_foreign_key "participant_declarations", "lead_providers"
   add_foreign_key "participant_profiles", "cohorts"
   add_foreign_key "participant_profiles", "core_induction_programmes"
   add_foreign_key "participant_profiles", "participant_profiles", column: "mentor_profile_id"
