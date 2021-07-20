@@ -9,8 +9,12 @@ en:
       validations:
         npq:
           identity:
-            header: Identity
+            name: Identity
+            header: Identity confirmation
             link_text: View identity confirmation
+            description: This participant's data was successfully checked against the Database of Qualified Teachers
           decision:
-            header: Decision
+            name: Decision
+            header: Final decision
             link_text: View / override decision
+            description: This participant has been approved

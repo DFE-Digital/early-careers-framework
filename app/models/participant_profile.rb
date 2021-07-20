@@ -35,12 +35,24 @@ class ParticipantProfile < ApplicationRecord
     false
   end
 
+  def approved?
+    false
+  end
+
+  def rejected?
+    false
+  end
+
+  def pending?
+    !approved? && !rejected?
+  end
+
   def validation_decision(name)
     unless self.class.validation_steps.include?(name.to_sym)
       raise "Unknown validation step: #{name} for #{self.class.name}. Known steps: #{self.class.validation_steps.join(', ')}"
     end
 
-    decision = validation_decisions.find { |record| record.validation_step == name }
+    decision = validation_decisions.find { |record| record.validation_step.to_s == name.to_s }
     decision || validation_decisions.build(validation_step: name)
   end
 end

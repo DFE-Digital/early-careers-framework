@@ -5,7 +5,7 @@ module Admin
     class Details < BaseComponent
       def initialize(profile:)
         @profile = profile
-        @variant = profile.participant_type
+        @variant = [profile.participant_type, (:pending if profile.pending?)].compact.join("_")
       end
 
     private

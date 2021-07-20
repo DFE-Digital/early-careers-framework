@@ -18,6 +18,12 @@ module Admin
       def tag_attributes(step)
         decision = profile.validation_decision(step)
         return { colour: "yellow", text: "Pending" } if decision.new_record?
+
+        if decision.approved?
+          { colour: "green", text: "Complete" }
+        else
+          { colour: "red", text: "Rejected" }
+        end
       end
     end
   end

@@ -137,7 +137,14 @@ Rails.application.routes.draw do
       resources :participants, controller: "schools/participants", only: :index
     end
 
-    resources :participants, only: %i[show index]
+    resources :participants, only: %i[show index] do
+      member do
+        scope path: "validations", controller: "participants/validations" do
+          get ":step", action: :show, as: :validation_step
+          post ":step", action: :update
+        end
+      end
+    end
 
     namespace :gias do
       resources :home, only: :index, path: "/"

@@ -5,6 +5,10 @@ class ParticipantProfilePolicy < ApplicationPolicy
     return true if admin?
   end
 
+  def validate?
+    admin?
+  end
+
   class Scope < Scope
     def resolve
       return scope.all if user.admin?

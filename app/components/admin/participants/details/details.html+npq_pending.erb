@@ -3,7 +3,7 @@
 <table class="govuk-table">
   <tbody class="govuk-table__body">
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header">Participant name</th>
+      <th scope="row" class="govuk-table__header">Name entered</th>
       <td class="govuk-table__cell"><%= profile.user.full_name %></td>
     </tr>
     <tr class="govuk-table__row">
@@ -11,8 +11,16 @@
       <td class="govuk-table__cell"><%= profile.user.email %></td>
     </tr>
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header">TRN</th>
+      <th scope="row" class="govuk-table__header">DOB entered</th>
+      <td class="govuk-table__cell"><%= profile.validation_data&.date_of_birth %></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">TRN entered</th>
       <td class="govuk-table__cell"><%= profile.validation_data&.teacher_reference_number %></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">NINo entered</th>
+      <td class="govuk-table__cell"><%#= profile.validation_data&.nino %></td>
     </tr>
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header">School</th>

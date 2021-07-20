@@ -11,8 +11,13 @@ class ParticipantProfile::NPQ < ParticipantProfile
     true
   end
 
-  def validated?
+  def approved?
     validation_decision(:decision).approved?
+  end
+
+  def rejected?
+    decision = validation_decision(:decision)
+    decision.persisted? && !decision.approved?
   end
 
   def participant_type
