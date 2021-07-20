@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe ApiDocs::OperationComponent, type: :component do
   describe "linking to the schema of the response object we return" do
     let :spec_with_schema_reference do
-      OpenApiExampleSpec.build_with <<~YAML
+      OpenApiExampleSpecification.build_with <<~YAML
         paths:
           "/post-a-string":
             post:
@@ -30,7 +30,7 @@ RSpec.describe ApiDocs::OperationComponent, type: :component do
     end
 
     let :spec_without_schema_reference do
-      OpenApiExampleSpec.build_with <<~YAML
+      OpenApiExampleSpecification.build_with <<~YAML
         paths:
           "/post-a-string":
             post:

@@ -67,29 +67,59 @@ RSpec.describe "Users::Sessions", type: :request do
     end
   end
 
-  describe "Mock login" do
-    let(:test_email) { "admin@example.com" }
-
+  describe "Valid mock login" do
     before do
       user.update!(email: test_email)
       allow(Rails).to receive(:env).and_return ActiveSupport::EnvironmentInquirer.new(environment.to_s)
     end
 
-    context "using a non-production enviromment" do
-      let(:environment) { :sandbox }
+    context "admin email" do
+      let(:test_email) { "admin@example.com" }
 
-      it "redirects to the dashboard" do
-        post "/users/sign_in", params: { user: { email: test_email } }
-        expect(response).to redirect_to "/dashboard"
+      context "using a non-production enviromment" do
+        let(:environment) { :sandbox }
+
+        it "redirects to the dashboard" do
+          post "/users/sign_in", params: { user: { email: test_email } }
+          expect(response).to redirect_to "/dashboard"
+        end
+      end
+
+      context "using a production environment" do
+        let(:environment) { :production }
+
+        it "renders the login_email_sent template" do
+          post "/users/sign_in", params: { user: { email: test_email } }
+          expect(response).to render_template(:login_email_sent)
+        end
       end
     end
+  end
 
-    context "using a production environment" do
-      let(:environment) { :production }
+  describe "Invalid mock logins" do
+    let(:environment) { :sandbox }
+
+    before do
+      allow(Rails).to receive(:env).and_return ActiveSupport::EnvironmentInquirer.new(environment.to_s)
+    end
+
+    context "unknown whitelisted email" do
+      let(:test_email) { "not-in-the-database@example.com" }
 
       it "renders the login_email_sent template" do
         post "/users/sign_in", params: { user: { email: test_email } }
-        expect(response).to render_template(:login_email_sent)
+        expect(response).to render_template(:login_email_sent) # falls back to prod behaviour
+      end
+    end
+
+    context "email domain not in the whitelist" do
+      let(:test_email) { "admin@some.other.example.com" }
+
+      context "using a non-production enviromment" do
+        it "renders the login_email_sent template" do
+          post "/users/sign_in", params: { user: { email: test_email } }
+          expect(response).to render_template(:login_email_sent) # falls back to prod behaviour
+        end
       end
     end
   end

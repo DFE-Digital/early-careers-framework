@@ -8,13 +8,6 @@ class ParticipantProfile < ApplicationRecord
     withdrawn: "withdrawn",
   }
 
-  scope :mentors, -> { where(type: Mentor.name) }
-  scope :ects, -> { where(type: ECT.name) }
-
-  scope :sparsity, -> { where(sparsity_uplift: true) }
-  scope :pupil_premium, -> { where(pupil_premium_uplift: true) }
-  scope :uplift, -> { sparsity.or(pupil_premium) }
-
   attr_reader :participant_type
 
   def ect?

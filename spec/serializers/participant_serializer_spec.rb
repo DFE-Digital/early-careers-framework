@@ -24,12 +24,12 @@ RSpec.describe ParticipantSerializer do
       let(:ect) { create(:participant_profile, :ect, mentor: mentor, status: "withdrawn").user }
 
       it "outputs correctly formatted serialized Mentors" do
-        expected_json_string = "{\"data\":{\"id\":\"#{mentor.id}\",\"type\":\"participant\",\"attributes\":{\"email\":null,\"full_name\":\"#{mentor.full_name}\",\"mentor_id\":null,\"school_urn\":null,\"participant_type\":\"mentor\",\"cohort\":null,\"status\":\"withdrawn\"}}}"
+        expected_json_string = "{\"data\":{\"id\":\"#{mentor.id}\",\"type\":\"participant\",\"attributes\":{\"email\":null,\"full_name\":null,\"mentor_id\":null,\"school_urn\":null,\"participant_type\":\"mentor\",\"cohort\":null,\"status\":\"withdrawn\"}}}"
         expect(ParticipantSerializer.new(mentor).serializable_hash.to_json).to eq expected_json_string
       end
 
       it "outputs correctly formatted serialized ECTs" do
-        expected_json_string = "{\"data\":{\"id\":\"#{ect.id}\",\"type\":\"participant\",\"attributes\":{\"email\":null,\"full_name\":\"#{ect.full_name}\",\"mentor_id\":null,\"school_urn\":null,\"participant_type\":\"ect\",\"cohort\":null,\"status\":\"withdrawn\"}}}"
+        expected_json_string = "{\"data\":{\"id\":\"#{ect.id}\",\"type\":\"participant\",\"attributes\":{\"email\":null,\"full_name\":null,\"mentor_id\":null,\"school_urn\":null,\"participant_type\":\"ect\",\"cohort\":null,\"status\":\"withdrawn\"}}}"
         expect(ParticipantSerializer.new(ect).serializable_hash.to_json).to eq expected_json_string
       end
     end

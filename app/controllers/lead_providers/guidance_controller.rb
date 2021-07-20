@@ -14,6 +14,10 @@ module LeadProviders
       @page_name = :ecf_usage
     end
 
+    def npq_usage
+      @page_name = :npq_usage
+    end
+
     def reference
       @page_name = :reference
       @api_reference = ApiDocs::ApiReference.new(LeadProviderApiSpecification.as_hash)

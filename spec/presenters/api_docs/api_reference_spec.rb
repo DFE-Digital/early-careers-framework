@@ -9,7 +9,7 @@ RSpec.describe ApiDocs::ApiReference do
 
   describe "#operations" do
     let(:spec_definition) do
-      OpenApiExampleSpec.build_with <<~YAML
+      OpenApiExampleSpecification.build_with <<~YAML
         paths:
           "/get-a-string":
             get:
@@ -33,7 +33,7 @@ RSpec.describe ApiDocs::ApiReference do
 
   describe "#schemas" do
     let(:spec_definition) do
-      OpenApiExampleSpec.build_with <<~YAML
+      OpenApiExampleSpecification.build_with <<~YAML
         components:
           schemas:
             Foo:

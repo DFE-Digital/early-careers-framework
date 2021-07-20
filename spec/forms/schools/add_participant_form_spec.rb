@@ -50,4 +50,47 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
       expect(subject.mentor_options).to include(withdrawn_mentor)
     end
   end
+
+  describe "email_already_taken?" do
+    before do
+      subject.email = "ray.clemence@example.com"
+    end
+
+    context "when the email is not already in use" do
+      it "returns true" do
+        expect(subject).not_to be_email_already_taken
+      end
+    end
+
+    context "when the email is in use by an ECT user" do
+      before do
+        create(:user, :early_career_teacher, email: "ray.clemence@example.com")
+      end
+
+      it "returns true" do
+        expect(subject).to be_email_already_taken
+      end
+    end
+
+    context "when the email is in use by a Mentor" do
+      before do
+        create(:user, :mentor, email: "ray.clemence@example.com")
+      end
+
+      it "returns true" do
+        expect(subject).to be_email_already_taken
+      end
+    end
+
+    context "when the email is in use by a NPQ registrant" do
+      before do
+        existing_user = create(:user, email: "ray.clemence@example.com")
+        create(:participant_profile, :npq, user: existing_user)
+      end
+
+      it "returns false" do
+        expect(subject).not_to be_email_already_taken
+      end
+    end
+  end
 end

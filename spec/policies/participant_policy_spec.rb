@@ -21,7 +21,8 @@ RSpec.describe ParticipantPolicy, type: :policy do
 
       context "being an induction coordinator" do
         context "when from the same school" do
-          let(:acting_user) { create(:user, :induction_coordinator, schools: [user_under_test.participant_profile.school]) }
+          let(:acting_user) { create(:user, :induction_coordinator, school_ids: [user_under_test.participant_profiles.ecf.first.school.id]) }
+
           it { is_expected.to permit_action(:show) }
 
           context "when the participant is withdrawn" do

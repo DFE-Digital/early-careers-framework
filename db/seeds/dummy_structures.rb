@@ -58,6 +58,11 @@ User.find_or_create_by!(email: "school-leader@example.com") do |user|
   end
 end
 
+User.find_or_create_by!(email: "npq-registrant@example.com") do |user|
+  user.update!(full_name: "NPQ registrant")
+  ParticipantProfile::NPQ.find_or_create_by!(user: user)
+end
+
 mentor = User.find_or_create_by!(email: "rp-mentor-ambition@example.com") do |user|
   user.update!(full_name: "Sally Mentor")
   ParticipantProfile::Mentor.find_or_create_by!(user: user) do |profile|

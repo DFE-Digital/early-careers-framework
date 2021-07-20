@@ -1,33 +1,34 @@
 <h2 class="govuk-heading-l">Contents</h2>
 
 <ul class="govuk-list govuk-list--bullet">
-  <li><a href="#continuing-the-registration-process" class="govuk-link">Continuing the registration process</a></li>
-  <li><a href="#declaring-that-a-participant-has-started-their-induction" class="govuk-link">Declaring that a participant has started their induction</a></li>
+  <li><a href="#continuing-the-ecf-registration-process" class="govuk-link">Continuing the ECF registration process</a></li>
+  <li><a href="#declaring-that-an-ecf-participant-has-started-their-induction" class="govuk-link">Declaring that an ECF
+    participant has started their induction</a></li>
 </ul>
 
 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6">
 
-<p class="govuk-body-m">The scenarios on this page show example request URLs and payloads clients can use to take actions via this API. The examples are only concerned with business logic and are missing details necessary for real-world usage. For example, authentication is completely left out.</p>
+<p class="govuk-body-m">The scenarios on this page show example request URLs and payloads clients can use to take
+  actions via this API. The examples are only concerned with business logic and are missing details necessary for
+  real-world usage. For example, authentication is completely left out.</p>
 
-<h2 id="continuing-the-registration-process" class="govuk-heading-l">Continuing the registration process</h2>
+<h2 id="continuing-the-ecf-registration-process" class="govuk-heading-l">Continuing the ECF registration process</h2>
+<p class="govuk-body-m">This scenario begins when an ECF participant has been added to the service by a school induction
+  tutor via the manage training for early career teachers service.</p>
 
-<p class="govuk-body-m">This scenario begins when a participant has been added to the service by a school induction tutor via the manage training for early career teachers service.</p>
-
-<h3 class="govuk-heading-m">1. Provider retrieves participant records</h3>
-
-<p class="govuk-body-m">Get the participant records.</p>
+<h3 class="govuk-heading-m">1. Provider retrieves ECF participant records</h3>
+<p class="govuk-body-m">Get the ECF participant records.</p>
 
 <p class="govuk-body-m"><pre><code>GET /api/v1/participants</code></pre></p>
 
-<p class="govuk-body-m">This will return <a href="/lead-providers/guidance/reference#multipleparticipantresponse-object" class="govuk-link">multiple participant records</a>.</p>
+<p class="govuk-body-m">This will return <a href="/lead-providers/guidance/reference#multipleecfparticipantsresponse-object" class="govuk-link">multiple ECF participant records</a>.</p>
 
-<p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#get-api-v1-participants" class="govuk-link">retrieve multiple participants</a> endpoint.</p>
+<p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#get-api-v1-participants" class="govuk-link">retrieve multiple ECF participants</a> endpoint.</p>
 
-<h3 class="govuk-heading-m">2. Participant enters registration details on register for early career framework service</h3>
-
+<h3 class="govuk-heading-m">2. ECF Participant enters registration details on register for early career framework service</h3>
 <p class="govuk-body-m">Participant is invited to continue their registration by validating their TRN and contact details.</p>
 
-<p class="govuk-body-m">When the participant has completed this step the participant record will show;</p>
+<p class="govuk-body-m">When the participant has completed this step the ECF participant record will show;</p>
 
 <ul class="govuk-list govuk-list--bullet">
   <li>whether the email address has been validated</li>
@@ -36,32 +37,28 @@
   <li>whether the participant is eligible for funding</li>
 </ul>
 
-<h3 class="govuk-heading-m">3. Provider refreshes participant records</h3>
+<h3 class="govuk-heading-m">3. Provider refreshes ECF participant records</h3>
+<p class="govuk-body-m">Get updated ECF participant records.</p>
 
-<p class="govuk-body-m">Get updated participant records.</p>
+<p class="govuk-body-m"><pre><code>GET /api/v1/participants?filter[updated_since]=2021-05-13T11:21:55Z</code></pre></p>
 
-<p class="govuk-body-m"><pre><code>GET /api/v1/participants?filter={updated_since:"2021-05-13T11:21:55Z"}</code></pre></p>
-
-<p class="govuk-body-m">This will return <a href="/lead-providers/guidance/reference#multipleparticipantresponse-object" class="govuk-link">multiple participant records</a> with the updates to the record included.</p>
+<p class="govuk-body-m">This will return <a href="/lead-providers/guidance/reference#multipleecfparticipantsresponse-object" class="govuk-link">multiple ECF participant records</a> with the updates to the record included.</p>
 
 <p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#get-api-v1-participants" class="govuk-link">retrieve multiple participants</a> endpoint.</p>
 
-<h2 id="declaring-that-a-participant-has-started-their-induction" class="govuk-heading-l">Declaring that a participant has started their induction</h2>
+<h2 id="declaring-that-an-ecf-participant-has-started-their-induction" class="govuk-heading-l">Declaring that an ECF participant has started their induction</h2>
+<p class="govuk-body-m">This scenario begins after it has been confirmed that an ECF participant is ready to begin their induction training.</p>
 
-<p class="govuk-body-m">This scenario begins after it has been confirmed that a participant is ready to begin their induction training.</p>
-
-<h3 class="govuk-heading-m">1. Provider confirms a participant has started</h3>
-
-<p class="govuk-body-m">Confirm a participant has started their induction training before Milestone 1.</p>
+<h3 class="govuk-heading-m">1. Provider confirms an ECF participant has started</h3>
+<p class="govuk-body-m">Confirm an ECF participant has started their induction training before Milestone 1.</p>
 
 <p class="govuk-body-m"><pre><code>POST /api/v1/participant_declarations</code></pre></p>
 
-<p class="govuk-body-m">With a <a href="/lead-providers/guidance/reference#participantdeclaration-object" class="govuk-link">request body containing a participant declaration</a>.</p>
+<p class="govuk-body-m">With a <a href="/lead-providers/guidance/reference#participantdeclaration-object" class="govuk-link">request body containing an ECF participant declaration</a>.</p>
 
 <p class="govuk-body-m">This returns <a href="/lead-providers/guidance/reference#participantdeclarationrecordedresponse-object" class="govuk-link">participant declaration recorded</a>.</p>
 
-<p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#post-api-v1-participant-declarations" class="govuk-link">confirm participant declarations</a> endpoint.</p>
+<p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#post-api-v1-participant-declarations" class="govuk-link">confirm ECF participant declarations</a> endpoint.</p>
 
-<h3 class="govuk-heading-m">2. Provider records the participant declaration id</h3>
-
-<p class="govuk-body-m">Store the returned participant declaration id for future management tasks.</p>
+<h3 class="govuk-heading-m">2. Provider records the ECF participant declaration id</h3>
+<p class="govuk-body-m">Store the returned ECF participant declaration id for future management tasks.</p>

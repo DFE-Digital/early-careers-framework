@@ -79,7 +79,7 @@ module Schools
     end
 
     def email_already_taken?
-      User.exists?(email: email)
+      User.find_by(email: email)&.participant_profiles&.ecf&.any?
     end
 
     def type=(value)
