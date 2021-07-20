@@ -43,4 +43,31 @@ RSpec.describe "Admin::Participants", type: :request do
       expect(response.body).to include(CGI.escapeHTML(mentor_profile.user.full_name))
     end
   end
+
+  describe "GET /admin/participants/:participant_id/remove" do
+    it "renders the remove participant template" do
+      get "/admin/participants/#{ect_profile.id}/remove"
+      expect(response).to render_template "admin/participants/remove"
+    end
+    it "does not allow NPQ participants" do
+      expect { get "/admin/participants/#{npq_profile.id}/remove" }.to raise_error Pundit::NotAuthorizedError
+    end
+  end
+
+  describe "DELETE /admin/participants/:id" do
+    it "marks the participant as withdrawn" do
+      delete "/admin/participants/#{ect_profile.id}"
+      expect(ect_profile.reload.withdrawn?).to be true
+    end
+
+    it "does not withdraw NPQ participants" do
+      expect { delete "/admin/participants/#{npq_profile.id}" }.to raise_error Pundit::NotAuthorizedError
+      expect(npq_profile.active?).to be true
+    end
+
+    it "shows a success message" do
+      delete "/admin/participants/#{ect_profile.id}"
+      expect(response).to render_template "admin/participants/destroy_success"
+    end
+  end
 end

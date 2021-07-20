@@ -1,0 +1,10 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Confirm you want to delete <%= @participant_profile.user.full_name %></h1>
+    <p class="govuk-body">All information connected to this participant will be deleted and cannot be recovered.</p>
+    <%= form_with url: admin_participant_path, method: :delete do |f| %>
+      <%= f.govuk_submit "Confirm" %>
+    <% end %>
+    <%= govuk_link_to "Cancel", admin_participant_path %>
+  </div>
+</div>

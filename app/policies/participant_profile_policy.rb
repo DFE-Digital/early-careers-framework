@@ -9,6 +9,8 @@ class ParticipantProfilePolicy < ApplicationPolicy
     admin? && (record.ect? || record.mentor?)
   end
 
+  alias_method :remove?, :delete?
+
   class Scope < Scope
     def resolve
       return scope.all if user.admin?
