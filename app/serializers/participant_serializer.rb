@@ -10,7 +10,11 @@ class ParticipantSerializer
     end
   end
 
-  attribute :full_name
+  attribute :full_name do |user|
+    if participant_active?(user)
+      user.full_name
+    end
+  end
 
   attributes :mentor_id do |user|
     if participant_active?(user)
