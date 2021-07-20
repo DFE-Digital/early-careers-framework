@@ -106,7 +106,7 @@ RSpec.describe "Users::Sessions", type: :request do
     context "unknown whitelisted email" do
       let(:test_email) { "not-in-the-database@example.com" }
 
-      it "redirects to the dashboard" do
+      it "renders the login_email_sent template" do
         post "/users/sign_in", params: { user: { email: test_email } }
         expect(response).to render_template(:login_email_sent) # falls back to prod behaviour
       end
@@ -116,7 +116,7 @@ RSpec.describe "Users::Sessions", type: :request do
       let(:test_email) { "admin@some.other.example.com" }
 
       context "using a non-production enviromment" do
-        it "redirects to the dashboard" do
+        it "renders the login_email_sent template" do
           post "/users/sign_in", params: { user: { email: test_email } }
           expect(response).to render_template(:login_email_sent) # falls back to prod behaviour
         end
