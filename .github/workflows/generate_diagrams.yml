@@ -6,10 +6,26 @@ on:
 
 jobs:
   entity-relationships:
+    name: Entity relationships
+
     runs-on: ubuntu-20.04
 
     env:
-      RAILS_ENV: development
+      RAILS_ENV: test
+      DB_USERNAME: postgres
+      DB_PASSWORD: ''
+      DB_HOSTNAME: 127.0.0.1
+      DB_PORT: 5432
+
+    services:
+      postgres:
+        image: postgres:11.6-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ''
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
       - name: Checkout Code
@@ -22,6 +38,9 @@ jobs:
         uses: ruby/setup-ruby@v1.70.1
         with:
           bundler-cache: true
+
+      - name: Set up test database
+        run: bin/rails db:create db:schema:load
 
       - name: Create ERD DOT
         run: bundle exec erd --filetype=dot
@@ -36,6 +55,8 @@ jobs:
           path: tmp/entity-relationship-diagram.*
 
   deployment-architecture:
+    name: Deployment architecture
+
     runs-on: ubuntu-20.04
 
     env:
@@ -63,10 +84,10 @@ jobs:
         run: terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-7f2ca242-9929-4662-a79c-c454ea56ea7b"
 
       - name: Run terraform graph
-        run: terraform graph -type=validate | dot -Tsvg > ../../tmp/deployment-architecture.pdf
+        run: terraform graph -type=validate | dot -Tpng > deployment-architecture.npg
 
       - name: Publish diagrams
         uses: actions/upload-artifact@v2
         with:
           name: Teacher CPD - deployment architecture
-          path: tmp/deployment-architecture.*
+          path: deployment-architecture.*
