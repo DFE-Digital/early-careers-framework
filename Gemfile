@@ -11,6 +11,7 @@ gem "rails", "~> 6.1.3", ">= 6.1.3.2"
 # User management and rbac
 gem "devise", ">= 4.7.3"
 gem "paper_trail"
+gem "pretender"
 gem "pundit"
 
 # Error and performance monitoring

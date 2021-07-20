@@ -12,6 +12,7 @@ Feature: Admin user managing schools
     And "page body" should contain "Include this school"
     And "page body" should contain "Sarah Smith"
     And "page body" should contain "Test local authority"
+    And "page body" should contain "Impersonate induction tutor"
     And the page should be accessible
 
   Scenario: Viewing a school's cohorts
@@ -44,3 +45,12 @@ Feature: Admin user managing schools
     Then "page body" should contain "123456"
     And "page body" should contain "Include this school"
     And the table should have 1 row
+  
+  Scenario: Impersonating an induction tutor
+    When I click on "link" containing "Include this school"
+    Then I should be on "admin school overview" page
+    When I click on "impersonate button"
+    Then "notification banner" should contain "You are impersonating Sarah Smith"
+    And "notification banner" should contain "Stop impersonating"
+    When I click on "stop impersonating button"
+    Then I should be on "admin schools" page

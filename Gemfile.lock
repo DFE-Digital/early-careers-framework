@@ -306,6 +306,8 @@ GEM
     percy-capybara (5.0.0)
       capybara (>= 3)
     pg (1.2.3)
+    pretender (0.3.4)
+      actionpack (>= 4.2)
     protobuf-cucumber (3.10.8)
       activesupport (>= 3.2)
       middleware
@@ -596,6 +598,7 @@ DEPENDENCIES
   paper_trail
   percy-capybara
   pg (>= 0.18, < 2.0)
+  pretender
   pry-byebug
   puma (~> 5.3, >= 5.3.1)
   pundit
