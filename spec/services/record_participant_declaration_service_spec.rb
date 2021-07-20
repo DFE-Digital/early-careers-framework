@@ -3,8 +3,8 @@
 require "rails_helper"
 
 RSpec.describe RecordParticipantDeclaration do
-  let(:lead_provider) { create(:lead_provider) }
-  let(:another_lead_provider) { create(:lead_provider, name: "Unknown") }
+  let(:cpd_lead_provider) { create(:cpd_lead_provider) }
+  let(:another_lead_provider) { create(:cpd_lead_provider, name: "Unknown") }
   let(:ect_profile) { create(:early_career_teacher_profile) }
   let(:mentor_profile) { create(:mentor_profile) }
   let(:induction_coordinator_profile) { create(:induction_coordinator_profile) }
@@ -15,11 +15,11 @@ RSpec.describe RecordParticipantDeclaration do
       declaration_date: "2021-06-21T08:46:29Z",
       declaration_type: "started",
       course_identifier: "ecf-induction",
-      lead_provider: another_lead_provider,
+      cpd_lead_provider: another_lead_provider,
     }
   end
   let(:ect_params) do
-    params.merge({ lead_provider: lead_provider })
+    params.merge({ cpd_lead_provider: cpd_lead_provider })
   end
   let(:mentor_params) do
     ect_params.merge({ participant_id: mentor_profile.user_id, course_identifier: "ecf-mentor" })
@@ -32,13 +32,13 @@ RSpec.describe RecordParticipantDeclaration do
   let!(:partnership) do
     create(:partnership,
            school: ect_profile.school,
-           lead_provider: lead_provider,
+           lead_provider: cpd_lead_provider.lead_provider,
            cohort: ect_profile.cohort,
            delivery_partner: delivery_partner)
   end
 
   def generate_raw_event(params)
-    params.except(:raw_event, :lead_provider).to_json
+    params.except(:raw_event, :cpd_lead_provider).to_json
   end
 
   context "when lead providers don't match" do

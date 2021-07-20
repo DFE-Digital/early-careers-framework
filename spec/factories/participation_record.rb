@@ -3,6 +3,6 @@
 FactoryBot.define do
   factory :participation_record do
     early_career_teacher_profile
-    lead_provider
+    cpd_lead_provider
   end
 end

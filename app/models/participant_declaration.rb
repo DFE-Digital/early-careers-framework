@@ -6,7 +6,7 @@ class ParticipantDeclaration < ApplicationRecord
   belongs_to :user
 
   # Helper scopes
-  scope :for_lead_provider, ->(lead_provider) { where(lead_provider: lead_provider) }
+  scope :for_lead_provider, ->(cpd_lead_provider) { where(cpd_lead_provider: cpd_lead_provider) }
   scope :for_declaration, ->(declaration_type) { where(declaration_type: declaration_type) }
   scope :started, -> { for_declaration("started").order(declaration_date: "desc").unique_id }
   scope :uplift, -> { joins(:profile_declaration).merge(ProfileDeclaration.uplift) }
