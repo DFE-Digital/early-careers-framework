@@ -9,6 +9,8 @@ class CreateProfileValidationDecision < ActiveRecord::Migration[6.1]
       t.text :note
 
       t.timestamps
+
+      t.index %i[participant_profile_id validation_step], unique: true, name: :unique_validation_step
     end
   end
 end

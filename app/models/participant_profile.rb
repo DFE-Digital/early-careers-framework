@@ -3,6 +3,7 @@
 class ParticipantProfile < ApplicationRecord
   belongs_to :user
   belongs_to :school, optional: true
+  has_many :validation_decisions, class_name: "ProfileValidationDecision"
 
   enum status: {
     active: "active",
@@ -19,6 +20,9 @@ class ParticipantProfile < ApplicationRecord
 
   attr_reader :participant_type
 
+  class_attribute :validation_steps
+  self.validation_steps = []
+
   def ect?
     false
   end
@@ -29,5 +33,14 @@ class ParticipantProfile < ApplicationRecord
 
   def npq?
     false
+  end
+
+  def validation_decision(name)
+    unless self.class.validation_steps.include?(name.to_sym)
+      raise "Unknown validation step: #{name} for #{self.class.name}. Known steps: #{self.class.validation_steps.join(', ')}"
+    end
+
+    decision = validation_decisions.find { |record| record.validation_step == name }
+    decision || validation_decisions.build(validation_step: name)
   end
 end

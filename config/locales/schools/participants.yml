@@ -5,3 +5,12 @@ en:
         ect: "Early career teacher"
         mentor: "Mentor"
         npq: "NPQ"
+
+      validations:
+        npq:
+          identity:
+            header: Identity
+            link_text: View identity confirmation
+          decision:
+            header: Decision
+            link_text: View / override decision

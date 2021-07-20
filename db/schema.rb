@@ -502,6 +502,7 @@ ActiveRecord::Schema.define(version: 2021_07_14_165145) do
     t.text "note"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["participant_profile_id", "validation_step"], name: "unique_validation_step", unique: true
     t.index ["participant_profile_id"], name: "index_profile_validation_decisions_on_participant_profile_id"
   end
 
