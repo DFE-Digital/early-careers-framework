@@ -12,7 +12,7 @@ module Admin
                                             .ecf
                                             .select(:user_id))
                           .order(:full_name)
-                          .includes(participant_profile: %i[cohort school])
+                          .includes(participant_profiles: %i[cohort school])
     end
 
   private

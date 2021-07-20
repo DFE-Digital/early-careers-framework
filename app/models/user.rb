@@ -10,7 +10,7 @@ class User < ApplicationRecord
   has_one :lead_provider, through: :lead_provider_profile
   has_one :admin_profile, dependent: :destroy
 
-  has_one :participant_profile, dependent: :destroy
+  has_many :participant_profiles, dependent: :destroy
   # TODO: Legacy associations, to be removed
   has_one :early_career_teacher_profile, class_name: "ParticipantProfile::ECT"
   has_one :mentor_profile, class_name: "ParticipantProfile::Mentor"
@@ -103,7 +103,7 @@ class User < ApplicationRecord
   }
 
   scope :is_participant, lambda {
-    includes_school.joins(:participant_profile).merge(ParticipantProfile.active)
+    includes_school.joins(:participant_profiles).merge(ParticipantProfile.active)
   }
 
   scope :in_school, lambda { |school_id|
