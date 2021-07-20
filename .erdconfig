@@ -24,6 +24,10 @@ exclude:
   - DataStage::School
   - DataStage::SchoolChange
   - ActionMailbox::InboundEmail
+  - NominationEmail
+  - PartnershipNotificationEmail
+  - PartnershipCsvUpload
+  - AdditionalSchoolEmail
 only: null
 only_recursion_depth: null
 prepend_primary: false
