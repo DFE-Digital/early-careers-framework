@@ -68,7 +68,7 @@ class School < ApplicationRecord
   end
 
   def delivery_partner_for(year)
-    partnerships.joins(%i[delivery_partner cohort]).find_by(cohorts: { start_year: year })&.delivery_partner
+    partnerships.unchallenged.joins(%i[delivery_partner cohort]).find_by(cohorts: { start_year: year })&.delivery_partner
   end
 
   def participants_for(cohort)
