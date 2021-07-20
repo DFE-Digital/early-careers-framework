@@ -86,12 +86,20 @@ jobs:
       - name: Run terraform init
         run: terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-7f2ca242-9929-4662-a79c-c454ea56ea7b"
 
-      - name: Run terraform graph
-        run: |
-          terraform graph | dot -Tsvg > deployment-architecture.svg
+      - name: Run terraform graph PLAN
+        run: terraform graph -type=plan
 
-      - name: Publish diagrams
-        uses: actions/upload-artifact@v2
-        with:
-          name: Teacher CPD - deployment architecture
-          path: deployment-architecture.*
+      - name: Run terraform graph APPLY
+        run: terraform graph -type=apply
+
+      - name: Run terraform graph VALIDATE
+        run: terraform graph -type=validate
+
+      - name: Run terraform graph REFRESH
+        run: terraform graph -type=refresh
+
+ #     - name: Publish diagrams
+ #       uses: actions/upload-artifact@v2
+ #       with:
+ #         name: Teacher CPD - deployment architecture
+ #         path: deployment-architecture.*
