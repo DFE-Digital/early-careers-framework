@@ -112,6 +112,7 @@ Rails.application.routes.draw do
 
     get "/guidance/home" => "guidance#index", as: :guidance_home
     get "/guidance/ecf-usage" => "guidance#ecf_usage", as: :guidance_ecf_usage
+    get "/guidance/npq-usage" => "guidance#npq_usage", as: :guidance_npq_usage
     get "/guidance/reference" => "guidance#reference", as: :guidance_reference
     get "/api-docs/v1/api_spec.yml" => "openapi#api_docs", as: :api_docs
     get "/guidance/release-notes" => "guidance#release_notes", as: :guidance_release_notes

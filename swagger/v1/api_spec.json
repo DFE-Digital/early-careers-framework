@@ -71,7 +71,7 @@
         ],
         "responses": {
           "200": {
-            "description": "An list of NPQ applications",
+            "description": "A list of NPQ applications",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -264,7 +264,7 @@
         ],
         "responses": {
           "200": {
-            "description": "An list of ECF participants",
+            "description": "A list of ECF participants",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -676,7 +676,7 @@
             }
           }
         },
-        "example": "id,type,email,full_name,mentor_id,school_urn,participant_type,cohort,status\ndb3a7848-7308-4879-942a-c4a70ced400a,participant,jane.smith@some-school.example.com,Jane Smith,bb36d74a-68a7-47b6-86b6-1fd0d141c590,106286,ect,2021,active\nbb36d74a-68a7-47b6-86b6-1fd0d141c590,participant,martin.jones@some-school.example.com,Martin Jones,,106286,mentor,2021,active\n"
+        "example": "id,type,email,full_name,mentor_id,school_urn,participant_type,cohort,status\ndb3a7848-7308-4879-942a-c4a70ced400a,participant,jane.smith@some-school.example.com,Jane Smith,bb36d74a-68a7-47b6-86b6-1fd0d141c590,106286,ect,2021,active\nbb36d74a-68a7-47b6-86b6-1fd0d141c590,participant,martin.jones@some-school.example.com,Martin Jones,,106286,mentor,2021,active\neb475531-bf08-48ae-b0ef-c2ff5e5bdef0,participant,null,null,null,null,ect,null,withdrawn\n"
       },
       "MultipleEcfParticipantsResponse": {
         "description": "A list of ECF participants",
@@ -714,6 +714,19 @@
                   "participant_type": "mentor",
                   "cohort": "2021",
                   "status": "active"
+                }
+              },
+              {
+                "id": "eb475531-bf08-48ae-b0ef-c2ff5e5bdef0",
+                "type": "participant",
+                "attributes": {
+                  "email": "null,",
+                  "full_name": null,
+                  "mentor_id": null,
+                  "school_urn": null,
+                  "participant_type": "ect",
+                  "cohort": null,
+                  "status": "withdrawn"
                 }
               }
             ]
@@ -1142,7 +1155,7 @@
           },
           "per_page": {
             "type": "integer",
-            "description": "The number items to display on a page. Defaults to 100. Maximum is 500, if the value is greater that the maximum allowed it will fallback to 500.",
+            "description": "The number items to display on a page. Defaults to 100. Maximum is 100, if the value is greater that the maximum allowed it will fallback to 100.",
             "example": 10
           }
         }

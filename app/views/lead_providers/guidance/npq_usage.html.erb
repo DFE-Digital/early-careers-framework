@@ -1,0 +1,41 @@
+<h2 class="govuk-heading-l">Contents</h2>
+
+<ul class="govuk-list govuk-list--bullet">
+  <li><a href="#continuing-the-npq-application-process" class="govuk-link">Continuing the NPQ application process</a></li>
+</ul>
+
+<hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6">
+
+<p class="govuk-body-m">The scenarios on this page show example request URLs and payloads clients can use to take actions
+  via this API. The examples are only concerned with business logic and are missing details necessary for real-world
+  usage. For example, authentication is completely left out.</p>
+
+<h2 id="continuing-the-npq-application-process" class="govuk-heading-l">Continuing the NPQ application process</h2>
+<p class="govuk-body-m">This scenario begins when a participant has been added to the service by registering for an NPQ
+  course via the register for a national professional qualification (NPQ) service.</p>
+
+<p class="govuk-body-m">When the participant has completed the register process the NPQ application record will show;</p>
+
+<ul class="govuk-list govuk-list--bullet">
+  <li>whether the email address has been validated</li>
+  <li>whether the TRN is valid</li>
+  <li>whether the participant is eligible for funding</li>
+</ul>
+
+<h3 class="govuk-heading-m">2. Provider retrieves NPQ application records</h3>
+<p class="govuk-body-m">Get the NPQ application records.</p>
+
+<p class="govuk-body-m"><pre><code>GET /api/v1/npq-appplications</code></pre></p>
+
+<p class="govuk-body-m">This will return <a href="/lead-providers/guidance/reference#multiplenpqapplicationsresponse-object" class="govuk-link">multiple NPQ application records</a>.</p>
+
+<p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#get-api-v1-npq-applications" class="govuk-link">retrieve multiple NPQ applications</a> endpoint.</p>
+
+<h3 class="govuk-heading-m">3. Provider refreshes NPQ application records</h3>
+<p class="govuk-body-m">Get updated NPQ application records.</p>
+
+<p class="govuk-body-m"><pre><code>GET /api/v1/npq-appplications?filter={updated_since:"2021-05-13T11:21:55Z"}</code></pre></p>
+
+<p class="govuk-body-m">This will return <a href="/lead-providers/guidance/reference#multiplenpqapplicationsresponse-object" class="govuk-link">multiple NPQ application records</a> with the updates to the record included.</p>
+
+<p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#get-api-v1-npq-applications" class="govuk-link">retrieve multiple NPQ applications</a> endpoint.</p>

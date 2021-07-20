@@ -142,6 +142,7 @@ const pagePaths = {
   "API Documentation": "/api-docs/index.html",
   "API guidance home": "/lead-providers/guidance/home",
   "ECF usage guide": "/lead-providers/guidance/ecf-usage",
+  "NPQ usage guide": "/lead-providers/guidance/npq-usage",
   "API release notes": "/lead-providers/guidance/release-notes",
   "API guidance support": "/lead-providers/guidance/help",
 };
