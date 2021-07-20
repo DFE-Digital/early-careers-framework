@@ -1,0 +1,63 @@
+name: Generate system diagrams
+
+on:
+  push:
+    branches: [ 'entity-relationship-diagram-outputs' ]
+
+jobs:
+  entity-relationships:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Setup Graphviz
+        uses: ts-graphviz/setup-graphviz@v1
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1.70.1
+        with:
+          bundler-cache: true
+
+      - name: Create ERD DOT
+        run: bundle exec erd --filetype=dot
+
+      - name: Create ERD PDF
+        run: bundle exec erd --filetype=pdf
+
+      - name: Publish ERD
+        uses: actions/upload-artifact@v2
+        with:
+          name: Continuing Professional Development ERD Dotfile
+          path: tmp/entity-relationship-diagram.*
+
+  deployment-architecture:
+    runs-on: ubuntu-20.04
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_PRODUCTION }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_PRODUCTION }}
+      TF_VAR_paas_user: ${{ secrets.GOVPAAS_PROD_USERNAME }}
+      TF_VAR_paas_password: ${{ secrets.GOVPAAS_PROD_PASSWORD }}
+      TF_VAR_statuscake_username: ${{ secrets.STATUSCAKE_USERNAME }}
+      TF_VAR_statuscake_apikey: ${{ secrets.STATUSCAKE_APIKEY }}
+      TF_VAR_paas_app_docker_image: dfedigital/early-careers-framework-prod:latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Pin Terraform version
+        uses: hashicorp/setup-terraform@v1.2.1
+        with:
+          terraform_version: 0.14.0
+
+      - name: Switch to terraform directory
+        run: cd terraform/app
+
+      - name: Run terraform init
+        run: terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-7f2ca242-9929-4662-a79c-c454ea56ea7b"
+
+      - name: Run terraform graph
+        run: terraform graph
