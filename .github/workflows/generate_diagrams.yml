@@ -53,31 +53,3 @@ jobs:
         with:
           name: Teacher CPD - entity relationship Diagram
           path: tmp/entity-relationship-diagram.*
-
-  deployment-architecture:
-    name: Deployment architecture
-
-    runs-on: ubuntu-20.04
-
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_PRODUCTION }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_PRODUCTION }}
-      TF_VAR_paas_user: ${{ secrets.GOVPAAS_PROD_USERNAME }}
-      TF_VAR_paas_password: ${{ secrets.GOVPAAS_PROD_PASSWORD }}
-      TF_VAR_statuscake_username: ${{ secrets.STATUSCAKE_USERNAME }}
-      TF_VAR_statuscake_apikey: ${{ secrets.STATUSCAKE_APIKEY }}
-      TF_VAR_paas_app_docker_image: dfedigital/early-careers-framework-prod:latest
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-
-      - name: Pin Terraform version
-        uses: hashicorp/setup-terraform@v1.2.1
-        with:
-          terraform_version: 0.14.0
-
-      - name: Create graph
-        run: |
-          terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-7f2ca242-9929-4662-a79c-c454ea56ea7b"
-          terraform graph -draw-cycles -type=plan terraform/app
