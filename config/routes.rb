@@ -227,6 +227,12 @@ Rails.application.routes.draw do
         get :success
       end
 
+      resources :year_2020, path: "year-2020", only: [] do
+        collection do
+          multistep_form :add, Schools::Year2020Form, controller: :year2020
+        end
+      end
+
       resources :cohorts, only: :show, param: :cohort_id do
         member do
           resources :partnerships, only: :index

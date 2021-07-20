@@ -1,0 +1,20 @@
+<% content_for :title, "Enter details to confirm" %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: back_link_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-l"><%= @school.name %>, <%= @cohort.display_name %> cohort</span>
+    <h1 class="govuk-heading-xl">Add a participant</h1>
+
+    <%= form_for year_2020_form, url: { action: :update }, method: :patch do |f| %>
+      <%= f.govuk_text_field :full_name, label: { text: "Full name" } %>
+      <%= f.govuk_email_field :email,
+                              label: { text: "Email address" },
+                              hint: { text: "You can use their personal or work email address" }
+      %>
+
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

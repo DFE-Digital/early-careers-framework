@@ -1,0 +1,14 @@
+<% content_for :title, "Add early career teacher" %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: back_link_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-three-quarters">
+    <span class="govuk-caption-l"><%= @school.name %>, <%= @cohort.display_name %> cohort</span>
+    <h1 class="govuk-heading-xl">Hello world!</h1>
+
+    <%= form_for year_2020_form, url: { action: :update }, method: :patch do |f| %>
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

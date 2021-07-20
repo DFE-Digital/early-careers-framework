@@ -1,0 +1,24 @@
+<% content_for :title, "Teacher or mentor added" %>
+
+<% if participant_profile.user == current_user %>
+  <%= govuk_panel title: "You have been added to the #{@cohort.display_name} cohort", body: nil, classes: "govuk-!-margin-bottom-8" %>
+
+  <h2 class="govuk-heading-m">What happens next</h2>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>we will contact you if we need anymore details and update you on your status</li>
+  </ul>
+
+<% else %>
+  <%= govuk_panel title: "You have added #{participant_profile.user.full_name} to the #{@cohort.display_name} cohort", body: nil, classes: "govuk-!-margin-bottom-8" %>
+
+  <h2 class="govuk-heading-m">What happens next</h2>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>we will verify their Qualified Teacher Status (QTS) and eligibility for induction</li>
+    <li>we will alert you if there are any issues or if we need any further information</li>
+    <li>you can also view your early career teachers (ECTs) and mentors to see their status (pending, approved or rejected)</li>
+  </ul>
+<% end %>
+
+<div class="govuk-button-group">
+  <%= govuk_link_to "Go to your dashboard", schools_dashboard_path %>
+</div>
