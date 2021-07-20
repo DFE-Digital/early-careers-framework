@@ -87,7 +87,7 @@ jobs:
         run: terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-7f2ca242-9929-4662-a79c-c454ea56ea7b"
 
       - name: Run terraform graph
-        run: terraform graph -type=validate > deployment-architecture.dot
+        run: terraform graph | dot -Tsvg > deployment-architecture.svg
 
       - name: Publish diagrams
         uses: actions/upload-artifact@v2
