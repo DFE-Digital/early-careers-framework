@@ -31,10 +31,6 @@ module CallOffContractSteps
   step :assert_service_fee_per_participant, "the per-participant service fee should be reduced to £:decimal_placeholder"
   step :assert_service_fee_per_participant, "the per-participant service fee should be £:decimal_placeholder"
 
-  step "the total service fee should be £:decimal_placeholder" do |expected_value|
-    expect(@call_off_contract.service_fee_total(@band_a).round(0)).to eq(expected_value)
-  end
-
   step "the monthly service fee should be £:decimal_placeholder" do |expected_value|
     expect(@call_off_contract.service_fee_monthly(@band_a).round(0)).to eq(expected_value)
   end
