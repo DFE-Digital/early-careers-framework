@@ -2,7 +2,6 @@
 
 class ParticipantProfile < ApplicationRecord
   belongs_to :user
-  belongs_to :school, optional: true
 
   enum status: {
     active: "active",

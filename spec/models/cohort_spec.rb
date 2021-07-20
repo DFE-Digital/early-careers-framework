@@ -28,9 +28,4 @@ RSpec.describe Cohort, type: :model do
       expect(Cohort.new(start_year: 2021).academic_year).to eq "2021/22"
     end
   end
-
-  describe "associations" do
-    it { is_expected.to have_many(:early_career_teacher_profiles) }
-    it { is_expected.to have_many(:early_career_teachers).through(:early_career_teacher_profiles) }
-  end
 end

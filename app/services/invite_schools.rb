@@ -92,7 +92,7 @@ class InviteSchools
   def send_beta_chasers
     beta_school_ids = FeatureFlag.new(name: :induction_tutor_manage_participants).feature.selected_objects.pluck(:object_id)
     beta_schools = School.where(id: beta_school_ids)
-    beta_schools_without_participants = beta_schools.where.not(id: ParticipantProfile.ecf.select(:school_id))
+    beta_schools_without_participants = beta_schools.includes(:ecf_participant_profiles).where(participant_profiles: { id: nil })
 
     beta_schools_without_participants.each do |school|
       induction_coordinator = school.induction_coordinators.first
@@ -201,13 +201,13 @@ class InviteSchools
   def send_induction_coordinator_add_participants_email
     induction_coordinators_chosen_route = User.distinct
                                               .joins(:induction_coordinator_profile, schools: :school_cohorts)
-                                              .left_outer_joins(schools: :participant_profiles)
+                                              .left_outer_joins(schools: :ecf_participant_profiles)
                                               .where(
                                                 school_cohorts: {
                                                   induction_programme_choice: %w[core_induction_programme full_induction_programme],
                                                   opt_out_of_updates: false,
                                                 },
-                                                participant_profiles: { id: nil },
+                                                ecf_participant_profiles: { id: nil },
                                               )
 
     induction_coordinators_chosen_route.find_each do |induction_coordinator|

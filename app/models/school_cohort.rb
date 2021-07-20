@@ -15,6 +15,16 @@ class SchoolCohort < ApplicationRecord
   belongs_to :school
   belongs_to :core_induction_programme, optional: true
 
+  has_many :ecf_participant_profiles, class_name: "ParticipantProfile"
+  has_many :ecf_participants, through: :ecf_participant_profiles, source: :user
+  has_many :active_ecf_participant_profiles, -> { ecf.active }, class_name: "ParticipantProfile"
+  has_many :active_ecf_participants, through: :active_ecf_participant_profiles, source: :user
+
+  has_many :mentor_profiles, -> { mentors }, class_name: "ParticipantProfile"
+  has_many :mentors, through: :mentor_profiles, source: :user
+  has_many :active_mentor_profiles, -> { mentors.active }, class_name: "ParticipantProfile"
+  has_many :active_mentors, through: :active_mentor_profiles, source: :user
+
   scope :for_year, ->(year) { joins(:cohort).where(cohort: { start_year: year }) }
 
   def training_provider_status

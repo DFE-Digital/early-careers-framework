@@ -13,20 +13,18 @@ module EarlyCareerTeachers
 
   private
 
-    attr_reader :full_name, :email, :cohort_id, :school_id, :mentor_profile_id
+    attr_reader :full_name, :email, :school_cohort, :mentor_profile_id
 
-    def initialize(full_name:, email:, cohort_id:, school_id:, mentor_profile_id: nil)
+    def initialize(full_name:, email:, school_cohort:, mentor_profile_id: nil)
       @full_name = full_name
       @email = email
-      @cohort_id = cohort_id
-      @school_id = school_id
+      @school_cohort = school_cohort
       @mentor_profile_id = mentor_profile_id
     end
 
     def ect_attributes
       {
-        school_id: school_id,
-        cohort_id: cohort_id,
+        school_cohort_id: school_cohort.id,
         mentor_profile_id: mentor_profile_id,
         sparsity_uplift: sparsity_uplift?(start_year),
         pupil_premium_uplift: pupil_premium_uplift?(start_year),

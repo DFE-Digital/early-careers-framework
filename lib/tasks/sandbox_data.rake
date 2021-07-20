@@ -23,23 +23,25 @@ end
 def generate_mentors(lead_provider, school, cohort, logger)
   existing_mentor_count = lead_provider.participant_profiles.mentors.count
   existing_ect_count = lead_provider.participant_profiles.ects.count
+  school_cohort = SchoolCohort.find_or_create_by!(school: school, cohort: cohort)
+
   10.times do
     mentor = User.create!(full_name: Faker::Name.name, email: Faker::Internet.email)
-    mentor_profile = ParticipantProfile::Mentor.create!(user: mentor, school: school, cohort: cohort)
+    mentor_profile = ParticipantProfile::Mentor.create!(user: mentor, school_cohort: school_cohort)
 
     ect_count = rand(0..3)
     ect_count.times do
       ect = User.create!(full_name: Faker::Name.name, email: Faker::Internet.email)
-      ParticipantProfile::ECT.create!(user: ect, school: school, cohort: cohort, mentor_profile: mentor_profile)
+      ParticipantProfile::ECT.create!(user: ect, school_cohort: school_cohort, mentor_profile: mentor_profile)
     end
     logger.info(" Mentor with user_id #{mentor.id} generated with #{ect_count} ECTs")
   end
   2.times do
     mentor = User.create!(full_name: Faker::Name.name, email: Faker::Internet.email)
-    mentor_profile = ParticipantProfile::Mentor.create!(user: mentor, school: school, cohort: cohort, status: "withdrawn")
+    mentor_profile = ParticipantProfile::Mentor.create!(user: mentor, school_cohort: school_cohort, status: "withdrawn")
 
     ect = User.create!(full_name: Faker::Name.name, email: Faker::Internet.email)
-    ParticipantProfile::ECT.create!(user: ect, school: school, cohort: cohort, mentor_profile: mentor_profile, status: "withdrawn")
+    ParticipantProfile::ECT.create!(user: ect, school_cohort: school_cohort, mentor_profile: mentor_profile, status: "withdrawn")
   end
   new_mentor_count = lead_provider.participant_profiles.mentors.count
   logger.info(" Before: #{existing_mentor_count} mentors, after: #{new_mentor_count}")

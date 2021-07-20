@@ -3,8 +3,7 @@
 FactoryBot.define do
   factory :early_career_teacher_profile, class: ParticipantProfile::ECT do
     user
-    school
-    cohort
+    school_cohort
 
     trait :sparsity_uplift do
       sparsity_uplift { true }

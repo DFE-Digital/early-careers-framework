@@ -6,7 +6,7 @@ module Admin
       include PaginationHelper
 
       def initialize(profiles:, page:)
-        @profiles = profiles.includes(:user, :school).page(page).per(10)
+        @profiles = profiles.includes(:user).page(page).per(10)
       end
 
     private

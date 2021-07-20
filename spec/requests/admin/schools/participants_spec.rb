@@ -5,16 +5,9 @@ require "rails_helper"
 RSpec.describe "Admin::Schools::Participants", type: :request do
   let(:admin_user) { create(:user, :admin) }
   let(:school) { create(:school) }
-  let!(:ect_user) do
-    user = create(:user, :early_career_teacher)
-    user.early_career_teacher_profile.update!(school: school)
-    user
-  end
-  let!(:mentor_user) do
-    user = create(:user, :mentor)
-    user.mentor_profile.update!(school: school)
-    user
-  end
+  let(:school_cohort) { create(:school_cohort, school: school) }
+  let!(:ect_user) { create(:user, :early_career_teacher, school_cohort: school_cohort) }
+  let!(:mentor_user) { create(:user, :mentor, school_cohort: school_cohort) }
   let!(:unrelated_user) { create(:user, :mentor) }
 
   before do

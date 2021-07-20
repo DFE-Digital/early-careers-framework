@@ -6,6 +6,7 @@ RSpec.describe "Admin::Participants", type: :request do
   let(:admin_user) { create(:user, :admin) }
   let(:cohort) { create(:cohort) }
   let(:school) { create(:school) }
+  let(:school_cohort) { create(:school_cohort, school: school, cohort: cohort) }
   let!(:mentor_user) do
     user = create(:user, :mentor)
     user.mentor_profile.update!(school: school)
@@ -13,7 +14,7 @@ RSpec.describe "Admin::Participants", type: :request do
   end
   let!(:ect_user) do
     user = create(:user, :early_career_teacher)
-    user.early_career_teacher_profile.update!(school: school, cohort: cohort, mentor_profile: mentor_user.mentor_profile)
+    user.early_career_teacher_profile.update!(school_cohort: school_cohort, mentor_profile: mentor_user.mentor_profile)
     user
   end
 

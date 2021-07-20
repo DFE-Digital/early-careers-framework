@@ -6,6 +6,7 @@ class User < ApplicationRecord
 
   has_one :induction_coordinator_profile, dependent: :destroy
   has_many :schools, through: :induction_coordinator_profile
+
   has_one :lead_provider_profile, dependent: :destroy
   has_one :lead_provider, through: :lead_provider_profile
   has_one :admin_profile, dependent: :destroy
@@ -94,20 +95,12 @@ class User < ApplicationRecord
     end.order(:updated_at, :id)
   }
 
-  scope :includes_school, lambda {
-    includes(
-      early_career_teacher_profile: %i[cohort school],
-      mentor_profile: %i[cohort school],
-      npq_profiles: :school,
-    )
+  scope :is_ecf_participant, lambda {
+    includes(participant_profiles: :school_cohort).joins(:participant_profiles).merge(ParticipantProfile.ecf.active)
   }
 
   scope :is_participant, lambda {
-    includes_school.joins(:participant_profiles).merge(ParticipantProfile.active)
-  }
-
-  scope :in_school, lambda { |school_id|
-    includes_school.where(participant_profiles: { school_id: school_id })
+    joins(:participant_profiles).merge(ParticipantProfile.active)
   }
 
 private

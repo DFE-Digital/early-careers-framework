@@ -37,19 +37,15 @@ FactoryBot.define do
 
       transient do
         mentor {}
-        school {}
-        cohort {}
+        school_cohort {}
       end
 
       after(:build) do |user, evaluator|
         if evaluator.mentor.present?
           user.early_career_teacher_profile.mentor_profile = evaluator.mentor.mentor_profile
         end
-        if evaluator.school.present?
-          user.early_career_teacher_profile.school = evaluator.school
-        end
-        if evaluator.cohort.present?
-          user.early_career_teacher_profile.cohort = evaluator.cohort
+        if evaluator.school_cohort.present?
+          user.early_career_teacher_profile.school_cohort = evaluator.school_cohort
         end
       end
     end
@@ -58,16 +54,12 @@ FactoryBot.define do
       mentor_profile
 
       transient do
-        school {}
-        cohort {}
+        school_cohort {}
       end
 
       after(:build) do |user, evaluator|
-        if evaluator.school.present?
-          user.mentor_profile.school = evaluator.school
-        end
-        if evaluator.cohort.present?
-          user.mentor_profile.cohort = evaluator.cohort
+        if evaluator.school_cohort.present?
+          user.mentor_profile.school_cohort = evaluator.school_cohort
         end
       end
     end

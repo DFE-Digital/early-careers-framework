@@ -7,12 +7,10 @@ module Admin
     before_action :set_school
 
     def index
-      @participants = User.where(id: @school.participant_profiles
-                                            .active
-                                            .ecf
-                                            .select(:user_id))
-                          .order(:full_name)
-                          .includes(participant_profiles: %i[cohort school])
+      @participants = @school.active_ecf_participants.order(:full_name).includes(
+        early_career_teacher_profile: [:mentor, school_cohort: %i[school cohort]],
+        mentor_profile: [school_cohort: %i[school cohort]],
+      )
     end
 
   private

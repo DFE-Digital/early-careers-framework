@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 class ParticipantProfile::ECT < ParticipantProfile
-  belongs_to :school_cohort, optional: true
-  belongs_to :school
-  belongs_to :cohort
+  self.ignored_columns = %i[school_id]
+
+  belongs_to :school_cohort
+  has_one :school, through: :school_cohort
+  has_one :cohort, through: :school_cohort
 
   belongs_to :mentor_profile, class_name: "Mentor", optional: true
   has_one :mentor, through: :mentor_profile, source: :user
@@ -16,9 +18,5 @@ class ParticipantProfile::ECT < ParticipantProfile
 
   def participant_type
     :ect
-  end
-
-  before_save do |profile|
-    profile.school_cohort = SchoolCohort.find_by(school: profile.school, cohort: profile.cohort)
   end
 end
