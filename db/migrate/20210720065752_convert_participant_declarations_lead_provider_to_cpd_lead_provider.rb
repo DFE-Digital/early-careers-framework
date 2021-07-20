@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class ParticipantDeclaration < ApplicationRecord
   belongs_to :cpd_lead_provider
 end

@@ -1,11 +1,8 @@
 # frozen_string_literal: true
 
-class ParticipantEvent < ApplicationRecord
-end
-
-class CreateParticipantEventsPapertrailVersioningTable < ActiveRecord::Migration[6.1]
+class DropParticipantEventTable < ActiveRecord::Migration[6.1]
   def change
-    create_table :participant_events, id: :uuid do |t|
+    drop_table :participant_events, id: :uuid do |t|
       t.string :item_type, null: false
       t.string :event, null: false
       t.string :whodunnit
