@@ -63,12 +63,16 @@ private
   def course_valid_for_participant?
     early_career_teacher? && course == "ecf-induction" ||
       mentor? && course == "ecf-mentor" ||
-      npq? && %w[npq-leading-teaching
-                 npq-leading-teaching-development
-                 npq-leading-behaviour-culture
-                 npq-headship
-                 npq-senior-leadership
-                 npq-executive-leadership].include?(course)
+      npq? && npq_course?
+  end
+
+  def npq_course?
+    %w[npq-leading-teaching
+       npq-leading-teaching-development
+       npq-leading-behaviour-culture
+       npq-headship
+       npq-senior-leadership
+       npq-executive-leadership].include?(course)
   end
 
   def user_profile
@@ -84,10 +88,10 @@ private
   end
 
   def declaration_type
-    if early_career_teacher? || mentor?
-      ParticipantDeclaration::ECF
-    elsif npq?
+    if npq? && npq_course?
       ParticipantDeclaration::NPQ
+    elsif early_career_teacher? || mentor?
+      ParticipantDeclaration::ECF
     end
   end
 
