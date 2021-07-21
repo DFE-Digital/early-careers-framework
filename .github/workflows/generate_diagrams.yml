@@ -48,6 +48,19 @@ jobs:
       - name: Create ERD PDF
         run: bundle exec erd --filetype=pdf
 
+      - name: Create ERD PNG
+        run: bundle exec erd --filetype=png
+
+      - name: Update service manual
+        # if: github.ref == 'refs/heads/develop'
+        run: |
+          cd ./tmp
+          git clone https://github.com/DFE-Digital/cpd-service-manual
+          cd ./cpd-service-manual
+          cp ../entity-relationship-diagram.png ./source/images
+          git commit -am "updated entity-relationship-diagram"
+          git push
+
       - name: Publish diagrams
         uses: actions/upload-artifact@v2
         with:
