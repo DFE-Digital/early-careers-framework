@@ -55,6 +55,8 @@ jobs:
         # if: github.ref == 'refs/heads/develop'
         run: |
           cd ./tmp
+          git config user.name github-actions
+          git config user.email github-actions@github.com
           git clone https://github.com/DFE-Digital/cpd-service-manual
           cd ./cpd-service-manual
           cp ../entity-relationship-diagram.png ./source/images
