@@ -28,7 +28,8 @@ FactoryBot.define do
       }
     end
     after(:build) do |contract|
-      contract.lead_provider = build(:lead_provider)
+      lead_provider = build(:lead_provider, cpd_lead_provider: build(:cpd_lead_provider))
+      contract.lead_provider = lead_provider
     end
     after(:create) do |contract|
       create(:participant_band, :band_a, { call_off_contract: contract })

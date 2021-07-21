@@ -22,4 +22,5 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym "UTM"
   inflect.acronym "ECT"
   inflect.acronym "NPQ"
+  inflect.acronym "ECF"
 end

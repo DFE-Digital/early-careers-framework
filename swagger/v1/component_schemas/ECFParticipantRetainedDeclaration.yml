@@ -20,7 +20,7 @@ properties:
     type: string
     format: date-time
     example: 2021-05-31T02:21:32Z
-  course_type:
+  course_identifier:
     description: "The type of course the participant is enrolled in"
     type: string
     enum:
@@ -38,11 +38,11 @@ required:
   - participant_id
   - declaration_type
   - declaration_date
-  - course_type
+  - course_identifier
   - evidence_held
 example:
   participant_id: db3a7848-7308-4879-942a-c4a70ced400a
   declaration_type: retained-1
   declaration_date: 2021-05-31T02:21:32Z
-  course_type: ecf-induction
+  course_identifier: ecf-induction
   evidence_held: training-event-attended

@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :participant_declaration do
     user
-    lead_provider
+    cpd_lead_provider
     declaration_date { Time.zone.now - 1.week }
     declaration_type { "started" }
 

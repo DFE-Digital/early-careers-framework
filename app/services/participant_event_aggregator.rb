@@ -6,7 +6,7 @@ class ParticipantEventAggregator
   include HasDIParameters
 
   def call(event_type: :started)
-    recorder.send(params[event_type], lead_provider)
+    recorder.send(params[event_type], cpd_lead_provider)
   end
 
 private
