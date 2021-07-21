@@ -25,8 +25,8 @@ class RecordParticipantDeclaration
 
 private
 
-  delegate :participant?, :early_career_teacher?, :mentor?, to: :user, allow_nil: true
-  delegate :early_career_teacher_profile, :mentor_profile, to: :user
+  delegate :participant?, :early_career_teacher?, :mentor?, :npq?, to: :user, allow_nil: true
+  delegate :early_career_teacher_profile, :mentor_profile, :npq_profiles, to: :user
   delegate :school, :cohort, to: :user_profile
 
   def initialize(params)
@@ -44,7 +44,7 @@ private
   end
 
   def add_participant_profile_params!
-    raise ActionController::ParameterMissing, [I18n.t(:invalid_participant)] unless participant?
+    raise ActionController::ParameterMissing, [I18n.t(:invalid_participant)] unless participant? || npq?
     raise ActionController::ParameterMissing, [I18n.t(:invalid_course)] unless course_valid_for_participant?
   end
 
@@ -62,7 +62,13 @@ private
 
   def course_valid_for_participant?
     early_career_teacher? && course == "ecf-induction" ||
-      mentor? && course == "ecf-mentor"
+      mentor? && course == "ecf-mentor" ||
+      npq? && %w[npq-leading-teaching
+                 npq-leading-teaching-development
+                 npq-leading-behaviour-culture
+                 npq-headship
+                 npq-senior-leadership
+                 npq-executive-leadership].include?(course)
   end
 
   def user_profile
@@ -70,6 +76,8 @@ private
       early_career_teacher_profile
     elsif mentor?
       mentor_profile
+    elsif npq?
+      npq_profiles.includes({ validation_data: [:npq_course] }).where('npq_courses.identifier': course).first
     else
       false
     end
@@ -78,6 +86,8 @@ private
   def declaration_type
     if early_career_teacher? || mentor?
       ParticipantDeclaration::ECF
+    elsif npq?
+      ParticipantDeclaration::NPQ
     end
   end
 
@@ -97,7 +107,8 @@ private
   end
 
   def actual_lead_provider
-    SchoolCohort.find_by(school: school, cohort: cohort)&.lead_provider&.cpd_lead_provider
+    SchoolCohort.find_by(school: school, cohort: cohort)&.lead_provider&.cpd_lead_provider if early_career_teacher? || mentor?
+    user_profile.validation_data.npq_lead_provider.cpd_lead_provider if npq?
   end
 
   def validate_provider!
