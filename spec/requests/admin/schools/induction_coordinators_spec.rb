@@ -71,8 +71,8 @@ RSpec.describe "Admin::Schools::InductionCoodinators", type: :request do
       end
     end
 
-    context "when a different user type already exists with that email address" do
-      let!(:existing_user) { create(:user) }
+    context "when an ECT user already exists with that email address" do
+      let!(:existing_user) { create(:user, :early_career_teacher) }
 
       it "renders to email_used" do
         expect {
@@ -85,6 +85,42 @@ RSpec.describe "Admin::Schools::InductionCoodinators", type: :request do
         }.not_to change { User.count }
 
         expect(response).to render_template :email_used
+      end
+    end
+
+    context "when a mentor user already exists with that email address" do
+      let!(:existing_user) { create(:user, :mentor) }
+
+      it "renders to email_used" do
+        expect {
+          post admin_school_induction_coordinators_path(school), params: {
+            tutor_details: {
+              full_name: name,
+              email: existing_user.email,
+            },
+          }
+        }.not_to change { User.count }
+
+        expect(response).to render_template :email_used
+      end
+    end
+
+    context "when a NPQ registrant already exists with that email address" do
+      let(:npq_profile) { create(:participant_profile, :npq) }
+      let!(:existing_user) { npq_profile.user }
+
+      it "adds an induction tutor profile to the existing user" do
+        expect {
+          post admin_school_induction_coordinators_path(school), params: {
+            tutor_details: {
+              full_name: existing_user.full_name,
+              email: existing_user.email,
+            },
+          }
+        }.not_to change { User.count }
+
+        expect(existing_user.schools).to include school
+        expect(response).to redirect_to admin_school_path(school)
       end
     end
   end

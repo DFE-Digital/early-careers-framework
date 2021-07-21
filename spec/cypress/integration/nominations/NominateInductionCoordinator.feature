@@ -56,7 +56,7 @@ Feature: Nominate induction tutor
     And the page should be accessible
     And percy should be sent snapshot called "Start nominations name different"
 
-    Given user was created with email "different-user-type@example.com"
+    Given user was created as "early_career_teacher" with email "different-user-type@example.com"
     When I click on "link" containing "Change the name"
     And I type "John Wick" into "name input"
     And I type "different-user-type@example.com" into "email input"
