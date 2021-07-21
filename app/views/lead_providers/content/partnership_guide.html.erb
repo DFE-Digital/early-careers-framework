@@ -1,0 +1,186 @@
+<p class="govuk-body-m">We’ve created an online service for training providers to:</p>
+
+<ul class="govuk-list govuk-list--bullet">
+  <li>upload the schools they have recruited</li>
+  <li>check which schools have added their early career teachers and mentors</li>
+</ul>
+
+<p class="govuk-body-m">Our service should help you through each step but here is a quick guide to get you up to speed.</p>
+
+<h2 class="govuk-heading-l">Contents</h2>
+
+<ul class="govuk-list govuk-list--bullet">
+  <li><a href="#how-to-sign-in-to-your-account" class="govuk-link">How to sign into your account</a></li>
+  <li><a href="#how-to-confirm-the-schools-you-have-recruited" class="govuk-link">How to confirm the schools you have recruited</a></li>
+  <li><a href="#checking-errors-and-updating-your-csv" class="govuk-link">Checking errors and updating your CSV</a></li>
+  <li><a href="#when-a-school-reports-that-they-have-been-confirmed-incorrectly" class="govuk-link">When a school reports they have been confirmed incorrectly</a></li>
+  <li><a href="#check-the-schools-you-ve-recruited" class="govuk-link">Check the schools you’ve recruited</a></li>
+</ul>
+
+<h2 id="how-to-sign-in-to-your-account" class="govuk-heading-l">How to sign in to your account</h2>
+<ol class="govuk-list govuk-list--number">
+  <li>If your organisation has provided us with your name and email address, we will create an account for you.</li>
+  <li>We will send a notification to your email address that your account has been created. You can use this email address to sign in.</li>
+  <li>You do not need a password. When you enter your email address, we send you an automatic email with a link to complete your sign in.</li>
+  <li>Sign in: <a href="https://manage-training-for-early-career-teachers.education.gov.uk/users/sign_in" class="govuk-link">https://manage-training-for-early-career-teachers.education.gov.uk/users/sign_in</a></li>
+  <li>When you have signed in, you will see this page (with your organisation’s name):</li>
+</ol>
+
+<p class="govuk-body-m"><img src="/lead-provider/start-page.png" alt="Example of a Lead Provider start page"></p>
+
+<%= render GovukComponent::Warning.new(text: "If you go to the start page called ‘Manage training for early career teachers’, ignore the copy for induction tutors. Just press ‘Start’ to get to the sign in page.") %>
+
+<h2 id="how-to-confirm-the-schools-you-have-recruited" class="govuk-heading-l">How to confirm the schools you have recruited</h2>
+<p class="govuk-body-m">When you have confirmed an agreement with a school or a number of schools, you can upload them using a CSV file. This updates the DfE so that we can process your payments.</p>
+
+<ol class="govuk-list govuk-list--number">
+  <li>When you have signed in, select ‘Confirm your schools’.</li>
+  <li>Follow the next screens to ensure that you are only confirming schools for 2021.</li>
+  <li>Choose the delivery partner that these schools will be working with:</li>
+</ol>
+
+<p class="govuk-body-m"><img src="/lead-provider/choose-delivery-partner-page.png" alt="Example of a Choose the delivery partner page"></p>
+
+<ol class="govuk-list govuk-list--number">
+  <li>Make sure that your CSV follows this format:
+    <ul class="govuk-list govuk-list--bullet">
+      <li>one column with the school URNs only (Column A)</li>
+      <li>every school on a new row, no empty rows in between</li>
+      <li>no other delivery partners</li>
+      <li>no other data</li>
+    </ul></li>
+</ol>
+
+<p class="govuk-body-m">Here’s an example CSV:</p>
+
+<p class="govuk-body-m"><img src="/lead-provider/example-csv.png" alt="Example CSV containing a list of school URNs"></p>
+
+<%= render GovukComponent::Warning.new(text: "you upload a CSV for each delivery partner you have confirmed schools for.") %>
+
+<h2 id="checking-errors-and-updating-your-csv" class="govuk-heading-l">Checking errors and updating your CSV</h2>
+<p class="govuk-body-m">When you upload your CSV, we will show you if there are any errors. These could be:</p>
+
+<%= render GovukComponent::SummaryList.new do |component|
+    component.slot(
+        :row,
+        key: 'Recruited by other provider',
+        value: 'Another training provider has confirmed this school'
+    )
+    component.slot(
+        :row,
+        key: 'URN is not valid',
+        value: 'The unique reference number (URN) does not match this school'
+    )
+    component.slot(
+        :row,
+        key: 'Your school - already confirmed',
+        value: 'You have already confirmed this school and it’s on your list'
+    )
+    component.slot(
+        :row,
+        key: 'School not eligible for inductions',
+        value: 'School is not an eligible establishment type and/or isn’t in England and/or isn’t open as per our GIAS snapshot'
+    )
+    component.slot(
+        :row,
+        key: 'School not eligible for funding',
+        value: 'This school is not eligible to receive funding from the DfE. (Other independent special schools, Welsh establishments, British schools overseas etc.)<br/><br/>They can only use the accredited materials (core induction programme).'.html_safe
+    )
+end %>
+
+<p class="govuk-body-m">You can choose to:</p>
+
+<ul class="govuk-list govuk-list--bullet">
+  <li>continue with the schools that do not have any errors, or</li>
+  <li>update your CSV and upload it again</li>
+</ul>
+
+<p class="govuk-body-m">When you have confirmed your schools, they will be sent a confirmation email. This includes a link to report if they have been confirmed incorrectly.</p>
+
+<h2 id="when-a-school-reports-that-they-have-been-confirmed-incorrectly" class="govuk-heading-l">When a school reports that they have been confirmed incorrectly</h2>
+<p class="govuk-body-m">Every school you confirm on our service will receive a confirmation email like this:</p>
+
+<%= render GovukComponent::InsetText.new(text: 'Hello,<br/>
+    <br/>
+    <code>&lt;Delivery partner name&gt;</code>, with <code>&lt;Lead provider name&gt;</code>, has confirmed they will be delivering an induction programme to early career teachers at <code>&lt;School name&gt;</code>, starting in 2021.<br/>
+
+    <h3>If this is a mistake</h3>
+
+    If you have not confirmed an agreement with this provider or you have signed up with someone else, report this now:<br/>
+    <br/>
+    <code>&lt;URL&gt;</code><br/>
+    <br/>
+    This link will expire in 14 days'.html_safe)
+%>
+
+<p class="govuk-body-m">They will also:</p>
+
+<ul class="govuk-list govuk-list--bullet">
+  <li>see this notification when they log in to their part of the service</li>
+  <li>be reminded to nominate their induction tutor and/or add their ECTs and mentors</li>
+  <li>have a link to report if they have been confirmed incorrectly</li>
+</ul>
+
+<h3 class="govuk-heading-m">When they report this</h3>
+<p class="govuk-body-m">They must select one of these reasons in our form:</p>
+
+<ul class="govuk-list govuk-list--bullet">
+  <li>I have already confirmed an agreement with another provider</li>
+  <li>We have not confirmed an agreement</li>
+  <li>I do not recognise this training provider</li>
+  <li>We do not have any early career teachers this year</li>
+  <li>This looks like a mistake</li>
+</ul>
+
+<h3 class="govuk-heading-m">When they have submitted this form</h3>
+<p class="govuk-body-m">You and any colleagues using the service will receive an email notification like this:</p>
+
+<p class="govuk-body-m"><img src="/lead-provider/email-notification.png" alt="Example email notification of a school rejecting a partnership"></p>
+
+<p class="govuk-body-m">You will also see this when you are signed into the service.</p>
+
+<p class="govuk-body-m">When you <strong>'Check your schools'</strong>, the label <strong>'Reported error'</strong> will appear next to that school.</p>
+
+<p class="govuk-body-m"><img src="/lead-provider/schools-page-with-error.png" alt="Example school listing page showing a partnership error"></p>
+
+<p class="govuk-body-m">When you click on that school, you will see a banner at the top of the page including the reason they reported this as a mistake:</p>
+
+<p class="govuk-body-m"><img src="/lead-provider/reported-reason.png" alt="Example of a reson being reported"></p>
+
+<h3 class="govuk-heading-m">If you think the school has made a mistake reporting this</h3>
+<p class="govuk-body-m">You should contact the school directly (you do not need to contact the DfE) </p>
+
+<p class="govuk-body-m">if the matter is resolved, upload the school again</p>
+
+<%= render GovukComponent::Warning.new(text: "You will not receive payment for this school until resolved and re-uploaded.") %>
+
+<h2 id="check-the-schools-you-ve-recruited" class="govuk-heading-l">Check the schools you’ve recruited</h2>
+<p class="govuk-body-m">When you have signed into the service, you can:</p>
+
+<ul class="govuk-list govuk-list--bullet">
+  <li>check the schools you have confirmed</li>
+  <li>see their details including their induction tutor contact</li>
+</ul>
+
+<p class="govuk-body-m">When you have signed in, select <strong>'Check your schools'</strong>. You’ll see your list of confirmed schools with their ECT and mentor numbers.</p>
+
+<p class="govuk-body-m"><img src="/lead-provider/schools-page.png" alt="Example showing the page of your schools"></p>
+
+<p class="govuk-body-m">You can click on any school to see more details:</p>
+
+<p class="govuk-body-m"><img src="/lead-provider/school-page.png" alt="Example showing the details known about a school"></p>
+
+<%= render GovukComponent::Warning.new(text: "ECT and mentor numbers will be zero (0) until we gather this data from schools. We will update all providers before schools start adding them to the service.") %>
+
+<h2 id="help-support-and-feedback" class="govuk-heading-l">Help, support and feedback</h2>
+
+<h3 class="govuk-heading-m">See a demo</h3>
+<p class="govuk-body-m">To request a remote demonstration of the service as a whole or a particular feature, email us on <a href="mailto:continuing-professional-development@digital.education.gov.uk" class="govuk-link">continuing-professional-development@digital.education.gov.uk</a>.</p>
+
+<h3 class="govuk-heading-m">Report a problem</h3>
+<p class="govuk-body-m">To report a problem or get help, email us on <a href="mailto:continuing-professional-development@digital.education.gov.uk" class="govuk-link">continuing-professional-development@digital.education.gov.uk</a>.</p>
+
+<h3 class="govuk-heading-m">Take part in user research and give feedback</h3>
+<p class="govuk-body-m">We welcome feedback on all aspects of Manage continuing professional development. When you participate in user research, you help shape current and future service features.</p>
+
+<p class="govuk-body-m">Please <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=yXfS-grGoU2187O4s0qC-VlIdprT6TlEmsOS8-ufjHVUQzgyQVVOSERHWkZYV045RVYxSTBQWlNUSi4u" class="govuk-link">complete this 30-second form</a> and we’ll be in touch. Or, simply give us your feedback over email at <a href="mailto:continuing-professional-development@digital.education.gov.uk" class="govuk-link">continuing-professional-development@digital.education.gov.uk</a>.</p>

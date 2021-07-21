@@ -1,0 +1,79 @@
+<h3 class="govuk-heading-l" id="<%= operation.anchor %>"><code><%= operation.name %></code></h3>
+
+<div class="govuk-body-l">
+  <%= operation.summary %>
+</div>
+
+<%= markdown_to_html operation.description %>
+<% if operation.parameters.any? %>
+  <h4 class="govuk-heading-s">Parameters</h4>
+
+  <table class="govuk-table">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">Parameter</th>
+        <th scope="col" class="govuk-table__header">In</th>
+        <th scope="col" class="govuk-table__header">Type</th>
+        <th scope="col" class="govuk-table__header">Required</th>
+        <th scope="col" class="govuk-table__header">Description</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+      <% operation.parameters.each do |parameter| %>
+        <tr class="govuk-table__row">
+          <td scope="row" class="govuk-table__header"><%= parameter.name %></td>
+          <td class="govuk-table__cell"><%= parameter.in %></td>
+          <td class="govuk-table__cell"><%= parameter.schema.type %></td>
+          <td class="govuk-table__cell"><%= parameter.required? %></td>
+          <td class="govuk-table__cell">
+            <p class="govuk-body">
+              <%= parameter.description %>
+            </p>
+            <% if parameter.schema.enum %>
+              <p>Allowed items:</p>
+
+              <ul>
+                <% parameter.schema.enum.each do |item| %>
+                  <li><%= item %></li>
+                <% end %>
+              </ul>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+<% unless operation.request_body.nil? %>
+  <h4 class="govuk-heading-s">Request body</h4>
+
+  <%= markdown_to_html operation.request_body.description %>
+  <%= render ApiDocs::PropertyListComponent.new(operation.request_body.schema.properties) %>
+  <%= govuk_details(
+        summary: 'Example request body',
+        ) do %>
+    <%= json_code_sample(operation.request_body.schema.example) %>
+  <% end %>
+<% end %>
+<% if operation.responses.any? %>
+  <h4 class="govuk-heading-s">Possible responses</h4>
+
+  <% operation.responses.each do |code, response| %>
+    <%= govuk_details(
+          summary: "HTTP #{code} - #{response.description}",
+          ) do %>
+      <% if response.schema %>
+        <% if response.schema.name %>
+          This request will return a <%= govuk_link_to response.schema.name, "##{response.schema.name.parameterize}-object" %> object.
+        <% end %>
+        <% if response.schema.example %>
+          <% if response.mime_type == 'application/json' %>
+            <%= json_code_sample(response.schema.example) %>
+          <% elsif response.mime_type == 'text/csv' %>
+            <%= csv_sample(response.schema.example) %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

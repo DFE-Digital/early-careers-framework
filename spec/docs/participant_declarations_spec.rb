@@ -13,83 +13,69 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
   let(:Authorization) { bearer_token }
 
   path "/api/v1/participant-declarations" do
-    post "Create participant declarations" do
-      operationId :api_v1_create_ect_participant
-      tags "participant_declarations"
+    post "Declare a participant has reached a milestone" do
+      operationId :participant_declarations
+      tags "Participant declarations"
       consumes "application/json"
       security [bearerAuth: []]
+
       request_body content: {
         "application/json": {
           "schema": {
-            "type": "object",
-            "properties": {
-              "participant_id": {
-                "type": "string",
-              },
-              "declaration_type": {
-                "enum": %w[started retained_1 retained_2 retained_3 retained_4 completed],
-              },
-              "declaration_date": {
-                "type": "string",
-                "format": "date-time",
-              },
-            },
-            "required": %w[participant_id declaration_type declaration_date],
-            "example": {
-              "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
-              "declaration_type": "started",
-              "declaration_date": "2021-05-31T02:21:32Z",
-            },
+            "$ref": "#/components/schemas/ParticipantDeclaration",
           },
         },
       }
-      parameter name: :params, in: :body, required: true, schema: {
-        type: :object,
-        properties: {
-          participant_id: { type: :string },
-        },
-      }, description: "The unique id of the participant"
 
-      parameter name: :params, in: :body, required: false, schema: {
-        type: :object,
-        properties: {
-          declaration_type: { enum: %w[started retained_1 retained_2 retained_3 retained_4 completed] },
-        },
-      }, description: "The event declaration type"
-
-      parameter name: :params, in: :body, required: false, schema: {
-        type: :object,
-        properties: {
-          declaration_date: { type: :string, format: "date-time" },
-        },
-      }, description: "The event declaration date"
+      parameter name: :params,
+                in: :body,
+                schema: {
+                  "$ref": "#/components/schemas/ParticipantDeclaration",
+                }
 
       response 200, "Successful" do
         let(:fresh_user) { create(:user, :early_career_teacher) }
         let(:params) do
           {
-            "participant_id" => fresh_user.id,
-            "declaration_type" => "started",
-            "declaration_date" => "2021-05-31T15:50:00Z",
+            "data": {
+              "type": "participant-declaration",
+              "attributes": {
+                "participant_id" => fresh_user.id,
+                "declaration_type" => "started",
+                "declaration_date" => "2021-05-31T15:50:00Z",
+                "course_type" => "ecf-induction",
+              },
+            },
           }
         end
         run_test!
       end
 
       response 200, "Successful" do
-        let(:params) do
+        let(:attributes) do
           {
             "participant_id" => user.id,
             "declaration_type" => "started",
             "declaration_date" => "2021-05-31T15:50:00Z",
+            "course_type" => "ecf-induction",
+          }
+        end
+
+        let(:params) do
+          {
+            "data": {
+              "type": "participant-declaration",
+              "attributes": attributes,
+            },
           }
         end
 
         before do
-          RecordParticipantDeclaration.call(HashWithIndifferentAccess.new({ lead_provider: lead_provider, raw_event: params.to_json }).merge(params))
+          caller_attributes = attributes.merge({ lead_provider: lead_provider, raw_event: params.to_json })
+          RecordParticipantDeclaration.call(HashWithIndifferentAccess.new(caller_attributes))
         end
 
-        schema "$ref": "#/components/schemas/id"
+        schema "$ref": "#/components/schemas/ParticipantDeclarationRecordedResponse"
 
         run_test!
       end
@@ -97,13 +83,32 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
       response "422", "Bad or Missing parameter" do
         let(:user) { build(:user, :early_career_teacher) }
 
-        schema "$ref": "#/components/schemas/error_response"
+        let(:params) do
+          {
+            "data": {
+              "type": "participant-declaration",
+              "attributes": {
+              },
+            },
+          }
+        end
+
+        schema "$ref": "#/components/schemas/BadOrMissingParametersResponse"
 
         run_test!
       end
 
       response "401", "Unauthorized" do
         let(:Authorization) { "Bearer invalid" }
+
+        schema "$ref": "#/components/schemas/UnauthorisedResponse"
+
+        run_test!
+      end
+
+      response "400", "Bad Request" do
+        schema "$ref": "#/components/schemas/BadRequestResponse"
+
         run_test!
       end
     end

@@ -65,11 +65,11 @@ module Schools
     end
 
     def can_add_self?
-      User.is_participant.in_school(school_cohort.school).exclude? current_user
+      school_cohort.active_ecf_participants.exclude? current_user
     end
 
     def mentor_options
-      @mentor_options ||= school_cohort.school.mentors
+      @mentor_options ||= school_cohort.active_mentors.order(:full_name)
     end
 
     def mentor
@@ -79,7 +79,7 @@ module Schools
     end
 
     def email_already_taken?
-      User.exists?(email: email)
+      User.find_by(email: email)&.participant_profiles&.ecf&.any?
     end
 
     def type=(value)
@@ -118,8 +118,7 @@ module Schools
       creators[participant_type].call(
         full_name: full_name,
         email: email,
-        cohort_id: school_cohort.cohort_id,
-        school_id: school_cohort.school_id,
+        school_cohort: school_cohort,
         mentor_profile_id: mentor&.mentor_profile&.id,
       )
     end

@@ -2,8 +2,10 @@
 
 cohort = Cohort.find_or_create_by!(start_year: 2021)
 school = FactoryBot.create(:school, name: "Hogwarts Academy", slug: "111111-hogwarts-academy")
+another_school = FactoryBot.create(:school, name: "Some High School", slug: "12344-some-high-school")
 
-FactoryBot.create(:school_cohort, cohort: cohort, school: school, induction_programme_choice: "full_induction_programme")
+school_cohort = FactoryBot.create(:school_cohort, cohort: cohort, school: school, induction_programme_choice: "full_induction_programme")
+another_school_cohort = FactoryBot.create(:school_cohort, cohort: cohort, school: another_school, induction_programme_choice: "full_induction_programme")
 
 FactoryBot.create(
   :partnership,
@@ -16,12 +18,9 @@ FactoryBot.create(
 coordinator = FactoryBot.create(:user, :induction_coordinator, email: "school-leader@example.com", full_name: "Ms School Leader")
 coordinator.induction_coordinator_profile.schools = [school]
 
-mentor = FactoryBot.create(:user, :mentor, full_name: "Abdul Mentor", id: "51223b41-a562-4d94-b50c-0ce59a8bb34d")
-mentor.mentor_profile.update!(school: school)
+mentor = FactoryBot.create(:user, :mentor, full_name: "Abdul Mentor", id: "51223b41-a562-4d94-b50c-0ce59a8bb34d", school_cohort: school_cohort)
 
-FactoryBot.create(:user, :mentor, full_name: "Unrelated user", email: "unrelated@example.com")
+FactoryBot.create(:user, :mentor, full_name: "Unrelated user", email: "unrelated@example.com", school_cohort: another_school_cohort)
 
-ect_1 = FactoryBot.create(:user, :early_career_teacher, full_name: "Joe Bloggs", email: "joe-bloggs@example.com")
-ect_1.early_career_teacher_profile.update!(school: school, mentor_profile: mentor.mentor_profile)
-ect_2 = FactoryBot.create(:user, :early_career_teacher, full_name: "Dan Smith", email: "dan-smith@example.com")
-ect_2.early_career_teacher_profile.update!(school: school)
+FactoryBot.create(:user, :early_career_teacher, full_name: "Joe Bloggs", email: "joe-bloggs@example.com", school_cohort: school_cohort, mentor: mentor)
+FactoryBot.create(:user, :early_career_teacher, full_name: "Dan Smith", email: "dan-smith@example.com", school_cohort: school_cohort)

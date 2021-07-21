@@ -27,14 +27,10 @@ class School < ApplicationRecord
   has_many :induction_coordinator_profiles, through: :induction_coordinator_profiles_schools
   has_many :induction_coordinators, through: :induction_coordinator_profiles, source: :user
 
-  has_many :participant_profiles
-
-  # TODO: Legacy association, to be removed
-  has_many :early_career_teacher_profiles, class_name: "ParticipantProfile::ECT"
-  has_many :mentor_profiles, class_name: "ParticipantProfile::Mentor"
-
-  has_many :early_career_teachers, through: :early_career_teacher_profiles, source: :user
-  has_many :mentors, through: :mentor_profiles, source: :user
+  has_many :ecf_participant_profiles, through: :school_cohorts, source: :ecf_participant_profiles
+  has_many :ecf_participants, through: :ecf_participant_profiles, source: :user
+  has_many :active_ecf_participant_profiles, through: :school_cohorts
+  has_many :active_ecf_participants, through: :active_ecf_participant_profiles, source: :user
 
   has_many :additional_school_emails
 
@@ -75,8 +71,16 @@ class School < ApplicationRecord
     partnerships.joins(%i[delivery_partner cohort]).find_by(cohorts: { start_year: year })&.delivery_partner
   end
 
-  def early_career_teacher_profiles_for(year)
-    early_career_teacher_profiles.joins(:cohort).where(cohort: { start_year: year })
+  def participants_for(cohort)
+    school_cohorts.find_by(cohort: cohort)&.active_ecf_participants || []
+  end
+
+  def early_career_teacher_profiles_for(cohort)
+    school_cohorts.find_by(cohort: cohort)&.ecf_participant_profiles&.ects&.active || []
+  end
+
+  def mentor_profiles_for(cohort)
+    school_cohorts.find_by(cohort: cohort)&.ecf_participant_profiles&.mentors&.active || []
   end
 
   def full_address

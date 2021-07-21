@@ -1,0 +1,7 @@
+description: "Bad Request"
+type: object
+example: "Bad Request"
+properties:
+  bad_request:
+    description: "An error message for bad request"
+    type: string

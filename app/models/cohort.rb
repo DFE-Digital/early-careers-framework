@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 class Cohort < ApplicationRecord
-  # TODO: Are those at all used?
-  has_many :early_career_teacher_profiles, class_name: "ParticipantProfile::ECT"
-  has_many :early_career_teachers, through: :early_career_teacher_profiles, source: :user
-
   def self.current
     # TODO: Register and Partner 262: Figure out how to update current year
     find_by(start_year: 2021)

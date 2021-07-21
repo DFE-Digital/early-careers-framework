@@ -3,6 +3,10 @@
 require "rails_helper"
 
 RSpec.describe School, type: :model do
+  subject(:school) { create(:school) }
+  let(:cohort) { create(:cohort) }
+  let(:school_cohort) { create(:school_cohort, school: school, cohort: cohort) }
+
   describe "School" do
     it "can be created" do
       expect {
@@ -25,8 +29,6 @@ RSpec.describe School, type: :model do
     it { is_expected.to have_many(:induction_coordinator_profiles_schools) }
     it { is_expected.to have_many(:induction_coordinator_profiles).through(:induction_coordinator_profiles_schools) }
     it { is_expected.to have_many(:induction_coordinators).through(:induction_coordinator_profiles).source(:user) }
-    it { is_expected.to have_many(:early_career_teacher_profiles) }
-    it { is_expected.to have_many(:early_career_teachers).through(:early_career_teacher_profiles) }
     it { is_expected.to have_many(:pupil_premiums) }
     it { is_expected.to have_many(:school_cohorts) }
     it { is_expected.to have_many(:nomination_emails) }
@@ -105,14 +107,12 @@ RSpec.describe School, type: :model do
   end
 
   describe "#not_registered?" do
-    let(:school) { create(:school) }
     it "returns true if no one has registered the school" do
       expect(school.not_registered?).to be true
     end
 
     context "when school has an induction coordinator" do
-      let(:user) { create(:user) }
-      let!(:coordinator) { create(:induction_coordinator_profile, user: user, schools: [school]) }
+      let!(:user) { create(:user, :induction_coordinator, school_ids: [school.id]) }
 
       it "returns false" do
         expect(school.not_registered?).to be false
@@ -121,7 +121,6 @@ RSpec.describe School, type: :model do
   end
 
   describe "#registered?" do
-    let(:school) { create(:school) }
     it "returns false if there are no induction coordinators for the school" do
       expect(school.registered?).to be false
     end
@@ -178,7 +177,6 @@ RSpec.describe School, type: :model do
 
   describe "#pupil_premium_uplift?" do
     context "it has no pupil premium eligibility record" do
-      let(:school) { create(:school) }
       it "returns false" do
         expect(school.pupil_premium_uplift?(2021)).to be false
       end
@@ -211,8 +209,6 @@ RSpec.describe School, type: :model do
     end
 
     context "it is part of a not sparse district" do
-      let(:school) { create(:school) }
-
       it "returns false" do
         expect(school.sparsity_uplift?).to be false
       end
@@ -330,7 +326,6 @@ RSpec.describe School, type: :model do
     let(:cohort_2021) { create(:cohort, start_year: 2021) }
     let(:delivery_1) { create(:delivery_partner, name: "Ace Education") }
     let(:delivery_2) { create(:delivery_partner, name: "Super Learn") }
-    let(:school) { create(:school) }
 
     before do
       create(:partnership, school: school, delivery_partner: delivery_1, cohort: cohort_2020)
@@ -344,25 +339,6 @@ RSpec.describe School, type: :model do
     context "when there is no partner for the given cohort" do
       it "returns nil" do
         expect(school.delivery_partner_for(2022)).to be_nil
-      end
-    end
-  end
-
-  describe "#early_career_teacher_profiles_for" do
-    let(:cohort_2020) { create(:cohort, start_year: 2020) }
-    let(:cohort_2021) { create(:cohort, start_year: 2021) }
-    let(:school) { create(:school) }
-    let!(:teachers_2020) { create_list(:early_career_teacher_profile, 2, school: school, cohort: cohort_2020) }
-    let!(:teachers_2021) { create_list(:early_career_teacher_profile, 3, school: school, cohort: cohort_2021) }
-
-    it "returns the number of early career teachers for the given cohort year" do
-      expect(school.early_career_teacher_profiles_for(2020)).to match_array teachers_2020
-      expect(school.early_career_teacher_profiles_for(2021)).to match_array teachers_2021
-    end
-
-    context "when no early career teacher profiles are in the given cohort year" do
-      it "returns and empty collection" do
-        expect(school.early_career_teacher_profiles_for(2022)).to be_empty
       end
     end
   end
@@ -393,8 +369,6 @@ RSpec.describe School, type: :model do
     end
 
     context "when neither pupil premium nor sparcity uplifts apply" do
-      let(:school) { create(:school) }
-
       it "returns an empty string" do
         expect(school.characteristics_for(2021)).to be_blank
       end
@@ -402,8 +376,6 @@ RSpec.describe School, type: :model do
   end
 
   describe "#induction_tutor" do
-    let(:school) { create(:school) }
-
     context "when an induction tutor exists" do
       let!(:tutor) { create(:induction_coordinator_profile, schools: [school]) }
 
@@ -448,7 +420,6 @@ RSpec.describe School, type: :model do
     end
 
     it "returns false when the school is not in a partnership" do
-      school = create(:school)
       expect(school.partnered?(create(:cohort))).to be false
     end
 
@@ -463,12 +434,110 @@ RSpec.describe School, type: :model do
     end
 
     it "returns true when the school has a challenged and unchallenged partnership" do
-      cohort = create(:cohort)
-      school = create(:school)
       create(:partnership, school: school, cohort: cohort)
       create(:partnership, :challenged, school: school, cohort: cohort)
 
       expect(school.partnered?(cohort)).to be true
+    end
+  end
+
+  describe "#participants_for" do
+    it "includes active participants" do
+      ect = create(:user, :early_career_teacher, school_cohort: school_cohort)
+      mentor = create(:user, :mentor, school_cohort: school_cohort)
+
+      expect(school.participants_for(cohort)).to include(ect, mentor)
+    end
+
+    it "does not include withdrawn participants" do
+      ect = create(:early_career_teacher_profile, status: "withdrawn", school_cohort: school_cohort).user
+      mentor = create(:mentor_profile, status: "withdrawn", school_cohort: school_cohort).user
+
+      expect(school.participants_for(cohort)).not_to include(ect, mentor)
+    end
+
+    it "does not include participants from other cohorts" do
+      another_school_cohort = create(:school_cohort, cohort: create(:cohort), school: school)
+      ect = create(:user, :early_career_teacher, school_cohort: another_school_cohort)
+      mentor = create(:user, :mentor, school_cohort: another_school_cohort)
+
+      expect(school.participants_for(cohort)).not_to include(ect, mentor)
+    end
+
+    it "does not include participants from other schools" do
+      another_school_cohort = create(:school_cohort, school: create(:school), cohort: cohort)
+      ect = create(:user, :early_career_teacher, school_cohort: another_school_cohort)
+      mentor = create(:user, :mentor, school_cohort: another_school_cohort)
+
+      expect(school.participants_for(cohort)).not_to include(ect, mentor)
+    end
+  end
+
+  describe "#early_career_teacher_profiles_for" do
+    it "includes active ECTs" do
+      ect_profile = create(:early_career_teacher_profile, school_cohort: school_cohort)
+
+      expect(school.early_career_teacher_profiles_for(cohort)).to include ect_profile
+    end
+
+    it "does not include withdrawn ECTs" do
+      ect_profile = create(:early_career_teacher_profile, status: "withdrawn", school_cohort: school_cohort)
+
+      expect(school.early_career_teacher_profiles_for(cohort)).not_to include ect_profile
+    end
+
+    it "does not include ECTs from other cohorts" do
+      another_school_cohort = create(:school_cohort, cohort: create(:cohort), school: school)
+      ect_profile = create(:early_career_teacher_profile, school_cohort: another_school_cohort)
+
+      expect(school.early_career_teacher_profiles_for(cohort)).not_to include ect_profile
+    end
+
+    it "does not include ECTs from other schools" do
+      another_school_cohort = create(:school_cohort, school: create(:school), cohort: cohort)
+      ect_profile = create(:early_career_teacher_profile, school_cohort: another_school_cohort)
+
+      expect(school.early_career_teacher_profiles_for(cohort)).not_to include ect_profile
+    end
+
+    it "does not include mentors" do
+      mentor_profile = create(:mentor_profile, school_cohort: school_cohort)
+
+      expect(school.early_career_teacher_profiles_for(cohort)).not_to include mentor_profile
+    end
+  end
+
+  describe "#mentor_profiles_for" do
+    it "includes active mentors" do
+      mentor_profile = create(:mentor_profile, school_cohort: school_cohort)
+
+      expect(school.mentor_profiles_for(cohort)).to include mentor_profile
+    end
+
+    it "does not include withdrawn mentors" do
+      mentor_profile = create(:mentor_profile, status: "withdrawn", school_cohort: school_cohort)
+
+      expect(school.mentor_profiles_for(cohort)).not_to include mentor_profile
+    end
+
+    it "does not include mentors from other cohorts" do
+      another_school_cohort = create(:school_cohort, cohort: create(:cohort), school: school)
+      mentor_profile = create(:mentor_profile, school_cohort: another_school_cohort)
+
+      expect(school.mentor_profiles_for(cohort)).not_to include mentor_profile
+    end
+
+    it "does not include mentors from other schools" do
+      another_school_cohort = create(:school_cohort, school: create(:school), cohort: cohort)
+      mentor_profile = create(:mentor_profile, school_cohort: another_school_cohort)
+
+      expect(school.mentor_profiles_for(cohort)).not_to include mentor_profile
+    end
+
+    it "does not include ECTs" do
+      ect_profile = create(:early_career_teacher_profile, school_cohort: school_cohort)
+
+      expect(school.mentor_profiles_for(cohort)).not_to include ect_profile
     end
   end
 end

@@ -8,6 +8,7 @@ RSpec.describe User, type: :model do
   end
 
   describe "associations" do
+    it { is_expected.to have_many(:participant_profiles) }
     it { is_expected.to have_one(:admin_profile) }
     it { is_expected.to have_one(:induction_coordinator_profile) }
     it { is_expected.to have_many(:schools).through(:induction_coordinator_profile) }
@@ -17,7 +18,7 @@ RSpec.describe User, type: :model do
   end
 
   describe "before_validation" do
-    let(:user) { build(:user, full_name: "\t  Gordon Banks \n", email: " \tgordo@example.com \n ") }
+    let(:user) { build(:user, full_name: "\t  Gordon \tBanks \n", email: " \tgordo@example.com \n ") }
 
     it "strips whitespace from :full_name" do
       user.valid?
@@ -102,6 +103,11 @@ RSpec.describe User, type: :model do
 
       expect(user.early_career_teacher?).to be false
     end
+
+    it "is false when the ect profile is withdrawn" do
+      user = create(:early_career_teacher_profile, status: "withdrawn").user
+      expect(user.early_career_teacher?).to be false
+    end
   end
 
   describe "#mentor?" do
@@ -114,6 +120,11 @@ RSpec.describe User, type: :model do
     it "is expected to be false when the user does not have a mentor profile" do
       user = create(:user)
 
+      expect(user.mentor?).to be false
+    end
+
+    it "is false when the mentor profile is withdrawn" do
+      user = create(:mentor_profile, status: "withdrawn").user
       expect(user.mentor?).to be false
     end
   end
@@ -290,6 +301,25 @@ RSpec.describe User, type: :model do
       it "returns Unknown" do
         expect(user.user_description).to eq("Unknown")
       end
+    end
+  end
+
+  describe "scope :is_ecf_participant" do
+    it "includes ecf participants" do
+      ect = create(:participant_profile, :ect).user
+      mentor = create(:participant_profile, :mentor).user
+
+      expect(User.is_ecf_participant).to include(ect, mentor)
+    end
+
+    it "does not include other user types" do
+      admin = create(:user, :admin)
+      lp = create(:user, :lead_provider)
+      npq = create(:participant_profile, :npq).user
+
+      expect(User.is_ecf_participant).not_to include(admin)
+      expect(User.is_ecf_participant).not_to include(lp)
+      expect(User.is_ecf_participant).not_to include(npq)
     end
   end
 end

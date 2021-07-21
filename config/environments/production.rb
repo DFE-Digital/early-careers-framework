@@ -15,7 +15,7 @@ Rails.application.configure do
   config.eager_load = true
 
   # Full error reports are disabled and caching is turned on.
-  config.consider_all_requests_local       = false
+  config.consider_all_requests_local = false
   config.action_controller.perform_caching = true
 
   # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
@@ -142,4 +142,20 @@ Rails.application.configure do
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
 
   config.cip_resource_bucket = "https://paas-s3-broker-prod-lon-ac28a7a5-2bc2-4d3b-8d16-a88eaef65526.s3.amazonaws.com"
+
+  # From https://github.com/paper-trail-gem/paper_trail/wiki/Setting-whodunnit-in-the-rails-console
+  console do
+    PaperTrail.request.whodunnit = lambda {
+      @paper_trail_whodunnit ||= begin
+                                   email = nil
+                                   until email.present?
+                                     # rubocop:disable Rails/Output
+                                     puts "Enter your email address for PaperTrail"
+                                     # rubocop:enable Rails/Output
+                                     email = gets.chomp
+                                   end
+                                   email
+                                 end
+    }
+  end
 end

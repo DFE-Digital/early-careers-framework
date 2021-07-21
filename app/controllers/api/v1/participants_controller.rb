@@ -24,7 +24,7 @@ module Api
     private
 
       def access_scope
-        LeadProviderApiToken.all
+        LeadProviderApiToken.joins(cpd_lead_provider: [:lead_provider])
       end
 
       def to_csv(hash)
@@ -51,7 +51,7 @@ module Api
       end
 
       def participants
-        participants = User.participants_for_lead_provider(lead_provider)
+        participants = lead_provider.ecf_participants
                            .includes(
                              early_career_teacher_profile: %i[cohort mentor school],
                              mentor_profile: %i[cohort school],

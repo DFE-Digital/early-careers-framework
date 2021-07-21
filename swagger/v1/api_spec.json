@@ -1,56 +1,158 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "API documentation",
-    "version": "v1",
-    "description": "API for DfE CPD's participant service"
-  },
-  "components": {
-    "securitySchemes": {
-      "bearerAuth": {
-        "bearerFormat": "string",
-        "type": "http",
-        "scheme": "bearer"
-      }
+    "version": "0.0.1",
+    "title": "Manage teacher CPD - lead provider API",
+    "contact": {
+      "name": "DfE",
+      "email": "continuing-professional-development@digital.education.gov.uk"
     },
-    "schemas": {
-      "error_response": {
-        "type": "object",
-        "properties": {
-          "bad_or_missing_parameter": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "uniqueItems": true,
-            "minItems": 1
-          }
-        }
-      },
-      "id": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          }
-        }
-      }
-    }
+    "description": "The lead provider API for DfE's manage teacher CPD service"
   },
-  "security": [
+  "servers": [
     {
-      "bearerAuth": [
-
-      ]
+      "url": "https://ecf-sandbox.london.cloudapps.digital",
+      "description": "Sandbox"
+    },
+    {
+      "url": "/",
+      "description": "Current environment"
+    },
+    {
+      "url": "https://manage-training-for-early-career-teachers.education.gov.uk",
+      "description": "Production"
     }
   ],
   "paths": {
+    "/api/v1/npq-applications": {
+      "get": {
+        "summary": "Retrieve multiple NPQ applications",
+        "operationId": "npq_applications",
+        "tags": [
+          "NPQ applications"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ListFilter"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "description": "Refine NPQ applications to return.",
+            "example": {
+              "updated_since": "2020-11-13T11:21:55Z"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Pagination"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "example": {
+              "page": 1,
+              "per_page": 5
+            },
+            "description": "Pagination options to navigate through the list of NPQ applications."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of NPQ applications",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultipleNpqApplicationsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/npq-applications.csv": {
+      "get": {
+        "summary": "Retrieve all NPQ applications in CSV format",
+        "operationId": "npq_applications_csv",
+        "tags": [
+          "NPQ applications"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ListFilter"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "description": "Refine NPQ applications to return.",
+            "example": {
+              "updated_since": "2020-11-13T11:21:55Z"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A CSV file of NPQ application",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultipleNpqApplicationsCsvResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/participant-declarations": {
       "post": {
-        "summary": "Create participant declarations",
-        "operationId": "api_v1_create_ect_participant",
+        "summary": "Declare a participant has reached a milestone",
+        "operationId": "participant_declarations",
         "tags": [
-          "participant_declarations"
+          "Participant declarations"
         ],
         "security": [
           {
@@ -63,36 +165,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "participant_id": {
-                    "type": "string"
-                  },
-                  "declaration_type": {
-                    "enum": [
-                      "started",
-                      "retained_1",
-                      "retained_2",
-                      "retained_3",
-                      "retained_4",
-                      "completed"
-                    ]
-                  },
-                  "declaration_date": {
-                    "type": "string",
-                    "format": "date-time"
-                  }
-                },
-                "required": [
-                  "participant_id",
-                  "declaration_type",
-                  "declaration_date"
-                ],
-                "example": {
-                  "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                  "declaration_type": "started",
-                  "declaration_date": "2021-05-31T02:21:32Z"
-                }
+                "$ref": "#/components/schemas/ParticipantDeclaration"
               }
             }
           }
@@ -106,7 +179,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/id"
+                  "$ref": "#/components/schemas/ParticipantDeclarationRecordedResponse"
                 }
               }
             }
@@ -116,23 +189,40 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/error_response"
+                  "$ref": "#/components/schemas/BadOrMissingParametersResponse"
                 }
               }
             }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/v1/participants": {
       "get": {
-        "summary": "Returns all participants",
-        "operationId": "api_v1_participants_index",
+        "summary": "Retrieve multiple participants",
+        "operationId": "participants",
         "tags": [
-          "participant"
+          "ECF participants"
         ],
         "security": [
           {
@@ -146,21 +236,12 @@
             "name": "filter",
             "in": "query",
             "schema": {
-              "type": "object",
-              "example": "",
-              "description": "This schema is used to search within collections to return more specific results.",
-              "properties": {
-                "updated_since": {
-                  "description": "Return participants that have been updated since the date (ISO 8601 date format)",
-                  "type": "string",
-                  "example": "2021-05-13T11:21:55Z"
-                }
-              }
+              "$ref": "#/components/schemas/ListFilter"
             },
             "style": "deepObject",
             "explode": true,
             "required": false,
-            "description": "Refine participants to return.",
+            "description": "Refine ECF participants to return.",
             "example": {
               "updated_since": "2020-11-13T11:21:55Z"
             }
@@ -169,20 +250,7 @@
             "name": "page",
             "in": "query",
             "schema": {
-              "type": "object",
-              "description": "This schema used to paginate through a collection.",
-              "properties": {
-                "page": {
-                  "type": "integer",
-                  "description": "The page number to paginate to in the collection. If no value is specified it defaults to the first page.",
-                  "example": 3
-                },
-                "per_page": {
-                  "type": "integer",
-                  "description": "The number items to display on a page. Defaults to 100. Maximum is 500, if the value is greater that the maximum allowed it will fallback to 500.",
-                  "example": 10
-                }
-              }
+              "$ref": "#/components/schemas/Pagination"
             },
             "style": "deepObject",
             "explode": true,
@@ -191,91 +259,39 @@
               "page": 1,
               "per_page": 5
             },
-            "description": "Pagination options to navigate through the collection."
+            "description": "Pagination options to navigate through the list of ECF participants."
           }
         ],
         "responses": {
           "200": {
-            "description": "Collection of participants.",
+            "description": "A list of ECF participants",
             "content": {
-              "application/json": {
+              "application/vnd.api+json": {
                 "schema": {
-                  "type": "object",
-                  "required": [
-                    "data"
-                  ],
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "required": [
-                          "id",
-                          "type",
-                          "attributes"
-                        ],
-                        "properties": {
-                          "id": {
-                            "type": "string"
-                          },
-                          "type": {
-                            "type": "string"
-                          },
-                          "attributes": {
-                            "type": "object",
-                            "required": [
-                              "email",
-                              "full_name",
-                              "mentor_id",
-                              "school_urn",
-                              "participant_type",
-                              "cohort"
-                            ],
-                            "properties": {
-                              "email": {
-                                "type": "string"
-                              },
-                              "full_name": {
-                                "type": "string"
-                              },
-                              "mentor_id": {
-                                "type": "string"
-                              },
-                              "school_urn": {
-                                "type": "string"
-                              },
-                              "participant_type": {
-                                "type": "string",
-                                "enum": [
-                                  "mentor",
-                                  "ect"
-                                ]
-                              },
-                              "cohort": {
-                                "type": "string"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/MultipleEcfParticipantsResponse"
                 }
               }
             }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/v1/participants.csv": {
       "get": {
-        "summary": "Returns all participants",
-        "operationId": "api_v1_participants_index",
+        "summary": "Retrieve all participants in CSV format",
+        "operationId": "ecf_participants_csv",
         "tags": [
-          "participant"
+          "ECF participants"
         ],
         "security": [
           {
@@ -289,21 +305,12 @@
             "name": "filter",
             "in": "query",
             "schema": {
-              "type": "object",
-              "example": "",
-              "description": "This schema is used to search within collections to return more specific results.",
-              "properties": {
-                "updated_since": {
-                  "description": "Return participants that have been updated since the date (ISO 8601 date format)",
-                  "type": "string",
-                  "example": "2021-05-13T11:21:55Z"
-                }
-              }
+              "$ref": "#/components/schemas/ListFilter"
             },
             "style": "deepObject",
             "explode": true,
             "required": false,
-            "description": "Refine participants to return.",
+            "description": "Refine ECF participants to return.",
             "example": {
               "updated_since": "2020-11-13T11:21:55Z"
             }
@@ -311,20 +318,933 @@
         ],
         "responses": {
           "200": {
-            "description": "Collection of participants.",
+            "description": "A CSV file of ECF participants",
             "content": {
-              "application/json": {
+              "text/csv": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/MultipleEcfParticipantsCsvResponse"
                 }
               }
             }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
           }
         }
       }
     }
-  }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "bearerFormat": "string",
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "BadOrMissingParametersResponse": {
+        "description": "Request was missing data or contained invalid data",
+        "type": "object",
+        "required": [
+          "bad_or_missing_parameters"
+        ],
+        "properties": {
+          "bad_or_missing_parameters": {
+            "description": "An error message for each bad or missing attribute describing the problems",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true,
+            "example": [
+              "participant_id",
+              "declaration_date",
+              "declaration_type",
+              "course_type"
+            ]
+          }
+        }
+      },
+      "BadRequestResponse": {
+        "description": "Bad Request",
+        "type": "object",
+        "example": "Bad Request",
+        "properties": {
+          "bad_request": {
+            "description": "An error message for bad request",
+            "type": "string"
+          }
+        }
+      },
+      "ECFParticipantRetainedDeclaration": {
+        "description": "An ECF retained participant declaration",
+        "type": "object",
+        "properties": {
+          "participant_id": {
+            "description": "The unique id of the participant",
+            "type": "string",
+            "format": "uuid",
+            "example": "db3a7848-7308-4879-942a-c4a70ced400a"
+          },
+          "declaration_type": {
+            "description": "The event declaration type",
+            "type": "string",
+            "enum": [
+              "retained-1",
+              "retained-2",
+              "retained-3",
+              "retained-4"
+            ],
+            "example": "retained-1"
+          },
+          "declaration_date": {
+            "description": "The event declaration date",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:21:32.000Z"
+          },
+          "course_type": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "ecf-induction",
+              "ecf-mentor"
+            ],
+            "example": "ecf-induction"
+          },
+          "evidence_held": {
+            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
+            "type": "string",
+            "enum": [
+              "training-event-attended",
+              "self-study-material-completed"
+            ],
+            "example": "training-event-attended"
+          }
+        },
+        "required": [
+          "participant_id",
+          "declaration_type",
+          "declaration_date",
+          "course_type",
+          "evidence_held"
+        ],
+        "example": {
+          "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+          "declaration_type": "retained-1",
+          "declaration_date": "2021-05-31T02:21:32.000Z",
+          "course_type": "ecf-induction",
+          "evidence_held": "training-event-attended"
+        }
+      },
+      "ECFParticipantStartedDeclaration": {
+        "description": "An ECF started and completed participant declaration",
+        "type": "object",
+        "properties": {
+          "participant_id": {
+            "description": "The unique id of the participant",
+            "type": "string",
+            "format": "uuid",
+            "example": "db3a7848-7308-4879-942a-c4a70ced400a"
+          },
+          "declaration_type": {
+            "description": "The event declaration type",
+            "type": "string",
+            "enum": [
+              "started",
+              "completed"
+            ],
+            "example": "started"
+          },
+          "declaration_date": {
+            "description": "The event declaration date",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:21:32.000Z"
+          },
+          "course_type": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "ecf-induction",
+              "ecf-mentor"
+            ],
+            "example": "ecf-induction"
+          }
+        },
+        "required": [
+          "participant_id",
+          "declaration_type",
+          "declaration_date",
+          "course_type"
+        ],
+        "example": {
+          "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+          "declaration_type": "started",
+          "declaration_date": "2021-05-31T02:21:32.000Z",
+          "course_type": "ecf-mentor"
+        }
+      },
+      "EcfParticipant": {
+        "description": "The details of a participant",
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "id": {
+            "description": "The unique identifier of the participant record",
+            "type": "string",
+            "format": "uuid",
+            "example": "db3a7848-7308-4879-942a-c4a70ced400a"
+          },
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "participant"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/EcfParticipantAttributes"
+          }
+        }
+      },
+      "EcfParticipantAttributes": {
+        "description": "The data attributes associated with an ECF participant",
+        "type": "object",
+        "required": [
+          "email",
+          "full_name",
+          "school_urn",
+          "participant_type",
+          "cohort",
+          "status"
+        ],
+        "properties": {
+          "email": {
+            "description": "The email address registered for this ECF participant",
+            "type": "string",
+            "example": "jane.smith@some-school.example.com"
+          },
+          "full_name": {
+            "description": "The full name of this ECF participant",
+            "type": "string",
+            "example": "Jane Smith"
+          },
+          "mentor_id": {
+            "description": "The unique identifier of this ECF participants mentor",
+            "type": "string",
+            "example": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
+            "format": "uuid"
+          },
+          "school_urn": {
+            "description": "The Unique Reference Number (URN) of the school that submitted this ECF participant",
+            "type": "string",
+            "example": "106286"
+          },
+          "participant_type": {
+            "description": "The type of ECF participant this record refers to",
+            "type": "string",
+            "example": "ect",
+            "enum": [
+              "ect",
+              "mentor"
+            ]
+          },
+          "cohort": {
+            "description": "Which cohort this ECF participant is associated with",
+            "type": "string",
+            "example": "2021"
+          },
+          "status": {
+            "description": "The status of this ECF participants record",
+            "type": "string",
+            "example": "active",
+            "enum": [
+              "active",
+              "withdrawn"
+            ]
+          }
+        }
+      },
+      "EcfParticipantCsvRow": {
+        "description": "The details of an ECF participant",
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "email",
+          "full_name",
+          "school_urn",
+          "participant_type",
+          "cohort",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "description": "The unique identifier of the ECF participant record",
+            "type": "string",
+            "format": "uuid",
+            "example": "db3a7848-7308-4879-942a-c4a70ced400a"
+          },
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "participant",
+            "enum": [
+              "participant"
+            ]
+          },
+          "email": {
+            "description": "The email registered for this ECF participant",
+            "type": "string",
+            "example": "jane.smith@some-school.example.com"
+          },
+          "full_name": {
+            "description": "The full name of the ECF participant",
+            "type": "string",
+            "example": "Jane Smith"
+          },
+          "mentor_id": {
+            "description": "The unique identifier of the ECF participants mentor",
+            "type": "string",
+            "example": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
+            "format": "uuid"
+          },
+          "school_urn": {
+            "description": "The Unique Reference Number (URN) of the school the submitted this ECF participant",
+            "type": "string",
+            "example": "106286"
+          },
+          "participant_type": {
+            "description": "The type of ECF Participant this record refers to either ECT or Mentor",
+            "type": "string",
+            "example": "ect",
+            "enum": [
+              "ect",
+              "mentor"
+            ]
+          },
+          "cohort": {
+            "description": "Which cohort this ECF Participant is associated with",
+            "type": "string",
+            "example": "2021"
+          },
+          "status": {
+            "description": "The status of the ECF Participant",
+            "type": "string",
+            "example": "active",
+            "enum": [
+              "active"
+            ]
+          }
+        }
+      },
+      "ListFilter": {
+        "description": "Filter a list of records to return more specific results",
+        "type": "object",
+        "properties": {
+          "updated_since": {
+            "description": "Return only records that have been updated since this date and time (ISO 8601 date format)",
+            "type": "string",
+            "example": "2021-05-13T11:21:55Z"
+          }
+        }
+      },
+      "MultipleEcfParticipantsCsvResponse": {
+        "description": "A list of ECF participants in the Comma Separated Value (CSV) format",
+        "type": "string",
+        "format": "base64",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EcfParticipantCsvRow"
+            }
+          }
+        },
+        "example": "id,type,email,full_name,mentor_id,school_urn,participant_type,cohort,status\ndb3a7848-7308-4879-942a-c4a70ced400a,participant,jane.smith@some-school.example.com,Jane Smith,bb36d74a-68a7-47b6-86b6-1fd0d141c590,106286,ect,2021,active\nbb36d74a-68a7-47b6-86b6-1fd0d141c590,participant,martin.jones@some-school.example.com,Martin Jones,,106286,mentor,2021,active\neb475531-bf08-48ae-b0ef-c2ff5e5bdef0,participant,null,null,null,null,ect,null,withdrawn\n"
+      },
+      "MultipleEcfParticipantsResponse": {
+        "description": "A list of ECF participants",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EcfParticipant"
+            },
+            "example": [
+              {
+                "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                "type": "participant",
+                "attributes": {
+                  "email": "jane.smith@some-school.example.com",
+                  "full_name": "Jane Smith",
+                  "mentor_id": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
+                  "school_urn": "106286",
+                  "participant_type": "ect",
+                  "cohort": "2021",
+                  "status": "active"
+                }
+              },
+              {
+                "id": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
+                "type": "participant",
+                "attributes": {
+                  "email": "martin.jones@some-school.example.com",
+                  "full_name": "Martin jones",
+                  "school_urn": "106286",
+                  "participant_type": "mentor",
+                  "cohort": "2021",
+                  "status": "active"
+                }
+              },
+              {
+                "id": "eb475531-bf08-48ae-b0ef-c2ff5e5bdef0",
+                "type": "participant",
+                "attributes": {
+                  "email": "null,",
+                  "full_name": null,
+                  "mentor_id": null,
+                  "school_urn": null,
+                  "participant_type": "ect",
+                  "cohort": null,
+                  "status": "withdrawn"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "MultipleNpqApplicationsCsvResponse": {
+        "description": "A list of participants in the Comma Separated Value (CSV) format",
+        "type": "string",
+        "format": "base64",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NpqApplicationCsvRow"
+            }
+          }
+        },
+        "example": "id,type,participant_id,full_name,email,email_validated,email_validated,teacher_reference_number,teacher_reference_number_validated,school_urn,headteacher_status,eligible_for_funding,funding_choice,course_identifier\ndb3a7848-7308-4879-942a-c4a70ced400a,npq-application,7a8fef46-3c43-42c0-b3d5-1ba5904ba562,Isabelle MacDonald,isabelle.macdonald2@some-school.example.com,true,1234567,true,106286,no,true,trust,npq-leading-teaching\n"
+      },
+      "MultipleNpqApplicationsResponse": {
+        "description": "A list of NPQ applications",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NpqApplication"
+            },
+            "example": [
+              {
+                "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                "type": "participant",
+                "attributes": {
+                  "id": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
+                  "participant_id": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
+                  "full_name": "Isabelle MacDonald",
+                  "email": "isabelle.macdonald2@some-school.example.com",
+                  "email_validated": true,
+                  "teacher_reference_number": "1234567",
+                  "teacher_reference_number_validated": true,
+                  "school_urn": "106286",
+                  "headteacher_status": "no",
+                  "eligible_for_funding": true,
+                  "funding_choice": "trust",
+                  "course_identifier": "npq-leading-teaching"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "NPQParticipantRetainedDeclaration": {
+        "description": "An NPQ retained participant declaration",
+        "type": "object",
+        "properties": {
+          "participant_id": {
+            "description": "The unique id of the participant",
+            "type": "string",
+            "format": "uuid",
+            "example": "db3a7848-7308-4879-942a-c4a70ced400a"
+          },
+          "declaration_type": {
+            "description": "The event declaration type",
+            "type": "string",
+            "enum": [
+              "retained-1",
+              "retained-2",
+              "retained-3",
+              "retained-4"
+            ],
+            "example": "retained-1"
+          },
+          "declaration_date": {
+            "description": "The event declaration date",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:21:32.000Z"
+          },
+          "course_type": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "npq-leading-teaching",
+              "npq-leading-teaching-development",
+              "npq-leading-behaviour-culture",
+              "npq-headship",
+              "npq-senior-leadership",
+              "npq-executive-leadership"
+            ],
+            "example": "npq-headship"
+          },
+          "evidence_held": {
+            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
+            "type": "string",
+            "enum": [
+              "training-event-attended",
+              "self-study-material-completed"
+            ],
+            "example": "training-event-attended"
+          }
+        },
+        "required": [
+          "participant_id",
+          "declaration_type",
+          "declaration_date",
+          "course_type",
+          "evidence_held"
+        ],
+        "example": {
+          "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+          "declaration_type": "retained-1",
+          "declaration_date": "2021-05-31T02:21:32.000Z",
+          "course_type": "npq-headship",
+          "evidence_held": "training-event-attended"
+        }
+      },
+      "NPQParticipantStartedDeclaration": {
+        "description": "An NPQ started and completed participant declaration",
+        "type": "object",
+        "properties": {
+          "participant_id": {
+            "description": "The unique id of the participant",
+            "type": "string",
+            "format": "uuid",
+            "example": "db3a7848-7308-4879-942a-c4a70ced400a"
+          },
+          "declaration_type": {
+            "description": "The event declaration type",
+            "type": "string",
+            "enum": [
+              "started",
+              "completed"
+            ],
+            "example": "started"
+          },
+          "declaration_date": {
+            "description": "The event declaration date",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:21:32.000Z"
+          },
+          "course_type": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "npq-leading-teaching",
+              "npq-leading-teaching-development",
+              "npq-leading-behaviour-culture",
+              "npq-headship",
+              "npq-senior-leadership",
+              "npq-executive-leadership"
+            ],
+            "example": "npq-headship"
+          }
+        },
+        "required": [
+          "participant_id",
+          "declaration_type",
+          "declaration_date",
+          "course_type"
+        ],
+        "example": {
+          "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+          "declaration_type": "started",
+          "declaration_date": "2021-05-31T02:21:32.000Z",
+          "course_type": "npq-leading-teaching"
+        }
+      },
+      "NpqApplication": {
+        "description": "The details of an NPQ Applications",
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "id": {
+            "description": "The unique identifier of the NPQ Application record",
+            "type": "string",
+            "format": "uuid",
+            "example": "db3a7848-7308-4879-942a-c4a70ced400a"
+          },
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "npq-application",
+            "enum": [
+              "npq-application"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/NpqApplicationAttributes"
+          }
+        }
+      },
+      "NpqApplicationAttributes": {
+        "description": "The data attributes associated with an NPQ application",
+        "type": "object",
+        "required": [
+          "id",
+          "participant_id",
+          "full_name",
+          "email",
+          "email_validated",
+          "teacher_reference_number",
+          "teacher_reference_number_validated",
+          "school_urn",
+          "headteacher_status",
+          "eligible_for_funding",
+          "funding_choice",
+          "course_id",
+          "course_name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
+            "format": "uuid"
+          },
+          "participant_id": {
+            "description": "The unique identifier of this NPQ participant",
+            "type": "string",
+            "example": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
+            "format": "uuid"
+          },
+          "full_name": {
+            "description": "The full name of this NPQ participant",
+            "type": "string",
+            "example": "Isabelle MacDonald"
+          },
+          "email": {
+            "description": "The email address registered for this NPQ participant",
+            "type": "string",
+            "example": "isabelle.macdonald2@some-school.example.com"
+          },
+          "email_validated": {
+            "description": "Indicates whether the email address has been validated",
+            "type": "boolean",
+            "example": true
+          },
+          "teacher_reference_number": {
+            "description": "The Teacher Reference Number (TRN) for this NPQ participant",
+            "type": "string",
+            "example": "1234567"
+          },
+          "teacher_reference_number_validated": {
+            "description": "Indicates whether the Teacher Reference Number (TRN) has been validated",
+            "type": "boolean",
+            "example": true
+          },
+          "school_urn": {
+            "description": "The Unique Reference Number (URN) of the school where this NPQ participant is employed",
+            "type": "string",
+            "example": "106286"
+          },
+          "headteacher_status": {
+            "description": "Indicates whether this NPQ participant is or will be a head teacher",
+            "type": "string",
+            "example": "no",
+            "enum": [
+              false,
+              "yes_when_course_starts",
+              "yes_in_first_two_years",
+              "yes_over_two_years"
+            ]
+          },
+          "eligible_for_funding": {
+            "description": "Indicates whether this NPQ participant would be eligible for funding from the DfE",
+            "type": "boolean",
+            "example": true
+          },
+          "funding_choice": {
+            "description": "Indicates how this NPQ participant has said they will funded their training",
+            "type": "string",
+            "example": "trust",
+            "enum": [
+              "school",
+              "trust",
+              "self",
+              "another"
+            ]
+          },
+          "course_identifier": {
+            "description": "The Unique Reference Number (URN) of the NPQ course this NPQ application relates to",
+            "type": "string",
+            "example": "npq-leading-teaching",
+            "enum": [
+              "npq-leading-teaching",
+              "npq-leading-behaviour-culture",
+              "npq-leading-teaching-development",
+              "npq-senior-leadership",
+              "npq-headship",
+              "npq-executive-leadership"
+            ]
+          }
+        }
+      },
+      "NpqApplicationCsvRow": {
+        "description": "The details of an NPQ application",
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "participant_id",
+          "full_name",
+          "email",
+          "email_validated",
+          "teacher_reference_number",
+          "teacher_reference_number_validated",
+          "school_urn",
+          "headteacher_status",
+          "eligible_for_funding",
+          "funding_choice",
+          "course_id",
+          "course_name"
+        ],
+        "properties": {
+          "id": {
+            "description": "The unique identifier of the NPQ Application record",
+            "type": "string",
+            "format": "uuid",
+            "example": "db3a7848-7308-4879-942a-c4a70ced400a"
+          },
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "npq-application",
+            "enum": [
+              "npq-application"
+            ]
+          },
+          "participant_id": {
+            "description": "The unique identifier of this NPQ participant",
+            "type": "string",
+            "example": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
+            "format": "uuid"
+          },
+          "full_name": {
+            "description": "The full name of this NPQ participant",
+            "type": "string",
+            "example": "Isabelle MacDonald"
+          },
+          "email": {
+            "description": "The email address registered for this NPQ participant",
+            "type": "string",
+            "example": "isabelle.macdonald2@some-school.example.com"
+          },
+          "email_validated": {
+            "description": "Indicates whether the email address has been validated",
+            "type": "boolean",
+            "example": true
+          },
+          "teacher_reference_number": {
+            "description": "The Teacher Reference Number (TRN) for this NPQ participant",
+            "type": "string",
+            "example": "1234567"
+          },
+          "teacher_reference_number_validated": {
+            "description": "Indicates whether the Teacher Reference Number (TRN) has been validated",
+            "type": "boolean",
+            "example": true
+          },
+          "school_urn": {
+            "description": "The Unique Reference Number (URN) of the school where this NPQ participant is employed",
+            "type": "string",
+            "example": "106286"
+          },
+          "headteacher_status": {
+            "description": "Indicates whether this NPQ participant is or will be a head teacher",
+            "type": "string",
+            "example": "no",
+            "enum": [
+              false,
+              "yes_when_course_starts",
+              "yes_in_first_two_years",
+              "yes_over_two_years"
+            ]
+          },
+          "eligible_for_funding": {
+            "description": "Indicates whether this NPQ participant would be eligible for funding from the DfE",
+            "type": "boolean",
+            "example": true
+          },
+          "funding_choice": {
+            "description": "Indicates how this NPQ participant has said they will funded their training",
+            "type": "string",
+            "example": "trust",
+            "enum": [
+              "school",
+              "trust",
+              "self",
+              "another"
+            ]
+          },
+          "course_identifier": {
+            "description": "The Unique Reference Number (URN) of the NPQ course this NPQ application relates to",
+            "type": "string",
+            "example": "npq-leading-teaching",
+            "enum": [
+              "npq-leading-teaching",
+              "npq-leading-behaviour-culture",
+              "npq-leading-teaching-development",
+              "npq-senior-leadership",
+              "npq-headship",
+              "npq-executive-leadership"
+            ]
+          }
+        }
+      },
+      "Pagination": {
+        "type": "object",
+        "description": "This schema used to paginate through a collection.",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "description": "The page number to paginate to in the collection. If no value is specified it defaults to the first page.",
+            "example": 3
+          },
+          "per_page": {
+            "type": "integer",
+            "description": "The number items to display on a page. Defaults to 100. Maximum is 100, if the value is greater that the maximum allowed it will fallback to 100.",
+            "example": 10
+          }
+        }
+      },
+      "ParticipantDeclaration": {
+        "description": "A participant declaration",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "participant-declaration"
+                ]
+              },
+              "attributes": {
+                "$ref": "#/components/schemas/ParticipantDeclarationChoices"
+              }
+            }
+          }
+        },
+        "example": {
+          "data": {
+            "type": "participant-declaration",
+            "attributes": {
+              "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+              "declaration_type": "started",
+              "declaration_date": "2021-05-31T02:21:32.000Z",
+              "course_type": "ecf-mentor"
+            }
+          }
+        }
+      },
+      "ParticipantDeclarationChoices": {
+        "description": "A participant declaration",
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ECFParticipantStartedDeclaration"
+          },
+          {
+            "$ref": "#/components/schemas/ECFParticipantRetainedDeclaration"
+          },
+          {
+            "$ref": "#/components/schemas/NPQParticipantStartedDeclaration"
+          },
+          {
+            "$ref": "#/components/schemas/NPQParticipantRetainedDeclaration"
+          }
+        ],
+        "example": {
+          "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+          "declaration_type": "started",
+          "declaration_date": "2021-05-31T02:21:32.000Z",
+          "course_type": "ecf-mentor"
+        }
+      },
+      "ParticipantDeclarationRecordedResponse": {
+        "description": "A confirmation that the participant declaration has been recorded successfully",
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "description": "A unique identifier to reference the declaration in future actions",
+            "type": "string",
+            "format": "uuid",
+            "example": "b0f657a7-9a81-4a89-a6b0-627c774ff753"
+          }
+        }
+      },
+      "UnauthorisedResponse": {
+        "description": "Authorization information is missing or invalid",
+        "type": "string",
+        "example": "HTTP Token: Access denied."
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": [
+
+      ]
+    }
+  ]
 }

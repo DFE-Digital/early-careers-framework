@@ -5,7 +5,7 @@
 school = School.find_by(name: "Hogwarts Academy")
 
 if school.present?
-  school.mentor_profiles.each do |profile|
+  school.ecf_participant_profiles.mentors.each do |profile|
     profile.user.destroy!
   end
 end

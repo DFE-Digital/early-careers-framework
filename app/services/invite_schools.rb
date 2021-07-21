@@ -92,12 +92,7 @@ class InviteSchools
   def send_beta_chasers
     beta_school_ids = FeatureFlag.new(name: :induction_tutor_manage_participants).feature.selected_objects.pluck(:object_id)
     beta_schools = School.where(id: beta_school_ids)
-    beta_schools_without_participants = beta_schools.left_outer_joins(:early_career_teacher_profiles)
-                                                    .left_outer_joins(:mentor_profiles)
-                                                    .where(
-                                                      early_career_teacher_profiles: { id: nil },
-                                                      mentor_profiles: { id: nil },
-                                                    )
+    beta_schools_without_participants = beta_schools.includes(:ecf_participant_profiles).where(participant_profiles: { id: nil })
 
     beta_schools_without_participants.each do |school|
       induction_coordinator = school.induction_coordinators.first
@@ -120,15 +115,15 @@ class InviteSchools
     invite_group(school_urns, :send_federation_invite_email)
   end
 
-  def send_induction_coordinator_sign_in_chasers
-    induction_coordinators_never_signed_in = User.joins(:induction_coordinator_profile).where(last_sign_in_at: nil)
+  def send_induction_coordinator_sign_in_chasers(send_at: Time.zone.now)
+    induction_coordinators_never_signed_in = User.joins(:induction_coordinator_profile).where("last_sign_in_at IS NULL and users.created_at < ?", 2.days.ago)
     induction_coordinators_never_signed_in.each do |induction_coordinator|
       SchoolMailer.induction_coordinator_sign_in_chaser_email(
         recipient: induction_coordinator.email,
         name: induction_coordinator.full_name,
         school_name: induction_coordinator.schools.first.name,
-        start_url: sign_in_chaser_start_url,
-      ).deliver_later
+        sign_in_url: sign_in_url_with_campaign(:sign_in_reminder),
+      ).deliver_later(wait_until: send_at)
     rescue StandardError
       logger.info "Error emailing induction coordinator, email: #{induction_coordinator.email} ... skipping"
     end
@@ -206,13 +201,13 @@ class InviteSchools
   def send_induction_coordinator_add_participants_email
     induction_coordinators_chosen_route = User.distinct
                                               .joins(:induction_coordinator_profile, schools: :school_cohorts)
-                                              .left_outer_joins(schools: :participant_profiles)
+                                              .left_outer_joins(schools: :ecf_participant_profiles)
                                               .where(
                                                 school_cohorts: {
                                                   induction_programme_choice: %w[core_induction_programme full_induction_programme],
                                                   opt_out_of_updates: false,
                                                 },
-                                                participant_profiles: { id: nil },
+                                                ecf_participant_profiles: { id: nil },
                                               )
 
     induction_coordinators_chosen_route.find_each do |induction_coordinator|
@@ -232,13 +227,6 @@ private
     Rails.application.routes.url_helpers.root_url(
       host: Rails.application.config.domain,
       **UTMService.email(:june_private_beta, :private_beta),
-    )
-  end
-
-  def sign_in_chaser_start_url
-    Rails.application.routes.url_helpers.root_url(
-      host: Rails.application.config.domain,
-      **UTMService.email(:sign_in_reminder, :sign_in_reminder),
     )
   end
 

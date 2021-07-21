@@ -54,6 +54,7 @@ Rails.application.routes.draw do
       resources :users, only: %i[index create]
       resources :dqt_records, only: :show, path: "dqt-records"
       resources :participant_validation, only: :show, path: "participant-validation"
+      resources :npq_applications, only: :index, path: "npq-applications"
 
       jsonapi_resources :npq_profiles, only: [:create]
 
@@ -108,6 +109,14 @@ Rails.application.routes.draw do
   namespace :lead_providers, path: "lead-providers" do
     get "/", to: "content#index", as: :landing_page
     get "/partnership-guide", to: "content#partnership_guide", as: :partnership_guide
+
+    get "/guidance/home" => "guidance#index", as: :guidance_home
+    get "/guidance/ecf-usage" => "guidance#ecf_usage", as: :guidance_ecf_usage
+    get "/guidance/npq-usage" => "guidance#npq_usage", as: :guidance_npq_usage
+    get "/guidance/reference" => "guidance#reference", as: :guidance_reference
+    get "/api-docs/v1/api_spec.yml" => "openapi#api_docs", as: :api_docs
+    get "/guidance/release-notes" => "guidance#release_notes", as: :guidance_release_notes
+    get "/guidance/help" => "guidance#help", as: :guidance_help
 
     resources :your_schools, path: "/your-schools", only: %i[index create]
     resources :partnerships, only: %i[show]

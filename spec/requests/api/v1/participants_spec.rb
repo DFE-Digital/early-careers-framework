@@ -46,7 +46,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
 
         it "has correct attributes" do
           get "/api/v1/participants"
-          expect(parsed_response["data"][0]).to have_jsonapi_attributes(:email, :full_name, :mentor_id, :school_urn, :participant_type, :cohort).exactly
+          expect(parsed_response["data"][0]).to have_jsonapi_attributes(:email, :full_name, :mentor_id, :school_urn, :participant_type, :cohort, :status).exactly
         end
 
         it "returns correct user types" do
@@ -102,7 +102,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
         end
 
         it "returns the correct headers" do
-          expect(parsed_response.headers).to match_array(%w[id email full_name mentor_id school_urn participant_type cohort])
+          expect(parsed_response.headers).to match_array(%w[id email full_name mentor_id school_urn participant_type cohort status])
         end
 
         it "returns the correct values" do
@@ -152,6 +152,18 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
       let(:token) { EngageAndLearnApiToken.create_with_random_token! }
 
       it "returns 401 for invalid bearer token" do
+        default_headers[:Authorization] = bearer_token
+        get "/api/v1/participants"
+        expect(response.status).to eq 403
+      end
+    end
+
+    context "when using LeadProviderApiToken with only NPQ access" do
+      let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider: npq_lead_provider, lead_provider: nil) }
+      let(:npq_lead_provider) { create(:npq_lead_provider) }
+      let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
+
+      it "returns 403" do
         default_headers[:Authorization] = bearer_token
         get "/api/v1/participants"
         expect(response.status).to eq 403

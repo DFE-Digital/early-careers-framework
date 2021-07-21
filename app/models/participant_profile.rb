@@ -2,7 +2,7 @@
 
 class ParticipantProfile < ApplicationRecord
   belongs_to :user
-  belongs_to :school, optional: true
+  # belongs_to :school, optional: true
   has_many :validation_decisions, class_name: "ProfileValidationDecision"
 
   enum status: {
@@ -12,6 +12,8 @@ class ParticipantProfile < ApplicationRecord
 
   scope :mentors, -> { where(type: Mentor.name) }
   scope :ects, -> { where(type: ECT.name) }
+  scope :ecf, -> { where(type: [ECT.name, Mentor.name]) }
+
   scope :npqs, -> { where(type: NPQ.name) }
 
   scope :sparsity, -> { where(sparsity_uplift: true) }

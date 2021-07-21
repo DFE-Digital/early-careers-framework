@@ -1,0 +1,32 @@
+<%= content_for :title, t("page_titles.lead_providers.guidance.#{@page_name}") %>
+
+<% content_for :nav_bar do %>
+  <%= render PrimaryNavComponent.new do |component| %>
+    <%= component.nav_item(path: lead_providers_guidance_home_path) do %>
+      Home
+    <% end %>
+    <%= component.nav_item(path: lead_providers_guidance_ecf_usage_path) do %>
+      ECF usage guide
+    <% end %>
+    <%= component.nav_item(path: lead_providers_guidance_npq_usage_path) do %>
+      NPQ usage guide
+    <% end %>
+    <%= component.nav_item(path: lead_providers_guidance_reference_path) do %>
+      API reference
+    <% end %>
+    <%= component.nav_item(path: lead_providers_guidance_release_notes_path) do %>
+      Release notes
+    <% end %>
+    <%= component.nav_item(path: lead_providers_guidance_help_path) do %>
+      Get help
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= render layout: "layouts/width_container" do %>
+  <h1 class="govuk-heading-xl"><%= t("page_titles.lead_providers.guidance.#{@page_name}") %></h1>
+
+  <div class="lead-provider-content">
+    <%= yield %>
+  </div>
+<% end %>

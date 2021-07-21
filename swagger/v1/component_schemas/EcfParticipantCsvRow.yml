@@ -1,0 +1,57 @@
+description: "The details of an ECF participant"
+type: object
+required:
+  - id
+  - type
+  - email
+  - full_name
+  - school_urn
+  - participant_type
+  - cohort
+  - status
+properties:
+  id:
+    description: "The unique identifier of the ECF participant record"
+    type: string
+    format: uuid
+    example: db3a7848-7308-4879-942a-c4a70ced400a
+  type:
+    description: "The data type"
+    type: string
+    example: participant
+    enum:
+      - participant
+  email:
+    description: "The email registered for this ECF participant"
+    type: string
+    example: "jane.smith@some-school.example.com"
+  full_name:
+    description: "The full name of the ECF participant"
+    type: string
+    example: "Jane Smith"
+  mentor_id:
+    description: "The unique identifier of the ECF participants mentor"
+    type: string
+    example: bb36d74a-68a7-47b6-86b6-1fd0d141c590
+    format: uuid
+  school_urn:
+    description: "The Unique Reference Number (URN) of the school the submitted this ECF participant"
+    type: string
+    example: "106286"
+  participant_type:
+    description: "The type of ECF Participant this record refers to either ECT or Mentor"
+    type: string
+    example: ect
+    enum:
+      - ect
+      - mentor
+  cohort:
+    description: "Which cohort this ECF Participant is associated with"
+    type: string
+    example: "2021"
+  status:
+    description: "The status of the ECF Participant"
+    type: string
+    example: active
+    enum:
+      - active

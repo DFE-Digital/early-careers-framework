@@ -10,7 +10,7 @@
         </div>
         <%= govuk_start_now_button(
           text: 'Get started',
-          href: @provider_dashboard_url,
+          href: :dashboard,
           classes: 'govuk-!-margin-bottom-0 app-button--inverted',
         ) %>
       </div>
@@ -27,14 +27,14 @@
   <section class="app-section">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-half">
-        <h2 class="govuk-heading-m">Check the schools you’ve recruited</h2>
+        <h2 class="govuk-heading-m">Manage partnerships for the Early Career Framework</h2>
         <p class="govuk-body">Confirm all the schools you have recruited.</p>
         <p class="govuk-body">List your confirmed schools with their ECT and mentor numbers.</p>
         <p class="govuk-body">See school details including their induction tutor contact.</p>
 
         <%= govuk_start_now_button(
-          text: 'Learn to manage partnerships',
-          href: './lead-providers/partnership-guide',
+          text: 'Learn to manage ECF partnerships',
+          href: :lead_providers_partnership_guide,
           classes: 'govuk-!-margin-bottom-0',
         ) %>
       </div>

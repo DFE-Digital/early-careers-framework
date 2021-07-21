@@ -1,0 +1,30 @@
+{
+  "$id": "https://digital.education.gov.uk/schema/participant_declarations/create/request_schema.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "declaration_type": {
+      "enum": [
+        "started",
+        "retained_1",
+        "retained_2",
+        "retained_3",
+        "retained_4",
+        "completed"
+      ]
+    },
+    "declaration_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "participant_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "declaration_type",
+    "declaration_date",
+    "participant_id"
+  ],
+  "additionalProperties": false
+}

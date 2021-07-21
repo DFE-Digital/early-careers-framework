@@ -13,11 +13,9 @@ RSpec.describe "API Users", type: :request do
       cip = create(:core_induction_programme, name: "Teach First")
       school = create(:school)
       school_cohort = create(:school_cohort, school: school)
-      create(:mentor_profile, school: school, cohort: school_cohort.cohort, core_induction_programme: cip).user
-      create_list :early_career_teacher_profile, 2,
-                  school: school,
-                  cohort: school_cohort.cohort,
-                  core_induction_programme: cip
+      create(:mentor_profile, school_cohort: school_cohort, core_induction_programme: cip)
+      create(:participant_profile, participant_type: :npq, school: school)
+      create_list(:early_career_teacher_profile, 2, school_cohort: school_cohort, core_induction_programme: cip)
     end
 
     context "when authorized" do
@@ -55,15 +53,17 @@ RSpec.describe "API Users", type: :request do
 
         mentors = parsed_response["data"].count { |hash| hash["attributes"]["user_type"] == "mentor" }
         ects = parsed_response["data"].count { |hash| hash["attributes"]["user_type"] == "early_career_teacher" }
+        others = parsed_response["data"].count { |hash| hash["attributes"]["user_type"] == "other" }
 
         expect(mentors).to eql(1)
         expect(ects).to eql(2)
+        expect(others).to eql(0)
       end
 
       it "returns correct CIPs" do
         get "/api/v1/users"
         expect(parsed_response["data"][0]["attributes"]["core_induction_programme"]).to eql("teach_first")
-        expect(parsed_response["data"][1]["attributes"]["core_induction_programme"]).to eql("teach_first")
+        expect(parsed_response["data"][2]["attributes"]["core_induction_programme"]).to eql("teach_first")
       end
 
       it "returns the right number of users per page" do
@@ -82,14 +82,14 @@ RSpec.describe "API Users", type: :request do
       end
 
       it "returns users changed since a particular time, if given a changed_since parameter" do
-        User.first.update!(updated_at: 2.days.ago)
+        User.order(:created_at).first.update!(updated_at: 2.days.ago)
         get "/api/v1/users", params: { filter: { updated_since: 1.day.ago.iso8601 } }
         expect(parsed_response["data"].size).to eql(2)
       end
 
       context "when filtering by email" do
         it "returns users that match" do
-          email = User.all.sample.email
+          email = User.is_ecf_participant.sample.email
           get "/api/v1/users", params: { filter: { email: email } }
           expect(parsed_response["data"].size).to eql(1)
           expect(parsed_response.dig("data", 0, "attributes", "email")).to eql(email)

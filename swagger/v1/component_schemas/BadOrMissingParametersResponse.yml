@@ -1,0 +1,17 @@
+description: "Request was missing data or contained invalid data"
+type: object
+required:
+  - bad_or_missing_parameters
+properties:
+  bad_or_missing_parameters:
+    description: "An error message for each bad or missing attribute describing the problems"
+    type: array
+    minItems: 1
+    items:
+      type: string
+    uniqueItems: true
+    example:
+      - "participant_id"
+      - "declaration_date"
+      - "declaration_type"
+      - "course_type"

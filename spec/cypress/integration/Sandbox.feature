@@ -6,12 +6,10 @@ Feature: Sandbox landing page
 
   Scenario: Continuing as a Lead Provider
     Given I am on "the sandbox landing page" page
-    When I click on "link" containing "Continue as a training provider"
+    When I click on "link" containing "Continue as an ECF training provider"
     Then I should be on "the Lead Provider landing page" page
 
   Scenario: Continuing as a Lead Provider
     Given I am on "the sandbox landing page" page
-    When I click on "link" containing "Review our API documentation"
-    Then I should be on "API Documentation" page
-    And the Swagger documentation should be visible
-    And percy should be sent snapshot
+    When I click on "link" containing "Review our API guidance"
+    Then I should be on "API guidance home" page

@@ -2,6 +2,7 @@
 
 require "payment_calculator/ecf/payment_calculation"
 require "payment_calculator/ecf/uplift_calculation"
+require "tasks/payment_breakdown"
 require "terminal-table"
 
 include ActiveSupport::NumberHelper
@@ -9,72 +10,44 @@ include ActiveSupport::NumberHelper
 namespace :payment_calculation do
   desc "run payment calculator for a given lead provider"
   task breakdown: :environment do
-    logger = Logger.new($stdout)
-    logger.formatter = proc do |_severity, _datetime, _progname, msg|
-      "#{msg}\n"
-    end
+    lead_provider = begin
+                      LeadProvider.find(ARGV[1])
+                    rescue StandardError
+                      LeadProvider.find_by(name: ARGV[1])
+                    end
+    raise "Unknown lead provider: #{ARGV[1]}" if lead_provider.nil?
 
-    begin
-      lead_provider = LeadProvider.find(ARGV[1])
-    rescue StandardError
-      lead_provider = LeadProvider.find_by(name: ARGV[1])
-    end
-
-    total_participants = (ARGV[2] || 2000).to_i
-    uplift_participants = (ARGV[3] || 200).to_i
-    per_participant_in_bands = lead_provider.call_off_contract.bands.each_with_index.map { |b, i| "£#{b.per_participant.to_i} per participant in #{band_name_from_index(i)}" }.join(", ")
-
-    breakdown = PaymentCalculator::Ecf::PaymentCalculation.call(
-      contract: lead_provider.call_off_contract,
-      total_participants: total_participants,
-      uplift_participants: uplift_participants,
-      event_type: :started,
-    )
-
-    service_fees = breakdown.dig(:service_fees).each_with_object([]) do |hash, bands|
-      bands << [
-        band_name_from_index(bands.length),
-        "£#{number_to_delimited(hash[:service_fee_per_participant].to_i)}",
-        "£#{number_to_delimited(hash[:service_fee_monthly].to_i)}",
-      ]
-    end
-
-    output_payments = breakdown.dig(:output_payments).each_with_object([]) do |hash, bands|
-      bands << [
-        band_name_from_index(bands.length),
-        "£#{number_to_delimited(hash.dig(:started, :per_participant).to_i)}",
-        "£#{number_to_delimited(hash.dig(:started, :subtotal).to_i)}",
-      ]
-    end
-
-    uplift_payment = breakdown[:uplift].each_with_object({}) do |(type, value), hash|
-      hash[type] = "£#{number_to_delimited(value.to_i)}"
-    end
-
-    table = Terminal::Table.new(
-      title: "Started Event Payments",
-      headings: ["", "Service fee\nPer Participant", "Service fee\nThis month"],
-      rows: service_fees,
-    )
-    table.style = { alignment: :center }
-    table.add_separator
-    table.add_row ["", "Output price", "Output price"]
-    table.add_row ["", "Per Participant", "Sub-total"]
-    table.add_separator
-    output_payments.each { |row| table.add_row(row) }
-    table.add_separator
-    table.add_row ["", "Per participant", "Total Uplift"]
-    table.add_separator
-    table.add_row(["Uplift", uplift_payment[:per_participant], uplift_payment[:sub_total]])
-
-    output = <<~RESULT
-      Based on #{number_to_delimited(total_participants.to_i)} participants and #{per_participant_in_bands}
-    RESULT
-    logger.info table
-    logger.info output
+    total_participants = (ARGV[2] || ParticipantEventAggregator.call({ lead_provider: lead_provider, started: :count_active_for_lead_provider })).to_i
+    uplift_participants = (ARGV[3] || ParticipantEventAggregator.call({ lead_provider: lead_provider, started: :count_active_uplift_for_lead_provider })).to_i
+    total_ects = (ARGV[2].present? ? ARGV[2].to_i / 2 : ParticipantEventAggregator.call({ lead_provider: lead_provider, started: :count_active_ects_for_lead_provider }))
+    total_mentors = (ARGV[2].present? ? ARGV[2].to_i - ARGV[2].to_i / 2 : ParticipantEventAggregator.call({ lead_provider: lead_provider, started: :count_active_mentors_for_lead_provider }))
+    Tasks::PaymentBreakdown.new(contract: lead_provider.call_off_contract, total_participants: total_participants, uplift_participants: uplift_participants, total_ects: total_ects, total_mentors: total_mentors).to_table
+  rescue StandardError => e
+    puts e.message
+    puts e.backtrace
+  ensure
+    exit
   end
-end
 
-def band_name_from_index(index)
-  "Band #{('A'..'Z').to_a[index]}"
+  desc "generate csv payment calculations for all lead providers"
+  task csv: :environment do
+    filename = (ARGV[1] || "output.csv")
+    lead_providers = LeadProvider.all
+    CSV.open(filename, "wb") do |csv|
+      csv << Tasks::PaymentBreakdown.new(contract: lead_providers.first.call_off_contract, total_participants: 0, uplift_participants: 0).csv_headings
+      lead_providers.each do |lead_provider|
+        contract = lead_provider.call_off_contract
+        total_participants = ParticipantEventAggregator.call({ lead_provider: lead_provider, started: :count_active_for_lead_provider }).to_i
+        uplift_participants = ParticipantEventAggregator.call({ lead_provider: lead_provider, started: :count_active_uplift_for_lead_provider }).to_i
+        total_ects = ParticipantEventAggregator.call({ lead_provider: lead_provider, started: :count_active_ects_for_lead_provider })
+        total_mentors = ParticipantEventAggregator.call({ lead_provider: lead_provider, started: :count_active_mentors_for_lead_provider })
+        csv << Tasks::PaymentBreakdown.new(contract: contract, total_participants: total_participants, uplift_participants: uplift_participants, total_ects: total_ects, total_mentors: total_mentors).csv_body
+      end
+    end
+  rescue StandardError => e
+    puts e.message
+    puts e.backtrace
+  ensure
+    exit
+  end
 end

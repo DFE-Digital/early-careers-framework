@@ -1,0 +1,115 @@
+<%= content_for :title, t("page_titles.lead_providers.guidance.reference") %>
+<% content_for :nav_bar do %>
+  <%= render PrimaryNavComponent.new do |component| %>
+    <%= component.nav_item(path: lead_providers_guidance_home_path) do %>
+      Home
+    <% end %>
+    <%= component.nav_item(path: lead_providers_guidance_ecf_usage_path) do %>
+      ECF usage guide
+    <% end %>
+    <%= component.nav_item(path: lead_providers_guidance_npq_usage_path) do %>
+      NPQ usage guide
+    <% end %>
+    <%= component.nav_item(path: lead_providers_guidance_reference_path) do %>
+      API reference
+    <% end %>
+    <%= component.nav_item(path: lead_providers_guidance_release_notes_path) do %>
+      Release notes
+    <% end %>
+    <%= component.nav_item(path: lead_providers_guidance_help_path) do %>
+      Get help
+    <% end %>
+  <% end %>
+<% end %>
+
+<h1 class="govuk-heading-xl"><%= t("page_titles.lead_providers.guidance.reference") %></h1>
+
+<h2 class="app-contents-list__title">Contents</h2>
+
+<ol class="app-contents-list__list">
+  <li class="app-contents-list__list-item app-contents-list__list-item--parent"><%= govuk_link_to 'Developing on the API', '#developing', class: 'app-contents-list__link' %></li>
+  <li class="app-contents-list__list-item app-contents-list__list-item--parent">
+    <%= govuk_link_to 'Endpoints', '#endpoints', class: 'app-contents-list__link' %>
+
+    <ol class="app-contents-list__nested-list">
+      <% @api_reference.operations.each do |operation| %>
+        <li class="app-contents-list__list-item app-contents-list__list-item--dashed">
+          <%= govuk_link_to operation.name, "##{operation.anchor}", class: 'app-contents-list__link' %>
+        </li>
+      <% end %>
+    </ol>
+  </li>
+  <li class="app-contents-list__list-item app-contents-list__list-item--parent">
+    <%= govuk_link_to 'Objects', '#objects', class: 'app-contents-list__link' %>
+
+    <ol class="app-contents-list__nested-list">
+      <% @api_reference.schemas.each do |schema| %>
+        <li class="app-contents-list__list-item app-contents-list__list-item--dashed">
+          <%= govuk_link_to schema.name, "##{schema.anchor}", class: 'app-contents-list__link' %>
+        </li>
+      <% end %>
+    </ol>
+  </li>
+</ol>
+
+<hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6">
+
+<h2 class="govuk-heading-l" id="developing">Developing on the API</h2>
+
+<p class="govuk-body">
+  The OpenAPI spec from which this documentation is generated is <%= govuk_link_to 'available in YAML format', lead_providers_api_docs_url %>.
+</p>
+
+<h3 class="govuk-heading-m">Environments</h3>
+
+<p class="govuk-body">
+  We have a production environment and a sandbox environment.
+</p>
+
+<p class="govuk-body">
+  The <strong>Lead Provider sandbox</strong> is for testing your integration. When we
+  set you up with an API key, we’ll create a test provider as well.
+</p>
+
+<p class="govuk-body">
+  <%= govuk_link_to 'https://ecf-sandbox.london.cloudapps.digital/api-docs/reference', 'https://ecf-sandbox.london.cloudapps.digital/api-docs/reference' %>
+</p>
+
+<p class="govuk-body">
+  The <strong>Production</strong> environment is the real environment. Do not
+  perform testing here.
+</p>
+
+<p class="govuk-body">
+  <%= govuk_link_to 'https://manage-training-for-early-career-teachers.education.gov.uk/api-docs/reference', 'https://manage-training-for-early-career-teachers.education.gov.uk/api-docs/reference' %>
+</p>
+
+<h3 class="govuk-heading-m">Rate limits</h3>
+
+<p class="govuk-body">
+  You are limited to 300 requests per 5 minutes.
+</p>
+
+<p class="govuk-body">
+  This limit is calculated on a rolling basis, per API key.
+  If you exceed the limit, you will see <code>429</code> HTTP status codes.
+</p>
+
+<h3 id="authentication" class="govuk-heading-m">Authentication</h3>
+
+<p class="govuk-body">
+  All requests must be accompanied by an <code>Authorization</code> request header (not as part of the URL) in the following format:
+</p>
+
+<p class="govuk-body">
+  <code>
+    Authorization: Bearer {token}
+  </code>
+</p>
+
+<p class="govuk-body">
+  Unauthenticated requests will receive an <%= govuk_link_to 'UnauthorizedResponse', '#unauthorizedresponse-object' %>
+  with a <code>401</code> status code.
+</p>
+
+<%= render(ApiDocs::ApiReferenceComponent.new(@api_reference)) %>

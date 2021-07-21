@@ -57,9 +57,8 @@ class UserSerializer
   end
 
   def self.find_school_cohort(user)
-    @school_cohorts ||= SchoolCohort.all.to_a
     if user.participant?
-      @school_cohorts.find { |sc| (sc.school_id == user.school&.id) && (sc.cohort_id == user.cohort&.id) }
+      user.participant_profiles.ecf.active.first&.school_cohort
     end
   end
 end
