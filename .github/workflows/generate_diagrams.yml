@@ -51,16 +51,26 @@ jobs:
       - name: Create ERD PNG
         run: bundle exec erd --filetype=png
 
-      - name: Update service manual
+      - name: Checkout service manual
+        # if: github.ref == 'refs/heads/develop'
+        uses: actions/checkout@v2
+        with:
+          repository: DFE-Digital/cpd-service-manual
+          path: cpd-service-manual
+
+      - name: Update service manual diagram
         # if: github.ref == 'refs/heads/develop'
         run: |
-          cd ./tmp
+          cp ./tmp/entity-relationship-diagram.png ./cpd-service-manual/source/images
+
+      - name: Push updated diagram
+        # if: github.ref == 'refs/heads/develop'
+        uses: actions/checkout@v2
+        run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git clone https://github.com/DFE-Digital/cpd-service-manual
-          cd ./cpd-service-manual
-          cp ../entity-relationship-diagram.png ./source/images
-          git commit -am "updated entity-relationship-diagram"
+          git add .
+          git commit -m "updated entity relationship diagram"
           git push
 
       - name: Publish diagrams
