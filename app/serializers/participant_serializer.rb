@@ -30,10 +30,8 @@ class ParticipantSerializer
   end
 
   attributes :participant_type do |user|
-    if user.early_career_teacher_profile
-      :ect
-    else
-      :mentor
+    if participant_active?(user)
+      user.early_career_teacher? ? :ect : :mentor
     end
   end
 
