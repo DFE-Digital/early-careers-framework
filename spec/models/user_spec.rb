@@ -15,6 +15,30 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_one(:lead_provider_profile) }
     it { is_expected.to have_one(:lead_provider).through(:lead_provider_profile) }
     it { is_expected.to have_one(:early_career_teacher_profile) }
+
+    describe "early_career_teacher_profile" do
+      it "returns an active profile" do
+        user = create(:user, :early_career_teacher)
+        expect(user.early_career_teacher_profile).to be_an_instance_of ParticipantProfile::ECT
+      end
+
+      it "returns nil when there is no active profile" do
+        user = create(:participant_profile, :ect, status: "withdrawn").user
+        expect(user.early_career_teacher_profile).to be_nil
+      end
+    end
+
+    describe "mentor_profile" do
+      it "returns an active profile" do
+        user = create(:user, :mentor)
+        expect(user.mentor_profile).to be_an_instance_of ParticipantProfile::Mentor
+      end
+
+      it "returns nil when there is no active profile" do
+        user = create(:participant_profile, :mentor, status: "withdrawn").user
+        expect(user.mentor_profile).to be_nil
+      end
+    end
   end
 
   describe "before_validation" do
