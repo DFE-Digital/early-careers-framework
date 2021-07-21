@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ParticipantProfile < ApplicationRecord
+  has_paper_trail
   belongs_to :user
 
   enum status: {
