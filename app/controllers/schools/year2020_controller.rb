@@ -24,8 +24,7 @@ module Schools
     end
 
     setup_form do |form|
-      form.school_cohort_id = @school_cohort.id
-      form.current_user_id = current_user.id
+      form.school_id = @school.id
     end
 
   private
@@ -49,18 +48,12 @@ module Schools
     end
 
     def active_cohort
-      Cohort.find_or_create_by!(start_year: 2020) # QQQQ Add
+      Cohort.find_by(start_year: 2020)
     end
 
     def set_school_cohort
       @school = active_school
       @cohort = active_cohort
-
-      @school_cohort = SchoolCohort.find_or_create_by!(
-        cohort: @cohort,
-        school: @school,
-        induction_programme_choice: "core_induction_programme",
-      )
     end
   end
 end

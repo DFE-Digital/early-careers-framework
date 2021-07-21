@@ -5,16 +5,13 @@ module Schools
     include ActiveModel::Model
     include Multistep::Form
 
-    attribute :school_cohort_id
-    attribute :current_user_id
-    attribute :participant_type
+    attribute :school_id
 
     step :start do
       next_step do
         :select_cip
       end
     end
-    # QQQQ let users quit forever in this step
 
     step :select_cip do
       attribute :core_induction_programme_id
@@ -50,23 +47,18 @@ module Schools
     step :confirm
 
     def email_already_taken?
-      User.exists?(email: email)
-    end
-
-    def school_cohort
-      @school_cohort ||= SchoolCohort.find_by(id: school_cohort_id)
-    end
-
-    def current_user
-      @current_user ||= User.find_by(id: current_user_id)
+      User.find_by(email: email)&.participant_profiles&.ecf&.any?
     end
 
     def save!
+      school_cohort = SchoolCohort.find_or_create_by!(school_id: school_id, cohort: Cohort.find_by(start_year: 2020)) do |new_school_cohort|
+        new_school_cohort.update!(induction_programme_choice: "core_induction_programme")
+      end
+
       EarlyCareerTeachers::Create.call(
         full_name: full_name,
         email: email,
-        cohort_id: school_cohort.cohort_id,
-        school_id: school_cohort.school_id,
+        school_cohort: school_cohort,
         mentor_profile_id: nil,
       )
     end
