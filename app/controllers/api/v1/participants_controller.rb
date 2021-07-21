@@ -24,7 +24,7 @@ module Api
     private
 
       def access_scope
-        LeadProviderApiToken.all
+        LeadProviderApiToken.joins(cpd_lead_provider: [:lead_provider])
       end
 
       def to_csv(hash)
