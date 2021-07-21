@@ -43,6 +43,7 @@ const pagePaths = {
   "admin school participants": "/admin/schools/:slug/participants",
   "admin index": "/admin/administrators",
   "admin participants participant": "/admin/participants/:id",
+  "admin delete participant": "/admin/participants/:id/remove",
   "admin participants": "/admin/participants",
   "admin induction coordinator edit": "/admin/induction-coordinators/:id/edit",
   "admin creation": "/admin/administrators/new",

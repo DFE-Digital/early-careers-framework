@@ -41,6 +41,7 @@ RSpec.describe "Admin::Participants", type: :request do
       get "/admin/participants/#{ect_profile.id}"
       expect(response.body).to include(CGI.escapeHTML(ect_profile.user.full_name))
       expect(response.body).to include(CGI.escapeHTML(mentor_profile.user.full_name))
+      expect(response.body).not_to include(CGI.escapeHTML(npq_profile.user.full_name))
     end
   end
 

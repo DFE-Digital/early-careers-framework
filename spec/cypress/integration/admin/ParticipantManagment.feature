@@ -1,4 +1,4 @@
-Feature: Admin user managing partticipants
+Feature: Admin user managing participants
   Admin users should be able to view a list of participants
 
   Background:
@@ -14,9 +14,9 @@ Feature: Admin user managing partticipants
 
     When I type "Test school" into "search box"
     And I press enter in "search box"
-    Then the table should have 4 row
+    Then the table should have 4 rows
 
     When I clear "search box"
     And I type "Unrelated" into "search box"
     And I click on "search button"
-    Then the table should have 2 row
+    Then the table should have 2 rows
