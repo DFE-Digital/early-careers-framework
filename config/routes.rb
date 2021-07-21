@@ -227,7 +227,7 @@ Rails.application.routes.draw do
         get :success
       end
 
-      resources :year_2020, path: "year-2020", only: [] do
+      resources :year_2020, path: "year-2020", only: [], constraints: ->(_request) { FeatureFlag.active?(:year_2020_data_entry) } do
         collection do
           multistep_form :add, Schools::Year2020Form, controller: :year2020
         end
