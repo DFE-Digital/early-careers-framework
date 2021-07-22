@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "../../../services/declarations/record_participant_declaration"
+
 module Api
   module V1
     class ParticipantDeclarationsController < Api::ApiController
@@ -8,7 +10,7 @@ module Api
       def create
         params = HashWithIndifferentAccess.new({ raw_event: request.raw_post, cpd_lead_provider: cpd_lead_provider }).merge(permitted_params["attributes"] || {})
         validate_params!(params)
-        render json: RecordParticipantDeclaration.call(params)
+        render json: Declarations.detect_type(params)
       end
 
     private
