@@ -1,0 +1,13 @@
+<% content_for :title, "Lead Providers" %>
+
+<h1 class="govuk-heading-l">Lead Providers</h1>
+
+<table class="govuk-table">
+  <tbody class="govuk-table__body">
+    <% @lead_providers.each do |lead_provider| %>
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell" data-test="lead-provider-name"><%= lead_provider.name %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
