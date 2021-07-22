@@ -326,11 +326,8 @@ RSpec.describe School, type: :model do
     let(:cohort_2021) { create(:cohort, start_year: 2021) }
     let(:delivery_1) { create(:delivery_partner, name: "Ace Education") }
     let(:delivery_2) { create(:delivery_partner, name: "Super Learn") }
-
-    before do
-      create(:partnership, school: school, delivery_partner: delivery_1, cohort: cohort_2020)
-      create(:partnership, school: school, delivery_partner: delivery_2, cohort: cohort_2021)
-    end
+    let!(:partnership_2020) { create(:partnership, school: school, delivery_partner: delivery_1, cohort: cohort_2020) }
+    let!(:partnership_2021) { create(:partnership, school: school, delivery_partner: delivery_2, cohort: cohort_2021) }
 
     it "returns the delivery partner for the given cohort year" do
       expect(school.delivery_partner_for(2021)).to eq delivery_2
@@ -339,6 +336,19 @@ RSpec.describe School, type: :model do
     context "when there is no partner for the given cohort" do
       it "returns nil" do
         expect(school.delivery_partner_for(2022)).to be_nil
+      end
+    end
+
+    context "when the partnership has been challenged" do
+      let!(:partnership_2021) { create(:partnership, :challenged, school: school, cohort: cohort_2021) }
+
+      it "returns nil" do
+        expect(school.delivery_partner_for(2021)).to be_nil
+      end
+
+      it "returns the unchallenged delivery partner" do
+        create(:partnership, school: school, cohort: cohort_2021, delivery_partner: delivery_1)
+        expect(school.delivery_partner_for(2021)).to eql delivery_1
       end
     end
   end
