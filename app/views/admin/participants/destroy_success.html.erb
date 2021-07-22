@@ -1,0 +1,6 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= govuk_panel(title: "#{@participant_profile.user.full_name} has been deleted", body: nil) %>
+    <%= govuk_link_to "View participant listing", admin_participants_path %>
+  </div>
+</div>

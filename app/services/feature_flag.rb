@@ -20,6 +20,7 @@ class FeatureFlag
     participant_data_api
     induction_tutor_manage_participants
     admin_participants
+    admin_delete_participants
   ].freeze
 
   FEATURES = (PERMANENT_SETTINGS + TEMPORARY_FEATURE_FLAGS).index_with { |name|

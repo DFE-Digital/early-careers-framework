@@ -1,6 +1,6 @@
 <% content_for :title, "Participant detail" %>
 
-<h1 class="govuk-heading-l"><%= @participant.full_name %></h1>
+<h1 class="govuk-heading-l"><%= @participant_profile.user.full_name %></h1>
 
 <h2 class="govuk-heading-m">Details</h2>
 
@@ -10,15 +10,15 @@
       <tbody class="govuk-table__body">
         <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header">Full name</th>
-          <td class="govuk-table__cell"><%= @participant.full_name %></td>
+          <td class="govuk-table__cell"><%= @participant_profile.user.full_name %></td>
         </tr>
         <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header">Email address</th>
-          <td class="govuk-table__cell"><%= @participant.email %></td>
+          <td class="govuk-table__cell"><%= @participant_profile.user.email %></td>
         </tr>
         <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header">Participant type</th>
-          <td class="govuk-table__cell"><%= @participant.user_description %></td>
+          <td class="govuk-table__cell"><%= t @participant_profile.participant_type, scope: "schools.participants.type" %></td>
         </tr>
       </tbody>
     </table>
@@ -26,21 +26,30 @@
   <div class="govuk-grid-column-one-half">
     <table class="govuk-table">
       <tbody class="govuk-table__body">
-        <% if @participant.early_career_teacher? %>
+        <% if @participant_profile.ect? %>
           <tr class="govuk-table__row">
             <th scope="row" class="govuk-table__header">Mentor</th>
-            <td class="govuk-table__cell"><%= @participant.early_career_teacher_profile.mentor&.full_name&.presence || 'Not yet assigned' %></td>
+            <td class="govuk-table__cell"><%= @participant_profile.mentor&.full_name || 'Not yet assigned' %></td>
           </tr>
         <% end %>
         <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header">School</th>
-          <td class="govuk-table__cell"><%= @participant.school.name %></td>
+          <td class="govuk-table__cell"><%= @participant_profile.school.name %></td>
         </tr>
         <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header">Cohort</th>
-          <td class="govuk-table__cell"><%= @participant.cohort&.start_year || 'No cohort' %></td>
+          <td class="govuk-table__cell"><%= @participant_profile.cohort&.display_name || 'No cohort' %></td>
         </tr>
       </tbody>
     </table>
   </div>
 </div>
+<% if FeatureFlag.active?(:admin_delete_participants) %>
+  <% unless @participant_profile.npq? %>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <%= govuk_link_to "Delete participant", remove_admin_participant_path %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

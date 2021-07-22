@@ -1,6 +1,16 @@
 # frozen_string_literal: true
 
 class ParticipantProfilePolicy < ApplicationPolicy
+  def show?
+    admin_only
+  end
+
+  def destroy?
+    admin? && (record.ect? || record.mentor?)
+  end
+
+  alias_method :remove?, :delete?
+
   class Scope < Scope
     def resolve
       return scope.all if user.admin?

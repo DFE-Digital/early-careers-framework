@@ -5,7 +5,7 @@
 
 <h2 class="govuk-heading-l">Participants</h2>
 
-<% if @participants.present? %>
+<% if @participant_profiles.present? %>
   <table class="govuk-table">
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
@@ -16,10 +16,10 @@
       </tr>
     </thead>
     <tbody class="govuk-table__body">
-      <% @participants.each do |participant| %>
+      <% @participant_profiles.each do |participant| %>
         <tr class="govuk-table__row">
-          <th scope="row" class="govuk-table__header"><%= govuk_link_to participant.full_name, admin_participant_path(participant) %></th>
-          <td class="govuk-table__cell"><%= participant.user_description %></td>
+          <th scope="row" class="govuk-table__header"><%= govuk_link_to participant.user.full_name, admin_participant_path(participant) %></th>
+          <td class="govuk-table__cell"><%= t participant.participant_type, scope: "schools.participants.type" %></td>
           <td class="govuk-table__cell"><%= participant.cohort&.start_year %></td>
           <td class="govuk-table__cell">
             <%= render GovukComponent::Tag.new(text: "Not started", colour: "grey") %>
