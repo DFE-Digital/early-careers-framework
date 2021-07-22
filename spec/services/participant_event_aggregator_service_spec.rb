@@ -21,8 +21,8 @@ RSpec.describe ParticipantEventAggregator do
   context "event declarations" do
     before do
       10.times do
-        participant_declaration = create(:participant_declaration, cpd_lead_provider: cpd_lead_provider)
-        create(:participant_declaration, user: participant_declaration.user, cpd_lead_provider: cpd_lead_provider)
+        participant_declaration = create(:ect_participant_declaration, cpd_lead_provider: cpd_lead_provider)
+        create(:ect_participant_declaration, user: participant_declaration.user, cpd_lead_provider: cpd_lead_provider)
       end
     end
 

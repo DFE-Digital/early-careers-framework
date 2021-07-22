@@ -8,8 +8,7 @@ RSpec.describe ProfileDeclaration, type: :model do
 
     describe "ect_profiles" do
       let!(:ect_declaration) do
-        create(:participant_declaration,
-               :with_profile_type,
+        create(:ect_participant_declaration,
                cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
       end
 
@@ -20,10 +19,8 @@ RSpec.describe ProfileDeclaration, type: :model do
 
     describe "mentor_profiles" do
       let!(:mentor_declaration) do
-        create(:participant_declaration,
-               :with_profile_type,
-               cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider,
-               profile_type: :mentor_profile)
+        create(:mentor_participant_declaration,
+               cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
       end
 
       it "includes declaration with mentor profile" do

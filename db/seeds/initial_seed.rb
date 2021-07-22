@@ -46,7 +46,7 @@ end
   { name: "NPQ for Headship (NPQH)", id: "0f7d6578-a12c-4498-92a0-2ee0f18e0768", identifier: "npq-headship" },
   { name: "NPQ for Executive Leadership (NPQEL)", id: "aef853f2-9b48-4b6a-9d2a-91b295f5ca9a", identifier: "npq-executive-leadership" },
 ].each do |hash|
-  NPQCourse.find_or_create_by!(name: hash[:name], id: hash[:id])
+  NPQCourse.find_or_create_by!(name: hash[:name], id: hash[:id], identifier: hash[:identifier])
 end
 
 all_provider_names = (LeadProvider.pluck(:name) + NPQLeadProvider.pluck(:name)).uniq

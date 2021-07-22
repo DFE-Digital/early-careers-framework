@@ -97,6 +97,12 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         expect(response.body).to eq({ bad_or_missing_parameters: ["The property '#/course_identifier' must be an available course to '#/participant_id'"] }.to_json)
       end
 
+      it "returns 422 when there are multiple errors" do
+        post "/api/v1/participant-declarations", params: build_params("")
+        expect(response.status).to eq 422
+        expect(response.body).to eq({ bad_or_missing_parameters: %w[participant_id declaration_date declaration_type course_identifier] }.to_json)
+      end
+
       it "returns 400 when the data block is incorrect" do
         post "/api/v1/participant-declarations", params: {}.to_json
         expect(response.status).to eq 400

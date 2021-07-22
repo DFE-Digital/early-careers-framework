@@ -61,7 +61,8 @@ RSpec.describe CalculationOrchestrator do
       let(:with_uplift) { :sparsity_uplift }
 
       before do
-        create_list(:participant_declaration, 10, with_uplift, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+        create_list(:ect_participant_declaration, 5, with_uplift, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+        create_list(:mentor_participant_declaration, 5, with_uplift, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
       end
 
       context "when only sparsity_uplift flag was set" do
@@ -89,7 +90,8 @@ RSpec.describe CalculationOrchestrator do
 
     context "when no uplift flags were set" do
       before do
-        create_list(:participant_declaration, 10, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+        create_list(:ect_participant_declaration, 5, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider, uplift: false)
+        create_list(:mentor_participant_declaration, 5, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider, uplift: false)
         expected_result.tap { |hash| hash[:uplift][:sub_total] = 0.0 }
       end
 
@@ -100,7 +102,7 @@ RSpec.describe CalculationOrchestrator do
 
     context "when only mentor profile declaration records available" do
       before do
-        create_list(:participant_declaration, 10, :only_mentor_profile, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+        create_list(:mentor_participant_declaration, 10, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
       end
 
       it "returns the total calculation" do
@@ -110,7 +112,7 @@ RSpec.describe CalculationOrchestrator do
 
     context "when only ect profile declaration records available" do
       before do
-        create_list(:participant_declaration, 10, :only_ect_profile, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+        create_list(:ect_participant_declaration, 10, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
       end
 
       it "returns the total calculation" do
@@ -120,8 +122,7 @@ RSpec.describe CalculationOrchestrator do
 
     context "when both mentor profile and ect profile declaration records available" do
       before do
-        create_list(:participant_declaration, 5, :only_ect_profile, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
-        create_list(:participant_declaration, 5, :only_ect_profile, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+        create_list(:ect_participant_declaration, 10, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
       end
 
       it "returns the total calculation" do

@@ -16,11 +16,14 @@ RSpec.describe ParticipantDeclaration, type: :model do
         create(:participant_declaration,
                :with_profile_type,
                cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider,
-               profile_type: profile_type)
+               profile_type: profile_type,
+               course_identifier: course_identifier)
       end
 
       context "for mentor was created" do
         let(:profile_type) { :mentor_profile }
+        let(:course_identifier) { "ecf-mentor" }
+        let(:course) { :ecf_mentor }
 
         it "includes declaration with mentor profile" do
           expect(ParticipantDeclaration.uplift).to include(profile_declaration)
@@ -29,6 +32,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
 
       context "for early career teacher was created" do
         let(:profile_type) { :early_career_teacher_profile }
+        let(:course_identifier) { "ecf-induction" }
 
         it "includes declaration with mentor profile" do
           expect(ParticipantDeclaration.uplift).to include(profile_declaration)
