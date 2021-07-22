@@ -25,6 +25,7 @@ RSpec.describe "Admin::Schools::Participants", type: :request do
 
       expect(response.body).not_to include("No participants found for this school.")
       expect(assigns(:participant_profiles)).to include mentor_profile
+      expect(assigns(:participant_profiles)).to include ect_profile
       expect(assigns(:participant_profiles)).not_to include unrelated_profile
     end
   end

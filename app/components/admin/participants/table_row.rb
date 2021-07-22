@@ -13,12 +13,6 @@ module Admin
 
       attr_reader :profile
       delegate :school, to: :profile
-
-      def validation_status
-        return { text: "Not ready", colour: "grey" } unless profile.npq?
-
-        { text: "Pending", colour: "yellow" }
-      end
     end
   end
 end

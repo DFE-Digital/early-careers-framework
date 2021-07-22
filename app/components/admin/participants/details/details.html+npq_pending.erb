@@ -12,7 +12,7 @@
     </tr>
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header">DOB entered</th>
-      <td class="govuk-table__cell"><%= profile.validation_data&.date_of_birth %></td>
+      <td class="govuk-table__cell"><%= profile.validation_data&.date_of_birth&.to_s(:govuk) %></td>
     </tr>
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header">TRN entered</th>
@@ -20,7 +20,7 @@
     </tr>
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header">NINo entered</th>
-      <td class="govuk-table__cell"><%#= profile.validation_data&.nino %></td>
+      <td class="govuk-table__cell"><%= profile.validation_data&.nino %></td>
     </tr>
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header">School</th>

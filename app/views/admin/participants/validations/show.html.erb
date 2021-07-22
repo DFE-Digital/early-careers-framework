@@ -7,9 +7,9 @@
 <p><%= t :description, scope: t_scope %></p>
 
 <%= form_for @decision, url: {}, method: :post do |f| %>
-  <%= f.govuk_radio_buttons_fieldset :approved, inline: true, legend: { text: "Change this decision", tag: 'h2', size: 'm' } do %>
-    <%= f.govuk_radio_button :approved, 1, label: { text: 'Approved' }, checked: @decision.approved %>
-    <%= f.govuk_radio_button :approved, 0, label: { text: 'Rejected' }, checked: @decision.approved == false %>
+  <%= f.govuk_radio_buttons_fieldset :approved, inline: true, legend: { text: "Change this decision", tag: "h2", size: "m" } do %>
+    <%= f.govuk_radio_button :approved, 1, label: { text: "Approved" }, checked: @decision.approved %>
+    <%= f.govuk_radio_button :approved, 0, label: { text: "Rejected" }, checked: @decision.approved == false %>
   <% end %>
   <%= f.govuk_text_area :note, label: { text: "Decision notes", tag: 'h2', size: 'm'}, hint: { text: "Please write a brief note explaining why this participant has been approved or rejected" } %>
 

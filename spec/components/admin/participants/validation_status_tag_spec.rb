@@ -10,7 +10,7 @@ RSpec.describe Admin::Participants::ValidationStatusTag, type: :view_component d
   end
 
   context "for Mentor profile" do
-    let!(:participant_profile) { create :participant_profile, :ect }
+    let!(:participant_profile) { create :participant_profile, :mentor }
 
     it { is_expected.to have_selector(".govuk-tag.govuk-tag--grey", text: "Not ready") }
   end

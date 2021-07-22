@@ -6,7 +6,7 @@ class ParticipantProfile::NPQ < ParticipantProfile
 
   has_one :validation_data, class_name: "NPQValidationData", foreign_key: :id, dependent: :destroy
 
-  self.validation_steps = %i[identity decision]
+  self.validation_steps = %i[identity decision].freeze
 
   def npq?
     true

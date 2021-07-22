@@ -6,11 +6,28 @@ module Support
 
     define :have_contents do |*contents|
       match do |actual|
+        check_contents!(contents)
+
         begin
           aggregate_failures "have_contents" do
             contents.each { |content| expect(actual).to have_content content }
           end
-        rescue RSpec::Expectations::MultipleExpectationsNotMetError => e
+        rescue RSpec::Expectations::ExpectationNotMetError, RSpec::Expectations::MultipleExpectationsNotMetError => e
+          @exception = e
+          raise
+        end
+
+        true
+      end
+
+      match_when_negated do |actual|
+        check_contents!(contents)
+
+        begin
+          aggregate_failures "have_contents" do
+            contents.each { |content| expect(actual).not_to have_content content }
+          end
+        rescue RSpec::Expectations::ExpectationNotMetError, RSpec::Expectations::MultipleExpectationsNotMetError => e
           @exception = e
           raise
         end
@@ -19,7 +36,17 @@ module Support
       end
 
       failure_message do |*_args|
-        @exception.message.lines[2..-1].join
+        case @exception
+        when RSpec::Expectations::MultipleExpectationsNotMetError then @exception.message.lines[2..-1].join
+        else @exception.message
+        end
+      end
+
+      def check_contents!(contents)
+        unless contents.all?
+          indexes = contents.map.with_index { |content, index| index if content.blank? }.compact
+          raise "Cannot test on content presence of `nil` - at #{indexes.join(', ')}"
+        end
       end
     end
 

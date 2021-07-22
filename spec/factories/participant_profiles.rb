@@ -38,6 +38,8 @@ FactoryBot.define do
     trait :npq do
       school
 
+      association :validation_data, factory: :npq_validation_data
+
       participant_type { :npq }
     end
 

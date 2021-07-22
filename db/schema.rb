@@ -503,7 +503,7 @@ ActiveRecord::Schema.define(version: 2021_07_16_120023) do
   create_table "profile_validation_decisions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_profile_id", null: false
     t.string "validation_step", null: false
-    t.boolean "approved", default: false, null: false
+    t.boolean "approved"
     t.text "note"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

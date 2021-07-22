@@ -23,6 +23,7 @@ const inputs = {
     "input[value=no_early_career_teachers].govuk-radios__input",
   "new participant mentor radio":
     '[name="schools_add_participant_form[mentor_id]"]',
+  "decision note": '[name="profile_validation_decision[note]"]'
 };
 
 const buttons = {

@@ -7,7 +7,7 @@ Feature: Admin user managing partticipants
     And I am on "admin participants" page
 
   Scenario: Viewing a list of participants
-    Then the table should have 6 rows
+    Then the table should have 7 rows
     And "page body" should contain "Enter the participant’s name, school’s name or URN"
     And the page should be accessible
     And percy should be sent snapshot
@@ -20,3 +20,24 @@ Feature: Admin user managing partticipants
     And I type "Unrelated" into "search box"
     And I click on "search button"
     Then the table should have 2 row
+
+  Scenario: Validating NPQ participants
+    When I click on "link" containing "Natalie Portman Quebec"
+    Then I should be on "admin participant" page
+    And "page body" should contain "DOB entered"
+    And the page should be accessible
+    And percy should be sent snapshot called "NPQ participant admin profile"
+
+    When I click on "link" containing "View identity confirmation"
+    Then I should be on "admin participant identity" page
+    And the page should be accessible
+    And percy should be sent snapshot called "NPQ participant admin empty identity validation"
+
+    When I click the submit button
+    Then "page body" should contain "can't be blank"
+
+    When I click on "label" containing "Approved"
+    And I type "Look good to me" into field labelled "Decision notes"
+    And I click the submit button
+    Then I should be on "admin participant" page
+    And "page body" should contain "Participant task 'Identity' has been approved"

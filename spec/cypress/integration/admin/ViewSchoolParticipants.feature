@@ -1,5 +1,5 @@
 Feature: Admin users viewing school participants
-  As a DfE Admin 
+  As a DfE Admin
   I need to oversee the process of school induction tutors adding participant details
   So that I can view which schools have added their participants and
 
@@ -16,7 +16,7 @@ Feature: Admin users viewing school participants
 
   Scenario: Admins should be able to click through to individual participants
     When I click on "link" containing "ECT User 1"
-    Then I should be on "admin participants participant" page
+    Then I should be on "admin participant" page
     And "page title" should contain "ECT User 1"
 
     # Once there is more participants functionality this should be moved to there
