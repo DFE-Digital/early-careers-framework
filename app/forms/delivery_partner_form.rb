@@ -86,10 +86,9 @@ private
   def cohorts_validation
     # Ensure all selected lead providers have at least one selected cohort
     # This is indicated by the presence of a provider relationship for that lead provider
-    lead_provider_ids&.filter(&:present?)&.each do |lead_provider_id|
+    lead_provider_ids&.filter(&:present?)&.any? do |lead_provider_id|
       unless chosen_provider_relationships.pluck(:lead_provider_id).include?(lead_provider_id)
         errors.add(:provider_relationship_hashes, :blank, message: "Choose at least one cohort for every lead provider")
-        break
       end
     end
   end
