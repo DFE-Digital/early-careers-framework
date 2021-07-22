@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Admin::Schools::InductionCoodinators", type: :request do
+RSpec.describe "Admin::Schools::InductionCoordinators", type: :request do
   let(:admin_user) { create(:user, :admin) }
   let(:school) { create(:school) }
   let(:induction_tutor) { create(:user, :induction_coordinator, full_name: "May Weather", email: "may.weather@school.org", schools: [school]) }
@@ -74,11 +74,11 @@ RSpec.describe "Admin::Schools::InductionCoodinators", type: :request do
     context "when an ECT user already exists with that email address" do
       let!(:existing_user) { create(:user, :early_career_teacher) }
 
-      it "renders to email_used" do
+      it "render to email_used" do
         expect {
           post admin_school_induction_coordinators_path(school), params: {
             tutor_details: {
-              full_name: name,
+              full_name: existing_user.full_name,
               email: existing_user.email,
             },
           }
@@ -91,17 +91,35 @@ RSpec.describe "Admin::Schools::InductionCoodinators", type: :request do
     context "when a mentor user already exists with that email address" do
       let!(:existing_user) { create(:user, :mentor) }
 
-      it "renders to email_used" do
+      it "adds an induction tutor profile to the existing user" do
         expect {
           post admin_school_induction_coordinators_path(school), params: {
             tutor_details: {
-              full_name: name,
+              full_name: existing_user.full_name,
               email: existing_user.email,
             },
           }
         }.not_to change { User.count }
 
-        expect(response).to render_template :email_used
+        expect(existing_user.induction_coordinator_profile).not_to be_nil
+        expect(existing_user.schools).to include school
+        expect(response).to redirect_to admin_school_path(school)
+      end
+
+      it "does not change the user's name when a different name is used" do
+        expect {
+          post admin_school_induction_coordinators_path(school), params: {
+            tutor_details: {
+              full_name: "Different Name",
+              email: existing_user.email,
+            },
+          }
+        }.to not_change { User.count }
+               .and not_change { existing_user.full_name }
+
+        expect(existing_user.induction_coordinator_profile).not_to be_nil
+        expect(existing_user.schools).to include school
+        expect(response).to redirect_to admin_school_path(school)
       end
     end
 
@@ -119,6 +137,22 @@ RSpec.describe "Admin::Schools::InductionCoodinators", type: :request do
           }
         }.not_to change { User.count }
 
+        expect(existing_user.schools).to include school
+        expect(response).to redirect_to admin_school_path(school)
+      end
+
+      it "does not change the user's name when a different name is used" do
+        expect {
+          post admin_school_induction_coordinators_path(school), params: {
+            tutor_details: {
+              full_name: "Different Name",
+              email: existing_user.email,
+            },
+          }
+        }.to not_change { User.count }
+               .and not_change { existing_user.full_name }
+
+        expect(existing_user.induction_coordinator_profile).not_to be_nil
         expect(existing_user.schools).to include school
         expect(response).to redirect_to admin_school_path(school)
       end
