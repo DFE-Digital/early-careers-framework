@@ -172,7 +172,7 @@ RSpec.describe "Users::Sessions", type: :request do
       let(:user) { create(:user, :induction_coordinator) }
       let(:school) { user.schools.first }
 
-      it "redirects to dashboard on successful login" do
+      it "redirects to correct dashboard" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }
         expect(response).to redirect_to(advisory_schools_choose_programme_path(school_id: school.slug))
       end
