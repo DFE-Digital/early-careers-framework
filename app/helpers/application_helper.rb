@@ -4,6 +4,8 @@ module ApplicationHelper
   def profile_dashboard_path(user)
     if user.admin?
       admin_schools_path
+    elsif user.finance?
+      finance_lead_providers_path
     elsif user.induction_coordinator?
       induction_coordinator_dashboard_path(user)
     else

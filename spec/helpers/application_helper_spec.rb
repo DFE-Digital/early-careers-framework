@@ -6,6 +6,7 @@ RSpec.describe ApplicationHelper, type: :helper do
   include Devise::Test::ControllerHelpers
 
   let(:admin_user) { create(:user, :admin) }
+  let(:finance_user) { create(:user, :finance) }
   let(:induction_coordinator) { create(:user, :induction_coordinator) }
   let(:school) { induction_coordinator.induction_coordinator_profile.schools.first }
   let!(:cohort) { create(:cohort, :current) }
@@ -13,6 +14,10 @@ RSpec.describe ApplicationHelper, type: :helper do
   describe "#profile_dashboard_path" do
     it "returns the admin/schools path for admins" do
       expect(helper.profile_dashboard_path(admin_user)).to eq("/admin/schools")
+    end
+
+    it "returns the finance path for finance" do
+      expect(helper.profile_dashboard_path(finance_user)).to eq("/finance/lead_providers")
     end
 
     it "returns schools/choose-programme for induction coordinators" do

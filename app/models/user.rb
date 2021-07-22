@@ -10,6 +10,7 @@ class User < ApplicationRecord
   has_one :lead_provider_profile, dependent: :destroy
   has_one :lead_provider, through: :lead_provider_profile
   has_one :admin_profile, dependent: :destroy
+  has_one :finance_profile, dependent: :destroy
 
   has_many :participant_profiles, dependent: :destroy
   # TODO: Legacy associations, to be removed
@@ -25,6 +26,10 @@ class User < ApplicationRecord
 
   def admin?
     admin_profile.present?
+  end
+
+  def finance?
+    finance_profile.present?
   end
 
   def supplier_name
@@ -61,6 +66,8 @@ class User < ApplicationRecord
       "DfE admin"
     elsif induction_coordinator?
       "Induction tutor"
+    elsif finance?
+      "DfE Finance"
     elsif lead_provider?
       "Lead provider"
     elsif early_career_teacher?
@@ -86,6 +93,7 @@ class User < ApplicationRecord
   scope :induction_coordinators, -> { joins(:induction_coordinator_profile) }
   scope :for_lead_provider, -> { includes(:lead_provider).joins(:lead_provider) }
   scope :admins, -> { joins(:admin_profile) }
+  scope :finance_users, -> { joins(:finance_profile) }
 
   scope :changed_since, lambda { |timestamp|
     if timestamp.present?
