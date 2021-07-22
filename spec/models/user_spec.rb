@@ -10,6 +10,7 @@ RSpec.describe User, type: :model do
   describe "associations" do
     it { is_expected.to have_many(:participant_profiles) }
     it { is_expected.to have_one(:admin_profile) }
+    it { is_expected.to have_one(:finance_profile) }
     it { is_expected.to have_one(:induction_coordinator_profile) }
     it { is_expected.to have_many(:schools).through(:induction_coordinator_profile) }
     it { is_expected.to have_one(:lead_provider_profile) }
@@ -84,6 +85,20 @@ RSpec.describe User, type: :model do
       user = create(:user)
 
       expect(user.admin?).to be false
+    end
+  end
+
+  describe "#finance?" do
+    it "is expected to be true when the user has a finance profile" do
+      user = create(:user, :finance)
+
+      expect(user.finance?).to be true
+    end
+
+    it "is expected to be false when the user does not have a finance profile" do
+      user = create(:user)
+
+      expect(user.finance?).to be false
     end
   end
 
@@ -284,6 +299,14 @@ RSpec.describe User, type: :model do
 
       it "returns DfE admin" do
         expect(user.user_description).to eq("DfE admin")
+      end
+    end
+
+    context "when the user is a finance user" do
+      subject(:user) { create(:user, :finance) }
+
+      it "returns DfE finance" do
+        expect(user.user_description).to eq("DfE Finance")
       end
     end
 

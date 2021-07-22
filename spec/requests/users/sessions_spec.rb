@@ -196,6 +196,15 @@ RSpec.describe "Users::Sessions", type: :request do
       end
     end
 
+    context "when user is a finance user" do
+      let(:user) { create(:user, :finance) }
+
+      it "redirects to correct dashboard" do
+        post "/users/sign_in_with_token", params: { login_token: user.login_token }
+        expect(response).to redirect_to(finance_lead_providers_path)
+      end
+    end
+
     context "when the login_token has expired" do
       before { user.update(login_token_valid_until: 2.days.ago) }
 

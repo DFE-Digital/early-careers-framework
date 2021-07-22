@@ -217,6 +217,10 @@ Rails.application.routes.draw do
     resources :induction_coordinators, only: %i[index edit update], path: "induction-coordinators"
   end
 
+  namespace :finance do
+    resources :lead_providers, only: %i[index]
+  end
+
   namespace :schools do
     resources :dashboard, controller: :dashboard, only: %i[index show], path: "/", param: :school_id
 

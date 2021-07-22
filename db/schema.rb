@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_20_171815) do
+ActiveRecord::Schema.define(version: 2021_07_22_094019) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -223,6 +223,13 @@ ActiveRecord::Schema.define(version: 2021_07_20_171815) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["name"], name: "index_features_on_name", unique: true
+  end
+
+  create_table "finance_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_finance_profiles_on_user_id"
   end
 
   create_table "friendly_id_slugs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -622,6 +629,7 @@ ActiveRecord::Schema.define(version: 2021_07_20_171815) do
   add_foreign_key "data_stage_school_links", "data_stage_schools"
   add_foreign_key "district_sparsities", "local_authority_districts"
   add_foreign_key "feature_selected_objects", "features"
+  add_foreign_key "finance_profiles", "users"
   add_foreign_key "induction_coordinator_profiles", "users"
   add_foreign_key "lead_provider_cips", "cohorts"
   add_foreign_key "lead_provider_cips", "core_induction_programmes"
