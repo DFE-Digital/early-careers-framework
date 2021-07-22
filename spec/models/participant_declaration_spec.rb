@@ -23,7 +23,6 @@ RSpec.describe ParticipantDeclaration, type: :model do
       context "for mentor was created" do
         let(:profile_type) { :mentor_profile }
         let(:course_identifier) { "ecf-mentor" }
-        let(:course) { :ecf_mentor }
 
         it "includes declaration with mentor profile" do
           expect(ParticipantDeclaration.uplift).to include(profile_declaration)
