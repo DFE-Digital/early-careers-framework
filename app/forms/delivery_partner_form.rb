@@ -75,10 +75,18 @@ class DeliveryPartnerForm
     end
   end
 
+  def current_lead_provider_ids
+    lead_provider_ids&.filter(&:present?)
+  end
+
+  def chosen_provider_relationships_lead_provider_ids
+    chosen_provider_relationships.pluck(:lead_provider_id)
+  end
+
 private
 
   def lead_providers_validation
-    unless lead_provider_ids&.filter(&:present?)&.any?
+    unless current_lead_provider_ids&.any?
       errors.add(:lead_provider_ids, :blank, message: "Choose at least one")
     end
   end
@@ -86,10 +94,8 @@ private
   def cohorts_validation
     # Ensure all selected lead providers have at least one selected cohort
     # This is indicated by the presence of a provider relationship for that lead provider
-    lead_provider_ids&.filter(&:present?)&.any? do |lead_provider_id|
-      unless chosen_provider_relationships.pluck(:lead_provider_id).include?(lead_provider_id)
-        errors.add(:provider_relationship_hashes, :blank, message: "Choose at least one cohort for every lead provider")
-      end
+    if (current_lead_provider_ids - chosen_provider_relationships_lead_provider_ids).any?
+      errors.add(:provider_relationship_hashes, :blank, message: "Choose at least one cohort for every lead provider")
     end
   end
 end
