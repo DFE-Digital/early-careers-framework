@@ -17,7 +17,7 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
 
     it "returns the finance path for finance" do
-      expect(helper.profile_dashboard_path(finance_user)).to eq("/finance/lead_providers")
+      expect(helper.profile_dashboard_path(finance_user)).to eq("/finance/lead-providers")
     end
 
     it "returns schools/choose-programme for induction coordinators" do
