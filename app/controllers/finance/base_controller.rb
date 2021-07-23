@@ -5,6 +5,7 @@ class Finance::BaseController < ApplicationController
 
   before_action :authenticate_user!
   before_action :ensure_finance
+  after_action :verify_policy_scoped
 
 private
 

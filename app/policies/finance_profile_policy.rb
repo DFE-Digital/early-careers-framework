@@ -5,6 +5,10 @@ class FinanceProfilePolicy < ApplicationPolicy
     !!user&.finance?
   end
 
+  def show?
+    !!user&.finance?
+  end
+
   class Scope < Scope
     def resolve
       return scope.all if user.finance?
