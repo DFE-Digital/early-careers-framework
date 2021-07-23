@@ -104,7 +104,7 @@ class User < ApplicationRecord
   }
 
   scope :is_ecf_participant, lambda {
-    includes(participant_profiles: :school_cohort).joins(:participant_profiles).merge(ParticipantProfile.ecf.active)
+    joins(:participant_profiles).merge(ParticipantProfile.ecf.active).includes(mentor_profile: :school_cohort, early_career_teacher_profile: :school_cohort)
   }
 
   scope :is_participant, lambda {
