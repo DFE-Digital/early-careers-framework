@@ -19,7 +19,7 @@ class NominateInductionTutorForm
   end
 
   def email_already_taken?
-    ParticipantProfile.ecf.joins(:user).where(user: { email: email }).any?
+    ParticipantProfile.active.ects.joins(:user).where(user: { email: email }).any?
   end
 
   def name_different?
