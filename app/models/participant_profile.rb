@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ParticipantProfile < ApplicationRecord
+  has_paper_trail
   belongs_to :user
   # belongs_to :school, optional: true
   has_many :validation_decisions, class_name: "ProfileValidationDecision"

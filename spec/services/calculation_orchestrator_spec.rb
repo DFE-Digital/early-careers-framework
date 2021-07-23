@@ -61,12 +61,12 @@ RSpec.describe CalculationOrchestrator do
       let(:with_uplift) { :sparsity_uplift }
 
       before do
-        create_list(:participant_declaration, 10, with_uplift, lead_provider: call_off_contract.lead_provider)
+        create_list(:participant_declaration, 10, with_uplift, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
       end
 
       context "when only sparsity_uplift flag was set" do
         it "returns the total calculation" do
-          expect(described_class.call(contract: call_off_contract, lead_provider: call_off_contract.lead_provider, event_type: :started)).to eq(expected_result)
+          expect(described_class.call(contract: call_off_contract, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider, event_type: :started)).to eq(expected_result)
         end
       end
 
@@ -74,7 +74,7 @@ RSpec.describe CalculationOrchestrator do
         let(:with_uplift) { :pupil_premium_uplift }
 
         it "returns the total calculation" do
-          expect(described_class.call(contract: call_off_contract, lead_provider: call_off_contract.lead_provider, event_type: :started)).to eq(expected_result)
+          expect(described_class.call(contract: call_off_contract, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider, event_type: :started)).to eq(expected_result)
         end
       end
 
@@ -82,50 +82,50 @@ RSpec.describe CalculationOrchestrator do
         let(:with_uplift) { :uplift_flags }
 
         it "returns the total calculation" do
-          expect(described_class.call(contract: call_off_contract, lead_provider: call_off_contract.lead_provider, event_type: :started)).to eq(expected_result)
+          expect(described_class.call(contract: call_off_contract, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider, event_type: :started)).to eq(expected_result)
         end
       end
     end
 
     context "when no uplift flags were set" do
       before do
-        create_list(:participant_declaration, 10, lead_provider: call_off_contract.lead_provider)
+        create_list(:participant_declaration, 10, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
         expected_result.tap { |hash| hash[:uplift][:sub_total] = 0.0 }
       end
 
       it "returns the total calculation" do
-        expect(described_class.call(contract: call_off_contract, lead_provider: call_off_contract.lead_provider, event_type: :started)).to eq(expected_result)
+        expect(described_class.call(contract: call_off_contract, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider, event_type: :started)).to eq(expected_result)
       end
     end
 
     context "when only mentor profile declaration records available" do
       before do
-        create_list(:participant_declaration, 10, :only_mentor_profile, lead_provider: call_off_contract.lead_provider)
+        create_list(:participant_declaration, 10, :only_mentor_profile, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
       end
 
       it "returns the total calculation" do
-        expect(described_class.call(contract: call_off_contract, lead_provider: call_off_contract.lead_provider, event_type: :started)).to eq(expected_result)
+        expect(described_class.call(contract: call_off_contract, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider, event_type: :started)).to eq(expected_result)
       end
     end
 
     context "when only ect profile declaration records available" do
       before do
-        create_list(:participant_declaration, 10, :only_ect_profile, lead_provider: call_off_contract.lead_provider)
+        create_list(:participant_declaration, 10, :only_ect_profile, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
       end
 
       it "returns the total calculation" do
-        expect(described_class.call(contract: call_off_contract, lead_provider: call_off_contract.lead_provider, event_type: :started)).to eq(expected_result)
+        expect(described_class.call(contract: call_off_contract, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider, event_type: :started)).to eq(expected_result)
       end
     end
 
     context "when both mentor profile and ect profile declaration records available" do
       before do
-        create_list(:participant_declaration, 5, :only_ect_profile, lead_provider: call_off_contract.lead_provider)
-        create_list(:participant_declaration, 5, :only_ect_profile, lead_provider: call_off_contract.lead_provider)
+        create_list(:participant_declaration, 5, :only_ect_profile, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+        create_list(:participant_declaration, 5, :only_ect_profile, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
       end
 
       it "returns the total calculation" do
-        expect(described_class.call(contract: call_off_contract, lead_provider: call_off_contract.lead_provider, event_type: :started)).to eq(expected_result)
+        expect(described_class.call(contract: call_off_contract, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider, event_type: :started)).to eq(expected_result)
       end
     end
   end

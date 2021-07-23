@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ParticipantProfile::Ecf < ParticipantProfile
+class ParticipantProfile::ECF < ParticipantProfile
   self.ignored_columns = %i[school_id]
 
   belongs_to :school_cohort

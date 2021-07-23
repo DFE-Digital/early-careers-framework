@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_16_120023) do
+ActiveRecord::Schema.define(version: 2021_07_22_094019) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -225,6 +225,13 @@ ActiveRecord::Schema.define(version: 2021_07_16_120023) do
     t.index ["name"], name: "index_features_on_name", unique: true
   end
 
+  create_table "finance_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_finance_profiles_on_user_id"
+  end
+
   create_table "friendly_id_slugs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "slug", null: false
     t.integer "sluggable_id", null: false
@@ -375,27 +382,18 @@ ActiveRecord::Schema.define(version: 2021_07_16_120023) do
   end
 
   create_table "participant_declarations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "lead_provider_id", null: false
     t.string "declaration_type"
     t.datetime "declaration_date"
     t.jsonb "raw_event"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "user_id", null: false
-    t.string "course_type", default: "ecf-induction", null: false
-    t.index ["lead_provider_id"], name: "index_participant_declarations_on_lead_provider_id"
+    t.string "course_identifier"
+    t.string "evidence_held"
+    t.string "type", default: "ParticipantDeclaration::ECF"
+    t.uuid "cpd_lead_provider_id"
+    t.index ["cpd_lead_provider_id"], name: "index_participant_declarations_on_cpd_lead_provider_id"
     t.index ["user_id"], name: "index_participant_declarations_on_user_id"
-  end
-
-  create_table "participant_events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "item_type", null: false
-    t.string "event", null: false
-    t.string "whodunnit"
-    t.json "object"
-    t.json "object_changes"
-    t.datetime "created_at"
-    t.uuid "item_id", null: false
-    t.index ["item_type", "item_id"], name: "index_participant_events_on_item_type_and_item_id"
   end
 
   create_table "participant_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -417,16 +415,6 @@ ActiveRecord::Schema.define(version: 2021_07_16_120023) do
     t.index ["school_cohort_id"], name: "index_participant_profiles_on_school_cohort_id"
     t.index ["school_id"], name: "index_participant_profiles_on_school_id"
     t.index ["user_id"], name: "index_participant_profiles_on_user_id"
-  end
-
-  create_table "participation_records", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.uuid "early_career_teacher_profile_id", null: false
-    t.string "state", default: "assigned", null: false
-    t.uuid "lead_provider_id", null: false
-    t.index ["early_career_teacher_profile_id"], name: "index_participation_records_on_early_career_teacher_profile_id"
-    t.index ["lead_provider_id"], name: "index_participation_records_on_lead_provider_id"
   end
 
   create_table "partnership_csv_uploads", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -652,6 +640,7 @@ ActiveRecord::Schema.define(version: 2021_07_16_120023) do
   add_foreign_key "data_stage_school_links", "data_stage_schools"
   add_foreign_key "district_sparsities", "local_authority_districts"
   add_foreign_key "feature_selected_objects", "features"
+  add_foreign_key "finance_profiles", "users"
   add_foreign_key "induction_coordinator_profiles", "users"
   add_foreign_key "lead_provider_cips", "cohorts"
   add_foreign_key "lead_provider_cips", "core_induction_programmes"
@@ -663,15 +652,12 @@ ActiveRecord::Schema.define(version: 2021_07_16_120023) do
   add_foreign_key "nomination_emails", "schools"
   add_foreign_key "npq_lead_providers", "cpd_lead_providers"
   add_foreign_key "participant_bands", "call_off_contracts"
-  add_foreign_key "participant_declarations", "lead_providers"
   add_foreign_key "participant_profiles", "cohorts"
   add_foreign_key "participant_profiles", "core_induction_programmes"
   add_foreign_key "participant_profiles", "participant_profiles", column: "mentor_profile_id"
   add_foreign_key "participant_profiles", "school_cohorts"
   add_foreign_key "participant_profiles", "schools"
   add_foreign_key "participant_profiles", "users"
-  add_foreign_key "participation_records", "lead_providers"
-  add_foreign_key "participation_records", "participant_profiles", column: "early_career_teacher_profile_id"
   add_foreign_key "partnership_notification_emails", "partnerships"
   add_foreign_key "partnerships", "cohorts"
   add_foreign_key "partnerships", "delivery_partners"

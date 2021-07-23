@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe ParticipantDeclaration, type: :model do
   describe "associations" do
-    it { is_expected.to belong_to(:lead_provider) }
+    it { is_expected.to belong_to(:cpd_lead_provider) }
     it { is_expected.to have_one(:profile_declaration) }
   end
 
@@ -15,7 +15,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
       let(:profile_declaration) do
         create(:participant_declaration,
                :with_profile_type,
-               lead_provider: call_off_contract.lead_provider,
+               cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider,
                profile_type: profile_type)
       end
 

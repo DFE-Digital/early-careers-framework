@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+class ParticipantEvent < ApplicationRecord
+end
+
 class CreateParticipantEventsPapertrailVersioningTable < ActiveRecord::Migration[6.1]
   def change
     create_table :participant_events, id: :uuid do |t|

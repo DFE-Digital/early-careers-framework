@@ -11,7 +11,7 @@ class RecordParticipantDeclaration
     end
 
     def required_params
-      %i[participant_id lead_provider declaration_type declaration_date course_type raw_event]
+      %i[participant_id cpd_lead_provider declaration_type declaration_date course_identifier raw_event]
     end
   end
 
@@ -53,7 +53,7 @@ private
   end
 
   def course
-    params[:course_type]
+    params[:course_identifier]
   end
 
   def user
@@ -75,9 +75,15 @@ private
     end
   end
 
+  def declaration_type
+    if early_career_teacher? || mentor?
+      ParticipantDeclaration::ECF
+    end
+  end
+
   def create_record!
     ActiveRecord::Base.transaction do
-      ParticipantDeclaration.create!(params.slice(*required_params)).tap do |participant_declaration|
+      declaration_type.create!(params.slice(*required_params)).tap do |participant_declaration|
         ProfileDeclaration.create!(
           participant_declaration: participant_declaration,
           participant_profile: user_profile,
@@ -87,11 +93,11 @@ private
   end
 
   def lead_provider_from_token
-    params[:lead_provider]
+    params[:cpd_lead_provider]
   end
 
   def actual_lead_provider
-    SchoolCohort.find_by(school: school, cohort: cohort)&.lead_provider
+    SchoolCohort.find_by(school: school, cohort: cohort)&.lead_provider&.cpd_lead_provider
   end
 
   def validate_provider!

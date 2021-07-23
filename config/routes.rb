@@ -146,8 +146,10 @@ Rails.application.routes.draw do
       resources :participants, controller: "schools/participants", only: :index
     end
 
-    resources :participants, only: %i[show index] do
+    resources :participants, only: %i[show index destroy] do
       member do
+        get :remove
+
         scope path: "validations", controller: "participants/validations" do
           get ":step", action: :show, as: :validation_step
           post ":step", action: :update
@@ -218,6 +220,10 @@ Rails.application.routes.draw do
     end
 
     resources :induction_coordinators, only: %i[index edit update], path: "induction-coordinators"
+  end
+
+  namespace :finance do
+    resources :lead_providers, only: %i[index]
   end
 
   namespace :schools do

@@ -7,6 +7,10 @@ module Admin
         @profile = profile
       end
 
+      def render?
+        profile.npq?
+      end
+
     private
 
       attr_reader :profile

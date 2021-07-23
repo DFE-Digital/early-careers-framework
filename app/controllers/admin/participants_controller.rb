@@ -2,10 +2,10 @@
 
 module Admin
   class ParticipantsController < Admin::BaseController
-    skip_after_action :verify_policy_scoped, only: :show
+    skip_after_action :verify_policy_scoped, except: :index
     skip_after_action :verify_authorized, only: :index
 
-    before_action :load_participant, only: :show
+    before_action :load_participant, except: :index
 
     def show; end
 
@@ -13,8 +13,16 @@ module Admin
       school_cohort_ids = SchoolCohort.ransack(school_name_or_school_urn_cont: params[:query]).result.pluck(:id)
       query = "%#{(params[:query] || '').downcase}%"
       @participant_profiles = policy_scope(ParticipantProfile).joins(:user)
-                                  .where("lower(users.full_name) LIKE ? OR school_cohort_id IN (?)", query, school_cohort_ids)
-                                  .order("DATE(users.created_at) asc, users.full_name")
+                                                              .active
+                                                              .where("lower(users.full_name) LIKE ? OR school_cohort_id IN (?)", query, school_cohort_ids)
+                                                              .order("DATE(users.created_at) asc, users.full_name")
+    end
+
+    def remove; end
+
+    def destroy
+      @participant_profile.withdrawn!
+      render :destroy_success
     end
 
   private

@@ -63,5 +63,9 @@ FactoryBot.define do
         end
       end
     end
+
+    trait :finance do
+      finance_profile
+    end
   end
 end

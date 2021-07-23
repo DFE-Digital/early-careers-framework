@@ -10,11 +10,36 @@ RSpec.describe User, type: :model do
   describe "associations" do
     it { is_expected.to have_many(:participant_profiles) }
     it { is_expected.to have_one(:admin_profile) }
+    it { is_expected.to have_one(:finance_profile) }
     it { is_expected.to have_one(:induction_coordinator_profile) }
     it { is_expected.to have_many(:schools).through(:induction_coordinator_profile) }
     it { is_expected.to have_one(:lead_provider_profile) }
     it { is_expected.to have_one(:lead_provider).through(:lead_provider_profile) }
     it { is_expected.to have_one(:early_career_teacher_profile) }
+
+    describe "early_career_teacher_profile" do
+      it "returns an active profile" do
+        user = create(:user, :early_career_teacher)
+        expect(user.early_career_teacher_profile).to be_an_instance_of ParticipantProfile::ECT
+      end
+
+      it "returns nil when there is no active profile" do
+        user = create(:participant_profile, :ect, status: "withdrawn").user
+        expect(user.early_career_teacher_profile).to be_nil
+      end
+    end
+
+    describe "mentor_profile" do
+      it "returns an active profile" do
+        user = create(:user, :mentor)
+        expect(user.mentor_profile).to be_an_instance_of ParticipantProfile::Mentor
+      end
+
+      it "returns nil when there is no active profile" do
+        user = create(:participant_profile, :mentor, status: "withdrawn").user
+        expect(user.mentor_profile).to be_nil
+      end
+    end
   end
 
   describe "before_validation" do
@@ -60,6 +85,20 @@ RSpec.describe User, type: :model do
       user = create(:user)
 
       expect(user.admin?).to be false
+    end
+  end
+
+  describe "#finance?" do
+    it "is expected to be true when the user has a finance profile" do
+      user = create(:user, :finance)
+
+      expect(user.finance?).to be true
+    end
+
+    it "is expected to be false when the user does not have a finance profile" do
+      user = create(:user)
+
+      expect(user.finance?).to be false
     end
   end
 
@@ -263,6 +302,14 @@ RSpec.describe User, type: :model do
       end
     end
 
+    context "when the user is a finance user" do
+      subject(:user) { create(:user, :finance) }
+
+      it "returns DfE finance" do
+        expect(user.user_description).to eq("DfE Finance")
+      end
+    end
+
     context "when the user is an induction tutor" do
       subject(:user) { create(:user, :induction_coordinator) }
 
@@ -309,7 +356,11 @@ RSpec.describe User, type: :model do
       ect = create(:participant_profile, :ect).user
       mentor = create(:participant_profile, :mentor).user
 
-      expect(User.is_ecf_participant).to include(ect, mentor)
+      npq_and_mentor = create(:participant_profile, :mentor).user
+      create(:participant_profile, :npq, user: npq_and_mentor)
+
+      # Force execution of query with to_a to catch any exceptions
+      expect(User.is_ecf_participant.to_a).to include(ect, mentor, npq_and_mentor)
     end
 
     it "does not include other user types" do

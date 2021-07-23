@@ -2,12 +2,18 @@
 
 class ParticipantProfilePolicy < ApplicationPolicy
   def show?
-    return true if admin?
+    admin?
   end
 
   def validate?
     admin?
   end
+
+  def destroy?
+    admin? && (record.ect? || record.mentor?)
+  end
+
+  alias_method :remove?, :delete?
 
   class Scope < Scope
     def resolve

@@ -3,6 +3,36 @@
 require "rails_helper"
 
 RSpec.describe ParticipantProfilePolicy, type: :policy do
+  subject { described_class.new(user, participant_profile) }
+
+  let(:participant_profile) { create(:participant_profile) }
+
+  context "being an admin" do
+    let(:user) { create(:user, :admin) }
+    it { is_expected.to permit_action(:show) }
+
+    context "ECT" do
+      let(:participant_profile) { create(:participant_profile, :ect) }
+      it { is_expected.to permit_action(:destroy) }
+    end
+
+    context "mentor" do
+      let(:participant_profile) { create(:participant_profile, :mentor) }
+      it { is_expected.to permit_action(:destroy) }
+    end
+
+    context "NPQ" do
+      let(:participant_profile) { create(:participant_profile, :npq) }
+      it { is_expected.to forbid_action(:destroy) }
+    end
+  end
+
+  context "not an admin" do
+    let(:user) { create(:user) }
+    it { is_expected.to forbid_action(:show) }
+    it { is_expected.to forbid_action(:destroy) }
+  end
+
   describe described_class::Scope do
     subject(:result) { described_class.new(user, ParticipantProfile).resolve }
 
