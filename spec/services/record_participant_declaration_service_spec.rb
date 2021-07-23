@@ -3,7 +3,8 @@
 require "rails_helper"
 
 RSpec.describe RecordParticipantDeclaration do
-  let(:cpd_lead_provider) { create(:cpd_lead_provider) }
+  let(:ecf_lead_provider) { create(:lead_provider) }
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: ecf_lead_provider) }
   let(:another_lead_provider) { create(:cpd_lead_provider, name: "Unknown") }
   let(:npq_lead_provider) { create(:npq_lead_provider, cpd_lead_provider: cpd_lead_provider) }
   let!(:npq_course) { create(:npq_course, identifier: "npq-leading-teaching") }

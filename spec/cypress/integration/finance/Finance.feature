@@ -5,8 +5,17 @@ Feature: Finance user viewing finance data
     Given scenario "finance_lead_providers" has been run
     And I am logged in as a "finance"
 
-  Scenario: Finance page should list lead provider
-    Then the table should have 5 rows
-    Then "page body" should contain "Lead Provider"
-    Then the page should be accessible
+  Scenario: Finance user can view ECF payment breakdowns
+    Then I should be on "finance lead providers index" page
+    And the table should have 5 rows
+    And "page body" should contain "Lead Provider"
+    And the page should be accessible
     And percy should be sent snapshot called "Finance lead providers index page"
+
+    When I click on "link" containing "Lead Provider"
+    Then I should be on "ECF payment breakdown" page
+    And "page body" should contain "Payment breakdown"
+    And "page body" should contain "Service Fee"
+    And "page body" should contain "Output Fee"
+    Then the page should be accessible
+    And percy should be sent snapshot called "Finance ECF payment breakdown page"
