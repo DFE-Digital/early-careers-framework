@@ -356,7 +356,11 @@ RSpec.describe User, type: :model do
       ect = create(:participant_profile, :ect).user
       mentor = create(:participant_profile, :mentor).user
 
-      expect(User.is_ecf_participant).to include(ect, mentor)
+      npq_and_mentor = create(:participant_profile, :mentor).user
+      create(:participant_profile, :npq, user: npq_and_mentor)
+
+      # Force execution of query with to_a to catch any exceptions
+      expect(User.is_ecf_participant.to_a).to include(ect, mentor, npq_and_mentor)
     end
 
     it "does not include other user types" do
