@@ -23,6 +23,14 @@ FactoryBot.define do
       participant_type {}
     end
 
+    trait :ecf do
+      if [true, false].sample
+        ect
+      else
+        mentor
+      end
+    end
+
     trait :ect do
       school_cohort
 
