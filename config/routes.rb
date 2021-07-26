@@ -235,6 +235,22 @@ Rails.application.routes.draw do
         get :success
       end
 
+      resource :year_2020, path: "year-2020", controller: "year2020", only: [], constraints: ->(_request) { FeatureFlag.active?(:year_2020_data_entry) } do
+        get "start", action: :start
+
+        get "choose-induction-programme", action: :select_induction_programme
+        put "choose-induction-programme", action: :choose_induction_programme
+        get "choose-core-induction-programme", action: :select_cip
+        put "choose-core-induction-programme", action: :choose_cip
+        get "add-teacher", action: :new_teacher
+        put "add-teacher", action: :create_teacher
+        get "check-your-answers", action: :check
+        post "check-your-answers", action: :confirm
+        get "success", action: :success
+
+        get "no-accredited-materials", action: :no_accredited_materials
+      end
+
       resources :cohorts, only: :show, param: :cohort_id do
         member do
           resources :partnerships, only: :index
