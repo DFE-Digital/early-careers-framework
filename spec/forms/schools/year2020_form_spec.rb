@@ -49,30 +49,28 @@ RSpec.describe Schools::Year2020Form, type: :model do
   end
 
   describe "opt_out!" do
-    context "when no school cohort for 2020 exists" do
-      before do
-        subject.core_induction_programme_id = core_induction_programme.id
-        subject.school_id = school.id
-      end
+    before do
+      subject.induction_programme_choice = %w[no_early_career_teachers design_our_own].sample
+      subject.school_id = school.id
+    end
 
-      it "creates the school cohort, and sets programme choice to 'no_early_career_teachers'" do
+    context "when no school cohort for 2020 exists" do
+      it "creates school cohort, and sets programme choice to induction_programme_choice value" do
         subject.opt_out!
         school_cohort = SchoolCohort.find_by(school: school, cohort: cohort)
-        expect(school_cohort.no_early_career_teachers?).to be_truthy
+        expect(school_cohort.induction_programme_choice).to eq(subject.induction_programme_choice)
       end
     end
 
     context "school cohort for 2020 exists" do
       before do
-        subject.core_induction_programme_id = core_induction_programme.id
-        subject.school_id = school.id
         SchoolCohort.create!(school: school, cohort: cohort, induction_programme_choice: "core_induction_programme")
       end
 
       it "creates the school cohort, and sets programme choice to 'no_early_career_teachers'" do
         subject.opt_out!
         school_cohort = SchoolCohort.find_by(school: school, cohort: cohort)
-        expect(school_cohort.no_early_career_teachers?).to be_truthy
+        expect(school_cohort.induction_programme_choice).to eq(subject.induction_programme_choice)
       end
     end
   end

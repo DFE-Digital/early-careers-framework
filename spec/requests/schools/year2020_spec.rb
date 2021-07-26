@@ -104,6 +104,12 @@ RSpec.describe "Schools::AddParticipant", type: :request do
 
   describe "GET /schools/:school_id/year-2020/check-your-answers" do
     before do
+      set_session(:schools_year2020_form,
+                  full_name: "Joe Bloggs",
+                  email: "joe@example.com",
+                  school_id: school.friendly_id,
+                  induction_programme_choice: "core_induction_programme",
+                  core_induction_programme_id: core_induction_programme.id)
       get "/schools/#{school.slug}/year-2020/check-your-answers"
     end
 
