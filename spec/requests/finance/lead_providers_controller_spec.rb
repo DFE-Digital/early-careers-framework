@@ -15,7 +15,7 @@ RSpec.describe "Lead Providers for Finance users", type: :request do
       get "/finance/lead-providers"
 
       expect(response).to render_template("finance/lead_providers/index")
-      assigns(:lead_providers).should eq(lead_providers)
+      expect(assigns(:lead_providers)).to eq(lead_providers)
     end
   end
 end
