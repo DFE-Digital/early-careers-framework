@@ -32,8 +32,6 @@ module RecordDeclarations
 
   private
 
-    delegate :school, :cohort, to: :user_profile
-
     def initialize(params)
       @params = params
       @params[:user_id] = params[:participant_id]
@@ -89,7 +87,7 @@ module RecordDeclarations
     end
 
     def validate_provider!
-      raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless actual_lead_provider.nil? || lead_provider_from_token == actual_lead_provider
+      raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless lead_provider_from_token == actual_lead_provider
     end
 
     def required_params
