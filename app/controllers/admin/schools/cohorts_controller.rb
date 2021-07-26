@@ -10,8 +10,8 @@ module Admin
         @school_cohorts = policy_scope(SchoolCohort)
           .joins(:school)
           .where(school: @school)
-          .joins(:cohort)
-          .order("cohorts.start_year ASC")
+
+        @cohorts = Cohort.all.order(start_year: :asc)
       end
 
     private
