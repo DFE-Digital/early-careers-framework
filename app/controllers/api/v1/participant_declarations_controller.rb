@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../../../services/declarations/record_participant_declaration"
-
 module Api
   module V1
     class ParticipantDeclarationsController < Api::ApiController
@@ -10,7 +8,7 @@ module Api
       def create
         params = HashWithIndifferentAccess.new({ raw_event: request.raw_post, cpd_lead_provider: cpd_lead_provider }).merge(permitted_params["attributes"] || {})
         validate_params!(params)
-        render json: Declarations.detect_type(params)
+        render json: RecordParticipantDeclaration.call(params)
       end
 
     private
@@ -28,13 +26,17 @@ module Api
       end
 
       def permitted_params
-        params.require(:data).permit(:type, { attributes: required_params })
+        params.require(:data).permit(:type, { attributes: required_params + optional_params })
       rescue ActionController::ParameterMissing => e
         if e.param == :data
           raise ActionController::BadRequest, I18n.t(:invalid_data_structure)
         else
           raise
         end
+      end
+
+      def optional_params
+        %w[evidence_held]
       end
 
       def required_params

@@ -2,12 +2,12 @@
 
 require "rails_helper"
 
-RSpec.describe Declarations::RecordNPQParticipantDeclaration do
+RSpec.describe RecordDeclarations::NPQ do
   let(:cpd_lead_provider) { create(:cpd_lead_provider) }
   let(:another_lead_provider) { create(:cpd_lead_provider, name: "Unknown") }
   let(:npq_lead_provider) { create(:npq_lead_provider, cpd_lead_provider: cpd_lead_provider) }
   let(:npq_course) { create(:npq_course, identifier: "npq-leading-teaching") }
-  let(:npq_profile) do
+  let!(:npq_profile) do
     create(:npq_validation_data,
            npq_lead_provider: npq_lead_provider,
            npq_course: npq_course)
@@ -31,8 +31,10 @@ RSpec.describe Declarations::RecordNPQParticipantDeclaration do
     npq_params.merge({ participant_id: induction_coordinator_profile.user_id })
   end
 
-  it "creates a participant and profile declaration" do
-    expect { described_class.call(npq_params) }.to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
+  context "when sending event for an npq course" do
+    it "creates a participant and profile declaration" do
+      expect { described_class.call(npq_params) }.to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
+    end
   end
 
   context "when user is not a participant" do

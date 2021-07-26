@@ -2,26 +2,10 @@
 
 require "json_schema/validate_body_against_schema"
 
-module Declarations
-  def self.detect_type(params)
-    course = params["course_identifier"]
-    if %w[npq-leading-teaching
-          npq-leading-teaching-development
-          npq-leading-behaviour-culture
-          npq-headship
-          npq-senior-leadership
-          npq-executive-leadership].include?(course)
-      RecordNPQParticipantDeclaration.call(params)
-    elsif %w[ecf-induction
-             ecf-mentor].include?(course)
-      RecordECFParticipantDeclaration.call(params)
-    else
-      raise ActionController::ParameterMissing, "course_identifier"
-    end
-  end
-
-  class RecordParticipantDeclaration
+module RecordDeclarations
+  class Base
     attr_accessor :params
+    delegate :user_profile, :actual_lead_provider, to: :not_implemented_error
 
     class << self
       def call(params)
@@ -33,9 +17,14 @@ module Declarations
       end
     end
 
+    def not_implemented_error
+      raise NotImplementedError, "Method must be implemented"
+    end
+
     def call
       validate_schema!
       add_participant_profile_params!
+
       declaration = create_record!
       validate_provider!
       { id: declaration.id }
@@ -43,8 +32,6 @@ module Declarations
 
   private
 
-    delegate :participant?, :early_career_teacher?, :mentor?, :npq?, to: :user, allow_nil: true
-    delegate :early_career_teacher_profile, :mentor_profile, :npq_profiles, to: :user
     delegate :school, :cohort, to: :user_profile
 
     def initialize(params)
@@ -57,13 +44,17 @@ module Declarations
       raise ActionController::ParameterMissing, (errors.map { |error| error.sub(/\sin schema.*$/, "") }) unless errors.empty?
     end
 
+    def schema_validation_params
+      { version: "0.3" }
+    end
+
     def schema
-      JSON.parse(File.read(JsonSchema::VersionEventFileName.call(version: "0.3")))
+      JSON.parse(File.read(JsonSchema::VersionEventFileName.call(schema_validation_params)))
     end
 
     def add_participant_profile_params!
-      raise ActionController::ParameterMissing, [I18n.t(:invalid_participant)] unless participant? || npq?
       raise ActionController::ParameterMissing, [I18n.t(:invalid_course)] unless course_valid_for_participant?
+      raise ActionController::ParameterMissing, [I18n.t(:invalid_participant)] unless participant?
     end
 
     def user_id
@@ -79,19 +70,7 @@ module Declarations
     end
 
     def course_valid_for_participant?
-      raise NotImplementedError, "Method must be implemented"
-    end
-
-    def user_profile
-      raise NotImplementedError, "Method must be implemented"
-    end
-
-    def declaration_type
-      raise NotImplementedError, "Method must be implemented"
-    end
-
-    def actual_lead_provider
-      raise NotImplementedError, "Method must be implemented"
+      self.class.valid_courses.include?(course) && user_profile
     end
 
     def create_record!

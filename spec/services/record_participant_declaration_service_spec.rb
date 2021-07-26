@@ -6,7 +6,7 @@ RSpec.describe RecordParticipantDeclaration do
   let(:cpd_lead_provider) { create(:cpd_lead_provider) }
   let(:another_lead_provider) { create(:cpd_lead_provider, name: "Unknown") }
   let(:npq_lead_provider) { create(:npq_lead_provider, cpd_lead_provider: cpd_lead_provider) }
-  let(:npq_course) { create(:npq_course, identifier: "npq-leading-teaching") }
+  let!(:npq_course) { create(:npq_course, identifier: "npq-leading-teaching") }
   let(:npq_profile) do
     create(:npq_validation_data,
            npq_lead_provider: npq_lead_provider,
