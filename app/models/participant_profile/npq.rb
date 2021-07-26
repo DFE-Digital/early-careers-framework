@@ -6,8 +6,19 @@ class ParticipantProfile::NPQ < ParticipantProfile
 
   has_one :validation_data, class_name: "NPQValidationData", foreign_key: :id, dependent: :destroy
 
+  self.validation_steps = %i[identity decision].freeze
+
   def npq?
     true
+  end
+
+  def approved?
+    validation_decision(:decision).approved?
+  end
+
+  def rejected?
+    decision = validation_decision(:decision)
+    decision.persisted? && !decision.approved?
   end
 
   def participant_type

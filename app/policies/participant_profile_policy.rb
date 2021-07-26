@@ -2,7 +2,11 @@
 
 class ParticipantProfilePolicy < ApplicationPolicy
   def show?
-    admin_only
+    admin?
+  end
+
+  def validate?
+    admin?
   end
 
   def destroy?

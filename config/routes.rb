@@ -149,6 +149,11 @@ Rails.application.routes.draw do
     resources :participants, only: %i[show index destroy] do
       member do
         get :remove
+
+        scope path: "validations", controller: "participants/validations" do
+          get ":step", action: :show, as: :validation_step
+          post ":step", action: :update
+        end
       end
     end
 

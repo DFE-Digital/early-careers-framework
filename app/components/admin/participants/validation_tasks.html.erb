@@ -1,0 +1,25 @@
+<h2 class="govuk-heading-m govuk-!-margin-top-9">Validation tasks</h2>
+
+<% validation_steps.each.with_index do |step, index| %>
+  <table data-test="admin-participants-validation-tasks" class="govuk-table">
+    <thead  class="nhsuk-table__head">
+      <tr class="govuk-table__row">
+        <th class="govuk-table__header" colspan="2"><%= index + 1 %>. <%= t :name, scope: "schools.participants.validations.#{profile.participant_type}.#{step}" %></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="govuk-table__row">
+        <td class="govuk-!-width-full">
+          <%= govuk_link_to(
+                t(:link_text, scope: "schools.participants.validations.#{profile.participant_type}.#{step}"),
+                validation_step_admin_participant_path(profile, step)
+              )
+          %>
+        </td>
+        <td>
+          <%= govuk_tag tag_attributes(step) %>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+<% end %>

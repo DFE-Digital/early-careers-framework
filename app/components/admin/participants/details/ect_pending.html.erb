@@ -1,0 +1,30 @@
+<h2 class="govuk-heading-m">Details</h2>
+
+<table class="govuk-table">
+  <tbody class="govuk-table__body">
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">Full name</th>
+      <td class="govuk-table__cell"><%= profile.user.full_name %></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">Email address</th>
+      <td class="govuk-table__cell"><%= profile.user.email %></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">Participant type</th>
+      <td class="govuk-table__cell"><%= t :ect, scope: "schools.participants.type" %></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">Mentor</th>
+      <td class="govuk-table__cell"><%= profile.mentor&.full_name || 'Not yet assigned' %></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">School</th>
+      <td class="govuk-table__cell"><%= profile.school.name %></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">Cohort</th>
+      <td class="govuk-table__cell"><%= profile.cohort&.display_name || 'No cohort' %></td>
+    </tr>
+  </tbody>
+</table>

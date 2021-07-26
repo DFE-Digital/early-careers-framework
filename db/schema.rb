@@ -488,6 +488,17 @@ ActiveRecord::Schema.define(version: 2021_07_22_094019) do
     t.index ["participant_declaration_id"], name: "index_profile_declarations_on_participant_declaration_id"
   end
 
+  create_table "profile_validation_decisions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "participant_profile_id", null: false
+    t.string "validation_step", null: false
+    t.boolean "approved"
+    t.text "note"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["participant_profile_id", "validation_step"], name: "unique_validation_step", unique: true
+    t.index ["participant_profile_id"], name: "index_profile_validation_decisions_on_participant_profile_id"
+  end
+
   create_table "provider_relationships", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "lead_provider_id", null: false
     t.uuid "delivery_partner_id", null: false
@@ -653,6 +664,7 @@ ActiveRecord::Schema.define(version: 2021_07_22_094019) do
   add_foreign_key "partnerships", "lead_providers"
   add_foreign_key "partnerships", "schools"
   add_foreign_key "profile_declarations", "participant_profiles"
+  add_foreign_key "profile_validation_decisions", "participant_profiles"
   add_foreign_key "provider_relationships", "cohorts"
   add_foreign_key "provider_relationships", "delivery_partners"
   add_foreign_key "provider_relationships", "lead_providers"

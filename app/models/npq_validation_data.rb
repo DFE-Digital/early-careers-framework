@@ -4,7 +4,7 @@ class NPQValidationData < ApplicationRecord
   # TODO: Rename table
   self.table_name = "npq_profiles"
 
-  has_one :profile, class_name: "ParticipantProfile::NPQ", foreign_key: :id
+  has_one :profile, class_name: "ParticipantProfile::NPQ", foreign_key: :id, touch: true
   belongs_to :user
   belongs_to :npq_lead_provider
   belongs_to :npq_course

@@ -1,0 +1,50 @@
+<h2 class="govuk-heading-m">Details</h2>
+
+<table class="govuk-table">
+  <tbody class="govuk-table__body">
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">Name entered</th>
+      <td class="govuk-table__cell"><%= profile.user.full_name %></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">Participant email</th>
+      <td class="govuk-table__cell"><%= profile.user.email %></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">DOB entered</th>
+      <td class="govuk-table__cell"><%= profile.validation_data&.date_of_birth&.to_s(:govuk) %></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">TRN entered</th>
+      <td class="govuk-table__cell"><%= profile.validation_data&.teacher_reference_number %></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">NINo entered</th>
+      <td class="govuk-table__cell"><%= profile.validation_data&.nino %></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">School</th>
+      <td class="govuk-table__cell"><%= profile.school&.name %></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">School URN</th>
+      <td class="govuk-table__cell"><%= profile.school&.urn %></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">Participant type</th>
+      <td class="govuk-table__cell"><%= t :npq, scope: "schools.participants.type" %></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">Provider</th>
+      <td class="govuk-table__cell"><%= profile.validation_data&.npq_lead_provider&.name %></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">NPQ course</th>
+      <td class="govuk-table__cell"><%= profile.validation_data&.npq_course&.name %></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">Last updated</th>
+      <td class="govuk-table__cell"><%= profile.updated_at.to_s(:govuk) %></td>
+    </tr>
+  </tbody>
+</table>

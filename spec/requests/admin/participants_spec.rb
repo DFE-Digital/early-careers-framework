@@ -6,6 +6,7 @@ RSpec.describe "Admin::Participants", type: :request do
   let(:admin_user) { create(:user, :admin) }
   let(:cohort) { create(:cohort) }
   let(:school) { create(:school) }
+
   let(:school_cohort) { create(:school_cohort, school: school, cohort: cohort) }
   let!(:mentor_profile) { create :participant_profile, :mentor, school_cohort: school_cohort }
   let!(:ect_profile) { create :participant_profile, :ect, school_cohort: school_cohort, mentor_profile: mentor_profile }

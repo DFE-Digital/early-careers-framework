@@ -2,7 +2,7 @@
   <td class="govuk-table__cell nhsuk-table__cell">
     <span class="nhsuk-table-responsive__heading">Full name</span>
     <div class="school-name-with-tag">
-      <%= govuk_link_to profile.user.full_name, '#' %>
+      <%= govuk_link_to profile.user.full_name, admin_participant_path(profile) %>
     </div>
   </td>
   <td class="govuk-table__cell nhsuk-table__cell">
@@ -23,5 +23,6 @@
   </td>
   <td class="govuk-table__cell nhsuk-table__cell govuk-table__cell--numeric">
     <span class="nhsuk-table-responsive__heading">Validation status</span>
+    <%= render Admin::Participants::ValidationStatusTag.new(profile: profile) %>
   </td>
 </tr>
