@@ -52,6 +52,7 @@ Rails.application.routes.draw do
       resources :participants, only: :index, constraints: ->(_request) { FeatureFlag.active?(:participant_data_api) }
       resources :participant_declarations, only: %i[create], path: "participant-declarations"
       resources :users, only: %i[index create]
+      resources :ecf_users, only: %i[index create], path: "ecf-users"
       resources :dqt_records, only: :show, path: "dqt-records"
       resources :participant_validation, only: :show, path: "participant-validation"
       resources :npq_applications, only: :index, path: "npq-applications"
