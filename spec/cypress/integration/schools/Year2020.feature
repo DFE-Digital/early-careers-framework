@@ -10,7 +10,7 @@ Feature: School leaders should be able to add participants
     And percy should be sent snapshot called "Year 2020 start page"
 
   Scenario: Should be able to add a new 2020 ECT participant
-    When I click on "link" containing "Continue"
+    When I click on "link" containing "Start now"
     Then I should be on "2020 programme choice" page
     And the page should be accessible
     And percy should be sent snapshot called "Year 2020 Programme Choice page"

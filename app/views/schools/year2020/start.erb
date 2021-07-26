@@ -1,8 +1,13 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-three-quarters">
-    <span class="govuk-caption-l"><%= @year_2020_form.school.name %>, <%= @year_2020_form.cohort.display_name %> cohort</span>
-    <h1 class="govuk-heading-xl">Hello world!</h1>
+    <h1 class="govuk-heading-xl">Access materials for last year's NQTs</h1>
 
-    <%= govuk_link_to "Continue", choose_induction_programme_schools_year_2020_path, button: true %>
+    <%= govuk_start_now_button text: "Start now", href: choose_induction_programme_schools_year_2020_path %>
+
+    <h2 class="govuk-heading-m">Before you start</h2>
+    <p class="govuk-body">
+      You should already know what DfE accredited materials you want to use. If you don't know you can
+      <%= govuk_link_to "review this guidance", "/pages/core-materials-info" %>.
+    </p>
   </div>
 </div>

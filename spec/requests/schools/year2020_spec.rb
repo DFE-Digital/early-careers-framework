@@ -44,7 +44,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
 
     it "redirects to no programme page when school opts out" do
       put "/schools/#{school.slug}/year-2020/choose-induction-programme", params: {
-        schools_year2020_form: { induction_programme_choice: "no_programme" },
+        schools_year2020_form: { induction_programme_choice: "design_our_own" },
       }
       expect(response).to redirect_to "/schools/#{school.slug}/year-2020/no-accredited-materials"
     end

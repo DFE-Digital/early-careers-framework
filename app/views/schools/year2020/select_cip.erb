@@ -1,7 +1,15 @@
+<% content_for :before_content, govuk_back_link(
+  text: "Back",
+  href: { action: :select_induction_programme })
+%>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-three-quarters">
-    <span class="govuk-caption-l"><%= @year_2020_form.school.name %>, <%= @year_2020_form.cohort.display_name %> cohort</span>
-    <h1 class="govuk-heading-xl">Which training materials do you want this cohort to use?</h1>
+    <h1 class="govuk-heading-xl">Which study materials would you like to use?</h1>
+    <p class="govuk-body">
+      You don't necessarily need to choose the material that you chose before. If you are undecided you can read the
+      <%= govuk_link_to "guidance about different materials", "/pages/core-materials-info" %>.
+    </p>
 
     <%= form_for @year_2020_form, url: { action: :choose_cip }, method: :put do |f| %>
       <%= f.govuk_error_summary %>

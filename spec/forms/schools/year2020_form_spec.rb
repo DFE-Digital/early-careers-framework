@@ -28,8 +28,13 @@ RSpec.describe Schools::Year2020Form, type: :model do
   end
 
   describe "opt_out?" do
-    it "returns true when induction programme choice is 'no_programme'" do
-      subject.induction_programme_choice = "no_programme"
+    it "returns true when induction programme choice is 'no_early_career_teachers'" do
+      subject.induction_programme_choice = "no_early_career_teachers"
+      expect(subject.opt_out?).to be_truthy
+    end
+
+    it "returns true when induction programme choice is 'design_our_own'" do
+      subject.induction_programme_choice = "design_our_own"
       expect(subject.opt_out?).to be_truthy
     end
 

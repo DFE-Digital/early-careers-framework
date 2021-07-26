@@ -22,8 +22,9 @@ module Schools
 
     def induction_programme_options
       [
-        OpenStruct.new(id: "core_induction_programme", name: "Use DfE accredited materials"),
-        OpenStruct.new(id: "no_programme", name: "Do not participate in the programme"),
+        OpenStruct.new(id: "core_induction_programme", name: "Yes"),
+        OpenStruct.new(id: "design_our_own", name: "No, we will support our NQTs another way"),
+        OpenStruct.new(id: "no_early_career_teachers", name: "No, we don't have any NQTs"),
       ]
     end
 
@@ -31,17 +32,21 @@ module Schools
       School.friendly.find(school_id) || School.find_by(urn: school_id)
     end
 
+    def core_induction_programme
+      CoreInductionProgramme.find(core_induction_programme_id)
+    end
+
     def cohort
       Cohort.find_by(start_year: 2020)
     end
 
     def opt_out?
-      induction_programme_choice == "no_programme"
+      induction_programme_choice == "design_our_own" || induction_programme_choice == "no_early_career_teachers"
     end
 
     def opt_out!
       school_cohort = SchoolCohort.find_or_initialize_by(school: school, cohort: cohort)
-      school_cohort.induction_programme_choice = "no_early_career_teachers"
+      school_cohort.induction_programme_choice = induction_programme_choice
       school_cohort.save!
     end
 
@@ -49,7 +54,7 @@ module Schools
       ActiveRecord::Base.transaction do
         school_cohort = SchoolCohort.find_or_initialize_by(school: school, cohort: cohort)
         school_cohort.induction_programme_choice = "core_induction_programme"
-        school_cohort.core_induction_programme = CoreInductionProgramme.find(core_induction_programme_id)
+        school_cohort.core_induction_programme = core_induction_programme
         school_cohort.save!
 
         EarlyCareerTeachers::Create.call(
