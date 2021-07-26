@@ -86,7 +86,7 @@
           "declaration_date",
           "declaration_type",
           "participant_id",
-          "course_type"
+          "course_identifier"
         ]
       },
       "participant_retained_declarations": {
@@ -113,7 +113,7 @@
           "declaration_date",
           "declaration_type",
           "participant_id",
-          "course_type",
+          "course_identifier",
           "evidence_held"
         ]
       }
