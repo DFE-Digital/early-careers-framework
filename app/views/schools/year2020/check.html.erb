@@ -1,0 +1,29 @@
+<% content_for :title, "Confirm these details" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">Confirm these details</h1>
+
+    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Details
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <div><%= @year_2020_form.full_name %></div>
+          <div><%= @year_2020_form.email %></div>
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <%# govuk_link_to issue: https://github.com/DFE-Digital/govuk-components/issues/193 %>
+          <%= govuk_link_to({ action: :new_teacher }, button: false) do %>
+            Change <span class="govuk-visually-hidden">personal details</span>
+          <% end %>
+        </dd>
+      </div>
+    </dl>
+
+    <%= form_for @year_2020_form, url: { action: :confirm }, method: :post do |f| %>
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>
