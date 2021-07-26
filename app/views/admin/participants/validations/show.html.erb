@@ -1,10 +1,10 @@
-<% content_for :title, "Participant #{t :name, scope: t_scope}" %>
+<% content_for :title, "Participant #{t :name, scope: step_i18n_scope}" %>
 <% content_for :before_content, govuk_back_link(text: "Back", href: admin_participant_path(@participant_profile)) %>
 
 <span class="govuk-caption-l"><%= @participant_profile.user.full_name %>
-<h1 class="govuk-heading-l"><%= t :header, scope: t_scope %></h1>
+<h1 class="govuk-heading-l"><%= t :header, scope: step_i18n_scope %></h1>
 
-<p><%= t :description, scope: t_scope %></p>
+<p><%= t :description, scope: step_i18n_scope %></p>
 
 <%= form_for @decision, url: {}, method: :post do |f| %>
   <%= f.govuk_radio_buttons_fieldset :approved, inline: true, legend: { text: "Change this decision", tag: "h2", size: "m" } do %>

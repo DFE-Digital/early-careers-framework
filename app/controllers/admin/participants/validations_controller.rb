@@ -11,7 +11,7 @@ module Admin
       def update
         if @decision.update(decision_params)
           set_success_message(
-            heading: "Participant task '#{t(:name, scope: t_scope)}' has been #{@decision.approved? ? 'approved' : 'rejected'}",
+            heading: "Participant task '#{t(:name, scope: step_i18n_scope)}' has been #{@decision.approved? ? 'approved' : 'rejected'}",
           )
           redirect_to admin_participant_path(@participant_profile)
         else
@@ -28,10 +28,10 @@ module Admin
         @decision = @participant_profile.validation_decision(params[:step])
       end
 
-      def t_scope
+      def step_i18n_scope
         "schools.participants.validations.#{@participant_profile.participant_type}.#{params[:step]}"
       end
-      helper_method :t_scope
+      helper_method :step_i18n_scope
 
       def decision_params
         params.require(:profile_validation_decision).permit(:approved, :note)
