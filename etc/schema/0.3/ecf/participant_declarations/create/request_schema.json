@@ -73,13 +73,17 @@
           },
           "participant_id": {
             "$ref": "#/definitions/uuid"
+          },
+          "course_identifier": {
+            "$ref": "#/definitions/ecf/courses"
           }
         },
         "additionalProperties": false,
         "required": [
           "declaration_date",
           "declaration_type",
-          "participant_id"
+          "participant_id",
+          "course_identifier"
         ]
       },
       "participant_retained_declarations": {
@@ -93,6 +97,9 @@
           },
           "participant_id": {
             "$ref": "#/definitions/uuid"
+          },
+          "course_identifier": {
+            "$ref": "#/definitions/ecf/courses"
           },
           "evidence_held": {
             "$ref": "#/definitions/evidence_type"

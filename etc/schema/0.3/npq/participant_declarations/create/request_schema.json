@@ -77,7 +77,7 @@
           "participant_id": {
             "$ref": "#/definitions/uuid"
           },
-          "course_type": {
+          "course_identifier": {
             "$ref": "#/definitions/npq/courses"
           }
         },
@@ -101,7 +101,7 @@
           "participant_id": {
             "$ref": "#/definitions/uuid"
           },
-          "course_type": {
+          "course_identifier": {
             "$ref": "#/definitions/npq/courses"
           },
           "evidence_held": {
