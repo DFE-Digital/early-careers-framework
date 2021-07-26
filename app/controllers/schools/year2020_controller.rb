@@ -17,7 +17,7 @@ module Schools
     def choose_induction_programme
       render :select_induction_programme and return unless @year_2020_form.valid? :choose_induction_programme
 
-      session[SESSION_KEY] = @year_2020_form.serializable_hash
+      store_year_2020_session
       if @year_2020_form.opt_out?
         @year_2020_form.opt_out!
         redirect_to action: :no_accredited_materials
@@ -31,7 +31,7 @@ module Schools
     def choose_cip
       render :select_cip and return unless @year_2020_form.valid? :choose_cip
 
-      session[SESSION_KEY] = @year_2020_form.serializable_hash
+      store_year_2020_session
       redirect_to action: :new_teacher
     end
 
@@ -40,7 +40,7 @@ module Schools
     def create_teacher
       render :new_teacher and return unless @year_2020_form.valid? :create_teacher
 
-      session[SESSION_KEY] = @year_2020_form.serializable_hash
+      store_year_2020_session
       redirect_to action: :check
     end
 
@@ -70,6 +70,10 @@ module Schools
 
     def get_year_2020_session
       session[SESSION_KEY] || {}
+    end
+
+    def store_year_2020_session
+      session[SESSION_KEY] = @year_2020_form.serializable_hash
     end
   end
 end
