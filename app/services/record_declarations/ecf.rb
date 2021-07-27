@@ -13,7 +13,7 @@ module RecordDeclarations
     end
 
     def actual_lead_provider
-      user_profile&.school_cohort.lead_provider&.cpd_lead_provider
+      user_profile&.school_cohort&.lead_provider&.cpd_lead_provider
     end
   end
 end

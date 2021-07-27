@@ -48,7 +48,7 @@ class User < ApplicationRecord
   end
 
   def npq?
-    npq_profiles.any?
+    npq_profiles.any?(&:active?)
   end
 
   def participant?

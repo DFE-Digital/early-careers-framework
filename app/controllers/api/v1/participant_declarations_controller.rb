@@ -19,7 +19,7 @@ module Api
 
       def convert_params_for_declaration(params)
         params.transform_keys do |key|
-          key=='participant_id' ? 'user_id' : key
+          key == "participant_id" ? "user_id" : key
         end
       end
 
