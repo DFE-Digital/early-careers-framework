@@ -2,7 +2,7 @@
 
 class ParticipantProfile < ApplicationRecord
   has_paper_trail
-  belongs_to :user
+  belongs_to :user, touch: true
   has_many :validation_decisions, class_name: "ProfileValidationDecision"
 
   enum status: {
