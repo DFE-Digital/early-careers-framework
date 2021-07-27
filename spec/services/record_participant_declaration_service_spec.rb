@@ -45,14 +45,18 @@ RSpec.describe RecordParticipantDeclaration do
     let(:induction_coordinator_params) do
       ect_params.merge({ user_id: induction_coordinator_profile.user_id })
     end
-    let(:delivery_partner) { create(:delivery_partner) }
     let!(:school_cohort) { create(:school_cohort, school: ect_profile.school, cohort: ect_profile.cohort) }
-    let!(:partnership) do
+    let!(:ect_partnership) do
       create(:partnership,
              school: ect_profile.school,
              lead_provider: cpd_lead_provider.lead_provider,
-             cohort: ect_profile.cohort,
-             delivery_partner: delivery_partner)
+             cohort: ect_profile.cohort)
+    end
+    let!(:mentor_partnership) do
+      create(:partnership,
+             school: mentor_profile.school,
+             lead_provider: cpd_lead_provider.lead_provider,
+             cohort: mentor_profile.cohort)
     end
 
     def generate_raw_event(params)

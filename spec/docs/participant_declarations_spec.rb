@@ -5,6 +5,13 @@ require "swagger_helper"
 RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_spec.json" do
   let(:early_career_teacher_profile) { create(:early_career_teacher_profile) }
   let(:cohort) { early_career_teacher_profile.cohort }
+  let!(:school_cohort) { create(:school_cohort, school: early_career_teacher_profile.school, cohort: early_career_teacher_profile.cohort) }
+  let!(:ect_partnership) do
+    create(:partnership,
+           school: early_career_teacher_profile.school,
+           lead_provider: cpd_lead_provider.lead_provider,
+           cohort: early_career_teacher_profile.cohort)
+  end
   let(:user) { early_career_teacher_profile.user }
   let(:lead_provider) { create(:lead_provider) }
   let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: lead_provider) }
@@ -32,24 +39,6 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
                 schema: {
                   "$ref": "#/components/schemas/ParticipantDeclaration",
                 }
-
-      response 200, "Successful" do
-        let(:fresh_user) { create(:user, :early_career_teacher) }
-        let(:params) do
-          {
-            "data": {
-              "type": "participant-declaration",
-              "attributes": {
-                "participant_id" => fresh_user.id,
-                "declaration_type" => "started",
-                "declaration_date" => "2021-05-31T15:50:00Z",
-                "course_identifier" => "ecf-induction",
-              },
-            },
-          }
-        end
-        run_test!
-      end
 
       response 200, "Successful" do
         let(:attributes) do
