@@ -45,11 +45,19 @@ FactoryBot.create :participant_profile,
                   school_cohort: another_school_cohort,
                   created_at: Date.parse("29/12/2020")
 
-npq_profile = FactoryBot.create :participant_profile, :npq, validation_data: nil
+npq_user = FactoryBot.create(:user, full_name: "Natalie Portman Quebec", email: "natalie.portman@quebec.ca")
+
+npq_profile = FactoryBot.create :participant_profile,
+                                :npq,
+                                validation_data: nil,
+                                user: npq_user
 
 FactoryBot.create :npq_validation_data,
                   id: npq_profile.id,
-                  user: FactoryBot.create(:user, full_name: "Natalie Portman Quebec"),
+                  user: npq_user,
                   date_of_birth: Date.parse("10/12/1982"),
                   nino: "NI123456",
-                  created_at: Date.parse("19/09/2019")
+                  created_at: Date.parse("19/09/2019"),
+                  teacher_reference_number: "9780824"
+
+npq_profile.update!(updated_at: Date.parse("19/09/2019"))
