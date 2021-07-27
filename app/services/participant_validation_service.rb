@@ -39,8 +39,10 @@ private
     dqt_record = dqt_record(trn, nino)
     return if dqt_record.nil?
 
+    padded_trn = trn.rjust(7, "0")
+
     matches = 0
-    trn_matches = trn == dqt_record[:teacher_reference_number]
+    trn_matches = padded_trn == dqt_record[:teacher_reference_number]
     matches += 1 if trn_matches
     name_matches = full_name == dqt_record[:full_name]
     matches += 1 if name_matches
