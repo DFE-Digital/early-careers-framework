@@ -34,6 +34,11 @@ class School < ApplicationRecord
 
   has_many :additional_school_emails
 
+  after_commit do
+    ecf_participant_profiles.touch_all
+    ecf_participants.touch_all
+  end
+
   scope :with_local_authority, lambda { |local_authority|
     joins(%i[school_local_authorities local_authorities])
       .where(school_local_authorities: { end_year: nil }, local_authorities: local_authority)
