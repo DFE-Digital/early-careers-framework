@@ -67,7 +67,7 @@ jobs:
         run: bin/rails db:create db:schema:load
 
       - name: Run tests
-        run: yarn percy exec bundle exec rspec
+        run: yarn percy exec --parallel bundle exec rspec
 
   frontend-tests:
     name: Run frontend JS unit tests
@@ -172,7 +172,7 @@ jobs:
           wait-on: 'http://localhost:5017/'
           env: port=5017
           project: ./spec
-          command-prefix: 'percy exec -- npx'
+          command-prefix: 'percy exec --parallel -- npx'
         env:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
           COMMIT_INFO_BRANCH: ${{ github.head_ref }}
