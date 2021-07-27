@@ -14,6 +14,7 @@ class SchoolMailer < ApplicationMailer
   COORDINATOR_REMINDER_TO_CHOOSE_PROVIDER_EMAIL_TEMPLATE = "e7a60b68-334e-4a25-8adf-55ebc70622f9"
   COORDINATOR_REMINDER_TO_CHOOSE_MATERIALS_EMAIL_TEMPLATE = "43baf25c-6a46-437b-9f30-77c57d68a59e"
   ADD_PARTICIPANTS_EMAIL_TEMPLATE = "721787d0-74bc-42a0-a064-ee0c1cb58edb"
+  YEAR2020_INVITE_EMAIL_TEMPLATE = "d4b53e26-4630-43a5-b89e-3c668061a41c"
 
   def nomination_email(recipient:, school_name:, nomination_url:, expiry_date:)
     template_mail(
@@ -217,6 +218,18 @@ class SchoolMailer < ApplicationMailer
       personalisation: {
         name: name,
         sign_in_url: sign_in_url,
+      },
+    )
+  end
+
+  def year2020_invite_email(recipient:, start_url:)
+    template_mail(
+      YEAR2020_INVITE_EMAIL_TEMPLATE,
+      to: recipient,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        start_url: start_url,
       },
     )
   end
