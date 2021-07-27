@@ -51,7 +51,7 @@ module Api
       end
 
       def users
-        users = User.is_ecf_participant
+        users = User.all
 
         if updated_since.present?
           users = users.changed_since(updated_since)

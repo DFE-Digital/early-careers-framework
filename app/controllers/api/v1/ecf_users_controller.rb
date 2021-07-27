@@ -7,7 +7,7 @@ module Api
       include ApiPagination
 
       def index
-        render json: UserSerializer.new(paginate(users)).serializable_hash.to_json
+        render json: ECFUserSerializer.new(paginate(users)).serializable_hash.to_json
       end
 
       def create
