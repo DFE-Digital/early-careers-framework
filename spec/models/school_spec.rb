@@ -39,6 +39,18 @@ RSpec.describe School, type: :model do
     it { is_expected.to have_many(:additional_school_emails) }
   end
 
+  it "updates the updated_at on participant profiles and users" do
+    freeze_time
+    school_cohort = create(:school_cohort)
+    profile = create(:participant_profile, :ect, school_cohort: school_cohort, updated_at: 2.weeks.ago)
+    user = profile.user
+    user.update!(updated_at: 2.weeks.ago)
+
+    school_cohort.school.touch
+    expect(user.reload.updated_at).to be_within(1.second).of Time.zone.now
+    expect(profile.reload.updated_at).to be_within(1.second).of Time.zone.now
+  end
+
   describe "eligibility" do
     let!(:open_school) { create(:school, school_status_code: 1) }
     let!(:closed_school) { create(:school, school_status_code: 2) }

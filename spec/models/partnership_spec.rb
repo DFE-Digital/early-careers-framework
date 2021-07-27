@@ -17,6 +17,19 @@ RSpec.describe Partnership, type: :model do
     it { is_expected.to have_many(:partnership_notification_emails) }
   end
 
+  it "updates the updated_at on participant profiles and users" do
+    freeze_time
+    school_cohort = create(:school_cohort)
+    partnership = create(:partnership, school: school_cohort.school)
+    profile = create(:participant_profile, :ect, school_cohort: school_cohort, updated_at: 2.weeks.ago)
+    user = profile.user
+    user.update!(updated_at: 2.weeks.ago)
+
+    partnership.touch
+    expect(user.reload.updated_at).to be_within(1.second).of Time.zone.now
+    expect(profile.reload.updated_at).to be_within(1.second).of Time.zone.now
+  end
+
   describe "#challenged?" do
     it "returns true when the partnership has been challenged" do
       partnership = build(:partnership, challenged_at: Time.zone.now, challenge_reason: "mistake")

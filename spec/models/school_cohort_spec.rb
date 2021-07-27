@@ -8,6 +8,18 @@ RSpec.describe SchoolCohort, type: :model do
     it { is_expected.to belong_to(:school) }
   end
 
+  it "updates the updated_at on participant profiles and users" do
+    freeze_time
+    school_cohort = create(:school_cohort)
+    profile = create(:participant_profile, :ect, school_cohort: school_cohort, updated_at: 2.weeks.ago)
+    user = profile.user
+    user.update!(updated_at: 2.weeks.ago)
+
+    school_cohort.touch
+    expect(user.reload.updated_at).to be_within(1.second).of Time.zone.now
+    expect(profile.reload.updated_at).to be_within(1.second).of Time.zone.now
+  end
+
   it {
     is_expected.to define_enum_for(:induction_programme_choice).with_values(
       full_induction_programme: "full_induction_programme",

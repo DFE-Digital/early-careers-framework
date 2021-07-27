@@ -11,6 +11,14 @@ RSpec.describe ParticipantProfile, type: :model do
     ).backed_by_column_of_type(:text)
   }
 
+  it "updates the updated_at on the users" do
+    freeze_time
+    user = create(:user, :mentor, updated_at: 2.weeks.ago)
+
+    user.mentor_profile.touch
+    expect(user.reload.updated_at).to be_within(1.second).of Time.zone.now
+  end
+
   describe described_class::Mentor do
     it { is_expected.to belong_to(:school_cohort) }
     it { is_expected.to have_one(:cohort).through(:school_cohort) }
