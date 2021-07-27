@@ -16,7 +16,7 @@ RSpec.describe RecordParticipantDeclaration do
   let(:params) do
     {
       raw_event: "{\"participant_id\":\"37b300a8-4e99-49f1-ae16-0235672b6708\",\"declaration_type\":\"started\",\"declaration_date\":\"2021-06-21T08:57:31Z\",\"course_identifier\":\"npq-leading-teaching\"}",
-      participant_id: npq_profile.user_id,
+      user_id: npq_profile.user_id,
       declaration_date: "2021-06-21T08:46:29Z",
       declaration_type: "started",
       course_identifier: "npq-leading-teaching",
@@ -40,10 +40,10 @@ RSpec.describe RecordParticipantDeclaration do
       params.merge({ cpd_lead_provider: cpd_lead_provider })
     end
     let(:mentor_params) do
-      ect_params.merge({ participant_id: mentor_profile.user_id, course_identifier: "ecf-mentor" })
+      ect_params.merge({ user_id: mentor_profile.user_id, course_identifier: "ecf-mentor" })
     end
     let(:induction_coordinator_params) do
-      ect_params.merge({ participant_id: induction_coordinator_profile.user_id })
+      ect_params.merge({ user_id: induction_coordinator_profile.user_id })
     end
     let(:delivery_partner) { create(:delivery_partner) }
     let!(:school_cohort) { create(:school_cohort, school: ect_profile.school, cohort: ect_profile.cohort) }

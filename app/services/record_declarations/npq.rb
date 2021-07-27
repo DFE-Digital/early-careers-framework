@@ -15,7 +15,7 @@ module RecordDeclarations
     end
 
     def user_profile
-      npq_profiles.includes({ validation_data: [:npq_course] }).where('npq_courses.identifier': course).where(npq_lead_provider_id: cpd_lead_provider.npq_lead_provider).first
+      npq_profiles.includes({ validation_data: [:npq_course] }).where('npq_courses.identifier': course).first
     end
 
     def schema_validation_params
