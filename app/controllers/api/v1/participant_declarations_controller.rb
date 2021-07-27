@@ -8,13 +8,19 @@ module Api
       def create
         params = HashWithIndifferentAccess.new({ raw_event: request.raw_post, cpd_lead_provider: cpd_lead_provider }).merge(permitted_params["attributes"] || {})
         validate_params!(params)
-        render json: RecordParticipantDeclaration.call(params)
+        render json: RecordParticipantDeclaration.call(convert_params_for_declaration(params))
       end
 
     private
 
       def cpd_lead_provider
         current_user
+      end
+
+      def convert_params_for_declaration(params)
+        params.transform_keys do |key|
+          key == "participant_id" ? "user_id" : key
+        end
       end
 
       def validate_params!(params)
@@ -26,13 +32,17 @@ module Api
       end
 
       def permitted_params
-        params.require(:data).permit(:type, { attributes: required_params })
+        params.require(:data).permit(:type, { attributes: required_params + optional_params })
       rescue ActionController::ParameterMissing => e
         if e.param == :data
           raise ActionController::BadRequest, I18n.t(:invalid_data_structure)
         else
           raise
         end
+      end
+
+      def optional_params
+        %w[evidence_held]
       end
 
       def required_params

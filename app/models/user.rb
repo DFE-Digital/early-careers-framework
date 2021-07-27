@@ -54,6 +54,10 @@ class User < ApplicationRecord
     mentor_profile.present?
   end
 
+  def npq?
+    npq_profiles.any?(&:active?)
+  end
+
   def participant?
     early_career_teacher? || mentor?
   end

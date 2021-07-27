@@ -14,12 +14,6 @@
         "attributes": {
           "oneOf": [
             {
-              "$ref": "#/definitions/ecf/participant_started_declarations"
-            },
-            {
-              "$ref": "#/definitions/ecf/participant_retained_declarations"
-            },
-            {
               "$ref": "#/definitions/npq/participant_started_declarations"
             },
             {
@@ -60,66 +54,6 @@
         "training-event-attended",
         "self-study-material-completed"
       ]
-    },
-    "ecf": {
-      "courses": {
-        "enum": [
-          "ecf-induction",
-          "ecf-mentor"
-        ]
-      },
-      "participant_started_declarations": {
-        "type": "object",
-        "properties": {
-          "declaration_date": {
-            "$ref": "#/definitions/date-time"
-          },
-          "declaration_type": {
-            "$ref": "#/definitions/payment_events/started_completed"
-          },
-          "participant_id": {
-            "$ref": "#/definitions/uuid"
-          },
-          "course_identifier": {
-            "$ref": "#/definitions/ecf/courses"
-          }
-        },
-        "additionalProperties": false,
-        "required": [
-          "declaration_date",
-          "declaration_type",
-          "participant_id",
-          "course_identifier"
-        ]
-      },
-      "participant_retained_declarations": {
-        "type": "object",
-        "properties": {
-          "declaration_date": {
-            "$ref": "#/definitions/date-time"
-          },
-          "declaration_type": {
-            "$ref": "#/definitions/payment_events/retained"
-          },
-          "participant_id": {
-            "$ref": "#/definitions/uuid"
-          },
-          "course_identifier": {
-            "$ref": "#/definitions/ecf/courses"
-          },
-          "evidence_held": {
-            "$ref": "#/definitions/evidence_type"
-          }
-        },
-        "additionalProperties": false,
-        "required": [
-          "declaration_date",
-          "declaration_type",
-          "participant_id",
-          "course_identifier",
-          "evidence_held"
-        ]
-      }
     },
     "npq": {
       "courses": {
