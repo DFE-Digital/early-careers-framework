@@ -18,7 +18,7 @@ jobs:
       DB_HOSTNAME: 127.0.0.1
       DB_PORT: 5432
       PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
-      PERCY_PARALLEL_NONCE: ${{ github.head_ref }}
+      PERCY_PARALLEL_NONCE: ${{ github.run_number }}
       PERCY_PARALLEL_TOTAL: 2
 
     services:
@@ -67,7 +67,7 @@ jobs:
         run: bin/rails db:create db:schema:load
 
       - name: Run tests
-        run: yarn percy exec --parallel bundle exec rspec
+        run: yarn percy exec --parallel -- bundle exec rspec
 
   frontend-tests:
     name: Run frontend JS unit tests
@@ -176,5 +176,5 @@ jobs:
         env:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
           COMMIT_INFO_BRANCH: ${{ github.head_ref }}
-          PERCY_PARALLEL_NONCE: ${{ github.head_ref }}
+          PERCY_PARALLEL_NONCE: ${{ github.run_number }}
           PERCY_PARALLEL_TOTAL: 2
