@@ -3,6 +3,7 @@
 class ParticipantProfile < ApplicationRecord
   has_paper_trail
   belongs_to :user
+  belongs_to :teacher_profile, optional: true
   has_many :validation_decisions, class_name: "ProfileValidationDecision"
 
   enum status: {
@@ -24,6 +25,8 @@ class ParticipantProfile < ApplicationRecord
 
   class_attribute :validation_steps
   self.validation_steps = []
+
+  before_save :sync_teacher_profile
 
   def ect?
     false
@@ -56,5 +59,11 @@ class ParticipantProfile < ApplicationRecord
 
     decision = validation_decisions.find { |record| record.validation_step.to_s == name.to_s }
     decision || validation_decisions.build(validation_step: name)
+  end
+
+  def sync_teacher_profile
+    self.teacher_profile = user.teacher_profile || user.build_teacher_profile
+    teacher_profile.school = school
+    teacher_profile.save!
   end
 end
