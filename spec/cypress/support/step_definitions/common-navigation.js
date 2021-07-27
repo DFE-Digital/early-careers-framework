@@ -147,7 +147,18 @@ const pagePaths = {
   "NPQ usage guide": "/lead-providers/guidance/npq-usage",
   "API release notes": "/lead-providers/guidance/release-notes",
   "API guidance support": "/lead-providers/guidance/help",
+  "2020 programme choice":
+    "/schools/:school_id/year-2020/choose-induction-programme",
+  "2020 cip choice":
+    "/schools/:school_id/year-2020/choose-core-induction-programme",
+  "2020 add teacher": "/schools/:school_id/year-2020/add-teacher",
+  "2020 check your answers": "/schools/:school_id/year-2020/check-your-answers",
+  "2020 success": "/schools/:school_id/year-2020/success",
 };
+
+Given("I am on {string} path", (path) => {
+  cy.visit(path);
+});
 
 Given("I am on {string} page", (page) => {
   const path = pagePaths[page];

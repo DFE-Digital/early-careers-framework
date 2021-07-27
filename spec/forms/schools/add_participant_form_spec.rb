@@ -57,7 +57,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
     end
 
     context "when the email is not already in use" do
-      it "returns true" do
+      it "returns false" do
         expect(subject).not_to be_email_already_taken
       end
     end

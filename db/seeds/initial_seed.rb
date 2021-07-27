@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+Cohort.find_or_create_by!(start_year: 2020)
 cohort_2021 = Cohort.find_or_create_by!(start_year: 2021)
 
 ambition_cip = CoreInductionProgramme.find_or_create_by!(name: "Ambition Institute")
