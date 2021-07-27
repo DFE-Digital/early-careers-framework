@@ -23,7 +23,7 @@ module RecordDeclarations
 
     def call
       validate_schema!
-      add_participant_profile_params!
+      validate_participant_params!
 
       declaration = create_record!
       validate_provider!
@@ -49,7 +49,7 @@ module RecordDeclarations
       JSON.parse(File.read(JsonSchema::VersionEventFileName.call(schema_validation_params)))
     end
 
-    def add_participant_profile_params!
+    def validate_participant_params!
       raise ActionController::ParameterMissing, [I18n.t(:invalid_course)] unless course_valid_for_participant?
       raise ActionController::ParameterMissing, [I18n.t(:invalid_participant)] unless participant?
     end
