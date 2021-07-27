@@ -224,7 +224,7 @@ class InviteSchools
   def send_year2020_invite_email
     return unless FeatureFlag.active?(:year_2020_data_entry)
 
-    School.currently_open.each do |school|
+    School.eligible.each do |school|
       recipient = school.contact_email
       SchoolMailer.year2020_invite_email(recipient: recipient, start_url: year2020_start_url(school)).deliver_later if recipient.present?
     end
