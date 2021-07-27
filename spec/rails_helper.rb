@@ -3,9 +3,6 @@
 require "simplecov"
 SimpleCov.start
 
-require "capybara"
-require "capybara/rspec"
-
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require "spec_helper"
 ENV["RAILS_ENV"] ||= "test"
@@ -21,6 +18,10 @@ require "pundit/rspec"
 require "pundit/matchers"
 require "support/new_supplier_helper"
 require "paper_trail/frameworks/rspec"
+
+# require features_helper after support files have been loaded
+require "features_helper"
+
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
 # run as spec files by default. This means that files in spec/support that end

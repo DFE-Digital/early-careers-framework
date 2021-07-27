@@ -17,6 +17,7 @@ jobs:
       DB_PASSWORD: ''
       DB_HOSTNAME: 127.0.0.1
       DB_PORT: 5432
+      PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
 
     services:
       postgres:
@@ -64,7 +65,7 @@ jobs:
         run: bin/rails db:create db:schema:load
 
       - name: Run tests
-        run: bundle exec rspec
+        run: yarn percy exec bundle exec rspec
 
   frontend-tests:
     name: Run frontend JS unit tests
