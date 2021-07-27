@@ -11,9 +11,10 @@ class User < ApplicationRecord
   has_one :lead_provider, through: :lead_provider_profile
   has_one :admin_profile, dependent: :destroy
   has_one :finance_profile, dependent: :destroy
-  has_one :teacher_profile, dependent: :destroy
 
   has_many :participant_profiles, dependent: :destroy
+  has_one :teacher_profile, dependent: :destroy
+
   # TODO: Legacy associations, to be removed
   has_one :early_career_teacher_profile, -> { active }, class_name: "ParticipantProfile::ECT"
   has_one :mentor_profile, -> { active }, class_name: "ParticipantProfile::Mentor"

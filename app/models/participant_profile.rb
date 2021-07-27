@@ -63,8 +63,10 @@ class ParticipantProfile < ApplicationRecord
   end
 
   def sync_teacher_profile
-    self.teacher_profile = user.teacher_profile || user.build_teacher_profile
-    teacher_profile.school = school
-    teacher_profile.save!
+    profile = user.teacher_profile || user.build_teacher_profile
+    profile.school = school
+    profile.save!
+
+    self.teacher_profile = profile
   end
 end
