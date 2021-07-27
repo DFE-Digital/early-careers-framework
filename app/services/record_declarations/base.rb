@@ -13,7 +13,7 @@ module RecordDeclarations
       end
 
       def required_params
-        %i[participant_id cpd_lead_provider declaration_type declaration_date course_identifier raw_event]
+        %i[user_id cpd_lead_provider declaration_type declaration_date course_identifier raw_event]
       end
     end
 
@@ -34,7 +34,6 @@ module RecordDeclarations
 
     def initialize(params)
       @params = params
-      @params[:user_id] = params[:participant_id]
     end
 
     def validate_schema!
@@ -73,7 +72,7 @@ module RecordDeclarations
 
     def create_record!
       ActiveRecord::Base.transaction do
-        declaration_type.create!(params.slice(*required_params)).tap do |participant_declaration|
+        declaration_type.create!(params.slice(*self.class.required_params)).tap do |participant_declaration|
           ProfileDeclaration.create!(
             participant_declaration: participant_declaration,
             participant_profile: user_profile,
@@ -90,8 +89,5 @@ module RecordDeclarations
       raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless lead_provider_from_token == actual_lead_provider
     end
 
-    def required_params
-      (self.class.required_params - [:participant_id] + [:user_id])
-    end
   end
 end

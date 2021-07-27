@@ -10,7 +10,7 @@ class RecordParticipantDeclaration
   end
 
   def call
-    RecordDeclarations::RecorderFactory.call(course).call(params)
+    RecordDeclarations::RecorderFactory.call(course_identifier).call(params)
   rescue NameError
     raise ActionController::ParameterMissing, I18n.t(:invalid_course)
   end
@@ -19,10 +19,9 @@ private
 
   def initialize(params)
     @params = params
-    @params[:user_id] = params[:participant_id]
   end
 
-  def course
+  def course_identifier
     params[:course_identifier]
   end
 end
