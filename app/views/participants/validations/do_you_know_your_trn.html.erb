@@ -1,0 +1,31 @@
+<% content_for :title, "Choose type of participant" %>
+
+<%# <% content_for :before_content, govuk_back_link(text: "Back", href: back_link_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Do you know your teacher reference number?</h1>
+    <%= govuk_details(summary: "What’s a teacher reference number?") do %>
+      <p class="govuk-body">A teacher reference number (TRN) is a unique ID that helps us to check you’re a teacher.</p>
+      <p class="govuk-body">Your number:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>is usually 7 digits, for example '4567814'</li>
+        <li>may include the letters 'RP' or a slash '/'' symbol, for example 'RP99/12345'</li>
+      </ul>
+      <p>You can usually find it on your payslip, teachers’ pension documents, or teacher training records.</p>
+      <p>QTS, GTC, DfE, DfES or DCSF numbers are the same as TRNs.</p>
+      <p>You may not have a TRN if you qualified outside England.</p>
+    <% end %>
+
+    <%= form_for @form, url: { action: @form.step }, method: :put do |f| %>
+      <%= f.hidden_field :step, value: @form.step %>
+      <%= f.govuk_error_summary %>
+      <%= f.govuk_collection_radio_buttons(
+        :do_you_know_your_trn_choice, @form.trn_choices,
+        :id, :name,
+        legend: { text: "Do you know your teacher reference number (TRN)?", size: "s" },
+      ) %>
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

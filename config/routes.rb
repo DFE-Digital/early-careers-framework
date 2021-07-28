@@ -245,8 +245,20 @@ Rails.application.routes.draw do
     resources :lead_providers, only: %i[index show], path: "lead-providers"
   end
 
-  namespace :participants do
-    resource :start_registrations, path: "/start-registration", only: :show, constraints: ->(_request) { FeatureFlag.active?(:participant_validation) }
+  namespace :participants, constraints: ->(_request) { FeatureFlag.active?(:participant_validation) } do
+    resource :start_registrations, path: "/start-registration", only: :show
+      
+    scope :validation, as: :validation do
+      get "/do-you-know-your-teacher-reference-number", to: "validations#do_you_know_your_trn", as: :do_you_know_your_trn
+      put "/do-you-know-your-teacher-reference-number", to: "validations#do_you_know_your_trn"
+      get "/have-you-changed-your-name", to: "validations#have_you_changed_your_name", as: :have_you_changed_your_name
+      put "/have-you-changed-your-name", to: "validations#have_you_changed_your_name"
+      get "/tell-us-your-details", to: "validations#tell_us_your_details", as: :tell_us_your_details
+      put "/tell-us-your-details", to: "validations#tell_us_your_details"
+    # resource :validations, path: "/validation", only: :show, constraints: ->(_request) { FeatureFlag.active?(:participant_validation) } do
+      # get "/validation(/:step)", to: "validations#step", as: :validation
+      # patch "/validation(/:step)", to: "validations#next_step", as: :validation_next_step
+    end
   end
 
   namespace :schools do
