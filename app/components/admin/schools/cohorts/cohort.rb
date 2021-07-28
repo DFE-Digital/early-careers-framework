@@ -15,15 +15,15 @@ module Admin
 
         def cohort_info
           if school_cohort.nil?
-            NoProgramme.new
+            NoProgramme.new(cohort: cohort)
           elsif school_cohort.core_induction_programme?
             CipInfo.new(school_cohort: school_cohort)
           elsif school_cohort.full_induction_programme?
             FipInfo.new(school_cohort: school_cohort)
           elsif school_cohort.no_early_career_teachers?
-            NoEctsInfo.new
+            NoEctsInfo.new(cohort: cohort)
           elsif school_cohort.design_our_own?
-            DiyInfo.new
+            DiyInfo.new(cohort: cohort)
           end
         end
       end

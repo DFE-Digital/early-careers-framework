@@ -1,0 +1,20 @@
+<% content_for :title, "Choose your programme" %>
+<% content_for :before_content, govuk_back_link(
+  text: "Back",
+  href: admin_school_cohorts_path)
+%>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for @induction_choice_form, url: confirm_admin_school_change_programme_path, method: :post do |f| %>
+      <%= f.govuk_error_summary %>
+      <%= f.govuk_collection_radio_buttons(
+            :programme_choice,
+            @induction_choice_form.programme_choices(i18n_scope: "admin.induction_choice_form.options"),
+            :id,
+            :name,
+            legend: { text: "Change induction programme for #{@school.name} #{@induction_choice_form.cohort.academic_year}", size: "l", tag: "h1" },
+          ) %>
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

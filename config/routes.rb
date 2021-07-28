@@ -143,7 +143,13 @@ Rails.application.routes.draw do
       resources :induction_coordinators, controller: "schools/induction_coordinators", only: %i[new create edit update], path: "induction-coordinators"
       get "/replace-or-update-induction-tutor", to: "schools/replace_or_update_induction_tutor#show"
       post "/replace-or-update-induction-tutor", to: "schools/replace_or_update_induction_tutor#choose"
-      resources :cohorts, controller: "schools/cohorts", only: :index
+      resources :cohorts, controller: "schools/cohorts", only: :index do
+        member do
+          resource :change_programme, only: %i[show update], path: "change-programme", controller: "schools/cohorts/change_programme" do
+            post "confirm", action: :confirm
+          end
+        end
+      end
       resources :participants, controller: "schools/participants", only: :index
     end
 

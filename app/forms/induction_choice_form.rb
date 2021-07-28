@@ -5,6 +5,7 @@ class InductionChoiceForm
   include ActiveModel::Serialization
 
   attr_reader :programme_choice
+  attr_writer :cohort
 
   PROGRAMME_OPTIONS = %i[full_induction_programme core_induction_programme design_our_own no_early_career_teachers].freeze
 
@@ -14,13 +15,13 @@ class InductionChoiceForm
 
   validates :programme_choice, presence: { message: "Select how you want to run your induction" }, inclusion: { in: PROGRAMME_OPTIONS }
 
-  def programme_choices
+  def programme_choices(i18n_scope: "schools.induction_choice_form.options")
     PROGRAMME_OPTIONS.map do |option|
       OpenStruct.new(
         id: option,
         name: I18n.t(
           option,
-          scope: "schools.induction_choice_form.options",
+          scope: i18n_scope,
           cohort: cohort.display_name,
         ),
       )

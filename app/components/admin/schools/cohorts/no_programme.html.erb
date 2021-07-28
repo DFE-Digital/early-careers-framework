@@ -6,5 +6,9 @@
     <dd class="govuk-summary-list__value">
       No programme
     </dd>
+    <dd class="govuk-summary-list__actions">
+      <%= govuk_link_to "Change", admin_school_change_programme_path(id: cohort.start_year) %>
+      <span class="govuk-visually-hidden"> induction programme</span>
+    </dd>
   </div>
 </dl>
