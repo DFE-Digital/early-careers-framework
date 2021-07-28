@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
+require "jsonapi/serializer/instrumentation"
+
 class NPQApplicationSerializer
   include JSONAPI::Serializer
+  include JSONAPI::Serializer::Instrumentation
 
   attributes :participant_id,
              :full_name,
