@@ -27,6 +27,11 @@ class SchoolCohort < ApplicationRecord
 
   scope :for_year, ->(year) { joins(:cohort).where(cohort: { start_year: year }) }
 
+  after_commit do
+    ecf_participant_profiles.touch_all
+    ecf_participants.touch_all
+  end
+
   def training_provider_status
     school.partnerships&.active&.exists?(cohort: cohort) ? "Done" : "To do"
   end

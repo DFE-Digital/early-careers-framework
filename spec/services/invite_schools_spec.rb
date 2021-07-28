@@ -580,6 +580,31 @@ RSpec.describe InviteSchools do
     end
   end
 
+  describe "#send_year2020_invite_email" do
+    let!(:cohort) { create(:cohort, :current) }
+    let!(:induction_coordinator) { create(:user, :induction_coordinator) }
+    let!(:school) { induction_coordinator.schools.first }
+
+    it "does not send any email if year_2020_data_entry feature flag is inactive" do
+      expect(FeatureFlag.active?(:year_2020_data_entry)).to be false
+
+      InviteSchools.new.send_year2020_invite_email
+      expect(SchoolMailer).not_to delay_email_delivery_of(:year2020_invite_email)
+    end
+
+    it "emails the induction coordinator" do
+      FeatureFlag.activate(:year_2020_data_entry)
+
+      expected_url = "http://www.example.com/schools/#{school.friendly_id}/year-2020/start?utm_campaign=year2020-nqt-invite&utm_medium=email&utm_source=year2020-nqt-invite"
+      InviteSchools.new.send_year2020_invite_email
+      expect(SchoolMailer).to delay_email_delivery_of(:year2020_invite_email)
+                                  .with(hash_including(
+                                          recipient: induction_coordinator.email,
+                                          start_url: expected_url,
+                                        ))
+    end
+  end
+
 private
 
   def create_signed_in_induction_tutor

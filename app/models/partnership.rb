@@ -9,7 +9,7 @@ class Partnership < ApplicationRecord
     mistake: "mistake",
   }
 
-  belongs_to :school
+  belongs_to :school, touch: true
   belongs_to :lead_provider
   belongs_to :cohort
   belongs_to :delivery_partner

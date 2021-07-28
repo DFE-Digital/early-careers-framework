@@ -12,6 +12,9 @@ const inputs = {
   "replace induction tutor": "input[value=replace].govuk-radios__input",
   "update induction tutor": "input[value=update].govuk-radios__input",
   "new participant type radio": '[name="schools_add_participant_form[type]"]',
+  "programme choice radio":
+    '[name="schools_year2020_form[induction_programme_choice]"]',
+  "cip radio": '[name="schools_year2020_form[induction_programme_choice]"]',
   "nominate induction tutor radio button":
     "input[value=yes].govuk-radios__input",
   "opt out of updates radio button": "input[value=no].govuk-radios__input",

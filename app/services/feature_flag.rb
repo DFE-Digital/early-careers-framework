@@ -22,6 +22,7 @@ class FeatureFlag
     admin_participants
     admin_delete_participants
     participant_validation
+    year_2020_data_entry
   ].freeze
 
   FEATURES = (PERMANENT_SETTINGS + TEMPORARY_FEATURE_FLAGS).index_with { |name|

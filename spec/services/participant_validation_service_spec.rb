@@ -38,6 +38,37 @@ RSpec.describe ParticipantValidationService do
       end
     end
 
+    context "when trn is less than 7 characters" do
+      let(:trn) { "123456" }
+      let(:padded_trn) { "0123456" }
+
+      let(:dqt_record) do
+        { teacher_reference_number: "0123456", # API sends padded TRNs
+          national_insurance_number: nino,
+          full_name: full_name,
+          date_of_birth: dob,
+          qts_date: qts_date,
+          active_alert: alert }
+      end
+
+      let(:validation_result) do
+        ParticipantValidationService.validate(
+          trn: trn,
+          nino: "WRONG",
+          full_name: full_name,
+          date_of_birth: dob,
+        )
+      end
+
+      before do
+        expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(dqt_record)
+      end
+
+      it "returns record with padded trn when trn is not padded" do
+        expect(validation_result).to eql({ trn: padded_trn, qts: true, active_alert: false })
+      end
+    end
+
     context "when the participant has qts and no active flags" do
       before do
         expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(dqt_record)

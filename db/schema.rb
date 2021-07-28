@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_22_094019) do
+ActiveRecord::Schema.define(version: 2021_07_27_100720) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -409,11 +409,13 @@ ActiveRecord::Schema.define(version: 2021_07_22_094019) do
     t.datetime "updated_at", precision: 6, null: false
     t.text "status", default: "active", null: false
     t.uuid "school_cohort_id"
+    t.uuid "teacher_profile_id"
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"
     t.index ["school_cohort_id"], name: "index_participant_profiles_on_school_cohort_id"
     t.index ["school_id"], name: "index_participant_profiles_on_school_id"
+    t.index ["teacher_profile_id"], name: "index_participant_profiles_on_teacher_profile_id"
     t.index ["user_id"], name: "index_participant_profiles_on_user_id"
   end
 
@@ -598,6 +600,16 @@ ActiveRecord::Schema.define(version: 2021_07_22_094019) do
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
 
+  create_table "teacher_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "trn"
+    t.uuid "school_id"
+    t.uuid "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["school_id"], name: "index_teacher_profiles_on_school_id"
+    t.index ["user_id"], name: "index_teacher_profiles_on_user_id"
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "full_name", null: false
     t.citext "email", default: "", null: false
@@ -657,6 +669,7 @@ ActiveRecord::Schema.define(version: 2021_07_22_094019) do
   add_foreign_key "participant_profiles", "participant_profiles", column: "mentor_profile_id"
   add_foreign_key "participant_profiles", "school_cohorts"
   add_foreign_key "participant_profiles", "schools"
+  add_foreign_key "participant_profiles", "teacher_profiles"
   add_foreign_key "participant_profiles", "users"
   add_foreign_key "partnership_notification_emails", "partnerships"
   add_foreign_key "partnerships", "cohorts"
@@ -677,4 +690,6 @@ ActiveRecord::Schema.define(version: 2021_07_22_094019) do
   add_foreign_key "school_local_authority_districts", "local_authority_districts"
   add_foreign_key "school_local_authority_districts", "schools"
   add_foreign_key "schools", "networks"
+  add_foreign_key "teacher_profiles", "schools"
+  add_foreign_key "teacher_profiles", "users"
 end

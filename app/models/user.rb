@@ -13,9 +13,12 @@ class User < ApplicationRecord
   has_one :finance_profile, dependent: :destroy
 
   has_many :participant_profiles, dependent: :destroy
+  has_one :teacher_profile, dependent: :destroy
+
   # TODO: Legacy associations, to be removed
   has_one :early_career_teacher_profile, -> { active }, class_name: "ParticipantProfile::ECT"
   has_one :mentor_profile, -> { active }, class_name: "ParticipantProfile::Mentor"
+
   has_many :npq_profiles, class_name: "ParticipantProfile::NPQ", dependent: :destroy
   # end: TODO
 
@@ -50,6 +53,10 @@ class User < ApplicationRecord
 
   def mentor?
     mentor_profile.present?
+  end
+
+  def npq?
+    npq_profiles.any?(&:active?)
   end
 
   def participant?

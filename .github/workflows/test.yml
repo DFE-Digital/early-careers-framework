@@ -173,6 +173,7 @@ jobs:
           env: port=5017
           project: ./spec
           command-prefix: 'percy exec --parallel -- npx'
+          config: 'video=false,screenshotOnRunFailure=false'
         env:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
           COMMIT_INFO_BRANCH: ${{ github.head_ref }}

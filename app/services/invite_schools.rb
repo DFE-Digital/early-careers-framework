@@ -221,12 +221,29 @@ class InviteSchools
     end
   end
 
+  def send_year2020_invite_email
+    return unless FeatureFlag.active?(:year_2020_data_entry)
+
+    School.eligible.each do |school|
+      recipient = school.contact_email
+      SchoolMailer.year2020_invite_email(recipient: recipient, start_url: year2020_start_url(school)).deliver_later if recipient.present?
+    end
+  end
+
 private
 
   def private_beta_start_url
     Rails.application.routes.url_helpers.root_url(
       host: Rails.application.config.domain,
       **UTMService.email(:june_private_beta, :private_beta),
+    )
+  end
+
+  def year2020_start_url(school)
+    Rails.application.routes.url_helpers.start_schools_year_2020_url(
+      host: Rails.application.config.domain,
+      **UTMService.email(:year2020_nqt_invite, :year2020_nqt_invite),
+      school_id: school.friendly_id,
     )
   end
 
