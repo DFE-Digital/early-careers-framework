@@ -5,19 +5,20 @@ module Schools
     include ActiveModel::Model
     include ActiveModel::Serialization
 
-    attr_accessor :school_id, :induction_programme_choice, :core_induction_programme_id, :full_name, :email
+    attr_accessor :school_id, :induction_programme_choice, :core_induction_programme_id, :full_name, :email, :participants
 
     validates :induction_programme_choice, presence: true, on: :choose_induction_programme
     validates :core_induction_programme_id, presence: true, on: :choose_cip
 
     validates :full_name, presence: true, on: :create_teacher
+    # TODO: unique emails
     validates :email,
               presence: true,
               notify_email: { allow_blank: true },
               on: :create_teacher
 
     def attributes
-      { school_id: nil, induction_programme_choice: nil, core_induction_programme_id: nil, full_name: nil, email: nil }
+      { school_id: nil, induction_programme_choice: nil, core_induction_programme_id: nil, participants: nil }
     end
 
     def induction_programme_options
@@ -38,6 +39,43 @@ module Schools
 
     def cohort
       Cohort.find_by(start_year: 2020)
+    end
+
+    def store_new_participant
+      self.participants = get_participants << { full_name: full_name, email: email, index: new_participant_index }
+      self.full_name = nil
+      self.email = nil
+    end
+
+    def get_participants
+      participants&.filter { |participant| participant } || []
+    end
+
+    def new_participant_index
+      max_index = 0
+      get_participants.each { |participant| max_index = [max_index, participant[:index]].max }
+      max_index + 1
+    end
+
+    def get_participant(index)
+      get_participants.find { |participant| participant[:index] == index }
+    end
+
+    def update_participant(index)
+      new_participants = get_participants.map do |participant|
+        if participant[:index] == index
+          participant[:full_name] = full_name
+          participant[:email] = email
+        end
+        participant
+      end
+      self.participants = new_participants
+      self.full_name = nil
+      self.email = nil
+    end
+
+    def remove_participant(index)
+      self.participants = get_participants.filter { |participant| participant[:index] != index }
     end
 
     def opt_out?
