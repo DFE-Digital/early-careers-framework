@@ -6,8 +6,10 @@ module RecordDeclarations
       include RecordDeclarations::NPQ
       include Retained
 
-      def schema_validation_params
-        super.merge({ schema_path: "npq/participant_declarations/retained" })
+      class << self
+        def schema_validation_params
+          super.merge({ schema_path: "npq/participant_declarations/retained" })
+        end
       end
     end
   end

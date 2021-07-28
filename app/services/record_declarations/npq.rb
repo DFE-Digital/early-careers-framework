@@ -23,10 +23,6 @@ module RecordDeclarations
       npq_profiles.includes({ validation_data: [:npq_course] }).where('npq_courses.identifier': course).first
     end
 
-    def schema_validation_params
-      super.merge({ schema_path: "npq/participant_declarations" })
-    end
-
     def declaration_type
       ParticipantDeclaration::NPQ
     end

@@ -18,6 +18,14 @@ module RecordDeclarations
       def not_implemented_error
         raise NotImplementedError, "Method must be implemented"
       end
+
+      def schema_validation_params
+        { version: "0.3" }
+      end
+
+      def schema
+        JSON.parse(File.read(::JsonSchema::VersionEventFileName.call(schema_validation_params)))
+      end
     end
 
     def not_implemented_error
@@ -40,16 +48,8 @@ module RecordDeclarations
     end
 
     def validate_schema!
-      errors = ::JsonSchema::ValidateBodyAgainstSchema.call(schema: schema, body: params[:raw_event])
+      errors = ::JsonSchema::ValidateBodyAgainstSchema.call(schema: self.class.schema, body: params[:raw_event])
       raise ActionController::ParameterMissing, (errors.map { |error| error.sub(/\sin schema.*$/, "") }) unless errors.empty?
-    end
-
-    def schema_validation_params
-      { version: "0.3" }
-    end
-
-    def schema
-      JSON.parse(File.read(::JsonSchema::VersionEventFileName.call(schema_validation_params)))
     end
 
     def validate_participant_params!

@@ -6,8 +6,10 @@ module RecordDeclarations
       include RecordDeclarations::EarlyCareerTeacher
       include StartedCompleted
 
-      def schema_validation_params
-        super.merge({ schema_path: "ecf/participant_declarations/started" })
+      class << self
+        def schema_validation_params
+          super.merge({ schema_path: "ecf/participant_declarations/started" })
+        end
       end
     end
   end
