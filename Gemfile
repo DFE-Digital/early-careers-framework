@@ -102,9 +102,9 @@ gem "ransack"
 
 # Payment breackdown
 
-gem "terminal-table"
-
 gem "friendly_id", "~> 5.4.0"
+gem "rails-i18n"
+gem "terminal-table"
 
 platform :mswin, :mingw, :x64_mingw do
   gem "wdm", ">= 0.1.0"
