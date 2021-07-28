@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
 module RecordDeclarations
-  class ECF < Base
-    delegate :participant?, to: :user, allow_nil: true
+  module ECF
+    extend ActiveSupport::Concern
+
+    included do
+      delegate :participant?, to: :user, allow_nil: true
+    end
 
     def schema_validation_params
       super.merge({ schema_path: "ecf/participant_declarations" })

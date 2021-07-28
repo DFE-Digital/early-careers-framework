@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe RecordDeclarations::ECF::Mentor do
+RSpec.describe RecordDeclarations::Started::Mentor do
   let(:cpd_lead_provider) { create(:cpd_lead_provider) }
   let(:another_lead_provider) { create(:cpd_lead_provider, name: "Unknown") }
   let(:ect_profile) { create(:early_career_teacher_profile) }

@@ -1,12 +1,17 @@
 # frozen_string_literal: true
 
 module RecordDeclarations
-  class NPQ < Base
-    delegate :npq?, :npq_profiles, to: :user
+  module NPQ
+    extend ActiveSupport::Concern
 
-    class << self
+    included do
+      extend NPQClassMethods
+      delegate :npq?, :npq_profiles, to: :user
+    end
+
+    module NPQClassMethods
       def valid_courses
-        NPQCourse.identifiers
+        ::NPQCourse.identifiers
       end
     end
 
