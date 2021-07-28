@@ -160,12 +160,15 @@ group :development do
 end
 
 group :test do
+  gem "axe-core-rspec"
   gem "capybara", ">= 3.35.3"
   gem "jsonapi-rspec"
+  gem "percy-capybara"
   gem "pundit-matchers", "~> 1.6.0"
   gem "rails-controller-testing", ">= 1.0.5"
   gem "rspec-default_http_header"
   gem "rutabaga"
+  gem "selenium-webdriver"
   gem "shoulda-matchers", "~> 4.4"
   gem "simplecov"
   gem "webdrivers", "~> 4.4", ">= 4.4.1"

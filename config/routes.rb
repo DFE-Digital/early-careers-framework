@@ -227,6 +227,10 @@ Rails.application.routes.draw do
     resources :lead_providers, only: %i[index], path: "lead-providers"
   end
 
+  namespace :participants do
+    resource :start_registrations, path: "/start-registration", only: :show, constraints: ->(_request) { FeatureFlag.active?(:participant_validation) }
+  end
+
   namespace :schools do
     resources :dashboard, controller: :dashboard, only: %i[index show], path: "/", param: :school_id
 

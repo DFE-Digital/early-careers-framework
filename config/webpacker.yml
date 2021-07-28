@@ -76,7 +76,8 @@ development:
 
 test:
   <<: *default
-  compile: false
+  compile: true
+  public_output_path: packs-test
 
 production: &production
   <<: *default

@@ -17,6 +17,9 @@ jobs:
       DB_PASSWORD: ''
       DB_HOSTNAME: 127.0.0.1
       DB_PORT: 5432
+      PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+      PERCY_PARALLEL_NONCE: ${{ github.run_number }}
+      PERCY_PARALLEL_TOTAL: 2
 
     services:
       postgres:
@@ -64,7 +67,7 @@ jobs:
         run: bin/rails db:create db:schema:load
 
       - name: Run tests
-        run: bundle exec rspec
+        run: yarn percy exec --parallel -- bundle exec rspec
 
   frontend-tests:
     name: Run frontend JS unit tests
@@ -169,8 +172,10 @@ jobs:
           wait-on: 'http://localhost:5017/'
           env: port=5017
           project: ./spec
-          command-prefix: 'percy exec -- npx'
+          command-prefix: 'percy exec --parallel -- npx'
           config: 'video=false,screenshotOnRunFailure=false'
         env:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
           COMMIT_INFO_BRANCH: ${{ github.head_ref }}
+          PERCY_PARALLEL_NONCE: ${{ github.run_number }}
+          PERCY_PARALLEL_TOTAL: 2

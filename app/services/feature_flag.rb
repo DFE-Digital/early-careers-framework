@@ -21,6 +21,7 @@ class FeatureFlag
     induction_tutor_manage_participants
     admin_participants
     admin_delete_participants
+    participant_validation
     year_2020_data_entry
   ].freeze
 
