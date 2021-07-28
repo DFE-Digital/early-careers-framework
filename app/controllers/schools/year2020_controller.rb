@@ -32,7 +32,11 @@ module Schools
       render :select_cip and return unless @year_2020_form.valid? :choose_cip
 
       store_year_2020_session
-      redirect_to action: :new_teacher
+      if @year_2020_form.get_participants.count.positive?
+        redirect_to action: :check
+      else
+        redirect_to action: :new_teacher
+      end
     end
 
     def new_teacher; end
