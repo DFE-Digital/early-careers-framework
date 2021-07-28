@@ -95,12 +95,14 @@ module Schools
         school_cohort.core_induction_programme = core_induction_programme
         school_cohort.save!
 
-        EarlyCareerTeachers::Create.call(
-          full_name: full_name,
-          email: email,
-          school_cohort: school_cohort,
-          mentor_profile_id: nil,
-        )
+        get_participants.each do |participant|
+          EarlyCareerTeachers::Create.call(
+            full_name: participant[:full_name],
+            email: participant[:email],
+            school_cohort: school_cohort,
+            mentor_profile_id: nil,
+          )
+        end
       end
     end
   end
