@@ -68,6 +68,8 @@ module Schools
     end
 
     def update_teacher
+      render :edit_teacher and return unless @year_2020_form.valid? :update_teacher
+
       @year_2020_form.update_participant(participant_index)
       store_year_2020_session
       redirect_to action: :check

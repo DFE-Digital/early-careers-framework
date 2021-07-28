@@ -10,12 +10,12 @@ module Schools
     validates :induction_programme_choice, presence: true, on: :choose_induction_programme
     validates :core_induction_programme_id, presence: true, on: :choose_cip
 
-    validates :full_name, presence: true, on: :create_teacher
+    validates :full_name, presence: true, on: %i[create_teacher update_teacher]
     # TODO: unique emails
     validates :email,
               presence: true,
               notify_email: { allow_blank: true },
-              on: :create_teacher
+              on: %i[create_teacher update_teacher]
 
     def attributes
       { school_id: nil, induction_programme_choice: nil, core_induction_programme_id: nil, participants: nil }
