@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
+require "jsonapi/serializer/instrumentation"
+
 class ECFUserSerializer
   include JSONAPI::Serializer
+  include JSONAPI::Serializer::Instrumentation
 
   set_type :user
 

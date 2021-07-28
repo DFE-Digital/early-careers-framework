@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
+require "jsonapi/serializer/instrumentation"
+
 class ParticipantSerializer
   include JSONAPI::Serializer
+  include JSONAPI::Serializer::Instrumentation
+
   class << self
     def active_participant_attribute(attr, &blk)
       attribute attr do |user|
