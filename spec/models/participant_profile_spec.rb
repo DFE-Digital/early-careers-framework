@@ -15,7 +15,7 @@ RSpec.describe ParticipantProfile, type: :model do
   it "updates the updated_at on the users" do
     freeze_time
     user = create(:user, updated_at: 2.weeks.ago)
-    profile = create(:participant_profile, user: user)
+    profile = create(:participant_profile, teacher_profile: user.create_teacher_profile)
 
     profile.touch
     expect(user.reload.updated_at).to be_within(1.second).of Time.zone.now
