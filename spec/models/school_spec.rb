@@ -465,10 +465,10 @@ RSpec.describe School, type: :model do
 
   describe "#participants_for" do
     it "includes active participants" do
-      ect = create(:user, :early_career_teacher, school_cohort: school_cohort)
-      mentor = create(:user, :mentor, school_cohort: school_cohort)
+      ect_profile = create(:participant_profile, :ect, school_cohort: school_cohort)
+      mentor_profile = create(:participant_profile, :mentor, school_cohort: school_cohort)
 
-      expect(school.participants_for(cohort)).to include(ect, mentor)
+      expect(school.participants_for(cohort)).to include(ect_profile.user, mentor_profile.user)
     end
 
     it "does not include withdrawn participants" do
@@ -480,18 +480,18 @@ RSpec.describe School, type: :model do
 
     it "does not include participants from other cohorts" do
       another_school_cohort = create(:school_cohort, cohort: create(:cohort), school: school)
-      ect = create(:user, :early_career_teacher, school_cohort: another_school_cohort)
-      mentor = create(:user, :mentor, school_cohort: another_school_cohort)
+      ect_profile = create(:participant_profile, :ect, school_cohort: another_school_cohort)
+      mentor_profile = create(:participant_profile, :mentor, school_cohort: another_school_cohort)
 
-      expect(school.participants_for(cohort)).not_to include(ect, mentor)
+      expect(school.participants_for(cohort)).not_to include(ect_profile.user, mentor_profile.user)
     end
 
     it "does not include participants from other schools" do
       another_school_cohort = create(:school_cohort, school: create(:school), cohort: cohort)
-      ect = create(:user, :early_career_teacher, school_cohort: another_school_cohort)
-      mentor = create(:user, :mentor, school_cohort: another_school_cohort)
+      ect_profile = create(:participant_profile, :ect, school_cohort: another_school_cohort)
+      mentor_profile = create(:participant_profile, :mentor, school_cohort: another_school_cohort)
 
-      expect(school.participants_for(cohort)).not_to include(ect, mentor)
+      expect(school.participants_for(cohort)).not_to include(ect_profile.user, mentor_profile.user)
     end
   end
 

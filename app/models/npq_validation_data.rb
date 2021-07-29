@@ -29,7 +29,10 @@ private
 
   def update_participant_profile
     profile = ParticipantProfile::NPQ.find_or_initialize_by(id: id)
-    profile.school = School.find_by(urn: school_urn)
+    teacher_profile = user.teacher_profile || user.build_teacher_profile
+    teacher_profile.trn = teacher_reference_number
+    teacher_profile.school = profile.school = School.find_by(urn: school_urn)
+    profile.teacher_profile = teacher_profile
     profile.user_id = user_id
     profile.save!
   end

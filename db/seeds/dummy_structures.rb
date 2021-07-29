@@ -65,47 +65,60 @@ end
 
 User.find_or_create_by!(email: "npq-registrant@example.com") do |user|
   user.update!(full_name: "NPQ registrant")
-  ParticipantProfile::NPQ.find_or_create_by!(user: user)
+  teacher_profile = user.teacher_profile || user.create_teacher_profile
+  ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile)
 end
 
 mentor = User.find_or_create_by!(email: "rp-mentor-ambition@example.com") do |user|
   user.update!(full_name: "Sally Mentor")
-  ParticipantProfile::Mentor.find_or_create_by!(user: user) do |profile|
+  teacher_profile = user.teacher_profile || user.create_teacher_profile
+
+  ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
     profile.update!(school_cohort: school_cohort, core_induction_programme: CoreInductionProgramme.find_by(name: "Ambition Institute"))
   end
 end
 
 mentor_two = User.find_or_create_by!(email: "rp-mentor-edt@example.com") do |user|
   user.update!(full_name: "Jane Doe")
-  ParticipantProfile::Mentor.find_or_create_by!(user: user) do |profile|
+  teacher_profile = user.teacher_profile || user.create_teacher_profile
+
+  ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
     profile.update!(school_cohort: school_two_cohort, core_induction_programme: CoreInductionProgramme.find_by(name: "Education Development Trust"))
   end
 end
 
 mentor_three = User.find_or_create_by!(email: "rp-mentor-ucl@example.com") do |user|
   user.update!(full_name: "Abdul Mentor")
-  ParticipantProfile::Mentor.find_or_create_by!(user: user) do |profile|
+  teacher_profile = user.teacher_profile || user.create_teacher_profile
+
+  ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
     profile.update!(school_cohort: school_three_cohort, core_induction_programme: CoreInductionProgramme.find_by(name: "UCL Institute of Education"))
   end
 end
 
 User.find_or_create_by!(email: "rp-ect-ambition@example.com") do |user|
   user.update!(full_name: "Joe Bloggs")
-  ParticipantProfile::ECT.find_or_create_by!(user: user) do |profile|
+  teacher_profile = user.teacher_profile || user.create_teacher_profile
+
+  ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
     profile.update!(school_cohort: school_cohort, core_induction_programme: CoreInductionProgramme.find_by(name: "Ambition Institute"), mentor_profile: mentor.mentor_profile)
   end
 end
 
 User.find_or_create_by!(email: "rp-ect-edt@example.com") do |user|
   user.update!(full_name: "John Doe")
-  ParticipantProfile::ECT.find_or_create_by!(user: user) do |profile|
+  teacher_profile = user.teacher_profile || user.create_teacher_profile
+
+  ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
     profile.update!(school_cohort: school_two_cohort, core_induction_programme: CoreInductionProgramme.find_by(name: "Education Development Trust"), mentor_profile: mentor_two.mentor_profile)
   end
 end
 
 User.find_or_create_by!(email: "rp-ect-ucl@example.com") do |user|
   user.update!(full_name: "Dan Smith")
-  ParticipantProfile::ECT.find_or_create_by!(user: user) do |profile|
+  teacher_profile = user.teacher_profile || user.create_teacher_profile
+
+  ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
     profile.update!(school_cohort: school_three_cohort, core_induction_programme: CoreInductionProgramme.find_by(name: "UCL Institute of Education"), mentor_profile: mentor_three.mentor_profile)
   end
 end

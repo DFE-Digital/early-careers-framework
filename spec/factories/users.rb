@@ -33,7 +33,8 @@ FactoryBot.define do
     end
 
     trait :early_career_teacher do
-      early_career_teacher_profile
+      teacher_profile
+      # early_career_teacher_profile { association :early_career_teacher_profile, teacher_profile: teacher_profile }
 
       transient do
         mentor {}
@@ -41,11 +42,13 @@ FactoryBot.define do
       end
 
       after(:build) do |user, evaluator|
+        profile = create :participant_profile, :ect, teacher_profile: user.teacher_profile
+
         if evaluator.mentor.present?
-          user.early_career_teacher_profile.mentor_profile = evaluator.mentor.mentor_profile
+          profile.mentor_profile = evaluator.mentor.mentor_profile
         end
         if evaluator.school_cohort.present?
-          user.early_career_teacher_profile.school_cohort = evaluator.school_cohort
+          profile.school_cohort = evaluator.school_cohort
         end
       end
     end

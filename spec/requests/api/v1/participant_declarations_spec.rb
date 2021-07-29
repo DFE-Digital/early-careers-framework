@@ -8,7 +8,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
     let(:lead_provider) { create(:lead_provider) }
     let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
     let(:bearer_token) { "Bearer #{token}" }
-    let(:payload) { create(:early_career_teacher_profile) }
+    let(:payload) { create(:participant_profile, :ect) }
     let(:delivery_partner) { create(:delivery_partner) }
     let!(:school_cohort) { create(:school_cohort, school: payload.school, cohort: payload.cohort) }
     let!(:partnership) do
@@ -20,7 +20,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
     end
     let(:valid_params) do
       {
-        participant_id: payload.user_id,
+        participant_id: payload.user.id,
         declaration_type: "started",
         declaration_date: (Time.zone.now - 1.week).iso8601,
         course_identifier: "ecf-induction",

@@ -17,7 +17,7 @@ FactoryBot.define do
       end
     end
 
-    user
+    teacher_profile
 
     transient do
       participant_type {}
@@ -25,20 +25,23 @@ FactoryBot.define do
 
     trait :ect do
       school_cohort
+      teacher_profile { association :teacher_profile, school: school_cohort.school }
 
       participant_type { :ect }
     end
 
     trait :mentor do
       school_cohort
+      teacher_profile { association :teacher_profile, school: school_cohort.school }
 
       participant_type { :mentor }
     end
 
     trait :npq do
       school
+      teacher_profile { association :teacher_profile, school: school }
 
-      association :validation_data, factory: :npq_validation_data
+      validation_data { association :npq_validation_data, user: teacher_profile.user}
 
       participant_type { :npq }
     end

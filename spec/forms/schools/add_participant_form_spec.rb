@@ -74,7 +74,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
 
     context "when the email is in use by a Mentor" do
       before do
-        create(:user, :mentor, email: "ray.clemence@example.com")
+        create(:participant_profile, :mentor, user: create(:user, email: "ray.clemence@example.com"))
       end
 
       it "returns true" do
