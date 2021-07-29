@@ -24,8 +24,13 @@ RSpec.describe "Lead Providers for Finance users", type: :request do
     it "renders the ECF payment breakdown" do
       get "/finance/lead-providers/#{ecf_lead_provider.id}"
 
-      expect(response).to render_template("finance/lead_providers/show")
       assigns(:ecf_lead_provider).should eq(ecf_lead_provider)
+      assigns(:total_ect).should eq(0)
+      assigns(:total_mentors).should eq(0)
+      assigns(:total_participants).should eq(0)
+      assigns(:uplift_participants).should eq(0)
+
+      expect(response).to render_template("finance/lead_providers/show")
     end
   end
 end
