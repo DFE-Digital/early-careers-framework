@@ -562,7 +562,7 @@ RSpec.describe InviteSchools do
       schools_with_participants = create_list(:school, 10)
       schools_with_participants.each do |school|
         school_cohort = create(:school_cohort, school: school, induction_programme_choice: "core_induction_programme")
-        create(:user, :early_career_teacher, school_cohort: school_cohort)
+        create(:participant_profile, :ect, school_cohort: school_cohort)
       end
       school_without_participants = create(:school)
       create(:school_cohort, school: school_without_participants, induction_programme_choice: "core_induction_programme")

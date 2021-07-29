@@ -32,39 +32,8 @@ FactoryBot.define do
       lead_provider_profile
     end
 
-    trait :early_career_teacher do
+    trait :teacher do
       teacher_profile
-      # early_career_teacher_profile { association :early_career_teacher_profile, teacher_profile: teacher_profile }
-
-      transient do
-        mentor {}
-        school_cohort {}
-      end
-
-      after(:build) do |user, evaluator|
-        profile = create :participant_profile, :ect, teacher_profile: user.teacher_profile
-
-        if evaluator.mentor.present?
-          profile.mentor_profile = evaluator.mentor.mentor_profile
-        end
-        if evaluator.school_cohort.present?
-          profile.school_cohort = evaluator.school_cohort
-        end
-      end
-    end
-
-    trait :mentor do
-      mentor_profile
-
-      transient do
-        school_cohort {}
-      end
-
-      after(:build) do |user, evaluator|
-        if evaluator.school_cohort.present?
-          user.mentor_profile.school_cohort = evaluator.school_cohort
-        end
-      end
     end
 
     trait :finance do

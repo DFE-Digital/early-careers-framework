@@ -56,11 +56,11 @@ class User < ApplicationRecord
   end
 
   def npq?
-    npq_profiles.any?
+    npq_profiles.any?(&:active?)
   end
 
   def participant?
-    participant_profiles.any?
+    early_career_teacher? || mentor?
   end
 
   def core_induction_programme
@@ -92,7 +92,9 @@ class User < ApplicationRecord
   end
 
   def school
-    teacher_profile&.school # POTENTIAL CHANGE OF BEHAVIOUR!
+    return early_career_teacher_profile.school if early_career_teacher?
+    return mentor_profile.school if mentor?
+    return induction_coordinator_profile.schools.first if induction_coordinator?
   end
 
   scope :induction_coordinators, -> { joins(:induction_coordinator_profile) }

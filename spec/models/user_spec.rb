@@ -19,7 +19,7 @@ RSpec.describe User, type: :model do
 
     describe "early_career_teacher_profile" do
       it "returns an active profile" do
-        user = create(:user, :early_career_teacher)
+        user = create(:participant_profile, :ect).user
         expect(user.early_career_teacher_profile).to be_an_instance_of ParticipantProfile::ECT
       end
 
@@ -133,7 +133,7 @@ RSpec.describe User, type: :model do
 
   describe "#early_career_teacher?" do
     it "is expected to be true when the user has an early career teacher profile" do
-      user = create(:user, :early_career_teacher)
+      user = create(:participant_profile, :ect).user
 
       expect(user.early_career_teacher?).to be true
     end
@@ -192,11 +192,10 @@ RSpec.describe User, type: :model do
     end
 
     it "is expected to return ect cip for ect users" do
-      user = create(:user, :early_career_teacher)
       cip = create(:core_induction_programme)
-      user.early_career_teacher_profile.core_induction_programme = cip
+      user = create(:participant_profile, :ect, core_induction_programme: cip).user
 
-      expect(user.core_induction_programme).to be cip
+      expect(user.core_induction_programme).to eq cip
     end
 
     it "is expected to return nil when no cip" do
@@ -214,11 +213,10 @@ RSpec.describe User, type: :model do
     end
 
     it "is expected to return ect cohort for ect users" do
-      user = create(:user, :early_career_teacher)
       cohort = create(:cohort)
-      user.early_career_teacher_profile.cohort = cohort
+      user = create(:participant_profile, :ect, cohort: cohort).user
 
-      expect(user.cohort).to be cohort
+      expect(user.cohort).to eq cohort
     end
 
     it "is expected to return nil when no cohort" do
@@ -349,27 +347,4 @@ RSpec.describe User, type: :model do
       end
     end
   end
-
-  # describe "scope :is_ecf_participant" do
-  #   it "includes ecf participants" do
-  #     ect = create(:participant_profile, :ect).user
-  #     mentor = create(:participant_profile, :mentor).user
-  #
-  #     npq_and_mentor = create(:participant_profile, :mentor).user
-  #     create(:participant_profile, :npq, user: npq_and_mentor)
-  #
-  #     # Force execution of query with to_a to catch any exceptions
-  #     expect(User.is_ecf_participant.to_a).to include(ect, mentor, npq_and_mentor)
-  #   end
-  #
-  #   it "does not include other user types" do
-  #     admin = create(:user, :admin)
-  #     lp = create(:user, :lead_provider)
-  #     npq = create(:participant_profile, :npq).user
-  #
-  #     expect(User.is_ecf_participant).not_to include(admin)
-  #     expect(User.is_ecf_participant).not_to include(lp)
-  #     expect(User.is_ecf_participant).not_to include(npq)
-  #   end
-  # end
 end
