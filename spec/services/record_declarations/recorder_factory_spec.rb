@@ -5,8 +5,7 @@ require "rails_helper"
 RSpec.describe RecordDeclarations::RecorderFactory do
   let!(:npq_course) { create(:npq_course, identifier: "npq-leading-teaching") }
 
-  context 'when passed a valid course' do
-
+  context "when passed a valid course" do
     it "succeeds when passed a 'ecf-induction' key" do
       expect(described_class.call("ecf-induction")).to eq("EarlyCareerTeacher")
     end
@@ -18,6 +17,5 @@ RSpec.describe RecordDeclarations::RecorderFactory do
     it "succeeds when passed 'npq-leading-teaching'" do
       expect(described_class.call("npq-leading-teaching")).to eq("NPQ")
     end
-
   end
 end
