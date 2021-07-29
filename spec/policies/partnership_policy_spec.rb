@@ -22,4 +22,10 @@ RSpec.describe PartnershipPolicy, type: :policy do
 
     it { is_expected.not_to permit_actions(%i[create show edit update]) }
   end
+
+  context "being an admin" do
+    let(:user) { create(:user, :admin) }
+
+    it { is_expected.to permit_action(:update) }
+  end
 end

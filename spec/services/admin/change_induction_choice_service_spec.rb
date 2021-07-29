@@ -213,14 +213,6 @@ RSpec.describe Admin::ChangeInductionService do
     end
   end
 
-  describe "#challenge_partnership" do
-    let(:school) { create(:school_cohort, induction_programme_choice: "full_induction_programme", cohort: cohort).school }
-    let!(:partnership) { create(:partnership, cohort: cohort, school: school) }
-
-    it "should record the reason for challenging the partnership"
-    it "should email the lead provider"
-  end
-
 private
 
   def expect_to_set_to(new_value)

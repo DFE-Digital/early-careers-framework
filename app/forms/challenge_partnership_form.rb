@@ -16,8 +16,6 @@ class ChallengePartnershipForm
     Partnerships::Challenge.call(partnership, challenge_reason)
   end
 
-private
-
   def partnership
     Partnership.find(partnership_id)
   end
