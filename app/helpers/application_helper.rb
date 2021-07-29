@@ -8,6 +8,8 @@ module ApplicationHelper
       finance_lead_providers_path
     elsif user.induction_coordinator?
       induction_coordinator_dashboard_path(user)
+    elsif user.mentor? || user.early_career_teacher?
+      participants_validation_start_path
     else
       dashboard_path
     end

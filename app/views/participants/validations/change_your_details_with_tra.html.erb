@@ -1,0 +1,21 @@
+<% title = "Change your details with the Teaching Regulation Agency" %>
+<% content_for :title, title %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: participants_validation_name_not_updated_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl"><%= title %></h1>
+    <p class="govuk-body">Sign in to the <%= govuk_link_to "Teacher Self-Service Portal", "https://teacherservices.education.gov.uk/SelfService/Login" %>.</p>
+    <p class="govuk-body">You’ll need to upload one of the following documents as evidence of your change of name:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>marriage: copy of your marriage certificate</li>
+      <li>civil partnership: copy of your civil agreement certificate</li>
+      <li>divorce: copy of your decree absolute and your birth certificate</li>
+      <li>statutory declaration: copy of the statutory declaration</li>
+      <li>deed poll: copy of your deed poll</li>
+    </ul>
+
+    <p class="govuk-body">It may take up to 5 working days for your details to be updated.</p>
+    <p class="govuk-body">You can continue to register for your training and support with your previous name. You can change your name on our service once your Teaching Regulation Agency record has been updated.</p>
+  </div>
+</div>

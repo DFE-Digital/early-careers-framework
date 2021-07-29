@@ -1,10 +1,9 @@
-<% content_for :title, "Choose type of participant" %>
-
-<%# <% content_for :before_content, govuk_back_link(text: "Back", href: back_link_path) %>
+<% title = "Do you know your teacher reference number?" %>
+<% content_for :title, title %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">Do you know your teacher reference number?</h1>
+    <h1 class="govuk-heading-xl"><%= title %></h1>
     <%= govuk_details(summary: "What’s a teacher reference number?") do %>
       <p class="govuk-body">A teacher reference number (TRN) is a unique ID that helps us to check you’re a teacher.</p>
       <p class="govuk-body">Your number:</p>

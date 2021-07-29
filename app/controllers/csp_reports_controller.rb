@@ -2,6 +2,7 @@
 
 class CspReportsController < ApplicationController
   skip_before_action :verify_authenticity_token
+  skip_before_action :check_privacy_policy_accepted
 
   CSP_KEYS = %w[
     blocked-uri

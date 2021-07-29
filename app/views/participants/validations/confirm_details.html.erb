@@ -1,0 +1,41 @@
+<% content_for :title, "Confirm these details" %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: participants_validation_do_you_know_your_trn_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Confirm these details</h1>
+    <p class="govuk-body">Check the following details are correct before continuing.</p>
+    <%= govuk_summary_list do |component|
+      component.slot(
+        :row,
+        key: "Full name",
+        value: @form.name,
+        action: govuk_link_to("Change", participants_validation_tell_us_your_details_path),
+      )
+      component.slot(
+        :row,
+        key: "TRN",
+        value: @form.trn,
+        action: govuk_link_to("Change", participants_validation_tell_us_your_details_path),
+      )
+      component.slot(
+        :row,
+        key: "Date of birth",
+        value: @form.pretty_date_of_birth,
+        action: govuk_link_to("Change", participants_validation_tell_us_your_details_path),
+      )
+      component.slot(
+        :row,
+        key: "National Insurance number",
+        value: @form.national_insurance_number,
+        action: govuk_link_to("Change", participants_validation_tell_us_your_details_path),
+      )
+    end %>
+    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+      <div class="govuk-summary-list__row">
+
+      </div>
+    </dl>
+  </div>
+</div>

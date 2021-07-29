@@ -1,0 +1,47 @@
+<% title = "Get a teacher reference number (TRN)" %>
+<% content_for :title, title %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: participants_validation_do_you_know_your_trn_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl"><%= title %></h1>
+    <h2 class="govuk-heading-m">Request a TRN by email</h2>
+    <p class="govuk-body">If you’ve never been given a TRN, then email the Teaching Regulation Agency at <%= govuk_mail_to "qts.enquiries@education.gov.uk", "qts.enquiries@education.gov.uk" %>. They aim to reply within 5 working days.</p>
+    <p class="govuk-body">You’ll need to provide some information and proof of ID to get a TRN.</p>
+    <p class="govuk-body">Use the free Galaxkey secure email platform to make sure your identification documents are protected.</p>
+
+    <h2 class="govuk-heading-m">Register to send a secure email</h2>
+    <p class="govuk-body">To send a secure email to the department, go to the Galaxkey site: <%= govuk_link_to "https://manager.galaxkey.com/services/registerme", "https://manager.galaxkey.com/services/registerme" %></p>
+
+    <p class="govuk-body">Enter the email address that you want to sign up with, and complete the registration process.</p>
+    <p class="govuk-body">You’ll get an email to activate your account once you complete this step. You can then send secure emails to the Teaching Regulation Agency using Galaxkey.</p>
+
+    <h2 class="govuk-heading-m">Send your ID documents securely</h2>
+    <p class="govuk-body">Follow these steps to send your documents through Galaxkey:</p>
+    <ol class="govuk-list govuk-list--number">
+      <li>Select ‘Compose’ to create a new secure email.</li>
+      <li>Enter ‘qts.enquiries@education.gov.uk’ as the recipient.</li>
+      <li>Enter ‘TRN request for early career teacher training’ as the subject line.</li>
+      <li>Include the following information in your email:</li>
+        <ul class="govuk-list govuk-list--bullet">
+          <li>your full legal name</li>
+          <li>your date of birth</li>
+          <li>an email address for the team to reply to</li>
+        </ul>
+      <li>Attach a scanned copy or photo of one of the following types of ID:</li>
+      <ul>
+        <li>passport</li>
+        <li>driving licence (full or provisional)</li>
+        <li>certificate of residence</li>
+        <li>birth certificate</li>
+      </ul>
+    </ol>
+    <p class="govuk-body">Follow the guidance on screen to make sure you send the correct file size.</p>
+    <p class="govuk-body">Find information about how the Teaching Regulation Agency processes your data on the <%= govuk_link_to "teacher self-service site", "https://www.gov.uk/guidance/teacher-self-service-portal" %>.</p>
+
+    <h2 class="govuk-heading-m">What happens next</h2>
+    <p class="govuk-body">The Teaching Regulation Agency will use the information you send to create a permanent record and your TRN.</p>
+    <p class="govuk-body">Your ID documents will be deleted once your request is processed.</p>
+  </div>
+</div>

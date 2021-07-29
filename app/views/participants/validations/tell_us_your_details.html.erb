@@ -1,0 +1,36 @@
+<% content_for :title, "Tell us your details" %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: participants_validation_do_you_know_your_trn_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Tell us your details</h1>
+    <p class="govuk-body">We need to check your details on the Teaching Regulation Agency records.</p>
+
+    <%= form_for @form, url: { action: @form.step }, method: :put do |f| %>
+      <%= f.hidden_field :step, value: @form.step %>
+      <%= f.govuk_error_summary %>
+      <%= f.govuk_text_field :trn,
+        width: 10,
+        label: { text: "Teacher reference number (TRN)", class: "govuk-label bold-label" },
+        hint: { text: "Your TRN is between 5 and 7 characters long. Enter your TRN without ‘RP’ letters or a slash ‘/’ symbol." }
+      %>
+      <%= f.govuk_text_field :name,
+        width: "three-quarters",
+        label: { text: "Full name", class: "govuk-label bold-label" },
+        hint: { text: "Your full name exactly as it appears on the Teaching Regulation Agency records." }
+      %>
+      <%= f.govuk_date_field :date_of_birth,
+        date_of_birth: true,
+        legend: { text: "Date of birth", class: "govuk-label bold-label" },
+        hint: { text: "For example, 12 11 1990" }
+      %>
+      <%= f.govuk_text_field :national_insurance_number,
+        width: "three-quarters",
+        label: { text: "National Insurance number (optional)", class: "govuk-label bold-label" },
+        hint: { text: "This will help us match your details" }
+      %>
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>
