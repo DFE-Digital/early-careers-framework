@@ -13,5 +13,9 @@ RSpec.describe RecordDeclarations::EventFactory do
       expect(described_class.call("retained-1")).to eq("Retained")
     end
 
+    it 'succeeds when passed a "completed" key' do
+      expect(described_class.call("completed")).to eq("Started")
+    end
+
   end
 end

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "record_declarations/npq_course_proxy"
-
 module RecordDeclarations
   class RecorderFactory
     class << self
@@ -28,5 +26,9 @@ module RecordDeclarations
         [name.underscore.intern, klass]
       end
     end
+  end
+
+  class NPQCourseProxy
+    include NPQ
   end
 end
