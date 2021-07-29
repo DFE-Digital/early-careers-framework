@@ -20,6 +20,9 @@ Capybara.javascript_driver = :chrome_headless
 
 RSpec.configure do |config|
   config.include AxeAndPercyHelper, type: :feature
+  config.include InteractionHelper, type: :feature
+  config.include PageAssertionsHelper, type: :feature
+  config.include UserHelper, type: :feature
 
   # need this for percy and axe
   config.before(:each, type: :feature) do
