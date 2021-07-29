@@ -8,7 +8,7 @@ class Finance::LeadProvidersController < Finance::BaseController
   end
 
   def show
-    @ecf_lead_provider = lead_provider_scope.find(params[:id])
+    @ecf_lead_provider = ecf_lead_provider_scope.find(params[:id])
     cpd_lead_provider = @ecf_lead_provider.cpd_lead_provider
 
     @breakdown = CalculationOrchestrator.call(
@@ -24,7 +24,7 @@ class Finance::LeadProvidersController < Finance::BaseController
 
 private
 
-  def lead_provider_scope
+  def ecf_lead_provider_scope
     policy_scope(LeadProvider, policy_scope_class: FinanceProfilePolicy::Scope)
   end
 end
