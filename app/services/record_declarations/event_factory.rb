@@ -3,14 +3,14 @@
 module RecordDeclarations
   class EventFactory
     class << self
-      def call(course)
-        event_namespace_for_event(course)
+      def call(event)
+        event_namespace_for_event(event)
       end
 
     private
 
-      def event_namespace_for_event(course)
-        event_identifiers[course.underscore.intern].to_s
+      def event_namespace_for_event(event)
+        event_identifiers[event.underscore.intern].to_s
       end
 
       def event_identifiers
