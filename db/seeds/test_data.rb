@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 DOMAIN = "@digital.education.gov.uk" # Prevent low effort email scraping
 cohort_2022 = Cohort.find_or_create_by!(start_year: 2022)
 

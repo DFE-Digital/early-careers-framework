@@ -5,7 +5,6 @@ class ParticipantProfile < ApplicationRecord
   belongs_to :teacher_profile, touch: true
   has_one :user, through: :teacher_profile
 
-
   has_many :validation_decisions, class_name: "ProfileValidationDecision"
 
   enum status: {

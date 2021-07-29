@@ -41,7 +41,7 @@ FactoryBot.define do
       school
       teacher_profile { association :teacher_profile, school: school }
 
-      validation_data { association :npq_validation_data, user: teacher_profile.user}
+      validation_data { association :npq_validation_data, user: teacher_profile.user }
 
       participant_type { :npq }
     end
