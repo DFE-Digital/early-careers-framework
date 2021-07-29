@@ -5,20 +5,31 @@ require "json_schema/validate_body_against_schema"
 module RecordDeclarations
   class Base
     attr_accessor :params
+
     delegate :user_profile, :actual_lead_provider, to: :not_implemented_error
 
     class << self
+      delegate :required_params, to: :not_implemented_error
+
       def call(params)
         new(params).call
       end
 
-      def required_params
-        %i[user_id cpd_lead_provider declaration_type declaration_date course_identifier raw_event]
+      def not_implemented_error
+        raise NotImplementedError, "Method must be implemented"
+      end
+
+      def schema_validation_params
+        { version: "0.3" }
+      end
+
+      def schema
+        JSON.parse(File.read(::JsonSchema::VersionEventFileName.call(schema_validation_params)))
       end
     end
 
     def not_implemented_error
-      raise NotImplementedError, "Method must be implemented"
+      self.class.not_implemented_error
     end
 
     def call
@@ -37,16 +48,8 @@ module RecordDeclarations
     end
 
     def validate_schema!
-      errors = JsonSchema::ValidateBodyAgainstSchema.call(schema: schema, body: params[:raw_event])
+      errors = ::JsonSchema::ValidateBodyAgainstSchema.call(schema: self.class.schema, body: params[:raw_event])
       raise ActionController::ParameterMissing, (errors.map { |error| error.sub(/\sin schema.*$/, "") }) unless errors.empty?
-    end
-
-    def schema_validation_params
-      { version: "0.3" }
-    end
-
-    def schema
-      JSON.parse(File.read(JsonSchema::VersionEventFileName.call(schema_validation_params)))
     end
 
     def validate_participant_params!

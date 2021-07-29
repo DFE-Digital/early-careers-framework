@@ -1,12 +1,17 @@
 # frozen_string_literal: true
 
 module RecordDeclarations
-  class NPQ < Base
-    delegate :npq?, :npq_profiles, to: :user
+  module NPQ
+    extend ActiveSupport::Concern
 
-    class << self
+    included do
+      extend NPQClassMethods
+      delegate :npq?, :npq_profiles, to: :user
+    end
+
+    module NPQClassMethods
       def valid_courses
-        NPQCourse.identifiers
+        ::NPQCourse.identifiers
       end
     end
 
@@ -16,10 +21,6 @@ module RecordDeclarations
 
     def user_profile
       npq_profiles.includes({ validation_data: [:npq_course] }).where('npq_courses.identifier': course).first
-    end
-
-    def schema_validation_params
-      super.merge({ schema_path: "npq/participant_declarations" })
     end
 
     def declaration_type

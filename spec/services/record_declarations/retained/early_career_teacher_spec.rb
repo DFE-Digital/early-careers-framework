@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe RecordDeclarations::ECF::Mentor do
+RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
   let(:cpd_lead_provider) { create(:cpd_lead_provider) }
   let(:another_lead_provider) { create(:cpd_lead_provider, name: "Unknown") }
   let(:ect_profile) { create(:early_career_teacher_profile) }
@@ -10,10 +10,10 @@ RSpec.describe RecordDeclarations::ECF::Mentor do
   let(:induction_coordinator_profile) { create(:induction_coordinator_profile) }
   let(:params) do
     {
-      raw_event: "{\"participant_id\":\"37b300a8-4e99-49f1-ae16-0235672b6708\",\"declaration_type\":\"started\",\"declaration_date\":\"2021-06-21T08:57:31Z\",\"course_identifier\":\"ecf-induction\"}",
+      raw_event: "{\"participant_id\":\"37b300a8-4e99-49f1-ae16-0235672b6708\",\"declaration_type\":\"retained-1\",\"declaration_date\":\"2021-06-21T08:57:31Z\",\"course_identifier\":\"ecf-induction\"}",
       user_id: ect_profile.user_id,
       declaration_date: "2021-06-21T08:46:29Z",
-      declaration_type: "started",
+      declaration_type: "retained-1",
       course_identifier: "ecf-induction",
       cpd_lead_provider: another_lead_provider,
     }
@@ -47,13 +47,13 @@ RSpec.describe RecordDeclarations::ECF::Mentor do
     end
   end
 
-  context "when valid user is a mentor" do
+  context "when valid user is an early_career_teacher" do
     it "creates a participant and profile declaration" do
-      expect { described_class.call(mentor_params) }.to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
+      expect { described_class.call(ect_params) }.to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
     end
 
-    it "fails when course is for an early_career_teacher" do
-      params = mentor_params.merge({ course_identifier: "ecf-induction" })
+    it "fails when course is for mentor" do
+      params = ect_params.merge({ course_identifier: "ecf-mentor" })
       params[:raw_event] = generate_raw_event(params)
       expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing)
     end

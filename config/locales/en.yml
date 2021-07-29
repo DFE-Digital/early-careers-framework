@@ -39,6 +39,7 @@ en:
     completion: Completion
   parameter_required: Parameter is required
   invalid_participant: "The property '#/participant_id' must be a valid Participant ID"
+  invalid_event: "The property '#/declaration_type' must be a valid declaration type"
   invalid_course: "The property '#/course_identifier' must be an available course to '#/participant_id'"
   invalid_data_structure: correct json data structure required. See API docs for reference
   estimate_participants_default_message: &default_message "Enter a number between 0 and 1000"
