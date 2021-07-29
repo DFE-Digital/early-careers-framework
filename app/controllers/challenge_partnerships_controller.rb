@@ -51,7 +51,7 @@ private
       lead_provider_name: @partnership.lead_provider.name,
       delivery_partner_name: @partnership.delivery_partner.name,
       token: @token,
-      partnership: @partnership,
+      partnership_id: @partnership.id,
     )
 
     @challenge_partnership_form.assign_attributes(form_params)
