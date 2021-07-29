@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe RecordDeclarations::NPQ do
+RSpec.describe RecordDeclarations::Started::NPQ do
   let(:cpd_lead_provider) { create(:cpd_lead_provider) }
   let(:another_lead_provider) { create(:cpd_lead_provider, name: "Unknown") }
   let(:npq_lead_provider) { create(:npq_lead_provider, cpd_lead_provider: cpd_lead_provider) }

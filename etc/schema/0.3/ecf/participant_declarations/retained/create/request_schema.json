@@ -12,14 +12,7 @@
           ]
         },
         "attributes": {
-          "oneOf": [
-            {
-              "$ref": "#/definitions/ecf/participant_started_declarations"
-            },
-            {
-              "$ref": "#/definitions/ecf/participant_retained_declarations"
-            }
-          ]
+           "$ref": "#/definitions/ecf/participant_retained_declarations"
         }
       }
     }
@@ -34,12 +27,6 @@
       "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
     },
     "payment_events": {
-      "started_completed": {
-        "enum": [
-          "started",
-          "completed"
-        ]
-      },
       "retained": {
         "enum": [
           "retained-1",
@@ -60,30 +47,6 @@
         "enum": [
           "ecf-induction",
           "ecf-mentor"
-        ]
-      },
-      "participant_started_declarations": {
-        "type": "object",
-        "properties": {
-          "declaration_date": {
-            "$ref": "#/definitions/date-time"
-          },
-          "declaration_type": {
-            "$ref": "#/definitions/payment_events/started_completed"
-          },
-          "participant_id": {
-            "$ref": "#/definitions/uuid"
-          },
-          "course_identifier": {
-            "$ref": "#/definitions/ecf/courses"
-          }
-        },
-        "additionalProperties": false,
-        "required": [
-          "declaration_date",
-          "declaration_type",
-          "participant_id",
-          "course_identifier"
         ]
       },
       "participant_retained_declarations": {

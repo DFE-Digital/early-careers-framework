@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe RecordDeclarations::ECF::Mentor do
+RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
   let(:ecf_lead_provider) { create(:lead_provider) }
   let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: ecf_lead_provider) }
   let(:another_lead_provider) { create(:cpd_lead_provider, name: "Unknown") }
@@ -48,13 +48,13 @@ RSpec.describe RecordDeclarations::ECF::Mentor do
     end
   end
 
-  context "when valid user is a mentor" do
+  context "when valid user is an early_career_teacher" do
     it "creates a participant and profile declaration" do
-      expect { described_class.call(mentor_params) }.to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
+      expect { described_class.call(ect_params) }.to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
     end
 
-    it "fails when course is for an early_career_teacher" do
-      params = mentor_params.merge({ course_identifier: "ecf-induction" })
+    it "fails when course is for mentor" do
+      params = ect_params.merge({ course_identifier: "ecf-mentor" })
       params[:raw_event] = generate_raw_event(params)
       expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing)
     end
