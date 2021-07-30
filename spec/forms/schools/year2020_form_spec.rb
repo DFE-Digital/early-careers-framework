@@ -25,16 +25,26 @@ RSpec.describe Schools::Year2020Form, type: :model do
     end
 
     it "works with multiple participants" do
+      allow(EarlyCareerTeachers::Create).to receive(:call).and_call_original
+
       subject.core_induction_programme_id = core_induction_programme.id
-      add_new_participant(subject)
-      add_new_participant(subject)
-      add_new_participant(subject)
+
+      test_participants = build_list(:user, 3)
+      test_participants.each { |participant| add_new_participant(subject, name: participant.full_name, email: participant.email) }
 
       subject.save!
       school_cohort = SchoolCohort.find_by(school: school, cohort: cohort)
-
       expect(school_cohort).not_to be_nil
       expect(school_cohort.ecf_participants.count).to eq(3)
+
+      test_participants.each do |participant|
+        expect(EarlyCareerTeachers::Create).to have_received(:call).with(
+          full_name: participant.full_name,
+          email: participant.email,
+          school_cohort: school_cohort,
+          mentor_profile_id: nil,
+        )
+      end
     end
   end
 
