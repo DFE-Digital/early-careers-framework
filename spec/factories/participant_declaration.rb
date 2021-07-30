@@ -38,7 +38,7 @@ FactoryBot.define do
     end
 
     transient do
-      uplift { :sparsity_uplift }
+      uplift { false }
       profile_type { :early_career_teacher_profile }
     end
 
