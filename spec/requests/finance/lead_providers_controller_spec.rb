@@ -22,15 +22,25 @@ RSpec.describe "Lead Providers for Finance users", type: :request do
 
   describe "GET /finance/lead-providers/{:id}" do
     it "renders the ECF payment breakdown" do
+      # Arrange
+      create(:mentor_participant_declaration, cpd_lead_provider: ecf_lead_provider.cpd_lead_provider)
+      create(:ect_participant_declaration, :sparsity_uplift, cpd_lead_provider: ecf_lead_provider.cpd_lead_provider)
+      create(:ect_participant_declaration, :pupil_premium_uplift, cpd_lead_provider: ecf_lead_provider.cpd_lead_provider)
+      create_list(:ect_participant_declaration, 2, cpd_lead_provider: ecf_lead_provider.cpd_lead_provider)
+
+      # Act
       get "/finance/lead-providers/#{ecf_lead_provider.id}"
 
-      assigns(:ecf_lead_provider).should eq(ecf_lead_provider)
-      assigns(:total_ect).should eq(0)
-      assigns(:total_mentors).should eq(0)
-      assigns(:total_participants).should eq(0)
-      assigns(:uplift_participants).should eq(0)
-
+      # Assert
       expect(response).to render_template("finance/lead_providers/show")
+      assigns(:ecf_lead_provider).should eq(ecf_lead_provider)
+
+      aggregate_failures do
+        assigns(:total_mentors).should eq(1)
+        assigns(:uplift_participants).should eq(2)
+        assigns(:total_ect).should eq(4)
+        assigns(:total_participants).should eq(5)
+      end
     end
   end
 end
