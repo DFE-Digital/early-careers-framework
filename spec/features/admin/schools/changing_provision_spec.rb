@@ -32,10 +32,6 @@ private
     @school_cohort = create(:school_cohort, school: school, cohort: cohort, induction_programme_choice: "full_induction_programme")
   end
 
-  def and_feature_flag_is_active(flag)
-    FeatureFlag.activate(flag)
-  end
-
   def the_school_cohorts_page
     admin_school_cohorts_path(school_id: @school_cohort.school.slug)
   end

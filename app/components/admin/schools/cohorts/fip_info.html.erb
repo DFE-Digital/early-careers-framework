@@ -23,9 +23,11 @@
       <%= school_cohort.lead_provider&.name %>
     </dd>
     <dd class="govuk-summary-list__actions">
-      <% if school_cohort.lead_provider.present? %>
-        <%= govuk_link_to "Change", new_admin_school_challenge_partnership_path(id: school_cohort.cohort.start_year) %>
-        <span class="govuk-visually-hidden"> partnership</span>
+      <% if FeatureFlag.active?(:admin_challenge_partnership) %>
+        <% if school_cohort.lead_provider.present? %>
+          <%= govuk_link_to "Change", new_admin_school_challenge_partnership_path(id: school_cohort.cohort.start_year) %>
+          <span class="govuk-visually-hidden"> partnership</span>
+        <% end %>
       <% end %>
     </dd>
   </div>
