@@ -11,7 +11,7 @@ RSpec.describe RecordDeclarations::Started::Mentor do
   let(:params) do
     {
       raw_event: "{\"participant_id\":\"37b300a8-4e99-49f1-ae16-0235672b6708\",\"declaration_type\":\"retained-1\",\"declaration_date\":\"2021-06-21T08:57:31Z\",\"course_identifier\":\"ecf-induction\"}",
-      user_id: ect_profile.user_id,
+      user_id: ect_profile.user.id,
       declaration_date: "2021-06-21T08:46:29Z",
       declaration_type: "retained-1",
       course_identifier: "ecf-induction",
@@ -22,7 +22,7 @@ RSpec.describe RecordDeclarations::Started::Mentor do
     params.merge({ cpd_lead_provider: cpd_lead_provider })
   end
   let(:mentor_params) do
-    ect_params.merge({ user_id: mentor_profile.user_id, course_identifier: "ecf-mentor" })
+    ect_params.merge({ user_id: mentor_profile.user.id, course_identifier: "ecf-mentor" })
   end
   let(:induction_coordinator_params) do
     ect_params.merge({ user_id: induction_coordinator_profile.user_id })

@@ -24,9 +24,4 @@ class ParticipantProfile::NPQ < ParticipantProfile
   def participant_type
     :npq
   end
-
-  def shadow_teacher_profile
-    super
-    teacher_profile.update!(trn: validation_data&.teacher_reference_number)
-  end
 end

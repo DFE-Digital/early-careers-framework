@@ -34,7 +34,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
                 }
 
       response 200, "Successful" do
-        let(:fresh_user) { create(:user, :early_career_teacher) }
+        let(:fresh_user) { create(:participant_profile, :ect).user }
         let(:params) do
           {
             "data": {

@@ -160,7 +160,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
   describe "POST /users/sign_in_with_token" do
     context "when user is an ECT" do
-      let(:user) { create(:user, :early_career_teacher) }
+      let(:user) { create(:participant_profile, :ect).user }
 
       it "redirects to dashboard on successful login" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }

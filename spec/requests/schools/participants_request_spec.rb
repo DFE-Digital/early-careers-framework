@@ -9,12 +9,12 @@ RSpec.describe "Schools::Participants", type: :request do
 
   let!(:school_cohort) { create(:school_cohort, cohort: cohort) }
   let!(:another_cohort) { create(:school_cohort) }
-  let!(:mentor_user) { create(:user, :mentor, school_cohort: school_cohort) }
-  let!(:mentor_user_2) { create(:user, :mentor, school_cohort: school_cohort) }
-  let!(:ect_user) { create(:user, :early_career_teacher, mentor: mentor_user, school_cohort: school_cohort) }
-  let!(:withdrawn_ect) { create(:early_career_teacher_profile, status: "withdrawn", school_cohort: school_cohort).user }
-  let!(:unrelated_mentor) { create(:user, :mentor, school_cohort: another_cohort) }
-  let!(:unrelated_ect) { create(:user, :early_career_teacher, school_cohort: another_cohort) }
+  let!(:mentor_user) { create(:participant_profile, :mentor, school_cohort: school_cohort).user }
+  let!(:mentor_user_2) { create(:participant_profile, :mentor, school_cohort: school_cohort).user }
+  let!(:ect_user) { create(:participant_profile, :ect, mentor_profile: mentor_user.mentor_profile, school_cohort: school_cohort).user }
+  let!(:withdrawn_ect) { create(:participant_profile, :ect, status: "withdrawn", school_cohort: school_cohort).user }
+  let!(:unrelated_mentor) { create(:participant_profile, :mentor, school_cohort: another_cohort).user }
+  let!(:unrelated_ect) { create(:participant_profile, :ect, school_cohort: another_cohort).user }
 
   before do
     FeatureFlag.activate(:induction_tutor_manage_participants)
@@ -106,7 +106,7 @@ RSpec.describe "Schools::Participants", type: :request do
     end
 
     it "shows error when a blank form is submitted" do
-      ect_user = create(:user, :early_career_teacher, school_cohort: school_cohort)
+      ect_user = create(:participant_profile, :ect, school_cohort: school_cohort).user
       put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_user.id}/update-mentor"
       expect(response).to render_template("schools/participants/edit_mentor")
       expect(response.body).to include "Choose one"

@@ -211,12 +211,12 @@ RSpec.describe InviteSchools do
     let!(:unexpected_induction_coordinator) { create(:user, :induction_coordinator, school_ids: [beta_school_with_ect.school.id, beta_school_with_mentor.school.id, non_beta_school.school.id]) }
 
     before do
-      create(:user, :early_career_teacher, school_cohort: beta_school_with_ect)
-      create(:user, :mentor, school_cohort: beta_school_with_mentor)
+      create(:participant_profile, :ect, school_cohort: beta_school_with_ect)
+      create(:participant_profile, :mentor, school_cohort: beta_school_with_mentor)
       FeatureFlag.activate(:induction_tutor_manage_participants, for: beta_school_with_ect)
       FeatureFlag.activate(:induction_tutor_manage_participants, for: beta_school_with_mentor)
       FeatureFlag.activate(:induction_tutor_manage_participants, for: beta_school_without_participants)
-      create(:user, :early_career_teacher, school_cohort: non_beta_school)
+      create(:participant_profile, :ect, school_cohort: non_beta_school)
     end
 
     it "sends emails to beta schools without participants" do
@@ -552,7 +552,7 @@ RSpec.describe InviteSchools do
     it "does not send emails to tutors who have participants at all of their schools" do
       induction_coordinator = create(:user, :induction_coordinator)
       school_cohort = create(:school_cohort, school: induction_coordinator.schools.first, induction_programme_choice: "core_induction_programme")
-      create(:user, :early_career_teacher, school_cohort: school_cohort)
+      create(:participant_profile, :ect, school_cohort: school_cohort)
 
       InviteSchools.new.send_induction_coordinator_add_participants_email
       expect(SchoolMailer).not_to delay_email_delivery_of(:induction_coordinator_add_participants_email)
@@ -562,7 +562,7 @@ RSpec.describe InviteSchools do
       schools_with_participants = create_list(:school, 10)
       schools_with_participants.each do |school|
         school_cohort = create(:school_cohort, school: school, induction_programme_choice: "core_induction_programme")
-        create(:user, :early_career_teacher, school_cohort: school_cohort)
+        create(:participant_profile, :ect, school_cohort: school_cohort)
       end
       school_without_participants = create(:school)
       create(:school_cohort, school: school_without_participants, induction_programme_choice: "core_induction_programme")

@@ -5,13 +5,13 @@ require "rails_helper"
 RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
   let(:cpd_lead_provider) { create(:cpd_lead_provider) }
   let(:another_lead_provider) { create(:cpd_lead_provider, name: "Unknown") }
-  let(:ect_profile) { create(:early_career_teacher_profile) }
-  let(:mentor_profile) { create(:mentor_profile) }
+  let(:ect_profile) { create(:participant_profile, :ect) }
+  let(:mentor_profile) { create(:participant_profile, :mentor) }
   let(:induction_coordinator_profile) { create(:induction_coordinator_profile) }
   let(:params) do
     {
       raw_event: "{\"participant_id\":\"37b300a8-4e99-49f1-ae16-0235672b6708\",\"declaration_type\":\"started\",\"declaration_date\":\"2021-06-21T08:57:31Z\",\"course_identifier\":\"ecf-induction\"}",
-      user_id: ect_profile.user_id,
+      user_id: ect_profile.user.id,
       declaration_date: "2021-06-21T08:46:29Z",
       declaration_type: "started",
       course_identifier: "ecf-induction",

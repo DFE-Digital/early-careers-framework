@@ -5,11 +5,10 @@ require "rails_helper"
 RSpec.describe ParticipantPolicy, type: :policy do
   subject { described_class.new(acting_user, user_under_test) }
 
-  %i[early_career_teacher_profile mentor_profile].each do |profile_type|
-    context "when the participant has #{profile_type}" do
-      # rubocop:disable Rails/SaveBang
-      let(:user_under_test) { create(profile_type).user }
-      # rubocop:enable Rails/SaveBang
+  %i[ect mentor].each do |profile_type|
+    context "when the participant has #{profile_type} profile" do
+      let(:profile) { create(:participant_profile, profile_type) }
+      let(:user_under_test) { profile.user }
 
       context "being an admin" do
         let(:acting_user) { create(:user, :admin) }
@@ -21,12 +20,12 @@ RSpec.describe ParticipantPolicy, type: :policy do
 
       context "being an induction coordinator" do
         context "when from the same school" do
-          let(:acting_user) { create(:user, :induction_coordinator, school_ids: [user_under_test.participant_profiles.ecf.first.school.id]) }
+          let(:acting_user) { create(:user, :induction_coordinator, school_ids: [profile.school.id]) }
 
           it { is_expected.to permit_action(:show) }
 
           context "when the participant is withdrawn" do
-            let(:user_under_test) { create(profile_type, status: :withdrawn).user }
+            let(:profile) { create(:participant_profile, profile_type, status: :withdrawn) }
 
             it { is_expected.to forbid_action(:show) }
           end

@@ -12,14 +12,14 @@ class User < ApplicationRecord
   has_one :admin_profile, dependent: :destroy
   has_one :finance_profile, dependent: :destroy
 
-  has_many :participant_profiles, dependent: :destroy
   has_one :teacher_profile, dependent: :destroy
 
   # TODO: Legacy associations, to be removed
-  has_one :early_career_teacher_profile, -> { active }, class_name: "ParticipantProfile::ECT"
-  has_one :mentor_profile, -> { active }, class_name: "ParticipantProfile::Mentor"
+  has_many :participant_profiles, through: :teacher_profile
+  has_one :early_career_teacher_profile, through: :teacher_profile
+  has_one :mentor_profile, through: :teacher_profile
 
-  has_many :npq_profiles, class_name: "ParticipantProfile::NPQ", dependent: :destroy
+  has_many :npq_profiles, through: :teacher_profile
   # end: TODO
 
   before_validation :strip_whitespace

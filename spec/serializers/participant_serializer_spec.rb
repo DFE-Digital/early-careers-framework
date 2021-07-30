@@ -4,8 +4,8 @@ require "rails_helper"
 
 RSpec.describe ParticipantSerializer do
   describe "serialization" do
-    let(:mentor) { create(:user, :mentor) }
-    let(:ect) { create(:user, :early_career_teacher, mentor: mentor) }
+    let(:mentor) { create(:participant_profile, :mentor).user }
+    let(:ect) { create(:participant_profile, :ect, mentor_profile: mentor.mentor_profile).user }
     let(:ect_cohort) { ect.early_career_teacher_profile.cohort }
     let(:mentor_cohort) { mentor.mentor_profile.cohort }
 
@@ -21,7 +21,7 @@ RSpec.describe ParticipantSerializer do
 
     context "when the participant is withdrawn" do
       let(:mentor) { create(:participant_profile, :mentor, status: "withdrawn").user }
-      let(:ect) { create(:participant_profile, :ect, mentor: mentor, status: "withdrawn").user }
+      let(:ect) { create(:participant_profile, :ect, mentor_profile: mentor.mentor_profile, status: "withdrawn").user }
 
       it "outputs correctly formatted serialized Mentors" do
         expected_json_string = "{\"data\":{\"id\":\"#{mentor.id}\",\"type\":\"participant\",\"attributes\":{\"email\":null,\"full_name\":null,\"mentor_id\":null,\"school_urn\":null,\"participant_type\":null,\"cohort\":null,\"status\":\"withdrawn\"}}}"
