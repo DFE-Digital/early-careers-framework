@@ -110,7 +110,7 @@ end
       administrative_district_code: "E#{900 + idx}",
     )
     SchoolLocalAuthority.find_or_create_by!(school: school, local_authority: local_authority, start_year: 2019)
-    user = User.find_or_create_by!(full_name: "Induction Tutor for School #{item_num}", email: "cpd-test+tutor-#{item_num}#{DOMAIN}")
+    user = User.find_or_create_by!(full_name: "Induction Tutor for School #{item_num}", email: "cpd-test+tutor-#{item_num}@example.com")
     InductionCoordinatorProfile.find_or_create_by!(user: user) do |profile|
       profile.schools << school
     end
