@@ -1,10 +1,16 @@
-<dl class="govuk-summary-list" id="<%= school_cohort.cohort.display_name %>">
+<dl class="govuk-summary-list">
   <div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key">
       Induction programme
     </dt>
     <dd class="govuk-summary-list__value">
       Use the DfE accredited materials
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <% if FeatureFlag.active?(:admin_change_programme) %>
+        <%= govuk_link_to "Change", admin_school_change_programme_path(id: school_cohort.cohort.start_year) %>
+      <% end %>
+      <span class="govuk-visually-hidden"> induction programme</span>
     </dd>
   </div>
   <div class="govuk-summary-list__row">
@@ -14,5 +20,6 @@
     <dd class="govuk-summary-list__value">
       <%= school_cohort.core_induction_programme&.name %>
     </dd>
+    <dd class="govuk-summary-list__actions"></dd>
   </div>
 </dl>

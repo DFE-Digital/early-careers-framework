@@ -1,0 +1,13 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-three-quarters">
+    <h1 class="govuk-heading-xl">
+      You are choosing to change Induction programme to: <%= t @induction_choice_form.programme_choice,
+                                                               scope: "admin.induction_choice_form.confirmation_options",
+                                                               cohort: @induction_choice_form.cohort.display_name %>
+    </h1>
+    <%= form_for @induction_choice_form, url: admin_school_change_programme_path, method: :put do |f| %>
+      <%= f.hidden_field :programme_choice %>
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

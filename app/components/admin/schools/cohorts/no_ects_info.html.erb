@@ -1,0 +1,16 @@
+<dl class="govuk-summary-list">
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Induction programme
+    </dt>
+    <dd class="govuk-summary-list__value">
+      Not using service - no ECTs this year
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <% if FeatureFlag.active?(:admin_change_programme) %>
+        <%= govuk_link_to "Change", admin_school_change_programme_path(id: cohort.start_year) %>
+      <% end %>
+      <span class="govuk-visually-hidden"> induction programme</span>
+    </dd>
+  </div>
+</dl>

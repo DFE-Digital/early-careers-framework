@@ -1,10 +1,18 @@
-<dl class="govuk-summary-list" id="<%= school_cohort.cohort.display_name %>">
+<dl class="govuk-summary-list">
   <div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key">
       Induction programme
     </dt>
     <dd class="govuk-summary-list__value">
       Use an approved training provider
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <% if FeatureFlag.active?(:admin_change_programme) %>
+        <% if school_cohort.lead_provider.nil? %>
+          <%= govuk_link_to "Change", admin_school_change_programme_path(id: school_cohort.cohort.start_year) %>
+          <span class="govuk-visually-hidden"> induction programme</span>
+        <% end %>
+      <% end %>
     </dd>
   </div>
   <div class="govuk-summary-list__row">
@@ -14,6 +22,7 @@
     <dd class="govuk-summary-list__value">
       <%= school_cohort.lead_provider&.name %>
     </dd>
+    <dd class="govuk-summary-list__actions"></dd>
   </div>
   <div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key">
@@ -22,5 +31,6 @@
     <dd class="govuk-summary-list__value">
       <%= school_cohort.delivery_partner&.name %>
     </dd>
+    <dd class="govuk-summary-list__actions"></dd>
   </div>
 </dl>
