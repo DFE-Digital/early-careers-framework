@@ -163,6 +163,7 @@ Rails.application.routes.draw do
         end
       end
     end
+    resource :impersonate, only: %i[create destroy]
 
     namespace :gias do
       resources :home, only: :index, path: "/"

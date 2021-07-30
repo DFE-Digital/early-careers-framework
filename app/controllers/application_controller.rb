@@ -3,6 +3,8 @@
 class ApplicationController < ActionController::Base
   default_form_builder GOVUKDesignSystemFormBuilder::FormBuilder
 
+  impersonates :user
+
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :previous_url_for_cookies_page, except: :check
   before_action :check_privacy_policy_accepted, except: :check
@@ -22,8 +24,8 @@ private
     end
   end
 
-  def after_sign_in_path_for(user)
-    stored_location_for(user) || helpers.profile_dashboard_path(user)
+  def after_sign_in_path_for(_user)
+    stored_location_for(current_user) || helpers.profile_dashboard_path(current_user)
   end
 
   def after_sign_out_path_for(_user)
@@ -46,6 +48,9 @@ protected
 
   def check_privacy_policy_accepted
     return if current_user.blank?
+
+    # Impersonators should not accept policies
+    return if current_user != true_user
 
     policy = PrivacyPolicy.current
     return if policy.nil?

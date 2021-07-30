@@ -12,6 +12,6 @@ class Admin::BaseController < ApplicationController
 private
 
   def ensure_admin
-    raise Pundit::NotAuthorizedError, "Forbidden" unless current_user.admin?
+    raise Pundit::NotAuthorizedError, "Forbidden" unless true_user.admin?
   end
 end
