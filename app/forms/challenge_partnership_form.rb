@@ -3,7 +3,7 @@
 class ChallengePartnershipForm
   include ActiveModel::Model
 
-  attr_accessor :challenge_reason, :token, :school_name, :lead_provider_name, :delivery_partner_name, :partnership_id
+  attr_accessor :challenge_reason, :token, :school_name, :partnership_id
   validates :challenge_reason, presence: { message: "Select a reason why you think this confirmation is incorrect" }
 
   def challenge_reason_options
@@ -17,6 +17,14 @@ class ChallengePartnershipForm
   end
 
   def partnership
-    Partnership.find(partnership_id)
+    @partnership ||= Partnership.find(partnership_id)
+  end
+
+  def lead_provider_name
+    @lead_provider_name ||= partnership.lead_provider.name
+  end
+
+  def delivery_partner_name
+    @delivery_partner_name ||= partnership.delivery_partner.name
   end
 end

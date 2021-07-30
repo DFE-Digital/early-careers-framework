@@ -48,8 +48,6 @@ private
 
     @challenge_partnership_form = ChallengePartnershipForm.new(
       school_name: @school_name,
-      lead_provider_name: @partnership.lead_provider.name,
-      delivery_partner_name: @partnership.delivery_partner.name,
       token: @token,
       partnership_id: @partnership.id,
     )

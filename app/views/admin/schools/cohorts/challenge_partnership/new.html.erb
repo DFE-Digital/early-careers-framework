@@ -6,7 +6,6 @@
 
     <%= form_for @challenge_partnership_form, url: confirm_admin_school_challenge_partnership_path do |f| %>
       <%= f.hidden_field :partnership_id %>
-      <%= f.hidden_field :lead_provider_name %>
       <%= f.govuk_collection_radio_buttons(
             :challenge_reason,
             @challenge_partnership_form.challenge_reason_options,

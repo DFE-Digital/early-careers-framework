@@ -14,8 +14,6 @@ module Admin
           authorize partnership, :update?
           @challenge_partnership_form = ChallengePartnershipForm.new(
             school_name: school.name,
-            lead_provider_name: partnership.lead_provider.name,
-            delivery_partner_name: partnership.delivery_partner.name,
             partnership_id: partnership.id,
           )
         end
@@ -36,7 +34,7 @@ module Admin
 
         def set_challenge_partnership_form
           @challenge_partnership_form = ChallengePartnershipForm.new(
-            params.require(:challenge_partnership_form).permit(:partnership_id, :challenge_reason, :lead_provider_name),
+            params.require(:challenge_partnership_form).permit(:partnership_id, :challenge_reason),
           )
         end
       end
