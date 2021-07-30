@@ -7,9 +7,11 @@
       Use an approved training provider
     </dd>
     <dd class="govuk-summary-list__actions">
-      <% if school_cohort.lead_provider.nil? %>
-        <%= govuk_link_to "Change", admin_school_change_programme_path(id: school_cohort.cohort.start_year) %>
-        <span class="govuk-visually-hidden"> induction programme</span>
+      <% if FeatureFlag.active?(:admin_change_programme) %>
+        <% if school_cohort.lead_provider.nil? %>
+          <%= govuk_link_to "Change", admin_school_change_programme_path(id: school_cohort.cohort.start_year) %>
+          <span class="govuk-visually-hidden"> induction programme</span>
+        <% end %>
       <% end %>
     </dd>
   </div>

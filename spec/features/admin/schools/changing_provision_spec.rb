@@ -6,6 +6,7 @@ RSpec.feature "Admin managing school provision", js: true, rutabaga: false do
   scenario "Admin changes school provision" do
     given_there_is_a_fip_school_in_2021
     and_i_am_signed_in_as_an_admin
+    and_feature_flag_is_active :admin_change_programme
     when_i_visit_the_school_cohorts_page
     and_i_click_the_change_link
     then_i_should_be_on_the_change_programme_page
@@ -34,6 +35,10 @@ private
     create(:user, :admin, login_token: "test-token")
     visit "/users/confirm_sign_in?login_token=test-token"
     click_button "Continue"
+  end
+
+  def and_feature_flag_is_active(flag)
+    FeatureFlag.activate(flag)
   end
 
   def when_i_visit_the_school_cohorts_page

@@ -7,7 +7,9 @@
       Not using service - designing own induction course
     </dd>
     <dd class="govuk-summary-list__actions">
-      <%= govuk_link_to "Change", admin_school_change_programme_path(id: cohort.start_year) %>
+      <% if FeatureFlag.active?(:admin_change_programme) %>
+        <%= govuk_link_to "Change", admin_school_change_programme_path(id: cohort.start_year) %>
+      <% end %>
       <span class="govuk-visually-hidden"> induction programme</span>
     </dd>
   </div>
