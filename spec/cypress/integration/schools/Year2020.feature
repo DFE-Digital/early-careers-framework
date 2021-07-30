@@ -34,6 +34,37 @@ Feature: School leaders should be able to add participants
     And the page should be accessible
     And percy should be sent snapshot called "Year 2020 check your answers page"
 
+    When I click on "link" containing "Add another teacher"
+    Then I should be on "2020 add teacher" page
+
+    When I type "Dummy User" into field labelled "Full name"
+    And I type "dummy@secret.gov.uk" into field labelled "Email"
+    And I click the submit button
+    Then I should be on "2020 check your answers" page
+    And the page should be accessible
+    And percy should be sent snapshot called "Year 2020 check your answers page with two teachers"
+
+    When I click on "link" containing "Change personal details"
+    Then I should be on "2020 edit teacher" page
+    And the page should be accessible
+    And percy should be sent snapshot called "Year 2020 edit teacher"
+
+    When I type "James Bond 2" into field labelled "Full name"
+    And I click the submit button
+    Then I should be on "2020 check your answers" page
+    And the page should be accessible
+    And percy should be sent snapshot called "Year 2020 check your answers page with two teachers edited"
+
+    When I click on "link" containing "Delete"
+    Then I should be on "2020 remove teacher" page
+    And the page should be accessible
+    And percy should be sent snapshot called "Year 2020 remove teacher"
+
+    When I click the submit button
+    Then I should be on "2020 check your answers" page
+    And the page should be accessible
+    And percy should be sent snapshot called "Year 2020 check your answers page with a deleted teacher"
+
     When I click the submit button
     And the page should be accessible
     And percy should be sent snapshot called "Year 2020 ect participant added"

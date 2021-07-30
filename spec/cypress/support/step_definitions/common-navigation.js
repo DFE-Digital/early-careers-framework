@@ -152,6 +152,8 @@ const pagePaths = {
   "2020 cip choice":
     "/schools/:school_id/year-2020/choose-core-induction-programme",
   "2020 add teacher": "/schools/:school_id/year-2020/add-teacher",
+  "2020 edit teacher": "/schools/:school_id/year-2020/edit-teacher",
+  "2020 remove teacher": "/schools/:school_id/year-2020/remove-teacher",
   "2020 check your answers": "/schools/:school_id/year-2020/check-your-answers",
   "2020 success": "/schools/:school_id/year-2020/success",
 };
