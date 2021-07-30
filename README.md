@@ -3,7 +3,6 @@
 
 # Early careers framework
 
-## Z2H
 ### Prerequisites
 
 - Ruby 2.7.2
