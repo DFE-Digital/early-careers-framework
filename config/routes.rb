@@ -146,7 +146,10 @@ Rails.application.routes.draw do
       resources :cohorts, controller: "schools/cohorts", only: :index do
         member do
           resource :change_programme, only: %i[show update], path: "change-programme", controller: "schools/cohorts/change_programme" do
-            post "confirm", action: :confirm
+            post :confirm
+          end
+          resource :challenge_partnership, only: %i[new create], path: "challenge-partnership", controller: "schools/cohorts/challenge_partnership" do
+            post :confirm
           end
         end
       end

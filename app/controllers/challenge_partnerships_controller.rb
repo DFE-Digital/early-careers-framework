@@ -26,7 +26,7 @@ private
 
   def authorize_partnership
     @token = params[:token] || params.dig(:challenge_partnership_form, :token)
-    partnership_id = params[:partnership] || params.dig(:challenge_partnership_form, :partnership)
+    partnership_id = params[:partnership] || params.dig(:challenge_partnership_form, :partnership_id)
     if @token.present?
       notification_email = PartnershipNotificationEmail.find_by(token: @token)
       raise ActionController::RoutingError, "Not Found" if notification_email.blank?
@@ -48,10 +48,8 @@ private
 
     @challenge_partnership_form = ChallengePartnershipForm.new(
       school_name: @school_name,
-      lead_provider_name: @partnership.lead_provider.name,
-      delivery_partner_name: @partnership.delivery_partner.name,
       token: @token,
-      partnership: @partnership,
+      partnership_id: @partnership.id,
     )
 
     @challenge_partnership_form.assign_attributes(form_params)

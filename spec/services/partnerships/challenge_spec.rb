@@ -16,6 +16,13 @@ RSpec.describe Partnerships::Challenge do
       expect { subject.call }.to change { partnership.reload.challenged? }.to true
     end
 
+    it "sets the correct challenge reason" do
+      expect { subject.call }.to change { partnership.reload.challenge_reason }.to reason
+      created_event = partnership.event_logs.order(created_at: :desc).first
+      expect(created_event.event).to eql "challenged"
+      expect(created_event.data["reason"]).to eql reason
+    end
+
     it "stores :challenged event in the partnership event log" do
       expect { subject.call }.to change { partnership.event_logs.map(&:event) }.by %w[challenged]
     end

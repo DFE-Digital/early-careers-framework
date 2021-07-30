@@ -38,7 +38,6 @@ Feature: Reporting an error with a partnership
     When I navigate to "2021 school partnerships" page with id "111111-test-school"
     Then "page body" should contain "Signing up with a training provider"
 
-    @focus
   Scenario: A logged in induction tutor for CIP school challenges partnership
     Given I am logged in as existing user with email "test-subject2@example.com"
     And I am on "2021 school cohorts" page with id "111113-test-school-3"

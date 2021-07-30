@@ -1,0 +1,12 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-three-quarters">
+    <h1 class="govuk-heading-xl">
+      You are choosing to change course report and remove: <%= @challenge_partnership_form.lead_provider_name %>
+    </h1>
+    <%= form_for @challenge_partnership_form, url: admin_school_challenge_partnership_path do |f| %>
+      <%= f.hidden_field :partnership_id %>
+      <%= f.hidden_field :challenge_reason %>
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

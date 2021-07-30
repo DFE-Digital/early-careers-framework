@@ -9,7 +9,7 @@
 
     <%= form_for @challenge_partnership_form, url: challenge_partnership_path do |f| %>
       <%= f.hidden_field :token %>
-      <%= f.hidden_field :partnership, value: @challenge_partnership_form.partnership.id %>
+      <%= f.hidden_field :partnership_id %>
       <%= f.govuk_collection_radio_buttons(
             :challenge_reason,
             @challenge_partnership_form.challenge_reason_options,
