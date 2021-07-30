@@ -15,6 +15,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
       let(:profile_declaration) do
         create(:participant_declaration,
                :with_profile_type,
+               :sparsity_uplift,
                cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider,
                profile_type: profile_type,
                course_identifier: course_identifier)
