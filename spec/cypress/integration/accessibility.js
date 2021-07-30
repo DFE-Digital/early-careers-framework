@@ -17,7 +17,7 @@ describe("Accessibility", () => {
       expect(emails).to.have.lengthOf(0);
     });
 
-    cy.appFactories([["create", "user", "early_career_teacher"]])
+    cy.appFactories([["create", "user"]])
       .as("userData")
       .then(([user]) => {
         cy.visit("/users/sign_in");
