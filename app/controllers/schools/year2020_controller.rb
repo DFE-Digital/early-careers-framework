@@ -32,7 +32,11 @@ module Schools
       render :select_cip and return unless @year_2020_form.valid? :choose_cip
 
       store_year_2020_session
-      redirect_to action: :new_teacher
+      if @year_2020_form.get_participants.count.positive?
+        redirect_to action: :check
+      else
+        redirect_to action: :new_teacher
+      end
     end
 
     def new_teacher; end
@@ -40,6 +44,37 @@ module Schools
     def create_teacher
       render :new_teacher and return unless @year_2020_form.valid? :create_teacher
 
+      @year_2020_form.store_new_participant
+      store_year_2020_session
+      redirect_to action: :check
+    end
+
+    def remove_teacher
+      participant = @year_2020_form.get_participant(participant_index)
+      redirect_to action: :check unless participant
+
+      @year_2020_form.email = participant[:email]
+      @year_2020_form.full_name = participant[:full_name]
+    end
+
+    def delete_teacher
+      @year_2020_form.remove_participant(participant_index)
+      store_year_2020_session
+      redirect_to action: :check
+    end
+
+    def edit_teacher
+      participant = @year_2020_form.get_participant(participant_index)
+      redirect_to action: :check unless participant
+
+      @year_2020_form.email = participant[:email]
+      @year_2020_form.full_name = participant[:full_name]
+    end
+
+    def update_teacher
+      render :edit_teacher and return unless @year_2020_form.valid? :update_teacher
+
+      @year_2020_form.update_participant(participant_index)
       store_year_2020_session
       redirect_to action: :check
     end
@@ -74,6 +109,10 @@ module Schools
 
     def store_year_2020_session
       session[SESSION_KEY] = @year_2020_form.serializable_hash
+    end
+
+    def participant_index
+      params[:index].to_i
     end
   end
 end

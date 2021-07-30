@@ -261,6 +261,10 @@ Rails.application.routes.draw do
         put "choose-core-induction-programme", action: :choose_cip
         get "add-teacher", action: :new_teacher
         put "add-teacher", action: :create_teacher
+        get "remove-teacher", action: :remove_teacher
+        put "remove-teacher", action: :delete_teacher
+        get "edit-teacher", action: :edit_teacher
+        put "edit-teacher", action: :update_teacher
         get "check-your-answers", action: :check
         post "check-your-answers", action: :confirm
         get "success", action: :success

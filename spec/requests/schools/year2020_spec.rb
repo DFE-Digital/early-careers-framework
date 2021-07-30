@@ -67,7 +67,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
   end
 
   describe "PUT /schools/:school_id/year-2020/choose-core-induction-programme" do
-    it "renders the select_induction_programme if cip choice is missing" do
+    it "renders the select_cip if cip choice is missing" do
       put "/schools/#{school.slug}/year-2020/choose-core-induction-programme"
       expect(response).to render_template("schools/year2020/select_cip")
     end
@@ -89,7 +89,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
   end
 
   describe "PUT /schools/:school_id/year-2020/add-teacher" do
-    it "renders the select_induction_programme if teacher details are missing" do
+    it "renders the new_teacher if teacher details are missing" do
       put "/schools/#{school.slug}/year-2020/add-teacher"
       expect(response).to render_template("schools/year2020/new_teacher")
     end
@@ -104,12 +104,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
 
   describe "GET /schools/:school_id/year-2020/check-your-answers" do
     before do
-      set_session(:schools_year2020_form,
-                  full_name: "Joe Bloggs",
-                  email: "joe@example.com",
-                  school_id: school.friendly_id,
-                  induction_programme_choice: "core_induction_programme",
-                  core_induction_programme_id: core_induction_programme.id)
+      set_default_complete_session
       get "/schools/#{school.slug}/year-2020/check-your-answers"
     end
 
@@ -118,12 +113,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
 
   describe "POST /schools/:school_id/year-2020/check-your-answers" do
     before do
-      set_session(:schools_year2020_form,
-                  full_name: "Joe Bloggs",
-                  email: "joe@example.com",
-                  school_id: school.friendly_id,
-                  induction_programme_choice: "core_induction_programme",
-                  core_induction_programme_id: core_induction_programme.id)
+      set_default_complete_session
     end
 
     it "redirects to success page" do
@@ -142,11 +132,80 @@ RSpec.describe "Schools::AddParticipant", type: :request do
     end
   end
 
+  describe "GET /schools/:school_id/year-2020/edit-teacher?index=x" do
+    before do
+      set_default_complete_session
+      get "/schools/#{school.slug}/year-2020/edit-teacher?index=1"
+    end
+
+    it { is_expected.to render_template("schools/year2020/edit_teacher") }
+  end
+
+  describe "PUT /schools/:school_id/year-2020/edit-teacher?index=1" do
+    before do
+      set_default_complete_session
+    end
+
+    it "renders the edit_teacher if teacher details are missing" do
+      put "/schools/#{school.slug}/year-2020/edit-teacher?index=1"
+      expect(response).to render_template("schools/year2020/edit_teacher")
+    end
+
+    it "redirects to check page when teacher details are valid" do
+      put "/schools/#{school.slug}/year-2020/edit-teacher?index=1", params: {
+        schools_year2020_form: { full_name: "Joe Bloggs - updated", email: "joe@example.com" },
+      }
+      expect(response).to redirect_to "/schools/#{school.slug}/year-2020/check-your-answers"
+    end
+
+    it "updates participant details" do
+      put "/schools/#{school.slug}/year-2020/edit-teacher?index=1", params: {
+        schools_year2020_form: { full_name: "Joe Bloggs - updated", email: "joe@example.com" },
+      }
+      expect(session[:schools_year2020_form][:participants][0][:full_name]).to eq("Joe Bloggs - updated")
+    end
+  end
+
+  describe "GET /schools/:school_id/year-2020/remove-teacher?index=x" do
+    before do
+      set_default_complete_session
+      get "/schools/#{school.slug}/year-2020/remove-teacher?index=1"
+    end
+
+    it { is_expected.to render_template("schools/year2020/remove_teacher") }
+  end
+
+  describe "PUT /schools/:school_id/year-2020/remove-teacher?index=1" do
+    before do
+      set_default_complete_session
+    end
+
+    it "redirects to check page when teacher details are valid" do
+      put "/schools/#{school.slug}/year-2020/remove-teacher?index=1"
+      expect(response).to redirect_to "/schools/#{school.slug}/year-2020/check-your-answers"
+    end
+
+    it "updates participant list" do
+      put "/schools/#{school.slug}/year-2020/remove-teacher?index=1"
+      expect(session[:schools_year2020_form][:participants][0]).to be_nil
+    end
+  end
+
   describe "GET /schools/:school_id/year-2020/success" do
     before do
       get "/schools/#{school.slug}/year-2020/success"
     end
 
     it { is_expected.to render_template("schools/year2020/success") }
+  end
+
+private
+
+  def set_default_complete_session
+    set_session(:schools_year2020_form,
+                school_id: school.friendly_id,
+                induction_programme_choice: "core_induction_programme",
+                core_induction_programme_id: core_induction_programme.id,
+                participants: [{ full_name: "Joe Bloggs", email: "joe@example.com", index: 1 }])
   end
 end
