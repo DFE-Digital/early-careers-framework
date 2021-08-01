@@ -86,29 +86,68 @@ module Participants
     def confirm_details
       if request.put?
         if step_valid?
-          # validate the details
-          if participant_details_valid?
-            redirect_to_step :complete
-          else
-            redirect_to_step :cannot_find_details
-          end
+          validate_participant_details_and_redirect
         end
       end
     end
 
     def cannot_find_details; end
 
-    def complete; end
+    def complete
+      @school = participant.school
+    end
 
     def reset
       reset_form_data
-      redirect_to_step :do_you_know_your_trn
+      redirect_to participants_validation_start_path
     end
 
   private
 
-    def participant_details_valid?
-      true
+    def validate_participant_details_and_redirect
+      result = ParticipantValidationService.validate(trn: @form.trn,
+                                                     full_name: @form.name,
+                                                     date_of_birth: @form.date_of_birth,
+                                                     nino: @form.national_insurance_number)
+      if result.nil?
+        # store form data in validation data
+        store_validation_data!
+        redirect_to_step :cannot_find_details
+      else
+        store_trn!(result[:trn])
+        store_eligibility_data!
+        redirect_to_step :complete
+      end
+    rescue StandardError => e
+      Rails.logger.error("Problem with DQT API: " + e.message)
+      store_validation_data!
+      redirect_to_step :manual_details_check
+    end
+
+    def store_validation_data!
+      participant.create_participant_validation_data!(trn: @form.trn,
+                                                      full_name: @form.name,
+                                                      date_of_birth: @form.date_of_birth,
+                                                      nino: @form.national_insurance_number)
+    end
+
+    def store_trn!(trn)
+      if current_user.teacher_profile.trn.present? && current_user.teacher_profile.trn != trn
+        Rails.logger.warning("Different TRN already set for user [#{current_user.email}]")
+      else
+        current_user.teacher_profile.update!(trn: trn)
+      end
+    end
+
+    def store_eligibility_data!(dqt_data)
+      participant.create_participation_eligibility!(qts: dqt[:qts],
+                                                    active_flags: dqt[:active_alert] != "No",
+                                                    previous_participation: false,
+                                                    previous_induction: false)
+    end
+
+    def participant
+      @participant ||= current_user.participant_profiles.active.ecf.first
     end
 
     def set_form
@@ -122,11 +161,11 @@ module Participants
     end
 
     def step_valid?
-      session[:participant_validation] = @form.attributes
       @form.valid?(@form.step.to_sym)
     end
 
     def redirect_to_step(step)
+      session[:participant_validation] = @form.attributes
       redirect_to send("participants_validation_#{step}_path")
     end
 

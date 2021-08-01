@@ -11,6 +11,7 @@ module Participants
     attr_accessor :updated_record_choice, :name_not_updated_choice
     attr_accessor :trn, :name, :national_insurance_number
     attr_reader :date_of_birth
+    attr_accessor :validation_attempts
 
     validate :trn_choice, on: :do_you_know_your_trn
     validate :name_change_choice, on: :have_you_changed_your_name
@@ -29,6 +30,7 @@ module Participants
         name: name,
         date_of_birth: date_of_birth,
         national_insurance_number: national_insurance_number,
+        validation_attempts: validation_attempts.to_i,  # coerce nil to 0
       }
     end
 
@@ -69,16 +71,21 @@ module Participants
       ]
     end
 
-
     def pretty_date_of_birth
       if date_of_birth.present?
         date_of_birth.strftime("%d/%m/%Y")
       end
     end
 
-    def complete?
-      valid?
+    def increment_validation_attempts
+      if validation_attempts.nil?
+        @validation_attempts = 1
+      else
+        @validation_attempts += 1
+      end
     end
+
+  private
 
     def trn_choice
       if do_you_know_your_trn_choice.blank? || !do_you_know_your_trn_choice.in?(%w[yes no i_do_not_have])

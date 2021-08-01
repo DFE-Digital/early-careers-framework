@@ -16,8 +16,10 @@
 
     <%= govuk_link_to "Try again", participants_validation_tell_us_your_details_path, button: true %>
 
-    <h2 class="govuk-heading-m">If we still cannot find your details</h2>
-    <p class="govuk-body">You can continue to register. Our support team may contact you for more information before you start your induction training.</p>
-    <%= govuk_link_to "Continue registration", participants_validation_confirm_details_path, button: true, class: "govuk-button--secondary" %>
+    <% if @form.validation_attempts > 1 %>
+      <h2 class="govuk-heading-m">If we still cannot find your details</h2>
+      <p class="govuk-body">You can continue to register. Our support team may contact you for more information before you start your induction training.</p>
+      <%= govuk_link_to "Continue registration", participants_validation_confirm_details_path, button: true, class: "govuk-button--secondary" %>
+    <% end %>
   </div>
 </div>
