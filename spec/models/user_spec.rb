@@ -258,8 +258,8 @@ RSpec.describe User, type: :model do
 
       subject { User.changed_since(nil) }
 
-      it { should include user }
-      it { should include old_user }
+      it { is_expected.to include user }
+      it { is_expected.to include old_user }
     end
 
     context "with a user that was just updated" do
@@ -270,8 +270,8 @@ RSpec.describe User, type: :model do
 
       subject { User.changed_since(10.minutes.ago) }
 
-      it { should include user }
-      it { should_not include old_user }
+      it { is_expected.to include user }
+      it { is_expected.to_not include old_user }
     end
 
     context "with a user that has been updated less than a second after the given timestamp" do
@@ -280,7 +280,7 @@ RSpec.describe User, type: :model do
 
       subject { User.changed_since(timestamp) }
 
-      it { should include user }
+      it { is_expected.to include user }
     end
 
     context "with a user that has been updated exactly at the given timestamp" do
@@ -289,7 +289,7 @@ RSpec.describe User, type: :model do
 
       subject { User.changed_since(timestamp) }
 
-      it { should_not include user }
+      it { is_expected.to_not include user }
     end
   end
 
