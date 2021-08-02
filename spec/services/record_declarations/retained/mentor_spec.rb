@@ -3,8 +3,8 @@
 require "rails_helper"
 
 RSpec.describe RecordDeclarations::Started::Mentor do
-  let(:cpd_lead_provider) { create(:cpd_lead_provider) }
-  let(:another_lead_provider) { create(:cpd_lead_provider, name: "Unknown") }
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: create(:lead_provider)) }
+  let(:another_lead_provider) { create(:cpd_lead_provider, name: "Unknown", lead_provider: create(:lead_provider)) }
   let(:ect_profile) { create(:early_career_teacher_profile) }
   let(:mentor_profile) { create(:mentor_profile) }
   let(:induction_coordinator_profile) { create(:induction_coordinator_profile) }
