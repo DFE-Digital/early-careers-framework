@@ -23,7 +23,7 @@ SecureHeaders::Configuration.default do |config|
     form_action: %w['self'],
     frame_ancestors: %w['self'],
     frame_src: %w['self'] + google_analytics,
-    img_src: %W['self' data: *.gov.uk] + google_analytics,
+    img_src: %W['self' data: *.gov.uk online.swagger.io] + google_analytics,
     manifest_src: %w['self'],
     media_src: %w['self'],
     script_src: %W['self' 'unsafe-inline' 'unsafe-eval' *.gov.uk] + google_analytics,
