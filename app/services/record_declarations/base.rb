@@ -33,8 +33,10 @@ module RecordDeclarations
     end
 
     def call
-      validate_schema!
-      validate_participant_params!
+      record.validate
+      profile_declaration.validate
+      raise ActionController::ParameterMissing, record.errors.map(&:message) unless record.errors.empty?
+      raise ActionController::ParameterMissing, profile_declaration.errors.map(&:message) unless profile_declaration.errors.empty?
 
       declaration = create_record!
       validate_provider!

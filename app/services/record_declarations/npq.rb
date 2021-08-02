@@ -5,14 +5,7 @@ module RecordDeclarations
     extend ActiveSupport::Concern
 
     included do
-      extend NPQClassMethods
       delegate :npq?, :npq_profiles, to: :user
-    end
-
-    module NPQClassMethods
-      def valid_courses
-        ::NPQCourse.identifiers
-      end
     end
 
     def participant?

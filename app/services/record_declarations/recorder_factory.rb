@@ -14,7 +14,7 @@ module RecordDeclarations
       end
 
       def declaration_identifiers
-        NPQCourseProxy.valid_courses.collect { |identifier| identity_mapping(identifier, "NPQ") }.to_h.merge(
+        NPQCourse.identifiers.collect { |identifier| identity_mapping(identifier, "NPQ") }.to_h.merge(
           {
             ecf_induction: "EarlyCareerTeacher",
             ecf_mentor: "Mentor",
@@ -26,9 +26,5 @@ module RecordDeclarations
         [name.underscore.intern, klass]
       end
     end
-  end
-
-  class NPQCourseProxy
-    include NPQ
   end
 end
