@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "json_schema/validate_body_against_schema"
-
 module RecordDeclarations
   class Base
     attr_accessor :params
@@ -17,14 +15,6 @@ module RecordDeclarations
 
       def not_implemented_error
         raise NotImplementedError, "Method must be implemented"
-      end
-
-      def schema_validation_params
-        { version: "0.3" }
-      end
-
-      def schema
-        JSON.parse(File.read(::JsonSchema::VersionEventFileName.call(schema_validation_params)))
       end
     end
 
@@ -49,16 +39,6 @@ module RecordDeclarations
       @params = params
     end
 
-    def validate_schema!
-      errors = ::JsonSchema::ValidateBodyAgainstSchema.call(schema: self.class.schema, body: params[:raw_event])
-      raise ActionController::ParameterMissing, (errors.map { |error| error.sub(/\sin schema.*$/, "") }) unless errors.empty?
-    end
-
-    def validate_participant_params!
-      raise ActionController::ParameterMissing, [I18n.t(:invalid_course)] unless course_valid_for_participant?
-      raise ActionController::ParameterMissing, [I18n.t(:invalid_participant)] unless participant?
-    end
-
     def user_id
       params[:user_id]
     end
@@ -71,18 +51,22 @@ module RecordDeclarations
       @user ||= User.find_by(id: user_id)
     end
 
-    def course_valid_for_participant?
-      self.class.valid_courses.include?(course) && user_profile
+    def record
+      @record ||= declaration_type.new(params.slice(*self.class.required_params))
+    end
+
+    def profile_declaration
+      @profile_declaration ||= ProfileDeclaration.new(
+        participant_profile: user_profile,
+        participant_declaration: record,
+      )
     end
 
     def create_record!
       ActiveRecord::Base.transaction do
-        declaration_type.create!(params.slice(*self.class.required_params)).tap do |participant_declaration|
-          ProfileDeclaration.create!(
-            participant_declaration: participant_declaration,
-            participant_profile: user_profile,
-          )
-        end
+        record.save!
+        profile_declaration.save!
+        record
       end
     end
 
