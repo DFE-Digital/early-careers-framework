@@ -66,5 +66,9 @@ FactoryBot.define do
       sparsity_uplift
       pupil_premium_uplift
     end
+
+    trait :withdrawn do
+      status { :withdrawn }
+    end
   end
 end
