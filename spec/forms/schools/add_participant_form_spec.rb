@@ -31,8 +31,8 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
       it "sets the participant_type to mentor as well as full name and email to match current_user details" do
         expect { subject.type = "self" }
           .to change { subject.participant_type }.to(:mentor)
-          .and change { subject.full_name }.to(user.full_name)
-          .and change { subject.email }.to(user.email)
+                                                 .and change { subject.full_name }.to(user.full_name)
+                                                                                  .and change { subject.email }.to(user.email)
       end
     end
   end
@@ -63,22 +63,42 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
     end
 
     context "when the email is in use by an ECT user" do
-      before do
+      let!(:ect_profile) do
         create(:participant_profile, :ect, user: create(:user, email: "ray.clemence@example.com"))
       end
 
       it "returns true" do
         expect(subject).to be_email_already_taken
       end
+
+      context "when the ECT is withdrawn" do
+        let!(:ect_profile) do
+          create(:participant_profile, :withdrawn, :ect, user: create(:user, email: "ray.clemence@example.com"))
+        end
+
+        it "returns false" do
+          expect(subject).not_to be_email_already_taken
+        end
+      end
     end
 
     context "when the email is in use by a Mentor" do
-      before do
+      let!(:mentor_profile) do
         create(:participant_profile, :mentor, user: create(:user, email: "ray.clemence@example.com"))
       end
 
       it "returns true" do
         expect(subject).to be_email_already_taken
+      end
+
+      context "when the mentor is withdrawn" do
+        let!(:mentor_profile) do
+          create(:participant_profile, :withdrawn, :mentor, user: create(:user, email: "ray.clemence@example.com"))
+        end
+
+        it "returns false" do
+          expect(subject).not_to be_email_already_taken
+        end
       end
     end
 
