@@ -6,20 +6,20 @@ module RecordDeclarations
 
     attr_accessor :course_identifier, :user_id, :raw_event, :lead_provider_from_token, :declaration_date, :declaration_type, :evidence_held
 
-    validates :course_identifier, inclusion: { in: :valid_courses_for_user, message: "The property '#/course_identifier' must be an available course to '#/participant_id'" }
-    validates :declaration_type, inclusion: { in: :valid_declaration_types, message: "The property '#/declaration_type' must be an available for course_identifier '#/course_identifier'" }
-    validates :course_identifier, presence: { message: "The property '#/course_identifier' must be present" }
-    validates :declaration_date, presence: { message: "The property '#/declaration_date' must be present" }
-    validates :declaration_type, presence: { message: "The property '#/declaration_type' must be present" }
-    validates :user, presence: { message: "The participant must be exist" }
-    validates :lead_provider_from_token, presence: { message: "The lead provider must be present" }
+    validates :course_identifier, inclusion: { in: :valid_courses_for_user, message: I18n.t(:invalid_identifier) }
+    validates :declaration_type, inclusion: { in: :valid_declaration_types, message: I18n.t(:invalid_declaration_type) }
+    validates :course_identifier, presence: { message: I18n.t(:missing_course_identifier) }
+    validates :declaration_date, presence: { message: I18n.t(:missing_declaration_date) }
+    validates :declaration_type, presence: { message: I18n.t(:missing_declaration_type) }
+    validates :user, presence: { message: I18n.t(:invalid_participant) }
+    validates :lead_provider_from_token, presence: { message: I18n.t(:missing_lead_provider) }
     validate :profile_exists
 
     def profile_exists
       return if errors.any?
 
       unless user_profile
-        errors.add(:user_profile, "User profile must exist")
+        errors.add(:user_profile, I18n.t(:invalid_participant))
       end
     end
 
