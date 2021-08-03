@@ -1,17 +1,18 @@
 # frozen_string_literal: true
 
 class ParticipantValidationService
-  attr_reader :trn, :nino, :full_name, :date_of_birth
+  attr_reader :trn, :nino, :full_name, :date_of_birth, :config
 
-  def self.validate(trn:, full_name:, date_of_birth:, nino: nil)
-    ParticipantValidationService.new(trn: trn, full_name: full_name, date_of_birth: date_of_birth, nino: nino).validate
+  def self.validate(trn:, full_name:, date_of_birth:, nino: nil, config: {})
+    ParticipantValidationService.new(trn: trn, full_name: full_name, date_of_birth: date_of_birth, nino: nino, config: config).validate
   end
 
-  def initialize(trn:, full_name:, date_of_birth:, nino: nil)
+  def initialize(trn:, full_name:, date_of_birth:, nino: nil, config: {})
     @trn = trn
     @full_name = full_name
     @date_of_birth = date_of_birth
     @nino = nino
+    @config = config
   end
 
   def validate
@@ -26,6 +27,10 @@ class ParticipantValidationService
   end
 
 private
+
+  def check_first_name_only?
+    config[:check_first_name_only]
+  end
 
   def dqt_record(trn, nino)
     dqt_client.api.dqt_record.show(params: { teacher_reference_number: trn, national_insurance_number: nino })
@@ -44,8 +49,15 @@ private
     matches = 0
     trn_matches = padded_trn == dqt_record[:teacher_reference_number]
     matches += 1 if trn_matches
-    name_matches = full_name == dqt_record[:full_name]
+
+    name_matches = if check_first_name_only?
+                     full_name.split(" ").first.to_s == dqt_record[:full_name].split(" ").first.to_s
+                   else
+                     full_name == dqt_record[:full_name]
+                   end
+
     matches += 1 if name_matches
+
     dob_matches = dob == dqt_record[:date_of_birth]
     matches += 1 if dob_matches
     nino_matches = nino.downcase == dqt_record[:national_insurance_number]&.downcase
