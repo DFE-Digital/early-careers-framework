@@ -20,12 +20,12 @@ RSpec.describe RecordDeclarations::Started::NPQ do
       declaration_date: "2021-06-21T08:46:29Z",
       declaration_type: "started",
       course_identifier: "npq-leading-teaching",
-      cpd_lead_provider: another_lead_provider,
+      lead_provider_from_token: another_lead_provider,
     }
   end
 
   let(:npq_params) do
-    params.merge({ cpd_lead_provider: cpd_lead_provider })
+    params.merge({ lead_provider_from_token: cpd_lead_provider })
   end
   let(:induction_coordinator_params) do
     npq_params.merge({ user_id: induction_coordinator_profile.user_id })

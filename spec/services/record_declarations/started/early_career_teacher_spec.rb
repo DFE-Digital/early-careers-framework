@@ -15,11 +15,11 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
       declaration_date: "2021-06-21T08:46:29Z",
       declaration_type: "started",
       course_identifier: "ecf-induction",
-      cpd_lead_provider: another_lead_provider,
+      lead_provider_from_token: another_lead_provider,
     }
   end
   let(:ect_params) do
-    params.merge({ cpd_lead_provider: cpd_lead_provider })
+    params.merge({ lead_provider_from_token: cpd_lead_provider })
   end
   let(:mentor_params) do
     ect_params.merge({ user_id: mentor_profile.user_id, course_identifier: "ecf-mentor" })
