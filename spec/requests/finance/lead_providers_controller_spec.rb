@@ -33,14 +33,6 @@ RSpec.describe "Lead Providers for Finance users", type: :request do
 
       # Assert
       expect(response).to render_template("finance/lead_providers/show")
-      expect(assigns(:ecf_lead_provider)).to eq(ecf_lead_provider)
-
-      aggregate_failures do
-        expect(assigns(:total_mentors)).to eq(1)
-        expect(assigns(:uplift_participants)).to eq(2)
-        expect(assigns(:total_ect)).to eq(4)
-        expect(assigns(:total_participants)).to eq(5)
-      end
     end
   end
 end

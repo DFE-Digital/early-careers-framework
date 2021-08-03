@@ -11,6 +11,6 @@ class OtherFeeCollection
   end
 
   def initialize(params)
-    self.other_fees=params.map{|other_fee| OtherFee.new(other_fee)}
+    self.other_fees = params.map { |other_fee| OtherFee.new(other_fee) }
   end
 end

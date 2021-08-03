@@ -1,0 +1,6 @@
+<tr class="govuk-table__row">
+  <td class="govuk-table__cell"><%= I18n.t("activemodel.attributes.other_fees.#{other_fee.name}") %></td>
+  <td class="govuk-table__cell govuk-table__cell--numeric"><%= other_fee.participants %></td>
+  <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds other_fee.per_participant %></td>
+  <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds other_fee.subtotal %></td>
+</tr>

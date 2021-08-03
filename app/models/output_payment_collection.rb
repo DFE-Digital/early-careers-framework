@@ -10,9 +10,9 @@ class OutputPaymentCollection
     end
   end
 
-  private
+private
 
   def initialize(params)
-    self.output_payments=params.map {|service_fee| OutputPayment.new(service_fee)}
+    self.output_payments = params.map { |service_fee| OutputPayment.new(service_fee) }
   end
 end

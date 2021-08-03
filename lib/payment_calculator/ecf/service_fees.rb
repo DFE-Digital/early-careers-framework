@@ -15,9 +15,10 @@ module PaymentCalculator
         end
       end
 
-      private
-      def band_to_identifier(i)
-        ("A".ord+i).chr
+    private
+
+      def band_to_identifier(index)
+        ("A".ord + index).chr
       end
     end
   end

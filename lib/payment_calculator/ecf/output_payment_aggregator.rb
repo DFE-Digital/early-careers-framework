@@ -19,17 +19,16 @@ module PaymentCalculator
             band: band_to_identifier(i),
             participants: band.number_of_participants_in_this_band(total_participants),
             per_participant: output_payment_per_participant_for_event(event_type: event_type, band: band),
-            subtotal: output_payment_for_event(total_participants: total_participants, event_type: event_type, band: band)
+            subtotal: output_payment_for_event(total_participants: total_participants, event_type: event_type, band: band),
           }
         end
       end
 
     private
 
-      def band_to_identifier(i)
-        ("A".ord+i).chr
+      def band_to_identifier(index)
+        ("A".ord + index).chr
       end
-
     end
   end
 end

@@ -30,6 +30,7 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
+  currency: "£"
   event_types:
     started: Started
     retention_1: Retention 1
@@ -66,6 +67,26 @@ en:
       does_not_match: "The name you entered does not match our records"
 
   activemodel:
+    attributes:
+      finance:
+        provider: Provider
+        milestone: Milestone
+        target: Recruitment target
+        ects: Current ECTs
+        mentors: Current Mentors
+        band: Band
+        participants: Current Participants
+        per_participant: Payment amount per person
+        monthly: Payment amount monthly
+        subtotal: Sub total
+        period: Payment amount for period
+      service_fee:
+        participants: Target Participants
+      output_payment:
+        participants: Current Participants
+      other_fees:
+        fee: Fee
+        uplift: Uplift
     errors:
       models:
         nominate_induction_tutor_form:

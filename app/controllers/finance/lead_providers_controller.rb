@@ -8,22 +8,18 @@ class Finance::LeadProvidersController < Finance::BaseController
   end
 
   def show
-    @ecf_lead_provider = lead_provider_scope.find(params[:id])
-    cpd_lead_provider = @ecf_lead_provider.cpd_lead_provider
+    ecf_lead_provider = lead_provider_scope.find(params[:id])
 
-    @breakdown = CalculationOrchestrator.call(
-      cpd_lead_provider: cpd_lead_provider,
-      contract: @ecf_lead_provider.call_off_contract,
-      aggregator: ::ParticipantEventAggregator,
-      uplift_aggregator: ::ParticipantUpliftAggregator,
-      calculator: ::PaymentCalculator::Ecf::PaymentCalculation,
+    calculations = CalculationOrchestrator.call(
+      cpd_lead_provider: ecf_lead_provider.cpd_lead_provider,
+      contract: ecf_lead_provider.call_off_contract,
       event_type: :started,
     )
 
-    @total_ect = ParticipantEventAggregator.call({ cpd_lead_provider: cpd_lead_provider, started: :count_active_ects_for_lead_provider })
-    @total_mentors = ParticipantEventAggregator.call({ cpd_lead_provider: cpd_lead_provider, started: :count_active_mentors_for_lead_provider })
-    @total_participants = ParticipantEventAggregator.call({ cpd_lead_provider: cpd_lead_provider, started: :count_active_for_lead_provider })
-    @uplift_participants = ParticipantUpliftAggregator.call({ cpd_lead_provider: cpd_lead_provider }).to_i
+    @heading = Heading.new(calculations[:headings])
+    @service_fees = ServiceFeeCollection.new(calculations[:service_fees])
+    @output_payments = OutputPaymentCollection.new(calculations[:output_payments])
+    @other_fees = OtherFeeCollection.new(calculations[:other_fees])
   end
 
 private

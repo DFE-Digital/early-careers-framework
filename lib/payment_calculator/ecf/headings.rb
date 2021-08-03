@@ -1,4 +1,4 @@
-#frozen_string_literal: true
+# frozen_string_literal: true
 
 module PaymentCalculator
   module Ecf
@@ -9,29 +9,29 @@ module PaymentCalculator
         end
       end
 
-      def call(aggregations:, event_type: :started )
+      def call(aggregations:, event_type: :started)
         {
           name: lead_provider.name,
           declaration: event_type,
           target: recruitment_target,
           ects: aggregations[:ects],
           mentors: aggregations[:mentors],
-          participants: aggregations[:all]
+          participants: aggregations[:all],
         }
       end
 
-      private
+    private
+
       attr_accessor :contract
       delegate :recruitment_target, to: :contract
 
       def initialize(contract:)
-        self.contract=contract
+        self.contract = contract
       end
 
       def lead_provider
         contract.lead_provider
       end
-
     end
   end
 end

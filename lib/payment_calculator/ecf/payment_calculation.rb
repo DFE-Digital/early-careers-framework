@@ -26,7 +26,7 @@ module PaymentCalculator
                  event_type: event_type)
         end
 
-        private
+      private
 
         def empty_aggregations
           { all: 0, ects: 0, mentors: 0, uplift: 0 }
@@ -42,7 +42,8 @@ module PaymentCalculator
         }
       end
 
-      private
+    private
+
       attr_accessor :contract, :service_fee_calculator, :headings_calculator, :output_payment_aggregator, :uplift_payment_calculator
 
       def initialize(contract:,
@@ -56,7 +57,6 @@ module PaymentCalculator
         @service_fee_calculator = service_fee_calculator
         @uplift_payment_calculator = uplift_payment_calculator
       end
-
     end
   end
 end

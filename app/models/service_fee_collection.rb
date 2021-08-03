@@ -10,9 +10,9 @@ class ServiceFeeCollection
     end
   end
 
-  private
+private
 
   def initialize(params)
-    self.service_fees=params.map {|service_fee| ServiceFee.new(service_fee)}
+    self.service_fees = params.map { |service_fee| ServiceFee.new(service_fee) }
   end
 end
