@@ -5,13 +5,7 @@ module RecordDeclarations
     extend ActiveSupport::Concern
 
     included do
-      extend RetainedClassMethods
-    end
-
-    module RetainedClassMethods
-      def required_params
-        %i[user_id cpd_lead_provider declaration_type declaration_date course_identifier evidence_held raw_event]
-      end
+      validates :evidence_held, presence: { message: "The property '#/evidence_held' must be present" }
     end
   end
 end

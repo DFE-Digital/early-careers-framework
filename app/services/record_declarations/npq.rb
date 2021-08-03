@@ -13,7 +13,7 @@ module RecordDeclarations
     end
 
     def user_profile
-      npq_profiles.includes({ validation_data: [:npq_course] }).where('npq_courses.identifier': course).first
+      npq_profiles.includes({ validation_data: [:npq_course] }).where('npq_courses.identifier': course_identifier).first
     end
 
     def declaration_type

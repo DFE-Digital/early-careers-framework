@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe RecordDeclarations::Started::Mentor do
+RSpec.describe RecordDeclarations::Retained::Mentor do
   let(:cpd_lead_provider) { create(:cpd_lead_provider) }
   let(:another_lead_provider) { create(:cpd_lead_provider, name: "Unknown") }
   let(:ect_profile) { create(:early_career_teacher_profile) }
@@ -15,11 +15,12 @@ RSpec.describe RecordDeclarations::Started::Mentor do
       declaration_date: "2021-06-21T08:46:29Z",
       declaration_type: "retained-1",
       course_identifier: "ecf-induction",
-      cpd_lead_provider: another_lead_provider,
+      lead_provider_from_token: another_lead_provider,
+      evidence_held: "Test evidence",
     }
   end
   let(:ect_params) do
-    params.merge({ cpd_lead_provider: cpd_lead_provider })
+    params.merge({ lead_provider_from_token: cpd_lead_provider })
   end
   let(:mentor_params) do
     ect_params.merge({ user_id: mentor_profile.user.id, course_identifier: "ecf-mentor" })
