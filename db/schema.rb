@@ -376,6 +376,7 @@ ActiveRecord::Schema.define(version: 2021_08_04_105833) do
     t.boolean "eligible_for_funding", default: false, null: false
     t.text "funding_choice"
     t.text "nino"
+    t.text "status", default: "pending", null: false
     t.index ["npq_course_id"], name: "index_npq_profiles_on_npq_course_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_profiles_on_npq_lead_provider_id"
     t.index ["user_id"], name: "index_npq_profiles_on_user_id"

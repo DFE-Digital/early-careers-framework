@@ -16,7 +16,8 @@ class NPQApplicationSerializer
              :headteacher_status,
              :eligible_for_funding,
              :funding_choice,
-             :course_identifier
+             :course_identifier,
+             :status
 
   attribute(:participant_id, &:user_id)
   attribute(:teacher_reference_number_validated, &:teacher_reference_number_verified)

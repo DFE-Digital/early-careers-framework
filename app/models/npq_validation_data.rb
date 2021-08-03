@@ -23,6 +23,12 @@ class NPQValidationData < ApplicationRecord
     another: "another",
   }
 
+  enum status: {
+    pending: "pending",
+    accepted: "accepted",
+    rejected: "rejected",
+  }
+
   after_save :update_participant_profile
 
 private
