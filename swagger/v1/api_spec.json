@@ -848,7 +848,7 @@
             }
           }
         },
-        "example": "id,type,participant_id,full_name,email,email_validated,email_validated,teacher_reference_number,teacher_reference_number_validated,school_urn,headteacher_status,eligible_for_funding,funding_choice,course_identifier\ndb3a7848-7308-4879-942a-c4a70ced400a,npq-application,7a8fef46-3c43-42c0-b3d5-1ba5904ba562,Isabelle MacDonald,isabelle.macdonald2@some-school.example.com,true,1234567,true,106286,no,true,trust,npq-leading-teaching\n"
+        "example": "id,type,participant_id,full_name,email,email_validated,email_validated,teacher_reference_number,teacher_reference_number_validated,school_urn,headteacher_status,eligible_for_funding,funding_choice,course_identifier,status\ndb3a7848-7308-4879-942a-c4a70ced400a,npq-application,7a8fef46-3c43-42c0-b3d5-1ba5904ba562,Isabelle MacDonald,isabelle.macdonald2@some-school.example.com,true,1234567,true,106286,no,true,trust,npq-leading-teaching,pending\n"
       },
       "MultipleNpqApplicationsResponse": {
         "description": "A list of NPQ applications",
