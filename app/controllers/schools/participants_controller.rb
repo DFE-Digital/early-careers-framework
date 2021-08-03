@@ -8,13 +8,11 @@ class Schools::ParticipantsController < Schools::BaseController
   before_action :set_mentors_added, only: %i[index show]
 
   def index
-    @participants = @school_cohort.active_ecf_participants.order(:full_name)
+    @participant_profiles = policy_scope(
+      @school_cohort.active_ecf_participant_profiles.includes(:user).order("users.full_name"),
+    )
 
-    if @participants.empty?
-      redirect_to add_schools_participants_path
-    end
-
-    authorize @participants, policy_class: ParticipantPolicy
+    redirect_to add_schools_participants_path if @participant_profiles.empty?
   end
 
   def show
