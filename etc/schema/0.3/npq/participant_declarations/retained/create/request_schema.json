@@ -30,9 +30,7 @@
       "retained": {
         "enum": [
           "retained-1",
-          "retained-2",
-          "retained-3",
-          "retained-4"
+          "retained-2"
         ]
       }
     },

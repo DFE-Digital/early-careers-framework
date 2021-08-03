@@ -12,4 +12,8 @@ class CoreInductionProgrammeChoiceForm
       .pluck(:id, :name)
       .map { |attrs| OpenStruct.new(attrs) }
   end
+
+  def core_induction_programme
+    CoreInductionProgramme.find(core_induction_programme_id)
+  end
 end

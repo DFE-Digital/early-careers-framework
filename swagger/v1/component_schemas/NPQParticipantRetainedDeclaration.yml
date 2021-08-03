@@ -12,8 +12,6 @@ properties:
     enum:
       - retained-1
       - retained-2
-      - retained-3
-      - retained-4
     example: retained-1
   declaration_date:
     description: "The event declaration date"
