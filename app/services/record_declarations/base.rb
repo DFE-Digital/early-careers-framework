@@ -6,7 +6,7 @@ module RecordDeclarations
 
     attr_accessor :course_identifier, :user_id, :raw_event, :lead_provider_from_token, :declaration_date, :declaration_type, :evidence_held
 
-    validates :course_identifier, inclusion: { in: :valid_courses_for_user, message: I18n.t(:invalid_identifier) }
+    validates :course_identifier, inclusion: { in: :valid_courses_for_user, message: I18n.t(:invalid_identifier) }, ignore: :blank
     validates :declaration_type, inclusion: { in: :valid_declaration_types, message: I18n.t(:invalid_declaration_type) }
     validates :course_identifier, presence: { message: I18n.t(:missing_course_identifier) }
     validates :declaration_date, presence: { message: I18n.t(:missing_declaration_date) }
