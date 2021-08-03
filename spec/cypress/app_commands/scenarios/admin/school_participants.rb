@@ -50,7 +50,8 @@ npq_user = FactoryBot.create(:user, full_name: "Natalie Portman Quebec", email: 
 npq_profile = FactoryBot.create :participant_profile,
                                 :npq,
                                 validation_data: nil,
-                                user: npq_user
+                                user: npq_user,
+                                created_at: Date.parse("19/09/2019")
 
 FactoryBot.create :npq_validation_data,
                   id: npq_profile.id,
