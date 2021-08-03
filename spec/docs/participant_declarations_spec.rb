@@ -71,7 +71,11 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
         end
 
         before do
-          caller_attributes = attributes.merge({ user_id: attributes["participant_id"], lead_provider_from_token: cpd_lead_provider, raw_event: params.to_json })
+          caller_attributes = attributes.merge(
+            user_id: attributes["participant_id"],
+            lead_provider_from_token: cpd_lead_provider,
+            raw_event: params.to_json,
+          ).except("participant_id")
           RecordParticipantDeclaration.call(HashWithIndifferentAccess.new(caller_attributes))
         end
 
