@@ -4,8 +4,7 @@ module RecordDeclarations
   class Base
     include ActiveModel::Model
 
-    attr_accessor :course_identifier, :user, :cpd_lead_provider, :declaration_date, :declaration_type, :evidence_held
-    attr_accessor :params
+    attr_accessor :course_identifier, :user_id, :raw_event, :lead_provider_from_token, :declaration_date, :declaration_type, :evidence_held
 
     validates :course_identifier, inclusion: { in: :valid_courses_for_user, message: "The property '#/course_identifier' must be an available course to '#/participant_id'" }
     validates :declaration_type, inclusion: { in: :valid_declaration_types, message: "The property '#/declaration_type' must be an available for course_identifier '#/course_identifier'" }
@@ -13,7 +12,7 @@ module RecordDeclarations
     validates :declaration_date, presence: { message: "The property '#/declaration_date' must be present" }
     validates :declaration_type, presence: { message: "The property '#/declaration_type' must be present" }
     validates :user, presence: { message: "The participant must be exist" }
-    validates :cpd_lead_provider, presence: { message: "The lead provider must be present" }
+    validates :lead_provider_from_token, presence: { message: "The lead provider must be present" }
     validate :profile_exists
 
     def profile_exists
@@ -63,13 +62,13 @@ module RecordDeclarations
   private
 
     def initialize(params)
-      @params = params
-      @course_identifier = params[:course_identifier]
-      @declaration_date = params[:declaration_date]
-      @declaration_type = params[:declaration_type]
-      @cpd_lead_provider = params[:lead_provider_from_token]
-      @evidence_held = params[:evidence_held]
-      @user = User.find_by(id: params[:user_id])
+      params.each do |param, value|
+        send("#{param}=", value)
+      end
+    end
+
+    def user
+      @user ||= User.find_by(id: user_id)
     end
 
     def create_record!
@@ -78,10 +77,10 @@ module RecordDeclarations
           course_identifier: course_identifier,
           declaration_date: declaration_date,
           declaration_type: declaration_type,
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider: lead_provider_from_token,
           user: user,
           evidence_held: evidence_held,
-          raw_event: params[:raw_event],
+          raw_event: raw_event,
         ).tap do |participant_declaration|
           ProfileDeclaration.create!(
             participant_declaration: participant_declaration,
@@ -89,10 +88,6 @@ module RecordDeclarations
           )
         end
       end
-    end
-
-    def lead_provider_from_token
-      params[:lead_provider_from_token]
     end
 
     def validate_provider!
