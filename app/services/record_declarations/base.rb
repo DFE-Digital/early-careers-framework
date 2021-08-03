@@ -7,7 +7,8 @@ module RecordDeclarations
     attr_accessor :course_identifier, :user, :cpd_lead_provider, :declaration_date, :declaration_type, :evidence_held
     attr_accessor :params
 
-    validates :course_identifier, inclusion: { in: :valid_courses, message: "The property '#/course_identifier' must be an available course to '#/participant_id'" }
+    validates :course_identifier, inclusion: { in: :valid_courses_for_user, message: "The property '#/course_identifier' must be an available course to '#/participant_id'" }
+    validates :declaration_type, inclusion: { in: :valid_declaration_types, message: "The property '#/declaration_type' must be an available for course_identifier '#/course_identifier'" }
     validates :course_identifier, presence: { message: "The property '#/course_identifier' must be present" }
     validates :declaration_date, presence: { message: "The property '#/declaration_date' must be present" }
     validates :declaration_type, presence: { message: "The property '#/declaration_type' must be present" }
@@ -23,7 +24,7 @@ module RecordDeclarations
       end
     end
 
-    def valid_courses
+    def valid_courses_for_user
       valid_courses = []
       valid_courses << "ecf-mentor" if user.mentor?
       valid_courses << "ecf-induction" if user.early_career_teacher?
@@ -31,7 +32,7 @@ module RecordDeclarations
       valid_courses
     end
 
-    delegate :user_profile, :actual_lead_provider, to: :not_implemented_error
+    delegate :user_profile, :actual_lead_provider, :valid_declaration_types, to: :not_implemented_error
 
     class << self
       delegate :required_params, to: :not_implemented_error
@@ -73,13 +74,14 @@ module RecordDeclarations
 
     def create_record!
       ActiveRecord::Base.transaction do
-        declaration_type.create!(
+        declaration_model.create!(
           course_identifier: course_identifier,
           declaration_date: declaration_date,
           declaration_type: declaration_type,
           cpd_lead_provider: cpd_lead_provider,
           user: user,
           evidence_held: evidence_held,
+          raw_event: params[:raw_event],
         ).tap do |participant_declaration|
           ProfileDeclaration.create!(
             participant_declaration: participant_declaration,

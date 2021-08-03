@@ -43,4 +43,16 @@ RSpec.describe RecordDeclarations::Retained::NPQ do
       expect { described_class.call(induction_coordinator_params) }.to raise_error(ActionController::ParameterMissing)
     end
   end
+
+  context "when declaration type is invalid" do
+    it "raises a ParameterMissing error" do
+      expect { described_class.call(params.merge(declaration_type: "invalid")) }.to raise_error(ActionController::ParameterMissing)
+    end
+  end
+
+  context "when declaration type is valid for ECF but not NPQ" do
+    it "raises a ParameterMissing error" do
+      expect { described_class.call(params.merge(declaration_type: "retained-3")) }.to raise_error(ActionController::ParameterMissing)
+    end
+  end
 end
