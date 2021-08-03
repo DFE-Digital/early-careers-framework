@@ -22,8 +22,8 @@ describe ::PaymentCalculator::Ecf::UpliftCalculation do
   it "returns the expected types for all outputs" do
     retained_events.each do |key|
       result = described_class.call(contract: contract, event_type: key, total_participants: total_participants_eligible)
-      expect(result.dig(:per_participant)).to be_a(BigDecimal)
-      expect(result.dig(:sub_total)).to be_a(BigDecimal)
+      expect(result.dig(:uplift, :per_participant)).to be_a(BigDecimal)
+      expect(result.dig(:uplift, :subtotal)).to be_a(BigDecimal)
     end
   end
 end

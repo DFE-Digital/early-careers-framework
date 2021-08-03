@@ -13,10 +13,12 @@ module PaymentCalculator
       # All invalid users will have already been filtered out before this number is generated and passed here.
       def call(uplift_participants: 0, event_type: :started)
         return nil unless event_type == :started
-
         {
-          per_participant: uplift_payment_per_participant,
-          sub_total: uplift_payment_for_event(event_type: event_type, uplift_participants: uplift_participants),
+          uplift: {
+            participants: uplift_participants,
+            per_participant: uplift_payment_per_participant,
+            subtotal: uplift_payment_for_event(event_type: event_type, uplift_participants: uplift_participants),
+          }
         }
       end
     end

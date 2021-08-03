@@ -10,9 +10,14 @@ module PaymentCalculator
       delegate :bands, to: :contract
 
       def call
-        bands.map do |band|
-          Ecf::ServiceFeesForBand.call(params, band: band)
+        bands.each_with_index.map do |band, i|
+          { band: band_to_identifier(i) }.merge(Ecf::ServiceFeesForBand.call(params, band: band))
         end
+      end
+
+      private
+      def band_to_identifier(i)
+        ("A".ord+i).chr
       end
     end
   end

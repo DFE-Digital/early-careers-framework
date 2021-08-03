@@ -25,7 +25,7 @@ module UpliftPaymentsSteps
   end
 
   step "the total uplift payment should be £:decimal_placeholder" do |value|
-    expect(@result.dig(:uplift, :sub_total)).to eq(value)
+    expect(@result.dig(:uplift, :subtotal)).to eq(value)
   end
 end
 
