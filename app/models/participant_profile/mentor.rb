@@ -12,8 +12,6 @@ class ParticipantProfile < ApplicationRecord
              dependent: :nullify
     has_many :mentees, through: :mentee_profiles, source: :user
 
-    belongs_to :core_induction_programme, optional: true
-
     def mentor?
       true
     end
