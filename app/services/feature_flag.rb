@@ -25,6 +25,7 @@ class FeatureFlag
     year_2020_data_entry
     admin_change_programme
     admin_challenge_partnership
+    admin_change_materials
   ].freeze
 
   FEATURES = (PERMANENT_SETTINGS + TEMPORARY_FEATURE_FLAGS).index_with { |name|

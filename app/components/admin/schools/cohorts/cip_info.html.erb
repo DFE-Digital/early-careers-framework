@@ -20,6 +20,14 @@
     <dd class="govuk-summary-list__value">
       <%= school_cohort.core_induction_programme&.name %>
     </dd>
-    <dd class="govuk-summary-list__actions"></dd>
+    <dd class="govuk-summary-list__actions">
+      <% if FeatureFlag.active?(:admin_change_materials) %>
+        <%= govuk_link_to "Change",
+                          admin_school_change_training_materials_path(id: school_cohort.cohort.start_year),
+                          "data-test": "change-materials"
+        %>
+        <span class="govuk-visually-hidden"> training materials</span>
+      <% end %>
+    </dd>
   </div>
 </dl>
