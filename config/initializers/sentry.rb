@@ -29,6 +29,8 @@ Sentry.init do |config|
       else
         0.1
       end
+    when /delayed_job/
+      0.001
     else
       0.0 # We don't care about performance of other things
     end
