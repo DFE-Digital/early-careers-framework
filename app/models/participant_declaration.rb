@@ -5,7 +5,7 @@ class ParticipantDeclaration < ApplicationRecord
   belongs_to :cpd_lead_provider
   belongs_to :user
 
-  validates :course_identifier, inclusion: { in: :valid_courses, message: "The property '#/course_identifier' must be an available course to '#/participant_id'" }
+  validates :course_identifier, inclusion: { in: :valid_courses }
   validates :course_identifier, :user, :cpd_lead_provider, :declaration_date, :declaration_type, presence: true
 
   # Helper scopes
