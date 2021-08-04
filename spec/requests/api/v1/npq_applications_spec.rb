@@ -8,6 +8,7 @@ RSpec.describe "NPQ Applications API", type: :request do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider: npq_lead_provider) }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
   let(:bearer_token) { "Bearer #{token}" }
+  let(:parsed_response) { JSON.parse(response.body) }
 
   describe "GET /api/v1/npq-applications" do
     let(:other_npq_lead_provider) { create(:npq_lead_provider) }
@@ -23,8 +24,6 @@ RSpec.describe "NPQ Applications API", type: :request do
       end
 
       describe "JSON API" do
-        let(:parsed_response) { JSON.parse(response.body) }
-
         it "returns correct jsonapi content type header" do
           get "/api/v1/npq-applications"
           expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
@@ -169,7 +168,6 @@ RSpec.describe "NPQ Applications API", type: :request do
 
   describe "POST /api/v1/npq-applications/:id/reject" do
     let(:npq_profile) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider) }
-    let(:parsed_response) { JSON.parse(response.body) }
 
     before do
       default_headers[:Authorization] = bearer_token
@@ -187,11 +185,30 @@ RSpec.describe "NPQ Applications API", type: :request do
 
       expect(parsed_response.dig("data", "attributes", "status")).to eql("rejected")
     end
+
+    context "application has been accepted" do
+      let(:npq_profile) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, status: "accepted") }
+
+      it "return 400 bad request " do
+        post "/api/v1/npq-applications/#{npq_profile.id}/reject"
+        expect(response.status).to eql(400)
+      end
+
+      it "returns error in repsonse" do
+        post "/api/v1/npq-applications/#{npq_profile.id}/reject"
+
+        expect(parsed_response.key?("errors")).to be_truthy
+
+        expect(parsed_response["errors"][0].key?("title")).to be_truthy
+        expect(parsed_response["errors"][0].key?("detail")).to be_truthy
+        expect(parsed_response["errors"][0]["title"]).to eql("Status is invalid")
+        expect(parsed_response["errors"][0]["detail"]).to eql("Once accepted an application cannot change state")
+      end
+    end
   end
 
   describe "POST /api/v1/npq-applications/:id/accept" do
     let(:npq_profile) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider) }
-    let(:parsed_response) { JSON.parse(response.body) }
 
     before do
       default_headers[:Authorization] = bearer_token
@@ -208,6 +225,26 @@ RSpec.describe "NPQ Applications API", type: :request do
       expect(response).to be_successful
 
       expect(parsed_response.dig("data", "attributes", "status")).to eql("accepted")
+    end
+
+    context "application has been rejected" do
+      let(:npq_profile) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, status: "rejected") }
+
+      it "return 400 bad request " do
+        post "/api/v1/npq-applications/#{npq_profile.id}/accept"
+        expect(response.status).to eql(400)
+      end
+
+      it "returns error in repsonse" do
+        post "/api/v1/npq-applications/#{npq_profile.id}/accept"
+
+        expect(parsed_response.key?("errors")).to be_truthy
+
+        expect(parsed_response["errors"][0].key?("title")).to be_truthy
+        expect(parsed_response["errors"][0].key?("detail")).to be_truthy
+        expect(parsed_response["errors"][0]["title"]).to eql("Status is invalid")
+        expect(parsed_response["errors"][0]["detail"]).to eql("Once rejected an application cannot change state")
+      end
     end
   end
 end

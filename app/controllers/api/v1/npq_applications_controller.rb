@@ -23,17 +23,21 @@ module Api
       def reject
         profile = npq_lead_provider.npq_profiles.includes(:user, :npq_course).find(params[:id])
 
-        profile.update!(status: "rejected")
-
-        render json: NPQApplicationSerializer.new(profile).serializable_hash
+        if profile.update(status: "rejected")
+          render json: NPQApplicationSerializer.new(profile).serializable_hash
+        else
+          render json: { errors: Api::ErrorFactory.new(error: profile.errors).call }, status: :bad_request
+        end
       end
 
       def accept
         profile = npq_lead_provider.npq_profiles.includes(:user, :npq_course).find(params[:id])
 
-        profile.update!(status: "accepted")
-
-        render json: NPQApplicationSerializer.new(profile).serializable_hash
+        if profile.update(status: "accepted")
+          render json: NPQApplicationSerializer.new(profile).serializable_hash
+        else
+          render json: { errors: Api::ErrorFactory.new(error: profile.errors).call }, status: :bad_request
+        end
       end
 
     private
