@@ -7,9 +7,10 @@ class SchoolDataImporter
   attr_reader :logger
   attr_reader :start_year
 
-  def initialize(logger, start_year = Time.zone.now.year)
+  def initialize(logger, start_year: Time.zone.now.year, update_section_41: false)
     @logger = logger
     @start_year = start_year
+    @update_section_41 = update_section_41
   end
 
   def run
@@ -82,6 +83,7 @@ private
       school.school_website = data.fetch("SchoolWebsite")
       school.primary_contact_email = data.fetch("MainEmail").presence
       school.secondary_contact_email = data.fetch("AlternativeEmail").presence
+      school.section_41_approved = data.fetch("Section41Approved (name)") == "Approved" if @update_section_41
 
       # Changes to properties below carries major consequences and must be avoided until we know how to handle them
       if new_school?
@@ -95,6 +97,8 @@ private
 
         school.administrative_district_code = data.fetch("DistrictAdministrative (code)")
         school.administrative_district_name = data.fetch("DistrictAdministrative (name)")
+
+        school.section_41_approved = data.fetch("Section41Approved (name)") == "Approved"
       end
 
       school.save!
