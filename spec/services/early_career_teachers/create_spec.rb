@@ -19,6 +19,32 @@ RSpec.describe EarlyCareerTeachers::Create do
     }.to change { ParticipantProfile::ECT.count }.by(1)
   end
 
+  it "updates the users name" do
+    expect {
+      described_class.call(
+        email: user.email,
+        full_name: Faker::Name.name,
+        school_cohort: school_cohort,
+      )
+    }.to change { user.reload.full_name }
+  end
+
+  context "when the user has an active participant profile" do
+    before do
+      create(:participant_profile, teacher_profile: create(:teacher_profile, user: user))
+    end
+
+    it "does not update the users name" do
+      expect {
+        described_class.call(
+          email: user.email,
+          full_name: Faker::Name.name,
+          school_cohort: school_cohort,
+        )
+      }.not_to change { user.reload.full_name }
+    end
+  end
+
   it "sets the correct mentor profile" do
     participant_profile = described_class.call(email: user.email, full_name: user.full_name, school_cohort: school_cohort, mentor_profile_id: mentor_profile.id)
     expect(participant_profile.mentor_profile).to eq(mentor_profile)

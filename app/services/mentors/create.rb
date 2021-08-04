@@ -13,6 +13,8 @@ module Mentors
         user = User.find_or_create_by!(email: email) do |mentor|
           mentor.full_name = full_name
         end
+        user.update!(full_name: full_name) unless user.teacher_profile&.participant_profiles&.active&.any?
+
         ParticipantProfile::Mentor.create!({ user: user }.merge(mentor_attributes))
       end
     end
