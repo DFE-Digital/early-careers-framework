@@ -1,12 +1,37 @@
 # frozen_string_literal: true
 
-require "json_schema/validate_body_against_schema"
-
 module RecordDeclarations
   class Base
-    attr_accessor :params
+    include ActiveModel::Model
 
-    delegate :user_profile, :actual_lead_provider, to: :not_implemented_error
+    attr_accessor :course_identifier, :user_id, :raw_event, :lead_provider_from_token, :declaration_date, :declaration_type, :evidence_held
+
+    validates :course_identifier, inclusion: { in: :valid_courses_for_user, message: I18n.t(:invalid_identifier) }, allow_blank: true
+    validates :declaration_type, inclusion: { in: :valid_declaration_types, message: I18n.t(:invalid_declaration_type) }
+    validates :course_identifier, presence: { message: I18n.t(:missing_course_identifier) }
+    validates :declaration_date, presence: { message: I18n.t(:missing_declaration_date) }
+    validates :declaration_type, presence: { message: I18n.t(:missing_declaration_type) }
+    validates :user, presence: { message: I18n.t(:invalid_participant) }
+    validates :lead_provider_from_token, presence: { message: I18n.t(:missing_lead_provider) }
+    validate :profile_exists
+
+    def profile_exists
+      return if errors.any?
+
+      unless user_profile
+        errors.add(:user_profile, I18n.t(:invalid_participant))
+      end
+    end
+
+    def valid_courses_for_user
+      valid_courses = []
+      valid_courses << "ecf-mentor" if user.mentor?
+      valid_courses << "ecf-induction" if user.early_career_teacher?
+      valid_courses += NPQCourse.all.map(&:identifier) if user.npq?
+      valid_courses
+    end
+
+    delegate :user_profile, :actual_lead_provider, :valid_declaration_types, to: :not_implemented_error
 
     class << self
       delegate :required_params, to: :not_implemented_error
@@ -18,14 +43,6 @@ module RecordDeclarations
       def not_implemented_error
         raise NotImplementedError, "Method must be implemented"
       end
-
-      def schema_validation_params
-        { version: "0.3" }
-      end
-
-      def schema
-        JSON.parse(File.read(::JsonSchema::VersionEventFileName.call(schema_validation_params)))
-      end
     end
 
     def not_implemented_error
@@ -33,8 +50,9 @@ module RecordDeclarations
     end
 
     def call
-      validate_schema!
-      validate_participant_params!
+      unless valid?
+        raise ActionController::ParameterMissing, errors.map(&:message)
+      end
 
       declaration = create_record!
       validate_provider!
@@ -44,48 +62,32 @@ module RecordDeclarations
   private
 
     def initialize(params)
-      @params = params
-    end
-
-    def validate_schema!
-      errors = ::JsonSchema::ValidateBodyAgainstSchema.call(schema: self.class.schema, body: params[:raw_event])
-      raise ActionController::ParameterMissing, (errors.map { |error| error.sub(/\sin schema.*$/, "") }) unless errors.empty?
-    end
-
-    def validate_participant_params!
-      raise ActionController::ParameterMissing, [I18n.t(:invalid_course)] unless course_valid_for_participant?
-      raise ActionController::ParameterMissing, [I18n.t(:invalid_participant)] unless participant?
-    end
-
-    def user_id
-      params[:user_id]
-    end
-
-    def course
-      params[:course_identifier]
+      params.each do |param, value|
+        send("#{param}=", value)
+      end
     end
 
     def user
       @user ||= User.find_by(id: user_id)
     end
 
-    def course_valid_for_participant?
-      self.class.valid_courses.include?(course) && user_profile
-    end
-
     def create_record!
       ActiveRecord::Base.transaction do
-        declaration_type.create!(params.slice(*self.class.required_params)).tap do |participant_declaration|
+        declaration_model.create!(
+          course_identifier: course_identifier,
+          declaration_date: declaration_date,
+          declaration_type: declaration_type,
+          cpd_lead_provider: lead_provider_from_token,
+          user: user,
+          evidence_held: evidence_held,
+          raw_event: raw_event,
+        ).tap do |participant_declaration|
           ProfileDeclaration.create!(
             participant_declaration: participant_declaration,
             participant_profile: user_profile,
           )
         end
       end
-    end
-
-    def lead_provider_from_token
-      params[:cpd_lead_provider]
     end
 
     def validate_provider!

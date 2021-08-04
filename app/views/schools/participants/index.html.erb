@@ -16,7 +16,7 @@
 </div>
 
 
-<% if @participants.present? %>
+<% if @participant_profiles.present? %>
   <table class="govuk-table">
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
@@ -27,16 +27,18 @@
       </tr>
     </thead>
     <tbody class="govuk-table__body">
-      <% @participants.each do |participant| %>
+      <% @participant_profiles.each do |profile| %>
         <tr class="govuk-table__row">
-          <th scope="row" class="govuk-table__header"><%= govuk_link_to participant.full_name, schools_participant_path(id: participant) %></th>
-          <td class="govuk-table__cell"><%= t(participant.mentor? ? :mentor : :ect, scope: "schools.participants.type") %></td>
+          <th scope="row" class="govuk-table__header"><%= govuk_link_to profile.user.full_name, schools_participant_path(id: profile.user.id) %></th>
+          <td class="govuk-table__cell"><%= t(profile.participant_type, scope: "schools.participants.type") %></td>
           <td class="govuk-table__cell">
             <% if @mentors_added %>
-              <% if participant.early_career_teacher? %>
-                <%= (mentor = participant.early_career_teacher_profile.mentor) ?
-                      mentor.full_name :
-                      govuk_link_to("Assign mentor", schools_participant_edit_mentor_path(participant_id: participant.id)) %>
+              <% if profile.ect? %>
+                <% if profile.mentor %>
+                  <%= profile.mentor.full_name %>
+                <% else %>
+                  <%= govuk_link_to("Assign mentor", schools_participant_edit_mentor_path(participant_id: profile.user.id)) %>
+                <% end %>
               <% else %>
                 - <span class="govuk-visually-hidden">Not applicable</span>
               <% end %>

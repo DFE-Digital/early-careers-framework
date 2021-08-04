@@ -6,14 +6,7 @@ module RecordDeclarations
 
     included do
       include ECF
-      extend EarlyCareerTeacherClassMethods
       delegate :early_career_teacher_profile, to: :user
-    end
-
-    module EarlyCareerTeacherClassMethods
-      def valid_courses
-        %w[ecf-induction]
-      end
     end
 
     def user_profile

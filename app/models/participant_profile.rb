@@ -27,6 +27,8 @@ class ParticipantProfile < ApplicationRecord
   class_attribute :validation_steps
   self.validation_steps = []
 
+  self.ignored_columns = %w[user_id]
+
   def ect?
     false
   end

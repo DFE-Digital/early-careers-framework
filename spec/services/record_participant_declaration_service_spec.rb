@@ -21,13 +21,13 @@ RSpec.describe RecordParticipantDeclaration do
       declaration_date: "2021-06-21T08:46:29Z",
       declaration_type: "started",
       course_identifier: "npq-leading-teaching",
-      cpd_lead_provider: another_lead_provider,
+      lead_provider_from_token: another_lead_provider,
     }
   end
 
   context "when sending event for an npq course" do
     let(:npq_params) do
-      params.merge({ cpd_lead_provider: cpd_lead_provider })
+      params.merge({ lead_provider_from_token: cpd_lead_provider })
     end
     it "creates a participant and profile declaration" do
       expect { described_class.call(npq_params) }.to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
@@ -38,7 +38,7 @@ RSpec.describe RecordParticipantDeclaration do
     let(:ect_profile) { create(:early_career_teacher_profile) }
     let(:mentor_profile) { create(:mentor_profile) }
     let(:ect_params) do
-      params.merge({ cpd_lead_provider: cpd_lead_provider })
+      params.merge({ lead_provider_from_token: cpd_lead_provider })
     end
     let(:mentor_params) do
       ect_params.merge({ user_id: mentor_profile.user.id, course_identifier: "ecf-mentor" })

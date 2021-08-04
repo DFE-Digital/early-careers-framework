@@ -8,6 +8,7 @@ FactoryBot.define do
     declaration_type { "started" }
 
     factory :ect_participant_declaration do
+      user { create(:user, :early_career_teacher) }
       type { "ParticipantDeclaration::ECF" }
       course_identifier { "ecf-induction" }
       profile_type { :early_career_teacher_profile }
@@ -15,6 +16,7 @@ FactoryBot.define do
     end
 
     factory :mentor_participant_declaration do
+      user { create(:user, :mentor) }
       type { "ParticipantDeclaration::ECF" }
       course_identifier { "ecf-mentor" }
       profile_type { :mentor_profile }
@@ -22,6 +24,7 @@ FactoryBot.define do
     end
 
     factory :npq_participant_declaration do
+      user { create(:user, :npq) }
       course_identifier { NPQCourse.all.map(&:identifier).sample }
     end
 

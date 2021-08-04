@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe RecordDeclarations::Started::NPQ do
+RSpec.describe RecordDeclarations::Retained::NPQ do
   let(:cpd_lead_provider) { create(:cpd_lead_provider) }
   let(:another_lead_provider) { create(:cpd_lead_provider, name: "Unknown") }
   let(:npq_lead_provider) { create(:npq_lead_provider, cpd_lead_provider: cpd_lead_provider) }
@@ -20,12 +20,13 @@ RSpec.describe RecordDeclarations::Started::NPQ do
       declaration_date: "2021-06-21T08:46:29Z",
       declaration_type: "retained-1",
       course_identifier: "npq-leading-teaching",
-      cpd_lead_provider: another_lead_provider,
+      lead_provider_from_token: another_lead_provider,
+      evidence_held: "Test evidence",
     }
   end
 
   let(:npq_params) do
-    params.merge({ cpd_lead_provider: cpd_lead_provider })
+    params.merge({ lead_provider_from_token: cpd_lead_provider })
   end
   let(:induction_coordinator_params) do
     npq_params.merge({ user_id: induction_coordinator_profile.user_id })
@@ -40,6 +41,18 @@ RSpec.describe RecordDeclarations::Started::NPQ do
   context "when user is not a participant" do
     it "does not create a declaration record and raises ParameterMissing for an invalid user_id" do
       expect { described_class.call(induction_coordinator_params) }.to raise_error(ActionController::ParameterMissing)
+    end
+  end
+
+  context "when declaration type is invalid" do
+    it "raises a ParameterMissing error" do
+      expect { described_class.call(params.merge(declaration_type: "invalid")) }.to raise_error(ActionController::ParameterMissing)
+    end
+  end
+
+  context "when declaration type is valid for ECF but not NPQ" do
+    it "raises a ParameterMissing error" do
+      expect { described_class.call(params.merge(declaration_type: "retained-3")) }.to raise_error(ActionController::ParameterMissing)
     end
   end
 end

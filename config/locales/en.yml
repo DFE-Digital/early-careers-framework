@@ -40,6 +40,12 @@ en:
     completion: Completion
   parameter_required: Parameter is required
   invalid_participant: "The property '#/participant_id' must be a valid Participant ID"
+  invalid_identifier: "The property '#/course_identifier' must be an available course to '#/participant_id'"
+  invalid_declaration_type: "The property '#/declaration_type' must be available for course_identifier '#/course_identifier'"
+  missing_course_identifier: "The property '#/course_identifier' must be present"
+  missing_declaration_date: "The property '#/declaration_date' must be present"
+  missing_declaration_type: "The property '#/declaration_type' must be present"
+  missing_lead_provider: "The lead provider must be present"
   invalid_event: "The property '#/declaration_type' must be a valid declaration type"
   invalid_course: "The property '#/course_identifier' must be an available course to '#/participant_id'"
   invalid_data_structure: correct json data structure required. See API docs for reference

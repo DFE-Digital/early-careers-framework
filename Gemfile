@@ -15,9 +15,9 @@ gem "pretender"
 gem "pundit"
 
 # Error and performance monitoring
-gem "sentry-delayed_job", ">= 4.5.1"
-gem "sentry-rails", ">= 4.5.1"
-gem "sentry-ruby", ">= 4.5.1"
+gem "sentry-delayed_job", ">= 4.6.4"
+gem "sentry-rails", ">= 4.6.4"
+gem "sentry-ruby", ">= 4.6.4"
 
 # Pagination
 gem "kaminari", ">= 1.2.0"
