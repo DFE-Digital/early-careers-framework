@@ -11,7 +11,11 @@ module EarlyCareerTeachers
         end
         user.update!(full_name: full_name) unless user.teacher_profile&.participant_profiles&.active&.any?
 
-        ParticipantProfile::ECT.create!({ user: user }.merge(ect_attributes))
+        teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
+          profile.school = school_cohort.school
+        end
+
+        ParticipantProfile::ECT.create!({ teacher_profile: teacher_profile }.merge(ect_attributes))
       end
     end
 
