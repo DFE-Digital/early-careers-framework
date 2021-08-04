@@ -104,7 +104,7 @@ en:
         participants/participant_validation_form:
           attributes:
             do_you_know_your_trn_choice:
-              blank: Select whether you know your tracher reference number
+              blank: Select whether you know your teacher reference number
             have_you_changed_your_name_choice:
               blank: Select if your name has changed since ITT
             updated_record_choice:

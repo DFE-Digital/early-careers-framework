@@ -196,6 +196,30 @@ ActiveRecord::Schema.define(version: 2021_08_04_161507) do
     t.index ["local_authority_district_id"], name: "index_district_sparsities_on_local_authority_district_id"
   end
 
+  create_table "ecf_participant_eligibilities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "participant_profile_id", null: false
+    t.boolean "qts"
+    t.boolean "active_flags"
+    t.boolean "previous_participation"
+    t.boolean "previous_induction"
+    t.string "status", default: "manual_check", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["participant_profile_id"], name: "index_ecf_participant_eligibilities_on_participant_profile_id"
+  end
+
+  create_table "ecf_participant_validation_data", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "participant_profile_id", null: false
+    t.string "full_name"
+    t.date "date_of_birth"
+    t.string "trn"
+    t.string "nino"
+    t.boolean "api_failure", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["participant_profile_id"], name: "index_ecf_participant_validation_data_on_participant_profile_id"
+  end
+
   create_table "event_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "owner_type", null: false
     t.uuid "owner_id", null: false
@@ -670,6 +694,8 @@ ActiveRecord::Schema.define(version: 2021_08_04_161507) do
   add_foreign_key "data_stage_school_changes", "data_stage_schools"
   add_foreign_key "data_stage_school_links", "data_stage_schools"
   add_foreign_key "district_sparsities", "local_authority_districts"
+  add_foreign_key "ecf_participant_eligibilities", "participant_profiles"
+  add_foreign_key "ecf_participant_validation_data", "participant_profiles"
   add_foreign_key "feature_selected_objects", "features"
   add_foreign_key "finance_profiles", "users"
   add_foreign_key "induction_coordinator_profiles", "users"

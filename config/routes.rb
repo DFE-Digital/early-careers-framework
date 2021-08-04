@@ -247,7 +247,7 @@ Rails.application.routes.draw do
 
   namespace :participants, constraints: ->(_request) { FeatureFlag.active?(:participant_validation) } do
     resource :start_registrations, path: "/start-registration", only: :show
-      
+
     scope :validation, as: :validation do
       get "/", to: "validations#start", as: :start
       get "/do-you-know-your-teacher-reference-number", to: "validations#do_you_know_your_trn", as: :do_you_know_your_trn
@@ -267,6 +267,7 @@ Rails.application.routes.draw do
       get "/change-your-details-with-the-teacher-regulation-agency", to: "validations#change_your_details_with_tra", as: :change_your_details_with_tra
       get "/check-with-the-teacher-regulation-agency", to: "validations#check_with_tra", as: :check_with_tra
       get "/cannot-find-your-details", to: "validations#cannot_find_details", as: :cannot_find_details
+      put "/cannot-find-your-details", to: "validations#cannot_find_details"
       get "/complete", to: "validations#complete", as: :complete
       get "/reset", to: "validations#reset", as: :reset
     end

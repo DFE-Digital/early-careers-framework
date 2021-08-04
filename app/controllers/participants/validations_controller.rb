@@ -4,10 +4,9 @@ module Participants
   class ValidationsController < BaseController
     skip_before_action :ensure_participant, only: :reset
     before_action :set_form
+    before_action :check_not_already_completed, except: %i[complete reset]
 
     def start
-      # check validation completed/manual
-      # or start validation
       redirect_to_step :do_you_know_your_trn
     end
 
@@ -91,10 +90,25 @@ module Participants
       end
     end
 
-    def cannot_find_details; end
+    def cannot_find_details
+      if request.put?
+        if step_valid?
+          store_validation_data!
+          reset_form_data
+          redirect_to_step :complete
+        end
+      end
+    end
 
     def complete
       @school = participant.school
+      if participant.ecf_participant_eligibility.present? && participant.ecf_participant_eligibility.eligible_status?
+        # TRN has been validated, qts, no flags, not done before, no previous induction
+        render_completed_page
+      else
+        # all other cases
+        render_manual_check_page
+      end
     end
 
     def reset
@@ -104,46 +118,77 @@ module Participants
 
   private
 
+    def render_completed_page
+      if participant.school_cohort.full_induction_programme?
+        @partnership = @school.partnerships.active.find_by(cohort: participant.school_cohort.cohort)
+        render "complete_fip"
+      else
+        render "complete_cip"
+      end
+    end
+
+    def render_manual_check_page
+      if participant.school_cohort.full_induction_programme?
+        @partnership = @school.partnerships.active.find_by(cohort: participant.school_cohort.cohort)
+        render "manual_details_check_fip"
+      else
+        render "manual_details_check_cip"
+      end
+    end
+
+    def check_not_already_completed
+      redirect_to_step :complete if complete?
+    end
+
+    def complete?
+      participant.ecf_participant_validation_data.present? || participant.ecf_participant_eligibility.present?
+    end
+
     def validate_participant_details_and_redirect
       result = ParticipantValidationService.validate(trn: @form.trn,
                                                      full_name: @form.name,
                                                      date_of_birth: @form.date_of_birth,
                                                      nino: @form.national_insurance_number)
       if result.nil?
-        # store form data in validation data
-        store_validation_data!
+        @form.increment_validation_attempts
         redirect_to_step :cannot_find_details
       else
         store_trn!(result[:trn])
-        store_eligibility_data!
+        eligibility_data = store_eligibility_data!(result)
+        # if not eligibile store validation data for re-check later
+        store_validation_data! unless eligibility_data.eligible_status?
+        reset_form_data
         redirect_to_step :complete
       end
     rescue StandardError => e
       Rails.logger.error("Problem with DQT API: " + e.message)
-      store_validation_data!
-      redirect_to_step :manual_details_check
+      store_validation_data!(api_failure: true)
+      reset_form_data
+      redirect_to_step :complete
     end
 
-    def store_validation_data!
-      participant.create_participant_validation_data!(trn: @form.trn,
-                                                      full_name: @form.name,
-                                                      date_of_birth: @form.date_of_birth,
-                                                      nino: @form.national_insurance_number)
+    def store_validation_data!(opts = {})
+      participant.create_ecf_participant_validation_data!({
+        trn: @form.trn,
+        full_name: @form.name,
+        date_of_birth: @form.date_of_birth,
+        nino: @form.national_insurance_number,
+      }.merge(opts))
     end
 
     def store_trn!(trn)
-      if current_user.teacher_profile.trn.present? && current_user.teacher_profile.trn != trn
-        Rails.logger.warning("Different TRN already set for user [#{current_user.email}]")
+      if participant.teacher_profile.trn.present? && participant.teacher_profile.trn != trn
+        Rails.logger.warn("Different TRN already set for user [#{current_user.email}]")
       else
-        current_user.teacher_profile.update!(trn: trn)
+        participant.teacher_profile.update!(trn: trn)
       end
     end
 
     def store_eligibility_data!(dqt_data)
-      participant.create_participation_eligibility!(qts: dqt[:qts],
-                                                    active_flags: dqt[:active_alert] != "No",
-                                                    previous_participation: false,
-                                                    previous_induction: false)
+      participant.create_ecf_participant_eligibility!(qts: dqt_data[:qts],
+                                                      active_flags: dqt_data[:active_alert] != "No",
+                                                      previous_participation: false,
+                                                      previous_induction: false)
     end
 
     def participant
@@ -153,7 +198,12 @@ module Participants
     def set_form
       @form = ParticipantValidationForm.new(session[:participant_validation])
       @form.assign_attributes(form_params)
-      @form.step = action_name
+
+      if @form.step.blank?
+        @form.step = :start
+      elsif @form.step != action_name
+        redirect_to_step action_name
+      end
     end
 
     def reset_form_data
@@ -165,6 +215,7 @@ module Participants
     end
 
     def redirect_to_step(step)
+      @form.step = step
       session[:participant_validation] = @form.attributes
       redirect_to send("participants_validation_#{step}_path")
     end

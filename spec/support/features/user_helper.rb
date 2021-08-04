@@ -7,5 +7,12 @@ module UserHelper
     click_button "Continue"
   end
 
+  def sign_in_as(user)
+    token = "test-token"
+    user.update!(login_token: token)
+    visit users_confirm_sign_in_path(login_token: token)
+    click_button "Continue"
+  end
+
   alias_method :and_i_am_signed_in_as_an_admin, :given_i_am_logged_in_as_an_admin
 end

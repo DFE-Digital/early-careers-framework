@@ -5,7 +5,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl"><%= title %></h1>
-    <p class="govuk-body">We cannot check your eligibility if your name is different to the one listed in Teaching Regualtion Agency records.</p>
+    <p class="govuk-body">We cannot check your eligibility if your name is different to the one listed in Teaching Regulation Agency records.</p>
 
     <%= form_for @form, url: { action: @form.step }, method: :put do |f| %>
       <%= f.hidden_field :step, value: @form.step %>

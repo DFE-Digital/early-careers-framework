@@ -2,10 +2,11 @@
 
 module Participants
   class ParticipantValidationForm
-    include ActiveModel::Model, ActiveRecord::AttributeAssignment
+    include ActiveRecord::AttributeAssignment
+    include ActiveModel::Model
 
     # lifted from https://github.com/dwp/nino-format-validation
-    NINO_REGEX = /(^(?!BG)(?!GB)(?!NK)(?!KN)(?!TN)(?!NT)(?!ZZ)[A-Z&&[^DFIQUV]][A-Z&&[^DFIOQUV]][0-9]{6}[A-D]$)/
+    NINO_REGEX = /(^(?!BG)(?!GB)(?!NK)(?!KN)(?!TN)(?!NT)(?!ZZ)[A-Z&&[^DFIQUV]][A-Z&&[^DFIOQUV]][0-9]{6}[A-D]$)/.freeze
     attr_accessor :step
     attr_accessor :do_you_know_your_trn_choice, :have_you_changed_your_name_choice
     attr_accessor :updated_record_choice, :name_not_updated_choice
@@ -30,7 +31,7 @@ module Participants
         name: name,
         date_of_birth: date_of_birth,
         national_insurance_number: national_insurance_number,
-        validation_attempts: validation_attempts.to_i,  # coerce nil to 0
+        validation_attempts: validation_attempts.to_i, # coerce nil to 0
       }
     end
 
@@ -107,7 +108,7 @@ module Participants
 
     def confirm_name_not_updated_choice
       if name_not_updated_choice.blank? || !name_not_updated_choice.in?(%w[register_previous_name update_name])
-        errors.add(:name_not_update_choice, :blank)
+        errors.add(:name_not_updated_choice, :blank)
       end
     end
 

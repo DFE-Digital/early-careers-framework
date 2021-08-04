@@ -3,8 +3,17 @@
 module InteractionHelper
   include Capybara::DSL
 
+  alias_method :when_i_click, :click_on
+  alias_method :and_i_click, :click_on
+
   alias_method :when_i_click_the_link_containing, :click_link
   alias_method :and_i_click_the_link_containing, :click_link
+
+  def when_i_select(label)
+    choose(label, allow_label_click: true)
+  end
+
+  alias_method :and_i_select, :when_i_select
 
   def when_i_click_the_submit_button
     click_button class: "govuk-button", name: "commit"
