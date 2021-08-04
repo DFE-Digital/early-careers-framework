@@ -23,10 +23,10 @@ module Api
       def reject
         profile = npq_lead_provider.npq_profiles.includes(:user, :npq_course).find(params[:id])
 
-        if profile.update(status: "rejected")
+        if profile.update(lead_provider_approval_status: "rejected")
           render json: NPQApplicationSerializer.new(profile).serializable_hash
         else
-          render json: { errors: Api::ErrorFactory.new(error: profile.errors).call }, status: :bad_request
+          render json: { errors: Api::ErrorFactory.new(model: profile).call }, status: :bad_request
         end
       end
 
@@ -35,10 +35,10 @@ module Api
         other_profiles = NPQValidationData.where(profile: (profile.user.npq_profiles - [profile.profile]))
 
         ActiveRecord::Base.transaction do
-          if profile.update(status: "accepted") && other_profiles.update(status: "rejected")
+          if profile.update(lead_provider_approval_status: "accepted") && other_profiles.update(lead_provider_approval_status: "rejected")
             render json: NPQApplicationSerializer.new(profile).serializable_hash
           else
-            render json: { errors: Api::ErrorFactory.new(error: profile.errors).call }, status: :bad_request
+            render json: { errors: Api::ErrorFactory.new(model: profile).call }, status: :bad_request
           end
         end
       end

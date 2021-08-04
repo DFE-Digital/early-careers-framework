@@ -37,4 +37,6 @@ class NPQApplicationSerializer
   attribute(:course_identifier) do |object|
     object.npq_course.identifier
   end
+
+  attribute(:status, &:lead_provider_approval_status)
 end

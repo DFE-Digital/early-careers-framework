@@ -53,7 +53,7 @@ private
       record.eligible_for_funding,
       record.funding_choice,
       record.npq_course.identifier,
-      record.status,
+      record.lead_provider_approval_status,
     ]
   end
 end

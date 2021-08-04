@@ -129,7 +129,7 @@ RSpec.describe "NPQ Applications API", type: :request do
           expect(row["eligible_for_funding"]).to eql(profile.eligible_for_funding.to_s)
           expect(row["funding_choice"]).to eql(profile.funding_choice)
           expect(row["course_identifier"]).to eql(profile.npq_course.identifier)
-          expect(row["status"]).to eql(profile.status)
+          expect(row["status"]).to eql(profile.lead_provider_approval_status)
         end
       end
     end
@@ -173,9 +173,9 @@ RSpec.describe "NPQ Applications API", type: :request do
       default_headers[:Authorization] = bearer_token
     end
 
-    it "update status to rejected" do
+    it "update lead_provider_approval_status to rejected" do
       expect { post "/api/v1/npq-applications/#{npq_profile.id}/reject" }
-        .to change { npq_profile.reload.status }.from("pending").to("rejected")
+        .to change { npq_profile.reload.lead_provider_approval_status }.from("pending").to("rejected")
     end
 
     it "responds with 200 and representation of the resource" do
@@ -187,7 +187,7 @@ RSpec.describe "NPQ Applications API", type: :request do
     end
 
     context "application has been accepted" do
-      let(:npq_profile) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, status: "accepted") }
+      let(:npq_profile) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, lead_provider_approval_status: "accepted") }
 
       it "return 400 bad request " do
         post "/api/v1/npq-applications/#{npq_profile.id}/reject"
@@ -217,7 +217,7 @@ RSpec.describe "NPQ Applications API", type: :request do
 
     it "update status to accepted" do
       expect { post "/api/v1/npq-applications/#{npq_profile.id}/accept" }
-        .to change { npq_profile.reload.status }.from("pending").to("accepted")
+        .to change { npq_profile.reload.lead_provider_approval_status }.from("pending").to("accepted")
     end
 
     it "responds with 200 and representation of the resource" do
@@ -234,12 +234,12 @@ RSpec.describe "NPQ Applications API", type: :request do
       it "rejects all other NPQs" do
         post "/api/v1/npq-applications/#{npq_profile.id}/accept"
 
-        expect(other_npq_profile.reload.status).to eql("rejected")
+        expect(other_npq_profile.reload.lead_provider_approval_status).to eql("rejected")
       end
     end
 
     context "application has been rejected" do
-      let(:npq_profile) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, status: "rejected") }
+      let(:npq_profile) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, lead_provider_approval_status: "rejected") }
 
       it "return 400 bad request " do
         post "/api/v1/npq-applications/#{npq_profile.id}/accept"

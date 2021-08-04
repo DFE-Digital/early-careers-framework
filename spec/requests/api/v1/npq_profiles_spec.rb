@@ -79,7 +79,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
         expect(validation_data.npq_course).to eql(npq_course)
         expect(validation_data.eligible_for_funding).to eql(true)
         expect(validation_data.funding_choice).to eql("school")
-        expect(validation_data.status).to eql("pending")
+        expect(validation_data.lead_provider_approval_status).to eql("pending")
       end
 
       it "returns a 201" do

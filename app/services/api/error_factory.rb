@@ -2,16 +2,16 @@
 
 module Api
   class ErrorFactory
-    attr_reader :error
+    attr_reader :model
 
-    def initialize(error:)
-      @error = error
+    def initialize(model:)
+      @model = model
     end
 
     def call
-      error.errors.map do |e|
+      model.errors.map do |e|
         {
-          title: "#{e.attribute.to_s.humanize} is #{e.type.to_s.humanize.downcase}",
+          title: "#{model.class.human_attribute_name(e.attribute)} is #{e.type.to_s.humanize.downcase}",
           detail: e.message,
         }
       end
