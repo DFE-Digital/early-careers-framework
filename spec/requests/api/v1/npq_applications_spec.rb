@@ -209,6 +209,7 @@ RSpec.describe "NPQ Applications API", type: :request do
 
   describe "POST /api/v1/npq-applications/:id/accept" do
     let(:npq_profile) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider) }
+    let(:user) { npq_profile.user }
 
     before do
       default_headers[:Authorization] = bearer_token
@@ -225,6 +226,16 @@ RSpec.describe "NPQ Applications API", type: :request do
       expect(response).to be_successful
 
       expect(parsed_response.dig("data", "attributes", "status")).to eql("accepted")
+    end
+
+    context "when participant has applied for multiple NPQs" do
+      let!(:other_npq_profile) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, user: user) }
+
+      it "rejects all other NPQs" do
+        post "/api/v1/npq-applications/#{npq_profile.id}/accept"
+
+        expect(other_npq_profile.reload.status).to eql("rejected")
+      end
     end
 
     context "application has been rejected" do
