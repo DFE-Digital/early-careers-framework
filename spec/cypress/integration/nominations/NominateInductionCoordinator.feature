@@ -56,7 +56,7 @@ Feature: Nominate induction tutor
     And the page should be accessible
     And percy should be sent snapshot called "Start nominations name different"
 
-    Given user was created as "teacher" with email "different-user-type@example.com"
+    Given user was created with email "different-user-type@example.com"
     And teacher_profile was created with created user
     And participant_profile was created as "ect" with created teacher_profile
     When I click on "link" containing "Change the name"
