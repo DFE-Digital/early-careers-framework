@@ -31,8 +31,8 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
       it "sets the participant_type to mentor as well as full name and email to match current_user details" do
         expect { subject.type = "self" }
           .to change { subject.participant_type }.to(:mentor)
-                                                 .and change { subject.full_name }.to(user.full_name)
-                                                                                  .and change { subject.email }.to(user.email)
+          .and change { subject.full_name }.to(user.full_name)
+          .and change { subject.email }.to(user.email)
       end
     end
   end
