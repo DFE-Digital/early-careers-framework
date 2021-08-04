@@ -15,8 +15,12 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
     before :each do
       mentor_profile = create(:mentor_profile, school: partnership.school, cohort: partnership.cohort)
       create_list :early_career_teacher_profile, 2, mentor_profile: mentor_profile, school_cohort: school_cohort
-      ect_teacher_profile = ParticipantProfile::ECT.first.teacher_profile
-      create(:participant_profile, :withdrawn, :ect, teacher_profile: ect_teacher_profile, school_cohort: school_cohort)
+      ect_teacher_profile_with_one_active_and_one_withdrawn_profile = ParticipantProfile::ECT.first.teacher_profile
+      create(:participant_profile,
+             :withdrawn,
+             :ect,
+             teacher_profile: ect_teacher_profile_with_one_active_and_one_withdrawn_profile,
+             school_cohort: school_cohort)
     end
     let!(:withdrawn_ect_profile) { create(:participant_profile, :withdrawn, :ect, school_cohort: school_cohort) }
 
