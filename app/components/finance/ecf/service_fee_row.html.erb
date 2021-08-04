@@ -1,0 +1,6 @@
+<tr class="govuk-table__row">
+  <td class="govuk-table__cell"><%= service_fee.band %></td>
+  <td class="govuk-table__cell govuk-table__cell--numeric"><%= service_fee.participants %></td>
+  <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds service_fee.per_participant %></td>
+  <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds service_fee.monthly %></td>
+</tr>

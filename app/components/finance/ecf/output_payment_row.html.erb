@@ -1,0 +1,6 @@
+<tr class="govuk-table__row">
+  <td class="govuk-table__cell"><%= output_payment.band %></td>
+  <td class="govuk-table__cell govuk-table__cell--numeric"><%= output_payment.participants %></td>
+  <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds output_payment.per_participant %></td>
+  <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds output_payment.subtotal %></td>
+</tr>

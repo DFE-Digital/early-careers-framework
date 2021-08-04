@@ -6,4 +6,4 @@
 <%= render partial: "headings_table" %>
 <%= render partial: "service_fees_table" %>
 <%= render partial: "output_payments_table" %>
-<%= render partial: "other_fees_table" %>
+<%= render Finance::ECF::OtherFees.new(params: @breakdown[:other_fees]) %>

@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
 class Finance::LeadProvidersController < Finance::BaseController
-  skip_after_action :verify_policy_scoped
-
   def index
-    @ecf_lead_providers = LeadProvider.all
+    @ecf_lead_providers = LeadProvider.where.not(name: "Lead Provider")
   end
 
   def show
@@ -20,6 +18,7 @@ class Finance::LeadProvidersController < Finance::BaseController
     @service_fees = ServiceFeeCollection.new(calculations[:service_fees])
     @output_payments = OutputPaymentCollection.new(calculations[:output_payments])
     @other_fees = OtherFeeCollection.new(calculations[:other_fees])
+    @breakdown = calculations
   end
 
 private
