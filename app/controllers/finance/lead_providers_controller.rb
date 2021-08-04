@@ -2,7 +2,7 @@
 
 class Finance::LeadProvidersController < Finance::BaseController
   def index
-    @ecf_lead_providers = LeadProvider.where.not(name: "Lead Provider")
+    @ecf_lead_providers = LeadProvider.all
   end
 
   def show
@@ -14,10 +14,6 @@ class Finance::LeadProvidersController < Finance::BaseController
       event_type: :started,
     )
 
-    @heading = Heading.new(calculations[:headings])
-    @service_fees = ServiceFeeCollection.new(calculations[:service_fees])
-    @output_payments = OutputPaymentCollection.new(calculations[:output_payments])
-    @other_fees = OtherFeeCollection.new(calculations[:other_fees])
     @breakdown = calculations
   end
 

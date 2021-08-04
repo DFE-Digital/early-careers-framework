@@ -84,9 +84,13 @@ en:
     monthly: Payment amount monthly
     subtotal: Sub total
     period: Payment amount for period
+    ecf:
+      caption: ECF Payment Breakdown
     service_fee:
+      caption: Service Fee
       participants: Target Participants
     output_payment:
+      caption: Output Payment
       participants: Current Participants
     other_fees:
       caption: Other Fees
@@ -95,26 +99,6 @@ en:
 
 
   activemodel:
-    attributes:
-      finance:
-        provider: Provider
-        milestone: Milestone
-        target: Recruitment target
-        ects: Current ECTs
-        mentors: Current Mentors
-        band: Band
-        participants: Current Participants
-        per_participant: Payment amount per person
-        monthly: Payment amount monthly
-        subtotal: Sub total
-        period: Payment amount for period
-      service_fee:
-        participants: Target Participants
-      output_payment:
-        participants: Current Participants
-      other_fees:
-        fee: Fee
-        uplift: Uplift
     errors:
       models:
         nominate_induction_tutor_form:

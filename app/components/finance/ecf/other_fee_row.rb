@@ -8,10 +8,10 @@ module Finance
       with_collection_parameter :other_fee
       delegate :participants, :name, :per_participant, :subtotal, to: :other_fee
 
-      private
+    private
 
       def initialize(other_fee:)
-        @other_fee=other_fee
+        @other_fee = other_fee
       end
     end
   end

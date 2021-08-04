@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe CalculationOrchestrator do
   let(:call_off_contract) { create(:call_off_contract) }
-  let(:headings) do
+  let(:breakdown_summary) do
     {
       declaration: :started,
       ects: 5,
@@ -15,10 +15,10 @@ RSpec.describe CalculationOrchestrator do
     }
   end
   let(:ect_focussed_headings) do
-    headings.merge({ ects: 10, mentors: 0 })
+    breakdown_summary.merge({ ects: 10, mentors: 0 })
   end
   let(:mentor_focussed_headings) do
-    headings.merge({ ects: 0, mentors: 10 })
+    breakdown_summary.merge({ ects: 0, mentors: 10 })
   end
   let(:service_fees) do
     [
@@ -76,17 +76,17 @@ RSpec.describe CalculationOrchestrator do
 
   let(:normal_outcome) do
     {
-      headings: headings,
+      breakdown_summary: breakdown_summary,
       service_fees: service_fees,
       output_payments: output_payments,
       other_fees: other_fees,
     }
   end
   let(:mentor_outcome) do
-    normal_outcome.merge(headings: mentor_focussed_headings)
+    normal_outcome.merge(breakdown_summary: mentor_focussed_headings)
   end
   let(:ect_outcome) do
-    normal_outcome.merge(headings: ect_focussed_headings)
+    normal_outcome.merge(breakdown_summary: ect_focussed_headings)
   end
 
   def set_precision(hash, rounding)

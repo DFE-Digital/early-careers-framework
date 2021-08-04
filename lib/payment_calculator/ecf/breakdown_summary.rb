@@ -2,7 +2,7 @@
 
 module PaymentCalculator
   module Ecf
-    class Headings
+    class BreakdownSummary
       class << self
         def call(contract:, aggregations:, event_type: :started)
           new(contract: contract).call(aggregations: aggregations, event_type: event_type)

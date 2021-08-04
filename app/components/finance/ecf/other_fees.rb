@@ -12,11 +12,12 @@ module Finance
         other_fees.map(&:subtotal).inject(&:+)
       end
 
-      private
-      attr_accessor :other_fees
+    private
 
-      def initialize(params:)
-        self.other_fees = params.map { |other_fee| OtherFee.new(other_fee) }
+      attr_reader :other_fees
+
+      def initialize(other_fees:)
+        @other_fees = other_fees.map { |other_fee| OtherFee.new(other_fee) }
       end
     end
   end

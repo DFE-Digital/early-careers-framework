@@ -1,9 +1,9 @@
-<% content_for :title, "Lead Provider Payment Breakdown" %>
+<% content_for :title, t("finance.ecf.caption") %>
 
-<h1 class="govuk-caption-xl"><%= @heading.name %></h1>
-<h2 class="govuk-heading-l">Payment breakdown</h2>
+<h1 class="govuk-caption-xl"><%= @breakdown[:breakdown_summary][:name] %></h1>
+<h2 class="govuk-heading-l"><%=t "finance.ecf.caption" %></h2>
 
-<%= render partial: "headings_table" %>
-<%= render partial: "service_fees_table" %>
-<%= render partial: "output_payments_table" %>
-<%= render Finance::ECF::OtherFees.new(params: @breakdown[:other_fees]) %>
+<%= render Finance::ECF::BreakdownSummary.new(breakdown_summary: @breakdown[:breakdown_summary]) %>
+<%= render Finance::ECF::ServiceFees.new(service_fees: @breakdown[:service_fees]) %>
+<%= render Finance::ECF::OutputPayments.new(output_payments: @breakdown[:output_payments]) %>
+<%= render Finance::ECF::OtherFees.new(other_fees: @breakdown[:other_fees]) %>
