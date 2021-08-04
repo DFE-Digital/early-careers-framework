@@ -17,6 +17,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
       context "for mentor was created" do
         let(:mentor_participant_declaration) do
           create(:mentor_participant_declaration,
+                 :sparsity_uplift,
                  cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
         end
 
@@ -28,6 +29,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
       context "for early career teacher was created" do
         let(:ect_participant_declaration) do
           create(:ect_participant_declaration,
+                 :sparsity_uplift,
                  cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
         end
 
