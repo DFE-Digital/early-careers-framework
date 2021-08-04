@@ -51,7 +51,7 @@ private
     matches += 1 if trn_matches
 
     name_matches = if check_first_name_only?
-                     full_name.split(" ").first.to_s == dqt_record[:full_name].split(" ").first.to_s
+                     full_name.split(" ").first == dqt_record[:full_name].split(" ").first
                    else
                      full_name == dqt_record[:full_name]
                    end
