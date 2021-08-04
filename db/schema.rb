@@ -649,8 +649,11 @@ ActiveRecord::Schema.define(version: 2021_08_11_124609) do
     t.string "administrative_district_code"
     t.string "administrative_district_name"
     t.string "slug"
+    t.boolean "section_41_approved", default: false, null: false
     t.index ["name"], name: "index_schools_on_name"
     t.index ["network_id"], name: "index_schools_on_network_id"
+    t.index ["school_type_code", "school_status_code"], name: "index_schools_on_school_type_code_and_school_status_code"
+    t.index ["section_41_approved", "school_status_code"], name: "index_schools_on_section_41_approved_and_school_status_code", where: "section_41_approved"
     t.index ["slug"], name: "index_schools_on_slug", unique: true
     t.index ["urn"], name: "index_schools_on_urn", unique: true
   end
