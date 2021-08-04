@@ -70,7 +70,6 @@ module ParticipantValidationSteps
     click_on "Continue"
     expect(@user.reload.teacher_profile.trn).to be_nil
     expect(@user.teacher_profile.participant_profiles.ecf.first.ecf_participant_eligibility).to be_nil
-    # expect(@user.teacher_profile.participant_profiles.ecf.first.ecf_participant_validation_data).to be_present
   end
 
   def then_i_should_see_the_have_you_changed_your_name_page
@@ -183,27 +182,11 @@ module ParticipantValidationSteps
     expect(page).to have_field("I’m not sure", visible: :all)
   end
 
-  # def when_i_select_that_my_name_has_been_updated
-  #   choose("Yes, my name has been updated", allow_label_click: true)
-  # end
-  #
-  # def when_i_select_that_my_name_has_not_been_updated
-  #   choose("No, I need to update my name", allow_label_click: true)
-  # end
-
   def then_i_should_see_the_what_do_you_want_to_do_now_page
     expect(page).to have_selector("h1", text: "What do you want to do now?")
     expect(page).to have_field("Register for this programme using your previous name (you can update this later)", visible: :all)
     expect(page).to have_field("Update your name with the Teaching Regulation Agency", visible: :all)
   end
-
-  # def when_i_select_that_i_want_to_continue_with_my_previous_name
-  #   choose("Register for this programme using your previous name (you can update this later)", allow_label_click: true)
-  # end
-  #
-  # def when_i_select_that_i_want_to_update_my_name_with_the_tra
-  #   choose("Update your name with the Teaching Regulation Agency", allow_label_click: true)
-  # end
 
   def then_i_should_see_the_change_your_details_with_the_tra_page
     expect(page).to have_selector("h1", text: "Change your details with the Teaching Regulation Agency")
