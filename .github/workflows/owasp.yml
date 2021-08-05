@@ -4,8 +4,8 @@ on:
   push:
 
 jobs:
-  owasp:
-    name: 'OWASP Test on Staging'
+  owasp-full:
+    name: 'OWASP Full Scan on Staging'
 
     runs-on: ubuntu-latest
 
@@ -21,3 +21,21 @@ jobs:
           target: 'https://s-manage-training-for-early-career-teachers.education.gov.uk/sandbox'
           rules_file_name: '.zap/rules.tsv'
           cmd_options: '-a'
+
+  owasp-api:
+    name: 'OWASP API Scan on Staging'
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+
+      - name: ZAP Scan
+        uses: zaproxy/action-full-scan@v0.2.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          docker_name: 'owasp/zap2docker-stable'
+          target: 'https://s-manage-training-for-early-career-teachers.education.gov.uk/lead-providers/api-docs/v1/api_spec.yml'
+          rules_file_name: '.zap/rules.tsv'
+          cmd_options: '-a -f openapi'
