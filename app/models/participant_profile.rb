@@ -3,6 +3,10 @@
 class ParticipantProfile < ApplicationRecord
   has_paper_trail
   belongs_to :teacher_profile, touch: true
+
+  # TODO: Back-fill, so that every profile has a schedule
+  belongs_to :schedule, optional: true, touch: true
+
   has_one :user, through: :teacher_profile
 
   has_many :validation_decisions, class_name: "ProfileValidationDecision"
