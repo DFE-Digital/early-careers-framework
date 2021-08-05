@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-class Milestone < ApplicationRecord
+class Finance::Milestone < ApplicationRecord
   belongs_to :schedule
 end
