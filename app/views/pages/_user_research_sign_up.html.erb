@@ -1,0 +1,54 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-three-quarters">
+
+    <h1 class="govuk-heading-xl">Can you help us with our research?</h1>
+
+    <p class="govuk-body">
+      All early career teachers now complete a 2-year induction programme. Before you start, we need to check your
+      details
+      in the Teaching Regulation Agency records. This is to make sure you qualify for this training and support.
+    </p>
+
+    <p class="govuk-body">
+      We’re inviting some teachers to use our service to provide these details during an online meeting with our
+      research
+      team. We’ll ask for feedback to help us to improve the service for other teachers and schools. We can also answer
+      questions about how the process works.
+    </p>
+
+    <h2 class="govuk-heading-l">How research sessions work</h2>
+    <p class="govuk-body">
+      Sessions take up to 45 minutes, and you can choose a time that suits you. We’ll give you £30 for your time.
+    </p>
+
+    <p class="govuk-body">
+      In our research sessions:
+    <ul class="govuk-list govuk-list--bullet">
+      <li>we’ll speak via Zoom (or your choice of video call software)</li>
+      <li>we’ll ask you to share your screen with us as you use our service</li>
+      <li>you can give us your open and honest feedback about the service</li>
+    </ul>
+    Your feedback will be held anonymously and we will not share any of your personal information.
+    </p>
+
+
+    <h2 class="govuk-heading-l">Sign up for a session</h2>
+
+    <%= govuk_warning text: "Please do not use our service before your session." %>
+
+    <p class="govuk-body">
+      If you’d like to take part, choose a session time:
+
+      <% if mentor %>
+        <%= govuk_link_to "DfE ECF - Research session - Mentor - B3 - Luke Richards", "https://calendly.com/luke-richards-1/dfe-ecf-research-session-mentor-b3" %>
+      <% else %>
+        <%= govuk_link_to "DfE ECF - Research session - ECT - B3 - Luke Richards", "https://calendly.com/luke-richards-1/dfe-ecf-research-session-ect-b3" %>
+      <% end %>
+    </p>
+
+    <h2 class="govuk-heading-l">What happens after the session</h2>
+    <p class="govuk-body">
+      With your permission, we’ll pass your email to a partner company called Criteria who’ll arrange your payment.
+    </p>
+  </div>
+</div>
