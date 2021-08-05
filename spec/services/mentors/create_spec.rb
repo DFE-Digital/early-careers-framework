@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe Mentors::Create do
-  let(:user) { create :user }
+  let!(:user) { create :user }
   let(:school_cohort) { create :school_cohort }
   let(:pupil_premium_school) { create :school, :pupil_premium_uplift }
   let(:sparsity_school) { create :school, :sparsity_uplift }
   let(:uplift_school) { create :school, :sparsity_uplift, :pupil_premium_uplift }
+  let!(:npq_participant) { create(:participant_profile, :npq).teacher_profile.user }
 
   it "creates a Mentor record" do
     expect {
@@ -15,7 +16,23 @@ RSpec.describe Mentors::Create do
         school_cohort: school_cohort,
       )
     }.to change { ParticipantProfile::Mentor.count }.by(1)
+     .and not_change { User.count }
+  end
 
+  it "uses the existing teacher profile record" do
+    expect {
+      described_class.call(
+        email: npq_participant.email,
+        full_name: npq_participant.full_name,
+        school_cohort: school_cohort,
+        mentor_id: "random discardable",
+      )
+    }.to change { ParticipantProfile::Mentor.count }.by(1)
+     .and not_change { User.count }
+     .and not_change { TeacherProfile.count }
+  end
+
+  it "ignores mentor id" do
     expect {
       described_class.call(
         email: user.email,
@@ -24,6 +41,44 @@ RSpec.describe Mentors::Create do
         mentor_id: "random discardable",
       )
     }.to change { ParticipantProfile::Mentor.count }.by(1)
+  end
+
+  it "creates a new user and teacher profile" do
+    expect {
+      described_class.call(
+        email: Faker::Internet.email,
+        full_name: Faker::Name.name,
+        school_cohort: school_cohort,
+      )
+    }.to change { ParticipantProfile::Mentor.count }.by(1)
+     .and change { User.count }.by(1)
+     .and change { TeacherProfile.count }.by(1)
+  end
+
+  it "updates the users name" do
+    expect {
+      described_class.call(
+        email: user.email,
+        full_name: Faker::Name.name,
+        school_cohort: school_cohort,
+      )
+    }.to change { user.reload.full_name }
+  end
+
+  context "when the user has an active participant profile" do
+    before do
+      create(:participant_profile, teacher_profile: create(:teacher_profile, user: user))
+    end
+
+    it "does not update the users name" do
+      expect {
+        described_class.call(
+          email: user.email,
+          full_name: Faker::Name.name,
+          school_cohort: school_cohort,
+        )
+      }.not_to change { user.reload.full_name }
+    end
   end
 
   it "has no uplift if the school has not uplift set" do

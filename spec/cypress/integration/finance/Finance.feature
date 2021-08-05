@@ -14,8 +14,8 @@ Feature: Finance user viewing finance data
 
     When I click on "link" containing "Lead Provider"
     Then I should be on "ECF payment breakdown" page
-    And "page body" should contain "Payment breakdown"
     And "page body" should contain "Service Fee"
-    And "page body" should contain "Output Fee"
+    And "page body" should contain "Output Payment"
+    And "page body" should contain "Other Fees"
     Then the page should be accessible
     And percy should be sent snapshot called "Finance ECF payment breakdown page"

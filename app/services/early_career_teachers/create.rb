@@ -5,9 +5,17 @@ module EarlyCareerTeachers
     include SchoolCohortDelegator
     def call
       ActiveRecord::Base.transaction do
-        # TODO: What if email matches but with different name?
-        user = User.find_or_create_by!(full_name: full_name, email: email)
-        ParticipantProfile::ECT.create!({ user: user }.merge(ect_attributes))
+        # Retain the original name if the user already exists
+        user = User.find_or_create_by!(email: email) do |ect|
+          ect.full_name = full_name
+        end
+        user.update!(full_name: full_name) unless user.teacher_profile&.participant_profiles&.active&.any?
+
+        teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
+          profile.school = school_cohort.school
+        end
+
+        ParticipantProfile::ECT.create!({ teacher_profile: teacher_profile }.merge(ect_attributes))
       end
     end
 
