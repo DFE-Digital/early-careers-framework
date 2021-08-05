@@ -54,8 +54,10 @@ module Api
         participants = lead_provider.ecf_participants
                                     .distinct
                                     .includes(
-                                      early_career_teacher_profile: %i[cohort mentor school],
-                                      mentor_profile: %i[cohort school],
+                                      teacher_profile: {
+                                        ecf_profile: %i[cohort school],
+                                        early_career_teacher_profile: :mentor,
+                                      },
                                     )
 
         if updated_since.present?

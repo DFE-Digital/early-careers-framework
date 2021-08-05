@@ -13,8 +13,8 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
     let(:bearer_token) { "Bearer #{token}" }
 
     before :each do
-      mentor_profile = create(:mentor_profile, school: partnership.school, cohort: partnership.cohort)
-      create_list :early_career_teacher_profile, 2, mentor_profile: mentor_profile, school_cohort: school_cohort
+      mentor_profile = create(:participant_profile, :mentor, school: partnership.school, cohort: partnership.cohort)
+      create_list :participant_profile, 2, :ect, mentor_profile: mentor_profile, school_cohort: school_cohort
       ect_teacher_profile_with_one_active_and_one_withdrawn_profile = ParticipantProfile::ECT.first.teacher_profile
       create(:participant_profile,
              :withdrawn,
@@ -54,7 +54,18 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
 
         it "has correct attributes" do
           get "/api/v1/participants"
-          expect(parsed_response["data"][0]).to have_jsonapi_attributes(:email, :full_name, :mentor_id, :school_urn, :participant_type, :cohort, :status).exactly
+          expect(parsed_response["data"][0])
+            .to(have_jsonapi_attributes(
+              :email,
+              :full_name,
+              :mentor_id,
+              :school_urn,
+              :participant_type,
+              :cohort,
+              :status,
+              :teacher_reference_number,
+              :teacher_reference_number_validated,
+            ).exactly)
         end
 
         it "returns correct user types" do
@@ -119,7 +130,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
         end
 
         it "returns the correct headers" do
-          expect(parsed_response.headers).to match_array(%w[id email full_name mentor_id school_urn participant_type cohort status])
+          expect(parsed_response.headers).to match_array(%w[id email full_name mentor_id school_urn participant_type cohort status teacher_reference_number teacher_reference_number_validated])
         end
 
         it "returns the correct values" do
@@ -132,6 +143,8 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           expect(mentor_row["school_urn"]).to eql partnership.school.urn
           expect(mentor_row["participant_type"]).to eql "mentor"
           expect(mentor_row["cohort"]).to eql partnership.cohort.start_year.to_s
+          expect(mentor_row["teacher_reference_number"]).to eql mentor.teacher_profile.trn
+          expect(mentor_row["teacher_reference_number_validated"]).to eql "true"
 
           ect = ParticipantProfile::ECT.active.first.user
           ect_row = parsed_response.find { |row| row["id"] == ect.id }
@@ -142,6 +155,8 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           expect(ect_row["school_urn"]).to eql partnership.school.urn
           expect(ect_row["participant_type"]).to eql "ect"
           expect(ect_row["cohort"]).to eql partnership.cohort.start_year.to_s
+          expect(ect_row["teacher_reference_number"]).to eql ect.teacher_profile.trn
+          expect(ect_row["teacher_reference_number_validated"]).to eql "true"
 
           withdrawn_row = parsed_response.find { |row| row["id"] == withdrawn_ect_profile.user.id }
           expect(withdrawn_row).not_to be_nil
@@ -151,6 +166,8 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           expect(withdrawn_row["school_urn"]).to be_empty
           expect(withdrawn_row["participant_type"]).to be_empty
           expect(withdrawn_row["cohort"]).to be_empty
+          expect(withdrawn_row["teacher_reference_number"]).to be_empty
+          expect(withdrawn_row["teacher_reference_number_validated"]).to be_empty
         end
 
         it "ignores pagination parameters" do
