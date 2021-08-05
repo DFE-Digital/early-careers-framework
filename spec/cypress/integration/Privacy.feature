@@ -1,6 +1,6 @@
 Feature: Privacy page
   Scenario: Visiting the privacy policy page
-    Given privacy_policy was created as "set_text"
+    Given scenario "current_privacy_policy" has been run
     And I am on "start" page
     When I click on "link" containing "Privacy"
     Then I should be on "privacy" page
