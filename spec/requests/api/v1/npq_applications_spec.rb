@@ -230,11 +230,18 @@ RSpec.describe "NPQ Applications API", type: :request do
 
     context "when participant has applied for multiple NPQs" do
       let!(:other_npq_profile) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, user: user) }
+      let!(:other_accepted_npq_profile) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, user: user, lead_provider_approval_status: "accepted") }
 
-      it "rejects all other NPQs" do
+      it "rejects all pending NPQs" do
         post "/api/v1/npq-applications/#{npq_profile.id}/accept"
 
         expect(other_npq_profile.reload.lead_provider_approval_status).to eql("rejected")
+      end
+
+      it "does not reject non-pending NPQs" do
+        post "/api/v1/npq-applications/#{npq_profile.id}/accept"
+
+        expect(other_accepted_npq_profile.reload.lead_provider_approval_status).to eql("accepted")
       end
     end
 
