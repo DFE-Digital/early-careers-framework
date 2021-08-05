@@ -112,6 +112,9 @@ en:
             choice:
               blank: "Choose whether to replace or update the tutor"
   activerecord:
+    attributes:
+      npq_validation_data:
+        lead_provider_approval_status: Status
     errors:
       models:
         user:

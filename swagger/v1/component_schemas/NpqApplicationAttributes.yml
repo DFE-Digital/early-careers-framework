@@ -9,11 +9,9 @@ required:
   - teacher_reference_number
   - teacher_reference_number_validated
   - school_urn
-  - headteacher_status
   - eligible_for_funding
-  - funding_choice
-  - course_id
-  - course_name
+  - course_identifier
+  - status
 properties:
   id:
     type: string
@@ -81,3 +79,11 @@ properties:
       - npq-senior-leadership
       - npq-headship
       - npq-executive-leadership
+  status:
+    description: "The current state of the NPQ application"
+    type: string
+    example: pending
+    enum:
+      - pending
+      - accepted
+      - rejected

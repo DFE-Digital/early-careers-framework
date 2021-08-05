@@ -55,7 +55,12 @@ Rails.application.routes.draw do
       resources :ecf_users, only: %i[index create], path: "ecf-users"
       resources :dqt_records, only: :show, path: "dqt-records"
       resources :participant_validation, only: :show, path: "participant-validation"
-      resources :npq_applications, only: :index, path: "npq-applications"
+      resources :npq_applications, only: :index, path: "npq-applications" do
+        member do
+          post :accept
+          post :reject
+        end
+      end
 
       jsonapi_resources :npq_profiles, only: [:create]
 

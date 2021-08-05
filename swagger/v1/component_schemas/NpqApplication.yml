@@ -1,4 +1,4 @@
-description: "The details of an NPQ Applications"
+description: "The details of an NPQ Application"
 type: object
 required:
   - id
