@@ -1,8 +1,7 @@
 name: OWasp Security Scan
 
 on:
-  pull_request:
-    branches: [ owasp ]
+  push:
 
 jobs:
   owasp:
