@@ -43,3 +43,14 @@ properties:
     enum:
       - active
       - withdrawn
+  teacher_reference_number:
+    description: "The Teacher Reference Number (TRN) for this NPQ participant"
+    type: string
+    nullable: true
+    example: "1234567"
+  teacher_reference_number_validated:
+    description: "Indicates whether the Teacher Reference Number (TRN) has been validated"
+    type: boolean
+    nullable: true
+    example: true
+

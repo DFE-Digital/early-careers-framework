@@ -18,6 +18,8 @@ properties:
           participant_type: ect
           cohort: "2021"
           status: active
+          teacher_reference_number: "0012345"
+          teacher_reference_number_validated: true
       - id: bb36d74a-68a7-47b6-86b6-1fd0d141c590
         type: participant
         attributes:
@@ -27,6 +29,8 @@ properties:
           participant_type: mentor
           cohort: "2021"
           status: active
+          teacher_reference_number: null
+          teacher_reference_number_validated: false
       - id: eb475531-bf08-48ae-b0ef-c2ff5e5bdef0
         type: participant
         attributes:
@@ -37,3 +41,5 @@ properties:
           participant_type: ect
           cohort: null
           status: withdrawn
+          teacher_reference_number: null
+          teacher_reference_number_validated: null

@@ -675,6 +675,18 @@
               "active",
               "withdrawn"
             ]
+          },
+          "teacher_reference_number": {
+            "description": "The Teacher Reference Number (TRN) for this NPQ participant",
+            "type": "string",
+            "nullable": true,
+            "example": "1234567"
+          },
+          "teacher_reference_number_validated": {
+            "description": "Indicates whether the Teacher Reference Number (TRN) has been validated",
+            "type": "boolean",
+            "nullable": true,
+            "example": true
           }
         }
       },
@@ -748,6 +760,18 @@
             "enum": [
               "active"
             ]
+          },
+          "teacher_reference_number": {
+            "description": "The Teacher Reference Number (TRN) for this NPQ participant",
+            "type": "string",
+            "nullable": true,
+            "example": "1234567"
+          },
+          "teacher_reference_number_validated": {
+            "description": "Indicates whether the Teacher Reference Number (TRN) has been validated",
+            "type": "boolean",
+            "nullable": true,
+            "example": true
           }
         }
       },
@@ -777,7 +801,7 @@
             }
           }
         },
-        "example": "id,type,email,full_name,mentor_id,school_urn,participant_type,cohort,status\ndb3a7848-7308-4879-942a-c4a70ced400a,participant,jane.smith@some-school.example.com,Jane Smith,bb36d74a-68a7-47b6-86b6-1fd0d141c590,106286,ect,2021,active\nbb36d74a-68a7-47b6-86b6-1fd0d141c590,participant,martin.jones@some-school.example.com,Martin Jones,,106286,mentor,2021,active\neb475531-bf08-48ae-b0ef-c2ff5e5bdef0,participant,null,null,null,null,ect,null,withdrawn\n"
+        "example": "id,type,email,full_name,mentor_id,school_urn,participant_type,cohort,status,teacher_reference_number,teacher_reference_number_validated\ndb3a7848-7308-4879-942a-c4a70ced400a,participant,jane.smith@some-school.example.com,Jane Smith,bb36d74a-68a7-47b6-86b6-1fd0d141c590,106286,ect,2021,active,0012345,true\nbb36d74a-68a7-47b6-86b6-1fd0d141c590,participant,martin.jones@some-school.example.com,Martin Jones,,106286,mentor,2021,active,null,false\neb475531-bf08-48ae-b0ef-c2ff5e5bdef0,participant,null,null,null,null,ect,null,withdrawn,null,null\n"
       },
       "MultipleEcfParticipantsResponse": {
         "description": "A list of ECF participants",
@@ -802,7 +826,9 @@
                   "school_urn": "106286",
                   "participant_type": "ect",
                   "cohort": "2021",
-                  "status": "active"
+                  "status": "active",
+                  "teacher_reference_number": "0012345",
+                  "teacher_reference_number_validated": true
                 }
               },
               {
@@ -814,7 +840,9 @@
                   "school_urn": "106286",
                   "participant_type": "mentor",
                   "cohort": "2021",
-                  "status": "active"
+                  "status": "active",
+                  "teacher_reference_number": null,
+                  "teacher_reference_number_validated": false
                 }
               },
               {
@@ -827,7 +855,9 @@
                   "school_urn": null,
                   "participant_type": "ect",
                   "cohort": null,
-                  "status": "withdrawn"
+                  "status": "withdrawn",
+                  "teacher_reference_number": null,
+                  "teacher_reference_number_validated": null
                 }
               }
             ]
