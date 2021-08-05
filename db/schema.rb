@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_29_105503) do
+ActiveRecord::Schema.define(version: 2021_08_04_105833) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -307,6 +307,16 @@ ActiveRecord::Schema.define(version: 2021_07_29_105503) do
     t.index ["code"], name: "index_local_authority_districts_on_code", unique: true
   end
 
+  create_table "milestones", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.text "name", null: false
+    t.date "milestone_date", null: false
+    t.date "payment_date", null: false
+    t.uuid "schedule_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["schedule_id"], name: "index_milestones_on_schedule_id"
+  end
+
   create_table "networks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -410,9 +420,11 @@ ActiveRecord::Schema.define(version: 2021_07_29_105503) do
     t.text "status", default: "active", null: false
     t.uuid "school_cohort_id"
     t.uuid "teacher_profile_id"
+    t.uuid "schedule_id"
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"
+    t.index ["schedule_id"], name: "index_participant_profiles_on_schedule_id"
     t.index ["school_cohort_id"], name: "index_participant_profiles_on_school_cohort_id"
     t.index ["school_id"], name: "index_participant_profiles_on_school_id"
     t.index ["teacher_profile_id"], name: "index_participant_profiles_on_teacher_profile_id"
@@ -522,6 +534,12 @@ ActiveRecord::Schema.define(version: 2021_07_29_105503) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["school_id"], name: "index_pupil_premiums_on_school_id"
+  end
+
+  create_table "schedules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.text "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "school_cohorts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -660,6 +678,7 @@ ActiveRecord::Schema.define(version: 2021_07_29_105503) do
   add_foreign_key "lead_provider_profiles", "lead_providers"
   add_foreign_key "lead_provider_profiles", "users"
   add_foreign_key "lead_providers", "cpd_lead_providers"
+  add_foreign_key "milestones", "schedules"
   add_foreign_key "nomination_emails", "partnership_notification_emails"
   add_foreign_key "nomination_emails", "schools"
   add_foreign_key "npq_lead_providers", "cpd_lead_providers"
@@ -667,6 +686,7 @@ ActiveRecord::Schema.define(version: 2021_07_29_105503) do
   add_foreign_key "participant_profiles", "cohorts"
   add_foreign_key "participant_profiles", "core_induction_programmes"
   add_foreign_key "participant_profiles", "participant_profiles", column: "mentor_profile_id"
+  add_foreign_key "participant_profiles", "schedules"
   add_foreign_key "participant_profiles", "school_cohorts"
   add_foreign_key "participant_profiles", "schools"
   add_foreign_key "participant_profiles", "teacher_profiles"
