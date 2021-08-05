@@ -237,7 +237,7 @@ Rails.application.routes.draw do
   end
 
   namespace :finance do
-    resources :lead_providers, only: %i[index], path: "lead-providers"
+    resources :lead_providers, only: %i[index show], path: "lead-providers"
   end
 
   namespace :participants do

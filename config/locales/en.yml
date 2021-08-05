@@ -30,6 +30,7 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
+  currency: "£"
   event_types:
     started: Started
     retention_1: Retention 1
@@ -70,6 +71,32 @@ en:
     full_name: &full_name_error_messages
       blank: "Enter a full name"
       does_not_match: "The name you entered does not match our records"
+
+  finance:
+    provider: Provider
+    milestone: Milestone
+    target: Recruitment target
+    ects: Current ECTs
+    mentors: Current Mentors
+    band: Band
+    participants: Current Participants
+    per_participant: Payment amount per person
+    monthly: Payment amount monthly
+    subtotal: Sub total
+    period: Payment amount for period
+    ecf:
+      caption: ECF Payment Breakdown
+    service_fee:
+      caption: Service Fee
+      participants: Target Participants
+    output_payment:
+      caption: Output Payment
+      participants: Current Participants
+    other_fees:
+      caption: Other Fees
+      fee: Fee
+      uplift: Uplift
+
 
   activemodel:
     errors:

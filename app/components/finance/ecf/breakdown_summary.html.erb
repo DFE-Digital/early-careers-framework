@@ -1,0 +1,52 @@
+<dl class="govuk-summary-list govuk-summary-list--no-border">
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      <%=t("finance.provider") %>
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%=name %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      <%=t("finance.milestone") %>
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%=t("event_types.#{declaration}") %>
+    </dd>
+  </div>
+</dl>
+<dl class="govuk-summary-list">
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      <%=t("finance.target") %>
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%=target %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      <%=t("finance.ects") %>
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= ects %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      <%=t("finance.mentors") %>
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= mentors %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      <%=t("finance.participants") %>
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= participants %>
+    </dd>
+  </div>
+</dl>

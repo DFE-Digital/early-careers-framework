@@ -1,0 +1,20 @@
+<table class="govuk-table">
+  <caption class="govuk-table__caption govuk-table__caption--l"><%=t "finance.output_payment.caption" %></caption>
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th class="govuk-table__header"><%=t "finance.band"%></th>
+      <th class="govuk-table__header govuk-table__cell--numeric"><%=t "finance.output_payment.participants"%></th>
+      <th class="govuk-table__header govuk-table__cell--numeric"><%=t "finance.per_participant"%></th>
+      <th class="govuk-table__header govuk-table__cell--numeric"><%=t "finance.period"%></th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    <%= render Finance::ECF::OutputPaymentRow.with_collection(output_payments) %>
+    <tr class="govuk-table__row">
+      <th class="govuk-table__cell"><%=t("finance.subtotal") %></th>
+      <td class="govuk-table__cell govuk-table__cell--numeric"><%= participants %></td>
+      <td class="govuk-table__cell govuk-table__cell--numeric"></td>
+      <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds subtotal %></td>
+    </tr>
+  </tbody>
+</table>
