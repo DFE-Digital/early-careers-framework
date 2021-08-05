@@ -26,22 +26,22 @@ def generate_mentors(lead_provider, school, cohort, logger)
   school_cohort = SchoolCohort.find_or_create_by!(school: school, cohort: cohort)
 
   10.times do
-    mentor = User.create!(full_name: Faker::Name.name, email: Faker::Internet.email)
-    mentor_profile = ParticipantProfile::Mentor.create!(user: mentor, school_cohort: school_cohort)
+    mentor = create_teacher
+    mentor_profile = ParticipantProfile::Mentor.create!(teacher_profile: mentor, school_cohort: school_cohort)
 
     ect_count = rand(0..3)
     ect_count.times do
-      ect = User.create!(full_name: Faker::Name.name, email: Faker::Internet.email)
-      ParticipantProfile::ECT.create!(user: ect, school_cohort: school_cohort, mentor_profile: mentor_profile)
+      ect = create_teacher
+      ParticipantProfile::ECT.create!(teacher_profile: ect, school_cohort: school_cohort, mentor_profile: mentor_profile)
     end
     logger.info(" Mentor with user_id #{mentor.id} generated with #{ect_count} ECTs")
   end
   2.times do
-    mentor = User.create!(full_name: Faker::Name.name, email: Faker::Internet.email)
-    mentor_profile = ParticipantProfile::Mentor.create!(user: mentor, school_cohort: school_cohort, status: "withdrawn")
+    mentor = create_teacher
+    mentor_profile = ParticipantProfile::Mentor.create!(teacher_profile: mentor, school_cohort: school_cohort, status: "withdrawn")
 
-    ect = User.create!(full_name: Faker::Name.name, email: Faker::Internet.email)
-    ParticipantProfile::ECT.create!(user: ect, school_cohort: school_cohort, mentor_profile: mentor_profile, status: "withdrawn")
+    ect = create_teacher
+    ParticipantProfile::ECT.create!(teacher_profile: ect, school_cohort: school_cohort, mentor_profile: mentor_profile, status: "withdrawn")
   end
   new_mentor_count = lead_provider.ecf_participant_profiles.mentors.count
   logger.info(" Before: #{existing_mentor_count} mentors, after: #{new_mentor_count}")
@@ -69,4 +69,15 @@ def create_school_and_associations(lead_provider, cohort, index)
   SchoolCohort.find_or_create_by!(school: school, cohort: cohort, induction_programme_choice: "full_induction_programme")
 
   school
+end
+
+def random_trn
+  return if [true, false].sample
+
+  sprintf("%07i", Random.random_number(9_999_999))
+end
+
+def create_teacher
+  mentor = User.create!(full_name: Faker::Name.name, email: Faker::Internet.email)
+  TeacherProfile.create!(user: mentor, trn: random_trn)
 end
