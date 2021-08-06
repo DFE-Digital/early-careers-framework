@@ -195,6 +195,20 @@ per participant service fee £398 (40%) >> monthly service fee £27k >> total se
 * "Output payments" are payments made based on the performance of the training provider (i.e. their output).
 * "Payment type" for start/retention_x/completion output payments.
 
+## Runbook
+
+### Updating NPQ applications from manual validation
+
+This procedure is used after a batch from manual validation has been complete. The data also needs to be uploaded to the NPQ application as it uses a different database and there is no syncing procedure in place.
+
+1. Log in to a container instance
+2. Save CSV data to disk via `vi` and remember the path
+3. Start rails console
+4. Instantiate service with `svc = Importers::NPQManualValidation.new(path_to_csv: Rails.root.join("batchX.csv"))`
+5. Call service with `svc.call`
+6. Exit rails console
+7. Delete CSV as no longer needed
+
 ## Monitoring, logging, and alerting
 ### Sentry
 We use [sentry.io](https://sentry.io/) for error tracking and performance monitoring. Ask a team member for access - this is done through digi-tools.
