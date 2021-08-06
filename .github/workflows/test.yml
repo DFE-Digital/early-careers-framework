@@ -13,7 +13,7 @@ jobs:
       nonce: ${{ steps.generate-nonce.outputs.nonce }}
     steps:
       - id: generate-nonce
-        run: echo "::set-output nonce=$(tr -dc 0-9 </dev/urandom | head -c 18 ; echo '')"
+        run: echo "::set-output name=nonce::$(tr -dc 0-9 </dev/urandom | head -c 18 ; echo '')"
 
   backend-tests:
     name: Run rspec
