@@ -34,12 +34,6 @@
         ]
       }
     },
-    "evidence_type": {
-      "enum": [
-        "training-event-attended",
-        "self-study-material-completed"
-      ]
-    },
     "npq": {
       "courses": {
         "enum": [
