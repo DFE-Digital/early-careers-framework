@@ -101,8 +101,6 @@ gem "rouge"
 
 gem "ransack"
 
-gem "timecop"
-
 # Payment breackdown
 
 gem "terminal-table"
@@ -148,6 +146,7 @@ end
 
 group :development, :deployed_development, :test, :sandbox do
   gem "faker"
+  gem "timecop"
 end
 
 group :development do
