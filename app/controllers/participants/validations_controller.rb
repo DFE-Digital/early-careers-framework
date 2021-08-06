@@ -139,11 +139,9 @@ module Participants
         eligibility_data = store_eligibility_data!(result)
         eligibility_data.manual_check_status! unless store_trn!(result[:trn])
 
-        if !eligibiliy_data.eligible_status?
-          # different TRN already exists or not eligible
-          # store validation data for manual re-check later
-          store_validation_data!
-        end
+        # store validation data for manual re-check later
+        # if different TRN already exists or not eligible
+        store_validation_data! unless eligibiliy_data.eligible_status?
 
         reset_form_data
         redirect_to_step :complete
