@@ -208,3 +208,54 @@ LeadProvider.all.each do |lp|
     )
   end
 end
+
+# FIP ECT
+user = User.find_or_create_by!(email: "fip-ect@example.com") do |u|
+  u.full_name = "FIP ECT"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user)
+ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
+  ect_profile.school_cohort = School.find_by(urn: "000103").school_cohorts.find_by(cohort: Cohort.current)
+end
+
+# FIP mentor
+user = User.find_or_create_by!(email: "fip-mentor@example.com") do |u|
+  u.full_name = "FIP Mentor"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user)
+ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+  mentor_profile.school_cohort = School.find_by(urn: "000104").school_cohorts.find_by(cohort: Cohort.current)
+end
+
+# FIP mentor already doing an NPQ with the same email
+user = User.find_or_create_by!(email: "fip-mentor-npq@example.com") do |u|
+  u.full_name = "FIP Mentor NPQ"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
+  profile.trn = "1229708"
+end
+ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+  mentor_profile.school_cohort = School.find_by(urn: "000105").school_cohorts.find_by(cohort: Cohort.current)
+end
+ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile)
+
+# FIP mentor already doing an NPQ with a different email
+user = User.find_or_create_by!(email: "fip-mentor-npq-other-email@example.com") do |u|
+  u.full_name = "FIP Mentor NPQ"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
+  profile.trn = "2369848"
+end
+ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile)
+
+# FIP mentor already mentoring at another school with another email
+user = User.find_or_create_by!(email: "fip-mentor-another-school@example.com") do |u|
+  u.full_name = "FIP Mentor NPQ"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
+  profile.trn = "1737506"
+end
+ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
+  profile.school_cohort = School.find_by(urn: "000105").school_cohorts.find_by(cohort: Cohort.current)
+end
+# TODO: add validation data and eligibility records when merged
