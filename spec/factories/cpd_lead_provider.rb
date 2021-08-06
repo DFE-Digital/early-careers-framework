@@ -2,7 +2,10 @@
 
 FactoryBot.define do
   factory :cpd_lead_provider do
-    name  { "Lead Provider" }
-    lead_provider
+    name  { "CPD Lead Provider" }
+
+    trait :with_lead_provider do
+      lead_provider
+    end
   end
 end

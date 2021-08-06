@@ -55,7 +55,12 @@ Rails.application.routes.draw do
       resources :ecf_users, only: %i[index create], path: "ecf-users"
       resources :dqt_records, only: :show, path: "dqt-records"
       resources :participant_validation, only: :show, path: "participant-validation"
-      resources :npq_applications, only: :index, path: "npq-applications"
+      resources :npq_applications, only: :index, path: "npq-applications" do
+        member do
+          post :accept
+          post :reject
+        end
+      end
 
       jsonapi_resources :npq_profiles, only: [:create]
 
@@ -237,7 +242,7 @@ Rails.application.routes.draw do
   end
 
   namespace :finance do
-    resources :lead_providers, only: %i[index], path: "lead-providers"
+    resources :lead_providers, only: %i[index show], path: "lead-providers"
   end
 
   namespace :participants do

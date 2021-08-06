@@ -9,9 +9,9 @@ module PaymentCalculator
 
       def call(band:)
         {
-          service_fee_monthly: service_fee_monthly(band).round(0),
-          service_fee_per_participant: service_fee_per_participant(band).round(0),
-          service_fee_total: service_fee_total(band).round(0),
+          participants: band.number_of_participants_in_this_band(recruitment_target),
+          per_participant: service_fee_per_participant(band),
+          monthly: service_fee_monthly(band),
         }
       end
     end

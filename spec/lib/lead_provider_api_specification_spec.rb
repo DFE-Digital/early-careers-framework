@@ -9,6 +9,8 @@ RSpec.describe LeadProviderApiSpecification do
       paths = %w[
         /api/v1/npq-applications
         /api/v1/npq-applications.csv
+        /api/v1/npq-applications/{id}/accept
+        /api/v1/npq-applications/{id}/reject
         /api/v1/participant-declarations
         /api/v1/participants
         /api/v1/participants.csv

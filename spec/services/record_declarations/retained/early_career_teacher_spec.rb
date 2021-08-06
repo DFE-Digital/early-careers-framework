@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe RecordDeclarations::Retained::EarlyCareerTeacher do
-  let(:cpd_lead_provider) { create(:cpd_lead_provider) }
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:another_lead_provider) { create(:cpd_lead_provider, name: "Unknown") }
   let(:ect_profile) { create(:early_career_teacher_profile) }
   let(:mentor_profile) { create(:mentor_profile) }

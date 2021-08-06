@@ -35,6 +35,7 @@ private
       eligible_for_funding
       funding_choice
       course_identifier
+      status
     ]
   end
 
@@ -52,6 +53,7 @@ private
       record.eligible_for_funding,
       record.funding_choice,
       record.npq_course.identifier,
+      record.lead_provider_approval_status,
     ]
   end
 end
