@@ -16,10 +16,10 @@
 
     <%= govuk_link_to "Try again", participants_validation_tell_us_your_details_path, button: true %>
 
-    <% if @form.validation_attempts > 1 %>
+    <% if @participant_validation_form.validation_attempts > 1 %>
       <h2 class="govuk-heading-m">If we still cannot find your details</h2>
       <p class="govuk-body">You can continue to register. Our support team may contact you for more information before you start your induction training.</p>
-      <%= form_for @form, url: { action: @form.step }, method: :put do |f| %>
+      <%= form_for @participant_validation_form, url: { action: @participant_validation_form.step }, method: :put do |f| %>
         <%= f.govuk_submit "Continue registration", secondary: true %>
       <% end %>
     <% end %>

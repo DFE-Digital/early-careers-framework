@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class ECFParticipantEligibility < ApplicationRecord
+  has_paper_trail
+
   belongs_to :participant_profile, class_name: "ParticipantProfile::ECF", touch: true
-  before_validation :determine_status
+  before_validation :determine_status, on: :create
 
   enum status: {
     eligible: "eligible",

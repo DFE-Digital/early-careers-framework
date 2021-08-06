@@ -100,7 +100,7 @@ module ParticipantValidationSteps
     expect(page).to have_selector("h1", text: "Confirm these details")
     expect(page).to have_text(@participant_data[:full_name])
     expect(page).to have_text(@participant_data[:trn])
-    expect(page).to have_text(@participant_data[:date_of_birth].strftime("%d/%m/%Y"))
+    expect(page).to have_text(@participant_data[:date_of_birth].to_s(:govuk))
   end
 
   def when_i_click_a_change_link
@@ -115,7 +115,7 @@ module ParticipantValidationSteps
     expect(page).to have_selector("h1", text: "Confirm these details")
     expect(page).to have_text("Sally Participant")
     expect(page).to have_text(@participant_data[:trn])
-    expect(page).to have_text(@participant_data[:date_of_birth].strftime("%d/%m/%Y"))
+    expect(page).to have_text(@participant_data[:date_of_birth].to_s(:govuk))
   end
 
   def then_i_should_see_the_cannot_find_details_page

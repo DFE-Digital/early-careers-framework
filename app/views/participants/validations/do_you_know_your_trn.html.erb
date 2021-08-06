@@ -16,11 +16,11 @@
       <p>You may not have a TRN if you qualified outside England.</p>
     <% end %>
 
-    <%= form_for @form, url: { action: @form.step }, method: :put do |f| %>
-      <%= f.hidden_field :step, value: @form.step %>
+    <%= form_for @participant_validation_form, url: { action: @participant_validation_form.step }, method: :put do |f| %>
+      <%= f.hidden_field :step, value: @participant_validation_form.step %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_collection_radio_buttons(
-        :do_you_know_your_trn_choice, @form.trn_choices,
+        :do_you_know_your_trn_choice, @participant_validation_form.trn_choices,
         :id, :name,
         legend: { text: "Do you know your teacher reference number (TRN)?", size: "s" },
       ) %>

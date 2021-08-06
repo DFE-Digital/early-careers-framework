@@ -202,10 +202,11 @@ ActiveRecord::Schema.define(version: 2021_08_04_161507) do
     t.boolean "active_flags"
     t.boolean "previous_participation"
     t.boolean "previous_induction"
+    t.boolean "manually_validated", default: false
     t.string "status", default: "manual_check", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["participant_profile_id"], name: "index_ecf_participant_eligibilities_on_participant_profile_id"
+    t.index ["participant_profile_id"], name: "index_ecf_participant_eligibilities_on_participant_profile_id", unique: true
   end
 
   create_table "ecf_participant_validation_data", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -217,7 +218,7 @@ ActiveRecord::Schema.define(version: 2021_08_04_161507) do
     t.boolean "api_failure", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["participant_profile_id"], name: "index_ecf_participant_validation_data_on_participant_profile_id"
+    t.index ["participant_profile_id"], name: "index_ecf_participant_validation_data_on_participant_profile_id", unique: true
   end
 
   create_table "event_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

@@ -3,7 +3,7 @@
 class CreateECFParticipantValidationData < ActiveRecord::Migration[6.1]
   def change
     create_table :ecf_participant_validation_data, id: :uuid do |t|
-      t.references :participant_profile, index: true, foreign_key: true
+      t.references :participant_profile, foreign_key: true, index: { unique: true }
       t.string :full_name
       t.date :date_of_birth
       t.string :trn

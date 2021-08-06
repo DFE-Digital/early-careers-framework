@@ -74,7 +74,7 @@ module Participants
 
     def pretty_date_of_birth
       if date_of_birth.present?
-        date_of_birth.strftime("%d/%m/%Y")
+        date_of_birth.to_s(:govuk)
       end
     end
 

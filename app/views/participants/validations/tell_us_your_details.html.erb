@@ -7,8 +7,8 @@
     <h1 class="govuk-heading-xl">Tell us your details</h1>
     <p class="govuk-body">We need to check your details on the Teaching Regulation Agency records.</p>
 
-    <%= form_for @form, url: { action: @form.step }, method: :put do |f| %>
-      <%= f.hidden_field :step, value: @form.step %>
+    <%= form_for @participant_validation_form, url: { action: @participant_validation_form.step }, method: :put do |f| %>
+      <%= f.hidden_field :step, value: @participant_validation_form.step %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_text_field :trn,
         width: 10,

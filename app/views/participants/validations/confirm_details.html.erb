@@ -10,31 +10,31 @@
       component.slot(
         :row,
         key: "Full name",
-        value: @form.name,
+        value: @participant_validation_form.name,
         action: govuk_link_to("Change", participants_validation_tell_us_your_details_path),
       )
       component.slot(
         :row,
         key: "TRN",
-        value: @form.trn,
+        value: @participant_validation_form.trn,
         action: govuk_link_to("Change", participants_validation_tell_us_your_details_path),
       )
       component.slot(
         :row,
         key: "Date of birth",
-        value: @form.pretty_date_of_birth,
+        value: @participant_validation_form.pretty_date_of_birth,
         action: govuk_link_to("Change", participants_validation_tell_us_your_details_path),
       )
       component.slot(
         :row,
         key: "National Insurance number",
-        value: @form.national_insurance_number,
+        value: @participant_validation_form.national_insurance_number,
         action: govuk_link_to("Change", participants_validation_tell_us_your_details_path),
       )
     end %>
 
-    <%= form_for @form, url: { action: @form.step }, method: :put do |f| %>
-      <%= f.hidden_field :step, value: @form.step %>
+    <%= form_for @participant_validation_form, url: { action: @participant_validation_form.step }, method: :put do |f| %>
+      <%= f.hidden_field :step, value: @participant_validation_form.step %>
       <%= f.govuk_submit "Continue" %>
     <% end %>
   </div>
