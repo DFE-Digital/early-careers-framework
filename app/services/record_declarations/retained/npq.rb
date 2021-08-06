@@ -5,6 +5,10 @@ module RecordDeclarations
     class NPQ < ::RecordDeclarations::Base
       include RecordDeclarations::NPQ
       include Retained
+
+      def valid_evidence_types
+        %w[training-event-attended]
+      end
     end
   end
 end
