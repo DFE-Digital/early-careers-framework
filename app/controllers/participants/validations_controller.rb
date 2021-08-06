@@ -14,17 +14,17 @@ module Participants
                                                         cannot_find_details]
 
     def start
-      redirect_to_step :do_you_know_your_trn
+      store_form_and_redirect_to_step :do_you_know_your_trn
     end
 
     def do_you_know_your_trn
       choice = @participant_validation_form.do_you_know_your_trn_choice
       if choice == "yes"
-        redirect_to_step :have_you_changed_your_name
+        store_form_and_redirect_to_step :have_you_changed_your_name
       elsif choice == "no"
-        redirect_to_step :find_your_trn
+        store_form_and_redirect_to_step :find_your_trn
       else
-        redirect_to_step :get_a_trn
+        store_form_and_redirect_to_step :get_a_trn
       end
     end
 
@@ -35,29 +35,29 @@ module Participants
     def have_you_changed_your_name
       choice = @participant_validation_form.have_you_changed_your_name_choice
       if choice == "yes"
-        redirect_to_step :confirm_updated_record
+        store_form_and_redirect_to_step :confirm_updated_record
       else
-        redirect_to_step :tell_us_your_details
+        store_form_and_redirect_to_step :tell_us_your_details
       end
     end
 
     def confirm_updated_record
       choice = @participant_validation_form.updated_record_choice
       if choice == "yes"
-        redirect_to_step :tell_us_your_details
+        store_form_and_redirect_to_step :tell_us_your_details
       elsif choice == "no"
-        redirect_to_step :name_not_updated
+        store_form_and_redirect_to_step :name_not_updated
       else
-        redirect_to_step :check_with_tra
+        store_form_and_redirect_to_step :check_with_tra
       end
     end
 
     def name_not_updated
       choice = @participant_validation_form.name_not_updated_choice
       if choice == "register_previous_name"
-        redirect_to_step :tell_us_your_details
+        store_form_and_redirect_to_step :tell_us_your_details
       else
-        redirect_to_step :change_your_details_with_tra
+        store_form_and_redirect_to_step :change_your_details_with_tra
       end
     end
 
@@ -66,7 +66,7 @@ module Participants
     def check_with_tra; end
 
     def tell_us_your_details
-      redirect_to_step :confirm_details
+      store_form_and_redirect_to_step :confirm_details
     end
 
     def confirm_details
@@ -76,7 +76,7 @@ module Participants
     def cannot_find_details
       store_validation_data!
       reset_form_data
-      redirect_to_step :complete
+      store_form_and_redirect_to_step :complete
     end
 
     def complete
@@ -120,7 +120,7 @@ module Participants
     end
 
     def check_not_already_completed
-      redirect_to_step :complete if flow_complete?
+      store_form_and_redirect_to_step :complete if flow_complete?
     end
 
     def flow_complete?
@@ -134,7 +134,7 @@ module Participants
                                                      nino: @participant_validation_form.national_insurance_number)
       if result.nil?
         @participant_validation_form.increment_validation_attempts
-        redirect_to_step :cannot_find_details
+        store_form_and_redirect_to_step :cannot_find_details
       else
         eligibility_data = store_eligibility_data!(result)
         eligibility_data.manual_check_status! unless store_trn!(result[:trn])
@@ -144,13 +144,13 @@ module Participants
         store_validation_data! unless eligibiliy_data.eligible_status?
 
         reset_form_data
-        redirect_to_step :complete
+        store_form_and_redirect_to_step :complete
       end
     rescue StandardError => e
       Rails.logger.error("Problem with DQT API: " + e.message)
       store_validation_data!(api_failure: true)
       reset_form_data
-      redirect_to_step :complete
+      store_form_and_redirect_to_step :complete
     end
 
     def store_validation_data!(opts = {})
@@ -189,7 +189,7 @@ module Participants
       if @participant_validation_form.step.blank?
         @participant_validation_form.step = :start
       elsif @participant_validation_form.step != action_name
-        redirect_to_step action_name
+        store_form_and_redirect_to_step action_name
       end
     end
 
@@ -201,7 +201,7 @@ module Participants
       @participant_validation_form.valid?(@participant_validation_form.step.to_sym)
     end
 
-    def redirect_to_step(step)
+    def store_form_and_redirect_to_step(step)
       @participant_validation_form.step = step
       session[:participant_validation] = @participant_validation_form.attributes
       redirect_to send("participants_validation_#{step}_path")
