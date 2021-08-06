@@ -137,3 +137,17 @@ end
 if Rails.env.sandbox?
   NPQRegistrationApiToken.find_or_create_by!(hashed_token: "166eaa39950ad15f2f36041cb9062cc8fa9f109945fe9b8378bf904fe35369bc")
 end
+
+unless Rails.env.sandbox?
+  [
+    { name: "Ambition Institute", token: "ambition-token" },
+    { name: "Best Practice Network", token: "best-practice-token" },
+    { name: "Capita", token: "capita-token" },
+    { name: "Education Development Trust", token: "edt-token" },
+    { name: "Teach First", token: "teach-first-token" },
+    { name: "UCL Institute of Education", token: "ucl-token" },
+  ].each do |hash|
+    cpd_lead_provider = CpdLeadProvider.find_by(name: hash[:name])
+    LeadProviderApiToken.create_with_known_token!(hash[:token], cpd_lead_provider: cpd_lead_provider)
+  end
+end
