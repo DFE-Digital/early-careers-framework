@@ -612,6 +612,7 @@ DEPENDENCIES
   spring-watcher-listen (~> 2.0.0)
   strong_migrations
   terminal-table
+  timecop
   tzinfo-data
   view_component
   wdm (>= 0.1.0)

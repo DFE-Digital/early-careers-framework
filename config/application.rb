@@ -40,6 +40,10 @@ module EarlyCareerFramework
       require_dependency(c)
     end
 
+    Dir.glob(Rails.root + "app/middlewares/*.rb").sort.each do |file|
+      require file
+    end
+
     Dir.glob(Rails.root + "app/serializers/**/*_serializer*.rb").each do |c|
       require_dependency(c)
     end

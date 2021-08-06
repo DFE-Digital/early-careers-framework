@@ -101,6 +101,8 @@ gem "rouge"
 
 gem "ransack"
 
+gem "timecop"
+
 # Payment breackdown
 
 gem "terminal-table"
