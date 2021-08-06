@@ -16,7 +16,7 @@ class PrivacyPolicy < ApplicationRecord
 
   def acceptance_required?(user)
     return false if !user || user.admin?
-    return false unless user.induction_coordinator_profile
+    return false unless user.induction_coordinator_profile || user.teacher_profile
 
     Acceptance
       .joins(:privacy_policy)

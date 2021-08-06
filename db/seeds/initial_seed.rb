@@ -22,7 +22,7 @@ ucl_cip = CoreInductionProgramme.find_or_create_by!(name: "UCL Institute of Educ
 end
 
 PrivacyPolicy.find_or_initialize_by(major_version: 1, minor_version: 0)
-  .tap { |pp| pp.html = Rails.root.join("db/seeds/privacy_policy_1.0.html").read }
+  .tap { |pp| pp.html = Rails.root.join("data/privacy_policy.html").read }
   .save!
 
 [

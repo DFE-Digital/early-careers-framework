@@ -2,15 +2,13 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-three-quarters">
+    <h1 class="govuk-heading-xl">Privacy policy</h1>
+
     <% if !@policy.acceptance_required?(current_user) %>
       <% content_for :before_content, govuk_back_link(text: "Back", href: :back) %>
-      <h1 class="govuk-heading-xl">How we look after your personal data</h1>
     <% else %>
-      <h1 class="govuk-heading-xl">Privacy policy</h1>
       <p>Before you continue, please check our privacy policy</p>
       <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-
-      <h2 class="govuk-heading-l">How we look after your personal data</h2>
     <% end %>
 
     <%= @policy.html.html_safe %>
