@@ -245,31 +245,33 @@ Rails.application.routes.draw do
     resources :lead_providers, only: %i[index show], path: "lead-providers"
   end
 
-  namespace :participants, constraints: ->(_request) { FeatureFlag.active?(:participant_validation) } do
+  namespace :participants do
     resource :start_registrations, path: "/start-registration", only: :show
 
-    scope :validation, as: :validation do
-      get "/", to: "validations#start", as: :start
-      get "/do-you-know-your-teacher-reference-number", to: "validations#do_you_know_your_trn", as: :do_you_know_your_trn
-      put "/do-you-know-your-teacher-reference-number", to: "validations#do_you_know_your_trn"
-      get "/have-you-changed-your-name", to: "validations#have_you_changed_your_name", as: :have_you_changed_your_name
-      put "/have-you-changed-your-name", to: "validations#have_you_changed_your_name"
-      get "/confirm-name-change", to: "validations#confirm_updated_record", as: :confirm_updated_record
-      put "/confirm-name-change", to: "validations#confirm_updated_record"
-      get "/name-not-updated", to: "validations#name_not_updated", as: :name_not_updated
-      put "/name-not-updated", to: "validations#name_not_updated"
-      get "/tell-us-your-details", to: "validations#tell_us_your_details", as: :tell_us_your_details
-      put "/tell-us-your-details", to: "validations#tell_us_your_details"
-      get "/confirm-these-details", to: "validations#confirm_details", as: :confirm_details
-      put "/confirm-these-details", to: "validations#confirm_details"
-      get "/find-your-teacher-reference-number", to: "validations#find_your_trn", as: :find_your_trn
-      get "/get-a-teacher-reference-number", to: "validations#get_a_trn", as: :get_a_trn
-      get "/change-your-details-with-the-teacher-regulation-agency", to: "validations#change_your_details_with_tra", as: :change_your_details_with_tra
-      get "/check-with-the-teacher-regulation-agency", to: "validations#check_with_tra", as: :check_with_tra
-      get "/cannot-find-your-details", to: "validations#cannot_find_details", as: :cannot_find_details
-      put "/cannot-find-your-details", to: "validations#cannot_find_details"
-      get "/complete", to: "validations#complete", as: :complete
-      get "/reset", to: "validations#reset", as: :reset
+    authenticated :user, lambda { |user| FeatureFlag.active?(:participant_validation, for: user.teacher_profile&.participant_profiles&.ecf&.active&.first&.school) } do
+      scope :validation, as: :validation do
+        get "/", to: "validations#start", as: :start
+        get "/do-you-know-your-teacher-reference-number", to: "validations#do_you_know_your_trn", as: :do_you_know_your_trn
+        put "/do-you-know-your-teacher-reference-number", to: "validations#do_you_know_your_trn"
+        get "/have-you-changed-your-name", to: "validations#have_you_changed_your_name", as: :have_you_changed_your_name
+        put "/have-you-changed-your-name", to: "validations#have_you_changed_your_name"
+        get "/confirm-name-change", to: "validations#confirm_updated_record", as: :confirm_updated_record
+        put "/confirm-name-change", to: "validations#confirm_updated_record"
+        get "/name-not-updated", to: "validations#name_not_updated", as: :name_not_updated
+        put "/name-not-updated", to: "validations#name_not_updated"
+        get "/tell-us-your-details", to: "validations#tell_us_your_details", as: :tell_us_your_details
+        put "/tell-us-your-details", to: "validations#tell_us_your_details"
+        get "/confirm-these-details", to: "validations#confirm_details", as: :confirm_details
+        put "/confirm-these-details", to: "validations#confirm_details"
+        get "/find-your-teacher-reference-number", to: "validations#find_your_trn", as: :find_your_trn
+        get "/get-a-teacher-reference-number", to: "validations#get_a_trn", as: :get_a_trn
+        get "/change-your-details-with-the-teacher-regulation-agency", to: "validations#change_your_details_with_tra", as: :change_your_details_with_tra
+        get "/check-with-the-teacher-regulation-agency", to: "validations#check_with_tra", as: :check_with_tra
+        get "/cannot-find-your-details", to: "validations#cannot_find_details", as: :cannot_find_details
+        put "/cannot-find-your-details", to: "validations#cannot_find_details"
+        get "/complete", to: "validations#complete", as: :complete
+        get "/reset", to: "validations#reset", as: :reset
+      end
     end
   end
 
