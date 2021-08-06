@@ -248,7 +248,7 @@ Rails.application.routes.draw do
   namespace :participants do
     resource :start_registrations, path: "/start-registration", only: :show
 
-    authenticated :user, lambda { |user| FeatureFlag.active?(:participant_validation, for: user.teacher_profile&.participant_profiles&.ecf&.active&.first&.school) } do
+    authenticated :user, ->(user) { FeatureFlag.active?(:participant_validation, for: user.teacher_profile&.participant_profiles&.ecf&.active&.first&.school) } do
       scope :validation, as: :validation do
         get "/", to: "validations#start", as: :start
         get "/do-you-know-your-teacher-reference-number", to: "validations#do_you_know_your_trn", as: :do_you_know_your_trn
