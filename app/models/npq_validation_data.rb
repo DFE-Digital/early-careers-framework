@@ -23,6 +23,27 @@ class NPQValidationData < ApplicationRecord
     another: "another",
   }
 
+  enum lead_provider_approval_status: {
+    pending: "pending",
+    accepted: "accepted",
+    rejected: "rejected",
+  }
+
+  validate :validate_rejected_status_cannot_change
+  validate :validate_accepted_status_cannot_change
+
+  def validate_rejected_status_cannot_change
+    if lead_provider_approval_status_changed?(from: "rejected")
+      errors.add(:lead_provider_approval_status, :invalid, message: "Once rejected an application cannot change state")
+    end
+  end
+
+  def validate_accepted_status_cannot_change
+    if lead_provider_approval_status_changed?(from: "accepted")
+      errors.add(:lead_provider_approval_status, :invalid, message: "Once accepted an application cannot change state")
+    end
+  end
+
   after_save :update_participant_profile
 
 private

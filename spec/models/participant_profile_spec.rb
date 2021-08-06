@@ -4,6 +4,7 @@ require "rails_helper"
 
 RSpec.describe ParticipantProfile, type: :model do
   it { is_expected.to belong_to(:teacher_profile) }
+  it { is_expected.to belong_to(:schedule).optional }
   it { is_expected.to have_one(:user).through(:teacher_profile) }
   it {
     is_expected.to define_enum_for(:status).with_values(

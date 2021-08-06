@@ -147,6 +147,106 @@
         }
       }
     },
+    "/api/v1/npq-applications/{id}/accept": {
+      "post": {
+        "summary": "Accept an NPQ application",
+        "operationId": "npq_applications_accept",
+        "tags": [
+          "NPQ applications"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "07ba7a11-1cde-40bd-a5a8-489d895c96dc",
+            "description": "The ID of the NPQ application to accept.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The NPQ application being accepted",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NpqApplicationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/npq-applications/{id}/reject": {
+      "post": {
+        "summary": "Reject an NPQ application",
+        "operationId": "npq_applications_reject",
+        "tags": [
+          "NPQ applications"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "ac2a111b-b6d0-4b66-93ee-3ca9c97c3c7f",
+            "description": "The ID of the NPQ application to reject.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The NPQ application being rejected",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NpqApplicationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/participant-declarations": {
       "post": {
         "summary": "Declare a participant has reached a milestone",
@@ -748,7 +848,7 @@
             }
           }
         },
-        "example": "id,type,participant_id,full_name,email,email_validated,email_validated,teacher_reference_number,teacher_reference_number_validated,school_urn,headteacher_status,eligible_for_funding,funding_choice,course_identifier\ndb3a7848-7308-4879-942a-c4a70ced400a,npq-application,7a8fef46-3c43-42c0-b3d5-1ba5904ba562,Isabelle MacDonald,isabelle.macdonald2@some-school.example.com,true,1234567,true,106286,no,true,trust,npq-leading-teaching\n"
+        "example": "id,type,participant_id,full_name,email,email_validated,email_validated,teacher_reference_number,teacher_reference_number_validated,school_urn,headteacher_status,eligible_for_funding,funding_choice,course_identifier,status\ndb3a7848-7308-4879-942a-c4a70ced400a,npq-application,7a8fef46-3c43-42c0-b3d5-1ba5904ba562,Isabelle MacDonald,isabelle.macdonald2@some-school.example.com,true,1234567,true,106286,no,true,trust,npq-leading-teaching,pending\n"
       },
       "MultipleNpqApplicationsResponse": {
         "description": "A list of NPQ applications",
@@ -767,7 +867,6 @@
                 "id": "db3a7848-7308-4879-942a-c4a70ced400a",
                 "type": "participant",
                 "attributes": {
-                  "id": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
                   "participant_id": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
                   "full_name": "Isabelle MacDonald",
                   "email": "isabelle.macdonald2@some-school.example.com",
@@ -903,7 +1002,7 @@
         }
       },
       "NpqApplication": {
-        "description": "The details of an NPQ Applications",
+        "description": "The details of an NPQ Application",
         "type": "object",
         "required": [
           "id",
@@ -942,11 +1041,9 @@
           "teacher_reference_number",
           "teacher_reference_number_validated",
           "school_urn",
-          "headteacher_status",
           "eligible_for_funding",
-          "funding_choice",
-          "course_id",
-          "course_name"
+          "course_identifier",
+          "status"
         ],
         "properties": {
           "id": {
@@ -1028,6 +1125,16 @@
               "npq-senior-leadership",
               "npq-headship",
               "npq-executive-leadership"
+            ]
+          },
+          "status": {
+            "description": "The current state of the NPQ application",
+            "type": "string",
+            "example": "pending",
+            "enum": [
+              "pending",
+              "accepted",
+              "rejected"
             ]
           }
         }
@@ -1141,6 +1248,28 @@
               "npq-headship",
               "npq-executive-leadership"
             ]
+          },
+          "status": {
+            "description": "The current state of the NPQ application",
+            "type": "string",
+            "example": "pending",
+            "enum": [
+              "pending",
+              "accepted",
+              "rejected"
+            ]
+          }
+        }
+      },
+      "NpqApplicationResponse": {
+        "description": "An NPQ application",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/NpqApplication"
           }
         }
       },

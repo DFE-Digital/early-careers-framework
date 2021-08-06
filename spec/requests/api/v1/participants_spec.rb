@@ -8,13 +8,21 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
     let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: lead_provider) }
     let(:lead_provider) { create(:lead_provider) }
     let(:partnership) { create(:partnership, lead_provider: lead_provider) }
+    let(:school_cohort) { create(:school_cohort, school: partnership.school, cohort: partnership.cohort, induction_programme_choice: "full_induction_programme") }
     let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
     let(:bearer_token) { "Bearer #{token}" }
 
     before :each do
       mentor_profile = create(:mentor_profile, school: partnership.school, cohort: partnership.cohort)
-      create_list :early_career_teacher_profile, 2, mentor_profile: mentor_profile, school: partnership.school, cohort: partnership.cohort
+      create_list :early_career_teacher_profile, 2, mentor_profile: mentor_profile, school_cohort: school_cohort
+      ect_teacher_profile_with_one_active_and_one_withdrawn_profile = ParticipantProfile::ECT.first.teacher_profile
+      create(:participant_profile,
+             :withdrawn,
+             :ect,
+             teacher_profile: ect_teacher_profile_with_one_active_and_one_withdrawn_profile,
+             school_cohort: school_cohort)
     end
+    let!(:withdrawn_ect_profile) { create(:participant_profile, :withdrawn, :ect, school_cohort: school_cohort) }
 
     context "when authorized" do
       before do
@@ -31,7 +39,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
 
         it "returns all users" do
           get "/api/v1/participants"
-          expect(parsed_response["data"].size).to eql(3)
+          expect(parsed_response["data"].size).to eql(4)
         end
 
         it "returns correct type" do
@@ -53,18 +61,23 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           get "/api/v1/participants"
           mentors = 0
           ects = 0
+          withdrawn = 0
 
           parsed_response["data"].each do |user|
             user_type = user["attributes"]["participant_type"]
+            status = user["attributes"]["status"]
             if user_type == "mentor"
               mentors += 1
             elsif user_type == "ect"
               ects += 1
+            elsif user_type.nil? && status == "withdrawn"
+              withdrawn += 1
             end
           end
 
           expect(mentors).to eql(1)
           expect(ects).to eql(2)
+          expect(withdrawn).to eql(1)
         end
 
         it "returns the right number of users per page" do
@@ -75,15 +88,19 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
         it "returns different users for each page" do
           get "/api/v1/participants", params: { page: { per_page: 2, page: 1 } }
           expect(parsed_response["data"].size).to eql(2)
+          first_page_id = parsed_response["data"].first["id"]
 
           get "/api/v1/participants", params: { page: { per_page: 2, page: 2 } }
-          expect(JSON.parse(response.body)["data"].size).to eql(1)
+          second_parsed_response = JSON.parse(response.body)
+          second_page_ids = second_parsed_response["data"].map { |item| item["id"] }
+          expect(second_parsed_response["data"].size).to eql(2)
+          expect(second_page_ids).not_to include first_page_id
         end
 
         it "returns users changed since a particular time, if given a updated_since parameter" do
           User.first.update!(updated_at: 2.days.ago)
           get "/api/v1/participants", params: { filter: { updated_since: 1.day.ago.iso8601 } }
-          expect(parsed_response["data"].size).to eql(2)
+          expect(parsed_response["data"].size).to eql(3)
         end
       end
 
@@ -98,7 +115,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
         end
 
         it "returns all users" do
-          expect(parsed_response.length).to eql 3
+          expect(parsed_response.length).to eql 4
         end
 
         it "returns the correct headers" do
@@ -116,7 +133,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           expect(mentor_row["participant_type"]).to eql "mentor"
           expect(mentor_row["cohort"]).to eql partnership.cohort.start_year.to_s
 
-          ect = ParticipantProfile::ECT.first.user
+          ect = ParticipantProfile::ECT.active.first.user
           ect_row = parsed_response.find { |row| row["id"] == ect.id }
           expect(ect_row).not_to be_nil
           expect(ect_row["email"]).to eql ect.email
@@ -125,17 +142,26 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           expect(ect_row["school_urn"]).to eql partnership.school.urn
           expect(ect_row["participant_type"]).to eql "ect"
           expect(ect_row["cohort"]).to eql partnership.cohort.start_year.to_s
+
+          withdrawn_row = parsed_response.find { |row| row["id"] == withdrawn_ect_profile.user.id }
+          expect(withdrawn_row).not_to be_nil
+          expect(withdrawn_row["email"]).to be_empty
+          expect(withdrawn_row["full_name"]).to be_empty
+          expect(withdrawn_row["mentor_id"]).to be_empty
+          expect(withdrawn_row["school_urn"]).to be_empty
+          expect(withdrawn_row["participant_type"]).to be_empty
+          expect(withdrawn_row["cohort"]).to be_empty
         end
 
         it "ignores pagination parameters" do
           get "/api/v1/participants.csv", params: { page: { per_page: 2, page: 1 } }
-          expect(parsed_response.length).to eql 3
+          expect(parsed_response.length).to eql 4
         end
 
         it "respects the updated_since parameter" do
           User.first.update!(updated_at: 2.days.ago)
           get "/api/v1/participants.csv", params: { filter: { updated_since: 1.day.ago.iso8601 } }
-          expect(parsed_response.length).to eql(2)
+          expect(parsed_response.length).to eql(3)
         end
       end
     end

@@ -48,7 +48,7 @@ module Admin
     end
 
     def withdraw_participants_if_required(new_provision)
-      return if %w[core_induction_programme full_induction_programme].include? new_provision
+      return if %i[core_induction_programme full_induction_programme].include? new_provision
 
       school_cohort.active_ecf_participant_profiles.each(&:withdrawn!)
     end

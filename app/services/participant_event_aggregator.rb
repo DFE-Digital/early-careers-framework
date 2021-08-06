@@ -13,7 +13,7 @@ private
 
   def default_params
     {
-      recorder: ParticipantDeclaration,
+      recorder: ParticipantDeclaration::ECF,
       started: :count_active_for_lead_provider,
     }
   end

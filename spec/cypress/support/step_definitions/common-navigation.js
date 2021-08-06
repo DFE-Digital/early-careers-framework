@@ -57,6 +57,8 @@ const pagePaths = {
   "choose delivery partner cohorts":
     "/admin/suppliers/new/delivery-partner/choose-cohorts",
   "new delivery partner review": "/admin/suppliers/new/delivery-partner/review",
+  "finance lead providers index": "/finance/lead-providers",
+  "ECF payment breakdown": "/finance/lead-providers/:id",
   "delivery partner edit": "/delivery-partners/:id/edit",
   "delivery partner delete": "/delivery-partners/:id/delete",
   "users sign in": "/users/sign_in",

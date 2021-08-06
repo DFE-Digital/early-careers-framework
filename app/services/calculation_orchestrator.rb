@@ -8,12 +8,57 @@ class CalculationOrchestrator
     def call(cpd_lead_provider:,
              contract:,
              aggregator: ::ParticipantEventAggregator,
-             uplift_aggregator: ::ParticipantUpliftAggregator,
              calculator: ::PaymentCalculator::Ecf::PaymentCalculation,
              event_type: :started)
-      total_participants = aggregator.call({ cpd_lead_provider: cpd_lead_provider }, event_type: event_type)
-      uplift_participants = uplift_aggregator.call({ cpd_lead_provider: cpd_lead_provider }, event_type: event_type)
-      calculator.call(contract: contract, total_participants: total_participants, uplift_participants: uplift_participants, event_type: event_type)
+      new(
+        cpd_lead_provider: cpd_lead_provider,
+        contract: contract,
+        aggregator: aggregator,
+        calculator: calculator,
+      ).call(event_type: event_type)
+    end
+  end
+
+  def call(event_type:)
+    calculator.call(contract: contract, aggregations: aggregations(event_type: event_type), event_type: event_type)
+  end
+
+private
+
+  attr_accessor :cpd_lead_provider, :contract, :aggregator, :calculator
+
+  def initialize(cpd_lead_provider:,
+                 contract:,
+                 aggregator: ::ParticipantEventAggregator,
+                 calculator: ::PaymentCalculator::Ecf::PaymentCalculation)
+    @cpd_lead_provider = cpd_lead_provider
+    @contract = contract
+    @aggregator = aggregator
+    @calculator = calculator
+  end
+
+  def aggregators(event_type:)
+    @aggregators ||= Hash.new { |hash, key| hash[key] = aggregate(aggregation_type: key, event_type: event_type) }
+  end
+
+  def aggregate(aggregation_type:, event_type:)
+    aggregator.call({ cpd_lead_provider: cpd_lead_provider, event_type => aggregation_types[event_type][aggregation_type] }, event_type: event_type)
+  end
+
+  def aggregation_types
+    {
+      started: {
+        all: :count_active_for_lead_provider,
+        uplift: :count_active_uplift_for_lead_provider,
+        ects: :count_active_ects_for_lead_provider,
+        mentors: :count_active_mentors_for_lead_provider,
+      },
+    }
+  end
+
+  def aggregations(event_type:)
+    aggregation_types[event_type].keys.index_with do |key|
+      aggregators(event_type: event_type)[key]
     end
   end
 end

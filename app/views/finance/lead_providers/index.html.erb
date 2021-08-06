@@ -1,12 +1,12 @@
 <% content_for :title, "Lead Providers" %>
 
-<h1 class="govuk-heading-l">Lead Providers</h1>
+<h1 class="govuk-heading-l">ECF Lead Providers</h1>
 
 <table class="govuk-table">
   <tbody class="govuk-table__body">
-    <% @lead_providers.each do |lead_provider| %>
+    <% @ecf_lead_providers.each do |ecf_lead_provider| %>
       <tr class="govuk-table__row">
-        <td class="govuk-table__cell" data-test="lead-provider-name"><%= lead_provider.name %></td>
+        <td class="govuk-table__cell" data-test="lead-provider-name"><%= link_to ecf_lead_provider.name, finance_lead_provider_path(ecf_lead_provider) %></td>
       </tr>
     <% end %>
   </tbody>

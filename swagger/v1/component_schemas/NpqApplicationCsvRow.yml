@@ -89,3 +89,11 @@ properties:
       - npq-senior-leadership
       - npq-headship
       - npq-executive-leadership
+  status:
+    description: "The current state of the NPQ application"
+    type: string
+    example: pending
+    enum:
+      - pending
+      - accepted
+      - rejected

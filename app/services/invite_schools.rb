@@ -201,13 +201,13 @@ class InviteSchools
   def send_induction_coordinator_add_participants_email
     induction_coordinators_chosen_route = User.distinct
                                               .joins(:induction_coordinator_profile, schools: :school_cohorts)
-                                              .left_outer_joins(schools: :ecf_participant_profiles)
+                                              .left_outer_joins(schools: :active_ecf_participant_profiles)
                                               .where(
                                                 school_cohorts: {
                                                   induction_programme_choice: %w[core_induction_programme full_induction_programme],
                                                   opt_out_of_updates: false,
                                                 },
-                                                ecf_participant_profiles: { id: nil },
+                                                active_ecf_participant_profiles: { id: nil },
                                               )
 
     induction_coordinators_chosen_route.find_each do |induction_coordinator|

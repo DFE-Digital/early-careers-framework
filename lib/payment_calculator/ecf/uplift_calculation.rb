@@ -15,8 +15,11 @@ module PaymentCalculator
         return nil unless event_type == :started
 
         {
-          per_participant: uplift_payment_per_participant,
-          sub_total: uplift_payment_for_event(event_type: event_type, uplift_participants: uplift_participants),
+          uplift: {
+            participants: uplift_participants,
+            per_participant: uplift_payment_per_participant,
+            subtotal: uplift_payment_for_event(event_type: event_type, uplift_participants: uplift_participants),
+          },
         }
       end
     end

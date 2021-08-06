@@ -52,10 +52,11 @@ module Api
 
       def participants
         participants = lead_provider.ecf_participants
-                           .includes(
-                             early_career_teacher_profile: %i[cohort mentor school],
-                             mentor_profile: %i[cohort school],
-                           )
+                                    .distinct
+                                    .includes(
+                                      early_career_teacher_profile: %i[cohort mentor school],
+                                      mentor_profile: %i[cohort school],
+                                    )
 
         if updated_since.present?
           participants = participants.changed_since(updated_since)
