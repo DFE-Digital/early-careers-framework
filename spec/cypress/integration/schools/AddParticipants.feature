@@ -22,7 +22,8 @@ Feature: School leaders should be able to add participants
     And percy should be sent snapshot called "school participant etc details page"
 
     When I click the submit button
-    Then "page body" should contain "can't be blank"
+    Then "page body" should contain "Enter a full name"
+    Then "page body" should contain "Enter an email address"
 
     When I type "James Bond" into field labelled "Full name"
     And I type "james.bond.007@secret.gov.uk" into field labelled "Email"
@@ -67,7 +68,8 @@ Feature: School leaders should be able to add participants
     And percy should be sent snapshot called "school participant mentor details page"
 
     When I click the submit button
-    Then "page body" should contain "can't be blank"
+    Then "page body" should contain "Enter a full name"
+    Then "page body" should contain "Enter an email address"
 
     When I type "James Bond" into field labelled "Full name"
     And I type "james.bond.007@secret.gov.uk" into field labelled "Email"

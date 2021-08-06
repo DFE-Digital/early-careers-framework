@@ -9,8 +9,8 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
   it { is_expected.to validate_presence_of(:type).on(:type).with_message("Please select type of the new participant") }
   it { is_expected.to validate_inclusion_of(:type).in_array(subject.type_options).on(:type) }
 
-  it { is_expected.to validate_presence_of(:full_name).on(:details) }
-  it { is_expected.to validate_presence_of(:email).on(:details) }
+  it { is_expected.to validate_presence_of(:full_name).on(:details).with_message("Enter a full name") }
+  it { is_expected.to validate_presence_of(:email).on(:details).with_message("Enter an email address") }
 
   describe "type" do
     context "when it is set to :ect" do

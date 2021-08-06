@@ -25,10 +25,10 @@ module Schools
       attribute :full_name
       attribute :email
 
-      validates :full_name, presence: true
+      validates :full_name, presence: { message: "Enter a full name" }
 
       validates :email,
-                presence: true,
+                presence: { message: "Enter an email address" },
                 notify_email: { allow_blank: true }
 
       next_step do
