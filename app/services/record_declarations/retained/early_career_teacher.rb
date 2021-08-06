@@ -7,7 +7,7 @@ module RecordDeclarations
       include Retained
 
       def valid_evidence_types
-        %w[training-event-attended self-study-material-completed]
+        %w[training-event-attended self-study-material-completed other]
       end
     end
   end

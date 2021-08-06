@@ -16,7 +16,7 @@ RSpec.describe RecordDeclarations::Retained::Mentor do
       declaration_type: "retained-1",
       course_identifier: "ecf-induction",
       lead_provider_from_token: another_lead_provider,
-      evidence_held: "training-event-attended",
+      evidence_held: %w[training-event-attended self-study-material-completed other].sample,
     }
   end
   let(:ect_params) do

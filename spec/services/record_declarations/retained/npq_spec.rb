@@ -21,7 +21,7 @@ RSpec.describe RecordDeclarations::Retained::NPQ do
       declaration_type: "retained-1",
       course_identifier: "npq-leading-teaching",
       lead_provider_from_token: another_lead_provider,
-      evidence_held: "training-event-attended",
+      evidence_held: %w[training-event-attended other].sample,
     }
   end
 
