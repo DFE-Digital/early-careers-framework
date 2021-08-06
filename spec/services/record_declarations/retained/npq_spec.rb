@@ -21,7 +21,7 @@ RSpec.describe RecordDeclarations::Retained::NPQ do
       declaration_type: "retained-1",
       course_identifier: "npq-leading-teaching",
       lead_provider_from_token: another_lead_provider,
-      evidence_held: "Test evidence",
+      evidence_held: "training-event-attended",
     }
   end
 
@@ -53,6 +53,12 @@ RSpec.describe RecordDeclarations::Retained::NPQ do
   context "when declaration type is valid for ECF but not NPQ" do
     it "raises a ParameterMissing error" do
       expect { described_class.call(params.merge(declaration_type: "retained-3")) }.to raise_error(ActionController::ParameterMissing)
+    end
+  end
+
+  context "when evidence held is invalid" do
+    it "raises a ParameterMissing error" do
+      expect { described_class.call(params.merge(evidence_held: "invalid")) }.to raise_error(ActionController::ParameterMissing)
     end
   end
 end

@@ -16,7 +16,7 @@ RSpec.describe RecordDeclarations::Retained::Mentor do
       declaration_type: "retained-1",
       course_identifier: "ecf-induction",
       lead_provider_from_token: another_lead_provider,
-      evidence_held: "Test evidence",
+      evidence_held: "training-event-attended",
     }
   end
   let(:ect_params) do
@@ -69,6 +69,12 @@ RSpec.describe RecordDeclarations::Retained::Mentor do
   context "when declaration type is invalid" do
     it "raises a ParameterMissing error" do
       expect { described_class.call(params.merge(declaration_type: "invalid")) }.to raise_error(ActionController::ParameterMissing)
+    end
+  end
+
+  context "when evidence held is invalid" do
+    it "raises a ParameterMissing error" do
+      expect { described_class.call(params.merge(evidence_held: "invalid")) }.to raise_error(ActionController::ParameterMissing)
     end
   end
 end
