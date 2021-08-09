@@ -7,7 +7,7 @@ module RecordDeclarations
       include Retained
 
       def valid_evidence_types
-        %w[training-event-attended other]
+        %w[yes]
       end
     end
   end
