@@ -26,6 +26,7 @@ class FeatureFlag
     admin_change_programme
     admin_challenge_partnership
     admin_change_materials
+    user_research_full_booked
   ].freeze
 
   FEATURES = (PERMANENT_SETTINGS + TEMPORARY_FEATURE_FLAGS).index_with { |name|
