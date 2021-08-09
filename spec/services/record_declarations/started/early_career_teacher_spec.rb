@@ -81,7 +81,7 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
     it "raised ParameterMissing error" do
       params = ect_params.merge({ declaration_date: (Time.zone.now + 100.years).rfc3339(9) })
       params[:raw_event] = generate_raw_event(params)
-      expected_msg = "param is missing or the value is empty: [\"The property '#/declaration_date' can not declare a future date\"]"
+      expected_msg = /The property '#\/declaration_date' can not declare a future date/
       expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing, expected_msg)
     end
   end
