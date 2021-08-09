@@ -33,9 +33,8 @@ properties:
     description: "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period"
     type: string
     enum:
-      - training-event-attended
-      - self-study-material-completed
-    example: training-event-attended
+      - "yes"
+    example: "yes"
 required:
   - participant_id
   - declaration_type
@@ -47,4 +46,4 @@ example:
   declaration_type: retained-1
   declaration_date: 2021-05-31T02:21:32Z
   course_identifier: npq-headship
-  evidence_held: training-event-attended
+  evidence_held: "yes"

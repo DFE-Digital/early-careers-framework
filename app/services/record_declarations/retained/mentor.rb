@@ -5,6 +5,10 @@ module RecordDeclarations
     class Mentor < ::RecordDeclarations::Base
       include RecordDeclarations::Mentor
       include Retained
+
+      def valid_evidence_types
+        %w[training-event-attended self-study-material-completed other]
+      end
     end
   end
 end

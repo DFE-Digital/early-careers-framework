@@ -45,9 +45,11 @@ en:
   missing_course_identifier: "The property '#/course_identifier' must be present"
   missing_declaration_date: "The property '#/declaration_date' must be present"
   missing_declaration_type: "The property '#/declaration_type' must be present"
+  missing_evidence_held: "The property '#/evidence_held' must be present"
   missing_lead_provider: "The lead provider must be present"
   invalid_event: "The property '#/declaration_type' must be a valid declaration type"
   invalid_course: "The property '#/course_identifier' must be an available course to '#/participant_id'"
+  invalid_evidence_type: "The property '#/evidence_held' must be an available type to the event type and course type"
   invalid_data_structure: correct json data structure required. See API docs for reference
   estimate_participants_default_message: &default_message "Enter a number between 0 and 1000"
   estimate_participants_defaults: &defaults
