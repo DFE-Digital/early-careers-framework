@@ -4,6 +4,12 @@
   <li><a href="#continuing-the-npq-registration-process" class="govuk-link">Continuing the NPQ registration process</a></li>
 </ul>
 <ul class="govuk-list govuk-list--bullet">
+  <li><a href="#accept-npq-application" class="govuk-link">Accepting an NPQ application</a></li>
+</ul>
+<ul class="govuk-list govuk-list--bullet">
+  <li><a href="#reject-npq-application" class="govuk-link">Rejecting an NPQ application</a></li>
+</ul>
+<ul class="govuk-list govuk-list--bullet">
   <li>
     <a href="#declaring-that-an-npq-participant-has-started-their-induction" class="govuk-link">
       Declaring that an NPQ participant has started their induction
@@ -46,6 +52,38 @@
 <p class="govuk-body-m">This will return <a href="/lead-providers/guidance/reference#multiplenpqapplicationsresponse-object" class="govuk-link">multiple NPQ application records</a> with the updates to the record included.</p>
 
 <p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#get-api-v1-npq-applications" class="govuk-link">retrieve multiple NPQ applications</a> endpoint.</p>
+
+
+<h2 id="accept-npq-application" class="govuk-heading-l">
+  Accept an NPQ application
+</h2>
+<p class="govuk-body-m">
+  This scenario begins after a participant has been added to the service by registering for an NPQ course
+</p>
+<h3 class="govuk-heading-m">1. Provider accepts an NPQ application</h3>
+<p class="govuk-body-m">You can accept someone if they have successfully completed all application steps ahead of starting their course.</p>
+<p class="govuk-body-m">
+  <code>POST /api/v1/npq-applications/{id}/accept</code>
+</p>
+<p class="govuk-body-m">This returns an
+  <a href="/lead-providers/guidance/reference#npqapplicationresponse-object" class="govuk-link">NPQ application record</a>.
+</p>
+
+<h2 id="reject-npq-application" class="govuk-heading-l">
+  Reject an NPQ application
+</h2>
+<p class="govuk-body-m">
+  This scenario begins after a participant has been added to the service by registering for an NPQ course
+</p>
+<h3 class="govuk-heading-m">1. Provider rejects an NPQ application</h3>
+<p class="govuk-body-m">You will need to reject someone if you will be unable to train them. For example they have failed the rest of their application, have decided against studying an NPQ or are unable to secure funding.</p>
+<p class="govuk-body-m">
+  <code>POST /api/v1/npq-applications/{id}/reject</code>
+</p>
+<p class="govuk-body-m">This returns an
+  <a href="/lead-providers/guidance/reference#npqapplicationresponse-object" class="govuk-link">NPQ application record</a>.
+</p>
+
 
 <h2 id="declaring-that-an-npq-participant-has-started-their-induction" class="govuk-heading-l">
   Declaring that an NPQ participant has started their induction
