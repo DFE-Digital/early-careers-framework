@@ -3,6 +3,7 @@
 class ParticipantProfile < ApplicationRecord
   has_paper_trail
   belongs_to :teacher_profile, touch: true
+  has_many :profile_declarations
 
   # TODO: Back-fill, so that every profile has a schedule. Add touch: true afterwards
   belongs_to :schedule, optional: true, class_name: "Finance::Schedule"
@@ -13,7 +14,7 @@ class ParticipantProfile < ApplicationRecord
 
   enum status: {
     active: "active",
-    withdrawn: "withdrawn",
+    permanently_inactive: "permanently_inactive",
   }
 
   scope :mentors, -> { where(type: Mentor.name) }

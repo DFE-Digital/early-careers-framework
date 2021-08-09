@@ -18,4 +18,13 @@ namespace :data do
       )
     end
   end
+
+  namespace :participant_profile_status do
+    desc "Updates the participant profiles with the new permanently_inactive status change"
+    task permanently_inactive: :environment do
+      ParticipantProfile.where(status: "withdrawn").in_batches do |participant_profile|
+        participant_profile.update!(status: "permanently_inactive")
+      end
+    end
+  end
 end

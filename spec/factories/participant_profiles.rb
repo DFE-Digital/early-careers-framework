@@ -67,8 +67,8 @@ FactoryBot.define do
       pupil_premium_uplift
     end
 
-    trait :withdrawn do
-      status { :withdrawn }
+    trait :permanently_inactive do
+      status { :permanently_inactive }
     end
   end
 end

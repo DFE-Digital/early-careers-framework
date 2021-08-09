@@ -38,10 +38,10 @@ def generate_mentors(lead_provider, school, cohort, logger)
   end
   2.times do
     mentor = User.create!(full_name: Faker::Name.name, email: Faker::Internet.email)
-    mentor_profile = ParticipantProfile::Mentor.create!(user: mentor, school_cohort: school_cohort, status: "withdrawn")
+    mentor_profile = ParticipantProfile::Mentor.create!(user: mentor, school_cohort: school_cohort, status: "permanently_inactive")
 
     ect = User.create!(full_name: Faker::Name.name, email: Faker::Internet.email)
-    ParticipantProfile::ECT.create!(user: ect, school_cohort: school_cohort, mentor_profile: mentor_profile, status: "withdrawn")
+    ParticipantProfile::ECT.create!(user: ect, school_cohort: school_cohort, mentor_profile: mentor_profile, status: "permanently_inactive")
   end
   new_mentor_count = lead_provider.ecf_participant_profiles.mentors.count
   logger.info(" Before: #{existing_mentor_count} mentors, after: #{new_mentor_count}")

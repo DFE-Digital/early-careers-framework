@@ -42,4 +42,4 @@ properties:
     example: active
     enum:
       - active
-      - withdrawn
+      - permanently_inactive

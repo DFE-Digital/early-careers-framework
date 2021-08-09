@@ -15,14 +15,14 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
     before :each do
       mentor_profile = create(:mentor_profile, school: partnership.school, cohort: partnership.cohort)
       create_list :early_career_teacher_profile, 2, mentor_profile: mentor_profile, school_cohort: school_cohort
-      ect_teacher_profile_with_one_active_and_one_withdrawn_profile = ParticipantProfile::ECT.first.teacher_profile
+      ect_teacher_profile_with_one_active_and_one_permanently_inactive_profile = ParticipantProfile::ECT.first.teacher_profile
       create(:participant_profile,
-             :withdrawn,
+             :permanently_inactive,
              :ect,
-             teacher_profile: ect_teacher_profile_with_one_active_and_one_withdrawn_profile,
+             teacher_profile: ect_teacher_profile_with_one_active_and_one_permanently_inactive_profile,
              school_cohort: school_cohort)
     end
-    let!(:withdrawn_ect_profile) { create(:participant_profile, :withdrawn, :ect, school_cohort: school_cohort) }
+    let!(:permanently_inactive_ect_profile) { create(:participant_profile, :permanently_inactive, :ect, school_cohort: school_cohort) }
 
     context "when authorized" do
       before do
@@ -61,7 +61,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           get "/api/v1/participants"
           mentors = 0
           ects = 0
-          withdrawn = 0
+          permanently_inactive = 0
 
           parsed_response["data"].each do |user|
             user_type = user["attributes"]["participant_type"]
@@ -70,14 +70,14 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
               mentors += 1
             elsif user_type == "ect"
               ects += 1
-            elsif user_type.nil? && status == "withdrawn"
-              withdrawn += 1
+            elsif user_type.nil? && status == "permanently_inactive"
+              permanently_inactive += 1
             end
           end
 
           expect(mentors).to eql(1)
           expect(ects).to eql(2)
-          expect(withdrawn).to eql(1)
+          expect(permanently_inactive).to eql(1)
         end
 
         it "returns the right number of users per page" do
@@ -143,14 +143,14 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           expect(ect_row["participant_type"]).to eql "ect"
           expect(ect_row["cohort"]).to eql partnership.cohort.start_year.to_s
 
-          withdrawn_row = parsed_response.find { |row| row["id"] == withdrawn_ect_profile.user.id }
-          expect(withdrawn_row).not_to be_nil
-          expect(withdrawn_row["email"]).to be_empty
-          expect(withdrawn_row["full_name"]).to be_empty
-          expect(withdrawn_row["mentor_id"]).to be_empty
-          expect(withdrawn_row["school_urn"]).to be_empty
-          expect(withdrawn_row["participant_type"]).to be_empty
-          expect(withdrawn_row["cohort"]).to be_empty
+          permanently_inactive_row = parsed_response.find { |row| row["id"] == permanently_inactive_ect_profile.user.id }
+          expect(permanently_inactive_row).not_to be_nil
+          expect(permanently_inactive_row["email"]).to be_empty
+          expect(permanently_inactive_row["full_name"]).to be_empty
+          expect(permanently_inactive_row["mentor_id"]).to be_empty
+          expect(permanently_inactive_row["school_urn"]).to be_empty
+          expect(permanently_inactive_row["participant_type"]).to be_empty
+          expect(permanently_inactive_row["cohort"]).to be_empty
         end
 
         it "ignores pagination parameters" do

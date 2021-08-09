@@ -471,9 +471,9 @@ RSpec.describe School, type: :model do
       expect(school.participants_for(cohort)).to include(ect_profile.user, mentor_profile.user)
     end
 
-    it "does not include withdrawn participants" do
-      ect = create(:early_career_teacher_profile, status: "withdrawn", school_cohort: school_cohort).user
-      mentor = create(:mentor_profile, status: "withdrawn", school_cohort: school_cohort).user
+    it "does not include permanently_inactive participants" do
+      ect = create(:early_career_teacher_profile, :permanently_inactive, school_cohort: school_cohort).user
+      mentor = create(:mentor_profile, :permanently_inactive, school_cohort: school_cohort).user
 
       expect(school.participants_for(cohort)).not_to include(ect, mentor)
     end
@@ -502,8 +502,8 @@ RSpec.describe School, type: :model do
       expect(school.early_career_teacher_profiles_for(cohort)).to include ect_profile
     end
 
-    it "does not include withdrawn ECTs" do
-      ect_profile = create(:early_career_teacher_profile, status: "withdrawn", school_cohort: school_cohort)
+    it "does not include permanently_inactive ECTs" do
+      ect_profile = create(:early_career_teacher_profile, :permanently_inactive, school_cohort: school_cohort)
 
       expect(school.early_career_teacher_profiles_for(cohort)).not_to include ect_profile
     end
@@ -536,8 +536,8 @@ RSpec.describe School, type: :model do
       expect(school.mentor_profiles_for(cohort)).to include mentor_profile
     end
 
-    it "does not include withdrawn mentors" do
-      mentor_profile = create(:mentor_profile, status: "withdrawn", school_cohort: school_cohort)
+    it "does not include permanently_inactive mentors" do
+      mentor_profile = create(:mentor_profile, :permanently_inactive, school_cohort: school_cohort)
 
       expect(school.mentor_profiles_for(cohort)).not_to include mentor_profile
     end

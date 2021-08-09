@@ -24,7 +24,7 @@ RSpec.describe User, type: :model do
       end
 
       it "returns nil when there is no active profile" do
-        user = create(:participant_profile, :ect, status: "withdrawn").user
+        user = create(:participant_profile, :ect, :permanently_inactive).user
         expect(user.early_career_teacher_profile).to be_nil
       end
     end
@@ -36,7 +36,7 @@ RSpec.describe User, type: :model do
       end
 
       it "returns nil when there is no active profile" do
-        user = create(:participant_profile, :mentor, status: :withdrawn).user
+        user = create(:participant_profile, :mentor, status: :permanently_inactive).user
 
         expect(user.mentor_profile).to be_nil
       end
@@ -144,8 +144,8 @@ RSpec.describe User, type: :model do
       expect(user.early_career_teacher?).to be false
     end
 
-    it "is false when the ect profile is withdrawn" do
-      user = create(:participant_profile, :ect, status: "withdrawn").user
+    it "is false when the ect profile is permanently_inactive" do
+      user = create(:participant_profile, :ect, :permanently_inactive).user
       expect(user.early_career_teacher?).to be false
     end
   end
@@ -163,8 +163,8 @@ RSpec.describe User, type: :model do
       expect(user.mentor?).to be false
     end
 
-    it "is false when the mentor profile is withdrawn" do
-      user = create(:mentor_profile, status: "withdrawn").user
+    it "is false when the mentor profile is permanently_inactive" do
+      user = create(:mentor_profile, :permanently_inactive).user
       expect(user.mentor?).to be false
     end
   end

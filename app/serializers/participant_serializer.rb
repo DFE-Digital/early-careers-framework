@@ -46,6 +46,6 @@ class ParticipantSerializer
   end
 
   attribute :status do |user|
-    user.early_career_teacher_profile&.status || user.mentor_profile&.status || "withdrawn"
+    user.early_career_teacher_profile&.status || user.mentor_profile&.status || "permanently_inactive"
   end
 end

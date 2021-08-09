@@ -36,4 +36,4 @@ properties:
           school_urn: null
           participant_type: ect
           cohort: null
-          status: withdrawn
+          status: permanently_inactive

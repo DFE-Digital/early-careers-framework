@@ -12,7 +12,7 @@ RSpec.describe "Schools::Participants", type: :request do
   let!(:mentor_user) { create(:participant_profile, :mentor, school_cohort: school_cohort).user }
   let!(:mentor_user_2) { create(:participant_profile, :mentor, school_cohort: school_cohort).user }
   let!(:ect_user) { create(:participant_profile, :ect, mentor_profile: mentor_user.mentor_profile, school_cohort: school_cohort).user }
-  let!(:withdrawn_ect) { create(:participant_profile, :ect, status: "withdrawn", school_cohort: school_cohort).user }
+  let!(:permanently_inactive_ect) { create(:participant_profile, :ect, :permanently_inactive, school_cohort: school_cohort).user }
   let!(:unrelated_mentor) { create(:participant_profile, :mentor, school_cohort: another_cohort).user }
   let!(:unrelated_ect) { create(:participant_profile, :ect, school_cohort: another_cohort).user }
 
@@ -44,10 +44,10 @@ RSpec.describe "Schools::Participants", type: :request do
       expect(response.body).not_to include(CGI.escapeHTML(unrelated_ect.full_name))
     end
 
-    it "does not list withdrawn participants" do
+    it "does not list permanently_inactive participants" do
       get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants"
 
-      expect(response.body).not_to include(CGI.escapeHTML(withdrawn_ect.full_name))
+      expect(response.body).not_to include(CGI.escapeHTML(permanently_inactive_ect.full_name))
     end
 
     context "when there are no mentors" do

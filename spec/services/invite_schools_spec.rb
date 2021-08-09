@@ -513,10 +513,10 @@ RSpec.describe InviteSchools do
       expect_send_participants_email(induction_coordinator)
     end
 
-    it "sends emails to tutors who have withdrawn all of their participants" do
+    it "sends emails to tutors who have all of their participants permanently inactive" do
       induction_coordinator = create(:user, :induction_coordinator)
       school_cohort = create(:school_cohort, school: induction_coordinator.schools.first, induction_programme_choice: "full_induction_programme")
-      create(:participant_profile, :withdrawn, :ect, school_cohort: school_cohort)
+      create(:participant_profile, :permanently_inactive, :ect, school_cohort: school_cohort)
 
       InviteSchools.new.send_induction_coordinator_add_participants_email
       expect_send_participants_email(induction_coordinator)

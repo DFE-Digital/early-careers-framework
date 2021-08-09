@@ -21,7 +21,7 @@ module Admin
     def remove; end
 
     def destroy
-      @participant_profile.withdrawn!
+      @participant_profile.permanently_inactive!
       render :destroy_success
     end
 

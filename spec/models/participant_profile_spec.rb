@@ -9,7 +9,7 @@ RSpec.describe ParticipantProfile, type: :model do
   it {
     is_expected.to define_enum_for(:status).with_values(
       active: "active",
-      withdrawn: "withdrawn",
+      permanently_inactive: "permanently_inactive",
     ).backed_by_column_of_type(:text)
   }
 

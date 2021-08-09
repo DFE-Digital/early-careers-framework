@@ -38,16 +38,16 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
   end
 
   describe "mentor_options" do
-    it "does not include withdrawn mentors" do
-      withdrawn_mentor = create(:participant_profile, :mentor, school_cohort: school_cohort, status: "withdrawn").user
+    it "does not include permanently_inactive mentors" do
+      permanently_inactive_mentor = create(:participant_profile, :mentor, :permanently_inactive, school_cohort: school_cohort).user
 
-      expect(subject.mentor_options).not_to include(withdrawn_mentor)
+      expect(subject.mentor_options).not_to include(permanently_inactive_mentor)
     end
 
     it "includes active mentors" do
-      withdrawn_mentor = create(:participant_profile, :mentor, school_cohort: school_cohort).user
+      permanently_inactive_mentor = create(:participant_profile, :mentor, school_cohort: school_cohort).user
 
-      expect(subject.mentor_options).to include(withdrawn_mentor)
+      expect(subject.mentor_options).to include(permanently_inactive_mentor)
     end
   end
 
@@ -71,9 +71,9 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
         expect(subject).to be_email_already_taken
       end
 
-      context "when the ECT is withdrawn" do
+      context "when the ECT is permanently_inactive" do
         let!(:ect_profile) do
-          create(:participant_profile, :withdrawn, :ect, user: create(:user, email: "ray.clemence@example.com"))
+          create(:participant_profile, :permanently_inactive, :ect, user: create(:user, email: "ray.clemence@example.com"))
         end
 
         it "returns false" do
@@ -91,9 +91,9 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
         expect(subject).to be_email_already_taken
       end
 
-      context "when the mentor is withdrawn" do
+      context "when the mentor is permanently_inactive" do
         let!(:mentor_profile) do
-          create(:participant_profile, :withdrawn, :mentor, user: create(:user, email: "ray.clemence@example.com"))
+          create(:participant_profile, :permanently_inactive, :mentor, user: create(:user, email: "ray.clemence@example.com"))
         end
 
         it "returns false" do
