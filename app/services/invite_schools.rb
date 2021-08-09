@@ -230,6 +230,34 @@ class InviteSchools
     end
   end
 
+  def feature_flag_and_send_participant_validation_beta_emails(array_of_urns:)
+    start_url = participant_validation_start_url
+    user_research_url = participant_validation_research_url
+
+    School.where(urn: array_of_urns).find_each do |school|
+      FeatureFlag.activate(:participant_validation, for: school)
+
+      school.active_ecf_participant_profiles.each do |profile|
+        if profile.ect?
+          SchoolMailer.participant_validation_ect_email(
+            recipient: profile.user.email,
+            school_name: school.name,
+            start_url: start_url,
+            user_research_url: user_research_url
+          ).deliver_later
+        elsif profile.mentor?
+          SchoolMailer.participant_validation_fip_mentor_email(
+            recipient: profile.user.email,
+            school_name: school.name,
+            start_url: start_url
+          ).deliver_later
+        end
+      rescue StandardError
+        logger.info "Error sending participant validation email to: #{profile&.user&.email} ... skipping"
+      end
+    end
+  end
+
 private
 
   def private_beta_start_url
@@ -268,6 +296,21 @@ private
 
   def add_participants_chaser_sign_in_url
     sign_in_url_with_campaign(:add_participants)
+  end
+
+  def participant_validation_start_url
+    Rails.application.routes.url_helpers.participants_start_registrations_url(
+      host: Rails.application.config.domain,
+      **UTMService.email(:participant_validation_beta, :participant_validation_beta),
+    )
+  end
+
+  def participant_validation_research_url
+    Rails.application.routes.url_helpers.page_url(
+      page: "user-research",
+      host: Rails.application.config.domain,
+      **UTMService.email(:participant_validation_research, :participant_validation_research),
+    )
   end
 
   def find_eligible_school(urn)

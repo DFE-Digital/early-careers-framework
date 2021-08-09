@@ -16,6 +16,8 @@ class UTMService
     choose_materials: "choose-materials",
     add_participants: "add-participants",
     year2020_nqt_invite: "year2020-nqt-invite",
+    participant_validation_beta: "participant-validation-beta",
+    participant_validation_research: "participant-validation-research",
   }.freeze
 
   # Campaigns aren't showing up in GA at the moment, so use specific sources
@@ -30,6 +32,8 @@ class UTMService
     choose_materials: "choose-materials",
     add_participants: "add-participants",
     year2020_nqt_invite: "year2020-nqt-invite",
+    participant_validation_beta: "participant-validation-beta",
+    participant_validation_research: "participant-validation-research",
   }.freeze
 
   def self.email(campaign, source = :service)

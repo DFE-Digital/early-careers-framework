@@ -236,7 +236,7 @@ class SchoolMailer < ApplicationMailer
     )
   end
 
-  def participant_validation_ect_email(recipient:, school_name:, start_url:)
+  def participant_validation_ect_email(recipient:, school_name:, start_url:, user_research_url:)
     template_mail(
       PARTICIPANT_VALIDATION_CIP_AND_FIP_ECT_TEMPLATE,
       to: recipient,
@@ -245,6 +245,7 @@ class SchoolMailer < ApplicationMailer
       personalisation: {
         school_name: school_name,
         participant_start: start_url,
+        ur_sign_up_url: user_research_url,
       },
     )
   end

@@ -614,6 +614,60 @@ RSpec.describe InviteSchools do
     end
   end
 
+  describe "#feature_flag_and_send_participant_validation_beta_emails" do
+    let(:schools) { create_list(:school, 2) }
+    let!(:mentor_1) { create(:participant_profile, :mentor, school: schools.first) }
+    let!(:mentor_2) { create(:participant_profile, :mentor, school: schools.second) }
+    let!(:ect_1) { create(:participant_profile, :ect, school: schools.first) }
+    let!(:ect_2) { create(:participant_profile, :ect, school: schools.second) }
+    let(:urns) { schools.map(&:urn) }
+
+    it "activates the participant validation feature flag for the schools" do
+      InviteSchools.new.feature_flag_and_send_participant_validation_beta_emails(array_of_urns: urns)
+
+      schools.each do |school|
+        expect(FeatureFlag.active?(:participant_validation, for: school)).to be true
+      end
+    end
+
+    it "emails the early career teachers belonging to the schools" do
+      start_url = "http://www.example.com/participants/start-registration?utm_campaign=participant-validation-beta&utm_medium=email&utm_source=participant-validation-beta"
+      research_url = "http://www.example.com/pages/user-research?utm_campaign=participant-validation-research&utm_medium=email&utm_source=participant-validation-research"
+      InviteSchools.new.feature_flag_and_send_participant_validation_beta_emails(array_of_urns: urns)
+      expect(SchoolMailer).to delay_email_delivery_of(:participant_validation_ect_email)
+                                  .with(hash_including(
+                                          recipient: ect_1.user.email,
+                                          school_name: schools.first.name,
+                                          start_url: start_url,
+                                          user_research_url: research_url,
+                                        ))
+      expect(SchoolMailer).to delay_email_delivery_of(:participant_validation_ect_email)
+                                  .with(hash_including(
+                                          recipient: ect_2.user.email,
+                                          school_name: schools.second.name,
+                                          start_url: start_url,
+                                          user_research_url: research_url,
+                                        ))
+    end
+
+    it "emails the mentors belonging to the schools" do
+      start_url = "http://www.example.com/participants/start-registration?utm_campaign=participant-validation-beta&utm_medium=email&utm_source=participant-validation-beta"
+      InviteSchools.new.feature_flag_and_send_participant_validation_beta_emails(array_of_urns: urns)
+      expect(SchoolMailer).to delay_email_delivery_of(:participant_validation_fip_mentor_email)
+                                  .with(hash_including(
+                                          recipient: mentor_1.user.email,
+                                          school_name: schools.first.name,
+                                          start_url: start_url,
+                                        ))
+      expect(SchoolMailer).to delay_email_delivery_of(:participant_validation_fip_mentor_email)
+                                  .with(hash_including(
+                                          recipient: mentor_2.user.email,
+                                          school_name: schools.second.name,
+                                          start_url: start_url,
+                                        ))
+    end
+  end
+
 private
 
   def create_signed_in_induction_tutor
