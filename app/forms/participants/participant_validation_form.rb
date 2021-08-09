@@ -38,7 +38,7 @@ module Participants
     def date_of_birth=(value)
       @date_of_birth_invalid = false
       @date_of_birth = ActiveRecord::Type::Date.new.cast(value)
-    rescue StandardError => _e
+    rescue StandardError
       @date_of_birth_invalid = true
     end
 
