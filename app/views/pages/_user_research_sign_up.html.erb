@@ -12,7 +12,10 @@
     <p class="govuk-body">
       We’re inviting some teachers to use our service to provide these details during an online meeting with our
       research
-      team. We’ll ask for feedback to help us to improve the service for other teachers and schools. We can also answer
+      team. </p>
+    
+    <p class="govuk-body">
+      We’ll ask for feedback to help us to improve the service for other teachers and schools. We can also answer
       questions about how the process works.
     </p>
 
@@ -39,12 +42,12 @@
     <%= govuk_warning text: "Please do not use our service before your session." %>
 
     <p class="govuk-body">
-      If you’d like to take part, choose a session time:
+      If you’d like to take part,
 
       <% if mentor %>
-        <%= govuk_link_to "choose a session time here", "https://calendly.com/luke-richards-1/dfe-ecf-research-session-mentor-b3" %>
+        <%= govuk_link_to "choose a session time here.", "https://calendly.com/luke-richards-1/dfe-ecf-research-session-mentor-b3" %>
       <% else %>
-        <%= govuk_link_to "choose a session time here", "https://calendly.com/luke-richards-1/dfe-ecf-research-session-ect-b3" %>
+        <%= govuk_link_to "choose a session time here.", "https://calendly.com/luke-richards-1/dfe-ecf-research-session-ect-b3" %>
       <% end %>
     </p>
 
