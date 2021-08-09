@@ -79,4 +79,13 @@ RSpec.describe RecordDeclarations::Retained::EarlyCareerTeacher do
       expect { described_class.call(params.merge(evidence_held: "invalid")) }.to raise_error(ActionController::ParameterMissing)
     end
   end
+
+  context "when declaration date is invalid" do
+    it "raises a ParameterMissing error" do
+      params = ect_params.merge({ declaration_date: "2021-06-21 08:46:29" })
+      params[:raw_event] = generate_raw_event(params)
+      expected_msg = "param is missing or the value is empty: [\"The property '#/declaration_date' must be a valid RCF3339 date\"]"
+      expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing, expected_msg)
+    end
+  end
 end
