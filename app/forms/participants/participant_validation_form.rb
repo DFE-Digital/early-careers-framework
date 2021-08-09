@@ -89,27 +89,19 @@ module Participants
   private
 
     def trn_choice
-      if do_you_know_your_trn_choice.blank? || !do_you_know_your_trn_choice.in?(%w[yes no i_do_not_have])
-        errors.add(:do_you_know_your_trn_choice, :blank)
-      end
+      errors.add(:do_you_know_your_trn_choice, :blank) unless trn_choices.map(&:id).include?(do_you_know_your_trn_choice)
     end
 
     def name_change_choice
-      if have_you_changed_your_name_choice.blank? || !have_you_changed_your_name_choice.in?(%w[yes no])
-        errors.add(:have_you_changed_your_name_choice, :blank)
-      end
+      errors.add(:have_you_changed_your_name_choice, :blank) unless name_change_choices.map(&:id).include?(have_you_changed_your_name_choice)
     end
 
     def confirm_updated_record_choice
-      if updated_record_choice.blank? || !updated_record_choice.in?(%w[yes no i_do_not_know])
-        errors.add(:updated_record_choice, :blank)
-      end
+      errors.add(:updated_record_choice, :blank) unless updated_record_choices.map(&:id).include?(updated_record_choice)
     end
 
     def confirm_name_not_updated_choice
-      if name_not_updated_choice.blank? || !name_not_updated_choice.in?(%w[register_previous_name update_name])
-        errors.add(:name_not_updated_choice, :blank)
-      end
+      errors.add(:name_not_updated_choice, :blank) unless name_not_updated_choices.map(&:id).include?(name_not_updated_choice)
     end
 
     def teacher_details
@@ -135,7 +127,7 @@ module Participants
         errors.add(:date_of_birth, :in_the_future)
       end
 
-      if national_insurance_number.present? && national_insurance_number !~ NINO_REGEX
+      if national_insurance_number.present? && national_insurance_number.squish !~ NINO_REGEX
         errors.add(:national_insurance_number, :invalid)
       end
     end

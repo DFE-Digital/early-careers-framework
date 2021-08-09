@@ -14,6 +14,16 @@ RSpec.describe ECFParticipantEligibility, type: :model do
     ).backed_by_column_of_type(:string).with_suffix
   }
 
+  it "updates the updated_at on the User" do
+    freeze_time
+    profile = create(:participant_profile, :ect)
+    user = profile.user
+    eligibility = profile.create_ecf_participant_eligibility!(qts: true, active_flags: false)
+    user.update!(updated_at: 2.weeks.ago)
+    eligibility.touch
+    expect(user.reload.updated_at).to be_within(1.second).of Time.zone.now
+  end
+
   describe "#determine_status" do
     context "when active_flags are true" do
       it "sets the status to manual_check" do
