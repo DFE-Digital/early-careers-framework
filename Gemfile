@@ -146,6 +146,7 @@ end
 
 group :development, :deployed_development, :test, :sandbox do
   gem "faker"
+  gem "timecop"
 end
 
 group :development do
