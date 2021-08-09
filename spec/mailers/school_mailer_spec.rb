@@ -99,12 +99,14 @@ RSpec.describe SchoolMailer, type: :mailer do
     let(:recipient) { Faker::Internet.email }
     let(:school_name) { Faker::Company.name }
     let(:start_url) { "https://www.example.com/participants/start-registration" }
+    let(:research_url) { "https://www.example.com/pages/user-research" }
 
     let(:participant_validation_ect_email) do
       SchoolMailer.participant_validation_ect_email(
         recipient: recipient,
         school_name: school_name,
         start_url: start_url,
+        user_research_url: research_url,
       )
     end
 
