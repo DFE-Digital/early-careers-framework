@@ -16,7 +16,7 @@ RSpec.describe RecordDeclarations::Retained::EarlyCareerTeacher do
       declaration_type: "retained-1",
       course_identifier: "ecf-induction",
       lead_provider_from_token: another_lead_provider,
-      evidence_held: %w[training-event-attended self-study-material-completed other].sample,
+      evidence_held: "other",
     }
   end
   let(:ect_params) do
@@ -49,8 +49,10 @@ RSpec.describe RecordDeclarations::Retained::EarlyCareerTeacher do
   end
 
   context "when valid user is an early_career_teacher" do
-    it "creates a participant and profile declaration" do
-      expect { described_class.call(ect_params) }.to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
+    %w[training-event-attended self-study-material-completed other].each do |evidence_held|
+      it "creates a participant and profile declaration" do
+        expect { described_class.call(ect_params.merge(evidence_held: evidence_held)) }.to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
+      end
     end
 
     it "fails when course is for mentor" do
