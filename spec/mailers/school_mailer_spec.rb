@@ -104,7 +104,7 @@ RSpec.describe SchoolMailer, type: :mailer do
       SchoolMailer.participant_validation_ect_email(
         recipient: recipient,
         school_name: school_name,
-        start_url: start_url
+        start_url: start_url,
       )
     end
 
@@ -123,7 +123,7 @@ RSpec.describe SchoolMailer, type: :mailer do
       SchoolMailer.participant_validation_fip_mentor_email(
         recipient: recipient,
         school_name: school_name,
-        start_url: start_url
+        start_url: start_url,
       )
     end
 

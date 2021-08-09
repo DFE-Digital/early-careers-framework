@@ -243,13 +243,13 @@ class InviteSchools
             recipient: profile.user.email,
             school_name: school.name,
             start_url: start_url,
-            user_research_url: user_research_url
+            user_research_url: user_research_url,
           ).deliver_later
         elsif profile.mentor?
           SchoolMailer.participant_validation_fip_mentor_email(
             recipient: profile.user.email,
             school_name: school.name,
-            start_url: start_url
+            start_url: start_url,
           ).deliver_later
         end
       rescue StandardError
