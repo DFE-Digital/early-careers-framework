@@ -270,7 +270,6 @@ Rails.application.routes.draw do
         get "/cannot-find-your-details", to: "validations#cannot_find_details", as: :cannot_find_details
         put "/cannot-find-your-details", to: "validations#cannot_find_details"
         get "/complete", to: "validations#complete", as: :complete
-        get "/reset", to: "validations#reset", as: :reset
       end
     end
   end

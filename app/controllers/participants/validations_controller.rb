@@ -90,11 +90,6 @@ module Participants
       end
     end
 
-    def reset
-      reset_form_data
-      redirect_to participants_validation_start_path
-    end
-
   private
 
     def validate_request_or_render
