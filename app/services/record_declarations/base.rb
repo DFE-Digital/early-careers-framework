@@ -10,9 +10,12 @@ module RecordDeclarations
     validates :declaration_type, inclusion: { in: :valid_declaration_types, message: I18n.t(:invalid_declaration_type) }
     validates :course_identifier, presence: { message: I18n.t(:missing_course_identifier) }
     validates :declaration_date, presence: { message: I18n.t(:missing_declaration_date) }
+    validates :declaration_date, declaration_date: true, allow_blank: true
+    validates :declaration_date, future_date: true, allow_blank: true
     validates :declaration_type, presence: { message: I18n.t(:missing_declaration_type) }
     validates :user, presence: { message: I18n.t(:invalid_participant) }
     validates :lead_provider_from_token, presence: { message: I18n.t(:missing_lead_provider) }
+
     validate :profile_exists
 
     def profile_exists
