@@ -16,16 +16,24 @@ RSpec.describe "NPQ usage guide", type: :request do
       expect(response.body).to include("Continuing the NPQ registration process")
     end
 
-    it "should explain how to perform the NPQ participant declaration process" do
-      expect(response.body).to include("Declaring that an NPQ participant has started their induction")
-    end
-
     it "should explain how to accept an NPQ application" do
       expect(response.body).to include("Accept an NPQ application")
     end
 
     it "should explain how to reject an NPQ application" do
       expect(response.body).to include("Reject an NPQ application")
+    end
+
+    it "should explain how to perform the NPQ participant started declaration process" do
+      expect(response.body).to include("Declaring that an NPQ participant has started their course")
+    end
+
+    it "should explain how to perform the NPQ participant retained declaration process" do
+      expect(response.body).to include("Declaring that an NPQ participant has reached a retained milestone")
+    end
+
+    it "should explain how to perform the NPQ participant completed declaration process" do
+      expect(response.body).to include("Declaring that an NPQ participant has completed their course")
     end
   end
 end
