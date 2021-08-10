@@ -614,6 +614,77 @@ RSpec.describe InviteSchools do
     end
   end
 
+  describe "#feature_flag_and_send_participant_validation_beta_emails" do
+    let(:fip_school_1) { create(:school_cohort, induction_programme_choice: "full_induction_programme").school }
+    let(:fip_school_2) { create(:school_cohort, induction_programme_choice: "full_induction_programme").school }
+    let(:cip_school) { create(:school_cohort).school }
+    let!(:mentor_1) { create(:participant_profile, :mentor, school: fip_school_1) }
+    let!(:mentor_2) { create(:participant_profile, :mentor, school: fip_school_2) }
+    let!(:mentor_3) { create(:participant_profile, :mentor, school: cip_school) }
+    let!(:ect_1) { create(:participant_profile, :ect, school: fip_school_1) }
+    let!(:ect_2) { create(:participant_profile, :ect, school: fip_school_2) }
+    let!(:ect_3) { create(:participant_profile, :ect, school: cip_school) }
+    let(:start_url) { "http://www.example.com/participants/start-registration?utm_campaign=participant-validation-beta&utm_medium=email&utm_source=participant-validation-beta" }
+    let(:research_url) { "http://www.example.com/pages/user-research?utm_campaign=participant-validation-research&utm_medium=email&utm_source=participant-validation-research" }
+    let(:mentor_research_url) { "http://www.example.com/pages/user-research?mentor=true&utm_campaign=participant-validation-research&utm_medium=email&utm_source=participant-validation-research" }
+    let(:urns) { [fip_school_1, fip_school_2, cip_school].map(&:urn) }
+
+    it "activates the participant validation feature flag for FIP schools", with_feature_flag: { participant_validation: "inactive" } do
+      InviteSchools.new.feature_flag_and_send_participant_validation_beta_emails(array_of_urns: urns)
+
+      [fip_school_1, fip_school_2].each do |school|
+        expect(FeatureFlag.active?(:participant_validation, for: school)).to be true
+      end
+    end
+
+    it "emails the early career teachers belonging to the FIP schools" do
+      InviteSchools.new.feature_flag_and_send_participant_validation_beta_emails(array_of_urns: urns)
+      expect(SchoolMailer).to delay_email_delivery_of(:participant_validation_ect_email)
+                                  .with(hash_including(
+                                          recipient: ect_1.user.email,
+                                          school_name: fip_school_1.name,
+                                          start_url: start_url,
+                                          user_research_url: research_url,
+                                        ))
+      expect(SchoolMailer).to delay_email_delivery_of(:participant_validation_ect_email)
+                                  .with(hash_including(
+                                          recipient: ect_2.user.email,
+                                          school_name: fip_school_2.name,
+                                          start_url: start_url,
+                                          user_research_url: research_url,
+                                        ))
+    end
+
+    it "emails the mentors belonging to the FIP schools" do
+      InviteSchools.new.feature_flag_and_send_participant_validation_beta_emails(array_of_urns: urns)
+      expect(SchoolMailer).to delay_email_delivery_of(:participant_validation_fip_mentor_email)
+                                  .with(hash_including(
+                                          recipient: mentor_1.user.email,
+                                          school_name: fip_school_1.name,
+                                          start_url: start_url,
+                                          user_research_url: mentor_research_url,
+                                        ))
+      expect(SchoolMailer).to delay_email_delivery_of(:participant_validation_fip_mentor_email)
+                                  .with(hash_including(
+                                          recipient: mentor_2.user.email,
+                                          school_name: fip_school_2.name,
+                                          start_url: start_url,
+                                          user_research_url: mentor_research_url,
+                                        ))
+    end
+
+    it "does not activate the feature flag for schools not doing FIP" do
+      InviteSchools.new.feature_flag_and_send_participant_validation_beta_emails(array_of_urns: [cip_school.urn])
+      expect(FeatureFlag.active?(:participant_validation, for: cip_school)).to be false
+    end
+
+    it "does not email participants at schools not doing FIP" do
+      InviteSchools.new.feature_flag_and_send_participant_validation_beta_emails(array_of_urns: [cip_school.urn])
+      expect(SchoolMailer).not_to delay_email_delivery_of(:participant_validation_ect_email)
+      expect(SchoolMailer).not_to delay_email_delivery_of(:participant_validation_fip_mentor_email)
+    end
+  end
+
 private
 
   def create_signed_in_induction_tutor
