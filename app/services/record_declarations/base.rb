@@ -4,7 +4,7 @@ module RecordDeclarations
   class Base
     include ActiveModel::Model
 
-    attr_accessor :course_identifier, :user_id, :raw_event, :lead_provider_from_token, :declaration_date, :declaration_type, :evidence_held
+    attr_accessor :course_identifier, :user_id, :lead_provider_from_token, :declaration_date, :declaration_type, :evidence_held
 
     validates :course_identifier, inclusion: { in: :valid_courses_for_user, message: I18n.t(:invalid_identifier) }, allow_blank: true
     validates :declaration_type, inclusion: { in: :valid_declaration_types, message: I18n.t(:invalid_declaration_type) }
@@ -80,7 +80,6 @@ module RecordDeclarations
           cpd_lead_provider: lead_provider_from_token,
           user: user,
           evidence_held: evidence_held,
-          raw_event: raw_event,
         ).tap do |participant_declaration|
           ProfileDeclaration.create!(
             participant_declaration: participant_declaration,

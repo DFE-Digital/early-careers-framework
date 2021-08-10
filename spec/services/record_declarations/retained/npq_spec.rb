@@ -15,7 +15,6 @@ RSpec.describe RecordDeclarations::Retained::NPQ do
   let(:induction_coordinator_profile) { create(:induction_coordinator_profile) }
   let(:params) do
     {
-      raw_event: "{\"participant_id\":\"37b300a8-4e99-49f1-ae16-0235672b6708\",\"declaration_type\":\"retained-1\",\"declaration_date\":\"2021-06-21T08:57:31Z\",\"course_identifier\":\"npq-leading-teaching\"}",
       user_id: npq_profile.user_id,
       declaration_date: "2021-06-21T08:46:29Z",
       declaration_type: "retained-1",
