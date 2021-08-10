@@ -49,7 +49,7 @@ Rails.application.routes.draw do
     resource :notify_callback, only: :create, path: "notify-callback"
 
     namespace :v1 do
-      resources :participants, only: :index, constraints: ->(_request) { FeatureFlag.active?(:participant_data_api) }
+      resources :participants, only: :index
       resources :participant_declarations, only: %i[create], path: "participant-declarations"
       resources :users, only: %i[index create]
       resources :ecf_users, only: %i[index create], path: "ecf-users"
