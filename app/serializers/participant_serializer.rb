@@ -55,4 +55,16 @@ class ParticipantSerializer
   active_participant_attribute :teacher_reference_number_validated do |user|
     user.teacher_profile.trn.present?
   end
+
+  active_participant_attribute :eligible_for_funding do |user|
+    user.teacher_profile.ecf_profile.ecf_participant_eligibility&.eligible? || nil
+  end
+
+  active_participant_attribute :pupil_premium_uplift do
+    nil # TODO: CPDRP-534 - Share when we know we have the correct information
+  end
+
+  active_participant_attribute :sparsity_uplift do
+    nil # TODO: CPDRP-534 - Share when we know we have the correct information
+  end
 end

@@ -65,6 +65,9 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
               :status,
               :teacher_reference_number,
               :teacher_reference_number_validated,
+              :eligible_for_funding,
+              :pupil_premium_uplift,
+              :sparsity_uplift,
             ).exactly)
         end
 
@@ -130,7 +133,21 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
         end
 
         it "returns the correct headers" do
-          expect(parsed_response.headers).to match_array(%w[id email full_name mentor_id school_urn participant_type cohort status teacher_reference_number teacher_reference_number_validated])
+          expect(parsed_response.headers).to match_array(
+            %w[id
+               email
+               full_name
+               mentor_id
+               school_urn
+               participant_type
+               cohort
+               status
+               teacher_reference_number
+               teacher_reference_number_validated
+               eligible_for_payment
+               pupil_premium_uplift
+               sparsity_uplift],
+          )
         end
 
         it "returns the correct values" do
@@ -145,6 +162,9 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           expect(mentor_row["cohort"]).to eql partnership.cohort.start_year.to_s
           expect(mentor_row["teacher_reference_number"]).to eql mentor.teacher_profile.trn
           expect(mentor_row["teacher_reference_number_validated"]).to eql "true"
+          expect(mentor_row["eligible_for_funding"]).to be_empty
+          expect(mentor_row["pupil_premium_uplift"]).to be_empty
+          expect(mentor_row["sparsity_uplift"]).to be_empty
 
           ect = ParticipantProfile::ECT.active.first.user
           ect_row = parsed_response.find { |row| row["id"] == ect.id }
@@ -157,6 +177,9 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           expect(ect_row["cohort"]).to eql partnership.cohort.start_year.to_s
           expect(ect_row["teacher_reference_number"]).to eql ect.teacher_profile.trn
           expect(ect_row["teacher_reference_number_validated"]).to eql "true"
+          expect(mentor_row["eligible_for_funding"]).to be_empty
+          expect(mentor_row["pupil_premium_uplift"]).to be_empty
+          expect(mentor_row["sparsity_uplift"]).to be_empty
 
           withdrawn_row = parsed_response.find { |row| row["id"] == withdrawn_ect_profile.user.id }
           expect(withdrawn_row).not_to be_nil
@@ -168,6 +191,9 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           expect(withdrawn_row["cohort"]).to be_empty
           expect(withdrawn_row["teacher_reference_number"]).to be_empty
           expect(withdrawn_row["teacher_reference_number_validated"]).to be_empty
+          expect(mentor_row["eligible_for_funding"]).to be_empty
+          expect(mentor_row["pupil_premium_uplift"]).to be_empty
+          expect(mentor_row["sparsity_uplift"]).to be_empty
         end
 
         it "ignores pagination parameters" do
