@@ -2,14 +2,9 @@
 
 <ul class="govuk-list govuk-list--bullet">
   <li><a href="#continuing-the-npq-registration-process" class="govuk-link">Continuing the NPQ registration process</a></li>
-</ul>
-<ul class="govuk-list govuk-list--bullet">
-  <li><a href="#accept-npq-application" class="govuk-link">Accepting an NPQ application</a></li>
-</ul>
-<ul class="govuk-list govuk-list--bullet">
-  <li><a href="#reject-npq-application" class="govuk-link">Rejecting an NPQ application</a></li>
-</ul>
-<ul class="govuk-list govuk-list--bullet">
+  <li><a href="#about-accept-reject-npq-application" class="govuk-link">About accepting or rejecting an NPQ application</a></li>
+  <li><a href="#accept-npq-application" class="govuk-link">Accept an NPQ application</a></li>
+  <li><a href="#reject-npq-application" class="govuk-link">Reject an NPQ application</a></li>
   <li>
     <a href="#declaring-that-an-npq-participant-has-started-their-induction" class="govuk-link">
       Declaring that an NPQ participant has started their induction
@@ -24,6 +19,7 @@
   usage. For example, authentication is completely left out.</p>
 
 <h2 id="continuing-the-npq-registration-process" class="govuk-heading-l">Continuing the NPQ registration process</h2>
+
 <p class="govuk-body-m">This scenario begins when a participant has been added to the service by registering for an NPQ
   course via the register for a national professional qualification (NPQ) service.</p>
 
@@ -35,7 +31,12 @@
   <li>whether the participant is eligible for funding</li>
 </ul>
 
+<p class="govuk-body-m">
+  Once someone has progressed through the GOV.UK registration process, providers are then able to pull this information and initiate their own suitability and application processes.
+</p>
+
 <h3 class="govuk-heading-m">1. Provider retrieves NPQ application records</h3>
+
 <p class="govuk-body-m">Get the NPQ application records.</p>
 
 <p class="govuk-body-m"><pre><code>GET /api/v1/npq-applications</code></pre></p>
@@ -45,6 +46,7 @@
 <p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#get-api-v1-npq-applications" class="govuk-link">retrieve multiple NPQ applications</a> endpoint.</p>
 
 <h3 class="govuk-heading-m">2. Provider refreshes NPQ application records</h3>
+
 <p class="govuk-body-m">Get updated NPQ application records.</p>
 
 <p class="govuk-body-m"><pre><code>GET /api/v1/npq-applications?filter[updated_since]=2021-05-13T11:21:55Z</code></pre></p>
@@ -53,60 +55,111 @@
 
 <p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#get-api-v1-npq-applications" class="govuk-link">retrieve multiple NPQ applications</a> endpoint.</p>
 
-
-<h2 id="accept-npq-application" class="govuk-heading-l">
-  Accept an NPQ application
+<h2 id="about-accept-reject-npq-application" class="govuk-heading-l">
+  About accepting or rejecting an NPQ application
 </h2>
+
+<p class="govuk-body-m">
+  In order for DfE to understand if a person has been successful throughout these processes, we require you to submit an acceptance or rejection status. This will need to be submitted for each participant you wish to train before starting their NPQ course.
+</p>
+
+<p class="govuk-body-m">
+  Accepting or rejecting a participant is separate and distinct from a “starter declaration”, which will be collected as part of the tracking and payment process. More <a href="#declaring-that-an-npq-participant-has-started-their-induction" class="govuk-link">information about declarations</a> can be found further down this page. We will only be able to make payments for participants who are in an “application accepted” state.
+</p>
+
+<p class="govuk-body-m">
+  Providers should accept a participant if they have been successful in their NPQ application and you wish to enroll them on their chosen NPQ course. Reasons may include but not limited to:
+</p>
+
+<ul class="govuk-list govuk-list--bullet">
+  <li>Participant has had their funding confirmed</li>
+  <li>Participant is suitable for their chosen NPQ course</li>
+  <li>Participant has the relevant support from their school</li>
+</ul>
+
+<p class="govuk-body-m">
+  Providers should reject a participant if they have not been successful in their NPQ application. Reasons may include but not limited to:
+</p>
+
+<ul class="govuk-list govuk-list--bullet">
+  <li>Participant wishes to go with another provider</li>
+  <li>Participant wishes to take on another course</li>
+  <li>Participant no longer wishes to take the course</li>
+  <li>Participant was not successful in their application process</li>
+</ul>
+
+<h3 id="accept-npq-application" class="govuk-heading-m">
+  Accept an NPQ application
+</h3>
+
 <p class="govuk-body-m">
   This scenario begins after a participant has been added to the service by registering for an NPQ course
 </p>
-<h3 class="govuk-heading-m">1. Provider accepts an NPQ application</h3>
+
+<h4 class="govuk-heading-s">
+  1. Provider accepts an NPQ application
+</h4>
+
 <p class="govuk-body-m">You can accept someone if they have successfully completed all application steps ahead of starting their course.</p>
+
 <p class="govuk-body-m">
   <code>POST /api/v1/npq-applications/{id}/accept</code>
 </p>
+
 <p class="govuk-body-m">This returns an
   <a href="/lead-providers/guidance/reference#npqapplicationresponse-object" class="govuk-link">NPQ application record</a>.
 </p>
 
-<h2 id="reject-npq-application" class="govuk-heading-l">
+<h3 id="reject-npq-application" class="govuk-heading-m">
   Reject an NPQ application
-</h2>
+</h3>
+
 <p class="govuk-body-m">
   This scenario begins after a participant has been added to the service by registering for an NPQ course
 </p>
-<h3 class="govuk-heading-m">1. Provider rejects an NPQ application</h3>
+
+<h4 class="govuk-heading-s">
+  1. Provider rejects an NPQ application
+</h4>
+
 <p class="govuk-body-m">You will need to reject someone if you will be unable to train them. For example they have failed the rest of their application, have decided against studying an NPQ or are unable to secure funding.</p>
+
 <p class="govuk-body-m">
   <code>POST /api/v1/npq-applications/{id}/reject</code>
 </p>
+
 <p class="govuk-body-m">This returns an
   <a href="/lead-providers/guidance/reference#npqapplicationresponse-object" class="govuk-link">NPQ application record</a>.
 </p>
-
 
 <h2 id="declaring-that-an-npq-participant-has-started-their-induction" class="govuk-heading-l">
   Declaring that an NPQ participant has started their induction
 </h2>
+
 <p class="govuk-body-m">
   This scenario begins after it has been confirmed that an NPQ participant is ready to begin their induction training.
 </p>
 
 <h3 class="govuk-heading-m">1. Provider confirms an NPQ participant has started</h3>
+
 <p class="govuk-body-m">Confirm an NPQ participant has started their induction training before Milestone 1.</p>
+
 <p class="govuk-body-m">
   <code>POST /api/v1/participant-declarations</code>
 </p>
+
 <p class="govuk-body-m">With a request body containing an
   <a href="/lead-providers/guidance/reference#npqparticipantstarteddeclaration-object" class="govuk-link">
     NPQ participant declaration
   </a>.
 </p>
+
 <p class="govuk-body-m">This returns
   <a href="/lead-providers/guidance/reference#participantdeclarationrecordedresponse-object" class="govuk-link">
     participant declaration recorded
   </a>.
 </p>
+
 <p class="govuk-body-m">See
   <a href="/lead-providers/guidance/reference#post-api-v1-participant-declarations" class="govuk-link">
     confirm NPQ participant declarations
@@ -115,5 +168,5 @@
 </p>
 
 <h3 class="govuk-heading-m">2. Provider records the NPQ participant declaration id</h3>
-<p class="govuk-body-m">Store the returned NPQ participant declaration id for future management tasks.</p>
 
+<p class="govuk-body-m">Store the returned NPQ participant declaration id for future management tasks.</p>
