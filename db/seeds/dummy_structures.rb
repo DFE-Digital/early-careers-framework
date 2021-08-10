@@ -17,42 +17,39 @@ User.find_or_create_by!(email: "lead-provider@example.com") do |user|
   LeadProviderProfile.find_or_create_by!(user: user, lead_provider: LeadProvider.first)
 end
 
-school = School.find_or_create_by!(
-  name: "Example school",
-  postcode: "BB1 1BB",
-  address_line1: "3 Madeup Street",
-  primary_contact_email: "school-info@example.com",
-  school_status_code: 1,
-  school_type_code: 1,
-  administrative_district_code: "E123",
-  urn: "999999",
-)
+school = School.find_or_create_by!(urn: "999999") do |created_school|
+  created_school.name = "Example school"
+  created_school.postcode = "BB1 1BB"
+  created_school.address_line1 = "3 Madeup Street"
+  created_school.primary_contact_email = "school-info@example.com"
+  created_school.school_status_code = 1
+  created_school.school_type_code = 1
+  created_school.administrative_district_code = "E123"
+end
 
 school_cohort = SchoolCohort.find_or_create_by!(cohort: Cohort.current, school: school, induction_programme_choice: "core_induction_programme")
 
-school_two = School.find_or_create_by!(
-  name: "Example school two",
-  postcode: "ZZ1 1ZZ",
-  address_line1: "99 Madeup Road",
-  primary_contact_email: "school-2-info@example.com",
-  school_status_code: 1,
-  school_type_code: 1,
-  administrative_district_code: "WA4 1AA",
-  urn: "111111",
-)
+school_two = School.find_or_create_by!(urn: "111111") do |created_school|
+  created_school.name = "Example school two"
+  created_school.postcode = "ZZ1 1ZZ"
+  created_school.address_line1 = "99 Madeup Road"
+  created_school.primary_contact_email = "school-2-info@example.com"
+  created_school.school_status_code = 1
+  created_school.school_type_code = 1
+  created_school.administrative_district_code = "WA4 1AA"
+end
 
 school_two_cohort = SchoolCohort.find_or_create_by!(cohort: Cohort.current, school: school_two, induction_programme_choice: "core_induction_programme")
 
-school_three = School.find_or_create_by!(
-  name: "Example school three",
-  postcode: "WA1 1AA",
-  address_line1: "100 Warrington Road",
-  primary_contact_email: "school-3-info@example.com",
-  school_status_code: 1,
-  school_type_code: 1,
-  administrative_district_code: "W123",
-  urn: "5555555",
-)
+school_three = School.find_or_create_by!(urn: "5555555") do |created_school|
+  created_school.name = "Example school three"
+  created_school.postcode = "WA1 1AA"
+  created_school.address_line1 = "100 Warrington Road"
+  created_school.primary_contact_email = "school-3-info@example.com"
+  created_school.school_status_code = 1
+  created_school.school_type_code = 1
+  created_school.administrative_district_code = "W123"
+end
 
 school_three_cohort = SchoolCohort.find_or_create_by!(cohort: Cohort.current, school: school_three, induction_programme_choice: "full_induction_programme")
 
