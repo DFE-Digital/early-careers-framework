@@ -16,6 +16,8 @@ if Rails.env.development? || Rails.env.deployed_development?
     FeatureFlag.activate(feature)
   end
   FeatureFlag::TEMPORARY_FEATURE_FLAGS.each do |feature|
+    next if feature == :user_research_full_booked
+
     FeatureFlag.activate(feature)
   end
 end
