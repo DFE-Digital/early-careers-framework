@@ -233,6 +233,7 @@ class InviteSchools
   def feature_flag_and_send_participant_validation_beta_emails(array_of_urns:)
     start_url = participant_validation_start_url
     user_research_url = participant_validation_research_url
+    user_research_mentor_url = participant_validation_mentor_research_url
 
     School.where(urn: array_of_urns).find_each do |school|
       next unless school.school_cohorts.find_by(cohort: Cohort.current)&.full_induction_programme?
@@ -252,7 +253,7 @@ class InviteSchools
             recipient: profile.user.email,
             school_name: school.name,
             start_url: start_url,
-            user_research_url: user_research_url,
+            user_research_url: user_research_mentor_url,
           ).deliver_later
         end
       rescue StandardError
@@ -312,6 +313,15 @@ private
     Rails.application.routes.url_helpers.page_url(
       page: "user-research",
       host: Rails.application.config.domain,
+      **UTMService.email(:participant_validation_research, :participant_validation_research),
+    )
+  end
+
+  def participant_validation_mentor_research_url
+    Rails.application.routes.url_helpers.page_url(
+      page: "user-research",
+      host: Rails.application.config.domain,
+      mentor: true,
       **UTMService.email(:participant_validation_research, :participant_validation_research),
     )
   end
