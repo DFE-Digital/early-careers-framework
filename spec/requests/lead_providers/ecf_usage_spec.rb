@@ -16,10 +16,22 @@ RSpec.describe "ECF usage guide", type: :request do
       expect(response.body).to include("Continuing the ECF registration process")
     end
 
-    it "should explain how to declare that an ECF participant has started their induction" do
+    it "should explain how to declare that an ECF participant has started their course" do
       get lead_providers_guidance_ecf_usage_path
 
-      expect(response.body).to include("Declaring that an ECF participant has started their induction")
+      expect(response.body).to include("Declaring that an ECF participant has started their course")
+    end
+
+    it "should explain how to declare that an ECF participant has been retained" do
+      get lead_providers_guidance_ecf_usage_path
+
+      expect(response.body).to include("Declaring that an ECF participant has been retained")
+    end
+
+    it "should explain how to declare that an ECF participant has completed their course" do
+      get lead_providers_guidance_ecf_usage_path
+
+      expect(response.body).to include("Declaring that an ECF participant has completed their course")
     end
   end
 end
