@@ -1,0 +1,14 @@
+<% content_for :title, "Registration complete" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= govuk_panel title: title, body: nil, classes: "govuk-!-margin-bottom-8" %>
+    <h2 class="govuk-heading-m">What happens next</h2>
+    <p class="govuk-body">We may need to contact you for more information to complete your registration.</p>
+    <% if @participant_profile.ect? %>
+      <p class="govuk-body">Your training materials will be available in August. We’ll email you with a link to access them.</p>
+    <% else %>
+      <p class="govuk-body">If you need access to training materials, we’ll email you a link in the next 48 hours.</p>
+    <% end %>
+  </div>
+</div>

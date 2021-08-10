@@ -9,6 +9,7 @@ class ParticipantProfile < ApplicationRecord
 
   has_one :user, through: :teacher_profile
 
+  has_one :ecf_participant_validation_data
   has_many :validation_decisions, class_name: "ProfileValidationDecision"
 
   enum status: {

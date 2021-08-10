@@ -162,9 +162,9 @@ RSpec.describe "Users::Sessions", type: :request do
     context "when user is an ECT" do
       let(:user) { create(:participant_profile, :ect).user }
 
-      it "redirects to dashboard on successful login" do
+      it "redirects to participant validation on successful login" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }
-        expect(response).to redirect_to(dashboard_path)
+        expect(response).to redirect_to(participants_validation_start_path)
       end
     end
 

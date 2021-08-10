@@ -103,6 +103,29 @@ en:
   activemodel:
     errors:
       models:
+        participants/participant_validation_form:
+          attributes:
+            do_you_know_your_trn_choice:
+              blank: Select whether you know your teacher reference number
+            have_you_changed_your_name_choice:
+              blank: Select if your name has changed since ITT
+            updated_record_choice:
+              blank: Select whether you have updated your name
+            name_not_updated_choice:
+              blank: Select how you want to continue
+            trn:
+              blank: Enter your teacher reference number
+              too_short: Teacher reference number is at least %{count} digits long
+              too_long: Teacher reference number is at most %{count} digits long
+              invalid: Teacher reference number must only contain numbers
+            name:
+              blank: Enter your full name
+            date_of_birth:
+              blank: Enter your date of birth
+              invalid: Date of birth must be a valid date
+              in_the_future: Date of birth must be in the past
+            national_insurance_number:
+              invalid: National Insurance number is not the correct format (for example, AB123456C)
         nominate_induction_tutor_form:
           attributes:
             email:
