@@ -235,6 +235,8 @@ class InviteSchools
     user_research_url = participant_validation_research_url
 
     School.where(urn: array_of_urns).find_each do |school|
+      next unless school.school_cohorts.find_by(cohort: Cohort.current)&.full_induction_programme?
+
       FeatureFlag.activate(:participant_validation, for: school)
 
       school.active_ecf_participant_profiles.each do |profile|
@@ -250,6 +252,7 @@ class InviteSchools
             recipient: profile.user.email,
             school_name: school.name,
             start_url: start_url,
+            user_research_url: user_research_url,
           ).deliver_later
         end
       rescue StandardError
