@@ -2,9 +2,8 @@
 
 module Participants
   class ValidationsController < BaseController
-    skip_before_action :ensure_participant, only: :reset
     before_action :set_form
-    before_action :check_not_already_completed, except: %i[complete reset]
+    before_action :check_not_already_completed, except: :complete
     before_action :validate_request_or_render, only: %i[do_you_know_your_trn
                                                         have_you_changed_your_name
                                                         confirm_updated_record
