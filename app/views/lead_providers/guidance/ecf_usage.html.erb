@@ -2,8 +2,9 @@
 
 <ul class="govuk-list govuk-list--bullet">
   <li><a href="#continuing-the-ecf-registration-process" class="govuk-link">Continuing the ECF registration process</a></li>
-  <li><a href="#declaring-that-an-ecf-participant-has-started-their-induction" class="govuk-link">Declaring that an ECF
-    participant has started their induction</a></li>
+  <li><a href="#declaring-that-an-ecf-participant-has-started-their-course" class="govuk-link">Declaring that an ECF participant has started their course</a></li>
+  <li><a href="#declaring-that-an-ecf-participant-has-retained-their-course" class="govuk-link">Declaring that an ECF participant has reached a retained milestone</a></li>
+  <li><a href="#declaring-that-an-ecf-participant-has-completed-their-course" class="govuk-link">Declaring that an ECF participant has completed their course</a></li>
 </ul>
 
 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6">
@@ -26,7 +27,7 @@
 <p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#get-api-v1-participants" class="govuk-link">retrieve multiple ECF participants</a> endpoint.</p>
 
 <h3 class="govuk-heading-m">2. ECF Participant enters registration details on register for early career framework service</h3>
-<p class="govuk-body-m">Participant is invited to continue their registration by validating their TRN and contact details.</p>
+<p class="govuk-body-m">A participant is invited to continue their registration by validating their TRN and contact details.</p>
 
 <p class="govuk-body-m">When the participant has completed this step the ECF participant record will show;</p>
 
@@ -46,19 +47,66 @@
 
 <p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#get-api-v1-participants" class="govuk-link">retrieve multiple participants</a> endpoint.</p>
 
-<h2 id="declaring-that-an-ecf-participant-has-started-their-induction" class="govuk-heading-l">Declaring that an ECF participant has started their induction</h2>
+<h2 id="declaring-that-an-ecf-participant-has-started-their-course" class="govuk-heading-l">Declaring that an ECF participant has started their course</h2>
+
 <p class="govuk-body-m">This scenario begins after it has been confirmed that an ECF participant is ready to begin their induction training.</p>
 
 <h3 class="govuk-heading-m">1. Provider confirms an ECF participant has started</h3>
 <p class="govuk-body-m">Confirm an ECF participant has started their induction training before Milestone 1.</p>
 
-<p class="govuk-body-m"><pre><code>POST /api/v1/participant_declarations</code></pre></p>
+<p class="govuk-body-m"><pre><code>POST /api/v1/participant-declarations</code></pre></p>
 
-<p class="govuk-body-m">With a <a href="/lead-providers/guidance/reference#participantdeclaration-object" class="govuk-link">request body containing an ECF participant declaration</a>.</p>
+<p class="govuk-body-m">With a <a href="/lead-providers/guidance/reference#ecfparticipantstarteddeclaration-object" class="govuk-link">request body containing an ECF participant declaration</a>.</p>
 
 <p class="govuk-body-m">This returns <a href="/lead-providers/guidance/reference#participantdeclarationrecordedresponse-object" class="govuk-link">participant declaration recorded</a>.</p>
 
 <p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#post-api-v1-participant-declarations" class="govuk-link">confirm ECF participant declarations</a> endpoint.</p>
 
-<h3 class="govuk-heading-m">2. Provider records the ECF participant declaration id</h3>
-<p class="govuk-body-m">Store the returned ECF participant declaration id for future management tasks.</p>
+<h3 class="govuk-heading-m">2. Provider records the ECF participant declaration ID</h3>
+<p class="govuk-body-m">Store the returned ECF participant declaration ID for future management tasks.</p>
+
+<h2 id="declaring-that-an-ecf-participant-has-retained-their-course" class="govuk-heading-l">Declaring that an ECF participant has been retained</h2>
+
+<p class="govuk-body-m">This scenario begins after it has been confirmed that an ECF participant has completed enough of their course to meet a milestone.</p>
+<h3 class="govuk-heading-m">1. Provider confirms an ECF participant has been retained</h3>
+<p class="govuk-body-m">
+1. Confirm an ECF participant has been retained by the appropriate number of months for this retained event on their ECF course.
+</p>
+
+<p class="govuk-body-m">
+  An explicit <code>retained-x</code> declaration is required to trigger output payments. You should declare this when a participant has reached a particular milestone in line with contractual reporting requirements.
+</p>
+
+<p class="govuk-body-m"><pre><code>POST /api/v1/participant-declarations</code></pre></p>
+
+<p class="govuk-body-m">With a <a href="/lead-providers/guidance/reference#ecfparticipantretaineddeclaration-object" class="govuk-link">request body containing an ECF participant retained declaration</a>.</p>
+
+<p class="govuk-body-m">This returns <a href="/lead-providers/guidance/reference#participantdeclarationrecordedresponse-object" class="govuk-link">participant declaration recorded</a>.</p>
+
+<p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#post-api-v1-participant-declarations" class="govuk-link">confirm ECF participant declarations</a> endpoint.</p>
+
+<h3 class="govuk-heading-m">2. Provider records the ECF participant declaration ID</h3>
+<p class="govuk-body-m">Store the returned ECF participant declaration ID for future management tasks.</p>
+
+
+<h2 id="declaring-that-an-ecf-participant-has-completed-their-course" class="govuk-heading-l">Declaring that an ECF participant has completed their course</h2>
+<p class="govuk-body-m">This scenario begins after it has been confirmed that an ECF participant has completed their course.</p>
+<h3 class="govuk-heading-m">1. Provider confirms an ECF participant has completed their course.</h3>
+
+<p class="govuk-body-m">
+  Confirm an ECF participant has completed their ECF course.
+</p>
+<p class="govuk-body-m">
+  An explicit <code>completed</code> declaration is required to trigger output payments. You should declare this when a participant has reached their final milestone and completed their ECF course.
+</p>
+
+<p class="govuk-body-m"><pre><code>POST /api/v1/participant-declarations</code></pre></p>
+
+<p class="govuk-body-m">With a <a href="/lead-providers/guidance/reference#ecfparticipantstarteddeclaration-object" class="govuk-link">request body containing an ECF participant completed declaration</a>.</p>
+
+<p class="govuk-body-m">This returns <a href="/lead-providers/guidance/reference#participantdeclarationrecordedresponse-object" class="govuk-link">participant declaration recorded</a>.</p>
+
+<p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#post-api-v1-participant-declarations" class="govuk-link">confirm ECF participant declarations</a> endpoint.</p>
+
+<h3 class="govuk-heading-m">2. Provider records the ECF participant declaration ID</h3>
+<p class="govuk-body-m">Store the returned ECF participant declaration ID for future management tasks.</p>
