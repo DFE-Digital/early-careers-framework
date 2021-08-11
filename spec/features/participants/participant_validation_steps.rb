@@ -29,6 +29,11 @@ module ParticipantValidationSteps
     }
   end
 
+  def and_i_am_signed_in_as_an_ect_participant_with_a_trn_already_set
+    and_i_am_signed_in_as_an_ect_participant
+    @user.teacher_profile.update!(trn: "9876543")
+  end
+
   def then_i_should_see_the_do_you_know_your_trn_page
     expect(page).to have_selector("h1", text: "Do you know your teacher reference number")
     expect(page).to have_field("Yes, I know my TRN", visible: :all)
@@ -62,8 +67,6 @@ module ParticipantValidationSteps
       .with(@participant_data)
       .and_return(nil)
     click_on "Continue"
-    # expect(@user.reload.teacher_profile.trn).to be_nil
-    # expect(@user.teacher_profile.participant_profiles.ecf.first.ecf_participant_eligibility).to be_nil
   end
 
   def then_i_should_see_the_have_you_changed_your_name_page
@@ -139,22 +142,31 @@ module ParticipantValidationSteps
     expect(page).to have_text("Amazing Delivery Team")
   end
 
-  def then_i_should_see_the_checking_details_page_for_matched_user
+  def then_i_should_see_the_checking_details_page
     expect(page).to have_selector("h1", text: "We’re checking your details")
     expect(page).to have_text("Big Provider Ltd")
     expect(page).to have_text("Amazing Delivery Team")
+  end
+
+  def then_i_should_see_the_checking_details_page_for_matched_user
+    then_i_should_see_the_checking_details_page
     expect(@user.reload.teacher_profile.trn).to eq(@participant_data[:trn])
     expect(@user.teacher_profile.participant_profiles.ecf.first.ecf_participant_eligibility).to be_matched_status
     expect(@user.teacher_profile.participant_profiles.ecf.first.ecf_participant_validation_data).to be_present
   end
 
   def then_i_should_see_the_checking_details_page_for_invalid_user
-    expect(page).to have_selector("h1", text: "We’re checking your details")
-    expect(page).to have_text("Big Provider Ltd")
-    expect(page).to have_text("Amazing Delivery Team")
+    then_i_should_see_the_checking_details_page
     expect(@user.reload.teacher_profile.trn).to be_nil
     expect(@user.teacher_profile.participant_profiles.ecf.first.ecf_participant_eligibility).to be_nil
     expect(@user.teacher_profile.participant_profiles.ecf.first.ecf_participant_validation_data).to be_present
+  end
+
+  def then_i_should_see_the_checking_details_page_for_existing_trn_user
+    then_i_should_see_the_checking_details_page
+    expect(@user.reload.teacher_profile.trn).to eq "9876543"
+    expect(@user.teacher_profile.participant_profiles.ecf.first.ecf_participant_eligibility).to be_present
+    expect(@user.teacher_profile.participant_profiles.ecf.first.ecf_participant_validation_data).not_to be_api_failure
   end
 
   def then_i_should_see_the_find_your_trn_page
