@@ -1,26 +1,18 @@
 # frozen_string_literal: true
 
 require "rails_helper"
+require_relative "../../../shared/context/lead_provider_profiles_and_courses.rb"
 
 RSpec.describe "participant-declarations endpoint spec", type: :request do
+  include_context "lead provider profiles and courses"
+
   describe "post" do
-    let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: lead_provider) }
-    let(:lead_provider) { create(:lead_provider) }
     let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
     let(:bearer_token) { "Bearer #{token}" }
-    let(:payload) { create(:participant_profile, :ect) }
-    let(:delivery_partner) { create(:delivery_partner) }
-    let!(:school_cohort) { create(:school_cohort, school: payload.school, cohort: payload.cohort) }
-    let!(:partnership) do
-      create(:partnership,
-             school: payload.school,
-             lead_provider: lead_provider,
-             cohort: payload.cohort,
-             delivery_partner: delivery_partner)
-    end
+
     let(:valid_params) do
       {
-        participant_id: payload.user.id,
+        participant_id: ect_profile.user.id,
         declaration_type: "started",
         declaration_date: (Time.zone.now - 1.week).iso8601,
         course_identifier: "ecf-induction",
@@ -28,7 +20,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
     end
 
     let(:invalid_user_id) do
-      valid_params.merge({ participant_id: payload.id })
+      valid_params.merge({ participant_id: ect_profile.id })
     end
     let(:incorrect_course_identifier) do
       valid_params.merge({ course_identifier: "typoed-course-name" })

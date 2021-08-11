@@ -1,35 +1,12 @@
 # frozen_string_literal: true
 
 require "rails_helper"
+require_relative "../../../shared/context/service_record_declaration_params.rb"
+require_relative "../../../shared/context/lead_provider_profiles_and_courses.rb"
 
 RSpec.describe RecordDeclarations::Retained::NPQ do
-  let(:cpd_lead_provider) { create(:cpd_lead_provider) }
-  let(:another_lead_provider) { create(:cpd_lead_provider, name: "Unknown") }
-  let(:npq_lead_provider) { create(:npq_lead_provider, cpd_lead_provider: cpd_lead_provider) }
-  let(:npq_course) { create(:npq_course, identifier: "npq-leading-teaching") }
-  let!(:npq_profile) do
-    create(:npq_validation_data,
-           npq_lead_provider: npq_lead_provider,
-           npq_course: npq_course)
-  end
-  let(:induction_coordinator_profile) { create(:induction_coordinator_profile) }
-  let(:params) do
-    {
-      user_id: npq_profile.user_id,
-      declaration_date: "2021-06-21T08:46:29Z",
-      declaration_type: "retained-1",
-      course_identifier: "npq-leading-teaching",
-      lead_provider_from_token: another_lead_provider,
-      evidence_held: "yes",
-    }
-  end
-
-  let(:npq_params) do
-    params.merge({ lead_provider_from_token: cpd_lead_provider })
-  end
-  let(:induction_coordinator_params) do
-    npq_params.merge({ user_id: induction_coordinator_profile.user_id })
-  end
+  include_context "lead provider profiles and courses"
+  include_context "service record declaration params"
 
   context "when sending event for an npq course" do
     it "creates a participant and profile declaration" do
