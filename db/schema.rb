@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_10_124952) do
+ActiveRecord::Schema.define(version: 2021_08_11_065838) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -422,6 +422,17 @@ ActiveRecord::Schema.define(version: 2021_08_10_124952) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["call_off_contract_id"], name: "index_participant_bands_on_call_off_contract_id"
+  end
+
+  create_table "participant_declaration_attempts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "declaration_type"
+    t.datetime "declaration_date"
+    t.uuid "user_id"
+    t.string "course_identifier"
+    t.string "evidence_held"
+    t.uuid "cpd_lead_provider_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "participant_declarations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

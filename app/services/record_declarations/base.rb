@@ -54,8 +54,10 @@ module RecordDeclarations
         raise ActionController::ParameterMissing, errors.map(&:message)
       end
 
-      declaration = create_record!
+      create_declaration_attempt!
       validate_provider!
+      declaration = create_record!
+
       { id: declaration.id }
     end
 
@@ -69,6 +71,17 @@ module RecordDeclarations
 
     def user
       @user ||= User.find_by(id: user_id)
+    end
+
+    def create_declaration_attempt!
+      ParticipantDeclarationAttempt.create!(
+        course_identifier: course_identifier,
+        declaration_date: declaration_date,
+        declaration_type: declaration_type,
+        cpd_lead_provider: lead_provider_from_token,
+        user: user,
+        evidence_held: evidence_held,
+      )
     end
 
     def create_record!
