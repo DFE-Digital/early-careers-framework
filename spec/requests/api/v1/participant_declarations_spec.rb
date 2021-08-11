@@ -64,8 +64,8 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
       it "create declaration record and declaration attempt and return id when successful" do
         expect { post "/api/v1/participant-declarations", params: build_params(valid_params) }
-            .to(change(ParticipantDeclaration, :count).by(1))
-            .and(change(ParticipantDeclarationAttempt, :count).by(1))
+            .to change(ParticipantDeclaration, :count).by(1)
+            .and change(ParticipantDeclarationAttempt, :count).by(1)
         expect(response.status).to eq 200
         expect(parsed_response["id"]).to eq(ParticipantDeclaration.order(:created_at).last.id)
       end
