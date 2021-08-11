@@ -45,7 +45,7 @@ module ParticipantValidationSteps
     validator = class_double("ParticipantValidationService").as_stubbed_const(transfer_nested_constants: true)
     allow(validator).to receive(:validate)
       .with(@participant_data)
-      .and_return({ trn: @participant_data[:trn], qts: true, active_alert: "No" })
+      .and_return({ trn: @participant_data[:trn], qts: true, active_alert: false })
     click_on "Continue"
   end
 
@@ -57,7 +57,7 @@ module ParticipantValidationSteps
             full_name: "Sally Participant",
             date_of_birth: @participant_data[:date_of_birth],
             nino: @participant_data[:nino])
-      .and_return({ trn: @participant_data[:trn], qts: true, active_alert: "No" })
+      .and_return({ trn: @participant_data[:trn], qts: true, active_alert: false })
     click_on "Continue"
   end
 

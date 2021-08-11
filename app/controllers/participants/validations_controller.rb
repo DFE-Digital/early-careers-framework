@@ -167,9 +167,9 @@ module Participants
 
     def store_eligibility_data!(dqt_data)
       participant_profile.create_ecf_participant_eligibility!(qts: dqt_data[:qts],
-                                                              active_flags: dqt_data[:active_alert] != "No",
-                                                              previous_participation: false,
-                                                              previous_induction: false)
+                                                              active_flags: dqt_data[:active_alert],
+                                                              previous_participation: nil,
+                                                              previous_induction: nil)
     end
 
     def participant_profile
