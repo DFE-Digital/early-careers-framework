@@ -90,7 +90,7 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
     it "does not raise ParameterMissing error" do
       params = ect_params.merge({ declaration_date: (Time.zone.now - 100.years).rfc3339(9) })
       params[:raw_event] = generate_raw_event(params)
-      expect { described_class.call(params) }.to_not raise_error(ActionController::ParameterMissing)
+      expect { described_class.call(params) }.to_not raise_error
     end
   end
 end
