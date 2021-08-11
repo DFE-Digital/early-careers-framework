@@ -9,7 +9,7 @@ class SchoolPolicy < ApplicationPolicy
     return true if admin_only
 
     if user.induction_coordinator?
-      return user.schools.map(&:id).include?(record.id)
+      return user.schools.include?(record)
     end
 
     false
