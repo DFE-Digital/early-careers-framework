@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rails_helper"
+
 require_relative "../../../shared/context/service_record_declaration_params.rb"
 require_relative "../../../shared/context/lead_provider_profiles_and_courses.rb"
 

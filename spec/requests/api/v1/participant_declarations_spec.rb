@@ -9,10 +9,10 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
   describe "post" do
     let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
     let(:bearer_token) { "Bearer #{token}" }
-    let(:payload) { create(:participant_profile, :ect) }
+
     let(:valid_params) do
       {
-        participant_id: payload.user.id,
+        participant_id: ect_profile.user.id,
         declaration_type: "started",
         declaration_date: (Time.zone.now - 1.week).iso8601,
         course_identifier: "ecf-induction",
@@ -20,7 +20,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
     end
 
     let(:invalid_user_id) do
-      valid_params.merge({ participant_id: payload.id })
+      valid_params.merge({ participant_id: ect_profile.id })
     end
     let(:incorrect_course_identifier) do
       valid_params.merge({ course_identifier: "typoed-course-name" })
