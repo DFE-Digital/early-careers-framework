@@ -54,9 +54,10 @@ module RecordDeclarations
         raise ActionController::ParameterMissing, errors.map(&:message)
       end
 
-      create_declaration_attempt!
+      declaration_attempt = create_declaration_attempt!
       validate_provider!
       declaration = create_record!
+      declaration_attempt.update!(declaration: declaration)
 
       { id: declaration.id }
     end

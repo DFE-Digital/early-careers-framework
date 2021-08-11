@@ -431,8 +431,10 @@ ActiveRecord::Schema.define(version: 2021_08_11_065838) do
     t.string "course_identifier"
     t.string "evidence_held"
     t.uuid "cpd_lead_provider_id"
+    t.uuid "participant_declarations_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["participant_declarations_id"], name: "index_declaration_attempts_on_declarations"
   end
 
   create_table "participant_declarations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -728,6 +730,7 @@ ActiveRecord::Schema.define(version: 2021_08_11_065838) do
   add_foreign_key "nomination_emails", "schools"
   add_foreign_key "npq_lead_providers", "cpd_lead_providers"
   add_foreign_key "participant_bands", "call_off_contracts"
+  add_foreign_key "participant_declaration_attempts", "participant_declarations", column: "participant_declarations_id"
   add_foreign_key "participant_profiles", "cohorts"
   add_foreign_key "participant_profiles", "core_induction_programmes"
   add_foreign_key "participant_profiles", "participant_profiles", column: "mentor_profile_id"
