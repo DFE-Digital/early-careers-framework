@@ -6,7 +6,7 @@ module Api
       include ApiTokenAuthenticatable
 
       def create
-        params = HashWithIndifferentAccess.new({ raw_event: request.raw_post, lead_provider_from_token: cpd_lead_provider }).merge(permitted_params["attributes"] || {})
+        params = HashWithIndifferentAccess.new({ lead_provider_from_token: cpd_lead_provider }).merge(permitted_params["attributes"] || {})
         validate_params!(params)
         render json: RecordParticipantDeclaration.call(convert_params_for_declaration(params))
       end
