@@ -9,7 +9,7 @@ class CreateParticipantDeclarationAttempts < ActiveRecord::Migration[6.1]
       t.string :course_identifier
       t.string :evidence_held
       t.uuid :cpd_lead_provider_id
-      t.references :participant_declarations, null: true, foreign_key: true, type: :uuid, index: { name: :index_declaration_attempts_on_declarations }
+      t.references :participant_declaration, null: true, foreign_key: true, type: :uuid, index: { name: :index_declaration_attempts_on_declarations }
 
       t.timestamps
     end
