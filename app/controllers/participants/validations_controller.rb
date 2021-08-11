@@ -13,7 +13,23 @@ module Participants
                                                         cannot_find_details]
 
     def start
-      store_form_and_redirect_to_step :do_you_know_your_trn
+      # check whether the user is a SIT/mentor and offer the choice
+      # to proceed (unless they have already completed)
+      if current_user.induction_coordinator?
+        store_for_and_redirect_to_step :do_you_want_to_add_mentor_information
+      else
+        store_form_and_redirect_to_step :do_you_know_your_trn
+      end
+    end
+
+    def do_you_want_to_add_mentor_information
+      choice = @participant_validation_form.do_you_want_to_add_mentor_information_choice
+      if choice == "yes"
+        store_form_and_redirect_to_step :do_you_know_your_trn
+      else
+        reset_form_data
+        redirect_to induction_coordinator_dashboard_path(current_user)
+      end
     end
 
     def do_you_know_your_trn

@@ -7,7 +7,7 @@ module ApplicationHelper
     elsif user.finance?
       finance_lead_providers_path
     elsif user.induction_coordinator?
-      induction_coordinator_dashboard_path(user)
+      sit_mentor_redirector(user)
     elsif user.mentor? || user.early_career_teacher?
       participant_start_path(user)
     else
@@ -26,8 +26,6 @@ module ApplicationHelper
     analytics_data
   end
 
-private
-
   def induction_coordinator_dashboard_path(user)
     return schools_dashboard_index_path if user.schools.count > 1
 
@@ -43,5 +41,15 @@ private
     else
       dashboard_path
     end
+
+private
+
+  def sit_mentor_redirector(user)
+    if user.mentor?
+      profile = user.participant_profiles.active.mentor.first
+      return participants_validation_start_path unless profile.ecf_participant_validation_data.present? || profile.ecf_participant_eligibility.present?
+    end
+
+    induction_coordinator_dashboard_path(user)
   end
 end
