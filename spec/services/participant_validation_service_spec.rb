@@ -149,5 +149,16 @@ RSpec.describe ParticipantValidationService do
         expect(validation_result).to eql({ trn: trn, qts: true, active_alert: true })
       end
     end
+
+    context "when the DQT nino is blank" do
+      let(:nino) { "" }
+      before do
+        expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).twice.and_return(dqt_record)
+      end
+
+      it "does not count blank NINos as matching" do
+        expect(ParticipantValidationService.validate(trn: trn, nino: "", full_name: "John Smithe", date_of_birth: dob)).to be_nil
+      end
+    end
   end
 end
