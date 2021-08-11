@@ -135,7 +135,7 @@ module Participants
 
         # store validation data for manual re-check later
         # if different TRN already exists or not eligible
-        store_validation_data! unless eligibiliy_data.eligible_status?
+        store_validation_data! unless eligibility_data.eligible_status?
 
         reset_form_data
         store_form_and_redirect_to_step :complete
