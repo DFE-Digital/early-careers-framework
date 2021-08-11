@@ -57,6 +57,27 @@ RSpec.feature "Unhappy ECT participant validation journeys for FIP induction", t
     and_percy_should_be_sent_a_snapshot_named "Participant Validation: Checking details - Partnered FIP"
   end
 
+  scenario "Participant already has a different TRN set" do
+    given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+    and_i_am_signed_in_as_an_ect_participant_with_a_trn_already_set
+    then_i_should_see_the_do_you_know_your_trn_page
+
+    when_i_select "Yes, I know my TRN"
+    and_i_click "Continue"
+    then_i_should_see_the_have_you_changed_your_name_page
+
+    when_i_select "No, I have the same name"
+    and_i_click "Continue"
+    then_i_should_see_the_tell_us_your_details_page
+
+    when_i_enter_the_participants_details
+    and_i_click "Continue"
+    then_i_should_see_the_confirm_details_page
+
+    when_i_click_continue_to_proceed_with_validation
+    then_i_should_see_the_checking_details_page_for_existing_trn_user
+  end
+
   scenario "Participant does not know their TRN" do
     given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
     and_i_am_signed_in_as_an_ect_participant
