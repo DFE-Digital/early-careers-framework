@@ -144,6 +144,7 @@ module ParticipantValidationSteps
 
   def then_i_should_see_the_checking_details_page
     expect(page).to have_selector("h1", text: "We’re checking your details")
+    expect(page).to have_text("We may need to contact you for more information to complete your registration.")
     expect(page).to have_text("Big Provider Ltd")
     expect(page).to have_text("Amazing Delivery Team")
   end
