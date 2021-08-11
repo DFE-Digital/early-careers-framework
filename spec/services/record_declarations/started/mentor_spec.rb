@@ -2,39 +2,12 @@
 
 require "rails_helper"
 
+require_relative "../../../shared/context/service_record_declaration_params.rb"
+require_relative "../../../shared/context/lead_provider_profiles_and_courses.rb"
+
 RSpec.describe RecordDeclarations::Started::Mentor do
-  let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: create(:lead_provider)) }
-  let(:another_lead_provider) { create(:cpd_lead_provider, name: "Unknown", lead_provider: create(:lead_provider)) }
-  let(:ect_profile) { create(:participant_profile, :ect) }
-  let(:mentor_profile) { create(:participant_profile, :mentor) }
-  let(:induction_coordinator_profile) { create(:induction_coordinator_profile) }
-  let(:params) do
-    {
-      user_id: ect_profile.user.id,
-      declaration_date: "2021-06-21T08:46:29Z",
-      declaration_type: "started",
-      course_identifier: "ecf-induction",
-      lead_provider_from_token: another_lead_provider,
-    }
-  end
-  let(:ect_params) do
-    params.merge({ lead_provider_from_token: cpd_lead_provider })
-  end
-  let(:mentor_params) do
-    ect_params.merge({ user_id: mentor_profile.user.id, course_identifier: "ecf-mentor" })
-  end
-  let(:induction_coordinator_params) do
-    ect_params.merge({ user_id: induction_coordinator_profile.user_id })
-  end
-  let(:delivery_partner) { create(:delivery_partner) }
-  let!(:school_cohort) { create(:school_cohort, school: ect_profile.school, cohort: ect_profile.cohort) }
-  let!(:partnership) do
-    create(:partnership,
-           school: ect_profile.school,
-           lead_provider: cpd_lead_provider.lead_provider,
-           cohort: ect_profile.cohort,
-           delivery_partner: delivery_partner)
-  end
+  include_context "lead provider profiles and courses"
+  include_context "service record declaration params"
 
   context "when lead providers don't match" do
     it "raises a ParameterMissing error" do
