@@ -122,10 +122,8 @@ module Participants
     end
 
     def validate_participant_details_and_redirect
-      result = ParticipantValidationService.validate(trn: @participant_validation_form.trn,
-                                                     full_name: @participant_validation_form.name,
-                                                     date_of_birth: @participant_validation_form.date_of_birth,
-                                                     nino: @participant_validation_form.national_insurance_number)
+      result = ParticipantValidationService.validate(participant_details)
+
       if result.nil?
         @participant_validation_form.increment_validation_attempts
         store_form_and_redirect_to_step :cannot_find_details
@@ -147,13 +145,23 @@ module Participants
       store_form_and_redirect_to_step :complete
     end
 
+    def participant_details
+      @participant_validation_form.attributes
+        .slice(:trn, :name, :date_of_birth, :national_insurance_number)
+        .transform_keys do |key|
+          case key
+          when :name
+            :full_name
+          when :national_insurance_number
+            :nino
+          else
+            key
+          end
+        end
+    end
+
     def store_validation_data!(opts = {})
-      participant_profile.create_ecf_participant_validation_data!({
-        trn: @participant_validation_form.trn,
-        full_name: @participant_validation_form.name,
-        date_of_birth: @participant_validation_form.date_of_birth,
-        nino: @participant_validation_form.national_insurance_number,
-      }.merge(opts))
+      participant_profile.create_ecf_participant_validation_data!(participant_details.merge(opts))
     end
 
     def store_trn!(trn)
