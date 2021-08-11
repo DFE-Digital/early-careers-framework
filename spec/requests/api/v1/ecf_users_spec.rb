@@ -12,11 +12,12 @@ RSpec.describe "API Users", type: :request do
       # Heads up, for some reason the stored CIP IDs don't match
       cip = create(:core_induction_programme, name: "Teach First")
       school = create(:school)
+      cohort = create(:cohort, start_year: 2021)
       school_cohort = create(:school_cohort, school: school)
-      mentor_profile = create(:mentor_profile, school_cohort: school_cohort, core_induction_programme: cip)
+      mentor_profile = create(:mentor_profile, school_cohort: school_cohort, core_induction_programme: cip, cohort: cohort)
       create(:participant_profile, participant_type: :npq, school: school)
       create(:participant_profile, participant_type: :npq, school: school, teacher_profile: mentor_profile.teacher_profile)
-      create_list(:early_career_teacher_profile, 2, school_cohort: school_cohort, core_induction_programme: cip)
+      create_list(:early_career_teacher_profile, 2, school_cohort: school_cohort, core_induction_programme: cip, cohort: cohort)
     end
 
     context "when authorized" do
@@ -46,7 +47,7 @@ RSpec.describe "API Users", type: :request do
 
       it "has correct attributes" do
         get "/api/v1/ecf-users"
-        expect(parsed_response["data"][0]).to have_jsonapi_attributes(:email, :full_name, :user_type, :core_induction_programme, :induction_programme_choice, :registration_completed).exactly
+        expect(parsed_response["data"][0]).to have_jsonapi_attributes(:email, :full_name, :user_type, :core_induction_programme, :induction_programme_choice, :registration_completed, :cohort).exactly
       end
 
       it "returns correct user types" do
@@ -65,6 +66,11 @@ RSpec.describe "API Users", type: :request do
         get "/api/v1/ecf-users"
         expect(parsed_response["data"][0]["attributes"]["core_induction_programme"]).to eql("teach_first")
         expect(parsed_response["data"][2]["attributes"]["core_induction_programme"]).to eql("teach_first")
+      end
+
+      it "should return correct cohort year" do
+        get "/api/v1/ecf-users"
+        expect(parsed_response["data"][0]["attributes"]["cohort"]).to eql(2021)
       end
 
       it "returns the right number of users per page" do
