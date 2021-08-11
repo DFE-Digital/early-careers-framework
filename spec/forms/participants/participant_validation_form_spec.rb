@@ -173,6 +173,21 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
       form = described_class.new(values)
       expect(form.attributes).to match(values)
     end
+
+    context "when participant details have extraneous whitespace" do
+      it "squishes the whitespace" do
+        values = {
+          trn: "   1231222  \t",
+          name: "    Shiela\n\t Smith    \n",
+          national_insurance_number: "    AW  23  44 44  A\t\n ",
+        }
+        form = described_class.new(values)
+        attributes = form.attributes
+        expect(attributes[:trn]).to eq "1231222"
+        expect(attributes[:name]).to eq "Shiela Smith"
+        expect(attributes[:national_insurance_number]).to eq "AW 23 44 44 A"
+      end
+    end
   end
 
   describe "#trn_choices" do
