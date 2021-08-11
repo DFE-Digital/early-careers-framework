@@ -57,7 +57,7 @@ module RecordDeclarations
       declaration_attempt = create_declaration_attempt!
       validate_provider!
       declaration = create_record!
-      declaration_attempt.update!(declaration: declaration)
+      declaration_attempt.update!(participant_declaration: declaration)
 
       { id: declaration.id }
     end
