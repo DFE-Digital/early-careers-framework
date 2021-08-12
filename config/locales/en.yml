@@ -127,7 +127,7 @@ en:
               invalid: Date of birth must be a valid date
               in_the_future: Date of birth must be in the past
             national_insurance_number:
-              invalid: National Insurance number is not the correct format (for example, AB123456C)
+              invalid: National Insurance number is not the correct format (for example, QQ123456C)
         nominate_induction_tutor_form:
           attributes:
             email:
