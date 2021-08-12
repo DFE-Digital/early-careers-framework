@@ -33,6 +33,7 @@ properties:
     enum:
       - training-event-attended
       - self-study-material-completed
+      - other
     example: training-event-attended
 required:
   - participant_id

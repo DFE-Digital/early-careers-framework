@@ -16,7 +16,6 @@ RSpec.describe RecordParticipantDeclaration do
   let(:induction_coordinator_profile) { create(:induction_coordinator_profile) }
   let(:params) do
     {
-      raw_event: "{\"participant_id\":\"37b300a8-4e99-49f1-ae16-0235672b6708\",\"declaration_type\":\"started\",\"declaration_date\":\"2021-06-21T08:57:31Z\",\"course_identifier\":\"npq-leading-teaching\"}",
       user_id: npq_profile.user.id,
       declaration_date: "2021-06-21T08:46:29Z",
       declaration_type: "started",
@@ -56,10 +55,6 @@ RSpec.describe RecordParticipantDeclaration do
              delivery_partner: delivery_partner)
     end
 
-    def generate_raw_event(params)
-      params.except(:raw_event, :cpd_lead_provider).to_json
-    end
-
     context "when lead providers don't match" do
       it "raises a ParameterMissing error" do
         expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing)
@@ -73,7 +68,6 @@ RSpec.describe RecordParticipantDeclaration do
 
       it "fails when course is for mentor" do
         params = ect_params.merge({ course_identifier: "ecf-mentor" })
-        params[:raw_event] = generate_raw_event(params)
         expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing)
       end
     end
@@ -85,7 +79,6 @@ RSpec.describe RecordParticipantDeclaration do
 
       it "fails when course is for an early_career_teacher" do
         params = mentor_params.merge({ course_identifier: "ecf-induction" })
-        params[:raw_event] = generate_raw_event(params)
         expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing)
       end
     end

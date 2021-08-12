@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_04_161507) do
+ActiveRecord::Schema.define(version: 2021_08_11_065838) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -61,6 +61,13 @@ ActiveRecord::Schema.define(version: 2021_08_04_161507) do
     t.datetime "discarded_at"
     t.index ["discarded_at"], name: "index_admin_profiles_on_discarded_at"
     t.index ["user_id"], name: "index_admin_profiles_on_user_id"
+  end
+
+  create_table "api_request_audits", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "path"
+    t.jsonb "body"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "api_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -417,10 +424,22 @@ ActiveRecord::Schema.define(version: 2021_08_04_161507) do
     t.index ["call_off_contract_id"], name: "index_participant_bands_on_call_off_contract_id"
   end
 
+  create_table "participant_declaration_attempts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "declaration_type"
+    t.datetime "declaration_date"
+    t.uuid "user_id"
+    t.string "course_identifier"
+    t.string "evidence_held"
+    t.uuid "cpd_lead_provider_id"
+    t.uuid "participant_declaration_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["participant_declaration_id"], name: "index_declaration_attempts_on_declarations"
+  end
+
   create_table "participant_declarations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "declaration_type"
     t.datetime "declaration_date"
-    t.jsonb "raw_event"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "user_id", null: false
@@ -711,6 +730,7 @@ ActiveRecord::Schema.define(version: 2021_08_04_161507) do
   add_foreign_key "nomination_emails", "schools"
   add_foreign_key "npq_lead_providers", "cpd_lead_providers"
   add_foreign_key "participant_bands", "call_off_contracts"
+  add_foreign_key "participant_declaration_attempts", "participant_declarations"
   add_foreign_key "participant_profiles", "cohorts"
   add_foreign_key "participant_profiles", "core_induction_programmes"
   add_foreign_key "participant_profiles", "participant_profiles", column: "mentor_profile_id"

@@ -27,10 +27,10 @@ module Participants
         have_you_changed_your_name_choice: have_you_changed_your_name_choice,
         updated_record_choice: updated_record_choice,
         name_not_updated_choice: name_not_updated_choice,
-        trn: trn,
-        name: name,
+        trn: trn&.squish,
+        name: name&.squish,
         date_of_birth: date_of_birth,
-        national_insurance_number: national_insurance_number,
+        national_insurance_number: national_insurance_number&.squish,
         validation_attempts: validation_attempts.to_i, # coerce nil to 0
       }
     end

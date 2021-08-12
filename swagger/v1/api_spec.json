@@ -166,7 +166,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "example": "07ba7a11-1cde-40bd-a5a8-489d895c96dc",
+            "example": "45879f51-b4ce-49c8-975e-6f8653c22ab6",
             "description": "The ID of the NPQ application to accept.",
             "schema": {
               "type": "string"
@@ -216,7 +216,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "example": "ac2a111b-b6d0-4b66-93ee-3ca9c97c3c7f",
+            "example": "fd79896a-ac81-4769-8c23-37509de0a004",
             "description": "The ID of the NPQ application to reject.",
             "schema": {
               "type": "string"
@@ -526,7 +526,8 @@
             "type": "string",
             "enum": [
               "training-event-attended",
-              "self-study-material-completed"
+              "self-study-material-completed",
+              "other"
             ],
             "example": "training-event-attended"
           }

@@ -62,6 +62,10 @@ class ECFUserSerializer
     false
   end
 
+  attributes :cohort do |user|
+    user.cohort.start_year
+  end
+
   def self.find_school_cohort(user)
     user.teacher_profile.ecf_profile&.school_cohort
   end

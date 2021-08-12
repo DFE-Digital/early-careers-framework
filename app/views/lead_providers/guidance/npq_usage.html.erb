@@ -3,15 +3,13 @@
 <ul class="govuk-list govuk-list--bullet">
   <li><a href="#continuing-the-npq-registration-process" class="govuk-link">Continuing the NPQ registration process</a></li>
   <li><a href="#about-accept-reject-npq-application" class="govuk-link">About accepting or rejecting an NPQ application</a></li>
-  <li><a href="#accept-npq-application" class="govuk-link">Accept an NPQ application</a></li>
-  <li><a href="#reject-npq-application" class="govuk-link">Reject an NPQ application</a></li>
+  <li><a href="#accept-npq-application" class="govuk-link">Accepting an NPQ application</a></li>
+  <li><a href="#reject-npq-application" class="govuk-link">Rejecting an NPQ application</a></li>
   <li><a href="#handling-deferrals" class="govuk-link">Handling deferrals</a></li>
   <li><a href="#handling-changes-circumstances" class="govuk-link">Handling applications with changes in circumstances</a></li>
-  <li>
-    <a href="#declaring-that-an-npq-participant-has-started-their-induction" class="govuk-link">
-      Declaring that an NPQ participant has started their induction
-    </a>
-  </li>
+  <li><a href="#declaring-that-an-npq-participant-has-started-their-course" class="govuk-link">Declaring that an NPQ participant has started their course</a></li>
+  <li><a href="#declaring-that-an-npq-participant-has-been-retained" class="govuk-link">Declaring that an NPQ participant has reached a retained milestone</a></li>
+  <li><a href="#declaring-that-an-npq-participant-has-completed-their-course" class="govuk-link">Declaring that an NPQ participant has completed their course</a></li>
 </ul>
 
 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6">
@@ -66,7 +64,7 @@
 </p>
 
 <p class="govuk-body-m">
-  Accepting or rejecting a participant is separate and distinct from a “started declaration”, which will be collected as part of the tracking and payment process. More <a href="#declaring-that-an-npq-participant-has-started-their-induction" class="govuk-link">information about declarations</a> can be found further down this page. We will only be able to make payments for participants who are in an “application accepted” state.
+  Accepting or rejecting a participant is separate and distinct from a “started declaration”, which will be collected as part of the tracking and payment process. More <a href="#declaring-that-an-npq-participant-has-started-their-course" class="govuk-link">information about declarations</a> can be found further down this page. We will only be able to make payments for participants who are in an “application accepted” state.
 </p>
 
 <p class="govuk-body-m">
@@ -165,34 +163,28 @@
   If there is a mistake in the application for example where a participant registers for a one NPQ programme but wishes to change to another programme after registration. The provider should reject that participant and ask them to re-register on the NPQ registration service and enter the correct details. Once the new application is available you can then accept.
 </p>
 
-<h2 id="declaring-that-an-npq-participant-has-started-their-induction" class="govuk-heading-l">
+<h2 id="declaring-that-an-npq-participant-has-started-their-course" class="govuk-heading-l">
   Declaring that an NPQ participant has started their induction
 </h2>
-
 <p class="govuk-body-m">
   This scenario begins after it has been confirmed that an NPQ participant is ready to begin their induction training.
 </p>
 
 <h3 class="govuk-heading-m">1. Provider confirms an NPQ participant has started</h3>
-
 <p class="govuk-body-m">Confirm an NPQ participant has started their induction training before Milestone 1.</p>
-
 <p class="govuk-body-m">
   <code>POST /api/v1/participant-declarations</code>
 </p>
-
 <p class="govuk-body-m">With a request body containing an
   <a href="/lead-providers/guidance/reference#npqparticipantstarteddeclaration-object" class="govuk-link">
     NPQ participant declaration
   </a>.
 </p>
-
 <p class="govuk-body-m">This returns
   <a href="/lead-providers/guidance/reference#participantdeclarationrecordedresponse-object" class="govuk-link">
     participant declaration recorded
   </a>.
 </p>
-
 <p class="govuk-body-m">See
   <a href="/lead-providers/guidance/reference#post-api-v1-participant-declarations" class="govuk-link">
     confirm NPQ participant declarations
@@ -200,6 +192,83 @@
   endpoint.
 </p>
 
-<h3 class="govuk-heading-m">2. Provider records the NPQ participant declaration id</h3>
+<h3 class="govuk-heading-m">2. Provider records the NPQ participant declaration ID</h3>
+<p class="govuk-body-m">Store the returned NPQ participant declaration ID for future management tasks.</p>
 
-<p class="govuk-body-m">Store the returned NPQ participant declaration id for future management tasks.</p>
+<h2 id="declaring-that-an-npq-participant-has-been-retained" class="govuk-heading-l">
+  Declaring that an NPQ participant has reached a retained milestone
+</h2>
+<p class="govuk-body-m">
+  This scenario begins after it has been confirmed that an NPQ participant has completed enough of their course to reach a milestone
+</p>
+
+<h3 class="govuk-heading-m">1. Provider confirms an NPQ participant has been retained</h3>
+<p class="govuk-body-m">
+  Confirm an NPQ participant has been retained by the appropriate number of months for this retained event on their NPQ course.
+</p>
+
+<p class="govuk-body-m">
+  An explicit <code>retained-x</code> declaration is required to trigger output payments once a participant has reached a particular milestone. You should declare this when a participant has reached a particular milestone in line with contractual reporting requirements.
+</p>
+
+<p class="govuk-body-m">
+  <code>POST /api/v1/participant-declarations</code>
+</p>
+<p class="govuk-body-m">With a request body containing an
+  <a href="/lead-providers/guidance/reference#npqparticipantretaineddeclaration-object" class="govuk-link">
+    NPQ participant declaration
+  </a>.
+</p>
+<p class="govuk-body-m">This returns
+  <a href="/lead-providers/guidance/reference#participantdeclarationrecordedresponse-object" class="govuk-link">
+    participant declaration recorded
+  </a>.
+</p>
+<p class="govuk-body-m">See
+  <a href="/lead-providers/guidance/reference#post-api-v1-participant-declarations" class="govuk-link">
+    confirm NPQ participant declarations
+  </a>
+  endpoint.
+</p>
+
+<h3 class="govuk-heading-m">2. Provider records the NPQ participant declaration ID</h3>
+<p class="govuk-body-m">Store the returned NPQ participant declaration ID for future management tasks.</p>
+
+<h2 id="declaring-that-an-npq-participant-has-completed-their-course" class="govuk-heading-l">
+  Declaring that an NPQ participant has completed their course
+</h2>
+<p class="govuk-body-m">
+  This scenario begins after it has been confirmed that an NPQ participant has completed their course.
+</p>
+
+<h3 class="govuk-heading-m">1. Provider confirms an NPQ participant has completed their course.</h3>
+<p class="govuk-body-m">
+  Confirm an NPQ participant has completed their NPQ course.
+</p>
+
+<p class="govuk-body-m">
+  An explicit <code>completed</code> declaration is required to trigger output payments. You should declare this once a participant has reached their final milestone and finished their NPQ course.
+</p>
+
+<p class="govuk-body-m">
+  <code>POST /api/v1/participant-declarations</code>
+</p>
+<p class="govuk-body-m">With a request body containing an
+  <a href="/lead-providers/guidance/reference#npqparticipantstarteddeclaration-object" class="govuk-link">
+    NPQ participant declaration
+  </a>.
+</p>
+<p class="govuk-body-m">This returns
+  <a href="/lead-providers/guidance/reference#participantdeclarationrecordedresponse-object" class="govuk-link">
+    participant declaration recorded
+  </a>.
+</p>
+<p class="govuk-body-m">See
+  <a href="/lead-providers/guidance/reference#post-api-v1-participant-declarations" class="govuk-link">
+    confirm NPQ participant declarations
+  </a>
+  endpoint.
+</p>
+
+<h3 class="govuk-heading-m">2. Provider records the NPQ participant declaration ID</h3>
+<p class="govuk-body-m">Store the returned NPQ participant declaration ID for future management tasks.</p>

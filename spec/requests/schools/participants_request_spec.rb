@@ -51,13 +51,13 @@ RSpec.describe "Schools::Participants", type: :request do
     end
 
     context "when there are no mentors" do
-      let(:ect_profile) { create(:participant_profile, :ect) }
-      let(:other_school) { ect_profile.school }
-      let!(:other_school_cohort) { create(:school_cohort, school: other_school, cohort: cohort) }
-      let(:cohort) { ect_profile.cohort }
+      let(:other_school) { create(:school) }
+      let(:other_cohort) { create(:cohort) }
+      let!(:other_school_cohort) { create(:school_cohort, cohort: other_cohort, school: other_school) }
+      let!(:ect_profile) { create(:participant_profile, :ect, school_cohort: other_school_cohort) }
       let(:user) { create(:user, :induction_coordinator, school_ids: [other_school.id]) }
       it "does not show the assign mentor link" do
-        get "/schools/#{other_school.slug}/cohorts/#{cohort.start_year}/participants"
+        get "/schools/#{other_school.slug}/cohorts/#{other_cohort.start_year}/participants"
 
         expect(response.body).to include "No mentors added"
         expect(response.body).not_to include "Assign mentor"
