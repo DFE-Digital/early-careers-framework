@@ -9,7 +9,7 @@ module ApplicationHelper
     elsif user.induction_coordinator?
       induction_coordinator_dashboard_path(user)
     elsif user.mentor? || user.early_career_teacher?
-      participants_validation_start_path
+      participant_start_path(user)
     else
       dashboard_path
     end
@@ -35,5 +35,13 @@ private
     return advisory_schools_choose_programme_path(school_id: school.slug) unless school.chosen_programme?(Cohort.current)
 
     schools_dashboard_path(school_id: school.slug)
+  end
+
+  def participant_start_path(user)
+    if FeatureFlag.active?(:participant_validation, for: user.teacher_profile&.participant_profiles&.ecf&.active&.first&.school)
+      participants_validation_start_path
+    else
+      dashboard_path
+    end
   end
 end
