@@ -105,6 +105,10 @@ module Participants
     end
 
     def teacher_details
+      @trn = trn&.squish
+      @name = name&.squish
+      @national_insurance_number = national_insurance_number&.squish
+
       if trn.blank?
         errors.add(:trn, :blank)
       elsif trn.length < 5
