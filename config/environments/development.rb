@@ -8,7 +8,8 @@ Rails.application.configure do
   # Used to handle HTTP_X_WITH_SERVER_DATE header for server side datetime overwrite
   config.middleware.use TimeTraveler
 
-  config.middleware.use LeadProviderRequestAuditor
+  # TODO: Enable after more thorough testing
+  # config.middleware.use LeadProviderRequestAuditor
 
   # In the development environment your application's code is reloaded any time
   # it changes. This slows down response time but is perfect for development
