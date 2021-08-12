@@ -9,7 +9,7 @@
 describe("Meta test helper tests", () => {
   it("should have login and logout helper commands", () => {
     cy.login();
-    cy.get("h1").should("contain", "User dashboard");
+    cy.get("h1").should("contain", "You cannot use this service yet");
 
     cy.logout();
     cy.get("h1").should("contain", "You are now signed out");
