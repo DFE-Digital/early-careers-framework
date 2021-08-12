@@ -10,6 +10,9 @@ RSpec.describe ApplicationHelper, type: :helper do
   let(:induction_coordinator) { create(:user, :induction_coordinator) }
   let(:school) { induction_coordinator.induction_coordinator_profile.schools.first }
   let!(:cohort) { create(:cohort, :current) }
+  let(:participant_profile) { create(:participant_profile, :ect) }
+  let(:participant_school) { participant_profile.school }
+  let(:lead_provider) { create(:user, :lead_provider) }
 
   describe "#profile_dashboard_path" do
     it "returns the admin/schools path for admins" do
@@ -43,6 +46,24 @@ RSpec.describe ApplicationHelper, type: :helper do
       it "return the schools dashboard path (index)" do
         expect(helper.profile_dashboard_path(induction_coordinator)).to eq("/schools")
       end
+    end
+
+    it "returns dashboard path for participants" do
+      expect(helper.profile_dashboard_path(participant_profile.user)).to eq("/dashboard")
+    end
+
+    context "when the validation feature flag is active for a participant" do
+      before do
+        FeatureFlag.activate(:participant_validation, for: participant_school)
+      end
+
+      it "returns the validation start path" do
+        expect(helper.profile_dashboard_path(participant_profile.user)).to eq("/participants/validation")
+      end
+    end
+
+    it "returns the dashboard path for lead providers" do
+      expect(helper.profile_dashboard_path(lead_provider)).to eq("/dashboard")
     end
   end
 
