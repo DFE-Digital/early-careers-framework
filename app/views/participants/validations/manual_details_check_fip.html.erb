@@ -5,6 +5,7 @@
   <div class="govuk-grid-column-two-thirds">
     <%= govuk_panel title: title, body: nil, classes: "govuk-!-margin-bottom-8" %>
     <h2 class="govuk-heading-m">What happens next</h2>
+    <p class="govuk-body">We may need to contact you for more information to complete your registration.</p>
     <p class="govuk-body">You will not need to use this service again during your training.</p>
     <% if @partnership.present? %>
       <p class="govuk-body"><%= @school.name %> has chosen <%= @partnership.delivery_partner.name %> and <%= @partnership.lead_provider.name %> to deliver your training programme. These organisations will contact you directly with more information.</p>
