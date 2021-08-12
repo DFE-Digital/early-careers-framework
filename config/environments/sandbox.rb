@@ -6,11 +6,9 @@ Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Used to handle HTTP_X_WITH_SERVER_DATE header for server side datetime overwrite
-  # TODO: Enable after more thorough testing
-  # config.middleware.use TimeTraveler
+  config.middleware.use TimeTraveler
 
-  # TODO: Enable after more thorough testing
-  # config.middleware.use LeadProviderRequestAuditor
+  config.middleware.use LeadProviderRequestAuditor
 
   # Code is not reloaded between requests.
   config.cache_classes = true
