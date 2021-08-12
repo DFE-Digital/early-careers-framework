@@ -123,6 +123,13 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
       end
     end
 
+    context "when trn has leading/trailing whiitespace" do
+      it "strips whitespace and validates" do
+        form.trn = "   1234567  \t\n"
+        expect(form.valid?(:tell_us_your_details)).to be true
+      end
+    end
+
     context "when name is not supplied" do
       it "returns false" do
         form.name = nil
@@ -152,6 +159,13 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
         form.national_insurance_number = "A 12 VV"
         expect(form.valid?(:tell_us_your_details)).to be false
         expect(form.errors).to include :national_insurance_number
+      end
+    end
+
+    context "when national_insurance_number has leading/trailing whiitespace" do
+      it "strips whitespace and validates" do
+        form.national_insurance_number = "   AB123456C  \t\n"
+        expect(form.valid?(:tell_us_your_details)).to be true
       end
     end
   end
