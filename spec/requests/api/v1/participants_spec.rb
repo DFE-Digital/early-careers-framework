@@ -144,7 +144,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
                status
                teacher_reference_number
                teacher_reference_number_validated
-               eligible_for_payment
+               eligible_for_funding
                pupil_premium_uplift
                sparsity_uplift],
           )

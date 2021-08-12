@@ -57,7 +57,7 @@ class ParticipantSerializer
   end
 
   active_participant_attribute :eligible_for_funding do |user|
-    user.teacher_profile.ecf_profile.ecf_participant_eligibility&.eligible? || nil
+    user.teacher_profile.ecf_profile.ecf_participant_eligibility&.eligible_status? || nil
   end
 
   active_participant_attribute :pupil_premium_uplift do
