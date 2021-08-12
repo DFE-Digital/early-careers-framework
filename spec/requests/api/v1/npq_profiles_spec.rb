@@ -18,7 +18,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
         default_headers["Content-Type"] = "application/vnd.api+json"
       end
 
-      let(:json) do
+      let(:json_hash) do
         {
           data: {
             type: "npq_profiles",
@@ -54,8 +54,10 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
               },
             },
           },
-        }.to_json
+        }
       end
+
+      let(:json) { json_hash.to_json }
 
       it "creates the npq_profile" do
         expect { post "/api/v1/npq-profiles", params: json }
@@ -111,6 +113,20 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
           :eligible_for_funding,
           :funding_choice,
         )
+      end
+
+      context "cannot perform save" do
+        before do
+          json_hash[:data][:relationships][:user][:data][:id] = nil
+          json_hash[:data][:relationships][:npq_lead_provider][:data][:id] = nil
+          json_hash[:data][:relationships][:npq_course][:data][:id] = nil
+        end
+
+        it "returns errors" do
+          post "/api/v1/npq-profiles", params: json
+
+          expect(parsed_response["errors"]).to be_present
+        end
       end
     end
 

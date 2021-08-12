@@ -7,14 +7,16 @@ module Api
 
       def create
         validation_data = NPQValidationData.new(validation_data_params)
-        validation_data.npq_course = NPQCourse.find(npq_course_param)
-        validation_data.npq_lead_provider = NPQLeadProvider.find(npq_lead_provider_param)
-        validation_data.user = User.find(user_param)
+        validation_data.npq_course = NPQCourse.find_by(id: npq_course_param)
+        validation_data.npq_lead_provider = NPQLeadProvider.find_by(id: npq_lead_provider_param)
+        validation_data.user = User.find_by(id: user_param)
 
         if validation_data.save
           render status: :created,
                  content_type: "application/vnd.api+json",
                  json: NPQValidationDataSerializer.new(validation_data).serializable_hash
+        else
+          render json: { errors: Api::ErrorFactory.new(model: validation_data).call }, status: :bad_request
         end
       end
 
