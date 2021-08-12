@@ -62,7 +62,7 @@ Rails.application.routes.draw do
         end
       end
 
-      jsonapi_resources :npq_profiles, only: [:create]
+      resources :npq_profiles, only: [:create], path: "npq-profiles"
 
       namespace :data_studio, path: "data-studio" do
         get "/school-rollout", to: "school_rollout#index"
