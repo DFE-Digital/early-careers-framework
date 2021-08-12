@@ -16,7 +16,7 @@ private
     path = env["PATH_INFO"]
     if audited_paths.any? { |pattern| pattern.match?(path) }
       request = Rack::Request.new(env)
-      body = request.body.read.squish
+      body = request.POST
       ApiRequestAudit.create!(path: path, body: body)
     end
   rescue StandardError => e
