@@ -75,4 +75,11 @@ RSpec.feature "SIT/mentor participant validation journeys for FIP induction", ty
     then_i_should_see_the_manage_your_training_page
     and_i_should_not_see_a_banner_telling_me_i_need_to_add_my_mentor_information
   end
+
+  scenario "SIT/Mentor outside of beta does not see journey", with_feature_flags: { participant_validation: "inactive" } do
+    given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+    and_i_am_signed_in_as_a_sit_mentor_participant
+    then_i_should_see_the_manage_your_training_page
+    and_i_should_not_see_a_banner_telling_me_i_need_to_add_my_mentor_information
+  end
 end
