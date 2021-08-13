@@ -16,6 +16,17 @@ class ParticipantSerializer
     def participant_active?(user)
       user.teacher_profile.ecf_profile&.active?
     end
+
+    def trn(user)
+      user.teacher_profile.trn || user.teacher_profile.ecf_profile.ecf_participant_validation_data&.trn
+    end
+
+    def validated_trn(user)
+      eligibility_status = user.teacher_profile.ecf_profile.ecf_participant_eligibility&.status
+      if %w[matched eligible].include?(eligibility_status)
+        user.teacher_profile.trn
+      end
+    end
   end
 
   set_id :id
@@ -49,11 +60,11 @@ class ParticipantSerializer
   end
 
   active_participant_attribute :teacher_reference_number do |user|
-    user.teacher_profile.trn
+    trn(user)
   end
 
   active_participant_attribute :teacher_reference_number_validated do |user|
-    user.teacher_profile.trn.present?
+    trn(user).nil? ? nil : validated_trn(user).present?
   end
 
   active_participant_attribute :eligible_for_funding do |user|
