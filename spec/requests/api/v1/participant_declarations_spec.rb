@@ -14,7 +14,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       {
         participant_id: ect_profile.user.id,
         declaration_type: "started",
-        declaration_date: (ect_profile.schedule.milestones.first.start_date + 1.days).rfc3339,
+        declaration_date: (ect_profile.schedule.milestones.first.start_date + 1.day).rfc3339,
         course_identifier: "ecf-induction",
       }
     end
