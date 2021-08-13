@@ -213,9 +213,11 @@ end
 user = User.find_or_create_by!(email: "fip-ect@example.com") do |u|
   u.full_name = "FIP ECT"
 end
+
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
   ect_profile.school_cohort = School.find_by(urn: "000103").school_cohorts.find_by(cohort: Cohort.current)
+  ect_profile.schedule = Finance::Schedule.default
 end
 
 # FIP mentor
@@ -225,6 +227,7 @@ end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000104").school_cohorts.find_by(cohort: Cohort.current)
+  mentor_profile.schedule = Finance::Schedule.default
 end
 
 # FIP mentor already doing an NPQ with the same email
@@ -236,8 +239,9 @@ teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
 end
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000105").school_cohorts.find_by(cohort: Cohort.current)
+  mentor_profile.schedule = Finance::Schedule.default
 end
-ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile)
+ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile, schedule: Finance::Schedule.default)
 
 # FIP mentor already doing an NPQ with a different email
 user = User.find_or_create_by!(email: "fip-mentor-npq-other-email@example.com") do |u|
@@ -246,7 +250,7 @@ end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
   profile.trn = "2369848"
 end
-ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile)
+ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile, schedule: Finance::Schedule.default)
 
 user = User.find_or_create_by!(email: "fip-mentor2@example.com") do |u|
   u.full_name = "FIP Mentor"
@@ -254,6 +258,7 @@ end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000105").school_cohorts.find_by(cohort: Cohort.current)
+  mentor_profile.schedule = Finance::Schedule.default
 end
 
 # FIP mentor already mentoring at another school with another email
@@ -263,8 +268,9 @@ end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
   profile.trn = "1357010"
 end
-ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
-  profile.school_cohort = School.find_by(urn: "000105").school_cohorts.find_by(cohort: Cohort.current)
+ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+  mentor_profile.school_cohort = School.find_by(urn: "000105").school_cohorts.find_by(cohort: Cohort.current)
+  mentor_profile.schedule = Finance::Schedule.default
 end
 
 user = User.find_or_create_by!(email: "fip-mentor3@example.com") do |u|
@@ -273,6 +279,7 @@ end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000106").school_cohorts.find_by(cohort: Cohort.current)
+  mentor_profile.schedule = Finance::Schedule.default
 end
 
 # SIT also a mentor
@@ -280,6 +287,7 @@ user = User.find_by(email: "cpd-test+tutor-17@example.com")
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = user.induction_coordinator_profile.schools.first.school_cohorts.find_by(cohort: Cohort.current)
+  mentor_profile.schedule = Finance::Schedule.default
 end
 
 # Extra participant records
@@ -289,6 +297,7 @@ end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
   ect_profile.school_cohort = School.find_by(urn: "000107").school_cohorts.find_by(cohort: Cohort.current)
+  ect_profile.schedule = Finance::Schedule.default
 end
 
 user = User.find_or_create_by!(email: "fip-mentor4@example.com") do |u|
@@ -297,6 +306,7 @@ end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000108").school_cohorts.find_by(cohort: Cohort.current)
+  mentor_profile.schedule = Finance::Schedule.default
 end
 
 user = User.find_or_create_by!(email: "fip-mentor5@example.com") do |u|
@@ -305,5 +315,6 @@ end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000109").school_cohorts.find_by(cohort: Cohort.current)
+  mentor_profile.schedule = Finance::Schedule.default
 end
 # TODO: add validation data and eligibility records when merged

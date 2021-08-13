@@ -19,7 +19,7 @@ module Mentors
           profile.school = school_cohort.school
         end
 
-        ParticipantProfile::Mentor.create!({ teacher_profile: teacher_profile }.merge(mentor_attributes))
+        ParticipantProfile::Mentor.create!({ teacher_profile: teacher_profile, schedule: Finance::Schedule.default }.merge(mentor_attributes))
       end
     end
 
