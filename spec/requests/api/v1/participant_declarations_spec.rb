@@ -55,9 +55,11 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       end
 
       it "create declaration record and declaration attempt and return id when successful" do
-        expect { post "/api/v1/participant-declarations", params: build_params(valid_params) }
+        params = build_params(valid_params)
+        expect { post "/api/v1/participant-declarations", params: params }
             .to change(ParticipantDeclaration, :count).by(1)
             .and change(ParticipantDeclarationAttempt, :count).by(1)
+        expect(ApiRequestAudit.last.body).to eq(params.to_s)
         expect(response.status).to eq 200
         expect(parsed_response["id"]).to eq(ParticipantDeclaration.order(:created_at).last.id)
       end
@@ -121,9 +123,11 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
     context "when unauthorized" do
       it "returns 401 for invalid bearer token" do
+        params = build_params(valid_params)
         default_headers[:Authorization] = "Bearer ugLPicDrpGZdD_w7hhCL"
-        post "/api/v1/participant-declarations", params: build_params(valid_params)
+        post "/api/v1/participant-declarations", params: params
         expect(response.status).to eq 401
+        expect(ApiRequestAudit.last.body).to eq(params.to_s)
       end
     end
   end

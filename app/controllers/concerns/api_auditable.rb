@@ -10,6 +10,6 @@ module ApiAuditable
 private
 
   def capture_params
-    ApiRequestAudit.create!(path: request.env["PATH_INFO"], body: params)
+    ApiRequestAudit.create!(path: request.env["PATH_INFO"], body: request.raw_post)
   end
 end
