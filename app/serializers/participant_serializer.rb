@@ -14,7 +14,7 @@ class ParticipantSerializer
     end
 
     def participant_active?(user)
-      user.early_career_teacher_profile&.active? || user.mentor_profile&.active?
+      user.teacher_profile.ecf_profile&.active?
     end
   end
 
@@ -24,28 +24,47 @@ class ParticipantSerializer
   active_participant_attribute :full_name, &:full_name
 
   active_participant_attribute :mentor_id do |user|
-    user.early_career_teacher_profile&.mentor&.id
+    user.teacher_profile.early_career_teacher_profile&.mentor&.id
   end
 
   active_participant_attribute :school_urn do |user|
-    user.early_career_teacher_profile&.school&.urn ||
-      user.mentor_profile&.school&.urn
+    user.teacher_profile.ecf_profile&.school&.urn
   end
 
-  attribute :participant_type do |user|
-    if user.early_career_teacher?
+  active_participant_attribute :participant_type do |user|
+    case user.teacher_profile.ecf_profile.type
+    when ParticipantProfile::ECT.name
       :ect
-    elsif user.mentor?
+    when ParticipantProfile::Mentor.name
       :mentor
     end
   end
 
   active_participant_attribute :cohort do |user|
-    user.early_career_teacher_profile&.cohort&.start_year ||
-      user.mentor_profile.cohort&.start_year
+    user.teacher_profile.ecf_profile.cohort.start_year
   end
 
   attribute :status do |user|
-    user.early_career_teacher_profile&.status || user.mentor_profile&.status || "withdrawn"
+    user.teacher_profile.ecf_profile&.status || "withdrawn"
+  end
+
+  active_participant_attribute :teacher_reference_number do |user|
+    user.teacher_profile.trn
+  end
+
+  active_participant_attribute :teacher_reference_number_validated do |user|
+    user.teacher_profile.trn.present?
+  end
+
+  active_participant_attribute :eligible_for_funding do |user|
+    user.teacher_profile.ecf_profile.ecf_participant_eligibility&.eligible_status? || nil
+  end
+
+  active_participant_attribute :pupil_premium_uplift do
+    nil # TODO: CPDRP-534 - Share when we know we have the correct information
+  end
+
+  active_participant_attribute :sparsity_uplift do
+    nil # TODO: CPDRP-534 - Share when we know we have the correct information
   end
 end
