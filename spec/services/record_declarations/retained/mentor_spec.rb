@@ -8,6 +8,10 @@ RSpec.describe RecordDeclarations::Retained::Mentor do
   include_context "lead provider profiles and courses"
   include_context "service record declaration params"
 
+  before do
+    travel_to ect_profile.schedule.milestones.first.start_date + 2.days
+  end
+
   context "when lead providers don't match" do
     it "raises a ParameterMissing error" do
       expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing)

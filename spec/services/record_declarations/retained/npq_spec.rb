@@ -8,6 +8,10 @@ RSpec.describe RecordDeclarations::Retained::NPQ do
   include_context "lead provider profiles and courses"
   include_context "service record declaration params"
 
+  before do
+    travel_to ect_profile.schedule.milestones.first.start_date + 2.days
+  end
+
   context "when sending event for an npq course" do
     it "creates a participant and profile declaration" do
       expect { described_class.call(npq_params) }.to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)

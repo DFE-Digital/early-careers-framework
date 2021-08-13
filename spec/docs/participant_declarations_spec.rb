@@ -1,16 +1,21 @@
 # frozen_string_literal: true
 
 require "swagger_helper"
+require_relative "../shared/context/service_record_declaration_params.rb"
+require_relative "../shared/context/lead_provider_profiles_and_courses.rb"
 
 RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_spec.json" do
-  let(:early_career_teacher_profile) { create(:early_career_teacher_profile) }
-  let(:cohort) { early_career_teacher_profile.cohort }
-  let(:user) { early_career_teacher_profile.user }
-  let(:lead_provider) { create(:lead_provider) }
-  let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: lead_provider) }
+  include_context "lead provider profiles and courses"
+  include_context "service record declaration params"
+
+  let(:user) { ect_profile.user }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
   let(:bearer_token) { "Bearer #{token}" }
   let(:Authorization) { bearer_token }
+
+  before do
+    travel_to ect_profile.schedule.milestones.first.start_date + 2.days
+  end
 
   path "/api/v1/participant-declarations" do
     post "Declare a participant has reached a milestone" do
@@ -34,30 +39,12 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
                 }
 
       response 200, "Successful" do
-        let(:fresh_user) { create(:participant_profile, :ect).user }
-        let(:params) do
-          {
-            "data": {
-              "type": "participant-declaration",
-              "attributes": {
-                "participant_id" => fresh_user.id,
-                "declaration_type" => "started",
-                "declaration_date" => "2021-05-31T15:50:00Z",
-                "course_identifier" => "ecf-induction",
-              },
-            },
-          }
-        end
-        run_test!
-      end
-
-      response 200, "Successful" do
         let(:attributes) do
           {
-            "participant_id" => user.id,
-            "declaration_type" => "started",
-            "declaration_date" => "2021-05-31T15:50:00Z",
-            "course_identifier" => "ecf-induction",
+            participant_id: ect_profile.user.id,
+            declaration_date: ect_declaration_date.rfc3339,
+            declaration_type: "started",
+            course_identifier: "ecf-induction",
           }
         end
 
@@ -70,16 +57,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
           }
         end
 
-        before do
-          caller_attributes = attributes.merge(
-            user_id: attributes["participant_id"],
-            lead_provider_from_token: cpd_lead_provider,
-          ).except("participant_id")
-          RecordParticipantDeclaration.call(HashWithIndifferentAccess.new(caller_attributes))
-        end
-
         schema "$ref": "#/components/schemas/ParticipantDeclarationRecordedResponse"
-
         run_test!
       end
 

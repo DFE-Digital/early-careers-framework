@@ -9,6 +9,10 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
   include_context "lead provider profiles and courses"
   include_context "service record declaration params"
 
+  before do
+    travel_to ect_profile.schedule.milestones.first.start_date + 2.days
+  end
+
   context "when lead providers don't match" do
     it "raises a ParameterMissing error" do
       expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing)
@@ -50,7 +54,7 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
 
   context "when declaration date is in the past" do
     it "does not raise ParameterMissing error" do
-      params = ect_params.merge({ declaration_date: (Time.zone.now - 100.years).rfc3339(9) })
+      params = ect_params.merge({ declaration_date: (Time.zone.now - 1.day).rfc3339(9) })
       expect { described_class.call(params) }.to_not raise_error
     end
   end

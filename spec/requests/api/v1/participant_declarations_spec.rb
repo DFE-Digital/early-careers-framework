@@ -14,28 +14,16 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       {
         participant_id: ect_profile.user.id,
         declaration_type: "started",
-        declaration_date: (Time.zone.now - 1.week).iso8601,
+        declaration_date: (ect_profile.schedule.milestones.first.start_date + 1.days).rfc3339,
         course_identifier: "ecf-induction",
       }
     end
 
-    let(:invalid_user_id) do
-      valid_params.merge({ participant_id: ect_profile.id })
-    end
-    let(:incorrect_course_identifier) do
-      valid_params.merge({ course_identifier: "typoed-course-name" })
-    end
-    let(:invalid_course_identifier) do
-      valid_params.merge({ course_identifier: "ecf-mentor" })
-    end
-    let(:missing_user_id) do
-      valid_params.merge({ participant_id: "" })
-    end
-    let(:missing_attribute) do
-      valid_params.except(:participant_id)
-    end
-
     let(:parsed_response) { JSON.parse(response.body) }
+
+    before do
+      travel_to ect_profile.schedule.milestones.first.start_date + 2.days
+    end
 
     def build_params(attributes)
       {
@@ -79,28 +67,34 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         end
       end
 
-      it "returns 422 when trying to create for an invalid user id" do # Expects the user uuid. Pass the early_career_teacher_profile_id
+      it "returns 422 when trying to create for an invalid user id" do
+        # Expects the user uuid. Pass the early_career_teacher_profile_id
+        invalid_user_id = valid_params.merge({ participant_id: ect_profile.id })
         post "/api/v1/participant-declarations", params: build_params(invalid_user_id)
         expect(response.status).to eq 422
       end
 
       it "returns 422 when trying to create with no id" do
+        missing_user_id = valid_params.merge({ participant_id: "" })
         post "/api/v1/participant-declarations", params: build_params(missing_user_id)
         expect(response.status).to eq 422
       end
 
       it "returns 422 when a required parameter is missing" do
+        missing_attribute = valid_params.except(:participant_id)
         post "/api/v1/participant-declarations", params: build_params(missing_attribute)
         expect(response.status).to eq 422
         expect(response.body).to eq({ bad_or_missing_parameters: %w[participant_id] }.to_json)
       end
 
       it "returns 422 when supplied an incorrect course type" do
+        incorrect_course_identifier = valid_params.merge({ course_identifier: "typoed-course-name" })
         post "/api/v1/participant-declarations", params: build_params(incorrect_course_identifier)
         expect(response.status).to eq 422
       end
 
       it "returns 422 when a participant type doesn't match the course type" do
+        invalid_course_identifier = valid_params.merge({ course_identifier: "ecf-mentor" })
         post "/api/v1/participant-declarations", params: build_params(invalid_course_identifier)
         expect(response.status).to eq 422
         expect(response.body).to eq({ bad_or_missing_parameters: ["The property '#/course_identifier' must be an available course to '#/participant_id'"] }.to_json)
