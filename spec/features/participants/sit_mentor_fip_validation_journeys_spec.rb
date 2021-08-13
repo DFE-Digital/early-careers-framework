@@ -12,6 +12,12 @@ RSpec.feature "SIT/mentor participant validation journeys for FIP induction", ty
     then_i_should_see_the_do_you_want_to_add_your_mentor_information_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Participant Validation: Do you want to add your mentor information"
+
+    when_i_click "Continue"
+    then_i_see_an_error_message "Select whether you want to add your mentor information now"
+    and_the_page_should_be_accessible
+    and_percy_should_be_sent_a_snapshot_named "Participant Validation: Do you want to add your mentor information - error"
+
     when_i_select "Yes, I want to add information now"
     and_i_click "Continue"
     then_i_should_see_the_do_you_know_your_trn_page
