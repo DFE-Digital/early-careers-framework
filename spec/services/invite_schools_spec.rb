@@ -627,7 +627,12 @@ RSpec.describe InviteSchools do
     let(:start_url) { "http://www.example.com/participants/start-registration?utm_campaign=participant-validation-beta&utm_medium=email&utm_source=participant-validation-beta" }
     let(:research_url) { "http://www.example.com/pages/user-research?utm_campaign=participant-validation-research&utm_medium=email&utm_source=participant-validation-research" }
     let(:mentor_research_url) { "http://www.example.com/pages/user-research?mentor=true&utm_campaign=participant-validation-research&utm_medium=email&utm_source=participant-validation-research" }
-    let(:urns) { [fip_school_1, fip_school_2, cip_school].map(&:urn) }
+    let(:schools) { [fip_school_1, fip_school_2, cip_school] }
+    let(:urns) { schools.map(&:urn) }
+
+    before do
+      schools.each { |school| FeatureFlag.deactivate(:participant_validation, for: school) }
+    end
 
     it "activates the participant validation feature flag for FIP schools", with_feature_flag: { participant_validation: "inactive" } do
       InviteSchools.new.feature_flag_and_send_participant_validation_beta_emails(array_of_urns: urns)
@@ -635,6 +640,8 @@ RSpec.describe InviteSchools do
       [fip_school_1, fip_school_2].each do |school|
         expect(FeatureFlag.active?(:participant_validation, for: school)).to be true
       end
+
+      expect(FeatureFlag.active?(:participant_validation, for: cip_school)).to be false
     end
 
     it "emails the early career teachers belonging to the FIP schools" do
@@ -671,11 +678,6 @@ RSpec.describe InviteSchools do
                                           start_url: start_url,
                                           user_research_url: mentor_research_url,
                                         ))
-    end
-
-    it "does not activate the feature flag for schools not doing FIP" do
-      InviteSchools.new.feature_flag_and_send_participant_validation_beta_emails(array_of_urns: [cip_school.urn])
-      expect(FeatureFlag.active?(:participant_validation, for: cip_school)).to be false
     end
 
     it "does not email participants at schools not doing FIP" do
