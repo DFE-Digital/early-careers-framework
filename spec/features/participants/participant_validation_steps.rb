@@ -20,18 +20,33 @@ module ParticipantValidationSteps
     profile = create(:participant_profile, :ect, school_cohort: @school_cohort)
     @user = profile.user
     @user.teacher_profile.update!(trn: nil)
+    set_participant_data
     sign_in_as @user
-    @participant_data = {
-      trn: "1234567",
-      full_name: "Sally Teacher",
-      date_of_birth: Date.new(1998, 3, 22),
-      nino: "",
-    }
   end
 
   def and_i_am_signed_in_as_an_ect_participant_with_a_trn_already_set
     and_i_am_signed_in_as_an_ect_participant
     @user.teacher_profile.update!(trn: "9876543")
+  end
+
+  def and_i_am_signed_in_as_a_sit_mentor_participant
+    profile = create(:participant_profile, :mentor, school_cohort: @school_cohort)
+    @user = profile.user
+    @user.create_induction_coordinator_profile!
+    @user.induction_coordinator_profile.schools << @school
+    @user.teacher_profile.update!(trn: nil)
+    set_participant_data
+    sign_in_as @user
+  end
+
+  def and_i_sign_in_again_as_the_same_user
+    sign_in_as @user
+  end
+
+  def then_i_should_see_the_do_you_want_to_add_your_mentor_information_page
+    expect(page).to have_selector("h1", text: "Do you want to add information about yourself as a mentor?")
+    expect(page).to have_field("Yes, I want to add information now", visible: :all)
+    expect(page).to have_field("No, I’ll do it later", visible: :all)
   end
 
   def then_i_should_see_the_do_you_know_your_trn_page
@@ -145,8 +160,19 @@ module ParticipantValidationSteps
   def then_i_should_see_the_checking_details_page
     expect(page).to have_selector("h1", text: "We’re checking your details")
     expect(page).to have_text("We may need to contact you for more information to complete your registration.")
+    expect(page).to have_text("You will not need to use this service again during your training.")
     expect(page).to have_text("Big Provider Ltd")
     expect(page).to have_text("Amazing Delivery Team")
+    expect(page).not_to have_link("Manage induction for your school")
+  end
+
+  def then_i_should_see_the_checking_details_page_for_a_sit_mentor
+    expect(page).to have_selector("h1", text: "We’re checking your details")
+    expect(page).to have_text("We may need to contact you for more information to complete your registration.")
+    expect(page).not_to have_text("You will not need to use this service again during your training.")
+    expect(page).to have_text("Big Provider Ltd")
+    expect(page).to have_text("Amazing Delivery Team")
+    expect(page).to have_link("Manage induction for your school")
   end
 
   def then_i_should_see_the_checking_details_page_for_matched_user
@@ -198,5 +224,29 @@ module ParticipantValidationSteps
   def then_i_should_see_the_change_your_details_with_the_tra_page
     expect(page).to have_selector("h1", text: "Change your details with the Teaching Regulation Agency")
     expect(page).to have_link("Teacher Self-Service Portal", href: "https://teacherservices.education.gov.uk/SelfService/Login")
+  end
+
+  def then_i_should_see_the_manage_your_training_page
+    expect(page).to have_selector("h1", text: "Manage your training")
+  end
+
+  def and_i_should_see_a_banner_telling_me_i_need_to_add_my_mentor_information
+    banner = find("[data-test='add-mentor-information-banner']")
+    expect(banner).to have_selector("h2", text: "Important")
+    expect(banner).to have_selector("p.govuk-notification-banner__heading", text: "You need to add information about yourself as a mentor.")
+    expect(banner).to have_link("Update now", href: participants_validation_do_you_know_your_trn_path)
+  end
+
+  def and_i_should_not_see_a_banner_telling_me_i_need_to_add_my_mentor_information
+    expect(page).not_to have_selector("[data-test='add-mentor-information-banner']")
+  end
+
+  def set_participant_data
+    @participant_data = {
+      trn: "1234567",
+      full_name: "Sally Teacher",
+      date_of_birth: Date.new(1998, 3, 22),
+      nino: "",
+    }
   end
 end

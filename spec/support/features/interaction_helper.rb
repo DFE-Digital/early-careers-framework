@@ -32,4 +32,11 @@ module InteractionHelper
   end
 
   alias_method :and_i_visit, :when_i_visit
+
+  def when_i_sign_out
+    click_on "Sign out"
+    expect(page).to have_selector("h1", text: "You are now signed out")
+  end
+
+  alias_method :and_i_sign_out, :when_i_sign_out
 end

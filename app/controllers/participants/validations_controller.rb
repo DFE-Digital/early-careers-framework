@@ -4,7 +4,8 @@ module Participants
   class ValidationsController < BaseController
     before_action :set_form
     before_action :check_not_already_completed, except: :complete
-    before_action :validate_request_or_render, only: %i[do_you_know_your_trn
+    before_action :validate_request_or_render, only: %i[do_you_want_to_add_mentor_information
+                                                        do_you_know_your_trn
                                                         have_you_changed_your_name
                                                         confirm_updated_record
                                                         name_not_updated
@@ -16,7 +17,7 @@ module Participants
       # check whether the user is a SIT/mentor and offer the choice
       # to proceed (unless they have already completed)
       if current_user.induction_coordinator?
-        store_for_and_redirect_to_step :do_you_want_to_add_mentor_information
+        store_form_and_redirect_to_step :do_you_want_to_add_mentor_information
       else
         store_form_and_redirect_to_step :do_you_know_your_trn
       end
@@ -28,7 +29,7 @@ module Participants
         store_form_and_redirect_to_step :do_you_know_your_trn
       else
         reset_form_data
-        redirect_to induction_coordinator_dashboard_path(current_user)
+        redirect_to helpers.induction_coordinator_dashboard_path(current_user)
       end
     end
 
@@ -134,7 +135,7 @@ module Participants
     end
 
     def flow_complete?
-      participant_profile.ecf_participant_validation_data.present? || participant_profile.ecf_participant_eligibility.present?
+      participant_profile.completed_validation_wizard?
     end
 
     def validate_participant_details_and_redirect
@@ -201,9 +202,8 @@ module Participants
       @participant_validation_form = ParticipantValidationForm.new(session[:participant_validation])
       @participant_validation_form.assign_attributes(form_params)
 
-      if @participant_validation_form.step.blank?
-        @participant_validation_form.step = :start
-      elsif @participant_validation_form.step != action_name
+      if @participant_validation_form.step != action_name
+        @participant_validation_form.step = action_name.to_sym
         store_form_and_redirect_to_step action_name
       end
     end
@@ -224,6 +224,7 @@ module Participants
 
     def form_params
       params.fetch(:participants_participant_validation_form, {}).permit(
+        :do_you_want_to_add_mentor_information_choice,
         :do_you_know_your_trn_choice,
         :have_you_changed_your_name_choice,
         :updated_record_choice,

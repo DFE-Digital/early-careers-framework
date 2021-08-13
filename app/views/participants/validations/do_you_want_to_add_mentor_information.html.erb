@@ -11,6 +11,7 @@
       <%= f.govuk_collection_radio_buttons(
         :do_you_want_to_add_mentor_information_choice, @participant_validation_form.add_mentor_information_choices,
         :id, :name,
+        legend: { text: false },
       ) %>
       <%= f.govuk_submit "Continue" %>
     <% end %>

@@ -63,6 +63,10 @@ class User < ApplicationRecord
     early_career_teacher? || mentor?
   end
 
+  def sit_mentor?
+    induction_coordinator? && mentor?
+  end
+
   def core_induction_programme
     return early_career_teacher_profile.core_induction_programme if early_career_teacher?
     return mentor_profile.core_induction_programme if mentor?

@@ -107,6 +107,8 @@ en:
       models:
         participants/participant_validation_form:
           attributes:
+            do_you_want_to_add_mentor_information_choice:
+              blank: Select whether you want to add your mentor information now
             do_you_know_your_trn_choice:
               blank: Select whether you know your teacher reference number
             have_you_changed_your_name_choice:

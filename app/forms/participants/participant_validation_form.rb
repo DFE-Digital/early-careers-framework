@@ -15,7 +15,7 @@ module Participants
     attr_reader :date_of_birth
     attr_accessor :validation_attempts
 
-    validate :add_mentor_info, on: :do_you_want_to_add_mentor_information
+    validate :add_mentor_info_choice, on: :do_you_want_to_add_mentor_information
     validate :trn_choice, on: :do_you_know_your_trn
     validate :name_change_choice, on: :have_you_changed_your_name
     validate :confirm_updated_record_choice, on: :confirm_updated_record
@@ -25,7 +25,7 @@ module Participants
     def attributes
       {
         step: step,
-        do_you_want_to_add_mentor_information: do_you_want_to_add_mentor_information_choice,
+        do_you_want_to_add_mentor_information_choice: do_you_want_to_add_mentor_information_choice,
         do_you_know_your_trn_choice: do_you_know_your_trn_choice,
         have_you_changed_your_name_choice: have_you_changed_your_name_choice,
         updated_record_choice: updated_record_choice,

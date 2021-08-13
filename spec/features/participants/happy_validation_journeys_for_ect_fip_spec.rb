@@ -42,6 +42,10 @@ RSpec.feature "ECT participant validation journey for FIP induction", type: :fea
     then_i_should_see_the_checking_details_page_for_matched_user
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Participant Validation: Complete Partnered FIP"
+
+    when_i_sign_out
+    and_i_sign_in_again_as_the_same_user
+    then_i_should_see_the_checking_details_page_for_matched_user
   end
 
   scenario "Participant has changed their name and updated TRA" do
