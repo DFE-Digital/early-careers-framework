@@ -16,8 +16,22 @@ module ParticipantValidationSteps
     create(:partnership, school: @school, lead_provider: lead_provider, delivery_partner: delivery_partner, cohort: @cohort)
   end
 
+  def given_there_is_a_school_that_has_chosen_cip_for_2021
+    @cohort = create(:cohort, start_year: 2021)
+    @school = create(:school, name: "Cip School")
+    @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "core_induction_programme")
+  end
+
   def and_i_am_signed_in_as_an_ect_participant
     profile = create(:participant_profile, :ect, school_cohort: @school_cohort)
+    @user = profile.user
+    @user.teacher_profile.update!(trn: nil)
+    set_participant_data
+    sign_in_as @user
+  end
+
+  def and_i_am_signed_in_as_a_mentor_participant
+    profile = create(:participant_profile, :mentor, school_cohort: @school_cohort)
     @user = profile.user
     @user.teacher_profile.update!(trn: nil)
     set_participant_data
@@ -194,6 +208,25 @@ module ParticipantValidationSteps
     expect(@user.reload.teacher_profile.trn).to eq "9876543"
     expect(@user.teacher_profile.participant_profiles.ecf.first.ecf_participant_eligibility).to be_present
     expect(@user.teacher_profile.participant_profiles.ecf.first.ecf_participant_validation_data).not_to be_api_failure
+  end
+
+  def then_i_should_see_the_checking_details_page_for_matched_cip_ect_participant
+    expect(page).to have_selector("h1", text: "We’re checking your details")
+    expect(page).to have_text("We may need to contact you for more information to complete your registration.")
+    expect(page).to have_text("Your training materials will be available by the end of August. We’ll email you with a link to access them.")
+    expect(@user.reload.teacher_profile.trn).to eq(@participant_data[:trn])
+    expect(@user.teacher_profile.participant_profiles.ecf.first.ecf_participant_eligibility).to be_matched_status
+    expect(@user.teacher_profile.participant_profiles.ecf.first.ecf_participant_validation_data).to be_present
+  end
+
+  def then_i_should_see_the_checking_details_page_for_matched_cip_mentor_participant
+    expect(page).to have_selector("h1", text: "We’re checking your details")
+    expect(page).to have_text("We may need to contact you for more information to complete your registration.")
+    expect(page).not_to have_text("Your training materials will be available by the end of August. We’ll email you with a link to access them.")
+    expect(page).to have_text("If you need access to training materials, we’ll email you a link in the next 48 hours.")
+    expect(@user.reload.teacher_profile.trn).to eq(@participant_data[:trn])
+    expect(@user.teacher_profile.participant_profiles.ecf.first.ecf_participant_eligibility).to be_matched_status
+    expect(@user.teacher_profile.participant_profiles.ecf.first.ecf_participant_validation_data).to be_present
   end
 
   def then_i_should_see_the_find_your_trn_page
