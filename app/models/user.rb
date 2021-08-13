@@ -63,7 +63,7 @@ class User < ApplicationRecord
     early_career_teacher? || mentor?
   end
 
-  def sit_mentor?
+  def induction_coordinator_and_mentor?
     induction_coordinator? && mentor?
   end
 

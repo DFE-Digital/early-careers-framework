@@ -6,8 +6,8 @@ module ApplicationHelper
       admin_schools_path
     elsif user.finance?
       finance_lead_providers_path
-    elsif user.sit_mentor?
-      sit_mentor_path(user)
+    elsif user.induction_coordinator_and_mentor?
+      induction_coordinator_mentor_path(user)
     elsif user.induction_coordinator?
       induction_coordinator_dashboard_path(user)
     elsif user.mentor? || user.early_career_teacher?
@@ -47,10 +47,10 @@ module ApplicationHelper
 
 private
 
-  def sit_mentor_path(user)
+  def induction_coordinator_mentor_path(user)
     if FeatureFlag.active?(:participant_validation, for: user.teacher_profile&.participant_profiles&.ecf&.active&.first&.school)
       profile = user.participant_profiles.active.mentors.first
-      return participant_start_path(user) unless profile&.completed_validation_wizard?
+      return participants_validation_start_path unless profile&.completed_validation_wizard?
     end
 
     induction_coordinator_dashboard_path(user)
