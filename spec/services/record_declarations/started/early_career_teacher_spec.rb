@@ -54,4 +54,11 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
       expect { described_class.call(params) }.to_not raise_error
     end
   end
+
+  context "when declaration date is today" do
+    it "does not raise ParameterMissing error" do
+      params = ect_params.merge({ declaration_date: Time.zone.now.rfc3339(9) })
+      expect { described_class.call(params) }.to_not raise_error
+    end
+  end
 end
