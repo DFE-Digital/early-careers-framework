@@ -53,7 +53,10 @@ module Api
       def users
         users = User.where(id: ParticipantProfile::ECF.joins(:teacher_profile).select("teacher_profiles.user_id"))
                     .includes(teacher_profile: {
-                      ecf_profile: %i[school_cohort core_induction_programme],
+                      ecf_profile: [
+                        :core_induction_programme,
+                        school_cohort: :cohort,
+                      ],
                     })
 
         if updated_since.present?
