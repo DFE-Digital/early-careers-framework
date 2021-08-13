@@ -18,11 +18,22 @@ RSpec.feature "Integration Test", type: :feature do
 private
 
   def given_an_early_career_teacher_has_been_entered_onto_the_dfe_service
-    @participant_id = create(:early_career_teacher_profile).user.id
+    ect_profile = create(:early_career_teacher_profile)
+    delivery_partner = create(:delivery_partner)
+    create(:partnership,
+           school: ect_profile.school,
+           lead_provider: @cpd_lead_provider.lead_provider,
+           cohort: ect_profile.cohort,
+           delivery_partner: delivery_partner)
+
+    @participant_id = ect_profile.user.id
   end
 
   def when_the_participant_details_are_passed_to_the_lead_provider
-    # a dummy step as it's outside the technical scope
+    @session.get("/api/v1/participants",
+                 headers: { "Authorization": "Bearer #{@token}" })
+    participants = JSON.parse(@session.response.body).dig("data").map { |a| a["id"] }
+    expect(participants.first).to eq(@participant_id)
   end
 
   def and_the_lead_provider_submits_a_declaration_for_the_participant_using_the_same_unique_id
