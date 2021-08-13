@@ -48,10 +48,14 @@ FactoryBot.define do
     trait :npq do
       school
       teacher_profile { association :teacher_profile, school: school }
-
-      validation_data { association :npq_validation_data, user: teacher_profile.user }
-
       participant_type { :npq }
+    end
+
+    trait :npq_with_validation_data do
+      school
+      teacher_profile { association :teacher_profile, school: school }
+      participant_type { :npq }
+      validation_data { association :npq_validation_data, user: teacher_profile.user }
     end
 
     trait :sparsity_uplift do

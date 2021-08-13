@@ -34,7 +34,7 @@ RSpec.describe Admin::Participants::Details, type: :view_component do
   end
 
   context "for unvalidated npq profile" do
-    let(:profile) { create :participant_profile, :npq }
+    let(:profile) { create :participant_profile, :npq_with_validation_data }
 
     it "renders all the required information" do
       expect(rendered).to have_contents(
@@ -51,7 +51,7 @@ RSpec.describe Admin::Participants::Details, type: :view_component do
   end
 
   context "for validated npq profile" do
-    let(:profile) { create :participant_profile, :npq }
+    let(:profile) { create :participant_profile, :npq_with_validation_data }
 
     before do
       allow(profile).to receive(%i[approved? rejected?].sample).and_return true

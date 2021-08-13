@@ -20,11 +20,18 @@ RSpec.shared_context "lead provider profiles and courses" do
   end
 
   # NPQ setup
+  let(:npq_user) { create(:user) }
+  let(:npq_teacher_profile) { create(:teacher_profile, user: npq_user) }
+  let(:npq_participant_profile) { create(:participant_profile, :npq, teacher_profile: npq_teacher_profile) }
+
   let(:npq_lead_provider) { create(:npq_lead_provider, cpd_lead_provider: cpd_lead_provider) }
   let(:npq_course) { create(:npq_course, identifier: "npq-leading-teaching") }
-  let!(:npq_profile) do
+
+  let(:npq_profile) do
     create(:npq_validation_data,
            npq_lead_provider: npq_lead_provider,
-           npq_course: npq_course)
+           npq_course: npq_course,
+           profile: npq_participant_profile,
+           user: npq_user)
   end
 end

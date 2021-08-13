@@ -17,9 +17,18 @@ RSpec.shared_context "service record declaration params" do
   let(:mentor_params) do
     ect_params.merge({ user_id: mentor_profile.user.id, course_identifier: "ecf-mentor" })
   end
+
   let(:npq_params) do
-    params.merge({ lead_provider_from_token: cpd_lead_provider, user_id: npq_profile.user_id, course_identifier: "npq-leading-teaching", evidence_held: "yes" })
+    {
+      user_id: npq_profile.user_id,
+      declaration_date: "2021-06-21T08:46:29Z",
+      declaration_type: "retained-1",
+      course_identifier: "npq-leading-teaching",
+      lead_provider_from_token: cpd_lead_provider,
+      evidence_held: "yes",
+    }
   end
+
   let(:induction_coordinator_params) do
     ect_params.merge({ user_id: induction_coordinator_profile.user_id })
   end

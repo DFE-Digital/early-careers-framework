@@ -44,17 +44,17 @@ RSpec.describe "NPQ Applications API", type: :request do
 
           expect(parsed_response["data"][0]["id"]).to be_in(NPQValidationData.pluck(:id))
 
-          profile = NPQValidationData.find(parsed_response["data"][0]["id"])
+          validation_data = NPQValidationData.find(parsed_response["data"][0]["id"])
           user = User.find(parsed_response["data"][0]["attributes"]["participant_id"])
 
           expect(parsed_response["data"][0]["attributes"]["full_name"]).to eql(user.full_name)
           expect(parsed_response["data"][0]["attributes"]["email"]).to eql(user.email)
           expect(parsed_response["data"][0]["attributes"]["email_validated"]).to eql(true)
-          expect(parsed_response["data"][0]["attributes"]["school_urn"]).to eql(profile.school_urn)
-          expect(parsed_response["data"][0]["attributes"]["teacher_reference_number"]).to eql(profile.teacher_reference_number)
-          expect(parsed_response["data"][0]["attributes"]["teacher_reference_number_validated"]).to eql(profile.teacher_reference_number_verified)
-          expect(parsed_response["data"][0]["attributes"]["eligible_for_funding"]).to eql(profile.eligible_for_funding)
-          expect(parsed_response["data"][0]["attributes"]["course_identifier"]).to eql(profile.npq_course.identifier)
+          expect(parsed_response["data"][0]["attributes"]["school_urn"]).to eql(validation_data.school_urn)
+          expect(parsed_response["data"][0]["attributes"]["teacher_reference_number"]).to eql(validation_data.teacher_reference_number)
+          expect(parsed_response["data"][0]["attributes"]["teacher_reference_number_validated"]).to eql(validation_data.teacher_reference_number_verified)
+          expect(parsed_response["data"][0]["attributes"]["eligible_for_funding"]).to eql(validation_data.eligible_for_funding)
+          expect(parsed_response["data"][0]["attributes"]["course_identifier"]).to eql(validation_data.npq_course.identifier)
           expect(parsed_response["data"][0]["attributes"]["status"]).to eql("pending")
         end
 
@@ -114,22 +114,22 @@ RSpec.describe "NPQ Applications API", type: :request do
         end
 
         it "returns correct data" do
-          profile = npq_lead_provider.npq_profiles[0]
+          validation_data = npq_lead_provider.npq_profiles[0]
           row = parsed_response[0]
 
-          expect(row["id"]).to eql(profile.id)
-          expect(row["participant_id"]).to eql(profile.user.id)
-          expect(row["full_name"]).to eql(profile.user.full_name)
-          expect(row["email"]).to eql(profile.user.email)
+          expect(row["id"]).to eql(validation_data.id)
+          expect(row["participant_id"]).to eql(validation_data.user.id)
+          expect(row["full_name"]).to eql(validation_data.user.full_name)
+          expect(row["email"]).to eql(validation_data.user.email)
           expect(row["email_validated"]).to eql("true")
-          expect(row["teacher_reference_number"]).to eql(profile.teacher_reference_number)
-          expect(row["teacher_reference_number_validated"]).to eql(profile.teacher_reference_number_verified.to_s)
-          expect(row["school_urn"]).to eql(profile.school_urn)
-          expect(row["headteacher_status"]).to eql(profile.headteacher_status)
-          expect(row["eligible_for_funding"]).to eql(profile.eligible_for_funding.to_s)
-          expect(row["funding_choice"]).to eql(profile.funding_choice)
-          expect(row["course_identifier"]).to eql(profile.npq_course.identifier)
-          expect(row["status"]).to eql(profile.lead_provider_approval_status)
+          expect(row["teacher_reference_number"]).to eql(validation_data.teacher_reference_number)
+          expect(row["teacher_reference_number_validated"]).to eql(validation_data.teacher_reference_number_verified.to_s)
+          expect(row["school_urn"]).to eql(validation_data.school_urn)
+          expect(row["headteacher_status"]).to eql(validation_data.headteacher_status)
+          expect(row["eligible_for_funding"]).to eql(validation_data.eligible_for_funding.to_s)
+          expect(row["funding_choice"]).to eql(validation_data.funding_choice)
+          expect(row["course_identifier"]).to eql(validation_data.npq_course.identifier)
+          expect(row["status"]).to eql(validation_data.lead_provider_approval_status)
         end
       end
     end
@@ -167,19 +167,19 @@ RSpec.describe "NPQ Applications API", type: :request do
   end
 
   describe "POST /api/v1/npq-applications/:id/reject" do
-    let(:npq_profile) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider) }
+    let(:validation_data) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider) }
 
     before do
       default_headers[:Authorization] = bearer_token
     end
 
     it "update lead_provider_approval_status to rejected" do
-      expect { post "/api/v1/npq-applications/#{npq_profile.id}/reject" }
-        .to change { npq_profile.reload.lead_provider_approval_status }.from("pending").to("rejected")
+      expect { post "/api/v1/npq-applications/#{validation_data.id}/reject" }
+        .to change { validation_data.reload.lead_provider_approval_status }.from("pending").to("rejected")
     end
 
     it "responds with 200 and representation of the resource" do
-      post "/api/v1/npq-applications/#{npq_profile.id}/reject"
+      post "/api/v1/npq-applications/#{validation_data.id}/reject"
 
       expect(response).to be_successful
 
@@ -187,15 +187,15 @@ RSpec.describe "NPQ Applications API", type: :request do
     end
 
     context "application has been accepted" do
-      let(:npq_profile) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, lead_provider_approval_status: "accepted") }
+      let(:validation_data) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, lead_provider_approval_status: "accepted") }
 
       it "return 400 bad request " do
-        post "/api/v1/npq-applications/#{npq_profile.id}/reject"
+        post "/api/v1/npq-applications/#{validation_data.id}/reject"
         expect(response.status).to eql(400)
       end
 
       it "returns error in repsonse" do
-        post "/api/v1/npq-applications/#{npq_profile.id}/reject"
+        post "/api/v1/npq-applications/#{validation_data.id}/reject"
 
         expect(parsed_response.key?("errors")).to be_truthy
 
@@ -208,20 +208,20 @@ RSpec.describe "NPQ Applications API", type: :request do
   end
 
   describe "POST /api/v1/npq-applications/:id/accept" do
-    let(:npq_profile) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider) }
-    let(:user) { npq_profile.user }
+    let(:validation_data) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider) }
+    let(:user) { validation_data.user }
 
     before do
       default_headers[:Authorization] = bearer_token
     end
 
     it "update status to accepted" do
-      expect { post "/api/v1/npq-applications/#{npq_profile.id}/accept" }
-        .to change { npq_profile.reload.lead_provider_approval_status }.from("pending").to("accepted")
+      expect { post "/api/v1/npq-applications/#{validation_data.id}/accept" }
+        .to change { validation_data.reload.lead_provider_approval_status }.from("pending").to("accepted")
     end
 
     it "responds with 200 and representation of the resource" do
-      post "/api/v1/npq-applications/#{npq_profile.id}/accept"
+      post "/api/v1/npq-applications/#{validation_data.id}/accept"
 
       expect(response).to be_successful
 
@@ -229,32 +229,37 @@ RSpec.describe "NPQ Applications API", type: :request do
     end
 
     context "when participant has applied for multiple NPQs" do
-      let!(:other_npq_profile) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, user: user) }
-      let!(:other_accepted_npq_profile) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, user: user, lead_provider_approval_status: "accepted") }
+      let!(:teacher_profile) { user.teacher_profile }
+
+      let!(:other_participant_profile) { create(:participant_profile, :npq, teacher_profile: teacher_profile, validation_data: other_validation_data) }
+      let!(:other_validation_data) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, user: user) }
+
+      let!(:other_accepted_participant_profile) { create(:participant_profile, :npq, teacher_profile: teacher_profile, validation_data: other_accepted_validation_data) }
+      let!(:other_accepted_validation_data) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, user: user, lead_provider_approval_status: "accepted") }
 
       it "rejects all pending NPQs" do
-        post "/api/v1/npq-applications/#{npq_profile.id}/accept"
+        post "/api/v1/npq-applications/#{validation_data.id}/accept"
 
-        expect(other_npq_profile.reload.lead_provider_approval_status).to eql("rejected")
+        expect(other_validation_data.reload.lead_provider_approval_status).to eql("rejected")
       end
 
       it "does not reject non-pending NPQs" do
-        post "/api/v1/npq-applications/#{npq_profile.id}/accept"
+        post "/api/v1/npq-applications/#{validation_data.id}/accept"
 
-        expect(other_accepted_npq_profile.reload.lead_provider_approval_status).to eql("accepted")
+        expect(other_accepted_validation_data.reload.lead_provider_approval_status).to eql("accepted")
       end
     end
 
     context "application has been rejected" do
-      let(:npq_profile) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, lead_provider_approval_status: "rejected") }
+      let(:validation_data) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, lead_provider_approval_status: "rejected") }
 
       it "return 400 bad request " do
-        post "/api/v1/npq-applications/#{npq_profile.id}/accept"
+        post "/api/v1/npq-applications/#{validation_data.id}/accept"
         expect(response.status).to eql(400)
       end
 
       it "returns error in repsonse" do
-        post "/api/v1/npq-applications/#{npq_profile.id}/accept"
+        post "/api/v1/npq-applications/#{validation_data.id}/accept"
 
         expect(parsed_response.key?("errors")).to be_truthy
 
