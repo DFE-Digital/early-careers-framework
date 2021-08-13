@@ -161,7 +161,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           expect(mentor_row["participant_type"]).to eql "mentor"
           expect(mentor_row["cohort"]).to eql partnership.cohort.start_year.to_s
           expect(mentor_row["teacher_reference_number"]).to eql mentor.teacher_profile.trn
-          expect(mentor_row["teacher_reference_number_validated"]).to eql "true"
+          expect(mentor_row["teacher_reference_number_validated"]).to eql "false"
           expect(mentor_row["eligible_for_funding"]).to be_empty
           expect(mentor_row["pupil_premium_uplift"]).to be_empty
           expect(mentor_row["sparsity_uplift"]).to be_empty
@@ -176,7 +176,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           expect(ect_row["participant_type"]).to eql "ect"
           expect(ect_row["cohort"]).to eql partnership.cohort.start_year.to_s
           expect(ect_row["teacher_reference_number"]).to eql ect.teacher_profile.trn
-          expect(ect_row["teacher_reference_number_validated"]).to eql "true"
+          expect(ect_row["teacher_reference_number_validated"]).to eql "false"
           expect(mentor_row["eligible_for_funding"]).to be_empty
           expect(mentor_row["pupil_premium_uplift"]).to be_empty
           expect(mentor_row["sparsity_uplift"]).to be_empty
