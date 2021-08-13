@@ -59,7 +59,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         expect { post "/api/v1/participant-declarations", params: params }
             .to change(ParticipantDeclaration, :count).by(1)
             .and change(ParticipantDeclarationAttempt, :count).by(1)
-        expect(ApiRequestAudit.last.body).to eq(params.to_s)
+        expect(ApiRequestAudit.order(created_at: :asc).last.body).to eq(params.to_s)
         expect(response.status).to eq 200
         expect(parsed_response["id"]).to eq(ParticipantDeclaration.order(:created_at).last.id)
       end
@@ -127,7 +127,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         default_headers[:Authorization] = "Bearer ugLPicDrpGZdD_w7hhCL"
         post "/api/v1/participant-declarations", params: params
         expect(response.status).to eq 401
-        expect(ApiRequestAudit.last.body).to eq(params.to_s)
+        expect(ApiRequestAudit.order(created_at: :asc).last.body).to eq(params.to_s)
       end
     end
   end
