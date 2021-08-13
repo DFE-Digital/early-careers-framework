@@ -3,14 +3,56 @@
 require "rails_helper"
 
 RSpec.feature "Integration Test", type: :feature do
-  scenario "ECT details sent to provider, declaration sent using same unique ID, no errors in declaration" do
-    given_there_is_a_token
-    and_there_is_a_participant
-    and_there_is_participant_declaration_params(@participant_id)
-
-    response = @session.post("/api/v1/participant-declarations", params: @params, headers: { "Authorization": "Bearer #{@token}" })
-    expect(response).to eq(200)
+  background(:all) do
+    setup
   end
+
+  scenario "ECT details sent to provider, declaration sent using same unique ID, no errors in declaration" do
+    given_an_early_career_teacher_has_been_entered_onto_the_dfe_service
+    when_the_participant_details_are_passed_to_the_lead_provider
+    and_the_lead_provider_submits_a_declaration_for_the_participant_using_the_same_unique_id
+    then_the_declaration_made_is_valid
+    and_the_lead_provider_receives_a_response_to_confirm_that_the_declaration_was_successful
+  end
+
+private
+
+  def given_an_early_career_teacher_has_been_entered_onto_the_dfe_service
+    @participant_id = create(:early_career_teacher_profile).user.id
+  end
+
+  def when_the_participant_details_are_passed_to_the_lead_provider
+    # a dummy step as it's outside the technical scope
+  end
+
+  def and_the_lead_provider_submits_a_declaration_for_the_participant_using_the_same_unique_id
+    @params = common_params(@participant_id, "ecf-induction")
+  end
+
+  def then_the_declaration_made_is_valid
+    expect {
+      @response = @session.post("/api/v1/participant-declarations",
+                                params: @params,
+                                headers: { "Authorization": "Bearer #{@token}" })
+    }.to change(ParticipantDeclaration, :count).by(1)
+  end
+
+  def and_the_lead_provider_receives_a_response_to_confirm_that_the_declaration_was_successful
+    expect(@response).to eq(200)
+  end
+
+  # helper methods
+
+  def setup
+    lead_provider = create(:lead_provider)
+    @cpd_lead_provider = create(:cpd_lead_provider, lead_provider: lead_provider)
+    @token = LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: @cpd_lead_provider)
+    @session = ActionDispatch::Integration::Session.new(Rails.application)
+
+    @params = common_params(@participant_id, "ecf-induction")
+  end
+
+  #------------
 
   scenario "ECT details sent to provider, declaration sent using same unique ID, errors exist in declaration" do
     given_there_is_a_token
