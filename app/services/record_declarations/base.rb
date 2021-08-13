@@ -59,6 +59,7 @@ module RecordDeclarations
 
       declaration_attempt = create_declaration_attempt!
       validate_provider!
+      validate_schedule!
       declaration = create_record!
       declaration_attempt.update!(participant_declaration: declaration)
 
@@ -109,6 +110,36 @@ module RecordDeclarations
     def validate_provider!
       # TODO: Remove the nil? check and fix the test setup so that they build the school cohort, partnership and give us back the actual lead_provider.
       raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless actual_lead_provider.nil? || lead_provider_from_token == actual_lead_provider
+    end
+
+    def parsed_date
+      ActiveRecord::Type::Date.new.cast(declaration_date)
+    rescue StandardError
+      raise ActionController::ParameterMissing, I18n.t(:invalid_declaration_date)
+    end
+
+    def validate_schedule!
+      schedule = user_profile.schedule
+
+      unless schedule
+        raise ActionController::ParameterMissing, I18n.t(:schedule_missing)
+      end
+
+      existing_declarations = user_profile.participant_declarations
+
+      if existing_declarations.count >= schedule.milestones.count
+        raise ActionController::ParameterMissing, I18n.t(:too_many_declarations)
+      end
+
+      next_milestone = schedule.milestones[existing_declarations.count]
+      parsed_date = self.parsed_date
+      unless next_milestone.start_date < parsed_date
+        raise ActionController::ParameterMissing, I18n.t(:declaration_before_milestone_start)
+      end
+
+      unless next_milestone.milestone_date > parsed_date
+        raise ActionController::ParameterMissing, I18n.t(:declaration_after_milestone_cutoff)
+      end
     end
   end
 end
