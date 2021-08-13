@@ -5,6 +5,31 @@ require "rails_helper"
 RSpec.describe Participants::ParticipantValidationForm, type: :model do
   subject(:form) { described_class.new }
 
+  describe "do_you_want_to_add_mentor_information validations" do
+    context "when a valid choice is made" do
+      it "returns true" do
+        form.do_you_want_to_add_mentor_information_choice = form.add_mentor_information_choices.map(&:id).sample
+        expect(form.valid?(:do_you_want_to_add_mentor_information)).to be true
+        expect(form.errors).to be_empty
+      end
+    end
+
+    context "when no choice has been made" do
+      it "returns false" do
+        expect(form.valid?(:do_you_want_to_add_mentor_information)).to be false
+        expect(form.errors).to include :do_you_want_to_add_mentor_information_choice
+      end
+    end
+
+    context "when an invalid choice has been made" do
+      it "returns false" do
+        form.do_you_know_your_trn_choice = :banana
+        expect(form.valid?(:do_you_want_to_add_mentor_information)).to be false
+        expect(form.errors).to include :do_you_want_to_add_mentor_information_choice
+      end
+    end
+  end
+
   describe "do_you_know_your_trn validations" do
     context "when a valid choice is made" do
       it "returns true" do
@@ -174,6 +199,7 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
     it "returns a hash of the attribute data" do
       values = {
         step: :my_step,
+        do_you_want_to_add_mentor_information_choice: form.add_mentor_information_choices.map(&:id).sample,
         do_you_know_your_trn_choice: form.trn_choices.map(&:id).sample,
         have_you_changed_your_name_choice: form.name_change_choices.map(&:id).sample,
         updated_record_choice: form.updated_record_choices.map(&:id).sample,

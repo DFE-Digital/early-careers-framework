@@ -6,6 +6,8 @@ module ApplicationHelper
       admin_schools_path
     elsif user.finance?
       finance_lead_providers_path
+    elsif user.induction_coordinator_and_mentor?
+      induction_coordinator_mentor_path(user)
     elsif user.induction_coordinator?
       induction_coordinator_dashboard_path(user)
     elsif user.mentor? || user.early_career_teacher?
@@ -26,8 +28,6 @@ module ApplicationHelper
     analytics_data
   end
 
-private
-
   def induction_coordinator_dashboard_path(user)
     return schools_dashboard_index_path if user.schools.count > 1
 
@@ -43,5 +43,16 @@ private
     else
       dashboard_path
     end
+  end
+
+private
+
+  def induction_coordinator_mentor_path(user)
+    if FeatureFlag.active?(:participant_validation, for: user.teacher_profile&.participant_profiles&.ecf&.active&.first&.school)
+      profile = user.participant_profiles.active.mentors.first
+      return participants_validation_start_path unless profile&.completed_validation_wizard?
+    end
+
+    induction_coordinator_dashboard_path(user)
   end
 end

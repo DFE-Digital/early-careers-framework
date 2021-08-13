@@ -8,12 +8,14 @@ module Participants
     # lifted from https://github.com/dwp/nino-format-validation
     NINO_REGEX = /(^(?!BG)(?!GB)(?!NK)(?!KN)(?!TN)(?!NT)(?!ZZ)[A-Z&&[^DFIQUV]][A-Z&&[^DFIOQUV]][0-9]{6}[A-D]$)/.freeze
     attr_accessor :step
+    attr_accessor :do_you_want_to_add_mentor_information_choice
     attr_accessor :do_you_know_your_trn_choice, :have_you_changed_your_name_choice
     attr_accessor :updated_record_choice, :name_not_updated_choice
     attr_accessor :trn, :name, :national_insurance_number
     attr_reader :date_of_birth
     attr_accessor :validation_attempts
 
+    validate :add_mentor_info_choice, on: :do_you_want_to_add_mentor_information
     validate :trn_choice, on: :do_you_know_your_trn
     validate :name_change_choice, on: :have_you_changed_your_name
     validate :confirm_updated_record_choice, on: :confirm_updated_record
@@ -23,6 +25,7 @@ module Participants
     def attributes
       {
         step: step,
+        do_you_want_to_add_mentor_information_choice: do_you_want_to_add_mentor_information_choice,
         do_you_know_your_trn_choice: do_you_know_your_trn_choice,
         have_you_changed_your_name_choice: have_you_changed_your_name_choice,
         updated_record_choice: updated_record_choice,
@@ -40,6 +43,13 @@ module Participants
       @date_of_birth = ActiveRecord::Type::Date.new.cast(value)
     rescue StandardError
       @date_of_birth_invalid = true
+    end
+
+    def add_mentor_information_choices
+      [
+        OpenStruct.new(id: "yes", name: "Yes, I want to add information now"),
+        OpenStruct.new(id: "no", name: "No, I’ll do it later"),
+      ]
     end
 
     def trn_choices
@@ -87,6 +97,10 @@ module Participants
     end
 
   private
+
+    def add_mentor_info_choice
+      errors.add(:do_you_want_to_add_mentor_information_choice, :blank) unless add_mentor_information_choices.map(&:id).include?(do_you_want_to_add_mentor_information_choice)
+    end
 
     def trn_choice
       errors.add(:do_you_know_your_trn_choice, :blank) unless trn_choices.map(&:id).include?(do_you_know_your_trn_choice)

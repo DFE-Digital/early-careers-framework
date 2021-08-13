@@ -251,6 +251,8 @@ Rails.application.routes.draw do
     authenticated :user, ->(user) { FeatureFlag.active?(:participant_validation, for: user.teacher_profile&.participant_profiles&.ecf&.active&.first&.school) } do
       scope :validation, as: :validation do
         get "/", to: "validations#start", as: :start
+        get "/do-you-want-to-add-your-mentor-information", to: "validations#do_you_want_to_add_mentor_information", as: :do_you_want_to_add_mentor_information
+        put "/do-you-want-to-add-your-mentor-information", to: "validations#do_you_want_to_add_mentor_information"
         get "/do-you-know-your-teacher-reference-number", to: "validations#do_you_know_your_trn", as: :do_you_know_your_trn
         put "/do-you-know-your-teacher-reference-number", to: "validations#do_you_know_your_trn"
         get "/have-you-changed-your-name", to: "validations#have_you_changed_your_name", as: :have_you_changed_your_name

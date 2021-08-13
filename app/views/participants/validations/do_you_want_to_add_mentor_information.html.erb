@@ -1,0 +1,19 @@
+<% title = "Do you want to add information about yourself as a mentor?" %>
+<% content_for :title, title %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl"><%= title %></h1>
+    <p class="govuk-body">We need to check your details on the Teaching Regulation Agency records. This is to make sure you qualify for this programme.</p>
+    <%= form_for @participant_validation_form, url: { action: @participant_validation_form.step }, method: :put do |f| %>
+      <%= f.hidden_field :step, value: @participant_validation_form.step %>
+      <%= f.govuk_error_summary %>
+      <%= f.govuk_collection_radio_buttons(
+        :do_you_want_to_add_mentor_information_choice, @participant_validation_form.add_mentor_information_choices,
+        :id, :name,
+        legend: { text: false },
+      ) %>
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>
