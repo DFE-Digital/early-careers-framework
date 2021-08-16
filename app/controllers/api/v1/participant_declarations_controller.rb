@@ -3,6 +3,7 @@
 module Api
   module V1
     class ParticipantDeclarationsController < Api::ApiController
+      include ApiAuditable
       include ApiTokenAuthenticatable
 
       def create
