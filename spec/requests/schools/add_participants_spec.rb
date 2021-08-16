@@ -44,7 +44,8 @@ RSpec.describe "Schools::AddParticipant", type: :request do
                       full_name: Faker::Name.name,
                       email: Faker::Internet.email,
                       mentor_id: "later",
-                      school_cohort_id: school_cohort.id)
+                      school_cohort_id: school_cohort.id,
+                      current_user_id: user.id)
           get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/#{step.to_s.dasherize}"
         end
 
@@ -72,7 +73,8 @@ RSpec.describe "Schools::AddParticipant", type: :request do
                     full_name: Faker::Name.name,
                     email: email,
                     mentor_id: "later",
-                    school_cohort_id: school_cohort.id)
+                    school_cohort_id: school_cohort.id,
+                    current_user_id: user.id)
         get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/email-taken"
       end
 
