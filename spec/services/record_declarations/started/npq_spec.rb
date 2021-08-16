@@ -10,7 +10,7 @@ RSpec.describe RecordDeclarations::Started::NPQ do
   include_context "service record declaration params"
 
   before do
-    travel_to ect_profile.schedule.milestones.first.start_date + 2.days
+    travel_to npq_profile.schedule.milestones.first.start_date + 2.days
   end
 
   context "when sending event for an npq course" do
