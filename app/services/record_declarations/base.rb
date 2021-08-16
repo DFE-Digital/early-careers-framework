@@ -19,6 +19,7 @@ module RecordDeclarations
     validate :date_has_the_right_format
 
     delegate :user_profile, :actual_lead_provider, :valid_declaration_types, to: :not_implemented_error
+    delegate :schedule, :participant_declarations, to: :user_profile
 
     class << self
       delegate :required_params, to: :not_implemented_error
@@ -43,7 +44,7 @@ module RecordDeclarations
 
       declaration_attempt = create_declaration_attempt!
       validate_provider!
-      validate_schedule!
+      validate_milestone!
       declaration = create_record!
       declaration_attempt.update!(participant_declaration: declaration)
 
@@ -125,20 +126,7 @@ module RecordDeclarations
       raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless actual_lead_provider.nil? || lead_provider_from_token == actual_lead_provider
     end
 
-    def validate_schedule!
-      schedule = user_profile.schedule
-
-      unless schedule
-        raise ActionController::ParameterMissing, I18n.t(:schedule_missing)
-      end
-
-      existing_declarations = user_profile.participant_declarations
-
-      if existing_declarations.count >= schedule.milestones.count
-        raise ActionController::ParameterMissing, I18n.t(:too_many_declarations)
-      end
-
-      next_milestone = schedule.milestones[existing_declarations.count]
+    def validate_milestone!
       unless next_milestone.start_date < parsed_date
         raise ActionController::ParameterMissing, I18n.t(:declaration_before_milestone_start)
       end
@@ -146,6 +134,18 @@ module RecordDeclarations
       unless next_milestone.milestone_date > parsed_date
         raise ActionController::ParameterMissing, I18n.t(:declaration_after_milestone_cutoff)
       end
+    end
+
+    def next_milestone
+      unless schedule
+        raise ActionController::ParameterMissing, I18n.t(:schedule_missing)
+      end
+
+      if participant_declarations.count >= schedule.milestones.count
+        raise ActionController::ParameterMissing, I18n.t(:too_many_declarations)
+      end
+
+      schedule.milestones[participant_declarations.count]
     end
   end
 end
