@@ -3,7 +3,7 @@
 module RecordDeclarations
   class Base
     include ActiveModel::Model
-    RCF3339_DATE_REGEX = /\A\d{4}-\d{2}-\d{2}T(\d{2}):(\d{2}):(\d{2})([\.,]\d+)?(Z|[+-](\d{2})(:?\d{2})?)?\z/i.freeze
+    RFC3339_DATE_REGEX = /\A\d{4}-\d{2}-\d{2}T(\d{2}):(\d{2}):(\d{2})([\.,]\d+)?(Z|[+-](\d{2})(:?\d{2})?)?\z/i.freeze
 
     attr_accessor :course_identifier, :user_id, :lead_provider_from_token, :declaration_date, :declaration_type, :evidence_held
 
@@ -115,7 +115,7 @@ module RecordDeclarations
     def date_has_the_right_format
       return if declaration_date.blank?
 
-      errors.add(:declaration_date, I18n.t(:invalid_declaration_date)) unless declaration_date.match(RCF3339_DATE_REGEX)
+      errors.add(:declaration_date, I18n.t(:invalid_declaration_date)) unless declaration_date.match(RFC3339_DATE_REGEX)
       errors.add(:declaration_date, I18n.t(:future_declaration_date)) if parsed_date > Time.zone.now
     rescue StandardError
       errors.add(:declaration_date, I18n.t(:invalid_declaration_date))
