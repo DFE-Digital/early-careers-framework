@@ -1,21 +1,25 @@
 # frozen_string_literal: true
 
+ALL_TRNS = (1111..9_999_999).freeze unless defined?(ALL_TRNS)
+
 class TRNGenerator
   class << self
     def next
-      available.pop || (raise "TRN available list exhausted")
+      sprintf("%07d", taken.push(available.pop || (raise "TRN available list exhausted"))[-1])
     end
 
   private
 
-    ALL_TRNS = ("0011111".."9999999").to_a.freeze unless defined?(ALL_TRNS)
-
     def available
-      @available ||= (ALL_TRNS - taken).shuffle
+      @available.presence || reseed
+    end
+
+    def reseed
+      @available = (10_000.times.map { rand(ALL_TRNS) }.uniq - taken)
     end
 
     def taken
-      @taken ||= TeacherProfile.where.not(trn: nil).pluck(:trn)
+      @taken ||= TeacherProfile.where.not(trn: nil).pluck(:trn).map(&:to_i)
     end
   end
 end
