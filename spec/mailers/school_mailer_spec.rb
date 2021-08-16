@@ -136,4 +136,23 @@ RSpec.describe SchoolMailer, type: :mailer do
       expect(participant_validation_fip_mentor_email.to).to match_array [recipient]
     end
   end
+
+  describe "#participant_validation_induction_coordinator_email" do
+    let(:recipient) { Faker::Internet.email }
+    let(:school_name) { Faker::Company.name }
+    let(:start_url) { "https://www.example.com/" }
+
+    let(:participant_validation_fip_mentor_email) do
+      SchoolMailer.participant_validation_induction_coordinator_email(
+        recipient: recipient,
+        school_name: school_name,
+        start_url: start_url,
+      )
+    end
+
+    it "renders the right headers" do
+      expect(participant_validation_fip_mentor_email.from).to match_array ["mail@example.com"]
+      expect(participant_validation_fip_mentor_email.to).to match_array [recipient]
+    end
+  end
 end

@@ -607,10 +607,10 @@ RSpec.describe InviteSchools do
       expected_url = "http://www.example.com/schools/#{school.friendly_id}/year-2020/start?utm_campaign=year2020-nqt-invite&utm_medium=email&utm_source=year2020-nqt-invite"
       InviteSchools.new.send_year2020_invite_email
       expect(SchoolMailer).to delay_email_delivery_of(:year2020_invite_email)
-                                  .with(hash_including(
-                                          recipient: induction_coordinator.email,
-                                          start_url: expected_url,
-                                        ))
+                                .with(hash_including(
+                                        recipient: induction_coordinator.email,
+                                        start_url: expected_url,
+                                      ))
     end
   end
 
@@ -624,9 +624,11 @@ RSpec.describe InviteSchools do
     let!(:ect_1) { create(:participant_profile, :ect, school: fip_school_1) }
     let!(:ect_2) { create(:participant_profile, :ect, school: fip_school_2) }
     let!(:ect_3) { create(:participant_profile, :ect, school: cip_school) }
+    let!(:induction_coordinator) { create(:user, :induction_coordinator, school_ids: [fip_school_1.id]) }
     let(:start_url) { "http://www.example.com/participants/start-registration?utm_campaign=participant-validation-beta&utm_medium=email&utm_source=participant-validation-beta" }
     let(:research_url) { "http://www.example.com/pages/user-research?utm_campaign=participant-validation-research&utm_medium=email&utm_source=participant-validation-research" }
     let(:mentor_research_url) { "http://www.example.com/pages/user-research?mentor=true&utm_campaign=participant-validation-research&utm_medium=email&utm_source=participant-validation-research" }
+    let(:induction_coordinator_start_url) { "http://www.example.com/?utm_campaign=participant-validation-sit-notification&utm_medium=email&utm_source=cpdservice" }
     let(:schools) { [fip_school_1, fip_school_2, cip_school] }
     let(:urns) { schools.map(&:urn) }
 
@@ -644,40 +646,50 @@ RSpec.describe InviteSchools do
       expect(FeatureFlag.active?(:participant_validation, for: cip_school)).to be false
     end
 
+    it "emails the induction coordinator" do
+      InviteSchools.new.feature_flag_and_send_participant_validation_beta_emails(array_of_urns: urns)
+      expect(SchoolMailer).to delay_email_delivery_of(:participant_validation_induction_coordinator_email)
+                                .with(hash_including(
+                                        recipient: induction_coordinator.email,
+                                        school_name: fip_school_1.name,
+                                        start_url: induction_coordinator_start_url,
+                                      ))
+    end
+
     it "emails the early career teachers belonging to the FIP schools" do
       InviteSchools.new.feature_flag_and_send_participant_validation_beta_emails(array_of_urns: urns)
       expect(SchoolMailer).to delay_email_delivery_of(:participant_validation_ect_email)
-                                  .with(hash_including(
-                                          recipient: ect_1.user.email,
-                                          school_name: fip_school_1.name,
-                                          start_url: start_url,
-                                          user_research_url: research_url,
-                                        ))
+                                .with(hash_including(
+                                        recipient: ect_1.user.email,
+                                        school_name: fip_school_1.name,
+                                        start_url: start_url,
+                                        user_research_url: research_url,
+                                      ))
       expect(SchoolMailer).to delay_email_delivery_of(:participant_validation_ect_email)
-                                  .with(hash_including(
-                                          recipient: ect_2.user.email,
-                                          school_name: fip_school_2.name,
-                                          start_url: start_url,
-                                          user_research_url: research_url,
-                                        ))
+                                .with(hash_including(
+                                        recipient: ect_2.user.email,
+                                        school_name: fip_school_2.name,
+                                        start_url: start_url,
+                                        user_research_url: research_url,
+                                      ))
     end
 
     it "emails the mentors belonging to the FIP schools" do
       InviteSchools.new.feature_flag_and_send_participant_validation_beta_emails(array_of_urns: urns)
       expect(SchoolMailer).to delay_email_delivery_of(:participant_validation_fip_mentor_email)
-                                  .with(hash_including(
-                                          recipient: mentor_1.user.email,
-                                          school_name: fip_school_1.name,
-                                          start_url: start_url,
-                                          user_research_url: mentor_research_url,
-                                        ))
+                                .with(hash_including(
+                                        recipient: mentor_1.user.email,
+                                        school_name: fip_school_1.name,
+                                        start_url: start_url,
+                                        user_research_url: mentor_research_url,
+                                      ))
       expect(SchoolMailer).to delay_email_delivery_of(:participant_validation_fip_mentor_email)
-                                  .with(hash_including(
-                                          recipient: mentor_2.user.email,
-                                          school_name: fip_school_2.name,
-                                          start_url: start_url,
-                                          user_research_url: mentor_research_url,
-                                        ))
+                                .with(hash_including(
+                                        recipient: mentor_2.user.email,
+                                        school_name: fip_school_2.name,
+                                        start_url: start_url,
+                                        user_research_url: mentor_research_url,
+                                      ))
     end
 
     it "does not email participants at schools not doing FIP" do
