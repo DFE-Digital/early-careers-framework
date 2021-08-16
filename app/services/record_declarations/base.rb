@@ -14,6 +14,7 @@ module RecordDeclarations
     validates :declaration_type, presence: { message: I18n.t(:missing_declaration_type) }
     validates :user, presence: { message: I18n.t(:invalid_participant) }
     validates :lead_provider_from_token, presence: { message: I18n.t(:missing_lead_provider) }
+    validates :parsed_date, future_date: true, allow_blank: true
 
     validate :profile_exists
     validate :date_has_the_right_format
@@ -116,7 +117,7 @@ module RecordDeclarations
       return if declaration_date.blank?
 
       errors.add(:declaration_date, I18n.t(:invalid_declaration_date)) unless declaration_date.match(RFC3339_DATE_REGEX)
-      errors.add(:declaration_date, I18n.t(:future_declaration_date)) if parsed_date > Time.zone.now
+      parsed_date
     rescue StandardError
       errors.add(:declaration_date, I18n.t(:invalid_declaration_date))
     end
