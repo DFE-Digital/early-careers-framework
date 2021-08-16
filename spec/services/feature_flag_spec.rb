@@ -127,7 +127,6 @@ RSpec.describe FeatureFlag do
   end
 
   def random_record
-    # TODO: WHY ARE SOME FACTORIES BROKEN?
-    create FactoryBot.factories.map(&:name).without(:participant_band, :pupil_premium, :declarable, :profile_declaration, :participant_declaration, :npq_participant_declaration).sample
+    create %i[user school].sample
   end
 end
