@@ -51,9 +51,7 @@ class User < ApplicationRecord
     early_career_teacher_profile.present?
   end
 
-  def ect?
-    early_career_teacher?
-  end
+  alias_method :ect?, :early_career_teacher?
 
   def mentor?
     mentor_profile.present?
