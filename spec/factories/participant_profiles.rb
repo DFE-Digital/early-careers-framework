@@ -17,7 +17,7 @@ FactoryBot.define do
       end
     end
 
-    schedule { create(:schedule) }
+    schedule
     teacher_profile
 
     transient do
