@@ -103,6 +103,41 @@ RSpec.describe ParticipantValidationService do
       end
     end
 
+    context "when 3 of 4 things match and only first name matches" do
+      let(:validation_result) do
+        ParticipantValidationService.validate(
+          trn: trn,
+          nino: "WRONG",
+          full_name: full_name.split(" ").first.to_s,
+          date_of_birth: dob,
+        )
+      end
+
+      it "returns nil" do
+        expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(dqt_record, nil)
+
+        expect(validation_result).to be_nil
+      end
+
+      context "when config check_first_name_only: true" do
+        let(:validation_result) do
+          ParticipantValidationService.validate(
+            trn: trn,
+            nino: "WRONG",
+            full_name: full_name.split(" ").first.to_s,
+            date_of_birth: dob,
+            config: { check_first_name_only: true },
+          )
+        end
+
+        it "returns validated details" do
+          expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(dqt_record)
+
+          expect(validation_result).to eql({ trn: trn, qts: true, active_alert: false })
+        end
+      end
+    end
+
     context "when the wrong trn is provided" do
       let(:other_trn) { "7654321" }
       before do
