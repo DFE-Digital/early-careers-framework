@@ -18,31 +18,6 @@ module RecordDeclarations
     validate :profile_exists
     validate :date_has_the_right_format
 
-    def profile_exists
-      return if errors.any?
-
-      unless user_profile
-        errors.add(:user_profile, I18n.t(:invalid_participant))
-      end
-    end
-
-    def date_has_the_right_format
-      return if declaration_date.blank?
-
-      errors.add(:declaration_date, I18n.t(:invalid_declaration_date)) unless declaration_date.match(RCF3339_DATE_REGEX)
-      errors.add(:declaration_date, I18n.t(:future_declaration_date)) if parsed_date > Time.zone.now
-    rescue StandardError
-      errors.add(:declaration_date, I18n.t(:invalid_declaration_date))
-    end
-
-    def valid_courses_for_user
-      valid_courses = []
-      valid_courses << "ecf-mentor" if user.mentor?
-      valid_courses << "ecf-induction" if user.early_career_teacher?
-      valid_courses += NPQCourse.all.map(&:identifier) if user.npq?
-      valid_courses
-    end
-
     delegate :user_profile, :actual_lead_provider, :valid_declaration_types, to: :not_implemented_error
 
     class << self
@@ -87,6 +62,10 @@ module RecordDeclarations
       @user ||= User.find_by(id: user_id)
     end
 
+    def parsed_date
+      Time.zone.parse(declaration_date)
+    end
+
     def create_declaration_attempt!
       ParticipantDeclarationAttempt.create!(
         course_identifier: course_identifier,
@@ -116,13 +95,34 @@ module RecordDeclarations
       end
     end
 
+    def valid_courses_for_user
+      valid_courses = []
+      valid_courses << "ecf-mentor" if user.mentor?
+      valid_courses << "ecf-induction" if user.early_career_teacher?
+      valid_courses += NPQCourse.all.map(&:identifier) if user.npq?
+      valid_courses
+    end
+
+    def profile_exists
+      return if errors.any?
+
+      unless user_profile
+        errors.add(:user_profile, I18n.t(:invalid_participant))
+      end
+    end
+
+    def date_has_the_right_format
+      return if declaration_date.blank?
+
+      errors.add(:declaration_date, I18n.t(:invalid_declaration_date)) unless declaration_date.match(RCF3339_DATE_REGEX)
+      errors.add(:declaration_date, I18n.t(:future_declaration_date)) if parsed_date > Time.zone.now
+    rescue StandardError
+      errors.add(:declaration_date, I18n.t(:invalid_declaration_date))
+    end
+
     def validate_provider!
       # TODO: Remove the nil? check and fix the test setup so that they build the school cohort, partnership and give us back the actual lead_provider.
       raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless actual_lead_provider.nil? || lead_provider_from_token == actual_lead_provider
-    end
-
-    def parsed_date
-      Time.zone.parse(declaration_date)
     end
 
     def validate_schedule!
