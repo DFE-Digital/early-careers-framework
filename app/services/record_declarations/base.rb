@@ -139,7 +139,6 @@ module RecordDeclarations
       end
 
       next_milestone = schedule.milestones[existing_declarations.count]
-      parsed_date = self.parsed_date
       unless next_milestone.start_date < parsed_date
         raise ActionController::ParameterMissing, I18n.t(:declaration_before_milestone_start)
       end
