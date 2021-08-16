@@ -18,6 +18,7 @@ class UTMService
     year2020_nqt_invite: "year2020-nqt-invite",
     participant_validation_beta: "participant-validation-beta",
     participant_validation_research: "participant-validation-research",
+    participant_validation_sit_notification: "participant-validation-sit-notification",
   }.freeze
 
   # Campaigns aren't showing up in GA at the moment, so use specific sources

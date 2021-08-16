@@ -17,6 +17,7 @@ class SchoolMailer < ApplicationMailer
   YEAR2020_INVITE_EMAIL_TEMPLATE = "d4b53e26-4630-43a5-b89e-3c668061a41c"
   PARTICIPANT_VALIDATION_CIP_AND_FIP_ECT_TEMPLATE = "b73fe1d1-94ac-4e77-ab37-71738c2474dd"
   PARTICIPANT_VALIDATION_FIP_MENTOR_TEMPLATE = "06ad385b-9a76-4f5c-941a-c5d8cf5f72c7"
+  PARTICIPANT_VALIDATION_INDUCTION_COORDINATOR_TEMPLATE = "afb54050-7ebd-43af-ad83-7fa6795d1523"
 
   def nomination_email(recipient:, school_name:, nomination_url:, expiry_date:)
     template_mail(
@@ -260,6 +261,19 @@ class SchoolMailer < ApplicationMailer
         school_name: school_name,
         participant_start: start_url,
         ur_sign_up_url: user_research_url,
+      },
+    )
+  end
+
+  def participant_validation_induction_coordinator_email(recipient:, school_name:, start_url:)
+    template_mail(
+      PARTICIPANT_VALIDATION_INDUCTION_COORDINATOR_TEMPLATE,
+      to: recipient,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        school_name: school_name,
+        start_url: start_url,
       },
     )
   end
