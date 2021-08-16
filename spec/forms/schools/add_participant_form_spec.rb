@@ -31,8 +31,8 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
       it "sets the participant_type to mentor as well as full name and email to match current_user details" do
         expect { subject.type = "self" }
           .to change { subject.participant_type }.to(:mentor)
-          .and change { subject.full_name }.to(user.full_name)
-          .and change { subject.email }.to(user.email)
+                                                 .and change { subject.full_name }.to(user.full_name)
+                                                                                  .and change { subject.email }.to(user.email)
       end
     end
   end
@@ -110,6 +110,34 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
 
       it "returns false" do
         expect(subject).not_to be_email_already_taken
+      end
+    end
+  end
+
+  describe "can_add_self?" do
+    context "when the user is not a mentor" do
+      it "returns true" do
+        expect(subject.can_add_self?).to be true
+      end
+    end
+
+    context "when the user is a mentor at another school" do
+      before do
+        create(:participant_profile, :mentor, user: user)
+      end
+
+      it "returns false" do
+        expect(subject.can_add_self?).to be false
+      end
+    end
+
+    context "when the user is a mentor at this school" do
+      before do
+        create(:participant_profile, :mentor, user: user, school_cohort: school_cohort)
+      end
+
+      it "returns false" do
+        expect(subject.can_add_self?).to be false
       end
     end
   end
