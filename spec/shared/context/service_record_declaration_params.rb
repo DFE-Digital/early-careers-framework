@@ -6,7 +6,7 @@ RSpec.shared_context "service record declaration params" do
     {
       user_id: ect_profile.user.id,
       declaration_date: ect_declaration_date.rfc3339,
-      declaration_type: "retained-1",
+      declaration_type: "started",
       course_identifier: "ecf-induction",
       lead_provider_from_token: another_lead_provider,
       evidence_held: "other",

@@ -4,6 +4,14 @@ module RecordDeclarations
   class Base
     include ActiveModel::Model
     RFC3339_DATE_REGEX = /\A\d{4}-\d{2}-\d{2}T(\d{2}):(\d{2}):(\d{2})([\.,]\d+)?(Z|[+-](\d{2})(:?\d{2})?)?\z/i.freeze
+    DECLARATION_TO_MILESTONE_MAP = {
+      "started": schedule.milestones[0],
+      "retained-1": schedule.milestones[1],
+      "retained-2": schedule.milestones[2],
+      "retained-3": schedule.milestones[3],
+      "retained-4": schedule.milestones[4],
+      "completed": schedule.milestones.last,
+    }.freeze
 
     attr_accessor :course_identifier, :user_id, :lead_provider_from_token, :declaration_date, :declaration_type, :evidence_held
 
@@ -128,25 +136,21 @@ module RecordDeclarations
     end
 
     def validate_milestone!
-      unless next_milestone.start_date < parsed_date
+      unless milestone.start_date < parsed_date
         raise ActionController::ParameterMissing, I18n.t(:declaration_before_milestone_start)
       end
 
-      unless next_milestone.milestone_date > parsed_date
+      unless milestone.milestone_date > parsed_date
         raise ActionController::ParameterMissing, I18n.t(:declaration_after_milestone_cutoff)
       end
     end
 
-    def next_milestone
+    def milestone
       unless schedule
         raise ActionController::ParameterMissing, I18n.t(:schedule_missing)
       end
 
-      if participant_declarations.count >= schedule.milestones.count
-        raise ActionController::ParameterMissing, I18n.t(:too_many_declarations)
-      end
-
-      schedule.milestones[participant_declarations.count]
+      DECLARATION_TO_MILESTONE_MAP[declaration_type.to_sym]
     end
   end
 end

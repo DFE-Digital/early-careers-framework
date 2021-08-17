@@ -53,7 +53,6 @@ en:
   invalid_course: "The property '#/course_identifier' must be an available course to '#/participant_id'"
   invalid_evidence_type: "The property '#/evidence_held' must be an available type to the event type and course type"
   schedule_missing: "The participant does not have a schedule"
-  too_many_declarations: "The participant has more declarations than milestones"
   declaration_before_milestone_start: "The property '#/declaration_date' can not be before milestone start"
   declaration_after_milestone_cutoff: "The property '#/declaration_date' can not be after milestone end"
   invalid_data_structure: correct json data structure required. See API docs for reference
