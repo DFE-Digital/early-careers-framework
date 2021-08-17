@@ -55,8 +55,7 @@ RSpec.feature "Submit participant declarations", type: :feature do
     and_the_lead_provider_receives_a_response_to_confirm_that_the_declaration_has_a_validation_error
   end
 
-  # Need an npq enpoint to validate step that npq participant id passed to the lead provider
-  xscenario "NPQ participant details sent to provider, declaration sent using same unique ID, no errors in declaration" do
+  scenario "NPQ participant details sent to provider, declaration sent using same unique ID, no errors in declaration" do
     given_an_npq_participant_has_been_entered_onto_the_dfe_service
     when_the_npq_participant_details_are_passed_to_the_lead_provider
     and_the_lead_provider_submits_a_declaration_for_the_npq_using_their_id
@@ -64,7 +63,7 @@ RSpec.feature "Submit participant declarations", type: :feature do
     and_the_lead_provider_receives_a_response_to_confirm_that_the_declaration_was_successful
   end
 
-  xscenario "NPQ participant details sent to provider, declaration sent using same unique ID, errors exist in declaration" do
+  scenario "NPQ participant details sent to provider, declaration sent using same unique ID, errors exist in declaration" do
     given_an_npq_participant_has_been_entered_onto_the_dfe_service
     when_the_npq_participant_details_are_passed_to_the_lead_provider
     and_the_lead_provider_submits_a_declaration_for_the_participant_using_and_invalid_participant_id
@@ -72,10 +71,10 @@ RSpec.feature "Submit participant declarations", type: :feature do
     and_the_lead_provider_receives_a_response_to_confirm_that_the_declaration_has_a_validation_error
   end
 
-  xscenario "NPQ participant details sent to provider, declaration sent using different unique ID, errors exist in declaration" do
+  scenario "NPQ participant details sent to provider, declaration sent using different unique ID, errors exist in declaration" do
     given_an_npq_participant_has_been_entered_onto_the_dfe_service
     when_the_npq_participant_details_are_passed_to_the_lead_provider
-    and_the_lead_provider_submits_a_declaration_for_the_npq_using_their_id
+    and_the_lead_provider_submits_a_declaration_without_participant_id
     then_the_declaration_made_is_invalid
     and_the_lead_provider_receives_a_response_to_confirm_that_the_declaration_has_a_validation_error
   end
@@ -116,11 +115,11 @@ private
   end
 
   def when_the_npq_participant_details_are_passed_to_the_lead_provider
-    @session.get("/api/v1/participants",
+    @session.get("/api/v1/npq-applications",
                  headers: { "Authorization": "Bearer #{@token}" })
 
-    participants = JSON.parse(@session.response.body).dig("data").map { |participant| participant["id"] }
-    expect(participants.first).to eq([@ect_id, @mentor_id, @npq_id].compact.first)
+    participant = JSON.parse(@session.response.body).dig("data", 0, "attributes", "participant_id")
+    expect(participant).to eq([@ect_id, @mentor_id, @npq_id].compact.first)
   end
 
   def and_the_lead_provider_submits_a_declaration_for_the_ect_using_their_id
