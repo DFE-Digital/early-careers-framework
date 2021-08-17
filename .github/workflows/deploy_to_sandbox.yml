@@ -39,4 +39,4 @@ jobs:
           export TF_VAR_paas_app_docker_image=dfedigital/early-careers-framework-prod:${{ github.event.inputs.version }}
           cd terraform/app
           terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-d25ff054-929d-4206-8c6f-d5c4a93ed5c3"
-          terraform apply -input=false -auto-approve -var-file ../workspace-variables/sandbox.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_SANDBOX}}", "RELEASE_VERSION":"${{github.event.inputs.version}}"}' -var 'logstash_url=${{secrets.SYSLOG_DRAIN_URL}}'
+          terraform apply -input=false -auto-approve -var-file ../workspace-variables/sandbox.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_SANDBOX}}", "RELEASE_VERSION":"${{github.event.inputs.version}}"}' -var 'logstash_url=${{secrets.SYSLOG_DRAIN_URL}}' -var 'docker_username=${{ secrets.DOCKER_USERNAME }}' -var 'docker_password=${{ secrets.DOCKER_DEV_PASSWORD }}'
