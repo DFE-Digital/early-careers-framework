@@ -111,7 +111,7 @@ class School < ApplicationRecord
   end
 
   def eligible?
-    eligible_establishment_type? && open? && in_england?
+    open? && in_england? && (eligible_establishment_type? || section_41_approved?)
   end
 
   def cip_only?

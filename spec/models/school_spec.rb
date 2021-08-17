@@ -58,6 +58,8 @@ RSpec.describe School, type: :model do
     let!(:ineligible_school_type) { create(:school, school_type_code: 56) }
     let!(:english_school) { create(:school, administrative_district_code: "E123") }
     let!(:welsh_school) { create(:school, administrative_district_code: "W123", school_type_code: 30) }
+    let!(:s41_school) { create(:school, section_41_approved: true, school_type_code: 30) }
+    let!(:closed_s41_school) { create(:school, school_status_code: 2, section_41_approved: true) }
     describe "#eligible?" do
       it "should be true for open schools" do
         expect(open_school.eligible?).to be true
@@ -82,6 +84,14 @@ RSpec.describe School, type: :model do
       it "should be false for schools not in England" do
         expect(welsh_school.eligible?).to be false
       end
+
+      it "should be true for open section 41 schools" do
+        expect(s41_school.eligible?).to be true
+      end
+
+      it "should be false for closed section 41  schools" do
+        expect(closed_s41_school.eligible?).to be false
+      end
     end
 
     describe "scope eligible" do
@@ -89,8 +99,8 @@ RSpec.describe School, type: :model do
       let(:ineligible_school) { closed_school }
 
       it "should only include eligible schools" do
-        expect(School.eligible.all).to include(open_school, eligible_school_type, english_school)
-        expect(School.eligible.all).not_to include(closed_school, ineligible_school_type, welsh_school)
+        expect(School.eligible.all).to include(open_school, eligible_school_type, english_school, s41_school)
+        expect(School.eligible.all).not_to include(closed_school, ineligible_school_type, welsh_school, closed_s41_school)
       end
     end
 

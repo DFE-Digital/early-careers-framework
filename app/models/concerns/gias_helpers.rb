@@ -8,7 +8,8 @@ module GiasHelpers
     scope :currently_open, -> { where(school_status_code: GiasTypes::ELIGIBLE_STATUS_CODES) }
     scope :eligible_establishment_type, -> { where(school_type_code: GiasTypes::ELIGIBLE_TYPE_CODES) }
     scope :in_england, -> { where("administrative_district_code ILIKE 'E%'") }
-    scope :eligible, -> { currently_open.eligible_establishment_type.in_england }
+    scope :section_41, -> { where(section_41_approved: true) }
+    scope :eligible, -> { currently_open.eligible_establishment_type.in_england.or(currently_open.in_england.section_41) }
 
     enum school_status_name: {
       open: "Open",

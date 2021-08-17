@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe SchoolDataImporter do
-  let(:school_data_importer) { SchoolDataImporter.new(Logger.new($stdout), 2021) }
+  let(:school_data_importer) { SchoolDataImporter.new(Logger.new($stdout), start_year: 2021) }
   let(:ecf_tech_csv) { File.open("spec/fixtures/files/gias_response/ecf_tech.csv") }
   let(:group_links_csv) { File.open("spec/fixtures/files/gias_response/groupLinks.csv") }
   let(:groups_csv) { File.open("spec/fixtures/files/gias_response/groups.csv") }
@@ -23,7 +23,7 @@ RSpec.describe SchoolDataImporter do
 
   describe "#run" do
     it "imports each row as a school with associated Local Authority" do
-      expect { school_data_importer.run }.to change { School.count }.by 3
+      expect { school_data_importer.run }.to change { School.count }.by 4
 
       imported_school = School.find_by(urn: 20_001)
       expect(imported_school.name).to eql("The Starship Children's Centre")
@@ -39,6 +39,7 @@ RSpec.describe SchoolDataImporter do
       expect(imported_school.school_phase_type).to eql(0)
       expect(imported_school.school_phase_name).to eql("Not applicable")
       expect(imported_school.school_status_code).to eql(1)
+      expect(imported_school.section_41_approved).to be false
     end
 
     it "correctly handles any Latin1 encoded characters in the data file" do

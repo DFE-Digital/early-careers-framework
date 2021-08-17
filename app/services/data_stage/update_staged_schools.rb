@@ -82,6 +82,7 @@ module DataStage
         school_status_name: data.fetch("EstablishmentStatus (name)"),
         administrative_district_code: data.fetch("DistrictAdministrative (code)"),
         administrative_district_name: data.fetch("DistrictAdministrative (name)"),
+        section_41_approved: data.fetch("Section41Approved (name)") == "Approved",
       }
     end
 
