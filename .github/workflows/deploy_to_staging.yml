@@ -35,7 +35,7 @@ jobs:
         name: Checkout Code
         with:
           ref: ${{ github.event.inputs.ref }}
-      
+
       - name: Tag deployment
         run: |
           git tag --force ${{ github.event.inputs.version }}
@@ -66,4 +66,4 @@ jobs:
           export TF_VAR_paas_app_docker_image=dfedigital/early-careers-framework-prod:${{ github.event.inputs.version }}
           cd terraform/app
           terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-e2123d0b-d394-4594-8056-315300e7d8a8"
-          terraform apply -input=false -auto-approve -var-file ../workspace-variables/staging.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_STAGING}}", "RELEASE_VERSION":"${{github.event.inputs.version}}"}' -var 'logstash_url=${{secrets.SYSLOG_DRAIN_URL}}'
+          terraform apply -input=false -auto-approve -var-file ../workspace-variables/staging.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_STAGING}}", "RELEASE_VERSION":"${{github.event.inputs.version}}"}' -var 'logstash_url=${{secrets.SYSLOG_DRAIN_URL}}' -var 'docker_username=${{ secrets.DOCKER_USERNAME }}' -var 'docker_password=${{ secrets.DOCKER_DEV_PASSWORD }}'

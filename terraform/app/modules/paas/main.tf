@@ -62,6 +62,7 @@ resource "cloudfoundry_app" "worker_app" {
   name = local.worker_app_name
   command = var.worker_app_start_command
   docker_image = var.app_docker_image
+  docker_credentials = var.docker_credentials
   health_check_type = "process"
   health_check_timeout = 10
   instances = var.worker_app_instances
