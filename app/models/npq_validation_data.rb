@@ -55,7 +55,7 @@ private
     teacher_profile.school = profile.school = School.find_by(urn: school_urn)
     teacher_profile.save!
 
-    profile.schedule = Finance::Schedule.default
+    profile.schedule ||= Finance::Schedule.default
     profile.teacher_profile = teacher_profile
     profile.user_id = user_id
     profile.save!

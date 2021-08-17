@@ -17,6 +17,7 @@ FactoryBot.define do
       end
     end
 
+    schedule
     teacher_profile
 
     transient do

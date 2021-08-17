@@ -12,6 +12,9 @@ class ParticipantProfile < ApplicationRecord
   has_one :ecf_participant_validation_data
   has_many :validation_decisions, class_name: "ProfileValidationDecision"
 
+  has_many :profile_declarations
+  has_many :participant_declarations, through: :profile_declarations
+
   enum status: {
     active: "active",
     withdrawn: "withdrawn",
