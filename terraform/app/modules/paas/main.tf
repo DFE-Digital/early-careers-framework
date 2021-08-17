@@ -15,6 +15,7 @@ resource cloudfoundry_app web_app {
   name = local.web_app_name
   command = var.web_app_start_command
   docker_image = var.app_docker_image
+  docker_credentials = var.docker_credentials
   health_check_type = "http"
   health_check_http_endpoint = "/check"
   health_check_timeout = 60
