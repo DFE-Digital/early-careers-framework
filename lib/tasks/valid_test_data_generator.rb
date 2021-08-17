@@ -32,20 +32,20 @@ module ValidTestDataGenerator
       count.times { create_fip_school_with_cohort(urn: SchoolURNGenerator.next) }
     end
 
-    def find_or_create_participants(school:, number_of_participants:, sparsity_uplift:, pupil_premium_uplift: )
+    def find_or_create_participants(school:, number_of_participants:, sparsity_uplift:, pupil_premium_uplift:)
       generate_new_participants(school: school, count: number_of_participants - school.ecf_participants.count, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift) if school.ecf_participants.count < number_of_participants
     end
 
     def generate_new_participants(school:, count:, sparsity_uplift:, pupil_premium_uplift:)
-      while count > 0
-        status = weighted_choice(selection: %w[active withdrawn], odds: [6,1])
-        profile_type = weighted_choice(selection: %i[mentor ect], odds: [9,1])
-        count-=1
-        if profile_type==:mentor
+      while count.positive?
+        status = weighted_choice(selection: %w[active withdrawn], odds: [6, 1])
+        profile_type = weighted_choice(selection: %i[mentor ect], odds: [9, 1])
+        count -= 1
+        if profile_type == :mentor
           mentor = create_participant(school_cohort: school_cohort(school: school), profile_type: :mentor, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift)
           rand(0..3).times do
             create_participant(school_cohort: school_cohort(school: school), profile_type: :ect, mentor_profile: mentor, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift)
-            count-=1
+            count -= 1
           end
         else
           create_participant(school_cohort: school_cohort(school: school), profile_type: :ect, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift)
@@ -98,9 +98,9 @@ module ValidTestDataGenerator
     end
 
     def weighted_choice(selection:, odds:)
-      selection.each_with_index.map do |item, index|
+      selection.each_with_index.map { |item, index|
         [item] * odds[index]
-      end.flatten.sample
+      }.flatten.sample
     end
   end
 end
