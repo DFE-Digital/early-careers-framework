@@ -74,8 +74,7 @@ mentor = User.find_or_create_by!(email: "rp-mentor-ambition@example.com") do |us
   teacher_profile = user.teacher_profile || user.create_teacher_profile
 
   ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
-    profile.update!(school_cohort: school_cohort, core_induction_programme: CoreInductionProgramme.find_by(name: "Ambition Institute"))
-    profile.update!(schedule: Finance::Schedule.default)
+    profile.update!(school_cohort: school_cohort, core_induction_programme: CoreInductionProgramme.find_by(name: "Ambition Institute"), schedule: Finance::Schedule.default)
   end
 end
 
@@ -84,8 +83,7 @@ mentor_two = User.find_or_create_by!(email: "rp-mentor-edt@example.com") do |use
   teacher_profile = user.teacher_profile || user.create_teacher_profile
 
   ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
-    profile.update!(school_cohort: school_two_cohort, core_induction_programme: CoreInductionProgramme.find_by(name: "Education Development Trust"))
-    profile.update!(schedule: Finance::Schedule.default)
+    profile.update!(school_cohort: school_two_cohort, core_induction_programme: CoreInductionProgramme.find_by(name: "Education Development Trust"), schedule: Finance::Schedule.default)
   end
 end
 
@@ -94,8 +92,7 @@ mentor_three = User.find_or_create_by!(email: "rp-mentor-ucl@example.com") do |u
   teacher_profile = user.teacher_profile || user.create_teacher_profile
 
   ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
-    profile.update!(school_cohort: school_three_cohort, core_induction_programme: CoreInductionProgramme.find_by(name: "UCL Institute of Education"))
-    profile.update!(schedule: Finance::Schedule.default)
+    profile.update!(school_cohort: school_three_cohort, core_induction_programme: CoreInductionProgramme.find_by(name: "UCL Institute of Education"), schedule: Finance::Schedule.default)
   end
 end
 
@@ -104,8 +101,7 @@ User.find_or_create_by!(email: "rp-ect-ambition@example.com") do |user|
   teacher_profile = user.teacher_profile || user.create_teacher_profile
 
   ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
-    profile.update!(school_cohort: school_cohort, core_induction_programme: CoreInductionProgramme.find_by(name: "Ambition Institute"), mentor_profile: mentor.mentor_profile)
-    profile.update!(schedule: Finance::Schedule.default)
+    profile.update!(school_cohort: school_cohort, core_induction_programme: CoreInductionProgramme.find_by(name: "Ambition Institute"), mentor_profile: mentor.mentor_profile, schedule: Finance::Schedule.default)
   end
 end
 
@@ -114,8 +110,7 @@ User.find_or_create_by!(email: "rp-ect-edt@example.com") do |user|
   teacher_profile = user.teacher_profile || user.create_teacher_profile
 
   ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
-    profile.update!(school_cohort: school_two_cohort, core_induction_programme: CoreInductionProgramme.find_by(name: "Education Development Trust"), mentor_profile: mentor_two.mentor_profile)
-    profile.update!(schedule: Finance::Schedule.default)
+    profile.update!(school_cohort: school_two_cohort, core_induction_programme: CoreInductionProgramme.find_by(name: "Education Development Trust"), mentor_profile: mentor_two.mentor_profile, schedule: Finance::Schedule.default)
   end
 end
 
@@ -124,8 +119,7 @@ User.find_or_create_by!(email: "rp-ect-ucl@example.com") do |user|
   teacher_profile = user.teacher_profile || user.create_teacher_profile
 
   ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
-    profile.update!(school_cohort: school_three_cohort, core_induction_programme: CoreInductionProgramme.find_by(name: "UCL Institute of Education"), mentor_profile: mentor_three.mentor_profile)
-    profile.update!(schedule: Finance::Schedule.default)
+    profile.update!(school_cohort: school_three_cohort, core_induction_programme: CoreInductionProgramme.find_by(name: "UCL Institute of Education"), mentor_profile: mentor_three.mentor_profile, schedule: Finance::Schedule.default)
   end
 end
 
