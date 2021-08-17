@@ -10,7 +10,7 @@ RSpec.feature "Submit participant declarations", type: :feature do
   scenario "ECT details sent to provider, declaration sent using same unique ID, no errors in declaration" do
     given_an_early_career_teacher_has_been_entered_onto_the_dfe_service
     when_the_participant_details_are_passed_to_the_lead_provider
-    and_the_lead_provider_submits_a_declaration_for_the_participant_using_the_same_unique_id(@participant_id, "ecf-induction")
+    and_the_lead_provider_submits_a_declaration_for_the_ect_using_their_id
     then_the_declaration_made_is_valid
     and_the_lead_provider_receives_a_response_to_confirm_that_the_declaration_was_successful
   end
@@ -18,7 +18,7 @@ RSpec.feature "Submit participant declarations", type: :feature do
   scenario "ECT details sent to provider, declaration sent using same unique ID, errors exist in declaration" do
     given_an_early_career_teacher_has_been_entered_onto_the_dfe_service
     when_the_participant_details_are_passed_to_the_lead_provider
-    and_the_lead_provider_submits_a_declaration_for_the_participant_using_the_same_unique_id_with_error("ecf-induction")
+    and_the_lead_provider_submits_a_declaration_for_the_participant_using_and_invalid_participant_id
     then_the_declaration_made_is_invalid
     and_the_lead_provider_receives_a_response_to_confirm_that_the_declaration_has_a_validation_error
   end
@@ -26,7 +26,7 @@ RSpec.feature "Submit participant declarations", type: :feature do
   scenario "ECT details sent to provider, declaration sent using different unique ID, errors exist in declaration" do
     given_an_early_career_teacher_has_been_entered_onto_the_dfe_service
     when_the_participant_details_are_passed_to_the_lead_provider
-    and_the_lead_provider_submits_a_declaration_for_the_participant_using_the_same_unique_id("111-111-111-111", "ecf-induction")
+    and_the_lead_provider_submits_a_declaration_without_participant_id
     then_the_declaration_made_is_invalid
     and_the_lead_provider_receives_a_response_to_confirm_that_the_declaration_has_a_validation_error
   end
@@ -34,7 +34,7 @@ RSpec.feature "Submit participant declarations", type: :feature do
   scenario "Mentor details sent to provider, declaration sent using same unique ID, no errors in declaration" do
     given_an_ecf_mentor_has_been_entered_onto_the_dfe_service
     when_the_participant_details_are_passed_to_the_lead_provider
-    and_the_lead_provider_submits_a_declaration_for_the_participant_using_the_same_unique_id(@mentor_id, "ecf-mentor")
+    and_the_lead_provider_submits_a_declaration_for_the_mentor_using_their_id
     then_the_declaration_made_is_valid
     and_the_lead_provider_receives_a_response_to_confirm_that_the_declaration_was_successful
   end
@@ -42,7 +42,7 @@ RSpec.feature "Submit participant declarations", type: :feature do
   scenario "Mentor details sent to provider, declaration sent using same unique ID, errors exist in declaration" do
     given_an_ecf_mentor_has_been_entered_onto_the_dfe_service
     when_the_participant_details_are_passed_to_the_lead_provider
-    and_the_lead_provider_submits_a_declaration_for_the_participant_using_the_same_unique_id_with_error("ecf-mentor")
+    and_the_lead_provider_submits_a_declaration_for_the_participant_using_and_invalid_participant_id
     then_the_declaration_made_is_invalid
     and_the_lead_provider_receives_a_response_to_confirm_that_the_declaration_has_a_validation_error
   end
@@ -50,7 +50,7 @@ RSpec.feature "Submit participant declarations", type: :feature do
   scenario "Mentor details sent to provider, declaration sent using different unique ID, errors exist in declaration" do
     given_an_ecf_mentor_has_been_entered_onto_the_dfe_service
     when_the_participant_details_are_passed_to_the_lead_provider
-    and_the_lead_provider_submits_a_declaration_for_the_participant_using_the_same_unique_id("111-222-333-444", "ecf-mentor")
+    and_the_lead_provider_submits_a_declaration_without_participant_id
     then_the_declaration_made_is_invalid
     and_the_lead_provider_receives_a_response_to_confirm_that_the_declaration_has_a_validation_error
   end
@@ -58,7 +58,7 @@ RSpec.feature "Submit participant declarations", type: :feature do
   scenario "NPQ participant details sent to provider, declaration sent using same unique ID, no errors in declaration" do
     given_an_npq_participant_has_been_entered_onto_the_dfe_service
     when_the_participant_details_are_passed_to_the_lead_provider
-    and_the_lead_provider_submits_a_declaration_for_the_participant_using_the_same_unique_id(@npq_profile_id, "npq-leading-teaching")
+    and_the_lead_provider_submits_a_declaration_for_the_npq_using_their_id
     then_the_declaration_made_is_valid
     and_the_lead_provider_receives_a_response_to_confirm_that_the_declaration_was_successful
   end
@@ -66,7 +66,7 @@ RSpec.feature "Submit participant declarations", type: :feature do
   scenario "NPQ participant details sent to provider, declaration sent using same unique ID, errors exist in declaration" do
     given_an_npq_participant_has_been_entered_onto_the_dfe_service
     when_the_participant_details_are_passed_to_the_lead_provider
-    and_the_lead_provider_submits_a_declaration_for_the_participant_using_the_same_unique_id_with_error("npq-leading-teaching")
+    and_the_lead_provider_submits_a_declaration_for_the_participant_using_and_invalid_participant_id
     then_the_declaration_made_is_invalid
     and_the_lead_provider_receives_a_response_to_confirm_that_the_declaration_has_a_validation_error
   end
@@ -74,7 +74,7 @@ RSpec.feature "Submit participant declarations", type: :feature do
   scenario "NPQ participant details sent to provider, declaration sent using different unique ID, errors exist in declaration" do
     given_an_npq_participant_has_been_entered_onto_the_dfe_service
     when_the_participant_details_are_passed_to_the_lead_provider
-    and_the_lead_provider_submits_a_declaration_for_the_participant_using_the_same_unique_id("111-222-333-444", "npq-leading-teaching")
+    and_the_lead_provider_submits_a_declaration_for_the_npq_using_their_id
     then_the_declaration_made_is_invalid
     and_the_lead_provider_receives_a_response_to_confirm_that_the_declaration_has_a_validation_error
   end
@@ -90,35 +90,52 @@ private
            cohort: ect_profile.cohort,
            delivery_partner: delivery_partner)
 
-    @participant_id = ect_profile.user.id
+    @ect_id = ect_profile.user.id
   end
 
   def given_an_ecf_mentor_has_been_entered_onto_the_dfe_service
-    @mentor_id = create(:mentor_profile).user.id
+    partnership = create(:partnership, lead_provider: @lead_provider)
+    @mentor_id = create(:participant_profile, :mentor, school: partnership.school, cohort: partnership.cohort).user.id
   end
 
   def given_an_npq_participant_has_been_entered_onto_the_dfe_service
     npq_lead_provider = create(:npq_lead_provider, cpd_lead_provider: @cpd_lead_provider)
     npq_course = create(:npq_course, identifier: "npq-leading-teaching")
-    @npq_profile_id = create(:npq_validation_data,
-                             npq_lead_provider: npq_lead_provider,
-                             npq_course: npq_course).user.id
+    @npq_id = create(:npq_validation_data,
+                     npq_lead_provider: npq_lead_provider,
+                     npq_course: npq_course).user.id
   end
 
   def when_the_participant_details_are_passed_to_the_lead_provider
     @session.get("/api/v1/participants",
                  headers: { "Authorization": "Bearer #{@token}" })
+
     participants = JSON.parse(@session.response.body).dig("data").map { |participant| participant["id"] }
-    expect(participants.first).to eq(@participant_id)
+    expect(participants.first).to eq([@ect_id, @mentor_id, @npq_id].compact.first)
   end
 
-  def and_the_lead_provider_submits_a_declaration_for_the_participant_using_the_same_unique_id(participant_id, course_identifier)
-    params = common_params(participant_id, course_identifier)
+  def and_the_lead_provider_submits_a_declaration_for_the_ect_using_their_id
+    params = common_params(@ect_id, "ecf-induction")
     submit_request(params)
   end
 
-  def and_the_lead_provider_submits_a_declaration_for_the_participant_using_the_same_unique_id_with_error(course_identifier)
-    params = common_params("", course_identifier)
+  def and_the_lead_provider_submits_a_declaration_for_the_mentor_using_their_id
+    params = common_params(@mentor_id, "ecf-mentor")
+    submit_request(params)
+  end
+
+  def and_the_lead_provider_submits_a_declaration_for_the_npq_using_their_id
+    params = common_params(@npq_id, "npq-leading-teaching")
+    submit_request(params)
+  end
+
+  def and_the_lead_provider_submits_a_declaration_for_the_participant_using_and_invalid_participant_id
+    params = common_params("111-222-333-444-555")
+    submit_request(params)
+  end
+
+  def and_the_lead_provider_submits_a_declaration_without_participant_id
+    params = common_params("", "ecf-induction")
     params["data"]["attributes"].reject! { |a| a["participant_id"] }
     submit_request(params)
   end
@@ -142,25 +159,22 @@ private
   # helper methods
 
   def setup
-    lead_provider = create(:lead_provider)
-    @cpd_lead_provider = create(:cpd_lead_provider, lead_provider: lead_provider)
+    @lead_provider = create(:lead_provider)
+    @cpd_lead_provider = create(:cpd_lead_provider, lead_provider: @lead_provider)
     @token = LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: @cpd_lead_provider)
     @session = ActionDispatch::Integration::Session.new(Rails.application)
 
     @params = common_params(@participant_id, "ecf-induction")
   end
 
-private
-
   def submit_request(params)
     @response_http_code = @session.post("/api/v1/participant-declarations",
                                         params: params,
                                         headers: { "Authorization": "Bearer #{@token}" })
-
     @response = JSON.parse(@session.response.body)
   end
 
-  def common_params(participant_id, course_identifier)
+  def common_params(participant_id, course_identifier = "ecf-induction")
     JSON.parse(<<~DATA)
       {
       "data":{
