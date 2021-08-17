@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.feature "Submit participant declarations", type: :feature do
-  background(:all) do
+  before(:each) do
     setup
   end
 
