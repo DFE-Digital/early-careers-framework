@@ -2,6 +2,6 @@
 
 class RemoveNullFromParticipantProfileSchedules < ActiveRecord::Migration[6.1]
   def change
-    change_column_null :participant_profiles, :schedule_id, true
+    add_check_constraint :participant_profiles, "schedule_id IS NOT NULL", name: "participant_profiles_schedule_id_null", validate: false
   end
 end
