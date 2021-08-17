@@ -4,14 +4,6 @@ module RecordDeclarations
   class Base
     include ActiveModel::Model
     RFC3339_DATE_REGEX = /\A\d{4}-\d{2}-\d{2}T(\d{2}):(\d{2}):(\d{2})([\.,]\d+)?(Z|[+-](\d{2})(:?\d{2})?)?\z/i.freeze
-    DECLARATION_TO_MILESTONE_MAP = {
-      "started": schedule.milestones[0],
-      "retained-1": schedule.milestones[1],
-      "retained-2": schedule.milestones[2],
-      "retained-3": schedule.milestones[3],
-      "retained-4": schedule.milestones[4],
-      "completed": schedule.milestones.last,
-    }.freeze
 
     attr_accessor :course_identifier, :user_id, :lead_provider_from_token, :declaration_date, :declaration_type, :evidence_held
 
@@ -150,7 +142,18 @@ module RecordDeclarations
         raise ActionController::ParameterMissing, I18n.t(:schedule_missing)
       end
 
-      DECLARATION_TO_MILESTONE_MAP[declaration_type.to_sym]
+      declaration_to_milestone_map[declaration_type.to_sym]
+    end
+
+    def declaration_to_milestone_map
+      {
+        "started": schedule.milestones[0],
+        "retained-1": schedule.milestones[1],
+        "retained-2": schedule.milestones[2],
+        "retained-3": schedule.milestones[3],
+        "retained-4": schedule.milestones[4],
+        "completed": schedule.milestones.last,
+      }
     end
   end
 end
