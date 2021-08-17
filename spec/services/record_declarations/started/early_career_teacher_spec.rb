@@ -9,8 +9,11 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
   include_context "lead provider profiles and courses"
   include_context "service record declaration params"
 
+  let(:cutoff_start_datetime) { ect_profile.schedule.milestones.first.start_date.beginning_of_day }
+  let(:cutoff_end_datetime) { ect_profile.schedule.milestones.first.milestone_date.end_of_day }
+
   before do
-    travel_to ect_profile.schedule.milestones.first.start_date + 2.days
+    travel_to cutoff_start_datetime + 2.days
   end
 
   context "when lead providers don't match" do
@@ -63,6 +66,61 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
     it "does not raise ParameterMissing error" do
       params = ect_params.merge({ declaration_date: Time.zone.now.rfc3339(9) })
       expect { described_class.call(params) }.to_not raise_error
+    end
+  end
+
+  context "when before the milestone start" do
+    before do
+      travel_to cutoff_start_datetime - 1.day
+    end
+
+    it "raises ParameterMissing error" do
+      params = ect_params.merge({ declaration_date: (cutoff_start_datetime - 1.day).rfc3339 })
+      expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing)
+    end
+  end
+
+  context "when at the milestone start" do
+    before do
+      travel_to cutoff_start_datetime
+    end
+
+    it "raises ParameterMissing error" do
+      params = ect_params.merge({ declaration_date: cutoff_start_datetime.rfc3339 })
+      expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing)
+    end
+  end
+
+  context "when in the middle of milestone" do
+    before do
+      travel_to cutoff_start_datetime + 2.days
+    end
+
+    it "does not raise ParameterMissing error" do
+      params = ect_params.merge({ declaration_date: (cutoff_start_datetime + 2.days).rfc3339 })
+      expect { described_class.call(params) }.to_not raise_error
+    end
+  end
+
+  context "when at the milestone end" do
+    before do
+      travel_to cutoff_end_datetime
+    end
+
+    it "does not raise ParameterMissing error" do
+      params = ect_params.merge({ declaration_date: cutoff_end_datetime.rfc3339 })
+      expect { described_class.call(params) }.to_not raise_error
+    end
+  end
+
+  context "when after the milestone start" do
+    before do
+      travel_to cutoff_end_datetime + 1.day
+    end
+
+    it "raises ParameterMissing error" do
+      params = ect_params.merge({ declaration_date: (cutoff_end_datetime + 1.day).rfc3339 })
+      expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing)
     end
   end
 end
