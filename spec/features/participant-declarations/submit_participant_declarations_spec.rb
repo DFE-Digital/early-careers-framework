@@ -91,19 +91,23 @@ private
            delivery_partner: delivery_partner)
 
     @ect_id = ect_profile.user.id
+    travel_to ect_profile.schedule.milestones.first.start_date + 1.day
   end
 
   def given_an_ecf_mentor_has_been_entered_onto_the_dfe_service
     partnership = create(:partnership, lead_provider: @lead_provider)
-    @mentor_id = create(:participant_profile, :mentor, school: partnership.school, cohort: partnership.cohort).user.id
+    mentor_profile = create(:participant_profile, :mentor, school: partnership.school, cohort: partnership.cohort)
+    @mentor_id = mentor_profile.user.id
+    travel_to mentor_profile.schedule.milestones.first.start_date + 1.day
   end
 
   def given_an_npq_participant_has_been_entered_onto_the_dfe_service
+    create(:schedule, name: "ECF September standard 2021")
     npq_lead_provider = create(:npq_lead_provider, cpd_lead_provider: @cpd_lead_provider)
     npq_course = create(:npq_course, identifier: "npq-leading-teaching")
-    @npq_id = create(:npq_validation_data,
-                     npq_lead_provider: npq_lead_provider,
-                     npq_course: npq_course).user.id
+    npq_validation_date = create(:npq_validation_data, npq_lead_provider: npq_lead_provider, npq_course: npq_course)
+    @npq_id = npq_validation_date.user.id
+    travel_to npq_validation_date.profile.schedule.milestones.first.start_date + 1.day
   end
 
   def when_the_participant_details_are_passed_to_the_lead_provider
@@ -182,7 +186,7 @@ private
     @response = JSON.parse(@session.response.body)
   end
 
-  def common_params(participant_id, course_identifier = "ecf-induction")
+  def common_params(participant_id, course_identifier = "ecf-induction", declaration_date = Time.zone.now)
     JSON.parse(<<~DATA)
       {
       "data":{
@@ -190,7 +194,7 @@ private
         "attributes": {
            "participant_id": "#{participant_id}",
            "declaration_type": "started",
-           "declaration_date": "2021-01-01T01:01:01.000Z",
+           "declaration_date": "#{declaration_date.rfc3339}",
       		 "course_identifier": "#{course_identifier}"
          }
        }
