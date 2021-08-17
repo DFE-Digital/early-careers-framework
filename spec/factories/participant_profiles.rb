@@ -35,6 +35,7 @@ FactoryBot.define do
     trait :ect do
       school_cohort
       teacher_profile { association :teacher_profile, school: school_cohort.school }
+      schedule
 
       participant_type { :ect }
     end
@@ -42,6 +43,7 @@ FactoryBot.define do
     trait :mentor do
       school_cohort
       teacher_profile { association :teacher_profile, school: school_cohort.school }
+      schedule
 
       participant_type { :mentor }
     end
@@ -49,6 +51,7 @@ FactoryBot.define do
     trait :npq do
       school
       teacher_profile { association :teacher_profile, school: school }
+      schedule
 
       validation_data { association :npq_validation_data, user: teacher_profile.user }
 

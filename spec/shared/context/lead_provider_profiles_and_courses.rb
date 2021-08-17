@@ -4,6 +4,7 @@ RSpec.shared_context "lead provider profiles and courses" do
   # lead providers setup
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:another_lead_provider) { create(:cpd_lead_provider, name: "Unknown") }
+  let!(:default_schedule) { create(:schedule, name: "ECF September standard 2021") }
 
   # ECF setup
   let(:ecf_lead_provider) { cpd_lead_provider.lead_provider }

@@ -4,8 +4,7 @@ class ParticipantProfile < ApplicationRecord
   has_paper_trail
   belongs_to :teacher_profile, touch: true
 
-  # TODO: Back-fill, so that every profile has a schedule. Add touch: true afterwards
-  belongs_to :schedule, optional: true, class_name: "Finance::Schedule"
+  belongs_to :schedule, class_name: "Finance::Schedule", touch: true
 
   has_one :user, through: :teacher_profile
 

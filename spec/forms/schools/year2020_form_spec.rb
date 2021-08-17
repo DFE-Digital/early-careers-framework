@@ -4,6 +4,7 @@ RSpec.describe Schools::Year2020Form, type: :model do
   let!(:school) { create :school }
   let!(:cohort) { create :cohort, start_year: 2020 }
   let!(:core_induction_programme) { create :core_induction_programme }
+  let!(:default_schedule) { create(:schedule, name: "ECF September standard 2021") }
 
   subject { described_class.new(school_id: school.id) }
 
