@@ -97,5 +97,28 @@ RSpec.describe SchoolDataImporter do
         expect(existing_school.name).to eql("The Starship Children's Centre")
       end
     end
+
+    describe "section 41 approval" do
+      let!(:formerly_section_41_school) do
+        create(:school, urn: 20_001, section_41_approved: true)
+      end
+      let!(:newly_section_41_school) do
+        create(:school, urn: 20_004, section_41_approved: false)
+      end
+
+      it "does not change when the setting is false" do
+        school_data_importer.run
+
+        expect(formerly_section_41_school.reload.section_41_approved).to be true
+        expect(newly_section_41_school.reload.section_41_approved).to be false
+      end
+
+      it "changes when the setting is true" do
+        SchoolDataImporter.new(Logger.new($stdout), start_year: 2021, update_section_41: true).run
+
+        expect(formerly_section_41_school.reload.section_41_approved).to be false
+        expect(newly_section_41_school.reload.section_41_approved).to be true
+      end
+    end
   end
 end

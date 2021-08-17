@@ -4,8 +4,7 @@ require "gias_api_client"
 require "csv"
 
 class SchoolDataImporter
-  attr_reader :logger
-  attr_reader :start_year
+  attr_reader :logger, :start_year, :update_section_41
 
   def initialize(logger, start_year: Time.zone.now.year, update_section_41: false)
     @logger = logger
@@ -29,6 +28,7 @@ class SchoolDataImporter
           start_year: start_year,
           la_cache: la_cache,
           lad_cache: lad_cache,
+          update_section_41: update_section_41,
         ).call
       end
     end
@@ -43,9 +43,9 @@ private
   end
 
   class SchoolHandler
-    attr_reader :school, :data, :logger, :start_year
+    attr_reader :school, :data, :logger, :start_year, :update_section_41
 
-    def initialize(school:, data:, logger:, start_year:, la_cache:, lad_cache:)
+    def initialize(school:, data:, logger:, start_year:, la_cache:, lad_cache:, update_section_41:)
       @school = school
       @new_school = school.new_record?
       @logger = logger
@@ -53,6 +53,7 @@ private
       @start_year = start_year
       @la_cache = la_cache
       @lad_cache = lad_cache
+      @update_section_41 = update_section_41
     end
 
     def call
@@ -83,7 +84,7 @@ private
       school.school_website = data.fetch("SchoolWebsite")
       school.primary_contact_email = data.fetch("MainEmail").presence
       school.secondary_contact_email = data.fetch("AlternativeEmail").presence
-      school.section_41_approved = data.fetch("Section41Approved (name)") == "Approved" if @update_section_41
+      school.section_41_approved = data.fetch("Section41Approved (name)") == "Approved" if update_section_41
 
       # Changes to properties below carries major consequences and must be avoided until we know how to handle them
       if new_school?
