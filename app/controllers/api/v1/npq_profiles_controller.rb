@@ -11,7 +11,7 @@ module Api
         validation_data.npq_lead_provider = NPQLeadProvider.find_by(id: npq_lead_provider_param)
         validation_data.user = User.find_by(id: user_param)
 
-        if validation_data.save
+        if validation_data.save && NPQ::CreateOrUpdateProfile.new(npq_validation_data: validation_data).call
           render status: :created,
                  content_type: "application/vnd.api+json",
                  json: NPQValidationDataSerializer.new(validation_data).serializable_hash
