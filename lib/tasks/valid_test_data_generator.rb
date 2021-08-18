@@ -4,7 +4,7 @@ require "tasks/school_urn_generator"
 require "tasks/trn_generator"
 
 module ValidTestDataGenerator
-  class LeadProviderPopulator
+  class LeadProviderPopulater
     class << self
       def call(name:, total_schools: 10, participants_per_school: 100)
         new(name: name).call(total_schools: total_schools, participants_per_school: participants_per_school)
@@ -57,10 +57,11 @@ module ValidTestDataGenerator
       name = Faker::Name.name
       user = User.create!(full_name: name, email: Faker::Internet.email(name: name))
       teacher_profile = TeacherProfile.create!(user: user, trn: random_or_nil_trn)
+      schedule = Finance::Schedule.default
       if profile_type == :ect
-        ParticipantProfile::ECT.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, mentor_profile: mentor_profile, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift)
+        ParticipantProfile::ECT.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, mentor_profile: mentor_profile, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule)
       else
-        ParticipantProfile::Mentor.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift)
+        ParticipantProfile::Mentor.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule)
       end
     end
 

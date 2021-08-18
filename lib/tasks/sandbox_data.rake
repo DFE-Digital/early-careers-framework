@@ -11,7 +11,7 @@ namespace :lead_providers do
     end
 
     ["Capita", "Teach First", "UCL Institute of Education", "Best Practice Network", "Ambition Institute", "Education Development Trust"].each do |provider|
-      ValidTestDataGenerator::LeadProviderPopulator.call(name: provider, total_schools: 100, participants_per_school: 100)
+      ValidTestDataGenerator::LeadProviderPopulater.call(name: provider, total_schools: 100, participants_per_school: 100)
     end
   end
 end
