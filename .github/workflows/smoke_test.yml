@@ -1,0 +1,46 @@
+name: Smoke Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: GitHub SHA
+        required: true
+      paas_environment:
+        default: 'develop'
+        required: true
+        description: Environment to test
+
+jobs:
+  smoke_test:
+
+    name: Smoke Test ${{ github.event.inputs.paas_environment }} ${{ github.event.inputs.sha }}
+
+    runs-on: ubuntu-20.04
+
+    env:
+      RAILS_ENV: test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Set up Node
+        uses: actions/setup-node@v2.4.0
+        with:
+          node-version: '12.x'
+
+      - name: set environment (workflow dispatch)
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          echo "PAAS_ENVIRONMENT=${{ github.event.inputs.paas_environment }}" >> $GITHUB_ENV
+
+      - name: Run deployment smoke test
+        run:  bundle exec rspec spec/smoke_tests/participant_declarations_spec.rb --tag smoke_test
+
+      - name: print environment
+        run: echo ${{ env.PAAS_ENVIRONMENT}}
