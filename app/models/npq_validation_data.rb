@@ -43,21 +43,4 @@ class NPQValidationData < ApplicationRecord
       errors.add(:lead_provider_approval_status, :invalid, message: "Once accepted an application cannot change state")
     end
   end
-
-  after_save :update_participant_profile
-
-private
-
-  def update_participant_profile
-    profile = ParticipantProfile::NPQ.find_or_initialize_by(id: id)
-    teacher_profile = user.teacher_profile || user.build_teacher_profile
-    teacher_profile.trn = teacher_reference_number
-    teacher_profile.school = profile.school = School.find_by(urn: school_urn)
-    teacher_profile.save!
-
-    profile.schedule ||= Finance::Schedule.default
-    profile.teacher_profile = teacher_profile
-    profile.user_id = user_id
-    profile.save!
-  end
 end

@@ -14,8 +14,13 @@ RSpec.describe "NPQ Applications API", type: :request do
     let(:other_npq_lead_provider) { create(:npq_lead_provider) }
 
     before :each do
-      create_list :npq_validation_data, 3, npq_lead_provider: npq_lead_provider, school_urn: "123456"
-      create_list :npq_validation_data, 2, npq_lead_provider: other_npq_lead_provider, school_urn: "123456"
+      list = []
+      list << create_list(:npq_validation_data, 3, npq_lead_provider: npq_lead_provider, school_urn: "123456")
+      list << create_list(:npq_validation_data, 2, npq_lead_provider: other_npq_lead_provider, school_urn: "123456")
+
+      list.flatten.each do |npq_validation_data|
+        NPQ::CreateOrUpdateProfile.new(npq_validation_data: npq_validation_data).call
+      end
     end
 
     context "when authorized" do
@@ -229,19 +234,24 @@ RSpec.describe "NPQ Applications API", type: :request do
     end
 
     context "when participant has applied for multiple NPQs" do
-      let!(:other_npq_profile) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, user: user) }
-      let!(:other_accepted_npq_profile) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, user: user, lead_provider_approval_status: "accepted") }
+      let!(:other_npq_validation_data) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, user: user) }
+      let!(:other_accepted_npq_validation_data) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, user: user, lead_provider_approval_status: "accepted") }
+
+      before do
+        NPQ::CreateOrUpdateProfile.new(npq_validation_data: other_npq_validation_data).call
+        NPQ::CreateOrUpdateProfile.new(npq_validation_data: other_accepted_npq_validation_data).call
+      end
 
       it "rejects all pending NPQs" do
         post "/api/v1/npq-applications/#{npq_profile.id}/accept"
 
-        expect(other_npq_profile.reload.lead_provider_approval_status).to eql("rejected")
+        expect(other_npq_validation_data.reload.lead_provider_approval_status).to eql("rejected")
       end
 
       it "does not reject non-pending NPQs" do
         post "/api/v1/npq-applications/#{npq_profile.id}/accept"
 
-        expect(other_accepted_npq_profile.reload.lead_provider_approval_status).to eql("accepted")
+        expect(other_accepted_npq_validation_data.reload.lead_provider_approval_status).to eql("accepted")
       end
     end
 

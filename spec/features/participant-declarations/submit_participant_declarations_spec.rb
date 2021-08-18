@@ -105,9 +105,12 @@ private
     create(:schedule, name: "ECF September standard 2021")
     npq_lead_provider = create(:npq_lead_provider, cpd_lead_provider: @cpd_lead_provider)
     npq_course = create(:npq_course, identifier: "npq-leading-teaching")
-    npq_validation_date = create(:npq_validation_data, npq_lead_provider: npq_lead_provider, npq_course: npq_course)
-    @npq_id = npq_validation_date.user.id
-    travel_to npq_validation_date.profile.schedule.milestones.first.start_date + 1.day
+    npq_validation_data = create(:npq_validation_data, npq_lead_provider: npq_lead_provider, npq_course: npq_course)
+    @npq_id = npq_validation_data.user.id
+
+    NPQ::CreateOrUpdateProfile.new(npq_validation_data: npq_validation_data).call
+
+    travel_to npq_validation_data.profile.schedule.milestones.first.start_date + 1.day
   end
 
   def when_the_participant_details_are_passed_to_the_lead_provider
