@@ -109,6 +109,7 @@ RSpec.describe School, type: :model do
         expect(open_school.cip_only?).to eql false
         expect(eligible_school_type.cip_only?).to eql false
         expect(english_school.cip_only?).to eql false
+        expect(s41_school.cip_only?).to eql false
       end
 
       it "should be true for welsh schools" do
