@@ -115,7 +115,7 @@ class School < ApplicationRecord
   end
 
   def cip_only?
-    open? && cip_only_establishment_type?
+    !eligible? && open? && cip_only_establishment_type?
   end
 
   def local_authority_district
