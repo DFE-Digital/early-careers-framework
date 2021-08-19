@@ -125,4 +125,95 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       end
     end
   end
+
+  describe "get" do
+    let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
+    let(:bearer_token) { "Bearer #{token}" }
+
+    let(:participant_declaration) do
+      create(:participant_declaration,
+             user: ect_profile.user,
+             cpd_lead_provider: cpd_lead_provider,
+             course_identifier: "ecf-induction")
+    end
+
+    let!(:profile_declaration) do
+      create(:profile_declaration,
+             participant_declaration: participant_declaration,
+             participant_profile: ect_profile)
+    end
+
+    context "when authorized" do
+      context "when there is a non eligible declaration" do
+        let(:expected_response) do
+          JSON.parse(<<-DATA)
+            {"data":
+              [
+                {
+                  "id":"#{participant_declaration.id}",
+                  "type":"participant_declaration",
+                  "attributes": {
+                    "participant_id": "#{ect_profile.user.id}",
+                    "declaration_type": "started",
+                    "declaration_date": "#{participant_declaration.declaration_date.rfc3339(3)}",
+                    "course_identifier": "ecf-induction",
+                    "eligible_for_payment": false
+                  }
+              }]
+            }
+          DATA
+        end
+
+        before do
+          default_headers[:Authorization] = bearer_token
+          default_headers[:CONTENT_TYPE] = "application/json"
+        end
+
+        it "loads list of eligible participant" do
+          get "/api/v1/participant-declarations"
+          expect(response.status).to eq 200
+
+          expect(JSON.parse(response.body)).to eq(expected_response)
+        end
+      end
+
+      context "when there is an eligible declaration" do
+        before do
+          eligibility = ECFParticipantEligibility.create!(participant_profile_id: ect_profile.id)
+          eligibility.update!({ status: "eligible" })
+        end
+
+        let(:expected_response) do
+          JSON.parse(<<-DATA)
+            {"data":
+              [
+                {
+                  "id":"#{participant_declaration.id}",
+                  "type":"participant_declaration",
+                  "attributes": {
+                    "participant_id": "#{ect_profile.user.id}",
+                    "declaration_type": "started",
+                    "declaration_date": "#{participant_declaration.declaration_date.rfc3339(3)}",
+                    "course_identifier": "ecf-induction",
+                    "eligible_for_payment": true
+                  }
+              }]
+            }
+          DATA
+        end
+
+        before do
+          default_headers[:Authorization] = bearer_token
+          default_headers[:CONTENT_TYPE] = "application/json"
+        end
+
+        it "loads list of eligible participant" do
+          get "/api/v1/participant-declarations"
+          expect(response.status).to eq 200
+
+          expect(JSON.parse(response.body)).to eq(expected_response)
+        end
+      end
+    end
+  end
 end
