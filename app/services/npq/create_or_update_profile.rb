@@ -9,7 +9,10 @@ module NPQ
     end
 
     def call
-      teacher_profile.trn = npq_validation_data.teacher_reference_number
+      if npq_validation_data.teacher_reference_number_verified?
+        teacher_profile.trn = npq_validation_data.teacher_reference_number
+      end
+
       teacher_profile.school = school
       teacher_profile.save!
 
