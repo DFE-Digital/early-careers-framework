@@ -104,4 +104,24 @@ module ValidTestDataGenerator
       }.flatten.sample
     end
   end
+
+  class AmbitionSpecificPopulater < LeadProviderPopulater
+    class << self
+      def call(name:, total_schools: 3, participants_per_school: 3000)
+        new(name: name).call(total_schools: total_schools, participants_per_school: participants_per_school)
+      end
+    end
+
+    def generate_new_participants(school:, count:, sparsity_uplift:, pupil_premium_uplift:)
+      (count / 2).times do
+        status = "active"
+        mentor = create_participant(school_cohort: school_cohort(school: school), profile_type: :mentor, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift)
+        create_participant(school_cohort: school_cohort(school: school), profile_type: :ect, mentor_profile: mentor, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift)
+      end
+    end
+
+    def random_or_nil_trn
+      TRNGenerator.next
+    end
+  end
 end
