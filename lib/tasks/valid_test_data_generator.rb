@@ -6,7 +6,7 @@ require "tasks/trn_generator"
 module ValidTestDataGenerator
   class LeadProviderPopulater
     class << self
-      def call(name:, total_schools: 10, participants_per_school: 100)
+      def call(name:, total_schools: 10, participants_per_school: 100, created_at: )
         new(name: name).call(total_schools: total_schools, participants_per_school: participants_per_school)
       end
     end
@@ -107,8 +107,37 @@ module ValidTestDataGenerator
 
   class AmbitionSpecificPopulater < LeadProviderPopulater
     class << self
-      def call(name:, total_schools: 3, participants_per_school: 3000)
-        new(name: name).call(total_schools: total_schools, participants_per_school: participants_per_school)
+      def call(name:, total_schools: 3, participants_per_school: 3000, created_at: "2021-08-18 13:43".."2021-08-18 13:49")
+        generator=new(name: name)
+        generator.remove_old_data(created_at: created_at)
+        generator.call(total_schools: total_schools, participants_per_school: participants_per_school)
+      end
+    end
+
+    def remove_old_data(created_at:)
+      participants=lead_provider.ecf_participants.where(created_at: created_at)
+      participants.all.each do |participant|
+        tp=participant.teacher_profile
+        # tp.participant_profiles.each do |pp|
+        #   pp.participant_profile_states.destroy_all
+        # end
+        tp.destroy
+        participant.destroy
+      end
+      schools=lead_provider.schools.where(created_at: created_at)
+      schools.all.each do |school|
+        partnership=Partnership.find_by(lead_provider: lead_provider, school: school, cohort: Cohort.current)
+        delivery_partner = partnership.delivery_partner
+        provider_relationship=ProviderRelationship.find_by( lead_provider: lead_provider,
+                                                            cohort: Cohort.current,
+                                                            delivery_partner: delivery_partner)
+        provider_relationship.destroy
+        partnership.destroy
+        delivery_partner.destroy
+        school_cohort = SchoolCohort.find_by(school: school, cohort: Cohort.current, induction_programme_choice: "full_induction_programme")
+        school_cohort.participant_profiles.destroy_all
+        school_cohort.destroy
+        school.destroy
       end
     end
 
