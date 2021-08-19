@@ -29,7 +29,7 @@
     <tbody class="govuk-table__body">
       <% @participant_profiles.each do |profile| %>
         <tr class="govuk-table__row">
-          <th scope="row" class="govuk-table__header"><%= govuk_link_to profile.user.full_name, schools_participant_path(id: profile.user.id) %></th>
+          <th scope="row" class="govuk-table__header"><%= govuk_link_to profile.user.full_name, schools_participant_path(id: profile.id) %></th>
           <td class="govuk-table__cell"><%= t(profile.participant_type, scope: "schools.participants.type") %></td>
           <td class="govuk-table__cell">
             <% if @mentors_added %>
@@ -37,7 +37,7 @@
                 <% if profile.mentor %>
                   <%= profile.mentor.full_name %>
                 <% else %>
-                  <%= govuk_link_to("Assign mentor", schools_participant_edit_mentor_path(participant_id: profile.user.id)) %>
+                  <%= govuk_link_to("Assign mentor", schools_participant_edit_mentor_path(participant_id: profile.id)) %>
                 <% end %>
               <% else %>
                 - <span class="govuk-visually-hidden">Not applicable</span>
