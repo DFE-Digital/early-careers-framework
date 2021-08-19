@@ -8,6 +8,7 @@ RSpec.describe NPQ::CreateOrUpdateProfile do
   end
 
   describe "#call" do
+    let!(:default_schedule) { create(:schedule, name: "ECF September standard 2021") }
     let(:trn) { rand(1_000_000..9_999_999).to_s }
     let(:user) { create(:user) }
     let(:npq_course) { create(:npq_course) }
