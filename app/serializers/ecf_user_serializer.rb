@@ -57,9 +57,8 @@ class ECFUserSerializer
     find_school_cohort(user)&.induction_programme_choice
   end
 
-  # TODO: CPDRP-508 use the actual users registration completed value as part of participant validation journey
-  attributes :registration_completed do
-    false
+  attributes :registration_completed do |user|
+    user.teacher_profile.ecf_profile&.completed_validation_wizard?
   end
 
   attributes :cohort do |user|
