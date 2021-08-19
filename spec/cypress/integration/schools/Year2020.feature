@@ -2,6 +2,7 @@ Feature: School leaders should be able to add participants
 
   Background:
     Given school was created with name "Test School" and slug "test-school"
+    And schedule was created with name "ECF September standard 2021"
     And cohort was created with start_year "2020"
     And core_induction_programme was created with name "Awesome induction course"
     And feature year_2020_data_entry is active

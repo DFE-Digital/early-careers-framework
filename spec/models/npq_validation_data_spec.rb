@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe NPQValidationData, type: :model do
+  let!(:default_schedule) { create(:schedule, name: "ECF September standard 2021") }
+
   it {
     is_expected.to define_enum_for(:headteacher_status).with_values(
       no: "no",

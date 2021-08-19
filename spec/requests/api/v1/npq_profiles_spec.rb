@@ -3,6 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "NPQ profiles api endpoint", type: :request do
+  let!(:default_schedule) { create(:schedule, name: "ECF September standard 2021") }
   let(:token) { NPQRegistrationApiToken.create_with_random_token! }
   let(:bearer_token) { "Bearer #{token}" }
   let(:parsed_response) { JSON.parse(response.body) }
