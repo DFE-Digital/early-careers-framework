@@ -9,6 +9,27 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-20.04
+
+    env:
+      RAILS_ENV: test
+      DB_USERNAME: postgres
+      DB_PASSWORD: ''
+      DB_HOSTNAME: 127.0.0.1
+      DB_PORT: 5432
+      PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+      PERCY_PARALLEL_NONCE: ${{ needs.create-nonce.outputs.nonce }}
+      PERCY_PARALLEL_TOTAL: 2
+
+    services:
+      postgres:
+        image: postgres:11.6-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ''
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
     steps:
       - uses: softprops/turnstyle@v1
         name: Check workflow concurrency
@@ -112,3 +133,28 @@ jobs:
         with:
           msg: "Created review app at https://ecf-review-pr-${{ github.event.number }}.london.cloudapps.digital"
           check_for_duplicate_msg: true
+
+      # avoid complexities of dispatching a separate flow
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Set up Node
+        uses: actions/setup-node@v2.4.0
+        with:
+          node-version: '12.x'
+
+      - name: set environment (workflow dispatch)
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          echo "ENVIRONMENT=${{ github.event.inputs.paas_environment }}" >> $GITHUB_ENV
+
+      - name: Set up test database
+        run: bin/rails db:create db:schema:load
+
+      - name: Run deployment smoke test
+        run: bundle exec rspec spec/smoke_tests/participant_declarations_spec.rb --tag smoke_test
+
+      - name: print environment
+        run: echo ${{ env.ENVIRONMENT}}
