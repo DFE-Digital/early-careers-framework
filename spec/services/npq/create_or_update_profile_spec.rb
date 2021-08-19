@@ -3,6 +3,10 @@
 require "rails_helper"
 
 RSpec.describe NPQ::CreateOrUpdateProfile do
+  before do
+    Finance::Schedule.find_or_create_by(name: "ECF September standard 2021")
+  end
+
   subject do
     described_class.new(npq_validation_data: npq_validation_data)
   end
@@ -39,10 +43,30 @@ RSpec.describe NPQ::CreateOrUpdateProfile do
         expect(user.teacher_profile.npq_profiles.last.npq_course).to eql(npq_validation_data.npq_course)
       end
 
-      it "stores the TRN on teacher profile" do
-        subject.call
-        npq_validation_data.reload
-        expect(npq_validation_data.user.teacher_profile.trn).to eql trn
+      context "when trn is validated" do
+        let(:npq_validation_data) do
+          NPQValidationData.new(
+            teacher_reference_number: trn,
+            teacher_reference_number_verified: true,
+            user: user,
+            npq_course: npq_course,
+            npq_lead_provider: npq_lead_provider,
+          )
+        end
+
+        it "stores the TRN on teacher profile" do
+          subject.call
+          npq_validation_data.reload
+          expect(npq_validation_data.user.teacher_profile.trn).to eql trn
+        end
+      end
+
+      context "when trn is not validated" do
+        it "does not store the TRN on teacher profile" do
+          subject.call
+          npq_validation_data.reload
+          expect(npq_validation_data.user.teacher_profile.trn).to be_blank
+        end
       end
     end
 
@@ -62,12 +86,14 @@ RSpec.describe NPQ::CreateOrUpdateProfile do
           .and change(ParticipantProfile::NPQ, :count).by(0)
       end
 
-      it "updates the TRN on teacher profile" do
-        npq_validation_data.update!(teacher_reference_number: new_trn)
+      context "context trn now validated" do
+        it "updates the TRN on teacher profile" do
+          npq_validation_data.update!(teacher_reference_number: new_trn, teacher_reference_number_verified: true)
 
-        subject.call
+          subject.call
 
-        expect(npq_validation_data.reload.user.teacher_profile.trn).to eql new_trn
+          expect(npq_validation_data.reload.user.teacher_profile.trn).to eql new_trn
+        end
       end
     end
   end
