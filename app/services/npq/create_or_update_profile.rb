@@ -14,6 +14,7 @@ module NPQ
       teacher_profile.save!
 
       participant_profile.schedule ||= Finance::Schedule.default
+      participant_profile.npq_course ||= npq_validation_data.npq_course
       participant_profile.school = school
       participant_profile.teacher_profile = teacher_profile
       participant_profile.user = user

@@ -34,6 +34,11 @@ RSpec.describe NPQ::CreateOrUpdateProfile do
           .and change(ParticipantProfile::NPQ, :count).by(1)
       end
 
+      it "set NPQ course on participant profile" do
+        subject.call
+        expect(user.teacher_profile.npq_profiles.last.npq_course).to eql(npq_validation_data.npq_course)
+      end
+
       it "stores the TRN on teacher profile" do
         subject.call
         npq_validation_data.reload
