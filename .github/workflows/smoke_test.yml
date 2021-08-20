@@ -62,7 +62,7 @@ jobs:
         run: bin/rails db:create db:schema:load
 
       - name: Run deployment smoke test
-        run: bundle exec rspec spec/smoke_tests/**/*_spec.rb --tag smoke_test
+        run: bundle exec rspec spec/smoke_tests/*_spec.rb --tag smoke_test
 
       - name: print environment
         run: echo ${{ env.ENVIRONMENT}}
