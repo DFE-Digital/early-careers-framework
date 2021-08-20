@@ -141,5 +141,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: "Ran smoke test against the review app"
+          msg: "Smoke tests passed against the review app."
           check_for_duplicate_msg: true

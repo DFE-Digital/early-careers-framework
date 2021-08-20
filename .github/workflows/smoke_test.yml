@@ -1,8 +1,6 @@
 name: Smoke Test
 
 on:
-  schedule:
-    - cron: '*/5 * * * *'
   workflow_dispatch:
     inputs:
       sha:
@@ -64,7 +62,7 @@ jobs:
         run: bin/rails db:create db:schema:load
 
       - name: Run deployment smoke test
-        run: bundle exec rspec spec/smoke_tests/participant_declarations_spec.rb --tag smoke_test
+        run: bundle exec rspec spec/smoke_tests/**/*_spec.rb --tag smoke_test
 
       - name: print environment
         run: echo ${{ env.ENVIRONMENT}}
