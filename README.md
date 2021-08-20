@@ -77,6 +77,12 @@ We use Cypress for end-to-end tests. This integrates with Axe for automated acce
 
 We aim to have an accessibility and snapshot test for every page on the service.
 
+## Smoke tests
+
+We run smoke tests against review apps. After a review app is deployed, a smoke test will be run against it automatically.
+
+Tests are written in rspec, so if you need to debug them, you can run them locally - just make sure to set the domain to the review app you want to debug against.
+
 ### Setup
 
 ```

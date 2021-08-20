@@ -10,26 +10,6 @@ jobs:
   deploy:
     runs-on: ubuntu-20.04
 
-    env:
-      RAILS_ENV: test
-      DB_USERNAME: postgres
-      DB_PASSWORD: ''
-      DB_HOSTNAME: 127.0.0.1
-      DB_PORT: 5432
-      PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
-      PERCY_PARALLEL_NONCE: ${{ needs.create-nonce.outputs.nonce }}
-      PERCY_PARALLEL_TOTAL: 2
-
-    services:
-      postgres:
-        image: postgres:11.6-alpine
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: ''
-        ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
     steps:
       - uses: softprops/turnstyle@v1
         name: Check workflow concurrency
@@ -134,27 +114,32 @@ jobs:
           msg: "Created review app at https://ecf-review-pr-${{ github.event.number }}.london.cloudapps.digital"
           check_for_duplicate_msg: true
 
-      # avoid complexities of dispatching a separate flow
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+      - name: Trigger Smoke Test
+        uses: benc-uk/workflow-dispatch@v1.1
         with:
-          bundler-cache: true
+          workflow: Smoke Test
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          inputs: '{"paas_environment": "${{ env.ENVIRONMENT }}", "sha": "${{ github.event.pull_request.head.sha }}"}'
+          ref: ${{ github.event.pull_request.head.ref }}
 
-      - name: Set up Node
-        uses: actions/setup-node@v2.4.0
+      - name: Wait for smoke test
+        id: wait_for_smoke_test
+        uses: fountainhead/action-wait-for-check@v1.0.0
         with:
-          node-version: '12.x'
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          checkName: Smoke Test ${{ env.ENVIRONMENT }} ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          timeoutSeconds: 300
+          intervalSeconds: 15
 
-      - name: set environment (workflow dispatch)
-        if: ${{ github.event_name == 'workflow_dispatch' }}
-        run: |
-          echo "ENVIRONMENT=${{ github.event.inputs.paas_environment }}" >> $GITHUB_ENV
+      - name: Exit whole workflow if ${{ env.ENVIRONMENT }} smoke test was not successful
+        if: steps.wait_for_smoke_test.outputs.conclusion != 'success'
+        run: exit 1
 
-      - name: Set up test database
-        run: bin/rails db:create db:schema:load
-
-      - name: Run deployment smoke test
-        run: bundle exec rspec spec/smoke_tests/participant_declarations_spec.rb --tag smoke_test
-
-      - name: print environment
-        run: echo ${{ env.ENVIRONMENT}}
+      - name: comment on PR
+        uses: unsplash/comment-on-pr@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: "Ran smoke test against the review app"
+          check_for_duplicate_msg: true
