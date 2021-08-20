@@ -24,7 +24,7 @@ RSpec.feature "ECT participant validation journey for CIP induction", type: :fea
     then_i_should_see_the_confirm_details_page
 
     when_i_click_continue_to_proceed_with_validation
-    then_i_should_see_the_checking_details_page_for_matched_cip_ect_participant
+    then_i_should_see_the_complete_page_for_matched_cip_ect_participant
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Participant Validation: Complete ECT CIP"
   end

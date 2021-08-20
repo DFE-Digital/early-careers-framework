@@ -9,7 +9,7 @@
     <% if @participant_profile.ect? %>
       <p class="govuk-body">Your training materials will be available by the end of August. We’ll email you with a link to access them.</p>
     <% else %>
-      <p class="govuk-body">If you need access to training materials, we’ll email you a link in the next 48 hours.</p>
+      <p class="govuk-body">If you need access to training materials, we’ll email you a link soon.</p>
     <% end %>
     <% if current_user.induction_coordinator? %>
       <%= govuk_link_to "Manage induction for your school", induction_coordinator_dashboard_path(current_user) %>
