@@ -166,7 +166,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "example": "25234630-d7e1-42bf-9e59-ffd2ffe157b3",
+            "example": "9177b458-5e50-48e7-8a5c-c66493ccdb5c",
             "description": "The ID of the NPQ application to accept.",
             "schema": {
               "type": "string"
@@ -216,7 +216,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "example": "22bea91d-e8ac-47b7-93a0-c5b7f80a8d95",
+            "example": "d62c5070-f7c9-4f58-b3e3-18bc3e6fe5b9",
             "description": "The ID of the NPQ application to reject.",
             "schema": {
               "type": "string"
@@ -310,6 +310,59 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "List all participant declarations",
+        "operationId": "participant_declarations",
+        "tags": [
+          "participants declarations"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Pagination"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "example": {
+              "page": 1,
+              "per_page": 5
+            },
+            "description": "Pagination options to navigate through the list of participant declarations."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of participant declarations",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultipleParticipantDeclarationsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
                 }
               }
             }
@@ -960,6 +1013,45 @@
           }
         }
       },
+      "MultipleParticipantDeclarationsResponse": {
+        "description": "A list of participant declarations",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ParticipantDeclarations"
+            },
+            "example": [
+              {
+                "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                "type": "participant-declaration",
+                "attributes": {
+                  "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                  "declaration_type": "started",
+                  "declaration_date": "2021-05-31T02:21:32.000Z",
+                  "course_identifier": "ecf-mentor",
+                  "eligible_for_payment": false
+                }
+              },
+              {
+                "id": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
+                "type": "participant-declaration",
+                "attributes": {
+                  "participant_id": "ab3a7848-7308-4879-942a-c4a70ced400a",
+                  "declaration_type": "started",
+                  "declaration_date": "2021-05-31T02:21:32.000Z",
+                  "course_identifier": "ecf-mentor",
+                  "eligible_for_payment": true
+                }
+              }
+            ]
+          }
+        }
+      },
       "NPQParticipantRetainedDeclaration": {
         "description": "An NPQ retained participant declaration",
         "type": "object",
@@ -1391,7 +1483,8 @@
               "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
               "declaration_type": "started",
               "declaration_date": "2021-05-31T02:21:32.000Z",
-              "course_identifier": "ecf-mentor"
+              "course_identifier": "ecf-mentor",
+              "eligible_for_payment": true
             }
           }
         }
