@@ -43,6 +43,9 @@ jobs:
         with:
           ref: ${{ github.event.inputs.sha }}
 
+      - name: print environment
+        run: echo ${{ env.ENVIRONMENT}}
+
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -63,6 +66,3 @@ jobs:
 
       - name: Run deployment smoke test
         run: bundle exec rspec spec/smoke_tests/*_spec.rb --tag smoke_test
-
-      - name: print environment
-        run: echo ${{ env.ENVIRONMENT}}
