@@ -13,15 +13,15 @@
     <span class="nhsuk-table-responsive__heading">School</span>
     <%= school&.name %>
   </td>
-  <td class="govuk-table__cell nhsuk-table__cell govuk-table__cell--numeric">
+  <td class="govuk-table__cell nhsuk-table__cell">
     <span class="nhsuk-table-responsive__heading">School URN</span>
     <%= school&.urn %>
   </td>
-  <td class="govuk-table__cell nhsuk-table__cell govuk-table__cell--numeric">
+  <td class="govuk-table__cell nhsuk-table__cell">
     <span class="nhsuk-table-responsive__heading">Date added</span>
     <%= profile.created_at.to_date.to_s(:govuk_short) %>
   </td>
-  <td class="govuk-table__cell nhsuk-table__cell govuk-table__cell--numeric">
+  <td class="govuk-table__cell nhsuk-table__cell">
     <span class="nhsuk-table-responsive__heading">Validation status</span>
     <%= render Admin::Participants::ValidationStatusTag.new(profile: profile) %>
   </td>
