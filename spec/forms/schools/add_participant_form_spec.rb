@@ -38,16 +38,16 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
   end
 
   describe "mentor_options" do
-    it "does not include withdrawn mentors" do
-      withdrawn_mentor = create(:participant_profile, :mentor, school_cohort: school_cohort, status: "withdrawn").user
+    it "does not include mentors with withdrawn records" do
+      withdrawn_mentor_record = create(:participant_profile, :mentor, :withdrawn_record, school_cohort: school_cohort).user
 
-      expect(subject.mentor_options).not_to include(withdrawn_mentor)
+      expect(subject.mentor_options).not_to include(withdrawn_mentor_record)
     end
 
     it "includes active mentors" do
-      withdrawn_mentor = create(:participant_profile, :mentor, school_cohort: school_cohort).user
+      active_mentor_record = create(:participant_profile, :mentor, school_cohort: school_cohort).user
 
-      expect(subject.mentor_options).to include(withdrawn_mentor)
+      expect(subject.mentor_options).to include(active_mentor_record)
     end
   end
 
@@ -71,9 +71,9 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
         expect(subject).to be_email_already_taken
       end
 
-      context "when the ECT is withdrawn" do
+      context "when the ECT profile record is withdrawn" do
         let!(:ect_profile) do
-          create(:participant_profile, :withdrawn, :ect, user: create(:user, email: "ray.clemence@example.com"))
+          create(:participant_profile, :withdrawn_record, :ect, user: create(:user, email: "ray.clemence@example.com"))
         end
 
         it "returns false" do
@@ -91,9 +91,9 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
         expect(subject).to be_email_already_taken
       end
 
-      context "when the mentor is withdrawn" do
+      context "when the mentor profile record is withdrawn" do
         let!(:mentor_profile) do
-          create(:participant_profile, :withdrawn, :mentor, user: create(:user, email: "ray.clemence@example.com"))
+          create(:participant_profile, :withdrawn_record, :mentor, user: create(:user, email: "ray.clemence@example.com"))
         end
 
         it "returns false" do

@@ -24,8 +24,8 @@ RSpec.describe ParticipantPolicy, type: :policy do
 
           it { is_expected.to permit_action(:show) }
 
-          context "when the participant is withdrawn" do
-            let(:profile) { create(:participant_profile, profile_type, status: :withdrawn) }
+          context "when the participant profile is withdrawn" do
+            let(:profile) { create(:participant_profile, profile_type, :withdrawn_record) }
 
             it { is_expected.to forbid_action(:show) }
           end
