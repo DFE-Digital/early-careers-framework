@@ -10,7 +10,7 @@ class ParticipantDeclarationSerializer
   attributes :participant_id, :declaration_type, :declaration_date, :course_identifier
 
   attributes :eligible_for_payment do |participant_declaration|
-    participant_declaration.profile_declaration.participant_profile.ecf_participant_eligibility&.status == "eligible"
+    participant_declaration.profile_declaration.participant_profile.ecf_participant_eligibility&.eligible_status? || false
   end
 
   attribute(:participant_id, &:user_id)

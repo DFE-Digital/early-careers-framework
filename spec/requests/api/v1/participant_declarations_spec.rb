@@ -146,22 +146,22 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
     context "when authorized" do
       context "when there is a non eligible declaration" do
         let(:expected_response) do
-          JSON.parse(<<-DATA)
-            {"data":
-              [
-                {
-                  "id":"#{participant_declaration.id}",
-                  "type":"participant_declaration",
-                  "attributes": {
-                    "participant_id": "#{ect_profile.user.id}",
-                    "declaration_type": "started",
-                    "declaration_date": "#{participant_declaration.declaration_date.rfc3339(3)}",
-                    "course_identifier": "ecf-induction",
-                    "eligible_for_payment": false
-                  }
-              }]
-            }
-          DATA
+          {
+            "data" =>
+            [
+              {
+                "id" => participant_declaration.id,
+                "type" => "participant_declaration",
+                "attributes" => {
+                  "participant_id" => ect_profile.user.id,
+                  "declaration_type" => "started",
+                  "declaration_date" => participant_declaration.declaration_date.rfc3339(3),
+                  "course_identifier" => "ecf-induction",
+                  "eligible_for_payment" => false,
+                },
+              },
+            ],
+          }
         end
 
         before do
@@ -180,7 +180,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       context "when there is an eligible declaration" do
         before do
           eligibility = ECFParticipantEligibility.create!(participant_profile_id: ect_profile.id)
-          eligibility.update!({ status: "eligible" })
+          eligibility.eligible_status!
         end
 
         let(:expected_response) do
