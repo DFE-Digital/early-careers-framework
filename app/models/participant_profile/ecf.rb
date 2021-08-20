@@ -14,4 +14,9 @@ class ParticipantProfile::ECF < ParticipantProfile
   def completed_validation_wizard?
     ecf_participant_eligibility.present? || ecf_participant_validation_data.present?
   end
+
+  def manual_check_needed?
+    ecf_participant_eligibility&.manual_check_status? ||
+      (ecf_participant_validation_data.present? && ecf_participant_eligibility.nil?)
+  end
 end

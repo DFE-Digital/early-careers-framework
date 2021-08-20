@@ -20,14 +20,9 @@ private
 
   def tag_attributes
     return { text: "DfE to contact participant", colour: "grey" } unless FeatureFlag.active?(:participant_validation, for: profile.school_cohort.school)
-    return { text: "Manual checks needed", colour: "turquoise" } if admin && manual_check_needed
+    return { text: "Manual checks needed", colour: "turquoise" } if admin && profile.manual_check_needed?
     return { text: "DfE checking eligibility", colour: "blue" } if profile.ecf_participant_validation_data.present?
 
     { text: "DfE requested details from participant", colour: "yellow" }
-  end
-
-  def manual_check_needed
-    profile.ecf_participant_eligibility&.manual_check_status? ||
-      (profile.ecf_participant_validation_data.present? && profile.ecf_participant_eligibility.nil?)
   end
 end

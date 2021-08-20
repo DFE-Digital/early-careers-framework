@@ -14,7 +14,7 @@ RSpec.describe "Schools::Participants", type: :request do
   let!(:mentor_user_2) { create(:participant_profile, :mentor, school_cohort: school_cohort).user }
   let(:ect_profile) { create(:participant_profile, :ect, mentor_profile: mentor_user.mentor_profile, school_cohort: school_cohort) }
   let!(:ect_user) { ect_profile.user }
-  let!(:withdrawn_ect) { create(:participant_profile, :ect, status: "withdrawn", school_cohort: school_cohort).user }
+  let!(:withdrawn_ect) { create(:participant_profile, :ect, :withdrawn_record, school_cohort: school_cohort).user }
   let!(:unrelated_mentor) { create(:participant_profile, :mentor, school_cohort: another_cohort).user }
   let!(:unrelated_ect) { create(:participant_profile, :ect, school_cohort: another_cohort).user }
 
@@ -49,7 +49,7 @@ RSpec.describe "Schools::Participants", type: :request do
     it "does not list participants with withdrawn profile records" do
       get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants"
 
-      expect(response.body).not_to include(CGI.escapeHTML(withdrawn_ect_record.full_name))
+      expect(response.body).not_to include(CGI.escapeHTML(withdrawn_ect.full_name))
     end
 
     context "when there are no mentors" do
