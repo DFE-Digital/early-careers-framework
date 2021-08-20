@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "tasks/valid_test_data_generator"
+
 DOMAIN = "@digital.education.gov.uk" # Prevent low effort email scraping
 cohort_2022 = Cohort.find_or_create_by!(start_year: 2022)
 
@@ -445,4 +447,8 @@ teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000209").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule.default
+end
+
+["Capita", "Teach First", "UCL Institute of Education", "Best Practice Network", "Ambition Institute", "Education Development Trust"].each do |provider|
+  ValidTestDataGenerator::LeadProviderPopulater.call(name: provider, total_schools: 10, participants_per_school: 10)
 end
