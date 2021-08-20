@@ -9,7 +9,7 @@ module EarlyCareerTeachers
         user = User.find_or_create_by!(email: email) do |ect|
           ect.full_name = full_name
         end
-        user.update!(full_name: full_name) unless user.teacher_profile&.participant_profiles&.active&.any?
+        user.update!(full_name: full_name) unless user.teacher_profile&.participant_profiles&.active_record&.any?
 
         teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
           profile.school = school_cohort.school

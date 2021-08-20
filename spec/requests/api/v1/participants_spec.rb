@@ -166,7 +166,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           expect(mentor_row["pupil_premium_uplift"]).to be_empty
           expect(mentor_row["sparsity_uplift"]).to be_empty
 
-          ect = ParticipantProfile::ECT.active.first.user
+          ect = ParticipantProfile::ECT.active_record.first.user
           ect_row = parsed_response.find { |row| row["id"] == ect.id }
           expect(ect_row).not_to be_nil
           expect(ect_row["email"]).to eql ect.email

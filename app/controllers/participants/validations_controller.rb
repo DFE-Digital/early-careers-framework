@@ -195,7 +195,7 @@ module Participants
     end
 
     def participant_profile
-      @participant_profile ||= current_user.participant_profiles.active.ecf.first
+      @participant_profile ||= current_user.participant_profiles.active_record.ecf.first
     end
 
     def set_form

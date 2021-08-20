@@ -59,12 +59,12 @@ RSpec.describe "Admin::Participants", type: :request do
   describe "DELETE /admin/participants/:id" do
     it "marks the participant as withdrawn" do
       delete "/admin/participants/#{ect_profile.id}"
-      expect(ect_profile.reload.withdrawn?).to be true
+      expect(ect_profile.reload.withdrawn_record?).to be true
     end
 
     it "does not withdraw NPQ participants" do
       expect { delete "/admin/participants/#{npq_profile.id}" }.to raise_error Pundit::NotAuthorizedError
-      expect(npq_profile.active?).to be true
+      expect(npq_profile.active_record?).to be true
     end
 
     it "shows a success message" do

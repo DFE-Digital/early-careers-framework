@@ -82,7 +82,7 @@ module Schools
       User.find_by(email: email)
         &.teacher_profile
         &.participant_profiles
-        &.active
+        &.active_record
         &.ecf
         &.any?
     end
