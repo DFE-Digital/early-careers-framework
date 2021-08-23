@@ -6,9 +6,9 @@ properties:
   data:
     type: array
     items:
-      $ref: "#/components/schemas/ParticipantDeclarations"
+      $ref: "#/components/schemas/ParticipantDeclarationResponses"
     example:
-      - id: db3a7848-7308-4879-942a-c4a70ced400a
+      - id: 01017c12-354b-4b2d-b621-3531ab729c43
         type: "participant-declaration"
         attributes:
           participant_id: db3a7848-7308-4879-942a-c4a70ced400a

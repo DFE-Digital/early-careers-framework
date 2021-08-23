@@ -166,7 +166,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "example": "9177b458-5e50-48e7-8a5c-c66493ccdb5c",
+            "example": "4ad5763d-a311-4dfb-9919-8ce8031892f1",
             "description": "The ID of the NPQ application to accept.",
             "schema": {
               "type": "string"
@@ -216,7 +216,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "example": "d62c5070-f7c9-4f58-b3e3-18bc3e6fe5b9",
+            "example": "319d3e33-271d-43cc-b639-f0429127aa41",
             "description": "The ID of the NPQ application to reject.",
             "schema": {
               "type": "string"
@@ -1023,11 +1023,11 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ParticipantDeclarations"
+              "$ref": "#/components/schemas/ParticipantDeclarationResponses"
             },
             "example": [
               {
-                "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                "id": "01017c12-354b-4b2d-b621-3531ab729c43",
                 "type": "participant-declaration",
                 "attributes": {
                   "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
@@ -1483,9 +1483,68 @@
               "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
               "declaration_type": "started",
               "declaration_date": "2021-05-31T02:21:32.000Z",
-              "course_identifier": "ecf-mentor",
-              "eligible_for_payment": true
+              "course_identifier": "ecf-mentor"
             }
+          }
+        }
+      },
+      "ParticipantDeclarationAttributes": {
+        "description": "The data attributes associated with a participant declaration response",
+        "type": "object",
+        "required": [
+          "id",
+          "participant_id",
+          "declaration_type",
+          "declaration_date",
+          "course_identifier",
+          "eligible_for_payment"
+        ],
+        "properties": {
+          "id": {
+            "description": "The unique id of the participant",
+            "type": "string",
+            "format": "uuid",
+            "example": "db3a7848-7308-4879-942a-c4a70ced400a"
+          },
+          "declaration_type": {
+            "description": "The event declaration type",
+            "type": "string",
+            "enum": [
+              "started",
+              "completed",
+              "retained-1",
+              "retained-2",
+              "retained-3",
+              "retained-4"
+            ],
+            "example": "started"
+          },
+          "declaration_date": {
+            "description": "The event declaration date",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:21:32.000Z"
+          },
+          "course_identifier": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "ecf-induction",
+              "ecf-mentor",
+              "npq-leading-teaching",
+              "npq-leading-teaching-development",
+              "npq-leading-behaviour-culture",
+              "npq-headship",
+              "npq-senior-leadership",
+              "npq-executive-leadership"
+            ],
+            "example": "ecf-induction"
+          },
+          "eligible_for_payment": {
+            "description": "The flag showing whether this participant eligible for funding",
+            "type": "boolean",
+            "nullable": false,
+            "example": true
           }
         }
       },
@@ -1525,6 +1584,31 @@
             "type": "string",
             "format": "uuid",
             "example": "b0f657a7-9a81-4a89-a6b0-627c774ff753"
+          }
+        }
+      },
+      "ParticipantDeclarationResponse": {
+        "description": "A participant declaration response",
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "id": {
+            "description": "The unique identifier of the participant record",
+            "type": "string",
+            "format": "uuid",
+            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
+          },
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "participant"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ParticipantDeclarationAttributes"
           }
         }
       },
