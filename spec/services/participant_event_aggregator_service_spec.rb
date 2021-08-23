@@ -17,6 +17,13 @@ RSpec.describe ParticipantEventAggregator do
 
           expect(described_class.call(cpd_lead_provider: cpd_lead_provider)).to eq(10)
         end
+
+        it "does not include non-payable events" do
+          create_list(:ect_participant_declaration, 2, cpd_lead_provider: cpd_lead_provider, payable: true)
+          create_list(:ect_participant_declaration, 2, cpd_lead_provider: cpd_lead_provider, payable: false)
+
+          expect(described_class.call(cpd_lead_provider: cpd_lead_provider)).to eq(2)
+        end
       end
 
       it "can be injected with a different recorder" do
