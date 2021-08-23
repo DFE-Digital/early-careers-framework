@@ -15,6 +15,7 @@ class ParticipantDeclaration < ApplicationRecord
   scope :uplift, -> { joins(:profile_declaration).merge(ProfileDeclaration.uplift) }
   scope :ect, -> { joins(:profile_declaration).merge(ProfileDeclaration.ect_profiles) }
   scope :mentor, -> { joins(:profile_declaration).merge(ProfileDeclaration.mentor_profiles) }
+  scope :npq, -> { joins(:profile_declaration).merge(ProfileDeclaration.npq_profiles) }
   scope :unique_id, -> { select(:user_id).distinct }
 
   # Time dependent Range scopes
@@ -25,5 +26,7 @@ class ParticipantDeclaration < ApplicationRecord
   scope :active_for_lead_provider, ->(lead_provider) { started.for_lead_provider(lead_provider).unique_id }
   scope :active_ects_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).ect }
   scope :active_mentors_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).mentor }
+  scope :active_npqs_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).npq }
   scope :active_uplift_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).uplift }
+  scope :payable, -> { where(payable: true) }
 end
