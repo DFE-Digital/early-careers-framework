@@ -8,7 +8,7 @@ class ParticipantEventAggregator
   end
 
   def call
-    recorder.send(scope, cpd_lead_provider).count
+    recorder.send(scope, cpd_lead_provider).payable.count
   end
 
 private

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_19_104745) do
+ActiveRecord::Schema.define(version: 2021_08_23_100406) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -449,6 +449,7 @@ ActiveRecord::Schema.define(version: 2021_08_19_104745) do
     t.string "evidence_held"
     t.string "type", default: "ParticipantDeclaration::ECF"
     t.uuid "cpd_lead_provider_id"
+    t.boolean "payable", default: false
     t.index ["cpd_lead_provider_id"], name: "index_participant_declarations_on_cpd_lead_provider_id"
     t.index ["user_id"], name: "index_participant_declarations_on_user_id"
   end
