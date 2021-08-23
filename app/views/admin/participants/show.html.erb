@@ -3,7 +3,7 @@
 
 <h1 class="govuk-heading-l">
   <%= @participant_profile.user.full_name %>
-  <%= render Admin::Participants::ValidationStatusTag.new(profile: @participant_profile) %>
+  <%= render ParticipantStatusTagComponent.new(profile: @participant_profile, admin: true) %>
 </h1>
 
 <%= render Admin::Participants::Details.new(profile: @participant_profile) %>

@@ -23,6 +23,6 @@
   </td>
   <td class="govuk-table__cell nhsuk-table__cell">
     <span class="nhsuk-table-responsive__heading">Validation status</span>
-    <%= render Admin::Participants::ValidationStatusTag.new(profile: profile) %>
+    <%= render ParticipantStatusTagComponent.new(profile: profile, admin: true) %>
   </td>
 </tr>

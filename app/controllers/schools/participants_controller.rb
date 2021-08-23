@@ -16,19 +16,19 @@ class Schools::ParticipantsController < Schools::BaseController
   end
 
   def show
-    @mentor = @participant.early_career_teacher_profile&.mentor
+    @mentor = @profile.mentor if @profile.ect?
   end
 
   def edit_name; end
 
   def update_name
-    if @participant.update(params.require(:user).permit(:full_name))
-      if @participant.early_career_teacher?
+    if @profile.user.update(params.require(:user).permit(:full_name))
+      if @profile.ect?
         set_success_message(heading: "The ECT’s name has been updated")
       else
         set_success_message(heading: "The mentor’s name has been updated")
       end
-      redirect_to schools_participant_path(id: @participant)
+      redirect_to schools_participant_path(id: @profile)
     else
       render "schools/participants/edit_name"
     end
@@ -37,16 +37,17 @@ class Schools::ParticipantsController < Schools::BaseController
   def edit_email; end
 
   def update_email
-    @participant.assign_attributes(params.require(:user).permit(:email))
+    user = @profile.user
+    user.assign_attributes(params.require(:user).permit(:email))
     redirect_to action: :email_used and return if email_used?
 
-    if @participant.save
-      if @participant.early_career_teacher?
+    if user.save
+      if @profile.ect?
         set_success_message(heading: "The ECT’s email address has been updated")
       else
         set_success_message(heading: "The mentor’s email address has been updated")
       end
-      redirect_to schools_participant_path(id: @participant)
+      redirect_to schools_participant_path(id: @profile)
     else
       render "schools/participants/edit_email"
     end
@@ -66,10 +67,10 @@ class Schools::ParticipantsController < Schools::BaseController
     @mentor_form = ParticipantMentorForm.new(participant_mentor_form_params.merge(school_id: @school.id, cohort_id: @cohort.id))
 
     if @mentor_form.valid?
-      @participant.early_career_teacher_profile.update!(mentor_profile: @mentor_form.mentor ? @mentor_form.mentor.mentor_profile : nil)
+      @profile.update!(mentor_profile: @mentor_form.mentor ? @mentor_form.mentor.mentor_profile : nil)
 
       flash[:success] = { title: "Success", heading: "The mentor for this participant has been updated" }
-      redirect_to schools_participant_path(id: @participant)
+      redirect_to schools_participant_path(id: @profile)
     else
       render :edit_mentor
     end
@@ -83,7 +84,7 @@ private
 
   def build_mentor_form
     @mentor_form = ParticipantMentorForm.new(
-      mentor_id: @participant.early_career_teacher_profile.mentor&.id,
+      mentor_id: @profile.mentor&.id,
       school_id: @school.id,
       cohort_id: @cohort.id,
     )
@@ -96,8 +97,8 @@ private
   end
 
   def set_participant
-    @participant = User.find(params[:participant_id] || params[:id])
-    authorize @participant, policy_class: ParticipantPolicy
+    @profile = ParticipantProfile.find(params[:participant_id] || params[:id])
+    authorize @profile.user, policy_class: ParticipantPolicy
   end
 
   def participant_mentor_form_params
@@ -105,6 +106,6 @@ private
   end
 
   def email_used?
-    User.where.not(id: @participant.id).where(email: @participant.email).any?
+    User.where.not(id: @profile.user.id).where(email: @profile.user.email).any?
   end
 end

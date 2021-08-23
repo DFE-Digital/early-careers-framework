@@ -2,7 +2,7 @@
 
 module Admin
   module Participants
-    class ValidationStatusTag < BaseComponent
+    class NPQValidationStatusTag < BaseComponent
       def initialize(profile:)
         @profile = profile
       end
