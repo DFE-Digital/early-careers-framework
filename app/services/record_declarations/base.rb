@@ -5,7 +5,7 @@ module RecordDeclarations
     include ActiveModel::Model
     RFC3339_DATE_REGEX = /\A\d{4}-\d{2}-\d{2}T(\d{2}):(\d{2}):(\d{2})([\.,]\d+)?(Z|[+-](\d{2})(:?\d{2})?)?\z/i.freeze
 
-    attr_accessor :course_identifier, :user_id, :lead_provider_from_token, :declaration_date, :declaration_type, :evidence_held
+    attr_accessor :course_identifier, :participant_id, :cpd_lead_provider, :declaration_date, :declaration_type, :evidence_held
 
     validates :course_identifier, inclusion: { in: :valid_courses_for_user, message: I18n.t(:invalid_identifier) }, allow_blank: true
     validates :declaration_type, inclusion: { in: :valid_declaration_types, message: I18n.t(:invalid_declaration_type) }
@@ -13,7 +13,7 @@ module RecordDeclarations
     validates :declaration_date, presence: { message: I18n.t(:missing_declaration_date) }
     validates :declaration_type, presence: { message: I18n.t(:missing_declaration_type) }
     validates :user, presence: { message: I18n.t(:invalid_participant) }
-    validates :lead_provider_from_token, presence: { message: I18n.t(:missing_lead_provider) }
+    validates :cpd_lead_provider, presence: { message: I18n.t(:missing_lead_provider) }
     validates :parsed_date, future_date: true, allow_blank: true
 
     validate :profile_exists
@@ -61,7 +61,7 @@ module RecordDeclarations
     end
 
     def user
-      @user ||= User.find_by(id: user_id)
+      @user ||= User.find_by(id: participant_id)
     end
 
     def parsed_date
@@ -73,7 +73,7 @@ module RecordDeclarations
         course_identifier: course_identifier,
         declaration_date: declaration_date,
         declaration_type: declaration_type,
-        cpd_lead_provider: lead_provider_from_token,
+        cpd_lead_provider: cpd_lead_provider,
         user: user,
         evidence_held: evidence_held,
       )
@@ -85,7 +85,7 @@ module RecordDeclarations
           course_identifier: course_identifier,
           declaration_date: declaration_date,
           declaration_type: declaration_type,
-          cpd_lead_provider: lead_provider_from_token,
+          cpd_lead_provider: cpd_lead_provider,
           user: user,
           evidence_held: evidence_held,
         ).tap do |participant_declaration|
@@ -98,19 +98,14 @@ module RecordDeclarations
     end
 
     def valid_courses_for_user
-      valid_courses = []
-      valid_courses << "ecf-mentor" if user.mentor?
-      valid_courses << "ecf-induction" if user.early_career_teacher?
-      valid_courses += NPQCourse.all.map(&:identifier) if user.npq?
-      valid_courses
+      self.class.valid_courses_for_user
     end
 
     def profile_exists
       return if errors.any?
 
-      unless user_profile
-        errors.add(:user_profile, I18n.t(:invalid_participant))
-      end
+      errors.add(:participant_id, I18n.t(:invalid_participant)) if user.participant_profiles.blank?
+      errors.add(:participant_id, I18n.t(:invalid_course)) unless user_profile
     end
 
     def date_has_the_right_format
@@ -123,8 +118,7 @@ module RecordDeclarations
     end
 
     def validate_provider!
-      # TODO: Remove the nil? check and fix the test setup so that they build the school cohort, partnership and give us back the actual lead_provider.
-      raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless actual_lead_provider.nil? || lead_provider_from_token == actual_lead_provider
+      raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless cpd_lead_provider == actual_lead_provider
     end
 
     def validate_milestone!

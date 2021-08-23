@@ -6,6 +6,7 @@ module RecordDeclarations
 
     included do
       delegate :npq?, :npq_profiles, to: :user
+      extend NPQClassMethods
     end
 
     def participant?
@@ -26,6 +27,12 @@ module RecordDeclarations
 
     def valid_declaration_types
       %w[started completed retained-1 retained-2]
+    end
+
+    module NPQClassMethods
+      def valid_courses_for_user
+        NPQCourse.identifiers
+      end
     end
   end
 end

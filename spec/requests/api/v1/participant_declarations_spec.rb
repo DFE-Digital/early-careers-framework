@@ -86,7 +86,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         missing_attribute = valid_params.except(:participant_id)
         post "/api/v1/participant-declarations", params: build_params(missing_attribute)
         expect(response.status).to eq 422
-        expect(response.body).to eq({ bad_or_missing_parameters: %w[participant_id] }.to_json)
+        expect(response.body).to eq({ bad_or_missing_parameters: [I18n.t(:invalid_participant)] }.to_json)
       end
 
       it "returns 422 when supplied an incorrect course type" do
@@ -99,13 +99,13 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         invalid_course_identifier = valid_params.merge({ course_identifier: "ecf-mentor" })
         post "/api/v1/participant-declarations", params: build_params(invalid_course_identifier)
         expect(response.status).to eq 422
-        expect(response.body).to eq({ bad_or_missing_parameters: ["The property '#/course_identifier' must be an available course to '#/participant_id'"] }.to_json)
+        expect(response.body).to eq({ bad_or_missing_parameters: [I18n.t(:invalid_course)] }.to_json)
       end
 
       it "returns 422 when there are multiple errors" do
         post "/api/v1/participant-declarations", params: build_params("")
         expect(response.status).to eq 422
-        expect(response.body).to eq({ bad_or_missing_parameters: %w[participant_id declaration_date declaration_type course_identifier] }.to_json)
+        expect(response.body).to eq({ bad_or_missing_parameters: [I18n.t(:invalid_declaration_type)] }.to_json)
       end
 
       it "returns 400 when the data block is incorrect" do
