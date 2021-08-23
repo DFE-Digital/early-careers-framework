@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "has_di_parameters"
-
 class ParticipantEventAggregator
   def self.call(*args)
     new(*args).call
