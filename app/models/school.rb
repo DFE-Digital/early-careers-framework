@@ -81,11 +81,11 @@ class School < ApplicationRecord
   end
 
   def early_career_teacher_profiles_for(cohort)
-    school_cohorts.find_by(cohort: cohort)&.ecf_participant_profiles&.ects&.active || []
+    school_cohorts.find_by(cohort: cohort)&.ecf_participant_profiles&.ects&.active_record || []
   end
 
   def mentor_profiles_for(cohort)
-    school_cohorts.find_by(cohort: cohort)&.ecf_participant_profiles&.mentors&.active || []
+    school_cohorts.find_by(cohort: cohort)&.ecf_participant_profiles&.mentors&.active_record || []
   end
 
   def full_address

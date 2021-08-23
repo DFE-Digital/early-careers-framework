@@ -7,7 +7,7 @@ module Admin
 
     def index
       @participant_profiles = policy_scope(ParticipantProfile::ECF, policy_scope_class: ParticipantProfilePolicy::Scope)
-        .active
+        .active_record
         .where(school_cohort_id: SchoolCohort.where(school: school).select(:id))
         .includes(:user)
         .order("users.full_name")

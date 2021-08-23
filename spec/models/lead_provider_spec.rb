@@ -49,8 +49,8 @@ RSpec.describe LeadProvider, type: :model do
         expect(lead_provider.ecf_participant_profiles).to include participant_profile
       end
 
-      it "should include withdrawn participants" do
-        participant_profile = create(:participant_profile, :ect, status: "withdrawn", school_cohort: school_cohort)
+      it "should include participants whose records have been withdrawn" do
+        participant_profile = create(:participant_profile, :ect, :withdrawn_record, school_cohort: school_cohort)
         expect(lead_provider.ecf_participant_profiles).to include participant_profile
       end
 
@@ -76,8 +76,8 @@ RSpec.describe LeadProvider, type: :model do
         expect(lead_provider.active_ecf_participant_profiles).to include participant_profile
       end
 
-      it "should not include withdrawn participants" do
-        participant_profile = create(:participant_profile, :ect, school_cohort: school_cohort, status: "withdrawn")
+      it "should not include participants whose records have been withdrawn" do
+        participant_profile = create(:participant_profile, :withdrawn_record, :ect, school_cohort: school_cohort)
         expect(lead_provider.active_ecf_participant_profiles).not_to include participant_profile
       end
 

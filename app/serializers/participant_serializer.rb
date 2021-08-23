@@ -14,7 +14,7 @@ class ParticipantSerializer
     end
 
     def participant_active?(user)
-      user.teacher_profile.ecf_profile&.active?
+      user.teacher_profile.ecf_profile&.active_record?
     end
 
     def trn(user)

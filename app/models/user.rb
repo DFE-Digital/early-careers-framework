@@ -56,7 +56,7 @@ class User < ApplicationRecord
   end
 
   def npq?
-    npq_profiles.any?(&:active?)
+    npq_profiles.any?(&:active_record?)
   end
 
   def participant?
@@ -115,11 +115,11 @@ class User < ApplicationRecord
   }
 
   scope :is_ecf_participant, lambda {
-    joins(:participant_profiles).merge(ParticipantProfile.ecf.active).includes(mentor_profile: :school_cohort, early_career_teacher_profile: :school_cohort)
+    joins(:participant_profiles).merge(ParticipantProfile.ecf.active_record).includes(mentor_profile: :school_cohort, early_career_teacher_profile: :school_cohort)
   }
 
   scope :is_participant, lambda {
-    joins(:participant_profiles).merge(ParticipantProfile.active)
+    joins(:participant_profiles).merge(ParticipantProfile.active_record)
   }
 
 private

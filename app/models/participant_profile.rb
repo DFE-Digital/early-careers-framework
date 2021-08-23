@@ -17,7 +17,7 @@ class ParticipantProfile < ApplicationRecord
   enum status: {
     active: "active",
     withdrawn: "withdrawn",
-  }
+  }, _suffix: :record
 
   scope :mentors, -> { where(type: Mentor.name) }
   scope :ects, -> { where(type: ECT.name) }

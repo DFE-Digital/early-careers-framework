@@ -141,18 +141,18 @@ RSpec.describe Admin::ChangeInductionService do
         let(:school) { create(:school_cohort, induction_programme_choice: "core_induction_programme", cohort: cohort).school }
         it "withdraws all participants when changing to NoECTs" do
           service.change_induction_provision(:no_early_career_teachers)
-          expect(participant_profiles.each(&:reload)).to all be_withdrawn
+          expect(participant_profiles.each(&:reload)).to all be_withdrawn_record
         end
 
         it "withdraws all participants when changing to DIY" do
           service.change_induction_provision(:design_our_own)
-          expect(participant_profiles.each(&:reload)).to all be_withdrawn
+          expect(participant_profiles.each(&:reload)).to all be_withdrawn_record
         end
 
         it "does not change participants when changing to FIP" do
           expect { service.change_induction_provision(:full_induction_programme) }
             .not_to change { school.participants_for(cohort).map(&:id) }
-          expect(participant_profiles.each(&:reload)).to all be_active
+          expect(participant_profiles.each(&:reload)).to all be_active_record
         end
       end
 
@@ -160,18 +160,18 @@ RSpec.describe Admin::ChangeInductionService do
         let(:school) { create(:school_cohort, induction_programme_choice: "full_induction_programme", cohort: cohort).school }
         it "withdraws all participants when changing to NoECTs" do
           service.change_induction_provision(:no_early_career_teachers)
-          expect(participant_profiles.each(&:reload)).to all be_withdrawn
+          expect(participant_profiles.each(&:reload)).to all be_withdrawn_record
         end
 
         it "withdraws all participants when changing to DIY" do
           service.change_induction_provision(:design_our_own)
-          expect(participant_profiles.each(&:reload)).to all be_withdrawn
+          expect(participant_profiles.each(&:reload)).to all be_withdrawn_record
         end
 
         it "does not change participants when changing to CIP" do
           expect { service.change_induction_provision(:core_induction_programme) }
             .not_to change { school.participants_for(cohort).map(&:id) }
-          expect(participant_profiles.each(&:reload)).to all be_active
+          expect(participant_profiles.each(&:reload)).to all be_active_record
         end
       end
     end

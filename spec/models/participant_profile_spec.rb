@@ -10,7 +10,7 @@ RSpec.describe ParticipantProfile, type: :model do
     is_expected.to define_enum_for(:status).with_values(
       active: "active",
       withdrawn: "withdrawn",
-    ).backed_by_column_of_type(:text)
+    ).with_suffix(:record).backed_by_column_of_type(:text)
   }
 
   it "updates the updated_at on the users" do

@@ -15,14 +15,14 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
     before :each do
       mentor_profile = create(:participant_profile, :mentor, school: partnership.school, cohort: partnership.cohort)
       create_list :participant_profile, 2, :ect, mentor_profile: mentor_profile, school_cohort: school_cohort
-      ect_teacher_profile_with_one_active_and_one_withdrawn_profile = ParticipantProfile::ECT.first.teacher_profile
+      ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record = ParticipantProfile::ECT.first.teacher_profile
       create(:participant_profile,
-             :withdrawn,
+             :withdrawn_record,
              :ect,
-             teacher_profile: ect_teacher_profile_with_one_active_and_one_withdrawn_profile,
+             teacher_profile: ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record,
              school_cohort: school_cohort)
     end
-    let!(:withdrawn_ect_profile) { create(:participant_profile, :withdrawn, :ect, school_cohort: school_cohort) }
+    let!(:withdrawn_ect_profile_record) { create(:participant_profile, :withdrawn_record, :ect, school_cohort: school_cohort) }
 
     context "when authorized" do
       before do
@@ -75,7 +75,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           get "/api/v1/participants"
           mentors = 0
           ects = 0
-          withdrawn = 0
+          withdrawn_participant_record = 0
 
           parsed_response["data"].each do |user|
             user_type = user["attributes"]["participant_type"]
@@ -85,13 +85,13 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
             elsif user_type == "ect"
               ects += 1
             elsif user_type.nil? && status == "withdrawn"
-              withdrawn += 1
+              withdrawn_participant_record += 1
             end
           end
 
           expect(mentors).to eql(1)
           expect(ects).to eql(2)
-          expect(withdrawn).to eql(1)
+          expect(withdrawn_participant_record).to eql(1)
         end
 
         it "returns the right number of users per page" do
@@ -166,7 +166,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           expect(mentor_row["pupil_premium_uplift"]).to be_empty
           expect(mentor_row["sparsity_uplift"]).to be_empty
 
-          ect = ParticipantProfile::ECT.active.first.user
+          ect = ParticipantProfile::ECT.active_record.first.user
           ect_row = parsed_response.find { |row| row["id"] == ect.id }
           expect(ect_row).not_to be_nil
           expect(ect_row["email"]).to eql ect.email
@@ -181,16 +181,16 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           expect(mentor_row["pupil_premium_uplift"]).to be_empty
           expect(mentor_row["sparsity_uplift"]).to be_empty
 
-          withdrawn_row = parsed_response.find { |row| row["id"] == withdrawn_ect_profile.user.id }
-          expect(withdrawn_row).not_to be_nil
-          expect(withdrawn_row["email"]).to be_empty
-          expect(withdrawn_row["full_name"]).to be_empty
-          expect(withdrawn_row["mentor_id"]).to be_empty
-          expect(withdrawn_row["school_urn"]).to be_empty
-          expect(withdrawn_row["participant_type"]).to be_empty
-          expect(withdrawn_row["cohort"]).to be_empty
-          expect(withdrawn_row["teacher_reference_number"]).to be_empty
-          expect(withdrawn_row["teacher_reference_number_validated"]).to be_empty
+          withdrawn_record_row = parsed_response.find { |row| row["id"] == withdrawn_ect_profile_record.user.id }
+          expect(withdrawn_record_row).not_to be_nil
+          expect(withdrawn_record_row["email"]).to be_empty
+          expect(withdrawn_record_row["full_name"]).to be_empty
+          expect(withdrawn_record_row["mentor_id"]).to be_empty
+          expect(withdrawn_record_row["school_urn"]).to be_empty
+          expect(withdrawn_record_row["participant_type"]).to be_empty
+          expect(withdrawn_record_row["cohort"]).to be_empty
+          expect(withdrawn_record_row["teacher_reference_number"]).to be_empty
+          expect(withdrawn_record_row["teacher_reference_number_validated"]).to be_empty
           expect(mentor_row["eligible_for_funding"]).to be_empty
           expect(mentor_row["pupil_premium_uplift"]).to be_empty
           expect(mentor_row["sparsity_uplift"]).to be_empty
