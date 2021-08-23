@@ -35,7 +35,7 @@ RSpec.feature "SIT/mentor participant validation journeys for FIP induction", ty
     then_i_should_see_the_confirm_details_page
 
     when_i_click_continue_to_proceed_with_validation
-    then_i_should_see_the_checking_details_page_for_a_sit_mentor
+    then_i_should_see_the_complete_page_for_a_sit_mentor
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Participant Validation: SIT/Mentor Complete Partnered FIP"
 
@@ -73,7 +73,7 @@ RSpec.feature "SIT/mentor participant validation journeys for FIP induction", ty
     then_i_should_see_the_confirm_details_page
 
     when_i_click_continue_to_proceed_with_validation
-    then_i_should_see_the_checking_details_page_for_a_sit_mentor
+    then_i_should_see_the_complete_page_for_a_sit_mentor
 
     when_i_click "Manage induction for your school"
     then_i_should_see_the_manage_your_training_page

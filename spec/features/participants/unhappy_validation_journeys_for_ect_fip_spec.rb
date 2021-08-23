@@ -52,7 +52,7 @@ RSpec.feature "Unhappy ECT participant validation journeys for FIP induction", t
     then_i_should_see_the_cannot_find_details_page_with_continue_option
 
     when_i_click "Continue registration"
-    then_i_should_see_the_checking_details_page_for_invalid_user
+    then_i_should_see_the_fip_checking_details_page_for_invalid_user
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Participant Validation: Checking details - Partnered FIP"
   end
@@ -75,7 +75,7 @@ RSpec.feature "Unhappy ECT participant validation journeys for FIP induction", t
     then_i_should_see_the_confirm_details_page
 
     when_i_click_continue_to_proceed_with_validation
-    then_i_should_see_the_checking_details_page_for_existing_trn_user
+    then_i_should_see_the_fip_checking_details_page_for_existing_trn_user
   end
 
   scenario "Participant does not know their TRN" do

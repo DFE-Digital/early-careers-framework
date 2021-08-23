@@ -39,13 +39,13 @@ RSpec.feature "ECT participant validation journey for FIP induction", type: :fea
     then_i_should_see_the_confirm_details_page_with_updated_name
 
     when_i_click_continue_to_proceed_with_validation_for_updated_name
-    then_i_should_see_the_checking_details_page_for_matched_user
+    then_i_should_see_the_complete_page_for_matched_user
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Participant Validation: Complete Partnered FIP"
 
     when_i_sign_out
     and_i_sign_in_again_as_the_same_user
-    then_i_should_see_the_checking_details_page_for_matched_user
+    then_i_should_see_the_complete_page_for_matched_user
   end
 
   scenario "Participant has changed their name and updated TRA" do
@@ -72,7 +72,7 @@ RSpec.feature "ECT participant validation journey for FIP induction", type: :fea
     then_i_should_see_the_confirm_details_page
 
     when_i_click_continue_to_proceed_with_validation
-    then_i_should_see_the_checking_details_page_for_matched_user
+    then_i_should_see_the_complete_page_for_matched_user
   end
 
   scenario "Participant has changed their name and wishes to continue with previous name" do
@@ -101,6 +101,6 @@ RSpec.feature "ECT participant validation journey for FIP induction", type: :fea
     then_i_should_see_the_confirm_details_page
 
     when_i_click_continue_to_proceed_with_validation
-    then_i_should_see_the_checking_details_page_for_matched_user
+    then_i_should_see_the_complete_page_for_matched_user
   end
 end
