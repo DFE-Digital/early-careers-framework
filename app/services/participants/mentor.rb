@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
-module RecordDeclarations
+module Participants
   module Mentor
+    include ECF
     extend ActiveSupport::Concern
-
     included do
       extend MentorClassMethods
-      include ECF
       delegate :mentor_profile, to: :user
     end
 

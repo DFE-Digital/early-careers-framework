@@ -1,0 +1,65 @@
+{
+  "$id": "https://digital.education.gov.uk/schema/npq/participants/actions/request_schema.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "participant"
+          ]
+        },
+        "attributes": {
+          "$ref": "#/definitions/action"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "action": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "$ref": "#/definitions/actions"
+        },
+        "participant_id": {
+          "$ref": "#/definitions/uuid"
+        },
+        "course_identifier": {
+          "$ref": "#/definitions/npq/courses"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "action",
+        "participant_id",
+        "course_identifier"
+      ]
+    },
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "actions": {
+      "enum": [
+        "withdrawal",
+        "resumption",
+        "deferral"
+      ]
+    },
+    "npq": {
+      "courses": {
+        "enum": [
+          "npq-leading-teaching",
+          "npq-leading-teaching-development",
+          "npq-leading-behaviour-culture",
+          "npq-headship",
+          "npq-senior-leadership",
+          "npq-executive-leadership"
+        ]
+      }
+    }
+  }
+}

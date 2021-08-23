@@ -29,7 +29,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
         default_headers[:Authorization] = bearer_token
       end
 
-      describe "JSON API" do
+      describe "JSON Index API" do
         let(:parsed_response) { JSON.parse(response.body) }
 
         it "returns correct jsonapi content type header" do
@@ -118,7 +118,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
         end
       end
 
-      describe "CSV API" do
+      describe "CSV Index API" do
         let(:parsed_response) { CSV.parse(response.body, headers: true) }
         before do
           get "/api/v1/participants.csv"
@@ -205,6 +205,13 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           User.first.update!(updated_at: 2.days.ago)
           get "/api/v1/participants.csv", params: { filter: { updated_since: 1.day.ago.iso8601 } }
           expect(parsed_response.length).to eql(3)
+        end
+      end
+
+      describe "JSON Participant Withdrawal " do
+        let(:parsed_response) { JSON.parse(response.body) }
+
+        it "changes the state of a participant to withdrawn" do
         end
       end
     end

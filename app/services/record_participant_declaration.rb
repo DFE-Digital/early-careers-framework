@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require "record_declarations/recorder_factory"
-require "record_declarations/event_factory"
+require "factories/course_identifier"
+require "factories/event"
 
 class RecordParticipantDeclaration
   attr_accessor :params
@@ -13,7 +13,7 @@ class RecordParticipantDeclaration
   end
 
   def call
-    recorder = "::RecordDeclarations::#{::RecordDeclarations::EventFactory.call(event)}::#{::RecordDeclarations::RecorderFactory.call(course_identifier)}".constantize
+    recorder = "::RecordDeclarations::#{::Factories::Event.call(event)}::#{::Factories::CourseIdentifier.call(course_identifier)}".constantize
     recorder.call(params)
   end
 

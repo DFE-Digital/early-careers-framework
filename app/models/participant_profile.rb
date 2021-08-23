@@ -13,6 +13,11 @@ class ParticipantProfile < ApplicationRecord
   has_many :profile_declarations
   has_many :participant_declarations, through: :profile_declarations
 
+  has_many :participant_profile_states
+  has_one :state, lambda {
+    merge(ParticipantProfileState.most_recent)
+  }, class_name: "ParticipantProfileState"
+
   enum status: {
     active: "active",
     withdrawn: "withdrawn",
@@ -67,4 +72,6 @@ class ParticipantProfile < ApplicationRecord
     decision = validation_decisions.find { |record| record.validation_step.to_s == name.to_s }
     decision || validation_decisions.build(validation_step: name)
   end
+
+  def defer; end
 end

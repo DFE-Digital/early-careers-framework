@@ -17,16 +17,14 @@ module RecordDeclarations
       npq_profiles.includes({ validation_data: [:npq_course] }).where('npq_courses.identifier': course_identifier).first
     end
 
-    def declaration_model
-      ParticipantDeclaration::NPQ
-    end
+    module NPQClassMethods
+      def declaration_model
+        ParticipantDeclaration::NPQ
+      end
 
-    def actual_lead_provider
-      user_profile.validation_data.npq_lead_provider.cpd_lead_provider
-    end
-
-    def valid_declaration_types
-      %w[started completed retained-1 retained-2]
+      def valid_declaration_types
+        %w[started completed retained-1 retained-2]
+      end
     end
 
     module NPQClassMethods

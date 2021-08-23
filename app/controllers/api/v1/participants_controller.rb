@@ -5,6 +5,7 @@ require "csv"
 module Api
   module V1
     class ParticipantsController < Api::ApiController
+      include ApiAuditable
       include ApiTokenAuthenticatable
       include ApiPagination
 
@@ -19,6 +20,12 @@ module Api
             render body: to_csv(participant_hash)
           end
         end
+      end
+
+      def update
+        participant_id = permitted_participant
+        params = HashWithIndifferentAccess.new({ cpd_lead_provider: current_user, participant_id: participant_id }).merge(permitted_params["attributes"] || {})
+        render json: ManageParticipant.call(params)
       end
 
     private
@@ -65,6 +72,20 @@ module Api
         end
 
         participants
+      end
+
+      def permitted_participant
+        params.require(:id)
+      end
+
+      def permitted_params
+        params.require(:data).permit(:type, attributes: {})
+      rescue ActionController::ParameterMissing => e
+        if e.param == :data
+          raise ActionController::BadRequest, I18n.t(:invalid_data_structure)
+        else
+          raise
+        end
       end
     end
   end

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module RecordDeclarations
-  module Retained
-    class Mentor < ECF
+module Participants
+  module Withdraw
+    class EarlyCareerTeacher < ECF
       include Participants::Mentor
     end
   end
