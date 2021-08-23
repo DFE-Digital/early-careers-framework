@@ -483,8 +483,8 @@ RSpec.describe School, type: :model do
     end
 
     it "does not include participants with withdrawn records" do
-      ect = create(:early_career_teacher_profile, :withdrawn_record, school_cohort: school_cohort).user
-      mentor = create(:mentor_profile, :withdrawn_record, school_cohort: school_cohort).user
+      ect = create(:participant_profile, :ect, :withdrawn_record, school_cohort: school_cohort).user
+      mentor = create(:participant_profile, :mentor, :withdrawn_record, school_cohort: school_cohort).user
 
       expect(school.participants_for(cohort)).not_to include(ect, mentor)
     end
@@ -508,33 +508,33 @@ RSpec.describe School, type: :model do
 
   describe "#early_career_teacher_profiles_for" do
     it "includes active ECTs" do
-      ect_profile = create(:early_career_teacher_profile, school_cohort: school_cohort)
+      ect_profile = create(:participant_profile, :ect, school_cohort: school_cohort)
 
       expect(school.early_career_teacher_profiles_for(cohort)).to include ect_profile
     end
 
     it "does not include ECTs with withdrawn records" do
-      ect_profile = create(:early_career_teacher_profile, :withdrawn_record, school_cohort: school_cohort)
+      ect_profile = create(:participant_profile, :ect, :withdrawn_record, school_cohort: school_cohort)
 
       expect(school.early_career_teacher_profiles_for(cohort)).not_to include ect_profile
     end
 
     it "does not include ECTs from other cohorts" do
       another_school_cohort = create(:school_cohort, cohort: create(:cohort), school: school)
-      ect_profile = create(:early_career_teacher_profile, school_cohort: another_school_cohort)
+      ect_profile = create(:participant_profile, :ect, school_cohort: another_school_cohort)
 
       expect(school.early_career_teacher_profiles_for(cohort)).not_to include ect_profile
     end
 
     it "does not include ECTs from other schools" do
       another_school_cohort = create(:school_cohort, school: create(:school), cohort: cohort)
-      ect_profile = create(:early_career_teacher_profile, school_cohort: another_school_cohort)
+      ect_profile = create(:participant_profile, :ect, school_cohort: another_school_cohort)
 
       expect(school.early_career_teacher_profiles_for(cohort)).not_to include ect_profile
     end
 
     it "does not include mentors" do
-      mentor_profile = create(:mentor_profile, school_cohort: school_cohort)
+      mentor_profile = create(:participant_profile, :mentor, school_cohort: school_cohort)
 
       expect(school.early_career_teacher_profiles_for(cohort)).not_to include mentor_profile
     end
@@ -542,33 +542,33 @@ RSpec.describe School, type: :model do
 
   describe "#mentor_profiles_for" do
     it "includes active mentors" do
-      mentor_profile = create(:mentor_profile, school_cohort: school_cohort)
+      mentor_profile = create(:participant_profile, :mentor, school_cohort: school_cohort)
 
       expect(school.mentor_profiles_for(cohort)).to include mentor_profile
     end
 
     it "does not include mentors with withdrawn records" do
-      mentor_profile = create(:mentor_profile, :withdrawn_record, school_cohort: school_cohort)
+      mentor_profile = create(:participant_profile, :mentor, :withdrawn_record, school_cohort: school_cohort)
 
       expect(school.mentor_profiles_for(cohort)).not_to include mentor_profile
     end
 
     it "does not include mentors from other cohorts" do
       another_school_cohort = create(:school_cohort, cohort: create(:cohort), school: school)
-      mentor_profile = create(:mentor_profile, school_cohort: another_school_cohort)
+      mentor_profile = create(:participant_profile, :mentor, school_cohort: another_school_cohort)
 
       expect(school.mentor_profiles_for(cohort)).not_to include mentor_profile
     end
 
     it "does not include mentors from other schools" do
       another_school_cohort = create(:school_cohort, school: create(:school), cohort: cohort)
-      mentor_profile = create(:mentor_profile, school_cohort: another_school_cohort)
+      mentor_profile = create(:participant_profile, :mentor, school_cohort: another_school_cohort)
 
       expect(school.mentor_profiles_for(cohort)).not_to include mentor_profile
     end
 
     it "does not include ECTs" do
-      ect_profile = create(:early_career_teacher_profile, school_cohort: school_cohort)
+      ect_profile = create(:participant_profile, :ect, school_cohort: school_cohort)
 
       expect(school.mentor_profiles_for(cohort)).not_to include ect_profile
     end

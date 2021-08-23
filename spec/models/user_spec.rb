@@ -164,7 +164,7 @@ RSpec.describe User, type: :model do
     end
 
     it "is false when the mentor profile is withdrawn" do
-      user = create(:mentor_profile, :withdrawn_record).user
+      user = create(:participant_profile, :mentor, :withdrawn_record).user
       expect(user.mentor?).to be false
     end
   end

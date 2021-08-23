@@ -16,7 +16,7 @@ RSpec.describe "API Users", type: :request do
       mentor_profile = create(:participant_profile, :mentor, school_cohort: school_cohort, core_induction_programme: cip)
       create(:participant_profile, :npq, school: school)
       create(:participant_profile, :npq, school: school, teacher_profile: mentor_profile.teacher_profile)
-      create_list(:early_career_teacher_profile, 2, school_cohort: school_cohort, core_induction_programme: cip)
+      create_list(:participant_profile, 2, :ect, school_cohort: school_cohort, core_induction_programme: cip)
     end
 
     context "when authorized" do
