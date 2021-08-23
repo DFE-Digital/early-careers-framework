@@ -16,15 +16,14 @@ class ParticipantDeclaration < ApplicationRecord
   scope :ect, -> { joins(:profile_declaration).merge(ProfileDeclaration.ect_profiles) }
   scope :mentor, -> { joins(:profile_declaration).merge(ProfileDeclaration.mentor_profiles) }
   scope :unique_id, -> { select(:user_id).distinct }
-  scope :active_for_lead_provider, ->(lead_provider) { started.for_lead_provider(lead_provider).unique_id }
 
   # Time dependent Range scopes
   scope :declared_as_between, ->(start_date, end_date) { where(declaration_date: start_date..end_date) }
   scope :submitted_between, ->(start_date, end_date) { where(created_at: start_date..end_date) }
 
   # Declaration aggregation scopes
-  scope :count_active_ects_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).ect.count }
-  scope :count_active_mentors_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).mentor.count }
-  scope :count_active_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).count }
-  scope :count_active_uplift_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).uplift.count }
+  scope :active_for_lead_provider, ->(lead_provider) { started.for_lead_provider(lead_provider).unique_id }
+  scope :active_ects_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).ect }
+  scope :active_mentors_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).mentor }
+  scope :active_uplift_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).uplift }
 end

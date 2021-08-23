@@ -42,16 +42,16 @@ private
   end
 
   def aggregate(aggregation_type:, event_type:)
-    aggregator.call({ cpd_lead_provider: cpd_lead_provider, event_type => aggregation_types[event_type][aggregation_type] }, event_type: event_type)
+    aggregator.call(cpd_lead_provider: cpd_lead_provider, scope: aggregation_types[event_type][aggregation_type])
   end
 
   def aggregation_types
     {
       started: {
-        all: :count_active_for_lead_provider,
-        uplift: :count_active_uplift_for_lead_provider,
-        ects: :count_active_ects_for_lead_provider,
-        mentors: :count_active_mentors_for_lead_provider,
+        all: :active_for_lead_provider,
+        uplift: :active_uplift_for_lead_provider,
+        ects: :active_ects_for_lead_provider,
+        mentors: :active_mentors_for_lead_provider,
       },
     }
   end

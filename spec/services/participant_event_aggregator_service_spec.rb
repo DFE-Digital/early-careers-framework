@@ -4,12 +4,12 @@ require "rails_helper"
 
 class DummyRecorder
   class << self
-    def count_active_for_lead_provider(*)
-      100
+    def active_for_lead_provider(*)
+      OpenStruct.new(count: 100)
     end
 
-    def count_something_else(*)
-      40
+    def something_else(*)
+      OpenStruct.new(count: 40)
     end
   end
 end
@@ -29,16 +29,16 @@ RSpec.describe ParticipantEventAggregator do
     describe ".call" do
       context "aggregate using ParticipantDeclaration" do
         it "returns a count of the unique started events" do
-          expect(described_class.call({ cpd_lead_provider: cpd_lead_provider })).to eq(10)
+          expect(described_class.call(cpd_lead_provider: cpd_lead_provider)).to eq(10)
         end
       end
 
       it "can be injected with a different recorder" do
-        expect(described_class.call({ recorder: DummyRecorder, cpd_lead_provider: cpd_lead_provider })).to eq(100)
+        expect(described_class.call(recorder: DummyRecorder, cpd_lead_provider: cpd_lead_provider)).to eq(100)
       end
 
       it "can be injected with a different recorder and different scope" do
-        expect(described_class.call({ recorder: DummyRecorder, started: :count_something_else, cpd_lead_provider: cpd_lead_provider })).to eq(40)
+        expect(described_class.call(recorder: DummyRecorder, scope: :something_else, cpd_lead_provider: cpd_lead_provider)).to eq(40)
       end
     end
   end

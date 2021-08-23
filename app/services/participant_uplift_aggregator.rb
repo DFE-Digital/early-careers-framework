@@ -14,7 +14,7 @@ private
   def default_params
     {
       recorder: ParticipantDeclaration,
-      started: :count_active_uplift_for_lead_provider,
+      started: :active_uplift_for_lead_provider,
     }
   end
 end

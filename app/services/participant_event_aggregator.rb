@@ -3,18 +3,21 @@
 require "has_di_parameters"
 
 class ParticipantEventAggregator
-  include HasDIParameters
+  def self.call(*args)
+    new(*args).call
+  end
 
-  def call(event_type: :started)
-    recorder.send(params[event_type], cpd_lead_provider)
+  def call
+    recorder.send(scope, cpd_lead_provider).count
   end
 
 private
 
-  def default_params
-    {
-      recorder: ParticipantDeclaration::ECF,
-      started: :count_active_for_lead_provider,
-    }
+  attr_accessor :cpd_lead_provider, :recorder, :scope
+
+  def initialize(cpd_lead_provider:, recorder: ParticipantDeclaration::ECF, scope: :active_for_lead_provider)
+    @cpd_lead_provider = cpd_lead_provider
+    @recorder = recorder
+    @scope = scope
   end
 end
