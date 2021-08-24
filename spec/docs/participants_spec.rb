@@ -8,6 +8,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
   let(:bearer_token) { "Bearer #{token}" }
   let(:Authorization) { bearer_token }
+  let(:participant) { create(:user) }
 
   path "/api/v1/participants" do
     get "Retrieve multiple participants" do
@@ -50,6 +51,40 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
 
         schema({ "$ref": "#/components/schemas/UnauthorisedResponse" }, content_type: "application/vnd.api+json")
 
+        run_test!
+      end
+    end
+  end
+
+  path "/api/v1/participants/{id}/withdraw" do
+    put "Manage participant" do
+      operationId :participant
+      tags "ECF Participant"
+      security [bearerAuth: []]
+
+      parameter name: :id,
+                in: :path,
+                type: :string,
+                required: true,
+                example: SecureRandom.uuid,
+                description: "The ID of the participant to modify"
+      parameter name: :course_identifier,
+                in: :body,
+                type: :string,
+                required: true,
+                example: "ecf-induction",
+                description: "The course that the participant is associated with"
+      parameter name: :reason,
+                in: :body,
+                type: :string,
+                required: true,
+                example: "Career break",
+                description: "The reason for the withdrawal"
+
+      response "200", "The ECF participant being modified" do
+        let(:id) { participant.id }
+
+        schema({ "$ref": "#/components/schemas/ECFParticipantAttributes" }, content_type: "application/vnd.api+json")
         run_test!
       end
     end

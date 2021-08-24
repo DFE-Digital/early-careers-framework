@@ -1,0 +1,65 @@
+{
+  "$id": "https://digital.education.gov.uk/schema/ecf/participants/actions/request_schema.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "participant"
+          ]
+        },
+        "attributes": {
+          "$ref": "#/definitions/action"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "action": {
+      "type": "object",
+      "properties": {
+        "participant_id": {
+          "$ref": "#/definitions/uuid"
+        },
+        "course_identifier": {
+          "$ref": "#/definitions/ecf/courses"
+        },
+        "reason": {
+          "$ref": "#/definitions/ecf/withdrawn_reasons"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "participant_id",
+        "course_identifier",
+        "reason"
+      ]
+    },
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "ecf": {
+      "courses": {
+        "enum": [
+          "ecf-induction",
+          "ecf-mentor"
+        ]
+      },
+      "withdrawn_reasons": {
+        "enum": [
+          "Left teaching profession",
+          "Moved school",
+          "Mentor no longer being mentor",
+          "School left FIP",
+          "Career break",
+          "Passed Induction",
+          "Other"
+        ]
+      }
+    }
+  }
+}
