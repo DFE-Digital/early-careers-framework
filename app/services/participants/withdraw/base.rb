@@ -14,7 +14,7 @@ module Participants
           raise NotImplementedError, "Method must be implemented"
         end
 
-        delegate :valid_courses_for_user, to: :not_implemented_error
+        delegate :valid_courses, to: :not_implemented_error
       end
 
       def call
@@ -24,19 +24,15 @@ module Participants
 
         validate_provider!
         ParticipantProfileState.create!(participant_profile: user_profile, state: "withdrawn", reason: reason)
+        user_profile
       end
 
     private
 
       attr_accessor :reason
       validates :reason, presence: true
-      validate :existing_profile
       validate :not_already_withdrawn
-      delegate :present?, :state, to: :not_implemented_error
-
-      def valid_courses_for_user
-        self.class.valid_courses_for_user
-      end
+      delegate :state, to: :not_implemented_error
 
       def initialize(params:)
         params.each do |param, value|
@@ -49,11 +45,14 @@ module Participants
       end
 
       def not_already_withdrawn
+        return if errors.any?
+
         errors.add(:participant_id, I18n.t(:invalid_withdrawal)) if state&.withdrawn?
       end
 
       def validate_provider!
-        errors.add(:participant_id, I18n.t(:invalid_participant)) unless matches_lead_provider?
+        return if errors.any?
+        raise ActionController::ParameterMissing, [I18n.t(:invalid_participant)] unless matches_lead_provider?
       end
     end
   end

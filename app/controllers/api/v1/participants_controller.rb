@@ -22,10 +22,10 @@ module Api
         end
       end
 
-      def update
-        participant_id = permitted_participant
+      def withdraw
         params = HashWithIndifferentAccess.new({ cpd_lead_provider: current_user, participant_id: participant_id }).merge(permitted_params["attributes"] || {})
-        render json: ManageParticipant.call(params)
+        profile = WithdrawParticipant.call(params)
+        render json: ParticipantSerializer.new(profile.user).serializable_hash.to_json
       end
 
     private
@@ -64,6 +64,7 @@ module Api
                                       teacher_profile: {
                                         ecf_profile: %i[cohort school ecf_participant_eligibility],
                                         early_career_teacher_profile: :mentor,
+                                        participant_profiles: :state,
                                       },
                                     )
 
@@ -74,7 +75,7 @@ module Api
         participants
       end
 
-      def permitted_participant
+      def participant_id
         params.require(:id)
       end
 

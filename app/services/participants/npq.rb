@@ -3,10 +3,9 @@
 module Participants
   module NPQ
     extend ActiveSupport::Concern
-    include ProfileAttributes
 
     included do
-      delegate :validation_data, to: :user_profile, allow_nil: true
+      delegate :validation_data, :state, to: :user_profile, allow_nil: true
       delegate :npq?, :npq_profiles, to: :user, allow_nil: true
       extend NPQClassMethods
     end
@@ -24,7 +23,7 @@ module Participants
     end
 
     module NPQClassMethods
-      def valid_courses_for_user
+      def valid_courses
         NPQCourse.identifiers
       end
     end

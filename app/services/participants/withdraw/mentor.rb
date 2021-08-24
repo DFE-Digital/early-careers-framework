@@ -2,7 +2,7 @@
 
 module Participants
   module Withdraw
-    class EarlyCareerTeacher < ECF
+    class Mentor < ECF
       include Participants::Mentor
     end
   end

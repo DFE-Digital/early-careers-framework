@@ -8,12 +8,4 @@ class ParticipantProfileState < ApplicationRecord
   }
 
   scope :most_recent, -> { order("created_at desc").limit(1) }
-
-  def active?
-    state == "active"
-  end
-
-  def withdrawn?
-    state == "withdrawn"
-  end
 end

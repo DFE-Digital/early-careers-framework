@@ -18,12 +18,11 @@ module RecordDeclarations
       end
     end
 
-    def declaration_model
-      self.class.declaration_model
-    end
-
-    def valid_declarations_types
-      self.class.valid_declaration_type
+    def valid_courses
+      [
+        ("ecf-induction" if user&.early_career_teacher?),
+        ("ecf-mentor" if user&.mentor?),
+      ].flatten
     end
   end
 end

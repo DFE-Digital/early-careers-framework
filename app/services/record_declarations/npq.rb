@@ -17,6 +17,10 @@ module RecordDeclarations
       npq_profiles.includes({ validation_data: [:npq_course] }).where('npq_courses.identifier': course_identifier).first
     end
 
+    def valid_courses
+      self.class.valid_courses
+    end
+
     module NPQClassMethods
       def declaration_model
         ParticipantDeclaration::NPQ
@@ -25,10 +29,8 @@ module RecordDeclarations
       def valid_declaration_types
         %w[started completed retained-1 retained-2]
       end
-    end
 
-    module NPQClassMethods
-      def valid_courses_for_user
+      def valid_courses
         NPQCourse.identifiers
       end
     end

@@ -49,7 +49,6 @@ en:
   missing_declaration_type: "The property '#/declaration_type' must be present"
   missing_evidence_held: "The property '#/evidence_held' must be present"
   missing_lead_provider: "The lead provider must be present"
-  invalid_action: "The property '#/action' must be a valid action"
   invalid_withdrawal: "The participant has already been withdrawn"
   invalid_event: "The property '#/declaration_type' must be a valid declaration type"
   invalid_course: "The property '#/course_identifier' must be an available course to '#/participant_id'"

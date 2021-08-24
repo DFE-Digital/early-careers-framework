@@ -49,8 +49,12 @@ Rails.application.routes.draw do
     resource :notify_callback, only: :create, path: "notify-callback"
 
     namespace :v1 do
-      resources :participants, only: %i[index update]
-      resources :participant_declarations, only: %i[create], path: "participant-declarations"
+      resources :participants, only: %i[index] do
+        member do
+          put :withdraw
+        end
+      end
+      resources :participant_declarations, only: %i[create index], path: "participant-declarations"
       resources :users, only: %i[index create]
       resources :ecf_users, only: %i[index create], path: "ecf-users"
       resources :dqt_records, only: :show, path: "dqt-records"

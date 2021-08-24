@@ -78,4 +78,8 @@ class ParticipantSerializer
   active_participant_attribute :sparsity_uplift do
     nil # TODO: CPDRP-534 - Share when we know we have the correct information
   end
+
+  active_participant_attribute :state do |user|
+    user.teacher_profile.ecf_profile&.state&.state || "active"
+  end
 end

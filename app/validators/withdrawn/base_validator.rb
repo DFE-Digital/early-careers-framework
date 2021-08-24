@@ -7,7 +7,7 @@ module Withdrawn
     end
 
     def valid?(value)
-      self.class.reasons.map(&:downcase).include?(value.downcase)
+      self.class.reasons.map(&:downcase).include?(value.to_s.downcase)
     end
   end
 end

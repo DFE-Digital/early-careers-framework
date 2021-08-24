@@ -14,7 +14,7 @@ module Participants
     end
 
     module EarlyCareerTeacherClassMethods
-      def valid_courses_for_user
+      def valid_courses
         %w[ecf-induction]
       end
     end
