@@ -37,7 +37,7 @@ properties:
     type: string
     example: "2021"
   status:
-    description: "The status of this ECF participants record"
+    description: "The status of this ECF participant record"
     type: string
     example: active
     enum:
@@ -68,3 +68,10 @@ properties:
     type: boolean
     nullable: true
     example: true
+  state:
+    description: "The state of the ECF participant"
+    type: string
+    example: active
+    enum:
+      - active
+      - withdrawn

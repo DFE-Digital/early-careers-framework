@@ -9,6 +9,7 @@ required:
   - participant_type
   - cohort
   - status
+  - state
 properties:
   id:
     description: "The unique identifier of the ECF participant record"
@@ -50,11 +51,12 @@ properties:
     type: string
     example: "2021"
   status:
-    description: "The status of the ECF Participant"
+    description: "The status of the ECF Participant record"
     type: string
     example: active
     enum:
       - active
+      - withdrawn
   teacher_reference_number:
     description: "The Teacher Reference Number (TRN) for this NPQ participant"
     type: string
@@ -80,3 +82,10 @@ properties:
     type: boolean
     nullable: true
     example: true
+  state:
+    description: "The state of the ECF Participant"
+    type: string
+    example: active
+    enum:
+      - active
+      - withdrawn

@@ -21,39 +21,43 @@
     "action": {
       "type": "object",
       "properties": {
-        "action": {
-          "$ref": "#/definitions/actions"
-        },
         "participant_id": {
           "$ref": "#/definitions/uuid"
         },
         "course_identifier": {
           "$ref": "#/definitions/ecf/courses"
+        },
+        "reason": {
+          "$ref": "#/definitions/ecf/withdrawn_reasons"
         }
       },
       "additionalProperties": false,
       "required": [
-        "action",
         "participant_id",
-        "course_identifier"
+        "course_identifier",
+        "reason"
       ]
     },
     "uuid": {
       "type": "string",
       "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
     },
-    "actions": {
-      "enum": [
-        "withdrawal",
-        "resumption",
-        "deferral"
-      ]
-    },
     "ecf": {
       "courses": {
         "enum": [
           "ecf-induction",
           "ecf-mentor"
+        ]
+      },
+      "withdrawn_reasons": {
+        "enum": [
+          "Left teaching profession",
+          "Moved school",
+          "Mentor no longer being mentor",
+          "School left FIP",
+          "Career break",
+          "Passed Induction",
+          "Other"
         ]
       }
     }
