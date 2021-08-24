@@ -94,4 +94,38 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
       end
     end
   end
+
+  path "/api/v1/participant-declarations" do
+    get "List all participant declarations" do
+      operationId :participant_declarations
+      tags "participants declarations"
+      security [bearerAuth: []]
+
+      parameter name: :page,
+                in: :query,
+                schema: {
+                  "$ref": "#/components/schemas/Pagination",
+                },
+                type: :object,
+                style: :deepObject,
+                explode: true,
+                required: false,
+                example: { page: 1, per_page: 5 },
+                description: "Pagination options to navigate through the list of participant declarations."
+
+      response "200", "A list of participant declarations" do
+        schema({ "$ref": "#/components/schemas/MultipleParticipantDeclarationsResponse" }, content_type: "application/vnd.api+json")
+
+        run_test!
+      end
+
+      response "401", "Unauthorized" do
+        let(:Authorization) { "Bearer invalid" }
+
+        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" }, content_type: "application/vnd.api+json")
+
+        run_test!
+      end
+    end
+  end
 end
