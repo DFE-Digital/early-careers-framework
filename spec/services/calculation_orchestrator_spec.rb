@@ -121,10 +121,7 @@ RSpec.describe CalculationOrchestrator do
 
       context "when only sparsity_uplift flag was set" do
         it "returns the total calculation" do
-          expect(set_precision(described_class.call(contract: call_off_contract,
-                                                    cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider,
-                                                    event_type: :started),
-                               2)).to eq(normal_outcome)
+          expect(run_calculation).to eq(normal_outcome)
         end
       end
 
@@ -132,10 +129,7 @@ RSpec.describe CalculationOrchestrator do
         let(:with_uplift) { :pupil_premium_uplift }
 
         it "returns the total calculation" do
-          expect(set_precision(described_class.call(contract: call_off_contract,
-                                                    cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider,
-                                                    event_type: :started),
-                               2)).to eq(normal_outcome)
+          expect(run_calculation).to eq(normal_outcome)
         end
       end
 
@@ -143,10 +137,7 @@ RSpec.describe CalculationOrchestrator do
         let(:with_uplift) { :uplift_flags }
 
         it "returns the total calculation" do
-          expect(set_precision(described_class.call(contract: call_off_contract,
-                                                    cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider,
-                                                    event_type: :started),
-                               2)).to eq(normal_outcome)
+          expect(run_calculation).to eq(normal_outcome)
         end
       end
     end
@@ -162,10 +153,12 @@ RSpec.describe CalculationOrchestrator do
       end
 
       it "returns the total calculation" do
-        expect(set_precision(described_class.call(contract: call_off_contract,
-                                                  cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider,
-                                                  event_type: :started),
-                             2)).to eq(normal_outcome)
+        expect(run_calculation).to eq(normal_outcome)
+      end
+
+      it "ignores non-payable declarations" do
+        create_list(:ect_participant_declaration, 5, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider, payable: false)
+        expect(run_calculation).to eq(normal_outcome)
       end
     end
 
@@ -175,10 +168,7 @@ RSpec.describe CalculationOrchestrator do
       end
 
       it "returns the total calculation" do
-        expect(set_precision(described_class.call(contract: call_off_contract,
-                                                  cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider,
-                                                  event_type: :started),
-                             2)).to eq(mentor_outcome)
+        expect(run_calculation).to eq(mentor_outcome)
       end
     end
 
@@ -188,10 +178,7 @@ RSpec.describe CalculationOrchestrator do
       end
 
       it "returns the total calculation" do
-        expect(set_precision(described_class.call(contract: call_off_contract,
-                                                  cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider,
-                                                  event_type: :started),
-                             2)).to eq(ect_outcome)
+        expect(run_calculation).to eq(ect_outcome)
       end
     end
 
@@ -202,11 +189,21 @@ RSpec.describe CalculationOrchestrator do
       end
 
       it "returns the total calculation" do
-        expect(set_precision(described_class.call(contract: call_off_contract,
-                                                  cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider,
-                                                  event_type: :started),
-                             2)).to eq(normal_outcome)
+        expect(run_calculation).to eq(normal_outcome)
       end
     end
+  end
+
+private
+
+  def run_calculation
+    set_precision(
+      described_class.call(
+        contract: call_off_contract,
+        cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider,
+        event_type: :started,
+      ),
+      2,
+    )
   end
 end
