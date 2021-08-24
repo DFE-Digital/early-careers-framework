@@ -1023,7 +1023,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ParticipantDeclarationResponses"
+              "$ref": "#/components/schemas/ParticipantDeclarationResponse"
             },
             "example": [
               {
