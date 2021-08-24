@@ -2,6 +2,7 @@
 
 class ParticipantDeclaration < ApplicationRecord
   has_one :profile_declaration
+  has_one :participant_profile, through: :profile_declaration
   belongs_to :cpd_lead_provider
   belongs_to :user
 
@@ -29,4 +30,9 @@ class ParticipantDeclaration < ApplicationRecord
   scope :active_npqs_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).npq }
   scope :active_uplift_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).uplift }
   scope :payable, -> { where(payable: true) }
+
+  def refresh_payability!
+    # TODO: Do not update it if the declaration was processed already
+    update!(payable: participant_profile.fundable?)
+  end
 end

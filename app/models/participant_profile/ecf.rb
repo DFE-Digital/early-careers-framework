@@ -19,4 +19,8 @@ class ParticipantProfile::ECF < ParticipantProfile
     ecf_participant_eligibility&.manual_check_status? ||
       (ecf_participant_validation_data.present? && ecf_participant_eligibility.nil?)
   end
+
+  def fundable?
+    ecf_participant_eligibility&.eligible_status?
+  end
 end

@@ -47,6 +47,7 @@ module RecordDeclarations
       validate_provider!
       validate_milestone!
       declaration = create_record!
+      declaration.refresh_payability!
       declaration_attempt.update!(participant_declaration: declaration)
 
       { id: declaration.id }

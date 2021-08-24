@@ -43,6 +43,10 @@ class ParticipantProfile < ApplicationRecord
     false
   end
 
+  def ecf?
+    ecf? || mentor?
+  end
+
   def npq?
     false
   end
@@ -66,5 +70,9 @@ class ParticipantProfile < ApplicationRecord
 
     decision = validation_decisions.find { |record| record.validation_step.to_s == name.to_s }
     decision || validation_decisions.build(validation_step: name)
+  end
+
+  def fundable?
+    false
   end
 end
