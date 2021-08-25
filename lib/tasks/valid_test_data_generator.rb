@@ -107,9 +107,11 @@ module ValidTestDataGenerator
 
   class AmbitionSpecificPopulater < LeadProviderPopulater
     class << self
+      FIRST_AMBITION_SEED_DATA_TIME = ("2021-08-18 13:43".."2021-08-18 13:49").freeze
+
       def call(name:, total_schools: 3, participants_per_school: 3000)
         generator = new(name: name)
-        generator.remove_old_data(created_at: "2021-08-18 13:43".."2021-08-18 13:49")
+        generator.remove_old_data(created_at: FIRST_AMBITION_SEED_DATA_TIME)
         generator.call(total_schools: total_schools, participants_per_school: participants_per_school)
       end
     end
