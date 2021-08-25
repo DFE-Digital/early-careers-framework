@@ -34,6 +34,12 @@ class ParticipantDeclaration < ApplicationRecord
   scope :active_npqs_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).npq }
   scope :active_uplift_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).uplift }
 
+  scope :payable_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).payable }
+  scope :payable_ects_for_lead_provider, ->(lead_provider) { active_ects_for_lead_provider(lead_provider).payable }
+  scope :payable_mentors_for_lead_provider, ->(lead_provider) { active_mentors_for_lead_provider(lead_provider).payable }
+  scope :payable_npqs_for_lead_provider, ->(lead_provider) { active_npqs_for_lead_provider(lead_provider).payable }
+  scope :payable_uplift_for_lead_provider, ->(lead_provider) { active_uplift_for_lead_provider(lead_provider).payable }
+
   def currently_payable
     participant_profile.fundable?
   end

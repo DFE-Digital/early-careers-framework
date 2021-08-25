@@ -41,16 +41,16 @@ private
   end
 
   def aggregate(aggregation_type:, event_type:)
-    aggregator.send(aggregation_types[event_type][aggregation_type], cpd_lead_provider).payable.count
+    aggregator.send(aggregation_types[event_type][aggregation_type], cpd_lead_provider).count
   end
 
   def aggregation_types
     {
       started: {
-        all: :active_for_lead_provider,
-        uplift: :active_uplift_for_lead_provider,
-        ects: :active_ects_for_lead_provider,
-        mentors: :active_mentors_for_lead_provider,
+        all: :payable_for_lead_provider,
+        uplift: :payable_uplift_for_lead_provider,
+        ects: :payable_ects_for_lead_provider,
+        mentors: :payable_mentors_for_lead_provider,
       },
     }
   end
