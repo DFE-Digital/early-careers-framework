@@ -38,7 +38,7 @@ module RecordDeclarations
       declaration_attempt = create_declaration_attempt!
       validate_provider!
       validate_milestone!
-      declaration = create_record!
+      declaration = find_or_create_record!
       declaration_attempt.update!(participant_declaration: declaration)
 
       { id: declaration.id }
@@ -67,7 +67,17 @@ module RecordDeclarations
       )
     end
 
-    def create_record!
+    def find_or_create_record!
+      existing_declaration = declaration_model.find_by(
+        course_identifier: course_identifier,
+        declaration_date: declaration_date,
+        declaration_type: declaration_type,
+        cpd_lead_provider: cpd_lead_provider,
+        user: user,
+        evidence_held: evidence_held,
+      )
+      return existing_declaration if existing_declaration
+
       ActiveRecord::Base.transaction do
         self.class.declaration_model.create!(
           course_identifier: course_identifier,
