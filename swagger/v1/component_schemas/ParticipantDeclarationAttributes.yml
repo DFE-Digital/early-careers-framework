@@ -43,7 +43,7 @@ properties:
       - npq-executive-leadership
     example: ecf-induction
   eligible_for_payment:
-    description: "The flag showing whether this participant eligible for funding"
+    description: "Indicates whether this declaration would be eligible for funding from the DfE"
     type: boolean
     nullable: false
     example: true
