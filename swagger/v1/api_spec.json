@@ -1267,6 +1267,7 @@
                   "teacher_reference_number": "1234567",
                   "teacher_reference_number_validated": true,
                   "school_urn": "106286",
+                  "school_ukprn": "10079319",
                   "headteacher_status": "no",
                   "eligible_for_funding": true,
                   "funding_choice": "trust",
