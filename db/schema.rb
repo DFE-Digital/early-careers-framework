@@ -411,6 +411,7 @@ ActiveRecord::Schema.define(version: 2021_08_31_081434) do
     t.text "funding_choice"
     t.text "nino"
     t.text "lead_provider_approval_status", default: "pending", null: false
+    t.text "school_ukprn"
     t.index ["npq_course_id"], name: "index_npq_profiles_on_npq_course_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_profiles_on_npq_lead_provider_id"
     t.index ["user_id"], name: "index_npq_profiles_on_user_id"
