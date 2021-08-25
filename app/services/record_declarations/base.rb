@@ -90,10 +90,11 @@ module RecordDeclarations
           user: user,
           evidence_held: evidence_held,
         ).tap do |participant_declaration|
-          ProfileDeclaration.create!(
+          profile_declaration = ProfileDeclaration.create!(
             participant_declaration: participant_declaration,
             participant_profile: user_profile,
           )
+          profile_declaration.update!(payable: participant_declaration.currently_payable)
         end
       end
     end

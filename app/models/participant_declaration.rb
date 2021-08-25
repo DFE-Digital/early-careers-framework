@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
 class ParticipantDeclaration < ApplicationRecord
-  has_one :profile_declaration
-  has_one :participant_profile, through: :profile_declaration
+  has_many :profile_declarations
+  has_one :current_profile_declaration, -> { order(created_at: :desc) }, class_name: "ProfileDeclaration"
+  has_one :participant_profile, through: :current_profile_declaration
   belongs_to :cpd_lead_provider
   belongs_to :user
+
+  delegate :payable, to: :current_profile_declaration
 
   validates :course_identifier, inclusion: { in: :valid_courses }
   validates :course_identifier, :user, :cpd_lead_provider, :declaration_date, :declaration_type, presence: true
@@ -13,10 +16,11 @@ class ParticipantDeclaration < ApplicationRecord
   scope :for_lead_provider, ->(cpd_lead_provider) { where(cpd_lead_provider: cpd_lead_provider) }
   scope :for_declaration, ->(declaration_type) { where(declaration_type: declaration_type) }
   scope :started, -> { for_declaration("started").order(declaration_date: "desc").unique_id }
-  scope :uplift, -> { joins(:profile_declaration).merge(ProfileDeclaration.uplift) }
-  scope :ect, -> { joins(:profile_declaration).merge(ProfileDeclaration.ect_profiles) }
-  scope :mentor, -> { joins(:profile_declaration).merge(ProfileDeclaration.mentor_profiles) }
-  scope :npq, -> { joins(:profile_declaration).merge(ProfileDeclaration.npq_profiles) }
+  scope :uplift, -> { joins(:current_profile_declaration).merge(ProfileDeclaration.uplift) }
+  scope :ect, -> { joins(:current_profile_declaration).merge(ProfileDeclaration.ect_profiles) }
+  scope :mentor, -> { joins(:current_profile_declaration).merge(ProfileDeclaration.mentor_profiles) }
+  scope :npq, -> { joins(:current_profile_declaration).merge(ProfileDeclaration.npq_profiles) }
+  scope :payable, -> { joins(:current_profile_declaration).merge(ProfileDeclaration.where({ payable: true })) }
   scope :unique_id, -> { select(:user_id).distinct }
 
   # Time dependent Range scopes
@@ -29,10 +33,19 @@ class ParticipantDeclaration < ApplicationRecord
   scope :active_mentors_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).mentor }
   scope :active_npqs_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).npq }
   scope :active_uplift_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).uplift }
-  scope :payable, -> { where(payable: true) }
+
+  def currently_payable
+    participant_profile.fundable?
+  end
 
   def refresh_payability!
     # TODO: Do not update it if the declaration was processed already
-    update!(payable: participant_profile.fundable?)
+    if current_profile_declaration&.payable != currently_payable
+      ProfileDeclaration.create!(
+        participant_profile: participant_profile,
+        participant_declaration: self,
+        payable: currently_payable,
+      )
+    end
   end
 end

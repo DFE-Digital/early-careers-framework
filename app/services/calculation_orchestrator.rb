@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "participant_event_aggregator"
 require "payment_calculator/ecf/payment_calculation"
 
 class CalculationOrchestrator

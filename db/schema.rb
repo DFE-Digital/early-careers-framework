@@ -449,7 +449,6 @@ ActiveRecord::Schema.define(version: 2021_08_23_100406) do
     t.string "evidence_held"
     t.string "type", default: "ParticipantDeclaration::ECF"
     t.uuid "cpd_lead_provider_id"
-    t.boolean "payable", default: false
     t.index ["cpd_lead_provider_id"], name: "index_participant_declarations_on_cpd_lead_provider_id"
     t.index ["user_id"], name: "index_participant_declarations_on_user_id"
   end
@@ -549,6 +548,7 @@ ActiveRecord::Schema.define(version: 2021_08_23_100406) do
     t.uuid "participant_profile_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "payable", default: false
     t.index ["participant_declaration_id"], name: "index_profile_declarations_on_participant_declaration_id"
   end
 
