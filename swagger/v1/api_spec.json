@@ -166,7 +166,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "example": "4ad5763d-a311-4dfb-9919-8ce8031892f1",
+            "example": "eba7c936-ff24-4af9-8ea6-69a52449edc8",
             "description": "The ID of the NPQ application to accept.",
             "schema": {
               "type": "string"
@@ -216,7 +216,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "example": "319d3e33-271d-43cc-b639-f0429127aa41",
+            "example": "4b614d64-8569-4a3b-9b38-5611fea627c3",
             "description": "The ID of the NPQ application to reject.",
             "schema": {
               "type": "string"
@@ -1023,7 +1023,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ParticipantDeclarationResponses"
+              "$ref": "#/components/schemas/ParticipantDeclarationResponse"
             },
             "example": [
               {
@@ -1541,7 +1541,7 @@
             "example": "ecf-induction"
           },
           "eligible_for_payment": {
-            "description": "The flag showing whether this participant eligible for funding",
+            "description": "Indicates whether this declaration would be eligible for funding from the DfE",
             "type": "boolean",
             "nullable": false,
             "example": true

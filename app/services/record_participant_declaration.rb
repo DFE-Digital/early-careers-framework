@@ -15,8 +15,6 @@ class RecordParticipantDeclaration
   def call
     recorder = "::RecordDeclarations::#{::RecordDeclarations::EventFactory.call(event)}::#{::RecordDeclarations::RecorderFactory.call(course_identifier)}".constantize
     recorder.call(params)
-  rescue NameError
-    raise ActionController::ParameterMissing, I18n.t(:invalid_course)
   end
 
 private
