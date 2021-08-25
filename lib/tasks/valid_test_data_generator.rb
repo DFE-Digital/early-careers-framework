@@ -117,18 +117,9 @@ module ValidTestDataGenerator
     end
 
     def remove_old_data(created_at:)
-      participants = lead_provider.ecf_participants.where(created_at: created_at)
-      participants.all.each do |participant|
-        tp = participant.teacher_profile
-        # Just in case the withdrawn merge happens before this is run.
-        # tp.participant_profiles.each do |pp|
-        #   pp.participant_profile_states.destroy_all!
-        # end
-        tp.destroy!
-        participant.destroy!
-      end
+      lead_provider.ecf_participants.where(created_at: created_at).each(&:destroy)
       schools = lead_provider.schools.where(created_at: created_at)
-      schools.all.each do |school|
+      schools.each do |school|
         partnership = Partnership.find_by(lead_provider: lead_provider, school: school, cohort: Cohort.current)
         delivery_partner = partnership.delivery_partner
         provider_relationship = ProviderRelationship.find_by(lead_provider: lead_provider,
