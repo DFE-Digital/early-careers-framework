@@ -14,6 +14,7 @@ class NPQValidationDataSerializer
              :teacher_reference_number_verified,
              :active_alert,
              :school_urn,
+             :school_ukprn,
              :headteacher_status,
              :eligible_for_funding,
              :funding_choice
