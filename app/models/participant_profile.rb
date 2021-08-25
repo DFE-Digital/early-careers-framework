@@ -43,10 +43,6 @@ class ParticipantProfile < ApplicationRecord
     false
   end
 
-  def ecf?
-    ecf? || mentor?
-  end
-
   def npq?
     false
   end

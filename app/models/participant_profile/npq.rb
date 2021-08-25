@@ -25,8 +25,4 @@ class ParticipantProfile::NPQ < ParticipantProfile
   def participant_type
     :npq
   end
-
-  def fundable?
-    false
-  end
 end
