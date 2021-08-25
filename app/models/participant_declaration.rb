@@ -46,6 +46,7 @@ class ParticipantDeclaration < ApplicationRecord
         participant_declaration: self,
         payable: currently_payable,
       )
+      reload
     end
   end
 end
