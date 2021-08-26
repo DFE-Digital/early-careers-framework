@@ -9,7 +9,6 @@ class ParticipantDeclaration < ApplicationRecord
 
   delegate :payable, to: :current_profile_declaration, allow_nil: true
 
-  validates :course_identifier, inclusion: { in: :valid_courses }
   validates :course_identifier, :user, :cpd_lead_provider, :declaration_date, :declaration_type, presence: true
 
   # Helper scopes

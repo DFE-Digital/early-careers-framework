@@ -6,12 +6,12 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby File.read(".ruby-version").chomp
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 6.1.3", ">= 6.1.3.2"
+gem "rails", "~> 6.1.4", ">= 6.1.4.1"
 
 # User management and rbac
 gem "devise", ">= 4.7.3"
 gem "paper_trail"
-gem "pretender"
+gem "pretender", ">= 0.3.4"
 gem "pundit"
 
 # Error and performance monitoring
@@ -114,7 +114,7 @@ end
 # S3 adapter for active storage
 gem "aws-sdk-s3", require: false
 
-gem "activerecord-session_store"
+gem "activerecord-session_store", ">= 2.0.0"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -166,7 +166,7 @@ group :test do
   gem "percy-capybara"
   gem "pundit-matchers", "~> 1.6.0"
   gem "rails-controller-testing", ">= 1.0.5"
-  gem "rspec-default_http_header"
+  gem "rspec-default_http_header", ">= 0.0.4"
   gem "selenium-webdriver"
   gem "shoulda-matchers", "~> 4.4"
   gem "simplecov"

@@ -21,6 +21,12 @@ module Api
         end
       end
 
+      def withdraw
+        params = HashWithIndifferentAccess.new({ cpd_lead_provider: current_user, participant_id: participant_id }).merge(permitted_params["attributes"] || {})
+        profile = WithdrawParticipant.call(params)
+        render json: ParticipantSerializer.new(profile.user).serializable_hash.to_json
+      end
+
     private
 
       def access_scope
@@ -57,6 +63,7 @@ module Api
                                       teacher_profile: {
                                         ecf_profile: %i[cohort school ecf_participant_eligibility],
                                         early_career_teacher_profile: :mentor,
+                                        participant_profiles: :participant_profile_state,
                                       },
                                     )
 
@@ -65,6 +72,20 @@ module Api
         end
 
         participants
+      end
+
+      def participant_id
+        params.require(:id)
+      end
+
+      def permitted_params
+        params.require(:data).permit(:type, attributes: {})
+      rescue ActionController::ParameterMissing => e
+        if e.param == :data
+          raise ActionController::BadRequest, I18n.t(:invalid_data_structure)
+        else
+          raise
+        end
       end
     end
   end
