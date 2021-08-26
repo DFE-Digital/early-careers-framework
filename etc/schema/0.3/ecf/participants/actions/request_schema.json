@@ -47,13 +47,13 @@
       },
       "withdrawn_reasons": {
         "enum": [
-          "Left teaching profession",
-          "Moved school",
-          "Mentor no longer being mentor",
-          "School left FIP",
-          "Career break",
-          "Passed Induction",
-          "Other"
+          "left-teaching-profession",
+          "moved-school",
+          "mentor-no-longer-being-mentor",
+          "school-left-fip",
+          "career-break",
+          "passed-induction",
+          "other"
         ]
       }
     }

@@ -51,10 +51,10 @@
       },
       "reason": {
         "enum": [
-          "Left teaching profession",
-          "Moved school",
-          "Career break",
-          "Other"
+          "left-teaching-profession",
+          "moved-school",
+          "career-break",
+          "other"
         ]
       }
     }
