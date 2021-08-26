@@ -166,7 +166,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "example": "5ceeff63-8dea-49b8-bdc8-aaaf9823fe0c",
+            "example": "f97db76b-271f-45a5-a0fa-87e0de3a290a",
             "description": "The ID of the NPQ application to accept.",
             "schema": {
               "type": "string"
@@ -216,7 +216,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "example": "79fc82f6-3bce-4c22-b7b4-db14b19abaf3",
+            "example": "2a929ff2-42e3-42e1-a535-2105d9c84f2b",
             "description": "The ID of the NPQ application to reject.",
             "schema": {
               "type": "string"
@@ -315,6 +315,59 @@
             }
           }
         }
+      },
+      "get": {
+        "summary": "List all participant declarations",
+        "operationId": "participant_declarations",
+        "tags": [
+          "participants declarations"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Pagination"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "example": {
+              "page": 1,
+              "per_page": 5
+            },
+            "description": "Pagination options to navigate through the list of participant declarations."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of participant declarations",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultipleParticipantDeclarationsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/v1/participants": {
@@ -400,13 +453,22 @@
             ]
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantAction"
+              }
+            }
+          }
+        },
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "example": "f847086c-d727-4e47-96d0-a52cb9f60a76",
-            "description": "The ID of the participant to modify",
+            "example": "",
+            "description": "The ID of the participant to withdraw",
             "schema": {
               "type": "string"
             }
@@ -414,11 +476,11 @@
         ],
         "responses": {
           "200": {
-            "description": "The ECF participant being modified",
+            "description": "The ECF participant being withdrawn",
             "content": {
-              "application/vnd.api+json": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ECFManageResponse"
+                  "$ref": "#/components/schemas/EcfParticipantResponse"
                 }
               }
             }
@@ -522,6 +584,24 @@
           "bad_request": {
             "description": "An error message for bad request",
             "type": "string"
+          }
+        }
+      },
+      "ECFParticipantAction": {
+        "description": "The details of a participant",
+        "type": "object",
+        "required": [
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "participant"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ECFParticipantWithdrawal"
           }
         }
       },
@@ -632,6 +712,38 @@
           "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
           "declaration_type": "started",
           "declaration_date": "2021-05-31T02:21:32.000Z",
+          "course_identifier": "ecf-mentor"
+        }
+      },
+      "ECFParticipantWithdrawal": {
+        "description": "An ECF withdrawal action",
+        "type": "object",
+        "properties": {
+          "reason": {
+            "description": "The reason for withdrawal",
+            "type": "string",
+            "enum": [
+              "career-break",
+              "mentor-no-longer-being-mentor"
+            ],
+            "example": "career-break"
+          },
+          "course_identifier": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "ecf-induction",
+              "ecf-mentor"
+            ],
+            "example": "ecf-induction"
+          }
+        },
+        "required": [
+          "reason",
+          "course_identifier"
+        ],
+        "example": {
+          "reason": "career-break",
           "course_identifier": "ecf-mentor"
         }
       },
@@ -871,6 +983,18 @@
           }
         }
       },
+      "EcfParticipantResponse": {
+        "description": "An ECF Participant",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/EcfParticipant"
+          }
+        }
+      },
       "ListFilter": {
         "description": "Filter a list of records to return more specific results",
         "type": "object",
@@ -1014,6 +1138,45 @@
                   "eligible_for_funding": true,
                   "funding_choice": "trust",
                   "course_identifier": "npq-leading-teaching"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "MultipleParticipantDeclarationsResponse": {
+        "description": "A list of participant declarations",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ParticipantDeclarationResponses"
+            },
+            "example": [
+              {
+                "id": "01017c12-354b-4b2d-b621-3531ab729c43",
+                "type": "participant-declaration",
+                "attributes": {
+                  "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                  "declaration_type": "started",
+                  "declaration_date": "2021-05-31T02:21:32.000Z",
+                  "course_identifier": "ecf-mentor",
+                  "eligible_for_payment": false
+                }
+              },
+              {
+                "id": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
+                "type": "participant-declaration",
+                "attributes": {
+                  "participant_id": "ab3a7848-7308-4879-942a-c4a70ced400a",
+                  "declaration_type": "started",
+                  "declaration_date": "2021-05-31T02:21:32.000Z",
+                  "course_identifier": "ecf-mentor",
+                  "eligible_for_payment": true
                 }
               }
             ]
@@ -1456,6 +1619,66 @@
           }
         }
       },
+      "ParticipantDeclarationAttributes": {
+        "description": "The data attributes associated with a participant declaration response",
+        "type": "object",
+        "required": [
+          "id",
+          "participant_id",
+          "declaration_type",
+          "declaration_date",
+          "course_identifier",
+          "eligible_for_payment"
+        ],
+        "properties": {
+          "id": {
+            "description": "The unique id of the participant",
+            "type": "string",
+            "format": "uuid",
+            "example": "db3a7848-7308-4879-942a-c4a70ced400a"
+          },
+          "declaration_type": {
+            "description": "The event declaration type",
+            "type": "string",
+            "enum": [
+              "started",
+              "completed",
+              "retained-1",
+              "retained-2",
+              "retained-3",
+              "retained-4"
+            ],
+            "example": "started"
+          },
+          "declaration_date": {
+            "description": "The event declaration date",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:21:32.000Z"
+          },
+          "course_identifier": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "ecf-induction",
+              "ecf-mentor",
+              "npq-leading-teaching",
+              "npq-leading-teaching-development",
+              "npq-leading-behaviour-culture",
+              "npq-headship",
+              "npq-senior-leadership",
+              "npq-executive-leadership"
+            ],
+            "example": "ecf-induction"
+          },
+          "eligible_for_payment": {
+            "description": "The flag showing whether this participant eligible for funding",
+            "type": "boolean",
+            "nullable": false,
+            "example": true
+          }
+        }
+      },
       "ParticipantDeclarationChoices": {
         "description": "A participant declaration",
         "type": "object",
@@ -1492,6 +1715,31 @@
             "type": "string",
             "format": "uuid",
             "example": "b0f657a7-9a81-4a89-a6b0-627c774ff753"
+          }
+        }
+      },
+      "ParticipantDeclarationResponse": {
+        "description": "A participant declaration response",
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "id": {
+            "description": "The unique identifier of the participant record",
+            "type": "string",
+            "format": "uuid",
+            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
+          },
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "participant"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ParticipantDeclarationAttributes"
           }
         }
       },

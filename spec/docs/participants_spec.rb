@@ -2,13 +2,16 @@
 
 require "swagger_helper"
 
+require_relative "../shared/context/lead_provider_profiles_and_courses.rb"
+
 describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_flags: { participant_data_api: "active" } do
+  include_context "lead provider profiles and courses"
+
   let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: lead_provider) }
   let(:lead_provider) { create(:lead_provider) }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
   let(:bearer_token) { "Bearer #{token}" }
   let(:Authorization) { bearer_token }
-  let(:participant) { create(:user) }
 
   path "/api/v1/participants" do
     get "Retrieve multiple participants" do
@@ -61,6 +64,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
       operationId :participant
       tags "ECF Participant"
       security [bearerAuth: []]
+      consumes "application/json"
 
       request_body content: {
         "application/json": {
@@ -87,11 +91,11 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
                 }
 
       response "200", "The ECF participant being withdrawn" do
-        let(:id) { participant.id }
+        let(:id) { mentor_profile.user.id }
         let(:attributes) do
           {
             reason: "career-break",
-            course_identifier: "ecf-induction",
+            course_identifier: "ecf-mentor",
           }
         end
 
@@ -104,7 +108,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
           }
         end
 
-        schema({ "$ref": "#/components/schemas/ECFParticipantAttributes" }, content_type: "application/vnd.api+json")
+        schema "$ref": "#/components/schemas/EcfParticipantResponse"
         run_test!
       end
     end
