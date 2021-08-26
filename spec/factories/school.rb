@@ -23,5 +23,14 @@ FactoryBot.define do
     trait :with_local_authority do
       school_local_authorities { [build(:school_local_authority)] }
     end
+
+    trait :open do
+      school_status_code { 1 }
+    end
+
+    trait :cip_only do
+      open
+      school_type_code { GiasTypes::CIP_ONLY_TYPE_CODES.sample }
+    end
   end
 end

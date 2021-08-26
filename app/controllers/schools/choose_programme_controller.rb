@@ -6,7 +6,7 @@ class Schools::ChooseProgrammeController < Schools::BaseController
   before_action :load_programme_form
   before_action :verify_programme_chosen, only: %i[show]
 
-  def show;
+  def show
     if current_user.schools.count > 1
       @show_back_link = true
     end
@@ -54,7 +54,7 @@ private
 
   def load_programme_form
     session_params = session[:induction_choice_form] || {}
-    @induction_choice_form = InductionChoiceForm.new(session_params.merge(programme_choice_form_params))
+    @induction_choice_form = InductionChoiceForm.new(session_params.merge(programme_choice_form_params).merge(school: school))
   end
 
   def save_school_choice!
