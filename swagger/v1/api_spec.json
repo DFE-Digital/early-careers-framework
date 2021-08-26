@@ -166,7 +166,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "example": "f97db76b-271f-45a5-a0fa-87e0de3a290a",
+            "example": "e253e8e3-79e1-4d6d-8968-f1fde415901f",
             "description": "The ID of the NPQ application to accept.",
             "schema": {
               "type": "string"
@@ -216,7 +216,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "example": "2a929ff2-42e3-42e1-a535-2105d9c84f2b",
+            "example": "cd80eebc-e49d-49a0-b372-dfdbe5e7de05",
             "description": "The ID of the NPQ application to reject.",
             "schema": {
               "type": "string"
@@ -798,7 +798,8 @@
             "description": "The unique identifier of this ECF participants mentor",
             "type": "string",
             "example": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
-            "format": "uuid"
+            "format": "uuid",
+            "nullable": true
           },
           "school_urn": {
             "description": "The Unique Reference Number (URN) of the school that submitted this ECF participant",
