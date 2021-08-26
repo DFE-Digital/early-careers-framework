@@ -12,7 +12,7 @@ RSpec.describe Participants::Withdraw::NPQ do
       cpd_lead_provider: cpd_lead_provider,
       participant_id: npq_profile.user.id,
       course_identifier: "npq-leading-teaching",
-      reason: "Career break",
+      reason: "career-break",
     }
   end
 

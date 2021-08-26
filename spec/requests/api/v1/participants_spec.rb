@@ -219,7 +219,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
         let(:parsed_response) { JSON.parse(response.body) }
 
         it "changes the state of a participant to withdrawn" do
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "Career break" } } }
+          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
 
           expect(response).to be_successful
 

@@ -38,6 +38,14 @@ en:
     retention_3: Retention 3
     retention_4: Retention 4
     completion: Completion
+  withdrawal_reasons:
+    left_teaching_profession: "Left teaching profession"
+    moved_school: "Moved school"
+    mentor_no_longer_mentor: "Mentor no longer being mentor"
+    school_left_fip: "School left FIP"
+    career_break: "Career break"
+    passed_induction: "Passed Induction"
+    other: "Other"
   parameter_required: Parameter is required
   invalid_participant: "The property '#/participant_id' must be a valid Participant ID"
   invalid_identifier: "The property '#/course_identifier' must be an available course to '#/participant_id'"

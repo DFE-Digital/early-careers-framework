@@ -11,7 +11,7 @@ RSpec.describe Participants::Withdraw::Mentor do
       cpd_lead_provider: cpd_lead_provider,
       participant_id: mentor_profile.user.id,
       course_identifier: "ecf-mentor",
-      reason: "Career break",
+      reason: "career-break",
     }
   end
 

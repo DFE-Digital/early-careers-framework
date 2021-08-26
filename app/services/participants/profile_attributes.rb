@@ -27,7 +27,7 @@ module Participants
       errors.add(:participant_id, I18n.t(:invalid_participant)) if user_profile.blank?
     end
 
-    private
+  private
 
     def user
       @user ||= User.find_by(id: participant_id)
@@ -36,6 +36,5 @@ module Participants
     def valid_courses
       self.class.valid_courses
     end
-
   end
 end

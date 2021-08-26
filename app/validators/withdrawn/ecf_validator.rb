@@ -4,15 +4,7 @@ module Withdrawn
   class ECFValidator < BaseValidator
     class << self
       def reasons
-        [
-          "Left teaching profession",
-          "Moved school",
-          "Mentor no longer being mentor",
-          "School left FIP",
-          "Career break",
-          "Passed Induction",
-          "Other",
-        ].freeze
+        %w[left-teaching-profession moved-school mentor-no-longer-being-mentor school-left-fip career-break passed-induction other].freeze
       end
     end
   end
