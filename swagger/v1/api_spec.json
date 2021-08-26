@@ -166,7 +166,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "example": "40c0fb7b-9b58-45f2-9c3c-70b562ab678c",
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
             "description": "The ID of the NPQ application to accept.",
             "schema": {
               "type": "string"
@@ -216,7 +216,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "example": "e7fb63cb-d71c-4bcc-ab3d-f411ea3da7c4",
+            "example": "14b1b4ab-fa81-4f7a-b4b5-f632412e8c5c",
             "description": "The ID of the NPQ application to reject.",
             "schema": {
               "type": "string"
@@ -439,55 +439,6 @@
         }
       }
     },
-    "/api/v1/participants/{id}/withdraw": {
-      "put": {
-        "summary": "Manage participant",
-        "operationId": "participant",
-        "tags": [
-          "ECF Participant"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ECFParticipantAction"
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "",
-            "description": "The ID of the participant to withdraw",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The ECF participant being withdrawn",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EcfParticipantResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/participants.csv": {
       "get": {
         "summary": "Retrieve all participants in CSV format",
@@ -535,6 +486,55 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/participants/{id}/withdraw": {
+      "put": {
+        "summary": "Withdraw a participant from a course",
+        "operationId": "participant",
+        "tags": [
+          "ECF Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantAction"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "",
+            "description": "The ID of the participant to withdraw",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ECF participant being withdrawn",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EcfParticipantResponse"
                 }
               }
             }
@@ -716,15 +716,20 @@
         }
       },
       "ECFParticipantWithdrawal": {
-        "description": "An ECF withdrawal action",
+        "description": "An ECF participant withdrawal action",
         "type": "object",
         "properties": {
           "reason": {
-            "description": "The reason for withdrawal",
+            "description": "The reason for the withdrawal",
             "type": "string",
             "enum": [
+              "left-teaching-profession",
+              "moved-school",
+              "mentor-no-longer-being-mentor",
+              "school-left-fip",
               "career-break",
-              "mentor-no-longer-being-mentor"
+              "passed-induction",
+              "other"
             ],
             "example": "career-break"
           },

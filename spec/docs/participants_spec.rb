@@ -57,8 +57,42 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
     end
   end
 
+  path "/api/v1/participants.csv" do
+    get "Retrieve all participants in CSV format" do
+      operationId :ecf_participants_csv
+      tags "ECF participants"
+      security [bearerAuth: []]
+
+      parameter name: :filter,
+                in: :query,
+                schema: {
+                  "$ref": "#/components/schemas/ListFilter",
+                },
+                type: :object,
+                style: :deepObject,
+                explode: true,
+                required: false,
+                description: "Refine ECF participants to return.",
+                example: { updated_since: "2020-11-13T11:21:55Z" }
+
+      response "200", "A CSV file of ECF participants" do
+        schema({ "$ref": "#/components/schemas/MultipleEcfParticipantsCsvResponse" }, content_type: "text/csv")
+
+        run_test!
+      end
+
+      response "401", "Unauthorized" do
+        let(:Authorization) { "Bearer invalid" }
+
+        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" }, content_type: "application/vnd.api+json")
+
+        run_test!
+      end
+    end
+  end
+
   path "/api/v1/participants/{id}/withdraw" do
-    put "Manage participant" do
+    put "Withdraw a participant from a course" do
       operationId :participant
       tags "ECF Participant"
       security [bearerAuth: []]
@@ -107,40 +141,6 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
         end
 
         schema "$ref": "#/components/schemas/EcfParticipantResponse"
-        run_test!
-      end
-    end
-  end
-
-  path "/api/v1/participants.csv" do
-    get "Retrieve all participants in CSV format" do
-      operationId :ecf_participants_csv
-      tags "ECF participants"
-      security [bearerAuth: []]
-
-      parameter name: :filter,
-                in: :query,
-                schema: {
-                  "$ref": "#/components/schemas/ListFilter",
-                },
-                type: :object,
-                style: :deepObject,
-                explode: true,
-                required: false,
-                description: "Refine ECF participants to return.",
-                example: { updated_since: "2020-11-13T11:21:55Z" }
-
-      response "200", "A CSV file of ECF participants" do
-        schema({ "$ref": "#/components/schemas/MultipleEcfParticipantsCsvResponse" }, content_type: "text/csv")
-
-        run_test!
-      end
-
-      response "401", "Unauthorized" do
-        let(:Authorization) { "Bearer invalid" }
-
-        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" }, content_type: "application/vnd.api+json")
-
         run_test!
       end
     end
