@@ -56,12 +56,8 @@ RSpec.describe Participants::Withdraw::NPQ do
   end
 
   context "when user is not a participant" do
-    it "raises ParameterMissing for an invalid user_id" do
-      expect { described_class.call(params: participant_params.except(:participant_id)) }.to raise_error(ActionController::ParameterMissing)
-    end
-
-    it "does not trigger a state change" do
-      expect { described_class.call(params: participant_params.except(:participant_id)) }.to not_change { ParticipantProfileState.count }
+    it "raises ParameterMissing for an invalid user_id and not change participant profile state" do
+      expect { described_class.call(params: participant_params.except(:participant_id)) }.to raise_error(ActionController::ParameterMissing).and(not_change { ParticipantProfileState.count })
     end
   end
 end

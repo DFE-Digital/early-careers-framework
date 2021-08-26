@@ -14,7 +14,7 @@ class ParticipantProfile < ApplicationRecord
   has_many :participant_declarations, through: :profile_declarations
 
   has_many :participant_profile_states
-  has_one :state, lambda {
+  has_one :participant_profile_state, lambda {
     merge(ParticipantProfileState.most_recent)
   }, class_name: "ParticipantProfileState"
 
@@ -39,6 +39,10 @@ class ParticipantProfile < ApplicationRecord
   self.validation_steps = []
 
   self.ignored_columns = %w[user_id]
+
+  def state
+    participant_profile_state&.state
+  end
 
   def ect?
     false

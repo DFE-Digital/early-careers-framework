@@ -80,6 +80,7 @@ class ParticipantSerializer
   end
 
   active_participant_attribute :state do |user|
-    user.teacher_profile.ecf_profile&.state&.state || "active"
+    user.teacher_profile.ecf_profile&.state || "active"
   end
+
 end

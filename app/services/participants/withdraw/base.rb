@@ -32,7 +32,7 @@ module Participants
       attr_accessor :reason
       validates :reason, presence: true
       validate :not_already_withdrawn
-      delegate :state, to: :not_implemented_error
+      delegate :participant_profile_state, to: :not_implemented_error
 
       def initialize(params:)
         params.each do |param, value|
@@ -47,7 +47,7 @@ module Participants
       def not_already_withdrawn
         return if errors.any?
 
-        errors.add(:participant_id, I18n.t(:invalid_withdrawal)) if state&.withdrawn?
+        errors.add(:participant_id, I18n.t(:invalid_withdrawal)) if participant_profile_state&.withdrawn?
       end
 
       def validate_provider!
