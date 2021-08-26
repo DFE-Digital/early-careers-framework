@@ -5,20 +5,7 @@ module RecordDeclarations
     extend ActiveSupport::Concern
 
     included do
-      delegate :npq?, :npq_profiles, to: :user
       extend NPQClassMethods
-    end
-
-    def participant?
-      npq?
-    end
-
-    def user_profile
-      npq_profiles.includes({ validation_data: [:npq_course] }).where('npq_courses.identifier': course_identifier).first
-    end
-
-    def valid_courses
-      self.class.valid_courses
     end
 
     module NPQClassMethods
@@ -28,10 +15,6 @@ module RecordDeclarations
 
       def valid_declaration_types
         %w[started completed retained-1 retained-2]
-      end
-
-      def valid_courses
-        NPQCourse.identifiers
       end
     end
   end

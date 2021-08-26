@@ -96,10 +96,10 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       end
 
       it "returns 422 when a participant type doesn't match the course type" do
-        invalid_course_identifier = valid_params.merge({ course_identifier: "ecf-mentor" })
-        post "/api/v1/participant-declarations", params: build_params(invalid_course_identifier)
+        invalid_participant_for_course_type = valid_params.merge({ course_identifier: "ecf-mentor" })
+        post "/api/v1/participant-declarations", params: build_params(invalid_participant_for_course_type)
         expect(response.status).to eq 422
-        expect(response.body).to eq({ bad_or_missing_parameters: [I18n.t(:invalid_course)] }.to_json)
+        expect(response.body).to eq({ bad_or_missing_parameters: [I18n.t(:invalid_participant)] }.to_json)
       end
 
       it "returns 422 when there are multiple errors" do
