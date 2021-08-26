@@ -7,7 +7,7 @@ class ParticipantDeclaration < ApplicationRecord
   belongs_to :cpd_lead_provider
   belongs_to :user
 
-  delegate :payable, to: :current_profile_declaration
+  delegate :payable, to: :current_profile_declaration, allow_nil: true
 
   validates :course_identifier, inclusion: { in: :valid_courses }
   validates :course_identifier, :user, :cpd_lead_provider, :declaration_date, :declaration_type, presence: true
@@ -20,7 +20,7 @@ class ParticipantDeclaration < ApplicationRecord
   scope :ect, -> { joins(:current_profile_declaration).merge(ProfileDeclaration.ect_profiles) }
   scope :mentor, -> { joins(:current_profile_declaration).merge(ProfileDeclaration.mentor_profiles) }
   scope :npq, -> { joins(:current_profile_declaration).merge(ProfileDeclaration.npq_profiles) }
-  scope :payable, -> { joins(:current_profile_declaration).merge(ProfileDeclaration.where({ payable: true })) }
+  scope :payable, -> { joins(:current_profile_declaration).merge(ProfileDeclaration.where(payable: true)) }
   scope :unique_id, -> { select(:user_id).distinct }
 
   # Time dependent Range scopes
