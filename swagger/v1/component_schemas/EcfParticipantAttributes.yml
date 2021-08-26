@@ -35,8 +35,8 @@ properties:
       - mentor
   cohort:
     description: "Which cohort this ECF participant is associated with"
-    type: string
-    example: "2021"
+    type: integer
+    example: 2021
   status:
     description: "The status of this ECF participant record"
     type: string
