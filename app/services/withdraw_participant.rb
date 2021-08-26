@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 require "factories/course_identifier"
-require "factories/event"
 
-class RecordParticipantDeclaration
+class WithdrawParticipant
   attr_accessor :params
 
   class << self
@@ -13,8 +12,8 @@ class RecordParticipantDeclaration
   end
 
   def call
-    recorder = "::RecordDeclarations::#{::Factories::Event.call(event)}::#{::Factories::CourseIdentifier.call(course_identifier)}".constantize
-    recorder.call(params)
+    recorder = "::Participants::Withdraw::#{::Factories::CourseIdentifier.call(course_identifier)}".constantize
+    recorder.call(params: params)
   end
 
 private
@@ -25,9 +24,5 @@ private
 
   def course_identifier
     params[:course_identifier]
-  end
-
-  def event
-    params[:declaration_type]
   end
 end

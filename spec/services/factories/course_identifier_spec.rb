@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe RecordDeclarations::RecorderFactory do
+RSpec.describe Factories::CourseIdentifier do
   let!(:npq_course) { create(:npq_course, identifier: "npq-leading-teaching") }
 
   context "when passed a valid course" do

@@ -2,14 +2,13 @@
 
 module RecordDeclarations
   module Retained
-    class NPQ < ::RecordDeclarations::Base
-      include Participants::NPQ
-      include RecordDeclarations::NPQ
+    class ECF < ::RecordDeclarations::Base
+      include RecordDeclarations::ECF
       include Retained
 
       class << self
         def valid_evidence_types
-          %w[yes].freeze
+          %w[training-event-attended self-study-material-completed other].freeze
         end
       end
     end

@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
-module RecordDeclarations
+module Participants
   module EarlyCareerTeacher
+    include ECF
     extend ActiveSupport::Concern
-
     included do
       extend EarlyCareerTeacherClassMethods
-      include ECF
-      delegate :early_career_teacher_profile, to: :user
+      delegate :early_career_teacher_profile, to: :user, allow_nil: true
     end
 
     def user_profile
@@ -15,7 +14,7 @@ module RecordDeclarations
     end
 
     module EarlyCareerTeacherClassMethods
-      def valid_courses_for_user
+      def valid_courses
         %w[ecf-induction]
       end
     end
