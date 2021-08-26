@@ -5,7 +5,6 @@ require "csv"
 module Api
   module V1
     class ParticipantsController < Api::ApiController
-      include ApiAuditable
       include ApiTokenAuthenticatable
       include ApiPagination
 
