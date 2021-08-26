@@ -52,6 +52,20 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         expect(parsed_response["id"]).to eq(ParticipantDeclaration.order(:created_at).last.id)
       end
 
+      it "does not create duplicate declarations, but stores the duplicate declaration attempts" do
+        params = build_params(valid_params)
+        post "/api/v1/participant-declarations", params: params
+        original_id = parsed_response["id"]
+
+        expect { post "/api/v1/participant-declarations", params: params }
+            .not_to change(ParticipantDeclaration, :count)
+        expect { post "/api/v1/participant-declarations", params: params }
+            .to change(ParticipantDeclarationAttempt, :count).by(1)
+
+        expect(response.status).to eq 200
+        expect(parsed_response["id"]).to eq(original_id)
+      end
+
       context "when lead provider has no access to the user" do
         before do
           partnership.update!(lead_provider: create(:lead_provider))

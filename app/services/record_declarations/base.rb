@@ -68,25 +68,15 @@ module RecordDeclarations
     end
 
     def find_or_create_record!
-      existing_declaration = declaration_model.find_by(
-        course_identifier: course_identifier,
-        declaration_date: declaration_date,
-        declaration_type: declaration_type,
-        cpd_lead_provider: cpd_lead_provider,
-        user: user,
-        evidence_held: evidence_held,
-      )
-      return existing_declaration if existing_declaration
-
       ActiveRecord::Base.transaction do
-        self.class.declaration_model.create!(
+        self.class.declaration_model.find_or_create_by!(
           course_identifier: course_identifier,
           declaration_date: declaration_date,
           declaration_type: declaration_type,
           cpd_lead_provider: cpd_lead_provider,
           user: user,
           evidence_held: evidence_held,
-        ).tap do |participant_declaration|
+        ) do |participant_declaration|
           ProfileDeclaration.create!(
             participant_declaration: participant_declaration,
             participant_profile: user_profile,
