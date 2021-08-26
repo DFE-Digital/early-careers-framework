@@ -27,6 +27,12 @@ statuscake_alerts = {
     contact_group = [206487]
     find_string   = "Manage training for early career teachers"
   }
+  "alertmanager-prod" = {
+    website_name  = "alertmanager-cpd-monitoring-prod"
+    website_url   = "https://alertmanager-cpd-monitoring-prod.london.cloudapps.digital/-/healthy"
+    contact_group = [206487]
+    find_string   = "OK"
+  }
   "PaaS500String" = {
     website_name  = "manage-training-for-early-career-teachers-production"
     website_url   = "https://manage-training-for-early-career-teachers.education.gov.uk"
