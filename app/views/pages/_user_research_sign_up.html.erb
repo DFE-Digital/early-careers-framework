@@ -21,7 +21,7 @@
 
     <h2 class="govuk-heading-l">How research sessions work</h2>
     <p class="govuk-body">
-      Sessions take up to 45 minutes, and you can choose a time that suits you. We’ll give you £30 for your time.
+      Sessions take up to 60 minutes, and you can choose a time that suits you. We’ll give you £50 for your time.
     </p>
 
     <p class="govuk-body">
@@ -44,8 +44,10 @@
     <p class="govuk-body">
       If you’d like to take part,
 
-      <% if mentor %>
+      <% if type == :ect %>
         <%= govuk_link_to "choose a session time here.", "https://calendly.com/dfe-ecf/dfe-ecf-research-session-ect-b3" %>
+      <% elsif type == :sit %>
+        <%= govuk_link_to "choose a session time here.", "https://calendly.com/dfe-ecf/dfe-ecf-research-session-sit-b3" %>
       <% else %>
         <%= govuk_link_to "choose a session time here.", "https://calendly.com/dfe-ecf/dfe-ecf-research-session-mentor-b3" %>
       <% end %>
