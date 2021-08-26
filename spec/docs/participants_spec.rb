@@ -62,27 +62,47 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
       tags "ECF Participant"
       security [bearerAuth: []]
 
+      request_body content: {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/ECFParticipantAction",
+          },
+        },
+      }
+
       parameter name: :id,
                 in: :path,
                 type: :string,
                 required: true,
-                example: SecureRandom.uuid,
-                description: "The ID of the participant to modify"
-      parameter name: :course_identifier,
-                in: :body,
-                type: :string,
-                required: true,
-                example: "ecf-induction",
-                description: "The course that the participant is associated with"
-      parameter name: :reason,
-                in: :body,
-                type: :string,
-                required: true,
-                example: "Career break",
-                description: "The reason for the withdrawal"
+                example: "",
+                description: "The ID of the participant to withdraw"
 
-      response "200", "The ECF participant being modified" do
+      parameter name: :params,
+                in: :body,
+                type: :object,
+                style: :deepObject,
+                required: true,
+                schema: {
+                  "$ref": "#/components/schemas/ECFParticipantAction",
+                }
+
+      response "200", "The ECF participant being withdrawn" do
         let(:id) { participant.id }
+        let(:attributes) do
+          {
+            reason: "career-break",
+            course_identifier: "ecf-induction",
+          }
+        end
+
+        let(:params) do
+          {
+            "data": {
+              "type": "participant",
+              "attributes": attributes,
+            },
+          }
+        end
 
         schema({ "$ref": "#/components/schemas/ECFParticipantAttributes" }, content_type: "application/vnd.api+json")
         run_test!

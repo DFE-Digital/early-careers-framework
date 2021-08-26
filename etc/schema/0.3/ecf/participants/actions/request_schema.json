@@ -21,9 +21,6 @@
     "action": {
       "type": "object",
       "properties": {
-        "participant_id": {
-          "$ref": "#/definitions/uuid"
-        },
         "course_identifier": {
           "$ref": "#/definitions/ecf/courses"
         },
@@ -33,7 +30,6 @@
       },
       "additionalProperties": false,
       "required": [
-        "participant_id",
         "course_identifier",
         "reason"
       ]
