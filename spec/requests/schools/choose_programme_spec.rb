@@ -32,26 +32,6 @@ RSpec.describe "Schools::ChooseProgramme", type: :request do
     end
   end
 
-  describe "GET /schools/choose-programme/advisory" do
-    it "renders the choose programme advisory template" do
-      get "/schools/#{school.slug}/choose-programme/advisory"
-
-      expect(response).to render_template("schools/choose_programme/advisory")
-    end
-
-    context "when the school has chosen provision" do
-      before do
-        SchoolCohort.create!(school: school, cohort: cohort, induction_programme_choice: "full_induction_programme")
-      end
-
-      it "redirects to the dashboard" do
-        get "/schools/#{school.slug}/choose-programme/advisory"
-
-        expect(response).to redirect_to("/schools/#{school.slug}")
-      end
-    end
-  end
-
   describe "POST /schools/choose-programme" do
     it "should show an error if nothing is selected" do
       post "/schools/#{school.slug}/choose-programme", params: { induction_choice_form: { programme_choice: "" } }

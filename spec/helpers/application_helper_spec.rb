@@ -24,7 +24,7 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
 
     it "returns schools/choose-programme for induction coordinators" do
-      expect(helper.profile_dashboard_path(induction_coordinator)).to eq("/schools/#{school.slug}/choose-programme/advisory")
+      expect(helper.profile_dashboard_path(induction_coordinator)).to eq("/schools/#{school.slug}/choose-programme")
     end
 
     context "when a school has chosen a programme" do

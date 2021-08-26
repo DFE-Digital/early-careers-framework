@@ -6,17 +6,11 @@ Feature: Induction tutors choosing programmes
     Given cohort was created with start_year "2021"
     And school was created with name "Test School" and slug "test-school"
     And I am logged in as an induction coordinator for created school
-    Then I should be on "choose programme advisory" page
-    And the page should be accessible
-
-  Scenario: Choosing Core Induction Programme
-    Then percy should be sent snapshot called "Choose programme advisory page"
-
-    When I click on "link" containing "Continue"
     Then I should be on "choose programme" page
     And the page should be accessible
     And percy should be sent snapshot called "Choose programme page"
 
+  Scenario: Choosing Core Induction Programme
     When I click on "accredited materials" label
     And I click the submit button
     Then I should be on "choose programme confirm" page
@@ -44,9 +38,6 @@ Feature: Induction tutors choosing programmes
     And "page body" should contain "Add early career teachers"
 
   Scenario: Choosing Full Induction Programme
-    When I click on "link" containing "Continue"
-    Then I should be on "choose programme" page
-
     When I click on "training provider" label
     And I click the submit button
     Then I should be on "choose programme confirm" page
@@ -66,9 +57,6 @@ Feature: Induction tutors choosing programmes
     And "page body" should not contain "Choose your training"
 
   Scenario: Choosing to design and deliver our own programme
-    When I click on "link" containing "Continue"
-    Then I should be on "choose programme" page
-
     When I click on "design and deliver our own programme radio button"
     And I click the submit button
     Then I should be on "choose programme confirm" page
@@ -82,9 +70,6 @@ Feature: Induction tutors choosing programmes
     And percy should be sent snapshot called "Choose design and deliver success"
 
   Scenario: Choosing there are no early career teachers for this year
-    When I click on "link" containing "Continue"
-    Then I should be on "choose programme" page
-
     When I click on "no early career teachers radio button"
     And I click the submit button
     Then I should be on "choose programme confirm" page
