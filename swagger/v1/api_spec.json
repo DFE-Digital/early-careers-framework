@@ -166,7 +166,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "example": "eba7c936-ff24-4af9-8ea6-69a52449edc8",
+            "example": "40c0fb7b-9b58-45f2-9c3c-70b562ab678c",
             "description": "The ID of the NPQ application to accept.",
             "schema": {
               "type": "string"
@@ -216,7 +216,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "example": "4b614d64-8569-4a3b-9b38-5611fea627c3",
+            "example": "e7fb63cb-d71c-4bcc-ab3d-f411ea3da7c4",
             "description": "The ID of the NPQ application to reject.",
             "schema": {
               "type": "string"
@@ -439,6 +439,55 @@
         }
       }
     },
+    "/api/v1/participants/{id}/withdraw": {
+      "put": {
+        "summary": "Manage participant",
+        "operationId": "participant",
+        "tags": [
+          "ECF Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantAction"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "",
+            "description": "The ID of the participant to withdraw",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ECF participant being withdrawn",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EcfParticipantResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/participants.csv": {
       "get": {
         "summary": "Retrieve all participants in CSV format",
@@ -535,6 +584,24 @@
           "bad_request": {
             "description": "An error message for bad request",
             "type": "string"
+          }
+        }
+      },
+      "ECFParticipantAction": {
+        "description": "The details of a participant",
+        "type": "object",
+        "required": [
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "participant"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ECFParticipantWithdrawal"
           }
         }
       },
@@ -648,6 +715,38 @@
           "course_identifier": "ecf-mentor"
         }
       },
+      "ECFParticipantWithdrawal": {
+        "description": "An ECF withdrawal action",
+        "type": "object",
+        "properties": {
+          "reason": {
+            "description": "The reason for withdrawal",
+            "type": "string",
+            "enum": [
+              "career-break",
+              "mentor-no-longer-being-mentor"
+            ],
+            "example": "career-break"
+          },
+          "course_identifier": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "ecf-induction",
+              "ecf-mentor"
+            ],
+            "example": "ecf-induction"
+          }
+        },
+        "required": [
+          "reason",
+          "course_identifier"
+        ],
+        "example": {
+          "reason": "career-break",
+          "course_identifier": "ecf-mentor"
+        }
+      },
       "EcfParticipant": {
         "description": "The details of a participant",
         "type": "object",
@@ -699,7 +798,8 @@
             "description": "The unique identifier of this ECF participants mentor",
             "type": "string",
             "example": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
-            "format": "uuid"
+            "format": "uuid",
+            "nullable": true
           },
           "school_urn": {
             "description": "The Unique Reference Number (URN) of the school that submitted this ECF participant",
@@ -721,7 +821,7 @@
             "example": "2021"
           },
           "status": {
-            "description": "The status of this ECF participants record",
+            "description": "The status of this ECF participant record",
             "type": "string",
             "example": "active",
             "enum": [
@@ -758,6 +858,15 @@
             "type": "boolean",
             "nullable": true,
             "example": true
+          },
+          "state": {
+            "description": "The state of the ECF participant",
+            "type": "string",
+            "example": "active",
+            "enum": [
+              "active",
+              "withdrawn"
+            ]
           }
         }
       },
@@ -772,7 +881,8 @@
           "school_urn",
           "participant_type",
           "cohort",
-          "status"
+          "status",
+          "state"
         ],
         "properties": {
           "id": {
@@ -825,11 +935,12 @@
             "example": "2021"
           },
           "status": {
-            "description": "The status of the ECF Participant",
+            "description": "The status of the ECF Participant record",
             "type": "string",
             "example": "active",
             "enum": [
-              "active"
+              "active",
+              "withdrawn"
             ]
           },
           "teacher_reference_number": {
@@ -861,6 +972,27 @@
             "type": "boolean",
             "nullable": true,
             "example": true
+          },
+          "state": {
+            "description": "The state of the ECF Participant",
+            "type": "string",
+            "example": "active",
+            "enum": [
+              "active",
+              "withdrawn"
+            ]
+          }
+        }
+      },
+      "EcfParticipantResponse": {
+        "description": "An ECF Participant",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/EcfParticipant"
           }
         }
       },

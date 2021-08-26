@@ -2,9 +2,11 @@
 
 require "swagger_helper"
 
+require_relative "../shared/context/lead_provider_profiles_and_courses.rb"
+
 describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_flags: { participant_data_api: "active" } do
-  let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: lead_provider) }
-  let(:lead_provider) { create(:lead_provider) }
+  include_context "lead provider profiles and courses"
+
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
   let(:bearer_token) { "Bearer #{token}" }
   let(:Authorization) { bearer_token }
@@ -50,6 +52,61 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
 
         schema({ "$ref": "#/components/schemas/UnauthorisedResponse" }, content_type: "application/vnd.api+json")
 
+        run_test!
+      end
+    end
+  end
+
+  path "/api/v1/participants/{id}/withdraw" do
+    put "Manage participant" do
+      operationId :participant
+      tags "ECF Participant"
+      security [bearerAuth: []]
+      consumes "application/json"
+
+      request_body content: {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/ECFParticipantAction",
+          },
+        },
+      }
+
+      parameter name: :id,
+                in: :path,
+                type: :string,
+                required: true,
+                example: "",
+                description: "The ID of the participant to withdraw"
+
+      parameter name: :params,
+                in: :body,
+                type: :object,
+                style: :deepObject,
+                required: true,
+                schema: {
+                  "$ref": "#/components/schemas/ECFParticipantAction",
+                }
+
+      response "200", "The ECF participant being withdrawn" do
+        let(:id) { mentor_profile.user.id }
+        let(:attributes) do
+          {
+            reason: "career-break",
+            course_identifier: "ecf-mentor",
+          }
+        end
+
+        let(:params) do
+          {
+            "data": {
+              "type": "participant",
+              "attributes": attributes,
+            },
+          }
+        end
+
+        schema "$ref": "#/components/schemas/EcfParticipantResponse"
         run_test!
       end
     end

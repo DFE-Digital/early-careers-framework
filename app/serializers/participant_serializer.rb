@@ -52,7 +52,7 @@ class ParticipantSerializer
   end
 
   active_participant_attribute :cohort do |user|
-    user.teacher_profile.ecf_profile.cohort.start_year
+    user.teacher_profile.ecf_profile.cohort.start_year.to_s
   end
 
   attribute :status do |user|

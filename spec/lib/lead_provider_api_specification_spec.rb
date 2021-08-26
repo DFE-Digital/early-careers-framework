@@ -13,6 +13,7 @@ RSpec.describe LeadProviderApiSpecification do
         /api/v1/npq-applications/{id}/reject
         /api/v1/participant-declarations
         /api/v1/participants
+        /api/v1/participants/{id}/withdraw
         /api/v1/participants.csv
       ]
 

@@ -21,6 +21,7 @@ properties:
     type: string
     example: bb36d74a-68a7-47b6-86b6-1fd0d141c590
     format: uuid
+    nullable: true
   school_urn:
     description: "The Unique Reference Number (URN) of the school that submitted this ECF participant"
     type: string
@@ -37,7 +38,7 @@ properties:
     type: string
     example: "2021"
   status:
-    description: "The status of this ECF participants record"
+    description: "The status of this ECF participant record"
     type: string
     example: active
     enum:
@@ -68,3 +69,10 @@ properties:
     type: boolean
     nullable: true
     example: true
+  state:
+    description: "The state of the ECF participant"
+    type: string
+    example: active
+    enum:
+      - active
+      - withdrawn

@@ -1,0 +1,9 @@
+{
+  "data": {
+    "type": "participants",
+    "attributes": {
+      "course_identifier": "ecf-induction",
+      "reason": "career-break"
+    }
+  }
+}

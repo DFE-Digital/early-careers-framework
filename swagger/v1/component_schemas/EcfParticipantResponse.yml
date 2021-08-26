@@ -1,0 +1,7 @@
+description: "An ECF Participant"
+type: object
+required:
+  - data
+properties:
+  data:
+    $ref: "#/components/schemas/EcfParticipant"
