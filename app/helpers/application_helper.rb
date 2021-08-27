@@ -10,7 +10,7 @@ module ApplicationHelper
       induction_coordinator_mentor_path(user)
     elsif user.induction_coordinator?
       induction_coordinator_dashboard_path(user)
-    elsif user.mentor? || user.early_career_teacher?
+    elsif user.teacher?
       participant_start_path(user)
     else
       dashboard_path
@@ -38,6 +38,8 @@ module ApplicationHelper
   end
 
   def participant_start_path(user)
+    return participants_no_access_path unless user.teacher_profile.participant_profiles.active_record.ecf.any?
+
     if FeatureFlag.active?(:participant_validation, for: user.teacher_profile&.participant_profiles&.ecf&.active_record&.first&.school)
       participants_validation_start_path
     else

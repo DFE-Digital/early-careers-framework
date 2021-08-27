@@ -51,6 +51,10 @@ class User < ApplicationRecord
     early_career_teacher_profile.present?
   end
 
+  def teacher?
+    teacher_profile.present?
+  end
+
   def mentor?
     mentor_profile.present?
   end

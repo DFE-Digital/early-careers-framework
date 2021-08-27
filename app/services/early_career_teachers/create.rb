@@ -3,6 +3,7 @@
 module EarlyCareerTeachers
   class Create < BaseService
     include SchoolCohortDelegator
+
     def call
       ActiveRecord::Base.transaction do
         # Retain the original name if the user already exists

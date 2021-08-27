@@ -10,10 +10,13 @@ class ParticipantProfilePolicy < ApplicationPolicy
   end
 
   def destroy?
-    admin? && (record.ect? || record.mentor?)
+    return record.ect? || record.mentor? if admin?
+    return false unless user.induction_coordinator?
+
+    user.induction_coordinator_profile.schools.include?(record.school)
   end
 
-  alias_method :remove?, :delete?
+  alias_method :remove?, :destroy?
 
   class Scope < Scope
     def resolve

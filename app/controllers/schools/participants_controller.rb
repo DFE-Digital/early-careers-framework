@@ -76,6 +76,14 @@ class Schools::ParticipantsController < Schools::BaseController
     end
   end
 
+  def remove; end
+
+  def destroy
+    @profile.withdrawn_record!
+
+    render :removed
+  end
+
 private
 
   def set_mentors_added
@@ -98,7 +106,11 @@ private
 
   def set_participant
     @profile = ParticipantProfile.find(params[:participant_id] || params[:id])
-    authorize @profile.user, policy_class: ParticipantPolicy
+    if %w[remove destroy].include?(action_name)
+      authorize @profile, policy_class: ParticipantProfilePolicy
+    else
+      authorize @profile.user, policy_class: ParticipantPolicy
+    end
   end
 
   def participant_mentor_form_params

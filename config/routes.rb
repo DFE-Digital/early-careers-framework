@@ -246,6 +246,7 @@ Rails.application.routes.draw do
   end
 
   namespace :participants do
+    resource :no_access, only: :show, controller: "no_access"
     resource :start_registrations, path: "/start-registration", only: :show
 
     authenticated :user, ->(user) { FeatureFlag.active?(:participant_validation, for: user.teacher_profile&.participant_profiles&.ecf&.active_record&.first&.school) } do
@@ -315,7 +316,8 @@ Rails.application.routes.draw do
           resources :partnerships, only: :index
           resource :programme, only: %i[edit], controller: "choose_programme"
 
-          resources :participants, only: %i[index show] do
+          resources :participants, only: %i[index show destroy] do
+            get :remove
             get :edit_name, path: "edit-name"
             put :update_name, path: "update-name"
             get :edit_email, path: "edit-email"
