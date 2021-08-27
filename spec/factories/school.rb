@@ -28,6 +28,10 @@ FactoryBot.define do
       school_status_code { 1 }
     end
 
+    trait :closed do
+      school_status_code { 2 }
+    end
+
     trait :cip_only do
       open
       school_type_code { GiasTypes::CIP_ONLY_TYPE_CODES.sample }

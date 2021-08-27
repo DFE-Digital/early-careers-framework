@@ -10,6 +10,8 @@ module GiasHelpers
     scope :in_england, -> { where("administrative_district_code ILIKE 'E%'") }
     scope :section_41, -> { where(section_41_approved: true) }
     scope :eligible, -> { currently_open.eligible_establishment_type.in_england.or(currently_open.in_england.section_41) }
+    scope :cip_only, -> { currently_open.where(school_type_code: GiasTypes::CIP_ONLY_TYPE_CODES) }
+    scope :eligible_or_cip_only, -> { eligible.or(cip_only) }
 
     enum school_status_name: {
       open: "Open",
