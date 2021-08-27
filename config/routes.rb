@@ -360,5 +360,7 @@ Rails.application.routes.draw do
   get "/ministerial-letter", to: redirect("ECF%20Letter.pdf")
   get "/ecf-leaflet", to: redirect("ECFleaflet2021.pdf")
 
+  get "/how-to-set-up-your-programme", to: "step_by_step#show", as: :step_by_step
+
   post "__session", to: "support/request_spec/session_helper#update" if Rails.env.test?
 end
