@@ -70,7 +70,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
               :eligible_for_funding,
               :pupil_premium_uplift,
               :sparsity_uplift,
-              :state,
+              :training_status,
             ).exactly)
         end
 
@@ -150,7 +150,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
                eligible_for_funding
                pupil_premium_uplift
                sparsity_uplift
-               state],
+               training_status],
           )
         end
 
@@ -169,7 +169,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           expect(mentor_row["eligible_for_funding"]).to be_empty
           expect(mentor_row["pupil_premium_uplift"]).to be_empty
           expect(mentor_row["sparsity_uplift"]).to be_empty
-          expect(mentor_row["state"]).to eql "active"
+          expect(mentor_row["training_status"]).to eql "active"
 
           ect = ParticipantProfile::ECT.active_record.first.user
           ect_row = parsed_response.find { |row| row["id"] == ect.id }
@@ -185,7 +185,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           expect(mentor_row["eligible_for_funding"]).to be_empty
           expect(mentor_row["pupil_premium_uplift"]).to be_empty
           expect(mentor_row["sparsity_uplift"]).to be_empty
-          expect(mentor_row["state"]).to eql "active"
+          expect(mentor_row["training_status"]).to eql "active"
 
           withdrawn_record_row = parsed_response.find { |row| row["id"] == withdrawn_ect_profile_record.user.id }
           expect(withdrawn_record_row).not_to be_nil
@@ -200,7 +200,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           expect(withdrawn_record_row["eligible_for_funding"]).to be_empty
           expect(withdrawn_record_row["pupil_premium_uplift"]).to be_empty
           expect(withdrawn_record_row["sparsity_uplift"]).to be_empty
-          expect(withdrawn_record_row["state"]).to be_empty
+          expect(withdrawn_record_row["training_status"]).to be_empty
         end
 
         it "ignores pagination parameters" do
@@ -218,12 +218,12 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
       describe "JSON Participant Withdrawal" do
         let(:parsed_response) { JSON.parse(response.body) }
 
-        it "changes the state of a participant to withdrawn" do
+        it "changes the training status of a participant to withdrawn" do
           put "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
 
           expect(response).to be_successful
 
-          expect(parsed_response.dig("data", "attributes", "state")).to eql("withdrawn")
+          expect(parsed_response.dig("data", "attributes", "training_status")).to eql("withdrawn")
         end
       end
     end

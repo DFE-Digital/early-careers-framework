@@ -79,7 +79,7 @@ class ParticipantSerializer
     nil # TODO: CPDRP-534 - Share when we know we have the correct information
   end
 
-  active_participant_attribute :state do |user|
+  active_participant_attribute :training_status do |user|
     user.teacher_profile.ecf_profile&.state || "active"
   end
 end
