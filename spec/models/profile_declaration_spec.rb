@@ -13,7 +13,7 @@ RSpec.describe ProfileDeclaration, type: :model do
       end
 
       it "includes declaration with ect profile" do
-        expect(ProfileDeclaration.ect_profiles).to include(ect_declaration.profile_declaration)
+        expect(ProfileDeclaration.ect_profiles).to include(ect_declaration.current_profile_declaration)
       end
     end
 
@@ -24,7 +24,7 @@ RSpec.describe ProfileDeclaration, type: :model do
       end
 
       it "includes declaration with mentor profile" do
-        expect(ProfileDeclaration.mentor_profiles).to include(mentor_declaration.profile_declaration)
+        expect(ProfileDeclaration.mentor_profiles).to include(mentor_declaration.current_profile_declaration)
       end
     end
   end

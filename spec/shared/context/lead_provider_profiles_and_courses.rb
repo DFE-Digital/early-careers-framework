@@ -8,8 +8,8 @@ RSpec.shared_context "lead provider profiles and courses" do
 
   # ECF setup
   let(:ecf_lead_provider) { cpd_lead_provider.lead_provider }
-  let!(:ect_profile) { create(:early_career_teacher_profile) }
-  let!(:mentor_profile) { create(:mentor_profile, school_cohort: ect_profile.school_cohort) }
+  let!(:ect_profile) { create(:participant_profile, :ect) }
+  let!(:mentor_profile) { create(:participant_profile, :mentor, school_cohort: ect_profile.school_cohort) }
   let(:induction_coordinator_profile) { create(:induction_coordinator_profile) }
   let(:delivery_partner) { create(:delivery_partner) }
   let!(:school_cohort) { create(:school_cohort, school: ect_profile.school, cohort: ect_profile.cohort) }

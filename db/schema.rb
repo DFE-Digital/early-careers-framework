@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_19_104745) do
+ActiveRecord::Schema.define(version: 2021_08_23_100406) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -557,6 +557,7 @@ ActiveRecord::Schema.define(version: 2021_08_19_104745) do
     t.uuid "participant_profile_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "payable", default: false
     t.index ["participant_declaration_id"], name: "index_profile_declarations_on_participant_declaration_id"
   end
 

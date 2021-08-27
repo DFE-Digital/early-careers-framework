@@ -13,7 +13,7 @@ RSpec.describe LeadProviders::YourSchools::TableRow, type: :view_component do
   it { is_expected.to have_content partnership.delivery_partner.name }
 
   context "with ECT in given cohort" do
-    let!(:ect_profiles) { create_list :early_career_teacher_profile, rand(1..5), school_cohort: school_cohort }
+    let!(:ect_profiles) { create_list :participant_profile, rand(1..5), :ect, school_cohort: school_cohort }
 
     it { is_expected.to have_css "td.govuk-table__cell--numeric", text: ect_profiles.count }
   end

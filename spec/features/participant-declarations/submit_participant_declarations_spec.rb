@@ -82,7 +82,7 @@ RSpec.feature "Submit participant declarations", type: :feature do
 private
 
   def given_an_early_career_teacher_has_been_entered_onto_the_dfe_service
-    ect_profile = create(:early_career_teacher_profile)
+    ect_profile = create(:participant_profile, :ect)
     delivery_partner = create(:delivery_partner)
     create(:partnership,
            school: ect_profile.school,

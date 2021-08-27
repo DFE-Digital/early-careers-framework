@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
-require "participant_event_aggregator"
 require "payment_calculator/ecf/payment_calculation"
 
 class CalculationOrchestrator
   class << self
     def call(cpd_lead_provider:,
              contract:,
-             aggregator: ::ParticipantEventAggregator,
+             aggregator: ParticipantDeclaration::ECF,
              calculator: ::PaymentCalculator::Ecf::PaymentCalculation,
              event_type: :started)
       new(
@@ -29,7 +28,7 @@ private
 
   def initialize(cpd_lead_provider:,
                  contract:,
-                 aggregator: ::ParticipantEventAggregator,
+                 aggregator: ParticipantDeclaration::ECF,
                  calculator: ::PaymentCalculator::Ecf::PaymentCalculation)
     @cpd_lead_provider = cpd_lead_provider
     @contract = contract
@@ -42,16 +41,16 @@ private
   end
 
   def aggregate(aggregation_type:, event_type:)
-    aggregator.call({ cpd_lead_provider: cpd_lead_provider, event_type => aggregation_types[event_type][aggregation_type] }, event_type: event_type)
+    aggregator.send(aggregation_types[event_type][aggregation_type], cpd_lead_provider).count
   end
 
   def aggregation_types
     {
       started: {
-        all: :count_active_for_lead_provider,
-        uplift: :count_active_uplift_for_lead_provider,
-        ects: :count_active_ects_for_lead_provider,
-        mentors: :count_active_mentors_for_lead_provider,
+        all: :payable_for_lead_provider,
+        uplift: :payable_uplift_for_lead_provider,
+        ects: :payable_ects_for_lead_provider,
+        mentors: :payable_mentors_for_lead_provider,
       },
     }
   end

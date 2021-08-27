@@ -38,7 +38,9 @@ module RecordDeclarations
       declaration_attempt = create_declaration_attempt!
       validate_provider!
       validate_milestone!
+
       declaration = find_or_create_record!
+      declaration.refresh_payability!
       declaration_attempt.update!(participant_declaration: declaration)
 
       { id: declaration.id }
@@ -77,10 +79,11 @@ module RecordDeclarations
           user: user,
           evidence_held: evidence_held,
         ) do |participant_declaration|
-          ProfileDeclaration.create!(
+          profile_declaration = ProfileDeclaration.create!(
             participant_declaration: participant_declaration,
             participant_profile: user_profile,
           )
+          profile_declaration.update!(payable: participant_declaration.currently_payable)
         end
       end
     end

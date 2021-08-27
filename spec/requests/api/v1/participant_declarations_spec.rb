@@ -52,6 +52,14 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         expect(parsed_response["id"]).to eq(ParticipantDeclaration.order(:created_at).last.id)
       end
 
+      it "create payable declaration record when user is eligible" do
+        params = build_params(valid_params)
+        eligibility = ECFParticipantEligibility.create!(participant_profile_id: ect_profile.id)
+        eligibility.eligible_status!
+        post "/api/v1/participant-declarations", params: params
+        expect(ParticipantDeclaration.order(:created_at).last.payable).to be_truthy
+      end
+
       it "does not create duplicate declarations, but stores the duplicate declaration attempts" do
         params = build_params(valid_params)
         post "/api/v1/participant-declarations", params: params
@@ -195,6 +203,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         before do
           eligibility = ECFParticipantEligibility.create!(participant_profile_id: ect_profile.id)
           eligibility.eligible_status!
+          participant_declaration.refresh_payability!
         end
 
         let(:expected_response) do

@@ -58,7 +58,7 @@ RSpec.describe CreateInductionTutor do
         end
 
         context "when the induction coordinator is also a mentor" do
-          let!(:mentor_profile) { create(:mentor_profile, user: existing_profile.user, school: school) }
+          let!(:mentor_profile) { create(:participant_profile, :mentor, user: existing_profile.user, school: school) }
 
           it "removes the school from the existing induction coordinator" do
             expect(school.induction_coordinator_profiles.first).to eq(existing_profile)
@@ -77,7 +77,7 @@ RSpec.describe CreateInductionTutor do
       end
 
       context "when the induction coordinator is also a mentor" do
-        let!(:mentor_profile) { create(:mentor_profile, user: existing_profile.user, school: school) }
+        let!(:mentor_profile) { create(:participant_profile, :mentor, user: existing_profile.user, school: school) }
 
         it "retains the user but deletes the induction coordinator profile" do
           expect(school.induction_coordinator_profiles.first).to eq(existing_profile)
