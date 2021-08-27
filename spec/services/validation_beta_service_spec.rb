@@ -4,9 +4,9 @@ require "rails_helper"
 
 RSpec.describe ValidationBetaService do
   subject(:validation_beta_service) { described_class.new }
-  let(:fip_school_1) { create(:school_cohort, induction_programme_choice: "full_induction_programme").school }
-  let(:fip_school_2) { create(:school_cohort, induction_programme_choice: "full_induction_programme").school }
-  let(:cip_school) { create(:school_cohort).school }
+  let(:fip_school_1) { create(:school_cohort, :fip).school }
+  let(:fip_school_2) { create(:school_cohort, :fip).school }
+  let(:cip_school) { create(:school_cohort, :cip).school }
   let!(:mentor_1) { create(:participant_profile, :mentor, school: fip_school_1) }
   let!(:mentor_2) { create(:participant_profile, :mentor, school: fip_school_2) }
   let!(:mentor_3) { create(:participant_profile, :mentor, school: cip_school) }

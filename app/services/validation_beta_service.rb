@@ -6,7 +6,6 @@ class ValidationBetaService
       induction_coordinator = school.induction_coordinators.first
       if induction_coordinator.induction_coordinator_and_mentor?
         participant_profiles = school.active_ecf_participant_profiles.where.not(id: induction_coordinator.mentor_profile.id)
-
         ActiveRecord::Base.transaction do
           FeatureFlag.activate(:participant_validation, for: school)
           send_induction_coordinator_notification(participant_research, school)
