@@ -1,5 +1,5 @@
 <% if manual_removal_possible? %>
-  <%= govuk_link_to "Remove #{name} from this cohort", schools_participant_remove_path(school_id: profile.school, cohort_id: profile.cohort, participant_id: profile), button: false %>
+  <%= govuk_link_to "Remove #{name} from this cohort", schools_participant_remove_path(school_id: profile.school, cohort_id: profile.cohort, participant_id: profile) %>
 <% elsif fip? %>
   <p class="govuk-body">If <%= name %> should not be in this cohort, contact your training provider to remove them.</p>
 <% elsif cip? %>

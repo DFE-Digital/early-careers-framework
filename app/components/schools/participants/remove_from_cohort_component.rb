@@ -12,15 +12,15 @@ module Schools
       attr_reader :profile
 
       def manual_removal_possible?
-        profile.ecf_participant_validation_data.nil?
+        !profile.completed_validation_wizard?
       end
 
       def fip?
-        profile.school_cohort.induction_programme_choice == "full_induction_programme"
+        profile.school_cohort.full_induction_programme?
       end
 
       def cip?
-        profile.school_cohort.induction_programme_choice == "core_induction_programme"
+        profile.school_cohort.core_induction_programme?
       end
 
       def name
