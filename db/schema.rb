@@ -479,6 +479,8 @@ ActiveRecord::Schema.define(version: 2021_08_31_081434) do
     t.uuid "teacher_profile_id"
     t.uuid "schedule_id", null: false
     t.uuid "npq_course_id"
+    t.text "school_urn"
+    t.text "school_ukprn"
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"

@@ -12,7 +12,6 @@ RSpec.describe NPQ::CreateOrUpdateProfile do
   end
 
   describe "#call" do
-    let!(:default_schedule) { create(:schedule, name: "ECF September standard 2021") }
     let(:trn) { rand(1_000_000..9_999_999).to_s }
     let(:user) { create(:user) }
     let(:npq_course) { create(:npq_course) }
@@ -24,6 +23,8 @@ RSpec.describe NPQ::CreateOrUpdateProfile do
         user: user,
         npq_course: npq_course,
         npq_lead_provider: npq_lead_provider,
+        school_urn: "123456",
+        school_ukprn: "12345678",
       )
     end
 
@@ -38,9 +39,17 @@ RSpec.describe NPQ::CreateOrUpdateProfile do
           .and change(ParticipantProfile::NPQ, :count).by(1)
       end
 
-      it "set NPQ course on participant profile" do
+      it "creates participant profile correctly" do
         subject.call
-        expect(user.teacher_profile.npq_profiles.last.npq_course).to eql(npq_validation_data.npq_course)
+
+        profile = user.teacher_profile.npq_profiles.last
+
+        expect(profile.schedule).to eql(Finance::Schedule.default)
+        expect(profile.npq_course).to eql(npq_validation_data.npq_course)
+        expect(profile.teacher_profile).to eql(user.teacher_profile)
+        expect(profile.user).to eql(user)
+        expect(profile.school_urn).to eql(npq_validation_data.school_urn)
+        expect(profile.school_ukprn).to eql(npq_validation_data.school_ukprn)
       end
 
       context "when trn is validated" do
