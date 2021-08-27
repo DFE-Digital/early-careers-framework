@@ -1,0 +1,5 @@
+<% if FeatureFlag.active?(:sit_user_research_fully_booked) %>
+  <%= render partial: "user_research_fully_booked" %>
+<% else %>
+  <%= render partial: "user_research_sign_up", locals: { type: :sit } %>
+<% end %>
