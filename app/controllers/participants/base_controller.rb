@@ -10,6 +10,6 @@ class Participants::BaseController < ApplicationController
 private
 
   def ensure_participant
-    raise Pundit::NotAuthorizedError, "Forbidden" unless current_user.participant_profiles.active_record.ecf.any?
+    redirect_to participants_no_access_path unless current_user.participant_profiles.active_record.ecf.any?
   end
 end

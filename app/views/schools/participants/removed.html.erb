@@ -1,0 +1,16 @@
+<% content_for :title, "#{@profile.user.full_name} removed from cohort" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= govuk_panel(title: "#{@profile.user.full_name} has been removed from this cohort", body: "") %>
+    <h2 class="govuk-heading-m govuk-!-margin-top-7">What happens next</h2>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>you’ll no longer see their details in this service</li>
+      <li>we’ll let them know that they do not need to provide us with any information</li>
+    </ul>
+    <% if @profile.mentor? %>
+      <p>Remember to assign this person’s ECT(s) to another mentor.</p>
+    <% end %>
+    <%= govuk_link_to "Return to your ECTs and mentor", { action: :index }, class: "govuk-link--no-visited-state" %>
+  </div>
+</div>

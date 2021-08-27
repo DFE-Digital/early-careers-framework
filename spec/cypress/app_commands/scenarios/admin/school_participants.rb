@@ -2,7 +2,7 @@
 
 school = FactoryBot.create :school, name: "Test School", slug: "test-school", urn: "123456"
 cohort = FactoryBot.create :cohort, start_year: 2021
-school_cohort = FactoryBot.create(:school_cohort, school: school, cohort: cohort, induction_programme_choice: "core_induction_programme")
+school_cohort = FactoryBot.create(:school_cohort, :cip, school: school, cohort: cohort)
 
 mentor_1 = FactoryBot.create :participant_profile,
                              :mentor,
@@ -31,7 +31,7 @@ FactoryBot.create :participant_profile,
                   created_at: Date.parse("25/05/2020")
 
 another_school = FactoryBot.create(:school, name: "Some other school", urn: "222222")
-another_school_cohort = FactoryBot.create(:school_cohort, school: another_school, cohort: cohort, induction_programme_choice: "core_induction_programme")
+another_school_cohort = FactoryBot.create(:school_cohort, :cip, school: another_school, cohort: cohort)
 
 FactoryBot.create :participant_profile,
                   :mentor,

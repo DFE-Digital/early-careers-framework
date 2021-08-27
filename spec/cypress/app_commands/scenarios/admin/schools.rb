@@ -13,8 +13,8 @@ cohort_2022 = Cohort.find_or_create_by!(start_year: 2022)
 
 cip_1 = FactoryBot.create(:core_induction_programme, name: "CIP Programme 1")
 cip_2 = FactoryBot.create(:core_induction_programme, name: "CIP Programme 2")
-FactoryBot.create(:school_cohort, cohort: cohort_2021, school: school_with_cohorts, core_induction_programme: cip_1)
-FactoryBot.create(:school_cohort, cohort: cohort_2022, school: school_with_cohorts, core_induction_programme: cip_2)
+FactoryBot.create(:school_cohort, :cip, cohort: cohort_2021, school: school_with_cohorts, core_induction_programme: cip_1)
+FactoryBot.create(:school_cohort, :cip, cohort: cohort_2022, school: school_with_cohorts, core_induction_programme: cip_2)
 
 Faker::UniqueGenerator.clear
 Faker::Config.random = Random.new(42)
