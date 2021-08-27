@@ -79,7 +79,10 @@ class Schools::ParticipantsController < Schools::BaseController
   def remove; end
 
   def destroy
-    @profile.withdrawn_record!
+    ActiveRecord::Base.transaction do
+      @profile.withdrawn_record!
+      @profile.mentee_profiles.update_all(mentor_profile_id: nil) if @profile.mentor?
+    end
 
     render :removed
   end
