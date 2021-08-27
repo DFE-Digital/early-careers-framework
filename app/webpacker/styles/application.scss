@@ -14,6 +14,8 @@ $govuk-image-url-function: frontend-image-url;
 
 @import "notification_banner";
 @import "app_task_list";
+@import "components/step-by-step-header";
+@import "components/step-by-step-nav";
 @import "header_overrides";
 @import "lead_providers/dashboard_numbers";
 @import "lead_providers/index_group";
