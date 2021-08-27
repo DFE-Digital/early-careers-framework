@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
-module RecordDeclarations
-  class EventFactory
+module Factories
+  class Event
     class << self
       def call(event)
-        event_namespace_for_event(event)
+        event_namespace_for_event(event).presence || (raise ActionController::ParameterMissing, [I18n.t(:invalid_declaration_type)])
+      rescue StandardError
+        raise ActionController::ParameterMissing, [I18n.t(:invalid_declaration_type)]
       end
 
     private

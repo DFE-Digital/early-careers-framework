@@ -52,6 +52,20 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         expect(parsed_response["id"]).to eq(ParticipantDeclaration.order(:created_at).last.id)
       end
 
+      it "does not create duplicate declarations, but stores the duplicate declaration attempts" do
+        params = build_params(valid_params)
+        post "/api/v1/participant-declarations", params: params
+        original_id = parsed_response["id"]
+
+        expect { post "/api/v1/participant-declarations", params: params }
+            .not_to change(ParticipantDeclaration, :count)
+        expect { post "/api/v1/participant-declarations", params: params }
+            .to change(ParticipantDeclarationAttempt, :count).by(1)
+
+        expect(response.status).to eq 200
+        expect(parsed_response["id"]).to eq(original_id)
+      end
+
       context "when lead provider has no access to the user" do
         before do
           partnership.update!(lead_provider: create(:lead_provider))
@@ -86,7 +100,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         missing_attribute = valid_params.except(:participant_id)
         post "/api/v1/participant-declarations", params: build_params(missing_attribute)
         expect(response.status).to eq 422
-        expect(response.body).to eq({ bad_or_missing_parameters: %w[participant_id] }.to_json)
+        expect(response.body).to eq({ bad_or_missing_parameters: [I18n.t(:invalid_participant)] }.to_json)
       end
 
       it "returns 422 when supplied an incorrect course type" do
@@ -96,16 +110,16 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       end
 
       it "returns 422 when a participant type doesn't match the course type" do
-        invalid_course_identifier = valid_params.merge({ course_identifier: "ecf-mentor" })
-        post "/api/v1/participant-declarations", params: build_params(invalid_course_identifier)
+        invalid_participant_for_course_type = valid_params.merge({ course_identifier: "ecf-mentor" })
+        post "/api/v1/participant-declarations", params: build_params(invalid_participant_for_course_type)
         expect(response.status).to eq 422
-        expect(response.body).to eq({ bad_or_missing_parameters: ["The property '#/course_identifier' must be an available course to '#/participant_id'"] }.to_json)
+        expect(response.body).to eq({ bad_or_missing_parameters: [I18n.t(:invalid_participant)] }.to_json)
       end
 
       it "returns 422 when there are multiple errors" do
         post "/api/v1/participant-declarations", params: build_params("")
         expect(response.status).to eq 422
-        expect(response.body).to eq({ bad_or_missing_parameters: %w[participant_id declaration_date declaration_type course_identifier] }.to_json)
+        expect(response.body).to eq({ bad_or_missing_parameters: [I18n.t(:invalid_declaration_type)] }.to_json)
       end
 
       it "returns 400 when the data block is incorrect" do

@@ -59,9 +59,13 @@ module ValidTestDataGenerator
       teacher_profile = TeacherProfile.create!(user: user, trn: random_or_nil_trn)
       schedule = Finance::Schedule.default
       if profile_type == :ect
-        ParticipantProfile::ECT.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, mentor_profile: mentor_profile, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule)
+        ParticipantProfile::ECT.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, mentor_profile: mentor_profile, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule) do |profile|
+          ParticipantProfileState.create!({ participant_profile: profile })
+        end
       else
-        ParticipantProfile::Mentor.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule)
+        ParticipantProfile::Mentor.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule) do |profile|
+          ParticipantProfileState.create!({ participant_profile: profile })
+        end
       end
     end
 
@@ -107,8 +111,31 @@ module ValidTestDataGenerator
 
   class AmbitionSpecificPopulater < LeadProviderPopulater
     class << self
+      FIRST_AMBITION_SEED_DATA_TIME = ("2021-08-18 13:43".."2021-08-18 13:49").freeze
+
       def call(name:, total_schools: 3, participants_per_school: 3000)
-        new(name: name).call(total_schools: total_schools, participants_per_school: participants_per_school)
+        generator = new(name: name)
+        generator.remove_old_data(created_at: FIRST_AMBITION_SEED_DATA_TIME)
+        generator.call(total_schools: total_schools, participants_per_school: participants_per_school)
+      end
+    end
+
+    def remove_old_data(created_at:)
+      lead_provider.ecf_participants.where(created_at: created_at).each(&:destroy)
+      schools = lead_provider.schools.where(created_at: created_at)
+      schools.each do |school|
+        partnership = Partnership.find_by(lead_provider: lead_provider, school: school, cohort: Cohort.current)
+        delivery_partner = partnership.delivery_partner
+        provider_relationship = ProviderRelationship.find_by(lead_provider: lead_provider,
+                                                             cohort: Cohort.current,
+                                                             delivery_partner: delivery_partner)
+        provider_relationship.destroy!
+        partnership.destroy!
+        delivery_partner.destroy!
+        school_cohort = SchoolCohort.find_by(school: school, cohort: Cohort.current, induction_programme_choice: "full_induction_programme")
+        school_cohort.ecf_participant_profiles.destroy_all
+        school_cohort.destroy!
+        school.destroy!
       end
     end
 

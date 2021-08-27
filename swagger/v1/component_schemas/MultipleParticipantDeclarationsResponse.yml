@@ -6,7 +6,7 @@ properties:
   data:
     type: array
     items:
-      $ref: "#/components/schemas/ParticipantDeclarationResponses"
+      $ref: "#/components/schemas/ParticipantDeclarationResponse"
     example:
       - id: 01017c12-354b-4b2d-b621-3531ab729c43
         type: "participant-declaration"

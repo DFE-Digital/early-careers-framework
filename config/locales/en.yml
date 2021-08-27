@@ -38,10 +38,18 @@ en:
     retention_3: Retention 3
     retention_4: Retention 4
     completion: Completion
+  withdrawal_reasons:
+    left_teaching_profession: "Left teaching profession"
+    moved_school: "Moved school"
+    mentor_no_longer_mentor: "Mentor no longer being mentor"
+    school_left_fip: "School left FIP"
+    career_break: "Career break"
+    passed_induction: "Passed Induction"
+    other: "Other"
   parameter_required: Parameter is required
   invalid_participant: "The property '#/participant_id' must be a valid Participant ID"
   invalid_identifier: "The property '#/course_identifier' must be an available course to '#/participant_id'"
-  invalid_declaration_type: "The property '#/declaration_type' must be available for course_identifier '#/course_identifier'"
+  invalid_declaration_type: "The property '#/declaration_type' must be available for '#/course_identifier'"
   missing_course_identifier: "The property '#/course_identifier' must be present"
   missing_declaration_date: "The property '#/declaration_date' must be present"
   invalid_declaration_date: "The property '#/declaration_date' must be a valid RCF3339 date"
@@ -49,6 +57,7 @@ en:
   missing_declaration_type: "The property '#/declaration_type' must be present"
   missing_evidence_held: "The property '#/evidence_held' must be present"
   missing_lead_provider: "The lead provider must be present"
+  invalid_withdrawal: "The participant has already been withdrawn"
   invalid_event: "The property '#/declaration_type' must be a valid declaration type"
   invalid_course: "The property '#/course_identifier' must be an available course to '#/participant_id'"
   invalid_evidence_type: "The property '#/evidence_held' must be an available type to the event type and course type"
@@ -78,6 +87,8 @@ en:
     full_name: &full_name_error_messages
       blank: "Enter a full name"
       does_not_match: "The name you entered does not match our records"
+    withdrawn_reason:
+      invalid: "Cannot withdraw without a valid reason"
 
   finance:
     provider: Provider

@@ -16,7 +16,9 @@ module EarlyCareerTeachers
           profile.school = school_cohort.school
         end
 
-        ParticipantProfile::ECT.create!({ teacher_profile: teacher_profile, schedule: Finance::Schedule.default }.merge(ect_attributes))
+        ParticipantProfile::ECT.create!({ teacher_profile: teacher_profile, schedule: Finance::Schedule.default }.merge(ect_attributes)) do |profile|
+          ParticipantProfileState.create!({ participant_profile: profile })
+        end
       end
     end
 

@@ -453,6 +453,15 @@ ActiveRecord::Schema.define(version: 2021_08_19_104745) do
     t.index ["user_id"], name: "index_participant_declarations_on_user_id"
   end
 
+  create_table "participant_profile_states", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "participant_profile_id", null: false
+    t.text "state", default: "active"
+    t.text "reason"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["participant_profile_id"], name: "index_participant_profile_states_on_participant_profile_id"
+  end
+
   create_table "participant_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "type", null: false
     t.uuid "user_id"
@@ -738,6 +747,7 @@ ActiveRecord::Schema.define(version: 2021_08_19_104745) do
   add_foreign_key "npq_lead_providers", "cpd_lead_providers"
   add_foreign_key "participant_bands", "call_off_contracts"
   add_foreign_key "participant_declaration_attempts", "participant_declarations"
+  add_foreign_key "participant_profile_states", "participant_profiles"
   add_foreign_key "participant_profiles", "cohorts"
   add_foreign_key "participant_profiles", "core_induction_programmes"
   add_foreign_key "participant_profiles", "npq_courses"
