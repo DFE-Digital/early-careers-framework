@@ -1,0 +1,190 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Set up your school’s early career teacher training programme: step by step</h1>
+
+    <h2 class="govuk-heading-m">What’s different about the new 2-year programme</h2>
+
+    <p class="govuk-body">From September 2021, statutory induction for early career teachers (also known as NQTs) will change as part of the early career framework (ECF) reforms. <a href="https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview" class="govuk-link">Read more about the reforms in our guidance</a>.</p>
+    <p class="govuk-body">All early career teachers (ECTs) are now entitled to a funded 2-year induction programme. This includes structured training and support to help them get their teaching career off to the best possible start.</p>
+    <p class="govuk-body">Your school still needs to <a href="https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview#the-role-of-the-appropriate-body" class="govuk-link">have an appropriate body in place</a>.</p>
+
+    <h2 class="govuk-heading-m">When to set up your school’s programme</h2>
+    <p class="govuk-body">Any school that offers statutory induction needs to follow the steps below as soon as possible.</p>
+
+
+    <div id="step-by-step-navigation" class="app-step-nav app-step-nav--large" data-show-text="Show" data-hide-text="Hide" data-show-all-text="Show all steps" data-hide-all-text="Hide all steps">
+
+      <ol class="app-step-nav__steps">
+        <li class="app-step-nav__step js-step" id="tell-us-if-you-have-ects" >
+          <div class="app-step-nav__header js-toggle-panel" data-position="1">
+            <h2 class="app-step-nav__title">
+              					<span class="app-step-nav__circle app-step-nav__circle--number">
+                					<span class="app-step-nav__circle-inner">
+                  						<span class="app-step-nav__circle-background">
+                    						<span class="govuk-visually-hidden">Step</span> 1
+                  						</span>
+                					</span>
+              					</span>
+              <span class="js-step-title">Tell us whether or not you expect ECTs to join you in this academic year</span>
+            </h2>
+          </div>
+
+          <div class="app-step-nav__panel js-panel js-hidden" id="step-panel-tell-us-if-you-have-ects-1">
+            <p class="app-step-nav__paragraph">We recommend you do this as soon as possible, even if you’re not sure.</p>
+
+
+            <p class="app-step-nav__paragraph">Your school may have been a link so that you can 'tell us if you have ECTs (previously NQTs) joining you this academic year.'</p>
+            <p class="app-step-nav__paragraph">If you can not find this email, you can <%= govuk_link_to "send your school a new link", resend_email_request_nomination_invite_path %>.</p>
+            <p class="app-step-nav__paragraph">If you answer ‘no’, you do not need to complete any more steps. Your school will not receive any more messages about statutory inductions for early career teachers until the next academic year.</p>
+            <p class="app-step-nav__paragraph">You can <%= render MailToSupportComponent.new("contact us") %> if things change and ECTs do join your school this academic year.</p>
+          </div>
+        </li>
+        <li class="app-step-nav__step js-step" id="nominate-a-tutor" >
+          <div class="app-step-nav__header js-toggle-panel" data-position="2">
+            <h2 class="app-step-nav__title">
+              					<span class="app-step-nav__circle app-step-nav__circle--number">
+                					<span class="app-step-nav__circle-inner">
+                  						<span class="app-step-nav__circle-background">
+                    						<span class="govuk-visually-hidden">Step</span> 2
+                  						</span>
+                					</span>
+              					</span>
+              <span class="js-step-title">Nominate an induction tutor to manage your school’s programme</span>
+            </h2>
+          </div>
+          <div class="app-step-nav__panel js-panel js-hidden" id="step-panel-nominate-a-tutor-2">
+            <p class="app-step-nav__paragraph">You need to do this as soon as possible if you expect ECTs to join your school this academic year, or if you’re not sure.</p>
+            <ol class="app-step-nav__list " data-length="2">
+              <li class="app-step-nav__list-item js-list-item "><%= govuk_link_to "Nominate the induction tutor for your school", resend_email_request_nomination_invite_path, class: "app-step-nav__link js-link" %></li>
+            </ol>
+          </div>
+        </li>
+        <li class="app-step-nav__step js-step" id="choose-a-programme" >
+          <div class="app-step-nav__header js-toggle-panel" data-position="3">
+            <h2 class="app-step-nav__title">
+              					<span class="app-step-nav__circle app-step-nav__circle--number">
+                					<span class="app-step-nav__circle-inner">
+                  						<span class="app-step-nav__circle-background">
+                    						<span class="govuk-visually-hidden">Step</span> 3
+                  						</span>
+                					</span>
+              					</span>
+              <span class="js-step-title">Choose how to run your programme</span>
+            </h2>
+          </div>
+          <div class="app-step-nav__panel js-panel js-hidden" id="step-panel-choose-a-programme-3">
+            <p class="app-step-nav__paragraph">Your school’s induction tutor needs to do this as soon as possible. ECTs cannot begin their statutory induction until a training programme is in place.</p>
+            <h3 class="govuk-heading-s govuk-!-margin-bottom-1 govuk-!-padding-top-1">Option 1</h3>
+            <p class="app-step-nav__paragraph"><a href="https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview#FPL">Use a DfE-funded training provider</a> - available for state-funded schools only</p>
+
+            <h3 class="govuk-heading-s govuk-!-margin-bottom-1 govuk-!-padding-top-1">Option 2</h3>
+            <p class="app-step-nav__paragraph"><a href="https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview#schools-delivering-their-own-training-using-dfe-accredited-materials-and-resources">Use DfE-accredited materials to deliver your own programme</a></p>
+
+            <h3 class="govuk-heading-s govuk-!-margin-bottom-1 govuk-!-padding-top-1">Option 3</h3>
+            <p class="app-step-nav__paragraph"><a href="https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview#schools-designing-and-delivering-their-own-ecf-based-induction">Design and deliver your own ECF-based programme</a></p>
+            <p class="app-step-nav__paragraph">If you choose option 3, you do not need to complete the steps listed below. </p>
+          </div>
+        </li>
+        <li class="app-step-nav__step js-step" id="select-a-training-partner" >
+          <div class="app-step-nav__header js-toggle-panel" data-position="5">
+            <h2 class="app-step-nav__title">
+								<span class="app-step-nav__circle app-step-nav__circle--number">
+									<span class="app-step-nav__circle-inner">
+										<span class="app-step-nav__circle-background">
+											<span class="govuk-visually-hidden">Step</span> 4
+										</span>
+									</span>
+								</span>
+              <span class="js-step-title">Select a DfE-funded training partner</span>
+            </h2>
+          </div>
+          <div class="app-step-nav__panel js-panel js-hidden" id="step-panel-select-a-training-partner-5">
+            <p class="app-step-nav__paragraph">If you choose to use a training provider, your induction tutor needs to select from the 6 available options as soon as possible.</p>
+
+            <ol class="app-step-nav__list " data-length="2">
+              <li class="app-step-nav__list-item js-list-item "><a data-position="4.1" class="app-step-nav__link js-link" href="https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview#FPL">Compare DfE-funded training providers</a></li>
+              <li class="app-step-nav__list-item js-list-item "><a data-position="4.2" class="app-step-nav__link js-link" href="https://www.gov.uk/guidance/teaching-school-hubs">Contact your local teaching school hub to confirm your choice of provider</a></li>
+            </ol>
+
+          </div>
+        </li>
+        <li class="app-step-nav__step js-step" id="select-materials" >
+          <div class="app-step-nav__header js-toggle-panel" data-position="4">
+            <h2 class="app-step-nav__title">
+								<span class="app-step-nav__circle app-step-nav__circle--logic">
+								  <span class="app-step-nav__circle-inner">
+										<span class="app-step-nav__circle-background">or</span>
+								  </span>
+								</span>
+              <span class="js-step-title">Select your DfE-accredited materials</span>
+            </h2>
+          </div>
+
+          <div class="app-step-nav__panel js-panel js-hidden" id="step-panel-select-materials-4">
+            <p class="app-step-nav__paragraph">If you choose to deliver your own programme with accredited materials, your induction tutor needs to select materials as soon as possible.</p>
+            <ol class="app-step-nav__list " data-length="3">
+              <li class="app-step-nav__list-item js-list-item "><a data-position="4.1" class="app-step-nav__link js-link" href="https://www.early-career-framework.education.gov.uk/">Compare DfE-accredited materials </a></li>
+              <li class="app-step-nav__list-item js-list-item "><%=govuk_link_to "Tell us which materials you want to use", root_path, class: "app-step-nav__link js-link" %></li>
+            </ol>
+          </div>
+        </li>
+        <li class="app-step-nav__step js-step" id="add-ects-and-mentors" >
+          <div class="app-step-nav__header js-toggle-panel" data-position="6">
+            <h2 class="app-step-nav__title">
+								<span class="app-step-nav__circle app-step-nav__circle--number">
+									<span class="app-step-nav__circle-inner">
+										<span class="app-step-nav__circle-background">
+											<span class="govuk-visually-hidden">Step</span> 5
+										</span>
+									</span>
+								</span>
+              <span class="js-step-title">Add ECTs and their mentors to your training cohort</span>
+            </h2>
+          </div>
+          <div class="app-step-nav__panel js-panel js-hidden" id="step-panel-add-ects-and-mentors-6">
+            <p class="app-step-nav__paragraph">Your induction tutor needs to tell us each ECTs name and email address as soon as possible. We also need this contact information for the mentors you've assigned to work with them. </p>
+            <p class="app-step-nav__paragraph">We’ll contact each ECT and mentor to ask them for more information. We’ll use this to check they’re eligible for this funded training and support.</p>
+            <ol class="app-step-nav__list " data-length="3">
+              <li class="app-step-nav__list-item js-list-item "><%=govuk_link_to "Tell us about your 2021 to 2022 ECTs and mentors ", root_path, class: "app-step-nav__link js-link" %></li>
+
+            </ol>
+            <p class="app-step-nav__paragraph">If your school has chosen to design and deliver your own ECF-based programme, you do not need to complete this step.</p>
+          </div>
+        </li>
+        <li class="app-step-nav__step js-step" id="begin-your-training" >
+          <div class="app-step-nav__header js-toggle-panel" data-position="7">
+            <h2 class="app-step-nav__title">
+								<span class="app-step-nav__circle app-step-nav__circle--number">
+									<span class="app-step-nav__circle-inner">
+										<span class="app-step-nav__circle-background">
+											<span class="govuk-visually-hidden">Step</span> 6
+										</span>
+									</span>
+								</span>
+              <span class="js-step-title">Begin your school's training programme</span>
+            </h2>
+          </div>
+          <div class="app-step-nav__panel js-panel js-hidden" id="step-begin-your-training-7">
+            <p class="app-step-nav__paragraph">Each ECT should start their training programme as soon as they begin their statutory induction. This can be at any point in the 2021 to 2022 academic year.</p>
+
+            <p class="app-step-nav__paragraph">Your next step depends on which way you choose to run your programme. </p>
+
+            <h3 class="govuk-heading-s govuk-!-margin-bottom-1 govuk-!-padding-top-1">If you’re using a DfE-funded training provider</h3>
+            <p class="app-step-nav__paragraph">They’ll contact you directly about what to do next.</p>
+
+            <h3 class="govuk-heading-s govuk-!-margin-bottom-1 govuk-!-padding-top-1">If you’re using DfE-accredited materials to deliver your own programme</h3>
+            <p class="app-step-nav__paragraph">We’ll send your induction tutor, ECTs and mentors a link to access the materials you choose.</p>
+
+            <h3 class="govuk-heading-s govuk-!-margin-bottom-1 govuk-!-padding-top-1">If you’re designing and delivering your own programme</h3>
+            <p class="app-step-nav__paragraph">You need to plan and create your materials.</p>
+
+
+            <p><a href="https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview#the-role-of-the-appropriate-body" class="govuk-link">Contact your appropriate body</a> to find out more about next steps.</p>
+          </div>
+        </li>
+
+      </ol>
+    </div>
+
+  </div>
+</div>

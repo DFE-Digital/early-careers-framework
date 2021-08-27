@@ -1,10 +1,10 @@
 // Based on https://github.com/alphagov/govuk_publishing_components/blob/v22.0.0/app/assets/stylesheets/govuk_publishing_components/components/_step-by-step-nav.scss
 
-$stroke-width: 2px;
+$stroke-width: 1px;
 $stroke-width-large: 3px;
-$number-circle-size: 26px;
+$number-circle-size: 30px;
 $number-circle-size-large: 35px;
-$top-border: solid 2px govuk-colour("mid-grey", $legacy: "grey-3");
+$top-border: solid 1px govuk-colour("mid-grey", $legacy: "grey-3");
 
 @mixin step-nav-vertical-line ($line-style: solid) {
   content: "";
@@ -31,7 +31,7 @@ $top-border: solid 2px govuk-colour("mid-grey", $legacy: "grey-3");
 // we want to ensure that both large and small step navs have the same size font on mobile
 // this will stop text resizing if compatibility mode is turned off
 @mixin step-nav-font($size, $tablet-size: $size, $weight: normal, $line-height: 1.3, $tablet-line-height: $line-height) {
-  @include govuk-typography-common();
+  @include govuk-typography-common;
   font-size: $size + px;
   font-weight: $weight;
   line-height: $line-height;
@@ -39,6 +39,13 @@ $top-border: solid 2px govuk-colour("mid-grey", $legacy: "grey-3");
   @include govuk-media-query($from: tablet) {
     font-size: $tablet-size + px;
     line-height: $tablet-line-height;
+  }
+}
+
+// Adds a focus state for the chevron icon so that it turns black on button focus
+@mixin step-nav-chevron-focus-state {
+  .app-step-nav__chevron-stroke {
+    stroke: govuk-colour("black");
   }
 }
 
@@ -58,7 +65,6 @@ $top-border: solid 2px govuk-colour("mid-grey", $legacy: "grey-3");
 
 .app-step-nav__controls {
   padding: 3px 3px 0 0;
-  text-align: right;
 }
 
 .app-step-nav__button {
@@ -80,14 +86,29 @@ $top-border: solid 2px govuk-colour("mid-grey", $legacy: "grey-3");
 }
 
 .app-step-nav__button--title {
-  @include step-nav-font(19, $weight: bold, $line-height: 1.4);
+  @include step-nav-font(19, $weight: bold, $line-height: 1.2);
   display: inline-block;
-  padding: 0;
+  padding: govuk-spacing(1) 0 0;
   text-align: left;
   color: govuk-colour("black");
+  width: 100%;
 
   .app-step-nav--large & {
     @include step-nav-font(19, $tablet-size: 24, $weight: bold, $line-height: 1.4);
+
+    @include govuk-media_query($from: tablet) {
+      padding-top: govuk-spacing(2);
+    }
+  }
+
+  &:focus {
+    box-shadow: 0 -4px govuk-colour("black");
+
+    .app-step-nav__toggle-link {
+      color: govuk-colour("black");
+    }
+
+    @include step-nav-chevron-focus-state;
   }
 }
 
@@ -95,11 +116,61 @@ $top-border: solid 2px govuk-colour("mid-grey", $legacy: "grey-3");
   @include step-nav-font(14, $line-height: 1);
   position: relative;
   z-index: 1; // this and relative position stops focus outline underlap with border of accordion
-  padding: .5em 0;
-  text-decoration: underline;
+  margin: .5em 0 1.5em;
+  padding: 0 0 govuk-spacing(1);
+
+  &:hover .app-step-nav__button-text {
+    @include govuk-link-decoration;
+    @include govuk-link-hover-decoration;
+  }
 
   .app-step-nav--large & {
     @include step-nav-font(14, $tablet-size: 16, $line-height: 1);
+  }
+
+  &:focus {
+    @include step-nav-chevron-focus-state;
+
+    .app-step-nav__button-text {
+      text-decoration: none;
+    }
+  }
+}
+
+.app-step-nav__title-text {
+  display: block;
+  margin-bottom: govuk-spacing(1);
+}
+
+.app-step-nav__chevron {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: govuk-em(5, 14);
+
+  .app-step-nav--large & {
+    margin-left: govuk-em(5, 16);
+  }
+
+  svg {
+    pointer-events: none;
+  }
+}
+
+.app-step-nav__button-text {
+  display: inline-block;
+  text-align: left;
+  min-width: govuk-em(35, 14);
+
+  .app-step-nav--large & {
+    min-width: govuk-em(40, 16);
+  }
+}
+
+.app-step-nav__button-text--all {
+  min-width: govuk-em(87, 14);
+
+  .app-step-nav--large & {
+    min-width: govuk-em(100, 16);
   }
 }
 
@@ -147,12 +218,8 @@ $top-border: solid 2px govuk-colour("mid-grey", $legacy: "grey-3");
   }
 
   &:after {
-    // scss-lint:disable DuplicateProperty
-    // sass-lint:disable no-duplicate-properties
     height: -webkit-calc(100% - #{govuk-spacing(3)}); // fallback for iphone 4
     height: calc(100% - #{govuk-spacing(3)});
-    // sass-lint:enable no-duplicate-properties
-    // scss-lint:enable DuplicateProperty
   }
 
   .app-step-nav__help:after {
@@ -187,7 +254,7 @@ $top-border: solid 2px govuk-colour("mid-grey", $legacy: "grey-3");
   box-sizing: border-box;
   position: absolute;
   z-index: 5;
-  top: govuk-spacing(3);
+  top: 3px;
   left: 0;
   width: $number-circle-size;
   height: $number-circle-size;
@@ -206,23 +273,37 @@ $top-border: solid 2px govuk-colour("mid-grey", $legacy: "grey-3");
 }
 
 .app-step-nav__circle--number {
-  @include step-nav-font(16, $weight: bold, $line-height: 23px);
+  @include step-nav-font(16, $weight: bold, $line-height: 29px);
   border: solid $stroke-width govuk-colour("mid-grey", $legacy: "grey-2");
 
   .app-step-nav--large & {
-    @include step-nav-font(16, $tablet-size: 19, $weight: bold, $line-height: 23px, $tablet-line-height: 30px);
+    @include step-nav-font(16, $tablet-size: 19, $weight: bold, $line-height: 25px, $tablet-line-height: 30px);
+    border-width: $stroke-width-large;
+  }
 
-    @include govuk-media-query($from: tablet) {
-      border-width: $stroke-width-large;
+  .app-step-nav__step--active & {
+    background-color: govuk-colour("black");
+
+    .app-step-nav__circle-background {
+      text-shadow: none;
+      color: govuk-colour("white");
     }
   }
 }
 
 .app-step-nav__circle--logic {
-  @include step-nav-font(16, $weight: bold, $line-height: 28px);
+  @include step-nav-font(19, $weight: bold, $line-height: 28px);
+  left: 3px;
+  width: govuk-em($number-circle-size, 19);
+  height: govuk-em($number-circle-size, 19);
 
   .app-step-nav--large & {
-    @include step-nav-font(16, $tablet-size: 19, $weight: bold, $line-height: 28px, $tablet-line-height: 34px);
+    @include step-nav-font(19, $tablet-size: 24, $weight: bold, $line-height: 28px, $tablet-line-height: 34px);
+
+    @include govuk-media-query($from: tablet) {
+      width: govuk-em($number-circle-size-large, 24);
+      height: govuk-em($number-circle-size-large, 24);
+    }
   }
 }
 
@@ -246,21 +327,19 @@ $top-border: solid 2px govuk-colour("mid-grey", $legacy: "grey-3");
 }
 
 .app-step-nav__header {
-  padding: govuk-spacing(3) 0;
   border-top: $top-border;
+  padding: govuk-spacing(1) 0 govuk-spacing(6);
+
+  .app-step-nav--large & {
+    padding-top: govuk-spacing(2);
+  }
+
+  .js-enabled & {
+    padding: 0;
+  }
 
   .app-step-nav--active & {
     cursor: pointer;
-  }
-
-  .app-step-nav__button {
-    &:focus {
-      @include govuk-focused-text;
-
-      .app-step-nav__toggle-link {
-        @include govuk-focused-text;
-      }
-    }
   }
 
   &:hover {
@@ -269,27 +348,9 @@ $top-border: solid 2px govuk-colour("mid-grey", $legacy: "grey-3");
       color: $govuk-link-colour;
     }
 
-    .app-step-nav__toggle-link {
-      text-decoration: underline;
-    }
-  }
-
-  .app-step-nav--large & {
-    @include govuk-media-query($from: tablet) {
-      padding: govuk-spacing(6) 0;
-    }
-  }
-}
-
-
-.app-step-nav__header.app-step-nav__header--non-clickable {
-  .app-step-nav--active & {
-    cursor: default !important;
-  }
-
-  &:hover {
-    .app-step-nav__circle {
-      color: govuk-colour('black');
+    .app-step-nav__button-text {
+      @include govuk-link-decoration;
+      @include govuk-link-hover-decoration;
     }
   }
 }
@@ -309,6 +370,7 @@ $top-border: solid 2px govuk-colour("mid-grey", $legacy: "grey-3");
   display: block;
   color: $govuk-link-colour;
   text-transform: capitalize;
+  padding-bottom: govuk-spacing(6);
 
   .app-step-nav--large & {
     @include step-nav-font(14, $tablet-size: 16, $line-height: 1.2);
@@ -318,6 +380,7 @@ $top-border: solid 2px govuk-colour("mid-grey", $legacy: "grey-3");
 .app-step-nav__panel {
   @include govuk-text-colour;
   @include step-nav-font(16);
+  padding-bottom: govuk-spacing(5);
 
   .app-step-nav--large & {
     @include step-nav-font(16, $tablet-size: 19);
@@ -337,12 +400,6 @@ $top-border: solid 2px govuk-colour("mid-grey", $legacy: "grey-3");
 
   + .app-step-nav__list {
     margin-top: -5px;
-
-    .app-step-nav--large & {
-      @include govuk-media-query($from: tablet) {
-        margin-top: -govuk-spacing(3);
-      }
-    }
   }
 
   .app-step-nav--large & {
@@ -350,10 +407,12 @@ $top-border: solid 2px govuk-colour("mid-grey", $legacy: "grey-3");
       padding-bottom: govuk-spacing(6);
     }
   }
-}
 
-.app-step-nav__inset-text {
-  margin-top: 0;
+  .app-step-nav--large & + .app-step-nav__list {
+    @include govuk-media-query($from: tablet) {
+      margin-top: -govuk-spacing(3);
+    }
+  }
 }
 
 .app-step-nav__list {
@@ -422,7 +481,6 @@ $top-border: solid 2px govuk-colour("mid-grey", $legacy: "grey-3");
       &:before {
         left: -(govuk-spacing(9));
         margin-left: ($number-circle-size-large / 2);
-        height: $stroke-width-large;
       }
     }
   }
