@@ -67,7 +67,7 @@ module Api
                                     .distinct
                                     .includes(
                                       teacher_profile: {
-                                        ecf_profile: %i[cohort school ecf_participant_eligibility ecf_participant_validation_data participant_profile_state participant_profile_states],
+                                        ecf_profile: %i[cohort school ecf_participant_eligibility ecf_participant_validation_data participant_profile_state participant_profile_states schedule],
                                         early_career_teacher_profile: :mentor,
                                       },
                                     )
