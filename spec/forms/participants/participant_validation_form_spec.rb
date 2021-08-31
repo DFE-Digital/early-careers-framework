@@ -225,7 +225,7 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
         attributes = form.attributes
         expect(attributes[:trn]).to eq "1231222"
         expect(attributes[:name]).to eq "Shiela Smith"
-        expect(attributes[:national_insurance_number]).to eq "AW 23 44 44 A"
+        expect(attributes[:national_insurance_number]).to eq "AW234444A"
       end
     end
   end
