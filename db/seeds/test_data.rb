@@ -72,6 +72,8 @@ School.find_or_create_by!(urn: "000004") do |school|
   SchoolCohort.find_or_create_by!(cohort: Cohort.current, school: school, induction_programme_choice: "core_induction_programme", core_induction_programme: cip)
 end
 
+lead_provider = LeadProvider.find_by(name: "Ambition Institute")
+
 School.find_or_create_by!(urn: "000005") do |school|
   school.update!(
     name: "ZZ Test School 5",
@@ -89,7 +91,7 @@ School.find_or_create_by!(urn: "000005") do |school|
   end
   SchoolCohort.find_or_create_by!(cohort: Cohort.current, school: school, induction_programme_choice: "full_induction_programme")
   delivery_partner = DeliveryPartner.find_or_create_by!(name: "Test Delivery Partner")
-  partnership = Partnership.find_or_create_by!(cohort: Cohort.current, delivery_partner: delivery_partner, school: school, lead_provider: LeadProvider.first, challenge_deadline: 2.weeks.from_now)
+  partnership = Partnership.find_or_create_by!(cohort: Cohort.current, delivery_partner: delivery_partner, school: school, lead_provider: lead_provider, challenge_deadline: 2.weeks.from_now)
   PartnershipNotificationEmail.find_or_create_by!(
     partnership: partnership,
     sent_to: "cpd-test+tutor-2#{DOMAIN}",
@@ -119,7 +121,7 @@ end
 
     SchoolCohort.find_or_create_by!(cohort: Cohort.current, school: school, induction_programme_choice: "full_induction_programme")
     delivery_partner = DeliveryPartner.find_or_create_by!(name: "Mega Delivery Partner")
-    partnership = Partnership.find_or_create_by!(cohort: Cohort.current, delivery_partner: delivery_partner, school: school, lead_provider: LeadProvider.first, challenge_deadline: 2.weeks.from_now)
+    partnership = Partnership.find_or_create_by!(cohort: Cohort.current, delivery_partner: delivery_partner, school: school, lead_provider: lead_provider, challenge_deadline: 2.weeks.from_now)
     PartnershipNotificationEmail.find_or_create_by!(
       partnership: partnership,
       sent_to: "cpd-test+tutor-3#{DOMAIN}",
@@ -151,7 +153,7 @@ School.find_or_create_by!(urn: "000006") do |school|
   end
   SchoolCohort.find_or_create_by!(cohort: Cohort.current, school: school, induction_programme_choice: "full_induction_programme")
   delivery_partner = DeliveryPartner.find_or_create_by!(name: "Mega Delivery Partner")
-  partnership = Partnership.find_or_create_by!(cohort: Cohort.current, delivery_partner: delivery_partner, school: school, lead_provider: LeadProvider.first)
+  partnership = Partnership.find_or_create_by!(cohort: Cohort.current, delivery_partner: delivery_partner, school: school, lead_provider: lead_provider)
   PartnershipNotificationEmail.find_or_create_by!(
     partnership: partnership,
     sent_to: "cpd-test+tutor-3#{DOMAIN}",
@@ -164,7 +166,7 @@ end
 delivery_partner = DeliveryPartner.find_or_create_by!(name: "Amazing Delivery Partner")
 
 ProviderRelationship.find_or_create_by!(
-  lead_provider: LeadProvider.first,
+  lead_provider: lead_provider,
   delivery_partner: delivery_partner,
   cohort: Cohort.current,
 )
@@ -450,5 +452,5 @@ ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) 
 end
 
 ["Capita", "Teach First", "UCL Institute of Education", "Best Practice Network", "Ambition Institute", "Education Development Trust"].each do |provider|
-  ValidTestDataGenerator::LeadProviderPopulater.call(name: provider, total_schools: 10, participants_per_school: 10)
+  ValidTestDataGenerator::LeadProviderPopulater.delay.call(name: provider, total_schools: 10, participants_per_school: 10)
 end
