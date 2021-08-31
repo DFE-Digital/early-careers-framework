@@ -49,11 +49,10 @@ FactoryBot.define do
     end
 
     trait :npq do
-      school
-      teacher_profile { association :teacher_profile, school: school }
+      teacher_profile { association :teacher_profile }
       schedule
 
-      validation_data { association :npq_validation_data, user: teacher_profile.user }
+      validation_data { association :npq_validation_data, user: teacher_profile.user, school_urn: rand(100_000..999_999) }
 
       participant_type { :npq }
     end
