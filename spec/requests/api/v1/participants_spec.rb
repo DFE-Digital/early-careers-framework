@@ -71,6 +71,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
               :pupil_premium_uplift,
               :sparsity_uplift,
               :training_status,
+              :schedule_identifier,
             ).exactly)
         end
 
@@ -150,7 +151,8 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
                eligible_for_funding
                pupil_premium_uplift
                sparsity_uplift
-               training_status],
+               training_status
+               schedule_identifier],
           )
         end
 
@@ -224,6 +226,29 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           expect(response).to be_successful
 
           expect(parsed_response.dig("data", "attributes", "training_status")).to eql("withdrawn")
+        end
+
+        it "returns an error when the participant is already withdrawn" do
+          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
+          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
+
+          expect(response).not_to be_successful
+        end
+      end
+
+      describe "JSON Participant Change Schedule" do
+        let(:parsed_response) { JSON.parse(response.body) }
+
+        before do
+          create(:schedule, schedule_identifier: "ecf-september-extended-2021")
+          early_career_teacher_profile.update!(schedule: create(:schedule, schedule_identifier: "ecf-september-standard-2021"))
+        end
+
+        it "changes participant schedule" do
+          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/change-schedule", params: { data: { attributes: { course_identifier: "ecf-induction", schedule_identifier: "ecf-september-extended-2021" } } }
+
+          expect(response).to be_successful
+          expect(parsed_response.dig("data", "attributes", "schedule_identifier")).to eql("ecf-september-extended-2021")
         end
       end
     end

@@ -7,6 +7,7 @@ required:
   - participant_type
   - cohort
   - status
+  - schedule_identifier
 properties:
   email:
     description: "The email address registered for this ECF participant"
@@ -76,3 +77,10 @@ properties:
     enum:
       - active
       - withdrawn
+  schedule_identifier:
+    description: "The schedule of the ECF participant"
+    type: string
+    example: ecf-september-extended-2021
+    enum:
+      - ecf-september-standard-2021
+      - ecf-september-extended-2021
