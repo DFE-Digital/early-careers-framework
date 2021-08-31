@@ -104,6 +104,13 @@ RSpec.describe School, type: :model do
       end
     end
 
+    describe "scope eligible_or_cip_only" do
+      it "should only include schools that are eligible or cip only" do
+        expect(School.eligible_or_cip_only.all).to include(open_school, eligible_school_type, english_school, s41_school, welsh_school)
+        expect(School.eligible_or_cip_only.all).not_to include(closed_school, ineligible_school_type, closed_s41_school)
+      end
+    end
+
     describe "#cip_only?" do
       it "should be false for fully eligible schools" do
         expect(open_school.cip_only?).to eql false
