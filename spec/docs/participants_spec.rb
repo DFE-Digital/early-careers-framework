@@ -101,7 +101,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
       request_body content: {
         "application/json": {
           "schema": {
-            "$ref": "#/components/schemas/ECFParticipantAction",
+            "$ref": "#/components/schemas/ECFParticipantWithdrawRequest",
           },
         },
       }
@@ -119,7 +119,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
                 style: :deepObject,
                 required: true,
                 schema: {
-                  "$ref": "#/components/schemas/ECFParticipantAction",
+                  "$ref": "#/components/schemas/ECFParticipantWithdrawRequest",
                 }
 
       response "200", "The ECF participant being withdrawn" do
@@ -138,6 +138,65 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
               "attributes": attributes,
             },
           }
+        end
+
+        schema "$ref": "#/components/schemas/EcfParticipantResponse"
+        run_test!
+      end
+    end
+  end
+
+  path "/api/v1/participants/{id}/change-schedule" do
+    put "Change participant schedule" do
+      operationId :participant
+      tags "ECF Participant"
+      security [bearerAuth: []]
+      consumes "application/json"
+
+      request_body content: {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest",
+          },
+        },
+      }
+
+      parameter name: :id,
+                in: :path,
+                type: :string,
+                required: true,
+                example: "",
+                description: "The ID of the participant"
+
+      parameter name: :params,
+                in: :body,
+                type: :object,
+                style: :deepObject,
+                required: true,
+                schema: {
+                  "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest",
+                }
+
+      response "200", "The ECF participant changing schedule" do
+        let(:id) { mentor_profile.user.id }
+        let(:attributes) do
+          {
+            schedule_identifier: "ecf-september-extended-2021",
+            course_identifier: "ecf-mentor",
+          }
+        end
+
+        let(:params) do
+          {
+            "data": {
+              "type": "participant",
+              "attributes": attributes,
+            },
+          }
+        end
+
+        before do
+          create(:schedule, schedule_identifier: "ecf-september-extended-2021")
         end
 
         schema "$ref": "#/components/schemas/EcfParticipantResponse"

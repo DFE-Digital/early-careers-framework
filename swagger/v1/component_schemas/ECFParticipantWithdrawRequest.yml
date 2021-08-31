@@ -1,4 +1,4 @@
-description: "The details of a participant"
+description: "The withdrawal request for a participant"
 type: object
 required:
   - type

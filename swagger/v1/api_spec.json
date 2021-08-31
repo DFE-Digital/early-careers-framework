@@ -166,7 +166,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "example": "77fdc478-8107-40c9-b85e-b9d647e9e16c",
             "description": "The ID of the NPQ application to accept.",
             "schema": {
               "type": "string"
@@ -216,7 +216,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "example": "14b1b4ab-fa81-4f7a-b4b5-f632412e8c5c",
+            "example": "c9fc73b7-f9d4-423c-8692-0d88e76a99a3",
             "description": "The ID of the NPQ application to reject.",
             "schema": {
               "type": "string"
@@ -511,7 +511,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ECFParticipantAction"
+                "$ref": "#/components/schemas/ECFParticipantWithdrawRequest"
               }
             }
           }
@@ -531,6 +531,55 @@
         "responses": {
           "200": {
             "description": "The ECF participant being withdrawn",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EcfParticipantResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/participants/{id}/change-schedule": {
+      "put": {
+        "summary": "Change participant schedule",
+        "operationId": "participant",
+        "tags": [
+          "ECF Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "",
+            "description": "The ID of the participant",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ECF participant changing schedule",
             "content": {
               "application/json": {
                 "schema": {
@@ -587,8 +636,40 @@
           }
         }
       },
-      "ECFParticipantAction": {
-        "description": "The details of a participant",
+      "ECFParticipantChangeSchedule": {
+        "description": "An ECF participant change schedule action",
+        "type": "object",
+        "properties": {
+          "schedule_identifier": {
+            "description": "The new schedule of the participant",
+            "type": "string",
+            "enum": [
+              "ecf-september-standard-2021",
+              "ecf-september-extended-2021"
+            ],
+            "example": "career-break"
+          },
+          "course_identifier": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "ecf-induction",
+              "ecf-mentor"
+            ],
+            "example": "ecf-induction"
+          }
+        },
+        "required": [
+          "schedule_identifier",
+          "course_identifier"
+        ],
+        "example": {
+          "schedule_identifier": "ecf-september-extended-2021",
+          "course_identifier": "ecf-mentor"
+        }
+      },
+      "ECFParticipantChangeScheduleRequest": {
+        "description": "The change schedule request for a participant",
         "type": "object",
         "required": [
           "type",
@@ -601,7 +682,7 @@
             "example": "participant"
           },
           "attributes": {
-            "$ref": "#/components/schemas/ECFParticipantWithdrawal"
+            "$ref": "#/components/schemas/ECFParticipantChangeSchedule"
           }
         }
       },
@@ -713,6 +794,24 @@
           "declaration_type": "started",
           "declaration_date": "2021-05-31T02:21:32.000Z",
           "course_identifier": "ecf-mentor"
+        }
+      },
+      "ECFParticipantWithdrawRequest": {
+        "description": "The withdrawal request for a participant",
+        "type": "object",
+        "required": [
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "participant"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ECFParticipantWithdrawal"
+          }
         }
       },
       "ECFParticipantWithdrawal": {
