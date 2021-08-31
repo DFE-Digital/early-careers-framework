@@ -6,7 +6,7 @@ module Participants
     extend ActiveSupport::Concern
     included do
       extend MentorClassMethods
-      delegate :mentor_profile, to: :user
+      delegate :mentor_profile, to: :user, allow_nil: true
     end
 
     def user_profile
