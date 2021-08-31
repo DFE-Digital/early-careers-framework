@@ -173,7 +173,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
             [
               {
                 "id" => participant_declaration.id,
-                "type" => "participant_declaration",
+                "type" => "participant-declaration",
                 "attributes" => {
                   "participant_id" => ect_profile.user.id,
                   "declaration_type" => "started",
@@ -212,7 +212,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
             [
               {
                 "id" => participant_declaration.id,
-                "type" => "participant_declaration",
+                "type" => "participant-declaration",
                 "attributes" => {
                   "participant_id" => ect_profile.user.id,
                   "declaration_type" => "started",
