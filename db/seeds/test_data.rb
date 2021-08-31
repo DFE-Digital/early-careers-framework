@@ -449,8 +449,6 @@ ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) 
   mentor_profile.schedule = Finance::Schedule.default
 end
 
-PaperTrail.request(enabled: false) do
-  ["Capita", "Teach First", "UCL Institute of Education", "Best Practice Network", "Ambition Institute", "Education Development Trust"].each do |provider|
-    ValidTestDataGenerator::LeadProviderPopulater.call(name: provider, total_schools: 10, participants_per_school: 10)
-  end
+["Capita", "Teach First", "UCL Institute of Education", "Best Practice Network", "Ambition Institute", "Education Development Trust"].each do |provider|
+  ValidTestDataGenerator::LeadProviderPopulater.delay.call(name: provider, total_schools: 10, participants_per_school: 10)
 end
