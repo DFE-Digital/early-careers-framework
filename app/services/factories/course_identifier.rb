@@ -10,7 +10,7 @@ module Factories
     private
 
       def recorder_klass_name_for_course_identifier(course)
-        declaration_identifiers[course.underscore.intern].to_s
+        declaration_identifiers[course.underscore.intern].to_s if course
       end
 
       def declaration_identifiers
