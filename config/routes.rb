@@ -52,6 +52,7 @@ Rails.application.routes.draw do
       resources :participants, only: %i[index] do
         member do
           put :withdraw
+          put :change_schedule, path: "change-schedule"
         end
       end
       resources :participant_declarations, only: %i[create index], path: "participant-declarations"
