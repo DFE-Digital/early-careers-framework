@@ -1,12 +1,17 @@
-description: "An ECF withdrawal action"
+description: "An ECF participant withdrawal action"
 type: object
 properties:
   reason:
-    description: "The reason for withdrawal"
+    description: "The reason for the withdrawal"
     type: string
     enum:
-      - career-break
+      - left-teaching-profession
+      - moved-school
       - mentor-no-longer-being-mentor
+      - school-left-fip
+      - career-break
+      - passed-induction
+      - other
     example: career-break
   course_identifier:
     description: "The type of course the participant is enrolled in"
