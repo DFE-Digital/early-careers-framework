@@ -101,6 +101,12 @@ RSpec.describe ParticipantValidationService do
           ParticipantValidationService.validate(trn: trn, nino: nino.downcase, full_name: "John Smithe", date_of_birth: dob),
         ).to eql({ trn: trn, qts: true, active_alert: false })
       end
+
+      it "returns validated details when the name is cased differently and the nino is missing" do
+        expect(
+          ParticipantValidationService.validate(trn: trn, nino: "", full_name: "John SMITH", date_of_birth: dob),
+        ).to eql({ trn: trn, qts: true, active_alert: false })
+      end
     end
 
     context "when 3 of 4 things match and only first name matches" do
