@@ -49,7 +49,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
             .and change(ParticipantDeclarationAttempt, :count).by(1)
         expect(ApiRequestAudit.order(created_at: :asc).last.body).to eq(params.to_s)
         expect(response.status).to eq 200
-        expect(parsed_response["id"]).to eq(ParticipantDeclaration.order(:created_at).last.id)
+        expect(parsed_response["data"]["id"]).to eq(ParticipantDeclaration.order(:created_at).last.id)
       end
 
       it "create payable declaration record when user is eligible" do

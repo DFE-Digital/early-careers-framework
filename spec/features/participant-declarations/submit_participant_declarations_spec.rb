@@ -156,7 +156,7 @@ private
   end
 
   def then_the_declaration_made_is_valid
-    expect(ParticipantDeclaration.find(@response["id"])).to be_present
+    expect(ParticipantDeclaration.find(@response["data"]["id"])).to be_present
   end
 
   def then_the_declaration_made_is_invalid

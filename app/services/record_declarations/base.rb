@@ -43,7 +43,9 @@ module RecordDeclarations
       declaration.refresh_payability!
       declaration_attempt.update!(participant_declaration: declaration)
 
-      { id: declaration.id }
+      participant_declarations_hash = ParticipantDeclarationSerializer.new(declaration).serializable_hash
+
+      participant_declarations_hash.to_json
     end
 
   private
