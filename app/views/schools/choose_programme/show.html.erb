@@ -2,8 +2,11 @@
 <% if @show_back_link %>
   <% content_for :before_content, govuk_back_link(text: "Back", href: schools_dashboard_index_path) %>
 <% end %>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-l"><%= @school.name %></span>
+
     <%= form_for @induction_choice_form, url: schools_choose_programme_path, method: :post do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_collection_radio_buttons(
