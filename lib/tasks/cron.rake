@@ -5,5 +5,6 @@ namespace :cron do
   task schedule: :environment do
     SessionTrimJob.schedule
     SchoolDataImporterJob.schedule
+    ValidationRetryJob.schedule
   end
 end
