@@ -4,7 +4,7 @@ RSpec.describe "STI removing participants from the cohort", js: true, with_featu
   let(:sti_profile) { create(:induction_coordinator_profile, schools: [school_cohort.school]) }
   let(:school_cohort) { create(:school_cohort) }
   let!(:mentor_profile) { create(:participant_profile, :mentor, school_cohort: school_cohort) }
-  let!(:ect_profile) { create(:participant_profile, :ect, school_cohort: school_cohort, mentor_profile: mentor_profile) }
+  let!(:ect_profile) { create(:participant_profile, :ect, school_cohort: school_cohort, mentor_profile: mentor_profile, user: create(:user, full_name: "John Smith", email: "john-smith@example.com")) }
   let(:privacy_policy) { create :privacy_policy }
 
   before do
