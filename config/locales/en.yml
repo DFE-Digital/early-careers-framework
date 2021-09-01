@@ -87,8 +87,12 @@ en:
     full_name: &full_name_error_messages
       blank: "Enter a full name"
       does_not_match: "The name you entered does not match our records"
+    defer_reason:
+      invalid: "Cannot defer without a valid reason"
     withdrawn_reason:
       invalid: "Cannot withdraw without a valid reason"
+    transition:
+      invalid: ""
     course_identifier: &course_identifier_error_messages
       blank: The property '#/course_identifier' must be present
     participant_id: &participant_id_error_messages

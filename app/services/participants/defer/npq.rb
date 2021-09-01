@@ -2,12 +2,11 @@
 
 module Participants
   module Withdraw
-    class ECF < ::Participants::Base
-      include Participants::ECF
+    class NPQ < ::Participants::Base
+      include Participants::NPQ
       include StateValidation
 
-      validates :reason, "withdrawn/ecf": true
-
+      validates :reason, "deferred/npq": true
     end
   end
 end

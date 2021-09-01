@@ -2,9 +2,9 @@
 
 module Participants
   module Withdraw
-    class NPQ < Base
+    class NPQ < ::Participants::Base
       include Participants::NPQ
-      include Participants::Withdrawal
+      include StateValidation
 
       validates :reason, "withdrawn/npq": true
     end

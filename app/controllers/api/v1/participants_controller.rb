@@ -24,11 +24,11 @@ module Api
       end
 
       def defer
-        perform_action(service: DeferParticipant)
+        perform_action(service: ::Participants::Actions::Defer)
       end
 
       def withdraw
-        perform_action(service: WithdrawParticipant)
+        perform_action(service: ::Participants::Actions::Withdraw)
       end
 
       def change_schedule

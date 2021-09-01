@@ -6,7 +6,7 @@ module Participants
       include Participants::ECF
       include StateValidation
 
-      validates :reason, "withdrawn/ecf": true
+      validates :reason, "deferred/ecf": true
 
     end
   end
