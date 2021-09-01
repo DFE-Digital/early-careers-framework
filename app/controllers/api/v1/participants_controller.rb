@@ -36,6 +36,7 @@ module Api
       end
 
     private
+
       def perform_action(service:)
         params = HashWithIndifferentAccess.new({ cpd_lead_provider: current_user, participant_id: participant_id }).merge(permitted_params["attributes"] || {})
         profile = service.call(params)

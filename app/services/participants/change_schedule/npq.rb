@@ -10,7 +10,6 @@ module Participants
         user_profile.update_schedule!(schedule)
         user_profile
       end
-
     end
   end
 end

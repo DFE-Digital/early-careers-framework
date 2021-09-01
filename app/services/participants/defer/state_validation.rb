@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Participants
   module Defer
     module StateValidation
@@ -17,7 +19,6 @@ module Participants
           %i[active]
         end
       end
-
     end
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Participants
   module ChangeSchedule
     module ScheduleValidation

@@ -24,7 +24,7 @@ module Participants
         recorder.call(params: params)
       end
 
-      private
+    private
 
       def initialize(params)
         @params = params
@@ -33,7 +33,6 @@ module Participants
       def course_identifier
         params[:course_identifier]
       end
-
     end
   end
 end

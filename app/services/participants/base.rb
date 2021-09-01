@@ -51,6 +51,7 @@ module Participants
 
     def not_already_withdrawn
       return if errors.any?
+
       errors.add(:participant_id, I18n.t(:invalid_withdrawal)) if participant_profile_state&.withdrawn?
     end
 
