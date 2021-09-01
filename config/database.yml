@@ -49,17 +49,28 @@ test:
       idle_in_transaction_session_timeout: 0
 
 deployed_development:
-  <<: *default_primary
-  sslmode: require
+  <<: *default
+  primary:
+    <<: *default_primary
+    sslmode: require
+  analytics:
+    <<: *default_analytics
+    sslmode: require
 
 staging:
   <<: *default
   primary:
     <<: *default_primary
     sslmode: require
+  analytics:
+    <<: *default_analytics
+    sslmode: require
 
 production:
   <<: *default
   primary:
     <<: *default_primary
+    sslmode: require
+  analytics:
+    <<: *default_analytics
     sslmode: require

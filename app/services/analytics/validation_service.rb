@@ -4,7 +4,7 @@ module Analytics
   class ValidationService
     class << self
       def upsert_record(participant_profile)
-        return unless %w[development staging production].include? Rails.env
+        return unless %w[development deployed_development staging production].include? Rails.env
 
         record = Analytics::ECFParticipant.find_or_initialize_by(participant_profile_id: participant_profile.id)
         record.user_id = participant_profile.user.id
@@ -24,6 +24,8 @@ module Analytics
       end
 
       def record_validation(participant_profile:, real_time_attempts:, real_time_success:, nino_entered:)
+        return unless %w[development deployed_development staging production].include? Rails.env
+
         record = Analytics::ECFParticipant.find_or_initialize_by(participant_profile_id: participant_profile.id)
         record.real_time_attempts = real_time_attempts
         record.real_time_success = real_time_success
