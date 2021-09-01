@@ -4,4 +4,4 @@ required:
   - data
 properties:
   data:
-    $ref: "#/components/schemas/EcfParticipant"
+    $ref: "#/components/schemas/ECFParticipant"

@@ -45,7 +45,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
           npq_application
         end
 
-        schema({ "$ref": "#/components/schemas/MultipleNpqApplicationsResponse" }, content_type: "application/vnd.api+json")
+        schema({ "$ref": "#/components/schemas/MultipleNPQApplicationsResponse" }, content_type: "application/vnd.api+json")
 
         run_test!
       end
@@ -79,7 +79,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
                 example: { updated_since: "2020-11-13T11:21:55Z" }
 
       response "200", "A CSV file of NPQ application" do
-        schema({ "$ref": "#/components/schemas/MultipleNpqApplicationsCsvResponse" }, content_type: "text/csv")
+        schema({ "$ref": "#/components/schemas/MultipleNPQApplicationsCsvResponse" }, content_type: "text/csv")
 
         run_test!
       end
@@ -110,7 +110,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
       response "200", "The NPQ application being accepted" do
         let(:id) { npq_application.id }
 
-        schema({ "$ref": "#/components/schemas/NpqApplicationResponse" }, content_type: "application/vnd.api+json")
+        schema({ "$ref": "#/components/schemas/NPQApplicationResponse" }, content_type: "application/vnd.api+json")
 
         run_test!
       end
@@ -142,7 +142,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
       response "200", "The NPQ application being rejected" do
         let(:id) { npq_application.id }
 
-        schema({ "$ref": "#/components/schemas/NpqApplicationResponse" }, content_type: "application/vnd.api+json")
+        schema({ "$ref": "#/components/schemas/NPQApplicationResponse" }, content_type: "application/vnd.api+json")
 
         run_test!
       end

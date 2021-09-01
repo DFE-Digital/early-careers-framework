@@ -7,7 +7,7 @@ class CalculationOrchestrator
     def call(cpd_lead_provider:,
              contract:,
              aggregator: ParticipantDeclaration::ECF,
-             calculator: ::PaymentCalculator::Ecf::PaymentCalculation,
+             calculator: ::PaymentCalculator::ECF::PaymentCalculation,
              event_type: :started)
       new(
         cpd_lead_provider: cpd_lead_provider,
@@ -29,7 +29,7 @@ private
   def initialize(cpd_lead_provider:,
                  contract:,
                  aggregator: ParticipantDeclaration::ECF,
-                 calculator: ::PaymentCalculator::Ecf::PaymentCalculation)
+                 calculator: ::PaymentCalculator::ECF::PaymentCalculation)
     @cpd_lead_provider = cpd_lead_provider
     @contract = contract
     @aggregator = aggregator

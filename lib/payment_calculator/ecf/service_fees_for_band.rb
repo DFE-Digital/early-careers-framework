@@ -3,9 +3,9 @@
 require "payment_calculator/ecf/contract/service_fee_calculations"
 
 module PaymentCalculator
-  module Ecf
+  module ECF
     class ServiceFeesForBand
-      include Ecf::Contract::ServiceFeeCalculations
+      include ECF::Contract::ServiceFeeCalculations
 
       def call(band:)
         {
