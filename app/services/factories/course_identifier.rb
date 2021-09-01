@@ -5,12 +5,14 @@ module Factories
     class << self
       def call(course)
         recorder_klass_name_for_course_identifier(course).presence || (raise ActionController::ParameterMissing, I18n.t(:invalid_course))
+      rescue StandardError
+        raise ActionController::ParameterMissing, [I18n.t(:invalid_course)]
       end
 
     private
 
       def recorder_klass_name_for_course_identifier(course)
-        declaration_identifiers[course.underscore.intern].to_s if course
+        declaration_identifiers[course.underscore.intern].to_s
       end
 
       def declaration_identifiers

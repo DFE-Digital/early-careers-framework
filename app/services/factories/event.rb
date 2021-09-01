@@ -12,7 +12,7 @@ module Factories
     private
 
       def event_namespace_for_event(event)
-        event_identifiers[event.underscore.intern].to_s if event
+        event_identifiers[event.underscore.intern].to_s
       end
 
       def event_identifiers
