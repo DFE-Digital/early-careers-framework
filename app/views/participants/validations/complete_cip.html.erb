@@ -10,7 +10,7 @@
       <p class="govuk-body">We'll email you a link to access your materials within the next 24 hours.</p>
     <% else %>
       <!-- TODO: CPDRP-886 revert to 48 hours -->
-      <p class="govuk-body">If you need access to materials, we’ll email you a link soon.</p>
+      <p class="govuk-body">If you need access to materials, we’ll email you a link within the next 24 hours.</p>
     <% end %>
     <% if current_user.induction_coordinator? %>
       <%= govuk_link_to "Manage induction for your school", induction_coordinator_dashboard_path(current_user) %>
