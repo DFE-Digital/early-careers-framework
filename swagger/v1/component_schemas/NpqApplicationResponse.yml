@@ -1,7 +1,0 @@
-description: "An NPQ application"
-type: object
-required:
-  - data
-properties:
-  data:
-    $ref: "#/components/schemas/NpqApplication"
