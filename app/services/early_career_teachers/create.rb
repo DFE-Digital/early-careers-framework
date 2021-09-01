@@ -18,6 +18,7 @@ module EarlyCareerTeachers
 
         ParticipantProfile::ECT.create!({ teacher_profile: teacher_profile, schedule: Finance::Schedule.default }.merge(ect_attributes)) do |profile|
           ParticipantProfileState.create!(participant_profile: profile)
+          Analytics::ECFValidationService.upsert_record(profile)
         end
       end
     end

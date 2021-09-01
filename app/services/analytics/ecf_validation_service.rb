@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Analytics
-  class ValidationService
+  class ECFValidationService
     class << self
       def upsert_record(participant_profile)
         return unless %w[development staging production].include? Rails.env
@@ -22,6 +22,7 @@ module Analytics
 
         record.save!
       end
+      handle_asynchronously :upsert_record
 
       def record_validation(participant_profile:, real_time_attempts:, real_time_success:, nino_entered:)
         return unless %w[development staging production].include? Rails.env
