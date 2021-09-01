@@ -3,9 +3,9 @@
 require "payment_calculator/ecf/contract/output_payment_calculations"
 
 module PaymentCalculator
-  module Ecf
+  module ECF
     class OutputPaymentAggregator
-      include PaymentCalculator::Ecf::Contract::OutputPaymentCalculations
+      include PaymentCalculator::ECF::Contract::OutputPaymentCalculations
 
       delegate :bands, to: :contract
 

@@ -18,9 +18,9 @@ module Tasks
       @total_ects = total_ects
       @total_mentors = total_mentors
       @logger = set_up_logger
-      @service_fee_calculator = PaymentCalculator::Ecf::ServiceFeesForBand.new({ contract: contract })
-      @output_calculator = PaymentCalculator::Ecf::OutputPaymentAggregator.new({ contract: contract })
-      @uplift_calculator = PaymentCalculator::Ecf::UpliftCalculation.new({ contract: contract })
+      @service_fee_calculator = PaymentCalculator::ECF::ServiceFeesForBand.new({ contract: contract })
+      @output_calculator = PaymentCalculator::ECF::OutputPaymentAggregator.new({ contract: contract })
+      @uplift_calculator = PaymentCalculator::ECF::UpliftCalculation.new({ contract: contract })
     end
 
     def set_up_logger

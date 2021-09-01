@@ -3,7 +3,7 @@
 require "payment_calculator/ecf/service_fees_for_band"
 
 module PaymentCalculator
-  module Ecf
+  module ECF
     class ServiceFees
       include HasDIParameters
 
@@ -11,7 +11,7 @@ module PaymentCalculator
 
       def call
         bands.each_with_index.map do |band, i|
-          { band: band_to_identifier(i) }.merge(Ecf::ServiceFeesForBand.call(params, band: band))
+          { band: band_to_identifier(i) }.merge(ECF::ServiceFeesForBand.call(params, band: band))
         end
       end
 
