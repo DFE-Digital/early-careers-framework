@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module PaymentCalculator
-  module Ecf
+  module ECF
     class BreakdownSummary
       class << self
         def call(contract:, aggregations:, event_type: :started)
