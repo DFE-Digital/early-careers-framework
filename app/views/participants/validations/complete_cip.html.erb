@@ -9,7 +9,6 @@
     <% if @participant_profile.ect? %>
       <p class="govuk-body">We'll email you a link to access your materials within the next 24 hours.</p>
     <% else %>
-      <!-- TODO: CPDRP-886 revert to 48 hours -->
       <p class="govuk-body">If you need access to materials, we’ll email you a link within the next 24 hours.</p>
     <% end %>
     <% if current_user.induction_coordinator? %>
