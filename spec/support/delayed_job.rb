@@ -152,13 +152,23 @@ module DelayedJobMatchers
       email_arguments = find_email_args(mailer_class, email_name)
       return email_arguments.any? unless @arguments
 
-      email_arguments.any? do |args|
-        @arguments.args_match?(*args)
+      if @once
+        email_arguments.select { |args|
+          @arguments.args_match?(*args)
+        }.count == 1
+      else
+        email_arguments.any? do |args|
+          @arguments.args_match?(*args)
+        end
       end
     end
 
     chain :with do |*args|
       @arguments = RSpec::Mocks::ArgumentListMatcher.new(*args)
+    end
+
+    chain :once do
+      @once = true
     end
 
     # TODO: Also find email enqueued without ActiveJob, i.e. Mailer.delay.email

@@ -217,8 +217,9 @@ RSpec.describe ValidationBetaService do
 
   describe "#notify_induction_coordinators_about_validation" do
     let!(:chosen_programme_and_not_in_beta_school) { create(:school_cohort, :fip).school }
+    let!(:chosen_programme_and_not_in_beta_school2) { create(:school_cohort, :fip).school }
     let!(:chosen_programme_and_not_in_beta_ic) do
-      create(:user, :induction_coordinator, school_ids: [chosen_programme_and_not_in_beta_school.id])
+      create(:user, :induction_coordinator, school_ids: [chosen_programme_and_not_in_beta_school.id, chosen_programme_and_not_in_beta_school2.id])
     end
 
     let!(:not_chosen_programme_and_not_in_beta_school) { create(:school) }
@@ -237,15 +238,15 @@ RSpec.describe ValidationBetaService do
       validation_beta_service.notify_induction_coordinators_about_validation
     end
 
-    it "emails schools that have added chosen programme but not in validation beta" do
+    it "emails SITs that have added chosen programme but not in validation beta, once per SIT even with multiple matching schools" do
       expect(ParticipantValidationMailer).to delay_email_delivery_of(:induction_coordinator_validation_notification_email)
                                                .with(hash_including(
                                                        recipient: chosen_programme_and_not_in_beta_ic.email,
                                                        start_url: induction_coordinator_start_url,
-                                                     ))
+                                                     )).once
     end
 
-    it "doesn't emails schools that have not chosen programme and were not in validaiton beta" do
+    it "doesn't emails schools that have not chosen programme and were not in validation beta" do
       expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:induction_coordinator_validation_notification_email)
                                                .with(hash_including(
                                                        recipient: not_chosen_programme_and_not_in_beta_ic.email,
