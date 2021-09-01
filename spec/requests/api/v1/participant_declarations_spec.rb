@@ -108,7 +108,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         missing_attribute = valid_params.except(:participant_id)
         post "/api/v1/participant-declarations", params: build_params(missing_attribute)
         expect(response.status).to eq 422
-        expect(response.body).to eq({ bad_or_missing_parameters: [I18n.t(:invalid_participant)] }.to_json)
+        expect(response.body).to eq({ errors: [{ title: "Bad or missing parameters", detail: I18n.t(:invalid_participant) }] }.to_json)
       end
 
       it "returns 422 when supplied an incorrect course type" do
@@ -121,19 +121,19 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         invalid_participant_for_course_type = valid_params.merge({ course_identifier: "ecf-mentor" })
         post "/api/v1/participant-declarations", params: build_params(invalid_participant_for_course_type)
         expect(response.status).to eq 422
-        expect(response.body).to eq({ bad_or_missing_parameters: [I18n.t(:invalid_participant)] }.to_json)
+        expect(response.body).to eq({ errors: [{ title: "Bad or missing parameters", detail: I18n.t(:invalid_participant) }] }.to_json)
       end
 
       it "returns 422 when there are multiple errors" do
         post "/api/v1/participant-declarations", params: build_params("")
         expect(response.status).to eq 422
-        expect(response.body).to eq({ bad_or_missing_parameters: [I18n.t(:invalid_declaration_type)] }.to_json)
+        expect(response.body).to eq({ errors: [{ title: "Bad or missing parameters", detail: I18n.t(:invalid_declaration_type) }] }.to_json)
       end
 
       it "returns 400 when the data block is incorrect" do
         post "/api/v1/participant-declarations", params: {}.to_json
         expect(response.status).to eq 400
-        expect(response.body).to eq({ bad_request: I18n.t(:invalid_data_structure) }.to_json)
+        expect(response.body).to eq({ errors: [{ title: "Bad request", detail: I18n.t(:invalid_data_structure) }] }.to_json)
       end
     end
 

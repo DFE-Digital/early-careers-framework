@@ -74,7 +74,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
           }
         end
 
-        schema "$ref": "#/components/schemas/BadOrMissingParametersResponse"
+        schema "$ref": "#/components/schemas/ErrorResponse"
 
         run_test!
       end

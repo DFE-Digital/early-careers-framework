@@ -289,7 +289,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BadOrMissingParametersResponse"
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -1126,6 +1126,32 @@
         "example": {
           "reason": "career-break",
           "course_identifier": "ecf-mentor"
+        }
+      },
+      "Error": {
+        "description": "An single error element",
+        "type": "object",
+        "properties": {
+          "title": {
+            "description": "A title of the error",
+            "type": "string"
+          },
+          "detail": {
+            "description": "Additional details of the error",
+            "type": "string"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "description": "A list of errors",
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
         }
       },
       "ListFilter": {
