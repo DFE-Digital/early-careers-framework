@@ -51,10 +51,11 @@
 
           <li class="app-task-list__item">
             <span class="app-task-list__task-name">
-              <%= govuk_link_to "Add early career teachers and mentors",
-                FeatureFlag.active?(:induction_tutor_manage_participants, for: @school) ?
-                  schools_participants_path :
-                  add_participants_schools_cohort_path %>
+              <% if @school_cohort.active_ecf_participants.any? %>
+                <%= govuk_link_to "Your early career teachers and mentors", schools_participants_path %>
+              <% else %>
+                <%= govuk_link_to "Add early career teachers and mentors", schools_participants_path %>
+              <% end %>
             </span>
 
             <%= render AutoTagComponent.new(text: @school_cohort.add_participants_status) %>
