@@ -91,6 +91,7 @@ module Participants
 
     def cannot_find_details
       store_validation_data!
+      store_analytics(matched: false)
       reset_form_data
       store_form_and_redirect_to_step :complete
     end
@@ -157,12 +158,14 @@ module Participants
         # if different TRN already exists or not eligible
         store_validation_data! unless eligibility_data.eligible_status?
 
+        store_analytics(matched: true)
         reset_form_data
         store_form_and_redirect_to_step :complete
       end
     rescue StandardError => e
       Rails.logger.error("Problem with DQT API: " + e.message)
       store_validation_data!(api_failure: true)
+      store_analytics(matched: false)
       reset_form_data
       store_form_and_redirect_to_step :complete
     end
@@ -224,6 +227,15 @@ module Participants
       @participant_validation_form.step = step
       session[:participant_validation] = @participant_validation_form.attributes
       redirect_to send("participants_validation_#{step}_path")
+    end
+
+    def store_analytics(matched:)
+      Analytics::ValidationService.record_validation(
+        participant_profile: participant_profile,
+        real_time_attempts: [@participant_validation_form.validation_attempts, 1].max,
+        real_time_success: matched,
+        nino_entered: @participant_validation_form.national_insurance_number.present?,
+      )
     end
 
     def form_params
