@@ -214,4 +214,60 @@ RSpec.describe ValidationBetaService do
                                                      ))
     end
   end
+
+  describe "#notify_induction_coordinators_about_validation" do
+    let!(:added_participants_but_not_in_beta_school) { create(:school_cohort, :fip).school }
+    let!(:added_participants_but_not_in_beta_ic) do
+      create(:user, :induction_coordinator, school_ids: [added_participants_but_not_in_beta_school.id])
+    end
+
+    let!(:chosen_programme_but_not_added_participants_school) { create(:school_cohort, :fip).school }
+    let!(:chosen_programme_but_not_added_participants_ic) do
+      create(:user, :induction_coordinator, school_ids: [chosen_programme_but_not_added_participants_school.id])
+    end
+
+    let!(:added_participants_and_in_beta_school) { create(:school_cohort, :fip).school }
+    let!(:added_participants_and_in_beta_ic) do
+      create(:user, :induction_coordinator, school_ids: [added_participants_and_in_beta_school.id])
+    end
+
+    before do
+      create(:participant_profile, :mentor, school: added_participants_but_not_in_beta_school)
+      create(:participant_profile, :ect, school: added_participants_but_not_in_beta_school)
+      create(:participant_profile, :mentor, school: added_participants_and_in_beta_school)
+      create(:participant_profile, :ect, school: added_participants_and_in_beta_school)
+
+      FeatureFlag.activate(:participant_validation, for: chosen_programme_but_not_added_participants_school)
+      FeatureFlag.activate(:participant_validation, for: added_participants_and_in_beta_school)
+
+      validation_beta_service.notify_induction_coordinators_about_validation
+    end
+
+    it "emails schools that have added participants but not in validation beta" do
+      expect(ParticipantValidationMailer).to delay_email_delivery_of(:induction_coordinator_validation_notification_email)
+                                               .with(hash_including(
+                                                       recipient: added_participants_but_not_in_beta_ic.email,
+                                                       school_name: added_participants_but_not_in_beta_school.name,
+                                                       start_url: induction_coordinator_start_url,
+                                                     ))
+    end
+
+    it "emails schools that have chosen programme but not added participants" do
+      expect(ParticipantValidationMailer).to delay_email_delivery_of(:induction_coordinator_validation_notification_email)
+                                               .with(hash_including(
+                                                       recipient: chosen_programme_but_not_added_participants_ic.email,
+                                                       school_name: chosen_programme_but_not_added_participants_school.name,
+                                                       start_url: induction_coordinator_start_url,
+                                                     ))
+    end
+
+    it "doesn't email schools that have added participants and were in beta" do
+      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:induction_coordinator_validation_notification_email)
+                                               .with(hash_including(
+                                                       recipient: added_participants_and_in_beta_ic.email,
+                                                       school_name: added_participants_and_in_beta_school.name,
+                                                       start_url: induction_coordinator_start_url,
+                                                     ))
+    end
+  end
 end

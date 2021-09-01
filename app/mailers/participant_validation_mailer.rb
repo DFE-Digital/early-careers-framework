@@ -9,6 +9,8 @@ class ParticipantValidationMailer < ApplicationMailer
   ENGAGE_BETA_MENTOR_TEMPLATE = "99dacb2d-2255-4aa8-9076-46fa6093f1e5"
   INDUCTION_COORDINATOR_NOTIFICATION_TEMPLATE = "d560fb2e-243d-48b1-bf61-c7e111f56858"
   INDUCTION_COORDINATOR_NOTIFICATION_UR_TEMPLATE = "afb54050-7ebd-43af-ad83-7fa6795d1523"
+  # TODO: add real uuid, this is a dummy one
+  INDUCTION_COORDINATOR_VALIDATION_NOTIFICATION_TEMPLATE = "4eb4455d-6b33-4af3-aa40-43b47bfc5501"
   COORDINATOR_AND_MENTOR_UR_TEMPLATE = "5e53ac12-65e2-4196-a894-2b23bf07f334"
   COORDINATOR_AND_MENTOR_TEMPLATE = "7e7d3fdb-41f5-4e04-a4ae-acf92e8fefe6"
 
@@ -95,6 +97,19 @@ class ParticipantValidationMailer < ApplicationMailer
   def induction_coordinator_email(recipient:, school_name:, start_url:)
     template_mail(
       INDUCTION_COORDINATOR_NOTIFICATION_TEMPLATE,
+      to: recipient,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        school_name: school_name,
+        start_url: start_url,
+      },
+    )
+  end
+
+  def induction_coordinator_validation_notification_email(recipient:, school_name:, start_url:)
+    template_mail(
+      INDUCTION_COORDINATOR_VALIDATION_NOTIFICATION_TEMPLATE,
       to: recipient,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,

@@ -115,6 +115,21 @@ RSpec.describe ParticipantValidationMailer, type: :mailer do
     end
   end
 
+  describe "#induction_coordinator_validation_notification_email" do
+    let(:induction_coordinator_email) do
+      described_class.induction_coordinator_validation_notification_email(
+        recipient: recipient,
+        school_name: school_name,
+        start_url: start_url,
+      )
+    end
+
+    it "renders the right headers" do
+      expect(induction_coordinator_email.from).to match_array ["mail@example.com"]
+      expect(induction_coordinator_email.to).to match_array [recipient]
+    end
+  end
+
   describe "#induction_coordinator_ur_email" do
     let(:induction_coordinator_email) do
       described_class.induction_coordinator_ur_email(
