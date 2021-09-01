@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Participants
-  module Withdraw
+  module Defer
     class Mentor < ECF
       include Participants::Mentor
     end

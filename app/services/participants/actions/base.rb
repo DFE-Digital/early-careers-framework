@@ -16,7 +16,7 @@ module Participants
           raise NotImplementedError, "Method must be implemented"
         end
 
-        delegate :recorder_namespace, to: not_implemented_error
+        delegate :recorder_namespace, to: :not_implemented_error
       end
 
       def call

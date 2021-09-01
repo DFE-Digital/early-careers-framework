@@ -21,15 +21,21 @@ module Participants
         raise ActionController::ParameterMissing, errors.map(&:message)
       end
 
+      business_validation!
+      perform_action!
+    end
+
+    def business_validation!
       validate_provider!
+    end
+
+    def perform_action!
       ParticipantProfileState.create!(participant_profile: user_profile, state: self.class.state_to_transition_to, reason: reason)
       user_profile
     end
 
   private
 
-    attr_accessor :reason
-    validates :reason, presence: true
     validate :not_already_withdrawn
     delegate :participant_profile_state, to: :not_implemented_error
 
@@ -45,7 +51,6 @@ module Participants
 
     def not_already_withdrawn
       return if errors.any?
-
       errors.add(:participant_id, I18n.t(:invalid_withdrawal)) if participant_profile_state&.withdrawn?
     end
 
