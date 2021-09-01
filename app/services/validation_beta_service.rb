@@ -196,7 +196,6 @@ private
   def send_validation_notification(school)
     ParticipantValidationMailer.induction_coordinator_validation_notification_email(
       recipient: school.contact_email,
-      school_name: school.name,
       start_url: induction_coordinator_start_url,
     ).deliver_later
   end

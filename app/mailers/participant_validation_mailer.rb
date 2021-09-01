@@ -107,14 +107,13 @@ class ParticipantValidationMailer < ApplicationMailer
     )
   end
 
-  def induction_coordinator_validation_notification_email(recipient:, school_name:, start_url:)
+  def induction_coordinator_validation_notification_email(recipient:, start_url:)
     template_mail(
       INDUCTION_COORDINATOR_VALIDATION_NOTIFICATION_TEMPLATE,
       to: recipient,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        school_name: school_name,
         start_url: start_url,
       },
     )

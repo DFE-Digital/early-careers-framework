@@ -241,7 +241,6 @@ RSpec.describe ValidationBetaService do
       expect(ParticipantValidationMailer).to delay_email_delivery_of(:induction_coordinator_validation_notification_email)
                                                .with(hash_including(
                                                        recipient: chosen_programme_and_not_in_beta_ic.email,
-                                                       school_name: chosen_programme_and_not_in_beta_school.name,
                                                        start_url: induction_coordinator_start_url,
                                                      ))
     end
@@ -250,7 +249,6 @@ RSpec.describe ValidationBetaService do
       expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:induction_coordinator_validation_notification_email)
                                                .with(hash_including(
                                                        recipient: not_chosen_programme_and_not_in_beta_ic.email,
-                                                       school_name: not_chosen_programme_and_not_in_beta_school.name,
                                                        start_url: induction_coordinator_start_url,
                                                      ))
     end
@@ -259,7 +257,6 @@ RSpec.describe ValidationBetaService do
       expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:induction_coordinator_validation_notification_email)
                                                .with(hash_including(
                                                        recipient: chosen_programme_and_in_beta_ic.email,
-                                                       school_name: chosen_programme_and_in_beta_school.name,
                                                        start_url: induction_coordinator_start_url,
                                                      ))
     end
