@@ -22,10 +22,10 @@ class ValidationBetaService
     end
   end
 
-  def notify_induction_coordinators_about_validation
+  def tell_induction_coordinators_to_check_ect_and_mentor_information
     InductionCoordinatorProfile.find_each do |ic|
       if ic.schools.any? { |school| chosen_programme_and_not_in_beta(school) }
-        send_validation_notification(ic)
+        send_check_ect_and_mentor(ic)
       end
     end
   end
@@ -193,10 +193,9 @@ private
     end
   end
 
-  def send_validation_notification(induction_coordinator)
-    ParticipantValidationMailer.induction_coordinator_validation_notification_email(
+  def send_check_ect_and_mentor(induction_coordinator)
+    ParticipantValidationMailer.induction_coordinator_check_ect_and_mentor_email(
       recipient: induction_coordinator.user.email,
-      start_url: induction_coordinator_start_url,
     ).deliver_later
   end
 

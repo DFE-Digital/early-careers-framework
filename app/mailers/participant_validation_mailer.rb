@@ -9,10 +9,11 @@ class ParticipantValidationMailer < ApplicationMailer
   ENGAGE_BETA_MENTOR_TEMPLATE = "99dacb2d-2255-4aa8-9076-46fa6093f1e5"
   INDUCTION_COORDINATOR_NOTIFICATION_TEMPLATE = "d560fb2e-243d-48b1-bf61-c7e111f56858"
   INDUCTION_COORDINATOR_NOTIFICATION_UR_TEMPLATE = "afb54050-7ebd-43af-ad83-7fa6795d1523"
-  # TODO: add real uuid, this is a dummy one
-  INDUCTION_COORDINATOR_VALIDATION_NOTIFICATION_TEMPLATE = "4eb4455d-6b33-4af3-aa40-43b47bfc5501"
+  INDUCTION_COORDINATOR_CHECK_ECT_AND_MENTOR_TEMPLATE = "127f972e-3b78-4780-9933-c9bb889af663"
   COORDINATOR_AND_MENTOR_UR_TEMPLATE = "5e53ac12-65e2-4196-a894-2b23bf07f334"
   COORDINATOR_AND_MENTOR_TEMPLATE = "7e7d3fdb-41f5-4e04-a4ae-acf92e8fefe6"
+
+  STATUTORY_GUIDANCE_LINK = "https://www.gov.uk/government/publications/induction-for-early-career-teachers-england"
 
   def ect_email(recipient:, school_name:, start_url:)
     template_mail(
@@ -107,14 +108,17 @@ class ParticipantValidationMailer < ApplicationMailer
     )
   end
 
-  def induction_coordinator_validation_notification_email(recipient:, start_url:)
+  def induction_coordinator_check_ect_and_mentor_email(recipient:)
     template_mail(
-      INDUCTION_COORDINATOR_VALIDATION_NOTIFICATION_TEMPLATE,
+      INDUCTION_COORDINATOR_CHECK_ECT_AND_MENTOR_TEMPLATE,
       to: recipient,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        start_url: start_url,
+        statutory_guidance: STATUTORY_GUIDANCE_LINK,
+        sign_in: new_user_session_url,
+        step_by_step: step_by_step_url,
+        resend_email: resend_email_request_nomination_invite_url,
       },
     )
   end

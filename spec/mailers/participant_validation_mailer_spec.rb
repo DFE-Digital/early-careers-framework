@@ -115,11 +115,10 @@ RSpec.describe ParticipantValidationMailer, type: :mailer do
     end
   end
 
-  describe "#induction_coordinator_validation_notification_email" do
+  describe "#induction_coordinator_check_ect_and_mentor_email" do
     let(:induction_coordinator_email) do
-      described_class.induction_coordinator_validation_notification_email(
+      described_class.induction_coordinator_check_ect_and_mentor_email(
         recipient: recipient,
-        start_url: start_url,
       )
     end
 

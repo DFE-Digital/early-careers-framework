@@ -215,7 +215,7 @@ RSpec.describe ValidationBetaService do
     end
   end
 
-  describe "#notify_induction_coordinators_about_validation" do
+  describe "#tell_induction_coordinators_to_check_ect_and_mentor_information" do
     let!(:chosen_programme_and_not_in_beta_school) { create(:school_cohort, :fip).school }
     let!(:chosen_programme_and_not_in_beta_school2) { create(:school_cohort, :fip).school }
     let!(:chosen_programme_and_not_in_beta_ic) do
@@ -235,30 +235,27 @@ RSpec.describe ValidationBetaService do
     before do
       FeatureFlag.activate(:participant_validation, for: chosen_programme_and_in_beta_school)
 
-      validation_beta_service.notify_induction_coordinators_about_validation
+      validation_beta_service.tell_induction_coordinators_to_check_ect_and_mentor_information
     end
 
     it "emails SITs that have added chosen programme but not in validation beta, once per SIT even with multiple matching schools" do
-      expect(ParticipantValidationMailer).to delay_email_delivery_of(:induction_coordinator_validation_notification_email)
+      expect(ParticipantValidationMailer).to delay_email_delivery_of(:induction_coordinator_check_ect_and_mentor_email)
                                                .with(hash_including(
                                                        recipient: chosen_programme_and_not_in_beta_ic.email,
-                                                       start_url: induction_coordinator_start_url,
                                                      )).once
     end
 
     it "doesn't emails schools that have not chosen programme and were not in validation beta" do
-      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:induction_coordinator_validation_notification_email)
+      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:induction_coordinator_check_ect_and_mentor_email)
                                                .with(hash_including(
                                                        recipient: not_chosen_programme_and_not_in_beta_ic.email,
-                                                       start_url: induction_coordinator_start_url,
                                                      ))
     end
 
     it "doesn't email schools that have chosen a programme and were in validation beta" do
-      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:induction_coordinator_validation_notification_email)
+      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:induction_coordinator_check_ect_and_mentor_email)
                                                .with(hash_including(
                                                        recipient: chosen_programme_and_in_beta_ic.email,
-                                                       start_url: induction_coordinator_start_url,
                                                      ))
     end
   end
