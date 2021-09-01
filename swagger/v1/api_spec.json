@@ -166,7 +166,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "example": "77fdc478-8107-40c9-b85e-b9d647e9e16c",
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
             "description": "The ID of the NPQ application to accept.",
             "schema": {
               "type": "string"
@@ -216,7 +216,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "example": "c9fc73b7-f9d4-423c-8692-0d88e76a99a3",
+            "example": "14b1b4ab-fa81-4f7a-b4b5-f632412e8c5c",
             "description": "The ID of the NPQ application to reject.",
             "schema": {
               "type": "string"
@@ -885,7 +885,8 @@
           "school_urn",
           "participant_type",
           "cohort",
-          "status"
+          "status",
+          "schedule_identifier"
         ],
         "properties": {
           "email": {
@@ -970,6 +971,15 @@
             "enum": [
               "active",
               "withdrawn"
+            ]
+          },
+          "schedule_identifier": {
+            "description": "The schedule of the ECF participant",
+            "type": "string",
+            "example": "ecf-september-extended-2021",
+            "enum": [
+              "ecf-september-standard-2021",
+              "ecf-september-extended-2021"
             ]
           }
         }
@@ -1728,7 +1738,6 @@
         "description": "The data attributes associated with a participant declaration response",
         "type": "object",
         "required": [
-          "id",
           "participant_id",
           "declaration_type",
           "declaration_date",
@@ -1736,7 +1745,7 @@
           "eligible_for_payment"
         ],
         "properties": {
-          "id": {
+          "participant_id": {
             "description": "The unique id of the participant",
             "type": "string",
             "format": "uuid",
@@ -1812,14 +1821,11 @@
         "description": "A confirmation that the participant declaration has been recorded successfully",
         "type": "object",
         "required": [
-          "id"
+          "data"
         ],
         "properties": {
-          "id": {
-            "description": "A unique identifier to reference the declaration in future actions",
-            "type": "string",
-            "format": "uuid",
-            "example": "b0f657a7-9a81-4a89-a6b0-627c774ff753"
+          "data": {
+            "$ref": "#/components/schemas/ParticipantDeclarationResponse"
           }
         }
       },

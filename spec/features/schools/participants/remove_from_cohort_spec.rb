@@ -26,6 +26,8 @@ RSpec.describe "STI removing participants from the cohort", js: true, with_featu
       .to change { mentor_profile.reload.status }.from("active").to("withdrawn")
       .and change { ect_profile.reload.mentor_profile }.from(mentor_profile).to(nil)
     expect(page).to have_content "#{mentor_profile.user.full_name} has been removed from this cohort"
+    and_the_page_should_be_accessible
+    and_percy_should_be_sent_a_snapshot_named("Induction coordinator removing participant")
 
     click_on "Return to your ECTs and mentor"
     expect(page).to have_no_content mentor_profile.user.full_name
