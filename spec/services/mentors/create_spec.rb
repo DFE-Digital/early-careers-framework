@@ -16,7 +16,7 @@ RSpec.describe Mentors::Create do
         school_cohort: school_cohort,
       )
     }.to change { ParticipantProfile::Mentor.count }.by(1)
-     .and not_change { User.count }
+                                                    .and not_change { User.count }
   end
 
   it "uses the existing teacher profile record" do
@@ -28,8 +28,8 @@ RSpec.describe Mentors::Create do
         mentor_id: "random discardable",
       )
     }.to change { ParticipantProfile::Mentor.count }.by(1)
-     .and not_change { User.count }
-     .and not_change { TeacherProfile.count }
+                                                    .and not_change { User.count }
+                                                           .and not_change { TeacherProfile.count }
   end
 
   it "ignores mentor id" do
@@ -51,8 +51,8 @@ RSpec.describe Mentors::Create do
         school_cohort: school_cohort,
       )
     }.to change { ParticipantProfile::Mentor.count }.by(1)
-     .and change { User.count }.by(1)
-     .and change { TeacherProfile.count }.by(1)
+                                                    .and change { User.count }.by(1)
+                                                                              .and change { TeacherProfile.count }.by(1)
   end
 
   it "updates the users name" do
@@ -106,5 +106,15 @@ RSpec.describe Mentors::Create do
     mentor_profile = described_class.call(email: user.email, full_name: user.full_name, school_cohort: school_cohort)
     expect(mentor_profile.pupil_premium_uplift).to be(true)
     expect(mentor_profile.sparsity_uplift).to be(true)
+  end
+
+  it "records the profile for analytics" do
+    described_class.call(
+      email: user.email,
+      full_name: user.full_name,
+      school_cohort: school_cohort,
+    )
+
+    expect(Analytics::ECFValidationService).to delay_execution_of(:upsert_record_without_delay)
   end
 end

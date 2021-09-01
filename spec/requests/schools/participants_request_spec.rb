@@ -111,6 +111,12 @@ RSpec.describe "Schools::Participants", type: :request do
       expect(response).to render_template("schools/participants/edit_mentor")
       expect(response.body).to include "Choose one"
     end
+
+    it "updates analytics" do
+      params = { participant_mentor_form: { mentor_id: mentor_user_2.id } }
+      put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-mentor", params: params
+      expect(Analytics::ECFValidationService).to delay_execution_of(:upsert_record_without_delay)
+    end
   end
 
   describe "GET /schools/:school_id/cohorts/:start_year/participants/:id/edit-name" do
