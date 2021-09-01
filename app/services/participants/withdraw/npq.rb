@@ -4,6 +4,7 @@ module Participants
   module Withdraw
     class NPQ < Base
       include Participants::NPQ
+      include Participants::Withdrawal
 
       validates :reason, "withdrawn/npq": true
     end

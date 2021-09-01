@@ -51,6 +51,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :participants, only: %i[index] do
         member do
+          put :defer
           put :withdraw
           put :change_schedule, path: "change-schedule"
         end

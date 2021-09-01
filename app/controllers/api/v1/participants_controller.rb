@@ -23,10 +23,12 @@ module Api
         end
       end
 
+      def defer
+        perform_action(service: DeferParticipant)
+      end
+
       def withdraw
-        params = HashWithIndifferentAccess.new({ cpd_lead_provider: current_user, participant_id: participant_id }).merge(permitted_params["attributes"] || {})
-        profile = WithdrawParticipant.call(params)
-        render json: ParticipantSerializer.new(profile.user).serializable_hash.to_json
+        perform_action(service: WithdrawParticipant)
       end
 
       def change_schedule
@@ -36,6 +38,11 @@ module Api
       end
 
     private
+      def perform_action(service:)
+        params = HashWithIndifferentAccess.new({ cpd_lead_provider: current_user, participant_id: participant_id }).merge(permitted_params["attributes"] || {})
+        profile = service.call(params)
+        render json: ParticipantSerializer.new(profile.user).serializable_hash.to_json
+      end
 
       def access_scope
         LeadProviderApiToken.joins(cpd_lead_provider: [:lead_provider])
