@@ -34,15 +34,20 @@ RSpec.describe Admin::Participants::Details, type: :view_component do
   end
 
   context "for unvalidated npq profile" do
-    let(:profile) { create :participant_profile, :npq }
+    let(:npq_validation_data) { create(:npq_validation_data) }
+    let(:profile) { npq_validation_data.profile }
+
+    before do
+      Finance::Schedule.find_or_create_by!(name: "ECF September standard 2021")
+      NPQ::CreateOrUpdateProfile.new(npq_validation_data: npq_validation_data).call
+    end
 
     it "renders all the required information" do
       expect(rendered).to have_contents(
         profile.user.full_name,
         profile.user.email,
         profile.validation_data.teacher_reference_number,
-        profile.school.name,
-        profile.school.urn,
+        profile.validation_data.school_urn,
         t(:npq, scope: "schools.participants.type"),
         profile.validation_data.npq_lead_provider.name,
         profile.validation_data.npq_course.name,
@@ -51,7 +56,13 @@ RSpec.describe Admin::Participants::Details, type: :view_component do
   end
 
   context "for validated npq profile" do
-    let(:profile) { create :participant_profile, :npq }
+    let(:npq_validation_data) { create(:npq_validation_data) }
+    let(:profile) { npq_validation_data.profile }
+
+    before do
+      Finance::Schedule.find_or_create_by!(name: "ECF September standard 2021")
+      NPQ::CreateOrUpdateProfile.new(npq_validation_data: npq_validation_data).call
+    end
 
     before do
       allow(profile).to receive(%i[approved? rejected?].sample).and_return true
@@ -63,8 +74,7 @@ RSpec.describe Admin::Participants::Details, type: :view_component do
         profile.user.full_name,
         profile.user.email,
         profile.validation_data.teacher_reference_number,
-        profile.school.name,
-        profile.school.urn,
+        profile.validation_data.school_urn,
         t(:npq, scope: "schools.participants.type"),
         profile.validation_data.npq_lead_provider.name,
         profile.validation_data.npq_course.name,

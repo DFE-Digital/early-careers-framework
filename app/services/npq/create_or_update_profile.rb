@@ -13,14 +13,14 @@ module NPQ
         teacher_profile.trn = npq_validation_data.teacher_reference_number
       end
 
-      teacher_profile.school = school
       teacher_profile.save!
 
       participant_profile.schedule ||= Finance::Schedule.default
       participant_profile.npq_course ||= npq_validation_data.npq_course
-      participant_profile.school = school
       participant_profile.teacher_profile = teacher_profile
       participant_profile.user = user
+      participant_profile.school_urn = npq_validation_data.school_urn
+      participant_profile.school_ukprn = npq_validation_data.school_ukprn
       participant_profile.save!
     end
 
@@ -36,10 +36,6 @@ module NPQ
 
     def user
       @user ||= npq_validation_data.user
-    end
-
-    def school
-      @school ||= School.find_by(urn: npq_validation_data.school_urn)
     end
   end
 end

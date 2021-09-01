@@ -1267,6 +1267,7 @@
                   "teacher_reference_number": "1234567",
                   "teacher_reference_number_validated": true,
                   "school_urn": "106286",
+                  "school_ukprn": "10079319",
                   "headteacher_status": "no",
                   "eligible_for_funding": true,
                   "funding_choice": "trust",
@@ -1355,7 +1356,6 @@
           "email_validated",
           "teacher_reference_number",
           "teacher_reference_number_validated",
-          "school_urn",
           "eligible_for_funding",
           "course_identifier",
           "status"
@@ -1401,6 +1401,11 @@
             "description": "The Unique Reference Number (URN) of the school where this NPQ participant is employed",
             "type": "string",
             "example": "106286"
+          },
+          "school_ukprn": {
+            "description": "The UK Provider Reference Number (UK Provider Reference Number) of the school where this NPQ participant is employed",
+            "type": "string",
+            "example": "10079319"
           },
           "headteacher_status": {
             "description": "Indicates whether this NPQ participant is or will be a head teacher",
