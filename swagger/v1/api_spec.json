@@ -75,7 +75,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MultipleNpqApplicationsResponse"
+                  "$ref": "#/components/schemas/MultipleNPQApplicationsResponse"
                 }
               }
             }
@@ -129,7 +129,7 @@
             "content": {
               "text/csv": {
                 "schema": {
-                  "$ref": "#/components/schemas/MultipleNpqApplicationsCsvResponse"
+                  "$ref": "#/components/schemas/MultipleNPQApplicationsCsvResponse"
                 }
               }
             }
@@ -179,7 +179,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NpqApplicationResponse"
+                  "$ref": "#/components/schemas/NPQApplicationResponse"
                 }
               }
             }
@@ -229,7 +229,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NpqApplicationResponse"
+                  "$ref": "#/components/schemas/NPQApplicationResponse"
                 }
               }
             }
@@ -421,7 +421,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MultipleEcfParticipantsResponse"
+                  "$ref": "#/components/schemas/MultipleECFParticipantsResponse"
                 }
               }
             }
@@ -475,7 +475,7 @@
             "content": {
               "text/csv": {
                 "schema": {
-                  "$ref": "#/components/schemas/MultipleEcfParticipantsCsvResponse"
+                  "$ref": "#/components/schemas/MultipleECFParticipantsCsvResponse"
                 }
               }
             }
@@ -534,7 +534,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EcfParticipantResponse"
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
                 }
               }
             }
@@ -752,7 +752,7 @@
           "course_identifier": "ecf-mentor"
         }
       },
-      "EcfParticipant": {
+      "ECFParticipant": {
         "description": "The details of a participant",
         "type": "object",
         "required": [
@@ -773,11 +773,11 @@
             "example": "participant"
           },
           "attributes": {
-            "$ref": "#/components/schemas/EcfParticipantAttributes"
+            "$ref": "#/components/schemas/ECFParticipantAttributes"
           }
         }
       },
-      "EcfParticipantAttributes": {
+      "ECFParticipantAttributes": {
         "description": "The data attributes associated with an ECF participant",
         "type": "object",
         "required": [
@@ -875,7 +875,7 @@
           }
         }
       },
-      "EcfParticipantCsvRow": {
+      "ECFParticipantCsvRow": {
         "description": "The details of an ECF participant",
         "type": "object",
         "required": [
@@ -989,7 +989,7 @@
           }
         }
       },
-      "EcfParticipantResponse": {
+      "ECFParticipantResponse": {
         "description": "An ECF Participant",
         "type": "object",
         "required": [
@@ -997,7 +997,7 @@
         ],
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/EcfParticipant"
+            "$ref": "#/components/schemas/ECFParticipant"
           }
         }
       },
@@ -1012,7 +1012,7 @@
           }
         }
       },
-      "MultipleEcfParticipantsCsvResponse": {
+      "MultipleECFParticipantsCsvResponse": {
         "description": "A list of ECF participants in the Comma Separated Value (CSV) format",
         "type": "string",
         "format": "base64",
@@ -1023,13 +1023,13 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/EcfParticipantCsvRow"
+              "$ref": "#/components/schemas/ECFParticipantCsvRow"
             }
           }
         },
         "example": "id,type,email,full_name,mentor_id,school_urn,participant_type,cohort,status,teacher_reference_number,teacher_reference_number_validated,eligible_for_funding,pupil_premium_uplift,sparsity_uplift\ndb3a7848-7308-4879-942a-c4a70ced400a,participant,jane.smith@some-school.example.com,Jane Smith,bb36d74a-68a7-47b6-86b6-1fd0d141c590,106286,ect,2021,active,0012345,true,true,true,true\nbb36d74a-68a7-47b6-86b6-1fd0d141c590,participant,martin.jones@some-school.example.com,Martin Jones,,106286,mentor,2021,active,\"\",false,false,false,false\neb475531-bf08-48ae-b0ef-c2ff5e5bdef0,participant,\"\",\"\",\"\",\"\",ect,\"\",withdrawn,\"\",\"\",\"\",\"\",\"\"\n"
       },
-      "MultipleEcfParticipantsResponse": {
+      "MultipleECFParticipantsResponse": {
         "description": "A list of ECF participants",
         "type": "object",
         "required": [
@@ -1039,7 +1039,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/EcfParticipant"
+              "$ref": "#/components/schemas/ECFParticipant"
             },
             "example": [
               {
@@ -1099,7 +1099,7 @@
           }
         }
       },
-      "MultipleNpqApplicationsCsvResponse": {
+      "MultipleNPQApplicationsCsvResponse": {
         "description": "A list of participants in the Comma Separated Value (CSV) format",
         "type": "string",
         "format": "base64",
@@ -1110,13 +1110,13 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NpqApplicationCsvRow"
+              "$ref": "#/components/schemas/NPQApplicationCsvRow"
             }
           }
         },
         "example": "id,type,participant_id,full_name,email,email_validated,email_validated,teacher_reference_number,teacher_reference_number_validated,school_urn,headteacher_status,eligible_for_funding,funding_choice,course_identifier,status\ndb3a7848-7308-4879-942a-c4a70ced400a,npq-application,7a8fef46-3c43-42c0-b3d5-1ba5904ba562,Isabelle MacDonald,isabelle.macdonald2@some-school.example.com,true,1234567,true,106286,no,true,trust,npq-leading-teaching,pending\n"
       },
-      "MultipleNpqApplicationsResponse": {
+      "MultipleNPQApplicationsResponse": {
         "description": "A list of NPQ applications",
         "type": "object",
         "required": [
@@ -1126,7 +1126,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NpqApplication"
+              "$ref": "#/components/schemas/NPQApplication"
             },
             "example": [
               {
@@ -1303,7 +1303,7 @@
           "course_identifier": "npq-leading-teaching"
         }
       },
-      "NpqApplication": {
+      "NPQApplication": {
         "description": "The details of an NPQ Application",
         "type": "object",
         "required": [
@@ -1327,11 +1327,11 @@
             ]
           },
           "attributes": {
-            "$ref": "#/components/schemas/NpqApplicationAttributes"
+            "$ref": "#/components/schemas/NPQApplicationAttributes"
           }
         }
       },
-      "NpqApplicationAttributes": {
+      "NPQApplicationAttributes": {
         "description": "The data attributes associated with an NPQ application",
         "type": "object",
         "required": [
@@ -1441,7 +1441,7 @@
           }
         }
       },
-      "NpqApplicationCsvRow": {
+      "NPQApplicationCsvRow": {
         "description": "The details of an NPQ application",
         "type": "object",
         "required": [
@@ -1563,7 +1563,7 @@
           }
         }
       },
-      "NpqApplicationResponse": {
+      "NPQApplicationResponse": {
         "description": "An NPQ application",
         "type": "object",
         "required": [
@@ -1571,7 +1571,7 @@
         ],
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/NpqApplication"
+            "$ref": "#/components/schemas/NPQApplication"
           }
         }
       },

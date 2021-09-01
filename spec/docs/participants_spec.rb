@@ -42,7 +42,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
                 description: "Pagination options to navigate through the list of ECF participants."
 
       response "200", "A list of ECF participants" do
-        schema({ "$ref": "#/components/schemas/MultipleEcfParticipantsResponse" }, content_type: "application/vnd.api+json")
+        schema({ "$ref": "#/components/schemas/MultipleECFParticipantsResponse" }, content_type: "application/vnd.api+json")
 
         run_test!
       end
@@ -76,7 +76,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
                 example: { updated_since: "2020-11-13T11:21:55Z" }
 
       response "200", "A CSV file of ECF participants" do
-        schema({ "$ref": "#/components/schemas/MultipleEcfParticipantsCsvResponse" }, content_type: "text/csv")
+        schema({ "$ref": "#/components/schemas/MultipleECFParticipantsCsvResponse" }, content_type: "text/csv")
 
         run_test!
       end
@@ -140,7 +140,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
           }
         end
 
-        schema "$ref": "#/components/schemas/EcfParticipantResponse"
+        schema "$ref": "#/components/schemas/ECFParticipantResponse"
         run_test!
       end
     end
