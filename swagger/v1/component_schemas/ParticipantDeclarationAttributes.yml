@@ -1,14 +1,13 @@
 description: "The data attributes associated with a participant declaration response"
 type: object
 required:
-  - id
   - participant_id
   - declaration_type
   - declaration_date
   - course_identifier
   - eligible_for_payment
 properties:
-  id:
+  participant_id:
     description: "The unique id of the participant"
     type: string
     format: uuid
