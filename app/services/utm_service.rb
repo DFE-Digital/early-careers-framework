@@ -19,6 +19,7 @@ class UTMService
     participant_validation_beta: "participant-validation-beta",
     participant_validation_research: "participant-validation-research",
     participant_validation_sit_notification: "participant-validation-sit-notification",
+    check_ect_and_mentor_info: "check-ect-and-mentor-info",
   }.freeze
 
   # Campaigns aren't showing up in GA at the moment, so use specific sources
@@ -35,6 +36,7 @@ class UTMService
     year2020_nqt_invite: "year2020-nqt-invite",
     participant_validation_beta: "participant-validation-beta",
     participant_validation_research: "participant-validation-research",
+    check_ect_and_mentor_info: "check-ect-and-mentor-info",
   }.freeze
 
   def self.email(campaign, source = :service)

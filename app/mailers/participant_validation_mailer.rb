@@ -108,7 +108,7 @@ class ParticipantValidationMailer < ApplicationMailer
     )
   end
 
-  def induction_coordinator_check_ect_and_mentor_email(recipient:)
+  def induction_coordinator_check_ect_and_mentor_email(recipient:, sign_in:, step_by_step:, resend_email:)
     template_mail(
       INDUCTION_COORDINATOR_CHECK_ECT_AND_MENTOR_TEMPLATE,
       to: recipient,
@@ -116,9 +116,9 @@ class ParticipantValidationMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         statutory_guidance: STATUTORY_GUIDANCE_LINK,
-        sign_in: new_user_session_url,
-        step_by_step: step_by_step_url,
-        resend_email: resend_email_request_nomination_invite_url,
+        sign_in: sign_in,
+        step_by_step: step_by_step,
+        resend_email: resend_email,
       },
     )
   end

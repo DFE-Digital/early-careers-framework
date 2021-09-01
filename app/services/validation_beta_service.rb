@@ -194,8 +194,28 @@ private
   end
 
   def send_check_ect_and_mentor(induction_coordinator)
+    campaign = :check_ect_and_mentor_info
+
+    sign_in_url = Rails.application.routes.url_helpers.new_user_session_url(
+      host: Rails.application.config.domain,
+      **UTMService.email(campaign, campaign),
+    )
+
+    step_by_step_url = Rails.application.routes.url_helpers.step_by_step_url(
+      host: Rails.application.config.domain,
+      **UTMService.email(campaign, campaign),
+    )
+
+    resend_email_url = Rails.application.routes.url_helpers.resend_email_request_nomination_invite_url(
+      host: Rails.application.config.domain,
+      **UTMService.email(campaign, campaign),
+    )
+
     ParticipantValidationMailer.induction_coordinator_check_ect_and_mentor_email(
       recipient: induction_coordinator.user.email,
+      sign_in: sign_in_url,
+      step_by_step: step_by_step_url,
+      resend_email: resend_email_url,
     ).deliver_later
   end
 

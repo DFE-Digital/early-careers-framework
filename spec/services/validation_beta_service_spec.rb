@@ -232,6 +232,10 @@ RSpec.describe ValidationBetaService do
       create(:user, :induction_coordinator, school_ids: [chosen_programme_and_in_beta_school.id])
     end
 
+    let(:sign_in_url) { "http://www.example.com/users/sign_in?utm_campaign=check-ect-and-mentor-info&utm_medium=email&utm_source=check-ect-and-mentor-info" }
+    let(:step_by_step_url) { "http://www.example.com/how-to-set-up-your-programme?utm_campaign=check-ect-and-mentor-info&utm_medium=email&utm_source=check-ect-and-mentor-info" }
+    let(:resend_email_url) { "http://www.example.com/nominations/resend-email?utm_campaign=check-ect-and-mentor-info&utm_medium=email&utm_source=check-ect-and-mentor-info" }
+
     before do
       FeatureFlag.activate(:participant_validation, for: chosen_programme_and_in_beta_school)
 
@@ -242,6 +246,9 @@ RSpec.describe ValidationBetaService do
       expect(ParticipantValidationMailer).to delay_email_delivery_of(:induction_coordinator_check_ect_and_mentor_email)
                                                .with(hash_including(
                                                        recipient: chosen_programme_and_not_in_beta_ic.email,
+                                                       sign_in: sign_in_url,
+                                                       step_by_step: step_by_step_url,
+                                                       resend_email: resend_email_url,
                                                      )).once
     end
 

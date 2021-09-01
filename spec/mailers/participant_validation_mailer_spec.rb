@@ -119,6 +119,9 @@ RSpec.describe ParticipantValidationMailer, type: :mailer do
     let(:induction_coordinator_email) do
       described_class.induction_coordinator_check_ect_and_mentor_email(
         recipient: recipient,
+        sign_in: "example.com/sign-in",
+        step_by_step: "example.com/step-by-step",
+        resend_email: "example.com/resend-email",
       )
     end
 
