@@ -672,17 +672,24 @@
         "description": "The change schedule request for a participant",
         "type": "object",
         "required": [
-          "type",
-          "attributes"
+          "data"
         ],
         "properties": {
-          "type": {
-            "description": "The data type",
-            "type": "string",
-            "example": "participant"
-          },
-          "attributes": {
-            "$ref": "#/components/schemas/ECFParticipantChangeSchedule"
+          "data": {
+            "required": [
+              "type",
+              "attributes"
+            ],
+            "properties": {
+              "type": {
+                "description": "The data type",
+                "type": "string",
+                "example": "participant"
+              },
+              "attributes": {
+                "$ref": "#/components/schemas/ECFParticipantChangeSchedule"
+              }
+            }
           }
         }
       },
@@ -800,17 +807,24 @@
         "description": "The withdrawal request for a participant",
         "type": "object",
         "required": [
-          "type",
-          "attributes"
+          "data"
         ],
         "properties": {
-          "type": {
-            "description": "The data type",
-            "type": "string",
-            "example": "participant"
-          },
-          "attributes": {
-            "$ref": "#/components/schemas/ECFParticipantWithdrawal"
+          "data": {
+            "required": [
+              "type",
+              "attributes"
+            ],
+            "properties": {
+              "type": {
+                "description": "The data type",
+                "type": "string",
+                "example": "participant"
+              },
+              "attributes": {
+                "$ref": "#/components/schemas/ECFParticipantWithdrawal"
+              }
+            }
           }
         }
       },
