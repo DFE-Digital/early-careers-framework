@@ -19,6 +19,7 @@ module Analytics
         record.manually_validated = participant_profile.ecf_participant_eligibility&.manually_validated
         record.eligible_for_funding = eligible_for_funding?(participant_profile)
         record.validation_submitted_at ||= participant_profile.ecf_participant_validation_data&.created_at
+        record.active = participant_profile.active_record?
 
         record.save!
       end
