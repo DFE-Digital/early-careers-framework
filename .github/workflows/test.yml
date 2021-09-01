@@ -26,6 +26,10 @@ jobs:
       DB_PASSWORD: ''
       DB_HOSTNAME: 127.0.0.1
       DB_PORT: 5432
+      ANALYTICS_DB_USERNAME: postgres
+      ANALYTICS_DB_PASSWORD: ''
+      ANALYTICS_DB_HOSTNAME: 127.0.0.1
+      ANALYTICS_DB_PORT: 5432
       PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
       PERCY_PARALLEL_NONCE: ${{ needs.create-nonce.outputs.nonce }}
       PERCY_PARALLEL_TOTAL: 2
@@ -124,6 +128,10 @@ jobs:
       DB_PASSWORD: ''
       DB_HOSTNAME: 127.0.0.1
       DB_PORT: 5432
+      ANALYTICS_DB_USERNAME: postgres
+      ANALYTICS_DB_PASSWORD: ''
+      ANALYTICS_DB_HOSTNAME: 127.0.0.1
+      ANALYTICS_DB_PORT: 5432
 
     services:
       postgres:

@@ -101,8 +101,7 @@ gem "rouge"
 
 gem "ransack"
 
-# Payment breackdown
-
+# Payment breakdown
 gem "terminal-table"
 
 gem "friendly_id", "~> 5.4.0"
