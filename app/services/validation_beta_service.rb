@@ -24,7 +24,7 @@ class ValidationBetaService
 
   def tell_induction_coordinators_to_check_ect_and_mentor_information
     InductionCoordinatorProfile.find_each do |ic|
-      if ic.schools.any? { |school| chosen_programme_and_not_in_beta(school) }
+      if ic.schools.not_opted_out.any? { |school| chosen_programme_and_not_in_beta(school) }
         send_check_ect_and_mentor(ic)
       end
     end
