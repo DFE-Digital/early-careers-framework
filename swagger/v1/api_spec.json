@@ -817,7 +817,7 @@
             ],
             "properties": {
               "type": {
-                "description": "The data attributes",
+                "description": "The data type",
                 "type": "string",
                 "example": "participant"
               },
@@ -1080,7 +1080,7 @@
             ],
             "properties": {
               "type": {
-                "description": "The data attributes",
+                "description": "The data type",
                 "type": "string",
                 "example": "participant"
               },

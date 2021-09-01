@@ -11,7 +11,7 @@ properties:
       - attributes
     properties:
       type:
-        description: "The data attributes"
+        description: "The data type"
         type: string
         example: participant
       attributes:
