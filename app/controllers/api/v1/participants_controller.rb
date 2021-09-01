@@ -27,6 +27,12 @@ module Api
         render json: ParticipantSerializer.new(profile.user).serializable_hash.to_json
       end
 
+      def change_schedule
+        params = HashWithIndifferentAccess.new({ cpd_lead_provider: current_user, participant_id: participant_id }).merge(permitted_params["attributes"] || {})
+        profile = ChangeParticipantSchedule.call(params)
+        render json: ParticipantSerializer.new(profile.user).serializable_hash.to_json
+      end
+
     private
 
       def access_scope
@@ -61,7 +67,7 @@ module Api
                                     .distinct
                                     .includes(
                                       teacher_profile: {
-                                        ecf_profile: %i[cohort school ecf_participant_eligibility ecf_participant_validation_data participant_profile_state participant_profile_states],
+                                        ecf_profile: %i[cohort school ecf_participant_eligibility ecf_participant_validation_data participant_profile_state participant_profile_states schedule],
                                         early_career_teacher_profile: :mentor,
                                       },
                                     )

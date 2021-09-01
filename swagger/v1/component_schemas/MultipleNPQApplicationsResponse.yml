@@ -6,7 +6,7 @@ properties:
   data:
     type: array
     items:
-      $ref: "#/components/schemas/NpqApplication"
+      $ref: "#/components/schemas/NPQApplication"
     example:
       - id: db3a7848-7308-4879-942a-c4a70ced400a
         type: participant

@@ -1,0 +1,23 @@
+description: "An ECF participant change schedule action"
+type: object
+properties:
+  schedule_identifier:
+    description: "The new schedule of the participant"
+    type: string
+    enum:
+      - ecf-september-standard-2021
+      - ecf-september-extended-2021
+    example: career-break
+  course_identifier:
+    description: "The type of course the participant is enrolled in"
+    type: string
+    enum:
+      - ecf-induction
+      - ecf-mentor
+    example: ecf-induction
+required:
+  - schedule_identifier
+  - course_identifier
+example:
+  schedule_identifier: ecf-september-extended-2021
+  course_identifier: ecf-mentor
