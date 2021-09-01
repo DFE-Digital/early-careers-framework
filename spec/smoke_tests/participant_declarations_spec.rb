@@ -3,24 +3,19 @@
 require "capybara/rspec"
 require "yaml"
 
-CLOUDAPPS_DOMAIN = "london.cloudapps.digital"
-
 RSpec.describe "Participant API availability", smoke_test: true do
   context "ECF participant declarations" do
     let(:smoke_test_domain) { fetch_smoke_test_domain }
 
     before do
+      skip "No domain for smoke tests found" unless smoke_test_domain
       WebMock.allow_net_connect!
     end
 
     it "ensures participant declaration api allows declarations" do
-      if smoke_test_domain
-        participant = fetch_first_active_participant
-        res = make_started_declaration(participant)
-        expect(res).to be_a Net::HTTPSuccess
-      else
-        puts "No domain for smoke tests found, skipping..."
-      end
+      participant = fetch_first_active_participant
+      res = make_started_declaration(participant)
+      expect(res).to be_a Net::HTTPSuccess
     end
   end
 
@@ -30,7 +25,7 @@ private
     paas_environment = ENV.fetch("ENVIRONMENT")
     YAML.load_file("#{__dir__}/../../terraform/workspace-variables/#{paas_environment}_app_env.yml")["DOMAIN"]
   rescue Errno::ENOENT
-    "ecf-#{paas_environment}.#{CLOUDAPPS_DOMAIN}"
+    "ecf-#{paas_environment}.london.cloudapps.digital"
   rescue KeyError
     nil
   end
