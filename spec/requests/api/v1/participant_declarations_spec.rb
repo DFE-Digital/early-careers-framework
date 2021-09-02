@@ -230,11 +230,63 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
           default_headers[:CONTENT_TYPE] = "application/json"
         end
 
-        it "loads list of eligible participant" do
+        it "loads list of eligible participants" do
           get "/api/v1/participant-declarations"
           expect(response.status).to eq 200
 
           expect(JSON.parse(response.body)).to eq(expected_response)
+        end
+      end
+
+      context "when a participant id filter used" do
+        let!(:second_ect_profile) { create(:participant_profile, :ect, schedule: default_schedule) }
+        let!(:second_participant_declaration) do
+          create(:participant_declaration,
+                 user: second_ect_profile.user,
+                 cpd_lead_provider: cpd_lead_provider,
+                 course_identifier: "ecf-induction")
+        end
+        let!(:profile_declaration) do
+          create(:profile_declaration,
+                 participant_declaration: second_participant_declaration,
+                 participant_profile: second_ect_profile)
+        end
+        let(:expected_response) do
+          {
+            "data" =>
+            [
+              {
+                "id" => second_participant_declaration.id,
+                "type" => "participant-declaration",
+                "attributes" => {
+                  "participant_id" => second_ect_profile.user.id,
+                  "declaration_type" => "started",
+                  "declaration_date" => second_participant_declaration.declaration_date.rfc3339(3),
+                  "course_identifier" => "ecf-induction",
+                  "eligible_for_payment" => false,
+                },
+              },
+            ],
+          }
+        end
+
+        before do
+          default_headers[:Authorization] = bearer_token
+          default_headers[:CONTENT_TYPE] = "application/json"
+        end
+
+        it "loads only declarations for the chosen participant id" do
+          get "/api/v1/participant-declarations?participant_id=#{second_ect_profile.user.id}"
+          expect(response.status).to eq 200
+
+          expect(JSON.parse(response.body)).to eq(expected_response)
+        end
+
+        it "does not load declaration for an unexistent participant id" do
+          get "/api/v1/participant-declarations?participant_id=aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
+          expect(response.status).to eq 200
+
+          expect(JSON.parse(response.body)).to eq({ "data" => [] })
         end
       end
     end
