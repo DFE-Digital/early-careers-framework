@@ -19,4 +19,12 @@ module AxeAndPercyHelper
 
   alias_method :then_the_page_should_be_accessible, :and_the_page_should_be_accessible
   alias_method :then_percy_should_be_sent_a_snapshot_named, :and_percy_should_be_sent_a_snapshot_named
+
+  module SilentPercy
+    def log(*)
+      super if ENV["PERCY_TOKEN"]
+    end
+
+    ::Capybara::Session.include(self)
+  end
 end
