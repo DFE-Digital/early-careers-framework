@@ -282,7 +282,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
           expect(JSON.parse(response.body)).to eq(expected_response)
         end
 
-        it "does not load declaration for an unexistent participant id" do
+        it "does not load declaration for a non-existent participant id" do
           get "/api/v1/participant-declarations?participant_id=aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
           expect(response.status).to eq 200
 
