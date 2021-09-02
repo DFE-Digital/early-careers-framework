@@ -22,7 +22,7 @@ module RecordDeclarations
         cpd_lead_provider: cpd_lead_provider,
         user: user,
         evidence_held: evidence_held,
-        )
+      )
     end
 
     def find_or_create_record!
@@ -34,15 +34,14 @@ module RecordDeclarations
           cpd_lead_provider: cpd_lead_provider,
           user: user,
           evidence_held: evidence_held,
-          ) do |participant_declaration|
+        ) do |participant_declaration|
           profile_declaration = ProfileDeclaration.create!(
             participant_declaration: participant_declaration,
             participant_profile: user_profile,
-            )
+          )
           profile_declaration.update!(payable: participant_declaration.currently_payable)
         end
       end
     end
-
   end
 end
