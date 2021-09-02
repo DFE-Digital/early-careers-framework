@@ -3,7 +3,7 @@
 require "has_di_parameters"
 
 module PaymentCalculator
-  module Ecf
+  module ECF
     module Contract
       module OutputPaymentCalculations
         extend ActiveSupport::Concern

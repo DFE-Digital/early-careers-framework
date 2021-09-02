@@ -100,6 +100,20 @@ School.find_or_create_by!(urn: "000005") do |school|
   )
 end
 
+School.find_or_create_by!(urn: "181818") do |school|
+  school.name = "ZZ TEST CIP only school"
+  school.postcode = "XM4 5HQ"
+  school.address_line1 = "North pole"
+  school.primary_contact_email = "cip-only-school-info@example.com"
+  school.school_status_code = 1
+  school.school_type_code = 10
+
+  user = User.find_or_create_by!(full_name: "Induction Tutor for CIP only school", email: "cip-only-induction-tutor@example.com")
+  InductionCoordinatorProfile.find_or_create_by!(user: user) do |profile|
+    profile.update!(schools: [school])
+  end
+end
+
 30.times do |idx|
   urn = (100 + idx).to_s.rjust(6, "0")
   item_num = 7 + idx

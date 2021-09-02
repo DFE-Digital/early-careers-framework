@@ -50,6 +50,7 @@ module Api
             :headteacher_status,
             :national_insurance_number,
             :school_urn,
+            :school_ukprn,
             :teacher_reference_number,
             :teacher_reference_number_verified,
           ).transform_keys! { |key| key == "national_insurance_number" ? "nino" : key }

@@ -31,6 +31,7 @@ private
       teacher_reference_number
       teacher_reference_number_validated
       school_urn
+      school_ukprn
       headteacher_status
       eligible_for_funding
       funding_choice
@@ -49,6 +50,7 @@ private
       record.teacher_reference_number,
       record.teacher_reference_number_verified,
       record.school_urn,
+      record.school_ukprn,
       record.headteacher_status,
       record.eligible_for_funding,
       record.funding_choice,

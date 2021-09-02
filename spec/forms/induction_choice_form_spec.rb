@@ -8,15 +8,27 @@ RSpec.describe InductionChoiceForm, type: :model do
   end
 
   describe "#programme_choices" do
-    subject(:form) { described_class.new }
+    let(:school) { build(:school) }
+    subject(:form) { described_class.new(school: school) }
 
     before do
       create(:cohort, :current)
     end
 
-    it "provides options for the programme choices" do
-      options = SchoolCohort.induction_programme_choices.except("not_yet_known").keys
-      expect(form.programme_choices.map(&:id)).to match_array options.map(&:to_sym)
+    context "the school is eligible for the full induction programme" do
+      it "provides options for the all programme choices" do
+        options = SchoolCohort.induction_programme_choices.except("not_yet_known").keys
+        expect(form.programme_choices.map(&:id)).to match_array options.map(&:to_sym)
+      end
+    end
+
+    context "the school is cip only" do
+      let(:school) { build(:school, :cip_only) }
+
+      it "doesn't show the full induction programme as an option" do
+        options = SchoolCohort.induction_programme_choices.except("not_yet_known", "full_induction_programme").keys
+        expect(form.programme_choices.map(&:id)).to match_array options.map(&:to_sym)
+      end
     end
   end
 

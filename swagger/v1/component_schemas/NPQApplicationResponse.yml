@@ -4,4 +4,4 @@ required:
   - data
 properties:
   data:
-    $ref: "#/components/schemas/NpqApplication"
+    $ref: "#/components/schemas/NPQApplication"

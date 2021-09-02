@@ -9,8 +9,11 @@ class ParticipantValidationMailer < ApplicationMailer
   ENGAGE_BETA_MENTOR_TEMPLATE = "99dacb2d-2255-4aa8-9076-46fa6093f1e5"
   INDUCTION_COORDINATOR_NOTIFICATION_TEMPLATE = "d560fb2e-243d-48b1-bf61-c7e111f56858"
   INDUCTION_COORDINATOR_NOTIFICATION_UR_TEMPLATE = "afb54050-7ebd-43af-ad83-7fa6795d1523"
+  INDUCTION_COORDINATOR_CHECK_ECT_AND_MENTOR_TEMPLATE = "127f972e-3b78-4780-9933-c9bb889af663"
   COORDINATOR_AND_MENTOR_UR_TEMPLATE = "5e53ac12-65e2-4196-a894-2b23bf07f334"
   COORDINATOR_AND_MENTOR_TEMPLATE = "7e7d3fdb-41f5-4e04-a4ae-acf92e8fefe6"
+
+  STATUTORY_GUIDANCE_LINK = "https://www.gov.uk/government/publications/induction-for-early-career-teachers-england"
 
   def ect_email(recipient:, school_name:, start_url:)
     template_mail(
@@ -101,6 +104,21 @@ class ParticipantValidationMailer < ApplicationMailer
       personalisation: {
         school_name: school_name,
         start_url: start_url,
+      },
+    )
+  end
+
+  def induction_coordinator_check_ect_and_mentor_email(recipient:, sign_in:, step_by_step:, resend_email:)
+    template_mail(
+      INDUCTION_COORDINATOR_CHECK_ECT_AND_MENTOR_TEMPLATE,
+      to: recipient,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        statutory_guidance: STATUTORY_GUIDANCE_LINK,
+        sign_in: sign_in,
+        step_by_step: step_by_step,
+        resend_email: resend_email,
       },
     )
   end

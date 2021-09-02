@@ -17,4 +17,4 @@ properties:
     enum:
       - npq-application
   attributes:
-    $ref: "#/components/schemas/NpqApplicationAttributes"
+    $ref: "#/components/schemas/NPQApplicationAttributes"

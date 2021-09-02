@@ -45,7 +45,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
           npq_application
         end
 
-        schema({ "$ref": "#/components/schemas/MultipleNpqApplicationsResponse" }, content_type: "application/vnd.api+json")
+        schema({ "$ref": "#/components/schemas/MultipleNPQApplicationsResponse" }, content_type: "application/vnd.api+json")
 
         run_test!
       end
@@ -79,7 +79,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
                 example: { updated_since: "2020-11-13T11:21:55Z" }
 
       response "200", "A CSV file of NPQ application" do
-        schema({ "$ref": "#/components/schemas/MultipleNpqApplicationsCsvResponse" }, content_type: "text/csv")
+        schema({ "$ref": "#/components/schemas/MultipleNPQApplicationsCsvResponse" }, content_type: "text/csv")
 
         run_test!
       end
@@ -104,13 +104,13 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
                 in: :path,
                 type: :string,
                 required: true,
-                example: SecureRandom.uuid,
+                example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The ID of the NPQ application to accept."
 
       response "200", "The NPQ application being accepted" do
         let(:id) { npq_application.id }
 
-        schema({ "$ref": "#/components/schemas/NpqApplicationResponse" }, content_type: "application/vnd.api+json")
+        schema({ "$ref": "#/components/schemas/NPQApplicationResponse" }, content_type: "application/vnd.api+json")
 
         run_test!
       end
@@ -136,13 +136,13 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
                 in: :path,
                 type: :string,
                 required: true,
-                example: SecureRandom.uuid,
+                example: "14b1b4ab-fa81-4f7a-b4b5-f632412e8c5c",
                 description: "The ID of the NPQ application to reject."
 
       response "200", "The NPQ application being rejected" do
         let(:id) { npq_application.id }
 
-        schema({ "$ref": "#/components/schemas/NpqApplicationResponse" }, content_type: "application/vnd.api+json")
+        schema({ "$ref": "#/components/schemas/NPQApplicationResponse" }, content_type: "application/vnd.api+json")
 
         run_test!
       end

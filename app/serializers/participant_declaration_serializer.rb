@@ -7,6 +7,7 @@ class ParticipantDeclarationSerializer
   include JSONAPI::Serializer::Instrumentation
 
   set_id :id
+  set_type :'participant-declaration'
   attributes :participant_id, :declaration_type, :declaration_date, :course_identifier
 
   attribute :eligible_for_payment do |declaration|

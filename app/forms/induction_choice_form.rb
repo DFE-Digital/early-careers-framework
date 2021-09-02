@@ -6,6 +6,7 @@ class InductionChoiceForm
 
   attr_reader :programme_choice
   attr_writer :cohort
+  attr_accessor :school
 
   PROGRAMME_OPTIONS = %i[full_induction_programme core_induction_programme design_our_own no_early_career_teachers].freeze
 
@@ -16,7 +17,14 @@ class InductionChoiceForm
   validates :programme_choice, presence: { message: "Select how you want to run your induction" }, inclusion: { in: PROGRAMME_OPTIONS }
 
   def programme_choices(i18n_scope: "schools.induction_choice_form.options")
-    PROGRAMME_OPTIONS.map do |option|
+    options =
+      if school.cip_only?
+        PROGRAMME_OPTIONS.excluding(:full_induction_programme)
+      else
+        PROGRAMME_OPTIONS
+      end
+
+    options.map do |option|
       OpenStruct.new(
         id: option,
         name: I18n.t(

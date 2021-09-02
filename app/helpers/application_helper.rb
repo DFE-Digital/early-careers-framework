@@ -32,7 +32,7 @@ module ApplicationHelper
     return schools_dashboard_index_path if user.schools.count > 1
 
     school = user.induction_coordinator_profile.schools.first
-    return advisory_schools_choose_programme_path(school_id: school.slug) unless school.chosen_programme?(Cohort.current)
+    return schools_choose_programme_path(school_id: school.slug) unless school.chosen_programme?(Cohort.current)
 
     schools_dashboard_path(school_id: school.slug)
   end

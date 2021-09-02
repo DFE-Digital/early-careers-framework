@@ -4,17 +4,13 @@ class Schools::ChooseProgrammeController < Schools::BaseController
   skip_after_action :verify_authorized
   skip_after_action :verify_policy_scoped
   before_action :load_programme_form
-  before_action :verify_programme_chosen, only: %i[advisory show]
+  before_action :verify_programme_chosen, only: %i[show]
 
-  def advisory
-    @school = school
-    @cohort = cohort
+  def show
     if current_user.schools.count > 1
       @show_back_link = true
     end
   end
-
-  def show; end
 
   def create
     render :show and return unless @induction_choice_form.valid?
@@ -58,7 +54,7 @@ private
 
   def load_programme_form
     session_params = session[:induction_choice_form] || {}
-    @induction_choice_form = InductionChoiceForm.new(session_params.merge(programme_choice_form_params))
+    @induction_choice_form = InductionChoiceForm.new(session_params.merge(programme_choice_form_params).merge(school: school))
   end
 
   def save_school_choice!

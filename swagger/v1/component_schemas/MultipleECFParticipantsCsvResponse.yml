@@ -7,7 +7,7 @@ properties:
   data:
     type: array
     items:
-      $ref: "#/components/schemas/EcfParticipantCsvRow"
+      $ref: "#/components/schemas/ECFParticipantCsvRow"
 example: |
   id,type,email,full_name,mentor_id,school_urn,participant_type,cohort,status,teacher_reference_number,teacher_reference_number_validated,eligible_for_funding,pupil_premium_uplift,sparsity_uplift
   db3a7848-7308-4879-942a-c4a70ced400a,participant,jane.smith@some-school.example.com,Jane Smith,bb36d74a-68a7-47b6-86b6-1fd0d141c590,106286,ect,2021,active,0012345,true,true,true,true

@@ -57,6 +57,7 @@ RSpec.describe "NPQ Applications API", type: :request do
           expect(parsed_response["data"][0]["attributes"]["email"]).to eql(user.email)
           expect(parsed_response["data"][0]["attributes"]["email_validated"]).to eql(true)
           expect(parsed_response["data"][0]["attributes"]["school_urn"]).to eql(profile.school_urn)
+          expect(parsed_response["data"][0]["attributes"]["school_ukprn"]).to eql(profile.school_ukprn)
           expect(parsed_response["data"][0]["attributes"]["teacher_reference_number"]).to eql(profile.teacher_reference_number)
           expect(parsed_response["data"][0]["attributes"]["teacher_reference_number_validated"]).to eql(profile.teacher_reference_number_verified)
           expect(parsed_response["data"][0]["attributes"]["eligible_for_funding"]).to eql(profile.eligible_for_funding)
@@ -110,6 +111,7 @@ RSpec.describe "NPQ Applications API", type: :request do
               teacher_reference_number
               teacher_reference_number_validated
               school_urn
+              school_ukprn
               headteacher_status
               eligible_for_funding
               funding_choice
@@ -131,6 +133,7 @@ RSpec.describe "NPQ Applications API", type: :request do
           expect(row["teacher_reference_number"]).to eql(profile.teacher_reference_number)
           expect(row["teacher_reference_number_validated"]).to eql(profile.teacher_reference_number_verified.to_s)
           expect(row["school_urn"]).to eql(profile.school_urn)
+          expect(row["school_ukprn"]).to eql(profile.school_ukprn)
           expect(row["headteacher_status"]).to eql(profile.headteacher_status)
           expect(row["eligible_for_funding"]).to eql(profile.eligible_for_funding.to_s)
           expect(row["funding_choice"]).to eql(profile.funding_choice)

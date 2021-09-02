@@ -23,7 +23,7 @@ private
   end
 
   def max_per_page
-    250
+    3000
   end
 
   def page

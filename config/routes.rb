@@ -52,6 +52,7 @@ Rails.application.routes.draw do
       resources :participants, only: %i[index] do
         member do
           put :withdraw
+          put :change_schedule, path: "change-schedule"
         end
       end
       resources :participant_declarations, only: %i[create index], path: "participant-declarations"
@@ -286,8 +287,6 @@ Rails.application.routes.draw do
 
     scope "/:school_id" do
       resource :choose_programme, controller: :choose_programme, only: %i[show create], path: "choose-programme" do
-        get :advisory
-
         get :confirm_programme, path: "confirm-programme"
         get :choice_saved_design_our_own, path: "design-your-programme"
         get :choice_saved_no_early_career_teachers, path: "no-early-career-teachers"

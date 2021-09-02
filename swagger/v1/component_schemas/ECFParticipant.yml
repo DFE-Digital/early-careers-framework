@@ -15,4 +15,4 @@ properties:
     type: string
     example: participant
   attributes:
-    $ref: "#/components/schemas/EcfParticipantAttributes"
+    $ref: "#/components/schemas/ECFParticipantAttributes"

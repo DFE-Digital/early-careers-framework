@@ -13,6 +13,7 @@ class NPQApplicationSerializer
              :teacher_reference_number,
              :teacher_reference_number_validated,
              :school_urn,
+             :school_ukprn,
              :headteacher_status,
              :eligible_for_funding,
              :funding_choice,

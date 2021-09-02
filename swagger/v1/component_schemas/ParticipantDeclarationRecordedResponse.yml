@@ -1,10 +1,7 @@
 description: "A confirmation that the participant declaration has been recorded successfully"
 type: object
 required:
-  - id
+  - data
 properties:
-  id:
-    description: "A unique identifier to reference the declaration in future actions"
-    type: string
-    format: uuid
-    example: "b0f657a7-9a81-4a89-a6b0-627c774ff753"
+  data:
+    $ref: "#/components/schemas/ParticipantDeclarationResponse"
