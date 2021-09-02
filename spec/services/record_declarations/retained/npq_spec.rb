@@ -8,8 +8,8 @@ RSpec.describe RecordDeclarations::Retained::NPQ do
   include_context "lead provider profiles and courses"
   include_context "service record declaration params"
 
-  let(:retained_params) { params.merge(declaration_type: "retained-1", declaration_date: (milestone_start_date + 1.day).rfc3339) }
-  let(:retained_npq_params) { npq_params.merge(declaration_type: "retained-1", declaration_date: (milestone_start_date + 1.day).rfc3339) }
+  let(:retained_params) { params.merge(declaration_type: "retained-1", declaration_date: (milestone_start_date + 1.day).rfc3339, evidence_held: "other") }
+  let(:retained_npq_params) { npq_params.merge(declaration_type: "retained-1", declaration_date: (milestone_start_date + 1.day).rfc3339, evidence_held: "yes") }
   let(:milestone_start_date) { npq_profile.schedule.milestones[1].start_date }
 
   before do

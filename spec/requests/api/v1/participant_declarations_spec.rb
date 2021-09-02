@@ -108,7 +108,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         missing_attribute = valid_params.except(:participant_id)
         post "/api/v1/participant-declarations", params: build_params(missing_attribute)
         expect(response.status).to eq 422
-        expect(response.body).to eq({ errors: [{ title: "Bad or missing parameters", detail: I18n.t(:invalid_participant) }] }.to_json)
+        expect(response.body).to eq({ errors: [{ title: "Bad or missing parameters", detail: I18n.t("activemodel.errors.models.record_declarations/base.attributes.participant_id.blank") }] }.to_json)
       end
 
       it "returns 422 when supplied an incorrect course type" do
