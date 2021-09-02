@@ -1,0 +1,9 @@
+description: "An single error element"
+type: object
+properties:
+  title:
+    description: "A title of the error"
+    type: :string
+  detail:
+    description: "Additional details of the error"
+    type: :string

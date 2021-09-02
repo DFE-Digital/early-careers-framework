@@ -19,11 +19,11 @@ module Api
     end
 
     def missing_parameter_response(exception)
-      render json: { bad_or_missing_parameters: exception.param }, status: :unprocessable_entity
+      render json: { errors: Api::ParamErrorFactory.new(error: "Bad or missing parameters", params: exception.param).call }, status: :unprocessable_entity
     end
 
     def bad_request_response(exception)
-      render json: { bad_request: exception.message }, status: :bad_request
+      render json: { errors: Api::ParamErrorFactory.new(error: "Bad request", params: exception.message).call }, status: :bad_request
     end
   end
 end

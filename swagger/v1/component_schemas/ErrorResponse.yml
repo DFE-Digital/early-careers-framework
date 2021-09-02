@@ -1,0 +1,7 @@
+description: "A list of errors"
+type: object
+properties:
+  error:
+    type: array
+    items:
+      $ref: "#/components/schemas/Error"

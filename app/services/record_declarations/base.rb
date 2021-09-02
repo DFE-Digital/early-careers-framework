@@ -5,7 +5,7 @@ module RecordDeclarations
     include Participants::ProfileAttributes
     RFC3339_DATE_REGEX = /\A\d{4}-\d{2}-\d{2}T(\d{2}):(\d{2}):(\d{2})([\.,]\d+)?(Z|[+-](\d{2})(:?\d{2})?)?\z/i.freeze
 
-    attr_accessor :declaration_date, :declaration_type, :evidence_held
+    attr_accessor :declaration_date, :declaration_type
     validates :declaration_date, :declaration_type, presence: true
     validates :parsed_date, future_date: true, allow_blank: true
     validate :date_has_the_right_format
@@ -65,7 +65,6 @@ module RecordDeclarations
         declaration_type: declaration_type,
         cpd_lead_provider: cpd_lead_provider,
         user: user,
-        evidence_held: evidence_held,
       )
     end
 
@@ -77,7 +76,6 @@ module RecordDeclarations
           declaration_type: declaration_type,
           cpd_lead_provider: cpd_lead_provider,
           user: user,
-          evidence_held: evidence_held,
         ) do |participant_declaration|
           profile_declaration = ProfileDeclaration.create!(
             participant_declaration: participant_declaration,

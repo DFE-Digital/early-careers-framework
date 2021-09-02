@@ -7,10 +7,8 @@ module Participants
 
     included do
       attr_accessor :course_identifier, :participant_id, :cpd_lead_provider
-      validates :course_identifier, presence: { message: I18n.t(:missing_course_identifier) }
-      validates :participant_id, presence: { message: I18n.t(:invalid_participant) }
+      validates :participant_id, :course_identifier, :cpd_lead_provider, presence: true
       validates :participant_id, format: /\A[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\Z/, allow_blank: true
-      validates :cpd_lead_provider, presence: { message: I18n.t(:missing_lead_provider) }
       validate :course_valid_for_participant
       validate :participant_has_user_profile
     end

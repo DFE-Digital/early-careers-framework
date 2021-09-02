@@ -9,7 +9,6 @@ RSpec.shared_context "service record declaration params" do
       declaration_type: "started",
       course_identifier: "ecf-induction",
       cpd_lead_provider: another_lead_provider,
-      evidence_held: "other",
     }
   end
   let(:ect_params) do
@@ -27,7 +26,6 @@ RSpec.shared_context "service record declaration params" do
       cpd_lead_provider: cpd_lead_provider,
       participant_id: npq_profile.user.id,
       course_identifier: npq_profile.validation_data.npq_course.identifier,
-      evidence_held: "yes",
       declaration_date: npq_declaration_date.rfc3339,
     })
   end

@@ -160,7 +160,7 @@ private
   end
 
   def then_the_declaration_made_is_invalid
-    expect(@response["bad_or_missing_parameters"]).not_to be_empty
+    expect(@response["errors"]).not_to be_empty
   end
 
   def and_the_lead_provider_receives_a_response_to_confirm_that_the_declaration_was_successful
