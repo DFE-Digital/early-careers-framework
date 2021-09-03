@@ -10,13 +10,13 @@ module AbstractInterface
   module AbstractInterfaceClassMethods
     def implement_class_method(*methods)
       methods.each do |key|
-        instance_method_define(key) { raise NotImplementedError, "Method must be implemented" } unless self.class.respond_to?(key)
+        instance_method_define(key) { raise NotImplementedError, "Class method #{key} must be implemented" } unless self.class.respond_to?(key)
       end
     end
 
     def implement_instance_method(*methods)
       methods.each do |key|
-        class_method_define(key) { raise NotImplementedError, "Method must be implemented" } unless respond_to?(key)
+        class_method_define(key) { raise NotImplementedError, "Instance method #{key} must be implemented" } unless respond_to?(key)
       end
     end
 

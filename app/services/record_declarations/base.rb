@@ -1,8 +1,14 @@
 # frozen_string_literal: true
 
+require "abstract_interface"
+
 module RecordDeclarations
   class Base
     include Participants::ProfileAttributes
+    include AbstractInterface
+    implement_class_method :required_params
+    implement_instance_method :valid_declaration_types, :user_profile
+
     RFC3339_DATE_REGEX = /\A\d{4}-\d{2}-\d{2}T(\d{2}):(\d{2}):(\d{2})([\.,]\d+)?(Z|[+-](\d{2})(:?\d{2})?)?\z/i.freeze
 
     attr_accessor :declaration_date, :declaration_type
@@ -11,23 +17,12 @@ module RecordDeclarations
     validate :date_has_the_right_format
 
     validates :declaration_type, inclusion: { in: :valid_declaration_types, message: I18n.t(:invalid_declaration_type) }
-    delegate :valid_declaration_types, :user_profile, to: :not_implemented_error
     delegate :schedule, :participant_declarations, to: :user_profile, allow_nil: true
 
     class << self
-      delegate :required_params, to: :not_implemented_error
-
       def call(params)
         new(params).call
       end
-
-      def not_implemented_error
-        raise NotImplementedError, "Method must be implemented"
-      end
-    end
-
-    def not_implemented_error
-      self.class.not_implemented_error
     end
 
     def call
