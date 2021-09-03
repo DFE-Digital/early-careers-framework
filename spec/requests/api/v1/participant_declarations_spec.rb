@@ -168,22 +168,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
     context "when authorized" do
       context "when there is a non eligible declaration" do
         let(:expected_response) do
-          {
-            "data" =>
-            [
-              {
-                "id" => participant_declaration.id,
-                "type" => "participant-declaration",
-                "attributes" => {
-                  "participant_id" => ect_profile.user.id,
-                  "declaration_type" => "started",
-                  "declaration_date" => participant_declaration.declaration_date.rfc3339,
-                  "course_identifier" => "ecf-induction",
-                  "eligible_for_payment" => false,
-                },
-              },
-            ],
-          }
+          expected_json_response(declaration: participant_declaration, profile: ect_profile)
         end
 
         before do
@@ -207,22 +192,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         end
 
         let(:expected_response) do
-          {
-            "data" =>
-            [
-              {
-                "id" => participant_declaration.id,
-                "type" => "participant-declaration",
-                "attributes" => {
-                  "participant_id" => ect_profile.user.id,
-                  "declaration_type" => "started",
-                  "declaration_date" => participant_declaration.declaration_date.rfc3339,
-                  "course_identifier" => "ecf-induction",
-                  "eligible_for_payment" => true,
-                },
-              },
-            ],
-          }
+          expected_json_response(declaration: participant_declaration, profile: ect_profile, eligible_for_payment: true)
         end
 
         before do
@@ -230,11 +200,48 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
           default_headers[:CONTENT_TYPE] = "application/json"
         end
 
-        it "loads list of eligible participant" do
+        it "loads list of eligible participants" do
           get "/api/v1/participant-declarations"
           expect(response.status).to eq 200
 
           expect(JSON.parse(response.body)).to eq(expected_response)
+        end
+      end
+
+      context "when a participant id filter used" do
+        let!(:second_ect_profile) { create(:participant_profile, :ect, schedule: default_schedule) }
+        let!(:second_participant_declaration) do
+          create(:participant_declaration,
+                 user: second_ect_profile.user,
+                 cpd_lead_provider: cpd_lead_provider,
+                 course_identifier: "ecf-induction")
+        end
+        let!(:profile_declaration) do
+          create(:profile_declaration,
+                 participant_declaration: second_participant_declaration,
+                 participant_profile: second_ect_profile)
+        end
+        let(:expected_response) do
+          expected_json_response(declaration: second_participant_declaration, profile: second_ect_profile)
+        end
+
+        before do
+          default_headers[:Authorization] = bearer_token
+          default_headers[:CONTENT_TYPE] = "application/json"
+        end
+
+        it "loads only declarations for the chosen participant id" do
+          get "/api/v1/participant-declarations", params: { filter: { participant_id: second_ect_profile.user.id } }
+          expect(response.status).to eq 200
+
+          expect(JSON.parse(response.body)).to eq(expected_response)
+        end
+
+        it "does not load declaration for a non-existent participant id" do
+          get "/api/v1/participant-declarations", params: { filter: { participant_id: "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee" } }
+          expect(response.status).to eq 200
+
+          expect(JSON.parse(response.body)).to eq({ "data" => [] })
         end
       end
     end
@@ -287,7 +294,6 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
     end
 
     it "returns the correct values" do
-      p response.body
       participant_declaration_one_row = parsed_response.find { |row| row["id"] == participant_declaration_one.id }
       expect(participant_declaration_one_row).not_to be_nil
       expect(participant_declaration_one_row["course_identifier"]).to eql participant_declaration_one.course_identifier
@@ -301,5 +307,26 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       get "/api/v1/participants.csv", params: { page: { per_page: 1, page: 1 } }
       expect(parsed_response.length).to eql 2
     end
+  end
+
+private
+
+  def expected_json_response(declaration:, profile:, course_identifier: "ecf-induction", eligible_for_payment: false)
+    {
+      "data" =>
+          [
+            {
+              "id" => declaration.id,
+              "type" => "participant-declaration",
+              "attributes" => {
+                "participant_id" => profile.user.id,
+                "declaration_type" => "started",
+                "declaration_date" => declaration.declaration_date.rfc3339,
+                "course_identifier" => course_identifier,
+                "eligible_for_payment" => eligible_for_payment,
+              },
+            },
+          ],
+    }
   end
 end

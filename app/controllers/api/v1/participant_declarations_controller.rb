@@ -16,17 +16,31 @@ module Api
       def index
         respond_to do |format|
           format.json do
-            participant_declarations_hash = ParticipantDeclarationSerializer.new(paginate(participant_declarations)).serializable_hash
+            participant_declarations_hash = ParticipantDeclarationSerializer.new(paginate(query_scope)).serializable_hash
             render json: participant_declarations_hash.to_json
           end
           format.csv do
-            participant_declarations_hash = ParticipantDeclarationSerializer.new(participant_declarations).serializable_hash
+            participant_declarations_hash = ParticipantDeclarationSerializer.new(query_scope).serializable_hash
             render body: to_csv(participant_declarations_hash)
           end
         end
       end
 
     private
+
+      def query_scope
+        scope = ParticipantDeclaration.for_lead_provider(cpd_lead_provider)
+        scope = scope.where("user_id = ?", participant_id_filter) if participant_id_filter.present?
+        scope
+      end
+
+      def filter
+        params[:filter] ||= {}
+      end
+
+      def participant_id_filter
+        filter[:participant_id]
+      end
 
       def cpd_lead_provider
         current_user

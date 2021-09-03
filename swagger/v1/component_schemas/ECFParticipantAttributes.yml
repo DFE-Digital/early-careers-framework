@@ -7,6 +7,7 @@ required:
   - participant_type
   - cohort
   - status
+  - training_status
   - schedule_identifier
 properties:
   email:
@@ -70,8 +71,8 @@ properties:
     type: boolean
     nullable: true
     example: true
-  state:
-    description: "The state of the ECF participant"
+  training_status:
+    description: "The training status of the ECF participant"
     type: string
     example: active
     enum:
@@ -84,3 +85,5 @@ properties:
     enum:
       - ecf-september-standard-2021
       - ecf-september-extended-2021
+      - ecf-january-reduced-2021
+      - ecf-january-extended-2021

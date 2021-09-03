@@ -331,6 +331,20 @@
         ],
         "parameters": [
           {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ListFilter"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "description": "Refine participant declarations to return.",
+            "example": {
+              "participant_id": "ab3a7848-1208-7679-942a-b4a70eed400a"
+            }
+          },
+          {
             "name": "page",
             "in": "query",
             "schema": {
@@ -709,6 +723,7 @@
           "participant_type",
           "cohort",
           "status",
+          "training_status",
           "schedule_identifier"
         ],
         "properties": {
@@ -787,8 +802,8 @@
             "nullable": true,
             "example": true
           },
-          "state": {
-            "description": "The state of the ECF participant",
+          "training_status": {
+            "description": "The training status of the ECF participant",
             "type": "string",
             "example": "active",
             "enum": [
@@ -802,7 +817,9 @@
             "example": "ecf-september-extended-2021",
             "enum": [
               "ecf-september-standard-2021",
-              "ecf-september-extended-2021"
+              "ecf-september-extended-2021",
+              "ecf-january-reduced-2021",
+              "ecf-january-extended-2021"
             ]
           }
         }
@@ -816,7 +833,9 @@
             "type": "string",
             "enum": [
               "ecf-september-standard-2021",
-              "ecf-september-extended-2021"
+              "ecf-september-extended-2021",
+              "ecf-january-reduced-2021",
+              "ecf-january-extended-2021"
             ],
             "example": "career-break"
           },
@@ -1200,6 +1219,11 @@
             "description": "Return only records that have been updated since this date and time (ISO 8601 date format)",
             "type": "string",
             "example": "2021-05-13T11:21:55Z"
+          },
+          "participant_id": {
+            "description": "The unique id of the participant",
+            "type": "string",
+            "example": "ab3a7848-1208-7679-942a-b4a70eed400a"
           }
         }
       },

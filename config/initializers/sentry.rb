@@ -27,7 +27,7 @@ Sentry.init do |config|
       when /check/
         0.0 # ignore healthcheck requests
       else
-        0.1
+        0.01
       end
     when /delayed_job/
       0.001
