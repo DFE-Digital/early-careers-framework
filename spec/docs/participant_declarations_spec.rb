@@ -128,4 +128,26 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
       end
     end
   end
+
+  path "/api/v1/participant-declarations.csv" do
+    get "Retrieve all participant declarations in CSV format" do
+      operationId :ecf_participant_declarations_csv
+      tags "ECF participant declarations"
+      security [bearerAuth: []]
+
+      response "200", "A CSV file of participant declarations" do
+        schema({ "$ref": "#/components/schemas/MultipleParticipantDeclarationsCsvResponse" }, content_type: "text/csv")
+
+        run_test!
+      end
+
+      response "401", "Unauthorized" do
+        let(:Authorization) { "Bearer invalid" }
+
+        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" }, content_type: "application/vnd.api+json")
+
+        run_test!
+      end
+    end
+  end
 end
