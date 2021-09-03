@@ -21,7 +21,6 @@ class ParticipantDeclaration < ApplicationRecord
   scope :npq, -> { joins(:current_profile_declaration).merge(ProfileDeclaration.npq_profiles) }
   scope :payable, -> { joins(:current_profile_declaration).merge(ProfileDeclaration.where(payable: true)) }
   scope :unique_id, -> { select(:user_id).distinct }
-  scope :for_participant, ->(*args) { where(user_id: args[0]) if args.any? }
 
   # Time dependent Range scopes
   scope :declared_as_between, ->(start_date, end_date) { where(declaration_date: start_date..end_date) }

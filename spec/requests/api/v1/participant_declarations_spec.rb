@@ -276,14 +276,14 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         end
 
         it "loads only declarations for the chosen participant id" do
-          get "/api/v1/participant-declarations?participant_id=#{second_ect_profile.user.id}"
+          get "/api/v1/participant-declarations", params: { filter: { participant_id: second_ect_profile.user.id } }
           expect(response.status).to eq 200
 
           expect(JSON.parse(response.body)).to eq(expected_response)
         end
 
         it "does not load declaration for a non-existent participant id" do
-          get "/api/v1/participant-declarations?participant_id=aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
+          get "/api/v1/participant-declarations", params: { filter: { participant_id: "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee" } }
           expect(response.status).to eq 200
 
           expect(JSON.parse(response.body)).to eq({ "data" => [] })

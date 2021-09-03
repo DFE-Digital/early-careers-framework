@@ -166,7 +166,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "example": "ab6a62bb-3b56-491c-ae40-1e7212ef00c5",
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
             "description": "The ID of the NPQ application to accept.",
             "schema": {
               "type": "string"
@@ -216,7 +216,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "example": "80aa8e2e-dd68-491d-b730-d6f0645fa973",
+            "example": "14b1b4ab-fa81-4f7a-b4b5-f632412e8c5c",
             "description": "The ID of the NPQ application to reject.",
             "schema": {
               "type": "string"
@@ -330,6 +330,20 @@
           }
         ],
         "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ListFilter"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "description": "Refine participant declarations to return.",
+            "example": {
+              "participant_id": "ab3a7848-1208-7679-942a-b4a70eed400a"
+            }
+          },
           {
             "name": "page",
             "in": "query",
@@ -1009,6 +1023,11 @@
             "description": "Return only records that have been updated since this date and time (ISO 8601 date format)",
             "type": "string",
             "example": "2021-05-13T11:21:55Z"
+          },
+          "participant_id": {
+            "description": "The unique id of the participant",
+            "type": "string",
+            "example": "ab3a7848-1208-7679-942a-b4a70eed400a"
           }
         }
       },
