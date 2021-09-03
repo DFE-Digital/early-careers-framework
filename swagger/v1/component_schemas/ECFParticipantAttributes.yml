@@ -77,6 +77,7 @@ properties:
     example: active
     enum:
       - active
+      - deferred
       - withdrawn
   schedule_identifier:
     description: "The schedule of the ECF participant"

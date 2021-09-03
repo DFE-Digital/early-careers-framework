@@ -857,6 +857,7 @@
             "example": "active",
             "enum": [
               "active",
+              "deferred",
               "withdrawn"
             ]
           },
@@ -1056,12 +1057,6 @@
             "description": "The reason for the deferral",
             "type": "string",
             "enum": [
-              "left-teaching-profession",
-              "moved-school",
-              "mentor-no-longer-being-mentor",
-              "school-left-fip",
-              "career-break",
-              "passed-induction",
               "other"
             ],
             "example": "career-break"
