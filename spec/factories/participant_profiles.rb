@@ -48,6 +48,10 @@ FactoryBot.define do
       participant_type { :mentor }
     end
 
+    trait :ecf_participant_validation_data do
+      ecf_participant_validation_data { association :ecf_participant_validation_data }
+    end
+
     trait :npq do
       teacher_profile { association :teacher_profile }
       schedule
