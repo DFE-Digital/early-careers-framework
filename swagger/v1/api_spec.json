@@ -545,6 +545,55 @@
         }
       }
     },
+    "/api/v1/participants/{id}/defer": {
+      "put": {
+        "summary": "Defer a participant from a course",
+        "operationId": "participant",
+        "tags": [
+          "ECF Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantDeferRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "",
+            "description": "The ID of the participant to defer",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ECF participant being withdrawn",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/participants/{id}/withdraw": {
       "put": {
         "summary": "Withdraw a participant from a course",
@@ -999,6 +1048,70 @@
           }
         }
       },
+      "ECFParticipantDefer": {
+        "description": "An ECF participant deferral action",
+        "type": "object",
+        "properties": {
+          "reason": {
+            "description": "The reason for the deferral",
+            "type": "string",
+            "enum": [
+              "left-teaching-profession",
+              "moved-school",
+              "mentor-no-longer-being-mentor",
+              "school-left-fip",
+              "career-break",
+              "passed-induction",
+              "other"
+            ],
+            "example": "career-break"
+          },
+          "course_identifier": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "ecf-induction",
+              "ecf-mentor"
+            ],
+            "example": "ecf-induction"
+          }
+        },
+        "required": [
+          "reason",
+          "course_identifier"
+        ],
+        "example": {
+          "reason": "career-break",
+          "course_identifier": "ecf-mentor"
+        }
+      },
+      "ECFParticipantDeferRequest": {
+        "description": "The deferral request for a participant",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "description": "The request data",
+            "required": [
+              "type",
+              "attributes"
+            ],
+            "properties": {
+              "type": {
+                "description": "The data type",
+                "type": "string",
+                "example": "participant"
+              },
+              "attributes": {
+                "$ref": "#/components/schemas/ECFParticipantDefer"
+              }
+            }
+          }
+        }
+      },
       "ECFParticipantResponse": {
         "description": "An ECF Participant",
         "type": "object",
@@ -1121,34 +1234,7 @@
           "course_identifier": "ecf-mentor"
         }
       },
-      "ECFParticipantWithdrawRequest": {
-        "description": "The withdrawal request for a participant",
-        "type": "object",
-        "required": [
-          "data"
-        ],
-        "properties": {
-          "data": {
-            "type": "object",
-            "description": "The request data",
-            "required": [
-              "type",
-              "attributes"
-            ],
-            "properties": {
-              "type": {
-                "description": "The data type",
-                "type": "string",
-                "example": "participant"
-              },
-              "attributes": {
-                "$ref": "#/components/schemas/ECFParticipantWithdrawal"
-              }
-            }
-          }
-        }
-      },
-      "ECFParticipantWithdrawal": {
+      "ECFParticipantWithdraw": {
         "description": "An ECF participant withdrawal action",
         "type": "object",
         "properties": {
@@ -1183,6 +1269,33 @@
         "example": {
           "reason": "career-break",
           "course_identifier": "ecf-mentor"
+        }
+      },
+      "ECFParticipantWithdrawRequest": {
+        "description": "The withdrawal request for a participant",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "description": "The request data",
+            "required": [
+              "type",
+              "attributes"
+            ],
+            "properties": {
+              "type": {
+                "description": "The data type",
+                "type": "string",
+                "example": "participant"
+              },
+              "attributes": {
+                "$ref": "#/components/schemas/ECFParticipantWithdraw"
+              }
+            }
+          }
         }
       },
       "Error": {

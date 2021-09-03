@@ -6,12 +6,6 @@ module Participants
       class << self
         def reasons
           %w[
-            left-teaching-profession
-            moved-school
-            mentor-no-longer-being-mentor
-            school-left-fip
-            career-break
-            passed-induction
             other
           ].freeze
         end

@@ -91,6 +91,61 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
     end
   end
 
+  path "/api/v1/participants/{id}/defer" do
+    put "Defer a participant from a course" do
+      operationId :participant
+      tags "ECF Participant"
+      security [bearerAuth: []]
+      consumes "application/json"
+
+      request_body content: {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/ECFParticipantDeferRequest",
+          },
+        },
+      }
+
+      parameter name: :id,
+                in: :path,
+                type: :string,
+                required: true,
+                example: "",
+                description: "The ID of the participant to defer"
+
+      parameter name: :params,
+                in: :body,
+                type: :object,
+                style: :deepObject,
+                required: true,
+                schema: {
+                  "$ref": "#/components/schemas/ECFParticipantDeferRequest",
+                }
+
+      response "200", "The ECF participant being withdrawn" do
+        let(:id) { mentor_profile.user.id }
+        let(:attributes) do
+          {
+            reason: "career-break",
+            course_identifier: "ecf-mentor",
+          }
+        end
+
+        let(:params) do
+          {
+            "data": {
+              "type": "participant",
+              "attributes": attributes,
+            },
+          }
+        end
+
+        schema "$ref": "#/components/schemas/ECFParticipantResponse"
+        run_test!
+      end
+    end
+  end
+
   path "/api/v1/participants/{id}/withdraw" do
     put "Withdraw a participant from a course" do
       operationId :participant
