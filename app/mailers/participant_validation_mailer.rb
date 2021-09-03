@@ -10,8 +10,10 @@ class ParticipantValidationMailer < ApplicationMailer
   INDUCTION_COORDINATOR_NOTIFICATION_TEMPLATE = "d560fb2e-243d-48b1-bf61-c7e111f56858"
   INDUCTION_COORDINATOR_NOTIFICATION_UR_TEMPLATE = "afb54050-7ebd-43af-ad83-7fa6795d1523"
   INDUCTION_COORDINATOR_CHECK_ECT_AND_MENTOR_TEMPLATE = "127f972e-3b78-4780-9933-c9bb889af663"
+  INDUCTION_COORDINATOR_WE_ASKED_YOUR_ECTS_AND_MENTORS_TEMPLATE = "d560fb2e-243d-48b1-bf61-c7e111f56858"
   COORDINATOR_AND_MENTOR_UR_TEMPLATE = "5e53ac12-65e2-4196-a894-2b23bf07f334"
   COORDINATOR_AND_MENTOR_TEMPLATE = "7e7d3fdb-41f5-4e04-a4ae-acf92e8fefe6"
+  ECF_WE_NEED_YOUR_INFO_TEMPLATE = "50ee41e5-06b9-41cf-9afd-d5bc4db356c4"
 
   STATUTORY_GUIDANCE_LINK = "https://www.gov.uk/government/publications/induction-for-early-career-teachers-england"
 
@@ -123,6 +125,19 @@ class ParticipantValidationMailer < ApplicationMailer
     )
   end
 
+  def tell_induction_coordinators_we_asked_ects_and_mentors_for_information_email(recipient:, sign_in:, school_name:)
+    template_mail(
+      INDUCTION_COORDINATOR_WE_ASKED_YOUR_ECTS_AND_MENTORS_TEMPLATE,
+      to: recipient,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        sign_in: sign_in,
+        school_name: school_name,
+      },
+    )
+  end
+
   def induction_coordinator_ur_email(recipient:, school_name:, start_url:)
     template_mail(
       INDUCTION_COORDINATOR_NOTIFICATION_UR_TEMPLATE,
@@ -159,6 +174,19 @@ class ParticipantValidationMailer < ApplicationMailer
         school_name: school_name,
         participant_start: start_url,
         ur_sign_up_url: user_research_url,
+      },
+    )
+  end
+
+  def we_need_information_for_your_programme_email(recipient:, school_name:, start_url:)
+    template_mail(
+      ECF_WE_NEED_YOUR_INFO_TEMPLATE,
+      to: recipient,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        school_name: school_name,
+        participant_start: start_url,
       },
     )
   end

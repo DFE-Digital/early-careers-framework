@@ -30,6 +30,26 @@ class ValidationBetaService
     end
   end
 
+  def tell_induction_coordinators_we_asked_ects_and_mentors_for_information
+    InductionCoordinatorProfile.find_each do |ic|
+      ic.schools.not_opted_out.each do |school|
+        if chosen_programme_and_not_in_beta(school)
+          send_asked_ects_and_mentors_for_information(ic, school)
+          break
+        end
+      end
+    end
+  end
+
+  def tell_ects_and_mentors_to_add_validation_information
+    ParticipantProfile::ECF
+      .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort, :school)
+      .where(school_cohort: { cohort: Cohort.current }) # Chosen program
+      .where(ecf_participant_eligibility: { participant_profile_id: nil })
+      .or(ParticipantProfile::ECF.where(ecf_participant_validation_data: { participant_profile_id: nil }))
+      .find_each { |profile| send_we_need_information_for_your_programme(profile, profile.school) }
+  end
+
 private
 
   def participant_validation_start_url
@@ -216,6 +236,36 @@ private
       sign_in: sign_in_url,
       step_by_step: step_by_step_url,
       resend_email: resend_email_url,
+    ).deliver_later
+  end
+
+  def send_asked_ects_and_mentors_for_information(induction_coordinator, school)
+    campaign = :asked_ects_and_mentors_for_information
+
+    sign_in_url = Rails.application.routes.url_helpers.new_user_session_url(
+      host: Rails.application.config.domain,
+      **UTMService.email(campaign, campaign),
+    )
+
+    ParticipantValidationMailer.tell_induction_coordinators_we_asked_ects_and_mentors_for_information_email(
+      recipient: induction_coordinator.user.email,
+      school_name: school.name,
+      sign_in: sign_in_url,
+    ).deliver_later
+  end
+
+  def send_we_need_information_for_your_programme(profile, school)
+    campaign = :we_need_information_for_your_programme
+
+    participant_validation_start_url = Rails.application.routes.url_helpers.participants_start_registrations_url(
+      host: Rails.application.config.domain,
+      **UTMService.email(campaign, campaign),
+    )
+
+    ParticipantValidationMailer.we_need_information_for_your_programme_email(
+      recipient: profile.user.email,
+      school_name: school.name,
+      start_url: participant_validation_start_url,
     ).deliver_later
   end
 

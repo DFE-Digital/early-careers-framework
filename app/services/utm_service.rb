@@ -20,6 +20,8 @@ class UTMService
     participant_validation_research: "participant-validation-research",
     participant_validation_sit_notification: "participant-validation-sit-notification",
     check_ect_and_mentor_info: "check-ect-and-mentor-info",
+    we_need_information_for_your_programme: "we-need-information-for-your-programme",
+    asked_ects_and_mentors_for_information: "asked-ects-and-mentors-for-information",
   }.freeze
 
   # Campaigns aren't showing up in GA at the moment, so use specific sources
@@ -37,6 +39,8 @@ class UTMService
     participant_validation_beta: "participant-validation-beta",
     participant_validation_research: "participant-validation-research",
     check_ect_and_mentor_info: "check-ect-and-mentor-info",
+    we_need_information_for_your_programme: "we-need-information-for-your-programme",
+    asked_ects_and_mentors_for_information: "asked-ects-and-mentors-for-information",
   }.freeze
 
   def self.email(campaign, source = :service)
