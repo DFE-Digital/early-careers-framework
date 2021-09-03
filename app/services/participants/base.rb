@@ -4,6 +4,7 @@ require "abstract_interface"
 
 module Participants
   class Base
+    include ActiveModel::Validations
     include ProfileAttributes
     include AbstractInterface
     implement_class_method :valid_courses
@@ -19,17 +20,13 @@ module Participants
         raise ActionController::ParameterMissing, errors.map(&:message)
       end
 
-      business_validation!
-      action!
-    end
-
-    def business_validation!
       validate_provider!
+      perform_action!
     end
 
   private
 
-    implement_instance_method :participant_profile_state, :action!
+    implement_instance_method :participant_profile_state, :perform_action!, :matches_lead_provider?
 
     def initialize(params:)
       params.each do |param, value|

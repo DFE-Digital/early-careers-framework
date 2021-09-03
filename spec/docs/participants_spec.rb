@@ -110,7 +110,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
                 in: :path,
                 type: :string,
                 required: true,
-                example: "",
+                example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The ID of the participant to defer"
 
       parameter name: :params,
@@ -122,11 +122,11 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
                   "$ref": "#/components/schemas/ECFParticipantDeferRequest",
                 }
 
-      response "200", "The ECF participant being withdrawn" do
+      response "200", "The ECF participant being deferred" do
         let(:id) { mentor_profile.user.id }
         let(:attributes) do
           {
-            reason: "career-break",
+            reason: "adoption",
             course_identifier: "ecf-mentor",
           }
         end
@@ -165,7 +165,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
                 in: :path,
                 type: :string,
                 required: true,
-                example: "",
+                example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The ID of the participant to withdraw"
 
       parameter name: :params,
@@ -220,7 +220,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
                 in: :path,
                 type: :string,
                 required: true,
-                example: "",
+                example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The ID of the participant"
 
       parameter name: :params,

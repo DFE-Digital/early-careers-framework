@@ -33,7 +33,7 @@ RSpec.describe Participants::Withdraw::EarlyCareerTeacher do
     end
 
     it "creates a withdrawn state when that user is deferred" do
-      Participants::Defer::EarlyCareerTeacher.call(params: participant_params)
+      Participants::Defer::EarlyCareerTeacher.call(params: participant_params.merge(reason: "adoption"))
       expect { described_class.call(params: participant_params) }
         .to change { ParticipantProfileState.count }.by(1)
     end

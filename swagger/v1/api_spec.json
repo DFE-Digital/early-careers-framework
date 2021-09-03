@@ -582,7 +582,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The ECF participant being withdrawn",
+            "description": "The ECF participant being deferred",
             "content": {
               "application/json": {
                 "schema": {

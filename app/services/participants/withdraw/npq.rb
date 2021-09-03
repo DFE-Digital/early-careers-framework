@@ -15,7 +15,7 @@ module Participants
       end
 
       include Participants::NPQ
-      include ValidateAndChange
+      include ValidateAndChangeState
     end
   end
 end

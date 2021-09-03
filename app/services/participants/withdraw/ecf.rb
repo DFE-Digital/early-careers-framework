@@ -18,7 +18,7 @@ module Participants
       end
 
       include Participants::ECF
-      include ValidateAndChange
+      include ValidateAndChangeState
     end
   end
 end

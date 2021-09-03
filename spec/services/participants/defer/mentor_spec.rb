@@ -22,8 +22,8 @@ RSpec.describe Participants::Defer::Mentor do
   end
 
   context "when valid user is an mentor" do
-    it "creates a withdrawn state for that user's profile" do
-      expect { described_class.call(params: participant_params) }
+    it "creates a deferred state for that user's profile" do
+      expect { described_class.call(params: participant_params.merge(reason: "adoption")) }
         .to change { ParticipantProfileState.count }.by(1)
     end
 
@@ -33,24 +33,24 @@ RSpec.describe Participants::Defer::Mentor do
     end
 
     it "fails when the participant is already deferred" do
-      described_class.call(params: participant_params)
-      expect { described_class.call(params: participant_params) }
+      described_class.call(params: participant_params.merge(reason: "adoption"))
+      expect { described_class.call(params: participant_params.merge(reason: "adoption")) }
         .to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "fails when the participant is already withdrawn" do
       Participants::Withdraw::Mentor.call(params: participant_params)
-      expect { described_class.call(params: participant_params) }
+      expect { described_class.call(params: participant_params.merge(reason: "adoption")) }
         .to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "fails when course is for an early career teacher" do
-      params = participant_params.merge({ course_identifier: "ecf-induction" })
+      params = participant_params.merge({ course_identifier: "ecf-induction", reason: "adoption" })
       expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
     end
 
     it "fails when course is for an npq-course" do
-      params = participant_params.merge({ course_identifier: "npq-leading-teacher" })
+      params = participant_params.merge({ course_identifier: "npq-leading-teacher", reason: "adoption" })
       expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
     end
   end

@@ -2,7 +2,7 @@
 
 module Participants
   module ChangeSchedule
-    module ValidateAndChange
+    module ValidateAndChangeSchedule
       extend ActiveSupport::Concern
       include ActiveModel::Validations
 
@@ -12,7 +12,7 @@ module Participants
         validate :not_already_withdrawn
       end
 
-      def action!
+      def perform_action!
         user_profile.update_schedule!(schedule)
         user_profile
       end

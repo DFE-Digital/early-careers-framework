@@ -6,13 +6,13 @@ module Participants
       class << self
         def reasons
           %w[
-            other
+            adoption
           ].freeze
         end
       end
 
       include Participants::NPQ
-      include ValidateAndChange
+      include ValidateAndChangeState
     end
   end
 end

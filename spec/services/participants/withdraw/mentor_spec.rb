@@ -33,7 +33,7 @@ RSpec.describe Participants::Withdraw::Mentor do
     end
 
     it "creates a withdrawn state when that user is deferred" do
-      Participants::Defer::Mentor.call(params: participant_params)
+      Participants::Defer::Mentor.call(params: participant_params.merge(reason: "adoption"))
       expect { described_class.call(params: participant_params) }
         .to change { ParticipantProfileState.count }.by(1)
     end

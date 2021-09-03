@@ -2,7 +2,7 @@
 
 module Participants
   module Withdraw
-    module ValidateAndChange
+    module ValidateAndChangeState
       extend ActiveSupport::Concern
       include ActiveModel::Validations
 
@@ -12,7 +12,7 @@ module Participants
         validates :reason, inclusion: { in: reasons, case_sensitive: false }, allow_blank: true
       end
 
-      def action!
+      def perform_action!
         ParticipantProfileState.create!(participant_profile: user_profile, state: "withdrawn", reason: reason)
         user_profile
       end
