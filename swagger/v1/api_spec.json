@@ -331,6 +331,20 @@
         ],
         "parameters": [
           {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ListFilter"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "description": "Refine participant declarations to return.",
+            "example": {
+              "participant_id": "ab3a7848-1208-7679-942a-b4a70eed400a"
+            }
+          },
+          {
             "name": "page",
             "in": "query",
             "schema": {
@@ -1166,6 +1180,11 @@
             "description": "Return only records that have been updated since this date and time (ISO 8601 date format)",
             "type": "string",
             "example": "2021-05-13T11:21:55Z"
+          },
+          "participant_id": {
+            "description": "The unique id of the participant",
+            "type": "string",
+            "example": "ab3a7848-1208-7679-942a-b4a70eed400a"
           }
         }
       },
