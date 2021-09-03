@@ -30,6 +30,17 @@ class ValidationBetaService
     end
   end
 
+  def tell_induction_coordinators_we_asked_ects_and_mentors_for_information
+    InductionCoordinatorProfile.find_each do |ic|
+      ic.schools.not_opted_out.each do |school|
+        if chosen_programme_and_not_in_beta(school)
+          send_asked_ects_and_mentors_for_information(ic, school)
+          break
+        end
+      end
+    end
+  end
+
   def tell_ects_and_mentors_to_add_validation_information
     ParticipantProfile::ECF
       .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort, :school)
@@ -225,6 +236,21 @@ private
       sign_in: sign_in_url,
       step_by_step: step_by_step_url,
       resend_email: resend_email_url,
+    ).deliver_later
+  end
+
+  def send_asked_ects_and_mentors_for_information(induction_coordinator, school)
+    campaign = :asked_ects_and_mentors_for_information
+
+    sign_in_url = Rails.application.routes.url_helpers.new_user_session_url(
+      host: Rails.application.config.domain,
+      **UTMService.email(campaign, campaign),
+    )
+
+    ParticipantValidationMailer.tell_induction_coordinators_we_asked_ects_and_mentors_for_information_email(
+      recipient: induction_coordinator.user.email,
+      school_name: school.name,
+      sign_in: sign_in_url,
     ).deliver_later
   end
 
