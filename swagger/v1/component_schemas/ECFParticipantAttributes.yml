@@ -7,6 +7,7 @@ required:
   - participant_type
   - cohort
   - status
+  - training_status
   - schedule_identifier
 properties:
   email:
@@ -76,7 +77,6 @@ properties:
     example: active
     enum:
       - active
-      - deferred
       - withdrawn
   schedule_identifier:
     description: "The schedule of the ECF participant"
