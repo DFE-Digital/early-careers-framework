@@ -9,7 +9,7 @@ required:
   - participant_type
   - cohort
   - status
-  - state
+  - training_status
 properties:
   id:
     description: "The unique identifier of the ECF participant record"
@@ -82,8 +82,8 @@ properties:
     type: boolean
     nullable: true
     example: true
-  state:
-    description: "The state of the ECF Participant"
+  training_status:
+    description: "The training status of the ECF Participant"
     type: string
     example: active
     enum:

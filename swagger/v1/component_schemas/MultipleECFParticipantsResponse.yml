@@ -23,6 +23,7 @@ properties:
           eligible_for_funding: true
           pupil_premium_uplift: false
           sparsity_uplift: true
+          training_status: active
       - id: bb36d74a-68a7-47b6-86b6-1fd0d141c590
         type: participant
         attributes:
@@ -37,6 +38,7 @@ properties:
           eligible_for_funding: null
           pupil_premium_uplift: null
           sparsity_uplift: null
+          training_status: active
       - id: eb475531-bf08-48ae-b0ef-c2ff5e5bdef0
         type: participant
         attributes:
@@ -52,3 +54,4 @@ properties:
           eligible_for_funding: null
           pupil_premium_uplift: null
           sparsity_uplift: null
+          training_status: withdrawn
