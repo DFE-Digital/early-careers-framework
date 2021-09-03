@@ -55,7 +55,8 @@ module Api
       end
 
       def updated_since
-        params.dig(:filter, :updated_since)
+        value = params.dig(:filter, :updated_since)
+        URI.decode_www_form_component(value) if value.present?
       end
 
       def lead_provider

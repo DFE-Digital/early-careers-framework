@@ -115,10 +115,30 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           expect(second_page_ids).not_to include first_page_id
         end
 
-        it "returns users changed since a particular time, if given a updated_since parameter" do
-          User.first.update!(updated_at: 2.days.ago)
-          get "/api/v1/participants", params: { filter: { updated_since: 1.day.ago.iso8601 } }
-          expect(parsed_response["data"].size).to eql(3)
+        context "when updated_since parameter is supplied" do
+          before do
+            User.first.update!(updated_at: 2.days.ago)
+          end
+
+          it "returns users changed since the updated_since parameter" do
+            get "/api/v1/participants", params: { filter: { updated_since: 1.day.ago.iso8601 } }
+            expect(parsed_response["data"].size).to eql(3)
+          end
+
+          context "when updated_since parameter is encoded/escaped" do
+            it "unescapes the value and returns users changed since the updated_since date" do
+              since = URI.encode_www_form_component(1.day.ago.iso8601)
+              get "/api/v1/participants", params: { filter: { updated_since: since } }
+              expect(parsed_response["data"].size).to eql(3)
+            end
+          end
+
+          context "when updated_since in an invalid format" do
+            it "returns a 400 status" do
+              get "/api/v1/participants", params: { filter: { updated_since: "23rm21" } }
+              expect(response.status).to eq 400
+            end
+          end
         end
       end
 
