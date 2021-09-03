@@ -9,6 +9,8 @@ class NPQValidationData < ApplicationRecord
   belongs_to :npq_lead_provider
   belongs_to :npq_course
 
+  after_save :push_enrollment_to_big_query
+
   enum headteacher_status: {
     no: "no",
     yes_when_course_starts: "yes_when_course_starts",
@@ -41,6 +43,14 @@ class NPQValidationData < ApplicationRecord
   def validate_accepted_status_cannot_change
     if lead_provider_approval_status_changed?(from: "accepted")
       errors.add(:lead_provider_approval_status, :invalid, message: "Once accepted an application cannot change state")
+    end
+  end
+
+private
+
+  def push_enrollment_to_big_query
+    if (saved_changes.keys & %w[id lead_provider_approval_status]).present?
+      NPQ::StreamBigQueryEnrollmentJob.perform_later(npq_validation_data_id: id)
     end
   end
 end
