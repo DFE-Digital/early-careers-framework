@@ -148,7 +148,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
     end
   end
 
-  describe "get" do
+  describe "JSON Index Api" do
     let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
     let(:bearer_token) { "Bearer #{token}" }
 
@@ -177,7 +177,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
                 "attributes" => {
                   "participant_id" => ect_profile.user.id,
                   "declaration_type" => "started",
-                  "declaration_date" => participant_declaration.declaration_date.rfc3339(3),
+                  "declaration_date" => participant_declaration.declaration_date.rfc3339,
                   "course_identifier" => "ecf-induction",
                   "eligible_for_payment" => false,
                 },
@@ -216,7 +216,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
                 "attributes" => {
                   "participant_id" => ect_profile.user.id,
                   "declaration_type" => "started",
-                  "declaration_date" => participant_declaration.declaration_date.rfc3339(3),
+                  "declaration_date" => participant_declaration.declaration_date.rfc3339,
                   "course_identifier" => "ecf-induction",
                   "eligible_for_payment" => true,
                 },
@@ -237,6 +237,69 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
           expect(JSON.parse(response.body)).to eq(expected_response)
         end
       end
+    end
+  end
+
+  describe "CSV Index API" do
+    let(:parsed_response) { CSV.parse(response.body, headers: true) }
+    let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
+    let(:bearer_token) { "Bearer #{token}" }
+
+    let!(:participant_declaration_one) do
+      participant_declaration = create(:participant_declaration,
+                                       user: ect_profile.user,
+                                       cpd_lead_provider: cpd_lead_provider,
+                                       course_identifier: "ecf-induction")
+      create(:profile_declaration,
+             participant_declaration: participant_declaration,
+             participant_profile: ect_profile)
+      participant_declaration
+    end
+
+    let!(:participant_declaration_two) do
+      participant_declaration = create(:participant_declaration,
+                                       user: ect_profile.user,
+                                       cpd_lead_provider: cpd_lead_provider,
+                                       course_identifier: "ecf-induction")
+      create(:profile_declaration,
+             participant_declaration: participant_declaration,
+             participant_profile: ect_profile)
+      participant_declaration
+    end
+
+    before do
+      default_headers[:Authorization] = bearer_token
+      get "/api/v1/participant-declarations.csv"
+    end
+
+    it "returns the correct CSV content type header" do
+      expect(response.headers["Content-Type"]).to eql("text/csv")
+    end
+
+    it "returns all declarations" do
+      expect(parsed_response.length).to eql 2
+    end
+
+    it "returns the correct headers" do
+      expect(parsed_response.headers).to match_array(
+        %w[id course_identifier declaration_date declaration_type eligible_for_payment participant_id],
+      )
+    end
+
+    it "returns the correct values" do
+      p response.body
+      participant_declaration_one_row = parsed_response.find { |row| row["id"] == participant_declaration_one.id }
+      expect(participant_declaration_one_row).not_to be_nil
+      expect(participant_declaration_one_row["course_identifier"]).to eql participant_declaration_one.course_identifier
+      expect(participant_declaration_one_row["declaration_date"]).to eql participant_declaration_one.declaration_date.rfc3339
+      expect(participant_declaration_one_row["declaration_type"]).to eql participant_declaration_one.declaration_type
+      expect(participant_declaration_one_row["eligible_for_payment"]).to eql participant_declaration_one.payable.to_s
+      expect(participant_declaration_one_row["participant_id"]).to eql participant_declaration_one.participant_profile.user.id
+    end
+
+    it "ignores pagination parameters" do
+      get "/api/v1/participants.csv", params: { page: { per_page: 1, page: 1 } }
+      expect(parsed_response.length).to eql 2
     end
   end
 end

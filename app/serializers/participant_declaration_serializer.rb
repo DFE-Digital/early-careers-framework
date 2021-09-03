@@ -8,10 +8,14 @@ class ParticipantDeclarationSerializer
 
   set_id :id
   set_type :'participant-declaration'
-  attributes :participant_id, :declaration_type, :declaration_date, :course_identifier
+  attributes :participant_id, :declaration_type, :course_identifier
 
   attribute :eligible_for_payment do |declaration|
     declaration.payable || false
+  end
+
+  attribute :declaration_date do |declaration|
+    declaration.declaration_date.rfc3339
   end
 
   attribute(:participant_id, &:user_id)
