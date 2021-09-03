@@ -26,7 +26,7 @@ module DataStage
             school = DataStage::School.find_by(urn: urn)
 
             if school.present?
-              school.update!(school_attrs)
+              school.update_and_sync_changes!(school_attrs)
             else
               DataStage::School.create!(school_attrs)
             end

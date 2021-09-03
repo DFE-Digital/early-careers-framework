@@ -6,7 +6,7 @@ module Admin
       before_action { authorize :gias }
 
       def index
-        @schools = schools_scope.schools_to_add.order(urn: :asc)
+        @schools = fetch_schools_to_open
       end
 
       def show
@@ -17,6 +17,11 @@ module Admin
 
       def schools_scope
         policy_scope(DataStage::School, policy_scope_class: GiasPolicy::Scope)
+      end
+
+      def fetch_schools_to_open
+        (schools_scope.schools_to_add + schools_scope.schools_to_open)
+          .sort { |a, b| a.urn.to_i <=> b.urn.to_i }
       end
     end
   end

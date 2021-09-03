@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ImportGiasDataJob < CronJob
-  self.cron_expression = "30 6 * * *"
+  self.cron_expression = "0 6 * * *"
 
   queue_as :school_data
 
