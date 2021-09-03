@@ -1,6 +1,5 @@
 variable environment {}
 
-
 # Gov.UK PaaS
 variable paas_api_url {
 }

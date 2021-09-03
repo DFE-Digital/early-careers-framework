@@ -116,6 +116,8 @@ gem "aws-sdk-s3", require: false
 
 gem "activerecord-session_store", ">= 2.0.0"
 
+gem "google-cloud-bigquery"
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem "byebug", platforms: %i[mri mingw x64_mingw]
