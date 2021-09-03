@@ -70,12 +70,13 @@ properties:
     type: boolean
     nullable: true
     example: true
-  state:
-    description: "The state of the ECF participant"
+  training_status:
+    description: "The training status of the ECF participant"
     type: string
     example: active
     enum:
       - active
+      - deferred
       - withdrawn
   schedule_identifier:
     description: "The schedule of the ECF participant"
