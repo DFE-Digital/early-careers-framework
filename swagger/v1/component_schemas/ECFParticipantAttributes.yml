@@ -84,3 +84,5 @@ properties:
     enum:
       - ecf-september-standard-2021
       - ecf-september-extended-2021
+      - ecf-january-reduced-2021
+      - ecf-january-extended-2021
