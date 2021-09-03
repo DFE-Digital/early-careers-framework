@@ -281,6 +281,69 @@ RSpec.describe ValidationBetaService do
     end
   end
 
+  describe "#tell_induction_coordinators_we_asked_ects_and_mentors_for_information" do
+    let!(:chosen_programme_and_not_in_beta_school) { create(:school_cohort, :fip).school }
+    let!(:chosen_programme_and_not_in_beta_school2) { create(:school_cohort, :fip).school }
+    let!(:chosen_programme_and_not_in_beta_ic) do
+      create(:user, :induction_coordinator, school_ids: [chosen_programme_and_not_in_beta_school.id, chosen_programme_and_not_in_beta_school2.id])
+    end
+
+    let!(:chosen_programme_and_not_in_beta_opted_out_school) do
+      create(:school_cohort, induction_programme_choice: :no_early_career_teachers, opt_out_of_updates: true).school
+    end
+    let!(:chosen_programme_and_not_in_beta_opted_out_ic) do
+      create(:user, :induction_coordinator, school_ids: [chosen_programme_and_not_in_beta_opted_out_school.id])
+    end
+
+    let!(:not_chosen_programme_and_not_in_beta_school) { create(:school) }
+    let!(:not_chosen_programme_and_not_in_beta_ic) do
+      create(:user, :induction_coordinator, school_ids: [not_chosen_programme_and_not_in_beta_school.id])
+    end
+
+    let!(:chosen_programme_and_in_beta_school) { create(:school_cohort, :fip).school }
+    let!(:chosen_programme_and_in_beta_ic) do
+      create(:user, :induction_coordinator, school_ids: [chosen_programme_and_in_beta_school.id])
+    end
+
+    let(:sign_in_url) { "http://www.example.com/users/sign_in?utm_campaign=asked-ects-and-mentors-for-information&utm_medium=email&utm_source=asked-ects-and-mentors-for-information" }
+
+    before do
+      FeatureFlag.activate(:participant_validation, for: chosen_programme_and_in_beta_school)
+
+      validation_beta_service.tell_induction_coordinators_we_asked_ects_and_mentors_for_information
+    end
+
+    it "emails SITs that have chosen programme but not in validation beta, once per SIT even with multiple matching schools" do
+      expect(ParticipantValidationMailer).to delay_email_delivery_of(:tell_induction_coordinators_we_asked_ects_and_mentors_for_information_email)
+                                               .with(hash_including(
+                                                       recipient: chosen_programme_and_not_in_beta_ic.email,
+                                                       sign_in: sign_in_url,
+                                                       school_name: chosen_programme_and_not_in_beta_school.name,
+                                                     ))
+    end
+
+    it "doesn't emails schools that have not chosen programme and were not in validation beta" do
+      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:tell_induction_coordinators_we_asked_ects_and_mentors_for_information_email)
+                                               .with(hash_including(
+                                                       recipient: not_chosen_programme_and_not_in_beta_ic.email,
+                                                     ))
+    end
+
+    it "doesn't email schools that have chosen a programme and were in validation beta" do
+      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:tell_induction_coordinators_we_asked_ects_and_mentors_for_information_email)
+                                               .with(hash_including(
+                                                       recipient: chosen_programme_and_in_beta_ic.email,
+                                                     ))
+    end
+
+    it "doesn't email schools that have chosen programme and not in validation beta if they have opted out of updates" do
+      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:tell_induction_coordinators_we_asked_ects_and_mentors_for_information_email)
+                                               .with(hash_including(
+                                                       recipient: chosen_programme_and_not_in_beta_opted_out_ic.email,
+                                                     ))
+    end
+  end
+
   describe "#tell_ects_and_mentors_to_add_validation_information" do
     let!(:chosen_programme_school) { create(:school_cohort, :cip).school }
 
