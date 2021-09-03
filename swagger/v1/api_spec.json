@@ -685,6 +685,7 @@
           "participant_type",
           "cohort",
           "status",
+          "training_status",
           "schedule_identifier"
         ],
         "properties": {
@@ -769,7 +770,6 @@
             "example": "active",
             "enum": [
               "active",
-              "deferred",
               "withdrawn"
             ]
           },
@@ -859,7 +859,7 @@
           "participant_type",
           "cohort",
           "status",
-          "state"
+          "training_status"
         ],
         "properties": {
           "id": {
@@ -950,8 +950,8 @@
             "nullable": true,
             "example": true
           },
-          "state": {
-            "description": "The state of the ECF Participant",
+          "training_status": {
+            "description": "The training status of the ECF Participant",
             "type": "string",
             "example": "active",
             "enum": [
@@ -1204,7 +1204,7 @@
             }
           }
         },
-        "example": "id,type,email,full_name,mentor_id,school_urn,participant_type,cohort,status,teacher_reference_number,teacher_reference_number_validated,eligible_for_funding,pupil_premium_uplift,sparsity_uplift\ndb3a7848-7308-4879-942a-c4a70ced400a,participant,jane.smith@some-school.example.com,Jane Smith,bb36d74a-68a7-47b6-86b6-1fd0d141c590,106286,ect,2021,active,0012345,true,true,true,true\nbb36d74a-68a7-47b6-86b6-1fd0d141c590,participant,martin.jones@some-school.example.com,Martin Jones,,106286,mentor,2021,active,\"\",false,false,false,false\neb475531-bf08-48ae-b0ef-c2ff5e5bdef0,participant,\"\",\"\",\"\",\"\",ect,\"\",withdrawn,\"\",\"\",\"\",\"\",\"\"\n"
+        "example": "id,type,email,full_name,mentor_id,school_urn,participant_type,cohort,status,teacher_reference_number,teacher_reference_number_validated,eligible_for_funding,pupil_premium_uplift,sparsity_uplift,training_status\ndb3a7848-7308-4879-942a-c4a70ced400a,participant,jane.smith@some-school.example.com,Jane Smith,bb36d74a-68a7-47b6-86b6-1fd0d141c590,106286,ect,2021,active,0012345,true,true,true,true,active\nbb36d74a-68a7-47b6-86b6-1fd0d141c590,participant,martin.jones@some-school.example.com,Martin Jones,,106286,mentor,2021,active,\"\",false,false,false,false,active\neb475531-bf08-48ae-b0ef-c2ff5e5bdef0,participant,\"\",\"\",\"\",\"\",ect,\"\",withdrawn,\"\",\"\",\"\",\"\",\"\",withdrawn\n"
       },
       "MultipleECFParticipantsResponse": {
         "description": "A list of ECF participants",
@@ -1234,7 +1234,8 @@
                   "teacher_reference_number_validated": true,
                   "eligible_for_funding": true,
                   "pupil_premium_uplift": false,
-                  "sparsity_uplift": true
+                  "sparsity_uplift": true,
+                  "training_status": "active"
                 }
               },
               {
@@ -1251,7 +1252,8 @@
                   "teacher_reference_number_validated": false,
                   "eligible_for_funding": null,
                   "pupil_premium_uplift": null,
-                  "sparsity_uplift": null
+                  "sparsity_uplift": null,
+                  "training_status": "active"
                 }
               },
               {
@@ -1269,7 +1271,8 @@
                   "teacher_reference_number_validated": null,
                   "eligible_for_funding": null,
                   "pupil_premium_uplift": null,
-                  "sparsity_uplift": null
+                  "sparsity_uplift": null,
+                  "training_status": "withdrawn"
                 }
               }
             ]
