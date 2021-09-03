@@ -9,6 +9,7 @@ module Api
       include ApiPagination
       include ApiCsv
       include ApiFilter
+      rescue_from ActiveRecord::RecordInvalid, with: :invalid_transition
 
       def index
         respond_to do |format|
@@ -24,23 +25,31 @@ module Api
       end
 
       def defer
-        perform_action(service: ::Participants::Actions::Defer)
+        perform_action(service_namespace: ::Participants::Defer)
       end
 
       def withdraw
-        perform_action(service: ::Participants::Actions::Withdraw)
+        perform_action(service_namespace: ::Participants::Withdraw)
       end
 
       def change_schedule
-        perform_action(service: ::Participants::Actions::ChangeSchedule)
+        perform_action(service_namespace: ::Participants::ChangeSchedule)
       end
 
     private
 
-      def perform_action(service:)
+      def perform_action(service_namespace:)
         params = HashWithIndifferentAccess.new({ cpd_lead_provider: current_user, participant_id: participant_id }).merge(permitted_params["attributes"] || {})
-        profile = service.call(params)
+        profile = recorder(service_namespace: service_namespace, params: params).call(params: params)
         render json: ParticipantSerializer.new(profile.user).serializable_hash.to_json
+      end
+
+      def recorder(service_namespace:, params:)
+        "#{service_namespace}::#{::Factories::CourseIdentifier.call(params[:course_identifier])}".constantize
+      end
+
+      def invalid_transition(exception)
+        render json: { errors: Api::ParamErrorFactory.new(error: "Invalid action", params: exception).call }, status: :unprocessable_entity
       end
 
       def access_scope

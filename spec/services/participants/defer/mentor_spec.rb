@@ -4,7 +4,7 @@ require "rails_helper"
 
 require_relative "../../../shared/context/lead_provider_profiles_and_courses.rb"
 
-RSpec.describe Participants::Withdraw::Mentor do
+RSpec.describe Participants::Defer::Mentor do
   include_context "lead provider profiles and courses"
   let(:participant_params) do
     {
@@ -32,14 +32,14 @@ RSpec.describe Participants::Withdraw::Mentor do
       expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
     end
 
-    it "creates a withdrawn state when that user is deferred" do
-      Participants::Defer::Mentor.call(params: participant_params)
+    it "fails when the participant is already deferred" do
+      described_class.call(params: participant_params)
       expect { described_class.call(params: participant_params) }
-        .to change { ParticipantProfileState.count }.by(1)
+        .to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "fails when the participant is already withdrawn" do
-      described_class.call(params: participant_params)
+      Participants::Withdraw::Mentor.call(params: participant_params)
       expect { described_class.call(params: participant_params) }
         .to raise_error(ActiveRecord::RecordInvalid)
     end

@@ -2,14 +2,9 @@
 
 module Participants
   module ChangeSchedule
-    class NPQ < Base
+    class NPQ < ::Participants::Base
       include Participants::NPQ
-      include ScheduleValidation
-
-      def perform_action!
-        user_profile.update_schedule!(schedule)
-        user_profile
-      end
+      include ValidateAndChange
     end
   end
 end

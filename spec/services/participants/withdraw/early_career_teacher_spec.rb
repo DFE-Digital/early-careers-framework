@@ -22,20 +22,26 @@ RSpec.describe Participants::Withdraw::EarlyCareerTeacher do
   end
 
   context "when valid user is an early_career_teacher" do
-    it "creates a withdrawn state for that user's profile" do
-      expect { described_class.call(params: participant_params) }
-        .to change { ParticipantProfileState.count }.by(1)
-    end
-
     it "fails when the reason is invalid" do
       params = participant_params.merge({ reason: "wibble" })
       expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
     end
 
+    it "creates a withdrawn state for that user's profile" do
+      expect { described_class.call(params: participant_params) }
+        .to change { ParticipantProfileState.count }.by(1)
+    end
+
+    it "creates a withdrawn state when that user is deferred" do
+      Participants::Defer::EarlyCareerTeacher.call(params: participant_params)
+      expect { described_class.call(params: participant_params) }
+        .to change { ParticipantProfileState.count }.by(1)
+    end
+
     it "fails when the participant is already withdrawn" do
       described_class.call(params: participant_params)
       expect { described_class.call(params: participant_params) }
-        .to raise_error(ActionController::ParameterMissing)
+        .to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "fails when course is for a mentor" do

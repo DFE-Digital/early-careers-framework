@@ -4,13 +4,13 @@ require "rails_helper"
 
 require_relative "../../../shared/context/lead_provider_profiles_and_courses.rb"
 
-RSpec.describe Participants::Withdraw::Mentor do
+RSpec.describe Participants::Defer::EarlyCareerTeacher do
   include_context "lead provider profiles and courses"
   let(:participant_params) do
     {
       cpd_lead_provider: cpd_lead_provider,
-      participant_id: mentor_profile.user.id,
-      course_identifier: "ecf-mentor",
+      participant_id: ect_profile.user.id,
+      course_identifier: "ecf-induction",
       reason: "career-break",
     }
   end
@@ -21,7 +21,7 @@ RSpec.describe Participants::Withdraw::Mentor do
     end
   end
 
-  context "when valid user is an mentor" do
+  context "when valid user is an early_career_teacher" do
     it "creates a withdrawn state for that user's profile" do
       expect { described_class.call(params: participant_params) }
         .to change { ParticipantProfileState.count }.by(1)
@@ -32,20 +32,20 @@ RSpec.describe Participants::Withdraw::Mentor do
       expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
     end
 
-    it "creates a withdrawn state when that user is deferred" do
-      Participants::Defer::Mentor.call(params: participant_params)
-      expect { described_class.call(params: participant_params) }
-        .to change { ParticipantProfileState.count }.by(1)
-    end
-
-    it "fails when the participant is already withdrawn" do
+    it "fails when the participant is already deferred" do
       described_class.call(params: participant_params)
       expect { described_class.call(params: participant_params) }
         .to raise_error(ActiveRecord::RecordInvalid)
     end
 
-    it "fails when course is for an early career teacher" do
-      params = participant_params.merge({ course_identifier: "ecf-induction" })
+    it "fails when the participant is already withdrawn" do
+      Participants::Withdraw::EarlyCareerTeacher.call(params: participant_params)
+      expect { described_class.call(params: participant_params) }
+        .to raise_error(ActiveRecord::RecordInvalid)
+    end
+
+    it "fails when course is for a mentor" do
+      params = participant_params.merge({ course_identifier: "ecf-mentor" })
       expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
     end
 

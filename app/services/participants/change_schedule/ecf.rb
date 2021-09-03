@@ -2,14 +2,9 @@
 
 module Participants
   module ChangeSchedule
-    class ECF < Base
+    class ECF < ::Participants::Base
       include Participants::ECF
-      include ScheduleValidation
-
-      def perform_action!
-        user_profile.update_schedule!(schedule)
-        user_profile
-      end
+      include ValidateAndChange
     end
   end
 end

@@ -3,11 +3,19 @@
 module Participants
   module Defer
     class NPQ < ::Participants::Base
+      class << self
+        def reasons
+          %w[
+            left-teaching-profession
+            moved-school
+            career-break
+            other
+          ].freeze
+        end
+      end
+
       include Participants::NPQ
-      include StateValidation
-      attr_accessor :reason
-      validates :reason, presence: true
-      validates :reason, "deferred/npq": true
+      include ValidateAndChange
     end
   end
 end
