@@ -14,7 +14,7 @@ class ParticipantMailer < ApplicationMailer
         name: participant_profile.user.full_name,
         school_name: participant_profile.school.name,
         sti_name: sti_profile.user.full_name,
-      }
+      },
     )
   end
 end
