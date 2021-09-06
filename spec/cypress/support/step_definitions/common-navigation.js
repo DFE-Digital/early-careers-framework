@@ -70,7 +70,6 @@ const pagePaths = {
   "resend nominations not eligible": "/nominations/not-eligible",
   "resend nominations already nominated": "/nominations/already-nominated",
   "resend nominations limit reached": "/nominations/limit-reached",
-  "resend nominations cip only": "/nominations/cip-only",
   "choose how to continue nominations": "/nominations/choose-how-to-continue",
   "start nominations with token": "/nominations/start?token=foo-bar-baz",
   "lead provider users index": "/admin/suppliers/users",

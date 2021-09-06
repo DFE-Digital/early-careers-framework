@@ -123,13 +123,6 @@ RSpec.describe "Requesting an invitation to nominate an induction tutor", type: 
     end
   end
 
-  describe "cip only" do
-    it "renders the cip only page" do
-      get "/nominations/cip-only"
-      expect(response).to render_template(:cip_only)
-    end
-  end
-
   describe "not eligible" do
     it "renders the not eligible page" do
       get "/nominations/not-eligible"
