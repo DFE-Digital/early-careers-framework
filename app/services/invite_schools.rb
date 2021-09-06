@@ -231,9 +231,7 @@ class InviteSchools
   end
 
   def invite_cip_only_schools
-    # We want to exclude sending invites to welsh schools (code 30), which is the only other cip only
-    # type code in GiasTypes::CIP_ONLY_TYPE_CODES
-    School.currently_open.where(school_type_code: [10, 11, 37]).where(section_41_approved: false).find_each do |school|
+    School.currently_open.where(school_type_code: GiasTypes::CIP_ONLY_EXCEPT_WELSH_CODES).where(section_41_approved: false).find_each do |school|
       if school.contact_email.blank?
         logger.info "No contact details for school urn: #{school.urn} ... skipping"
         next

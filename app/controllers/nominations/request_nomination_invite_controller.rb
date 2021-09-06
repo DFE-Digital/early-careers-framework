@@ -30,7 +30,7 @@ class Nominations::RequestNominationInviteController < ApplicationController
 
     session[:nomination_request_form] = @nomination_request_form.serializable_hash
 
-    if !@nomination_request_form.school.eligible? && !@nomination_request_form.school.cip_only?
+    if !@nomination_request_form.school.can_access_service?
       redirect_to not_eligible_request_nomination_invite_path
     elsif @nomination_request_form.school.registered?
       redirect_to already_nominated_request_nomination_invite_path

@@ -118,6 +118,10 @@ class School < ApplicationRecord
     !eligible? && open? && cip_only_establishment_type?
   end
 
+  def can_access_service?
+    eligible? || cip_only?
+  end
+
   def local_authority_district
     school_local_authority_districts.latest.first&.local_authority_district
   end
