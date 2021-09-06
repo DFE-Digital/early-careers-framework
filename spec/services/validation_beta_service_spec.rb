@@ -408,13 +408,14 @@ RSpec.describe ValidationBetaService do
   end
 
   describe "#tell_fip_mentors_to_add_validation_information" do
-    let!(:chosen_programme_school) { create(:school_cohort, :fip).school }
+    let(:chosen_programme_cohort) { create(:school_cohort, :fip) }
+    let!(:chosen_programme_school) { chosen_programme_cohort.school }
 
     let!(:chosen_programme_mentor) do
-      create(:participant_profile, :mentor, school: chosen_programme_school)
+      create(:participant_profile, :mentor, school_cohort: chosen_programme_cohort)
     end
     let!(:chosen_programme_ect) do
-      create(:participant_profile, :ect, school: chosen_programme_school)
+      create(:participant_profile, :ect, school_cohort: chosen_programme_cohort)
     end
 
     let!(:cip_chosen_programme_mentor) do
@@ -422,16 +423,14 @@ RSpec.describe ValidationBetaService do
     end
 
     let!(:provided_validation_details_mentor) do
-      create(:participant_profile, :mentor, :ecf_participant_validation_data, school: chosen_programme_school)
+      create(:participant_profile, :mentor, :ecf_participant_validation_data, school_cohort: chosen_programme_cohort)
     end
     let!(:provided_eligibility_details_mentor) do
-      create(:participant_profile, :mentor, :ecf_participant_eligibility, school: chosen_programme_school)
+      create(:participant_profile, :mentor, :ecf_participant_eligibility, school_cohort: chosen_programme_cohort)
     end
 
-    let!(:not_chosen_programme_school) { create(:school, school_cohorts: []) }
-    let!(:not_chosen_programme_mentor) do
-      create(:participant_profile, :mentor, school: not_chosen_programme_school)
-    end
+    let(:cohort_without_programme) { create :school_cohort, induction_programme_choice: "not_yet_known" }
+    let!(:not_chosen_programme_mentor) { create(:participant_profile, :ect, school_cohort: cohort_without_programme) }
 
     let(:start_url) { "http://www.example.com/participants/start-registration?utm_campaign=fip-mentors-to-add-validation-information&utm_medium=email&utm_source=fip-mentors-to-add-validation-information" }
 

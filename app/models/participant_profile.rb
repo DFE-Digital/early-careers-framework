@@ -68,6 +68,10 @@ class ParticipantProfile < ApplicationRecord
     !approved? && !rejected?
   end
 
+  def request_for_details_sent?
+    request_for_details_sent_at.present?
+  end
+
   def validation_decision(name)
     unless self.class.validation_steps.include?(name.to_sym)
       raise "Unknown validation step: #{name} for #{self.class.name}. Known steps: #{self.class.validation_steps.join(', ')}"

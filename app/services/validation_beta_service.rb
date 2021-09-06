@@ -35,13 +35,18 @@ class ValidationBetaService
     ParticipantProfile::ECT
       .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort, :school)
       .where(
+        request_for_details_sent_at: nil,
         school_cohort: {
           cohort: Cohort.current,
           induction_programme_choice: %w[core_induction_programme full_induction_programme],
-        }
-      ).where(ecf_participant_eligibility: { participant_profile_id: nil })
-      .where(ecf_participant_validation_data: { participant_profile_id: nil })
-      .find_each { |profile| send_ects_to_add_validation_information(profile, profile.school) }
+        },
+        ecf_participant_eligibility: {
+          participant_profile_id: nil,
+        },
+        ecf_participant_validation_data: {
+          participant_profile_id: nil,
+        },
+      ).find_each { |profile| send_ects_to_add_validation_information(profile, profile.school) }
   end
 
   # FIP mentors who have not added their details for validation
@@ -262,11 +267,16 @@ private
       **UTMService.email(campaign, campaign),
     )
 
-    ParticipantValidationMailer.ects_to_add_validation_information_email(
+    email = ParticipantValidationMailer.ects_to_add_validation_information_email(
       recipient: profile.user.email,
       school_name: school.name,
       start_url: participant_validation_start_url,
-    ).deliver_later
+    )
+
+    ActiveRecord::Base.transaction do
+      email.deliver_later
+      profile.update_column(:request_for_details_sent_at, Time.zone.now)
+    end
   end
 
   def send_fip_mentors_to_add_validation_information(profile, school)
@@ -277,11 +287,16 @@ private
       **UTMService.email(campaign, campaign),
     )
 
-    ParticipantValidationMailer.fip_mentors_to_add_validation_information_email(
+    email = ParticipantValidationMailer.fip_mentors_to_add_validation_information_email(
       recipient: profile.user.email,
       school_name: school.name,
       start_url: participant_validation_start_url,
-    ).deliver_later
+    )
+
+    ActiveRecord::Base.transaction do
+      email.deliver_later
+      profile.update_column(:request_for_details_sent_at, Time.zone.now)
+    end
   end
 
   def send_induction_coordinators_we_asked_ects_and_mentors_for_information(induction_coordinator, school)
