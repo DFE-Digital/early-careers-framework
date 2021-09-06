@@ -162,7 +162,7 @@ class SchoolMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         school_name: school_name,
-        nomination_url: nomination_url,
+        nomination_link: nomination_url,
       },
     )
   end
