@@ -41,12 +41,12 @@ RSpec.describe Participants::Defer::NPQ do
 
     it "fails when the participant is already withdrawn" do
       Participants::Withdraw::NPQ.call(params: participant_params)
-      expect { described_class.call(params: participant_params.merge({reason: "adoption"})) }
+      expect { described_class.call(params: participant_params.merge({ reason: "adoption" })) }
         .to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "fails when course is for an early career teacher" do
-      params = participant_params.merge({ course_identifier: "ecf-induction", reason: "adoption"})
+      params = participant_params.merge({ course_identifier: "ecf-induction", reason: "adoption" })
       expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
     end
 

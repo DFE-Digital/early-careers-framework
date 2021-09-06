@@ -40,7 +40,7 @@ RSpec.describe Participants::Defer::EarlyCareerTeacher do
 
     it "fails when the participant is already withdrawn" do
       Participants::Withdraw::EarlyCareerTeacher.call(params: participant_params)
-      expect { described_class.call(params: participant_params.merge({reason: "adoption"})) }
+      expect { described_class.call(params: participant_params.merge({ reason: "adoption" })) }
         .to raise_error(ActiveRecord::RecordInvalid)
     end
 

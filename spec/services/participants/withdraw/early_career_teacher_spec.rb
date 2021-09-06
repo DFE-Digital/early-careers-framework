@@ -30,16 +30,20 @@ RSpec.describe Participants::Withdraw::EarlyCareerTeacher do
     it "creates a withdrawn state for that user's profile" do
       expect { described_class.call(params: participant_params) }
         .to change { ParticipantProfileState.count }.by(1)
+      expect { User.find(participant_params[:participant_id]).early_career_teacher_profile.withdrawn? }
     end
 
     it "creates a withdrawn state when that user is deferred" do
       Participants::Defer::EarlyCareerTeacher.call(params: participant_params.merge(reason: "adoption"))
+      expect { User.find(participant_params[:participant_id]).early_career_teacher_profile.deferred? }
       expect { described_class.call(params: participant_params) }
         .to change { ParticipantProfileState.count }.by(1)
+      expect { User.find(participant_params[:participant_id]).early_career_teacher_profile.withdrawn? }
     end
 
     it "fails when the participant is already withdrawn" do
       described_class.call(params: participant_params)
+      expect { User.find(participant_params[:participant_id]).early_career_teacher_profile.withdrawn? }
       expect { described_class.call(params: participant_params) }
         .to raise_error(ActiveRecord::RecordInvalid)
     end
