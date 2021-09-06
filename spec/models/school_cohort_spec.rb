@@ -8,16 +8,30 @@ RSpec.describe SchoolCohort, type: :model do
     it { is_expected.to belong_to(:school) }
   end
 
-  it "updates the updated_at on participant profiles and users" do
+  it "updates the updated_at on participant profiles and users when meaningfully updated" do
     freeze_time
     school_cohort = create(:school_cohort)
     profile = create(:participant_profile, :ect, school_cohort: school_cohort, updated_at: 2.weeks.ago)
     user = profile.user
     user.update!(updated_at: 2.weeks.ago)
 
-    school_cohort.touch
+    school_cohort.update!(updated_at: Time.zone.now - 1.day)
+
     expect(user.reload.updated_at).to be_within(1.second).of Time.zone.now
     expect(profile.reload.updated_at).to be_within(1.second).of Time.zone.now
+  end
+
+  it "does not update the updated_at on participant profiles and users when not changed" do
+    freeze_time
+    school_cohort = create(:school_cohort)
+    profile = create(:participant_profile, :ect, school_cohort: school_cohort, updated_at: 2.weeks.ago)
+    user = profile.user
+    user.update!(updated_at: 2.weeks.ago)
+
+    school_cohort.save!
+
+    expect(user.reload.updated_at).to be_within(1.second).of 2.weeks.ago
+    expect(profile.reload.updated_at).to be_within(1.second).of 2.weeks.ago
   end
 
   it {
