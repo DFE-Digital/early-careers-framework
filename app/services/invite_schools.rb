@@ -230,6 +230,25 @@ class InviteSchools
     end
   end
 
+  def invite_cip_only_schools
+    # We want to exclude sending invites to welsh schools (code 30), which is the only other cip only
+    # type code in GiasTypes::CIP_ONLY_TYPE_CODES
+    School.currently_open.where(school_type_code: [10, 11, 37]).where(section_41_approved: false).find_each do |school|
+      if school.contact_email.blank?
+        logger.info "No contact details for school urn: #{school.urn} ... skipping"
+        next
+      end
+
+      nomination_email = NominationEmail.create_nomination_email(
+        sent_at: Time.zone.now,
+        sent_to: school.contact_email,
+        school: school,
+      )
+
+      delay(queue: "mailers", priority: 1).send_cip_only_invite_email(nomination_email)
+    end
+  end
+
 private
 
   def private_beta_start_url
@@ -344,6 +363,16 @@ private
 
   def send_federation_invite_email(nomination_email)
     notify_id = SchoolMailer.federation_invite_email(
+      recipient: nomination_email.sent_to,
+      school_name: nomination_email.school.name,
+      nomination_url: nomination_email.nomination_url,
+    ).deliver_now.delivery_method.response.id
+
+    nomination_email.update!(notify_id: notify_id)
+  end
+
+  def send_cip_only_invite_email(nomination_email)
+    notify_id = SchoolMailer.cip_only_invite_email(
       recipient: nomination_email.sent_to,
       school_name: nomination_email.school.name,
       nomination_url: nomination_email.nomination_url,

@@ -339,6 +339,26 @@ RSpec.describe InviteSchools do
     end
   end
 
+  describe "#invite_cip_only_schools" do
+    context "when the school has a primary contact email" do
+      let!(:cip_only_school) { create(:school, :cip_only, school_type_code: 10) }
+      let!(:welsh_cip_only_school) { create(:school, :cip_only, school_type_code: 30) }
+      let!(:section_41_school) { create(:school, :cip_only, school_type_code: 10, section_41_approved: true) }
+      let!(:fip_school) { create(:school, :open) }
+
+      it "sends invites to non-welsh cip-only schools" do
+        expect { InviteSchools.new.invite_cip_only_schools }.to change { NominationEmail.count }.by(1)
+        expect(an_instance_of(InviteSchools)).to delay_execution_of(:send_cip_only_invite_email).with(
+          an_object_having_attributes(
+            class: NominationEmail,
+            sent_to: cip_only_school.contact_email,
+            school: cip_only_school,
+          ),
+        )
+      end
+    end
+  end
+
   describe "#send_induction_coordinator_sign_in_chasers" do
     it "emails induction coordinators yet to sign in" do
       induction_coordinator = create(:user, :induction_coordinator, created_at: 5.days.ago)
