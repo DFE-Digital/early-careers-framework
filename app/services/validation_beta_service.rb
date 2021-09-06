@@ -34,8 +34,12 @@ class ValidationBetaService
   def tell_ects_to_add_validation_information
     ParticipantProfile::ECT
       .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort, :school)
-      .where(school_cohort: { cohort: Cohort.current })
-      .where(ecf_participant_eligibility: { participant_profile_id: nil })
+      .where(
+        school_cohort: {
+          cohort: Cohort.current,
+          induction_programme_choice: %w[core_induction_programme full_induction_programme],
+        }
+      ).where(ecf_participant_eligibility: { participant_profile_id: nil })
       .where(ecf_participant_validation_data: { participant_profile_id: nil })
       .find_each { |profile| send_ects_to_add_validation_information(profile, profile.school) }
   end

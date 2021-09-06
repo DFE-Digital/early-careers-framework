@@ -131,9 +131,9 @@ RSpec.describe ParticipantValidationMailer, type: :mailer do
     end
   end
 
-  describe "#tell_induction_coordinators_we_asked_ects_and_mentors_for_information_email" do
+  describe "#induction_coordinators_we_asked_ects_and_mentors_for_information_email" do
     let(:induction_coordinator_email) do
-      described_class.tell_induction_coordinators_we_asked_ects_and_mentors_for_information_email(
+      described_class.induction_coordinators_we_asked_ects_and_mentors_for_information_email(
         recipient: recipient,
         school_name: school_name,
         sign_in: "example.com/sign-in",
@@ -146,9 +146,24 @@ RSpec.describe ParticipantValidationMailer, type: :mailer do
     end
   end
 
-  describe "#we_need_information_for_your_programme_email" do
+  describe "#ects_to_add_validation_information_email" do
     let(:induction_coordinator_email) do
-      described_class.we_need_information_for_your_programme_email(
+      described_class.ects_to_add_validation_information_email(
+        recipient: recipient,
+        school_name: school_name,
+        start_url: "example.com/start-validation",
+      )
+    end
+
+    it "renders the right headers" do
+      expect(induction_coordinator_email.from).to match_array ["mail@example.com"]
+      expect(induction_coordinator_email.to).to match_array [recipient]
+    end
+  end
+
+  describe "#fip_mentors_to_add_validation_information_email" do
+    let(:induction_coordinator_email) do
+      described_class.fip_mentors_to_add_validation_information_email(
         recipient: recipient,
         school_name: school_name,
         start_url: "example.com/start-validation",

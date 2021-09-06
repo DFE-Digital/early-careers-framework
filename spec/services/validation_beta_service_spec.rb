@@ -360,10 +360,8 @@ RSpec.describe ValidationBetaService do
       create(:participant_profile, :ect, :ecf_participant_eligibility, school: chosen_programme_school)
     end
 
-    let!(:not_chosen_programme_school) { create(:school, school_cohorts: []) }
-    let!(:not_chosen_programme_ect) do
-      create(:participant_profile, :ect, school: not_chosen_programme_school)
-    end
+    let(:cohort_without_programme) { create :school_cohort, induction_programme_choice: "not_yet_known" }
+    let!(:not_chosen_programme_ect) { create(:participant_profile, :ect, school_cohort: cohort_without_programme) }
 
     let(:start_url) { "http://www.example.com/participants/start-registration?utm_campaign=ects-to-add-validation-information&utm_medium=email&utm_source=ects-to-add-validation-information" }
 
@@ -420,7 +418,7 @@ RSpec.describe ValidationBetaService do
     end
 
     let!(:cip_chosen_programme_mentor) do
-      create(:participant_profile, :mentor, school: create(:school_cohort, :cip).school)
+      create(:participant_profile, :mentor, school_cohort: create(:school_cohort, :cip))
     end
 
     let!(:provided_validation_details_mentor) do
