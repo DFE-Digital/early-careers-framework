@@ -52,6 +52,10 @@ FactoryBot.define do
       ecf_participant_validation_data { association :ecf_participant_validation_data }
     end
 
+    trait :ecf_participant_eligibility do
+      ecf_participant_eligibility { association :ecf_participant_eligibility }
+    end
+
     trait :npq do
       teacher_profile { association :teacher_profile }
       schedule

@@ -314,7 +314,7 @@ RSpec.describe ValidationBetaService do
     end
 
     it "emails SITs that have chosen programme but not in validation beta, once per SIT even with multiple matching schools" do
-      expect(ParticipantValidationMailer).to delay_email_delivery_of(:tell_induction_coordinators_we_asked_ects_and_mentors_for_information_email)
+      expect(ParticipantValidationMailer).to delay_email_delivery_of(:induction_coordinators_we_asked_ects_and_mentors_for_information_email)
                                                .with(hash_including(
                                                        recipient: chosen_programme_and_not_in_beta_ic.email,
                                                        sign_in: sign_in_url,
@@ -323,28 +323,28 @@ RSpec.describe ValidationBetaService do
     end
 
     it "doesn't emails schools that have not chosen programme and were not in validation beta" do
-      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:tell_induction_coordinators_we_asked_ects_and_mentors_for_information_email)
+      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:induction_coordinators_we_asked_ects_and_mentors_for_information_email)
                                                .with(hash_including(
                                                        recipient: not_chosen_programme_and_not_in_beta_ic.email,
                                                      ))
     end
 
     it "doesn't email schools that have chosen a programme and were in validation beta" do
-      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:tell_induction_coordinators_we_asked_ects_and_mentors_for_information_email)
+      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:induction_coordinators_we_asked_ects_and_mentors_for_information_email)
                                                .with(hash_including(
                                                        recipient: chosen_programme_and_in_beta_ic.email,
                                                      ))
     end
 
     it "doesn't email schools that have chosen programme and not in validation beta if they have opted out of updates" do
-      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:tell_induction_coordinators_we_asked_ects_and_mentors_for_information_email)
+      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:induction_coordinators_we_asked_ects_and_mentors_for_information_email)
                                                .with(hash_including(
                                                        recipient: chosen_programme_and_not_in_beta_opted_out_ic.email,
                                                      ))
     end
   end
 
-  describe "#tell_ects_and_mentors_to_add_validation_information" do
+  describe "#tell_ects_to_add_validation_information" do
     let!(:chosen_programme_school) { create(:school_cohort, :cip).school }
 
     let!(:chosen_programme_ect) do
@@ -356,26 +356,23 @@ RSpec.describe ValidationBetaService do
     let!(:provided_validation_details_ect) do
       create(:participant_profile, :ect, :ecf_participant_validation_data, school: chosen_programme_school)
     end
-    let!(:provided_validation_details_mentor) do
-      create(:participant_profile, :mentor, :ecf_participant_validation_data, school: chosen_programme_school)
+    let!(:provided_eligibility_details_ect) do
+      create(:participant_profile, :ect, :ecf_participant_eligibility, school: chosen_programme_school)
     end
 
-    let!(:not_chosen_programme_school) { create(:school) }
+    let!(:not_chosen_programme_school) { create(:school, school_cohorts: []) }
     let!(:not_chosen_programme_ect) do
       create(:participant_profile, :ect, school: not_chosen_programme_school)
     end
-    let!(:not_chosen_programme_mentor) do
-      create(:participant_profile, :mentor, school: not_chosen_programme_school)
-    end
 
-    let(:start_url) { "http://www.example.com/participants/start-registration?utm_campaign=we-need-information-for-your-programme&utm_medium=email&utm_source=we-need-information-for-your-programme" }
+    let(:start_url) { "http://www.example.com/participants/start-registration?utm_campaign=ects-to-add-validation-information&utm_medium=email&utm_source=ects-to-add-validation-information" }
 
     before do
-      validation_beta_service.tell_ects_and_mentors_to_add_validation_information
+      validation_beta_service.tell_ects_to_add_validation_information
     end
 
     it "emails ECTs that have chosen programme but have not provided details" do
-      expect(ParticipantValidationMailer).to delay_email_delivery_of(:we_need_information_for_your_programme_email)
+      expect(ParticipantValidationMailer).to delay_email_delivery_of(:ects_to_add_validation_information_email)
                                                .with(hash_including(
                                                        recipient: chosen_programme_ect.user.email,
                                                        school_name: chosen_programme_school.name,
@@ -383,8 +380,69 @@ RSpec.describe ValidationBetaService do
                                                      )).once
     end
 
-    it "emails mentors that have chosen programme but have not provided details" do
-      expect(ParticipantValidationMailer).to delay_email_delivery_of(:we_need_information_for_your_programme_email)
+    it "doesn't email mentors that have chosen programme but have not provided details" do
+      expect(ParticipantValidationMailer).not_to delay_email_delivery_of(:ects_to_add_validation_information_email)
+                                               .with(hash_including(
+                                                       recipient: chosen_programme_mentor.user.email,
+                                                     )).once
+    end
+
+    it "doesn't email ECTs that have not chosen programme" do
+      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:ects_to_add_validation_information_email)
+                                               .with(hash_including(
+                                                       recipient: not_chosen_programme_ect.user.email,
+                                                     ))
+    end
+
+    it "doesn't email ECTs that have have provided validation details" do
+      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:ects_to_add_validation_information_email)
+                                               .with(hash_including(
+                                                       recipient: provided_validation_details_ect.user.email,
+                                                     ))
+    end
+
+    it "doesn't email ECTs that have have provided eligibility details" do
+      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:ects_to_add_validation_information_email)
+                                               .with(hash_including(
+                                                       recipient: provided_eligibility_details_ect.user.email,
+                                                     ))
+    end
+  end
+
+  describe "#tell_fip_mentors_to_add_validation_information" do
+    let!(:chosen_programme_school) { create(:school_cohort, :fip).school }
+
+    let!(:chosen_programme_mentor) do
+      create(:participant_profile, :mentor, school: chosen_programme_school)
+    end
+    let!(:chosen_programme_ect) do
+      create(:participant_profile, :ect, school: chosen_programme_school)
+    end
+
+    let!(:cip_chosen_programme_mentor) do
+      create(:participant_profile, :mentor, school: create(:school_cohort, :cip).school)
+    end
+
+    let!(:provided_validation_details_mentor) do
+      create(:participant_profile, :mentor, :ecf_participant_validation_data, school: chosen_programme_school)
+    end
+    let!(:provided_eligibility_details_mentor) do
+      create(:participant_profile, :mentor, :ecf_participant_eligibility, school: chosen_programme_school)
+    end
+
+    let!(:not_chosen_programme_school) { create(:school, school_cohorts: []) }
+    let!(:not_chosen_programme_mentor) do
+      create(:participant_profile, :mentor, school: not_chosen_programme_school)
+    end
+
+    let(:start_url) { "http://www.example.com/participants/start-registration?utm_campaign=fip-mentors-to-add-validation-information&utm_medium=email&utm_source=fip-mentors-to-add-validation-information" }
+
+    before do
+      validation_beta_service.tell_fip_mentors_to_add_validation_information
+    end
+
+    it "emails FIP mentors that have chosen programme but have not provided details" do
+      expect(ParticipantValidationMailer).to delay_email_delivery_of(:fip_mentors_to_add_validation_information_email)
                                                .with(hash_including(
                                                        recipient: chosen_programme_mentor.user.email,
                                                        school_name: chosen_programme_school.name,
@@ -392,31 +450,38 @@ RSpec.describe ValidationBetaService do
                                                      )).once
     end
 
-    it "doesn't ECTs that have not chosen programme" do
-      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:induction_coordinator_check_ect_and_mentor_email)
+    it "doesn't email ECTs that have chosen programme but have not provided details" do
+      expect(ParticipantValidationMailer).not_to delay_email_delivery_of(:fip_mentors_to_add_validation_information_email)
                                                .with(hash_including(
-                                                       recipient: not_chosen_programme_ect.user.email,
-                                                     ))
+                                                       recipient: chosen_programme_ect.user.email,
+                                                     )).once
     end
 
-    it "doesn't mentors that have not chosen programme" do
-      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:induction_coordinator_check_ect_and_mentor_email)
+    it "doesn't email CIP mentors that have chosen programme but have not provided details" do
+      expect(ParticipantValidationMailer).not_to delay_email_delivery_of(:fip_mentors_to_add_validation_information_email)
+                                               .with(hash_including(
+                                                       recipient: cip_chosen_programme_mentor.user.email,
+                                                     )).once
+    end
+
+    it "doesn't email mentors that have not chosen programme" do
+      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:fip_mentors_to_add_validation_information_email)
                                                .with(hash_including(
                                                        recipient: not_chosen_programme_mentor.user.email,
                                                      ))
     end
 
-    it "doesn't ECTs that have have provided details" do
-      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:induction_coordinator_check_ect_and_mentor_email)
+    it "doesn't email mentors that have provided validation details" do
+      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:fip_mentors_to_add_validation_information_email)
                                                .with(hash_including(
-                                                       recipient: provided_validation_details_ect.user.email,
+                                                       recipient: provided_validation_details_mentor.user.email,
                                                      ))
     end
 
-    it "doesn't mentors that have provided details" do
-      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:induction_coordinator_check_ect_and_mentor_email)
+    it "doesn't email mentors that have provided eligibility details" do
+      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:fip_mentors_to_add_validation_information_email)
                                                .with(hash_including(
-                                                       recipient: provided_validation_details_mentor.user.email,
+                                                       recipient: provided_eligibility_details_mentor.user.email,
                                                      ))
     end
   end
