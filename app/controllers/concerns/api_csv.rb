@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 module ApiCsv
-  extend ActiveSupport::Concern
-
 private
 
   def to_csv(hash)

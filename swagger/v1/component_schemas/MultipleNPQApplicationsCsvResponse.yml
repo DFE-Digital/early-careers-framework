@@ -1,6 +1,5 @@
 description: "A list of participants in the Comma Separated Value (CSV) format"
 type: string
-format: base64
 required:
   - data
 properties:

@@ -1230,7 +1230,6 @@
       "MultipleECFParticipantsCsvResponse": {
         "description": "A list of ECF participants in the Comma Separated Value (CSV) format",
         "type": "string",
-        "format": "base64",
         "required": [
           "data"
         ],
@@ -1317,7 +1316,6 @@
       "MultipleNPQApplicationsCsvResponse": {
         "description": "A list of participants in the Comma Separated Value (CSV) format",
         "type": "string",
-        "format": "base64",
         "required": [
           "data"
         ],
@@ -1369,7 +1367,6 @@
       "MultipleParticipantDeclarationsCsvResponse": {
         "description": "A list of participant declarations in the Comma Separated Value (CSV) format",
         "type": "string",
-        "format": "base64",
         "required": [
           "data"
         ],
