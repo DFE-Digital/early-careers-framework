@@ -10,7 +10,7 @@ class InviteSchools
     logger.info "Emailing schools"
 
     school_urns.each do |urn|
-      school = find_eligible_school(urn)
+      school = find_school(urn)
       next if school.nil?
 
       nomination_email = NominationEmail.create_nomination_email(
@@ -63,7 +63,7 @@ class InviteSchools
 
   def invite_to_beta(school_urns)
     school_urns.each do |urn|
-      school = find_eligible_school(urn)
+      school = find_school(urn)
       next if school.nil?
 
       if FeatureFlag.active?(:induction_tutor_manage_participants, for: school)
@@ -287,9 +287,9 @@ private
     sign_in_url_with_campaign(:add_participants)
   end
 
-  def find_eligible_school(urn)
-    school = School.eligible.find_by(urn: urn)
-    logger.info "School not found, urn: #{urn} ... skipping" if school.nil?
+  def find_school(urn)
+    school = School.find_by(urn: urn)
+    logger.info "School not found, urn: #{urn} ... skipping" unless school&.can_access_service?
     school
   end
 
@@ -329,7 +329,7 @@ private
 
   def invite_group(school_urns, send_method)
     school_urns.each do |urn|
-      school = find_eligible_school(urn)
+      school = find_school(urn)
       next if school.nil?
 
       if school.contact_email.blank?

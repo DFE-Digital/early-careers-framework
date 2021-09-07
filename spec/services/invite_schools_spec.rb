@@ -45,22 +45,46 @@ RSpec.describe InviteSchools do
     end
 
     it "sends the nomination email" do
-      travel_to Time.utc("2000-1-1")
-      expect(SchoolMailer).to receive(:nomination_email).with(
-        hash_including(
-          school_name: String,
-          nomination_url: String,
-          recipient: school.primary_contact_email,
-          expiry_date: "22/01/2000",
-        ),
-      ).and_call_original
+      travel_to(Time.utc("2000-1-1")) do
+        expect(SchoolMailer).to receive(:nomination_email).with(
+          hash_including(
+            school_name: String,
+            nomination_url: String,
+            recipient: school.primary_contact_email,
+            expiry_date: "22/01/2000",
+          ),
+        ).and_call_original
 
-      invite_schools.run [school.urn]
+        invite_schools.run [school.urn]
+      end
     end
 
     it "sets the notify id on the nomination email record" do
       invite_schools.run [school.urn]
       expect(nomination_email.notify_id).to eq "notify_id"
+    end
+
+    context "when the school is cip only" do
+      let(:school) do
+        create(:school,
+               :cip_only,
+               primary_contact_email: primary_contact_email)
+      end
+
+      it "still sends the nomination email" do
+        travel_to(Time.utc("2000-1-1")) do
+          expect(SchoolMailer).to receive(:nomination_email).with(
+            hash_including(
+              school_name: String,
+              nomination_url: String,
+              recipient: school.primary_contact_email,
+              expiry_date: "22/01/2000",
+            ),
+          ).and_call_original
+
+          invite_schools.run [school.urn]
+        end
+      end
     end
 
     context "when school primary contact email is empty" do
