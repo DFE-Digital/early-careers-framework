@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe "Schools::Participants", type: :request do
   let(:user) { create(:user, :induction_coordinator, school_ids: [school.id]) }
   let(:school) { school_cohort.school }
@@ -226,6 +224,34 @@ RSpec.describe "Schools::Participants", type: :request do
       get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/email-used"
 
       expect(response).to render_template("schools/participants/email_used")
+    end
+  end
+
+  describe "DELETE /schools/:school_id/cohorts/:start_year/participants/:id" do
+    it "marks the participant as withdrawn" do
+      expect { delete "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}" }
+        .to change { ect_profile.reload.withdrawn_record? }.from(false).to true
+    end
+
+    context "when participant has already received request for details email" do
+      before do
+        ect_profile.update_column(:request_for_details_sent_at, rand(0..100).days.ago)
+      end
+
+      it "queues 'participant deleted' email" do
+        delete "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}"
+
+        expect(ParticipantMailer).to delay_email_delivery_of(:participant_removed_by_sti)
+          .with(participant_profile: ect_profile, sti_profile: user.induction_coordinator_profile)
+      end
+    end
+
+    context "when participant has not yet received request for details email" do
+      it "does not queue 'participant deleted' email" do
+        delete "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}"
+
+        expect(ParticipantMailer).not_to delay_email_delivery_of(:participant_removed_by_sti)
+      end
     end
   end
 end
