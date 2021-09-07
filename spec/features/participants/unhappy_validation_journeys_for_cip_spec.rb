@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "./participant_validation_steps"
 
-RSpec.feature "Unhappy participant validation journeys for CIP induction", type: :feature, js: true, with_feature_flags: { participant_validation: "active" } do
+RSpec.feature "Unhappy participant validation journeys for CIP induction", type: :feature, js: true do
   include ParticipantValidationSteps
 
   scenario "ECT provides invalid details" do
