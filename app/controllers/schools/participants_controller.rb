@@ -82,7 +82,7 @@ class Schools::ParticipantsController < Schools::BaseController
     ActiveRecord::Base.transaction do
       @profile.withdrawn_record!
       @profile.mentee_profiles.update_all(mentor_profile_id: nil) if @profile.mentor?
-      if FeatureFlag.active?(:participant_validation, for: @profile.school)
+      if @profile.request_for_details_sent?
         ParticipantMailer.participant_removed_by_sti(
           participant_profile: @profile,
           sti_profile: current_user.induction_coordinator_profile,

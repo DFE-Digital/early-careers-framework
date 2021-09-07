@@ -233,7 +233,11 @@ RSpec.describe "Schools::Participants", type: :request do
         .to change { ect_profile.reload.withdrawn_record? }.from(false).to true
     end
 
-    context "with :participant_validation flag enabled", with_feature_flags: { participant_validation: "active" } do
+    context "when participant has already received request for details email" do
+      before do
+        ect_profile.update_column(:request_for_details_sent_at, rand(0..100).days.ago)
+      end
+
       it "queues 'participant deleted' email" do
         delete "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}"
 
@@ -242,8 +246,8 @@ RSpec.describe "Schools::Participants", type: :request do
       end
     end
 
-    context "without :participant_validation flag enabled", with_feature_flags: { participant_validation: "inactive" } do
-      it "queues 'participant deleted' email" do
+    context "when participant has not yet received request for details email" do
+      it "does not queue 'participant deleted' email" do
         delete "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}"
 
         expect(ParticipantMailer).not_to delay_email_delivery_of(:participant_removed_by_sti)
