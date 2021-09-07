@@ -82,6 +82,21 @@ RSpec.describe "NPQ Applications API", type: :request do
             get "/api/v1/npq-applications", params: { filter: { updated_since: 2.days.ago.iso8601 } }
             expect(parsed_response["data"].size).to eql(3)
           end
+
+          context "with invalid filter of a string" do
+            it "returns an error" do
+              get "/api/v1/npq-applications", params: { filter: 2.days.ago.iso8601 }
+              expect(response).to be_bad_request
+              expect(parsed_response).to eql(HashWithIndifferentAccess.new({
+                "errors": [
+                  {
+                    "title": "Bad parameter",
+                    "detail": "Filter must be a hash",
+                  },
+                ],
+              }))
+            end
+          end
         end
       end
 
