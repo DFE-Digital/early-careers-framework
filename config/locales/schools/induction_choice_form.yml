@@ -5,10 +5,12 @@ en:
         core_induction_programme: "Deliver your own programme using DfE accredited materials (core induction programme)"
         full_induction_programme: "Use a training provider, funded by the DfE (full induction programme)"
         design_our_own: "Design and deliver your own programme based on the Early Career Framework (ECF)"
+        school_funded_fip: "Use a training provider funded by your school"
         no_early_career_teachers: "We don’t expect to have any early career teachers starting in %{cohort}"
 
       confirmation_options:
         core_induction_programme: "deliver your own programme using DfE accredited materials"
         full_induction_programme: "use a training provider, funded by the DfE"
         design_our_own: "design and deliver your own programme based on the Early Career Framework (ECF)"
+        school_funded_fip: "use a training provider funded by your school."
         no_early_career_teachers: "opt out of notifications because you don't expect to have any early career teachers starting in %{cohort}"
