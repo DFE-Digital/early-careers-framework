@@ -558,4 +558,90 @@ RSpec.describe ValidationBetaService do
                                                      ))
     end
   end
+
+  describe "#tell_induction_coordinators_who_are_mentors_to_add_validation_information" do
+    let(:chosen_programme_cohort) { create(:school_cohort, :cip) }
+    let!(:chosen_programme_school) { chosen_programme_cohort.school }
+
+    let!(:chosen_programme_mentor_and_ic) do
+      mentor_profile = create(:participant_profile, :mentor, school_cohort: chosen_programme_cohort)
+      create(:induction_coordinator_profile, user: mentor_profile.user)
+      mentor_profile
+    end
+
+    let!(:chosen_programme_mentor) do
+      create(:participant_profile, :mentor, school_cohort: chosen_programme_cohort)
+    end
+    let!(:chosen_programme_ic) do
+      create(:induction_coordinator_profile, schools: [chosen_programme_school])
+    end
+
+    let!(:provided_validation_details_mentor_and_ic) do
+      mentor_profile = create(:participant_profile, :mentor, :ecf_participant_validation_data, school_cohort: chosen_programme_cohort)
+      create(:induction_coordinator_profile, user: mentor_profile.user)
+      mentor_profile
+    end
+    let!(:provided_eligibility_details_mentor_and_ic) do
+      mentor_profile = create(:participant_profile, :mentor, :ecf_participant_eligibility, school_cohort: chosen_programme_cohort)
+      create(:induction_coordinator_profile, user: mentor_profile.user)
+      mentor_profile
+    end
+
+    let(:cohort_without_programme) { create :school_cohort, induction_programme_choice: "not_yet_known" }
+    let!(:not_chosen_programme_mentor_and_ic) {
+      mentor_profile = create(:participant_profile, :ect, school_cohort: cohort_without_programme)
+      create(:induction_coordinator_profile, user: mentor_profile.user)
+      mentor_profile
+    }
+
+    let(:start_url) { "http://www.example.com/participants/start-registration?utm_campaign=induction-coordinators-who-are-mentors-to-add-validation-information&utm_medium=email&utm_source=induction-coordinators-who-are-mentors-to-add-validation-information" }
+
+    before do
+      validation_beta_service.tell_induction_coordinators_who_are_mentors_to_add_validation_information
+    end
+
+    it "emails mentors who are SITs that have chosen programme but have not provided details" do
+      expect(ParticipantValidationMailer).to delay_email_delivery_of(:induction_coordinators_who_are_mentors_to_add_validation_information_email)
+                                               .with(hash_including(
+                                                       recipient: chosen_programme_mentor_and_ic.user.email,
+                                                       school_name: chosen_programme_school.name,
+                                                       start_url: start_url,
+                                                     )).once
+    end
+
+    it "doesn't email mentors that have chosen programme but have not provided details" do
+      expect(ParticipantValidationMailer).not_to delay_email_delivery_of(:induction_coordinators_who_are_mentors_to_add_validation_information_email)
+                                               .with(hash_including(
+                                                       recipient: chosen_programme_mentor.user.email,
+                                                     )).once
+    end
+
+    it "doesn't email SITs that have chosen programme but have not provided details" do
+      expect(ParticipantValidationMailer).not_to delay_email_delivery_of(:induction_coordinators_who_are_mentors_to_add_validation_information_email)
+                                               .with(hash_including(
+                                                       recipient: chosen_programme_ic.user.email,
+                                                     )).once
+    end
+
+    it "doesn't email mentors who are SITs that have not chosen programme" do
+      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:induction_coordinators_who_are_mentors_to_add_validation_information_email)
+                                               .with(hash_including(
+                                                       recipient: not_chosen_programme_mentor_and_ic.user.email,
+                                                     ))
+    end
+
+    it "doesn't email mentors who are SITs that have provided validation details" do
+      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:induction_coordinators_who_are_mentors_to_add_validation_information_email)
+                                               .with(hash_including(
+                                                       recipient: provided_validation_details_mentor_and_ic.user.email,
+                                                     ))
+    end
+
+    it "doesn't email mentors who are SITs that have provided eligibility details" do
+      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:induction_coordinators_who_are_mentors_to_add_validation_information_email)
+                                               .with(hash_including(
+                                                       recipient: provided_eligibility_details_mentor_and_ic.user.email,
+                                                     ))
+    end
+  end
 end

@@ -53,9 +53,19 @@ class ValidationBetaService
   def tell_fip_mentors_to_add_validation_information
     ParticipantProfile::Mentor
       .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort, :school)
-      .where(school_cohort: { cohort: Cohort.current, induction_programme_choice: "full_induction_programme" })
-      .where(ecf_participant_eligibility: { participant_profile_id: nil })
-      .where(ecf_participant_validation_data: { participant_profile_id: nil })
+      .where(
+        request_for_details_sent_at: nil,
+        school_cohort: {
+          cohort: Cohort.current,
+          induction_programme_choice: "full_induction_programme",
+        },
+        ecf_participant_eligibility: {
+          participant_profile_id: nil,
+        },
+        ecf_participant_validation_data: {
+          participant_profile_id: nil,
+        },
+      )
       .find_each { |profile| send_fip_mentors_to_add_validation_information(profile, profile.school) }
   end
 
@@ -63,10 +73,38 @@ class ValidationBetaService
   def tell_cip_mentors_to_add_validation_information
     ParticipantProfile::Mentor
       .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort, :school)
-      .where(school_cohort: { cohort: Cohort.current, induction_programme_choice: "core_induction_programme" })
-      .where(ecf_participant_eligibility: { participant_profile_id: nil })
-      .where(ecf_participant_validation_data: { participant_profile_id: nil })
+      .where(
+        request_for_details_sent_at: nil,
+        school_cohort: {
+          cohort: Cohort.current,
+          induction_programme_choice: "core_induction_programme",
+        },
+        ecf_participant_eligibility: {
+          participant_profile_id: nil,
+        },
+        ecf_participant_validation_data: {
+          participant_profile_id: nil,
+        },
+      )
       .find_each { |profile| send_cip_mentors_to_add_validation_information(profile, profile.school) }
+  end
+
+  def tell_induction_coordinators_who_are_mentors_to_add_validation_information
+    ParticipantProfile::Mentor
+    .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort, :school, user: :induction_coordinator_profile)
+    .where(
+      request_for_details_sent_at: nil,
+      school_cohort: {
+        cohort: Cohort.current,
+      },
+      ecf_participant_eligibility: {
+        participant_profile_id: nil,
+      },
+      ecf_participant_validation_data: {
+        participant_profile_id: nil,
+      },
+    )
+    .find_each { |profile| send_induction_coordinators_who_are_mentors_to_add_validation_information(profile, profile.school) if profile.user.induction_coordinator? }
   end
 
   def tell_induction_coordinators_we_asked_ects_and_mentors_for_information
@@ -318,6 +356,26 @@ private
     )
 
     email = ParticipantValidationMailer.cip_mentors_to_add_validation_information_email(
+      recipient: profile.user.email,
+      school_name: school.name,
+      start_url: participant_validation_start_url,
+    )
+
+    ActiveRecord::Base.transaction do
+      email.deliver_later
+      profile.update_column(:request_for_details_sent_at, Time.zone.now)
+    end
+  end
+
+  def send_induction_coordinators_who_are_mentors_to_add_validation_information(profile, school)
+    campaign = :induction_coordinators_who_are_mentors_to_add_validation_information
+
+    participant_validation_start_url = Rails.application.routes.url_helpers.participants_start_registrations_url(
+      host: Rails.application.config.domain,
+      **UTMService.email(campaign, campaign),
+    )
+
+    email = ParticipantValidationMailer.induction_coordinators_who_are_mentors_to_add_validation_information_email(
       recipient: profile.user.email,
       school_name: school.name,
       start_url: participant_validation_start_url,
