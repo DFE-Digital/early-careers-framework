@@ -18,8 +18,6 @@ module DataStage
                           foreign_key: :urn,
                           primary_key: :urn
 
-    after_create :log_create
-
     scope :schools_to_add, -> { currently_open.left_joins(:counterpart).where(counterpart: { urn: nil }) }
 
     scope :schools_to_open, -> { currently_open.joins(:counterpart).where(counterpart: { school_status_name: :proposed_to_open }) }
@@ -28,44 +26,39 @@ module DataStage
 
     scope :schools_with_changes, -> { includes(:school_changes).where(school_changes: { status: :changed, handled: false }) }
 
-    def create_counterpart_school!
-      return if ::School.exists?(urn: urn)
-
-      create_counterpart!(attributes.except("id", "created_at", "updated_at"))
-      # ::School.create!(attributes.except("id", "created_at", "updated_at"))
-    end
-
-    def update_and_sync_changes!(school_attributes)
-      special_case_attributes = %i[
-        administrative_district_code
-        administratuve_district_name
-        school_status_code
-        school_status_name
-        school_type_code
-        school_type_name
-        section_41_approved
-        ukprn
-      ].freeze
-
-      assign_attributes(school_attributes)
-      simple_changes = changes.except(:updated_at, *special_case_attributes)
-      major_changes = changes.slice(*special_case_attributes)
-
-      DataStage::School.transaction do
-        save!
-        if counterpart.present?
-          counterpart.update!(simple_changes) if simple_changes.any?
-          school_changes.create!(attribute_changes: major_changes, status: :changed) if major_changes.any?
-        end
+    def create_or_sync_counterpart!
+      if counterpart.present?
+        counterpart.update!(attributes_to_sync)
+      else
+        create_counterpart!(attributes_to_sync)
+        link_counterpart_to_local_authority_data
       end
     end
 
   private
 
-    def log_create
-      school_changes.create!(status: :added)
+    def attributes_to_sync
+      attributes.except("id", "created_at", "updated_at", "la_code")
     end
 
+    def link_counterpart_to_local_authority_data(start_year: Time.zone.now.year)
+      SchoolLocalAuthority.create!(
+        school: counterpart,
+        local_authority: LocalAuthority.find_by(code: la_code),
+        start_year: start_year,
+      )
+
+      SchoolLocalAuthorityDistrict.create!(
+        school: counterpart,
+        local_authority_district: LocalAuthorityDistrict.find_by(code: administrative_district_code),
+        start_year: start_year,
+      )
+    end
+
+    # def log_create
+    #   school_changes.create!(status: :added)
+    # end
+    #
     # def log_changes
     #   relevant_changes = changes.except(:updated_at, :school_status_code, :school_status_name)
     #
