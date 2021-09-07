@@ -350,6 +350,9 @@ RSpec.describe ValidationBetaService do
     let!(:chosen_programme_ect) do
       create(:participant_profile, :ect, school: chosen_programme_school)
     end
+    let!(:chosen_programme_ect_already_received) do
+      create(:participant_profile, :ect, school: chosen_programme_school, request_for_details_sent_at: Time.zone.now)
+    end
     let!(:chosen_programme_mentor) do
       create(:participant_profile, :mentor, school: chosen_programme_school)
     end
@@ -375,6 +378,13 @@ RSpec.describe ValidationBetaService do
                                                        recipient: chosen_programme_ect.user.email,
                                                        school_name: chosen_programme_school.name,
                                                        start_url: start_url,
+                                                     )).once
+    end
+
+    it "doesn't email ECTs that have already received an invitation email" do
+      expect(ParticipantValidationMailer).not_to delay_email_delivery_of(:ects_to_add_validation_information_email)
+                                               .with(hash_including(
+                                                       recipient: chosen_programme_ect_already_received.user.email,
                                                      )).once
     end
 
@@ -414,6 +424,9 @@ RSpec.describe ValidationBetaService do
     let!(:chosen_programme_mentor) do
       create(:participant_profile, :mentor, school_cohort: chosen_programme_cohort)
     end
+    let!(:chosen_programme_mentor_already_received) do
+      create(:participant_profile, :mentor, school_cohort: chosen_programme_cohort, request_for_details_sent_at: Time.zone.now)
+    end
     let!(:chosen_programme_ect) do
       create(:participant_profile, :ect, school_cohort: chosen_programme_cohort)
     end
@@ -444,6 +457,13 @@ RSpec.describe ValidationBetaService do
                                                        recipient: chosen_programme_mentor.user.email,
                                                        school_name: chosen_programme_school.name,
                                                        start_url: start_url,
+                                                     )).once
+    end
+
+    it "doesn't email FIP mentors that have already received an invitation email" do
+      expect(ParticipantValidationMailer).not_to delay_email_delivery_of(:fip_mentors_to_add_validation_information_email)
+                                               .with(hash_including(
+                                                       recipient: chosen_programme_mentor_already_received.user.email,
                                                      )).once
     end
 
@@ -490,6 +510,9 @@ RSpec.describe ValidationBetaService do
     let!(:chosen_programme_mentor) do
       create(:participant_profile, :mentor, school_cohort: chosen_programme_cohort)
     end
+    let!(:chosen_programme_mentor_already_received) do
+      create(:participant_profile, :mentor, school_cohort: chosen_programme_cohort, request_for_details_sent_at: Time.zone.now)
+    end
     let!(:chosen_programme_ect) do
       create(:participant_profile, :ect, school_cohort: chosen_programme_cohort)
     end
@@ -520,6 +543,13 @@ RSpec.describe ValidationBetaService do
                                                        recipient: chosen_programme_mentor.user.email,
                                                        school_name: chosen_programme_school.name,
                                                        start_url: start_url,
+                                                     )).once
+    end
+
+    it "doesn't email CIP mentors that have already received an invitation email" do
+      expect(ParticipantValidationMailer).not_to delay_email_delivery_of(:cip_mentors_to_add_validation_information_email)
+                                               .with(hash_including(
+                                                       recipient: chosen_programme_mentor_already_received.user.email,
                                                      )).once
     end
 
@@ -568,7 +598,11 @@ RSpec.describe ValidationBetaService do
       create(:induction_coordinator_profile, user: mentor_profile.user)
       mentor_profile
     end
-
+    let!(:chosen_programme_mentor_and_ic_already_received) do
+      mentor_profile = create(:participant_profile, :mentor, school_cohort: chosen_programme_cohort, request_for_details_sent_at: Time.zone.now)
+      create(:induction_coordinator_profile, user: mentor_profile.user)
+      mentor_profile
+    end
     let!(:chosen_programme_mentor) do
       create(:participant_profile, :mentor, school_cohort: chosen_programme_cohort)
     end
@@ -588,11 +622,11 @@ RSpec.describe ValidationBetaService do
     end
 
     let(:cohort_without_programme) { create :school_cohort, induction_programme_choice: "not_yet_known" }
-    let!(:not_chosen_programme_mentor_and_ic) {
+    let!(:not_chosen_programme_mentor_and_ic) do
       mentor_profile = create(:participant_profile, :ect, school_cohort: cohort_without_programme)
       create(:induction_coordinator_profile, user: mentor_profile.user)
       mentor_profile
-    }
+    end
 
     let(:start_url) { "http://www.example.com/participants/start-registration?utm_campaign=induction-coordinators-who-are-mentors-to-add-validation-information&utm_medium=email&utm_source=induction-coordinators-who-are-mentors-to-add-validation-information" }
 
@@ -606,6 +640,13 @@ RSpec.describe ValidationBetaService do
                                                        recipient: chosen_programme_mentor_and_ic.user.email,
                                                        school_name: chosen_programme_school.name,
                                                        start_url: start_url,
+                                                     )).once
+    end
+
+    it "doesn't mentors who are SITS that have already received an invitation email" do
+      expect(ParticipantValidationMailer).not_to delay_email_delivery_of(:induction_coordinators_who_are_mentors_to_add_validation_information_email)
+                                               .with(hash_including(
+                                                       recipient: chosen_programme_mentor_and_ic_already_received.user.email,
                                                      )).once
     end
 
