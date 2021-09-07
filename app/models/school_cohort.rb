@@ -75,6 +75,10 @@ class SchoolCohort < ApplicationRecord
     induction_programme_choice == "full_induction_programme"
   end
 
+  def school_chose_school_funded_fip?
+    induction_programme_choice == "school_funded_fip"
+  end
+
 private
 
   def cip_status
