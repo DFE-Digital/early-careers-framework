@@ -30,7 +30,7 @@ class Schools::ChooseProgrammeController < Schools::BaseController
     render "shared/choice_saved_no_early_career_teachers"
   end
 
-  def choise_saved_school_funded_fip
+  def choice_saved_school_funded_fip
     @cohort = cohort
     @school = school
   end

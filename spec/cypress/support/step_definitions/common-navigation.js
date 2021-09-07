@@ -84,6 +84,8 @@ const pagePaths = {
   "choose programme success": "/schools/:id/choose-programme/success",
   "design your programme success":
     "/schools/:id/choose-programme/design-your-programme",
+  "school funded fip success":
+    "/schools/:id/choose-programme/school-funded-fip",
   "no early career teachers success":
     "/schools/:id/choose-programme/no-early-career-teachers",
   schools: "/schools",
