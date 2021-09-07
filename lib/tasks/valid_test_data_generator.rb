@@ -151,4 +151,80 @@ module ValidTestDataGenerator
       TRNGenerator.next
     end
   end
+
+  class NPQLeadProviderPopulater
+    class << self
+      def call(name:, total_schools: 10, participants_per_school: 10)
+        new(name: name).call(total_schools: total_schools, participants_per_school: participants_per_school)
+      end
+    end
+
+    def call(total_schools: 10, participants_per_school: 100)
+      generate_new_schools(count: total_schools, participants_per_school: participants_per_school)
+    end
+
+  private
+
+    attr_reader :lead_provider
+
+    def initialize(name:)
+      @lead_provider = ::NPQLeadProvider.find_or_create_by!(name: name)
+    end
+
+    def generate_new_schools(count:, participants_per_school:)
+      count.times { create_fip_school_with_cohort(urn: SchoolURNGenerator.next, participants_per_school: participants_per_school) }
+    end
+
+    def find_or_create_participants(school:, number_of_participants:)
+      generate_new_participants(school: school, count: number_of_participants)
+    end
+
+    def generate_new_participants(school:, count:)
+      while count.positive?
+        count -= 1
+        create_participant(school: school)
+      end
+    end
+
+    def create_participant(school:)
+      name = Faker::Name.name
+      user = User.create!(full_name: name, email: Faker::Internet.email(name: name))
+
+      validation_data = NPQValidationData.create!(
+        active_alert: "",
+        date_of_birth: Date.new(1990, 1, 1),
+        eligible_for_funding: true,
+        funding_choice: "",
+        headteacher_status: "",
+        nino: "",
+        school_urn: school.urn,
+        teacher_reference_number: TRNGenerator.next,
+        teacher_reference_number_verified: true,
+        npq_course: NPQCourse.all.sample,
+        npq_lead_provider: lead_provider,
+        user: user,
+      )
+
+      NPQ::CreateOrUpdateProfile.new(npq_validation_data: validation_data).call
+    end
+
+    def create_fip_school_with_cohort(urn:, participants_per_school:)
+      school = School.find_or_create_by!(urn: urn) do |s|
+        s.name = Faker::Company.name
+        s.address_line1 = Faker::Address.street_address
+        s.postcode = Faker::Address.postcode
+      end
+      find_or_create_participants(school: school, number_of_participants: participants_per_school)
+    end
+
+    def random_or_nil_trn
+      [true, false].sample ? nil : TRNGenerator.next
+    end
+
+    def weighted_choice(selection:, odds:)
+      selection.each_with_index.map { |item, index|
+        [item] * odds[index]
+      }.flatten.sample
+    end
+  end
 end
