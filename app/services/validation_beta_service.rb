@@ -1,35 +1,6 @@
 # frozen_string_literal: true
 
 class ValidationBetaService
-  def invite_schools(array_of_urns:, participant_research:, coordinator_research:)
-    School.where(urn: array_of_urns).find_each do |school|
-      induction_coordinator = school.induction_coordinators.first
-      if induction_coordinator.induction_coordinator_and_mentor?
-        participant_profiles = school.active_ecf_participant_profiles.where.not(id: induction_coordinator.mentor_profile.id)
-        ActiveRecord::Base.transaction do
-          FeatureFlag.activate(:participant_validation, for: school)
-          send_induction_coordinator_notification(participant_research, school)
-          invite_coordinator_and_mentor(induction_coordinator, school, coordinator_research)
-          invite_participants(participant_profiles, school, participant_research)
-        end
-      else
-        ActiveRecord::Base.transaction do
-          FeatureFlag.activate(:participant_validation, for: school)
-          send_induction_coordinator_notification(participant_research, school)
-          invite_participants(school.active_ecf_participant_profiles, school, participant_research)
-        end
-      end
-    end
-  end
-
-  def tell_induction_coordinators_to_check_ect_and_mentor_information
-    InductionCoordinatorProfile.find_each do |ic|
-      if ic.schools.not_opted_out.any? { |school| chosen_programme_and_not_in_beta(school) }
-        send_check_ect_and_mentor(ic)
-      end
-    end
-  end
-
   # ECTs who have not added their details for validation
   def tell_ects_to_add_validation_information
     ParticipantProfile::ECT
@@ -91,20 +62,23 @@ class ValidationBetaService
 
   def tell_induction_coordinators_who_are_mentors_to_add_validation_information
     ParticipantProfile::Mentor
-    .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort, :school, user: :induction_coordinator_profile)
-    .where(
-      request_for_details_sent_at: nil,
-      school_cohort: {
-        cohort: Cohort.current,
-      },
-      ecf_participant_eligibility: {
-        participant_profile_id: nil,
-      },
-      ecf_participant_validation_data: {
-        participant_profile_id: nil,
-      },
-    )
-    .find_each { |profile| send_induction_coordinators_who_are_mentors_to_add_validation_information(profile, profile.school) if profile.user.induction_coordinator? }
+      .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort, :school, user: :induction_coordinator_profile)
+      .where(
+        request_for_details_sent_at: nil,
+        school_cohort: {
+          cohort: Cohort.current,
+        },
+        ecf_participant_eligibility: {
+          participant_profile_id: nil,
+        },
+        ecf_participant_validation_data: {
+          participant_profile_id: nil,
+        },
+      ).find_each do |profile|
+        next unless profile.user.induction_coordinator?
+
+        send_induction_coordinators_who_are_mentors_to_add_validation_information(profile, profile.school)
+      end
   end
 
   def tell_induction_coordinators_we_asked_ects_and_mentors_for_information

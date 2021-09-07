@@ -40,20 +40,14 @@ module ApplicationHelper
   def participant_start_path(user)
     return participants_no_access_path unless user.teacher_profile.participant_profiles.active_record.ecf.any?
 
-    if FeatureFlag.active?(:participant_validation, for: user.teacher_profile&.participant_profiles&.ecf&.active_record&.first&.school)
-      participants_validation_start_path
-    else
-      dashboard_path
-    end
+    participants_validation_start_path
   end
 
 private
 
   def induction_coordinator_mentor_path(user)
-    if FeatureFlag.active?(:participant_validation, for: user.teacher_profile&.participant_profiles&.ecf&.active_record&.first&.school)
-      profile = user.participant_profiles.active_record.mentors.first
-      return participants_validation_start_path unless profile&.completed_validation_wizard?
-    end
+    profile = user.participant_profiles.active_record.mentors.first
+    return participants_validation_start_path unless profile&.completed_validation_wizard?
 
     induction_coordinator_dashboard_path(user)
   end

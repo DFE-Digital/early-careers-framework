@@ -48,18 +48,8 @@ RSpec.describe ApplicationHelper, type: :helper do
       end
     end
 
-    it "returns dashboard path for participants" do
-      expect(helper.profile_dashboard_path(participant_profile.user)).to eq("/dashboard")
-    end
-
-    context "when the validation feature flag is active for a participant" do
-      before do
-        FeatureFlag.activate(:participant_validation, for: participant_school)
-      end
-
-      it "returns the validation start path" do
-        expect(helper.profile_dashboard_path(participant_profile.user)).to eq("/participants/validation")
-      end
+    it "returns the validation start path" do
+      expect(helper.profile_dashboard_path(participant_profile.user)).to eq("/participants/validation")
     end
 
     it "returns the dashboard path for lead providers" do

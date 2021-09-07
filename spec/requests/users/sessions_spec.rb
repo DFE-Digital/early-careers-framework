@@ -163,20 +163,9 @@ RSpec.describe "Users::Sessions", type: :request do
       let(:user) { create(:participant_profile, :ect).user }
       let(:school) { user.teacher_profile.early_career_teacher_profile.school }
 
-      it "redirects to generic dashboard on successful login" do
+      it "redirects to participant validation on successful login" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }
-        expect(response).to redirect_to(dashboard_path)
-      end
-
-      context "when the validations feature flag is active for the user" do
-        before do
-          FeatureFlag.activate(:participant_validation, for: school)
-        end
-
-        it "redirects to participant validation on successful login" do
-          post "/users/sign_in_with_token", params: { login_token: user.login_token }
-          expect(response).to redirect_to(participants_validation_start_path)
-        end
+        expect(response).to redirect_to(participants_validation_start_path)
       end
     end
 

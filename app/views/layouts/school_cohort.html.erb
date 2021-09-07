@@ -1,6 +1,5 @@
 <%= render layout: 'layouts/width_container' do %>
   <%= render SchoolRecruitedTransitionComponent.new(school_cohort: @school_cohort) if @school_cohort %>
-  <% if FeatureFlag.active?(:participant_validation, for: current_user.teacher_profile&.participant_profiles&.ecf&.active_record&.first&.school) %>
     <% if current_user.induction_coordinator_and_mentor? && !current_user.mentor_profile.completed_validation_wizard? %>
       <%= render GovukComponent::NotificationBanner.new(title: "Important", html_attributes: { data: { test: "add-mentor-information-banner" } }) do |banner|
         banner.slot(
@@ -11,6 +10,5 @@
         )
       end %>
     <% end %>
-  <% end %>
   <%= yield %>
 <% end %>
