@@ -20,7 +20,10 @@ class UTMService
     participant_validation_research: "participant-validation-research",
     participant_validation_sit_notification: "participant-validation-sit-notification",
     check_ect_and_mentor_info: "check-ect-and-mentor-info",
-    we_need_information_for_your_programme: "we-need-information-for-your-programme",
+    ects_to_add_validation_information: "ects-to-add-validation-information",
+    fip_mentors_to_add_validation_information: "fip-mentors-to-add-validation-information",
+    cip_mentors_to_add_validation_information: "cip-mentors-to-add-validation-information",
+    induction_coordinators_who_are_mentors_to_add_validation_information: "induction-coordinators-who-are-mentors-to-add-validation-information",
     asked_ects_and_mentors_for_information: "asked-ects-and-mentors-for-information",
   }.freeze
 
@@ -39,7 +42,10 @@ class UTMService
     participant_validation_beta: "participant-validation-beta",
     participant_validation_research: "participant-validation-research",
     check_ect_and_mentor_info: "check-ect-and-mentor-info",
-    we_need_information_for_your_programme: "we-need-information-for-your-programme",
+    ects_to_add_validation_information: "ects-to-add-validation-information",
+    fip_mentors_to_add_validation_information: "fip-mentors-to-add-validation-information",
+    cip_mentors_to_add_validation_information: "cip-mentors-to-add-validation-information",
+    induction_coordinators_who_are_mentors_to_add_validation_information: "induction-coordinators-who-are-mentors-to-add-validation-information",
     asked_ects_and_mentors_for_information: "asked-ects-and-mentors-for-information",
   }.freeze
 
