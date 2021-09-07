@@ -384,6 +384,44 @@
         }
       }
     },
+    "/api/v1/participant-declarations.csv": {
+      "get": {
+        "summary": "Retrieve all participant declarations in CSV format",
+        "operationId": "ecf_participant_declarations_csv",
+        "tags": [
+          "ECF participant declarations"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A CSV file of participant declarations",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultipleParticipantDeclarationsCsvResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/participants": {
       "get": {
         "summary": "Retrieve multiple participants",
@@ -1192,7 +1230,6 @@
       "MultipleECFParticipantsCsvResponse": {
         "description": "A list of ECF participants in the Comma Separated Value (CSV) format",
         "type": "string",
-        "format": "base64",
         "required": [
           "data"
         ],
@@ -1282,7 +1319,6 @@
       "MultipleNPQApplicationsCsvResponse": {
         "description": "A list of participants in the Comma Separated Value (CSV) format",
         "type": "string",
-        "format": "base64",
         "required": [
           "data"
         ],
@@ -1330,6 +1366,22 @@
             ]
           }
         }
+      },
+      "MultipleParticipantDeclarationsCsvResponse": {
+        "description": "A list of participant declarations in the Comma Separated Value (CSV) format",
+        "type": "string",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ParticipantDeclarationCsvRow"
+            }
+          }
+        },
+        "example": "id,participant_id,declaration_type,course_identifier,eligible_for_payment,declaration_date\nc88eb9a9-773a-4f53-9716-121b981154d8,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z\n31a521ec-82c5-451c-aea3-426523f1facc,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z\n"
       },
       "MultipleParticipantDeclarationsResponse": {
         "description": "A list of participant declarations",
@@ -1891,6 +1943,66 @@
           "declaration_type": "started",
           "declaration_date": "2021-05-31T02:21:32.000Z",
           "course_identifier": "ecf-mentor"
+        }
+      },
+      "ParticipantDeclarationCsvRow": {
+        "description": "The details of a participant declaration",
+        "type": "object",
+        "required": [
+          "id",
+          "participant_id",
+          "declaration_type",
+          "course_identifier",
+          "eligible_for_payment",
+          "declaration_date"
+        ],
+        "properties": {
+          "id": {
+            "description": "The unique identifier of the participant declaration record",
+            "type": "string",
+            "format": "uuid",
+            "example": "db3a7848-7308-4879-942a-c4a70ced400a"
+          },
+          "participant_id": {
+            "description": "The unique identifier of the participant record the declaration refers to",
+            "type": "string",
+            "format": "uuid",
+            "example": "bb36d74a-68a7-47b6-86b6-1fd0d141c590"
+          },
+          "declaration_type": {
+            "description": "The event declaration type",
+            "type": "string",
+            "enum": [
+              "started",
+              "retained-1",
+              "retained-2",
+              "retained-3",
+              "retained-4",
+              "completed"
+            ],
+            "example": "started"
+          },
+          "declaration_date": {
+            "description": "The event declaration date",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:21:32.000Z"
+          },
+          "course_identifier": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "ecf-induction",
+              "ecf-mentor",
+              "npq-leading-teaching",
+              "npq-leading-teaching-development",
+              "npq-leading-behaviour-culture",
+              "npq-headship",
+              "npq-senior-leadership",
+              "npq-executive-leadership"
+            ],
+            "example": "ecf-induction"
+          }
         }
       },
       "ParticipantDeclarationRecordedResponse": {

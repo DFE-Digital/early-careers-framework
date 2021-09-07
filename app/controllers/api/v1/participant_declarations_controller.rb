@@ -6,6 +6,7 @@ module Api
       include ApiAuditable
       include ApiTokenAuthenticatable
       include ApiPagination
+      include ApiCsv
 
       def create
         params = HashWithIndifferentAccess.new({ cpd_lead_provider: cpd_lead_provider }).merge(permitted_params["attributes"] || {})
@@ -13,8 +14,16 @@ module Api
       end
 
       def index
-        participant_declarations_hash = ParticipantDeclarationSerializer.new(paginate(query_scope)).serializable_hash
-        render json: participant_declarations_hash.to_json
+        respond_to do |format|
+          format.json do
+            participant_declarations_hash = ParticipantDeclarationSerializer.new(paginate(query_scope)).serializable_hash
+            render json: participant_declarations_hash.to_json
+          end
+          format.csv do
+            participant_declarations_hash = ParticipantDeclarationSerializer.new(query_scope).serializable_hash
+            render body: to_csv(participant_declarations_hash)
+          end
+        end
       end
 
     private
@@ -35,6 +44,10 @@ module Api
 
       def cpd_lead_provider
         current_user
+      end
+
+      def participant_declarations
+        ParticipantDeclaration.for_lead_provider(cpd_lead_provider)
       end
 
       def permitted_params
