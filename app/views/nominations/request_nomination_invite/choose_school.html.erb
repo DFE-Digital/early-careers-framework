@@ -1,4 +1,4 @@
-<% content_for :title, "What's the name of your school?" %>
+<% content_for :title, "What’s the name of your school?" %>
 <% content_for :before_content, govuk_back_link(text: "Back", href: choose_location_request_nomination_invite_path(continue: true)) %>
 
 <%= form_with model: @nomination_request_form, url: choose_school_request_nomination_invite_path, method: :post do |f| %>
