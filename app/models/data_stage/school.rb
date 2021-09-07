@@ -54,15 +54,5 @@ module DataStage
         start_year: start_year,
       )
     end
-
-    # def log_create
-    #   school_changes.create!(status: :added)
-    # end
-    #
-    # def log_changes
-    #   relevant_changes = changes.except(:updated_at, :school_status_code, :school_status_name)
-    #
-    #   school_changes.create!(attribute_changes: relevant_changes, status: :changed) if relevant_changes.any?
-    # end
   end
 end
