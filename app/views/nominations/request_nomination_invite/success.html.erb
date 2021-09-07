@@ -5,13 +5,15 @@
     <%= govuk_panel title: "Your school has been sent a link", body: nil, classes: "govuk-!-margin-bottom-8" %>
 
     <h2 class="govuk-heading-m">What happens next</h2>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>we have sent a link to your school’s email address on our register, Get information about schools (GIAS)
-gister, </li>
-      <li>
-       it will be an administration email, for example, office@, admin@ or head@
-      </li>
-       <li>If you don't receive an email, <%= govuk_link_to "sign in to DfE", "https://services.signin.education.gov.uk/" %> and make sure that your GIAS email address is up to date. When this has been updated you can <%= govuk_link_to "send a new link", choose_location_request_nomination_invite_path %></li>
-    </ul>
+       <p>Use the link to sign in to our service to:</p> 
+       <ul class="govuk-list govuk-list--bullet">
+        		<li>nominate an induction tutor for your school</li>
+        		<li>tell us how you'll run your early career teacher training programme</li>
+       </ul>
+    
+       <h2 class="govuk-heading-m">If you do not get an email</h2>
+       <p><%= govuk_link_to "Sign in to the DfE", "https://services.signin.education.gov.uk/" %> and make sure that your school's email address is up to date in GIAS. 
+       <p>When this has been updated, you can <%= govuk_link_to "send your school a new link", choose_location_request_nomination_invite_path %>.</p>
+
   </div>
 </div>
