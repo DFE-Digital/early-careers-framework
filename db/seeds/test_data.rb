@@ -112,6 +112,17 @@ School.find_or_create_by!(urn: "181818") do |school|
   InductionCoordinatorProfile.find_or_create_by!(user: user) do |profile|
     profile.update!(schools: [school])
   end
+  SchoolLocalAuthority.find_or_create_by!(school: school, local_authority: local_authority, start_year: 2019)
+end
+
+School.find_or_create_by!(urn: "181815") do |school|
+  school.name = "ZZ TEST CIP only school 2"
+  school.postcode = "XM4 5HQ"
+  school.address_line1 = "South pole"
+  school.primary_contact_email = "cip-only-school-info-2@example.com"
+  school.school_status_code = 1
+  school.school_type_code = 10
+  SchoolLocalAuthority.find_or_create_by!(school: school, local_authority: local_authority, start_year: 2019)
 end
 
 30.times do |idx|

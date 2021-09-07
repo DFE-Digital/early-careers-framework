@@ -45,22 +45,46 @@ RSpec.describe InviteSchools do
     end
 
     it "sends the nomination email" do
-      travel_to Time.utc("2000-1-1")
-      expect(SchoolMailer).to receive(:nomination_email).with(
-        hash_including(
-          school_name: String,
-          nomination_url: String,
-          recipient: school.primary_contact_email,
-          expiry_date: "22/01/2000",
-        ),
-      ).and_call_original
+      travel_to(Time.utc("2000-1-1")) do
+        expect(SchoolMailer).to receive(:nomination_email).with(
+          hash_including(
+            school_name: String,
+            nomination_url: String,
+            recipient: school.primary_contact_email,
+            expiry_date: "22/01/2000",
+          ),
+        ).and_call_original
 
-      invite_schools.run [school.urn]
+        invite_schools.run [school.urn]
+      end
     end
 
     it "sets the notify id on the nomination email record" do
       invite_schools.run [school.urn]
       expect(nomination_email.notify_id).to eq "notify_id"
+    end
+
+    context "when the school is cip only" do
+      let(:school) do
+        create(:school,
+               :cip_only,
+               primary_contact_email: primary_contact_email)
+      end
+
+      it "still sends the nomination email" do
+        travel_to(Time.utc("2000-1-1")) do
+          expect(SchoolMailer).to receive(:nomination_email).with(
+            hash_including(
+              school_name: String,
+              nomination_url: String,
+              recipient: school.primary_contact_email,
+              expiry_date: "22/01/2000",
+            ),
+          ).and_call_original
+
+          invite_schools.run [school.urn]
+        end
+      end
     end
 
     context "when school primary contact email is empty" do
@@ -333,6 +357,26 @@ RSpec.describe InviteSchools do
             class: NominationEmail,
             sent_to: secondary_email,
             school: school,
+          ),
+        )
+      end
+    end
+  end
+
+  describe "#invite_cip_only_schools" do
+    context "when the school has a primary contact email" do
+      let!(:cip_only_school) { create(:school, :cip_only, school_type_code: 10) }
+      let!(:welsh_cip_only_school) { create(:school, :cip_only, school_type_code: 30) }
+      let!(:section_41_school) { create(:school, :cip_only, school_type_code: 10, section_41_approved: true) }
+      let!(:fip_school) { create(:school, :open) }
+
+      it "sends invites to non-welsh cip-only schools" do
+        expect { InviteSchools.new.invite_cip_only_schools }.to change { NominationEmail.count }.by(1)
+        expect(an_instance_of(InviteSchools)).to delay_execution_of(:send_cip_only_invite_email).with(
+          an_object_having_attributes(
+            class: NominationEmail,
+            sent_to: cip_only_school.contact_email,
+            school: cip_only_school,
           ),
         )
       end

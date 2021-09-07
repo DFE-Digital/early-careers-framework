@@ -10,7 +10,7 @@ class InviteSchools
     logger.info "Emailing schools"
 
     school_urns.each do |urn|
-      school = find_eligible_school(urn)
+      school = find_school(urn)
       next if school.nil?
 
       nomination_email = NominationEmail.create_nomination_email(
@@ -63,7 +63,7 @@ class InviteSchools
 
   def invite_to_beta(school_urns)
     school_urns.each do |urn|
-      school = find_eligible_school(urn)
+      school = find_school(urn)
       next if school.nil?
 
       if FeatureFlag.active?(:induction_tutor_manage_participants, for: school)
@@ -230,6 +230,23 @@ class InviteSchools
     end
   end
 
+  def invite_cip_only_schools
+    School.currently_open.where(school_type_code: GiasTypes::CIP_ONLY_EXCEPT_WELSH_CODES).where(section_41_approved: false).find_each do |school|
+      if school.contact_email.blank?
+        logger.info "No contact details for school urn: #{school.urn} ... skipping"
+        next
+      end
+
+      nomination_email = NominationEmail.create_nomination_email(
+        sent_at: Time.zone.now,
+        sent_to: school.contact_email,
+        school: school,
+      )
+
+      delay(queue: "mailers", priority: 1).send_cip_only_invite_email(nomination_email)
+    end
+  end
+
 private
 
   def private_beta_start_url
@@ -270,9 +287,9 @@ private
     sign_in_url_with_campaign(:add_participants)
   end
 
-  def find_eligible_school(urn)
-    school = School.eligible.find_by(urn: urn)
-    logger.info "School not found, urn: #{urn} ... skipping" if school.nil?
+  def find_school(urn)
+    school = School.find_by(urn: urn)
+    logger.info "School not found, urn: #{urn} ... skipping" unless school&.can_access_service?
     school
   end
 
@@ -312,7 +329,7 @@ private
 
   def invite_group(school_urns, send_method)
     school_urns.each do |urn|
-      school = find_eligible_school(urn)
+      school = find_school(urn)
       next if school.nil?
 
       if school.contact_email.blank?
@@ -344,6 +361,16 @@ private
 
   def send_federation_invite_email(nomination_email)
     notify_id = SchoolMailer.federation_invite_email(
+      recipient: nomination_email.sent_to,
+      school_name: nomination_email.school.name,
+      nomination_url: nomination_email.nomination_url,
+    ).deliver_now.delivery_method.response.id
+
+    nomination_email.update!(notify_id: notify_id)
+  end
+
+  def send_cip_only_invite_email(nomination_email)
+    notify_id = SchoolMailer.cip_only_invite_email(
       recipient: nomination_email.sent_to,
       school_name: nomination_email.school.name,
       nomination_url: nomination_email.nomination_url,
