@@ -28,7 +28,8 @@
       <%= f.govuk_text_field :national_insurance_number,
         width: "three-quarters",
         label: { text: "National Insurance number (optional)", class: "govuk-label bold-label" },
-        hint: { text: "This will help us match your details" }
+        hint: { text: "This will help us match your details" },
+        spellcheck: false
       %>
       <%= f.govuk_submit "Continue" %>
     <% end %>

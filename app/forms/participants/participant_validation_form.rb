@@ -33,7 +33,7 @@ module Participants
         trn: trn&.squish,
         name: name&.squish,
         date_of_birth: date_of_birth,
-        national_insurance_number: national_insurance_number&.squish,
+        national_insurance_number: tidy_national_insurance_number,
         validation_attempts: validation_attempts.to_i, # coerce nil to 0
       }
     end
@@ -121,7 +121,7 @@ module Participants
     def teacher_details
       @trn = trn&.squish
       @name = name&.squish
-      @national_insurance_number = national_insurance_number&.squish
+      @national_insurance_number = tidy_national_insurance_number
 
       if trn.blank?
         errors.add(:trn, :blank)
@@ -145,9 +145,15 @@ module Participants
         errors.add(:date_of_birth, :in_the_future)
       end
 
-      if national_insurance_number.present? && national_insurance_number.squish !~ NINO_REGEX
+      if national_insurance_number.present? && national_insurance_number !~ NINO_REGEX
         errors.add(:national_insurance_number, :invalid)
       end
+    end
+
+    def tidy_national_insurance_number
+      return if national_insurance_number.blank?
+
+      national_insurance_number.gsub(/\s+/, "").upcase
     end
   end
 end

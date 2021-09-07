@@ -308,7 +308,7 @@ module ParticipantValidationSteps
       trn: "1234567",
       full_name: "Sally Teacher",
       date_of_birth: Date.new(1998, 3, 22),
-      nino: "",
+      nino: nil,
     }
   end
 end
