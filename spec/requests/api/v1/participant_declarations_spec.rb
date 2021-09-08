@@ -247,16 +247,21 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         end
       end
 
-      context "when a declartion id filter used" do
+      context "when querying a single participant declaration" do
         let(:expected_response) do
-          expected_json_response(declaration: participant_declaration, profile: ect_profile)
+          expected_single_json_response(declaration: participant_declaration, profile: ect_profile)
         end
 
-        it "loads only a declaration for the chosen declaration id" do
-          get "/api/v1/participant-declarations", params: { filter: { id: participant_declaration.id } }
+        it "loads declaration with the specific id" do
+          get "/api/v1/participant-declarations/#{participant_declaration.id}"
           expect(response.status).to eq 200
 
           expect(JSON.parse(response.body)).to eq(expected_response)
+        end
+
+        it "returns 404 if participant declaration does not exist" do
+          get "/api/v1/participant-declarations/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
+          expect(response.status).to eq 404
         end
       end
     end
@@ -330,18 +335,29 @@ private
     {
       "data" =>
           [
-            {
-              "id" => declaration.id,
-              "type" => "participant-declaration",
-              "attributes" => {
-                "participant_id" => profile.user.id,
-                "declaration_type" => "started",
-                "declaration_date" => declaration.declaration_date.rfc3339,
-                "course_identifier" => course_identifier,
-                "eligible_for_payment" => eligible_for_payment,
-              },
-            },
+            single_json_declaration(declaration: declaration, profile: profile, course_identifier: course_identifier, eligible_for_payment: eligible_for_payment),
           ],
+    }
+  end
+
+  def expected_single_json_response(declaration:, profile:, course_identifier: "ecf-induction", eligible_for_payment: false)
+    {
+      "data" =>
+          single_json_declaration(declaration: declaration, profile: profile, course_identifier: course_identifier, eligible_for_payment: eligible_for_payment),
+    }
+  end
+
+  def single_json_declaration(declaration:, profile:, course_identifier: "ecf-induction", eligible_for_payment: false)
+    {
+      "id" => declaration.id,
+      "type" => "participant-declaration",
+      "attributes" => {
+        "participant_id" => profile.user.id,
+        "declaration_type" => "started",
+        "declaration_date" => declaration.declaration_date.rfc3339,
+        "course_identifier" => course_identifier,
+        "eligible_for_payment" => eligible_for_payment,
+      },
     }
   end
 end

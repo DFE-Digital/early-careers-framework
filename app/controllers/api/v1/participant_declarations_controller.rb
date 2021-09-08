@@ -27,6 +27,16 @@ module Api
         end
       end
 
+      def show
+        record = ParticipantDeclaration.find_by(id: params[:id])
+
+        if record.present?
+          render json: ParticipantDeclarationSerializer.new(record).serializable_hash.to_json
+        else
+          head :not_found
+        end
+      end
+
     private
 
       def query_scope
