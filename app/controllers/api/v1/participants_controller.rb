@@ -8,6 +8,7 @@ module Api
       include ApiTokenAuthenticatable
       include ApiPagination
       include ApiCsv
+      include ApiFilter
 
       def index
         respond_to do |format|
@@ -40,11 +41,6 @@ module Api
         LeadProviderApiToken.joins(cpd_lead_provider: [:lead_provider])
       end
 
-      def updated_since
-        value = params.dig(:filter, :updated_since)
-        URI.decode_www_form_component(value) if value.present?
-      end
-
       def lead_provider
         current_user.lead_provider
       end
@@ -59,9 +55,7 @@ module Api
                                       },
                                     )
 
-        if updated_since.present?
-          participants = participants.changed_since(updated_since)
-        end
+        participants = participants.changed_since(updated_since) if updated_since.present?
 
         participants
       end

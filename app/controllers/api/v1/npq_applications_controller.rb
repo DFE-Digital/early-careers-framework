@@ -7,6 +7,7 @@ module Api
     class NPQApplicationsController < Api::ApiController
       include ApiTokenAuthenticatable
       include ApiPagination
+      include ApiFilter
 
       def index
         respond_to do |format|
@@ -51,16 +52,8 @@ module Api
 
       def query_scope
         scope = npq_lead_provider.npq_profiles.includes(:user, :npq_course)
-        scope = scope.where("updated_at > ?", Time.iso8601(updated_since_filter)) if updated_since_filter.present?
+        scope = scope.where("updated_at > ?", updated_since) if updated_since.present?
         scope
-      end
-
-      def filter
-        params[:filter] ||= {}
-      end
-
-      def updated_since_filter
-        filter[:updated_since]
       end
 
       def access_scope

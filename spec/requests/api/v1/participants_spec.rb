@@ -125,6 +125,12 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
             expect(parsed_response["data"].size).to eql(3)
           end
 
+          it "returns users changed since the updated_since parameter with other formats" do
+            User.first.update!(updated_at: Date.new(1970, 1, 1))
+            get "/api/v1/participants", params: { filter: { updated_since: "1980-01-01T00%3A00%3A00%2B01%3A00" } }
+            expect(parsed_response["data"].size).to eql(3)
+          end
+
           context "when updated_since parameter is encoded/escaped" do
             it "unescapes the value and returns users changed since the updated_since date" do
               since = URI.encode_www_form_component(1.day.ago.iso8601)
