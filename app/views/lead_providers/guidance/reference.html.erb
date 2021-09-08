@@ -161,20 +161,20 @@
 
 <h3 id="csv-file-postman" class="govuk-heading-m">Using Postman to submit from Test runner</h3>
 
-<p class="govuk-body">Since the declarations service is API only, uploading CSV files for declarations is not directly supported. However, it is possible to use a script runner to achieve this functionality.</p>
+<p class="govuk-body">As the declarations service is API only, uploading CSV files directly is not possible.. However, this can be done with a script runner.</p>
+<p class="govuk-body">To do this, you need to create a collection which supports a single declaration test with a <code>Pre-request script</code>.</p>
 
-<p class="govuk-body">In order to do this, you will need to create a collection which supports a single declaration test with a Pre-request script.</p>
+<h3 id="csv-collection" class="govuk-heading-s">Create a new collection</h3>
 
-<p class="govuk-body">For this script, you will need to set the Authorization to the following value:</p>
-<p class="govuk-body"><code>
+<p class="govuk-body">Create a New Collection and name it "CSV Started Declaration Submission"</p>
+
+<p class="govuk-body">For this collection, you will need to set <code>Authorization</code> to the following value:</p>
+<p class="govuk-body"><pre><code>
 Type: Bearer Token
 Token: {{bearerToken}}
-</code></p>
+</code></pre></p>
 
-<p class="govuk-body">The body should only have a single line containing a variable which will be populated by the Pre-request Script</p>
-<p class="govuk-body"><code>{{request_body}}</code></p>
-
-<p class="govuk-body">The Pre-request Script should contain the following code to set the "request_body" previously set in the Body</p>
+<p class="govuk-body">The <code>Pre-request script</code> should contain the following code to set the "request_body" previously set in the Body</p>
 <%=postman_code_sample(%Q[pm.environment.set('request_body', JSON.stringify({
   "data": {
     "type": "participant-declaration",
@@ -187,9 +187,75 @@ Token: {{bearerToken}}
   }
 }))])%>
 
-<p class="govuk-body">The Test should contain the following code to determine </p>
+<p class="govuk-body">The <code>Test</code> should contain the following to determine the success of the declaration submission.</p>
 <%=postman_code_sample(%Q[pm.test("Send declaration via csv file", function(){
   pm.response.to.have.status(200);
 })])%>
+
+<p class="govuk-body">
+  Save the collection using the icon at the top right
+</p>
+
+<p class="govuk-body">
+  This collection is a wrapper within which you will need a single test with an endpoint to run against. This test will contain just a single line which the pre-request script will update for each iteration of the test using the contents of a csv file chosen when running the test Using "Runner"
+</p>
+
+<h3 id="csv-collection" class="govuk-heading-s">Create a new request</h3>
+
+<p class="govuk-body">
+  Under the CSV Started Declaration Submission, select the "Add a request" to create the new action and endpoint.
+</p>
+
+<p class="govuk-body">
+  Name this test <code>Declare a participant from the CSV file</code>
+</p>
+
+<p class="govuk-body">
+  Set the operation type to <code>POST</code> and the endpoint to <code>{{baseUrl}}/api/v1/participant-declarations</code>
+</p>
+
+<p class="govuk-body">
+  Set the Body type to "raw" and enter
+  <code>
+    {{request_body}}
+  </code>
+</p>
+
+<p class="govuk-body">Save the request using the icon at the top right of the screen.</p>
+
+<h3 id="update-environment" class="govuk-heading-s">Populate the required environment</h3>
+
+<p class="govuk-body">Before making submissions, you need to create the two variables <code>{{baseUrl}}</code> and <code>{{bearerToken}}</code></p>
+
+<p class="govuk-body">These are required to be set as variables for the environment in which you wish to run this selection of declarations.</p>
+
+<p class="govuk-body">Choose the Variables tab and create the baseUrl and bearerToken variables.</p>
+
+<p class="govuk-body">Set these to the API URL address and Token you have for that location.</p>
+
+<h3 id="create-csv">Create a CSV file for upload</h3>
+
+<p class="govuk-body">The script requires populating from a CSV file. This file requires the headings:</p>
+
+<ul><li>id</li><li>declaration_date</li><li>participant_type</li></ul>
+
+<p class="govuk-body">where</p>
+
+<ul><li>id - the participant id</li><li>declaration_date - the date of the declaration in RCF3339 format (i.e. yyyy-mm-ddThh:mm:ssZ)</li><li>participant_type - ecf, or mentor</li></ul>
+
+<p class="govuk-body">Note the id and participant_type fields can be used directly from the participants download csv, but the declaration_date column would need to be added to this in the correct format.</p>
+
+<p class="govuk-body">Save this file as <code>declaration_submission_ddmmyyyy.csv</code> in a location you can attach the script runner to.</p>
+
+<h3 id="run-script">Use Postman Runner to submit multiple declarations</h3>
+
+<p class="govuk-body">From Postman, select the Runner icon from the right of the bottom toolbar</p>
+
+<p class="govuk-body">Drag the CSV Started Declaration Submission collection into the RUN ORDER box</p>
+
+<p class="govuk-body">Select the Data </p>
+
+<p class="govuk-body"></p>
+
 
 <%= render(ApiDocs::ApiReferenceComponent.new(@api_reference)) %>
