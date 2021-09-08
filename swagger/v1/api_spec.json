@@ -334,7 +334,7 @@
             "name": "filter",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/ListFilter"
+              "$ref": "#/components/schemas/ListFilterDeclarations"
             },
             "style": "deepObject",
             "explode": true,
@@ -1326,6 +1326,17 @@
       },
       "ListFilter": {
         "description": "Filter a list of records to return more specific results",
+        "type": "object",
+        "properties": {
+          "updated_since": {
+            "description": "Return only records that have been updated since this date and time (ISO 8601 date format)",
+            "type": "string",
+            "example": "2021-05-13T11:21:55Z"
+          }
+        }
+      },
+      "ListFilterDeclarations": {
+        "description": "Filter a list of declarations records to return more specific results",
         "type": "object",
         "properties": {
           "updated_since": {
