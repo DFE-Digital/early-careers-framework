@@ -8,7 +8,7 @@ class InductionChoiceForm
   attr_writer :cohort
   attr_accessor :school
 
-  PROGRAMME_OPTIONS = %i[full_induction_programme core_induction_programme school_funded_fip design_our_own no_early_career_teachers].freeze
+  PROGRAMME_OPTIONS = %i[full_induction_programme core_induction_programme design_our_own school_funded_fip no_early_career_teachers].freeze
 
   def attributes
     { programme_choice: nil }
