@@ -1,15 +1,12 @@
 # frozen_string_literal: true
 
 module Participants
-  module Withdraw
+  module Defer
     class NPQ < ::Participants::Base
       class << self
         def reasons
           %w[
-            left-teaching-profession
-            moved-school
-            career-break
-            other
+            adoption
           ].freeze
         end
       end

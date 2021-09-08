@@ -1,18 +1,15 @@
 # frozen_string_literal: true
 
 module Participants
-  module Withdraw
+  module Defer
     class ECF < ::Participants::Base
       class << self
         def reasons
           %w[
-            left-teaching-profession
-            moved-school
-            mentor-no-longer-being-mentor
-            school-left-fip
-            career-break
-            passed-induction
-            other
+            parental-leave
+            adoption
+            bereavement
+            long-term-sickness
           ].freeze
         end
       end

@@ -38,7 +38,7 @@ properties:
           eligible_for_funding: null
           pupil_premium_uplift: null
           sparsity_uplift: null
-          training_status: active
+          training_status: deferred
       - id: eb475531-bf08-48ae-b0ef-c2ff5e5bdef0
         type: participant
         attributes:

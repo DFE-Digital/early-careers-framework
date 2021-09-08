@@ -9,6 +9,7 @@ module Api
       include ApiPagination
       include ApiCsv
       include ApiFilter
+      rescue_from ActiveRecord::RecordInvalid, with: :invalid_transition
 
       def index
         respond_to do |format|
@@ -23,19 +24,33 @@ module Api
         end
       end
 
+      def defer
+        perform_action(service_namespace: ::Participants::Defer)
+      end
+
       def withdraw
-        params = HashWithIndifferentAccess.new({ cpd_lead_provider: current_user, participant_id: participant_id }).merge(permitted_params["attributes"] || {})
-        profile = WithdrawParticipant.call(params)
-        render json: ParticipantSerializer.new(profile.user).serializable_hash.to_json
+        perform_action(service_namespace: ::Participants::Withdraw)
       end
 
       def change_schedule
-        params = HashWithIndifferentAccess.new({ cpd_lead_provider: current_user, participant_id: participant_id }).merge(permitted_params["attributes"] || {})
-        profile = ChangeParticipantSchedule.call(params)
-        render json: ParticipantSerializer.new(profile.user).serializable_hash.to_json
+        perform_action(service_namespace: ::Participants::ChangeSchedule)
       end
 
     private
+
+      def perform_action(service_namespace:)
+        params = HashWithIndifferentAccess.new({ cpd_lead_provider: current_user, participant_id: participant_id }).merge(permitted_params["attributes"] || {})
+        profile = recorder(service_namespace: service_namespace, params: params).call(params: params)
+        render json: ParticipantSerializer.new(profile.user).serializable_hash.to_json
+      end
+
+      def recorder(service_namespace:, params:)
+        "#{service_namespace}::#{::Factories::CourseIdentifier.call(params[:course_identifier])}".constantize
+      end
+
+      def invalid_transition(exception)
+        render json: { errors: Api::ParamErrorFactory.new(error: "Invalid action", params: exception).call }, status: :unprocessable_entity
+      end
 
       def access_scope
         LeadProviderApiToken.joins(cpd_lead_provider: [:lead_provider])

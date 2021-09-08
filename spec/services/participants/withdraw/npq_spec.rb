@@ -33,10 +33,16 @@ RSpec.describe Participants::Withdraw::NPQ do
       expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
     end
 
+    it "creates a withdrawn state when that user is deferred" do
+      Participants::Defer::NPQ.call(params: participant_params.merge(reason: "adoption"))
+      expect { described_class.call(params: participant_params) }
+        .to change { ParticipantProfileState.count }.by(1)
+    end
+
     it "fails when the participant is already withdrawn" do
       described_class.call(params: participant_params)
       expect { described_class.call(params: participant_params) }
-        .to raise_error(ActionController::ParameterMissing)
+        .to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "fails when course is for an early career teacher" do

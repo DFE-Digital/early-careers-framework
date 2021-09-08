@@ -1,4 +1,4 @@
-description: "The withdrawal request for a participant"
+description: "The deferral request for a participant"
 type: object
 required:
   - data
@@ -15,4 +15,4 @@ properties:
         type: string
         example: participant
       attributes:
-        $ref: "#/components/schemas/ECFParticipantWithdraw"
+        $ref: "#/components/schemas/ECFParticipantDefer"

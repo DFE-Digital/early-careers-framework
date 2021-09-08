@@ -15,6 +15,7 @@ RSpec.describe LeadProviderApiSpecification do
         /api/v1/participant-declarations.csv
         /api/v1/participants
         /api/v1/participants.csv
+        /api/v1/participants/{id}/defer
         /api/v1/participants/{id}/withdraw
         /api/v1/participants/{id}/change-schedule
       ]
