@@ -57,7 +57,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
           }
         end
 
-        schema "$ref": "#/components/schemas/ParticipantDeclarationRecordedResponse"
+        schema "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
         run_test!
       end
 
@@ -187,7 +187,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
                 description: "The ID of the participant declaration ID"
 
       response "200", "A single participant declaration" do
-        schema({ "$ref": "#/components/schemas/ParticipantDeclarationsRecordedResponse" }, content_type: "application/vnd.api+json")
+        schema({ "$ref": "#/components/schemas/SingleParticipantDeclarationResponse" }, content_type: "application/vnd.api+json")
 
         run_test!
       end
