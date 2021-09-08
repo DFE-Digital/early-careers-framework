@@ -3,7 +3,7 @@ groups:
     rules:
       - alert: RequestsFailuresElevated
         # Condition for alerting
-        expr: ((sum(rate(requests{app="ecf-staging", status_range=~"0xx|4xx|5xx"}[5m]))) / (sum(rate(requests{app="ecf-staging"}[5m])) ) > 0.1) and ((sum(rate(requests{app="ecf-staging"}[5m])) > 20)
+        expr: (sum(rate(requests{app="ecf-staging", status_range=~"0xx|5xx"}[5m]))) / (sum(rate(requests{app="ecf-staging"}[5m])) ) > 0.1)
         # Annotation - additional informational labels to store more information
         annotations:
           summary: High rate of failing requests
