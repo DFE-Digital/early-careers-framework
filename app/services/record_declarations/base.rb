@@ -39,7 +39,7 @@ module RecordDeclarations
       validate_provider!
       validate_milestone!
 
-      raise ActiveRecord::RecordNotUnique, "Declaration with given participant ID already exists" if record_exist?
+      raise ActiveRecord::RecordNotUnique, "Declaration with given participant ID already exists" if record_exists_with_different_declaration_date?
 
       declaration = find_or_create_record!
 
@@ -89,12 +89,11 @@ module RecordDeclarations
       end
     end
 
-    def record_exist?
+    def record_exists_with_different_declaration_date?
       declaration = self.class.declaration_model.find_by(
         user: user,
         course_identifier: course_identifier,
         declaration_type: declaration_type,
-        cpd_lead_provider: cpd_lead_provider,
       )
 
       declaration.present? && declaration.declaration_date.rfc3339 != Time.zone.parse(declaration_date)&.rfc3339
