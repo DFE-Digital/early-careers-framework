@@ -1,0 +1,19 @@
+<% content_for :title, "Choice saved - training provider funded by your school" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= govuk_panel(
+      title: "Your choice has been saved for #{@cohort.academic_year}",
+      body: nil,
+      classes: "govuk-!-margin-bottom-8",
+      html_attributes: { "data-test": "success-panel" }
+    ) %>
+
+    <h2 class="govuk-heading-m">What happens next</h2>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>you do not need to use this service to set up your training programme</li>
+      <li>you will need to make your own arrangements with a <%= govuk_link_to "training provider", "https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview#FPL" %>, approved by the DfE</li>
+      <li>if you change your mind about how you want to run your training, contact: <%= render MailToSupportComponent.new %></li>
+    </ul>
+  </div>
+</div>

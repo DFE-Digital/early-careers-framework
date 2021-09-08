@@ -16,8 +16,8 @@ RSpec.describe InductionChoiceForm, type: :model do
     end
 
     context "the school is eligible for the full induction programme" do
-      it "provides options for the all programme choices" do
-        options = SchoolCohort.induction_programme_choices.except("not_yet_known").keys
+      it "provides options for the all programme choices except school_funded_fip" do
+        options = SchoolCohort.induction_programme_choices.except("not_yet_known", "school_funded_fip").keys
         expect(form.programme_choices.map(&:id)).to match_array options.map(&:to_sym)
       end
     end

@@ -39,6 +39,7 @@ RSpec.describe SchoolCohort, type: :model do
       full_induction_programme: "full_induction_programme",
       core_induction_programme: "core_induction_programme",
       design_our_own: "design_our_own",
+      school_funded_fip: "school_funded_fip",
       no_early_career_teachers: "no_early_career_teachers",
       not_yet_known: "not_yet_known",
     ).backed_by_column_of_type(:string)

@@ -5,6 +5,7 @@ class SchoolCohort < ApplicationRecord
     full_induction_programme: "full_induction_programme",
     core_induction_programme: "core_induction_programme",
     design_our_own: "design_our_own",
+    school_funded_fip: "school_funded_fip",
     no_early_career_teachers: "no_early_career_teachers",
     not_yet_known: "not_yet_known",
   }
@@ -74,6 +75,10 @@ class SchoolCohort < ApplicationRecord
 
   def school_chose_fip?
     induction_programme_choice == "full_induction_programme"
+  end
+
+  def school_chose_school_funded_fip?
+    induction_programme_choice == "school_funded_fip"
   end
 
 private
