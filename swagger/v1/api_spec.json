@@ -1348,6 +1348,11 @@
             "description": "The unique id of the participant",
             "type": "string",
             "example": "ab3a7848-1208-7679-942a-b4a70eed400a"
+          },
+          "id": {
+            "description": "The unique id of the participant declaration",
+            "type": "string",
+            "example": "143b7848-7651-1209-540e-54a703ad400a"
           }
         }
       },

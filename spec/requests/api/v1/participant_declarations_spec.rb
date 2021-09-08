@@ -168,6 +168,11 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
     end
 
     context "when authorized" do
+      before do
+        default_headers[:Authorization] = bearer_token
+        default_headers[:CONTENT_TYPE] = "application/json"
+      end
+
       context "when there is a non eligible declaration" do
         let(:expected_response) do
           expected_json_response(declaration: participant_declaration, profile: ect_profile)
@@ -190,11 +195,6 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
         let(:expected_response) do
           expected_json_response(declaration: participant_declaration, profile: ect_profile, eligible_for_payment: true)
-        end
-
-        before do
-          default_headers[:Authorization] = bearer_token
-          default_headers[:CONTENT_TYPE] = "application/json"
         end
 
         it "loads list of eligible participants" do
@@ -244,6 +244,19 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
           expect(response.status).to eq 200
 
           expect(parsed_response).to eq({ "data" => [] })
+        end
+      end
+
+      context "when a declartion id filter used" do
+        let(:expected_response) do
+          expected_json_response(declaration: participant_declaration, profile: ect_profile)
+        end
+
+        it "loads only a declaration for the chosen declaration id" do
+          get "/api/v1/participant-declarations", params: { filter: { id: participant_declaration.id } }
+          expect(response.status).to eq 200
+
+          expect(JSON.parse(response.body)).to eq(expected_response)
         end
       end
     end
