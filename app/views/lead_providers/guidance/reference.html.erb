@@ -158,4 +158,38 @@
   </li>
 </ol>
 
+
+<h3 id="csv-file-postman" class="govuk-heading-m">Using Postman to submit from Test runner</h3>
+
+<p class="govuk-body">Since the declarations service is API only, uploading CSV files for declarations is not directly supported. However, it is possible to use a script runner to achieve this functionality.</p>
+
+<p class="govuk-body">In order to do this, you will need to create a collection which supports a single declaration test with a Pre-request script.</p>
+
+<p class="govuk-body">For this script, you will need to set the Authorization to the following value:</p>
+<p class="govuk-body"><code>
+Type: Bearer Token
+Token: {{bearerToken}}
+</code></p>
+
+<p class="govuk-body">The body should only have a single line containing a variable which will be populated by the Pre-request Script</p>
+<p class="govuk-body"><code>{{request_body}}</code></p>
+
+<p class="govuk-body">The Pre-request Script should contain the following code to set the "request_body" previously set in the Body</p>
+<%=postman_code_sample(%Q[pm.environment.set('request_body', JSON.stringify({
+  "data": {
+    "type": "participant-declaration",
+    "attributes": {
+      "participant_id": data.id,
+      "declaration_date": data.declaration_date,
+      "declaration_type": "started",
+      "course_identifier": data.participant_type == "ect" ? "ecf-induction" : "ecf-mentor"
+    }
+  }
+}))])%>
+
+<p class="govuk-body">The Test should contain the following code to determine </p>
+<%=postman_code_sample(%Q[pm.test("Send declaration via csv file", function(){
+  pm.response.to.have.status(200);
+})])%>
+
 <%= render(ApiDocs::ApiReferenceComponent.new(@api_reference)) %>

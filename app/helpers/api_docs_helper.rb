@@ -20,4 +20,15 @@ module ApiDocsHelper
       end
     end
   end
+
+  def postman_code_sample(code)
+    formatter = Rouge::Formatters::HTML.new
+    lexer = Rouge::Lexers::Javascript.new
+
+    tag.pre class: "app-json-code-sample" do
+      tag.code do
+        formatter.format(lexer.lex(code)).html_safe
+      end
+    end
+  end
 end
