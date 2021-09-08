@@ -7,8 +7,8 @@
   <div class="govuk-grid-column-three-quarters">
     <h1 class="govuk-heading-xl">Choose your materials</h1>
     <p class="govuk-body">
-      Check
-      <%= govuk_link_to "your support materials summary (opens in a new tab)", "/pages/core-materials-info", target: "_blank", rel: "noopener noreferrer" %> if you're not sure.
+      Check <%= govuk_link_to "your support materials summary (opens in a new tab)", "/pages/core-materials-info",
+                target: "_blank", rel: "noopener noreferrer" %> if you're not sure.
     </p>
 
     <%= form_for @year_2020_form, url: { action: :choose_cip }, method: :put do |f| %>
