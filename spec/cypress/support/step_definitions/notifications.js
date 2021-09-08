@@ -4,7 +4,7 @@ import {
   SIGN_IN_EMAIL_TEMPLATE,
   ADMIN_ACCOUNT_CREATED_TEMPLATE,
   NOMINATION_EMAIL_TEMPLATE,
-  NOMINATION_CONFIRMATION_EMAIL_TEMPLATE,
+  NOMINATION_CONFIRMATION_EMAIL_TEMPLATE, BASIC_TEMPLATE
 } from "../commands";
 
 Given(
@@ -51,6 +51,20 @@ Given(
       const headersHash = computeHeadersFromEmail(emails[0]);
       expect(headersHash["template-id"]).to.eq(
         NOMINATION_CONFIRMATION_EMAIL_TEMPLATE
+      );
+      expect(headersHash.To).to.eq(email);
+    });
+  }
+);
+
+Given(
+  "Email should be sent to the Induction Coordinator to email {string}",
+  (email) => {
+    cy.appSentEmails().then((emails) => {
+      expect(emails).to.have.lengthOf(1);
+      const headersHash = computeHeadersFromEmail(emails[0]);
+      expect(headersHash["template-id"]).to.eq(
+        BASIC_TEMPLATE
       );
       expect(headersHash.To).to.eq(email);
     });

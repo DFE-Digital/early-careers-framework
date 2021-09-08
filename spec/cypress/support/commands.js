@@ -43,6 +43,7 @@ export const ADMIN_ACCOUNT_CREATED_TEMPLATE =
 export const NOMINATION_EMAIL_TEMPLATE = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f";
 export const NOMINATION_CONFIRMATION_EMAIL_TEMPLATE =
   "240c5685-5cb0-40a9-9bd4-1a595d991cbc";
+export const BASIC_TEMPLATE = "b1ab542e-a8d5-4fdf-a7aa-f0ce49b98262"
 
 export const computeHeadersFromEmail = (email) =>
   email.header.reduce(
