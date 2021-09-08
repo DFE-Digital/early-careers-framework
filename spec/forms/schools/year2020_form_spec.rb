@@ -3,15 +3,27 @@
 RSpec.describe Schools::Year2020Form, type: :model do
   let!(:school) { create :school }
   let!(:cohort) { create :cohort, start_year: 2020 }
+  let!(:induction_coordinator) { create :user, :induction_coordinator }
   let!(:core_induction_programme) { create :core_induction_programme }
   let!(:default_schedule) { create(:schedule, name: "ECF September standard 2021") }
+  let!(:name) { Faker::Name.name }
+  let!(:email) { Faker::Internet.email }
 
   subject { described_class.new(school_id: school.id) }
 
-  it { is_expected.to validate_presence_of(:induction_programme_choice).on(:choose_induction_programme) }
-  it { is_expected.to validate_presence_of(:core_induction_programme_id).on(:choose_cip) }
-  it { is_expected.to validate_presence_of(:full_name).on(:create_teacher) }
-  it { is_expected.to validate_presence_of(:email).on(:create_teacher) }
+  describe "validations" do
+    it { is_expected.to validate_presence_of(:core_induction_programme_id).on(:choose_cip) }
+    it { is_expected.to validate_presence_of(:full_name).on(:create_teacher).with_message("Enter a full name for your teacher") }
+    it { is_expected.to validate_presence_of(:email).on(:create_teacher).with_message("Enter an email address for your teacher") }
+
+    it "validates that the email address is not already in use by an ECT" do
+      create(:participant_profile, :ect, user: create(:user, email: email))
+      form = Schools::Year2020Form.new(full_name: name, email: email)
+      expect(form).not_to be_valid
+      expect(form.errors[:email].first).to eq("This email address is already in use")
+      expect(form.email_already_taken?).to be_truthy
+    end
+  end
 
   describe "save!" do
     it "creates a school cohort and user when given all details" do

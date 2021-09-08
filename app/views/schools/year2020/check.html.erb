@@ -9,9 +9,12 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-l">Confirm details for <%= @year_2020_form.school.name %></h1>
 
-    <h2 class="govuk-heading-m">DfE accredited material choice</h2>
+    <h2 class="govuk-heading-m">Chosen materials</h2>
     <dl class="govuk-summary-list govuk-!-margin-bottom-9">
       <div class="govuk-summary-list__row">
+        <dd class="govuk-summary-list__value">
+          <b>Provider</b>
+        </dd>
         <dd class="govuk-summary-list__value">
           <%= @year_2020_form.core_induction_programme.name %>
         </dd>
@@ -24,15 +27,17 @@
       </div>
     </dl>
 
-    <h2 class="govuk-heading-m">Teachers</h2>
+    <h2 class="govuk-heading-m">Teacher details</h2>
     <dl class="govuk-summary-list">
       <% @year_2020_form.get_participants.each do |participant| %>
         <div class="govuk-summary-list__row">
-          <dd class="govuk-summary-list__value">
-            <div><%= participant[:full_name] %></div>
+          <dd class="govuk-summary-list__value govuk-!-width-one-quarter">
+            <div><b><%= participant[:full_name] %></b></div>
+          </dd>
+          <dd class="govuk-summary-list__value govuk-!-width-one-half">
             <div><%= participant[:email] %></div>
           </dd>
-          <dd class="govuk-summary-list__actions">
+          <dd class="govuk-summary-list__actions govuk-!-width-one-quarter">
             <%# govuk_link_to issue: https://github.com/DFE-Digital/govuk-components/issues/193 %>
             <%= govuk_link_to({ action: :remove_teacher, index: participant[:index] }, button: false, class: "govuk-!-margin-right-5") do %>
               Delete
@@ -51,8 +56,12 @@
       <% end %>
     </p>
 
+    <p>
+      Check these details before confirming. You cannot change them within this application once you have clicked 'Confirm'.
+    </p>
+
     <%= form_for @year_2020_form, url: { action: :confirm }, method: :post do |f| %>
-      <%= f.govuk_submit "Continue" %>
+      <%= f.govuk_submit "Confirm" %>
     <% end %>
   </div>
 </div>
