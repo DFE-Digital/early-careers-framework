@@ -7,18 +7,18 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-l">Confirm details for <%= @year_2020_form.school.name %></h1>
+    <h1 class="govuk-heading-xl">Confirm details for <%= @year_2020_form.school.name %></h1>
 
     <h2 class="govuk-heading-m">Chosen materials</h2>
     <dl class="govuk-summary-list govuk-!-margin-bottom-9">
       <div class="govuk-summary-list__row">
-        <dd class="govuk-summary-list__value">
+        <dd class="govuk-summary-list__value govuk-!-width-one-quarter">
           <b>Provider</b>
         </dd>
-        <dd class="govuk-summary-list__value">
+        <dd class="govuk-summary-list__value govuk-!-width-one-half">
           <%= @year_2020_form.core_induction_programme.name %>
         </dd>
-        <dd class="govuk-summary-list__actions">
+        <dd class="govuk-summary-list__actions govuk-!-width-one-quarter">
           <%# govuk_link_to issue: https://github.com/DFE-Digital/govuk-components/issues/193 %>
           <%= govuk_link_to({ action: :select_cip }, button: false) do %>
             Change <span class="govuk-visually-hidden">material choice</span>
@@ -50,7 +50,7 @@
       <% end %>
     </dl>
 
-    <p>
+    <p class="govuk-!-margin-bottom-9">
       <%= govuk_link_to({ action: :new_teacher }, button: false) do %>
         Add another teacher
       <% end %>
