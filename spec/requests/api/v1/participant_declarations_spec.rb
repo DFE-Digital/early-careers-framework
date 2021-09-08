@@ -5,6 +5,7 @@ require_relative "../../../shared/context/lead_provider_profiles_and_courses.rb"
 
 RSpec.describe "participant-declarations endpoint spec", type: :request do
   include_context "lead provider profiles and courses"
+  let(:parsed_response) { JSON.parse(response.body) }
 
   describe "post" do
     let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
@@ -18,8 +19,6 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         course_identifier: "ecf-induction",
       }
     end
-
-    let(:parsed_response) { JSON.parse(response.body) }
 
     before do
       travel_to ect_profile.schedule.milestones.first.start_date + 2.days
@@ -35,8 +34,6 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
     end
 
     context "when authorized" do
-      let(:parsed_response) { JSON.parse(response.body) }
-
       before do
         default_headers[:Authorization] = bearer_token
         default_headers[:CONTENT_TYPE] = "application/json"
@@ -165,22 +162,22 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
              participant_profile: ect_profile)
     end
 
+    before do
+      default_headers[:Authorization] = bearer_token
+      default_headers[:CONTENT_TYPE] = "application/json"
+    end
+
     context "when authorized" do
       context "when there is a non eligible declaration" do
         let(:expected_response) do
           expected_json_response(declaration: participant_declaration, profile: ect_profile)
         end
 
-        before do
-          default_headers[:Authorization] = bearer_token
-          default_headers[:CONTENT_TYPE] = "application/json"
-        end
-
         it "loads list of eligible participant" do
           get "/api/v1/participant-declarations"
           expect(response.status).to eq 200
 
-          expect(JSON.parse(response.body)).to eq(expected_response)
+          expect(parsed_response).to eq(expected_response)
         end
       end
 
@@ -204,7 +201,17 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
           get "/api/v1/participant-declarations"
           expect(response.status).to eq 200
 
-          expect(JSON.parse(response.body)).to eq(expected_response)
+          expect(parsed_response).to eq(expected_response)
+        end
+      end
+
+      context "when a updated since filter used" do
+        it "returns declarations changed or created since a particular time" do
+          participant_declaration.update!(updated_at: 2.days.ago)
+          get "/api/v1/participant-declarations", params: { filter: { updated_since: 1.day.ago.iso8601 } }
+          expect(response.status).to eq 200
+
+          expect(parsed_response["data"].size).to eq 0
         end
       end
 
@@ -216,7 +223,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
                  cpd_lead_provider: cpd_lead_provider,
                  course_identifier: "ecf-induction")
         end
-        let!(:profile_declaration) do
+        let!(:second_profile_declaration) do
           create(:profile_declaration,
                  participant_declaration: second_participant_declaration,
                  participant_profile: second_ect_profile)
@@ -225,23 +232,18 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
           expected_json_response(declaration: second_participant_declaration, profile: second_ect_profile)
         end
 
-        before do
-          default_headers[:Authorization] = bearer_token
-          default_headers[:CONTENT_TYPE] = "application/json"
-        end
-
         it "loads only declarations for the chosen participant id" do
           get "/api/v1/participant-declarations", params: { filter: { participant_id: second_ect_profile.user.id } }
           expect(response.status).to eq 200
 
-          expect(JSON.parse(response.body)).to eq(expected_response)
+          expect(parsed_response).to eq(expected_response)
         end
 
         it "does not load declaration for a non-existent participant id" do
           get "/api/v1/participant-declarations", params: { filter: { participant_id: "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee" } }
           expect(response.status).to eq 200
 
-          expect(JSON.parse(response.body)).to eq({ "data" => [] })
+          expect(parsed_response).to eq({ "data" => [] })
         end
       end
     end

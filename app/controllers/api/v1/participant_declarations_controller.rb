@@ -31,6 +31,7 @@ module Api
       def query_scope
         scope = ParticipantDeclaration.for_lead_provider(cpd_lead_provider)
         scope = scope.where("user_id = ?", participant_id_filter) if participant_id_filter.present?
+        scope = scope.where("updated_at > ?", Time.iso8601(updated_since_filter)) if updated_since_filter.present?
         scope
       end
 
@@ -40,6 +41,10 @@ module Api
 
       def participant_id_filter
         filter[:participant_id]
+      end
+
+      def updated_since_filter
+        filter[:updated_since]
       end
 
       def cpd_lead_provider

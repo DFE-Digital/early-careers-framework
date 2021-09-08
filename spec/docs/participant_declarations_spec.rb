@@ -111,7 +111,10 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
                 explode: true,
                 required: false,
                 description: "Refine participant declarations to return.",
-                example: { participant_id: "ab3a7848-1208-7679-942a-b4a70eed400a" }
+                example: {
+                  participant_id: "ab3a7848-1208-7679-942a-b4a70eed400a",
+                  updated_since: "2020-11-13T11:21:55Z"
+                }
 
       parameter name: :page,
                 in: :query,
