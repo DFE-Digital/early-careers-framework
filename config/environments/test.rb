@@ -75,4 +75,8 @@ Rails.application.configure do
   # config.action_view.annotate_rendered_view_with_filenames = true
 
   config.cip_resource_bucket = "https://paas-s3-broker-prod-lon-ac28a7a5-2bc2-4d3b-8d16-a88eaef65526.s3.amazonaws.com"
+
+  if config.respond_to?(:web_console)
+    config.web_console.development_only = false
+  end
 end

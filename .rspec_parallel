@@ -1,0 +1,5 @@
+--require rails_helper
+--require spec_helper
+--require payment_calculator
+--format progress
+--format ParallelTests::RSpec::RuntimeLogger --out tmp/parallel_runtime_rspec.log
