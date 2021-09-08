@@ -423,6 +423,59 @@
         }
       }
     },
+    "/api/v1/participant-declarations/{id}": {
+      "get": {
+        "summary": "Get single participant declaration",
+        "operationId": "participant_declarations",
+        "tags": [
+          "participants declaration"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "9ed4612b-f8bd-44d9-b296-38ab103fadd2",
+            "description": "The ID of the participant declaration ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single participant declaration",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantDeclarationsRecordedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/participants": {
       "get": {
         "summary": "Retrieve multiple participants",
@@ -1348,11 +1401,6 @@
             "description": "The unique id of the participant",
             "type": "string",
             "example": "ab3a7848-1208-7679-942a-b4a70eed400a"
-          },
-          "id": {
-            "description": "The unique id of the participant declaration",
-            "type": "string",
-            "example": "143b7848-7651-1209-540e-54a703ad400a"
           }
         }
       },

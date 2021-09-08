@@ -28,7 +28,7 @@ module Api
       end
 
       def show
-        record = ParticipantDeclaration.find_by(id: params[:id])
+        record = ParticipantDeclaration.for_lead_provider(cpd_lead_provider).find_by(id: params[:id])
 
         if record.present?
           render json: ParticipantDeclarationSerializer.new(record).serializable_hash.to_json
