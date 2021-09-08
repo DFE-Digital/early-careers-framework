@@ -22,43 +22,6 @@ RSpec.describe "Schools::AddParticipant", type: :request do
     it { is_expected.to render_template("schools/year2020/start") }
   end
 
-  describe "GET /schools/:school_id/year-2020/choose-induction-programme" do
-    before do
-      get "/schools/#{school.slug}/year-2020/choose-induction-programme"
-    end
-
-    it { is_expected.to render_template("schools/year2020/select_induction_programme") }
-  end
-
-  describe "PUT /schools/:school_id/year-2020/choose-induction-programme" do
-    it "renders the select_induction_programme if programme choice is missing" do
-      put "/schools/#{school.slug}/year-2020/choose-induction-programme"
-      expect(response).to render_template("schools/year2020/select_induction_programme")
-    end
-
-    it "redirects to cip choice page when programme choice is CIP" do
-      put "/schools/#{school.slug}/year-2020/choose-induction-programme", params: {
-        schools_year2020_form: { induction_programme_choice: "core_induction_programme" },
-      }
-      expect(response).to redirect_to "/schools/#{school.slug}/year-2020/choose-core-induction-programme"
-    end
-
-    it "redirects to no programme page when school opts out" do
-      put "/schools/#{school.slug}/year-2020/choose-induction-programme", params: {
-        schools_year2020_form: { induction_programme_choice: "design_our_own" },
-      }
-      expect(response).to redirect_to "/schools/#{school.slug}/year-2020/no-accredited-materials"
-    end
-  end
-
-  describe "GET /schools/:school_id/year-2020/no-accredited-materials" do
-    before do
-      get "/schools/#{school.slug}/year-2020/no-accredited-materials"
-    end
-
-    it { is_expected.to render_template("schools/year2020/no_accredited_materials") }
-  end
-
   describe "GET /schools/:school_id/year-2020/choose-core-induction-programme" do
     before do
       get "/schools/#{school.slug}/year-2020/choose-core-induction-programme"

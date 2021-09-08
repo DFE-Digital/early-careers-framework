@@ -18,15 +18,7 @@ module Schools
     validate :email_is_not_in_use
 
     def attributes
-      { school_id: nil, induction_programme_choice: nil, core_induction_programme_id: nil, participants: nil }
-    end
-
-    def induction_programme_options
-      [
-        OpenStruct.new(id: "core_induction_programme", name: "Yes"),
-        OpenStruct.new(id: "design_our_own", name: "No, we will support our NQTs another way"),
-        OpenStruct.new(id: "no_early_career_teachers", name: "No, we don't have any NQTs"),
-      ]
+      { school_id: nil, core_induction_programme_id: nil, participants: nil }
     end
 
     def school
