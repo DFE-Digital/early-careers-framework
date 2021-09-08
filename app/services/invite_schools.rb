@@ -373,7 +373,7 @@ private
     notify_id = SchoolMailer.cip_only_invite_email(
       recipient: nomination_email.sent_to,
       school_name: nomination_email.school.name,
-      nomination_url: nomination_email.nomination_url,
+      nomination_url: nomination_email.nomination_url(utm_source: :nominate_tutor_cip_only),
     ).deliver_now.delivery_method.response.id
 
     nomination_email.update!(notify_id: notify_id)
