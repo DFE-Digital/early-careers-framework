@@ -7,6 +7,7 @@ module Api
       include ApiTokenAuthenticatable
       include ApiPagination
       include ApiCsv
+      include ApiFilter
 
       def create
         params = HashWithIndifferentAccess.new({ cpd_lead_provider: cpd_lead_provider }).merge(permitted_params["attributes"] || {})
@@ -31,6 +32,7 @@ module Api
       def query_scope
         scope = ParticipantDeclaration.for_lead_provider(cpd_lead_provider)
         scope = scope.where("user_id = ?", participant_id_filter) if participant_id_filter.present?
+        scope = scope.where("updated_at > ?", updated_since) if updated_since.present?
         scope
       end
 
