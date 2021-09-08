@@ -2,6 +2,7 @@
 
 <ul class="govuk-list govuk-list--bullet">
   <li><a href="#continuing-the-ecf-registration-process" class="govuk-link">Continuing the ECF registration process</a></li>
+  <li><a href="#notifying-of-deferral" class="govuk-link">Notify that an ECF participant is taking a break from their course</a></li>
   <li><a href="#declaring-that-an-ecf-participant-has-started-their-course" class="govuk-link">Declaring that an ECF participant has started their course</a></li>
   <li><a href="#declaring-that-an-ecf-participant-has-retained-their-course" class="govuk-link">Declaring that an ECF participant has reached a retained milestone</a></li>
   <li><a href="#declaring-that-an-ecf-participant-has-completed-their-course" class="govuk-link">Declaring that an ECF participant has completed their course</a></li>
@@ -47,6 +48,27 @@
 
 <p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#get-api-v1-participants" class="govuk-link">retrieve multiple participants</a> endpoint.</p>
 
+
+<h2 id="notifying-of-deferral" class="govuk-heading-l">Notifying that an ECF participant is taking a break from their course</h2>
+
+<p class="govuk-body-m">This operation allows the provider to tell the DfE that a participant has deferred from their ECF course.</p>
+
+<p class="govuk-body-m">A participant is deemed to have deferred from an ECF course if he or she will be resuming it at a later date.</p>
+
+<h3 class="govuk-heading-m">1. Provider defers a participant</h3>
+
+<p class="govuk-body-m">
+  Submit the deferral notification to the following endpoint
+</p>
+
+<p class="govuk-body-m"><code>PUT /api/v1/participants/{id}/deferred</code></p>
+
+<p class="govuk-body-m">This will return an <a href="/lead-providers/guidance/reference#ecfparticipant-object" class="govuk-link">ECF participant record</a> with the updates to the record included.</p>
+
+<p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#put-api-v1-participants-id-defer" class="govuk-link">deferred ECF participant</a> endpoint.</p>
+
+
+
 <h2 id="declaring-that-an-ecf-participant-has-started-their-course" class="govuk-heading-l">Declaring that an ECF participant has started their course</h2>
 
 <p class="govuk-body-m">This scenario begins after it has been confirmed that an ECF participant is ready to begin their induction training.</p>
@@ -65,6 +87,7 @@
 
 <h3 class="govuk-heading-m">2. Provider records the ECF participant declaration ID</h3>
 <p class="govuk-body-m">Store the returned ECF participant declaration ID for future management tasks.</p>
+
 
 <h2 id="declaring-that-an-ecf-participant-has-retained-their-course" class="govuk-heading-l">Declaring that an ECF participant has been retained</h2>
 
