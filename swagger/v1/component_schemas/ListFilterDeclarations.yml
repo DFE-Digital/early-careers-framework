@@ -1,0 +1,7 @@
+description: "Filter a list of declarations records to return more specific results"
+type: object
+properties:
+  participant_id:
+    description: "The unique id of the participant"
+    type: :string
+    example: "ab3a7848-1208-7679-942a-b4a70eed400a"

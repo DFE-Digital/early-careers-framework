@@ -104,7 +104,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
       parameter name: :filter,
                 in: :query,
                 schema: {
-                  "$ref": "#/components/schemas/ListFilter",
+                  "$ref": "#/components/schemas/ListFilterDeclarations",
                 },
                 type: :object,
                 style: :deepObject,
