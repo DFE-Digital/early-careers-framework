@@ -61,7 +61,6 @@ RSpec.describe ValidationBetaService do
                                                .with(hash_including(
                                                        recipient: chosen_programme_and_not_in_beta_ic.email,
                                                        sign_in: sign_in_url,
-                                                       school_name: chosen_programme_and_not_in_beta_school.name,
                                                      ))
     end
 
