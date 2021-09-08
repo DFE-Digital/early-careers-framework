@@ -3,13 +3,12 @@
 RSpec.describe Schools::Year2020Form, type: :model do
   let!(:school) { create :school }
   let!(:cohort) { create :cohort, start_year: 2020 }
-  let!(:induction_coordinator) { create :user, :induction_coordinator }
   let!(:core_induction_programme) { create :core_induction_programme }
   let!(:default_schedule) { create(:schedule, name: "ECF September standard 2021") }
   let!(:name) { Faker::Name.name }
   let!(:email) { Faker::Internet.email }
 
-  subject { described_class.new(school_id: school.id, current_user: induction_coordinator) }
+  subject { described_class.new(school_id: school.id) }
 
   describe "validations" do
     it { is_expected.to validate_presence_of(:core_induction_programme_id).on(:choose_cip) }
@@ -74,7 +73,7 @@ RSpec.describe Schools::Year2020Form, type: :model do
       participants = subject.get_participants
 
       expect(SchoolMailer).to have_received(:year2020_add_participants_confirmation)
-                                .with(user: induction_coordinator, school: school, participants: participants)
+                                .with(school: school, participants: participants)
     end
   end
 

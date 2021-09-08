@@ -5,7 +5,7 @@ module Schools
     include ActiveModel::Model
     include ActiveModel::Serialization
 
-    attr_accessor :current_user, :school_id, :induction_programme_choice, :core_induction_programme_id, :full_name, :email, :participants
+    attr_accessor :school_id, :core_induction_programme_id, :full_name, :email, :participants
     validates :core_induction_programme_id, presence: true, on: :choose_cip
 
     validates :full_name, presence: true, on: %i[create_teacher update_teacher]
@@ -89,7 +89,6 @@ module Schools
         end
 
         SchoolMailer.year2020_add_participants_confirmation(
-          user: current_user,
           school: school,
           participants: participants,
         ).deliver_now

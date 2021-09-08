@@ -59,7 +59,7 @@ Given(
 );
 
 Given(
-  "Email should be sent to the Induction Coordinator to email {string}",
+  "Confirmation email should be sent to the Induction Coordinator to email {string}",
   (email) => {
     cy.appSentEmails().then((emails) => {
       expect(emails).to.have.lengthOf(1);

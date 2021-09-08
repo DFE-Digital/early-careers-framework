@@ -1,14 +1,12 @@
 Feature: School leaders should be able to add participants
 
   Background:
-    Given scenario "school_participants" has been run
-    And I am logged in as existing user with email "school-leader@example.com"
+    Given school was created with name "Test School" and slug "test-school" and primary_contact_email "test-email@example.com"
     And schedule was created with name "ECF September standard 2021"
     And cohort was created with start_year "2020"
     And core_induction_programme was created with name "Awesome induction course"
     And feature year_2020_data_entry is active
-    And feature year_2020_add_participants_confirmation is active
-    And I am on "/schools/111111-hogwarts-academy/year-2020/start" path
+    And I am on "/schools/test-school/year-2020/start" path
     Then the page should be accessible
     And percy should be sent snapshot called "Year 2020 start page"
 
@@ -64,6 +62,6 @@ Feature: School leaders should be able to add participants
 
     When I click the submit button
     Then "success panel" should contain "now access their support materials"
-    And Email should be sent to the Induction Coordinator to email "school-leader@example.com"
+    And Confirmation email should be sent to the Induction Coordinator to email "test-email@example.com"
     And the page should be accessible
     And percy should be sent snapshot called "Year 2020 ect participant added"

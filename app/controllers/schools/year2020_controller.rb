@@ -79,7 +79,7 @@ module Schools
   private
 
     def load_year_2020_form
-      @year_2020_form = Year2020Form.new(get_year_2020_session.merge(school_id: params[:school_id], current_user: current_user))
+      @year_2020_form = Year2020Form.new(get_year_2020_session.merge(school_id: params[:school_id]))
       @year_2020_form.assign_attributes(year_2020_params)
     end
 

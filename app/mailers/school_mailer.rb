@@ -249,13 +249,13 @@ class SchoolMailer < ApplicationMailer
     )
   end
 
-  def year2020_add_participants_confirmation(user:, school:, participants:)
+  def year2020_add_participants_confirmation(school:, participants:)
     @school = school
     @participants = participants
 
     view_mail(
       BASIC_TEMPLATE,
-      to: user.email,
+      to: school.contact_email,
       subject: "2020 to 2021 NQTs cohort: support materials confirmation",
       rails_mailer: mailer_name,
       rails_mail_template: action_name,

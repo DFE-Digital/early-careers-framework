@@ -3,7 +3,6 @@
 require "rails_helper"
 
 RSpec.describe "Schools::AddParticipant", type: :request do
-  let!(:induction_coordinator) { create :user, :induction_coordinator }
   let!(:default_schedule) { create(:schedule, name: "ECF September standard 2021") }
   let!(:school) { create :school }
   let!(:cohort) { create :cohort, start_year: 2020 }
@@ -12,7 +11,6 @@ RSpec.describe "Schools::AddParticipant", type: :request do
   subject { response }
 
   before do
-    sign_in induction_coordinator
     FeatureFlag.activate(:year_2020_data_entry)
   end
 
@@ -170,7 +168,6 @@ private
   def set_default_complete_session
     set_session(:schools_year2020_form,
                 school_id: school.friendly_id,
-                induction_programme_choice: "core_induction_programme",
                 core_induction_programme_id: core_induction_programme.id,
                 participants: [{ full_name: "Joe Bloggs", email: "joe@example.com", index: 1 }])
   end

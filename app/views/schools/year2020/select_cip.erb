@@ -4,11 +4,12 @@
 %>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-three-quarters">
+  <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">Choose your materials</h1>
-    <p class="govuk-body">
-      Check <%= govuk_link_to "your support materials summary (opens in a new tab)", "/pages/core-materials-info",
-                target: "_blank", rel: "noopener noreferrer" %> if you're not sure.
+    <p class="govuk-body govuk-!-margin-bottom-6">
+      All providers cover the same subject matter, but each takes a different approach. Check this
+       <%= govuk_link_to "overview of the resources on offer", "/pages/core-materials-info", target: "_blank", rel: "noopener noreferrer" %>
+       if you are not familiar with them.
     </p>
 
     <%= form_for @year_2020_form, url: { action: :choose_cip }, method: :put do |f| %>
