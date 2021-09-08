@@ -9,7 +9,7 @@ RSpec.describe Schools::Year2020Form, type: :model do
   let!(:name) { Faker::Name.name }
   let!(:email) { Faker::Internet.email }
 
-  subject { described_class.new(school_id: school.id) }
+  subject { described_class.new(school_id: school.id, current_user: induction_coordinator) }
 
   describe "validations" do
     it { is_expected.to validate_presence_of(:core_induction_programme_id).on(:choose_cip) }
@@ -59,52 +59,22 @@ RSpec.describe Schools::Year2020Form, type: :model do
         )
       end
     end
-  end
 
-  describe "opt_out?" do
-    it "returns true when induction programme choice is 'no_early_career_teachers'" do
-      subject.induction_programme_choice = "no_early_career_teachers"
-      expect(subject.opt_out?).to be_truthy
-    end
+    it "emails a user a confirmation email of 2020 cohort ECTs" do
+      allow(SchoolMailer).to receive(:year2020_add_participants_confirmation).and_call_original
 
-    it "returns true when induction programme choice is 'design_our_own'" do
-      subject.induction_programme_choice = "design_our_own"
-      expect(subject.opt_out?).to be_truthy
-    end
-
-    it "returns false when induction programme choice is 'core_induction_programme'" do
-      subject.induction_programme_choice = "core_induction_programme"
-      expect(subject.opt_out?).to be_falsey
-    end
-
-    it "returns false when induction programme choice is nil" do
-      expect(subject.opt_out?).to be_falsey
-    end
-  end
-
-  describe "opt_out!" do
-    before do
-      subject.induction_programme_choice = %w[no_early_career_teachers design_our_own].sample
-    end
-
-    context "when no school cohort for 2020 exists" do
-      it "creates school cohort, and sets programme choice to induction_programme_choice value" do
-        subject.opt_out!
-        school_cohort = SchoolCohort.find_by(school: school, cohort: cohort)
-        expect(school_cohort.induction_programme_choice).to eq(subject.induction_programme_choice)
-      end
-    end
-
-    context "school cohort for 2020 exists" do
-      before do
-        SchoolCohort.create!(school: school, cohort: cohort, induction_programme_choice: "core_induction_programme")
+      test_participants = build_list(:user, 3)
+      test_participants.each do |participant|
+        add_new_participant(subject, name: participant.full_name, email: participant.email)
       end
 
-      it "creates the school cohort, and sets programme choice to 'no_early_career_teachers'" do
-        subject.opt_out!
-        school_cohort = SchoolCohort.find_by(school: school, cohort: cohort)
-        expect(school_cohort.induction_programme_choice).to eq(subject.induction_programme_choice)
-      end
+      subject.core_induction_programme_id = core_induction_programme.id
+      subject.save!
+
+      participants = subject.get_participants
+
+      expect(SchoolMailer).to have_received(:year2020_add_participants_confirmation)
+                                .with(user: induction_coordinator, school: school, participants: participants)
     end
   end
 

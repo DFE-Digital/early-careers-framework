@@ -112,4 +112,24 @@ RSpec.describe SchoolMailer, type: :mailer do
       expect(partnership_notification_email.to).to eq([recipient])
     end
   end
+
+  describe "#year2020_add_participants_confirmation" do
+    let(:school) { create(:school) }
+    let(:user) { create(:user, :induction_coordinator) }
+    let(:ect_one) { create(:user, :early_career_teacher) }
+    let(:ect_two) { create(:user, :early_career_teacher) }
+
+    let(:year2020_add_participants_confirmation) do
+      SchoolMailer.year2020_add_participants_confirmation(
+        user: user,
+        school: school,
+        participants: [ect_one, ect_two],
+      ).deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(year2020_add_participants_confirmation.to).to eq([user.email])
+      expect(year2020_add_participants_confirmation.from).to eq(["mail@example.com"])
+    end
+  end
 end
