@@ -60,7 +60,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         expect(ParticipantDeclaration.order(:created_at).last.payable).to be_truthy
       end
 
-      it "does not create duplicate declarations, but stores the duplicate declaration attempts" do
+      it "does not create duplicate declarations with the same declaration date, but stores the duplicate declaration attempts" do
         params = build_params(valid_params)
         post "/api/v1/participant-declarations", params: params
         original_id = parsed_response["id"]
@@ -71,6 +71,26 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
             .to change(ParticipantDeclarationAttempt, :count).by(1)
 
         expect(response.status).to eq 200
+        expect(parsed_response["id"]).to eq(original_id)
+      end
+
+      it "does not create duplicate declarations with different declaration date, but stores the duplicate declaration attempts" do
+        params = build_params(valid_params)
+
+        new_valid_params = valid_params
+        new_valid_params[:declaration_date] = (ect_profile.schedule.milestones.first.start_date + 1.second).rfc3339
+
+        params_with_different_declaration_date = build_params(new_valid_params)
+
+        post "/api/v1/participant-declarations", params: params
+        original_id = parsed_response["id"]
+
+        expect { post "/api/v1/participant-declarations", params: params }
+            .not_to change(ParticipantDeclaration, :count)
+        expect { post "/api/v1/participant-declarations", params: params_with_different_declaration_date }
+            .to change(ParticipantDeclarationAttempt, :count).by(1)
+
+        expect(response.status).to eq 409
         expect(parsed_response["id"]).to eq(original_id)
       end
 

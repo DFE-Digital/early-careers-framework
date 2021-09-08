@@ -9,6 +9,7 @@ module Api
     rescue_from ActionController::BadRequest, with: :bad_request_response
     rescue_from ActiveRecord::StatementInvalid, with: :bad_request_response
     rescue_from ArgumentError, with: :bad_request_response
+    rescue_from ActiveRecord::RecordNotUnique, with: :conflict_response
 
   private
 
@@ -26,6 +27,10 @@ module Api
 
     def bad_request_response(exception)
       render json: { errors: Api::ParamErrorFactory.new(error: "Bad request", params: exception.message).call }, status: :bad_request
+    end
+
+    def conflict_response(exception)
+      render json: { errors: Api::ParamErrorFactory.new(error: "Conflict", params: exception.message).call }, status: :conflict
     end
   end
 end

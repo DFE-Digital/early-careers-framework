@@ -34,6 +34,13 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
       }.to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
     end
 
+    it "does not create exact duplicates and throws an error" do
+      expect {
+        described_class.call(ect_params)
+        described_class.call(ect_params_with_different_date)
+      }.to raise_error(ActiveRecord::RecordNotUnique)
+    end
+
     it "fails when course is for mentor" do
       params = ect_params.merge({ course_identifier: "ecf-mentor" })
       expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing)
