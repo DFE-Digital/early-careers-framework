@@ -20,7 +20,7 @@ sandbox:
 
 test:
   <<: *default
-  database: 'early_careers_framework_test'
+  database: early_careers_framework_test<%= ENV['TEST_ENV_NUMBER'] %>
   variables:
     idle_in_transaction_session_timeout: 0
 

@@ -59,6 +59,18 @@ bundle exec rake
 bundle exec rspec
 ```
 
+## Running specs in parallel
+
+### One time Setup
+```
+bundle exec rake parallel:create
+```
+
+### Running specs thereafter
+```
+bundle exec rake parallel:spec
+```
+
 ## Running swagger doc generator
 
 It auto-generates swagger/*/api_spec.json from the schema files located in spec/docs
