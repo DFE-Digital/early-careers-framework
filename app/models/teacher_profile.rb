@@ -7,9 +7,9 @@ class TeacherProfile < ApplicationRecord
   has_many :participant_profiles, dependent: :destroy
 
   # TODO: Legacy associations, to be removed
-  has_one :early_career_teacher_profile, -> { active_record }, class_name: "ParticipantProfile::ECT"
-  has_one :mentor_profile, -> { active_record }, class_name: "ParticipantProfile::Mentor"
-  has_one :ecf_profile, -> { active_record }, class_name: "ParticipantProfile::ECF"
+  has_one :early_career_teacher_profile, -> { ects.active_record }, class_name: "ParticipantProfile"
+  has_one :mentor_profile, -> { mentors.active_record }, class_name: "ParticipantProfile"
+  has_one :ecf_profile, -> { ecf.active_record }, class_name: "ParticipantProfile"
 
   has_many :npq_profiles, class_name: "ParticipantProfile::NPQ"
   # end: TODO
