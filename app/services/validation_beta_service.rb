@@ -1,6 +1,19 @@
 # frozen_string_literal: true
 
 class ValidationBetaService
+  def remind_sits_to_add_participants
+    empty_school_cohorts = SchoolCohort.where.not(id: ParticipantProfile::ECF.select(:school_cohort_id))
+    School.where(id: empty_school_cohorts.select(:school_id)).includes(:induction_coordinators).find_each do |school|
+      school.induction_coordinators.each do |sit|
+        SchoolMailer.remind_sits_to_setup_cohort(
+          recipient: sit.email,
+          school_name: school.name,
+          campaign: :sit_to_complete_steps,
+        ).deliver_later
+      end
+    end
+  end
+
   # ECTs who have not added their details for validation
   def tell_ects_to_add_validation_information
     ParticipantProfile::ECT

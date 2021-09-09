@@ -18,6 +18,23 @@ class SchoolMailer < ApplicationMailer
   ADD_PARTICIPANTS_EMAIL_TEMPLATE = "721787d0-74bc-42a0-a064-ee0c1cb58edb"
   YEAR2020_INVITE_EMAIL_TEMPLATE = "d4b53e26-4630-43a5-b89e-3c668061a41c"
 
+  def remind_sits_to_setup_cohort(recipient:, school_name:, campaign: nil)
+    campaign_tracking = campaign ? UTMService.email(campaign, campaign) : {}
+
+    template_mail(
+      "14aabb56-1d6e-419f-8144-58a0439c61a6",
+      to: recipient,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        subject: "You need to set up your ECT training programme",
+        school_name: school_name,
+        sign_in: new_user_session_url(**campaign_tracking),
+        step_by_step: step_by_step_url(**campaign_tracking)
+      }
+    )
+  end
+
   def nomination_email(recipient:, school_name:, nomination_url:, expiry_date:)
     template_mail(
       NOMINATION_EMAIL_TEMPLATE,
