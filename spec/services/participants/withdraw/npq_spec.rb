@@ -26,6 +26,7 @@ RSpec.describe Participants::Withdraw::NPQ do
     it "creates a withdrawn state for that user's profile" do
       expect { described_class.call(params: participant_params) }
         .to change { ParticipantProfileState.count }.by(1)
+      expect { ParticipantProfileState.order(created_at: :desc).first.withdrawn? }
     end
 
     it "fails when the reason is invalid" do

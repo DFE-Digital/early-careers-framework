@@ -25,6 +25,7 @@ RSpec.describe Participants::Defer::Mentor do
     it "creates a deferred state for that user's profile" do
       expect { described_class.call(params: participant_params.merge(reason: "adoption")) }
         .to change { ParticipantProfileState.count }.by(1)
+      expect { ParticipantProfileState.order(created_at: :desc).first.deferred? }
     end
 
     it "fails when the reason is invalid" do

@@ -30,7 +30,7 @@ RSpec.describe Participants::Withdraw::EarlyCareerTeacher do
     it "creates a withdrawn state for that user's profile" do
       expect { described_class.call(params: participant_params) }
         .to change { ParticipantProfileState.count }.by(1)
-      expect { User.find(participant_params[:participant_id]).early_career_teacher_profile.withdrawn? }
+      expect { ParticipantProfileState.order(created_at: :desc).first.withdrawn? }
     end
 
     it "creates a withdrawn state when that user is deferred" do
