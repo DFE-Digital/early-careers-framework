@@ -21,7 +21,7 @@ module Admin
 
       def fetch_schools_to_open
         (schools_scope.schools_to_add + schools_scope.schools_to_open)
-          .sort { |a, b| a.urn.to_i <=> b.urn.to_i }
+          .sort_by { |school| school.urn.to_i }
       end
     end
   end
