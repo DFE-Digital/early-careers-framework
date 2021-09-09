@@ -692,6 +692,55 @@
           }
         }
       }
+    },
+    "/api/v1/participants/{id}/resume": {
+      "put": {
+        "summary": "Resume a participant into a course",
+        "operationId": "participant",
+        "tags": [
+          "ECF Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantResumeRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant to resume",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ECF participant being resumed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1121,6 +1170,54 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/ECFParticipant"
+          }
+        }
+      },
+      "ECFParticipantResume": {
+        "description": "An ECF participant resume action",
+        "type": "object",
+        "properties": {
+          "course_identifier": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "ecf-induction",
+              "ecf-mentor"
+            ],
+            "example": "ecf-induction"
+          }
+        },
+        "required": [
+          "course_identifier"
+        ],
+        "example": {
+          "course_identifier": "ecf-mentor"
+        }
+      },
+      "ECFParticipantResumeRequest": {
+        "description": "The resume request for a participant",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "description": "The request data",
+            "required": [
+              "type",
+              "attributes"
+            ],
+            "properties": {
+              "type": {
+                "description": "The data type",
+                "type": "string",
+                "example": "participant"
+              },
+              "attributes": {
+                "$ref": "#/components/schemas/ECFParticipantResume"
+              }
+            }
           }
         }
       },
