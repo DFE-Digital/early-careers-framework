@@ -26,6 +26,7 @@ class UTMService
     cip_mentors_to_add_validation_information: "cip-mentors-to-add-validation-information",
     induction_coordinators_who_are_mentors_to_add_validation_information: "induction-coordinators-who-are-mentors-to-add-validation-information",
     asked_ects_and_mentors_for_information: "asked-ects-and-mentors-for-information",
+    sit_to_complete_steps: "sit-to-complete-steps",
   }.freeze
 
   # Campaigns aren't showing up in GA at the moment, so use specific sources
@@ -49,6 +50,7 @@ class UTMService
     cip_mentors_to_add_validation_information: "cip-mentors-to-add-validation-information",
     induction_coordinators_who_are_mentors_to_add_validation_information: "induction-coordinators-who-are-mentors-to-add-validation-information",
     asked_ects_and_mentors_for_information: "asked-ects-and-mentors-for-information",
+    sit_to_complete_steps: "sit-to-complete-steps",
   }.freeze
 
   def self.email(campaign, source = :service)
