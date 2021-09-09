@@ -30,8 +30,8 @@ class SchoolMailer < ApplicationMailer
         subject: "You need to set up your ECT training programme",
         school_name: school_name,
         sign_in: new_user_session_url(**campaign_tracking),
-        step_by_step: step_by_step_url(**campaign_tracking)
-      }
+        step_by_step: step_by_step_url(**campaign_tracking),
+      },
     )
   end
 

@@ -2,16 +2,28 @@
 
 class ValidationBetaService
   def remind_sits_to_add_participants
-    empty_school_cohorts = SchoolCohort.where.not(id: ParticipantProfile::ECF.select(:school_cohort_id))
+    empty_school_cohorts = SchoolCohort
+      .where(induction_programme_choice: %i[full_induction_programme core_induction_programme not_yet_known])
+      .where(opt_out_of_updates: false)
+      .where.not(id: ParticipantProfile::ECF.select(:school_cohort_id))
+
+    emails_sent = []
+
     School.where(id: empty_school_cohorts.select(:school_id)).includes(:induction_coordinators).find_each do |school|
       school.induction_coordinators.each do |sit|
+        next if emails_sent.include?(sit.email)
+
         SchoolMailer.remind_sits_to_setup_cohort(
           recipient: sit.email,
           school_name: school.name,
           campaign: :sit_to_complete_steps,
         ).deliver_later
+
+        emails_sent << sit.email
       end
     end
+
+    emails_sent
   end
 
   # ECTs who have not added their details for validation
