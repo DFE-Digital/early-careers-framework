@@ -17,6 +17,10 @@ module Admin
                                                               .includes(:validation_decisions)
                                                               .where("lower(users.full_name) LIKE ? OR school_cohort_id IN (?)", query, school_cohort_ids)
                                                               .order("DATE(users.created_at) asc, users.full_name")
+
+      if params[:type].present?
+        @participant_profiles = @participant_profiles.where(type: params[:type])
+      end
     end
 
     def remove; end

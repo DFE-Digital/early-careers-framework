@@ -9,6 +9,18 @@
           )
       %>
     </div>
+
+    <% filters.each do |filter| %>
+      <div class="search-box__input">
+        <%= f.govuk_collection_select filter[:field],
+          filter[:options],
+          :id,
+          :name,
+          label: { text: "Filter by #{filter[:field]}" },
+          options: { selected: filter[:value] } %>
+      </div>
+    <% end %>
+
     <%= f.govuk_submit "Search", classes: "search-box__button", "data-test": "search-button" %>
   <% end %>
 </div>

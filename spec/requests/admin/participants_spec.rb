@@ -30,6 +30,14 @@ RSpec.describe "Admin::Participants", type: :request do
       expect(assigns(:participant_profiles)).to include npq_profile
       expect(assigns(:participant_profiles)).not_to include withdrawn_ect_profile_record
     end
+
+    it "can filter by type" do
+      get "/admin/participants?type=ParticipantProfile::NPQ"
+      expect(assigns(:participant_profiles)).not_to include ect_profile
+      expect(assigns(:participant_profiles)).not_to include mentor_profile
+      expect(assigns(:participant_profiles)).to include npq_profile
+      expect(assigns(:participant_profiles)).not_to include withdrawn_ect_profile_record
+    end
   end
 
   describe "GET /admin/participants/:id" do

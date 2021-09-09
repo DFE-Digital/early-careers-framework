@@ -1,4 +1,20 @@
 <h1 class="govuk-header-xl">Participants</h1>
 
-<%= render SearchBox.new(query: params[:query], title: "Search participants", hint: "Enter the participant’s name, school’s name or URN") %>
+<%= render SearchBox.new(
+  query: params[:query],
+  title: "Search participants",
+  hint: "Enter the participant’s name, school’s name or URN",
+  filters: [
+    {
+      field: :type,
+      value: params[:type],
+      options: [
+        OpenStruct.new(id: "", name: ""),
+        OpenStruct.new(id: "ParticipantProfile::ECT", name: "ECT"),
+        OpenStruct.new(id: "ParticipantProfile::Mentor", name: "Mentor"),
+        OpenStruct.new(id: "ParticipantProfile::NPQ", name: "NPQ"),
+      ],
+    },
+  ],
+) %>
 <%= render Admin::Participants::Table.new(profiles: @participant_profiles, page: params.fetch(:page, 1)) %>
