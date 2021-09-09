@@ -8,6 +8,17 @@ module GiasTypes
   CIP_ONLY_TYPE_CODES = [10, 11, 30, 37].freeze
   CIP_ONLY_EXCEPT_WELSH_CODES = [10, 11, 37].freeze
 
+  MAJOR_CHANGE_ATTRIBUTES = %w[
+    administrative_district_code
+    administrative_district_name
+    school_status_code
+    school_status_name
+    school_type_code
+    school_type_name
+    section_41_approved
+    ukprn
+  ].freeze
+
   def open_status_code?(status_code)
     ELIGIBLE_STATUS_CODES.include?(status_code)
   end

@@ -168,6 +168,7 @@ ActiveRecord::Schema.define(version: 2021_09_06_164616) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "section_41_approved"
+    t.string "la_code"
     t.index ["urn"], name: "index_data_stage_schools_on_urn", unique: true
   end
 
