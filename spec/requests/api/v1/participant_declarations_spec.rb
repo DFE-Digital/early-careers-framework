@@ -90,7 +90,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         expect { post "/api/v1/participant-declarations", params: params_with_different_declaration_date }
             .to change(ParticipantDeclarationAttempt, :count).by(1)
 
-        expect(response.status).to eq 409
+        expect(response.status).to eq 400
         expect(parsed_response["id"]).to eq(original_id)
       end
 
