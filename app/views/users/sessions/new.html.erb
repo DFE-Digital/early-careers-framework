@@ -13,10 +13,9 @@
 
       <%= f.govuk_submit "Sign in" %>
     <% end %>
-    <h2 class="govuk-heading-m">How you can access this service</h2>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>you must be nominated or sent sign in details to access this service. <%= govuk_link_to "Find out how to get an account", check_account_path %></li>
-      <li>we don’t use DfE sign in or passwords, you just need your account’s email address</li>
-    </ul>
+    <h2 class="govuk-heading-m">How to access this service</h2>
+      		<p>Enter your registered email address (the one we send emails to).</p>
+      		<p>Do not use your DfE Sign-in details.</p>
+        	<p>If you’re not registered, <%= govuk_link_to "find out how to get an account", check_account_path %>.</p>
   </div>
 </div>

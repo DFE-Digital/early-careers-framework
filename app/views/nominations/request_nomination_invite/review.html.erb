@@ -7,12 +7,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-l">Confirm your details</h1>
-    <p class="govuk-body govuk-!-margin-bottom-7">
-      We will send a link to the email address your school has listed on our register, Get Information about Schools</p>
-    <p class="govuk-body govuk-!-margin-bottom-7">
-      It will be an administration email, for example, office@, admin@ or head@</p>
-   <p class="govuk-body govuk-!-margin-bottom-7">If you're not sure, <%= govuk_link_to "Sign in to DfE", "https://services.signin.education.gov.uk/" %> and check that your GIAS email is up to date.</p>
-
+  
     <div class="govuk-!-margin-bottom-9">
       <%= render partial: 'nominations/school_details', locals: { school: @nomination_request_form.school, title: "Your school" } %>
       <%= govuk_link_to "Change school", choose_location_request_nomination_invite_path, class: "govuk-link--no-visited-state", "data-test": "change-school" %>
@@ -20,7 +15,7 @@
 
     <%= form_for :confirmation, url: review_request_nomination_invite_path, method: :post do |f| %>
       <%= f.hidden_field :answers_checked, value: true %>
-      <%= f.govuk_submit "Confirm" %>
+      <%= f.govuk_submit "Confirm and send" %>
     <% end %>
   </div>
 </div>
