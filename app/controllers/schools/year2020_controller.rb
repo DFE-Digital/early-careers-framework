@@ -3,7 +3,7 @@
 module Schools
   class Year2020Controller < ApplicationController
     before_action :load_year_2020_form
-    before_action :check_school_has_no_existing_2020_ects, except: %i[start cohort_already_have_access]
+    before_action :check_school_has_no_existing_2020_ects, except: %i[start cohort_already_have_access success]
     SESSION_KEY = :schools_year2020_form
 
     def start
@@ -87,8 +87,8 @@ module Schools
     end
 
     def check_school_has_no_existing_2020_ects
-      school_cohort = SchoolCohort.find_by(school: @year_2020_form.school, cohort: @year_2020_form.cohort)&.ecf_participants
-      if school_cohort.count.positive?
+      school_cohort = SchoolCohort.find_by(school: @year_2020_form.school, cohort: @year_2020_form.cohort)
+      if school_cohort&.ecf_participants&.present?
         redirect_to action: :cohort_already_have_access
       end
     end

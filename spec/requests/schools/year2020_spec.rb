@@ -171,7 +171,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
 
     describe "GET /schools/:school_id/year-2020/start" do
       before do
-        get "/schools/#{school.slug}/year-2020/start"
+        get "/schools/#{school.slug}/year-2020/support-materials-for-NQTs"
       end
 
       it { is_expected.to render_template("schools/year2020/start") }
