@@ -7,23 +7,22 @@ class ValidationBetaService
       .where(opt_out_of_updates: false)
       .where.not(id: ParticipantProfile::ECF.select(:school_cohort_id))
 
-    emails_sent = []
-
     School.where(id: empty_school_cohorts.select(:school_id)).includes(:induction_coordinators).find_each do |school|
-      school.induction_coordinators.each do |sit|
-        next if emails_sent.include?(sit.email)
+      school.induction_coordinator_profiles.each do |sit|
+        next if sit.reminder_email_sent_at.present?
 
-        SchoolMailer.remind_induction_coordinator_to_setup_cohort_email(
-          recipient: sit.email,
+        email = SchoolMailer.remind_induction_coordinator_to_setup_cohort_email(
+          recipient: sit.user.email,
           school_name: school.name,
           campaign: :sit_to_complete_steps,
-        ).deliver_later
+        )
 
-        emails_sent << sit.email
+        ActiveRecord::Base.transaction do
+          sit.update_column(:reminder_email_sent_at, Time.zone.now)
+          email.deliver_later
+        end
       end
     end
-
-    emails_sent
   end
 
   # ECTs who have not added their details for validation
