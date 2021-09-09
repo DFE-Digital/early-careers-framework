@@ -595,9 +595,9 @@
         }
       }
     },
-    "/api/v1/participants/{id}/withdraw": {
+    "/api/v1/participants/{id}/resume": {
       "put": {
-        "summary": "Withdraw a participant from a course",
+        "summary": "Resume a participant into a course",
         "operationId": "participant",
         "tags": [
           "ECF Participant"
@@ -613,7 +613,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ECFParticipantWithdrawRequest"
+                "$ref": "#/components/schemas/ECFParticipantResumeRequest"
               }
             }
           }
@@ -624,7 +624,7 @@
             "in": "path",
             "required": true,
             "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the participant to withdraw",
+            "description": "The ID of the participant to resume",
             "schema": {
               "type": "string"
             }
@@ -632,7 +632,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The ECF participant being withdrawn",
+            "description": "The ECF participant being resumed",
             "content": {
               "application/json": {
                 "schema": {
@@ -693,9 +693,9 @@
         }
       }
     },
-    "/api/v1/participants/{id}/resume": {
+    "/api/v1/participants/{id}/withdraw": {
       "put": {
-        "summary": "Resume a participant into a course",
+        "summary": "Withdraw a participant from a course",
         "operationId": "participant",
         "tags": [
           "ECF Participant"
@@ -711,7 +711,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ECFParticipantResumeRequest"
+                "$ref": "#/components/schemas/ECFParticipantWithdrawRequest"
               }
             }
           }
@@ -722,7 +722,7 @@
             "in": "path",
             "required": true,
             "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the participant to resume",
+            "description": "The ID of the participant to withdraw",
             "schema": {
               "type": "string"
             }
@@ -730,7 +730,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The ECF participant being resumed",
+            "description": "The ECF participant being withdrawn",
             "content": {
               "application/json": {
                 "schema": {
