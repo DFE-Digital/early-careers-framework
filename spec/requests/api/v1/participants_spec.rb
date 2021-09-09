@@ -115,6 +115,16 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           expect(second_page_ids).not_to include first_page_id
         end
 
+        it "returns users in a consistent order" do
+          users = User.all
+          users.first.update!(created_at: 1.day.ago)
+          users.last.update!(created_at: 2.days.ago)
+
+          get "/api/v1/participants"
+          expect(parsed_response["data"][0]["id"]).to eq User.last.id
+          expect(parsed_response["data"][1]["id"]).to eq User.first.id
+        end
+
         context "when updated_since parameter is supplied" do
           before do
             User.first.update!(updated_at: 2.days.ago)
