@@ -25,6 +25,18 @@
 <p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#put-api-v1-participants-id-defer" class="govuk-link">deferred ECF participant</a> endpoint.</p>
 
 
+<h2 id="notifying-of-resume" class="govuk-heading-l">Notifying that an ECF participant is resuming their course</h2>
+
+<p class="govuk-body-m">This functionality allows the provider to inform the DfE that a participant has resumed an ECF course.</p>
+
+<h3 class="govuk-heading-m">1. Provider resumes a participant</h3>
+
+<p class="govuk-body-m">Submit the resumed notification to the following endpoint</p>
+<p class="govuk-body-m"><code>PUT /api/v1/participants/{id}/resume</code></p>
+<p class="govuk-body-m">This will return an <a href="/lead-providers/guidance/reference#ecfparticipant-object" class="govuk-link">ECF participant record</a> with the updates to the record included.</p>
+<p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#put-api-v1-participants-id-defer" class="govuk-link">deferred ECF participant</a> endpoint.</p>
+
+
 <h2 id="notifying-of-schedule-change" class="govuk-heading-l">Notify that an ECF participant is changing training schedule</h2>
 
 <p class="govuk-body-m">This operation allows the provider to tell the DfE that a participant has changed training schedules on their ECF course.</p>
