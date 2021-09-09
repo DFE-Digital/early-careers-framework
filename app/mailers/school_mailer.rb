@@ -18,7 +18,7 @@ class SchoolMailer < ApplicationMailer
   ADD_PARTICIPANTS_EMAIL_TEMPLATE = "721787d0-74bc-42a0-a064-ee0c1cb58edb"
   YEAR2020_INVITE_EMAIL_TEMPLATE = "d4b53e26-4630-43a5-b89e-3c668061a41c"
 
-  def remind_sits_to_setup_cohort(recipient:, school_name:, campaign: nil)
+  def remind_induction_coordinator_to_setup_cohort_email(recipient:, school_name:, campaign: nil)
     campaign_tracking = campaign ? UTMService.email(campaign, campaign) : {}
 
     template_mail(

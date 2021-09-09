@@ -13,7 +13,7 @@ class ValidationBetaService
       school.induction_coordinators.each do |sit|
         next if emails_sent.include?(sit.email)
 
-        SchoolMailer.remind_sits_to_setup_cohort(
+        SchoolMailer.remind_induction_coordinator_to_setup_cohort_email(
           recipient: sit.email,
           school_name: school.name,
           campaign: :sit_to_complete_steps,
