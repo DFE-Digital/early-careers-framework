@@ -3,6 +3,7 @@
 module Schools
   class Year2020Controller < ApplicationController
     before_action :load_year_2020_form
+    before_action :check_school_has_no_existing_2020_ects, except: %i[start cohort_already_have_access]
     SESSION_KEY = :schools_year2020_form
 
     def start
@@ -76,11 +77,20 @@ module Schools
 
     def no_accredited_materials; end
 
+    def cohort_already_have_access; end
+
   private
 
     def load_year_2020_form
       @year_2020_form = Year2020Form.new(get_year_2020_session.merge(school_id: params[:school_id]))
       @year_2020_form.assign_attributes(year_2020_params)
+    end
+
+    def check_school_has_no_existing_2020_ects
+      school_cohort = SchoolCohort.find_by(school: @year_2020_form.school, cohort: @year_2020_form.cohort)&.ecf_participants
+      if school_cohort.count.positive?
+        redirect_to action: :cohort_already_have_access
+      end
     end
 
     def year_2020_params
