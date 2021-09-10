@@ -15,7 +15,7 @@ module Finance
         contract.bands.each_with_index.map do |band, index|
           {
             index: index,
-            band: band
+            band: band,
           }
         end
       end

@@ -101,6 +101,7 @@ en:
 
   finance:
     choose_programme: Choose programme scheme
+    show_contract: View contract information
     provider: Provider
     milestone: Milestone
     target: Recruitment target
@@ -123,7 +124,8 @@ en:
         floor: 0
         ceiling: Unlimited
     ecf:
-      caption: ECF Payment Breakdown
+      payment_breakdown: ECF Payment Breakdown
+      contract_information: ECF Contract Information
     service_fee:
       caption: Service Fee
       participants: Target Participants

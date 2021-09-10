@@ -5,7 +5,7 @@ module Finance
     class ContractBandRow < BaseComponent
       include FinanceHelper
 
-      private
+    private
 
       attr_reader :band, :index
       delegate :min, :max, :per_participant, to: :band

@@ -6,15 +6,17 @@ class Finance::LeadProvidersController < Finance::BaseController
   end
 
   def show
-    ecf_lead_provider = lead_provider_scope.find(params[:id])
-
-    calculations = CalculationOrchestrator.call(
-      cpd_lead_provider: ecf_lead_provider.cpd_lead_provider,
-      contract: ecf_lead_provider.call_off_contract,
+    @ecf_lead_provider = lead_provider_scope.find(params[:id])
+    @breakdown = CalculationOrchestrator.call(
+      cpd_lead_provider: @ecf_lead_provider.cpd_lead_provider,
+      contract: @ecf_lead_provider.call_off_contract,
       event_type: :started,
     )
+  end
 
-    @breakdown = calculations
+  def show_contract
+    ecf_lead_provider = lead_provider_scope.find(params[:id])
+    @contract = ecf_lead_provider.call_off_contract
   end
 
 private
