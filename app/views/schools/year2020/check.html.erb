@@ -16,8 +16,7 @@
           <%= @year_2020_form.core_induction_programme.name %>
         </dd>
         <dd class="govuk-summary-list__actions">
-          <%# govuk_link_to issue: https://github.com/DFE-Digital/govuk-components/issues/193 %>
-          <%= govuk_link_to({ action: :select_cip }, button: false) do %>
+          <%= govuk_link_to({ action: :select_cip }) do %>
             Change <span class="govuk-visually-hidden">material choice</span>
           <% end %>
         </dd>
@@ -33,11 +32,10 @@
             <div><%= participant[:email] %></div>
           </dd>
           <dd class="govuk-summary-list__actions">
-            <%# govuk_link_to issue: https://github.com/DFE-Digital/govuk-components/issues/193 %>
-            <%= govuk_link_to({ action: :remove_teacher, index: participant[:index] }, button: false, class: "govuk-!-margin-right-5") do %>
+            <%= govuk_link_to({ action: :remove_teacher, index: participant[:index] }, class: "govuk-!-margin-right-5") do %>
               Delete
             <% end %>
-            <%= govuk_link_to({ action: :edit_teacher, index: participant[:index] }, button: false) do %>
+            <%= govuk_link_to({ action: :edit_teacher, index: participant[:index] }) do %>
               Change <span class="govuk-visually-hidden">personal details</span>
             <% end %>
           </dd>
@@ -46,7 +44,7 @@
     </dl>
 
     <p>
-      <%= govuk_link_to({ action: :new_teacher }, button: false) do %>
+      <%= govuk_link_to({ action: :new_teacher }) do %>
         Add another teacher
       <% end %>
     </p>
