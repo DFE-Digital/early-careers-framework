@@ -205,7 +205,24 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
           expected_json_response(declaration: participant_declaration, profile: ect_profile)
         end
 
-        it "loads list of eligible participant" do
+        it "loads list of declarations" do
+          get "/api/v1/participant-declarations"
+          expect(response.status).to eq 200
+
+          expect(parsed_response).to eq(expected_response)
+        end
+      end
+
+      context "when there is a voided declaration" do
+        let(:expected_response) do
+          expected_json_response(declaration: participant_declaration, profile: ect_profile, voided: true)
+        end
+
+        before do
+          participant_declaration.void!
+        end
+
+        it "loads list of declarations" do
           get "/api/v1/participant-declarations"
           expect(response.status).to eq 200
 
@@ -224,7 +241,12 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
           expected_json_response(declaration: participant_declaration, profile: ect_profile, eligible_for_payment: true)
         end
 
-        it "loads list of eligible participants" do
+        before do
+          default_headers[:Authorization] = bearer_token
+          default_headers[:CONTENT_TYPE] = "application/json"
+        end
+
+        it "loads list of declarations" do
           get "/api/v1/participant-declarations"
           expect(response.status).to eq 200
 
@@ -336,7 +358,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
     it "returns the correct headers" do
       expect(parsed_response.headers).to match_array(
-        %w[id course_identifier declaration_date declaration_type eligible_for_payment participant_id],
+        %w[id course_identifier declaration_date declaration_type eligible_for_payment participant_id voided],
       )
     end
 
@@ -358,11 +380,11 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
 private
 
-  def expected_json_response(declaration:, profile:, course_identifier: "ecf-induction", eligible_for_payment: false)
+  def expected_json_response(declaration:, profile:, course_identifier: "ecf-induction", eligible_for_payment: false, voided: false)
     {
       "data" =>
           [
-            single_json_declaration(declaration: declaration, profile: profile, course_identifier: course_identifier, eligible_for_payment: eligible_for_payment),
+            single_json_declaration(declaration: declaration, profile: profile, course_identifier: course_identifier, eligible_for_payment: eligible_for_payment, voided: voided),
           ],
     }
   end
@@ -374,7 +396,7 @@ private
     }
   end
 
-  def single_json_declaration(declaration:, profile:, course_identifier: "ecf-induction", eligible_for_payment: false)
+  def single_json_declaration(declaration:, profile:, course_identifier: "ecf-induction", eligible_for_payment: false, voided: false)
     {
       "id" => declaration.id,
       "type" => "participant-declaration",
@@ -384,6 +406,7 @@ private
         "declaration_date" => declaration.declaration_date.rfc3339,
         "course_identifier" => course_identifier,
         "eligible_for_payment" => eligible_for_payment,
+        "voided" => voided,
       },
     }
   end
