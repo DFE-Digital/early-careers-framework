@@ -57,7 +57,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
           }
         end
 
-        schema "$ref": "#/components/schemas/ParticipantDeclarationRecordedResponse"
+        schema "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
         run_test!
       end
 
@@ -152,6 +152,48 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
 
       response "200", "A CSV file of participant declarations" do
         schema({ "$ref": "#/components/schemas/MultipleParticipantDeclarationsCsvResponse" }, content_type: "text/csv")
+
+        run_test!
+      end
+
+      response "401", "Unauthorized" do
+        let(:Authorization) { "Bearer invalid" }
+
+        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" }, content_type: "application/vnd.api+json")
+
+        run_test!
+      end
+    end
+  end
+
+  path "/api/v1/participant-declarations/{id}" do
+    let(:id) do
+      create(:participant_declaration,
+             user: user,
+             cpd_lead_provider: cpd_lead_provider,
+             course_identifier: "ecf-induction").id
+    end
+
+    get "Get single participant declaration" do
+      operationId :participant_declarations
+      tags "participants declaration"
+      security [bearerAuth: []]
+
+      parameter name: :id,
+                in: :path,
+                type: :string,
+                required: true,
+                example: "9ed4612b-f8bd-44d9-b296-38ab103fadd2",
+                description: "The ID of the participant declaration ID"
+
+      response "200", "A single participant declaration" do
+        schema({ "$ref": "#/components/schemas/SingleParticipantDeclarationResponse" }, content_type: "application/vnd.api+json")
+
+        run_test!
+      end
+
+      response "404", "Not found" do
+        let(:id) { "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee" }
 
         run_test!
       end

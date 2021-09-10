@@ -279,7 +279,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ParticipantDeclarationRecordedResponse"
+                  "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
                 }
               }
             }
@@ -409,6 +409,59 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/participant-declarations/{id}": {
+      "get": {
+        "summary": "Get single participant declaration",
+        "operationId": "participant_declarations",
+        "tags": [
+          "participants declaration"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "9ed4612b-f8bd-44d9-b296-38ab103fadd2",
+            "description": "The ID of the participant declaration ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single participant declaration",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
           },
           "401": {
             "description": "Unauthorized",
@@ -2129,18 +2182,6 @@
           }
         }
       },
-      "ParticipantDeclarationRecordedResponse": {
-        "description": "A confirmation that the participant declaration has been recorded successfully",
-        "type": "object",
-        "required": [
-          "data"
-        ],
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/ParticipantDeclarationResponse"
-          }
-        }
-      },
       "ParticipantDeclarationResponse": {
         "description": "A participant declaration response",
         "type": "object",
@@ -2163,6 +2204,18 @@
           },
           "attributes": {
             "$ref": "#/components/schemas/ParticipantDeclarationAttributes"
+          }
+        }
+      },
+      "SingleParticipantDeclarationResponse": {
+        "description": "A confirmation that the participant declaration has been recorded successfully",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ParticipantDeclarationResponse"
           }
         }
       },
