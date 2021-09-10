@@ -18,5 +18,9 @@ class ParticipantDeclarationSerializer
     declaration.declaration_date.rfc3339
   end
 
+  attribute :voided do |declaration|
+    declaration.voided || false
+  end
+
   attribute(:participant_id, &:user_id)
 end

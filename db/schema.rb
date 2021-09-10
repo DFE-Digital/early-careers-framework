@@ -564,6 +564,7 @@ ActiveRecord::Schema.define(version: 2021_09_09_154906) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "payable", default: false
+    t.boolean "voided", default: false
     t.index ["participant_declaration_id"], name: "index_profile_declarations_on_participant_declaration_id"
   end
 
