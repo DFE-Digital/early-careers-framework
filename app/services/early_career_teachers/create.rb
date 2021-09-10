@@ -17,7 +17,7 @@ module EarlyCareerTeachers
         end
 
         ParticipantProfile::ECT.create!({ teacher_profile: teacher_profile, schedule: Finance::Schedule.default }.merge(ect_attributes)) do |profile|
-          ParticipantProfileState.create!({ participant_profile: profile })
+          ParticipantProfileState.find_or_create_by!(participant_profile: profile)
         end
       end
     end
