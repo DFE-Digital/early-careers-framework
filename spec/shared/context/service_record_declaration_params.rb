@@ -14,7 +14,6 @@ RSpec.shared_context "service record declaration params" do
   let(:ect_params) do
     params.merge({ cpd_lead_provider: cpd_lead_provider })
   end
-
   let(:mentor_declaration_date) { mentor_profile.schedule.milestones.first.start_date + 1.day }
   let(:mentor_params) do
     ect_params.merge({ participant_id: mentor_profile.user.id, course_identifier: "ecf-mentor", declaration_date: mentor_declaration_date.rfc3339 })

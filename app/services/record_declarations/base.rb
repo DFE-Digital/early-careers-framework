@@ -34,7 +34,10 @@ module RecordDeclarations
       validate_provider!
       validate_milestone!
 
+      raise ActiveRecord::RecordNotUnique, "Declaration with given participant ID already exists" if record_exists_with_different_declaration_date?
+
       declaration = find_or_create_record!
+
       declaration.refresh_payability!
       declaration_attempt.update!(participant_declaration: declaration)
 
@@ -79,6 +82,16 @@ module RecordDeclarations
           profile_declaration.update!(payable: participant_declaration.currently_payable)
         end
       end
+    end
+
+    def record_exists_with_different_declaration_date?
+      declaration = self.class.declaration_model.find_by(
+        user: user,
+        course_identifier: course_identifier,
+        declaration_type: declaration_type,
+      )
+
+      declaration.present? && declaration.declaration_date != Time.zone.parse(declaration_date)
     end
 
     def date_has_the_right_format
