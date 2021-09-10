@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_06_164616) do
+ActiveRecord::Schema.define(version: 2021_09_09_154906) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -168,6 +168,7 @@ ActiveRecord::Schema.define(version: 2021_09_06_164616) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "section_41_approved"
+    t.string "la_code"
     t.index ["urn"], name: "index_data_stage_schools_on_urn", unique: true
   end
 
@@ -281,6 +282,7 @@ ActiveRecord::Schema.define(version: 2021_09_06_164616) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "discarded_at"
+    t.datetime "reminder_email_sent_at"
     t.index ["discarded_at"], name: "index_induction_coordinator_profiles_on_discarded_at"
     t.index ["user_id"], name: "index_induction_coordinator_profiles_on_user_id"
   end

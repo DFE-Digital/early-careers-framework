@@ -1,4 +1,4 @@
-<% content_for :title, "Find school" %>
+<% content_for :title, "What’s the name of your school?" %>
 <% content_for :before_content, govuk_back_link(text: "Back", href: choose_location_request_nomination_invite_path(continue: true)) %>
 
 <%= form_with model: @nomination_request_form, url: choose_school_request_nomination_invite_path, method: :post do |f| %>
@@ -10,7 +10,6 @@
           :id,
           :name_with_address,
           label: { text: "Find your school", tag: "h1", size: "l"  },
-          hint: { text: "Enter school name"},
           options: { include_blank: true },
           class: ["js-school-select"]) %>
   </div>

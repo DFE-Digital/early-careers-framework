@@ -11,6 +11,7 @@ FactoryBot.define do
     school_status_name { "Open" }
     school_type_code { 1 }
     administrative_district_code { "E123" }
+    section_41_approved { false }
 
     trait :closed do
       school_status_code { 2 }

@@ -76,7 +76,7 @@ module Api
 
         participants = participants.changed_since(updated_since) if updated_since.present?
 
-        participants
+        participants.order(:created_at)
       end
 
       def participant_id

@@ -9,6 +9,7 @@ module Api
     rescue_from ActionController::BadRequest, with: :bad_request_response
     rescue_from ActiveRecord::StatementInvalid, with: :bad_request_response
     rescue_from ArgumentError, with: :bad_request_response
+    rescue_from ActiveRecord::RecordNotUnique, with: :bad_request_response
 
   private
 

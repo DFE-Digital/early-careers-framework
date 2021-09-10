@@ -23,6 +23,10 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
   end
 
   context "when valid user is an early_career_teacher" do
+    let(:ect_params_with_different_date) do
+      ect_params.merge({ declaration_date: (ect_declaration_date + 1.second).rfc3339 })
+    end
+
     it "creates a participant and profile declaration" do
       expect { described_class.call(ect_params) }.to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
     end
@@ -32,6 +36,13 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
         described_class.call(ect_params)
         described_class.call(ect_params)
       }.to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
+    end
+
+    it "does not create exact duplicates and throws an error" do
+      expect {
+        described_class.call(ect_params)
+        described_class.call(ect_params_with_different_date)
+      }.to raise_error(ActiveRecord::RecordNotUnique)
     end
 
     it "fails when course is for mentor" do

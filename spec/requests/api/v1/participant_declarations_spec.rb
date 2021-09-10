@@ -57,7 +57,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         expect(ParticipantDeclaration.order(:created_at).last.payable).to be_truthy
       end
 
-      it "does not create duplicate declarations, but stores the duplicate declaration attempts" do
+      it "does not create duplicate declarations with the same declaration date, but stores the duplicate declaration attempts" do
         params = build_params(valid_params)
         post "/api/v1/participant-declarations", params: params
         original_id = parsed_response["id"]
@@ -68,6 +68,26 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
             .to change(ParticipantDeclarationAttempt, :count).by(1)
 
         expect(response.status).to eq 200
+        expect(parsed_response["id"]).to eq(original_id)
+      end
+
+      it "does not create duplicate declarations with different declaration date, but stores the duplicate declaration attempts" do
+        params = build_params(valid_params)
+
+        new_valid_params = valid_params
+        new_valid_params[:declaration_date] = (ect_profile.schedule.milestones.first.start_date + 1.second).rfc3339
+
+        params_with_different_declaration_date = build_params(new_valid_params)
+
+        post "/api/v1/participant-declarations", params: params
+        original_id = parsed_response["id"]
+
+        expect { post "/api/v1/participant-declarations", params: params }
+            .not_to change(ParticipantDeclaration, :count)
+        expect { post "/api/v1/participant-declarations", params: params_with_different_declaration_date }
+            .to change(ParticipantDeclarationAttempt, :count).by(1)
+
+        expect(response.status).to eq 400
         expect(parsed_response["id"]).to eq(original_id)
       end
 
@@ -168,6 +188,11 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
     end
 
     context "when authorized" do
+      before do
+        default_headers[:Authorization] = bearer_token
+        default_headers[:CONTENT_TYPE] = "application/json"
+      end
+
       context "when there is a non eligible declaration" do
         let(:expected_response) do
           expected_json_response(declaration: participant_declaration, profile: ect_profile)
@@ -190,11 +215,6 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
         let(:expected_response) do
           expected_json_response(declaration: participant_declaration, profile: ect_profile, eligible_for_payment: true)
-        end
-
-        before do
-          default_headers[:Authorization] = bearer_token
-          default_headers[:CONTENT_TYPE] = "application/json"
         end
 
         it "loads list of eligible participants" do
@@ -244,6 +264,24 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
           expect(response.status).to eq 200
 
           expect(parsed_response).to eq({ "data" => [] })
+        end
+      end
+
+      context "when querying a single participant declaration" do
+        let(:expected_response) do
+          expected_single_json_response(declaration: participant_declaration, profile: ect_profile)
+        end
+
+        it "loads declaration with the specific id" do
+          get "/api/v1/participant-declarations/#{participant_declaration.id}"
+          expect(response.status).to eq 200
+
+          expect(JSON.parse(response.body)).to eq(expected_response)
+        end
+
+        it "returns 404 if participant declaration does not exist" do
+          get "/api/v1/participant-declarations/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
+          expect(response.status).to eq 404
         end
       end
     end
@@ -317,18 +355,29 @@ private
     {
       "data" =>
           [
-            {
-              "id" => declaration.id,
-              "type" => "participant-declaration",
-              "attributes" => {
-                "participant_id" => profile.user.id,
-                "declaration_type" => "started",
-                "declaration_date" => declaration.declaration_date.rfc3339,
-                "course_identifier" => course_identifier,
-                "eligible_for_payment" => eligible_for_payment,
-              },
-            },
+            single_json_declaration(declaration: declaration, profile: profile, course_identifier: course_identifier, eligible_for_payment: eligible_for_payment),
           ],
+    }
+  end
+
+  def expected_single_json_response(declaration:, profile:, course_identifier: "ecf-induction", eligible_for_payment: false)
+    {
+      "data" =>
+          single_json_declaration(declaration: declaration, profile: profile, course_identifier: course_identifier, eligible_for_payment: eligible_for_payment),
+    }
+  end
+
+  def single_json_declaration(declaration:, profile:, course_identifier: "ecf-induction", eligible_for_payment: false)
+    {
+      "id" => declaration.id,
+      "type" => "participant-declaration",
+      "attributes" => {
+        "participant_id" => profile.user.id,
+        "declaration_type" => "started",
+        "declaration_date" => declaration.declaration_date.rfc3339,
+        "course_identifier" => course_identifier,
+        "eligible_for_payment" => eligible_for_payment,
+      },
     }
   end
 end
