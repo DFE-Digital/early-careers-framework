@@ -95,6 +95,33 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
     end
   end
 
+  path "/api/v1/participant-declarations/{id}/void" do
+    put "Void a declaration - it will not be soft-deleted" do
+      operationId :participant_declarations
+      tags "Participant declarations"
+      consumes "application/json"
+      security [bearerAuth: []]
+
+      parameter name: :id,
+                in: :path,
+                type: :string,
+                required: true,
+                example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+                description: "The ID of the declaration to void"
+
+      response 200, "Successful" do
+        let(:id) do
+          declaration = create(:participant_declaration, user: ect_profile.user, cpd_lead_provider: cpd_lead_provider, course_identifier: "ecf-induction")
+          create(:profile_declaration, participant_declaration: declaration, participant_profile: ect_profile)
+          declaration.id
+        end
+
+        schema "$ref": "#/components/schemas/ParticipantDeclarationRecordedResponse"
+        run_test!
+      end
+    end
+  end
+
   path "/api/v1/participant-declarations" do
     get "List all participant declarations" do
       operationId :participant_declarations
