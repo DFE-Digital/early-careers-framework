@@ -385,46 +385,6 @@
         }
       }
     },
-    "/api/v1/participant-declarations/{id}/void": {
-      "put": {
-        "summary": "Void a declaration - it will not be soft-deleted",
-        "operationId": "participant_declarations",
-        "tags": [
-          "Participant declarations"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the declaration to void",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ParticipantDeclarationRecordedResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/participant-declarations.csv": {
       "get": {
         "summary": "Retrieve all participant declarations in CSV format",
@@ -509,6 +469,46 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/participant-declarations/{id}/void": {
+      "put": {
+        "summary": "Void a declaration - it will not be soft-deleted",
+        "operationId": "participant_declarations",
+        "tags": [
+          "Participant declarations"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the declaration to void",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
                 }
               }
             }
