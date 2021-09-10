@@ -7,30 +7,26 @@
     <h1 class="govuk-heading-xl">Confirm these details</h1>
     <p class="govuk-body">Check the following details are correct before continuing.</p>
     <%= govuk_summary_list do |component|
-      component.slot(
-        :row,
-        key: "Full name",
-        value: @participant_validation_form.name,
-        action: govuk_link_to("Change", participants_validation_tell_us_your_details_path),
-      )
-      component.slot(
-        :row,
-        key: "TRN",
-        value: @participant_validation_form.trn,
-        action: govuk_link_to("Change", participants_validation_tell_us_your_details_path),
-      )
-      component.slot(
-        :row,
-        key: "Date of birth",
-        value: @participant_validation_form.pretty_date_of_birth,
-        action: govuk_link_to("Change", participants_validation_tell_us_your_details_path),
-      )
-      component.slot(
-        :row,
-        key: "National Insurance number",
-        value: @participant_validation_form.national_insurance_number,
-        action: govuk_link_to("Change", participants_validation_tell_us_your_details_path),
-      )
+      component.row do |row|
+        row.key { "Full name" }
+        row.value { @participant_validation_form.name }
+        row.action(text: "Change", href: participants_validation_tell_us_your_details_path)
+      end
+      component.row do |row|
+        row.key { "TRN" }
+        row.value { @participant_validation_form.trn }
+        row.action(text: "Change", href: participants_validation_tell_us_your_details_path)
+      end
+      component.row do |row|
+        row.key { "Date of birth" }
+        row.value { @participant_validation_form.pretty_date_of_birth }
+        row.action(text: "Change", href: participants_validation_tell_us_your_details_path)
+      end
+      component.row do |row|
+        row.key { "National Insurance number" }
+        row.value { @participant_validation_form.national_insurance_number }
+        row.action(text: "Change", href: participants_validation_tell_us_your_details_path)
+      end
     end %>
 
     <%= form_for @participant_validation_form, url: { action: @participant_validation_form.step }, method: :put do |f| %>

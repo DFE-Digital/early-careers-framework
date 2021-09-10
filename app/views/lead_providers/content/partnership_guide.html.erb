@@ -28,7 +28,7 @@
 
 <p class="govuk-body-m"><img src="/lead-provider/start-page.png" alt="Example of a Lead Provider start page"></p>
 
-<%= render GovukComponent::Warning.new(text: "If you go to the start page called ‘Manage training for early career teachers’, ignore the copy for induction tutors. Just press ‘Start’ to get to the sign in page.") %>
+<%= render GovukComponent::WarningTextComponent.new(text: "If you go to the start page called ‘Manage training for early career teachers’, ignore the copy for induction tutors. Just press ‘Start’ to get to the sign in page.") %>
 
 <h2 id="how-to-confirm-the-schools-you-have-recruited" class="govuk-heading-l">How to confirm the schools you have recruited</h2>
 <p class="govuk-body-m">When you have confirmed an agreement with a school or a number of schools, you can upload them using a CSV file. This updates the DfE so that we can process your payments.</p>
@@ -55,37 +55,32 @@
 
 <p class="govuk-body-m"><img src="/lead-provider/example-csv.png" alt="Example CSV containing a list of school URNs"></p>
 
-<%= render GovukComponent::Warning.new(text: "you upload a CSV for each delivery partner you have confirmed schools for.") %>
+<%= render GovukComponent::WarningTextComponent.new(text: "you upload a CSV for each delivery partner you have confirmed schools for.") %>
 
 <h2 id="checking-errors-and-updating-your-csv" class="govuk-heading-l">Checking errors and updating your CSV</h2>
 <p class="govuk-body-m">When you upload your CSV, we will show you if there are any errors. These could be:</p>
 
-<%= render GovukComponent::SummaryList.new do |component|
-    component.slot(
-        :row,
-        key: 'Recruited by other provider',
-        value: 'Another training provider has confirmed this school'
-    )
-    component.slot(
-        :row,
-        key: 'URN is not valid',
-        value: 'The unique reference number (URN) does not match this school'
-    )
-    component.slot(
-        :row,
-        key: 'Your school - already confirmed',
-        value: 'You have already confirmed this school and it’s on your list'
-    )
-    component.slot(
-        :row,
-        key: 'School not eligible for inductions',
-        value: 'School is not an eligible establishment type and/or isn’t in England and/or isn’t open as per our GIAS snapshot'
-    )
-    component.slot(
-        :row,
-        key: 'School not eligible for funding',
-        value: 'This school is not eligible to receive funding from the DfE. (Other independent special schools, Welsh establishments, British schools overseas etc.)<br/><br/>They can only use the accredited materials (core induction programme).'.html_safe
-    )
+<%= render GovukComponent::SummaryListComponent.new do |component|
+  component.row do |row|
+    row.key { "Recruited by other provider" }
+    row.value { "Another training provider has confirmed this school" }
+  end
+  component.row do |row|
+    row.key { "URN is not valid" }
+    row.value { "The unique reference number (URN) does not match this school" }
+  end
+  component.row do |row|
+    row.key { "Your school - already confirmed" }
+    row.value { "You have already confirmed this school and it’s on your list" }
+  end
+  component.row do |row|
+    row.key { "School not eligible for inductions" }
+    row.value { "School is not an eligible establishment type and/or isn’t in England and/or isn’t open as per our GIAS snapshot" }
+  end
+  component.row do |row|
+    row.key { "School not eligible for funding" }
+    row.value { "This school is not eligible to receive funding from the DfE. (Other independent special schools, Welsh establishments, British schools overseas etc.)<br/><br/>They can only use the accredited materials (core induction programme).".html_safe }
+  end
 end %>
 
 <p class="govuk-body-m">You can choose to:</p>
@@ -100,7 +95,7 @@ end %>
 <h2 id="when-a-school-reports-that-they-have-been-confirmed-incorrectly" class="govuk-heading-l">When a school reports that they have been confirmed incorrectly</h2>
 <p class="govuk-body-m">Every school you confirm on our service will receive a confirmation email like this:</p>
 
-<%= render GovukComponent::InsetText.new(text: 'Hello,<br/>
+<%= render GovukComponent::InsetTextComponent.new(text: 'Hello,<br/>
     <br/>
     <code>&lt;Delivery partner name&gt;</code>, with <code>&lt;Lead provider name&gt;</code>, has confirmed they will be delivering an induction programme to early career teachers at <code>&lt;School name&gt;</code>, starting in 2021.<br/>
 
@@ -152,7 +147,7 @@ end %>
 
 <p class="govuk-body-m">if the matter is resolved, upload the school again</p>
 
-<%= render GovukComponent::Warning.new(text: "You will not receive payment for this school until resolved and re-uploaded.") %>
+<%= render GovukComponent::WarningTextComponent.new(text: "You will not receive payment for this school until resolved and re-uploaded.") %>
 
 <h2 id="check-the-schools-you-ve-recruited" class="govuk-heading-l">Check the schools you’ve recruited</h2>
 <p class="govuk-body-m">When you have signed into the service, you can:</p>
@@ -170,7 +165,7 @@ end %>
 
 <p class="govuk-body-m"><img src="/lead-provider/school-page.png" alt="Example showing the details known about a school"></p>
 
-<%= render GovukComponent::Warning.new(text: "ECT and mentor numbers will be zero (0) until we gather this data from schools. We will update all providers before schools start adding them to the service.") %>
+<%= render GovukComponent::WarningTextComponent.new(text: "ECT and mentor numbers will be zero (0) until we gather this data from schools. We will update all providers before schools start adding them to the service.") %>
 
 <h2 id="help-support-and-feedback" class="govuk-heading-l">Help, support and feedback</h2>
 

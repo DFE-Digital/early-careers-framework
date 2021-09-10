@@ -126,7 +126,7 @@
 
     <% if current_user != true_user %>
       <div class="govuk-width-container">
-    <%= render GovukComponent::NotificationBanner.new(title: 'Important', classes: 'govuk-!-margin-top-0 govuk-!-margin-bottom-5', html_attributes: { data: { test: "notification-banner"} }) do |banner| %>
+    <%= render GovukComponent::NotificationBannerComponent.new(title: 'Important', classes: 'govuk-!-margin-top-0 govuk-!-margin-bottom-5', html_attributes: { data: { test: "notification-banner"} }) do |banner| %>
           <p class="govuk-notification-banner__heading">
             You are impersonating <%= link_to current_user.full_name %> (<%= current_user.email %>)
           </p>
