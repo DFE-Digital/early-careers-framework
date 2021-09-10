@@ -273,7 +273,8 @@ ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) 
   mentor_profile.schedule = Finance::Schedule.default
   ParticipantProfileState.find_or_create_by!(participant_profile: profile)
 end
-ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile, schedule: Finance::Schedule.default)
+npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile, schedule: Finance::Schedule.default)
+ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
 
 # FIP mentor already doing an NPQ with a different email
 user = User.find_or_create_by!(email: "fip-mentor-npq-other-email@example.com") do |u|
@@ -282,7 +283,8 @@ end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
   profile.trn = "2369848"
 end
-ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile, schedule: Finance::Schedule.default)
+npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile, schedule: Finance::Schedule.default)
+ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
 
 user = User.find_or_create_by!(email: "fip-mentor2@example.com") do |u|
   u.full_name = "FIP Mentor"
@@ -412,7 +414,8 @@ ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) 
   mentor_profile.schedule = Finance::Schedule.default
   ParticipantProfileState.find_or_create_by!(participant_profile: profile)
 end
-ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile, schedule: Finance::Schedule.default)
+npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile, schedule: Finance::Schedule.default)
+ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
 
 # CIP mentor already doing an NPQ with a different email
 user = User.find_or_create_by!(email: "cip-mentor-npq-other-email@example.com") do |u|
@@ -421,7 +424,8 @@ end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
   profile.trn = "2631405"
 end
-ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile, schedule: Finance::Schedule.default)
+npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile, schedule: Finance::Schedule.default)
+ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
 
 user = User.find_or_create_by!(email: "cip-mentor2@example.com") do |u|
   u.full_name = "CIP Mentor"
