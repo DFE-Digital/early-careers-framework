@@ -11,7 +11,7 @@ RSpec.describe CalculationOrchestrator do
       mentors: 5,
       name: "Lead Provider",
       participants: 10,
-      target: 2000,
+      recruitment_target: 2000,
     }
   end
   let(:ect_focussed_headings) do
