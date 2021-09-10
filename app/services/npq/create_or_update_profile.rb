@@ -23,7 +23,7 @@ module NPQ
       participant_profile.school_ukprn = npq_validation_data.school_ukprn
       participant_profile.save!
 
-      ParticipantProfileState.find_or_create_by!({ participant_profile: participant_profile })
+      ParticipantProfileState.find_or_create_by!(participant_profile: participant_profile)
     end
 
   private
