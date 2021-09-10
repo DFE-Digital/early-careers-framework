@@ -43,7 +43,6 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :notify
   config.action_mailer.perform_deliveries = true
   config.action_mailer.perform_caching = false
-  config.action_mailer.default_url_options = { host: config.domain }
   config.action_mailer.logger = Logger.new("log/mail.log", formatter: proc { |_, _, _, msg|
     if msg =~ /quoted-printable/
       message = Mail::Message.new(msg)
