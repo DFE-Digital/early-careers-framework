@@ -294,7 +294,7 @@ Rails.application.routes.draw do
       end
 
       resource :year_2020, path: "year-2020", controller: "year2020", only: [], constraints: ->(_request) { FeatureFlag.active?(:year_2020_data_entry) } do
-        get "start", action: :start
+        get "support-materials-for-NQTs", action: :start, as: :start
 
         get "choose-core-induction-programme", action: :select_cip
         put "choose-core-induction-programme", action: :choose_cip

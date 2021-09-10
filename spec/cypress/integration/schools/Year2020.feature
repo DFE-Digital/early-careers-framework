@@ -6,12 +6,12 @@ Feature: School leaders should be able to add participants
     And cohort was created with start_year "2020"
     And core_induction_programme was created with name "Awesome induction course"
     And feature year_2020_data_entry is active
-    And I am on "/schools/test-school/year-2020/start" path
+    And I am on "/schools/test-school/year-2020/support-materials-for-NQTs" path
     Then the page should be accessible
     And percy should be sent snapshot called "Year 2020 start page"
 
   Scenario: Should be able to add a new 2020 ECT participant
-    When I click on "link" containing "Start now"
+    When I click on "link" containing "Choose a provider"
     Then I should be on "2020 cip choice" page
     And the page should be accessible
     And percy should be sent snapshot called "Year 2020 CIP Choice page"

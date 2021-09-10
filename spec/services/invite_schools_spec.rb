@@ -648,7 +648,7 @@ RSpec.describe InviteSchools do
     it "emails the induction coordinator" do
       FeatureFlag.activate(:year_2020_data_entry)
 
-      expected_url = "http://www.example.com/schools/#{school.friendly_id}/year-2020/start?utm_campaign=year2020-nqt-invite&utm_medium=email&utm_source=year2020-nqt-invite"
+      expected_url = "http://www.example.com/schools/#{school.friendly_id}/year-2020/support-materials-for-NQTs?utm_campaign=year2020-nqt-invite&utm_medium=email&utm_source=year2020-nqt-invite"
       InviteSchools.new.send_year2020_invite_email
       expect(SchoolMailer).to delay_email_delivery_of(:year2020_invite_email)
                                 .with(hash_including(
