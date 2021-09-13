@@ -7,7 +7,7 @@ class ParticipantDeclaration < ApplicationRecord
   belongs_to :cpd_lead_provider
   belongs_to :user
 
-  delegate :payable, :voided, to: :current_profile_declaration, allow_nil: true
+  delegate :payable, to: :current_profile_declaration, allow_nil: true
 
   validates :course_identifier, :user, :cpd_lead_provider, :declaration_date, :declaration_type, presence: true
 
@@ -50,22 +50,17 @@ class ParticipantDeclaration < ApplicationRecord
         participant_profile: participant_profile,
         participant_declaration: self,
         payable: currently_payable,
-        voided: current_profile_declaration&.voided || false,
       )
       reload
     end
   end
 
-  def void!
-    return if current_profile_declaration&.voided
+  def voided
+    voided_at.present?
+  end
 
+  def void!
     # TODO: Prevent voiding a processed declaration - that requires clawbacks
-    ProfileDeclaration.create!(
-      participant_profile: participant_profile,
-      participant_declaration: self,
-      payable: current_profile_declaration&.payable,
-      voided: true,
-    )
-    reload
+    update!(voided_at: Time.zone.now)
   end
 end
