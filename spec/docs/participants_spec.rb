@@ -92,7 +92,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
   end
 
   path "/api/v1/participants/{id}/defer" do
-    put "Defer a participant from a course" do
+    put "Notify that an ECF participant is taking a break from their course" do
       operationId :participant
       tags "ECF Participant"
       security [bearerAuth: []]
@@ -147,7 +147,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
   end
 
   path "/api/v1/participants/{id}/resume" do
-    put "Resume a participant into a course" do
+    put "Notify that an ECF participant is resuming their course" do
       operationId :participant
       tags "ECF Participant"
       security [bearerAuth: []]
@@ -201,7 +201,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
   end
 
   path "/api/v1/participants/{id}/change-schedule" do
-    put "Change participant schedule" do
+    put "Notify that an ECF participant is changing training schedule" do
       operationId :participant
       tags "ECF Participant"
       security [bearerAuth: []]
@@ -260,7 +260,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
   end
 
   path "/api/v1/participants/{id}/withdraw" do
-    put "Withdraw a participant from a course" do
+    put "Notify that an ECF participant has withdrawn from their course" do
       operationId :participant
       tags "ECF Participant"
       security [bearerAuth: []]

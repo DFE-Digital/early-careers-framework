@@ -601,7 +601,7 @@
     },
     "/api/v1/participants/{id}/defer": {
       "put": {
-        "summary": "Defer a participant from a course",
+        "summary": "Notify that an ECF participant is taking a break from their course",
         "operationId": "participant",
         "tags": [
           "ECF Participant"
@@ -650,7 +650,7 @@
     },
     "/api/v1/participants/{id}/resume": {
       "put": {
-        "summary": "Resume a participant into a course",
+        "summary": "Notify that an ECF participant is resuming their course",
         "operationId": "participant",
         "tags": [
           "ECF Participant"
@@ -699,7 +699,7 @@
     },
     "/api/v1/participants/{id}/change-schedule": {
       "put": {
-        "summary": "Change participant schedule",
+        "summary": "Notify that an ECF participant is changing training schedule",
         "operationId": "participant",
         "tags": [
           "ECF Participant"
@@ -748,7 +748,7 @@
     },
     "/api/v1/participants/{id}/withdraw": {
       "put": {
-        "summary": "Withdraw a participant from a course",
+        "summary": "Notify that an ECF participant has withdrawn from their course",
         "operationId": "participant",
         "tags": [
           "ECF Participant"
