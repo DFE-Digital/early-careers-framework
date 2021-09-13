@@ -25,7 +25,7 @@ const pagePaths = {
   "Manage your training":
     "/schools/:id",
   "2021 cohort CIP materials info":
-    "/schools/:id/cohorts/2021/core-programme/materials/info",
+    "/schools/:id/cohorts/2021/programme-choice",
   "2021 cohort CIP materials selection":
     "/schools/:id/cohorts/2021/core-programme/materials/edit",
   "2021 cohort CIP materials success":

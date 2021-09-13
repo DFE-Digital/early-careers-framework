@@ -18,7 +18,7 @@ RSpec.describe "Schools::ProgrammeChoice", type: :request do
   describe "GET /schools/:school_id/cohorts/:start_year" do
     it "renders the show template" do
       get "/schools/#{school.slug}/cohorts/#{cohort.start_year}"
-      expect(response).to render_template("schools/cohorts/show")
+      expect(response).to render_template("schools/cohorts/programme_choice")
     end
 
     context "when the school has no early career teachers for the cohort" do
