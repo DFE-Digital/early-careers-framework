@@ -11,7 +11,7 @@ Feature: Induction tutors seeing challenge banners
     And the page should be accessible
 
   Scenario: Viewing the next steps page
-    When I click on "link" containing "2021"
+    When I click on "link" containing "View Details"
     Then I should be on "2021 school cohorts" page
     And the page should be accessible
     And percy should be sent snapshot called "Opted out with banner"

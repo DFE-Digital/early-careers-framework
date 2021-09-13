@@ -22,8 +22,10 @@ const pagePaths = {
   privacy: "/privacy-policy",
   accessibility: "/accessibility-statement",
   dashboard: "/dashboard",
+  "Manage your training":
+    "/schools/:id",
   "2021 cohort CIP materials info":
-    "/schools/:id/cohorts/2021/core-programme/materials/info",
+    "/schools/:id/cohorts/:id/programme-choice",
   "2021 cohort CIP materials selection":
     "/schools/:id/cohorts/2021/core-programme/materials/edit",
   "2021 cohort CIP materials success":
