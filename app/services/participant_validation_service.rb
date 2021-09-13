@@ -19,14 +19,25 @@ class ParticipantValidationService
     validated_record = matching_record(trn: trn, nino: nino, full_name: full_name, dob: date_of_birth)
     return if validated_record.nil?
 
-    {
+    validation_data = {
       trn: validated_record[:teacher_reference_number],
       qts: validated_record[:qts_date].present? && validated_record[:qts_date] != "null",
       active_alert: validated_record[:active_alert],
+      previous_participation: false,
+      previous_induction: false,
     }
+
+    set_eligibility_flags(validation_data)
   end
 
 private
+
+  def set_eligibility_flags(validation_data)
+    ineligibility_flag = CheckParticipantEligibility.call(trn: validation_data[:trn])
+
+    validation_data[ineligibility_flag] = true if ineligibility_flag.present?
+    validation_data
+  end
 
   def check_first_name_only?
     config[:check_first_name_only]

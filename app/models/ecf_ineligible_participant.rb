@@ -2,7 +2,7 @@
 
 class ECFIneligibleParticipant < ApplicationRecord
   enum reason: {
-    previous_participant: "previous_participant",
+    previous_participation: "previous_participation",
     previous_induction: "previous_induction",
   }
 end

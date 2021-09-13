@@ -196,10 +196,8 @@ module Participants
     def store_eligibility_data!(dqt_data)
       participant_profile.create_ecf_participant_eligibility!(qts: dqt_data[:qts],
                                                               active_flags: dqt_data[:active_alert],
-                                                              # TODO: CPDRP-672 use ERO data
-                                                              previous_participation: nil,
-                                                              # TODO: CPDRP-900 use previous induction data
-                                                              previous_induction: nil)
+                                                              previous_participation: dqt_data[:previous_participation],
+                                                              previous_induction: dqt_data[:previous_induction])
     end
 
     def participant_profile
