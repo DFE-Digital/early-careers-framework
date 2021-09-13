@@ -110,14 +110,25 @@ class ValidationBetaService
   end
 
   def tell_induction_coordinators_we_asked_ects_and_mentors_for_information
-    InductionCoordinatorProfile.find_each do |ic|
-      ic.schools.not_opted_out.each do |school|
-        if chosen_programme_and_not_in_beta(school)
-          send_induction_coordinators_we_asked_ects_and_mentors_for_information(ic, school)
-          break
+    school_cohorts = SchoolCohort
+      .where(
+        id: ParticipantProfile::ECF.where("created_at > ?", Date.new(2021, 9, 7)).select(:school_cohort_id),
+        induction_programme_choice: %w[core_induction_programme full_induction_programme],
+      )
+
+    school_ids = school_cohorts.select(:school_id)
+
+    InductionCoordinatorProfile
+      .includes(:schools)
+      .where(schools: { id: school_ids })
+      .find_each do |ic|
+        ic.schools.not_opted_out.where(id: school_ids) do |school|
+          if chosen_programme_and_not_in_beta(school)
+            send_induction_coordinators_we_asked_ects_and_mentors_for_information(ic, school)
+            break
+          end
         end
       end
-    end
   end
 
 private
