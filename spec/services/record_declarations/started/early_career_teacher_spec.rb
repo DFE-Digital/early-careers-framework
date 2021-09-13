@@ -73,6 +73,14 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
     end
   end
 
+  context "when including evidence_held" do
+    it "raised ParameterMissing error" do
+      params = ect_params.merge(evidence_held: "self-study-material-completed")
+      expected_msg = /Unpermitted parameter: evidence_held/
+      expect { described_class.call(params) }.to raise_error(ActionController::UnpermittedParameters, expected_msg)
+    end
+  end
+
   context "when declaration date is in the past" do
     it "does not raise ParameterMissing error" do
       params = ect_params.merge({ declaration_date: (Time.zone.now - 1.day).rfc3339(9) })

@@ -49,6 +49,8 @@ module RecordDeclarations
     def initialize(params)
       params.each do |param, value|
         send("#{param}=", value)
+      rescue NoMethodError
+        raise ActionController::UnpermittedParameters, ["Unpermitted parameter: #{param}"]
       end
     end
 
