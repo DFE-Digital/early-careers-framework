@@ -5,7 +5,6 @@ require "rails_helper"
 RSpec.describe CheckParticipantEligibility do
   subject(:service) { described_class }
 
-
   describe ".call" do
     context "when a matching ineligible participant record exists" do
       let!(:ineligible_participant) { create(:ineligible_participant, trn: "1234567", reason: "previous_participation") }
