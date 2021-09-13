@@ -20,7 +20,7 @@ class Importers::IneligibleParticipants < BaseService
         if row["dob"].present? || row["urn"].present?
           add_ineligible_record!(full_name: row["name"], date_of_birth: row["dob"], urn: row["urn"])
         else
-          @logger.info "Not enough info to add #{row["name"]}"
+          @logger.info "Not enough info to add #{row['name']}"
           invalid_count += 1
         end
       else
