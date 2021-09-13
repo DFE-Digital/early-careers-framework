@@ -21,10 +21,10 @@ RSpec.describe Participants::Resume::EarlyCareerTeacher do
   end
 
   context "when valid user is an early_career_teacher" do
-    it "creates an active state for that user's profile" do
+    it "creates an active state and makes the profile active" do
       expect { described_class.call(params: participant_params) }
-        .to change { ParticipantProfileState.count }.by(1)
-      expect { ParticipantProfileState.order(created_at: :desc).first.active? }
+          .to change { ParticipantProfileState.count }.by(1)
+      expect { User.find(participant_params[:participant_id]).ect_profile.active? }
     end
 
     it "fails when the participant is already active" do

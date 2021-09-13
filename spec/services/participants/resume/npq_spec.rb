@@ -21,10 +21,10 @@ RSpec.describe Participants::Resume::NPQ do
   end
 
   context "when valid user is an npq" do
-    it "creates an active state for that user's profile" do
+    it "creates an active state and makes the profile active" do
       expect { described_class.call(params: participant_params) }
           .to change { ParticipantProfileState.count }.by(1)
-      expect { ParticipantProfileState.order(created_at: :desc).first.active? }
+      expect { User.find(participant_params[:participant_id]).npq_profile.active? }
     end
 
     it "fails when the participant is already active" do

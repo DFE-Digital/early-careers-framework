@@ -22,10 +22,10 @@ RSpec.describe Participants::Withdraw::Mentor do
   end
 
   context "when valid user is an mentor" do
-    it "creates a withdrawn state for that user's profile" do
+    it "creates a withdrawn state and makes the profile withdrawn" do
       expect { described_class.call(params: participant_params) }
-        .to change { ParticipantProfileState.count }.by(1)
-      expect { ParticipantProfileState.order(created_at: :desc).first.withdrawn? }
+          .to change { ParticipantProfileState.count }.by(1)
+      expect { User.find(participant_params[:participant_id]).mentor_profile.withdrawn? }
     end
 
     it "fails when the reason is invalid" do
