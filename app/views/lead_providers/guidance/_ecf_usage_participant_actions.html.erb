@@ -8,7 +8,7 @@
 <p class="govuk-body-m">Submit the deferral notification to the following endpoint</p>
 <p class="govuk-body-m"><code>PUT /api/v1/participants/{id}/defer</code></p>
 <p class="govuk-body-m">This will return an <a href="/lead-providers/guidance/reference#ecfparticipant-object" class="govuk-link">ECF participant record</a> with the updates to the record included.</p>
-<p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#put-api-v1-participants-id-defer" class="govuk-link">deferred ECF participant</a> endpoint.</p>
+<p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#put-api-v1-participants-id-defer" class="govuk-link">defer ECF participant</a> endpoint.</p>
 
 
 <h2 id="notifying-of-resume" class="govuk-heading-l">Notifying that an ECF participant is resuming their course</h2>
@@ -20,22 +20,22 @@
 <p class="govuk-body-m">Submit the resumed notification to the following endpoint</p>
 <p class="govuk-body-m"><code>PUT /api/v1/participants/{id}/resume</code></p>
 <p class="govuk-body-m">This will return an <a href="/lead-providers/guidance/reference#ecfparticipant-object" class="govuk-link">ECF participant record</a> with the updates to the record included.</p>
-<p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#put-api-v1-participants-id-defer" class="govuk-link">deferred ECF participant</a> endpoint.</p>
+<p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#put-api-v1-participants-id-resume" class="govuk-link">resume ECF participant</a> endpoint.</p>
 
 
-<h2 id="notifying-of-schedule-change" class="govuk-heading-l">Notify that an ECF participant is changing training schedule</h2>
+<h2 id="notifying-of-schedule-change" class="govuk-heading-l">Notifying that an ECF participant is changing training schedule</h2>
 
 <p class="govuk-body-m">This operation allows the provider to tell the DfE that a participant has changed training schedules on their ECF course.</p>
 
-<h3 class="govuk-heading-m">1. Provider changes a participants schedule</h3>
+<h3 class="govuk-heading-m">1. Provider changes a participant's schedule</h3>
 
 <p class="govuk-body-m">Submit the change of schedule notification to the following endpoint</p>
 <p class="govuk-body-m"><code>PUT /api/v1/participants/{id}/change-schedule</code></p>
 <p class="govuk-body-m">This will return an <a href="/lead-providers/guidance/reference#ecfparticipant-object" class="govuk-link">ECF participant record</a> with the updates to the record included.</p>
-<p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#put-api-v1-participants-id-change-schedule" class="govuk-link">deferred ECF participant</a> endpoint.</p>
+<p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#put-api-v1-participants-id-change-schedule" class="govuk-link">change schedule of ECF participant</a> endpoint.</p>
 
 
-<h2 id="notifying-of-withdrawal" class="govuk-heading-l">Notify that an ECF participant has withdrawn from their course</h2>
+<h2 id="notifying-of-withdrawal" class="govuk-heading-l">Notifying that an ECF participant has withdrawn from their course</h2>
 
 <p class="govuk-body-m">This operation allows the provider to tell the DfE that a participant has withdrawn from their ECF course.</p>
 <p class="govuk-body-m">A participant that withdraws in a given milestone period after the submission of a retained event for the same period, will be paid for that period.</p>
