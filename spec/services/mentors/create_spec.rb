@@ -16,7 +16,7 @@ RSpec.describe Mentors::Create do
         school_cohort: school_cohort,
       )
     }.to change { ParticipantProfile::Mentor.count }.by(1)
-                                                    .and not_change { User.count }
+     .and not_change { User.count }
   end
 
   it "uses the existing teacher profile record" do
@@ -28,8 +28,8 @@ RSpec.describe Mentors::Create do
         mentor_id: "random discardable",
       )
     }.to change { ParticipantProfile::Mentor.count }.by(1)
-                                                    .and not_change { User.count }
-                                                           .and not_change { TeacherProfile.count }
+     .and not_change { User.count }
+     .and not_change { TeacherProfile.count }
   end
 
   it "ignores mentor id" do
@@ -51,8 +51,8 @@ RSpec.describe Mentors::Create do
         school_cohort: school_cohort,
       )
     }.to change { ParticipantProfile::Mentor.count }.by(1)
-                                                    .and change { User.count }.by(1)
-                                                                              .and change { TeacherProfile.count }.by(1)
+     .and change { User.count }.by(1)
+     .and change { TeacherProfile.count }.by(1)
   end
 
   it "updates the users name" do
