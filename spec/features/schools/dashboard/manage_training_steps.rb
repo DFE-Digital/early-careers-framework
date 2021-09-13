@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ManageTrainingSteps
   include Capybara::DSL
 
@@ -116,7 +118,7 @@ module ManageTrainingSteps
   end
 
   def when_i_select_materials
-    choose('CIP Programme 1', allow_label_click: true)
+    choose("CIP Programme 1", allow_label_click: true)
   end
 
   def and_i_am_taken_to_course_confirmed_page
