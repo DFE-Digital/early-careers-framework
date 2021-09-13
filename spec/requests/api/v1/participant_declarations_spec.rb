@@ -108,6 +108,32 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         end
       end
 
+      context "when participant is withdrawn" do
+        before do
+          ect_profile.participant_profile_states.create({ state: "withdrawn" })
+        end
+
+        it "returns 422 when participant is withdrawn" do
+          params = build_params(valid_params)
+          post "/api/v1/participant-declarations", params: params
+          expect(response.status).to eq 422
+          expect(response.body).to eq({ errors: [{ title: "Bad or missing parameters", detail: I18n.t(:declaration_on_incorrect_state) }] }.to_json)
+        end
+      end
+
+      context "when participant is deferred" do
+        before do
+          ect_profile.participant_profile_states.create({ state: "deferred" })
+        end
+
+        it "returns 422 when participant is withdrawn" do
+          params = build_params(valid_params)
+          post "/api/v1/participant-declarations", params: params
+          expect(response.status).to eq 422
+          expect(response.body).to eq({ errors: [{ title: "Bad or missing parameters", detail: I18n.t(:declaration_on_incorrect_state) }] }.to_json)
+        end
+      end
+
       it "returns 422 when trying to create for an invalid user id" do
         # Expects the user uuid. Pass the early_career_teacher_profile_id
         invalid_user_id = valid_params.merge({ participant_id: ect_profile.id })

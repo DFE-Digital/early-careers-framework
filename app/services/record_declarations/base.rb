@@ -33,6 +33,7 @@ module RecordDeclarations
       declaration_attempt = create_declaration_attempt!
       validate_provider!
       validate_milestone!
+      validate_participant!
 
       raise ActiveRecord::RecordNotUnique, "Declaration with given participant ID already exists" if record_exists_with_different_declaration_date?
 
@@ -117,6 +118,10 @@ module RecordDeclarations
       unless parsed_date <= milestone.milestone_date.end_of_day
         raise ActionController::ParameterMissing, I18n.t(:declaration_after_milestone_cutoff)
       end
+    end
+
+    def validate_participant!
+      raise ActionController::ParameterMissing, I18n.t(:declaration_on_incorrect_state) if %w[withdrawn deferred].include?(participant_profile_state&.state)
     end
 
     def milestone
