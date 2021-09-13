@@ -47,14 +47,12 @@
 
 <div class="govuk-button-group">
   <% if @valid_schools.any? %>
-    <%= govuk_button_to(
+    <%= govuk_button_link_to(
           "Continue with #{(@valid_schools.count)} #{"school".pluralize((@valid_schools.count))}",
-          { action: :proceed },
-          button: true) %>
+          { action: :proceed }) %>
   <% end %>
-  <%= govuk_link_to(
+  <%= govuk_button_link_to(
         "Re-upload CSV",
         { action: :show },
-        button: true,
         class: "govuk-button--secondary") %>
 </div>

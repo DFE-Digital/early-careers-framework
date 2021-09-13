@@ -295,7 +295,7 @@ module ParticipantValidationSteps
   def and_i_should_see_a_banner_telling_me_i_need_to_add_my_mentor_information
     banner = find("[data-test='add-mentor-information-banner']")
     expect(banner).to have_selector("h2", text: "Important")
-    expect(banner).to have_selector("p.govuk-notification-banner__heading", text: "You need to add information about yourself as a mentor.")
+    expect(banner).to have_selector("div.govuk-notification-banner__heading", text: "You need to add information about yourself as a mentor.")
     expect(banner).to have_link("Update now", href: participants_validation_do_you_know_your_trn_path)
   end
 

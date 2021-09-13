@@ -14,8 +14,7 @@
       <div class="govuk-button-group">
         <%= f.govuk_submit "Confirm",  class: "govuk-button--warning" %>
 
-        <%# govuk_link_to issue: https://github.com/DFE-Digital/govuk-components/issues/193 %>
-        <%= govuk_link_to({ action: :check }, button: false) do %>
+        <%= govuk_link_to({ action: :check }) do %>
           Cancel
         <% end %>
       </div>

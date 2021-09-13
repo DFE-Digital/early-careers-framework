@@ -1,8 +1,8 @@
 <% content_for :title, "Schools confirmed" %>
 
 <%= govuk_panel(
-  title: "#{report_schools_form.school_ids.count} #{"school".pluralize(report_schools_form.school_ids.count)} confirmed for #{report_schools_form.delivery_partner.name}",
-  body: nil,
+      title_text: "#{report_schools_form.school_ids.count} #{"school".pluralize(report_schools_form.school_ids.count)} confirmed for #{report_schools_form.delivery_partner.name}",
+      text: nil,
 ) %>
 
 <h2 class="govuk-heading-m">What happens next</h2>
@@ -11,4 +11,4 @@
   <li>each school needs to add their early career teachers and mentors</li>
 </ul>
 
-<%= govuk_link_to("Confirm more schools", { action: :start }, button: true)  %>
+<%= govuk_button_link_to("Confirm more schools", { action: :start })  %>

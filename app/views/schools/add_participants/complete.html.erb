@@ -1,7 +1,7 @@
 <% content_for :title, "Teacher or mentor added" %>
 
 <% if participant_profile.user == current_user %>
-  <%= govuk_panel title: "You have been added to the #{@cohort.display_name} cohort", body: nil, classes: "govuk-!-margin-bottom-8" %>
+  <%= govuk_panel title_text: "You have been added to the #{@cohort.display_name} cohort", text: nil, classes: "govuk-!-margin-bottom-8" %>
 
   <h2 class="govuk-heading-m">What happens next</h2>
   <ul class="govuk-list govuk-list--bullet">
@@ -9,7 +9,7 @@
   </ul>
 
 <% else %>
-  <%= govuk_panel title: "You have added #{participant_profile.user.full_name} to the #{@cohort.display_name} cohort", body: nil, classes: "govuk-!-margin-bottom-8" %>
+  <%= govuk_panel title_text: "You have added #{participant_profile.user.full_name} to the #{@cohort.display_name} cohort", text: nil, classes: "govuk-!-margin-bottom-8" %>
 
   <h2 class="govuk-heading-m">What happens next</h2>
   <ul class="govuk-list govuk-list--bullet">
@@ -20,6 +20,6 @@
 <% end %>
 
 <div class="govuk-button-group">
-  <%= govuk_link_to "Add a new ECT or mentor", add_schools_participants_path, button: true %>
+  <%= govuk_button_link_to "Add a new ECT or mentor", add_schools_participants_path %>
   <%= govuk_link_to "View your ECTs and mentors", schools_participants_path %>
 </div>
