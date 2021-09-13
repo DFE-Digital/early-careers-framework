@@ -28,7 +28,8 @@ class ValidationBetaService
   # ECTs who have not added their details for validation
   def tell_ects_to_add_validation_information
     ParticipantProfile::ECT
-      .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort, :school)
+      .active_record
+      .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort, :school, :user)
       .where(
         request_for_details_sent_at: nil,
         school_cohort: {
@@ -47,7 +48,8 @@ class ValidationBetaService
   # FIP mentors who have not added their details for validation
   def tell_fip_mentors_to_add_validation_information
     ParticipantProfile::Mentor
-      .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort, :school)
+      .active_record
+      .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort, :school, user: :induction_coordinator_profile)
       .where(
         request_for_details_sent_at: nil,
         school_cohort: {
@@ -64,10 +66,11 @@ class ValidationBetaService
       .find_each { |profile| send_fip_mentors_to_add_validation_information(profile, profile.school) }
   end
 
-  # FIP mentors who have not added their details for validation
+  # CIP mentors who have not added their details for validation
   def tell_cip_mentors_to_add_validation_information
     ParticipantProfile::Mentor
-      .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort, :school)
+      .active_record
+      .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort, :school, user: :induction_coordinator_profile)
       .where(
         request_for_details_sent_at: nil,
         school_cohort: {
@@ -86,6 +89,7 @@ class ValidationBetaService
 
   def tell_induction_coordinators_who_are_mentors_to_add_validation_information
     ParticipantProfile::Mentor
+      .active_record
       .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort, :school, user: :induction_coordinator_profile)
       .where(
         request_for_details_sent_at: nil,
@@ -326,6 +330,8 @@ private
   end
 
   def send_fip_mentors_to_add_validation_information(profile, school)
+    return if profile.user.induction_coordinator?
+
     campaign = :fip_mentors_to_add_validation_information
 
     participant_validation_start_url = Rails.application.routes.url_helpers.participants_start_registrations_url(
@@ -346,6 +352,8 @@ private
   end
 
   def send_cip_mentors_to_add_validation_information(profile, school)
+    return if profile.user.induction_coordinator?
+
     campaign = :cip_mentors_to_add_validation_information
 
     participant_validation_start_url = Rails.application.routes.url_helpers.participants_start_registrations_url(
