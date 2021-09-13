@@ -122,7 +122,7 @@ class ValidationBetaService
       .includes(:schools)
       .where(schools: { id: school_ids })
       .find_each do |ic|
-        ic.schools.not_opted_out.where(id: school_ids) do |school|
+        ic.schools.not_opted_out.where(id: school_ids).find_each do |school|
           if chosen_programme_and_not_in_beta(school)
             send_induction_coordinators_we_asked_ects_and_mentors_for_information(ic, school)
             break
