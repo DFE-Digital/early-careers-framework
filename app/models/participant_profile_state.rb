@@ -5,9 +5,11 @@ class ParticipantProfileState < ApplicationRecord
     current_state = participant_profile.participant_profile_state
     return true if current_state.nil?
 
+    # TODO: Add an active profile state to all ECF participants to avoid 'resume' actions with no profile states
     case state
     when "active"
-      errors.add(:base, "already active") if current_state.active?
+      errors.add(:base, I18n.t(:already_active)) if current_state.active?
+      errors.add(:base, I18n.t(:invalid_resume)) if current_state.withdrawn?
     when "withdrawn"
       errors.add(:base, I18n.t(:invalid_withdrawal)) if current_state.withdrawn?
     when "deferred"

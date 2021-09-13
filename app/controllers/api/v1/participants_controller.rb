@@ -28,6 +28,10 @@ module Api
         perform_action(service_namespace: ::Participants::Defer)
       end
 
+      def resume
+        perform_action(service_namespace: ::Participants::Resume)
+      end
+
       def withdraw
         perform_action(service_namespace: ::Participants::Withdraw)
       end

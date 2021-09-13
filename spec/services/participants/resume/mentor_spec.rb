@@ -4,15 +4,13 @@ require "rails_helper"
 
 require_relative "../../../shared/context/lead_provider_profiles_and_courses.rb"
 
-RSpec.describe Participants::Withdraw::NPQ do
+RSpec.describe Participants::Resume::Mentor do
   include_context "lead provider profiles and courses"
-
   let(:participant_params) do
     {
       cpd_lead_provider: cpd_lead_provider,
-      participant_id: npq_profile.user.id,
-      course_identifier: "npq-leading-teaching",
-      reason: "career-break",
+      participant_id: mentor_profile.user.id,
+      course_identifier: "ecf-mentor",
     }
   end
 
@@ -22,28 +20,23 @@ RSpec.describe Participants::Withdraw::NPQ do
     end
   end
 
-  context "when valid user is an NPQ" do
-    it "creates a withdrawn state and makes the profile withdrawn" do
+  context "when valid user is a mentor" do
+    it "creates an active state and makes the profile active" do
       expect { described_class.call(params: participant_params) }
           .to change { ParticipantProfileState.count }.by(1)
-      expect { User.find(participant_params[:participant_id]).npq_profile.withdrawn? }
+      expect { User.find(participant_params[:participant_id]).mentor_profile.active? }
     end
 
-    it "fails when the reason is invalid" do
-      params = participant_params.merge({ reason: "wibble" })
-      expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
-    end
-
-    it "creates a withdrawn state when that user is deferred" do
-      Participants::Defer::NPQ.call(params: participant_params.merge(reason: "adoption"))
+    it "fails when the participant is already active" do
+      ParticipantProfileState.create!(participant_profile: mentor_profile, state: "active")
       expect { described_class.call(params: participant_params) }
-        .to change { ParticipantProfileState.count }.by(1)
+          .to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "fails when the participant is already withdrawn" do
-      described_class.call(params: participant_params)
+      ParticipantProfileState.create!(participant_profile: mentor_profile, state: "withdrawn")
       expect { described_class.call(params: participant_params) }
-        .to raise_error(ActiveRecord::RecordInvalid)
+          .to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "fails when course is for an early career teacher" do
@@ -51,13 +44,8 @@ RSpec.describe Participants::Withdraw::NPQ do
       expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
     end
 
-    it "fails when course is for a mentor" do
-      params = participant_params.merge({ course_identifier: "ecf-mentor" })
-      expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
-    end
-
-    it "fails when course is for a different npq-course" do
-      params = participant_params.merge({ course_identifier: "npq-headship" })
+    it "fails when course is for an npq-course" do
+      params = participant_params.merge({ course_identifier: "npq-leading-teacher" })
       expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
     end
   end

@@ -57,6 +57,7 @@ en:
   missing_lead_provider: "The lead provider must be present"
   already_active: The participant is already active
   invalid_withdrawal: The participant is already withdrawn
+  invalid_resume: Cannot resume a withdrawn participant
   invalid_deferral: The participant is already deferred
   invalid_event: "The property '#/declaration_type' must be a valid declaration type"
   invalid_course: "The property '#/course_identifier' must be an available course to '#/participant_id'"
