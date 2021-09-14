@@ -28,14 +28,10 @@ module EmailRedirector
   private
 
     def overide_personalisation(mail, key, &block)
-      value = mail.header["personalisation"].unparsed_value[key]
+      value = mail.header["personalisation"]&.unparsed_value&.fetch(key, nil)
       return if value.blank?
 
       mail.header["personalisation"].unparsed_value[key] = block.call(value)
-    end
-
-    def add_default_personalisation(mail, key, value)
-      mail.header["personalisation"].unparsed_value[key] ||= value
     end
 
     def tags(mail)

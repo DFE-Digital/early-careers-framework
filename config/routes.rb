@@ -309,6 +309,7 @@ Rails.application.routes.draw do
         post "check-your-answers", action: :confirm
         get "success", action: :success
 
+        get "2020-cohort-already-have-access", action: :cohort_already_have_access
         get "no-accredited-materials", action: :no_accredited_materials
       end
 

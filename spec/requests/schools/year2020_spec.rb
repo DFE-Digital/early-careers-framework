@@ -6,6 +6,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
   let!(:default_schedule) { create(:schedule, name: "ECF September standard 2021") }
   let!(:school) { create :school }
   let!(:cohort) { create :cohort, start_year: 2020 }
+  let!(:school_cohort) { create(:school_cohort, school: school, cohort: cohort) }
   let!(:core_induction_programme) { create :core_induction_programme }
 
   subject { response }
@@ -163,6 +164,74 @@ RSpec.describe "Schools::AddParticipant", type: :request do
     it { is_expected.to render_template("schools/year2020/success") }
   end
 
+  context "trying to add more ects when a schools 2020 cohort has already been to the service" do
+    before do
+      create(:participant_profile, :ect, school_cohort: school_cohort)
+    end
+
+    describe "GET /schools/:school_id/year-2020/start" do
+      before do
+        get "/schools/#{school.slug}/year-2020/support-materials-for-NQTs"
+      end
+
+      it { is_expected.to render_template("schools/year2020/start") }
+    end
+
+    describe "GET /schools/:school_id/year-2020/choose-core-induction-programme" do
+      before do
+        get "/schools/#{school.slug}/year-2020/choose-core-induction-programme"
+      end
+
+      it { is_expected.to redirect_to "/schools/#{school.slug}/year-2020/2020-cohort-already-have-access" }
+    end
+
+    describe "PUT /schools/:school_id/year-2020/add-teacher" do
+      it "redirects to the cohort already have access page" do
+        put "/schools/#{school.slug}/year-2020/choose-core-induction-programme", params: {
+          schools_year2020_form: { core_induction_programme_id: core_induction_programme.id },
+        }
+        expect(response).to redirect_to "/schools/#{school.slug}/year-2020/2020-cohort-already-have-access"
+      end
+    end
+
+    describe "GET /schools/:school_id/year-2020/check-your-answers" do
+      before do
+        set_default_complete_session
+        get "/schools/#{school.slug}/year-2020/check-your-answers"
+      end
+
+      it { is_expected.to redirect_to "/schools/#{school.slug}/year-2020/2020-cohort-already-have-access" }
+    end
+
+    describe "GET /schools/:school_id/year-2020/edit-teacher?index=x" do
+      before do
+        set_default_complete_session
+        get "/schools/#{school.slug}/year-2020/edit-teacher?index=1"
+      end
+
+      it { is_expected.to redirect_to "/schools/#{school.slug}/year-2020/2020-cohort-already-have-access" }
+    end
+
+    describe "POST /schools/:school_id/year-2020/check-your-answers" do
+      before do
+        set_default_complete_session
+      end
+
+      it "redirects to the 2020-cohort-already-have-access" do
+        post "/schools/#{school.slug}/year-2020/check-your-answers"
+        expect(response).to redirect_to "/schools/#{school.slug}/year-2020/2020-cohort-already-have-access"
+      end
+
+      it "does not save additional teachers trying to be added" do
+        post "/schools/#{school.slug}/year-2020/check-your-answers"
+        school_cohort = SchoolCohort.find_by(school: school, cohort: cohort)
+
+        expect(school_cohort.ecf_participants.count).to eq(1)
+        expect(additional_teacher_has_saved?).to be false
+      end
+    end
+  end
+
 private
 
   def set_default_complete_session
@@ -170,5 +239,9 @@ private
                 school_id: school.friendly_id,
                 core_induction_programme_id: core_induction_programme.id,
                 participants: [{ full_name: "Joe Bloggs", email: "joe@example.com", index: 1 }])
+  end
+
+  def additional_teacher_has_saved?
+    school_cohort.ecf_participants.any? { |participant| participant.full_name == "Joe Bloggs" }
   end
 end
