@@ -12,7 +12,7 @@
 
     <%= form_for @year_2020_form, url: { action: :delete_teacher, index: params[:index] }, method: :put do |f| %>
       <div class="govuk-button-group">
-        <%= f.govuk_submit "Delete", class: "govuk-button--warning" %>
+        <%= f.govuk_submit "Delete", warning: true %>
 
         <%= govuk_link_to({ action: :check }) do %>
           Cancel
