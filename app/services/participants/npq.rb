@@ -5,7 +5,7 @@ module Participants
     extend ActiveSupport::Concern
 
     included do
-      delegate :validation_data, :participant_profile_state, to: :user_profile, allow_nil: true
+      delegate :validation_data, :participant_profile_state, :participant_profile_states, :validate_participant_state, to: :user_profile, allow_nil: true
       delegate :npq?, :npq_profiles, to: :user, allow_nil: true
       extend NPQClassMethods
     end

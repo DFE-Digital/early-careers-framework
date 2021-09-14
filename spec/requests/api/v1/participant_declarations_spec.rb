@@ -108,29 +108,40 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         end
       end
 
-      context "when participant is withdrawn" do
-        before do
-          ect_profile.participant_profile_states.create({ state: "withdrawn" })
+      context "when declaration is rejected" do
+        let(:valid_params) do
+          {
+            participant_id: ect_profile.user.id,
+            declaration_type: "started",
+            declaration_date: (ect_profile.schedule.milestones.first.start_date + 2.days).rfc3339,
+            course_identifier: "ecf-induction",
+          }
         end
 
-        it "returns 422 when participant is withdrawn" do
-          params = build_params(valid_params)
-          post "/api/v1/participant-declarations", params: params
-          expect(response.status).to eq 422
-          expect(response.body).to eq({ errors: [{ title: "Bad or missing parameters", detail: I18n.t(:declaration_on_incorrect_state) }] }.to_json)
-        end
-      end
+        context "when participant is withdrawn" do
+          before do
+            ect_profile.participant_profile_states.create({ state: "withdrawn" })
+          end
 
-      context "when participant is deferred" do
-        before do
-          ect_profile.participant_profile_states.create({ state: "deferred" })
+          it "returns 422 when participant is withdrawn" do
+            params = build_params(valid_params)
+            post "/api/v1/participant-declarations", params: params
+            expect(response.status).to eq 422
+            expect(response.body).to eq({ errors: [{ title: "Bad or missing parameters", detail: I18n.t(:declaration_on_incorrect_state) }] }.to_json)
+          end
         end
 
-        it "returns 422 when participant is withdrawn" do
-          params = build_params(valid_params)
-          post "/api/v1/participant-declarations", params: params
-          expect(response.status).to eq 422
-          expect(response.body).to eq({ errors: [{ title: "Bad or missing parameters", detail: I18n.t(:declaration_on_incorrect_state) }] }.to_json)
+        context "when participant is deferred" do
+          before do
+            ect_profile.participant_profile_states.create({ state: "deferred" })
+          end
+
+          it "returns 422 when participant is withdrawn" do
+            params = build_params(valid_params)
+            post "/api/v1/participant-declarations", params: params
+            expect(response.status).to eq 422
+            expect(response.body).to eq({ errors: [{ title: "Bad or missing parameters", detail: I18n.t(:declaration_on_incorrect_state) }] }.to_json)
+          end
         end
       end
 
