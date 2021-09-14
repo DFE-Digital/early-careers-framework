@@ -18,7 +18,7 @@ RSpec.describe Schools::Year2020Form, type: :model do
     it "validates that the email address is not already in use by an ECT" do
       create(:participant_profile, :ect, user: create(:user, email: email))
       form = Schools::Year2020Form.new(full_name: name, email: email)
-      expect(form).not_to be_valid
+      expect(form).not_to be_valid(:create_teacher)
       expect(form.errors[:email].first).to eq("This email address is already in use")
       expect(form.email_already_taken?).to be_truthy
     end

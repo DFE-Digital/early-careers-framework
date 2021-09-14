@@ -13,7 +13,7 @@ module Schools
               presence: true,
               notify_email: { allow_blank: true },
               on: %i[create_teacher update_teacher]
-    validate :email_is_not_in_use
+    validate :email_is_not_in_use, on: %i[create_teacher update_teacher]
 
     def attributes
       { school_id: nil, core_induction_programme_id: nil, participants: nil }
