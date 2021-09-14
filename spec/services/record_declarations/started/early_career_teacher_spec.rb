@@ -23,6 +23,10 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
   end
 
   context "when valid user is an early_career_teacher" do
+    let(:ect_params_with_different_date) do
+      ect_params.merge({ declaration_date: (ect_declaration_date + 1.second).rfc3339 })
+    end
+
     it "creates a participant and profile declaration" do
       expect { described_class.call(ect_params) }.to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
     end
@@ -32,6 +36,13 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
         described_class.call(ect_params)
         described_class.call(ect_params)
       }.to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
+    end
+
+    it "does not create exact duplicates and throws an error" do
+      expect {
+        described_class.call(ect_params)
+        described_class.call(ect_params_with_different_date)
+      }.to raise_error(ActiveRecord::RecordNotUnique)
     end
 
     it "fails when course is for mentor" do
@@ -59,6 +70,14 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
       params = ect_params.merge({ declaration_date: (Time.zone.now + 100.years).rfc3339(9) })
       expected_msg = /The property '#\/declaration_date' can not declare a future date/
       expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing, expected_msg)
+    end
+  end
+
+  context "when including evidence_held" do
+    it "raised ParameterMissing error" do
+      params = ect_params.merge(evidence_held: "self-study-material-completed")
+      expected_msg = /Unpermitted parameter: evidence_held/
+      expect { described_class.call(params) }.to raise_error(ActionController::UnpermittedParameters, expected_msg)
     end
   end
 

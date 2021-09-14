@@ -2,12 +2,14 @@
 
 <ul class="govuk-list govuk-list--bullet">
   <li><a href="#continuing-the-ecf-registration-process" class="govuk-link">Continuing the ECF registration process</a></li>
-  <li><a href="#notifying-of-withdrawal" class="govuk-link">Notify that an ECF participant has withdrawn from their course</a></li>
-  <li><a href="#notifying-of-deferral" class="govuk-link">Notify that an ECF participant is taking a break from their course</a></li>
-  <li><a href="#notifying-of-schedule-change" class="govuk-link">Notify that an ECF participant is changing training schedule</a></li>
+  <li><a href="#notifying-of-deferral" class="govuk-link">Notifying that an ECF participant is taking a break from their course</a></li>
+  <li><a href="#notifying-of-resume" class="govuk-link">Notifying that an ECF participant is resuming their course</a></li>
+  <li><a href="#notifying-of-schedule-change" class="govuk-link">Notifying that an ECF participant is changing training schedule</a></li>
+  <li><a href="#notifying-of-withdrawal" class="govuk-link">Notifying that an ECF participant has withdrawn from their course</a></li>
   <li><a href="#declaring-that-an-ecf-participant-has-started-their-course" class="govuk-link">Declaring that an ECF participant has started their course</a></li>
   <li><a href="#declaring-that-an-ecf-participant-has-retained-their-course" class="govuk-link">Declaring that an ECF participant has reached a retained milestone</a></li>
   <li><a href="#declaring-that-an-ecf-participant-has-completed-their-course" class="govuk-link">Declaring that an ECF participant has completed their course</a></li>
+  <li><a href="#listing-participant-declaration-submissions" class="govuk-link">Listing participant declaration submissions</a></li>
 </ul>
 
 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-6">
@@ -63,7 +65,7 @@
 
 <p class="govuk-body-m">With a <a href="/lead-providers/guidance/reference#ecfparticipantstarteddeclaration-object" class="govuk-link">request body containing an ECF participant declaration</a>.</p>
 
-<p class="govuk-body-m">This returns <a href="/lead-providers/guidance/reference#participantdeclarationrecordedresponse-object" class="govuk-link">participant declaration recorded</a>.</p>
+<p class="govuk-body-m">This returns <a href="/lead-providers/guidance/reference#singleparticipantdeclarationresponse-object" class="govuk-link">participant declaration</a>.</p>
 <p class="govuk-body-m">This endpoint is idempotent - submitting exact copy of a request will return the same response body as submitting it the first time.</p>
 
 <p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#post-api-v1-participant-declarations" class="govuk-link">confirm ECF participant declarations</a> endpoint.</p>
@@ -88,7 +90,7 @@
 
 <p class="govuk-body-m">With a <a href="/lead-providers/guidance/reference#ecfparticipantretaineddeclaration-object" class="govuk-link">request body containing an ECF participant retained declaration</a>.</p>
 
-<p class="govuk-body-m">This returns <a href="/lead-providers/guidance/reference#participantdeclarationrecordedresponse-object" class="govuk-link">participant declaration recorded</a>.</p>
+<p class="govuk-body-m">This returns <a href="/lead-providers/guidance/reference#singleparticipantdeclarationresponse-object" class="govuk-link">participant declaration</a>.</p>
 
 <p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#post-api-v1-participant-declarations" class="govuk-link">confirm ECF participant declarations</a> endpoint.</p>
 
@@ -111,9 +113,37 @@
 
 <p class="govuk-body-m">With a <a href="/lead-providers/guidance/reference#ecfparticipantstarteddeclaration-object" class="govuk-link">request body containing an ECF participant completed declaration</a>.</p>
 
-<p class="govuk-body-m">This returns <a href="/lead-providers/guidance/reference#participantdeclarationrecordedresponse-object" class="govuk-link">participant declaration recorded</a>.</p>
+<p class="govuk-body-m">This returns <a href="/lead-providers/guidance/reference#singleparticipantdeclarationresponse-object" class="govuk-link">participant declaration</a>.</p>
 
 <p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#post-api-v1-participant-declarations" class="govuk-link">confirm ECF participant declarations</a> endpoint.</p>
 
 <h3 class="govuk-heading-m">2. Provider records the ECF participant declaration ID</h3>
 <p class="govuk-body-m">Store the returned ECF participant declaration ID for future management tasks.</p>
+
+<h2 id="listing-participant-declaration-submissions" class="govuk-heading-l">Listing participant declaration submissions</h2>
+
+<p class="govuk-body-m">This is how you see all the declarations you have made. This functionality allows the provider to check declaration submissions and identify any that are missing.</p>
+<p class="govuk-body-m">If declarations are missing, following other guidance by going to <a href="#declaring-that-an-ecf-participant-has-started-their-course" class="govuk-link">Declaring that an ECF participant started their course</a>
+</p>
+
+<h3 class="govuk-heading-m">1. Checking all previously submitted declarations</h3>
+
+<p class="govuk-body-m">
+  This section lets you review all of the declarations you have made.
+</p>
+
+<p class="govuk-body-m">All of your submitted declarations are listed.</p>
+
+<p class="govuk-body-m"><pre><code>GET /api/v1/participant-declarations</code></pre></p>
+
+<p class="govuk-body-m">This returns <a href="/lead-providers/guidance/reference#singleparticipantdeclarationresponse-object" class="govuk-link">participant declarations</a>.</p>
+
+<h3 class="govuk-heading-m">2. Checking a single previously submitted declaration</h3>
+
+<p class="govuk-body-m">
+  This section lets you review a single declaration you have made
+</p>
+
+<p class="govuk-body-m"><pre><code>GET /api/v1/participant-declarations/{id}</code></pre></p>
+
+<p class="govuk-body-m">This returns <a href="/lead-providers/guidance/reference#singleparticipantdeclarationresponse-object" class="govuk-link">participant declaration</a>.</p>

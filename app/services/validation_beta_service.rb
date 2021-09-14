@@ -1,10 +1,35 @@
 # frozen_string_literal: true
 
 class ValidationBetaService
+  def remind_sits_to_add_participants
+    empty_school_cohorts = SchoolCohort
+      .where(induction_programme_choice: %i[full_induction_programme core_induction_programme not_yet_known])
+      .where(opt_out_of_updates: false)
+      .where.not(id: ParticipantProfile::ECF.select(:school_cohort_id))
+
+    School.where(id: empty_school_cohorts.select(:school_id)).includes(:induction_coordinators).find_each do |school|
+      school.induction_coordinator_profiles.each do |sit|
+        next if sit.reminder_email_sent_at.present?
+
+        email = SchoolMailer.remind_induction_coordinator_to_setup_cohort_email(
+          recipient: sit.user.email,
+          school_name: school.name,
+          campaign: :sit_to_complete_steps,
+        )
+
+        ActiveRecord::Base.transaction do
+          sit.update_column(:reminder_email_sent_at, Time.zone.now)
+          email.deliver_later
+        end
+      end
+    end
+  end
+
   # ECTs who have not added their details for validation
   def tell_ects_to_add_validation_information
     ParticipantProfile::ECT
-      .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort, :school)
+      .active_record
+      .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort, :school, :user)
       .where(
         request_for_details_sent_at: nil,
         school_cohort: {
@@ -23,7 +48,8 @@ class ValidationBetaService
   # FIP mentors who have not added their details for validation
   def tell_fip_mentors_to_add_validation_information
     ParticipantProfile::Mentor
-      .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort, :school)
+      .active_record
+      .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort, :school, user: :induction_coordinator_profile)
       .where(
         request_for_details_sent_at: nil,
         school_cohort: {
@@ -40,10 +66,11 @@ class ValidationBetaService
       .find_each { |profile| send_fip_mentors_to_add_validation_information(profile, profile.school) }
   end
 
-  # FIP mentors who have not added their details for validation
+  # CIP mentors who have not added their details for validation
   def tell_cip_mentors_to_add_validation_information
     ParticipantProfile::Mentor
-      .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort, :school)
+      .active_record
+      .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort, :school, user: :induction_coordinator_profile)
       .where(
         request_for_details_sent_at: nil,
         school_cohort: {
@@ -62,6 +89,7 @@ class ValidationBetaService
 
   def tell_induction_coordinators_who_are_mentors_to_add_validation_information
     ParticipantProfile::Mentor
+      .active_record
       .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort, :school, user: :induction_coordinator_profile)
       .where(
         request_for_details_sent_at: nil,
@@ -82,14 +110,25 @@ class ValidationBetaService
   end
 
   def tell_induction_coordinators_we_asked_ects_and_mentors_for_information
-    InductionCoordinatorProfile.find_each do |ic|
-      ic.schools.not_opted_out.each do |school|
-        if chosen_programme_and_not_in_beta(school)
-          send_induction_coordinators_we_asked_ects_and_mentors_for_information(ic, school)
-          break
+    school_cohorts = SchoolCohort
+      .where(
+        id: ParticipantProfile::ECF.where("created_at > ?", Date.new(2021, 9, 7)).select(:school_cohort_id),
+        induction_programme_choice: %w[core_induction_programme full_induction_programme],
+      )
+
+    school_ids = school_cohorts.select(:school_id)
+
+    InductionCoordinatorProfile
+      .includes(:schools)
+      .where(schools: { id: school_ids })
+      .find_each do |ic|
+        ic.schools.not_opted_out.where(id: school_ids).find_each do |school|
+          if chosen_programme_and_not_in_beta(school)
+            send_induction_coordinators_we_asked_ects_and_mentors_for_information(ic, school)
+            break
+          end
         end
       end
-    end
   end
 
 private
@@ -302,6 +341,8 @@ private
   end
 
   def send_fip_mentors_to_add_validation_information(profile, school)
+    return if profile.user.induction_coordinator?
+
     campaign = :fip_mentors_to_add_validation_information
 
     participant_validation_start_url = Rails.application.routes.url_helpers.participants_start_registrations_url(
@@ -322,6 +363,8 @@ private
   end
 
   def send_cip_mentors_to_add_validation_information(profile, school)
+    return if profile.user.induction_coordinator?
+
     campaign = :cip_mentors_to_add_validation_information
 
     participant_validation_start_url = Rails.application.routes.url_helpers.participants_start_registrations_url(

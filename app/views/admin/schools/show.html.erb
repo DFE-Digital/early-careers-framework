@@ -5,13 +5,11 @@
 <h2 class="govuk-heading-l">Overview</h2>
 
 <% if @induction_coordinator && ImpersonationPolicy.new(current_user, @induction_coordinator).create? %>
-  <%= govuk_button_to('Impersonate induction tutor',
-                      admin_impersonate_path,
+  <%= govuk_button_to(admin_impersonate_path,
                       params: {
                         impersonated_user_id: @induction_coordinator.id,
                       },
-                      method: :post,
-                      "data-test": "impersonate-button")  %>
+                      "data-test": "impersonate-button") { 'Impersonate induction tutor' } %>
 <% end %>
 
 <table class="govuk-table">

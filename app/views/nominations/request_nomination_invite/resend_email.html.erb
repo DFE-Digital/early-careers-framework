@@ -4,27 +4,12 @@
   <div class="govuk-grid-column-two-thirds">
 
     <h1 class="govuk-heading-xl">Send your school a link to use this service</h1>
-    <p>Schools have been sent a unique link to use this service. You can request a new link if this has expired or if the email is lost. 
-</p>
-    <p>You can use the Manage training for early career teachers service to:</p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>tell us if you do or do not expect early career teachers to join you in 2021</li>
-      <li>nominate an 'induction tutor' to set up your induction programme for early career teachers</li>
-    </ul>
-    
-    <p>An induction tutor is someone who can:</p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>confirm details about your induction programme</li>
-      <li>add information about your early career teachers and mentors</li>
-    </ul>
-    
-    <h2 class="govuk-heading-m">How does this work?</h2>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>enter a few details to find your school</li>
-      <li>we'll send a unique link to your school's email address on our register, Get Information about Schools
-        (GIAS)
-      </li>
-    </ul>
-    <%= govuk_link_to "Continue", choose_location_request_nomination_invite_path, button: true %>
+
+    <p>We need some information to help us find your school in the Get Information about Schools (GIAS) register.</p>
+    <p>We’ll then send a link to the email address held in the register.</p>
+
+    <p>You can <a href="https://services.signin.education.gov.uk/">sign in to the DfE</a> to check that your school’s email address is up to date before you start.</p>
+
+    <%= govuk_button_link_to "Continue", choose_location_request_nomination_invite_path %>
   </div>
 </div>

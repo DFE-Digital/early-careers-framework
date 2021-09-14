@@ -49,9 +49,7 @@
 
   <%= markdown_to_html operation.request_body.description %>
   <%= render ApiDocs::PropertyListComponent.new(operation.request_body.schema.properties) %>
-  <%= govuk_details(
-        summary: 'Example request body',
-        ) do %>
+  <%= govuk_details(summary_text: 'Example request body') do %>
     <%= json_code_sample(operation.request_body.schema.example) %>
   <% end %>
 <% end %>
@@ -59,9 +57,7 @@
   <h4 class="govuk-heading-s">Possible responses</h4>
 
   <% operation.responses.each do |code, response| %>
-    <%= govuk_details(
-          summary: "HTTP #{code} - #{response.description}",
-          ) do %>
+    <%= govuk_details(summary_text: "HTTP #{code} - #{response.description}") do %>
       <% if response.schema %>
         <% if response.schema.name %>
           This request will return a <%= govuk_link_to response.schema.name, "##{response.schema.name.parameterize}-object" %> object.

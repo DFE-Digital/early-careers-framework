@@ -279,7 +279,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ParticipantDeclarationRecordedResponse"
+                  "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
                 }
               }
             }
@@ -423,6 +423,59 @@
         }
       }
     },
+    "/api/v1/participant-declarations/{id}": {
+      "get": {
+        "summary": "Get single participant declaration",
+        "operationId": "participant_declarations",
+        "tags": [
+          "participants declaration"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "9ed4612b-f8bd-44d9-b296-38ab103fadd2",
+            "description": "The ID of the participant declaration ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single participant declaration",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/participants": {
       "get": {
         "summary": "Retrieve multiple participants",
@@ -548,7 +601,7 @@
     },
     "/api/v1/participants/{id}/defer": {
       "put": {
-        "summary": "Defer a participant from a course",
+        "summary": "Notify that an ECF participant is taking a break from their course",
         "operationId": "participant",
         "tags": [
           "ECF Participant"
@@ -595,9 +648,9 @@
         }
       }
     },
-    "/api/v1/participants/{id}/withdraw": {
+    "/api/v1/participants/{id}/resume": {
       "put": {
-        "summary": "Withdraw a participant from a course",
+        "summary": "Notify that an ECF participant is resuming their course",
         "operationId": "participant",
         "tags": [
           "ECF Participant"
@@ -613,7 +666,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ECFParticipantWithdrawRequest"
+                "$ref": "#/components/schemas/ECFParticipantResumeRequest"
               }
             }
           }
@@ -624,7 +677,7 @@
             "in": "path",
             "required": true,
             "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the participant to withdraw",
+            "description": "The ID of the participant to resume",
             "schema": {
               "type": "string"
             }
@@ -632,7 +685,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The ECF participant being withdrawn",
+            "description": "The ECF participant being resumed",
             "content": {
               "application/json": {
                 "schema": {
@@ -646,7 +699,7 @@
     },
     "/api/v1/participants/{id}/change-schedule": {
       "put": {
-        "summary": "Change participant schedule",
+        "summary": "Notify that an ECF participant is changing training schedule",
         "operationId": "participant",
         "tags": [
           "ECF Participant"
@@ -682,6 +735,55 @@
         "responses": {
           "200": {
             "description": "The ECF participant changing schedule",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/participants/{id}/withdraw": {
+      "put": {
+        "summary": "Notify that an ECF participant has withdrawn from their course",
+        "operationId": "participant",
+        "tags": [
+          "ECF Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantWithdrawRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant to withdraw",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ECF participant being withdrawn",
             "content": {
               "application/json": {
                 "schema": {
@@ -1121,6 +1223,54 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/ECFParticipant"
+          }
+        }
+      },
+      "ECFParticipantResume": {
+        "description": "An ECF participant resume action",
+        "type": "object",
+        "properties": {
+          "course_identifier": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "ecf-induction",
+              "ecf-mentor"
+            ],
+            "example": "ecf-induction"
+          }
+        },
+        "required": [
+          "course_identifier"
+        ],
+        "example": {
+          "course_identifier": "ecf-mentor"
+        }
+      },
+      "ECFParticipantResumeRequest": {
+        "description": "The resume request for a participant",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "description": "The request data",
+            "required": [
+              "type",
+              "attributes"
+            ],
+            "properties": {
+              "type": {
+                "description": "The data type",
+                "type": "string",
+                "example": "participant"
+              },
+              "attributes": {
+                "$ref": "#/components/schemas/ECFParticipantResume"
+              }
+            }
           }
         }
       },
@@ -2129,18 +2279,6 @@
           }
         }
       },
-      "ParticipantDeclarationRecordedResponse": {
-        "description": "A confirmation that the participant declaration has been recorded successfully",
-        "type": "object",
-        "required": [
-          "data"
-        ],
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/ParticipantDeclarationResponse"
-          }
-        }
-      },
       "ParticipantDeclarationResponse": {
         "description": "A participant declaration response",
         "type": "object",
@@ -2163,6 +2301,18 @@
           },
           "attributes": {
             "$ref": "#/components/schemas/ParticipantDeclarationAttributes"
+          }
+        }
+      },
+      "SingleParticipantDeclarationResponse": {
+        "description": "A confirmation that the participant declaration has been recorded successfully",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ParticipantDeclarationResponse"
           }
         }
       },

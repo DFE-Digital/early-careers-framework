@@ -11,10 +11,10 @@
       <li>your last name is different to the version held by the Teaching Regulation Agency</li>
       <li>you mistyped or entered some incorrect information</li>
     </ul>
-    
+
     <p class="govuk-body">Entering your National Insurance number will help us to find your details.</p>
 
-    <%= govuk_link_to "Try again", participants_validation_tell_us_your_details_path, button: true %>
+    <%= govuk_button_link_to "Try again", participants_validation_tell_us_your_details_path %>
 
     <% if @participant_validation_form.validation_attempts > 1 %>
       <h2 class="govuk-heading-m">If we still cannot find your details</h2>

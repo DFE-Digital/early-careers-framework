@@ -28,6 +28,10 @@ module Api
         perform_action(service_namespace: ::Participants::Defer)
       end
 
+      def resume
+        perform_action(service_namespace: ::Participants::Resume)
+      end
+
       def withdraw
         perform_action(service_namespace: ::Participants::Withdraw)
       end
@@ -72,7 +76,7 @@ module Api
 
         participants = participants.changed_since(updated_since) if updated_since.present?
 
-        participants
+        participants.order(:created_at)
       end
 
       def participant_id

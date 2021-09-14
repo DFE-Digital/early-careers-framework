@@ -115,6 +115,10 @@ class InviteSchools
     invite_group(school_urns, :send_federation_invite_email)
   end
 
+  def invite_section_41(school_urns)
+    invite_group(school_urns, :send_section_41_invite_email)
+  end
+
   def send_induction_coordinator_sign_in_chasers(send_at: Time.zone.now)
     induction_coordinators_never_signed_in = User.joins(:induction_coordinator_profile).where("last_sign_in_at IS NULL and users.created_at < ?", 2.days.ago)
     induction_coordinators_never_signed_in.each do |induction_coordinator|
@@ -374,6 +378,16 @@ private
       recipient: nomination_email.sent_to,
       school_name: nomination_email.school.name,
       nomination_url: nomination_email.nomination_url(utm_source: :nominate_tutor_cip_only),
+    ).deliver_now.delivery_method.response.id
+
+    nomination_email.update!(notify_id: notify_id)
+  end
+
+  def send_section_41_invite_email(nomination_email)
+    notify_id = SchoolMailer.section_41_invite_email(
+      recipient: nomination_email.sent_to,
+      school_name: nomination_email.school.name,
+      nomination_url: nomination_email.nomination_url(utm_source: :nominate_section_41),
     ).deliver_now.delivery_method.response.id
 
     nomination_email.update!(notify_id: notify_id)

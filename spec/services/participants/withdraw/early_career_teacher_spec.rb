@@ -27,10 +27,10 @@ RSpec.describe Participants::Withdraw::EarlyCareerTeacher do
       expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
     end
 
-    it "creates a withdrawn state for that user's profile" do
+    it "creates a withdrawn state and makes the profile withdrawn" do
       expect { described_class.call(params: participant_params) }
-        .to change { ParticipantProfileState.count }.by(1)
-      expect { User.find(participant_params[:participant_id]).early_career_teacher_profile.withdrawn? }
+          .to change { ParticipantProfileState.count }.by(1)
+      expect { User.find(participant_params[:participant_id]).ect_profile.withdrawn? }
     end
 
     it "creates a withdrawn state when that user is deferred" do

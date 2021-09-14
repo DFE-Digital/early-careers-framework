@@ -24,10 +24,12 @@ module GiasHelpers
     "#{name} (#{urn})"
   end
 
-private
-
   def open?
     open_status_code?(school_status_code)
+  end
+
+  def closed?
+    !open_status_code?(school_status_code)
   end
 
   def eligible_establishment_type?

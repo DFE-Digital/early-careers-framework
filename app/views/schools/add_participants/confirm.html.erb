@@ -17,8 +17,7 @@
         </dd>
         <dd class="govuk-summary-list__actions">
           <% unless add_participant_form.type == :self %>
-            <%# govuk_link_to issue: https://github.com/DFE-Digital/govuk-components/issues/193 %>
-            <%= govuk_link_to({ action: :show, step: "details" }, button: false) do %>
+            <%= govuk_link_to({ action: :show, step: "details" }) do %>
               Change <span class="govuk-visually-hidden">personal details</span>
             <% end %>
           <% end %>
@@ -34,8 +33,7 @@
         </dd>
         <dd class="govuk-summary-list__actions">
           <% unless add_participant_form.type == :self %>
-            <%# govuk_link_to issue: https://github.com/DFE-Digital/govuk-components/issues/193 %>
-            <%= govuk_link_to({ action: :show, step: "type" }, button: false) do %>
+            <%= govuk_link_to({ action: :show, step: "type" }) do %>
               Change <span class="govuk-visually-hidden">participant type</span>
             <% end %>
           <% end %>
@@ -58,8 +56,7 @@
           </dd>
           <dd class="govuk-summary-list__actions">
             <% if add_participant_form.type != :self && add_participant_form.mentor_options.any? %>
-              <%# govuk_link_to issue: https://github.com/DFE-Digital/govuk-components/issues/193 %>
-              <%= govuk_link_to({ action: :show, step: "choose-mentor" }, button: false) do %>
+              <%= govuk_link_to({ action: :show, step: "choose-mentor" }) do %>
                 Change <span class="govuk-visually-hidden">mentor</span>
               <% end %>
             <% end %>

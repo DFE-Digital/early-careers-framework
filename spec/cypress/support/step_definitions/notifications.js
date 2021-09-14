@@ -84,7 +84,7 @@ When(
           ""
         )
       );
-      cy.get("h1").should("contain", "You are now signed in");
+      cy.get("h1").should("contain", "You’re now signed in");
     });
   }
 );

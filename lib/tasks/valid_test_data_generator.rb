@@ -60,11 +60,11 @@ module ValidTestDataGenerator
       schedule = Finance::Schedule.default
       if profile_type == :ect
         ParticipantProfile::ECT.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, mentor_profile: mentor_profile, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule) do |profile|
-          ParticipantProfileState.create!({ participant_profile: profile })
+          ParticipantProfileState.create!(participant_profile: profile)
         end
       else
         ParticipantProfile::Mentor.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule) do |profile|
-          ParticipantProfileState.create!({ participant_profile: profile })
+          ParticipantProfileState.create!(participant_profile: profile)
         end
       end
     end
