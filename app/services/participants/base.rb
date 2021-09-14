@@ -26,7 +26,7 @@ module Participants
 
   private
 
-    implement_instance_method :participant_profile_state, :participant_profile_states, :perform_action!, :matches_lead_provider?
+    implement_instance_method :participant_profile_state, :perform_action!, :matches_lead_provider?
 
     def initialize(params:)
       params.each do |param, value|
