@@ -7,9 +7,9 @@
     <span class="govuk-caption-l"><%= @cohort.display_name %> cohort</span>
     <h1 class="govuk-heading-xl govuk-!-margin-top-2">Choose an induction programme</h1>
     <p class="govuk-body-l">
-      <strong>You have chosen to:</strong>
+      <strong>You've chosen to:</strong>
       <% if @school_cohort.school_chose_cip? %>
-        deliver your own programme using the DfE accredited materials
+        deliver your own programme using the DfE-accredited materials
       <% else %>
         use a training provider, funded by the DfE
       <% end %>
@@ -19,7 +19,7 @@
     <% if @school_cohort.school_chose_fip? %>
       <p class="govuk-body">If your school has decided to:</p>
       <ul class="govuk-list govuk-list--bullet">
-        <li>deliver your own programme using the DfE accredited materials</li>
+        <li>deliver your own programme using the DfE-accredited materials</li>
       </ul>
       <p class="govuk-body">Or</p>
       <ul class="govuk-list govuk-list--bullet">

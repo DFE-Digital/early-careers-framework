@@ -75,23 +75,23 @@ module ManageTrainingSteps
   end
 
   def when_i_click_on_view_details
-    click_on("View Details")
+    click_on("View details")
   end
 
   def then_i_am_taken_to_fip_programme_choice_info_page
-    "You have chosen to: use a training provider, funded by the DfE"
+    "You've chosen to: use a training provider, funded by the DfE"
   end
 
   def then_i_am_taken_to_cip_programme_choice_info_page
-    "You have chosen to: deliver your own programme using the DfE accredited materials"
+    "You've chosen to: deliver your own programme using the DfE-accredited materials"
   end
 
   def then_i_am_taken_to_design_our_own_course_programme_choice_info_page
-    "You have chosen to: design and deliver your own programme based on the Early Career Framework"
+    "You've chosen to: design and deliver your own programme based on the Early Career Framework"
   end
 
   def then_i_am_taken_to_no_ect_training_info_page
-    "You are not expecting any early career teachers this year"
+    "You're not expecting any early career teachers this year"
   end
 
   def then_i_should_see_the_fip_induction_dashboard_without_partnership_details
@@ -136,7 +136,7 @@ module ManageTrainingSteps
   end
 
   def when_i_select_view_details
-    click_on("View Details")
+    click_on("View details")
   end
 
   def set_participant_data

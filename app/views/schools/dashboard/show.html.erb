@@ -27,7 +27,7 @@
           <tr class="govuk-table__row">
             <th scope="row" class="govuk-table__header">Programme</th>
             <td class="govuk-table__cell"><%= t(school_cohort.induction_programme_choice, scope: %i[manage_your_training induction_programmes]) %></td>
-            <td class="govuk-table__cell govuk-!-width-one-quarter"><%= govuk_link_to 'View Details', schools_cohort_path(cohort_id: school_cohort.cohort.start_year) %></td>
+            <td class="govuk-table__cell govuk-!-width-one-quarter"><%= govuk_link_to 'View details', schools_cohort_path(cohort_id: school_cohort.cohort.start_year) %></td>
           </tr>
           <% if school_cohort.core_induction_programme? %>
             <tr class="govuk-table__row">
@@ -63,14 +63,14 @@
       <% if @partnership %>
         <% if @report_mistake_link.present? %>
           <p class="govuk-body">
-            If this doesn’t look right, <%= govuk_link_to "report that your school has been confirmed incorrectly", @report_mistake_link %>.
+            If this does not look right, <%= govuk_link_to "report that your school has been confirmed incorrectly", @report_mistake_link %>.
           </p>
           <p class="govuk-body">
             This link will expire on <%= @mistake_link_expiry %>.
           </p>
         <% else %>
           <p class="govuk-body">
-            If this doesn’t look right, contact: <%= render MailToSupportComponent.new %>
+            If this does not look right, contact: <%= render MailToSupportComponent.new %>
           </p>
         <% end %>
       <% end %>
@@ -80,7 +80,7 @@
           <%= govuk_link_to school_cohort.core_induction_programme.name, induction_tutor_materials_path(
             provider: school_cohort.core_induction_programme.name.downcase.tr(" ", "-"), year: "year-one"
           ) %>
-          induction programme.
+          training programme.
         </p>
       <% end %>
 
