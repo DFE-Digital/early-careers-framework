@@ -62,12 +62,12 @@ module ValidTestDataGenerator
       if profile_type == :ect
         ParticipantProfile::ECT.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, mentor_profile: mentor_profile, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule) do |profile|
           ParticipantProfileState.create!(participant_profile: profile)
-          ECFParticipantEligibility.create!(participant_profile_id: participant_profile.id, eligibility: eligibility_options.sample)
+          ECFParticipantEligibility.create!(participant_profile_id: profile.id, status: eligibility_options.sample)
         end
       else
         ParticipantProfile::Mentor.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule) do |profile|
           ParticipantProfileState.create!(participant_profile: profile)
-          ECFParticipantEligibility.create!(participant_profile_id: participant_profile.id, eligibility: eligibility_options.sample)
+          ECFParticipantEligibility.create!(participant_profile_id: profile.id, status: eligibility_options.sample)
         end
       end
     end
