@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+#TODO: The views will change when the actual payment prototypes are created. Remember that we may need feature tests
+# to be added in and the current one will need the show_contract to be added when we refactor them from cypress to
+# rspec/capybara
+
 class Finance::LeadProvidersController < Finance::BaseController
   def index
     @ecf_lead_providers = LeadProvider.all
