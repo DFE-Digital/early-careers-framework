@@ -89,15 +89,4 @@ class ParticipantProfile < ApplicationRecord
     # TODO: Do we need to store when this happens outside of papertrail?
     update!(schedule: schedule)
   end
-
-  def validate_participant_state(declaration_date, milestone)
-    if (%w[withdrawn deferred] & participant_profile_states.map(&:state)).any?
-      raise ActionController::ParameterMissing, I18n.t(:declaration_on_incorrect_state) if declaration_date >= Time.zone.now
-
-      active_state_date = participant_profile_states.where(state: "active").order(:created_at).last.created_at
-      unless active_state_date && active_state_date <= milestone.milestone_date.end_of_day
-        raise ActionController::ParameterMissing, I18n.t(:declaration_on_incorrect_state)
-      end
-    end
-  end
 end

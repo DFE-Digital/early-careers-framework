@@ -178,8 +178,6 @@ private
     @cpd_lead_provider = create(:cpd_lead_provider, lead_provider: @lead_provider)
     @token = LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: @cpd_lead_provider)
     @session = ActionDispatch::Integration::Session.new(Rails.application)
-
-    @params = common_params(@participant_id, "ecf-induction")
   end
 
   def submit_request(params)
