@@ -81,9 +81,5 @@ FactoryBot.define do
     trait :withdrawn_record do
       status { :withdrawn }
     end
-
-    after(:create) do |participant_profile|
-      participant_profile.participant_profile_states.create({ state: "active" })
-    end
   end
 end
