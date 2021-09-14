@@ -58,13 +58,16 @@ module ValidTestDataGenerator
       user = User.create!(full_name: name, email: Faker::Internet.email(name: name))
       teacher_profile = TeacherProfile.create!(user: user, trn: random_or_nil_trn)
       schedule = Finance::Schedule.default
+      eligibility_options = %w[eligible matched manual_check]
       if profile_type == :ect
         ParticipantProfile::ECT.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, mentor_profile: mentor_profile, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule) do |profile|
           ParticipantProfileState.create!(participant_profile: profile)
+          ECFParticipantEligibility.create!(participant_profile_id: participant_profile.id, eligibility: eligibility_options.sample)
         end
       else
         ParticipantProfile::Mentor.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule) do |profile|
           ParticipantProfileState.create!(participant_profile: profile)
+          ECFParticipantEligibility.create!(participant_profile_id: participant_profile.id, eligibility: eligibility_options.sample)
         end
       end
     end
