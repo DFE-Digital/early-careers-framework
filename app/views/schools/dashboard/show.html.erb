@@ -18,48 +18,47 @@
       <% end %>
 
       <table class="govuk-table">
-          <tbody class="govuk-table__body">
+        <tbody class="govuk-table__body">
+          <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header govuk-!-width-one-quarter">Cohort year</th>
+            <td class="govuk-table__cell"><%= school_cohort.cohort.start_year %></td>
+            <td class="govuk-table__cell"></td>
+          </tr>
+          <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header ">Programme</th>
+            <td class="govuk-table__cell"><%= t(school_cohort.induction_programme_choice, scope: %i[manage_your_training induction_programmes]) %></td>
+            <td class="govuk-table__cell govuk-!-width-one-quarter"><%= govuk_link_to 'View Details', schools_cohort_path(cohort_id: school_cohort.cohort.start_year) %></td>
+          </tr>
+          <% if school_cohort.core_induction_programme? %>
             <tr class="govuk-table__row">
-              <th scope="row" class="govuk-table__header govuk-!-width-one-quarter">Cohort year</th>
-              <td class="govuk-table__cell"><%= school_cohort.cohort.start_year %></td>
-              <td class="govuk-table__cell"></td>
-            </tr>
-            <tr class="govuk-table__row">
-              <th scope="row" class="govuk-table__header ">Programme</th>
-              <td class="govuk-table__cell"><%= t(school_cohort.induction_programme_choice, scope: %i[manage_your_training induction_programmes]) %></td>
-              <td class="govuk-table__cell govuk-!-width-one-quarter"><%= govuk_link_to 'View Details', schools_cohort_path(cohort_id: school_cohort.cohort.start_year) %></td>
-            </tr>
-            <% if school_cohort.core_induction_programme? %>
-              <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">Materials</th>
-                <td class="govuk-table__cell"><%= school_cohort.core_induction_programme&.name %></th>
-                <% if school_cohort.core_induction_programme_id? %>
-                  <td class="govuk-table__cell"><%= govuk_link_to 'Change', schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year) %></td>
-                <% else %>
-                  <td class="govuk-table__cell"><%= govuk_link_to 'Add', info_schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year) %></td>
-                <% end %>
-              </tr>
-            <% end %>
-            <% if school_cohort.full_induction_programme? %>
-              <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">Training provider</th>
-                <td class="govuk-table__cell"><%= school_cohort.lead_provider&.name %></td>
-                <% if school_cohort.lead_provider.present? %>
-                  <td class="govuk-table__cell"></td>
-                <% else %>
-                  <td class="govuk-table__cell"><%= govuk_link_to 'Sign up', schools_partnerships_path(cohort_id: school_cohort.cohort.start_year) %></td>
-                <% end %>
-              </tr>
-              <% if school_cohort.lead_provider.present? %>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">Delivery partner</th>
-                  <td class="govuk-table__cell"><%= school_cohort.delivery_partner&.name %></td>
-                  <td class="govuk-table__cell"></td>
-                </tr>
+              <th scope="row" class="govuk-table__header">Materials</th>
+              <td class="govuk-table__cell"><%= school_cohort.core_induction_programme&.name %></th>
+              <% if school_cohort.core_induction_programme_id? %>
+                <td class="govuk-table__cell"><%= govuk_link_to 'Change', schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year) %></td>
+              <% else %>
+                <td class="govuk-table__cell"><%= govuk_link_to 'Add', info_schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year) %></td>
               <% end %>
+            </tr>
+          <% elsif school_cohort.full_induction_programme? %>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">Training provider</th>
+              <td class="govuk-table__cell"><%= school_cohort.lead_provider&.name %></td>
+              <% if school_cohort.lead_provider.present? %>
+                <td class="govuk-table__cell"></td>
+              <% else %>
+                <td class="govuk-table__cell"><%= govuk_link_to 'Sign up', schools_partnerships_path(cohort_id: school_cohort.cohort.start_year) %></td>
+              <% end %>
+            </tr>
+            <% if school_cohort.lead_provider.present? %>
+              <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Delivery partner</th>
+                <td class="govuk-table__cell"><%= school_cohort.delivery_partner&.name %></td>
+                <td class="govuk-table__cell"></td>
+              </tr>
             <% end %>
-          </tbody>
-        </table>
+          <% end %>
+        </tbody>
+      </table>
 
       <% if @partnership %>
         <% if @report_mistake_link.present? %>
