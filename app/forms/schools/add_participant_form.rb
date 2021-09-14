@@ -47,6 +47,7 @@ module Schools
 
       validates :mentor_id,
                 presence: true,
+                if: -> { type == :ect },
                 inclusion: { in: ->(form) { form.mentor_options.map(&:id) + %w[later] } }
 
       next_step :confirm
@@ -120,12 +121,18 @@ module Schools
     end
 
     def save!
-      creators[participant_type].call(
-        full_name: full_name,
-        email: email,
-        school_cohort: school_cohort,
-        mentor_profile_id: mentor&.mentor_profile&.id,
-      )
+      ActiveRecord::Base.transaction do
+        profile = creators[participant_type].call(
+          full_name: full_name,
+          email: email,
+          school_cohort: school_cohort,
+          mentor_profile_id: mentor&.mentor_profile&.id,
+        )
+
+        ParticipantMailer.participant_added(participant_profile: profile).deliver_later
+        profile.update_column(request_for_details_sent_at: Time.zone.now)
+        profile
+      end
     end
   end
 end

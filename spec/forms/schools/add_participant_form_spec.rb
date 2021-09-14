@@ -4,10 +4,10 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
   let(:school_cohort) { create :school_cohort }
   let(:user) { create :user }
 
-  subject { described_class.new(current_user_id: user.id, school_cohort_id: school_cohort.id) }
+  subject(:form) { described_class.new(current_user_id: user.id, school_cohort_id: school_cohort.id) }
 
   it { is_expected.to validate_presence_of(:type).on(:type).with_message("Please select type of the new participant") }
-  it { is_expected.to validate_inclusion_of(:type).in_array(subject.type_options).on(:type) }
+  it { is_expected.to validate_inclusion_of(:type).in_array(form.type_options).on(:type) }
 
   it { is_expected.to validate_presence_of(:full_name).on(:details).with_message("Enter a full name") }
   it { is_expected.to validate_presence_of(:email).on(:details).with_message("Enter an email address") }
@@ -15,24 +15,24 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
   describe "type" do
     context "when it is set to :ect" do
       it "sets the participant_type to ect" do
-        expect { subject.type = "ect" }
-          .to change { subject.participant_type }.to :ect
+        expect { form.type = "ect" }
+          .to change { form.participant_type }.to :ect
       end
     end
 
     context "when it is set to :mentor" do
       it "sets the participant_type to ect" do
-        expect { subject.type = "mentor" }
-          .to change { subject.participant_type }.to :mentor
+        expect { form.type = "mentor" }
+          .to change { form.participant_type }.to :mentor
       end
     end
 
     context "when it is set to :self" do
       it "sets the participant_type to mentor as well as full name and email to match current_user details" do
-        expect { subject.type = "self" }
-          .to change { subject.participant_type }.to(:mentor)
-                                                 .and change { subject.full_name }.to(user.full_name)
-                                                                                  .and change { subject.email }.to(user.email)
+        expect { form.type = "self" }
+          .to change { form.participant_type }.to(:mentor)
+                                                 .and change { form.full_name }.to(user.full_name)
+                                                                                  .and change { form.email }.to(user.email)
       end
     end
   end
@@ -41,24 +41,24 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
     it "does not include mentors with withdrawn records" do
       withdrawn_mentor_record = create(:participant_profile, :mentor, :withdrawn_record, school_cohort: school_cohort).user
 
-      expect(subject.mentor_options).not_to include(withdrawn_mentor_record)
+      expect(form.mentor_options).not_to include(withdrawn_mentor_record)
     end
 
     it "includes active mentors" do
       active_mentor_record = create(:participant_profile, :mentor, school_cohort: school_cohort).user
 
-      expect(subject.mentor_options).to include(active_mentor_record)
+      expect(form.mentor_options).to include(active_mentor_record)
     end
   end
 
   describe "email_already_taken?" do
     before do
-      subject.email = "ray.clemence@example.com"
+      form.email = "ray.clemence@example.com"
     end
 
     context "when the email is not already in use" do
       it "returns false" do
-        expect(subject).not_to be_email_already_taken
+        expect(form).not_to be_email_already_taken
       end
     end
 
@@ -68,7 +68,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
       end
 
       it "returns true" do
-        expect(subject).to be_email_already_taken
+        expect(form).to be_email_already_taken
       end
 
       context "when the ECT profile record is withdrawn" do
@@ -77,7 +77,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
         end
 
         it "returns false" do
-          expect(subject).not_to be_email_already_taken
+          expect(form).not_to be_email_already_taken
         end
       end
     end
@@ -88,7 +88,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
       end
 
       it "returns true" do
-        expect(subject).to be_email_already_taken
+        expect(form).to be_email_already_taken
       end
 
       context "when the mentor profile record is withdrawn" do
@@ -97,7 +97,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
         end
 
         it "returns false" do
-          expect(subject).not_to be_email_already_taken
+          expect(form).not_to be_email_already_taken
         end
       end
     end
@@ -109,7 +109,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
       end
 
       it "returns false" do
-        expect(subject).not_to be_email_already_taken
+        expect(form).not_to be_email_already_taken
       end
     end
   end
@@ -117,7 +117,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
   describe "can_add_self?" do
     context "when the user is not a mentor" do
       it "returns true" do
-        expect(subject.can_add_self?).to be true
+        expect(form.can_add_self?).to be true
       end
     end
 
@@ -127,7 +127,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
       end
 
       it "returns false" do
-        expect(subject.can_add_self?).to be false
+        expect(form.can_add_self?).to be false
       end
     end
 
@@ -137,8 +137,31 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
       end
 
       it "returns false" do
-        expect(subject.can_add_self?).to be false
+        expect(form.can_add_self?).to be false
       end
+    end
+  end
+
+  describe "#save!" do
+    before do
+      form.type = form.type_options.sample
+      form.full_name = Faker::Name.name
+      form.email = Faker::Internet.email
+      form.mentor_id = (form.mentor_options.pluck(:id) + %w[later]).sample if form.type == :ect
+
+      create :schedule
+    end
+
+    subject(:execution) { form.method(:save!).to_proc }
+
+    it "creates new participant record" do
+      expect(execution).to change(ParticipantProfile::ECF, :count).by 1
+    end
+
+    it "schedules participant_added email" do
+      profile = form.save!
+
+      expect(ParticipantMailer).to delay_email_delivery_of(:participant_added).with(participant_profile: profile)
     end
   end
 end

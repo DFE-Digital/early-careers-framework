@@ -3,6 +3,7 @@
 FactoryBot.define do
   factory :schedule, class: "Finance::Schedule" do
     name { "ECF September standard 2021" }
+
     after(:create) do |schedule|
       [Date.new(2021, 9, 1), Date.new(2021, 11, 1), Date.new(2022, 2, 1)].each do |start_date|
         create(
