@@ -107,4 +107,14 @@ RSpec.describe Mentors::Create do
     expect(mentor_profile.pupil_premium_uplift).to be(true)
     expect(mentor_profile.sparsity_uplift).to be(true)
   end
+
+  it "records the profile for analytics" do
+    described_class.call(
+      email: user.email,
+      full_name: user.full_name,
+      school_cohort: school_cohort,
+    )
+
+    expect(Analytics::ECFValidationService).to delay_execution_of(:upsert_record_without_delay)
+  end
 end

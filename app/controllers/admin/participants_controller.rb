@@ -28,6 +28,7 @@ module Admin
     def destroy
       @participant_profile.withdrawn_record!
       @participant_profile.mentee_profiles.update_all(mentor_profile_id: nil) if @participant_profile.mentor?
+      Analytics::ECFValidationService.upsert_record(@participant_profile)
 
       render :destroy_success
     end

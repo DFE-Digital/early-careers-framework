@@ -1,37 +1,71 @@
 default: &default
-  adapter: postgresql
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  variables:
-    statement_timeout: 10000
-    idle_in_transaction_session_timeout: 10000
-  username: <%= ENV['DB_USERNAME'] %>
-  password: <%= ENV['DB_PASSWORD'] %>
-  host: <%= ENV['DB_HOSTNAME'] %>
-  port: <%= ENV['DB_PORT'] %>
-  database: <%= ENV['DB_DATABASE'] %>
+  primary: &default_primary
+    adapter: postgresql
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+    variables:
+      statement_timeout: 10000
+      idle_in_transaction_session_timeout: 10000
+    username: <%= ENV['DB_USERNAME'] %>
+    password: <%= ENV['DB_PASSWORD'] %>
+    host: <%= ENV['DB_HOSTNAME'] %>
+    port: <%= ENV['DB_PORT'] %>
+    database: <%= ENV['DB_DATABASE'] %>
+  analytics: &default_analytics
+    adapter: postgresql
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+    variables:
+      statement_timeout: 10000
+      idle_in_transaction_session_timeout: 10000
+    username: <%= ENV['ANALYTICS_DB_USERNAME'] || Rails.application.credentials.ANALYTICS_DB_USERNAME %>
+    password: <%= ENV['ANALYTICS_DB_PASSWORD'] || Rails.application.credentials.ANALYTICS_DB_PASSWORD %>
+    host: <%= ENV['ANALYTICS_DB_HOSTNAME'] || Rails.application.credentials.ANALYTICS_DB_HOSTNAME %>
+    port: <%= ENV['ANALYTICS_DB_PORT'] || Rails.application.credentials.ANALYTICS_DB_PORT %>
+    database: <%= ENV['ANALYTICS_DB_DATABASE'] || Rails.application.credentials.ANALYTICS_DB_DATABASE %>
+    migrations_paths: db/analytics_migrate
 
 development:
-  <<: *default
-  database: 'early_careers_framework_development'
+  primary:
+    <<: *default_primary
+    database: 'early_careers_framework_development'
+  analytics:
+    <<: *default_analytics
+    database: 'early_careers_framework_analytics_development'
 
 sandbox:
-  <<: *default
+  <<: *default_primary
   database: 'early_careers_framework_sandbox'
 
 test:
   <<: *default
-  database: early_careers_framework_test<%= ENV['TEST_ENV_NUMBER'] %>
-  variables:
-    idle_in_transaction_session_timeout: 0
+  primary:
+    <<: *default_primary
+    database: early_careers_framework_test<%= ENV['TEST_ENV_NUMBER'] %>
+    variables:
+      idle_in_transaction_session_timeout: 0
+  analytics:
+    <<: *default_analytics
+    database: 'early_careers_framework_analytics_test'
+    variables:
+      idle_in_transaction_session_timeout: 0
 
 deployed_development:
-  <<: *default
+  <<: *default_primary
   sslmode: require
 
 staging:
   <<: *default
-  sslmode: require
+  primary:
+    <<: *default_primary
+    sslmode: require
+  analytics:
+    <<: *default_analytics
+    sslmode: require
 
 production:
   <<: *default
-  sslmode: require
+  primary:
+    <<: *default_primary
+    sslmode: require
+  analytics:
+    <<: *default_analytics
+    sslmode: require
