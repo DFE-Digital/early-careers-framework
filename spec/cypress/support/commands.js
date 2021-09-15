@@ -34,7 +34,9 @@ Cypress.Commands.add("clickBackLink", () => {
 });
 
 Cypress.Commands.add("clickCommitButton", () => {
-  cy.get("[name=commit]").click();
+  cy.get("[type=submit]")
+    .contains(/Continue|Submit|Confirm|Save|Sign|Resend/)
+    .click();
 });
 
 export const SIGN_IN_EMAIL_TEMPLATE = "7ab8db5b-9842-4bc3-8dbb-f590a3198d9e";

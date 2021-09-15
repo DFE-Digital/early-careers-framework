@@ -15,11 +15,11 @@ module InteractionHelper
 
   alias_method :and_i_select, :when_i_select
 
-  def when_i_click_the_submit_button
-    click_button class: "govuk-button", name: "commit"
+  def when_i_click_the_continue_button
+    click_button "Continue", class: "govuk-button", type: "submit"
   end
 
-  alias_method :and_i_click_the_submit_button, :when_i_click_the_submit_button
+  alias_method :and_i_click_the_continue_button, :when_i_click_the_continue_button
 
   def then_i_should_be_on(path)
     expect(page).to have_current_path path
