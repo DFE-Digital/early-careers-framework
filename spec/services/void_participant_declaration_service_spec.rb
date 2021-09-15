@@ -28,7 +28,7 @@ RSpec.describe VoidParticipantDeclaration do
       described_class.new(cpd_lead_provider: cpd_lead_provider, id: declaration.id).call
       expect {
         described_class.new(cpd_lead_provider: cpd_lead_provider, id: declaration.id).call
-      }.to raise_error InvalidTransitionError
+      }.to raise_error Api::Errors::InvalidTransitionError
     end
 
     it "only voids the last declaration" do
@@ -36,7 +36,7 @@ RSpec.describe VoidParticipantDeclaration do
       create(:profile_declaration, participant_declaration: old_declaration, participant_profile: ect_profile)
       expect {
         described_class.new(cpd_lead_provider: cpd_lead_provider, id: old_declaration.id).call
-      }.to raise_error InvalidTransitionError
+      }.to raise_error Api::Errors::InvalidTransitionError
       expect(old_declaration.reload.voided).to be_falsey
 
       new_declaration = ParticipantDeclaration.order(:declaration_date).first
