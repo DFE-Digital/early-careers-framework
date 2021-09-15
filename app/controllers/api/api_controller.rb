@@ -12,6 +12,7 @@ module Api
     rescue_from ArgumentError, with: :bad_request_response
     rescue_from ActiveRecord::RecordNotUnique, with: :bad_request_response
     rescue_from ActiveRecord::RecordInvalid, with: :invalid_transition
+    rescue_from InvalidTransitionError, with: :invalid_transition
 
   private
 

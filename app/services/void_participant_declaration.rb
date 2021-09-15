@@ -6,10 +6,10 @@ class VoidParticipantDeclaration
   def call
     declaration = ParticipantDeclaration.find(id)
 
-    raise ActiveRecord::RecordInvalid, "Declaration is already voided" if declaration.voided
+    raise InvalidTransitionError, "Declaration is already voided" if declaration.voided
 
     latest_declaration = declaration.participant_profile.participant_declarations.order(declaration_date: :desc).first
-    raise ActiveRecord::RecordInvalid, "Can only void last declaration" if latest_declaration != declaration
+    raise InvalidTransitionError, "Can only void last declaration" if latest_declaration != declaration
 
     declaration.void!
     ParticipantDeclarationSerializer.new(declaration).serializable_hash.to_json
@@ -22,3 +22,5 @@ private
     @id = id
   end
 end
+
+class InvalidTransitionError < StandardError; end
