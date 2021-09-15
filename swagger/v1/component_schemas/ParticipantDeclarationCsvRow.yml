@@ -7,6 +7,7 @@ required:
   - course_identifier
   - eligible_for_payment
   - declaration_date
+  - voided
 properties:
   id:
     description: "The unique identifier of the participant declaration record"
@@ -47,3 +48,13 @@ properties:
       - npq-senior-leadership
       - npq-executive-leadership
     example: ecf-induction
+  eligible_for_payment:
+    description: "Indicates whether this declaration would be eligible for funding from the DfE"
+    type: boolean
+    nullable: false
+    example: true
+  voided:
+    description: "Indicates whether this declaration has been voided"
+    type: boolean
+    nullable: false
+    example: false

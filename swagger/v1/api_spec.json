@@ -390,7 +390,7 @@
         "summary": "Retrieve all participant declarations in CSV format",
         "operationId": "ecf_participant_declarations_csv",
         "tags": [
-          "ECF participant declarations"
+          "Participant declarations"
         ],
         "security": [
           {
@@ -469,6 +469,46 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/participant-declarations/{id}/void": {
+      "put": {
+        "summary": "Void a declaration - it will not be soft-deleted",
+        "operationId": "participant_declarations",
+        "tags": [
+          "Participant declarations"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the declaration to void",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
                 }
               }
             }
@@ -1655,7 +1695,7 @@
             }
           }
         },
-        "example": "id,participant_id,declaration_type,course_identifier,eligible_for_payment,declaration_date\nc88eb9a9-773a-4f53-9716-121b981154d8,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z\n31a521ec-82c5-451c-aea3-426523f1facc,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z\n"
+        "example": "id,participant_id,declaration_type,course_identifier,eligible_for_payment,declaration_date,voided\nc88eb9a9-773a-4f53-9716-121b981154d8,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false\n31a521ec-82c5-451c-aea3-426523f1facc,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false\n"
       },
       "MultipleParticipantDeclarationsResponse": {
         "description": "A list of participant declarations",
@@ -2144,7 +2184,8 @@
           "declaration_type",
           "declaration_date",
           "course_identifier",
-          "eligible_for_payment"
+          "eligible_for_payment",
+          "voided"
         ],
         "properties": {
           "participant_id": {
@@ -2192,6 +2233,12 @@
             "type": "boolean",
             "nullable": false,
             "example": true
+          },
+          "voided": {
+            "description": "Indicates whether this declaration has been voided",
+            "type": "boolean",
+            "nullable": false,
+            "example": false
           }
         }
       },
@@ -2228,7 +2275,8 @@
           "declaration_type",
           "course_identifier",
           "eligible_for_payment",
-          "declaration_date"
+          "declaration_date",
+          "voided"
         ],
         "properties": {
           "id": {
@@ -2276,6 +2324,18 @@
               "npq-executive-leadership"
             ],
             "example": "ecf-induction"
+          },
+          "eligible_for_payment": {
+            "description": "Indicates whether this declaration would be eligible for funding from the DfE",
+            "type": "boolean",
+            "nullable": false,
+            "example": true
+          },
+          "voided": {
+            "description": "Indicates whether this declaration has been voided",
+            "type": "boolean",
+            "nullable": false,
+            "example": false
           }
         }
       },

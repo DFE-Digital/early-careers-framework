@@ -73,6 +73,12 @@ RSpec.describe ParticipantDeclaration, type: :model do
           expect { participant_declaration.refresh_payability! }.to change { participant_declaration.profile_declarations.count }.by(1)
           expect(participant_declaration.payable).to be_falsey
         end
+
+        it "keeps the declaration voided if it was voided already" do
+          participant_declaration.void!
+          expect { participant_declaration.refresh_payability! }.to change { participant_declaration.profile_declarations.count }.by(1)
+          expect(participant_declaration.voided).to be_truthy
+        end
       end
 
       context "when declaration remains payable" do
@@ -100,6 +106,12 @@ RSpec.describe ParticipantDeclaration, type: :model do
           expect { participant_declaration.refresh_payability! }.to change { participant_declaration.profile_declarations.count }.by(1)
           expect(participant_declaration.payable).to be_truthy
         end
+
+        it "keeps the declaration voided if it was voided already" do
+          participant_declaration.void!
+          expect { participant_declaration.refresh_payability! }.to change { participant_declaration.profile_declarations.count }.by(1)
+          expect(participant_declaration.voided).to be_truthy
+        end
       end
 
       context "when declaration remains non-payable" do
@@ -107,6 +119,41 @@ RSpec.describe ParticipantDeclaration, type: :model do
           expect { participant_declaration.refresh_payability! }.not_to change { participant_declaration.profile_declarations.count }
           expect(participant_declaration.payable).to be_falsey
         end
+      end
+    end
+  end
+
+  describe "void!" do
+    let!(:participant_declaration) { create(:ect_participant_declaration) }
+    let!(:participant_profile) { create(:participant_profile, :ect) }
+
+    context "when declaration was payable" do
+      let(:eligibility) { ECFParticipantEligibility.create!(participant_profile_id: participant_profile.id) }
+
+      before do
+        eligibility.eligible_status!
+        create(:profile_declaration, participant_declaration: participant_declaration, participant_profile: participant_profile, created_at: Time.zone.now, payable: true)
+      end
+
+      it "voids the declaration and keeps it payable" do
+        participant_declaration.void!
+        expect(participant_declaration.payable).to be_truthy
+        expect(participant_declaration.voided).to be_truthy
+      end
+    end
+
+    context "when declaration was not payable" do
+      let(:eligibility) { ECFParticipantEligibility.create!(participant_profile_id: participant_profile.id) }
+
+      before do
+        eligibility.manual_check_status!
+        create(:profile_declaration, participant_declaration: participant_declaration, participant_profile: participant_profile, created_at: Time.zone.now, payable: false)
+      end
+
+      it "voids the declaration and keeps it non-payable" do
+        participant_declaration.void!
+        expect(participant_declaration.payable).to be_falsy
+        expect(participant_declaration.voided).to be_truthy
       end
     end
   end

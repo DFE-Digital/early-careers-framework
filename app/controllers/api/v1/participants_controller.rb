@@ -9,7 +9,6 @@ module Api
       include ApiPagination
       include ApiCsv
       include ApiFilter
-      rescue_from ActiveRecord::RecordInvalid, with: :invalid_transition
 
       def index
         respond_to do |format|
@@ -50,10 +49,6 @@ module Api
 
       def recorder(service_namespace:, params:)
         "#{service_namespace}::#{::Factories::CourseIdentifier.call(params[:course_identifier])}".constantize
-      end
-
-      def invalid_transition(exception)
-        render json: { errors: Api::ParamErrorFactory.new(error: "Invalid action", params: exception).call }, status: :unprocessable_entity
       end
 
       def access_scope
