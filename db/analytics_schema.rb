@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_01_101452) do
+ActiveRecord::Schema.define(version: 2021_09_01_151019) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -35,6 +35,7 @@ ActiveRecord::Schema.define(version: 2021_09_01_101452) do
     t.boolean "eligible_for_funding"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "active", default: true
     t.index ["participant_profile_id"], name: "index_ecf_participants_on_participant_profile_id"
   end
 
