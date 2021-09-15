@@ -84,4 +84,7 @@ Rails.application.configure do
   config.dqt_access_scope = "https:///dqtaccess.example.com/some-scope"
   config.dqt_access_client_id = "dqt-access-guid"
   config.dqt_access_client_secret = "dqt-access-secret"
+
+  config.dqt_api_url = "https://dtqapi.example.com/dqt-crm/v1/teachers"
+  config.dqt_api_ocp_apim_subscription_key = "ocp-apim-some-guid"
 end
