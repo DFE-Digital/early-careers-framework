@@ -59,6 +59,7 @@ jobs:
         uses: actions/setup-node@v2.4.0
         with:
           node-version: '12.x'
+          cache: 'yarn'
 
       - name: set environment (workflow dispatch)
         if: ${{ github.event_name == 'workflow_dispatch' }}
