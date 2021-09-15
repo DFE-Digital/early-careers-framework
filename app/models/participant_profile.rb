@@ -81,6 +81,10 @@ class ParticipantProfile < ApplicationRecord
     decision || validation_decisions.build(validation_step: name)
   end
 
+  def state_at(declaration_date)
+    participant_profile_states.where("created_at < ?", declaration_date).order(:created_at).last
+  end
+
   def fundable?
     false
   end
