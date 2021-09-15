@@ -62,7 +62,7 @@ gem "mail-notify", ">= 1.0.3"
 gem "tzinfo-data"
 
 gem "govuk-components", ">= 2.1.0"
-gem "govuk_design_system_formbuilder", "~> 2.3.0b1"
+gem "govuk_design_system_formbuilder", "~> 2.7"
 gem "govuk_markdown", "~> 0.4.0"
 gem "view_component", require: "view_component/engine"
 
