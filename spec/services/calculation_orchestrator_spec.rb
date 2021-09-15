@@ -23,19 +23,19 @@ RSpec.describe CalculationOrchestrator do
   let(:service_fees) do
     [
       {
-        band: "A",
+        band: 0,
         participants: 2000,
         monthly: 22_287.90,
         per_participant: 323.17,
       },
       {
-        band: "B",
+        band: 1,
         participants: 0,
         monthly: 0.0,
         per_participant: 391.60,
       },
       {
-        band: "C",
+        band: 2,
         participants: 0,
         monthly: 0.0,
         per_participant: 386.40,
@@ -45,19 +45,19 @@ RSpec.describe CalculationOrchestrator do
   let(:output_payments) do
     [
       {
-        band: "A",
+        band: 0,
         participants: 10,
         per_participant: 119.40,
         subtotal: 1194.0,
       },
       {
-        band: "B",
+        band: 1,
         participants: 0,
         per_participant: 117.48,
         subtotal: 0.0,
       },
       {
-        band: "C",
+        band: 2,
         participants: 0,
         per_participant: 115.92,
         subtotal: 0.0,

@@ -1,5 +1,5 @@
 class AddRevisedTargetToCallOffContract < ActiveRecord::Migration[6.1]
   def change
-    column_add :call_off_contract, :revised_target, :integer, default: null
+    add_column :call_off_contracts, :revised_target, :integer, default: nil
   end
 end

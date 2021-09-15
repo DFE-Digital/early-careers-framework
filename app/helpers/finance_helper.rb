@@ -10,6 +10,6 @@ module FinanceHelper
   end
 
   def band_to_identifier(index)
-    ("A".ord + index).chr
+    ("a".ord + index).chr
   end
 end

@@ -11,14 +11,8 @@ module PaymentCalculator
 
       def call
         bands.each_with_index.map do |band, i|
-          { band: band_to_identifier(i) }.merge(ECF::ServiceFeesForBand.call(params, band: band))
+          { band: i }.merge(ECF::ServiceFeesForBand.call(params, band: band))
         end
-      end
-
-    private
-
-      def band_to_identifier(index)
-        ("A".ord + index).chr
       end
     end
   end

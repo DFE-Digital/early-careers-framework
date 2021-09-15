@@ -16,18 +16,12 @@ module PaymentCalculator
       def call(event_type:, total_participants:)
         bands.each_with_index.map do |band, i|
           {
-            band: band_to_identifier(i),
+            band: i,
             participants: band.number_of_participants_in_this_band(total_participants),
             per_participant: output_payment_per_participant_for_event(event_type: event_type, band: band),
             subtotal: output_payment_for_event(total_participants: total_participants, event_type: event_type, band: band),
           }
         end
-      end
-
-    private
-
-      def band_to_identifier(index)
-        ("A".ord + index).chr
       end
     end
   end
