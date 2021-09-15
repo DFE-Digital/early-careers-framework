@@ -79,19 +79,19 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_fip_programme_choice_info_page
-    "You've chosen to: use a training provider, funded by the DfE"
+    expect(page).to have_text("You've chosen to: use a training provider, funded by the DfE")
   end
 
   def then_i_am_taken_to_cip_programme_choice_info_page
-    "You've chosen to: deliver your own programme using the DfE-accredited materials"
+    expect(page).to have_text("You've chosen to: deliver your own programme using the DfE-accredited materials")
   end
 
   def then_i_am_taken_to_design_our_own_course_programme_choice_info_page
-    "You've chosen to: design and deliver your own programme based on the Early Career Framework"
+    expect(page).to have_text("You've chosen to: design and deliver your own programme based on the Early Career Framework")
   end
 
-  def then_i_am_taken_to_no_ect_training_info_page
-    "You're not expecting any early career teachers this year"
+  def then_i_am_taken_to_the_no_ect_training_info_page
+    expect(page).to have_text("You're not expecting any early career teachers this year")
   end
 
   def then_i_should_see_the_fip_induction_dashboard_without_partnership_details
@@ -103,7 +103,7 @@ module ManageTrainingSteps
     click_on("Sign up")
   end
 
-  def then_i_am_taken_to_sign_up_to_train_provider_page
+  def then_i_am_taken_to_sign_up_to_training_provider_page
     expect(page).to have_selector("h1", text: "Signing up with a training provider")
     expect(page).to have_text("How you can sign up with a training provider")
   end
