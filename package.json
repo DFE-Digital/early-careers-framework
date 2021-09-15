@@ -21,7 +21,7 @@
     "axe-core": "^4.3.3",
     "cypress": "7.5.0",
     "cypress-axe": "^0.12.2",
-    "cypress-cucumber-preprocessor": "^4.0.1",
+    "cypress-cucumber-preprocessor": "^4.2.0",
     "cypress-file-upload": "^5.0.8",
     "cypress-intellij-reporter": "^0.0.6",
     "eslint": "^7.32.0",
