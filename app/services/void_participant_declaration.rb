@@ -6,10 +6,10 @@ class VoidParticipantDeclaration
   def call
     declaration = ParticipantDeclaration.find(id)
 
-    raise ActionController::BadRequest, "Declaration is already voided" if declaration.voided
+    raise ActiveRecord::RecordInvalid, "Declaration is already voided" if declaration.voided
 
     latest_declaration = declaration.participant_profile.participant_declarations.order(declaration_date: :desc).first
-    raise ActionController::BadRequest, "Can only void last declaration" if latest_declaration != declaration
+    raise ActiveRecord::RecordInvalid, "Can only void last declaration" if latest_declaration != declaration
 
     declaration.void!
     ParticipantDeclarationSerializer.new(declaration).serializable_hash.to_json
