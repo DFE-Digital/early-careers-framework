@@ -74,7 +74,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
           expect(participant_declaration.payable).to be_falsey
         end
 
-        it "creates new profile declaration which is voided if it is already voided" do
+        it "keeps the declaration voided if it was voided already" do
           participant_declaration.void!
           expect { participant_declaration.refresh_payability! }.to change { participant_declaration.profile_declarations.count }.by(1)
           expect(participant_declaration.voided).to be_truthy
@@ -107,7 +107,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
           expect(participant_declaration.payable).to be_truthy
         end
 
-        it "creates new profile declaration which is voided if it is already voided" do
+        it "keeps the declaration voided if it was voided already" do
           participant_declaration.void!
           expect { participant_declaration.refresh_payability! }.to change { participant_declaration.profile_declarations.count }.by(1)
           expect(participant_declaration.voided).to be_truthy
