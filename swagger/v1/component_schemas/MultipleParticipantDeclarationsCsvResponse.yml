@@ -8,6 +8,6 @@ properties:
     items:
       $ref: "#/components/schemas/ParticipantDeclarationCsvRow"
 example: |
-  id,participant_id,declaration_type,course_identifier,eligible_for_payment,declaration_date
-  c88eb9a9-773a-4f53-9716-121b981154d8,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z
-  31a521ec-82c5-451c-aea3-426523f1facc,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z
+  id,participant_id,declaration_type,course_identifier,eligible_for_payment,declaration_date,voided
+  c88eb9a9-773a-4f53-9716-121b981154d8,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false
+  31a521ec-82c5-451c-aea3-426523f1facc,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false
