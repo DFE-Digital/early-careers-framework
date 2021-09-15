@@ -25,7 +25,7 @@ jobs:
           ref: ${{ github.event.inputs.version }}
 
       - name: Pin Terraform version
-        uses: hashicorp/setup-terraform@v1.2.1
+        uses: hashicorp/setup-terraform@v1.3.2
         with:
           terraform_version: 0.14.0
 
