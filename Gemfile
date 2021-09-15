@@ -129,7 +129,7 @@ group :development, :test do
   gem "pry-byebug"
 
   # Testing framework
-  gem "rspec-rails", "~> 4.1.2"
+  gem "rspec-rails", "~> 5.0.2"
 
   gem "cypress-on-rails", "~> 1.0"
   gem "database_cleaner-active_record"
