@@ -56,9 +56,10 @@ jobs:
           bundler-cache: true
 
       - name: Set up Node
-        uses: actions/setup-node@v1.4.6
+        uses: actions/setup-node@v2.4.0
         with:
           node-version: '12.x'
+          cache: 'yarn'
 
       - name: set environment (workflow dispatch)
         if: ${{ github.event_name == 'workflow_dispatch' }}
