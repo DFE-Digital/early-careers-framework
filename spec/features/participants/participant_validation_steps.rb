@@ -73,29 +73,29 @@ module ParticipantValidationSteps
   def when_i_click_continue_to_proceed_with_validation
     validator = class_double("ParticipantValidationService").as_stubbed_const(transfer_nested_constants: true)
     allow(validator).to receive(:validate)
-                          .with(@participant_data)
-                          .and_return({ trn: @participant_data[:trn], qts: true, active_alert: false })
+      .with(@participant_data)
+      .and_return({ trn: @participant_data[:trn], qts: true, active_alert: false })
     click_on "Continue"
   end
 
   def when_i_click_continue_to_proceed_with_validation_for_updated_name
     validator = class_double("ParticipantValidationService").as_stubbed_const(transfer_nested_constants: true)
     allow(validator).to receive(:validate)
-                          .with(@participant_data)
-                          .with(trn: @participant_data[:trn],
-                                full_name: "Sally Participant",
-                                date_of_birth: @participant_data[:date_of_birth],
-                                nino: @participant_data[:nino],
-                                config: { check_first_name_only: true })
-                          .and_return({ trn: @participant_data[:trn], qts: true, active_alert: false })
+      .with(@participant_data)
+      .with(trn: @participant_data[:trn],
+            full_name: "Sally Participant",
+            date_of_birth: @participant_data[:date_of_birth],
+            nino: @participant_data[:nino],
+            config: { check_first_name_only: true })
+      .and_return({ trn: @participant_data[:trn], qts: true, active_alert: false })
     click_on "Continue"
   end
 
   def when_i_click_continue_but_my_details_are_invalid
     validator = class_double("ParticipantValidationService").as_stubbed_const(transfer_nested_constants: true)
     allow(validator).to receive(:validate)
-                          .with(@participant_data)
-                          .and_return(nil)
+      .with(@participant_data)
+      .and_return(nil)
     click_on "Continue"
   end
 

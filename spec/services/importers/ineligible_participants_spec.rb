@@ -9,7 +9,7 @@ RSpec.describe Importers::IneligibleParticipants do
 
   describe ".call" do
     before do
-      service.call(path_to_csv: csv_file, reason: "previous_participant")
+      service.call(path_to_csv: csv_file, reason: "previous_participation")
     end
 
     context "when the trn field is present" do
@@ -21,13 +21,13 @@ RSpec.describe Importers::IneligibleParticipants do
       end
 
       it "sets the reason for the ineligibility" do
-        expect(ECFIneligibleParticipant.previous_participant.count).to be 3
+        expect(ECFIneligibleParticipant.previous_participation.count).to be 3
       end
 
       context "when the trn already exists" do
         it "does not create a duplicate record" do
           expect {
-            service.call(path_to_csv: csv_file, reason: "previous_participant")
+            service.call(path_to_csv: csv_file, reason: "previous_participation")
           }.not_to change { ECFIneligibleParticipant.count }
         end
       end
