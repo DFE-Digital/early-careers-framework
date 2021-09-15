@@ -121,8 +121,8 @@ module RecordDeclarations
     end
 
     def validate_participant_state!
-      last_state = participant_profile_states.where("created_at < ?", declaration_date).order(:created_at).last
-      raise ActionController::ParameterMissing, I18n.t(:declaration_on_incorrect_state) unless last_state&.state.nil? || last_state&.state == "active"
+      last_state = user_profile.state_at(declaration_date)
+      raise ActionController::ParameterMissing, I18n.t(:declaration_on_incorrect_state) unless last_state&.state.nil? || last_state.active?
     end
 
     def milestone
