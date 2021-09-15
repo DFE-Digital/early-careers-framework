@@ -147,7 +147,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
   path "/api/v1/participant-declarations.csv" do
     get "Retrieve all participant declarations in CSV format" do
       operationId :ecf_participant_declarations_csv
-      tags "ECF participant declarations"
+      tags "Participant declarations"
       security [bearerAuth: []]
 
       response "200", "A CSV file of participant declarations" do

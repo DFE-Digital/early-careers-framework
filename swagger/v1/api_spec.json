@@ -390,7 +390,7 @@
         "summary": "Retrieve all participant declarations in CSV format",
         "operationId": "ecf_participant_declarations_csv",
         "tags": [
-          "ECF participant declarations"
+          "Participant declarations"
         ],
         "security": [
           {
