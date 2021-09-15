@@ -1,6 +1,6 @@
 <% content_for :title, "Core induction materials" %>
 
-<% content_for :before_content, govuk_back_link(text: "Back", href: schools_cohort_path) %>
+<% content_for :before_content, govuk_breadcrumbs(breadcrumbs: breadcrumbs(@school)) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -8,7 +8,7 @@
     <h1 class="govuk-heading-xl">Do you know which accredited materials you want to use?</h1>
 
     <p>You will be choosing materials for any new early career teachers. They will access these materials on our service and complete a programme over 2 years.</p>
-    <p>Not sure? <%= govuk_link_to "Check our gudiance on materials", page_path(page: "core-materials-info") %></p>
+    <p>Not sure? <%= govuk_link_to "Check our guidance on materials", page_path(page: "core-materials-info") %></p>
 
     <%= govuk_link_to "Continue", { action: :edit }, class: "govuk-button" %>
   </div>
