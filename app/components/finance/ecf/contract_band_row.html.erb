@@ -1,0 +1,6 @@
+<tr class="govuk-table__row">
+  <td class="govuk-table__cell"><%= band_to_identifier index %></td>
+  <td class="govuk-table__cell govuk-table__cell--numeric"><%= min || t("finance.contract.bands.floor") %></td>
+  <td class="govuk-table__cell govuk-table__cell--numeric"><%= max || t("finance.contract.bands.ceiling") %></td>
+  <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds per_participant %></td>
+</tr>

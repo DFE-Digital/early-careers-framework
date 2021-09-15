@@ -100,19 +100,32 @@ en:
       blank: The lead provider must be present
 
   finance:
+    choose_programme: Choose programme scheme
+    show_contract: View contract information
     provider: Provider
     milestone: Milestone
     target: Recruitment target
     ects: Current ECTs
     mentors: Current Mentors
-    band: Band
     participants: Current Participants
     per_participant: Payment amount per person
     monthly: Payment amount monthly
     subtotal: Sub total
     period: Payment amount for period
+    contract:
+      uplift_target: Uplift target
+      uplift_amount: Uplift amount
+      recuitment_target: Recruitment target
+      set_up_fee: Set-up Fee
+      band: Band
+      bands:
+        min: Min
+        max: Max
+        floor: 0
+        ceiling: Unlimited
     ecf:
-      caption: ECF Payment Breakdown
+      payment_breakdown: ECF Payment Breakdown
+      contract_information: ECF Contract Information
     service_fee:
       caption: Service Fee
       participants: Target Participants

@@ -35,4 +35,17 @@ RSpec.describe "Lead Providers for Finance users", type: :request do
       expect(response).to render_template("finance/lead_providers/show")
     end
   end
+
+  describe "GET /finance/lead-providers/{:id}/contract" do
+    it "renders the ECF contract" do
+      # Arrange
+      create(:call_off_contract, lead_provider: ecf_lead_provider)
+
+      # Act
+      get "/finance/lead-providers/#{ecf_lead_provider.id}/contract"
+
+      # Assert
+      expect(response).to render_template("finance/lead_providers/show_contract")
+    end
+  end
 end
