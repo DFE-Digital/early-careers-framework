@@ -31,6 +31,13 @@ RSpec.describe VoidParticipantDeclaration do
       }.to raise_error Api::Errors::InvalidTransitionError
     end
 
+    it "does not void another provider's declaration" do
+      declaration = ParticipantDeclaration.order(:created_at).last
+      expect {
+        described_class.new(cpd_lead_provider: another_lead_provider, id: declaration.id).call
+      }.to raise_error ActiveRecord::RecordNotFound
+    end
+
     it "only voids the last declaration" do
       old_declaration = create(:participant_declaration, declaration_date: start_date + 1.day, course_identifier: "ecf-induction", declaration_type: "started")
       create(:profile_declaration, participant_declaration: old_declaration, participant_profile: ect_profile)

@@ -4,7 +4,7 @@ class VoidParticipantDeclaration
   attr_accessor :cpd_lead_provider, :id
 
   def call
-    declaration = ParticipantDeclaration.find(id)
+    declaration = ParticipantDeclaration.for_lead_provider(cpd_lead_provider).find(id)
 
     raise Api::Errors::InvalidTransitionError, "Declaration is already voided" if declaration.voided
 
