@@ -24,7 +24,7 @@ describe("Accessibility", () => {
         cy.get('[name="user[email]"]').type(user.email);
       });
 
-    cy.get('[name="commit"]').contains("Sign in").click();
+    cy.get('[type="submit"]').contains("Sign in").click();
     cy.titleShouldEqual("Check email");
     cy.checkA11y();
     cy.percySnapshot("Check email page");
