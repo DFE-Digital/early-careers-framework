@@ -12,25 +12,16 @@ module PaymentCalculator
           include HasDIParameters
         end
 
-        def output_payment_per_participant(band)
-          band.per_participant * output_payment_contribution_percentage
-        end
-
         def output_payment_for_event(event_type:, total_participants:, band:)
           band.number_of_participants_in_this_band(total_participants) * output_payment_per_participant_for_event(event_type: event_type, band: band)
         end
 
         def output_payment_per_participant_for_event(event_type:, band:)
           event_type = event_type.parameterize.underscore.intern if event_type.is_a?(String)
-          send(event_type) * output_payment_per_participant(band)
+          send(event_type) * band.output_payment_per_participant
         end
 
       private
-
-        def output_payment_contribution_percentage
-          0.6
-        end
-
         def start_and_completion_event_percentage
           0.2
         end

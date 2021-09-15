@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_10_101052) do
+ActiveRecord::Schema.define(version: 2021_09_15_155919) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -434,6 +434,7 @@ ActiveRecord::Schema.define(version: 2021_09_10_101052) do
     t.decimal "per_participant"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "output_payment_contribution_percantage", default: 60
     t.index ["call_off_contract_id"], name: "index_participant_bands_on_call_off_contract_id"
   end
 
