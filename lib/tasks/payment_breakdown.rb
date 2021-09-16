@@ -32,7 +32,7 @@ module Tasks
     end
 
     def service_fee_per_participant(band)
-      service_fee_calculator.send(:service_fee_per_participant, band)
+      band.service_fee_per_participant
     end
 
     def service_fee_monthly(band)
