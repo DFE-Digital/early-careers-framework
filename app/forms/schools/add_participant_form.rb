@@ -121,19 +121,12 @@ module Schools
     end
 
     def save!
-      ActiveRecord::Base.transaction do
-        profile = creators[participant_type].call(
-          full_name: full_name,
-          email: email,
-          school_cohort: school_cohort,
-          mentor_profile_id: mentor&.mentor_profile&.id,
-        )
-
-        ParticipantMailer.participant_added(participant_profile: profile).deliver_later
-        profile.update_column(:request_for_details_sent_at, Time.zone.now)
-        ParticipantDetailsReminderJob.schedule(profile)
-        profile
-      end
+      creators[participant_type].call(
+        full_name: full_name,
+        email: email,
+        school_cohort: school_cohort,
+        mentor_profile_id: mentor&.mentor_profile&.id,
+      )
     end
   end
 end

@@ -157,19 +157,5 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
     it "creates new participant record" do
       expect(execution).to change(ParticipantProfile::ECF, :count).by 1
     end
-
-    it "schedules participant_added email" do
-      profile = form.save!
-
-      expect(ParticipantMailer).to delay_email_delivery_of(:participant_added).with(participant_profile: profile)
-    end
-
-    it "scheduled reminder email job" do
-      allow(ParticipantDetailsReminderJob).to receive(:schedule)
-
-      profile = form.save!
-
-      expect(ParticipantDetailsReminderJob).to have_received(:schedule).with(profile)
-    end
   end
 end
