@@ -6,6 +6,7 @@ module PaymentCalculator
   module ECF
     class ServiceFeesForBand
       include ECF::Contract::ServiceFeeCalculations
+      delegate :recruitment_target, to: :contract
 
       def call(band:)
         {

@@ -12,17 +12,12 @@ module PaymentCalculator
           include HasDIParameters
         end
 
-        delegate :recruitment_target, to: :contract
-
-        def service_fee_total(band)
-          band.number_of_participants_in_this_band(recruitment_target) * band.service_fee_per_participant
-        end
-
         def service_fee_monthly(band)
-          service_fee_total(band) / number_of_service_fee_payments
+          band.service_fee_total / number_of_service_fee_payments
         end
 
       private
+
         def number_of_service_fee_payments
           29
         end
