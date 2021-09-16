@@ -40,4 +40,17 @@ RSpec.describe "Manage CIP training", js: true, with_feature_flags: { induction_
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Cip induction dashboard with materials"
   end
+
+  scenario "CIP Induction Mentor who has not added ECT or mentors" do
+    given_there_is_a_school_that_has_chosen_cip_for_2021
+    and_i_am_signed_in_as_an_induction_coordinator
+    then_i_should_see_the_add_your_ect_and_mentor_link
+  end
+
+  scenario "CIP Induction Mentor who has added ECT or mentors" do
+    given_there_is_a_school_that_has_chosen_cip_for_2021
+    and_i_have_added_an_ect_or_mentor
+    and_i_am_signed_in_as_an_induction_coordinator
+    then_i_should_see_the_view_your_ect_and_mentor_link
+  end
 end

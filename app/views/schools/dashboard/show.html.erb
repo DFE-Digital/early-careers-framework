@@ -12,9 +12,15 @@
     <% @school_cohorts.each do |school_cohort| %>
 
       <% if school_cohort.core_induction_programme? || school_cohort.full_induction_programme? %>
-        <p class="govuk-body govuk-!-margin-bottom-5">
-          <%= govuk_link_to 'Add your early career teacher and mentor details', schools_participants_path(cohort_id: school_cohort.cohort.start_year) %>
-        </p>
+        <% if school_cohort.active_ecf_participant_profiles.any? %>
+          <p class="govuk-body govuk-!-margin-bottom-5">
+            <%= govuk_link_to 'View your early career teacher and mentor details', schools_participants_path(cohort_id: school_cohort.cohort.start_year) %>
+          </p>
+        <% else %>
+          <p class="govuk-body govuk-!-margin-bottom-5">
+            <%= govuk_link_to 'Add your early career teacher and mentor details', schools_participants_path(cohort_id: school_cohort.cohort.start_year) %>
+          </p>
+        <% end %>
       <% end %>
 
       <table class="govuk-table">

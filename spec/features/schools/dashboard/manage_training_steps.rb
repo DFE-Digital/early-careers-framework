@@ -23,6 +23,18 @@ module ManageTrainingSteps
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "core_induction_programme")
   end
 
+  def and_i_have_added_an_ect_or_mentor
+    create(:participant_profile, :ect, school_cohort: @school_cohort)
+  end
+
+  def then_i_should_see_the_add_your_ect_and_mentor_link
+    expect(page).to have_text("Add your early career teacher and mentor details")
+  end
+
+  def then_i_should_see_the_view_your_ect_and_mentor_link
+    expect(page).to have_text("View your early career teacher and mentor details")
+  end
+
   def given_there_is_a_school_that_has_chosen_design_our_own_for_2021
     @cohort = create(:cohort, start_year: 2021)
     @school = create(:school, name: "Design Our Own Programme School")
@@ -110,7 +122,7 @@ module ManageTrainingSteps
 
   def when_i_click_on_add_materials
     click_on("Add")
-    click_on "Continue"
+    click_on("Continue")
   end
 
   def then_i_am_taken_to_course_choice_page
