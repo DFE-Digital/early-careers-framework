@@ -1,12 +1,15 @@
 # frozen_string_literal: true
 
 module Finance
-  class ChooseProgrammeForm
+  class ChoosePaymentBreakdownForm
     include ActiveModel::Model
 
-    attr_accessor :choice, :provider
+    attr_accessor :programme, :provider
 
-    def choices
+    validates :programme, presence: { message: "Please select programme type" }, on: :choose_programme
+    validates :provider, presence: { message: "Please select a provider" }, on: :choose_provider
+
+    def programme_choices
       [
         OpenStruct.new(id: "ecf", name: "ECF payments"),
         OpenStruct.new(id: "npq", name: "NPQ payments"),

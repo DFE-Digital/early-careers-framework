@@ -1,4 +1,5 @@
 <% content_for :title, t("finance.ecf.payment_breakdown") %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: select_provider_ecf_finance_payment_breakdowns_path) %>
 
 <h1 class="govuk-caption-xl"><%= @breakdown[:breakdown_summary][:name] %></h1>
 <h2 class="govuk-heading-l"><%=t "finance.ecf.payment_breakdown" %></h2>

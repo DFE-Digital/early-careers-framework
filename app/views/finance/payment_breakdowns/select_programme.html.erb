@@ -7,8 +7,8 @@
       <%= f.govuk_error_summary %>
       <h1 class="govuk-heading-xl">Choose trainee payments scheme</h1>
       <%= f.govuk_collection_radio_buttons(
-            :choice,
-            @choose_programme_form.choices,
+            :programme,
+            @choose_programme_form.programme_choices,
             :id,
             :name,
             legend: { text: "I want to review:", size: "m" },

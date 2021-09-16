@@ -1,1 +1,3 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: finance_ecf_payment_breakdown_path(id: @ecf_lead_provider.id)) %>
+
 <%= render Finance::ECF::Contract.new(contract: @contract) %>

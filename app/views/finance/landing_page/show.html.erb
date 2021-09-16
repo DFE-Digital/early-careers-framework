@@ -1,29 +1,24 @@
 <div class="govuk-grid-row">
-  <h1 class="govuk-heading-xl " style="margin-top: 0" id="company-Name">Manage CPD contracts</h1>
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <div style="max-width:90%">
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-one-half">
-            <h3 class="govuk-heading-m " style="margin-top:0;"><%=govuk_link_to "Payment Breakdown", finance_payment_breakdowns_url %></h3>
-            <p class="rj-home-spacer rj-bottom-border-mobile ">Review upcoming payments to providers</p>
-          </div>
-
-          <div class="govuk-grid-column-one-half rj-space-top-mobile ">
-            <h3 class="govuk-heading-m " style="margin-top:0;  "><%=govuk_link_to "Contract Summary", finance_contracts_path %></h3>
-            <p class="rj-home-spacer  ">View all current contract details  </p>
-          </div>
-        </div>
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-one-half">
-            <h3 class="govuk-heading-m " style="margin-top:0; padding-top:35px"><a href="#">Provider dashboard</a></h3>
-            <p class="rj-home-spacer  ">Overview of all course providers </p>
-          </div>
-          <div class="govuk-grid-column-one-half ">
-            <h3 class="govuk-heading-m " style="margin-top:0; padding-top:35px"><a href="#">Programme dashboard</a></h3>
-            <p>Overview of all programme participants</p>
-          </div>
-        </div>
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Manage CPD contracts</h1>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        <h2 class="govuk-heading-m"><%= govuk_link_to "Payment Breakdown", finance_payment_breakdowns_url %></h2>
+        <p>Review upcoming payments to providers</p>
+      </div>
+      <div class="govuk-grid-column-one-half">
+        <h2 class="govuk-heading-m"><%= govuk_link_to "Contract Summary", "#" %></h2>
+        <p>View all current contract details  </p>
+      </div>
+    </div>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        <h2 class="govuk-heading-m"><%= govuk_link_to "Provider dashboard", "#" %></h2>
+        <p>Overview of all course providers </p>
+      </div>
+      <div class="govuk-grid-column-one-half ">
+        <h2 class="govuk-heading-m"><%= govuk_link_to "Programme dashboard", "#" %></h2>
+        <p>Overview of all programme participants</p>
       </div>
     </div>
   </div>

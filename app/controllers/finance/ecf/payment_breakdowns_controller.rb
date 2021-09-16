@@ -3,10 +3,6 @@
 module Finance
   module ECF
     class PaymentBreakdownsController < BaseController
-      def index
-        @ecf_lead_providers = LeadProvider.all
-      end
-
       def show
         @ecf_lead_provider = lead_provider_scope.find(params[:id])
 
