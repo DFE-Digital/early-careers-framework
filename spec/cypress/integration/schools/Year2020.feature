@@ -1,23 +1,17 @@
 Feature: School leaders should be able to add participants
 
   Background:
-    Given school was created with name "Test School" and slug "test-school"
+    Given school was created with name "Test School" and slug "test-school" and primary_contact_email "test-email@example.com"
     And schedule was created with name "ECF September standard 2021"
     And cohort was created with start_year "2020"
     And core_induction_programme was created with name "Awesome induction course"
     And feature year_2020_data_entry is active
-    And I am on "/schools/test-school/year-2020/start" path
+    And I am on "/schools/test-school/year-2020/support-materials-for-NQTs" path
     Then the page should be accessible
     And percy should be sent snapshot called "Year 2020 start page"
 
   Scenario: Should be able to add a new 2020 ECT participant
-    When I click on "link" containing "Start now"
-    Then I should be on "2020 programme choice" page
-    And the page should be accessible
-    And percy should be sent snapshot called "Year 2020 Programme Choice page"
-
-    When I set "programme choice radio" to "core_induction_programme"
-    And I click the submit button
+    When I click on "link" containing "Choose a provider"
     Then I should be on "2020 cip choice" page
     And the page should be accessible
     And percy should be sent snapshot called "Year 2020 CIP Choice page"
@@ -67,5 +61,7 @@ Feature: School leaders should be able to add participants
     And percy should be sent snapshot called "Year 2020 check your answers page with a deleted teacher"
 
     When I click the submit button
+    Then "success panel" should contain "now access their support materials"
+    And Confirmation email should be sent to the Induction Coordinator to email "test-email@example.com"
     And the page should be accessible
     And percy should be sent snapshot called "Year 2020 ect participant added"

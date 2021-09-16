@@ -17,6 +17,7 @@ class SchoolMailer < ApplicationMailer
   COORDINATOR_REMINDER_TO_CHOOSE_MATERIALS_EMAIL_TEMPLATE = "43baf25c-6a46-437b-9f30-77c57d68a59e"
   ADD_PARTICIPANTS_EMAIL_TEMPLATE = "721787d0-74bc-42a0-a064-ee0c1cb58edb"
   YEAR2020_INVITE_EMAIL_TEMPLATE = "d4b53e26-4630-43a5-b89e-3c668061a41c"
+  BASIC_TEMPLATE = "b1ab542e-a8d5-4fdf-a7aa-f0ce49b98262"
 
   def remind_induction_coordinator_to_setup_cohort_email(recipient:, school_name:, campaign: nil)
     campaign_tracking = campaign ? UTMService.email(campaign, campaign) : {}
@@ -276,6 +277,20 @@ class SchoolMailer < ApplicationMailer
       personalisation: {
         start_url: start_url,
       },
+    )
+  end
+
+  def year2020_add_participants_confirmation(school:, participants:)
+    @school = school
+    @participants = participants
+
+    view_mail(
+      BASIC_TEMPLATE,
+      to: school.contact_email,
+      subject: "2020 to 2021 NQTs cohort: support materials confirmation",
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      template_name: :year2020_ects_added_confirmation,
     )
   end
 end

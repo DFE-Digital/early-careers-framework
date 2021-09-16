@@ -209,6 +209,16 @@ en:
             evidence_held:
               blank: The property '#/evidence_held' must be present
               present: The propert '#/evidence_held' should not be supplied for '#/declaration_type' started or completed
+        schools/year2020_form:
+          attributes:
+            full_name:
+              <<: *full_name_error_messages
+              blank: "Enter a full name for your teacher"
+            email:
+              <<: *email_error_messages
+              blank: "Enter an email address for your teacher"
+            core_induction_programme_id:
+              blank: "Select the materials you want to use"
   activerecord:
     attributes:
       npq_validation_data:

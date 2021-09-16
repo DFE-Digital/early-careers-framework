@@ -1,14 +1,15 @@
 <% content_for :before_content, govuk_back_link(
   text: "Back",
-  href: { action: :select_induction_programme })
+  href: { action: :start })
 %>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-three-quarters">
-    <h1 class="govuk-heading-xl">Which study materials would you like to use?</h1>
-    <p class="govuk-body">
-      You don't necessarily need to choose the material that you chose before. If you are undecided you can read the
-      <%= govuk_link_to "guidance about different materials", "/pages/core-materials-info" %>.
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Choose your materials</h1>
+    <p class="govuk-body govuk-!-margin-bottom-6">
+      All providers cover the same subject matter, but each takes a different approach. Check this
+       <%= govuk_link_to "summary of the support materials (opens in a new tab)", "/pages/year2020-core-materials-info", target: "_blank", rel: "noopener noreferrer" %>
+       if you are not familiar with them.
     </p>
 
     <%= form_for @year_2020_form, url: { action: :choose_cip }, method: :put do |f| %>

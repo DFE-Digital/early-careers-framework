@@ -1,9 +1,20 @@
-<% content_for :title, "Teacher added" %>
+<% content_for :title, "Teacher(s) added" %>
 
-<%= govuk_panel title_text: "2020 cohort information saved", text: nil, classes: "govuk-!-margin-bottom-8" %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= govuk_panel title_text: "#{@year_2020_form.school.name}'s NQTs can now access their support materials.",
+      text: nil,
+      html_attributes: { "data-test": "success-panel" }
+      %>
+    <p class="govuk-body">We have sent you a confirmation email.</p>
 
-<h2 class="govuk-heading-m">What happens next</h2>
+    <h2 class="govuk-heading-m">What happens next</h2>
 
-<div class="govuk-button-group">
-  <%= govuk_link_to "Go to your dashboard", schools_dashboard_path %>
-</div>
+    <p class="govuk-body">We've sent the teacher(s) an email to access the service</p>
+
+    <p>
+      If you want to change your materials to a different provider or want to add any teachers place contact our support team
+      <%= render MailToSupportComponent.new %>
+    </p>
+  </div>
+</div

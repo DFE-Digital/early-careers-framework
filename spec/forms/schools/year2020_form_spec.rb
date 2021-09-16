@@ -5,13 +5,24 @@ RSpec.describe Schools::Year2020Form, type: :model do
   let!(:cohort) { create :cohort, start_year: 2020 }
   let!(:core_induction_programme) { create :core_induction_programme }
   let!(:default_schedule) { create(:schedule, name: "ECF September standard 2021") }
+  let!(:name) { Faker::Name.name }
+  let!(:email) { Faker::Internet.email }
 
   subject { described_class.new(school_id: school.id) }
 
-  it { is_expected.to validate_presence_of(:induction_programme_choice).on(:choose_induction_programme) }
-  it { is_expected.to validate_presence_of(:core_induction_programme_id).on(:choose_cip) }
-  it { is_expected.to validate_presence_of(:full_name).on(:create_teacher) }
-  it { is_expected.to validate_presence_of(:email).on(:create_teacher) }
+  describe "validations" do
+    it { is_expected.to validate_presence_of(:core_induction_programme_id).on(:choose_cip) }
+    it { is_expected.to validate_presence_of(:full_name).on(:create_teacher).with_message("Enter a full name for your teacher") }
+    it { is_expected.to validate_presence_of(:email).on(:create_teacher).with_message("Enter an email address for your teacher") }
+
+    it "validates that the email address is not already in use by an ECT" do
+      create(:participant_profile, :ect, user: create(:user, email: email))
+      form = Schools::Year2020Form.new(full_name: name, email: email)
+      expect(form).not_to be_valid(:create_teacher)
+      expect(form.errors[:email].first).to eq("This email address is already in use")
+      expect(form.email_already_taken?).to be_truthy
+    end
+  end
 
   describe "save!" do
     it "creates a school cohort and user when given all details" do
@@ -47,52 +58,22 @@ RSpec.describe Schools::Year2020Form, type: :model do
         )
       end
     end
-  end
 
-  describe "opt_out?" do
-    it "returns true when induction programme choice is 'no_early_career_teachers'" do
-      subject.induction_programme_choice = "no_early_career_teachers"
-      expect(subject.opt_out?).to be_truthy
-    end
+    it "emails a user a confirmation email of 2020 cohort ECTs" do
+      allow(SchoolMailer).to receive(:year2020_add_participants_confirmation).and_call_original
 
-    it "returns true when induction programme choice is 'design_our_own'" do
-      subject.induction_programme_choice = "design_our_own"
-      expect(subject.opt_out?).to be_truthy
-    end
-
-    it "returns false when induction programme choice is 'core_induction_programme'" do
-      subject.induction_programme_choice = "core_induction_programme"
-      expect(subject.opt_out?).to be_falsey
-    end
-
-    it "returns false when induction programme choice is nil" do
-      expect(subject.opt_out?).to be_falsey
-    end
-  end
-
-  describe "opt_out!" do
-    before do
-      subject.induction_programme_choice = %w[no_early_career_teachers design_our_own].sample
-    end
-
-    context "when no school cohort for 2020 exists" do
-      it "creates school cohort, and sets programme choice to induction_programme_choice value" do
-        subject.opt_out!
-        school_cohort = SchoolCohort.find_by(school: school, cohort: cohort)
-        expect(school_cohort.induction_programme_choice).to eq(subject.induction_programme_choice)
-      end
-    end
-
-    context "school cohort for 2020 exists" do
-      before do
-        SchoolCohort.create!(school: school, cohort: cohort, induction_programme_choice: "core_induction_programme")
+      test_participants = build_list(:user, 3)
+      test_participants.each do |participant|
+        add_new_participant(subject, name: participant.full_name, email: participant.email)
       end
 
-      it "creates the school cohort, and sets programme choice to 'no_early_career_teachers'" do
-        subject.opt_out!
-        school_cohort = SchoolCohort.find_by(school: school, cohort: cohort)
-        expect(school_cohort.induction_programme_choice).to eq(subject.induction_programme_choice)
-      end
+      subject.core_induction_programme_id = core_induction_programme.id
+      subject.save!
+
+      participants = subject.get_participants
+
+      expect(SchoolMailer).to have_received(:year2020_add_participants_confirmation)
+                                .with(school: school, participants: participants)
     end
   end
 
