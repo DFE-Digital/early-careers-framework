@@ -71,12 +71,12 @@ class ParticipantSerializer
     user.teacher_profile.ecf_profile.ecf_participant_eligibility&.eligible_status? || nil
   end
 
-  active_participant_attribute :pupil_premium_uplift do
-    nil # TODO: CPDRP-534 - Share when we know we have the correct information
+  active_participant_attribute :pupil_premium_uplift do |user|
+    user.teacher_profile.ecf_profile&.school&.pupil_premium_uplift?(user.teacher_profile.ecf_profile.cohort.start_year)
   end
 
-  active_participant_attribute :sparsity_uplift do
-    nil # TODO: CPDRP-534 - Share when we know we have the correct information
+  active_participant_attribute :sparsity_uplift do |user|
+    user.teacher_profile.ecf_profile&.school&.sparsity_uplift?(user.teacher_profile.ecf_profile.cohort.start_year)
   end
 
   active_participant_attribute :training_status do |user|
