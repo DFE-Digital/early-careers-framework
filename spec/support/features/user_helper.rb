@@ -7,6 +7,12 @@ module UserHelper
     click_button "Continue"
   end
 
+  def given_i_am_logged_in_as_a_finance_user
+    create(:user, :finance, login_token: "test-token")
+    visit "/users/confirm_sign_in?login_token=test-token"
+    click_button "Continue"
+  end
+
   def sign_in_as(user)
     token = "test-token-#{Time.zone.now.to_f}"
     user.update!(login_token: token, login_token_valid_until: 1.hour.from_now)
