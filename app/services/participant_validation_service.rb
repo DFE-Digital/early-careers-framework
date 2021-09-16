@@ -51,11 +51,20 @@ private
   end
 
   def dqt_record(trn, nino)
-    dqt_client.api.dqt_record.show(params: { teacher_reference_number: trn, national_insurance_number: nino })
+    if FeatureFlag.active?(:actual_dqt_api)
+      object = actual_dqt_client.get_record(trn: trn, birthdate: date_of_birth, nino: nino)
+      ActualDqt::OldRecordMapper.translate(object)
+    else
+      dqt_client.api.dqt_record.show(params: { teacher_reference_number: trn, national_insurance_number: nino })
+    end
   end
 
   def dqt_client
     @dqt_client ||= Dqt::Client.new
+  end
+
+  def actual_dqt_client
+    @actual_dqt_client ||= ActualDqt::Client.new(token: DqtApiAccess.token)
   end
 
   def matching_record(trn:, nino:, full_name:, dob:)
