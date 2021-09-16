@@ -25,8 +25,8 @@ RSpec.describe "ValidationRetryJob" do
       before do
         validator = class_double("ParticipantValidationService").as_stubbed_const(transfer_nested_constants: true)
         allow(validator).to receive(:validate)
-                              .with(participant_data)
-                              .and_return({ trn: participant_data[:trn], qts: true, active_alert: false })
+          .with(participant_data.merge(config: {}))
+          .and_return({ trn: participant_data[:trn], qts: true, active_alert: false })
       end
 
       it "rechecks the eligibility" do
@@ -56,8 +56,8 @@ RSpec.describe "ValidationRetryJob" do
       before do
         validator = class_double("ParticipantValidationService").as_stubbed_const(transfer_nested_constants: true)
         allow(validator).to receive(:validate)
-                              .with(participant_data)
-                              .and_raise(StandardError)
+          .with(participant_data.merge(config: {}))
+          .and_raise(StandardError)
       end
 
       it "does not change the record" do

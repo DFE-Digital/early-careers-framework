@@ -78,6 +78,7 @@ private
     record.full_name = validation_data[:name]
     record.date_of_birth = validation_data[:date_of_birth]
     record.nino = validation_data[:national_insurance_number]
+    record.api_failure = false
     record.assign_attributes(opts)
     record.save!
     record

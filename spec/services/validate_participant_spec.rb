@@ -107,6 +107,7 @@ RSpec.describe ValidateParticipant do
           expect(validation_data.full_name).to eq request_data[:name]
           expect(validation_data.date_of_birth).to eq request_data[:date_of_birth]
           expect(validation_data.nino).to eq request_data[:national_insurance_number]
+          expect(validation_data.api_failure).to be false
         end
       end
 
@@ -143,6 +144,7 @@ RSpec.describe ValidateParticipant do
         expect(validation_data.full_name).to eq request_data[:name]
         expect(validation_data.date_of_birth).to eq request_data[:date_of_birth]
         expect(validation_data.nino).to eq request_data[:national_insurance_number]
+        expect(validation_data.api_failure).to be false
       end
 
       context "when the save_validation_data_without_match is not set" do
@@ -151,6 +153,33 @@ RSpec.describe ValidateParticipant do
                        config: { save_validation_data_without_match: false })
           expect(participant_profile.reload.ecf_participant_validation_data).to be_nil
         end
+      end
+    end
+
+    context "when an error is raised during the API request" do
+      before do
+        allow(validation_service).to receive(:validate)
+          .with(validation_request)
+          .and_raise(StandardError)
+      end
+
+      it "raises the error" do
+        expect {
+          service.call(participant_profile: participant_profile, validation_data: request_data)
+        }.to raise_error(StandardError)
+      end
+
+      it "saves the validation data against the profile and sets the api_failure flag" do
+        expect {
+          service.call(participant_profile: participant_profile, validation_data: request_data)
+        }.to raise_error(StandardError)
+
+        validation_data = participant_profile.reload.ecf_participant_validation_data
+        expect(validation_data.trn).to eq request_data[:trn]
+        expect(validation_data.full_name).to eq request_data[:name]
+        expect(validation_data.date_of_birth).to eq request_data[:date_of_birth]
+        expect(validation_data.nino).to eq request_data[:national_insurance_number]
+        expect(validation_data.api_failure).to be true
       end
     end
 
