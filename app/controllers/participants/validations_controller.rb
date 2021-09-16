@@ -145,7 +145,8 @@ module Participants
       result = ParticipantValidationService.validate(trn: participant_details[:trn],
                                                      full_name: participant_details[:name],
                                                      date_of_birth: participant_details[:date_of_birth],
-                                                     nino: participant_details[:national_insurance_number])
+                                                     nino: participant_details[:national_insurance_number],
+                                                     config: { check_first_name_only: true })
 
       if result.nil?
         @participant_validation_form.increment_validation_attempts
