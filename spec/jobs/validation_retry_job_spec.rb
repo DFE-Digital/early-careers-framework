@@ -25,7 +25,7 @@ RSpec.describe "ValidationRetryJob" do
       before do
         validator = class_double("ParticipantValidationService").as_stubbed_const(transfer_nested_constants: true)
         allow(validator).to receive(:validate)
-          .with(participant_data.merge(config: {}))
+          .with(participant_data.merge(config: { check_first_name_only: true }))
           .and_return({ trn: participant_data[:trn], qts: true, active_alert: false })
       end
 
@@ -56,7 +56,7 @@ RSpec.describe "ValidationRetryJob" do
       before do
         validator = class_double("ParticipantValidationService").as_stubbed_const(transfer_nested_constants: true)
         allow(validator).to receive(:validate)
-          .with(participant_data.merge(config: {}))
+          .with(participant_data.merge(config: { check_first_name_only: true }))
           .and_raise(StandardError)
       end
 
