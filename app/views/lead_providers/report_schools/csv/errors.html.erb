@@ -47,7 +47,7 @@
 
 <div class="govuk-button-group">
   <% if @valid_schools.any? %>
-    <%= govuk_button_link_to(
+    <%= govuk_button_to(
           "Continue with #{(@valid_schools.count)} #{"school".pluralize((@valid_schools.count))}",
           { action: :proceed }) %>
   <% end %>
