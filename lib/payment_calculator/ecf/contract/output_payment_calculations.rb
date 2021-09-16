@@ -22,6 +22,7 @@ module PaymentCalculator
         end
 
       private
+
         def start_and_completion_event_percentage
           0.2
         end

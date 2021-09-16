@@ -15,7 +15,7 @@ class ParticipantBand < ApplicationRecord
   end
 
   def output_payment_per_participant
-    (per_participant * output_payment_contribution_percantage)/100
+    (per_participant * output_payment_contribution_percantage) / 100
   end
 
   def deduction_for_setup?
