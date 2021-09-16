@@ -19,13 +19,15 @@ RSpec.describe DqtApiAccess do
   let(:stub_token_fetch) do
     stub_request(:get, "https://dqtaccess.example.com/oauth2/v2.0/token")
       .with(
+        body: {
+          "client_id" => "dqt-access-guid",
+          "client_secret" => "dqt-access-secret",
+          "grant_type" => "client_credentials",
+          "scope" => "https:///dqtaccess.example.com/some-scope",
+        },
         headers: {
           "Accept" => "*/*",
-          "Client-Id" => "dqt-access-guid",
-          "Client-Secret" => "dqt-access-secret",
-          "Grant-Type" => "client_credentials",
           "Host" => "dqtaccess.example.com",
-          "Scope" => "https:///dqtaccess.example.com/some-scope",
         },
       )
       .to_return(status: 200, body: response_hash.to_json, headers: {})

@@ -8,10 +8,15 @@ class DqtApiAccess
     def token
       if @token.nil? || token_about_to_expire?
         request = Net::HTTP::Get.new(uri)
-        request["grant_type"] = grant_type
-        request["scope"] = scope
-        request["client_id"] = client_id
-        request["client_secret"] = client_secret
+
+        data = {
+          grant_type: grant_type,
+          scope: scope,
+          client_id: client_id,
+          client_secret: client_secret,
+        }
+
+        request.set_form_data(data)
 
         response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl?, read_timeout: 20) do |http|
           http.request(request)
