@@ -13,7 +13,7 @@ RSpec.describe VoidParticipantDeclaration do
     let(:start_date) { ect_profile.schedule.milestones.first.start_date }
     before do
       travel_to start_date + 2.days
-      RecordParticipantDeclaration.call(ect_params)
+      RecordParticipantDeclaration.call(ect_params.merge(declaration_date: (start_date + 2.days).rfc3339))
       travel_to start_date + 3.days
     end
 
@@ -46,7 +46,7 @@ RSpec.describe VoidParticipantDeclaration do
       }.to raise_error Api::Errors::InvalidTransitionError
       expect(old_declaration.reload.voided).to be_falsey
 
-      new_declaration = ParticipantDeclaration.order(:declaration_date).first
+      new_declaration = ParticipantDeclaration.order(declaration_date: :desc).first
       described_class.new(cpd_lead_provider: cpd_lead_provider, id: new_declaration.id).call
       expect(new_declaration.reload.voided).to be_truthy
     end
