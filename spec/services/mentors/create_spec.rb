@@ -65,6 +65,28 @@ RSpec.describe Mentors::Create do
     }.to change { user.reload.full_name }
   end
 
+  it "schedules participant_added email" do
+    profile = described_class.call(
+      email: user.email,
+      full_name: Faker::Name.name,
+      school_cohort: school_cohort,
+    )
+
+    expect(ParticipantMailer).to delay_email_delivery_of(:participant_added).with(participant_profile: profile)
+  end
+
+  it "scheduled reminder email job" do
+    allow(ParticipantDetailsReminderJob).to receive(:schedule)
+
+    profile = described_class.call(
+      email: user.email,
+      full_name: Faker::Name.name,
+      school_cohort: school_cohort,
+    )
+
+    expect(ParticipantDetailsReminderJob).to have_received(:schedule).with(profile)
+  end
+
   context "when the user has an active participant profile" do
     before do
       create(:participant_profile, teacher_profile: create(:teacher_profile, user: user))

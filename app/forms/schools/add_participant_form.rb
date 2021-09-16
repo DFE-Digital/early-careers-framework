@@ -47,6 +47,7 @@ module Schools
 
       validates :mentor_id,
                 presence: true,
+                if: -> { type == :ect },
                 inclusion: { in: ->(form) { form.mentor_options.map(&:id) + %w[later] } }
 
       next_step :confirm
