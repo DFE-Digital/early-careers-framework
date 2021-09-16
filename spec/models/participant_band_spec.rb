@@ -80,7 +80,7 @@ RSpec.describe ParticipantBand, type: :model do
         expect(bands[0].number_of_participants_in_this_band(2001)).to eq(2000)
         expect(bands[1].number_of_participants_in_this_band(2001)).to eq(1)
         expect(bands[2].number_of_participants_in_this_band(2001)).to eq(0)
-        expect(bands[3].number_of_participants_in_this_band(2000)).to eq(0)
+        expect(bands[3].number_of_participants_in_this_band(2001)).to eq(0)
       end
 
       it "fills bands[1] if there are enough participants for just bands[0] + bands[1]" do
