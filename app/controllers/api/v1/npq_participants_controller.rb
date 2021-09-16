@@ -28,6 +28,10 @@ module Api
         npq_participants = npq_participants.where("updated_at > ?", updated_since) if updated_since.present?
         npq_participants.order(:created_at)
       end
+
+      def access_scope
+        LeadProviderApiToken.joins(cpd_lead_provider: [:npq_lead_provider])
+      end
     end
   end
 end

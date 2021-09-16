@@ -117,21 +117,8 @@ RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { par
     context "when unauthorized" do
       it "returns 401 for invalid bearer token" do
         default_headers[:Authorization] = "Bearer ugLPicDrpGZdD_w7hhCL"
-        get "/api/v1/npq-applications"
+        get "/api/v1/npq-participants"
         expect(response.status).to eq 401
-      end
-    end
-
-    context "when token belongs to provider that does not handle NPQs" do
-      let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: lead_provider) }
-      let(:lead_provider) { create(:lead_provider) }
-      let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
-      let(:bearer_token) { "Bearer #{token}" }
-
-      it "returns 403" do
-        default_headers[:Authorization] = bearer_token
-        get "/api/v1/npq-applications"
-        expect(response.status).to eq 403
       end
     end
 
@@ -140,7 +127,7 @@ RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { par
 
       it "returns 401 for invalid bearer token" do
         default_headers[:Authorization] = bearer_token
-        get "/api/v1/npq-applications"
+        get "/api/v1/npq-participants"
         expect(response.status).to eq 403
       end
     end
