@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_09_154907) do
+ActiveRecord::Schema.define(version: 2021_09_10_101052) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -203,6 +203,14 @@ ActiveRecord::Schema.define(version: 2021_09_09_154907) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["local_authority_district_id"], name: "index_district_sparsities_on_local_authority_district_id"
+  end
+
+  create_table "ecf_ineligible_participants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "trn"
+    t.string "reason", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["trn"], name: "index_ecf_ineligible_participants_on_trn", unique: true
   end
 
   create_table "ecf_participant_eligibilities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

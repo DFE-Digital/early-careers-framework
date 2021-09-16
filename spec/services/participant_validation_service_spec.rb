@@ -65,7 +65,7 @@ RSpec.describe ParticipantValidationService do
       end
 
       it "returns record with padded trn when trn is not padded" do
-        expect(validation_result).to eql({ trn: padded_trn, qts: true, active_alert: false })
+        expect(validation_result).to eql(build_validation_result(trn: padded_trn))
       end
     end
 
@@ -75,37 +75,37 @@ RSpec.describe ParticipantValidationService do
       end
 
       it "returns true when all fields match" do
-        expect(validation_result).to eql({ trn: trn, qts: true, active_alert: false })
+        expect(validation_result).to eql(build_validation_result(trn: trn))
       end
 
       it "returns the validated details when date of birth is wrong" do
         expect(
           ParticipantValidationService.validate(trn: trn, nino: nino, full_name: full_name, date_of_birth: Date.new(1980, 1, 2)),
-        ).to eql({ trn: trn, qts: true, active_alert: false })
+        ).to eql(build_validation_result(trn: trn))
       end
 
       it "returns the validated details when name is wrong" do
         expect(
           ParticipantValidationService.validate(trn: trn, nino: nino, full_name: "John Smithe", date_of_birth: dob),
-        ).to eql({ trn: trn, qts: true, active_alert: false })
+        ).to eql(build_validation_result(trn: trn))
       end
 
       it "returns the validated details when nino is wrong" do
         expect(
           ParticipantValidationService.validate(trn: trn, nino: "AA654321A", full_name: full_name, date_of_birth: dob),
-        ).to eql({ trn: trn, qts: true, active_alert: false })
+        ).to eql(build_validation_result(trn: trn))
       end
 
       it "returns the validated details when name is wrong and nino is cased differently" do
         expect(
           ParticipantValidationService.validate(trn: trn, nino: nino.downcase, full_name: "John Smithe", date_of_birth: dob),
-        ).to eql({ trn: trn, qts: true, active_alert: false })
+        ).to eql(build_validation_result(trn: trn))
       end
 
       it "returns validated details when the name is cased differently and the nino is missing" do
         expect(
           ParticipantValidationService.validate(trn: trn, nino: "", full_name: "John SMITH", date_of_birth: dob),
-        ).to eql({ trn: trn, qts: true, active_alert: false })
+        ).to eql(build_validation_result(trn: trn))
       end
     end
 
@@ -139,7 +139,7 @@ RSpec.describe ParticipantValidationService do
         it "returns validated details" do
           expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(dqt_record)
 
-          expect(validation_result).to eql({ trn: trn, qts: true, active_alert: false })
+          expect(validation_result).to eql(build_validation_result(trn: trn))
         end
       end
     end
@@ -165,7 +165,7 @@ RSpec.describe ParticipantValidationService do
                  nino: nino,
                  full_name: full_name,
                  date_of_birth: dob,
-               )).to eql({ trn: trn, qts: true, active_alert: false })
+               )).to eql(build_validation_result(trn: trn))
       end
     end
 
@@ -176,7 +176,7 @@ RSpec.describe ParticipantValidationService do
       end
 
       it "returns correct QTS information" do
-        expect(validation_result).to eql({ trn: trn, qts: false, active_alert: false })
+        expect(validation_result).to eql(build_validation_result(trn: trn, options: { qts: false }))
       end
     end
 
@@ -187,7 +187,7 @@ RSpec.describe ParticipantValidationService do
       end
 
       it "returns returns the correct alert details" do
-        expect(validation_result).to eql({ trn: trn, qts: true, active_alert: true })
+        expect(validation_result).to eql(build_validation_result(trn: trn, options: { active_alert: true }))
       end
     end
 
@@ -201,5 +201,51 @@ RSpec.describe ParticipantValidationService do
         expect(ParticipantValidationService.validate(trn: trn, nino: "", full_name: "John Smithe", date_of_birth: dob)).to be_nil
       end
     end
+
+    context "when the participant has previously participated" do
+      let!(:ineligibity) { create(:ineligible_participant, trn: trn, reason: :previous_participation) }
+
+      before do
+        expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(dqt_record)
+      end
+
+      it "returns returns the correct previous_participation flags" do
+        expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_participation: true }))
+      end
+    end
+
+    context "when the participant has previously had an induction" do
+      let!(:ineligibity) { create(:ineligible_participant, trn: trn, reason: :previous_induction) }
+
+      before do
+        expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(dqt_record)
+      end
+
+      it "returns returns the correct previous_participation flags" do
+        expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: true }))
+      end
+    end
+
+    context "when the participant has previously had an induction and participation" do
+      let!(:ineligibity) { create(:ineligible_participant, trn: trn, reason: :previous_induction_and_participation) }
+
+      before do
+        expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(dqt_record)
+      end
+
+      it "returns returns both flags" do
+        expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: true, previous_participation: true }))
+      end
+    end
+  end
+
+  def build_validation_result(trn:, options: {})
+    {
+      trn: trn,
+      qts: true,
+      active_alert: false,
+      previous_participation: false,
+      previous_induction: false,
+    }.merge(options)
   end
 end

@@ -142,30 +142,21 @@ module Participants
     end
 
     def validate_participant_details_and_redirect
-      result = ParticipantValidationService.validate(trn: participant_details[:trn],
-                                                     full_name: participant_details[:name],
-                                                     date_of_birth: participant_details[:date_of_birth],
-                                                     nino: participant_details[:national_insurance_number],
-                                                     config: { check_first_name_only: true })
+      result = ValidateParticipant.call(participant_profile: participant_profile,
+                                        validation_data: participant_details,
+                                        config: { check_first_name_only: true, save_validation_data_without_match: false })
 
-      if result.nil?
-        @participant_validation_form.increment_validation_attempts
-        store_form_and_redirect_to_step :cannot_find_details
-      else
-        eligibility_data = store_eligibility_data!(result)
-        eligibility_data.manual_check_status! unless store_trn!(result[:trn])
-
-        # store validation data for manual re-check later
-        # if different TRN already exists or not eligible
-        store_validation_data! unless eligibility_data.eligible_status?
-
+      if result
         store_analytics(matched: true)
         reset_form_data
         store_form_and_redirect_to_step :complete
+      else
+        store_analytics(matched: false)
+        @participant_validation_form.increment_validation_attempts
+        store_form_and_redirect_to_step :cannot_find_details
       end
     rescue StandardError => e
-      Rails.logger.error("Problem with DQT API: " + e.message)
-      store_validation_data!(api_failure: true)
+      Rails.logger.error("Problem with ValidateParticipant: " + e.message)
       store_analytics(matched: false)
       reset_form_data
       store_form_and_redirect_to_step :complete
@@ -175,31 +166,13 @@ module Participants
       @participant_details ||= @participant_validation_form.attributes.slice(:trn, :name, :date_of_birth, :national_insurance_number)
     end
 
-    def store_validation_data!(opts = {})
+    def store_validation_data!
       participant_profile.create_ecf_participant_validation_data!({
         trn: participant_details[:trn],
         full_name: participant_details[:name],
         date_of_birth: participant_details[:date_of_birth],
         nino: participant_details[:national_insurance_number],
-      }.merge(opts))
-    end
-
-    def store_trn!(trn)
-      if participant_profile.teacher_profile.trn.present? && participant_profile.teacher_profile.trn != trn
-        Rails.logger.warn("Different TRN already set for user [#{current_user.email}]")
-        false
-      else
-        participant_profile.teacher_profile.update!(trn: trn)
-      end
-    end
-
-    def store_eligibility_data!(dqt_data)
-      participant_profile.create_ecf_participant_eligibility!(qts: dqt_data[:qts],
-                                                              active_flags: dqt_data[:active_alert],
-                                                              # TODO: CPDRP-672 use ERO data
-                                                              previous_participation: nil,
-                                                              # TODO: CPDRP-900 use previous induction data
-                                                              previous_induction: nil)
+      })
     end
 
     def participant_profile
