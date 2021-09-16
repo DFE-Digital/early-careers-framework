@@ -6,7 +6,7 @@
     <%= f.govuk_check_box :lead_provider_ids, lead_provider.id, label: { text: lead_provider.name }, link_errors: true do %>
       <%= f.govuk_check_boxes_fieldset(
         :provider_relationship_hashes,
-        legend: { hidden: true },
+        legend: nil,
         hint: { text: "What cohort/academic year are they working with?" },
         ) do %>
         <% lead_provider.cohorts.each do |cohort| %>
