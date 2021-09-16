@@ -18,7 +18,7 @@ module ActualDqt
       qts_date = response.dig("qualified_teacher_status", "qts_date")
 
       if qts_date
-        hash["qts_date"] = Time.zone.parse(qts_date)
+        hash["qts_date"] = qts_date
       end
 
       hash.with_indifferent_access

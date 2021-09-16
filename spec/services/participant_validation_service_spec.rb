@@ -265,7 +265,7 @@ RSpec.describe ParticipantValidationService do
         dob: dob,
         active_alert: alert,
         qualified_teacher_status: {
-          "qts_date" => qts_date.to_s,
+          "qts_date" => qts_date,
         },
       }.stringify_keys
     end
@@ -310,7 +310,7 @@ RSpec.describe ParticipantValidationService do
           dob: dob,
           active_alert: alert,
           qualified_teacher_status: {
-            "qts_date" => "2021-07-05T00:00:00Z",
+            "qts_date" => qts_date,
           },
         }.stringify_keys
       end

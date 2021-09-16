@@ -15,7 +15,7 @@ RSpec.describe ActualDqt::Client do
       "trn": "1001000",
       "ni_number": "AB123456D",
       "name": "Mostly Populated",
-      "dob": "1987-13-12",
+      "dob": "1987-12-13",
       "active_alert": false,
       "state": 0,
       "state_name": "Active",
@@ -128,6 +128,20 @@ RSpec.describe ActualDqt::Client do
       record = subject.get_record(trn: trn, birthdate: birthdate)
 
       expect(record["trn"]).to eql(trn)
+    end
+
+    it "maps dates to native date objects" do
+      stub_api_request
+
+      record = subject.get_record(trn: trn, birthdate: birthdate)
+
+      expect(record["dob"]).to be_a(Date)
+      expect(record["qualified_teacher_status"]["qts_date"]).to be_a(Date)
+      expect(record["induction"]["completion_date"]).to be_a(Date)
+      expect(record["initial_teacher_training"]["programme_start_date"]).to be_a(Date)
+      expect(record["initial_teacher_training"]["programme_end_date"]).to be_a(Date)
+      expect(record["qualifications"][0]["date_awarded"]).to be_nil
+      expect(record["qualifications"][1]["date_awarded"]).to be_a(Date)
     end
 
     context "when record does not exist" do

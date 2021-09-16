@@ -22,11 +22,21 @@ module ActualDqt
       end
 
       if response.code == "200"
-        JSON.parse(response.body)
+        translate_hash(JSON.parse(response.body))
       end
     end
 
   private
+
+    def translate_hash(hash)
+      hash.deep_transform_values do |value|
+        if value =~ /^\d{4}-\d{2}-\d{2}/
+          Date.parse(value)
+        else
+          value
+        end
+      end
+    end
 
     def subscription_key
       Rails.configuration.dqt_api_ocp_apim_subscription_key
