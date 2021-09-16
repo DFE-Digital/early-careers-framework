@@ -5,7 +5,7 @@ module ApplicationHelper
     if user.admin?
       admin_schools_path
     elsif user.finance?
-      finance_lead_providers_path
+      finance_landing_page_path(user)
     elsif user.induction_coordinator_and_mentor?
       induction_coordinator_mentor_path(user)
     elsif user.induction_coordinator?

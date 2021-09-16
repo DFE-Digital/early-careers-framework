@@ -1,0 +1,19 @@
+<% content_for :title, t("finance.choose_programme") %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: finance_landing_page_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_with model: @choose_programme_form, url: { action: :choose_programme }, method: :post do |f| %>
+      <%= f.govuk_error_summary %>
+      <h1 class="govuk-heading-xl">Choose trainee payments scheme</h1>
+      <%= f.govuk_collection_radio_buttons(
+            :choice,
+            @choose_programme_form.choices,
+            :id,
+            :name,
+            legend: { text: "I want to review:", size: "m" },
+            ) %>
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

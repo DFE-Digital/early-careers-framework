@@ -6,7 +6,7 @@
   <tbody class="govuk-table__body">
     <% @ecf_lead_providers.each do |ecf_lead_provider| %>
       <tr class="govuk-table__row">
-        <td class="govuk-table__cell" data-test="lead-provider-name"><%= link_to ecf_lead_provider.name, finance_lead_provider_path(ecf_lead_provider) %></td>
+        <td class="govuk-table__cell" data-test="lead-provider-name"><%= link_to ecf_lead_provider.name, finance_ecf_payment_breakdown_path(id: ecf_lead_provider) %></td>
       </tr>
     <% end %>
   </tbody>
