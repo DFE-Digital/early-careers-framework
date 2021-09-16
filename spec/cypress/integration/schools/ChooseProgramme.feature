@@ -25,14 +25,14 @@ Feature: Induction tutors choosing programmes
     When I click on "link" containing "Continue"
     Then I should be on "school cohorts" page
     And the page should be accessible
-    And percy should be sent snapshot called "Schools page"
+    And percy should be sent snapshot called "CIP schools page"
 
     When I navigate to "choose programme" page with id "test-school"
     Then I should have been redirected to "school cohorts" page
     And the page should be accessible
     And "page body" should contain "Manage your training"
     And "page body" should contain "Add your early career teacher and mentor details"
-    And percy should be sent snapshot called "Schools page"
+    And percy should be sent snapshot called "Manage your training page"
 
   Scenario: Choosing Full Induction Programme
     When I click on "training provider" label
@@ -49,7 +49,7 @@ Feature: Induction tutors choosing programmes
     And the page should be accessible
     And "page body" should contain "Manage your training"
     And "page body" should contain "Add your early career teacher and mentor details"
-    And percy should be sent snapshot called "Schools page"
+    And percy should be sent snapshot called "FIP schools page"
 
   Scenario: Choosing to design and deliver our own programme
     When I click on "design and deliver our own programme radio button"
