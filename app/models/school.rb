@@ -18,10 +18,11 @@ class School < ApplicationRecord
   has_many :local_authority_districts, through: :school_local_authority_districts
 
   has_many :partnerships
+  has_many :active_partnerships, -> { active }, class_name: "Partnership"
   has_many :lead_providers, through: :partnerships
   has_many :school_cohorts
   has_many :pupil_premiums
-  has_many :nomination_emails
+  has_many :nomination_emails, -> { order(created_at: :desc) }
 
   has_many :induction_coordinator_profiles_schools, dependent: :destroy
   has_many :induction_coordinator_profiles, through: :induction_coordinator_profiles_schools
