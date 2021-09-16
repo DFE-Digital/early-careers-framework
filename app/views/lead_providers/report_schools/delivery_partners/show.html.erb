@@ -3,15 +3,14 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">Choose the delivery partner</h1>
-    <p>Select the delivery partner that these schools have confirmed an agreement with.</p>
     <%= form_with model: report_schools_form, url: { action: :create }, method: :post do |f| %>
       <%= f.govuk_collection_radio_buttons(
         :delivery_partner_id,
         delivery_partners,
         :id,
         :name,
-        legend: nil) %>
+        legend: { text: "Choose the delivery partner", size: "xl", tag: "h1" },
+        hint: { text: "Select the delivery partner that these schools have confirmed an agreement with." }) %>
       <%= f.govuk_submit "Continue" %>
     <% end %>
   </div>
