@@ -14,7 +14,7 @@ RSpec.describe CheckParticipantEligibility do
       end
     end
 
-    context "when no matching ineligible participan record exists" do
+    context "when no matching ineligible participant record exists" do
       it "returns nil" do
         expect(service.call(trn: "9876543")).to be_nil
       end
