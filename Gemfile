@@ -171,7 +171,7 @@ group :test do
   gem "rails-controller-testing", ">= 1.0.5"
   gem "rspec-default_http_header", ">= 0.0.4"
   gem "selenium-webdriver"
-  gem "shoulda-matchers", "~> 4.4"
+  gem "shoulda-matchers", "~> 4.5"
   gem "simplecov"
   gem "webdrivers", "~> 4.4", ">= 4.4.1"
   gem "webmock", ">= 3.10.0"
