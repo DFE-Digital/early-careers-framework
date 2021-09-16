@@ -3,7 +3,7 @@
 module Finance
   module ECF
     class BreakdownSummary < BaseComponent
-      attr_accessor :name, :declaration, :target, :ects, :mentors, :participants
+      attr_accessor :name, :declaration, :recruitment_target, :ects, :mentors, :participants
 
     private
 

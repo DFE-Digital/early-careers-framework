@@ -8,6 +8,7 @@ AllCops:
     - 'node_modules/**/*'
     - 'bin/**/*'
     - 'db/schema.rb'
+    - 'db/analytics_schema.rb'
     - 'vendor/**/*'
     - 'db/seeds/cip_*.rb'
 

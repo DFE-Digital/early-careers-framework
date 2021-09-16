@@ -35,7 +35,7 @@ gem "pg", ">= 0.18", "< 2.0"
 gem "ar-uuid", "~> 0.2.1"
 
 # Use Puma as the app server
-gem "puma", "~> 5.3", ">= 5.3.1"
+gem "puma", "~> 5.4"
 
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
 gem "webpacker", ">= 5.2.1"
@@ -101,8 +101,7 @@ gem "rouge"
 
 gem "ransack"
 
-# Payment breackdown
-
+# Payment breakdown
 gem "terminal-table"
 
 gem "friendly_id", "~> 5.4.0"
@@ -130,7 +129,7 @@ group :development, :test do
   gem "pry-byebug"
 
   # Testing framework
-  gem "rspec-rails", "~> 4.0.2"
+  gem "rspec-rails", "~> 5.0.2"
 
   gem "cypress-on-rails", "~> 1.0"
   gem "database_cleaner-active_record"
@@ -168,7 +167,7 @@ group :test do
   gem "capybara", ">= 3.35.3"
   gem "jsonapi-rspec"
   gem "percy-capybara"
-  gem "pundit-matchers", "~> 1.6.0"
+  gem "pundit-matchers", "~> 1.7.0"
   gem "rails-controller-testing", ">= 1.0.5"
   gem "rspec-default_http_header", ">= 0.0.4"
   gem "selenium-webdriver"

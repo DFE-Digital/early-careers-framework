@@ -11,6 +11,8 @@ module Api
     rescue_from ActiveRecord::StatementInvalid, with: :bad_request_response
     rescue_from ArgumentError, with: :bad_request_response
     rescue_from ActiveRecord::RecordNotUnique, with: :bad_request_response
+    rescue_from ActiveRecord::RecordInvalid, with: :invalid_transition
+    rescue_from Api::Errors::InvalidTransitionError, with: :invalid_transition
 
   private
 
@@ -32,6 +34,10 @@ module Api
 
     def bad_request_response(exception)
       render json: { errors: Api::ParamErrorFactory.new(error: "Bad request", params: exception.message).call }, status: :bad_request
+    end
+
+    def invalid_transition(exception)
+      render json: { errors: Api::ParamErrorFactory.new(error: "Invalid action", params: exception).call }, status: :unprocessable_entity
     end
   end
 end

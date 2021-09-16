@@ -5,28 +5,18 @@ module Schools
     include ActiveModel::Model
     include ActiveModel::Serialization
 
-    attr_accessor :school_id, :induction_programme_choice, :core_induction_programme_id, :full_name, :email, :participants
-
-    validates :induction_programme_choice, presence: true, on: :choose_induction_programme
+    attr_accessor :school_id, :core_induction_programme_id, :full_name, :email, :participants
     validates :core_induction_programme_id, presence: true, on: :choose_cip
 
     validates :full_name, presence: true, on: %i[create_teacher update_teacher]
-    # TODO: unique emails
     validates :email,
               presence: true,
               notify_email: { allow_blank: true },
               on: %i[create_teacher update_teacher]
+    validate :email_is_not_in_use, on: %i[create_teacher update_teacher]
 
     def attributes
-      { school_id: nil, induction_programme_choice: nil, core_induction_programme_id: nil, participants: nil }
-    end
-
-    def induction_programme_options
-      [
-        OpenStruct.new(id: "core_induction_programme", name: "Yes"),
-        OpenStruct.new(id: "design_our_own", name: "No, we will support our NQTs another way"),
-        OpenStruct.new(id: "no_early_career_teachers", name: "No, we don't have any NQTs"),
-      ]
+      { school_id: nil, core_induction_programme_id: nil, participants: nil }
     end
 
     def school
@@ -39,6 +29,10 @@ module Schools
 
     def cohort
       Cohort.find_by(start_year: 2020)
+    end
+
+    def email_already_taken?
+      ParticipantProfile.active_record.ects.joins(:user).where(user: { email: email }).any?
     end
 
     def store_new_participant
@@ -78,16 +72,6 @@ module Schools
       self.participants = get_participants.filter { |participant| participant[:index] != index }
     end
 
-    def opt_out?
-      induction_programme_choice == "design_our_own" || induction_programme_choice == "no_early_career_teachers"
-    end
-
-    def opt_out!
-      school_cohort = SchoolCohort.find_or_initialize_by(school: school, cohort: cohort)
-      school_cohort.induction_programme_choice = induction_programme_choice
-      school_cohort.save!
-    end
-
     def save!
       ActiveRecord::Base.transaction do
         school_cohort = SchoolCohort.find_or_initialize_by(school: school, cohort: cohort)
@@ -95,7 +79,7 @@ module Schools
         school_cohort.core_induction_programme = core_induction_programme
         school_cohort.save!
 
-        get_participants.each do |participant|
+        participants = get_participants.each do |participant|
           EarlyCareerTeachers::Create.call(
             full_name: participant[:full_name],
             email: participant[:email],
@@ -103,7 +87,18 @@ module Schools
             mentor_profile_id: nil,
           )
         end
+
+        SchoolMailer.year2020_add_participants_confirmation(
+          school: school,
+          participants: participants,
+        ).deliver_now
       end
+    end
+
+  private
+
+    def email_is_not_in_use
+      errors.add(:email, :taken) if email_already_taken?
     end
   end
 end

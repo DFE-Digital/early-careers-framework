@@ -21,6 +21,7 @@ module EarlyCareerTeachers
           ParticipantMailer.participant_added(participant_profile: profile).deliver_later
           profile.update_column(:request_for_details_sent_at, Time.zone.now)
           ParticipantDetailsReminderJob.schedule(profile)
+          Analytics::ECFValidationService.upsert_record(profile)
         end
       end
     end

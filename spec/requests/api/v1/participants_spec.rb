@@ -205,8 +205,8 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           expect(mentor_row["teacher_reference_number"]).to eql mentor.teacher_profile.trn
           expect(mentor_row["teacher_reference_number_validated"]).to eql "false"
           expect(mentor_row["eligible_for_funding"]).to be_empty
-          expect(mentor_row["pupil_premium_uplift"]).to be_empty
-          expect(mentor_row["sparsity_uplift"]).to be_empty
+          expect(mentor_row["pupil_premium_uplift"]).to eql "false"
+          expect(mentor_row["sparsity_uplift"]).to eql "false"
           expect(mentor_row["training_status"]).to eql "active"
 
           ect = ParticipantProfile::ECT.active_record.first.user
@@ -221,8 +221,8 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           expect(ect_row["teacher_reference_number"]).to eql ect.teacher_profile.trn
           expect(ect_row["teacher_reference_number_validated"]).to eql "false"
           expect(mentor_row["eligible_for_funding"]).to be_empty
-          expect(mentor_row["pupil_premium_uplift"]).to be_empty
-          expect(mentor_row["sparsity_uplift"]).to be_empty
+          expect(mentor_row["pupil_premium_uplift"]).to eql "false"
+          expect(mentor_row["sparsity_uplift"]).to eql "false"
           expect(mentor_row["training_status"]).to eql "active"
 
           withdrawn_record_row = parsed_response.find { |row| row["id"] == withdrawn_ect_profile_record.user.id }

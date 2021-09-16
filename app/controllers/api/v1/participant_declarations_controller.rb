@@ -14,6 +14,10 @@ module Api
         render json: RecordParticipantDeclaration.call(params)
       end
 
+      def void
+        render json: VoidParticipantDeclaration.new(cpd_lead_provider: cpd_lead_provider, id: params[:id]).call
+      end
+
       def index
         respond_to do |format|
           format.json do

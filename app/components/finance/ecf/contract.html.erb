@@ -1,0 +1,59 @@
+<dl class="govuk-summary-list govuk-summary-list--no-border">
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      <%=t("finance.provider") %>
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%=name %>
+    </dd>
+  </div>
+</dl>
+<dl class="govuk-summary-list">
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      <%=t("finance.contract.recuitment_target") %>
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%=recruitment_target %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      <%=t("finance.contract.uplift_target") %>
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= float_to_percentage uplift_target %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      <%=t("finance.contract.uplift_amount") %>
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= number_to_pounds uplift_amount %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      <%=t("finance.contract.set_up_fee") %>
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= number_to_pounds set_up_fee %>
+    </dd>
+  </div>
+</dl>
+
+
+<table class="govuk-table">
+  <thead class="govuk-table__head">
+  <tr class="govuk-table__row">
+    <th class="govuk-table__header"><%=t "finance.contract.band" %></th>
+    <th class="govuk-table__header govuk-table__cell--numeric"><%=t "finance.contract.bands.min" %></th>
+    <th class="govuk-table__header govuk-table__cell--numeric"><%=t "finance.contract.bands.max" %></th>
+    <th class="govuk-table__header govuk-table__cell--numeric"><%=t "finance.per_participant"%></th>
+  </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+  <%= render Finance::ECF::ContractBandRow.with_collection(bands) %>
+  </tbody>
+</table>

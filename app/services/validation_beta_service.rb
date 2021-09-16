@@ -9,7 +9,7 @@ class ValidationBetaService
 
     School.where(id: empty_school_cohorts.select(:school_id)).includes(:induction_coordinators).find_each do |school|
       school.induction_coordinator_profiles.each do |sit|
-        next if sit.reminder_email_sent_at.blank? || sit.reminder_email_sent_at > time
+        next if sit.reminder_email_sent_at.present?
 
         email = SchoolMailer.remind_induction_coordinator_to_setup_cohort_email(
           recipient: sit.user.email,

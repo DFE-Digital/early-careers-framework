@@ -54,4 +54,13 @@ class ParticipantDeclaration < ApplicationRecord
       reload
     end
   end
+
+  def voided
+    voided_at.present?
+  end
+
+  def void!
+    # TODO: Prevent voiding a processed declaration - that requires clawbacks
+    update!(voided_at: Time.zone.now)
+  end
 end

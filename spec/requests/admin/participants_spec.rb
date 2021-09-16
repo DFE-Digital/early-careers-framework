@@ -79,5 +79,10 @@ RSpec.describe "Admin::Participants", type: :request do
       delete "/admin/participants/#{ect_profile.id}"
       expect(response).to render_template "admin/participants/destroy_success"
     end
+
+    it "updates analytics" do
+      delete "/admin/participants/#{ect_profile.id}"
+      expect(Analytics::ECFValidationService).to delay_execution_of(:upsert_record_without_delay)
+    end
   end
 end

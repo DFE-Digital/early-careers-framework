@@ -10,13 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1.4.4
+      - uses: actions/setup-node@v2.4.0
         with:
           node-version: '14.x'
+          cache: 'yarn'
       - name: Yarn install
         run: npm i -g yarn && yarn
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.70.1
+        uses: ruby/setup-ruby@v1.81.0
         with:
           ruby-version: 2.7.2
       - name: Install dependencies

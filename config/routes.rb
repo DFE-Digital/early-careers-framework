@@ -57,7 +57,11 @@ Rails.application.routes.draw do
           put :change_schedule, path: "change-schedule"
         end
       end
-      resources :participant_declarations, only: %i[create index show], path: "participant-declarations"
+      resources :participant_declarations, only: %i[create index show], path: "participant-declarations" do
+        member do
+          put :void
+        end
+      end
       resources :users, only: %i[index create]
       resources :ecf_users, only: %i[index create], path: "ecf-users"
       resources :dqt_records, only: :show, path: "dqt-records"
@@ -248,7 +252,11 @@ Rails.application.routes.draw do
   end
 
   namespace :finance do
-    resources :lead_providers, only: %i[index show], path: "lead-providers"
+    resources :lead_providers, only: %i[index show], path: "lead-providers" do
+      member do
+        get :contract, to: "lead_providers#show_contract"
+      end
+    end
   end
 
   namespace :participants do
@@ -295,10 +303,8 @@ Rails.application.routes.draw do
       end
 
       resource :year_2020, path: "year-2020", controller: "year2020", only: [], constraints: ->(_request) { FeatureFlag.active?(:year_2020_data_entry) } do
-        get "start", action: :start
+        get "support-materials-for-NQTs", action: :start, as: :start
 
-        get "choose-induction-programme", action: :select_induction_programme
-        put "choose-induction-programme", action: :choose_induction_programme
         get "choose-core-induction-programme", action: :select_cip
         put "choose-core-induction-programme", action: :choose_cip
         get "add-teacher", action: :new_teacher
@@ -311,6 +317,7 @@ Rails.application.routes.draw do
         post "check-your-answers", action: :confirm
         get "success", action: :success
 
+        get "2020-cohort-already-have-access", action: :cohort_already_have_access
         get "no-accredited-materials", action: :no_accredited_materials
       end
 

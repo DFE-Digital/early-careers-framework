@@ -8,7 +8,7 @@ class ParticipantDeclarationSerializer
 
   set_id :id
   set_type :'participant-declaration'
-  attributes :participant_id, :declaration_type, :course_identifier
+  attributes :participant_id, :declaration_type, :course_identifier, :voided
 
   attribute :eligible_for_payment do |declaration|
     declaration.payable || false

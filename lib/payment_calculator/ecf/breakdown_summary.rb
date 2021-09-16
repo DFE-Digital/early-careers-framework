@@ -13,7 +13,7 @@ module PaymentCalculator
         {
           name: lead_provider.name,
           declaration: event_type,
-          target: recruitment_target,
+          recruitment_target: recruitment_target,
           ects: aggregations[:ects],
           mentors: aggregations[:mentors],
           participants: aggregations[:all],

@@ -6,6 +6,7 @@ required:
   - declaration_date
   - course_identifier
   - eligible_for_payment
+  - voided
 properties:
   participant_id:
     description: "The unique id of the participant"
@@ -46,3 +47,8 @@ properties:
     type: boolean
     nullable: false
     example: true
+  voided:
+    description: "Indicates whether this declaration has been voided"
+    type: boolean
+    nullable: false
+    example: false

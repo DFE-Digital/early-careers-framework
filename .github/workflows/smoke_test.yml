@@ -26,6 +26,10 @@ jobs:
       DB_PASSWORD: ''
       DB_HOSTNAME: 127.0.0.1
       DB_PORT: 5432
+      ANALYTICS_DB_USERNAME: postgres
+      ANALYTICS_DB_PASSWORD: ''
+      ANALYTICS_DB_HOSTNAME: 127.0.0.1
+      ANALYTICS_DB_PORT: 5432
 
     services:
       postgres:
@@ -47,7 +51,7 @@ jobs:
         run: echo ${{ env.ENVIRONMENT}}
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@v1.81.0
         with:
           bundler-cache: true
 
@@ -55,6 +59,7 @@ jobs:
         uses: actions/setup-node@v2.4.0
         with:
           node-version: '12.x'
+          cache: 'yarn'
 
       - name: set environment (workflow dispatch)
         if: ${{ github.event_name == 'workflow_dispatch' }}
