@@ -15,9 +15,14 @@ class Importers::IneligibleParticipants < BaseService
 
     CSV.foreach(@path_to_csv, headers: true) do |row|
       if row["trn"].present?
-        ECFIneligibleParticipant.find_or_create_by!(trn: row["trn"]) do |record|
+        record = ECFIneligibleParticipant.find_or_initialize_by(trn: row["trn"])
+        if record.persisted? && record.reason.to_s != @reason.to_s
+          @logger.info "Same trn, different reason! #{record.trn}"
+          record.reason = :previous_induction_and_participation
+        else
           record.reason = @reason
         end
+        record.save!
       else
         @logger.info "Skipping row <#{row}> ..."
         invalid_count += 1

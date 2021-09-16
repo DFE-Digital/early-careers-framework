@@ -225,6 +225,18 @@ RSpec.describe ParticipantValidationService do
         expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: true }))
       end
     end
+
+    context "when the participant has previously had an induction and participation" do
+      let!(:ineligibity) { create(:ineligible_participant, trn: trn, reason: :previous_induction_and_participation) }
+
+      before do
+        expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(dqt_record)
+      end
+
+      it "returns returns both flags" do
+        expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: true, previous_participation: true }))
+      end
+    end
   end
 
   def build_validation_result(trn:, options: {})

@@ -35,7 +35,14 @@ private
   def set_eligibility_flags(validation_data)
     ineligibility_flag = CheckParticipantEligibility.call(trn: validation_data[:trn])
 
-    validation_data[ineligibility_flag] = true if ineligibility_flag.present?
+    if ineligibility_flag.present?
+      if ineligibility_flag == :previous_induction_and_participation
+        validation_data[:previous_participation] = validation_data[:previous_induction] = true
+      else
+        validation_data[ineligibility_flag] = true
+      end
+    end
+
     validation_data
   end
 

@@ -30,6 +30,18 @@ RSpec.describe Importers::IneligibleParticipants do
             service.call(path_to_csv: csv_file, reason: "previous_participation")
           }.not_to change { ECFIneligibleParticipant.count }
         end
+
+        context "when the reason is different" do
+          before do
+            @both_types = ECFIneligibleParticipant.find_by(trn: "4488331")
+            @both_types.previous_induction!
+          end
+
+          it "updates the reason to previous_induction_and_participation" do
+            service.call(path_to_csv: csv_file, reason: "previous_participation")
+            expect(@both_types.reload).to be_previous_induction_and_participation
+          end
+        end
       end
     end
   end
