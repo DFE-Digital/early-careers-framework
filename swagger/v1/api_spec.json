@@ -1602,8 +1602,8 @@
                   "teacher_reference_number": null,
                   "teacher_reference_number_validated": false,
                   "eligible_for_funding": null,
-                  "pupil_premium_uplift": null,
-                  "sparsity_uplift": null,
+                  "pupil_premium_uplift": true,
+                  "sparsity_uplift": false,
                   "training_status": "deferred"
                 }
               },
