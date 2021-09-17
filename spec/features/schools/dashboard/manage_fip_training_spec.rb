@@ -6,6 +6,10 @@ require_relative "./manage_training_steps"
 RSpec.describe "Manage FIP training", js: true, with_feature_flags: { induction_tutor_manage_participants: "active" } do
   include ManageTrainingSteps
 
+  before { freeze_dynamic_dates_or_times_for_percy }
+
+  after { return_from_timecop }
+
   scenario "FIP Induction Coordinator with training provider" do
     given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
     and_i_am_signed_in_as_an_induction_coordinator
