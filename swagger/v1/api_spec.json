@@ -518,7 +518,7 @@
     },
     "/api/v1/participants/ecf": {
       "get": {
-        "summary": "Retrieve multiple participants",
+        "summary": "Retrieve multiple participants, replaces <code>/api/v1/participants</code>",
         "operationId": "participants",
         "tags": [
           "ECF participants"
@@ -587,7 +587,7 @@
     },
     "/api/v1/participants/ecf.csv": {
       "get": {
-        "summary": "Retrieve all participants in CSV format",
+        "summary": "Retrieve all participants in CSV format, replaces <code>/api/v1/participants.csv</code>",
         "operationId": "ecf_participants_csv",
         "tags": [
           "ECF participants"
@@ -641,7 +641,7 @@
     },
     "/api/v1/participants": {
       "get": {
-        "summary": "Retrieve multiple participants",
+        "summary": "[DEPRECATED - use <code>/api/v1/participants/ecf</code>] Retrieve multiple participants",
         "operationId": "participants",
         "tags": [
           "ECF participants"
@@ -710,7 +710,7 @@
     },
     "/api/v1/participants.csv": {
       "get": {
-        "summary": "Retrieve all participants in CSV format",
+        "summary": "[DEPRECATED - use <code>/api/v1/participants/ecf.csv</code>] Retrieve all participants in CSV format",
         "operationId": "ecf_participants_csv",
         "tags": [
           "ECF participants"
@@ -1725,8 +1725,8 @@
                   "teacher_reference_number": null,
                   "teacher_reference_number_validated": false,
                   "eligible_for_funding": null,
-                  "pupil_premium_uplift": true,
-                  "sparsity_uplift": false,
+                  "pupil_premium_uplift": null,
+                  "sparsity_uplift": null,
                   "training_status": "deferred"
                 }
               },

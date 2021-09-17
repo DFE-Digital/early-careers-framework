@@ -12,7 +12,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
   let(:Authorization) { bearer_token }
 
   path "/api/v1/participants" do
-    get "Retrieve multiple participants" do
+    get "[DEPRECATED - use <code>/api/v1/participants/ecf</code>] Retrieve multiple participants" do
       operationId :participants
       tags "ECF participants"
       security [bearerAuth: []]
@@ -58,7 +58,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
   end
 
   path "/api/v1/participants.csv" do
-    get "Retrieve all participants in CSV format" do
+    get "[DEPRECATED - use <code>/api/v1/participants/ecf.csv</code>] Retrieve all participants in CSV format" do
       operationId :ecf_participants_csv
       tags "ECF participants"
       security [bearerAuth: []]
