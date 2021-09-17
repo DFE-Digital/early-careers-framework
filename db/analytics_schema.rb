@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_01_151019) do
+ActiveRecord::Schema.define(version: 2021_09_15_160357) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -37,6 +37,24 @@ ActiveRecord::Schema.define(version: 2021_09_01_151019) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "active", default: true
     t.index ["participant_profile_id"], name: "index_ecf_participants_on_participant_profile_id"
+  end
+
+  create_table "ecf_schools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.string "urn"
+    t.datetime "nomination_email_opened_at"
+    t.boolean "induction_tutor_nominated"
+    t.datetime "tutor_nominated_time"
+    t.boolean "induction_tutor_signed_in"
+    t.string "induction_programme_choice"
+    t.boolean "in_partnership"
+    t.datetime "partnership_time"
+    t.string "partnership_challenge_reason"
+    t.string "partnership_challenge_time"
+    t.string "lead_provider"
+    t.string "delivery_partner"
+    t.string "chosen_cip"
+    t.index ["urn"], name: "index_ecf_schools_on_urn", unique: true
   end
 
 end
