@@ -225,15 +225,6 @@ class InviteSchools
     end
   end
 
-  def send_year2020_invite_email
-    return unless FeatureFlag.active?(:year_2020_data_entry)
-
-    School.eligible.each do |school|
-      recipient = school.contact_email
-      SchoolMailer.year2020_invite_email(recipient: recipient, start_url: year2020_start_url(school)).deliver_later if recipient.present?
-    end
-  end
-
   def invite_cip_only_schools
     School.currently_open.where(school_type_code: GiasTypes::CIP_ONLY_EXCEPT_WELSH_CODES).where(section_41_approved: false).find_each do |school|
       if school.contact_email.blank?
@@ -251,6 +242,29 @@ class InviteSchools
     end
   end
 
+  def invite_sitless_opted_out_schools_for_nqt_plus_one
+    School.eligible.opted_out.where.missing(:induction_coordinators).each do |school|
+      if school.contact_email.blank?
+        logger.info "No contact details for school urn: #{school.urn} ... skipping"
+        next
+      end
+
+      SchoolMailer.nqt_plus_one_sitless_invite(
+        recipient: school.contact_email,
+        start_url: year2020_start_url(school, utm_source: :year2020_nqt_invite_school),
+      ).deliver_later
+    end
+  end
+
+  def invite_opted_out_sits_for_nqt_plus_one
+    School.eligible.opted_out.joins(:induction_coordinators).each do |school|
+      SchoolMailer.nqt_plus_one_sit_invite(
+        recipient: school.induction_coordinators.first.email,
+        start_url: year2020_start_url(school, utm_source: :year2020_nqt_invite_sit),
+      ).deliver_later
+    end
+  end
+
 private
 
   def private_beta_start_url
@@ -260,10 +274,10 @@ private
     )
   end
 
-  def year2020_start_url(school)
+  def year2020_start_url(school, utm_source:)
     Rails.application.routes.url_helpers.start_schools_year_2020_url(
       host: Rails.application.config.domain,
-      **UTMService.email(:year2020_nqt_invite, :year2020_nqt_invite),
+      **UTMService.email(utm_source, utm_source),
       school_id: school.friendly_id,
     )
   end

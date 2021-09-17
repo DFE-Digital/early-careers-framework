@@ -60,6 +60,10 @@ class School < ApplicationRecord
     left_outer_joins(:school_cohorts).where(school_cohorts: { cohort_id: [cohort.id, nil], opt_out_of_updates: [false, nil] })
   }
 
+  scope :opted_out, lambda { |cohort = Cohort.current|
+    joins(:school_cohorts).where(school_cohorts: { cohort_id: cohort.id, opt_out_of_updates: true })
+  }
+
   def partnered?(cohort)
     partnerships.unchallenged.where(cohort: cohort).any?
   end

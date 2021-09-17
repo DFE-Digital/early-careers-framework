@@ -148,4 +148,32 @@ RSpec.describe SchoolMailer, type: :mailer do
       expect(year2020_add_participants_confirmation.from).to eq(["mail@example.com"])
     end
   end
+
+  describe "nqt_plus_one_sitless_invite" do
+    let(:email) do
+      SchoolMailer.nqt_plus_one_sitless_invite(
+        recipient: "hello@example.com",
+        start_url: "www.example.com",
+      ).deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(email.to).to eq(["hello@example.com"])
+      expect(email.from).to eq(["mail@example.com"])
+    end
+  end
+
+  describe "nqt_plus_one_sit_invite" do
+    let(:email) do
+      SchoolMailer.nqt_plus_one_sit_invite(
+        recipient: "hello@example.com",
+        start_url: "www.example.com",
+      ).deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(email.to).to eq(["hello@example.com"])
+      expect(email.from).to eq(["mail@example.com"])
+    end
+  end
 end
