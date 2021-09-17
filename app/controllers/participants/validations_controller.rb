@@ -98,7 +98,8 @@ module Participants
 
     def complete
       @school = participant_profile.school
-      if participant_profile.ecf_participant_eligibility&.matched_status?
+      if participant_profile.ecf_participant_eligibility&.eligible_status? ||
+          participant_profile.ecf_participant_eligibility&.matched_status?
         # Probably successful - show success message.
         # TODO CPDRP-884: change line above to be eligible_status?
         # Will become: TRN has been validated, qts, no flags, not done before, no previous induction

@@ -90,7 +90,7 @@ RSpec.describe ValidateParticipant do
       it "creates an eligibility record for the participant" do
         service.call(participant_profile: participant_profile, validation_data: request_data)
         eligibility = participant_profile.reload.ecf_participant_eligibility
-        expect(eligibility).to be_matched_status
+        expect(eligibility).to be_eligible_status
       end
 
       context "when the participant is not eligible" do
@@ -194,7 +194,7 @@ RSpec.describe ValidateParticipant do
 
       it "updates the eligibility data" do
         service.call(participant_profile: participant_profile, validation_data: request_data)
-        expect(existing_eligibility.reload).to be_matched_status
+        expect(existing_eligibility.reload).to be_eligible_status
         expect(existing_eligibility.previous_participation).to be false
       end
 

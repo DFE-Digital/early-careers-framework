@@ -18,9 +18,7 @@ class ECFParticipantEligibility < ApplicationRecord
                   elsif !qts?
                     :matched
                   else
-                    # NOTE: this should be :eligible here but we are putting
-                    # everyone in the holding pen until we have the data to validate further
-                    :matched
+                    :eligible
                   end
   end
 end
