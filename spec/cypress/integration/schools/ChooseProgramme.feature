@@ -8,7 +8,7 @@ Feature: Induction tutors choosing programmes
     And I am logged in as an induction coordinator for created school
     Then I should be on "choose programme" page
     And the page should be accessible
-    And percy should be sent snapshot called "Choose programme page"
+    And percy should be sent snapshot called "Choose training programme page"
 
   Scenario: Choosing Core Induction Programme
     When I click on "accredited materials" label
