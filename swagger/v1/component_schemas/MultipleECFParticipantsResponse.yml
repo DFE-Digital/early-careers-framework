@@ -36,8 +36,8 @@ properties:
           teacher_reference_number: null
           teacher_reference_number_validated: false
           eligible_for_funding: null
-          pupil_premium_uplift: null
-          sparsity_uplift: null
+          pupil_premium_uplift: false
+          sparsity_uplift: false
           training_status: deferred
       - id: eb475531-bf08-48ae-b0ef-c2ff5e5bdef0
         type: participant
@@ -52,6 +52,6 @@ properties:
           teacher_reference_number: null
           teacher_reference_number_validated: null
           eligible_for_funding: null
-          pupil_premium_uplift: null
-          sparsity_uplift: null
+          pupil_premium_uplift: false
+          sparsity_uplift: false
           training_status: withdrawn
