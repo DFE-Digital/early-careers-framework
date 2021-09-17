@@ -25,6 +25,16 @@
       <%=recruitment_target %>
     </dd>
   </div>
+  <% if revised_target.present? %>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        <%=t("finance.contract.revised_target") %>
+      </dt>
+      <dd class="govuk-summary-list__value">
+        <%=revised_target %>
+      </dd>
+    </div>
+  <% end %>
   <div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key">
       <%=t("finance.ects") %>

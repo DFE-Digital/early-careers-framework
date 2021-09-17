@@ -8,8 +8,4 @@ module FinanceHelper
   def float_to_percentage(number)
     number_to_percentage(number * 100, precision: 0)
   end
-
-  def band_to_identifier(index)
-    ("A".ord + index).chr
-  end
 end

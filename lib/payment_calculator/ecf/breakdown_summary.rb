@@ -14,6 +14,7 @@ module PaymentCalculator
           name: lead_provider.name,
           declaration: event_type,
           recruitment_target: recruitment_target,
+          revised_target: revised_target,
           ects: aggregations[:ects],
           mentors: aggregations[:mentors],
           participants: aggregations[:all],
@@ -23,7 +24,7 @@ module PaymentCalculator
     private
 
       attr_accessor :contract
-      delegate :recruitment_target, to: :contract
+      delegate :recruitment_target, :revised_target, to: :contract
 
       def initialize(contract:)
         self.contract = contract

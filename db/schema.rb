@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_10_101052) do
+ActiveRecord::Schema.define(version: 2021_09_16_150823) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -94,6 +94,7 @@ ActiveRecord::Schema.define(version: 2021_09_10_101052) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "lead_provider_id", default: -> { "gen_random_uuid()" }, null: false
+    t.integer "revised_target"
     t.index ["lead_provider_id"], name: "index_call_off_contracts_on_lead_provider_id"
   end
 
@@ -434,6 +435,9 @@ ActiveRecord::Schema.define(version: 2021_09_10_101052) do
     t.decimal "per_participant"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "output_payment_percantage", default: 60
+    t.integer "service_fee_percentage", default: 40
+    t.integer "service_fee_contribution_percentage", default: 40
     t.index ["call_off_contract_id"], name: "index_participant_bands_on_call_off_contract_id"
   end
 

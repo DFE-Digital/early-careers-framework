@@ -117,6 +117,7 @@ en:
       uplift_target: Uplift target
       uplift_amount: Uplift amount
       recuitment_target: Recruitment target
+      revised_target: Revised recruitment target (+2%)
       set_up_fee: Set-up Fee
       band: Band
       bands:
@@ -125,6 +126,11 @@ en:
         floor: 0
         ceiling: Unlimited
     ecf:
+      bands:
+        "0": ECF FIP Band A
+        "1": ECF FIP Band B
+        "2": ECF FIP Band C
+        "3": Additional
       payment_breakdown: ECF Payment Breakdown
       contract_information: ECF Contract Information
     service_fee:

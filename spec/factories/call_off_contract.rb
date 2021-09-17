@@ -5,6 +5,7 @@ FactoryBot.define do
     uplift_target { 0.33 }
     uplift_amount { 100 }
     recruitment_target { 2000 }
+    revised_target { nil }
     set_up_fee { 149_651 }
     lead_provider { build(:lead_provider, cpd_lead_provider: build(:cpd_lead_provider)) }
     raw do
@@ -28,13 +29,20 @@ FactoryBot.define do
         }.to_json,
       }
     end
+
     after(:build) do |contract, evaluator|
       contract.lead_provider = evaluator.lead_provider
     end
+
     after(:create) do |contract|
       create(:participant_band, :band_a, { call_off_contract: contract })
       create(:participant_band, :band_b, { call_off_contract: contract })
-      create(:participant_band, :band_c, { call_off_contract: contract })
+      if contract.revised_target.present?
+        create(:participant_band, :band_c_with_additional, { max: contract.recruitment_target, call_off_contract: contract })
+        create(:participant_band, :additional, { min: contract.recruitment_target + 1, max: contract.revised_target, call_off_contract: contract })
+      else
+        create(:participant_band, :band_c, { call_off_contract: contract })
+      end
     end
   end
 end

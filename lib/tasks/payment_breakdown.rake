@@ -18,8 +18,8 @@ namespace :payment_calculation do
     raise "Unknown lead provider: #{ARGV[1]}" if cpd_lead_provider.nil?
     raise "Not an ECF lead provider #{ARGV[1]}" if cpd_lead_provider.lead_provider.nil?
 
-    total_participants = (ARGV[2] || ParticipantDeclaration::ECF.payable_for_lead_provider(cpd_lead_provider).count)
-    uplift_participants = (ARGV[3] || ParticipantDeclaration::ECF.payable_uplift_for_lead_provider(cpd_lead_provider).count)
+    total_participants = (ARGV[2] || ParticipantDeclaration::ECF.payable_for_lead_provider(cpd_lead_provider).count).to_i
+    uplift_participants = (ARGV[3] || ParticipantDeclaration::ECF.payable_uplift_for_lead_provider(cpd_lead_provider).count).to_i
     total_ects = (ARGV[2].present? ? ARGV[2].to_i / 2 : ParticipantDeclaration::ECF.payable_ects_for_lead_provider(cpd_lead_provider).count)
     total_mentors = (ARGV[2].present? ? ARGV[2].to_i - ARGV[2].to_i / 2 : ParticipantDeclaration::ECF.payable_mentors_for_lead_provider(cpd_lead_provider).count)
     Tasks::PaymentBreakdown.new(contract: cpd_lead_provider.lead_provider.call_off_contract, total_participants: total_participants, uplift_participants: uplift_participants, total_ects: total_ects, total_mentors: total_mentors).to_table
