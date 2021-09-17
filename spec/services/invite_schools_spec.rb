@@ -683,28 +683,127 @@ RSpec.describe InviteSchools do
     end
   end
 
-  describe "#send_year2020_invite_email" do
-    let!(:cohort) { create(:cohort, :current) }
-    let!(:induction_coordinator) { create(:user, :induction_coordinator) }
-    let!(:school) { induction_coordinator.schools.first }
+  describe "#invite_sitless_opted_out_schools_for_nqt_plus_one" do
+    it "sends an email to eligible opted out schools with no induction coordindators" do
+      school = create(:school)
+      create(:school_cohort,
+             school: school,
+             induction_programme_choice: "core_induction_programme",
+             cohort: cohort,
+             core_induction_programme: nil,
+             opt_out_of_updates: true)
 
-    it "does not send any email if year_2020_data_entry feature flag is inactive" do
-      expect(FeatureFlag.active?(:year_2020_data_entry)).to be false
-
-      InviteSchools.new.send_year2020_invite_email
-      expect(SchoolMailer).not_to delay_email_delivery_of(:year2020_invite_email)
-    end
-
-    it "emails the induction coordinator" do
-      FeatureFlag.activate(:year_2020_data_entry)
-
-      expected_url = "http://www.example.com/schools/#{school.friendly_id}/year-2020/support-materials-for-NQTs?utm_campaign=year2020-nqt-invite&utm_medium=email&utm_source=year2020-nqt-invite"
-      InviteSchools.new.send_year2020_invite_email
-      expect(SchoolMailer).to delay_email_delivery_of(:year2020_invite_email)
+      expected_url = "http://www.example.com/schools/#{school.friendly_id}/year-2020/support-materials-for-NQTs?utm_campaign=year2020-nqt-invite-school&utm_medium=email&utm_source=year2020-nqt-invite-school"
+      InviteSchools.new.invite_sitless_opted_out_schools_for_nqt_plus_one
+      expect(SchoolMailer).to delay_email_delivery_of(:nqt_plus_one_sitless_invite)
                                 .with(hash_including(
-                                        recipient: induction_coordinator.email,
+                                        recipient: school.contact_email,
                                         start_url: expected_url,
                                       ))
+      InviteSchools.new.invite_sitless_opted_out_schools_for_nqt_plus_one
+    end
+
+    it "doesn't email ineligible schools" do
+      school = create(:school, :cip_only)
+      create(:school_cohort,
+             school: school,
+             induction_programme_choice: "core_induction_programme",
+             cohort: cohort,
+             core_induction_programme: nil,
+             opt_out_of_updates: true)
+
+      InviteSchools.new.invite_sitless_opted_out_schools_for_nqt_plus_one
+      expect(SchoolMailer).to_not delay_email_delivery_of(:nqt_plus_one_sitless_invite)
+    end
+
+    it "doesn't email non-opted-out schools" do
+      school = create(:school)
+      create(:school_cohort,
+             school: school,
+             induction_programme_choice: "core_induction_programme",
+             cohort: cohort,
+             core_induction_programme: nil,
+             opt_out_of_updates: false)
+
+      InviteSchools.new.invite_sitless_opted_out_schools_for_nqt_plus_one
+      expect(SchoolMailer).to_not delay_email_delivery_of(:nqt_plus_one_sitless_invite)
+    end
+
+    it "doesn't email schools with induction coordinators" do
+      school = create(:school)
+      create(:user, :induction_coordinator, schools: [school])
+      create(:school_cohort,
+             school: school,
+             induction_programme_choice: "core_induction_programme",
+             cohort: cohort,
+             core_induction_programme: nil,
+             opt_out_of_updates: true)
+
+      InviteSchools.new.invite_sitless_opted_out_schools_for_nqt_plus_one
+      expect(SchoolMailer).to_not delay_email_delivery_of(:nqt_plus_one_sitless_invite)
+    end
+  end
+
+  describe "#invite_opted_out_sits_for_nqt_plus_one" do
+    it "sends an email to eligible opted out schools with induction coordindators" do
+      school = create(:school)
+      sit = create(:user, :induction_coordinator, schools: [school])
+      create(:school_cohort,
+             school: school,
+             induction_programme_choice: "core_induction_programme",
+             cohort: cohort,
+             core_induction_programme: nil,
+             opt_out_of_updates: true)
+
+      expected_url = "http://www.example.com/schools/#{school.friendly_id}/year-2020/support-materials-for-NQTs?utm_campaign=year2020-nqt-invite-sit&utm_medium=email&utm_source=year2020-nqt-invite-sit"
+
+      InviteSchools.new.invite_opted_out_sits_for_nqt_plus_one
+      expect(SchoolMailer).to delay_email_delivery_of(:nqt_plus_one_sit_invite)
+                                .with(hash_including(
+                                        recipient: sit.email,
+                                        start_url: expected_url,
+                                      ))
+    end
+
+    it "doesn't email ineligible schools" do
+      school = create(:school, :cip_only)
+      create(:user, :induction_coordinator, schools: [school])
+      create(:school_cohort,
+             school: school,
+             induction_programme_choice: "core_induction_programme",
+             cohort: cohort,
+             core_induction_programme: nil,
+             opt_out_of_updates: true)
+
+      InviteSchools.new.invite_opted_out_sits_for_nqt_plus_one
+      expect(SchoolMailer).to_not delay_email_delivery_of(:nqt_plus_one_sit_invite)
+    end
+
+    it "doesn't email non-opted-out schools" do
+      school = create(:school)
+      create(:user, :induction_coordinator, schools: [school])
+      create(:school_cohort,
+             school: school,
+             induction_programme_choice: "core_induction_programme",
+             cohort: cohort,
+             core_induction_programme: nil,
+             opt_out_of_updates: false)
+
+      InviteSchools.new.invite_opted_out_sits_for_nqt_plus_one
+      expect(SchoolMailer).to_not delay_email_delivery_of(:nqt_plus_one_sit_invite)
+    end
+
+    it "doesn't email schools without induction coordinators" do
+      school = create(:school)
+      create(:school_cohort,
+             school: school,
+             induction_programme_choice: "core_induction_programme",
+             cohort: cohort,
+             core_induction_programme: nil,
+             opt_out_of_updates: true)
+
+      InviteSchools.new.invite_opted_out_sits_for_nqt_plus_one
+      expect(SchoolMailer).to_not delay_email_delivery_of(:nqt_plus_one_sit_invite)
     end
   end
 
