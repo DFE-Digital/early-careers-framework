@@ -2,4 +2,4 @@
 
 <%= govuk_panel title_text: "Study materials saved", text: nil, classes: "govuk-!-margin-bottom-8" %>
 
-<%= govuk_link_to "Back to #{@cohort.display_name} cohort", schools_cohort_path %>
+<%= govuk_link_to "Back to #{@cohort.display_name} cohort", schools_dashboard_path(school_id: @school.slug) %>

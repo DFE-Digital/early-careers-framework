@@ -18,7 +18,7 @@ module ParticipantValidationSteps
 
   def given_there_is_a_school_that_has_chosen_cip_for_2021
     @cohort = create(:cohort, start_year: 2021)
-    @school = create(:school, name: "Cip School")
+    @school = create(:school, name: "CIP School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "core_induction_programme")
   end
 

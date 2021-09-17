@@ -8,7 +8,7 @@ Feature: Induction tutors choosing programmes
     And I am logged in as an induction coordinator for created school
     Then I should be on "choose programme" page
     And the page should be accessible
-    And percy should be sent snapshot called "Choose programme page"
+    And percy should be sent snapshot called "Choose training programme page"
 
   Scenario: Choosing Core Induction Programme
     When I click on "accredited materials" label
@@ -25,17 +25,14 @@ Feature: Induction tutors choosing programmes
     When I click on "link" containing "Continue"
     Then I should be on "school cohorts" page
     And the page should be accessible
-    And percy should be sent snapshot called "Schools page"
+    And percy should be sent snapshot called "CIP schools page"
 
     When I navigate to "choose programme" page with id "test-school"
     Then I should have been redirected to "school cohorts" page
-
-    When I click on "link" containing "2021"
-    Then I should be on "2021 school cohorts" page
     And the page should be accessible
-    And percy should be sent snapshot called "2021 school cohorts page"
-    And "page body" should contain "Choose your training"
-    And "page body" should contain "Add early career teachers"
+    And "page body" should contain "Manage your training"
+    And "page body" should contain "Add your early career teacher and mentor details"
+    And percy should be sent snapshot called "Manage your training page"
 
   Scenario: Choosing Full Induction Programme
     When I click on "training provider" label
@@ -50,11 +47,9 @@ Feature: Induction tutors choosing programmes
     When I click on "link" containing "Continue"
     Then I should be on "school cohorts" page
     And the page should be accessible
-
-    When I click on "link" containing "2021"
-    Then I should be on "2021 school cohorts" page
-    And "page body" should contain "Add early career teachers"
-    And "page body" should not contain "Choose your training"
+    And "page body" should contain "Manage your training"
+    And "page body" should contain "Add your early career teacher and mentor details"
+    And percy should be sent snapshot called "FIP schools page"
 
   Scenario: Choosing to design and deliver our own programme
     When I click on "design and deliver our own programme radio button"
