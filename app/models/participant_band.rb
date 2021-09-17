@@ -16,6 +16,10 @@ class ParticipantBand < ApplicationRecord
     end
   end
 
+  def contract_value
+    number_of_participants_in_this_band(recruitment_target) * per_participant
+  end
+
   def output_payment_per_participant
     (per_participant * output_payment_percantage) / 100
   end
