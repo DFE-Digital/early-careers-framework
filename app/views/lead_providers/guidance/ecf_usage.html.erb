@@ -26,7 +26,7 @@
 <h3 class="govuk-heading-m">1. Provider retrieves ECF participant records</h3>
 <p class="govuk-body-m">Get the ECF participant records.</p>
 
-<p class="govuk-body-m"><pre><code>GET /api/v1/participants</code></pre></p>
+<p class="govuk-body-m"><pre><code>GET /api/v1/participants/ecf</code></pre></p>
 
 <p class="govuk-body-m">This will return <a href="/lead-providers/guidance/reference#multipleecfparticipantsresponse-object" class="govuk-link">multiple ECF participant records</a>.</p>
 
@@ -47,7 +47,7 @@
 <h3 class="govuk-heading-m">3. Provider refreshes ECF participant records</h3>
 <p class="govuk-body-m">Get updated ECF participant records.</p>
 
-<p class="govuk-body-m"><pre><code>GET /api/v1/participants?filter[updated_since]=2021-05-13T11:21:55Z</code></pre></p>
+<p class="govuk-body-m"><pre><code>GET /api/v1/participants/ecf?filter[updated_since]=2021-05-13T11:21:55Z</code></pre></p>
 
 <p class="govuk-body-m">This will return <a href="/lead-providers/guidance/reference#multipleecfparticipantsresponse-object" class="govuk-link">multiple ECF participant records</a> with the updates to the record included.</p>
 
