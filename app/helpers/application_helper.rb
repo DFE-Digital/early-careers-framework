@@ -43,6 +43,14 @@ module ApplicationHelper
     participants_validation_start_path
   end
 
+  def service_name
+    if request.path.include? "year-2020"
+      "Get support materials for NQTs"
+    else
+      "Manage training for early career teachers"
+    end
+  end
+
 private
 
   def induction_coordinator_mentor_path(user)

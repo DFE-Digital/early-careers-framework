@@ -100,4 +100,20 @@ RSpec.describe ApplicationHelper, type: :helper do
       expect(data.analytics_data[:schoolId]).to eq(school.urn)
     end
   end
+
+  describe "#service_name" do
+    context "when the curent path doesn't contain 'year-2020'" do
+      it "displays the default service name" do
+        helper.request.path = "/"
+        expect(helper.service_name).to eq "Manage training for early career teachers"
+      end
+    end
+
+    context "when the current path does contain 'year-2020'" do
+      it "displays an NQT-oriented service name" do
+        helper.request.path = start_schools_year_2020_path(school)
+        expect(helper.service_name).to eq "Get support materials for NQTs"
+      end
+    end
+  end
 end

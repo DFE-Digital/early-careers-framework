@@ -9,11 +9,11 @@ RSpec.describe "Static pages", type: :request do
     end
   end
 
-  describe "GET /pages/year2020-core-materials-info" do
+  describe "GET /pages/year-2020-core-materials-info" do
     it "renders the correct template" do
-      get "/pages/year2020-core-materials-info"
+      get "/pages/year-2020-core-materials-info"
 
-      expect(response).to render_template("pages/year2020_core_materials_info")
+      expect(response).to render_template("pages/year_2020_core_materials_info")
     end
   end
 end
