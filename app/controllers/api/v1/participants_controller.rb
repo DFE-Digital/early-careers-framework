@@ -7,10 +7,6 @@ module Api
     class ParticipantsController < Api::ApiController
       include ApiTokenAuthenticatable
 
-      def index
-        redirect_to controller: "ecf_participants", action: "index", params: request.params and return
-      end
-
       def defer
         perform_action(service_namespace: ::Participants::Defer)
       end
