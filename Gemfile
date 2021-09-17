@@ -173,7 +173,7 @@ group :test do
   gem "selenium-webdriver"
   gem "shoulda-matchers", "~> 4.5"
   gem "simplecov"
-  gem "webdrivers", "~> 4.4", ">= 4.4.1"
+  gem "webdrivers", "~> 4.6"
   gem "webmock", ">= 3.10.0"
   gem "with_model"
 end
