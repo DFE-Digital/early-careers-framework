@@ -3,6 +3,14 @@
 module ManageTrainingSteps
   include Capybara::DSL
 
+  def freeze_dynamic_dates_or_times_for_percy
+    Timecop.freeze(Time.zone.local(2021, 9, 17, 16, 15, 0))
+  end
+
+  def return_from_timecop
+    Timecop.return
+  end
+
   def given_there_is_a_school_that_has_chosen_fip_for_2021
     @cohort = create(:cohort, start_year: 2021)
     @school = create(:school, name: "Fip School")
