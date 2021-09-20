@@ -135,7 +135,7 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
-    cypress-on-rails (1.8.1)
+    cypress-on-rails (1.11.0)
       rack
     daemons (1.4.1)
     database_cleaner-active_record (2.0.0)
@@ -598,7 +598,7 @@ DEPENDENCIES
   byebug
   canonical-rails (>= 0.2.11)
   capybara (>= 3.35.3)
-  cypress-on-rails (~> 1.0)
+  cypress-on-rails (~> 1.11)
   daemons
   database_cleaner-active_record
   delayed_cron_job
