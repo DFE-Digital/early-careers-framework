@@ -53,7 +53,7 @@ Feature: School leaders should be able to add participants
     Then I should be on "2021 school participant confirm" page
 
     When I click the submit button
-    Then "page body" should contain "You have added James Herbert Bond to the 2021 cohort"
+    Then "page body" should contain "You’ve added James Herbert Bond to the 2021 cohort"
     And the page should be accessible
     And percy should be sent snapshot called "school ect participant added"
 
@@ -79,7 +79,7 @@ Feature: School leaders should be able to add participants
     And percy should be sent snapshot called "school mentor participant confirmation page"
 
     When I click the submit button
-    Then "page body" should contain "You have added James Bond to the 2021 cohort"
+    Then "page body" should contain "You’ve added James Bond to the 2021 cohort"
     And the page should be accessible
     And percy should be sent snapshot called "school mentor participant added"
 
@@ -118,7 +118,7 @@ Feature: School leaders should be able to add participants
     And percy should be sent snapshot called "school self as a mentor confirmation page"
 
     When I click the submit button
-    Then "page body" should contain "You have been added to the 2021 cohort"
+    Then "page body" should contain "You’ve been added to the 2021 cohort"
     And the page should be accessible
     And percy should be sent snapshot called "school self as a mentor participant added"
 
