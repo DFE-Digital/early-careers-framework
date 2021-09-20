@@ -31,7 +31,7 @@ private
   end
 
   def fetch_first_active_participant
-    uri = URI("https://#{smoke_test_domain}/api/v1/participants")
+    uri = URI("https://#{smoke_test_domain}/api/v1/participants/ecf")
     req = Net::HTTP::Get.new(uri, "Authorization" => "Bearer ambition-token")
     http = Net::HTTP.new(uri.hostname, uri.port)
     http.use_ssl = true

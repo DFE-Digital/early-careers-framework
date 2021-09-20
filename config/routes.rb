@@ -49,7 +49,9 @@ Rails.application.routes.draw do
     resource :notify_callback, only: :create, path: "notify-callback"
 
     namespace :v1 do
-      resources :participants, only: %i[index] do
+      resources :ecf_participants, path: "participants/ecf", only: %i[index]
+      resources :participants, only: %i[index], controller: "ecf_participants"
+      resources :participants, only: [] do
         member do
           put :defer
           put :resume

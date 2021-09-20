@@ -516,9 +516,9 @@
         }
       }
     },
-    "/api/v1/participants": {
+    "/api/v1/participants/ecf": {
       "get": {
-        "summary": "Retrieve multiple participants",
+        "summary": "Retrieve multiple participants, replaces <code>/api/v1/participants</code>",
         "operationId": "participants",
         "tags": [
           "ECF participants"
@@ -585,9 +585,9 @@
         }
       }
     },
-    "/api/v1/participants.csv": {
+    "/api/v1/participants/ecf.csv": {
       "get": {
-        "summary": "Retrieve all participants in CSV format",
+        "summary": "Retrieve all participants in CSV format, replaces <code>/api/v1/participants.csv</code>",
         "operationId": "ecf_participants_csv",
         "tags": [
           "ECF participants"

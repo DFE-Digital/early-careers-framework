@@ -1,7 +1,7 @@
 <h3 class="govuk-heading-l" id="<%= operation.anchor %>"><code><%= operation.name %></code></h3>
 
 <div class="govuk-body-l">
-  <%= operation.summary %>
+  <%= operation.summary&.html_safe %>
 </div>
 
 <%= markdown_to_html operation.description %>

@@ -399,7 +399,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
     end
 
     it "ignores pagination parameters" do
-      get "/api/v1/participants.csv", params: { page: { per_page: 1, page: 1 } }
+      get "/api/v1/participants/ecf.csv", params: { page: { per_page: 1, page: 1 } }
       expect(parsed_response.length).to eql 2
     end
   end

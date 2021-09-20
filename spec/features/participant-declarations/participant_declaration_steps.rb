@@ -36,7 +36,7 @@ module ParticipantDeclarationSteps
   end
 
   def when_the_participant_details_are_passed_to_the_lead_provider
-    @session.get("/api/v1/participants",
+    @session.get("/api/v1/participants/ecf",
                  headers: { "Authorization": "Bearer #{@token}" })
 
     @participant_id = JSON.parse(@session.response.body).dig("data").map { |participant| participant["id"] }.sample
