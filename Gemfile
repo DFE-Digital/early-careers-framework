@@ -32,7 +32,7 @@ gem "logstash-event"
 gem "pg", ">= 0.18", "< 2.0"
 
 # Use UUIDs as db primary key by default
-gem "ar-uuid", "~> 0.2.1"
+gem "ar-uuid", "~> 0.2.2"
 
 # Use Puma as the app server
 gem "puma", "~> 5.4"
