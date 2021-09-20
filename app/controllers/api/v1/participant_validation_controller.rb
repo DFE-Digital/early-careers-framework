@@ -6,7 +6,7 @@ module Api
       include ApiTokenAuthenticatable
 
       def show
-        record = ParticipantValidationService.validate(
+        record = validation_service_class.validate(
           trn: params[:id],
           full_name: params[:full_name],
           date_of_birth: Date.iso8601(params[:date_of_birth]),
@@ -22,6 +22,10 @@ module Api
       end
 
     private
+
+      def validation_service_class
+        ParticipantValidationService
+      end
 
       def access_scope
         ApiToken.where(private_api_access: true)
