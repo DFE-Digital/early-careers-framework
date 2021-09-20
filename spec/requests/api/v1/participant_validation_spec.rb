@@ -50,6 +50,16 @@ RSpec.describe "participant validation api endpoint", type: :request do
         expect(parsed_response["data"]).to have_jsonapi_attributes(:trn, :qts, :active_alert).exactly
       end
 
+      context "with mock_participant_validation feature", with_feature_flags: { mock_participant_validation: "active" } do
+        it "call MockParticipantValidationService" do
+          allow(MockParticipantValidationService).to receive(:new).and_call_original
+
+          get "/api/v1/participant-validation/#{trn}?full_name=#{full_name}&date_of_birth=#{date_of_birth}&nino=#{nino}"
+
+          expect(MockParticipantValidationService).to have_received(:new)
+        end
+      end
+
       context "when no record is found for given teacher_reference_number" do
         let(:service_response) { nil }
 

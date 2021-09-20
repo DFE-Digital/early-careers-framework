@@ -28,6 +28,7 @@ class FeatureFlag
     admin_change_materials
     user_research_full_booked
     sit_user_research_fully_booked
+    mock_participant_validation
   ].freeze
 
   FEATURES = (PERMANENT_SETTINGS + TEMPORARY_FEATURE_FLAGS).index_with { |name|

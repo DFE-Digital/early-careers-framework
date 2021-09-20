@@ -24,7 +24,11 @@ module Api
     private
 
       def validation_service_class
-        ParticipantValidationService
+        if FeatureFlag.active?(:mock_participant_validation)
+          MockParticipantValidationService
+        else
+          ParticipantValidationService
+        end
       end
 
       def access_scope
