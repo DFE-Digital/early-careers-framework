@@ -1,6 +1,0 @@
-<% content_for :title, t("finance.ecf.contract_information") %>
-
-<h1 class="govuk-caption-xl"><%= @contract.lead_provider.name %></h1>
-<h2 class="govuk-heading-l"><%=t "finance.ecf.contract_information" %></h2>
-
-<%= render Finance::ECF::Contract.new(contract: @contract) %>
