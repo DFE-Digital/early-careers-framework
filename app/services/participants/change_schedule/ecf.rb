@@ -2,7 +2,7 @@
 
 module Participants
   module ChangeSchedule
-    class ECF < ::Participants::Base
+    class ECF < Base
       include Participants::ECF
       include ValidateAndChangeSchedule
     end

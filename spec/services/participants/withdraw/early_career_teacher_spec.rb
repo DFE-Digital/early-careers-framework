@@ -57,11 +57,6 @@ RSpec.describe Participants::Withdraw::EarlyCareerTeacher do
       params = participant_params.merge({ course_identifier: "npq-leading-teacher" })
       expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
     end
-
-    it "fails when sending unpermitted parameters" do
-      params = participant_params.merge({ "": "null" })
-      expect { described_class.call(params: params) }.to raise_error(ActionController::UnpermittedParameters)
-    end
   end
 
   context "when user is not a participant" do
