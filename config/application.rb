@@ -56,5 +56,7 @@ module EarlyCareerFramework
     config.middleware.use Rack::Deflater
 
     config.i18n.load_path += Dir[Rails.root.join("config/locales/**/*.{rb,yml}")]
+
+    config.record_emails = true
   end
 end

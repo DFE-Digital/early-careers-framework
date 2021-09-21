@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_16_150823) do
+ActiveRecord::Schema.define(version: 2021_09_21_160356) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -239,6 +239,17 @@ ActiveRecord::Schema.define(version: 2021_09_16_150823) do
     t.index ["participant_profile_id"], name: "index_ecf_participant_validation_data_on_participant_profile_id", unique: true
   end
 
+  create_table "emails", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "from"
+    t.string "to", array: true
+    t.uuid "template_id"
+    t.integer "template_version"
+    t.string "uri"
+    t.jsonb "personalisation"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "event_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "owner_type", null: false
     t.uuid "owner_id", null: false
@@ -437,7 +448,6 @@ ActiveRecord::Schema.define(version: 2021_09_16_150823) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "output_payment_percantage", default: 60
     t.integer "service_fee_percentage", default: 40
-    t.integer "service_fee_contribution_percentage", default: 40
     t.index ["call_off_contract_id"], name: "index_participant_bands_on_call_off_contract_id"
   end
 
