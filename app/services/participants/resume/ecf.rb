@@ -2,7 +2,7 @@
 
 module Participants
   module Resume
-    class ECF < ::Participants::Base
+    class ECF < Base
       include Participants::ECF
       include ValidateAndChangeState
     end

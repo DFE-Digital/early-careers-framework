@@ -2,7 +2,7 @@
 
 module Participants
   module ChangeSchedule
-    class NPQ < ::Participants::Base
+    class NPQ < Base
       include Participants::NPQ
       include ValidateAndChangeSchedule
     end

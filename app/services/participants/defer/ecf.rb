@@ -2,7 +2,7 @@
 
 module Participants
   module Defer
-    class ECF < ::Participants::Base
+    class ECF < Base
       class << self
         def reasons
           %w[

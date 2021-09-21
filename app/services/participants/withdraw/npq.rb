@@ -2,7 +2,7 @@
 
 module Participants
   module Withdraw
-    class NPQ < ::Participants::Base
+    class NPQ < Base
       class << self
         def reasons
           %w[

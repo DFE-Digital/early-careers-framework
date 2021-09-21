@@ -2,7 +2,7 @@
 
 module Participants
   module Withdraw
-    class ECF < ::Participants::Base
+    class ECF < Base
       class << self
         def reasons
           %w[

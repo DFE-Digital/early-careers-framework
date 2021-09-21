@@ -6,8 +6,8 @@ module RecordDeclarations
   class Base
     include Participants::ProfileAttributes
     include AbstractInterface
-    implement_class_method :required_params
-    implement_instance_method :valid_declaration_types, :user_profile
+    implement_class_method :required_params, :valid_declaration_types
+    implement_instance_method :user_profile
 
     RFC3339_DATE_REGEX = /\A\d{4}-\d{2}-\d{2}T(\d{2}):(\d{2}):(\d{2})([\.,]\d+)?(Z|[+-](\d{2})(:?\d{2})?)?\z/i.freeze
 
@@ -48,11 +48,11 @@ module RecordDeclarations
   private
 
     def initialize(params)
-      params.each do |param, value|
-        send("#{param}=", value)
-      rescue NoMethodError
-        raise ActionController::UnpermittedParameters, ["Unpermitted parameter: #{param}"]
-      end
+      self.participant_id = params[:participant_id]
+      self.course_identifier = params[:course_identifier]
+      self.cpd_lead_provider = params[:cpd_lead_provider]
+      self.declaration_date = params[:declaration_date]
+      self.declaration_type = params[:declaration_type]
     end
 
     def parsed_date

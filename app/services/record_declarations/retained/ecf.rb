@@ -2,9 +2,8 @@
 
 module RecordDeclarations
   module Retained
-    class ECF < ::RecordDeclarations::Base
+    class ECF < Base
       include RecordDeclarations::ECF
-      include Retained
 
       class << self
         def valid_evidence_types
