@@ -45,7 +45,6 @@ Rails.application.routes.draw do
   end
 
   namespace :api, defaults: { format: "json" } do
-    resources :school_search, only: %i[index]
     resource :notify_callback, only: :create, path: "notify-callback"
 
     namespace :v1 do
@@ -81,10 +80,6 @@ Rails.application.routes.draw do
         get "/school-rollout", to: "school_rollout#index"
       end
     end
-  end
-
-  namespace :demo do
-    resources :school_search, only: %i[index]
   end
 
   scope :nominations, module: :nominations do
@@ -375,8 +370,6 @@ Rails.application.routes.draw do
 
   mount OpenApi::Rswag::Ui::Engine => "/api-docs"
   mount OpenApi::Rswag::Api::Engine => "/api-docs"
-
-  resource :school_search, only: %i[show create], path: "school-search", controller: :school_search
 
   get "/ministerial-letter", to: redirect("ECF%20Letter.pdf")
   get "/ecf-leaflet", to: redirect("ECFleaflet2021.pdf")

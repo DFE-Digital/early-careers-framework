@@ -61,9 +61,6 @@ gem "mail-notify", ">= 1.0.3"
 # do not rely on host's timezone data, which can be inconsistent
 gem "tzinfo-data"
 
-# serialization gem that offers more features than active model serializer
-gem "blueprinter"
-
 gem "govuk-components", ">= 2.1.0"
 gem "govuk_design_system_formbuilder", "~> 2.3.0b1"
 gem "govuk_markdown", "~> 0.4.0"
