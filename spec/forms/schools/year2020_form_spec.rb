@@ -55,6 +55,7 @@ RSpec.describe Schools::Year2020Form, type: :model do
           email: participant.email,
           school_cohort: school_cohort,
           mentor_profile_id: nil,
+          year_2020: true,
         )
       end
     end
