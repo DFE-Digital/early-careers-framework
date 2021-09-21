@@ -150,13 +150,16 @@ module DelayedJobMatchers
   define :delay_email_delivery_of do |email_name|
     match do |mailer_class|
       email_arguments = find_email_args(mailer_class, email_name)
-      return email_arguments.any? unless @arguments
 
       if @once
+        return email_arguments.count == 1 unless @arguments
+
         email_arguments.select { |args|
           @arguments.args_match?(*args)
         }.count == 1
       else
+        return email_arguments.any? unless @arguments
+
         email_arguments.any? do |args|
           @arguments.args_match?(*args)
         end

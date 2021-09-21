@@ -20,7 +20,6 @@ class UTMService
     participant_validation_research: "participant-validation-research",
     participant_validation_sit_notification: "participant-validation-sit-notification",
     check_ect_and_mentor_info: "check-ect-and-mentor-info",
-    ects_to_add_validation_information: "ects-to-add-validation-information",
     fip_mentors_to_add_validation_information: "fip-mentors-to-add-validation-information",
     cip_mentors_to_add_validation_information: "cip-mentors-to-add-validation-information",
     induction_coordinators_who_are_mentors_to_add_validation_information: "induction-coordinators-who-are-mentors-to-add-validation-information",
@@ -28,6 +27,7 @@ class UTMService
     sit_to_complete_steps: "sit-to-complete-steps",
     year2020_nqt_invite_school: "year2020-nqt-invite-school",
     year2020_nqt_invite_sit: "year2020-nqt-invite-sit",
+    ect_validation_info_2109: "ect-validation-info-2109",
   }.freeze
 
   # Campaigns aren't showing up in GA at the moment, so use specific sources
@@ -45,7 +45,6 @@ class UTMService
     participant_validation_beta: "participant-validation-beta",
     participant_validation_research: "participant-validation-research",
     check_ect_and_mentor_info: "check-ect-and-mentor-info",
-    ects_to_add_validation_information: "ects-to-add-validation-information",
     fip_mentors_to_add_validation_information: "fip-mentors-to-add-validation-information",
     cip_mentors_to_add_validation_information: "cip-mentors-to-add-validation-information",
     induction_coordinators_who_are_mentors_to_add_validation_information: "induction-coordinators-who-are-mentors-to-add-validation-information",
@@ -53,6 +52,7 @@ class UTMService
     sit_to_complete_steps: "sit-to-complete-steps",
     year2020_nqt_invite_school: "year2020-nqt-invite-school",
     year2020_nqt_invite_sit: "year2020-nqt-invite-sit",
+    ect_validation_info_2109: "ect-validation-info-2109",
   }.freeze
 
   def self.email(campaign, source = :service)
