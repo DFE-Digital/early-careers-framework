@@ -1,6 +1,23 @@
-<tr class="govuk-table__row">
-  <td class="govuk-table__cell"><%= t("finance.ecf.bands.#{band}") %></td>
-  <td class="govuk-table__cell govuk-table__cell--numeric"><%= participants %></td>
-  <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds per_participant %></td>
-  <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds monthly %></td>
-</tr>
+<h3 class="govuk-heading-s">ECF FIP <%= t("finance.ecf.bands.#{band}") %></h3>
+<table class="govuk-table ">
+  <thead>
+    <tr class="govuk-table__row">
+      <th class="govuk-table__header"></th>
+      <th class="govuk-table__header"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="govuk-table__row">
+      <td class="govuk-table__cell">Service fee per participant</td>
+      <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds per_participant %></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <td class="govuk-table__cell">Number of participants </td>
+      <td class="govuk-table__cell govuk-table__cell--numeric"><%= participants %></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <td class="govuk-table__cell govuk-!-font-weight-bold">FIP <%= t("finance.ecf.bands.#{band}") %> payment</td>
+      <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds monthly %></td>
+    </tr>
+  </tbody>
+</table>

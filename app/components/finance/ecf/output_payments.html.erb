@@ -1,20 +1,22 @@
-<table class="govuk-table">
-  <caption class="govuk-table__caption govuk-table__caption--l"><%=t "finance.output_payment.caption" %></caption>
-  <thead class="govuk-table__head">
+<%= render Finance::ECF::OutputPaymentRow.with_collection(output_payments) %>
+
+<h3 class="govuk-heading-s">Participants</h3>
+<table class="govuk-table ">
+  <thead>
     <tr class="govuk-table__row">
-      <th class="govuk-table__header"><%=t "finance.contract.band"%></th>
-      <th class="govuk-table__header govuk-table__cell--numeric"><%=t "finance.output_payment.participants"%></th>
-      <th class="govuk-table__header govuk-table__cell--numeric"><%=t "finance.per_participant"%></th>
-      <th class="govuk-table__header govuk-table__cell--numeric"><%=t "finance.period"%></th>
+      <th class="govuk-table__header"></th>
+      <th class="govuk-table__header"></th>
     </tr>
   </thead>
-  <tbody class="govuk-table__body">
-    <%= render Finance::ECF::OutputPaymentRow.with_collection(output_payments) %>
+  <tbody>
     <tr class="govuk-table__row">
-      <th class="govuk-table__cell"><%=t("finance.subtotal") %></th>
+      <td class="govuk-table__cell">Total participants paid</td>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= participants %></td>
-      <td class="govuk-table__cell govuk-table__cell--numeric"></td>
-      <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds subtotal %></td>
+    </tr>
+    <!--TODO: Add not accepted participants-->
+    <tr class="govuk-table__row">
+      <td class="govuk-table__cell">Total participants not accepted </td>
+      <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
     </tr>
   </tbody>
 </table>
