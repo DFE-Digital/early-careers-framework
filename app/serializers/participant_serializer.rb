@@ -72,11 +72,11 @@ class ParticipantSerializer
   end
 
   active_participant_attribute :pupil_premium_uplift do |user|
-    user.teacher_profile.ecf_profile&.school&.pupil_premium_uplift?(user.teacher_profile.ecf_profile.cohort.start_year)
+    user.teacher_profile.ecf_profile&.pupil_premium_uplift
   end
 
   active_participant_attribute :sparsity_uplift do |user|
-    user.teacher_profile.ecf_profile&.school&.sparsity_uplift?(user.teacher_profile.ecf_profile.cohort.start_year)
+    user.teacher_profile.ecf_profile&.sparsity_uplift
   end
 
   active_participant_attribute :training_status do |user|
