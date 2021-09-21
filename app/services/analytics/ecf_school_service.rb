@@ -6,6 +6,8 @@ module Analytics
       def update_school_analytics
         return unless %w[test development production].include? Rails.env
 
+        before_object_count = ObjectSpace.each_object(ActiveRecord::Base).count
+
         School.eligible_or_cip_only.includes(
           :nomination_emails,
           :induction_coordinators,
@@ -36,6 +38,9 @@ module Analytics
             returning: false,
           )
         end
+
+        after_object_count = ObjectSpace.each_object(ActiveRecord::Base).count
+        Sentry.capture_message("Run analytics. Before object count: #{before_object_count}, after object count: #{after_object_count}")
       end
     end
   end
