@@ -335,7 +335,7 @@ private
   end
 
   def send_ects_to_add_validation_information(profile, school)
-    campaign = :ects_to_add_validation_information
+    campaign = :ect_validation_info_2109
 
     participant_validation_start_url = Rails.application.routes.url_helpers.participants_start_registrations_url(
       host: Rails.application.config.domain,

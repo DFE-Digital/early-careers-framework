@@ -112,7 +112,7 @@ RSpec.describe ValidationBetaService do
     let(:cohort_without_programme) { create :school_cohort, induction_programme_choice: "not_yet_known" }
     let!(:not_chosen_programme_ect) { create(:participant_profile, :ect, school_cohort: cohort_without_programme) }
 
-    let(:start_url) { "http://www.example.com/participants/start-registration?utm_campaign=ects-to-add-validation-information&utm_medium=email&utm_source=ects-to-add-validation-information" }
+    let(:start_url) { "http://www.example.com/participants/start-registration?utm_campaign=ect-validation-info-2109&utm_medium=email&utm_source=ect-validation-info-2109" }
 
     it "emails ECTs that have chosen programme but have not provided details and haven't already received the email" do
       validation_beta_service.tell_ects_to_add_validation_information
