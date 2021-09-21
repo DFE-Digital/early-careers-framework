@@ -67,8 +67,10 @@ class ParticipantSerializer
     trn(user).nil? ? nil : validated_trn(user).present?
   end
 
-  active_participant_attribute :eligible_for_funding do |user|
-    user.teacher_profile.ecf_profile.ecf_participant_eligibility&.eligible_status? || nil
+  active_participant_attribute :eligible_for_funding do |_user|
+    nil
+    # TODO: we want to check eligibility without communicating it yet
+    # user.teacher_profile.ecf_profile.ecf_participant_eligibility&.eligible_status? || nil
   end
 
   active_participant_attribute :pupil_premium_uplift do |user|
