@@ -4,7 +4,7 @@ require "abstract_interface"
 
 module Participants
   module Defer
-    class Base < ::Participants::Base
+    class Base < Participants::Base
     private
 
       def initialize(params:)
