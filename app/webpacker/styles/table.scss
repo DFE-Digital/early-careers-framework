@@ -1,0 +1,7 @@
+.payment-breakdown-table {
+  .govuk-table__cell {
+    border-top: 1px solid $govuk-border-colour;
+  }
+
+  margin-bottom: govuk-spacing(9);
+}

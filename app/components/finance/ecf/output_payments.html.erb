@@ -1,13 +1,7 @@
 <%= render Finance::ECF::OutputPaymentRow.with_collection(output_payments) %>
 
 <h3 class="govuk-heading-s">Participants</h3>
-<table class="govuk-table ">
-  <thead>
-    <tr class="govuk-table__row">
-      <th class="govuk-table__header"></th>
-      <th class="govuk-table__header"></th>
-    </tr>
-  </thead>
+<table class="govuk-table payment-breakdown-table">
   <tbody>
     <tr class="govuk-table__row">
       <td class="govuk-table__cell">Total participants paid</td>

@@ -1,11 +1,5 @@
-<h3 class="govuk-heading-s">ECF FIP <%= t("finance.ecf.bands.#{band}") %></h3>
-<table class="govuk-table ">
-  <thead>
-    <tr class="govuk-table__row">
-      <th class="govuk-table__header"></th>
-      <th class="govuk-table__header"></th>
-    </tr>
-  </thead>
+<h3 class="govuk-heading-s"><%= t("finance.ecf.bands.#{band}") %></h3>
+<table class="govuk-table payment-breakdown-table">
   <tbody>
     <tr class="govuk-table__row">
       <td class="govuk-table__cell">Fee per event</td>
@@ -16,7 +10,7 @@
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= participants %></td>
     </tr>
     <tr class="govuk-table__row">
-      <td class="govuk-table__cell govuk-!-font-weight-bold">FIP <%= t("finance.ecf.bands.#{band}") %> payment</td>
+      <td class="govuk-table__cell govuk-!-font-weight-bold"><%= t("finance.ecf.bands.#{band}") %> payment</td>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds subtotal %></td>
     </tr>
   </tbody>

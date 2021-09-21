@@ -32,6 +32,7 @@ $govuk-image-url-function: frontend-image-url;
 @import "search_box";
 @import "aside";
 @import "vendor/nhs_tables";
+@import "table";
 
 .govuk-tag {
   white-space: nowrap;
