@@ -29,6 +29,8 @@ module Participants
       end
 
       def schedule_valid_with_pending_declarations
+        return unless user_profile
+
         declarations = user_profile.participant_declarations.not_voided
         declarations.each do |declaration|
           milestone = schedule.milestone_for_declaration_type[declaration.declaration_type]
