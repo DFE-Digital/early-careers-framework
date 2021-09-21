@@ -111,7 +111,6 @@ GEM
       thread_safe (~> 0.3, >= 0.3.1)
     bcrypt (3.1.16)
     bindex (0.8.1)
-    blueprinter (0.25.2)
     bootsnap (1.5.1)
       msgpack (~> 1.0)
     builder (3.2.4)
@@ -593,7 +592,6 @@ DEPENDENCIES
   ar-uuid (~> 0.2.2)
   aws-sdk-s3
   axe-core-rspec
-  blueprinter
   bootsnap (>= 1.1.0)
   byebug
   canonical-rails (>= 0.2.11)
