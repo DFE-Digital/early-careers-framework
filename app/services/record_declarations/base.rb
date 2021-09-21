@@ -130,18 +130,7 @@ module RecordDeclarations
         raise ActionController::ParameterMissing, I18n.t(:schedule_missing)
       end
 
-      declaration_to_milestone_map[declaration_type]
-    end
-
-    def declaration_to_milestone_map
-      {
-        "started" => schedule.milestones[0],
-        "retained-1" => schedule.milestones[1],
-        "retained-2" => schedule.milestones[2],
-        "retained-3" => schedule.milestones[3],
-        "retained-4" => schedule.milestones[4],
-        "completed" => schedule.milestones.last,
-      }
+      schedule.milestone_for_declaration_type[declaration_type]
     end
 
     def valid_declaration_types
