@@ -74,10 +74,10 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
   end
 
   context "when including evidence_held" do
-    it "raised ParameterMissing error" do
+    it "ignores the extra parameter" do
       params = ect_params.merge(evidence_held: "self-study-material-completed")
-      expected_msg = /Unpermitted parameter: evidence_held/
-      expect { described_class.call(params) }.to raise_error(ActionController::UnpermittedParameters, expected_msg)
+      expect { described_class.call(params) }.to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
+      expect(ParticipantDeclaration.order(created_at: :desc).first.evidence_held).to be_nil
     end
   end
 

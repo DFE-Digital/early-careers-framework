@@ -2,10 +2,9 @@
 
 module RecordDeclarations
   module Retained
-    class NPQ < ::RecordDeclarations::Base
+    class NPQ < Base
       include Participants::NPQ
       include RecordDeclarations::NPQ
-      include Retained
 
       class << self
         def valid_evidence_types
