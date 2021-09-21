@@ -153,11 +153,8 @@ class InviteSchools
     end
   end
 
-  def send_induction_coordinator_choose_provider_chasers
-    induction_coordinators_not_in_partnership = User.includes(
-      :induction_coordinator_profile,
-      schools: %i[school_cohorts partnerships],
-    ).where(
+  def send_induction_coordinator_choose_provider_chasers(delivery_params: {})
+    induction_coordinators_not_in_partnership = User.where(
       id:
         School.unpartnered(Cohort.current.start_year)
               .joins(:school_cohorts, :induction_coordinator_profiles)
@@ -166,16 +163,9 @@ class InviteSchools
     )
 
     induction_coordinators_not_in_partnership.find_each do |induction_coordinator|
-      school_without_provider = induction_coordinator.schools.first do |school|
-        school.school_cohorts.first.induction_programme_choice == "full_induction_programme" &&
-          !school.partnered?(Cohort.current)
-      end
       SchoolMailer.induction_coordinator_reminder_to_choose_provider_email(
         recipient: induction_coordinator.email,
-        name: induction_coordinator.full_name,
-        school_name: school_without_provider.name,
-        sign_in_url: choose_provider_chaser_sign_in_url,
-      ).deliver_later
+      ).deliver_later(delivery_params)
     rescue StandardError
       logger.info "Error emailing induction coordinator, email: #{induction_coordinator.email} ... skipping"
     end
