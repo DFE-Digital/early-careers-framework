@@ -68,7 +68,10 @@ class ParticipantSerializer
   end
 
   active_participant_attribute :eligible_for_funding do |user|
-    user.teacher_profile.ecf_profile.ecf_participant_eligibility&.eligible_status? || nil
+    # TODO: we want to check eligibility without communicating it yet - except for sandbox
+    if Rails.env.sandbox?
+      user.teacher_profile.ecf_profile.ecf_participant_eligibility&.eligible_status? || nil
+    end
   end
 
   active_participant_attribute :pupil_premium_uplift do |user|

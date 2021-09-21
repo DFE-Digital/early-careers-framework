@@ -187,7 +187,7 @@ module ParticipantValidationSteps
   def then_i_should_see_the_complete_page_for_matched_user
     then_i_should_see_the_complete_page
     expect(@user.reload.teacher_profile.trn).to eq(@participant_data[:trn])
-    expect(@user.teacher_profile.participant_profiles.ecf.first.ecf_participant_eligibility).to be_matched_status
+    expect(@user.teacher_profile.participant_profiles.ecf.first.ecf_participant_eligibility).to be_eligible_status
     expect(@user.teacher_profile.participant_profiles.ecf.first.ecf_participant_validation_data).to be_present
   end
 
@@ -196,7 +196,7 @@ module ParticipantValidationSteps
     expect(page).to have_text("We may need to contact you for more information to complete your registration.")
     expect(page).to have_text("We’ll email you a link to access your materials within the next 24 hours.")
     expect(@user.reload.teacher_profile.trn).to eq(@participant_data[:trn])
-    expect(@user.teacher_profile.participant_profiles.ecf.first.ecf_participant_eligibility).to be_matched_status
+    expect(@user.teacher_profile.participant_profiles.ecf.first.ecf_participant_eligibility).to be_eligible_status
     expect(@user.teacher_profile.participant_profiles.ecf.first.ecf_participant_validation_data).to be_present
   end
 
@@ -206,7 +206,7 @@ module ParticipantValidationSteps
     expect(page).not_to have_text("Your training materials will be available by the end of August. We’ll email you with a link to access them.")
     expect(page).to have_text("If you need access to materials, we’ll email you a link within the next 24 hours.")
     expect(@user.reload.teacher_profile.trn).to eq(@participant_data[:trn])
-    expect(@user.teacher_profile.participant_profiles.ecf.first.ecf_participant_eligibility).to be_matched_status
+    expect(@user.teacher_profile.participant_profiles.ecf.first.ecf_participant_eligibility).to be_eligible_status
     expect(@user.teacher_profile.participant_profiles.ecf.first.ecf_participant_validation_data).to be_present
   end
 

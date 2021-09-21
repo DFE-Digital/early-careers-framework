@@ -58,13 +58,10 @@ RSpec.describe ECFParticipantEligibility, type: :model do
     end
 
     context "when QTS status is true and no other flags are set" do
-      # NOTE: this is the holding pen functionality to make all requests
-      # go via a manual validation until we have more supporting data
-      # This scenario should set the status to :eligible otherwise
-      it "sets the status to matched" do
+      it "sets the status to eligible" do
         eligibility.qts = true
         eligibility.valid?
-        expect(eligibility).to be_matched_status
+        expect(eligibility).to be_eligible_status
       end
     end
   end
