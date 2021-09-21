@@ -10,7 +10,7 @@ module Mail
       Email.create!(
         id: response.id,
         from: response.content["from_email"],
-        to: mail.to,
+        to: mail.original_to,
         template_id: response.template["id"],
         template_version: response.template["version"],
         uri: response.uri,
