@@ -13,7 +13,7 @@ class SchoolMailer < ApplicationMailer
   SECTION_41_INVITE_EMAIL_TEMPLATE = "a4ba1de4-e401-47f4-ac77-60c1da17a0e5"
   COORDINATOR_SIGN_IN_CHASER_EMAIL_TEMPLATE = "b5c318a4-2171-4ded-809a-af72dd87e7a7"
   COORDINATOR_REMINDER_TO_CHOOSE_ROUTE_EMAIL_TEMPLATE = "c939c27a-9951-4ac3-817d-56b7bf343fb4"
-  COORDINATOR_REMINDER_TO_CHOOSE_PROVIDER_EMAIL_TEMPLATE = "e7a60b68-334e-4a25-8adf-55ebc70622f9"
+  COORDINATOR_REMINDER_TO_CHOOSE_PROVIDER_EMAIL_TEMPLATE = "11cdb6d8-8a59-4618-ba35-0ebd7e47180c"
   COORDINATOR_REMINDER_TO_CHOOSE_MATERIALS_EMAIL_TEMPLATE = "43baf25c-6a46-437b-9f30-77c57d68a59e"
   ADD_PARTICIPANTS_EMAIL_TEMPLATE = "721787d0-74bc-42a0-a064-ee0c1cb58edb"
   BASIC_TEMPLATE = "b1ab542e-a8d5-4fdf-a7aa-f0ce49b98262"
@@ -228,17 +228,13 @@ class SchoolMailer < ApplicationMailer
     )
   end
 
-  def induction_coordinator_reminder_to_choose_provider_email(recipient:, name:, school_name:, sign_in_url:)
+  def induction_coordinator_reminder_to_choose_provider_email(recipient:)
     template_mail(
       COORDINATOR_REMINDER_TO_CHOOSE_PROVIDER_EMAIL_TEMPLATE,
       to: recipient,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
-      personalisation: {
-        name: name,
-        school_name: school_name,
-        sign_in_url: sign_in_url,
-      },
+      personalisation: {},
     )
   end
 
