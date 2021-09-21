@@ -154,11 +154,10 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         expect(response.body).to eq({ errors: [{ title: "Bad or missing parameters", detail: I18n.t("activemodel.errors.models.record_declarations/base.attributes.participant_id.blank") }] }.to_json)
       end
 
-      it "returns 422 when sending an unpermitted parameter" do
-        missing_attribute = valid_params.merge(evidence_held: "test")
-        post "/api/v1/participant-declarations", params: build_params(missing_attribute)
-        expect(response.status).to eq 422
-        expect(response.body).to eq({ errors: [{ title: "Unpermitted parameters", detail: "Unpermitted parameter: evidence_held" }] }.to_json)
+      it "ignores an unpermitted parameter" do
+        post "/api/v1/participant-declarations", params: build_params(valid_params.merge(evidence_held: "test"))
+        expect(response.status).to eq 200
+        expect(ParticipantDeclaration.order(created_at: :desc).first.evidence_held).to be_nil
       end
 
       it "returns 422 when supplied an incorrect course type" do
