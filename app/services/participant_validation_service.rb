@@ -85,8 +85,8 @@ private
 
     # If a participant mistypes their TRN and enters someone else's, we should search by NINO instead
     # The API first matches by (mandatory) TRN, then by NINO if it finds no results. This works around that.
-    if trn_matches && trn != "0"
-      matching_record(trn: "0", nino: nino, full_name: full_name, dob: dob)
+    if trn_matches && trn != "1"
+      matching_record(trn: "1", nino: nino, full_name: full_name, dob: dob)
     end
   end
 end
