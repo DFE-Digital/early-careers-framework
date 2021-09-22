@@ -154,7 +154,6 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
       it "returns 403" do
         default_headers[:Authorization] = "Bearer #{other_token}"
         post "/api/v1/npq-profiles"
-
         expect(response.status).to eq 403
       end
     end
