@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateEmailAssociations < ActiveRecord::Migration[6.1]
   def change
     create_table :email_associations do |t|

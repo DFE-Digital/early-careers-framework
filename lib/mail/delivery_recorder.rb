@@ -1,9 +1,18 @@
 # frozen_string_literal: true
 
 module Mail
-  module DeliveryRecorder
-    def self.delivered_email(mail)
-      return unless Rails.application.config.record_emails
+  class DeliveryRecorder
+    def self.setup!(enabled:)
+      Mail::Message.include(MessageExtension)
+      ActionMailer::Base.register_observer(new(enabled: enabled))
+    end
+
+    def initialize(enabled:)
+      @enabled = enabled
+    end
+
+    def delivered_email(mail)
+      return unless enabled?
 
       response = mail.delivery_method.response
 
@@ -26,9 +35,10 @@ module Mail
       end
     end
 
-    def self.enable!
-      Mail::Message.include(MessageExtension)
-      ActionMailer::Base.register_observer(self)
+  private
+
+    def enabled?
+      !!@enabled
     end
 
     module MessageExtension
@@ -36,7 +46,7 @@ module Mail
         @associations ||= []
       end
 
-      def associate_with(object, as: nil)
+      def associate_with(object, as: nil) # rubocop:disable Naming/MethodParameterName
         associations << [object, as]
         self
       end
