@@ -96,7 +96,7 @@ Rails.application.configure do
   # Logging
   config.log_level = :info
   config.log_tags = [:request_id] # Prepend all log lines with the following tags.
-  logger = ActiveSupport::Logger.new(STDOUT)
+  logger = ActiveSupport::Logger.new($stdout)
   logger.formatter = config.log_formatter
   config.logger = ActiveSupport::TaggedLogging.new(logger)
   config.active_record.logger = nil # Don't log SQL in production
@@ -149,15 +149,15 @@ Rails.application.configure do
   console do
     PaperTrail.request.whodunnit = lambda {
       @paper_trail_whodunnit ||= begin
-                                   email = nil
-                                   until email.present?
-                                     # rubocop:disable Rails/Output
-                                     puts "Enter your email address for PaperTrail"
-                                     # rubocop:enable Rails/Output
-                                     email = gets.chomp
-                                   end
-                                   email
-                                 end
+        email = nil
+        until email.present?
+          # rubocop:disable Rails/Output
+          puts "Enter your email address for PaperTrail"
+          # rubocop:enable Rails/Output
+          email = gets.chomp
+        end
+        email
+      end
     }
   end
 end

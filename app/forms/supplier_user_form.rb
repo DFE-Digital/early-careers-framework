@@ -5,6 +5,7 @@ class SupplierUserForm
   include ActiveModel::Serialization
 
   attr_accessor :full_name, :email, :supplier
+
   validates :supplier, presence: { message: "Select one" }, on: :supplier
   validates :full_name, presence: { message: "Enter a name" }, on: :details
   validates :email,

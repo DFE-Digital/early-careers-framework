@@ -3,6 +3,7 @@
 module Tasks
   class PaymentBreakdown
     attr_accessor :total_participants, :uplift_participants, :contract, :total_ects, :total_mentors, :service_fee_calculator, :output_calculator, :uplift_calculator
+
     delegate :bands, :recruitment_target, :revised_target, to: :contract
 
     class << self

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require "swagger_helper"
-require_relative "../shared/context/service_record_declaration_params.rb"
-require_relative "../shared/context/lead_provider_profiles_and_courses.rb"
+require_relative "../shared/context/service_record_declaration_params"
+require_relative "../shared/context/lead_provider_profiles_and_courses"
 
 RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_spec.json" do
   include_context "lead provider profiles and courses"

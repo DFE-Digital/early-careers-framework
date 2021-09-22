@@ -37,3 +37,6 @@ Naming/VariableNumber:
 Rails/Output:
   Exclude:
     - "app/services/importers/*"
+
+Lint/MissingSuper:
+  Enabled: false

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require_relative "../../../shared/context/lead_provider_profiles_and_courses.rb"
+require_relative "../../../shared/context/lead_provider_profiles_and_courses"
 
 RSpec.describe "participant-declarations endpoint spec", type: :request do
   include_context "lead provider profiles and courses"

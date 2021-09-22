@@ -8,6 +8,7 @@ module Finance
     private
 
       attr_reader :band, :index
+
       delegate :min, :max, :per_participant, to: :band
 
       def initialize(contract_band_row:)

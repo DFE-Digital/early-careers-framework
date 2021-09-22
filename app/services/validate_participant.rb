@@ -36,7 +36,7 @@ class ValidateParticipant < BaseService
     store_validation_data!
     true
   rescue StandardError => e
-    Rails.logger.error("Problem with DQT API: " + e.message)
+    Rails.logger.error("Problem with DQT API: #{e.message}")
     store_validation_data!(api_failure: true)
     raise
   end

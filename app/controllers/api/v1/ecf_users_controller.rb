@@ -52,7 +52,7 @@ module Api
                     .includes(teacher_profile: {
                       ecf_profile: [
                         :core_induction_programme,
-                        school_cohort: :cohort,
+                        { school_cohort: :cohort },
                       ],
                     })
 

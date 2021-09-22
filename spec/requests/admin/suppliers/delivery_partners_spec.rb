@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-include NewSupplierHelper
 
 RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
+  include NewSupplierHelper
+
   let(:delivery_partner_name) { Faker::Company.name }
   let(:cohort) { create(:cohort) }
   let(:lead_provider) { create(:lead_provider, cohorts: [cohort]) }
