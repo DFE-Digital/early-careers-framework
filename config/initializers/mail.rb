@@ -1,9 +1,9 @@
-# frozen_strin_literal: true
+# frozen_string_literal: true
 
-require 'mail/delivery_recorder'
 require "mail/redirector"
-
+require "mail/delivery_recorder"
 
 ActionMailer::Base.register_interceptor(Mail::Redirector)
 Mail::Message.include(Mail::Redirector::MessageExtension)
-ActionMailer::Base.register_observer(Mail::DeliveryRecorder)
+
+Mail::DeliveryRecorder.enable!

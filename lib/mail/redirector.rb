@@ -7,7 +7,7 @@ module Mail
         mail.original_to = mail.to
         return unless enabled?
 
-        overide_personalisation(mail, :subject) { |subject| "#{tags(mail)} #{subject}" }
+        override_personalisation(mail, :subject) { |subject| "#{tags(mail)} #{subject}" }
         mail.to = target_email if enabled?
       end
 
@@ -29,7 +29,7 @@ module Mail
 
     private
 
-      def overide_personalisation(mail, key, &block)
+      def override_personalisation(mail, key, &block)
         value = mail.header["personalisation"]&.unparsed_value&.fetch(key, nil)
         return if value.blank?
 

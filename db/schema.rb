@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_21_160356) do
+ActiveRecord::Schema.define(version: 2021_09_22_095123) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -237,6 +237,17 @@ ActiveRecord::Schema.define(version: 2021_09_21_160356) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["participant_profile_id"], name: "index_ecf_participant_validation_data_on_participant_profile_id", unique: true
+  end
+
+  create_table "email_associations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "email_id", null: false
+    t.string "object_type", null: false
+    t.uuid "object_id", null: false
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["email_id"], name: "index_email_associations_on_email_id"
+    t.index ["object_type", "object_id"], name: "index_email_associations_on_object"
   end
 
   create_table "emails", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -763,6 +774,7 @@ ActiveRecord::Schema.define(version: 2021_09_21_160356) do
   add_foreign_key "district_sparsities", "local_authority_districts"
   add_foreign_key "ecf_participant_eligibilities", "participant_profiles"
   add_foreign_key "ecf_participant_validation_data", "participant_profiles"
+  add_foreign_key "email_associations", "emails"
   add_foreign_key "feature_selected_objects", "features"
   add_foreign_key "finance_profiles", "users"
   add_foreign_key "induction_coordinator_profiles", "users"
