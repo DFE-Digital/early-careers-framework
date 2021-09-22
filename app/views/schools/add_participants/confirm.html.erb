@@ -9,16 +9,31 @@
     <dl class="govuk-summary-list govuk-!-margin-bottom-9">
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-          Details
+          Name
         </dt>
         <dd class="govuk-summary-list__value">
           <div><%= add_participant_form.full_name %></div>
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <% unless add_participant_form.type == :self %>
+            <%= govuk_link_to({ action: :show, step: "name" }) do %>
+              Change <span class="govuk-visually-hidden">name</span>
+            <% end %>
+          <% end %>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Email
+        </dt>
+        <dd class="govuk-summary-list__value">
           <div><%= add_participant_form.email %></div>
         </dd>
         <dd class="govuk-summary-list__actions">
           <% unless add_participant_form.type == :self %>
-            <%= govuk_link_to({ action: :show, step: "details" }) do %>
-              Change <span class="govuk-visually-hidden">personal details</span>
+            <%= govuk_link_to({ action: :show, step: "email" }) do %>
+              Change <span class="govuk-visually-hidden">email</span>
             <% end %>
           <% end %>
         </dd>
@@ -56,14 +71,13 @@
           </dd>
           <dd class="govuk-summary-list__actions">
             <% if add_participant_form.type != :self && add_participant_form.mentor_options.any? %>
-              <%= govuk_link_to({ action: :show, step: "choose-mentor" }) do %>
+              <%= govuk_link_to({ action: :show, step: "choose_mentor" }) do %>
                 Change <span class="govuk-visually-hidden">mentor</span>
               <% end %>
             <% end %>
           </dd>
         </div>
       <% end %>
-
     </dl>
 
     <%= form_for add_participant_form, url: { action: :complete }, method: :post do |f| %>
