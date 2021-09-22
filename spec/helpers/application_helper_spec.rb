@@ -53,7 +53,7 @@ RSpec.describe ApplicationHelper, type: :helper do
       expect(helper.profile_dashboard_path(participant_profile.user)).to eq("/participants/validation")
     end
 
-    it "returns something for NQT+1s" do
+    it "returns the no access path for NQT+1s" do
       expect(helper.profile_dashboard_path(year_2020_participant_profile.user)).to eq("/participants/no_access")
     end
 

@@ -78,6 +78,32 @@ RSpec.describe EarlyCareerTeachers::Create do
     expect(ParticipantDetailsReminderJob).to have_received(:schedule).with(profile)
   end
 
+  context "when creating a participant for 2020" do
+    it "does not schedule participant_added email" do
+      described_class.call(
+        email: user.email,
+        full_name: Faker::Name.name,
+        school_cohort: school_cohort,
+        year_2020: true,
+      )
+
+      expect(ParticipantMailer).not_to delay_email_delivery_of(:participant_added)
+    end
+
+    it "scheduled reminder email job" do
+      allow(ParticipantDetailsReminderJob).to receive(:schedule)
+
+      described_class.call(
+        email: user.email,
+        full_name: Faker::Name.name,
+        school_cohort: school_cohort,
+        year_2020: true,
+      )
+
+      expect(ParticipantDetailsReminderJob).not_to have_received(:schedule)
+    end
+  end
+
   context "when the user has an active participant profile" do
     before do
       create(:participant_profile, teacher_profile: create(:teacher_profile, user: user))
