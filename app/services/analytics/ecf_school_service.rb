@@ -47,6 +47,9 @@ module Analytics
           )
         end
 
+        ObjectSpace.each_object(ActiveRecord::Relation).each(&:reset)
+        GC.start
+
         after_object_count = ObjectSpace.each_object(ActiveRecord::Base).count
         Sentry.capture_message("Run analytics. Before object count: #{before_object_count}, after object count: #{after_object_count}")
       end
