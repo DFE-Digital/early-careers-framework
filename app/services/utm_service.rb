@@ -27,6 +27,7 @@ class UTMService
     year2020_nqt_invite_sit: "year2020-nqt-invite-sit",
     ect_validation_info_2109: "ect-validation-info-2109",
     mentor_validation_info_2309: "mentor-validation-info-2309",
+    year2020_nqt_invite_school_not_opted_out: "year2020-nqt-invite-school-not-opted-out",
   }.freeze
 
   # Campaigns aren't showing up in GA at the moment, so use specific sources
@@ -51,6 +52,7 @@ class UTMService
     year2020_nqt_invite_sit: "year2020-nqt-invite-sit",
     ect_validation_info_2109: "ect-validation-info-2109",
     mentor_validation_info_2309: "mentor-validation-info-2309",
+    year2020_nqt_invite_school_not_opted_out: "year2020-nqt-invite-school-not-opted-out",
   }.freeze
 
   def self.email(campaign, source = :service)
