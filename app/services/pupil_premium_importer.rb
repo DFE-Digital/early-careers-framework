@@ -3,9 +3,7 @@
 require "csv"
 
 class PupilPremiumImporter
-  attr_reader :logger
-  attr_reader :start_year
-  attr_reader :source_file
+  attr_reader :logger, :start_year, :source_file
 
   def initialize(logger, start_year = Time.zone.now.year, source_file = nil)
     @logger = logger

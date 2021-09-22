@@ -35,9 +35,10 @@ module Participants
 
     def do_you_know_your_trn
       choice = @participant_validation_form.do_you_know_your_trn_choice
-      if choice == "yes"
+      case choice
+      when "yes"
         store_form_and_redirect_to_step :have_you_changed_your_name
-      elsif choice == "no"
+      when "no"
         store_form_and_redirect_to_step :find_your_trn
       else
         store_form_and_redirect_to_step :get_a_trn
@@ -59,9 +60,10 @@ module Participants
 
     def confirm_updated_record
       choice = @participant_validation_form.updated_record_choice
-      if choice == "yes"
+      case choice
+      when "yes"
         store_form_and_redirect_to_step :tell_us_your_details
-      elsif choice == "no"
+      when "no"
         store_form_and_redirect_to_step :name_not_updated
       else
         store_form_and_redirect_to_step :check_with_tra
@@ -156,7 +158,7 @@ module Participants
         store_form_and_redirect_to_step :cannot_find_details
       end
     rescue StandardError => e
-      Rails.logger.error("Problem with ValidateParticipant: " + e.message)
+      Rails.logger.error("Problem with ValidateParticipant: #{e.message}")
       store_analytics(matched: false)
       reset_form_data
       store_form_and_redirect_to_step :complete

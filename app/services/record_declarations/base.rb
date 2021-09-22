@@ -9,9 +9,10 @@ module RecordDeclarations
     implement_class_method :required_params, :valid_declaration_types
     implement_instance_method :user_profile
 
-    RFC3339_DATE_REGEX = /\A\d{4}-\d{2}-\d{2}T(\d{2}):(\d{2}):(\d{2})([\.,]\d+)?(Z|[+-](\d{2})(:?\d{2})?)?\z/i.freeze
+    RFC3339_DATE_REGEX = /\A\d{4}-\d{2}-\d{2}T(\d{2}):(\d{2}):(\d{2})([.,]\d+)?(Z|[+-](\d{2})(:?\d{2})?)?\z/i.freeze
 
     attr_accessor :declaration_date, :declaration_type
+
     validates :declaration_date, :declaration_type, presence: true
     validates :parsed_date, future_date: true, allow_blank: true
     validate :date_has_the_right_format

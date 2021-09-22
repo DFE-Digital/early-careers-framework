@@ -4,6 +4,7 @@ class ChallengePartnershipForm
   include ActiveModel::Model
 
   attr_accessor :challenge_reason, :token, :school_name, :partnership_id
+
   validates :challenge_reason, presence: { message: "Select a reason why you think this confirmation is incorrect" }
 
   def challenge_reason_options

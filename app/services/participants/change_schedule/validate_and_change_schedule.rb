@@ -8,6 +8,7 @@ module Participants
 
       included do
         attr_accessor :schedule_identifier
+
         validates :schedule, presence: { message: I18n.t(:invalid_schedule) }
         validate :not_already_withdrawn
       end
