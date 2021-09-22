@@ -116,6 +116,8 @@ Rails.application.configure do
     {
       params: event.payload[:params].except(*exceptions),
       exception: event.payload[:exception], # ["ExceptionClass", "the message"]
+      current_user_class: event.payload[:current_user_class],
+      current_user_id: event.payload[:current_user_id],
     }
   end
 
