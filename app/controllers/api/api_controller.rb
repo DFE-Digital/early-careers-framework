@@ -17,7 +17,7 @@ module Api
     def append_info_to_payload(payload)
       super
       payload[:current_user_class] = current_user&.class&.name
-      payload[:current_user_id] = current_user&.id
+      payload[:current_user_id] = current_user&.is_a?(String) ? current_user : current_user&.id
     end
 
   private
