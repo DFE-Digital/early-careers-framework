@@ -59,16 +59,18 @@ class ValidationBetaService
       end
   end
 
-  # FIP mentors who have not added their details for validation
-  def tell_fip_mentors_to_add_validation_information
+  # mentors who have not added their details for validation
+  def tell_mentors_to_add_validation_information(limit: VALIDATION_CHASER_BATCH_LIMIT)
+    sent = 0
     ParticipantProfile::Mentor
+      .where(request_for_details_sent_at: nil)
+      .or(ParticipantProfile::Mentor.where(request_for_details_sent_at: ..AUTOMATION_LAUNCH_TIME))
       .active_record
       .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort, :school, user: :induction_coordinator_profile)
       .where(
-        request_for_details_sent_at: nil,
         school_cohort: {
           cohort: Cohort.current,
-          induction_programme_choice: "full_induction_programme",
+          induction_programme_choice: %w[core_induction_programme full_induction_programme],
         },
         ecf_participant_eligibility: {
           participant_profile_id: nil,
@@ -77,28 +79,14 @@ class ValidationBetaService
           participant_profile_id: nil,
         },
       )
-      .find_each { |profile| send_fip_mentors_to_add_validation_information(profile, profile.school) }
-  end
+      .find_each do |profile|
+        next if profile.user.induction_coordinator?
 
-  # CIP mentors who have not added their details for validation
-  def tell_cip_mentors_to_add_validation_information
-    ParticipantProfile::Mentor
-      .active_record
-      .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort, :school, user: :induction_coordinator_profile)
-      .where(
-        request_for_details_sent_at: nil,
-        school_cohort: {
-          cohort: Cohort.current,
-          induction_programme_choice: "core_induction_programme",
-        },
-        ecf_participant_eligibility: {
-          participant_profile_id: nil,
-        },
-        ecf_participant_validation_data: {
-          participant_profile_id: nil,
-        },
-      )
-      .find_each { |profile| send_cip_mentors_to_add_validation_information(profile, profile.school) }
+        send_mentors_to_add_validation_information(profile, profile.school)
+
+        sent += 1
+        break if sent == limit
+      end
   end
 
   def tell_induction_coordinators_who_are_mentors_to_add_validation_information
@@ -354,39 +342,15 @@ private
     end
   end
 
-  def send_fip_mentors_to_add_validation_information(profile, school)
-    return if profile.user.induction_coordinator?
-
-    campaign = :fip_mentors_to_add_validation_information
+  def send_mentors_to_add_validation_information(profile, school)
+    campaign = :mentor_validation_info_2309
 
     participant_validation_start_url = Rails.application.routes.url_helpers.participants_start_registrations_url(
       host: Rails.application.config.domain,
       **UTMService.email(campaign, campaign),
     )
 
-    email = ParticipantValidationMailer.fip_mentors_to_add_validation_information_email(
-      recipient: profile.user.email,
-      school_name: school.name,
-      start_url: participant_validation_start_url,
-    )
-
-    ActiveRecord::Base.transaction do
-      email.deliver_later
-      profile.update_column(:request_for_details_sent_at, Time.zone.now)
-    end
-  end
-
-  def send_cip_mentors_to_add_validation_information(profile, school)
-    return if profile.user.induction_coordinator?
-
-    campaign = :cip_mentors_to_add_validation_information
-
-    participant_validation_start_url = Rails.application.routes.url_helpers.participants_start_registrations_url(
-      host: Rails.application.config.domain,
-      **UTMService.email(campaign, campaign),
-    )
-
-    email = ParticipantValidationMailer.cip_mentors_to_add_validation_information_email(
+    email = ParticipantValidationMailer.mentors_to_add_validation_information_email(
       recipient: profile.user.email,
       school_name: school.name,
       start_url: participant_validation_start_url,
