@@ -2,15 +2,15 @@
 <table class="govuk-table payment-breakdown-table">
   <tbody>
     <tr class="govuk-table__row">
-      <td class="govuk-table__cell">Fee per event</td>
+      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Fee per event</th>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds per_participant %></td>
     </tr>
     <tr class="govuk-table__row">
-      <td class="govuk-table__cell">Number of participants </td>
+      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Number of participants </th>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= participants %></td>
     </tr>
     <tr class="govuk-table__row">
-      <td class="govuk-table__cell govuk-!-font-weight-bold"><%= t("finance.ecf.bands.#{band}") %> payment</td>
+      <th scope="row" class="govuk-table__cell"><%= t("finance.ecf.bands.#{band}") %> payment</th>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds subtotal %></td>
     </tr>
   </tbody>
