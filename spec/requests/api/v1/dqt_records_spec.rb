@@ -2,6 +2,12 @@
 
 require "rails_helper"
 
+class DummyToken < ApiToken
+  def owner
+    "Test"
+  end
+end
+
 RSpec.describe "DQT records api endpoint", type: :request do
   describe "#show" do
     let(:token) { NPQRegistrationApiToken.create_with_random_token! }
@@ -66,7 +72,7 @@ RSpec.describe "DQT records api endpoint", type: :request do
     end
 
     context "using valid token but for different scope" do
-      let(:other_token) { ApiToken.create_with_random_token! }
+      let(:other_token) { DummyToken.create_with_random_token! }
 
       it "returns 403" do
         default_headers[:Authorization] = "Bearer #{other_token}"
