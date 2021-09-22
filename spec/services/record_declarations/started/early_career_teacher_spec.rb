@@ -9,8 +9,8 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
   include_context "lead provider profiles and courses"
   include_context "service record declaration params"
 
-  let(:cutoff_start_datetime) { ect_profile.schedule.milestones.first.start_date.beginning_of_day }
-  let(:cutoff_end_datetime) { ect_profile.schedule.milestones.first.milestone_date.end_of_day }
+  let(:cutoff_start_datetime) { ect_profile.schedule.milestones.find_by(declaration_type: "started").start_date.beginning_of_day }
+  let(:cutoff_end_datetime) { ect_profile.schedule.milestones.find_by(declaration_type: "started").milestone_date.end_of_day }
 
   before do
     travel_to cutoff_start_datetime + 2.days
