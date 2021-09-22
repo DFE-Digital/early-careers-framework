@@ -2,7 +2,7 @@
 
 module Participants
   module Resume
-    class NPQ < ::Participants::Base
+    class NPQ < Base
       include Participants::NPQ
       include ValidateAndChangeState
     end

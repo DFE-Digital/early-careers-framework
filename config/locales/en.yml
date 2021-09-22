@@ -133,6 +133,8 @@ en:
         "3": Additional
       payment_breakdown: ECF Payment Breakdown
       contract_information: ECF Contract Information
+    npq:
+      payment_breakdown: NPQ Payment Breakdown
     service_fee:
       caption: Service Fee
       participants: Target Participants

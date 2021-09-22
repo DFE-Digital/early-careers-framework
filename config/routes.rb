@@ -45,7 +45,6 @@ Rails.application.routes.draw do
   end
 
   namespace :api, defaults: { format: "json" } do
-    resources :school_search, only: %i[index]
     resource :notify_callback, only: :create, path: "notify-callback"
 
     namespace :v1 do
@@ -81,10 +80,6 @@ Rails.application.routes.draw do
         get "/school-rollout", to: "school_rollout#index"
       end
     end
-  end
-
-  namespace :demo do
-    resources :school_search, only: %i[index]
   end
 
   scope :nominations, module: :nominations do
@@ -254,10 +249,21 @@ Rails.application.routes.draw do
   end
 
   namespace :finance do
-    resources :lead_providers, only: %i[index show], path: "lead-providers" do
-      member do
-        get :contract, to: "lead_providers#show_contract"
-      end
+    resource :landing_page, only: :show, path: "manage-cpd-contracts", controller: "landing_page"
+    resource :payment_breakdowns, only: :show, path: "payment-breakdowns", controller: "payment_breakdowns" do
+      get "/choose-programme", to: "payment_breakdowns#select_programme", as: :select_programme
+      post "/choose-programme", to: "payment_breakdowns#choose_programme", as: :choose_programme
+      get "/choose-provider-ecf", to: "payment_breakdowns#select_provider_ecf", as: :select_provider_ecf
+      post "/choose-provider-ecf", to: "payment_breakdowns#choose_provider_ecf", as: :choose_provider_ecf
+      get "/choose-provider-npq", to: "payment_breakdowns#select_provider_npq", as: :select_provider_npq
+      post "/choose-provider-npq", to: "payment_breakdowns#choose_provider_npq", as: :choose_provider_npq
+    end
+    namespace :ecf do
+      resources :payment_breakdowns, only: %i[show]
+      resources :contracts, only: %i[show]
+    end
+    namespace :npq do
+      resources :payment_breakdowns, only: %i[show]
     end
   end
 
@@ -364,8 +370,6 @@ Rails.application.routes.draw do
 
   mount OpenApi::Rswag::Ui::Engine => "/api-docs"
   mount OpenApi::Rswag::Api::Engine => "/api-docs"
-
-  resource :school_search, only: %i[show create], path: "school-search", controller: :school_search
 
   get "/ministerial-letter", to: redirect("ECF%20Letter.pdf")
   get "/ecf-leaflet", to: redirect("ECFleaflet2021.pdf")

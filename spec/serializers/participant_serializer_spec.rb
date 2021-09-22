@@ -18,12 +18,12 @@ RSpec.describe ParticipantSerializer do
       end
 
       it "outputs correctly formatted serialized Mentors" do
-        expected_json_string = "{\"data\":{\"id\":\"#{mentor.id}\",\"type\":\"participant\",\"attributes\":{\"email\":\"#{mentor.email}\",\"full_name\":\"#{mentor.full_name}\",\"mentor_id\":null,\"school_urn\":\"#{mentor.mentor_profile.school.urn}\",\"participant_type\":\"mentor\",\"cohort\":\"#{mentor_cohort.start_year}\",\"status\":\"active\",\"teacher_reference_number\":\"#{mentor.teacher_profile.trn}\",\"teacher_reference_number_validated\":true,\"eligible_for_funding\":true,\"pupil_premium_uplift\":false,\"sparsity_uplift\":false,\"training_status\":\"active\",\"schedule_identifier\":null}}}"
+        expected_json_string = "{\"data\":{\"id\":\"#{mentor.id}\",\"type\":\"participant\",\"attributes\":{\"email\":\"#{mentor.email}\",\"full_name\":\"#{mentor.full_name}\",\"mentor_id\":null,\"school_urn\":\"#{mentor.mentor_profile.school.urn}\",\"participant_type\":\"mentor\",\"cohort\":\"#{mentor_cohort.start_year}\",\"status\":\"active\",\"teacher_reference_number\":\"#{mentor.teacher_profile.trn}\",\"teacher_reference_number_validated\":true,\"eligible_for_funding\":null,\"pupil_premium_uplift\":false,\"sparsity_uplift\":false,\"training_status\":\"active\",\"schedule_identifier\":null}}}"
         expect(ParticipantSerializer.new(mentor).serializable_hash.to_json).to eq expected_json_string
       end
 
       it "outputs correctly formatted serialized ECTs" do
-        expected_json_string = "{\"data\":{\"id\":\"#{ect.id}\",\"type\":\"participant\",\"attributes\":{\"email\":\"#{ect.email}\",\"full_name\":\"#{ect.full_name}\",\"mentor_id\":\"#{mentor.id}\",\"school_urn\":\"#{ect.early_career_teacher_profile.school.urn}\",\"participant_type\":\"ect\",\"cohort\":\"#{ect_cohort.start_year}\",\"status\":\"active\",\"teacher_reference_number\":\"#{ect.teacher_profile.trn}\",\"teacher_reference_number_validated\":true,\"eligible_for_funding\":true,\"pupil_premium_uplift\":false,\"sparsity_uplift\":false,\"training_status\":\"active\",\"schedule_identifier\":null}}}"
+        expected_json_string = "{\"data\":{\"id\":\"#{ect.id}\",\"type\":\"participant\",\"attributes\":{\"email\":\"#{ect.email}\",\"full_name\":\"#{ect.full_name}\",\"mentor_id\":\"#{mentor.id}\",\"school_urn\":\"#{ect.early_career_teacher_profile.school.urn}\",\"participant_type\":\"ect\",\"cohort\":\"#{ect_cohort.start_year}\",\"status\":\"active\",\"teacher_reference_number\":\"#{ect.teacher_profile.trn}\",\"teacher_reference_number_validated\":true,\"eligible_for_funding\":null,\"pupil_premium_uplift\":false,\"sparsity_uplift\":false,\"training_status\":\"active\",\"schedule_identifier\":null}}}"
         expect(ParticipantSerializer.new(ect).serializable_hash.to_json).to eq expected_json_string
       end
     end
@@ -87,11 +87,12 @@ RSpec.describe ParticipantSerializer do
           eligibility.eligible_status!
         end
 
-        it "returns true" do
+        # TODO: this should be true once we no longer hide the eligibility status
+        it "returns nil" do
           expect(ect_profile.ecf_participant_eligibility.status).to eql "eligible"
 
           result = ParticipantSerializer.new(ect).serializable_hash
-          expect(result[:data][:attributes][:eligible_for_funding]).to be true
+          expect(result[:data][:attributes][:eligible_for_funding]).to be_nil
         end
       end
     end
@@ -203,7 +204,7 @@ RSpec.describe ParticipantSerializer do
 
       context "when participant belongs to a school" do
         context "eligible pupil premium uplift" do
-          before { create(:pupil_premium, :eligible, school: ect.school) }
+          before { ect_profile.update!(pupil_premium_uplift: true) }
 
           it "returns true" do
             expect(result[:data][:attributes][:pupil_premium_uplift]).to be true
@@ -211,29 +212,15 @@ RSpec.describe ParticipantSerializer do
         end
 
         context "not eligible pupil premium uplift" do
-          before { create(:pupil_premium, :not_eligible, school: ect.school) }
+          before { ect_profile.update!(pupil_premium_uplift: false) }
 
-          it "returns false" do
-            expect(result[:data][:attributes][:pupil_premium_uplift]).to be false
-          end
-        end
-
-        context "previously eligible for pupil premium uplift " do
-          before { create(:pupil_premium, :eligible, start_year: 2020, school: ect.school) }
-
-          it "returns false" do
-            expect(result[:data][:attributes][:pupil_premium_uplift]).to be false
-          end
-        end
-
-        context "no pupil premium record" do
           it "returns false" do
             expect(result[:data][:attributes][:pupil_premium_uplift]).to be false
           end
         end
 
         context "eligible sparsity uplift" do
-          before { create(:school_local_authority_district, :sparse, school: ect.school) }
+          before { ect_profile.update!(sparsity_uplift: true) }
 
           it "returns true" do
             expect(result[:data][:attributes][:sparsity_uplift]).to be true
@@ -241,24 +228,7 @@ RSpec.describe ParticipantSerializer do
         end
 
         context "not eligible sparsity uplift" do
-          before { create(:school_local_authority_district, school: ect.school) }
-
-          it "returns false" do
-            expect(result[:data][:attributes][:sparsity_uplift]).to be false
-          end
-        end
-
-        context "no sparsity uplift record" do
-          it "returns false" do
-            expect(result[:data][:attributes][:sparsity_uplift]).to be false
-          end
-        end
-
-        context "previously eligible for sparsity uplift" do
-          before do
-            district = create(:local_authority_district, district_sparsities: [create(:district_sparsity, start_year: 2020, end_year: 2021)])
-            create(:school_local_authority_district, local_authority_district: district, school: ect.school, start_year: 2020, end_year: 2021)
-          end
+          before { ect_profile.update!(sparsity_uplift: false) }
 
           it "returns false" do
             expect(result[:data][:attributes][:sparsity_uplift]).to be false

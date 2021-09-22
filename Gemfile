@@ -32,7 +32,7 @@ gem "logstash-event"
 gem "pg", ">= 0.18", "< 2.0"
 
 # Use UUIDs as db primary key by default
-gem "ar-uuid", "~> 0.2.1"
+gem "ar-uuid", "~> 0.2.2"
 
 # Use Puma as the app server
 gem "puma", "~> 5.4"
@@ -52,7 +52,7 @@ gem "foreman"
 # Canonical meta tag
 gem "canonical-rails", ">= 0.2.11"
 
-gem "listen", ">= 3.0.5", "< 3.4"
+gem "listen", ">= 3.0.5", "< 3.8"
 gem "rack-attack", ">=6.5.0"
 
 # GOV.UK Notify
@@ -60,9 +60,6 @@ gem "mail-notify", ">= 1.0.3"
 
 # do not rely on host's timezone data, which can be inconsistent
 gem "tzinfo-data"
-
-# serialization gem that offers more features than active model serializer
-gem "blueprinter"
 
 gem "govuk-components", ">= 2.1.0"
 gem "govuk_design_system_formbuilder", "~> 2.3.0b1"
@@ -86,7 +83,7 @@ gem "strong_migrations"
 gem "aasm"
 
 # Pagination for API
-gem "pagy", "~> 3.13"
+gem "pagy", "~> 4.11"
 
 # Json Schema for api validation
 gem "json-schema", ">= 2.8.1"
@@ -131,7 +128,7 @@ group :development, :test do
   # Testing framework
   gem "rspec-rails", "~> 5.0.2"
 
-  gem "cypress-on-rails", "~> 1.0"
+  gem "cypress-on-rails", "~> 1.11"
   gem "database_cleaner-active_record"
 
   gem "dotenv-rails", ">= 2.7.6"
@@ -173,7 +170,7 @@ group :test do
   gem "selenium-webdriver"
   gem "shoulda-matchers", "~> 4.5"
   gem "simplecov"
-  gem "webdrivers", "~> 4.4", ">= 4.4.1"
+  gem "webdrivers", "~> 4.6"
   gem "webmock", ">= 3.10.0"
   gem "with_model"
 end

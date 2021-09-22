@@ -6,5 +6,6 @@ namespace :cron do
     SessionTrimJob.schedule
     ImportGiasDataJob.schedule
     ValidationRetryJob.schedule
+    SchoolAnalyticsJob.schedule
   end
 end

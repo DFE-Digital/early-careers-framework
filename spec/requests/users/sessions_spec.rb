@@ -202,7 +202,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
       it "redirects to correct dashboard" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }
-        expect(response).to redirect_to(finance_lead_providers_path)
+        expect(response).to redirect_to(finance_landing_page_path)
       end
     end
 

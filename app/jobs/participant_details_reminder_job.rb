@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ParticipantDetailsReminderJob < ApplicationJob
-  REMIND_TIME = 3.days
+  REMIND_TIME = 7.days
 
   def self.schedule(participant_profile)
     set(wait: REMIND_TIME).perform_later(profile_id: participant_profile.id)

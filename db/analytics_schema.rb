@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_15_160357) do
+ActiveRecord::Schema.define(version: 2021_09_21_112511) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -54,6 +54,14 @@ ActiveRecord::Schema.define(version: 2021_09_15_160357) do
     t.string "lead_provider"
     t.string "delivery_partner"
     t.string "chosen_cip"
+    t.string "school_type_name"
+    t.integer "school_phase_type"
+    t.string "school_phase_name"
+    t.integer "school_status_code"
+    t.string "school_status_name"
+    t.string "postcode"
+    t.string "administrative_district_code"
+    t.string "administrative_district_name"
     t.index ["urn"], name: "index_ecf_schools_on_urn", unique: true
   end
 

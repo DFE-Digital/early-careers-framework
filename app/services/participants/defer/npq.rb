@@ -2,7 +2,7 @@
 
 module Participants
   module Defer
-    class NPQ < ::Participants::Base
+    class NPQ < Base
       class << self
         def reasons
           %w[

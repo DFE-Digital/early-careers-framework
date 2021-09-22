@@ -24,13 +24,16 @@ class ValidateParticipant < BaseService
     @eligibility_data = store_eligibility_data!(validation_result)
     store_trn_on_teacher_profile!(validation_result[:trn])
 
-    if @eligibility_data.eligible_status?
-      remove_validation_data!
-    else
-      # store validation data for manual re-check later
-      # if different TRN already exists or not eligible
-      store_validation_data!
-    end
+    # TODO: remove the validation data once we have the complete set of
+    # previous induction participants from the full API to validate against.
+    # if @eligibility_data.eligible_status?
+    #   remove_validation_data!
+    # else
+    #   # store validation data for manual re-check later
+    #   # if different TRN already exists or not eligible
+    #   store_validation_data!
+    # end
+    store_validation_data!
     true
   rescue StandardError => e
     Rails.logger.error("Problem with DQT API: " + e.message)
