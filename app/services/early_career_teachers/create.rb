@@ -19,7 +19,7 @@ module EarlyCareerTeachers
         ParticipantProfile::ECT.create!({ teacher_profile: teacher_profile, schedule: Finance::Schedule.default }.merge(ect_attributes)) do |profile|
           ParticipantProfileState.create!(participant_profile: profile)
 
-          unless @year_2020
+          unless year_2020
             ParticipantMailer.participant_added(participant_profile: profile).deliver_later
             profile.update_column(:request_for_details_sent_at, Time.zone.now)
             ParticipantDetailsReminderJob.schedule(profile)
@@ -32,7 +32,7 @@ module EarlyCareerTeachers
 
   private
 
-    attr_reader :full_name, :email, :school_cohort, :mentor_profile_id
+    attr_reader :full_name, :email, :school_cohort, :mentor_profile_id, :year_2020
 
     def initialize(full_name:, email:, school_cohort:, mentor_profile_id: nil, year_2020: false)
       @full_name = full_name

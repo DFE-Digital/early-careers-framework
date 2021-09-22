@@ -11,6 +11,7 @@ RSpec.describe ApplicationHelper, type: :helper do
   let(:school) { induction_coordinator.induction_coordinator_profile.schools.first }
   let!(:cohort) { create(:cohort, :current) }
   let(:participant_profile) { create(:participant_profile, :ect) }
+  let(:year_2020_participant_profile) { create(:participant_profile, :ect, school_cohort: build(:school_cohort, cohort: build(:cohort, start_year: 2020))) }
   let(:participant_school) { participant_profile.school }
   let(:lead_provider) { create(:user, :lead_provider) }
 
@@ -50,6 +51,10 @@ RSpec.describe ApplicationHelper, type: :helper do
 
     it "returns the validation start path" do
       expect(helper.profile_dashboard_path(participant_profile.user)).to eq("/participants/validation")
+    end
+
+    it "returns the no access path for NQT+1s" do
+      expect(helper.profile_dashboard_path(year_2020_participant_profile.user)).to eq("/participants/no_access")
     end
 
     it "returns the dashboard path for lead providers" do
@@ -102,7 +107,7 @@ RSpec.describe ApplicationHelper, type: :helper do
   end
 
   describe "#service_name" do
-    context "when the curent path doesn't contain 'year-2020'" do
+    context "when the current path doesn't contain 'year-2020'" do
       it "displays the default service name" do
         helper.request.path = "/"
         expect(helper.service_name).to eq "Manage training for early career teachers"
