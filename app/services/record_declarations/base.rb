@@ -111,11 +111,11 @@ module RecordDeclarations
     end
 
     def validate_milestone!
-      unless milestone.start_date.beginning_of_day < parsed_date
+      if parsed_date > milestone.start_date.beginning_of_day
         raise ActionController::ParameterMissing, I18n.t(:declaration_before_milestone_start)
       end
 
-      unless parsed_date <= milestone.milestone_date.end_of_day
+      if milestone.milestone_date.end_of_day >= parsed_date
         raise ActionController::ParameterMissing, I18n.t(:declaration_after_milestone_cutoff)
       end
     end
