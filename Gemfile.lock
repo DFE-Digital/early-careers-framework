@@ -134,7 +134,7 @@ GEM
     cypress-on-rails (1.11.0)
       rack
     daemons (1.4.1)
-    database_cleaner-active_record (2.0.0)
+    database_cleaner-active_record (2.0.1)
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
