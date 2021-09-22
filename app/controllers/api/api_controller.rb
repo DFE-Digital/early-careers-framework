@@ -14,6 +14,12 @@ module Api
     rescue_from ActiveRecord::RecordInvalid, with: :invalid_transition
     rescue_from Api::Errors::InvalidTransitionError, with: :invalid_transition
 
+    def append_info_to_payload(payload)
+      super
+      payload[:current_user_class] = current_user&.class&.name
+      payload[:current_user_id] = current_user&.id
+    end
+
   private
 
     def not_found
