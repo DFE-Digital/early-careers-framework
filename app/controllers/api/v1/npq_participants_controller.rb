@@ -24,8 +24,8 @@ module Api
       end
 
       def npq_participants
-        npq_participants = npq_lead_provider.npq_profiles.includes(:user, :npq_course)
-        npq_participants = npq_participants.where("updated_at > ?", updated_since) if updated_since.present?
+        npq_participants = npq_lead_provider.npq_participants
+        npq_participants = npq_participants.where("npq_profiles.updated_at > ?", updated_since) if updated_since.present?
         npq_participants.order(:created_at)
       end
 

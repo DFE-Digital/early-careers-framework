@@ -2,13 +2,13 @@
 
 require "rails_helper"
 
-RSpec.describe NPQ::CreateOrUpdateProfile do
+RSpec.describe NPQ::Accept do
   before do
     Finance::Schedule.find_or_create_by(name: "ECF September standard 2021")
   end
 
   subject do
-    described_class.new(npq_validation_data: npq_validation_data)
+    described_class.new(npq_application: npq_validation_data)
   end
 
   describe "#call" do
@@ -42,7 +42,7 @@ RSpec.describe NPQ::CreateOrUpdateProfile do
       it "creates participant profile correctly" do
         subject.call
 
-        profile = user.teacher_profile.npq_profiles.last
+        profile = user.teacher_profile.npq_profile
 
         expect(profile.schedule).to eql(Finance::Schedule.default)
         expect(profile.npq_course).to eql(npq_validation_data.npq_course)
@@ -79,7 +79,7 @@ RSpec.describe NPQ::CreateOrUpdateProfile do
       end
     end
 
-    context "after updating an existing NPQValidationData record" do
+    context "after approving an existing NPQValidationData record" do
       before do
         npq_validation_data.save!
         subject.call
@@ -91,18 +91,9 @@ RSpec.describe NPQ::CreateOrUpdateProfile do
         npq_validation_data.update!(teacher_reference_number: new_trn)
 
         expect { subject.call }
-          .to change(TeacherProfile, :count).by(0)
+          .to raise_error(ActiveRecord::RecordNotUnique)
+          .and change(TeacherProfile, :count).by(0)
           .and change(ParticipantProfile::NPQ, :count).by(0)
-      end
-
-      context "context trn now validated" do
-        it "updates the TRN on teacher profile" do
-          npq_validation_data.update!(teacher_reference_number: new_trn, teacher_reference_number_verified: true)
-
-          subject.call
-
-          expect(npq_validation_data.reload.user.teacher_profile.trn).to eql new_trn
-        end
       end
     end
   end

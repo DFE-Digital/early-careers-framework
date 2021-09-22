@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { participant_data_api: "active" } do
-  describe "GET /api/v1/npq-participants" do
+  describe "GET /api/v1/participants/npq" do
     let!(:default_schedule) { create(:schedule, name: "ECF September standard 2021") }
     let(:npq_lead_provider) { create(:npq_lead_provider) }
     let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider: npq_lead_provider) }
@@ -16,11 +16,10 @@ RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { par
       end
 
       before :each do
-        list = []
-        list << create_list(:npq_validation_data, 3, npq_lead_provider: npq_lead_provider, school_urn: "123456")
+        list = create_list(:npq_validation_data, 3, npq_lead_provider: npq_lead_provider, school_urn: "123456")
 
-        list.flatten.each do |npq_validation_data|
-          NPQ::CreateOrUpdateProfile.new(npq_validation_data: npq_validation_data).call
+        list.each do |npq_validation_data|
+          NPQ::Accept.new(npq_application: npq_validation_data).call
         end
       end
 
@@ -28,61 +27,51 @@ RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { par
         let(:parsed_response) { JSON.parse(response.body) }
 
         it "returns correct jsonapi content type header" do
-          get "/api/v1/npq-participants"
+          get "/api/v1/participants/npq"
           expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
         end
 
         it "returns all users" do
-          get "/api/v1/npq-participants"
+          get "/api/v1/participants/npq"
           expect(parsed_response["data"].size).to eql(3)
         end
 
         it "returns correct type" do
-          get "/api/v1/npq-participants"
+          get "/api/v1/participants/npq"
           expect(parsed_response["data"][0]).to have_type("npq-participant")
         end
 
         it "returns IDs" do
-          get "/api/v1/npq-participants"
-          expect(parsed_response["data"][0]["id"]).to be_in(NPQValidationData.pluck(:id))
+          get "/api/v1/participants/npq"
 
-          profile = NPQValidationData.find(parsed_response["data"][0]["id"])
+          user = User.find(parsed_response["data"][0]["id"])
+          expect(parsed_response["data"][0]["id"]).to be_in(NPQValidationData.pluck(:user_id))
+          validation_data = user.npq_profile.validation_data
 
-          expect(parsed_response["data"][0]["attributes"]["date_of_birth"]).to eql(profile.date_of_birth.strftime("%F"))
-          expect(parsed_response["data"][0]["attributes"]["teacher_reference_number"]).to eql(profile.teacher_reference_number)
-          expect(parsed_response["data"][0]["attributes"]["teacher_reference_number_verified"]).to eql(profile.teacher_reference_number_verified)
-          expect(parsed_response["data"][0]["attributes"]["active_alert"]).to eql(profile.active_alert)
-          expect(parsed_response["data"][0]["attributes"]["school_ukprn"]).to eql(profile.school_ukprn)
-          expect(parsed_response["data"][0]["attributes"]["school_ukprn"]).to eql(profile.school_ukprn)
-          expect(parsed_response["data"][0]["attributes"]["headteacher_status"]).to eql(profile.headteacher_status)
-          expect(parsed_response["data"][0]["attributes"]["eligible_for_funding"]).to eql(profile.eligible_for_funding)
-          expect(parsed_response["data"][0]["attributes"]["headteacher_status"]).to eql(profile.headteacher_status)
-          expect(parsed_response["data"][0]["attributes"]["eligible_for_funding"]).to eql(profile.eligible_for_funding)
-          expect(parsed_response["data"][0]["attributes"]["funding_choice"]).to eql(profile.funding_choice)
+          expect(parsed_response["data"][0]["attributes"]["email"]).to eql(user.email)
+          expect(parsed_response["data"][0]["attributes"]["full_name"]).to eql(user.full_name)
+          expect(parsed_response["data"][0]["attributes"]["teacher_reference_number"]).to eql(validation_data.teacher_reference_number)
+          expect(parsed_response["data"][0]["attributes"]["teacher_reference_number_validated"]).to eql(validation_data.teacher_reference_number_verified)
         end
 
         it "has correct attributes" do
-          get "/api/v1/npq-participants"
+          get "/api/v1/participants/npq"
           expect(parsed_response["data"][0])
             .to(have_jsonapi_attributes(
               :participant_id,
-              :date_of_birth,
+              :npq_courses,
+              :email,
+              :full_name,
               :teacher_reference_number,
-              :teacher_reference_number_verified,
-              :active_alert,
-              :school_urn,
-              :school_ukprn,
-              :headteacher_status,
-              :eligible_for_funding,
-              :funding_choice,
+              :teacher_reference_number_validated,
             ).exactly)
         end
 
         it "can return paginated data" do
-          get "/api/v1/npq-participants", params: { page: { per_page: 2, page: 1 } }
+          get "/api/v1/participants/npq", params: { page: { per_page: 2, page: 1 } }
           expect(parsed_response["data"].size).to eql(2)
 
-          get "/api/v1/npq-participants", params: { page: { per_page: 2, page: 2 } }
+          get "/api/v1/participants/npq", params: { page: { per_page: 2, page: 2 } }
           expect(JSON.parse(response.body)["data"].size).to eql(1)
         end
 
@@ -92,13 +81,14 @@ RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { par
           end
 
           it "returns content updated after specified timestamp" do
-            get "/api/v1/npq-participants", params: { filter: { updated_since: 2.days.ago.iso8601 } }
+            get "/api/v1/participants/npq", params: { filter: { updated_since: 2.days.ago.iso8601 } }
+            puts parsed_response
             expect(parsed_response["data"].size).to eql(3)
           end
 
           context "with invalid filter of a string" do
             it "returns an error" do
-              get "/api/v1/npq-participants", params: { filter: 2.days.ago.iso8601 }
+              get "/api/v1/participants/npq", params: { filter: 2.days.ago.iso8601 }
               expect(response).to be_bad_request
               expect(parsed_response).to eql(HashWithIndifferentAccess.new({
                 "errors": [
@@ -117,7 +107,7 @@ RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { par
     context "when unauthorized" do
       it "returns 401 for invalid bearer token" do
         default_headers[:Authorization] = "Bearer ugLPicDrpGZdD_w7hhCL"
-        get "/api/v1/npq-participants"
+        get "/api/v1/participants/npq"
         expect(response.status).to eq 401
       end
     end
@@ -127,7 +117,7 @@ RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { par
 
       it "returns 401 for invalid bearer token" do
         default_headers[:Authorization] = bearer_token
-        get "/api/v1/npq-participants"
+        get "/api/v1/participants/npq"
         expect(response.status).to eq 403
       end
     end
