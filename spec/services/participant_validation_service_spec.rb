@@ -219,7 +219,7 @@ RSpec.describe ParticipantValidationService do
 
     context "when the participant has previously had an induction" do
       before do
-        ECFIneligibleParticipant.find_by(trn: trn).destroy
+        ECFIneligibleParticipant.find_by(trn: trn).destroy!
         expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(dqt_record)
       end
 
