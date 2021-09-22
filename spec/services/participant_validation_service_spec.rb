@@ -18,6 +18,9 @@ RSpec.describe ParticipantValidationService do
         qts_date: qts_date,
         active_alert: alert }
     end
+    # reverse logic - the means eligible for induction
+    let!(:eligibity) { create(:ineligible_participant, trn: trn, reason: :previous_induction) }
+
     let(:validation_result) { ParticipantValidationService.validate(trn: trn, nino: nino, full_name: full_name, date_of_birth: dob) }
 
     it "calls show on the DQT API client" do
@@ -65,7 +68,8 @@ RSpec.describe ParticipantValidationService do
       end
 
       it "returns record with padded trn when trn is not padded" do
-        expect(validation_result).to eql(build_validation_result(trn: padded_trn))
+        expect(validation_result).to eql(build_validation_result(trn: padded_trn,
+                                                                 options: { previous_induction: true }))
       end
     end
 
@@ -203,9 +207,8 @@ RSpec.describe ParticipantValidationService do
     end
 
     context "when the participant has previously participated" do
-      let!(:ineligibity) { create(:ineligible_participant, trn: trn, reason: :previous_participation) }
-
       before do
+        ECFIneligibleParticipant.find_by(trn: trn).update!(reason: :previous_induction_and_participation)
         expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(dqt_record)
       end
 
@@ -215,9 +218,8 @@ RSpec.describe ParticipantValidationService do
     end
 
     context "when the participant has previously had an induction" do
-      let!(:ineligibity) { create(:ineligible_participant, trn: trn, reason: :previous_induction) }
-
       before do
+        ECFIneligibleParticipant.find_by(trn: trn).destroy
         expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(dqt_record)
       end
 
@@ -227,9 +229,8 @@ RSpec.describe ParticipantValidationService do
     end
 
     context "when the participant has previously had an induction and participation" do
-      let!(:ineligibity) { create(:ineligible_participant, trn: trn, reason: :previous_induction_and_participation) }
-
       before do
+        ECFIneligibleParticipant.find_by(trn: trn).update!(reason: :previous_participation)
         expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(dqt_record)
       end
 
