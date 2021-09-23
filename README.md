@@ -68,6 +68,7 @@ bundle exec rake parallel:create
 
 ### Running specs thereafter
 ```
+bundle exec rake parallel:migrate
 bundle exec rake parallel:spec
 ```
 
