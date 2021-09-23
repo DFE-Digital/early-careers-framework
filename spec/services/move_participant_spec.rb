@@ -1,0 +1,54 @@
+# frozen_string_literal: true
+
+require "rails_helper"
+
+RSpec.describe MoveParticipant do
+  subject(:service) { described_class }
+  let(:participant_profile) { create(:participant_profile, :ect) }
+  let(:new_school) { create(:school, name: "Big Shiny School", urn: "123000") }
+  let!(:school_cohort) { create(:school_cohort, cohort: participant_profile.school_cohort.cohort, school: new_school) }
+
+  describe ".call" do
+    before do
+      service.call(participant_profile: participant_profile, school: new_school)
+      participant_profile.reload
+    end
+
+    it "moves the participant to the new school" do
+      expect(participant_profile.school_cohort).to eq school_cohort
+      expect(participant_profile.teacher_profile.school).to eq new_school
+    end
+
+    context "when the new school has sparsity uplift" do
+      let(:new_school) { create(:school, :sparsity_uplift, name: "Big Shiny School", urn: "123000") }
+
+      it "sets the sparsity uplift flag on the participant profile" do
+        expect(participant_profile).to be_sparsity_uplift
+      end
+    end
+
+    context "when the new school does not have sparsity uplift" do
+      let(:participant_profile) { create(:participant_profile, :ect, :sparsity_uplift) }
+
+      it "clears the sparsity uplift flag on the participant profile" do
+        expect(participant_profile).not_to be_sparsity_uplift
+      end
+    end
+
+    context "when the new school has pupil premium uplift" do
+      let(:new_school) { create(:school, :pupil_premium_uplift, name: "Big Shiny School", urn: "123000") }
+
+      it "sets the pupil premium uplift flag on the participant profile" do
+        expect(participant_profile).to be_pupil_premium_uplift
+      end
+    end
+
+    context "when the new school does not pupil premium uplift" do
+      let(:participant_profile) { create(:participant_profile, :ect, :pupil_premium_uplift) }
+
+      it "clears the pupil premium uplift flag on the participant profile" do
+        expect(participant_profile).not_to be_pupil_premium_uplift
+      end
+    end
+  end
+end
