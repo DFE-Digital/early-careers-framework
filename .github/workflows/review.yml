@@ -28,6 +28,26 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
+      - name: Set release notes
+        run: |
+          git fetch --all
+          FIRST_TAG=$(git tag -l | sort -V | tail -2 | head -1)
+          echo "$FIRST_TAG"
+          SECOND_TAG=$(git tag -l | sort -V | tail -1)
+          echo "$SECOND_TAG"
+          git log --first-parent --pretty='format: %b (%an)' "$FIRST_TAG..$SECOND_TAG"
+          echo -E "RELEASE_NOTES=$(git log --first-parent --pretty='format: %b (%an)' "$FIRST_TAG..$SECOND_TAG" | sed ':a;N;$!ba;s/\n/\\n/g')" >> $GITHUB_ENV
+
+      - name: Post release notes on cpd-dev-alerts
+        uses: rtCamp/action-slack-notify@v2.2.0
+        env:
+          SLACK_CHANNEL: cpd-dev-alerts
+          SLACK_USERNAME: Release notes bot
+          SLACK_TITLE: Version ${{ github.event.inputs.version }} release notes
+          SLACK_MESSAGE: "${{ env.RELEASE_NOTES }}"
+          MSG_MINIMAL: true
+          SLACK_WEBHOOK: ${{ secrets.ALERTMANAGER_SLACK_URL }}
+
       - name: Pin Terraform version
         uses: hashicorp/setup-terraform@v1.3.2
         with:
