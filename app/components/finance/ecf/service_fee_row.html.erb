@@ -10,8 +10,8 @@
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= participants %></td>
     </tr>
     <tr class="govuk-table__row">
-      <th class="govuk-table__cell"><%= t("finance.ecf.bands.#{band}") %> payment</th>
-      <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds monthly %></td>
+      <th scope="row" class="govuk-table__cell"><%= t("finance.ecf.bands.#{band}") %> payment</th>
+      <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><%= number_to_pounds monthly %></td>
     </tr>
   </tbody>
 </table>
