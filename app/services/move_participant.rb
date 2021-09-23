@@ -11,7 +11,7 @@ class MoveParticipant < BaseService
   def call
     cohort = participant_profile.school_cohort.cohort
     school_cohort = school.school_cohorts.find_by!(cohort: cohort)
-    return unless school_cohort.present?
+    return if school_cohort.blank?
 
     ActiveRecord::Base.transaction do
       participant_profile.teacher_profile.update!(school: school)
