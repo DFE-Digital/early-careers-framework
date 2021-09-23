@@ -16,6 +16,28 @@ jobs:
         with:
           terraform_version: 0.14.0
 
+      - name: Clear S3 bucket
+        env:
+          CF_USERNAME: ${{ secrets.GOVPAAS_DEV_USERNAME }}
+          CF_PASSWORD: ${{ secrets.GOVPAAS_DEV_PASSWORD }}
+        run: |
+          wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | sudo apt-key add -
+          echo "deb https://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
+          sudo apt-get update
+          sudo apt-get install cf7-cli
+          cf api https://api.london.cloud.service.gov.uk
+          cf auth
+          cf target -o "dfe" -s "earlycareers-framework-dev"
+          cf create-service-key ecf-csv-review-pr-${{ github.event.number }} ecf-csv-review-pr-${{ github.event.number }}-key -c '{"allow_external_access": true}'
+          CREDS=$(cf service-key ecf-csv-review-pr-${{ github.event.number }} ecf-csv-review-pr-${{ github.event.number }}-key)
+          echo $CREDS
+          export AWS_ACCESS_KEY_ID=$(echo $CREDS | tail -7 | jq -r '.aws_access_key_id')
+          export AWS_SECRET_ACCESS_KEY=$(echo $CREDS | tail -7 | jq -r '.aws_secret_access_key')
+          BUCKET_NAME=$(echo $CREDS | tail -7 | jq -r '.bucket_name')
+          aws s3 rm s3://$BUCKET_NAME --recursive
+          cf delete-service-key ecf-csv-review-pr-${{ github.event.number }} ecf-csv-review-pr-${{ github.event.number }}-key -f
+
+
       - name: Destroy review app
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
