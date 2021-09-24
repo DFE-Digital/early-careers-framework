@@ -57,6 +57,11 @@ RSpec.describe Participants::Withdraw::EarlyCareerTeacher do
       params = participant_params.merge({ course_identifier: "npq-leading-teacher" })
       expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
     end
+
+    it "fails when participant profile is a withdrawn record" do
+      User.find(participant_params[:participant_id]).early_career_teacher_profile.withdrawn_record!
+      expect { described_class.call(params: participant_params) }.to raise_error(ActionController::ParameterMissing)
+    end
   end
 
   context "when user is not a participant" do
