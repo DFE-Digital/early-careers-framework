@@ -86,5 +86,46 @@ RSpec.describe DqtApiAccess do
         expect(described_class.token).to eql(second_jwt_token)
       end
     end
+
+    context "non 200 response from access api" do
+      let(:stub_token_fetch) do
+        stub_request(:get, "https://dqtaccess.example.com/oauth2/v2.0/token")
+          .with(
+            body: {
+              "client_id" => "dqt-access-guid",
+              "client_secret" => "dqt-access-secret",
+              "grant_type" => "client_credentials",
+              "scope" => "https:///dqtaccess.example.com/some-scope",
+            },
+            headers: {
+              "Accept" => "*/*",
+              "Host" => "dqtaccess.example.com",
+            },
+          )
+          .to_return(status: 500, body: "", headers: {})
+      end
+
+      before do
+        stub_token_fetch
+      end
+
+      it "raises an error" do
+        expect {
+          described_class.token
+        }.to raise_error(DqtApiAccess::TokenFetchError)
+      end
+
+      it "notifies sentry" do
+        allow(Sentry).to receive(:capture_exception)
+
+        begin
+          described_class.token
+        rescue DqtApiAccess::TokenFetchError
+          nil # do nothing
+        end
+
+        expect(Sentry).to have_received(:capture_exception)
+      end
+    end
   end
 end

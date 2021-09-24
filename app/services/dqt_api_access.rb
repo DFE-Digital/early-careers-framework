@@ -4,6 +4,9 @@ require "net/http"
 require "jwt"
 
 class DqtApiAccess
+  class TokenFetchError < RuntimeError
+  end
+
   class << self
     def token
       if @token.nil? || token_about_to_expire?
@@ -25,7 +28,11 @@ class DqtApiAccess
         if response.code == "200"
           @token = JSON.parse(response.body)["access_token"]
         else
-          raise "DQT access token could not be fetched"
+          message = "DQT access token could not be fetched"
+          error = TokenFetchError.new(message)
+
+          Sentry.capture_exception(error)
+          raise error
         end
       end
 
