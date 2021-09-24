@@ -43,14 +43,17 @@ module ActualDqt
     end
 
     def uri(trn:, birthdate:, nino: nil)
-      URI("#{Rails.configuration.dqt_api_url}/#{trn}?#{query_string(birthdate: birthdate, nino: nino)}")
+      URI("#{Rails.configuration.dqt_api_url}/#{trn}?#{query_string_object(birthdate: birthdate, nino: nino).to_query}")
     end
 
-    def query_string(birthdate:, nino: nil)
-      array = []
-      array << "birthdate=#{birthdate}"
-      array << "nino=#{nino}" if nino
-      array.join("&")
+    def query_string_object(birthdate:, nino: nil)
+      object = {
+        birthdate: birthdate,
+      }
+
+      object[:nino] = nino if nino
+
+      object
     end
   end
 end
