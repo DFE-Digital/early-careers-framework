@@ -51,7 +51,18 @@ RSpec.describe Mail::DeliveryRecorder do
       mail.associate_with(object, as: name)
 
       expect { recorder.delivered_email(mail) }
-        .to change { Email.associated_with(object, as: name).count }.by 1
+        .to change { Email.associated_with(object).count }.by 1
+    end
+  end
+
+  context "with a tag" do
+    let(:tag) { Faker::Lorem.word }
+
+    it "records the tag on the email record" do
+      mail.tag(tag)
+
+      expect { recorder.delivered_email(mail) }
+        .to change { Email.tagged_with(tag).count }.by 1
     end
   end
 

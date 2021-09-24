@@ -17,7 +17,7 @@ RSpec.describe "Nominations::NotifyCallbacks", type: :request do
       end
 
       it "updates matching email record" do
-        email = Email.create(id: nomination_email.notify_id)
+        email = Email.create!(id: nomination_email.notify_id)
 
         post "/api/notify-callback", params: {
           id: nomination_email.notify_id,

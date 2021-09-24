@@ -24,13 +24,14 @@ module Mail
           template_id: response.template["id"],
           template_version: response.template["version"],
           uri: response.uri,
+          tags: mail.tags,
           personalisation: mail.header["personalisation"].unparsed_value,
         )
 
-        email.associate_with(*User.where(email: email.to).to_a)
+        email.create_association_with(*User.where(email: email.to).to_a, as: :recipient)
 
         mail.associations.each do |object, name|
-          email.associate_with object, as: name
+          email.create_association_with object, as: name
         end
       end
     end
@@ -46,8 +47,17 @@ module Mail
         @associations ||= []
       end
 
+      def tags
+        @tags ||= []
+      end
+
       def associate_with(object, as: nil) # rubocop:disable Naming/MethodParameterName
         associations << [object, as]
+        self
+      end
+
+      def tag(*new_tags)
+        tags.concat(new_tags)
         self
       end
     end

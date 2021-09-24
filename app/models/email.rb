@@ -11,19 +11,15 @@ class Email < ApplicationRecord
   UNDEFINED = Object.new
   private_constant :UNDEFINED
 
-  scope(:associated_with, lambda do |object, as: UNDEFINED|
-    association_scope = Association.where(object: object)
-    association_scope = association_scope.where(name: as) unless as == UNDEFINED
+  scope :associated_with, ->(object) { where(id: Association.where(object: object).select(:email_id)) }
+  scope :tagged_with, ->(*tags) { tags.inject(self) { |scope, tag| scope.where("? = ANY (tags)", tag) } }
 
-    where(id: association_scope.select(:email_id))
-  end)
-
-  def associate_with(*objects, as: nil) # rubocop:disable Naming/MethodParameterName
+  def create_association_with(*objects, as: nil) # rubocop:disable Naming/MethodParameterName
     objects.each do |object|
       Association.create!(
         email: self,
         object: object,
-        name: as,
+        name: (as || object.model_name.singular),
       )
     end
   end
