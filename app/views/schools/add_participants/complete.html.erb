@@ -8,7 +8,7 @@
 
       <h2 class="govuk-heading-m">What happens next</h2>
       <ul class="govuk-list govuk-list--bullet">
-        <li>we will contact you if we need anymore details and update you on your status</li>
+        <li>we'll contact you if we need anymore details and update you on your status</li>
       </ul>
 
     <% else %>
@@ -16,11 +16,9 @@
 
       <h2 class="govuk-heading-m">What happens next</h2>
       <ul class="govuk-list govuk-list--bullet">
-        <p>We’ll send them an email in the next few days. We’ll ask them to use our service to tell us their:</p>
-        <li>full name</li>
-        <li>teacher reference number (TRN)</li>
-        <li>date of birth</li>
-        <li>National Insurance number (optional)</li>
+        <li>we’ll contact them to ask for information needed to check they’re eligible for this training</li>
+        <li>we’ll let you know if they’re not eligible, or if we need any further information</li>
+        <li>you can track the status of these checks by <%= govuk_link_to "viewing your ECTs and mentors", schools_participants_path %> </li>
       </ul>
     <% end %>
 
