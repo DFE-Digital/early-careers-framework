@@ -250,7 +250,7 @@ RSpec.describe ParticipantValidationService do
     }.merge(options)
   end
 
-  describe "#validate with actual DQT api", with_feature_flags: { actual_dqt_api: "active" } do
+  describe "#validate with full DQT api", with_feature_flags: { full_dqt_api: "active" } do
     let(:trn) { "1234567" }
     let(:nino) { "QQ123456A" }
     let(:full_name) { "John Smith" }
@@ -271,11 +271,11 @@ RSpec.describe ParticipantValidationService do
     end
     let(:validation_result) { ParticipantValidationService.validate(trn: trn, nino: nino, full_name: full_name, date_of_birth: dob) }
 
-    let(:mock_client) { instance_double(ActualDqt::Client, get_record: nil) }
+    let(:mock_client) { instance_double(FullDqt::Client, get_record: nil) }
 
     before do
       allow(DqtApiAccess).to receive(:token).and_return("jwt-access-token")
-      allow(ActualDqt::Client).to receive(:new).and_return(mock_client)
+      allow(FullDqt::Client).to receive(:new).and_return(mock_client)
     end
 
     it "calls get_record on the DQT API client" do

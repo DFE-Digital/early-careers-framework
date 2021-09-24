@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module ActualDqt
-  # Given a response from new actual DQP api
+module FullDqt
+  # Given a response from new full DQP api
   # map to old format for backwards compatability
   class OldRecordMapper
     def self.translate(response)

@@ -2,7 +2,7 @@
 
 require "net/http"
 
-module ActualDqt
+module FullDqt
   class Client
     attr_reader :token
 

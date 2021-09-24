@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ActualDqt::Client do
+RSpec.describe FullDqt::Client do
   let(:token) { "some-jwt-token" }
 
   subject { described_class.new(token: token) }
