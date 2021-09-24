@@ -4,12 +4,15 @@
   <div class="govuk-grid-column-two-thirds">
 
     <% if participant_profile.user == current_user %>
-      <%= govuk_panel title_text: "You have been added to the #{@cohort.display_name} cohort", text: nil, classes: "govuk-!-margin-bottom-8" %>
+      <%= govuk_panel title_text: "#{participant_profile.user.full_name} has been added as a mentor", text: nil, classes: "govuk-!-margin-bottom-8" %>
 
       <h2 class="govuk-heading-m">What happens next</h2>
+
       <ul class="govuk-list govuk-list--bullet">
         <li>we'll contact you if we need anymore details and update you on your status</li>
       </ul>
+
+      <p>We'll send you an email in the next few days that explains what information we need from you.</p>
 
     <% else %>
       <% if participant_profile.ect? %>
@@ -19,6 +22,7 @@
       <% end %>
 
       <h2 class="govuk-heading-m">What happens next</h2>
+
       <ul class="govuk-list govuk-list--bullet">
         <li>we’ll contact them to ask for information needed to check they’re eligible for this training</li>
         <li>we’ll let you know if they’re not eligible, or if we need any further information</li>
