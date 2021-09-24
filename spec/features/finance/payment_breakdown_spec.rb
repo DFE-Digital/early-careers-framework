@@ -20,6 +20,7 @@ RSpec.feature "Finance users payment breakdowns", type: :feature, js: true do
 
     when_i_select_a_provider
     and_i_click_the_submit_button
+    and_i_click_open_all_button
     then_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named("Payment breakdown for an ECF provider")
 
@@ -44,6 +45,10 @@ private
 
   def when_i_select_a_provider
     choose option: "cffd2237-c368-4044-8451-68e4a4f73369", allow_label_click: true
+  end
+
+  def and_i_click_open_all_button
+    find("button", text: "Open all").click
   end
 
   def when_i_click_on_view_contract_button

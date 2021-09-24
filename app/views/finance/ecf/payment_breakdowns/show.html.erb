@@ -1,12 +1,43 @@
 <% content_for :title, t("finance.ecf.payment_breakdown") %>
 <% content_for :before_content, govuk_back_link(text: "Back", href: select_provider_ecf_finance_payment_breakdowns_path) %>
 
-<h1 class="govuk-caption-xl"><%= @breakdown[:breakdown_summary][:name] %></h1>
-<h2 class="govuk-heading-l"><%=t "finance.ecf.payment_breakdown" %></h2>
+<h1 class="govuk-heading-xl"><%= @breakdown[:breakdown_summary][:name] %></h1>
+<!--TODO: Un-hardcode the values-->
+<p class="govuk-caption-m govuk-!-margin-0">Payment of</p>
+<h2 class="govuk-heading-xl govuk-!-margin-0"><%= number_to_pounds 100_000 %></h2>
+<p class="govuk-caption-m govuk-!-margin-0">On 31 October 2021</p>
+
+<div class="govuk-grid-row govuk-!-margin-top-9">
+  <div class="govuk-grid-column-two-thirds">
+
+    <%= render Finance::ECF::BreakdownSummary.new(breakdown_summary: @breakdown) %>
+
+    <%= govuk_accordion do |accordion| %>
+      <%= accordion.section heading_text: "Service fee" do %>
+        <%= render Finance::ECF::ServiceFees.new(service_fees: @breakdown[:service_fees]) %>
+      <% end %>
+
+      <%= accordion.section heading_text: "Output fee" do %>
+        <%= render Finance::ECF::OutputPayments.new(output_payments: @breakdown[:output_payments]) %>
+      <% end %>
+
+      <!--TODO: Add back payments-->
+      <%= accordion.section heading_text: "Milestone 1 back payment" do %>
+        <h3 class="govuk-heading-s">Coming soon!</h3>
+      <% end %>
+
+      <% @breakdown[:other_fees].each do |other_fee| %>
+        <%= accordion.section heading_text: "#{Finance::ECF::OtherFee.new(other_fee).name.capitalize} fees" do %>
+          <%= render Finance::ECF::OtherFeeRow.new(other_fee: Finance::ECF::OtherFee.new(other_fee)) %>
+        <% end %>
+      <% end %>
+
+      <!--TODO: Add clawbacks-->
+      <%= accordion.section heading_text: "Clawbacks" do %>
+        <h3 class="govuk-heading-s">Coming soon!</h3>
+      <% end %>
+    <% end %>
+  </div>
+</div>
 
 <%= govuk_button_link_to t("finance.show_contract"), finance_ecf_contract_path(id: @ecf_lead_provider.id) %>
-
-<%= render Finance::ECF::BreakdownSummary.new(breakdown_summary: @breakdown[:breakdown_summary]) %>
-<%= render Finance::ECF::ServiceFees.new(service_fees: @breakdown[:service_fees]) %>
-<%= render Finance::ECF::OutputPayments.new(output_payments: @breakdown[:output_payments]) %>
-<%= render Finance::ECF::OtherFees.new(other_fees: @breakdown[:other_fees]) %>

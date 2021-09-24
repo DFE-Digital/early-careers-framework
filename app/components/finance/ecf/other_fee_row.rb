@@ -6,7 +6,6 @@ module Finance
       include FinanceHelper
       attr_reader :other_fee
 
-      with_collection_parameter :other_fee
       delegate :participants, :name, :per_participant, :subtotal, to: :other_fee
 
     private
