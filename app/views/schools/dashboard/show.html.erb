@@ -47,7 +47,7 @@
         <% elsif school_cohort.full_induction_programme? %>
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Training provider</dt>
-            <dd class="govuk-summary-list__value"></dd><%= school_cohort.lead_provider&.name %></dd>
+            <dd class="govuk-summary-list__value"><%= school_cohort.lead_provider&.name %></dd>
             <% if school_cohort.lead_provider.present? %>
               <dd class="govuk-summary-list__actions"></dd>
             <% else %>
