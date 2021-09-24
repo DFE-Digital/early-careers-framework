@@ -7,7 +7,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-xl"><%= @school.name %></span>
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-7">Manage your training</h1>
+    <h1 class="govuk-heading-xl">Manage your training</h1>
 
     <% @school_cohorts.each do |school_cohort| %>
 
@@ -27,7 +27,7 @@
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Cohort year</dt>
           <dd class="govuk-summary-list__value"><%= school_cohort.cohort.start_year %></dd>
-          <dd class="govuk-summary-list__value"></dd>
+          <dd class="govuk-summary-list__actions"></dd>
         </div>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Programme</dt>
