@@ -16,6 +16,17 @@ RSpec.describe "Nominations::NotifyCallbacks", type: :request do
         expect(nomination_email.reload.notify_status).to eq "failed"
       end
 
+      it "updates matching email record" do
+        email = Email.create(id: nomination_email.notify_id)
+
+        post "/api/notify-callback", params: {
+          id: nomination_email.notify_id,
+          status: "failed",
+        }
+
+        expect(email.reload.status).to eq "failed"
+      end
+
       context "when reference is nil" do
         it "returns successfully" do
           post "/api/notify-callback", params: {
