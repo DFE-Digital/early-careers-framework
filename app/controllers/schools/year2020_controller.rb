@@ -2,7 +2,7 @@
 
 module Schools
   class Year2020Controller < ApplicationController
-    before_action :set_headers
+    before_action :set_no_index_headers
     before_action :load_year_2020_form
     before_action :check_school_has_no_existing_2020_ects, except: %i[start cohort_already_have_access success]
     SESSION_KEY = :schools_year2020_form
@@ -112,7 +112,7 @@ module Schools
       params[:index].to_i
     end
 
-    def set_headers
+    def set_no_index_headers
       response.set_header("X-Robots-Tag", "noindex")
     end
   end
