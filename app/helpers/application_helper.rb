@@ -38,7 +38,7 @@ module ApplicationHelper
   end
 
   def participant_start_path(user)
-    return participants_no_access_path unless user.teacher_profile.participant_profiles.active_record.ecf.any?
+    return participants_no_access_path unless post_2020_ecf_participant?(user)
 
     participants_validation_start_path
   end
@@ -52,6 +52,10 @@ module ApplicationHelper
   end
 
 private
+
+  def post_2020_ecf_participant?(user)
+    (user.teacher_profile.ecf_profile&.school_cohort&.cohort&.start_year || 0) > 2020
+  end
 
   def induction_coordinator_mentor_path(user)
     profile = user.participant_profiles.active_record.mentors.first

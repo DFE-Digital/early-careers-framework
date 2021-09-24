@@ -2,6 +2,19 @@
 
 require "rails_helper"
 
+class DummyAggregator
+  class << self
+    def call(*)
+      {
+        all: 10_000,
+        uplift: 10_000,
+        ects: 5_000,
+        mentors: 5_000,
+      }
+    end
+  end
+end
+
 RSpec.describe CalculationOrchestrator do
   let(:call_off_contract) { create(:call_off_contract) }
   let(:breakdown_summary) do
@@ -74,6 +87,15 @@ RSpec.describe CalculationOrchestrator do
       },
     }
   end
+  let(:capped_uplift) do
+    {
+      uplift: {
+        participants: 10_000,
+        per_participant: 100.0,
+        subtotal: 99_500.0,
+      },
+    }
+  end
 
   let(:normal_outcome) do
     {
@@ -141,6 +163,13 @@ RSpec.describe CalculationOrchestrator do
           expect(run_calculation).to eq(normal_outcome)
         end
       end
+
+      context "when excessive uplift records are passed" do
+        it "limits the amount to the capped level" do
+          results = run_calculation(aggregator: DummyAggregator)
+          expect(results[:other_fees]).to eq(capped_uplift)
+        end
+      end
     end
 
     context "when no uplift flags were set" do
@@ -197,9 +226,10 @@ RSpec.describe CalculationOrchestrator do
 
 private
 
-  def run_calculation
+  def run_calculation(aggregator: ParticipantEventAggregator)
     set_precision(
       described_class.call(
+        aggregator: aggregator,
         contract: call_off_contract,
         cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider,
         event_type: :started,

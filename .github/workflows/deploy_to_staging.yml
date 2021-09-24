@@ -67,3 +67,19 @@ jobs:
           cd terraform/app
           terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-e2123d0b-d394-4594-8056-315300e7d8a8"
           terraform apply -input=false -auto-approve -var-file ../workspace-variables/staging.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_STAGING}}", "RELEASE_VERSION":"${{github.event.inputs.version}}"}' -var 'logstash_url=${{secrets.SYSLOG_DRAIN_URL}}' -var 'docker_username=${{ secrets.DOCKER_USERNAME }}' -var 'docker_password=${{ secrets.DOCKER_DEV_PASSWORD }}'
+
+      - name: Set release notes
+        run: |
+          echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
+          echo "$(git log --first-parent --pretty='format: %b (%an)' $(git tag -l | sort -V | tail -2 | head -1)..${{ github.event.inputs.version }})" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Post release notes on cpd-dev-alerts
+        uses: rtCamp/action-slack-notify@v2.2.0
+        env:
+          SLACK_CHANNEL: cpd-dev-alerts
+          SLACK_USERNAME: Release notes bot
+          SLACK_TITLE: Version ${{ github.event.inputs.version }} release notes
+          SLACK_MESSAGE: ${{ env.RELEASE_NOTES }}
+          MSG_MINIMAL: true
+          SLACK_WEBHOOK: ${{ secrets.ALERTMANAGER_SLACK_URL }}

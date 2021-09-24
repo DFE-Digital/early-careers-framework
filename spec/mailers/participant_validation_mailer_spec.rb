@@ -161,24 +161,9 @@ RSpec.describe ParticipantValidationMailer, type: :mailer do
     end
   end
 
-  describe "#fip_mentors_to_add_validation_information_email" do
+  describe "#mentors_to_add_validation_information_email" do
     let(:email) do
-      described_class.fip_mentors_to_add_validation_information_email(
-        recipient: recipient,
-        school_name: school_name,
-        start_url: "example.com/start-validation",
-      )
-    end
-
-    it "renders the right headers" do
-      expect(email.from).to match_array ["mail@example.com"]
-      expect(email.to).to match_array [recipient]
-    end
-  end
-
-  describe "#cip_mentors_to_add_validation_information_email" do
-    let(:email) do
-      described_class.cip_mentors_to_add_validation_information_email(
+      described_class.mentors_to_add_validation_information_email(
         recipient: recipient,
         school_name: school_name,
         start_url: "example.com/start-validation",

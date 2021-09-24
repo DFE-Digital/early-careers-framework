@@ -3,8 +3,7 @@
 require "csv"
 
 class AdditionalEmailImporter
-  attr_reader :logger
-  attr_reader :source_file
+  attr_reader :logger, :source_file
 
   def initialize(logger, source_file = nil)
     @logger = logger

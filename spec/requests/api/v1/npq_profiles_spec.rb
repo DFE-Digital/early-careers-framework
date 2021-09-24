@@ -2,6 +2,12 @@
 
 require "rails_helper"
 
+class DummyToken < ApiToken
+  def owner
+    "Test"
+  end
+end
+
 RSpec.describe "NPQ profiles api endpoint", type: :request do
   let!(:default_schedule) { create(:schedule, name: "ECF September standard 2021") }
   let(:token) { NPQRegistrationApiToken.create_with_random_token! }
@@ -143,7 +149,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
     end
 
     context "using valid token but for different scope" do
-      let(:other_token) { ApiToken.create_with_random_token! }
+      let(:other_token) { DummyToken.create_with_random_token! }
 
       it "returns 403" do
         default_headers[:Authorization] = "Bearer #{other_token}"

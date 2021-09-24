@@ -15,8 +15,7 @@ class ParticipantValidationMailer < ApplicationMailer
   COORDINATOR_AND_MENTOR_TEMPLATE = "7e7d3fdb-41f5-4e04-a4ae-acf92e8fefe6"
 
   ECTS_TO_ADD_VALIDATIN_INFO_TEMPLATE = "50ee41e5-06b9-41cf-9afd-d5bc4db356c4"
-  FIP_MENTORS_TO_ADD_VALIDATION_EMAIL_TEMPLATE = "691eb49b-f23f-49dd-b799-f8efdd5e010f"
-  CIP_MENTORS_TO_ADD_VALIDATION_EMAIL_TEMPLATE = "e0198213-c09d-41aa-8197-b167e495e49d"
+  MENTORS_TO_ADD_VALIDATION_EMAIL_TEMPLATE = "e0198213-c09d-41aa-8197-b167e495e49d"
   INDUCTION_COORDINATORS_WHO_ARE_MENTORS_TO_ADD_VALIDATION_EMAIL_TEMPLATE = "7e7d3fdb-41f5-4e04-a4ae-acf92e8fefe6"
 
   STATUTORY_GUIDANCE_LINK = "https://www.gov.uk/government/publications/induction-for-early-career-teachers-england"
@@ -182,22 +181,9 @@ class ParticipantValidationMailer < ApplicationMailer
     )
   end
 
-  def fip_mentors_to_add_validation_information_email(recipient:, school_name:, start_url:)
+  def mentors_to_add_validation_information_email(recipient:, school_name:, start_url:)
     template_mail(
-      FIP_MENTORS_TO_ADD_VALIDATION_EMAIL_TEMPLATE,
-      to: recipient,
-      rails_mailer: mailer_name,
-      rails_mail_template: action_name,
-      personalisation: {
-        school_name: school_name,
-        participant_start: start_url,
-      },
-    )
-  end
-
-  def cip_mentors_to_add_validation_information_email(recipient:, school_name:, start_url:)
-    template_mail(
-      CIP_MENTORS_TO_ADD_VALIDATION_EMAIL_TEMPLATE,
+      MENTORS_TO_ADD_VALIDATION_EMAIL_TEMPLATE,
       to: recipient,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,

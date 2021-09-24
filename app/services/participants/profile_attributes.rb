@@ -7,6 +7,7 @@ module Participants
 
     included do
       attr_accessor :course_identifier, :participant_id, :cpd_lead_provider
+
       validates :participant_id, :course_identifier, :cpd_lead_provider, presence: true
       validates :participant_id, format: /\A[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\Z/, allow_blank: true
       validate :course_valid_for_participant

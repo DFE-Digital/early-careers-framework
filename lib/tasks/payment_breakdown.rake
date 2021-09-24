@@ -5,16 +5,16 @@ require "payment_calculator/ecf/uplift_calculation"
 require "tasks/payment_breakdown"
 require "terminal-table"
 
-include ActiveSupport::NumberHelper
-
 namespace :payment_calculation do
+  include ActiveSupport::NumberHelper
+
   desc "run payment calculator for a given ECF lead provider"
   task breakdown: :environment do
     cpd_lead_provider = begin
-                      CpdLeadProvider.find(ARGV[1])
-                        rescue StandardError
-                          CpdLeadProvider.find_by(name: ARGV[1])
-                    end
+      CpdLeadProvider.find(ARGV[1])
+    rescue StandardError
+      CpdLeadProvider.find_by(name: ARGV[1])
+    end
     raise "Unknown lead provider: #{ARGV[1]}" if cpd_lead_provider.nil?
     raise "Not an ECF lead provider #{ARGV[1]}" if cpd_lead_provider.lead_provider.nil?
 

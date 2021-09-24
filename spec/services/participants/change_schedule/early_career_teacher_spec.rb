@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-require_relative "../../../shared/context/lead_provider_profiles_and_courses.rb"
+require_relative "../../../shared/context/lead_provider_profiles_and_courses"
 
 RSpec.describe Participants::ChangeSchedule::EarlyCareerTeacher do
   include_context "lead provider profiles and courses"
@@ -16,9 +16,7 @@ RSpec.describe Participants::ChangeSchedule::EarlyCareerTeacher do
     }
   end
 
-  before do
-    create(:schedule, schedule_identifier: "ecf-september-extended-2021")
-  end
+  let!(:extended_schedule) { create(:schedule, schedule_identifier: "ecf-september-extended-2021") }
 
   context "when lead providers don't match" do
     it "raises a ParameterMissing error" do
@@ -52,6 +50,25 @@ RSpec.describe Participants::ChangeSchedule::EarlyCareerTeacher do
     it "fails when course is for an npq-course" do
       params = participant_params.merge({ course_identifier: "npq-leading-teacher" })
       expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
+    end
+
+    it "fails when it would invalidate a non-voided declaration" do
+      start_date = ect_profile.schedule.milestones.first.start_date
+      declaration = create(:participant_declaration, declaration_date: start_date + 1.day, course_identifier: "ecf-induction", declaration_type: "started", cpd_lead_provider: cpd_lead_provider)
+      create(:profile_declaration, participant_declaration: declaration, participant_profile: ect_profile)
+      extended_schedule.milestones.each { |milestone| milestone.update!(start_date: milestone.start_date + 6.months, milestone_date: milestone.milestone_date + 6.months) }
+      expect { described_class.call(params: participant_params) }.to raise_error(ActionController::ParameterMissing)
+    end
+
+    it "changes the schedule on user's profile when it would invalidate a voided declaration" do
+      start_date = ect_profile.schedule.milestones.first.start_date
+      declaration = create(:participant_declaration, declaration_date: start_date + 1.day, course_identifier: "ecf-induction", declaration_type: "started", cpd_lead_provider: cpd_lead_provider)
+      create(:profile_declaration, participant_declaration: declaration, participant_profile: ect_profile)
+      declaration.void!
+      extended_schedule.milestones.each { |milestone| milestone.update!(start_date: milestone.start_date + 6.months, milestone_date: milestone.milestone_date + 6.months) }
+
+      described_class.call(params: participant_params)
+      expect(ect_profile.reload.schedule.schedule_identifier).to eq("ecf-september-extended-2021")
     end
   end
 

@@ -13,5 +13,9 @@ FactoryBot.define do
     trait :cip do
       induction_programme_choice { "core_induction_programme" }
     end
+
+    trait :school_funded_fip do
+      induction_programme_choice { "school_funded_fip" }
+    end
   end
 end

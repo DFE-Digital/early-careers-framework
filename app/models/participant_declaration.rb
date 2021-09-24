@@ -21,17 +21,19 @@ class ParticipantDeclaration < ApplicationRecord
   scope :npq, -> { joins(:current_profile_declaration).merge(ProfileDeclaration.npq_profiles) }
   scope :payable, -> { joins(:current_profile_declaration).merge(ProfileDeclaration.where(payable: true)) }
   scope :unique_id, -> { select(:user_id).distinct }
+  scope :voided, -> { where.not(voided_at: nil) }
+  scope :not_voided, -> { where(voided_at: nil) }
 
   # Time dependent Range scopes
   scope :declared_as_between, ->(start_date, end_date) { where(declaration_date: start_date..end_date) }
   scope :submitted_between, ->(start_date, end_date) { where(created_at: start_date..end_date) }
 
   # Declaration aggregation scopes
-  scope :active_for_lead_provider, ->(lead_provider) { started.for_lead_provider(lead_provider).unique_id }
-  scope :active_ects_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).ect }
-  scope :active_mentors_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).mentor }
-  scope :active_npqs_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).npq }
-  scope :active_uplift_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).uplift }
+  scope :active_for_lead_provider, ->(lead_provider) { not_voided.started.for_lead_provider(lead_provider).unique_id }
+  scope :active_ects_for_lead_provider, ->(lead_provider) { not_voided.active_for_lead_provider(lead_provider).ect }
+  scope :active_mentors_for_lead_provider, ->(lead_provider) { not_voided.active_for_lead_provider(lead_provider).mentor }
+  scope :active_npqs_for_lead_provider, ->(lead_provider) { not_voided.active_for_lead_provider(lead_provider).npq }
+  scope :active_uplift_for_lead_provider, ->(lead_provider) { not_voided.active_for_lead_provider(lead_provider).uplift }
 
   scope :payable_for_lead_provider, ->(lead_provider) { active_for_lead_provider(lead_provider).payable }
   scope :payable_ects_for_lead_provider, ->(lead_provider) { active_ects_for_lead_provider(lead_provider).payable }

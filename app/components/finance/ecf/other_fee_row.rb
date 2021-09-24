@@ -5,6 +5,7 @@ module Finance
     class OtherFeeRow < BaseComponent
       include FinanceHelper
       attr_reader :other_fee
+
       delegate :participants, :name, :per_participant, :subtotal, to: :other_fee
 
     private

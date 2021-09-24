@@ -63,6 +63,7 @@ en:
   invalid_course: "The property '#/course_identifier' must be an available course to '#/participant_id'"
   invalid_evidence_type: "The property '#/evidence_held' must be an available type to the event type and course type"
   invalid_schedule: "The property '#/schedule_identifier' must be present and correspond to a valid schedule"
+  schedule_invalidates_declaration: Changing schedule would invalidate existing declarations. Please void them first.
   withdrawn_participant: Cannot perform actions on a withdrawn participant
   declaration_on_incorrect_state: "The declaration on withdrawn or deferred participant can not be accepted"
   schedule_missing: "The participant does not have a schedule"

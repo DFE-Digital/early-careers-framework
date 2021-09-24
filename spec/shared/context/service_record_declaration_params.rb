@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.shared_context "service record declaration params" do
-  let(:ect_declaration_date) { ect_profile.schedule.milestones.first.start_date + 1.day }
+  let(:ect_declaration_date) { ect_profile.schedule.milestones.find_by(declaration_type: "started").start_date + 1.day }
   let(:params) do
     {
       participant_id: ect_profile.user.id,
@@ -14,7 +14,7 @@ RSpec.shared_context "service record declaration params" do
   let(:ect_params) do
     params.merge({ cpd_lead_provider: cpd_lead_provider })
   end
-  let(:mentor_declaration_date) { mentor_profile.schedule.milestones.first.start_date + 1.day }
+  let(:mentor_declaration_date) { mentor_profile.schedule.milestones.find_by(declaration_type: "started").start_date + 1.day }
   let(:mentor_params) do
     ect_params.merge({ participant_id: mentor_profile.user.id, course_identifier: "ecf-mentor", declaration_date: mentor_declaration_date.rfc3339 })
   end
