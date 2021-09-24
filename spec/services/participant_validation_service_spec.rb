@@ -329,7 +329,13 @@ RSpec.describe ParticipantValidationService do
       end
 
       it "returns record with padded trn when trn is not padded" do
-        expect(validation_result).to eql({ trn: padded_trn, qts: true, active_alert: false })
+        expect(validation_result).to eql({
+          trn: padded_trn,
+          qts: true,
+          active_alert: false,
+          previous_induction: true,
+          previous_participation: false,
+        })
       end
     end
 
@@ -339,37 +345,73 @@ RSpec.describe ParticipantValidationService do
       end
 
       it "returns true when all fields match" do
-        expect(validation_result).to eql({ trn: trn, qts: true, active_alert: false })
+        expect(validation_result).to eql({
+          trn: trn,
+          qts: true,
+          active_alert: false,
+          previous_induction: true,
+          previous_participation: false,
+        })
       end
 
       it "returns the validated details when date of birth is wrong" do
         expect(
           ParticipantValidationService.validate(trn: trn, nino: nino, full_name: full_name, date_of_birth: Date.new(1980, 1, 2)),
-        ).to eql({ trn: trn, qts: true, active_alert: false })
+        ).to eql({
+          trn: trn,
+          qts: true,
+          active_alert: false,
+          previous_induction: true,
+          previous_participation: false,
+        })
       end
 
       it "returns the validated details when name is wrong" do
         expect(
           ParticipantValidationService.validate(trn: trn, nino: nino, full_name: "John Smithe", date_of_birth: dob),
-        ).to eql({ trn: trn, qts: true, active_alert: false })
+        ).to eql({
+          trn: trn,
+          qts: true,
+          active_alert: false,
+          previous_induction: true,
+          previous_participation: false,
+        })
       end
 
       it "returns the validated details when nino is wrong" do
         expect(
           ParticipantValidationService.validate(trn: trn, nino: "AA654321A", full_name: full_name, date_of_birth: dob),
-        ).to eql({ trn: trn, qts: true, active_alert: false })
+        ).to eql({
+          trn: trn,
+          qts: true,
+          active_alert: false,
+          previous_induction: true,
+          previous_participation: false,
+        })
       end
 
       it "returns the validated details when name is wrong and nino is cased differently" do
         expect(
           ParticipantValidationService.validate(trn: trn, nino: nino.downcase, full_name: "John Smithe", date_of_birth: dob),
-        ).to eql({ trn: trn, qts: true, active_alert: false })
+        ).to eql({
+          trn: trn,
+          qts: true,
+          active_alert: false,
+          previous_induction: true,
+          previous_participation: false,
+        })
       end
 
       it "returns validated details when the name is cased differently and the nino is missing" do
         expect(
           ParticipantValidationService.validate(trn: trn, nino: "", full_name: "John SMITH", date_of_birth: dob),
-        ).to eql({ trn: trn, qts: true, active_alert: false })
+        ).to eql({
+          trn: trn,
+          qts: true,
+          active_alert: false,
+          previous_induction: true,
+          previous_participation: false,
+        })
       end
     end
 
@@ -403,7 +445,13 @@ RSpec.describe ParticipantValidationService do
         it "returns validated details" do
           expect(mock_client).to receive(:get_record).and_return(dqt_record)
 
-          expect(validation_result).to eql({ trn: trn, qts: true, active_alert: false })
+          expect(validation_result).to eql({
+            trn: trn,
+            qts: true,
+            active_alert: false,
+            previous_induction: true,
+            previous_participation: false,
+          })
         end
       end
     end
@@ -435,7 +483,13 @@ RSpec.describe ParticipantValidationService do
                  nino: nino,
                  full_name: full_name,
                  date_of_birth: dob,
-               )).to eql({ trn: trn, qts: true, active_alert: false })
+               )).to eql({
+                 trn: trn,
+                 qts: true,
+                 active_alert: false,
+                 previous_induction: true,
+                 previous_participation: false,
+               })
       end
     end
 
@@ -447,7 +501,13 @@ RSpec.describe ParticipantValidationService do
       end
 
       it "returns correct QTS information" do
-        expect(validation_result).to eql({ trn: trn, qts: false, active_alert: false })
+        expect(validation_result).to eql({
+          trn: trn,
+          qts: false,
+          active_alert: false,
+          previous_induction: true,
+          previous_participation: false,
+        })
       end
     end
 
@@ -459,7 +519,13 @@ RSpec.describe ParticipantValidationService do
       end
 
       it "returns returns the correct alert details" do
-        expect(validation_result).to eql({ trn: trn, qts: true, active_alert: true })
+        expect(validation_result).to eql({
+          trn: trn,
+          qts: true,
+          active_alert: true,
+          previous_induction: true,
+          previous_participation: false,
+        })
       end
     end
 
