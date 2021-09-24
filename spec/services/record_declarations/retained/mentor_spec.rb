@@ -10,7 +10,7 @@ RSpec.describe RecordDeclarations::Retained::Mentor do
 
   let(:retained_params) { params.merge(declaration_type: "retained-1", declaration_date: (milestone_start_date + 1.day).rfc3339) }
   let(:retained_mentor_params) { mentor_params.merge(declaration_type: "retained-1", declaration_date: (milestone_start_date + 1.day).rfc3339) }
-  let(:milestone_start_date) { mentor_profile.schedule.milestones[1].start_date }
+  let(:milestone_start_date) { mentor_profile.schedule.milestones.find_by(declaration_type: "retained-1").start_date }
 
   before do
     travel_to milestone_start_date + 2.days

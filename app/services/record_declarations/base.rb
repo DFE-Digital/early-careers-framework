@@ -112,11 +112,11 @@ module RecordDeclarations
     end
 
     def validate_milestone!
-      unless milestone.start_date.beginning_of_day < parsed_date
+      if parsed_date <= milestone.start_date.beginning_of_day
         raise ActionController::ParameterMissing, I18n.t(:declaration_before_milestone_start)
       end
 
-      unless parsed_date <= milestone.milestone_date.end_of_day
+      if milestone.milestone_date.end_of_day < parsed_date
         raise ActionController::ParameterMissing, I18n.t(:declaration_after_milestone_cutoff)
       end
     end
@@ -131,18 +131,7 @@ module RecordDeclarations
         raise ActionController::ParameterMissing, I18n.t(:schedule_missing)
       end
 
-      declaration_to_milestone_map[declaration_type]
-    end
-
-    def declaration_to_milestone_map
-      {
-        "started" => schedule.milestones[0],
-        "retained-1" => schedule.milestones[1],
-        "retained-2" => schedule.milestones[2],
-        "retained-3" => schedule.milestones[3],
-        "retained-4" => schedule.milestones[4],
-        "completed" => schedule.milestones.last,
-      }
+      schedule.milestones.find_by(declaration_type: declaration_type)
     end
 
     def valid_declaration_types
