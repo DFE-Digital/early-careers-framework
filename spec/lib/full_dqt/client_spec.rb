@@ -12,7 +12,7 @@ RSpec.describe FullDqt::Client do
 
   let(:response_hash) do
     {
-      "trn": "1001000",
+      "trn": trn,
       "ni_number": "AB123456D",
       "name": "Mostly Populated",
       "dob": "1987-12-13",
@@ -159,6 +159,19 @@ RSpec.describe FullDqt::Client do
         stub_api_different_record_request
 
         record = subject.get_record(trn: incorrect_trn, birthdate: birthdate, nino: nino)
+
+        expect(record["trn"]).to eql(trn)
+      end
+    end
+
+    context "trn is less than 7 characters" do
+      let(:trn) { "0001000" }
+      let(:short_trn) { "001000" }
+
+      it "pads the trn with zeros on the left" do
+        stub_api_request
+
+        record = subject.get_record(trn: short_trn, birthdate: birthdate)
 
         expect(record["trn"]).to eql(trn)
       end
