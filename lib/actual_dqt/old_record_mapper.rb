@@ -5,7 +5,7 @@ module ActualDqt
   # map to old format for backwards compatability
   class OldRecordMapper
     def self.translate(response)
-      return nil if response.nil?
+      return if response.nil?
 
       hash = {}
 
