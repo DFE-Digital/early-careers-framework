@@ -14,31 +14,17 @@ RSpec.describe Participants::Resume::NPQ do
     }
   end
 
-  context "when lead providers don't match" do
-    it "raises a ParameterMissing error" do
-      expect { described_class.call(params: participant_params.merge({ cpd_lead_provider: another_lead_provider })) }.to raise_error(ActionController::ParameterMissing)
+  it_behaves_like "a participant resume action service" do
+    def given_params
+      participant_params
+    end
+
+    def user_profile
+      npq_profile.reload
     end
   end
 
   context "when valid user is an npq" do
-    it "creates an active state and makes the profile active" do
-      expect { described_class.call(params: participant_params) }
-          .to change { ParticipantProfileState.count }.by(1)
-      expect { User.find(participant_params[:participant_id]).npq_profile.active? }
-    end
-
-    it "fails when the participant is already active" do
-      ParticipantProfileState.create!(participant_profile: npq_profile, state: "active")
-      expect { described_class.call(params: participant_params) }
-          .to raise_error(ActiveRecord::RecordInvalid)
-    end
-
-    it "fails when the participant is already withdrawn" do
-      ParticipantProfileState.create!(participant_profile: npq_profile, state: "withdrawn")
-      expect { described_class.call(params: participant_params) }
-          .to raise_error(ActiveRecord::RecordInvalid)
-    end
-
     it "fails when course is for an early career teacher" do
       params = participant_params.merge({ course_identifier: "ecf-induction" })
       expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
@@ -48,11 +34,10 @@ RSpec.describe Participants::Resume::NPQ do
       params = participant_params.merge({ course_identifier: "ecf-mentor" })
       expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
     end
-  end
 
-  context "when user is not a participant" do
-    it "raises ParameterMissing for an invalid user_id and not change participant profile state" do
-      expect { described_class.call(params: participant_params.except(:participant_id)) }.to raise_error(ActionController::ParameterMissing).and(not_change { ParticipantProfileState.count })
+    it "fails when course is for a different npq-course" do
+      params = participant_params.merge({ course_identifier: "npq-headship" })
+      expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
     end
   end
 end
