@@ -54,7 +54,7 @@ RSpec.describe Partnerships::Report do
     expect(result.event_logs.map(&:event)).to eq %w[reported]
   end
 
-  context "with previous, challanged partnership between school and provider for the same cohort" do
+  context "with previous, challenged partnership between school and provider for the same cohort" do
     let!(:partnership) do
       create :partnership, :challenged, lead_provider: lead_provider, school: school, cohort: cohort
     end
@@ -96,7 +96,7 @@ RSpec.describe Partnerships::Report do
       create :school_cohort, school: school, cohort: cohort
     end
 
-    it "creates that cohort" do
+    it "does not create a school cohort" do
       expect { result }.not_to change { school.school_cohorts.count }
     end
   end
@@ -107,6 +107,48 @@ RSpec.describe Partnerships::Report do
              school: school,
              cohort: cohort,
              induction_programme_choice: "core_induction_programme")
+    end
+
+    it "marks partnership as pending" do
+      expect(result).to be_pending
+    end
+
+    it "schedules an activation job" do
+      result
+
+      expect(PartnershipActivationJob)
+        .to be_enqueued.with(partnership: result, report_id: result.report_id)
+                       .at(Partnerships::Report::CHALLENGE_WINDOW.from_now)
+    end
+  end
+
+  context "when the school has said they have no ECTs" do
+    before do
+      create(:school_cohort,
+             school: school,
+             cohort: cohort,
+             induction_programme_choice: "no_early_career_teachers")
+    end
+
+    it "marks partnership as pending" do
+      expect(result).to be_pending
+    end
+
+    it "schedules an activation job" do
+      result
+
+      expect(PartnershipActivationJob)
+        .to be_enqueued.with(partnership: result, report_id: result.report_id)
+                       .at(Partnerships::Report::CHALLENGE_WINDOW.from_now)
+    end
+  end
+
+  context "when the school has said they will design their own programme" do
+    before do
+      create(:school_cohort,
+             school: school,
+             cohort: cohort,
+             induction_programme_choice: "design_our_own")
     end
 
     it "marks partnership as pending" do
