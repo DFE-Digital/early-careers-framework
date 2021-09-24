@@ -26,20 +26,9 @@ RSpec.describe Participants::Defer::NPQ do
     end
   end
 
-  context "when valid user is an NPQ" do
-    it "fails when course is for an early career teacher" do
-      params = participant_params.merge({ course_identifier: "ecf-induction" })
-      expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
-    end
-
-    it "fails when course is for a mentor" do
-      params = participant_params.merge({ course_identifier: "ecf-mentor" })
-      expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
-    end
-
-    it "fails when course is for a different npq-course" do
-      params = participant_params.merge({ course_identifier: "npq-headship" })
-      expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
+  it_behaves_like "a participant service for npq" do
+    def given_params
+      participant_params
     end
   end
 end

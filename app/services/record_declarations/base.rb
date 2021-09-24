@@ -21,8 +21,8 @@ module RecordDeclarations
     delegate :schedule, :participant_declarations, to: :user_profile, allow_nil: true
 
     class << self
-      def call(params)
-        new(params).call
+      def call(params:)
+        new(params: params).call
       end
     end
 
@@ -48,7 +48,7 @@ module RecordDeclarations
 
   private
 
-    def initialize(params)
+    def initialize(params:)
       self.participant_id = params[:participant_id]
       self.course_identifier = params[:course_identifier]
       self.cpd_lead_provider = params[:cpd_lead_provider]

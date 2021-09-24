@@ -24,15 +24,9 @@ RSpec.describe Participants::Resume::Mentor do
     end
   end
 
-  context "when valid user is a mentor" do
-    it "fails when course is for an early career teacher" do
-      params = participant_params.merge({ course_identifier: "ecf-induction" })
-      expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
-    end
-
-    it "fails when course is for an npq-course" do
-      params = participant_params.merge({ course_identifier: "npq-leading-teacher" })
-      expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
+  it_behaves_like "a participant service for mentor" do
+    def given_params
+      participant_params
     end
   end
 end

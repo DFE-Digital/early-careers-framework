@@ -26,20 +26,9 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
     end
   end
 
-  context "when valid user is an early_career_teacher" do
-    it "fails when course is for mentor" do
-      params = ect_params.merge({ course_identifier: "ecf-mentor" })
-      expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing)
-    end
-
-    it "fails when course is npq" do
-      params = ect_params.merge({ course_identifier: "npq-headship" })
-      expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing)
-    end
-
-    it "fails when user profile is a withdrawn record" do
-      User.find(ect_params[:participant_id]).early_career_teacher_profile.withdrawn_record!
-      expect { described_class.call(ect_params) }.to raise_error(ActionController::ParameterMissing)
+  it_behaves_like "a participant service for ect" do
+    def given_params
+      ect_params
     end
   end
 end

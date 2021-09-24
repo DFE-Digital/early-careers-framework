@@ -5,7 +5,7 @@ RSpec.shared_examples "a retained participant declaration service" do
 
   context "when evidence held is invalid" do
     it "raises a ParameterMissing error" do
-      expect { described_class.call(given_params.merge(evidence_held: "invalid")) }.to raise_error(ActionController::ParameterMissing)
+      expect { described_class.call(params: given_params.merge(evidence_held: "invalid")) }.to raise_error(ActionController::ParameterMissing)
     end
   end
 end

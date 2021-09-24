@@ -26,15 +26,9 @@ RSpec.describe RecordDeclarations::Started::NPQ do
     end
   end
 
-  context "when valid user is for an npq course" do
-    it "fails when course is for an early_career_teacher" do
-      params = npq_params.merge({ course_identifier: "ecf-induction" })
-      expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing)
-    end
-
-    it "fails when course is for mentor" do
-      params = npq_params.merge({ course_identifier: "ecf-mentor" })
-      expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing)
+  it_behaves_like "a participant service for npq" do
+    def given_params
+      npq_params
     end
   end
 end

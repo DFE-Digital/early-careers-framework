@@ -26,22 +26,18 @@ RSpec.describe RecordDeclarations::Retained::Mentor do
     end
   end
 
+  it_behaves_like "a participant service for mentor" do
+    def given_params
+      retained_mentor_params
+    end
+  end
+
   context "when valid user is a mentor" do
     %w[training-event-attended self-study-material-completed].each do |evidence_held|
       it "creates a participant and profile declaration for evidence #{evidence_held}" do
-        expect { described_class.call(retained_mentor_params.merge(evidence_held: evidence_held)) }
+        expect { described_class.call(params: retained_mentor_params.merge(evidence_held: evidence_held)) }
             .to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
       end
-    end
-
-    it "fails when course is for an ect" do
-      params = retained_mentor_params.merge({ course_identifier: "ecf-induction" })
-      expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing)
-    end
-
-    it "fails when course is for an npq" do
-      params = retained_mentor_params.merge({ course_identifier: "npq-headship" })
-      expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing)
     end
   end
 end

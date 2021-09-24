@@ -26,20 +26,9 @@ RSpec.describe RecordDeclarations::Started::Mentor do
     end
   end
 
-  context "when valid user is an mentor" do
-    it "fails when course is for an early_career_teacher" do
-      params = mentor_params.merge({ course_identifier: "ecf-induction" })
-      expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing)
-    end
-
-    it "fails when course is npq" do
-      params = mentor_params.merge({ course_identifier: "npq-headship" })
-      expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing)
-    end
-
-    it "fails when user profile is a withdrawn record" do
-      User.find(mentor_params[:participant_id]).mentor_profile.withdrawn_record!
-      expect { described_class.call(mentor_params) }.to raise_error(ActionController::ParameterMissing)
+  it_behaves_like "a participant service for mentor" do
+    def given_params
+      mentor_params
     end
   end
 end

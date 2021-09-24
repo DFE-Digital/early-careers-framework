@@ -30,19 +30,15 @@ RSpec.describe RecordDeclarations::Retained::EarlyCareerTeacher do
   context "when valid user is an early_career_teacher" do
     %w[training-event-attended self-study-material-completed other].each do |evidence_held|
       it "creates a participant and profile declaration for evidence #{evidence_held}" do
-        expect { described_class.call(retained_ect_params.merge(evidence_held: evidence_held)) }
+        expect { described_class.call(params: retained_ect_params.merge(evidence_held: evidence_held)) }
             .to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
       end
     end
+  end
 
-    it "fails when course is for mentor" do
-      params = retained_ect_params.merge({ course_identifier: "ecf-mentor" })
-      expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing)
-    end
-
-    it "fails when course is for an npq" do
-      params = retained_ect_params.merge({ course_identifier: "npq-headship" })
-      expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing)
+  it_behaves_like "a participant service for ect" do
+    def given_params
+      retained_ect_params
     end
   end
 end

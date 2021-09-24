@@ -26,27 +26,15 @@ RSpec.describe RecordDeclarations::Retained::NPQ do
     end
   end
 
+  it_behaves_like "a participant service for npq" do
+    def given_params
+      retained_npq_params
+    end
+  end
+
   context "when declaration type is valid for ECF but not NPQ" do
     it "raises a ParameterMissing error" do
-      expect { described_class.call(retained_npq_params.merge(declaration_type: "retained-3")) }.to raise_error(ActionController::ParameterMissing)
-    end
-  end
-
-  context "when evidence held is invalid" do
-    it "raises a ParameterMissing error" do
-      expect { described_class.call(retained_npq_params.merge(evidence_held: "invalid")) }.to raise_error(ActionController::ParameterMissing)
-    end
-  end
-
-  context "when valid user is an npq user" do
-    it "fails when course is for an ect" do
-      params = retained_npq_params.merge({ course_identifier: "ecf-induction" })
-      expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing)
-    end
-
-    it "fails when course is for mentor" do
-      params = retained_npq_params.merge({ course_identifier: "ecf-mentor" })
-      expect { described_class.call(params) }.to raise_error(ActionController::ParameterMissing)
+      expect { described_class.call(params: retained_npq_params.merge(declaration_type: "retained-3")) }.to raise_error(ActionController::ParameterMissing)
     end
   end
 end
