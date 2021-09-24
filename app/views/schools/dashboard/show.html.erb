@@ -49,7 +49,7 @@
             <dt class="govuk-summary-list__key">Training provider</dt>
             <dd class="govuk-summary-list__value"></dd><%= school_cohort.lead_provider&.name %></dd>
             <% if school_cohort.lead_provider.present? %>
-              <dd class="govuk-summary-list__value"></dd>
+              <dd class="govuk-summary-list__actions"></dd>
             <% else %>
               <dd class="govuk-summary-list__actions"><%= govuk_link_to 'Sign up', schools_partnerships_path(cohort_id: school_cohort.cohort.start_year) %></dd>
             <% end %>
