@@ -78,7 +78,6 @@ module ParticipantDeclarationSteps
   end
 
   def then_the_declaration_made_is_valid
-    p @response
     expect(ParticipantDeclaration.find(@response["data"]["id"])).to be_present
   end
 
