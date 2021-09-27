@@ -39,10 +39,6 @@ module ManageTrainingSteps
     expect(page).to have_text("Add your early career teacher and mentor details")
   end
 
-  def then_i_should_see_the_view_your_ect_and_mentor_link
-    expect(page).to have_text("View your early career teacher and mentor details")
-  end
-
   def given_there_is_a_school_that_has_chosen_design_our_own_for_2021
     @cohort = create(:cohort, start_year: 2021)
     @school = create(:school, name: "Design Our Own Programme School")
@@ -56,10 +52,10 @@ module ManageTrainingSteps
   end
 
   def and_i_am_signed_in_as_an_induction_coordinator
-    induction_coordinator_profile = create(:induction_coordinator_profile, schools: [@school_cohort.school])
+    @induction_coordinator_profile = create(:induction_coordinator_profile, schools: [@school_cohort.school])
     privacy_policy = create(:privacy_policy)
-    privacy_policy.accept!(induction_coordinator_profile.user)
-    sign_in_as induction_coordinator_profile.user
+    privacy_policy.accept!(@induction_coordinator_profile.user)
+    sign_in_as @induction_coordinator_profile.user
     set_participant_data
   end
 
@@ -93,6 +89,28 @@ module ManageTrainingSteps
     choose("Early career teacher", allow_label_click: true)
   end
 
+  def when_i_select_add_mentor
+    choose("Mentor", allow_label_click: true)
+  end
+
+  def when_i_select_add_myself_as_mentor
+    choose("Myself as a mentor", allow_label_click: true)
+  end
+
+  def then_i_am_taken_to_are_you_sure_page
+    expect(page).to have_selector("h1", text: "Are you sure you want to add yourself as a mentor?")
+    expect(page).to have_text("The induction tutor and mentor roles are separate")
+  end
+
+  def when_i_click_on_check_what_each_role_needs_to_do
+    click_on("Check what each role needs to do")
+  end
+
+  def then_i_am_taken_to_roles_page
+    expect(page).to have_selector("h1", text: "Check what each person needs to do in the early career teacher training programme")
+    expect(page).to have_text("An induction tutor should only assign themself as a mentor in exceptional circumstances")
+  end
+
   def and_select_continue
     click_on("Continue")
   end
@@ -101,7 +119,11 @@ module ManageTrainingSteps
     expect(page).to have_selector("h1", text: "What’s the full name of this ECT?")
   end
 
-  def when_i_add_ect_name
+  def then_i_am_taken_to_add_mentor_name_page
+    expect(page).to have_selector("h1", text: "What’s the full name of this mentor?")
+  end
+
+  def when_i_add_ect_or_mentor_name
     fill_in "Full_name", with: @participant_data[:full_name]
   end
 
@@ -110,11 +132,11 @@ module ManageTrainingSteps
     expect(page).to have_text("We need to verify that your early career teachers")
   end
 
-  def then_i_am_taken_to_add_ect_email_page
+  def then_i_am_taken_to_add_ect_or_mentor_email_page
     expect(page).to have_selector("h1", text: "What’s #{@participant_data[:full_name]}’s email address?")
   end
 
-  def when_i_add_ect_email
+  def when_i_add_ect_or_mentor_email
     fill_in "Email", with: @participant_data[:email]
   end
 
@@ -193,11 +215,46 @@ module ManageTrainingSteps
     click_on("View details")
   end
 
+  def and_click_continue
+    click_on("Continue")
+  end
+
+  def and_when_i_select_back
+    click_on("Back")
+  end
+
+  def when_i_select_confirm_and_add
+    click_on("Confirm and add")
+  end
+
+  def and_select_confirm
+    click_on("Confirm")
+  end
+
+  def then_i_am_taken_to_check_details_page
+    expect(page).to have_selector("h1", text: "Check your answers")
+  end
+
+  def then_i_should_be_taken_to_ect_confirmation_page
+    expect(page).to have_selector("h1", text: "#{@participant_data[:full_name]} has been added as an ECT")
+    expect(page).to have_text("What happens next")
+  end
+
+  def then_i_should_be_taken_to_mentor_confirmation_page
+    expect(page).to have_selector("h1", text: "#{@participant_data[:full_name]} has been added as a mentor")
+    expect(page).to have_text("What happens next")
+  end
+
+  def then_i_should_be_taken_to_yourself_as_mentor_confirmation_page
+    expect(page).to have_selector("h1", text: "#{@induction_coordinator_profile.user.full_name} has been added as a mentor")
+  end
+
   def set_participant_data
     @participant_data = {
       trn: "1234567",
       full_name: "Sally Teacher",
       date_of_birth: Date.new(1998, 3, 22),
+      email: "sally@school.com",
       nino: "",
     }
   end
