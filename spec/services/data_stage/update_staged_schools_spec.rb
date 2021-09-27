@@ -15,7 +15,7 @@ RSpec.describe DataStage::UpdateStagedSchools do
 
   describe ".call" do
     it "imports each school_data_file row as a DataStage::School" do
-      expect { service.call(files) }.to change { DataStage::School.count }.by 3
+      expect { service.call(**files) }.to change { DataStage::School.count }.by 3
 
       imported_school = DataStage::School.find_by(urn: 20_001)
       expect(imported_school.name).to eql("The Starship Children's Centre")
@@ -34,25 +34,25 @@ RSpec.describe DataStage::UpdateStagedSchools do
     end
 
     it "correctly handles any Latin1 encoded characters in the data file" do
-      service.call(files)
+      service.call(**files)
 
       imported_school = DataStage::School.find_by(urn: 20_003)
       expect(imported_school.name).to eql("St Thomas à Becket Church of England Aided Primary School")
     end
 
     it "ensures the local authority is created" do
-      expect { service.call(files) }.to change { LocalAuthority.count }.by 3
+      expect { service.call(**files) }.to change { LocalAuthority.count }.by 3
     end
 
     it "ensures the local authority district is created" do
-      expect { service.call(files) }.to change { LocalAuthorityDistrict.count }.by 3
+      expect { service.call(**files) }.to change { LocalAuthorityDistrict.count }.by 3
     end
 
     context "when the school already exists" do
       let!(:existing_school) { create(:staged_school, urn: 20_001, name: "NOT The Starship Children's Centre") }
 
       it "updates the school record" do
-        service.call(files)
+        service.call(**files)
         existing_school.reload
 
         expect(existing_school.name).to eql("The Starship Children's Centre")
@@ -62,7 +62,7 @@ RSpec.describe DataStage::UpdateStagedSchools do
         let!(:existing_school) { create(:staged_school, urn: 20_001, name: "NOT The Starship Children's Centre", school_status_code: 2) }
 
         it "updates the school" do
-          service.call(files)
+          service.call(**files)
           existing_school.reload
 
           expect(existing_school.name).to eql("The Starship Children's Centre")
@@ -74,7 +74,7 @@ RSpec.describe DataStage::UpdateStagedSchools do
         let!(:counterpart_school) { create(:school, urn: 20_001, name: "Big School", school_status_code: 4, school_status_name: "Proposed to open") }
 
         it "updates the school" do
-          service.call(files)
+          service.call(**files)
           existing_school.reload
 
           expect(existing_school.school_status_code).to eq 1
@@ -83,20 +83,20 @@ RSpec.describe DataStage::UpdateStagedSchools do
         end
 
         it "applies minor changes to the counterpart school" do
-          service.call(files)
+          service.call(**files)
           expect(counterpart_school.reload.name).to eql("The Starship Children's Centre")
         end
 
         context "when major changes are present" do
           it "does not apply major changes to the counterpart" do
-            service.call(files)
+            service.call(**files)
             counterpart_school.reload
             expect(counterpart_school.school_status_code).to eq 4
             expect(counterpart_school.school_status_name).to eq "proposed_to_open"
           end
 
           it "creates a school change record" do
-            expect { service.call(files) }.to change { DataStage::SchoolChange.status_changed.count }.by 1
+            expect { service.call(**files) }.to change { DataStage::SchoolChange.status_changed.count }.by 1
           end
         end
       end

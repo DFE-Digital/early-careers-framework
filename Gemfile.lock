@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/ethanmills/rspec-default_http_header.git
+  revision: b72a803df9bef16a1da804c93898a432399f9c88
+  ref: b72a803
+  specs:
+    rspec-default_http_header (0.0.5)
+      rspec-rails (> 3.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -421,8 +429,6 @@ GEM
     rouge (3.26.1)
     rspec-core (3.10.1)
       rspec-support (~> 3.10.0)
-    rspec-default_http_header (0.0.4)
-      rspec-rails (> 3.0)
     rspec-expectations (3.10.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.10.0)
@@ -644,7 +650,7 @@ DEPENDENCIES
   rails-controller-testing (>= 1.0.5)
   ransack
   rouge
-  rspec-default_http_header (>= 0.0.4)
+  rspec-default_http_header!
   rspec-rails (~> 5.0.2)
   rubocop-govuk (>= 3.17.2)
   rubyzip (~> 2.3, >= 2.3.0)
@@ -672,7 +678,7 @@ DEPENDENCIES
   with_model
 
 RUBY VERSION
-   ruby 2.7.2p137
+   ruby 3.0.2p107
 
 BUNDLED WITH
-   2.2.20
+   2.2.22

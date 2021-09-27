@@ -60,7 +60,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
           }
         end
 
-        schema "$ref": "#/components/schemas/ECFParticipantResponse"
+        schema({ "$ref": "#/components/schemas/ECFParticipantResponse" })
         run_test!
       end
     end
@@ -114,7 +114,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
           }
         end
 
-        schema "$ref": "#/components/schemas/ECFParticipantResponse"
+        schema({ "$ref": "#/components/schemas/ECFParticipantResponse" })
         run_test!
       end
     end
@@ -173,7 +173,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
           create(:schedule, schedule_identifier: "ecf-september-extended-2021")
         end
 
-        schema "$ref": "#/components/schemas/ECFParticipantResponse"
+        schema({ "$ref": "#/components/schemas/ECFParticipantResponse" })
         run_test!
       end
     end
@@ -228,7 +228,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
           }
         end
 
-        schema "$ref": "#/components/schemas/ECFParticipantResponse"
+        schema({ "$ref": "#/components/schemas/ECFParticipantResponse" })
         run_test!
       end
     end

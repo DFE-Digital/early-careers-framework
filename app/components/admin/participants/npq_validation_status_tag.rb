@@ -8,7 +8,7 @@ module Admin
       end
 
       def call
-        govuk_tag tag_attributes
+        govuk_tag(**tag_attributes)
       end
 
     private
