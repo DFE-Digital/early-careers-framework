@@ -12,8 +12,8 @@ module RecordDeclarations
 
     private
 
-      def initialize(params)
-        super(params)
+      def initialize(params:)
+        super(params: params)
         self.evidence_held = params[:evidence_held]
       end
 

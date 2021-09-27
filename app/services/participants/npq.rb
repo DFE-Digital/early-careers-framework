@@ -19,7 +19,7 @@ module Participants
     end
 
     def user_profile
-      npq_profiles&.includes({ validation_data: [:npq_course] })&.where('npq_courses.identifier': course_identifier)&.first
+      npq_profiles&.active_record&.includes({ validation_data: [:npq_course] })&.where('npq_courses.identifier': course_identifier)&.first
     end
 
     module NPQClassMethods

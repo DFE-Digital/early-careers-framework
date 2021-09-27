@@ -15,53 +15,19 @@ RSpec.describe Participants::Withdraw::Mentor do
     }
   end
 
-  context "when lead providers don't match" do
-    it "raises a ParameterMissing error" do
-      expect { described_class.call(params: participant_params.merge({ cpd_lead_provider: another_lead_provider })) }.to raise_error(ActionController::ParameterMissing)
+  it_behaves_like "a participant withdraw action service" do
+    def given_params
+      participant_params
+    end
+
+    def user_profile
+      mentor_profile.reload
     end
   end
 
-  context "when valid user is an mentor" do
-    it "creates a withdrawn state and makes the profile withdrawn" do
-      expect { described_class.call(params: participant_params) }
-          .to change { ParticipantProfileState.count }.by(1)
-      expect { User.find(participant_params[:participant_id]).mentor_profile.withdrawn? }
-    end
-
-    it "fails when the reason is invalid" do
-      params = participant_params.merge({ reason: "wibble" })
-      expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
-    end
-
-    it "creates a withdrawn state when that user is deferred" do
-      Participants::Defer::Mentor.call(params: participant_params.merge(reason: "adoption"))
-      expect { User.find(participant_params[:participant_id]).mentor_profile.deferred? }
-      expect { described_class.call(params: participant_params) }
-        .to change { ParticipantProfileState.count }.by(1)
-      expect { User.find(participant_params[:participant_id]).mentor_profile.withdrawn? }
-    end
-
-    it "fails when the participant is already withdrawn" do
-      described_class.call(params: participant_params)
-      expect { User.find(participant_params[:participant_id]).mentor_profile.withdrawn? }
-      expect { described_class.call(params: participant_params) }
-        .to raise_error(ActiveRecord::RecordInvalid)
-    end
-
-    it "fails when course is for an early career teacher" do
-      params = participant_params.merge({ course_identifier: "ecf-induction" })
-      expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
-    end
-
-    it "fails when course is for an npq-course" do
-      params = participant_params.merge({ course_identifier: "npq-leading-teacher" })
-      expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
-    end
-  end
-
-  context "when user is not a participant" do
-    it "raises ParameterMissing for an invalid user_id and not change participant profile state" do
-      expect { described_class.call(params: participant_params.except(:participant_id)) }.to raise_error(ActionController::ParameterMissing).and(not_change { ParticipantProfileState.count })
+  it_behaves_like "a participant service for mentor" do
+    def given_params
+      participant_params
     end
   end
 end
