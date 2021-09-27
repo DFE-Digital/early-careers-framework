@@ -26,7 +26,10 @@ class UTMService
     year2020_nqt_invite_school: "year2020-nqt-invite-school",
     year2020_nqt_invite_sit: "year2020-nqt-invite-sit",
     ect_validation_info_2109: "ect-validation-info-2109",
+    ect_validation_info_2709: "ect-validation-info-2709",
     mentor_validation_info_2309: "mentor-validation-info-2309",
+    mentor_validation_info_2709: "mentor-validation-info-2709",
+    sit_mentor_validation_info_2709: "sit-mentor-validation-info-2709",
     year2020_nqt_invite_school_not_opted_out: "year2020-nqt-invite-school-not-opted-out",
   }.freeze
 
@@ -53,6 +56,9 @@ class UTMService
     ect_validation_info_2109: "ect-validation-info-2109",
     mentor_validation_info_2309: "mentor-validation-info-2309",
     year2020_nqt_invite_school_not_opted_out: "year2020-nqt-invite-school-not-opted-out",
+    ect_validation_info_2709: "ect-validation-info-2709",
+    mentor_validation_info_2709: "mentor-validation-info-2709",
+    sit_mentor_validation_info_2709: "sit-mentor-validation-info-2709",
   }.freeze
 
   def self.email(campaign, source = :service)

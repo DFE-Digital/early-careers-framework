@@ -24,69 +24,6 @@ RSpec.describe ValidationBetaService do
   let(:schools) { [fip_school_1, fip_school_2, cip_school] }
   let(:urns) { schools.map(&:urn) }
 
-  describe "#tell_induction_coordinators_we_asked_ects_and_mentors_for_information" do
-    before { skip "Not worth fixing this - should be deleted shortly!" }
-    let!(:chosen_programme_and_not_in_beta_school) { create(:school_cohort, :fip).school }
-    let!(:chosen_programme_and_not_in_beta_school2) { create(:school_cohort, :fip).school }
-    let!(:chosen_programme_and_not_in_beta_ic) do
-      create(:user, :induction_coordinator, school_ids: [chosen_programme_and_not_in_beta_school.id, chosen_programme_and_not_in_beta_school2.id])
-    end
-
-    let!(:chosen_programme_and_not_in_beta_opted_out_school) do
-      create(:school_cohort, induction_programme_choice: :no_early_career_teachers, opt_out_of_updates: true).school
-    end
-    let!(:chosen_programme_and_not_in_beta_opted_out_ic) do
-      create(:user, :induction_coordinator, school_ids: [chosen_programme_and_not_in_beta_opted_out_school.id])
-    end
-
-    let!(:not_chosen_programme_and_not_in_beta_school) { create(:school) }
-    let!(:not_chosen_programme_and_not_in_beta_ic) do
-      create(:user, :induction_coordinator, school_ids: [not_chosen_programme_and_not_in_beta_school.id])
-    end
-
-    let!(:chosen_programme_and_in_beta_school) { create(:school_cohort, :fip).school }
-    let!(:chosen_programme_and_in_beta_ic) do
-      create(:user, :induction_coordinator, school_ids: [chosen_programme_and_in_beta_school.id])
-    end
-
-    let(:sign_in_url) { "http://www.example.com/users/sign_in?utm_campaign=asked-ects-and-mentors-for-information&utm_medium=email&utm_source=asked-ects-and-mentors-for-information" }
-
-    before do
-      FeatureFlag.activate(:participant_validation, for: chosen_programme_and_in_beta_school)
-
-      validation_beta_service.tell_induction_coordinators_we_asked_ects_and_mentors_for_information
-    end
-
-    it "emails SITs that have chosen programme but not in validation beta, once per SIT even with multiple matching schools" do
-      expect(ParticipantValidationMailer).to delay_email_delivery_of(:induction_coordinators_we_asked_ects_and_mentors_for_information_email)
-                                               .with(hash_including(
-                                                       recipient: chosen_programme_and_not_in_beta_ic.email,
-                                                       sign_in: sign_in_url,
-                                                     ))
-    end
-
-    it "doesn't emails schools that have not chosen programme and were not in validation beta" do
-      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:induction_coordinators_we_asked_ects_and_mentors_for_information_email)
-                                               .with(hash_including(
-                                                       recipient: not_chosen_programme_and_not_in_beta_ic.email,
-                                                     ))
-    end
-
-    it "doesn't email schools that have chosen a programme and were in validation beta" do
-      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:induction_coordinators_we_asked_ects_and_mentors_for_information_email)
-                                               .with(hash_including(
-                                                       recipient: chosen_programme_and_in_beta_ic.email,
-                                                     ))
-    end
-
-    it "doesn't email schools that have chosen programme and not in validation beta if they have opted out of updates" do
-      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:induction_coordinators_we_asked_ects_and_mentors_for_information_email)
-                                               .with(hash_including(
-                                                       recipient: chosen_programme_and_not_in_beta_opted_out_ic.email,
-                                                     ))
-    end
-  end
-
   describe "#tell_ects_to_add_validation_information" do
     let!(:chosen_programme_school) { create(:school_cohort, :cip).school }
 
@@ -113,7 +50,7 @@ RSpec.describe ValidationBetaService do
     let(:cohort_without_programme) { create :school_cohort, induction_programme_choice: "not_yet_known" }
     let!(:not_chosen_programme_ect) { create(:participant_profile, :ect, school_cohort: cohort_without_programme) }
 
-    let(:start_url) { "http://www.example.com/participants/start-registration?utm_campaign=ect-validation-info-2109&utm_medium=email&utm_source=ect-validation-info-2109" }
+    let(:start_url) { "http://www.example.com/participants/start-registration?utm_campaign=ect-validation-info-2709&utm_medium=email&utm_source=ect-validation-info-2709" }
 
     it "emails ECTs that have chosen programme but have not provided details and haven't already received the email" do
       validation_beta_service.tell_ects_to_add_validation_information
@@ -220,7 +157,7 @@ RSpec.describe ValidationBetaService do
     let(:cohort_without_programme) { create :school_cohort, induction_programme_choice: "not_yet_known" }
     let!(:not_chosen_programme_mentor) { create(:participant_profile, :ect, school_cohort: cohort_without_programme) }
 
-    let(:start_url) { "http://www.example.com/participants/start-registration?utm_campaign=mentor-validation-info-2309&utm_medium=email&utm_source=mentor-validation-info-2309" }
+    let(:start_url) { "http://www.example.com/participants/start-registration?utm_campaign=mentor-validation-info-2709&utm_medium=email&utm_source=mentor-validation-info-2709" }
 
     it "emails FIP mentors that have chosen programme but have not provided details" do
       validation_beta_service.tell_mentors_to_add_validation_information
@@ -345,7 +282,7 @@ RSpec.describe ValidationBetaService do
       mentor_profile
     end
 
-    let(:start_url) { "http://www.example.com/participants/start-registration?utm_campaign=induction-coordinators-who-are-mentors-to-add-validation-information&utm_medium=email&utm_source=induction-coordinators-who-are-mentors-to-add-validation-information" }
+    let(:start_url) { "http://www.example.com/participants/start-registration?utm_campaign=sit-mentor-validation-info-2709&utm_medium=email&utm_source=sit-mentor-validation-info-2709" }
 
     before do
       validation_beta_service.tell_induction_coordinators_who_are_mentors_to_add_validation_information
