@@ -11,6 +11,6 @@ class TeacherProfile < ApplicationRecord
   has_one :mentor_profile, -> { mentors.active_record }, class_name: "ParticipantProfile"
   has_one :ecf_profile, -> { ecf.active_record }, class_name: "ParticipantProfile"
 
-  has_one :npq_profile, class_name: "ParticipantProfile::NPQ"
+  has_many :npq_profiles, class_name: "ParticipantProfile::NPQ"
   # end: TODO
 end

@@ -42,7 +42,7 @@ RSpec.describe NPQ::Accept do
       it "creates participant profile correctly" do
         subject.call
 
-        profile = user.teacher_profile.npq_profile
+        profile = user.teacher_profile.npq_profiles&.first
 
         expect(profile.schedule).to eql(Finance::Schedule.default)
         expect(profile.npq_course).to eql(npq_validation_data.npq_course)

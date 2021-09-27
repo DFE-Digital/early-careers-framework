@@ -46,12 +46,11 @@ RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { par
 
           user = User.find(parsed_response["data"][0]["id"])
           expect(parsed_response["data"][0]["id"]).to be_in(NPQValidationData.pluck(:user_id))
-          validation_data = user.npq_profile.validation_data
+          teacher_profile = user.teacher_profile
 
           expect(parsed_response["data"][0]["attributes"]["email"]).to eql(user.email)
           expect(parsed_response["data"][0]["attributes"]["full_name"]).to eql(user.full_name)
-          expect(parsed_response["data"][0]["attributes"]["teacher_reference_number"]).to eql(validation_data.teacher_reference_number)
-          expect(parsed_response["data"][0]["attributes"]["teacher_reference_number_validated"]).to eql(validation_data.teacher_reference_number_verified)
+          expect(parsed_response["data"][0]["attributes"]["teacher_reference_number"]).to eql(teacher_profile.trn)
         end
 
         it "has correct attributes" do
@@ -63,7 +62,6 @@ RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { par
               :email,
               :full_name,
               :teacher_reference_number,
-              :teacher_reference_number_validated,
             ).exactly)
         end
 
@@ -82,7 +80,6 @@ RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { par
 
           it "returns content updated after specified timestamp" do
             get "/api/v1/participants/npq", params: { filter: { updated_since: 2.days.ago.iso8601 } }
-            puts parsed_response
             expect(parsed_response["data"].size).to eql(3)
           end
 

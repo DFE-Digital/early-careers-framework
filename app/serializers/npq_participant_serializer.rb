@@ -14,14 +14,10 @@ class NPQParticipantSerializer
   attribute(:participant_id, &:id)
 
   attribute(:npq_courses) do |object|
-    object.npq_profile&.npq_course&.identifier
+    object.npq_profiles.map { |npq_profile| npq_profile.npq_course.identifier }
   end
 
   attribute(:teacher_reference_number) do |object|
-    object.npq_profile&.validation_data&.teacher_reference_number
-  end
-
-  attribute(:teacher_reference_number_validated) do |object|
-    object.npq_profile&.validation_data&.eligible_for_funding
+    object.teacher_profile&.trn
   end
 end

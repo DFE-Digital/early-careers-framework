@@ -1,0 +1,18 @@
+description: "A list of NPQ participants"
+type: object
+required:
+  - data
+properties:
+  data:
+    type: array
+    items:
+      $ref: "#/components/schemas/NPQParticipant"
+    example:
+      - id: db3a7848-7308-4879-942a-c4a70ced400a
+        type: npq-participant
+        attributes:
+          participant_id: 7a8fef46-3c43-42c0-b3d5-1ba5904ba562
+          full_name: "Isabelle MacDonald"
+          email: "isabelle.macdonald2@some-school.example.com"
+          npq_courses: ["npq-leading-teaching"]
+          trn: "1234567"

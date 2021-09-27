@@ -19,7 +19,7 @@ class User < ApplicationRecord
   has_one :early_career_teacher_profile, through: :teacher_profile
   has_one :mentor_profile, through: :teacher_profile
 
-  has_one :npq_profile, through: :teacher_profile
+  has_many :npq_profiles, through: :teacher_profile
   # end: TODO
 
   before_validation :strip_whitespace

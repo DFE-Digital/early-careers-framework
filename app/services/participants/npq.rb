@@ -6,7 +6,7 @@ module Participants
 
     included do
       delegate :validation_data, :participant_profile_state, to: :user_profile, allow_nil: true
-      delegate :npq?, :npq_profile, to: :user, allow_nil: true
+      delegate :npq?, :npq_profiles, to: :user, allow_nil: true
       extend NPQClassMethods
     end
 
