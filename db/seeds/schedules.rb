@@ -41,7 +41,7 @@ end
 ecf_january_reduced_2021 = Finance::Schedule.find_or_create_by!(name: "ECF January reduced 2021")
 ecf_january_reduced_2021.update!(schedule_identifier: "ecf-january-reduced-2021")
 [
-  { name: "Output 1 - Participant Start", start_date: Date.new(2021, 9, 1), milestone_date: Date.new(2022, 1, 31), payment_date: Date.new(2022, 2, 28), declaration_type: "started" },
+  { name: "Output 1 - Participant Start", start_date: Date.new(2022, 1, 1), milestone_date: Date.new(2022, 1, 31), payment_date: Date.new(2022, 2, 28), declaration_type: "started" },
   { name: "Output 2 – Retention Point 1", start_date: Date.new(2022, 2, 1), milestone_date: Date.new(2022, 4, 30), payment_date: Date.new(2022, 5, 31), declaration_type: "retained-1" },
   { name: "Output 3 – Retention Point 2", start_date: Date.new(2022, 2, 1), milestone_date: Date.new(2022, 4, 30), payment_date: Date.new(2022, 5, 31), declaration_type: "retained-2" },
   { name: "Output 4 – Retention Point 3", start_date: Date.new(2022, 5, 1), milestone_date: Date.new(2022, 9, 30), payment_date: Date.new(2022, 10, 31), declaration_type: "retained-3" },
@@ -60,7 +60,7 @@ end
 ecf_january_extended_2021 = Finance::Schedule.find_or_create_by!(name: "ECF January extended 2021")
 ecf_january_extended_2021.update!(schedule_identifier: "ecf-january-extended-2021")
 [
-  { name: "Output 1 - Participant Start", start_date: Date.new(2021, 9, 1), milestone_date: Date.new(2022, 1, 31), payment_date: Date.new(2022, 2, 28), declaration_type: "started" },
+  { name: "Output 1 - Participant Start", start_date: Date.new(2022, 1, 1), milestone_date: Date.new(2022, 1, 31), payment_date: Date.new(2022, 2, 28), declaration_type: "started" },
   { name: "Output 2 – Retention Point 1", start_date: Date.new(2022, 2, 1), milestone_date: Date.new(2022, 9, 30), payment_date: Date.new(2022, 10, 31), declaration_type: "retained-1" },
   { name: "Output 3 – Retention Point 2", start_date: Date.new(2022, 2, 1), milestone_date: Date.new(2022, 9, 30), payment_date: Date.new(2022, 10, 31), declaration_type: "retained-2" },
   { name: "Output 4 – Retention Point 3", start_date: Date.new(2022, 10, 1), milestone_date: Date.new(2023, 4, 30), payment_date: Date.new(2023, 5, 31), declaration_type: "retained-3" },
