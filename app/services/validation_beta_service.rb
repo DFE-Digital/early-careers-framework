@@ -3,9 +3,9 @@
 class ValidationBetaService
   def remind_sits_to_add_participants
     empty_school_cohorts = SchoolCohort
-      .where(induction_programme_choice: %i[full_induction_programme core_induction_programme not_yet_known])
-      .where(opt_out_of_updates: false)
-      .where.not(id: ParticipantProfile::ECF.select(:school_cohort_id))
+                             .where(induction_programme_choice: %i[full_induction_programme core_induction_programme not_yet_known])
+                             .where(opt_out_of_updates: false)
+                             .where.not(id: ParticipantProfile::ECF.select(:school_cohort_id))
 
     School.where(id: empty_school_cohorts.select(:school_id)).includes(:induction_coordinators).find_each do |school|
       school.induction_coordinator_profiles.each do |sit|
@@ -57,6 +57,7 @@ class ValidationBetaService
         sent += 1
         break if sent == limit
       end
+    Rails.logger.info "Send #{sent} emails to ECTs"
   end
 
   # mentors who have not added their details for validation
@@ -87,14 +88,17 @@ class ValidationBetaService
         sent += 1
         break if sent == limit
       end
+    Rails.logger.info "Send #{sent} emails to mentors"
   end
 
-  def tell_induction_coordinators_who_are_mentors_to_add_validation_information
+  def tell_induction_coordinators_who_are_mentors_to_add_validation_information(limit: VALIDATION_CHASER_BATCH_LIMIT)
+    sent = 0
     ParticipantProfile::Mentor
+      .where(request_for_details_sent_at: nil)
+      .or(ParticipantProfile::Mentor.where(request_for_details_sent_at: ..AUTOMATION_LAUNCH_TIME))
       .active_record
       .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort, :school, user: :induction_coordinator_profile)
       .where(
-        request_for_details_sent_at: nil,
         school_cohort: {
           cohort: Cohort.current,
         },
@@ -108,15 +112,19 @@ class ValidationBetaService
         next unless profile.user.induction_coordinator?
 
         send_induction_coordinators_who_are_mentors_to_add_validation_information(profile, profile.school)
+
+        sent += 1
+        break if sent == limit
       end
+    Rails.logger.info "Send #{sent} emails to SIT mentors"
   end
 
   def tell_induction_coordinators_we_asked_ects_and_mentors_for_information
     school_cohorts = SchoolCohort
-      .where(
-        id: ParticipantProfile::ECF.where("created_at > ?", Date.new(2021, 9, 7)).select(:school_cohort_id),
-        induction_programme_choice: %w[core_induction_programme full_induction_programme],
-      )
+                       .where(
+                         id: ParticipantProfile::ECF.where("created_at > ?", Date.new(2021, 9, 7)).select(:school_cohort_id),
+                         induction_programme_choice: %w[core_induction_programme full_induction_programme],
+                       )
 
     school_ids = school_cohorts.select(:school_id)
 
@@ -124,19 +132,19 @@ class ValidationBetaService
       .includes(:schools)
       .where(schools: { id: school_ids })
       .find_each do |ic|
-        ic.schools.not_opted_out.where(id: school_ids).find_each do |school|
-          if chosen_programme_and_not_in_beta(school)
-            send_induction_coordinators_we_asked_ects_and_mentors_for_information(ic, school)
-            break
-          end
+      ic.schools.not_opted_out.where(id: school_ids).find_each do |school|
+        if chosen_programme_and_not_in_beta(school)
+          send_induction_coordinators_we_asked_ects_and_mentors_for_information(ic, school)
+          break
         end
       end
+    end
   end
 
 private
 
   def send_ects_to_add_validation_information(profile, school)
-    campaign = :ect_validation_info_2109
+    campaign = :ect_validation_info_2709
 
     participant_validation_start_url = Rails.application.routes.url_helpers.participants_start_registrations_url(
       host: Rails.application.config.domain,
@@ -156,7 +164,7 @@ private
   end
 
   def send_mentors_to_add_validation_information(profile, school)
-    campaign = :mentor_validation_info_2309
+    campaign = :mentor_validation_info_2709
 
     participant_validation_start_url = Rails.application.routes.url_helpers.participants_start_registrations_url(
       host: Rails.application.config.domain,
@@ -176,7 +184,7 @@ private
   end
 
   def send_induction_coordinators_who_are_mentors_to_add_validation_information(profile, school)
-    campaign = :induction_coordinators_who_are_mentors_to_add_validation_information
+    campaign = :sit_mentor_validation_info_2709
 
     participant_validation_start_url = Rails.application.routes.url_helpers.participants_start_registrations_url(
       host: Rails.application.config.domain,
