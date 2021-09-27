@@ -22,7 +22,7 @@ module Api
       end
 
       def reject
-        profile = npq_lead_provider.npq_profiles.includes(:user, :npq_course).find(params[:id])
+        profile = npq_lead_provider.npq_profiles.find(params[:id])
 
         if profile.update(lead_provider_approval_status: "rejected")
           render json: NPQApplicationSerializer.new(profile).serializable_hash
