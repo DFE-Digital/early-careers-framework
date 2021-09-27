@@ -60,6 +60,7 @@ module ManageTrainingSteps
     privacy_policy = create(:privacy_policy)
     privacy_policy.accept!(induction_coordinator_profile.user)
     sign_in_as induction_coordinator_profile.user
+    set_participant_data
   end
 
   def then_i_should_see_the_fip_induction_dashboard
@@ -79,9 +80,42 @@ module ManageTrainingSteps
     click_on("Add your early career teacher and mentor details")
   end
 
+  def when_i_click_on_add_a_new_ect_or_mentor_link
+    click_on("Add a new ECT or mentor")
+  end
+
+  def then_i_am_taken_to_add_your_ect_and_mentors_page
+    expect(page).to have_selector("h1", text: "Add your early career teachers and mentors")
+    expect(page).to have_text("Do you want to add an early career teacher (ECT) or a mentor?")
+  end
+
+  def when_i_select_add_ect
+    choose("Early career teacher", allow_label_click: true)
+  end
+
+  def and_select_continue
+    click_on("Continue")
+  end
+
+  def then_i_am_taken_to_add_ect_name_page
+    expect(page).to have_selector("h1", text: "What’s the full name of this ECT?")
+  end
+
+  def when_i_add_ect_name
+    fill_in "Full_name", with: @participant_data[:full_name]
+  end
+
   def then_i_am_taken_to_add_new_ect_or_mentor_page
     expect(page).to have_text("Add your early career teachers and mentors")
     expect(page).to have_text("We need to verify that your early career teachers")
+  end
+
+  def then_i_am_taken_to_add_ect_email_page
+    expect(page).to have_selector("h1", text: "What’s #{@participant_data[:full_name]}’s email address?")
+  end
+
+  def when_i_add_ect_email
+    fill_in "Email", with: @participant_data[:email]
   end
 
   def and_then_return_to_dashboard
