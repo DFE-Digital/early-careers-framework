@@ -246,7 +246,7 @@ end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
   ect_profile.school_cohort = School.find_by(urn: "000103").school_cohorts.find_by(cohort: Cohort.current)
-  ect_profile.schedule = Finance::Schedule.default
+  ect_profile.schedule = Finance::Schedule.default_ecf
   ParticipantProfileState.find_or_create_by!(participant_profile: ect_profile)
 end
 
@@ -257,7 +257,7 @@ end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000104").school_cohorts.find_by(cohort: Cohort.current)
-  mentor_profile.schedule = Finance::Schedule.default
+  mentor_profile.schedule = Finance::Schedule.default_ecf
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
@@ -270,10 +270,10 @@ teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
 end
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000105").school_cohorts.find_by(cohort: Cohort.current)
-  mentor_profile.schedule = Finance::Schedule.default
+  mentor_profile.schedule = Finance::Schedule.default_ecf
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
-npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile, schedule: Finance::Schedule.default)
+npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile, schedule: Finance::Schedule.default_npq_specialist)
 ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
 
 # FIP mentor already doing an NPQ with a different email
@@ -283,7 +283,7 @@ end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
   profile.trn = "2369848"
 end
-npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile, schedule: Finance::Schedule.default)
+npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile, schedule: Finance::Schedule.default_npq_specialist)
 ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
 
 user = User.find_or_create_by!(email: "fip-mentor2@example.com") do |u|
@@ -292,7 +292,7 @@ end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000105").school_cohorts.find_by(cohort: Cohort.current)
-  mentor_profile.schedule = Finance::Schedule.default
+  mentor_profile.schedule = Finance::Schedule.default_ecf
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
@@ -305,7 +305,7 @@ teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
 end
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000105").school_cohorts.find_by(cohort: Cohort.current)
-  mentor_profile.schedule = Finance::Schedule.default
+  mentor_profile.schedule = Finance::Schedule.default_ecf
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
@@ -315,7 +315,7 @@ end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000106").school_cohorts.find_by(cohort: Cohort.current)
-  mentor_profile.schedule = Finance::Schedule.default
+  mentor_profile.schedule = Finance::Schedule.default_ecf
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
@@ -324,7 +324,7 @@ user = User.find_by(email: "cpd-test+tutor-17@example.com")
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = user.induction_coordinator_profile.schools.first.school_cohorts.find_by(cohort: Cohort.current)
-  mentor_profile.schedule = Finance::Schedule.default
+  mentor_profile.schedule = Finance::Schedule.default_ecf
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
@@ -335,7 +335,7 @@ end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
   ect_profile.school_cohort = School.find_by(urn: "000107").school_cohorts.find_by(cohort: Cohort.current)
-  ect_profile.schedule = Finance::Schedule.default
+  ect_profile.schedule = Finance::Schedule.default_ecf
   ParticipantProfileState.find_or_create_by!(participant_profile: ect_profile)
 end
 
@@ -345,7 +345,7 @@ end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000108").school_cohorts.find_by(cohort: Cohort.current)
-  mentor_profile.schedule = Finance::Schedule.default
+  mentor_profile.schedule = Finance::Schedule.default_ecf
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
@@ -355,7 +355,7 @@ end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000109").school_cohorts.find_by(cohort: Cohort.current)
-  mentor_profile.schedule = Finance::Schedule.default
+  mentor_profile.schedule = Finance::Schedule.default_ecf
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 # TODO: add validation data and eligibility records when merged
@@ -387,7 +387,7 @@ end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
   ect_profile.school_cohort = School.find_by(urn: "000200").school_cohorts.find_by(cohort: Cohort.current)
-  ect_profile.schedule = Finance::Schedule.default
+  ect_profile.schedule = Finance::Schedule.default_ecf
   ParticipantProfileState.find_or_create_by!(participant_profile: ect_profile)
 end
 
@@ -398,7 +398,7 @@ end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000201").school_cohorts.find_by(cohort: Cohort.current)
-  mentor_profile.schedule = Finance::Schedule.default
+  mentor_profile.schedule = Finance::Schedule.default_ecf
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
@@ -411,10 +411,10 @@ teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
 end
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000202").school_cohorts.find_by(cohort: Cohort.current)
-  mentor_profile.schedule = Finance::Schedule.default
+  mentor_profile.schedule = Finance::Schedule.default_ecf
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
-npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile, schedule: Finance::Schedule.default)
+npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile, schedule: Finance::Schedule.default_npq_specialist)
 ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
 
 # CIP mentor already doing an NPQ with a different email
@@ -424,7 +424,7 @@ end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
   profile.trn = "2631405"
 end
-npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile, schedule: Finance::Schedule.default)
+npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile, schedule: Finance::Schedule.default_npq_specialist)
 ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
 
 user = User.find_or_create_by!(email: "cip-mentor2@example.com") do |u|
@@ -433,7 +433,7 @@ end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000203").school_cohorts.find_by(cohort: Cohort.current)
-  mentor_profile.schedule = Finance::Schedule.default
+  mentor_profile.schedule = Finance::Schedule.default_ecf
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
@@ -446,7 +446,7 @@ teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
 end
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000204").school_cohorts.find_by(cohort: Cohort.current)
-  mentor_profile.schedule = Finance::Schedule.default
+  mentor_profile.schedule = Finance::Schedule.default_ecf
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
@@ -456,7 +456,7 @@ end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000205").school_cohorts.find_by(cohort: Cohort.current)
-  mentor_profile.schedule = Finance::Schedule.default
+  mentor_profile.schedule = Finance::Schedule.default_ecf
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
@@ -465,7 +465,7 @@ user = User.find_by(email: "cip-tutor-206@example.com")
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = user.induction_coordinator_profile.schools.first.school_cohorts.find_by(cohort: Cohort.current)
-  mentor_profile.schedule = Finance::Schedule.default
+  mentor_profile.schedule = Finance::Schedule.default_ecf
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
@@ -476,7 +476,7 @@ end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
   ect_profile.school_cohort = School.find_by(urn: "000207").school_cohorts.find_by(cohort: Cohort.current)
-  ect_profile.schedule = Finance::Schedule.default
+  ect_profile.schedule = Finance::Schedule.default_ecf
   ParticipantProfileState.find_or_create_by!(participant_profile: ect_profile)
 end
 
@@ -486,7 +486,7 @@ end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000208").school_cohorts.find_by(cohort: Cohort.current)
-  mentor_profile.schedule = Finance::Schedule.default
+  mentor_profile.schedule = Finance::Schedule.default_ecf
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
@@ -496,7 +496,7 @@ end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000209").school_cohorts.find_by(cohort: Cohort.current)
-  mentor_profile.schedule = Finance::Schedule.default
+  mentor_profile.schedule = Finance::Schedule.default_ecf
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 

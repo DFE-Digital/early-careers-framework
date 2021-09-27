@@ -75,3 +75,36 @@ ecf_january_extended_2021.update!(schedule_identifier: "ecf-january-extended-202
     payment_date: hash[:payment_date],
   ).update!(declaration_type: hash[:declaration_type])
 end
+
+npq_specialist_november_2021 = Finance::Schedule.find_or_create_by!(name: "NPQ Specialist November 2021", schedule_identifier: "npq-specialist-november-2021")
+[
+  { name: "Output 1 - Participant Start", start_date: Date.new(2021, 11, 1), milestone_date: Date.new(2021, 12, 25), payment_date: Date.new(2022, 1, 31), declaration_type: "started" },
+  { name: "Output 2 – Retention Point 1", start_date: Date.new(2021, 12, 26), milestone_date: Date.new(2022, 6, 25), payment_date: Date.new(2022, 7, 31), declaration_type: "retained-1" },
+  { name: "Output 3 – Participant Completion", start_date: Date.new(2022, 6, 26), milestone_date: Date.new(2022, 12, 25), payment_date: Date.new(2023, 1, 31), declaration_type: "completed" },
+].each do |hash|
+  Finance::Milestone.find_or_create_by!(
+    schedule: npq_specialist_november_2021,
+    name: hash[:name],
+    start_date: hash[:start_date],
+    milestone_date: hash[:milestone_date],
+    payment_date: hash[:payment_date],
+    declaration_type: hash[:declaration_type],
+  )
+end
+
+npq_leadership_november_2021 = Finance::Schedule.find_or_create_by!(name: "NPQ Leadership November 2021", schedule_identifier: "npq-leadership-november-2021")
+[
+  { name: "Output 1 - Participant Start", start_date: Date.new(2021, 11, 1), milestone_date: Date.new(2021, 12, 25), payment_date: Date.new(2022, 1, 31), declaration_type: "started" },
+  { name: "Output 2 – Retention Point 1", start_date: Date.new(2021, 12, 26), milestone_date: Date.new(2022, 6, 25), payment_date: Date.new(2022, 7, 31), declaration_type: "retained-1" },
+  { name: "Output 3 – Retention Point 2", start_date: Date.new(2022, 6, 26), milestone_date: Date.new(2022, 11, 25), payment_date: Date.new(2022, 12, 31), declaration_type: "retained-2" },
+  { name: "Output 4 – Participant Completion", start_date: Date.new(2022, 11, 26), milestone_date: Date.new(2023, 6, 25), payment_date: Date.new(2023, 7, 31), declaration_type: "completed" },
+].each do |hash|
+  Finance::Milestone.find_or_create_by!(
+    schedule: npq_leadership_november_2021,
+    name: hash[:name],
+    start_date: hash[:start_date],
+    milestone_date: hash[:milestone_date],
+    payment_date: hash[:payment_date],
+    declaration_type: hash[:declaration_type],
+  )
+end

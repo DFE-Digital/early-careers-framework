@@ -7,7 +7,7 @@ RSpec.describe Importers::NPQManualValidation do
   let(:file) { Tempfile.new("test.csv") }
 
   before do
-    Finance::Schedule.find_or_create_by!(name: "ECF September standard 2021")
+    Finance::Schedule.find_or_create_by!(name: "NPQ Specialist November 2021")
     NPQ::CreateOrUpdateProfile.new(npq_validation_data: npq_validation_data).call
   end
 

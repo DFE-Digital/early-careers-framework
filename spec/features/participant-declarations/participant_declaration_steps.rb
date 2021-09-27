@@ -24,7 +24,7 @@ module ParticipantDeclarationSteps
   end
 
   def given_an_npq_participant_has_been_entered_onto_the_dfe_service
-    create(:schedule, name: "ECF September standard 2021")
+    create(:schedule, name: "NPQ Specialist November 2021")
     npq_lead_provider = create(:npq_lead_provider, cpd_lead_provider: @cpd_lead_provider)
     npq_course = create(:npq_course, identifier: "npq-leading-teaching")
     npq_validation_data = create(:npq_validation_data, npq_lead_provider: npq_lead_provider, npq_course: npq_course)

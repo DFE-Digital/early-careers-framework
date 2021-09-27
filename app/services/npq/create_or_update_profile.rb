@@ -15,7 +15,7 @@ module NPQ
 
       teacher_profile.save!
 
-      participant_profile.schedule ||= Finance::Schedule.default
+      participant_profile.schedule ||= schedule
       participant_profile.npq_course ||= npq_validation_data.npq_course
       participant_profile.teacher_profile = teacher_profile
       participant_profile.user = user
@@ -38,6 +38,17 @@ module NPQ
 
     def user
       @user ||= npq_validation_data.user
+    end
+
+    def schedule
+      case participant_profile.npq_course.identifier
+      when "npq-leading-teaching", "npq-leading-behaviour-culture", "npq-leading-teaching-development"
+        Finance::Schedule.default_npq_leadership
+      when "npq-senior-leadership", "npq-headship", "npq-executive-leadership"
+        Finance::Schedule.default_npq_specialist
+      else
+        raise ArgumentError "Invalid course identifier"
+      end
     end
   end
 end
