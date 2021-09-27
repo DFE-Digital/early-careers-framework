@@ -21,7 +21,7 @@ module ApiTokenAuthenticatable
   end
 
   def current_user
-    @current_api_token.owner
+    @current_api_token&.owner
   end
 
 private

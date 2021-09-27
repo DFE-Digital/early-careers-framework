@@ -36,15 +36,15 @@ module EarlyCareerFramework
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
 
-    Dir.glob(Rails.root + "app/decorators/**/*_decorator*.rb").each do |c|
+    Dir.glob(Rails.root.join("app/decorators/**/*_decorator*.rb")).each do |c|
       require_dependency(c)
     end
 
-    Dir.glob(Rails.root + "app/middlewares/*.rb").sort.each do |file|
+    Dir.glob(Rails.root.join("app/middlewares/*.rb")).sort.each do |file|
       require file
     end
 
-    Dir.glob(Rails.root + "app/serializers/**/*_serializer*.rb").each do |c|
+    Dir.glob(Rails.root.join("app/serializers/**/*_serializer*.rb")).each do |c|
       require_dependency(c)
     end
 

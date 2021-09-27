@@ -14,6 +14,12 @@ class ApplicationController < ActionController::Base
     head :ok
   end
 
+  def append_info_to_payload(payload)
+    super
+    payload[:current_user_class] = current_user&.class&.name
+    payload[:current_user_id] = current_user&.id
+  end
+
 private
 
   def previous_url_for_cookies_page

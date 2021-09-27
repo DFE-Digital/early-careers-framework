@@ -52,7 +52,7 @@ class SchoolMailer < ApplicationMailer
     )
   end
 
-  def nomination_confirmation_email(user:, school:, start_url:)
+  def nomination_confirmation_email(user:, school:, start_url:, step_by_step_url:)
     template_mail(
       NOMINATION_CONFIRMATION_EMAIL_TEMPLATE,
       to: user.email,
@@ -62,6 +62,7 @@ class SchoolMailer < ApplicationMailer
         school_name: school.name,
         start_url: start_url,
         subject: "Sign in to manage induction",
+        step_by_step: step_by_step_url,
       },
     )
   end

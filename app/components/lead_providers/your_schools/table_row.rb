@@ -12,6 +12,7 @@ module LeadProviders
     private
 
       attr_reader :partnership
+
       delegate :school, :cohort, to: :partnership
     end
   end

@@ -3,14 +3,17 @@
 module Finance
   module ECF
     class BreakdownSummary < BaseComponent
-      attr_accessor :name, :declaration, :recruitment_target, :revised_target, :ects, :mentors, :participants
+      include FinanceHelper
+    # TODO: include revised_target in here somewhere :P
 
     private
 
       def initialize(breakdown_summary:)
-        breakdown_summary.each do |param, value|
-          send("#{param}=", value)
-        end
+        @breakdown = breakdown_summary
+        @service_fees_participants = @breakdown[:service_fees].map { |params| params[:participants] }.inject(&:+)
+        @service_fees_total = @breakdown[:service_fees].map { |params| params[:monthly] }.inject(&:+)
+        @output_payment_participants = @breakdown[:output_payments].map { |params| params[:participants] }.inject(&:+)
+        @output_payment_total = @breakdown[:output_payments].map { |params| params[:subtotal] }.inject(&:+)
       end
     end
   end

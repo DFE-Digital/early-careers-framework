@@ -65,7 +65,6 @@ Rails.application.routes.draw do
       end
       resources :users, only: %i[index create]
       resources :ecf_users, only: %i[index create], path: "ecf-users"
-      resources :dqt_records, only: :show, path: "dqt-records"
       resources :participant_validation, only: :show, path: "participant-validation"
       resources :npq_applications, only: :index, path: "npq-applications" do
         member do

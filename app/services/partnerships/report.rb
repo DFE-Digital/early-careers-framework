@@ -26,7 +26,7 @@ module Partnerships
 
         partnership.challenge_reason = partnership.challenged_at = nil
         partnership.delivery_partner_id = delivery_partner_id
-        partnership.pending = school_cohort.core_induction_programme?
+        partnership.pending = delay_partnership?
         partnership.challenge_deadline = CHALLENGE_WINDOW.from_now
         partnership.report_id = SecureRandom.uuid
         partnership.save!
@@ -54,6 +54,10 @@ module Partnerships
 
   private
 
+    def delay_partnership?
+      !school_cohort.full_induction_programme?
+    end
+
     attr_reader :cohort_id, :school_id, :lead_provider_id, :delivery_partner_id
 
     def school_cohort
@@ -69,10 +73,6 @@ module Partnerships
         cohort_id: cohort_id,
         induction_programme_choice: "full_induction_programme",
       )
-    end
-
-    def partnership_pending?
-      school_cohort.core_induction_programme?
     end
   end
 end

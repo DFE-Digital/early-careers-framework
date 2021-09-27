@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require_relative "../../../shared/context/service_record_declaration_params.rb"
-require_relative "../../../shared/context/lead_provider_profiles_and_courses.rb"
+require_relative "../../../shared/context/service_record_declaration_params"
+require_relative "../../../shared/context/lead_provider_profiles_and_courses"
 
 RSpec.describe RecordDeclarations::Retained::Mentor do
   include_context "lead provider profiles and courses"
@@ -10,7 +10,7 @@ RSpec.describe RecordDeclarations::Retained::Mentor do
 
   let(:retained_params) { params.merge(declaration_type: "retained-1", declaration_date: (milestone_start_date + 1.day).rfc3339) }
   let(:retained_mentor_params) { mentor_params.merge(declaration_type: "retained-1", declaration_date: (milestone_start_date + 1.day).rfc3339) }
-  let(:milestone_start_date) { mentor_profile.schedule.milestones[1].start_date }
+  let(:milestone_start_date) { mentor_profile.schedule.milestones.find_by(declaration_type: "retained-1").start_date }
 
   before do
     travel_to milestone_start_date + 2.days

@@ -384,6 +384,7 @@ ActiveRecord::Schema.define(version: 2021_09_24_124114) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.date "start_date"
+    t.string "declaration_type"
     t.index ["schedule_id"], name: "index_milestones_on_schedule_id"
   end
 

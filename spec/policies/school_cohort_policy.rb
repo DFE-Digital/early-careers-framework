@@ -8,7 +8,7 @@ RSpec.describe SchoolCohortPolicy, type: :policy do
   let(:user) { create(:user) }
   let(:school_cohort) { create :school_cohort }
 
-  it { is_expected.not_to permit_actions(%i[info show edit update success]) }
+  it { is_expected.to forbid_actions(%i[info show edit update success]) }
 
   context "being an admin" do
     let(:user) { create(:user, :admin) }
@@ -20,7 +20,7 @@ RSpec.describe SchoolCohortPolicy, type: :policy do
     let(:user) { create(:user, :induction_coordinator) }
 
     context "but not coordinating given school" do
-      it { is_expected.not_to permit_actions(%i[info show edit update success]) }
+      it { is_expected.to forbid_actions(%i[info show edit update success]) }
     end
 
     context "coordinating induction for given school" do

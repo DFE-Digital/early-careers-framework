@@ -68,6 +68,7 @@ RSpec.describe SchoolMailer, type: :mailer do
         user: user,
         school: school,
         start_url: start_url,
+        step_by_step_url: start_url,
       ).deliver_now
     end
 

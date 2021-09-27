@@ -5,6 +5,7 @@ module Finance
     class ServiceFeeRow < BaseComponent
       include FinanceHelper
       attr_reader :band, :participants, :per_participant, :monthly
+
       with_collection_parameter :service_fee
 
     private

@@ -8,9 +8,6 @@ class Email < ApplicationRecord
 
   has_many :associations, dependent: :destroy
 
-  UNDEFINED = Object.new
-  private_constant :UNDEFINED
-
   scope :associated_with, ->(object) { where(id: Association.where(object: object).select(:email_id)) }
   scope :tagged_with, ->(*tags) { tags.inject(self) { |scope, tag| scope.where("? = ANY (tags)", tag) } }
 

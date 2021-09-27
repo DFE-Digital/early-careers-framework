@@ -24,6 +24,7 @@ module PaymentCalculator
     private
 
       attr_accessor :contract
+
       delegate :recruitment_target, :revised_target, to: :contract
 
       def initialize(contract:)

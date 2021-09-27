@@ -6,6 +6,7 @@ module Schools
     include ActiveModel::Serialization
 
     attr_accessor :school_id, :core_induction_programme_id, :full_name, :email, :participants
+
     validates :core_induction_programme_id, presence: true, on: :choose_cip
 
     validates :full_name, presence: true, on: %i[create_teacher update_teacher]

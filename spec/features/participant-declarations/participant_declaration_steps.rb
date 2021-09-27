@@ -39,7 +39,7 @@ module ParticipantDeclarationSteps
     @session.get("/api/v1/participants/ecf",
                  headers: { "Authorization": "Bearer #{@token}" })
 
-    @participant_id = JSON.parse(@session.response.body).dig("data").map { |participant| participant["id"] }.sample
+    @participant_id = JSON.parse(@session.response.body)["data"].map { |participant| participant["id"] }.sample
     expect(@participant_id).to eq([@ect_id, @mentor_id, @npq_id].compact.first)
   end
 
