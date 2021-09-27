@@ -27,7 +27,7 @@ class ParticipantMailer < ApplicationMailer
         school_name: participant_profile.school.name,
         participant_start: new_user_session_url,
       },
-    )
+    ).tag(:request_for_details).associate_with(participant_profile, as: :participant_profile)
   end
 
   def participant_removed_by_sti(participant_profile:, sti_profile:)
@@ -42,7 +42,7 @@ class ParticipantMailer < ApplicationMailer
         school_name: participant_profile.school.name,
         sti_name: sti_profile.user.full_name,
       },
-    )
+    ).associate_with(participant_profile, as: :participant_profile)
   end
 
   def add_details_reminder(participant_profile:)
@@ -57,7 +57,7 @@ class ParticipantMailer < ApplicationMailer
         school_name: participant_profile.school.name,
         participant_start: new_user_session_url,
       },
-    )
+    ).tag(:request_for_details).associate_with(participant_profile, as: :participant_profile)
   end
 
 private
