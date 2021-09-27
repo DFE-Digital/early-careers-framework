@@ -7,7 +7,7 @@
     <span class="govuk-caption-xl"><%= @school.name %> - <%= @cohort.display_name %> cohort</span>
     <h1 class="govuk-heading-xl">Are you sure you want to add yourself as a mentor?</h1>
 
-    <p>The induction tutor and mentor roles are separate. Check what each role needs to do.</p>
+    <p>The induction tutor and mentor roles are separate. <%= govuk_link_to "Check what each role needs to do", roles_schools_cohort_path, class: "govuk-link--no-visited-state" %>.</p>
 
     <p>You should only assign yourself as a mentor in exceptional circumstances. If your school needs you to do this, you should:</p>
 
