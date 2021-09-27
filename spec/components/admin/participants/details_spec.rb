@@ -34,7 +34,7 @@ RSpec.describe Admin::Participants::Details, type: :view_component do
   end
 
   context "for unvalidated npq profile" do
-    let(:npq_validation_data) { create(:npq_validation_data) }
+    let(:npq_validation_data) { create(:npq_validation_data, npq_course: create(:npq_course, identifier: "npq-senior-leadership")) }
     let(:profile) { npq_validation_data.profile }
 
     before do
@@ -56,7 +56,7 @@ RSpec.describe Admin::Participants::Details, type: :view_component do
   end
 
   context "for validated npq profile" do
-    let(:npq_validation_data) { create(:npq_validation_data) }
+    let(:npq_validation_data) { create(:npq_validation_data, npq_course: create(:npq_course, identifier: "npq-senior-leadership")) }
     let(:profile) { npq_validation_data.profile }
 
     before do

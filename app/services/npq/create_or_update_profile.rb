@@ -41,7 +41,7 @@ module NPQ
     end
 
     def schedule
-      case participant_profile.npq_course.identifier
+      case npq_validation_data.npq_course.identifier
       when "npq-leading-teaching", "npq-leading-behaviour-culture", "npq-leading-teaching-development"
         Finance::Schedule.default_npq_leadership
       when "npq-senior-leadership", "npq-headship", "npq-executive-leadership"

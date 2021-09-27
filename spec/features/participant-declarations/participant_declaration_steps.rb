@@ -26,7 +26,7 @@ module ParticipantDeclarationSteps
   def given_an_npq_participant_has_been_entered_onto_the_dfe_service
     create(:schedule, name: "NPQ Specialist November 2021")
     npq_lead_provider = create(:npq_lead_provider, cpd_lead_provider: @cpd_lead_provider)
-    npq_course = create(:npq_course, identifier: "npq-leading-teaching")
+    npq_course = create(:npq_course, identifier: "npq-senior-leadership")
     npq_validation_data = create(:npq_validation_data, npq_lead_provider: npq_lead_provider, npq_course: npq_course)
     @npq_id = npq_validation_data.user.id
 
@@ -62,7 +62,7 @@ module ParticipantDeclarationSteps
   end
 
   def and_the_lead_provider_submits_a_declaration_for_the_npq_using_their_id
-    params = common_params(@npq_id, "npq-leading-teaching")
+    params = common_params(@npq_id, "npq-senior-leadership")
     submit_request(params)
   end
 
@@ -78,6 +78,7 @@ module ParticipantDeclarationSteps
   end
 
   def then_the_declaration_made_is_valid
+    p @response
     expect(ParticipantDeclaration.find(@response["data"]["id"])).to be_present
   end
 

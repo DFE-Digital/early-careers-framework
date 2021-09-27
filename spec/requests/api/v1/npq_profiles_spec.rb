@@ -17,7 +17,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
   describe "#create" do
     let(:user) { create(:user) }
     let(:npq_lead_provider) { create(:npq_lead_provider) }
-    let(:npq_course) { create(:npq_course) }
+    let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
 
     context "when authorized" do
       before do

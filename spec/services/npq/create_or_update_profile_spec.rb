@@ -14,7 +14,7 @@ RSpec.describe NPQ::CreateOrUpdateProfile do
   describe "#call" do
     let(:trn) { rand(1_000_000..9_999_999).to_s }
     let(:user) { create(:user) }
-    let(:npq_course) { create(:npq_course) }
+    let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
     let(:npq_lead_provider) { create(:npq_lead_provider) }
 
     let(:npq_validation_data) do

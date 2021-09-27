@@ -10,14 +10,15 @@ RSpec.describe "NPQ Applications API", type: :request do
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
   let(:bearer_token) { "Bearer #{token}" }
   let(:parsed_response) { JSON.parse(response.body) }
+  let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
 
   describe "GET /api/v1/npq-applications" do
     let(:other_npq_lead_provider) { create(:npq_lead_provider) }
 
     before :each do
       list = []
-      list << create_list(:npq_validation_data, 3, npq_lead_provider: npq_lead_provider, school_urn: "123456")
-      list << create_list(:npq_validation_data, 2, npq_lead_provider: other_npq_lead_provider, school_urn: "123456")
+      list << create_list(:npq_validation_data, 3, npq_lead_provider: npq_lead_provider, school_urn: "123456", npq_course: npq_course)
+      list << create_list(:npq_validation_data, 2, npq_lead_provider: other_npq_lead_provider, school_urn: "123456", npq_course: npq_course)
 
       list.flatten.each do |npq_validation_data|
         NPQ::CreateOrUpdateProfile.new(npq_validation_data: npq_validation_data).call
@@ -253,8 +254,9 @@ RSpec.describe "NPQ Applications API", type: :request do
     end
 
     context "when participant has applied for multiple NPQs" do
-      let!(:other_npq_validation_data) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, user: user) }
-      let!(:other_accepted_npq_validation_data) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, user: user, lead_provider_approval_status: "accepted") }
+      let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
+      let!(:other_npq_validation_data) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, user: user, npq_course: npq_course) }
+      let!(:other_accepted_npq_validation_data) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, user: user, lead_provider_approval_status: "accepted", npq_course: npq_course) }
 
       before do
         NPQ::CreateOrUpdateProfile.new(npq_validation_data: other_npq_validation_data).call
