@@ -39,6 +39,10 @@ module ManageTrainingSteps
     expect(page).to have_text("Add your early career teacher and mentor details")
   end
 
+  def then_i_should_see_the_view_your_ect_and_mentor_link
+    expect(page).to have_text("View your early career teacher and mentor details")
+  end
+
   def given_there_is_a_school_that_has_chosen_design_our_own_for_2021
     @cohort = create(:cohort, start_year: 2021)
     @school = create(:school, name: "Design Our Own Programme School")
