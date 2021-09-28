@@ -62,6 +62,14 @@ Rails.application.configure do
   config.dqt_client_host = Rails.application.credentials.DQT_CLIENT_HOST
   config.dqt_client_params = Rails.application.credentials.DQT_CLIENT_PARAMS
 
+  config.dqt_access_url = Rails.application.credentials.DQT_ACCESS_URL
+  config.dqt_access_scope = Rails.application.credentials.DQT_ACCESS_SCOPE
+  config.dqt_access_client_id = Rails.application.credentials.DQT_ACCESS_CLIENT_ID
+  config.dqt_access_client_secret = Rails.application.credentials.DQT_ACCESS_CLIENT_SECRET
+
+  config.dqt_api_url = Rails.application.credentials.DQT_API_URL
+  config.dqt_api_ocp_apim_subscription_key = Rails.application.credentials.DQT_API_OCP_APIM_SUBSCRIPTION_KEY
+
   config.action_mailer.perform_caching = false
   config.action_mailer.delivery_method = :notify
   unless ENV["IGNORE_SECRETS_FOR_BUILD"]
