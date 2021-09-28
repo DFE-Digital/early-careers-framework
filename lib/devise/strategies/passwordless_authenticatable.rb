@@ -12,6 +12,10 @@ module Devise
 
       class LoginIncompleteError < Error; end
 
+      def valid?
+        !!params.dig(:user, :email)&.match(/^\S+@\S+\.\S+$/)
+      end
+
       def authenticate!
         if params[:user].present?
           user = User.find_by(email: params[:user][:email])
