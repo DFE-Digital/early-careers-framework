@@ -5,8 +5,38 @@ RSpec.describe ParticipantStatusTagComponent, type: :view_component do
 
   let!(:participant_profile) { create :participant_profile, :ecf }
 
-  context "when the participant hasn't submitted validation details" do
+  context "when the request for details has not been sent yet" do
+    it { is_expected.to have_selector(".govuk-tag.govuk-tag--blue", text: "DfE to request details from participant") }
+  end
+
+  context "when participant has been added before Email audit release" do
+    before do
+      participant_profile.update(created_at: Email.released_at - rand(100..1000).minutes)
+    end
+
     it { is_expected.to have_selector(".govuk-tag.govuk-tag--yellow", text: "DfE requested details from participant") }
+  end
+
+  context "with a request for details email record" do
+    let!(:email) { create :email, tags: %i[request_for_details], associated_with: participant_profile, status: email_status }
+
+    context "which has been successfully delivered" do
+      let(:email_status) { :delivered }
+
+      it { is_expected.to have_selector(".govuk-tag.govuk-tag--yellow", text: "DfE requested details from participant") }
+    end
+
+    context "which has failed to be deliver" do
+      let(:email_status) { Email::FAILED_STATUSES.sample }
+
+      it { is_expected.to have_selector(".govuk-tag.govuk-tag--red", text: "Request bounced, check email address") }
+    end
+
+    context "which is still pending" do
+      let(:email_status) { :submitted }
+
+      it { is_expected.to have_selector(".govuk-tag.govuk-tag--blue", text: "DfE to request details from participant") }
+    end
   end
 
   context "when the participant has submitted validation data" do
