@@ -32,7 +32,7 @@ module ManageTrainingSteps
   end
 
   def and_i_have_added_an_ect_or_mentor
-    create(:participant_profile, :ect, school_cohort: @school_cohort)
+    @participant_profile = create(:participant_profile, :ect, school_cohort: @school_cohort)
   end
 
   def then_i_should_see_the_add_your_ect_and_mentor_link
@@ -144,6 +144,10 @@ module ManageTrainingSteps
     fill_in "Email", with: @participant_data[:email]
   end
 
+  def when_i_add_ect_or_mentor_email_that_already_exists
+    fill_in "Email", with: @participant_profile.user.email
+  end
+
   def and_then_return_to_dashboard
     visit schools_dashboard_path(@school)
   end
@@ -223,7 +227,7 @@ module ManageTrainingSteps
     click_on("Continue")
   end
 
-  def and_when_i_select_back
+  def and_select_back
     click_on("Back")
   end
 
@@ -249,7 +253,7 @@ module ManageTrainingSteps
     expect(page).to have_text("What happens next")
   end
 
-  def then_i_should_be_taken_to_yourself_as_mentor_confirmation_page
+  def then_i_am_taken_to_yourself_as_mentor_confirmation_page
     expect(page).to have_selector("h1", text: "#{@induction_coordinator_profile.user.full_name} has been added as a mentor")
   end
 
@@ -259,6 +263,10 @@ module ManageTrainingSteps
 
   def then_i_receive_a_missing_email_error_message
     expect(page).to have_text("Enter an email address")
+  end
+
+  def then_i_will_see_email_already_taken_error_message
+    expect(page).to have_text("This email has already been added")
   end
 
   def set_participant_data
