@@ -11,7 +11,11 @@ class Email < ApplicationRecord
   scope :associated_with, ->(object) { where(id: Association.where(object: object).select(:email_id)) }
   scope :tagged_with, ->(*tags) { tags.inject(self) { |scope, tag| scope.where("? = ANY (tags)", tag) } }
 
-  FAILED_STATUSES = %w[pernament-failure temporary-failure technical-failure].freeze
+  FAILED_STATUSES = %w[permanent-failure temporary-failure technical-failure].freeze
+
+  TAG_RELEASE_TIME = {
+    request_for_details: Time.zone.parse("28/09/2021 10:30"),
+  }.freeze
 
   def create_association_with(*objects, as: nil) # rubocop:disable Naming/MethodParameterName
     objects.each do |object|
@@ -35,7 +39,7 @@ class Email < ApplicationRecord
     order(:created_at).last
   end
 
-  def self.released_at
-    @released_at ||= Time.zone.parse("28/09/2021 10:30")
+  def self.released_at(tag:)
+    [Email.tagged_with(tag).minimum(:created_at), TAG_RELEASE_TIME[tag.to_sym]].compact.min
   end
 end

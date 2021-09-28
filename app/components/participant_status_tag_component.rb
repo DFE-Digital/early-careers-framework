@@ -32,7 +32,7 @@ private
   end
 
   def created_before_email_audit?
-    profile.created_at < Email.released_at
+    profile.created_at < Email.released_at(tag: :request_for_details)
   end
 
   def latest_email

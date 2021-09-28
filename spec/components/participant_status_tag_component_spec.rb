@@ -11,7 +11,7 @@ RSpec.describe ParticipantStatusTagComponent, type: :view_component do
 
   context "when participant has been added before Email audit release" do
     before do
-      participant_profile.update(created_at: Email.released_at - rand(100..1000).minutes)
+      participant_profile.update(created_at: Email.released_at(tag: :request_for_details) - rand(100..1000).minutes)
     end
 
     it { is_expected.to have_selector(".govuk-tag.govuk-tag--yellow", text: "DfE requested details from participant") }
