@@ -31,8 +31,21 @@ module ManageTrainingSteps
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "core_induction_programme")
   end
 
-  def and_i_have_added_an_ect_or_mentor
-    @participant_profile = create(:participant_profile, :ect, school_cohort: @school_cohort)
+  def and_i_have_added_an_ect
+    @participant_profile_ect = create(:participant_profile, :ect, school_cohort: @school_cohort)
+  end
+
+  def and_i_have_added_a_mentor
+    @participant_profile_mentor = create(:participant_profile, :mentor, school_cohort: @school_cohort)
+  end
+
+  def then_i_am_taken_to_add_mentor_page
+    expect(page).to have_selector("h1", text: "Who will mentor")
+    expect(page).to have_text("You can tell us later if you’re not sure")
+  end
+
+  def when_i_select_a_mentor
+    choose(@participant_profile_mentor.user.full_name.to_s, allow_label_click: true)
   end
 
   def then_i_should_see_the_add_your_ect_and_mentor_link
@@ -61,6 +74,7 @@ module ManageTrainingSteps
     privacy_policy.accept!(@induction_coordinator_profile.user)
     sign_in_as @induction_coordinator_profile.user
     set_participant_data
+    set_updated_participant_data
   end
 
   def then_i_should_see_the_fip_induction_dashboard
@@ -145,7 +159,55 @@ module ManageTrainingSteps
   end
 
   def when_i_add_ect_or_mentor_email_that_already_exists
-    fill_in "Email", with: @participant_profile.user.email
+    fill_in "Email", with: @participant_profile_ect.user.email
+  end
+
+  def when_i_select_change_name
+    click_on("Change name", visible: false)
+  end
+
+  def when_i_select_change_email
+    click_on("Change email", visible: false)
+  end
+
+  def when_i_select_change_mentor
+    click_on("Change mentor", visible: false)
+  end
+
+  def when_i_select_assign_mentor_later
+    choose("Assign mentor later", allow_label_click: true)
+  end
+
+  def then_i_can_view_assign_mentor_later_status
+    expect(page).to have_selector("h1", text: "Check your answers")
+    expect(page).to have_text("Add later")
+  end
+
+  def then_i_can_view_mentor_name
+    expect(page).to have_selector("h1", text: "Check your answers")
+    expect(page).to have_text(@participant_profile_mentor.user.full_name.to_s)
+  end
+
+  def when_i_add_ect_or_mentor_updated_name
+    fill_in "Full_name", with: @updated_participant_data[:full_name]
+  end
+
+  def when_i_add_ect_or_mentor_updated_email
+    fill_in "Email", with: @updated_participant_data[:email]
+  end
+
+  def then_i_am_taken_to_add_ect_or_mentor_updated_email_page
+    expect(page).to have_selector("h1", text: "What’s #{@updated_participant_data[:full_name]}’s email address?")
+  end
+
+  def then_i_can_view_updated_name
+    expect(page).to have_selector("h1", text: "Check your answers")
+    expect(page).to have_text((@updated_participant_data[:full_name]).to_s)
+  end
+
+  def then_i_can_view_updated_email
+    expect(page).to have_selector("h1", text: "Check your answers")
+    expect(page).to have_text((@updated_participant_data[:email]).to_s)
   end
 
   def and_then_return_to_dashboard
@@ -276,6 +338,13 @@ module ManageTrainingSteps
       date_of_birth: Date.new(1998, 3, 22),
       email: "sally@school.com",
       nino: "",
+    }
+  end
+
+  def set_updated_participant_data
+    @updated_participant_data = {
+      full_name: "Jane Teacher",
+      email: "jane@school.com",
     }
   end
 end
