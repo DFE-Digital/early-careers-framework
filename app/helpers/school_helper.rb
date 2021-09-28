@@ -6,7 +6,7 @@ module SchoolHelper
     when :ect
       "ECT"
     when :mentor
-      "Mentor"
+      "mentor"
     else
       type
     end
