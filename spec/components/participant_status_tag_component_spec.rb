@@ -9,14 +9,6 @@ RSpec.describe ParticipantStatusTagComponent, type: :view_component do
     it { is_expected.to have_selector(".govuk-tag.govuk-tag--blue", text: "DfE to request details from participant") }
   end
 
-  context "when participant has been added before Email audit release" do
-    before do
-      participant_profile.update(created_at: Email.released_at(tag: :request_for_details) - rand(100..1000).minutes)
-    end
-
-    it { is_expected.to have_selector(".govuk-tag.govuk-tag--yellow", text: "DfE requested details from participant") }
-  end
-
   context "with a request for details email record" do
     let!(:email) { create :email, tags: %i[request_for_details], associated_with: participant_profile, status: email_status }
 

@@ -13,10 +13,6 @@ class Email < ApplicationRecord
 
   FAILED_STATUSES = %w[permanent-failure temporary-failure technical-failure].freeze
 
-  TAG_RELEASE_TIME = {
-    request_for_details: Time.zone.parse("28/09/2021 10:30"),
-  }.freeze
-
   def create_association_with(*objects, as: nil) # rubocop:disable Naming/MethodParameterName
     objects.each do |object|
       Association.create!(
@@ -37,9 +33,5 @@ class Email < ApplicationRecord
 
   def self.latest
     order(:created_at).last
-  end
-
-  def self.released_at(tag:)
-    [Email.tagged_with(tag).minimum(:created_at), TAG_RELEASE_TIME[tag.to_sym]].compact.min
   end
 end
