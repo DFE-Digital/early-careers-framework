@@ -249,6 +249,14 @@ module ManageTrainingSteps
     expect(page).to have_selector("h1", text: "#{@induction_coordinator_profile.user.full_name} has been added as a mentor")
   end
 
+  def then_i_receive_a_missing_name_error_message
+    expect(page).to have_text("Enter a full name")
+  end
+
+  def then_i_receive_a_missing_email_error_message
+    expect(page).to have_text("Enter an email address")
+  end
+
   def set_participant_data
     @participant_data = {
       trn: "1234567",

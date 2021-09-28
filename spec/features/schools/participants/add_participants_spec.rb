@@ -23,12 +23,16 @@ RSpec.describe "Add participants", js: true, with_feature_flags: { induction_tut
     then_i_am_taken_to_add_ect_name_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Add ECT name"
+    and_select_continue
+    then_i_receive_a_missing_name_error_message
 
     when_i_add_ect_or_mentor_name
     and_select_continue
     then_i_am_taken_to_add_ect_or_mentor_email_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Add ECT email"
+    and_select_continue
+    then_i_receive_a_missing_email_error_message
 
     when_i_add_ect_or_mentor_email
     and_select_continue
