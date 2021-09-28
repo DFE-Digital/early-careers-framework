@@ -5,7 +5,13 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-xl"><%= @school.name %> - <%= @cohort.display_name %> cohort</span>
-    <h1 class="govuk-heading-xl">What’s the full name of this <%= format(add_participant_form.type) %>?</h1>
+
+    <% if add_participant_form.type == :ect %>
+      <h1 class="govuk-heading-xl">What’s the full name of this ECT?</h1>
+    <% else %>
+      <h1 class="govuk-heading-xl">What’s the full name of this mentor?</h1>
+    <% end %>
+
       <%= form_for add_participant_form, url: { action: :update }, method: :patch do |f| %>
         <%= f.govuk_text_field :full_name, width: "three-quarters", label: { hidden: true } %>
 
