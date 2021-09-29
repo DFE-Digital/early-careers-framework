@@ -57,7 +57,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
           }
         end
 
-        schema "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
+        schema({ "$ref": "#/components/schemas/SingleParticipantDeclarationResponse" })
         run_test!
       end
 
@@ -74,7 +74,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
           }
         end
 
-        schema "$ref": "#/components/schemas/ErrorResponse"
+        schema({ "$ref": "#/components/schemas/ErrorResponse" })
 
         run_test!
       end
@@ -82,13 +82,13 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
       response "401", "Unauthorized" do
         let(:Authorization) { "Bearer invalid" }
 
-        schema "$ref": "#/components/schemas/UnauthorisedResponse"
+        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
 
         run_test!
       end
 
       response "400", "Bad Request" do
-        schema "$ref": "#/components/schemas/BadRequestResponse"
+        schema({ "$ref": "#/components/schemas/BadRequestResponse" })
 
         run_test!
       end
@@ -229,7 +229,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
           declaration.id
         end
 
-        schema "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
+        schema({ "$ref": "#/components/schemas/SingleParticipantDeclarationResponse" })
         run_test!
       end
     end

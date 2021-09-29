@@ -6,7 +6,7 @@ module Participants
     include ActiveModel::Model
 
     # lifted from https://github.com/dwp/nino-format-validation
-    NINO_REGEX = /(^(?!BG)(?!GB)(?!NK)(?!KN)(?!TN)(?!NT)(?!ZZ)[A-Z&&[^DFIQUV]][A-Z&&[^DFIOQUV]][0-9]{6}[A-D]$)/.freeze
+    NINO_REGEX = /(^(?!BG)(?!GB)(?!NK)(?!KN)(?!TN)(?!NT)(?!ZZ)[A-Z&&[^DFIQUV]][A-Z&&[^DFIOQUV]][0-9]{6}[A-D]$)/
     attr_accessor :step,
                   :do_you_want_to_add_mentor_information_choice,
                   :do_you_know_your_trn_choice,

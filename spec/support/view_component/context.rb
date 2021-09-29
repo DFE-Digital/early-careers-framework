@@ -5,7 +5,8 @@ module Support
     class Context
       StubbedComponent = Struct.new(:instance, :args, :output)
 
-      def register_component(instance, args)
+      def register_component(instance, args, kwargs)
+        args << kwargs if kwargs.present?
         components << StubbedComponent.new(
           instance,
           args,

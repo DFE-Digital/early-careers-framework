@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class BaseService
-  def self.call(*args, &block)
-    new(*args).call(&block)
+  def self.call(*args, **kwargs, &block)
+    new(*args, **kwargs).call(&block)
   end
 end

@@ -168,7 +168,7 @@ group :test do
   gem "percy-capybara"
   gem "pundit-matchers", "~> 1.7.0"
   gem "rails-controller-testing", ">= 1.0.5"
-  gem "rspec-default_http_header", ">= 0.0.4"
+  gem "rspec-default_http_header", github: "ethanmills/rspec-default_http_header", ref: "b72a803"
   gem "selenium-webdriver"
   gem "shoulda-matchers", "~> 4.5"
   gem "simplecov"

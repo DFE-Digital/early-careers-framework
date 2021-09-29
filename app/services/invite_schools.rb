@@ -29,7 +29,8 @@ class InviteSchools
   end
 
   def reached_limit(school)
-    EMAIL_LIMITS.find do |max:, within:|
+    EMAIL_LIMITS.find do |args|
+      args => { max:, within: }
       NominationEmail.where(school: school, sent_at: within.ago..Float::INFINITY).count >= max
     end
   end
@@ -261,16 +262,16 @@ class InviteSchools
       .not_opted_out
       .where.missing(:induction_coordinators)
       .find_each do |school|
-        if school.contact_email.blank?
-          logger.info "No contact details for school urn: #{school.urn} ... skipping"
-          next
-        end
-
-        SchoolMailer.nqt_plus_one_sitless_invite(
-          recipient: school.contact_email,
-          start_url: year2020_start_url(school, utm_source: :year2020_nqt_invite_school_not_opted_out),
-        ).deliver_later
+      if school.contact_email.blank?
+        logger.info "No contact details for school urn: #{school.urn} ... skipping"
+        next
       end
+
+      SchoolMailer.nqt_plus_one_sitless_invite(
+        recipient: school.contact_email,
+        start_url: year2020_start_url(school, utm_source: :year2020_nqt_invite_school_not_opted_out),
+      ).deliver_later
+    end
   end
 
 private
