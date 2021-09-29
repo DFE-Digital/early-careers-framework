@@ -263,6 +263,20 @@
         ],
         "parameters": [
           {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ListFilter"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "description": "Refine NPQ participants to return.",
+            "example": {
+              "updated_since": "2020-11-13T11:21:55Z"
+            }
+          },
+          {
             "name": "page",
             "in": "query",
             "schema": {
@@ -1759,7 +1773,7 @@
                   "npq_courses": [
                     "npq-leading-teaching"
                   ],
-                  "trn": "1234567"
+                  "teacher_reference_number": "1234567"
                 }
               }
             ]
@@ -2371,7 +2385,7 @@
             "description": "The event declaration date",
             "type": "string",
             "format": "date-time",
-            "example": "2021-05-31T03:21:32.000+01:00"
+            "example": "2021-05-31T02:21:32Z"
           },
           "course_identifier": {
             "description": "The type of course the participant is enrolled in",

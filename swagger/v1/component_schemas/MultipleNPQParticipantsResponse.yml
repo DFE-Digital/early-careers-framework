@@ -15,4 +15,4 @@ properties:
           full_name: "Isabelle MacDonald"
           email: "isabelle.macdonald2@some-school.example.com"
           npq_courses: ["npq-leading-teaching"]
-          trn: "1234567"
+          teacher_reference_number: "1234567"
