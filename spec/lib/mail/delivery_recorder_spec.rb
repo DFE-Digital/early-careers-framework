@@ -2,11 +2,7 @@
 
 RSpec.describe Mail::DeliveryRecorder do
   let(:mail) do
-    Mail::Message.new(to: Faker::Internet.email, from: Faker::Internet.email, personalisation: personalisation).tap do |mail|
-      ActionMailer::Base.wrap_delivery_behavior(mail, :notify, api_key: "SomeKey")
-      mail.delivery_method.response = response
-      mail.original_to = mail.to
-    end
+    Mail::Message.new(to: Faker::Internet.email, from: Faker::Internet.email, personalisation: personalisation)
   end
 
   let(:response) do
@@ -29,6 +25,12 @@ RSpec.describe Mail::DeliveryRecorder do
   end
 
   subject(:recorder) { described_class.new(enabled: true) }
+
+  before do
+    ActionMailer::Base.wrap_delivery_behavior(mail, :notify, api_key: "SomeKey")
+    mail.delivery_method.response = response
+    mail.original_to = mail.to
+  end
 
   it "records the sent email into the database" do
     expect { recorder.delivered_email(mail) }.to change(Email, :count).by 1
@@ -71,6 +73,16 @@ RSpec.describe Mail::DeliveryRecorder do
 
     it "does not record emails" do
       expect { recorder.delivered_email(mail) }.not_to change(Email, :count)
+    end
+  end
+
+  context "when email has no personalisation header" do
+    let(:mail) do
+      Mail::Message.new(to: Faker::Internet.email, from: Faker::Internet.email)
+    end
+
+    it "records the sent email into the database" do
+      expect { recorder.delivered_email(mail) }.to change(Email, :count).by 1
     end
   end
 end
