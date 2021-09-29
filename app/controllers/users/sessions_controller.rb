@@ -40,11 +40,6 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def create
-    self.resource = validate_email
-    if resource.errors.any?
-      render :new and return
-    end
-
     super
   rescue Devise::Strategies::PasswordlessAuthenticatable::Error
     render :login_email_sent
@@ -90,30 +85,5 @@ private
 
     sign_in(user, scope: :user)
     redirect_to profile_dashboard_path(user)
-  end
-
-  def validate_email
-    email = params.dig(:user, :email)
-
-    if email.blank?
-      user = User.new
-      user.errors.add :email, :blank
-      return user
-    end
-
-    unless email.match(/^\S+@\S+\.\S+$/)
-      user = User.new
-      user.errors.add :email, :invalid
-      return user
-    end
-
-    user = User.find_by(email: params[:user][:email])
-
-    if user.blank?
-      user = User.new(email: email)
-      user
-    end
-
-    user
   end
 end

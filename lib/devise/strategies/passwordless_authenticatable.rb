@@ -13,7 +13,7 @@ module Devise
       class LoginIncompleteError < Error; end
 
       def valid?
-        !!params.dig(:user, :email)&.match(/^\S+@\S+\.\S+$/)
+        NotifyEmailValidator.valid?(params.dig(:user, :email))
       end
 
       def authenticate!
