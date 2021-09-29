@@ -141,6 +141,14 @@ class ValidationBetaService
     end
   end
 
+  def set_up_missing_chasers
+    participants_yet_to_validate.find_each do |profile|
+      next if chaser_scheduled?(profile)
+
+      ParticipantDetailsReminderJob.schedule(profile)
+    end
+  end
+
   def tell_fip_induction_coordinators_to_add_ects_and_mentors
     empty_school_cohorts = SchoolCohort
                              .where(induction_programme_choice: %i[full_induction_programme])
@@ -238,5 +246,28 @@ private
 
   def chosen_programme_and_not_in_beta(school)
     !FeatureFlag.active?(:participant_validation, for: school) && school.chosen_programme?(Cohort.current)
+  end
+
+  def participants_yet_to_validate
+    ParticipantProfile::ECF
+      .ecf
+      .active_record
+      .includes(:ecf_participant_eligibility, :ecf_participant_validation_data, :school_cohort)
+      .where(
+        school_cohort: {
+          cohort: Cohort.current,
+          induction_programme_choice: %w[core_induction_programme full_induction_programme],
+        },
+        ecf_participant_eligibility: {
+          participant_profile_id: nil,
+        },
+        ecf_participant_validation_data: {
+          participant_profile_id: nil,
+        },
+      )
+  end
+
+  def chaser_scheduled?(profile)
+    Delayed::Job.where("handler ILIKE ?", "%ParticipantDetailsReminderJob%#{profile.id}%").exists?
   end
 end
