@@ -14,7 +14,7 @@ module Admin
         attr_reader :school_cohort, :cohort
 
         MESSAGES = {
-          design_your_own: "designing own induction course",
+          design_our_own: "designing own induction course",
           school_funded_fip: "school funded full induction programme",
           no_early_career_teachers: "no ECTs this year",
         }.freeze
