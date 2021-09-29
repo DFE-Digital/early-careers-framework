@@ -36,21 +36,15 @@ RSpec.feature "Unhappy ECT participant validation journeys for FIP induction", t
     and_percy_should_be_sent_a_snapshot_named "Participant Validation: Tell us your details - error"
 
     when_i_enter_my_details
-    and_i_click "Continue"
-    then_i_should_see_the_confirm_details_page
+    and_i_click_continue_but_my_details_are_invalid
+    then_i_should_see_the_cannot_find_details_page
 
+    when_i_click_a_change_link
+    then_i_should_see_the_tell_us_your_details_page_filled_in
     when_i_click_continue_but_my_details_are_invalid
     then_i_should_see_the_cannot_find_details_page
 
-    when_i_click "Try again"
-    then_i_should_see_the_tell_us_your_details_page_filled_in
-    when_i_click "Continue"
-    then_i_should_see_the_confirm_details_page
-
-    when_i_click_continue_but_my_details_are_invalid
-    then_i_should_see_the_cannot_find_details_page_with_continue_option
-
-    when_i_click "Continue registration"
+    when_i_click "Confirm and send"
     then_i_should_see_the_fip_checking_details_page_for_invalid_user
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Participant Validation: Checking details - Partnered FIP"
@@ -70,9 +64,6 @@ RSpec.feature "Unhappy ECT participant validation journeys for FIP induction", t
     then_i_should_see_the_tell_us_your_details_page
 
     when_i_enter_my_details
-    and_i_click "Continue"
-    then_i_should_see_the_confirm_details_page
-
     when_i_click_continue_to_proceed_with_validation
     then_i_should_see_the_fip_checking_details_page_for_existing_trn_user
   end

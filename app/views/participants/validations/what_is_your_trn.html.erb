@@ -14,8 +14,8 @@
 
     <%= form_for @participant_validation_form, url: { action: @participant_validation_form.step }, method: :put do |f| %>
       <%= f.hidden_field :step, value: @participant_validation_form.step %>
-      <% if params[:return_to].present? %>
-        <%= hidden_field_tag :return_to, params[:return_to] %>
+      <% if params[:change].present? %>
+        <%= hidden_field_tag :change, params[:change] %>
       <% end %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_text_field :trn,

@@ -30,21 +30,16 @@ RSpec.feature "Unhappy participant validation journeys for CIP induction", type:
     and_i_see_an_error_message "Enter your date of birth"
 
     when_i_enter_my_details
-    and_i_click "Continue"
-    then_i_should_see_the_confirm_details_page
+    and_i_click_continue_but_my_details_are_invalid
+    then_i_should_see_the_cannot_find_details_page
+
+    when_i_click_a_change_link
+    then_i_should_see_the_tell_us_your_details_page_filled_in
 
     when_i_click_continue_but_my_details_are_invalid
     then_i_should_see_the_cannot_find_details_page
 
-    when_i_click "Try again"
-    then_i_should_see_the_tell_us_your_details_page_filled_in
-    when_i_click "Continue"
-    then_i_should_see_the_confirm_details_page
-
-    when_i_click_continue_but_my_details_are_invalid
-    then_i_should_see_the_cannot_find_details_page_with_continue_option
-
-    when_i_click "Continue registration"
+    when_i_click "Confirm and send"
     then_i_should_see_the_cip_checking_details_page_for_invalid_cip_ect
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Participant Validation: Checking details - CIP ECT"
@@ -74,21 +69,15 @@ RSpec.feature "Unhappy participant validation journeys for CIP induction", type:
     and_i_see_an_error_message "Enter your date of birth"
 
     when_i_enter_my_details
-    and_i_click "Continue"
-    then_i_should_see_the_confirm_details_page
-
-    when_i_click_continue_but_my_details_are_invalid
+    and_i_click_continue_but_my_details_are_invalid
     then_i_should_see_the_cannot_find_details_page
 
-    when_i_click "Try again"
+    when_i_click_a_change_link
     then_i_should_see_the_tell_us_your_details_page_filled_in
-    when_i_click "Continue"
-    then_i_should_see_the_confirm_details_page
+    and_i_click_continue_but_my_details_are_invalid
+    then_i_should_see_the_cannot_find_details_page
 
-    when_i_click_continue_but_my_details_are_invalid
-    then_i_should_see_the_cannot_find_details_page_with_continue_option
-
-    when_i_click "Continue registration"
+    when_i_click "Confirm and send"
     then_i_should_see_the_cip_checking_details_page_for_invalid_cip_mentor
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Participant Validation: Checking details - CIP mentor"

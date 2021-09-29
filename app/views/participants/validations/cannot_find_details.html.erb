@@ -1,27 +1,59 @@
-<% content_for :title, "We cannot find your details" %>
+<% title = "We cannot find your details" %>
+<% content_for :title, title %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: { action: :tell_us_your_details }) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">We cannot find your details</h1>
-
+    <h1 class="govuk-heading-xl"><%= title %></h1>
     <p class="govuk-body">This could be because:</p>
-
-    <ul class="govuk-list govuk-list--bullet">
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-5">
       <li>you used a different version of your first name, for example ‘Rob’ or ‘Robert’</li>
       <li>your last name is different to the version held by the Teaching Regulation Agency</li>
       <li>you mistyped or entered some incorrect information</li>
     </ul>
+    <% if @participant_validation_form.national_insurance_number.blank? %>
+      <p class="govuk-body">Entering your National Insurance number will help us to find your details.</p>
+    <% end %>
 
-    <p class="govuk-body">Entering your National Insurance number will help us to find your details.</p>
+    <%= govuk_summary_list do |component|
+      component.row do |row|
+        row.key { "Full name" }
+        row.value { @participant_validation_form.name }
+        row.action(text: "Change",
+                   visually_hidden_text: "full name",
+                   href: participants_validation_tell_us_your_details_path)
+      end
+      component.row do |row|
+        row.key { "TRN" }
+        row.value { @participant_validation_form.trn }
+        row.action(text: "Change",
+                   visually_hidden_text: "teacher reference number",
+                   href: participants_validation_what_is_your_trn_path(change: true))
+      end
+      component.row do |row|
+        row.key { "Date of birth" }
+        row.value { @participant_validation_form.pretty_date_of_birth }
+        row.action(text: "Change",
+                   visually_hidden_text: "date of birth",
+                   href: participants_validation_tell_us_your_details_path)
+      end
+      component.row do |row|
+        row.key { "National Insurance number" }
+        row.value { @participant_validation_form.national_insurance_number }
+        row.action(text: "Change",
+                   visually_hidden_text: "National Insurance number",
+                   href: participants_validation_tell_us_your_details_path)
+      end
+    end %>
 
-    <%= govuk_button_link_to "Try again", participants_validation_tell_us_your_details_path %>
-
-    <% if @participant_validation_form.validation_attempts > 1 %>
-      <h2 class="govuk-heading-m">If we still cannot find your details</h2>
+    <div class="govuk-inset-text">
       <p class="govuk-body">You can continue to register. Our support team may contact you for more information before you start your induction training.</p>
-      <%= form_for @participant_validation_form, url: { action: @participant_validation_form.step }, method: :put do |f| %>
-        <%= f.govuk_submit "Continue registration", secondary: true %>
-      <% end %>
+    </div>
+
+    <%= form_for @participant_validation_form, url: { action: @participant_validation_form.step }, method: :put do |f| %>
+      <%= f.hidden_field :step, value: @participant_validation_form.step %>
+      <%= f.govuk_submit "Confirm and send", secondary: true %>
     <% end %>
   </div>
 </div>

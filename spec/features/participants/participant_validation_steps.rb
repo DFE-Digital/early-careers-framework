@@ -75,6 +75,7 @@ module ParticipantValidationSteps
       .and_return({ trn: @participant_data[:trn], qts: true, active_alert: false })
     click_on "Continue"
   end
+  alias_method :and_i_click_continue_to_proceed_with_validation, :when_i_click_continue_to_proceed_with_validation
 
   def when_i_click_continue_to_proceed_with_validation_for_updated_name
     validator = class_double("ParticipantValidationService").as_stubbed_const(transfer_nested_constants: true)
@@ -93,6 +94,15 @@ module ParticipantValidationSteps
     validator = class_double("ParticipantValidationService").as_stubbed_const(transfer_nested_constants: true)
     allow(validator).to receive(:validate)
       .with(@participant_data)
+      .and_return(nil)
+    click_on "Continue"
+  end
+  alias_method :and_i_click_continue_but_my_details_are_invalid, :when_i_click_continue_but_my_details_are_invalid
+
+  def and_i_click_continue_but_my_trn_is_invalid
+    validator = class_double("ParticipantValidationService").as_stubbed_const(transfer_nested_constants: true)
+    allow(validator).to receive(:validate)
+      .with(@participant_data.merge(trn: @incorrect_trn))
       .and_return(nil)
     click_on "Continue"
   end
@@ -127,18 +137,20 @@ module ParticipantValidationSteps
     fill_in "Year", with: @participant_data[:date_of_birth].year
   end
 
-  def then_i_should_see_the_confirm_details_page
-    expect(page).to have_selector("h1", text: "Confirm these details")
+  def then_i_should_see_the_cannot_find_details_page
+    expect(page).to have_selector("h1", text: "We cannot find your details")
     expect(page).to have_text(@participant_data[:full_name])
     expect(page).to have_text(@participant_data[:trn])
     expect(page).to have_text(@participant_data[:date_of_birth].to_s(:govuk))
+    expect(page).to have_button("Confirm and send")
   end
 
-  def then_i_should_see_the_confirm_details_page_with_the_incorrect_trn
-    expect(page).to have_selector("h1", text: "Confirm these details")
+  def then_i_should_see_the_cannot_find_details_page_with_the_incorrect_trn
+    expect(page).to have_selector("h1", text: "We cannot find your details")
     expect(page).to have_text(@participant_data[:full_name])
     expect(page).to have_text(@incorrect_trn)
     expect(page).to have_text(@participant_data[:date_of_birth].to_s(:govuk))
+    expect(page).to have_button("Confirm and send")
   end
 
   def when_i_click_a_change_link
@@ -158,18 +170,6 @@ module ParticipantValidationSteps
     expect(page).to have_text("Sally Participant")
     expect(page).to have_text(@participant_data[:trn])
     expect(page).to have_text(@participant_data[:date_of_birth].to_s(:govuk))
-  end
-
-  def then_i_should_see_the_cannot_find_details_page
-    expect(page).to have_selector("h1", text: "We cannot find your details")
-    expect(page).to have_link("Try again")
-    expect(page).not_to have_button("Continue registration")
-  end
-
-  def then_i_should_see_the_cannot_find_details_page_with_continue_option
-    expect(page).to have_selector("h1", text: "We cannot find your details")
-    expect(page).to have_link("Try again")
-    expect(page).to have_button("Continue registration")
   end
 
   def then_i_should_see_the_what_is_your_trn_page_filled_in

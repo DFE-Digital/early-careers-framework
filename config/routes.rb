@@ -284,8 +284,6 @@ Rails.application.routes.draw do
       put "/name-not-updated", to: "validations#name_not_updated"
       get "/tell-us-your-details", to: "validations#tell_us_your_details", as: :tell_us_your_details
       put "/tell-us-your-details", to: "validations#tell_us_your_details"
-      get "/confirm-these-details", to: "validations#confirm_details", as: :confirm_details
-      put "/confirm-these-details", to: "validations#confirm_details"
       get "/get-a-teacher-reference-number", to: "validations#get_a_trn", as: :get_a_trn
       get "/change-your-details-with-the-teacher-regulation-agency", to: "validations#change_your_details_with_tra", as: :change_your_details_with_tra
       get "/check-with-the-teacher-regulation-agency", to: "validations#check_with_tra", as: :check_with_tra

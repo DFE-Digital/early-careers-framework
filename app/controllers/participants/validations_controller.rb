@@ -10,7 +10,6 @@ module Participants
                                                         confirm_updated_record
                                                         name_not_updated
                                                         tell_us_your_details
-                                                        confirm_details
                                                         cannot_find_details]
 
     def start
@@ -34,7 +33,11 @@ module Participants
     end
 
     def what_is_your_trn
-      store_form_and_redirect_to_step :have_you_changed_your_name
+      if change?
+        validate_participant_details_and_redirect
+      else
+        store_form_and_redirect_to_step :have_you_changed_your_name
+      end
     end
 
     def get_a_trn; end
@@ -74,10 +77,6 @@ module Participants
     def check_with_tra; end
 
     def tell_us_your_details
-      store_form_and_redirect_to_step :confirm_details
-    end
-
-    def confirm_details
       validate_participant_details_and_redirect
     end
 
@@ -190,15 +189,11 @@ module Participants
     end
 
     def store_form_and_redirect_to_step(step)
-      if request.put?
-        step = return_to_step || step
-      end
-
       @participant_validation_form.step = step
       session[:participant_validation] = @participant_validation_form.attributes
 
-      if request.get? && return_to_step.present?
-        redirect_to send("participants_validation_#{step}_path", return_to: return_to_step)
+      if request.get? && change?
+        redirect_to send("participants_validation_#{step}_path", change: true)
       else
         redirect_to send("participants_validation_#{step}_path")
       end
@@ -213,9 +208,8 @@ module Participants
       )
     end
 
-    def return_to_step
-      return_step = params.fetch(:return_to, "")
-      return return_step if return_step == "confirm_details"
+    def change?
+      params.fetch(:change, false) == "true"
     end
 
     def form_params
