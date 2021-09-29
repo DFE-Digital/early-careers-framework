@@ -102,7 +102,9 @@ module DelayedJobMatchers
     match do |job_class|
       job_arguments = find_job_with_arguments(job_class)
 
-      job_arguments.any? do |job, args|
+      method = @once ? :"one?" : :"any?"
+
+      job_arguments.send(method) do |job, args|
         result = true
         result &&= @arguments.args_match?(*args) if @arguments.present?
         result &&= job.run_at == @at if @at.present?
@@ -116,6 +118,10 @@ module DelayedJobMatchers
 
     chain :at do |datetime|
       @at = datetime
+    end
+
+    chain :once do
+      @once = true
     end
 
     def find_job_with_arguments(job_class)
