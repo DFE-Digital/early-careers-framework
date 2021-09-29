@@ -9,9 +9,9 @@ RSpec.feature "Mentor participant validation journey for CIP induction", type: :
   scenario "Participant validates their details" do
     given_there_is_a_school_that_has_chosen_cip_for_2021
     and_i_am_signed_in_as_a_mentor_participant
-    then_i_should_see_the_do_you_know_your_trn_page
+    then_i_should_see_the_what_is_your_trn_page
 
-    when_i_select "Yes, I know my TRN"
+    when_i_enter_my_trn
     and_i_click "Continue"
     then_i_should_see_the_have_you_changed_your_name_page
 
@@ -19,7 +19,7 @@ RSpec.feature "Mentor participant validation journey for CIP induction", type: :
     and_i_click "Continue"
     then_i_should_see_the_tell_us_your_details_page
 
-    when_i_enter_the_participants_details
+    when_i_enter_my_details
     and_i_click "Continue"
     then_i_should_see_the_confirm_details_page
 

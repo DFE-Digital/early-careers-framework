@@ -5,7 +5,7 @@ module Participants
     before_action :set_form
     before_action :check_not_already_completed, except: :complete
     before_action :validate_request_or_render, only: %i[do_you_want_to_add_mentor_information
-                                                        do_you_know_your_trn
+                                                        what_is_your_trn
                                                         have_you_changed_your_name
                                                         confirm_updated_record
                                                         name_not_updated
@@ -19,33 +19,23 @@ module Participants
       if current_user.induction_coordinator?
         store_form_and_redirect_to_step :do_you_want_to_add_mentor_information
       else
-        store_form_and_redirect_to_step :do_you_know_your_trn
+        store_form_and_redirect_to_step :what_is_your_trn
       end
     end
 
     def do_you_want_to_add_mentor_information
       choice = @participant_validation_form.do_you_want_to_add_mentor_information_choice
       if choice == "yes"
-        store_form_and_redirect_to_step :do_you_know_your_trn
+        store_form_and_redirect_to_step :what_is_your_trn
       else
         reset_form_data
         redirect_to helpers.induction_coordinator_dashboard_path(current_user)
       end
     end
 
-    def do_you_know_your_trn
-      choice = @participant_validation_form.do_you_know_your_trn_choice
-      case choice
-      when "yes"
-        store_form_and_redirect_to_step :have_you_changed_your_name
-      when "no"
-        store_form_and_redirect_to_step :find_your_trn
-      else
-        store_form_and_redirect_to_step :get_a_trn
-      end
+    def what_is_your_trn
+      store_form_and_redirect_to_step :have_you_changed_your_name
     end
-
-    def find_your_trn; end
 
     def get_a_trn; end
 
@@ -200,9 +190,18 @@ module Participants
     end
 
     def store_form_and_redirect_to_step(step)
+      if request.put?
+        step = return_to_step || step
+      end
+
       @participant_validation_form.step = step
       session[:participant_validation] = @participant_validation_form.attributes
-      redirect_to send("participants_validation_#{step}_path")
+
+      if request.get? && return_to_step.present?
+        redirect_to send("participants_validation_#{step}_path", return_to: return_to_step)
+      else
+        redirect_to send("participants_validation_#{step}_path")
+      end
     end
 
     def store_analytics(matched:)
@@ -214,10 +213,14 @@ module Participants
       )
     end
 
+    def return_to_step
+      return_step = params.fetch(:return_to, "")
+      return return_step if return_step == "confirm_details"
+    end
+
     def form_params
       params.fetch(:participants_participant_validation_form, {}).permit(
         :do_you_want_to_add_mentor_information_choice,
-        :do_you_know_your_trn_choice,
         :have_you_changed_your_name_choice,
         :updated_record_choice,
         :name_not_updated_choice,

@@ -274,8 +274,8 @@ Rails.application.routes.draw do
       get "/", to: "validations#start", as: :start
       get "/do-you-want-to-add-your-mentor-information", to: "validations#do_you_want_to_add_mentor_information", as: :do_you_want_to_add_mentor_information
       put "/do-you-want-to-add-your-mentor-information", to: "validations#do_you_want_to_add_mentor_information"
-      get "/do-you-know-your-teacher-reference-number", to: "validations#do_you_know_your_trn", as: :do_you_know_your_trn
-      put "/do-you-know-your-teacher-reference-number", to: "validations#do_you_know_your_trn"
+      get "/what-is-your-teacher-reference-number", to: "validations#what_is_your_trn", as: :what_is_your_trn
+      put "/what-is-your-teacher-reference-number", to: "validations#what_is_your_trn"
       get "/have-you-changed-your-name", to: "validations#have_you_changed_your_name", as: :have_you_changed_your_name
       put "/have-you-changed-your-name", to: "validations#have_you_changed_your_name"
       get "/confirm-name-change", to: "validations#confirm_updated_record", as: :confirm_updated_record
@@ -286,7 +286,6 @@ Rails.application.routes.draw do
       put "/tell-us-your-details", to: "validations#tell_us_your_details"
       get "/confirm-these-details", to: "validations#confirm_details", as: :confirm_details
       put "/confirm-these-details", to: "validations#confirm_details"
-      get "/find-your-teacher-reference-number", to: "validations#find_your_trn", as: :find_your_trn
       get "/get-a-teacher-reference-number", to: "validations#get_a_trn", as: :get_a_trn
       get "/change-your-details-with-the-teacher-regulation-agency", to: "validations#change_your_details_with_tra", as: :change_your_details_with_tra
       get "/check-with-the-teacher-regulation-agency", to: "validations#check_with_tra", as: :check_with_tra

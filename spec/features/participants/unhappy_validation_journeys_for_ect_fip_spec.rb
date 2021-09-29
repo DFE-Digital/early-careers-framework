@@ -9,14 +9,14 @@ RSpec.feature "Unhappy ECT participant validation journeys for FIP induction", t
   scenario "Participant provides invalid details" do
     given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
     and_i_am_signed_in_as_an_ect_participant
-    then_i_should_see_the_do_you_know_your_trn_page
+    then_i_should_see_the_what_is_your_trn_page
 
     when_i_click "Continue"
-    then_i_see_an_error_message "Select whether you know your teacher reference number"
+    then_i_see_an_error_message "Enter your teacher reference number"
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Participant Validation: Do you know your TRN - error"
+    and_percy_should_be_sent_a_snapshot_named "Participant Validation: What is your TRN - error"
 
-    when_i_select "Yes, I know my TRN"
+    when_i_enter_my_trn
     and_i_click "Continue"
     then_i_should_see_the_have_you_changed_your_name_page
 
@@ -30,13 +30,12 @@ RSpec.feature "Unhappy ECT participant validation journeys for FIP induction", t
     then_i_should_see_the_tell_us_your_details_page
 
     when_i_click "Continue"
-    then_i_see_an_error_message "Enter your teacher reference number"
     and_i_see_an_error_message "Enter your full name"
     and_i_see_an_error_message "Enter your date of birth"
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Participant Validation: Tell us your details - error"
 
-    when_i_enter_the_participants_details
+    when_i_enter_my_details
     and_i_click "Continue"
     then_i_should_see_the_confirm_details_page
 
@@ -60,9 +59,9 @@ RSpec.feature "Unhappy ECT participant validation journeys for FIP induction", t
   scenario "Participant already has a different TRN set" do
     given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
     and_i_am_signed_in_as_an_ect_participant_with_a_trn_already_set
-    then_i_should_see_the_do_you_know_your_trn_page
+    then_i_should_see_the_what_is_your_trn_page
 
-    when_i_select "Yes, I know my TRN"
+    when_i_enter_my_trn
     and_i_click "Continue"
     then_i_should_see_the_have_you_changed_your_name_page
 
@@ -70,7 +69,7 @@ RSpec.feature "Unhappy ECT participant validation journeys for FIP induction", t
     and_i_click "Continue"
     then_i_should_see_the_tell_us_your_details_page
 
-    when_i_enter_the_participants_details
+    when_i_enter_my_details
     and_i_click "Continue"
     then_i_should_see_the_confirm_details_page
 
@@ -81,22 +80,9 @@ RSpec.feature "Unhappy ECT participant validation journeys for FIP induction", t
   scenario "Participant does not know their TRN" do
     given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
     and_i_am_signed_in_as_an_ect_participant
-    then_i_should_see_the_do_you_know_your_trn_page
+    then_i_should_see_the_what_is_your_trn_page
 
-    when_i_select "No, I do not know my TRN"
-    and_i_click "Continue"
-    then_i_should_see_the_find_your_trn_page
-    and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Participant Validation: Find your TRN"
-  end
-
-  scenario "Participant does not have a TRN" do
-    given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
-    and_i_am_signed_in_as_an_ect_participant
-    then_i_should_see_the_do_you_know_your_trn_page
-
-    when_i_select "I do not have a TRN"
-    and_i_click "Continue"
+    and_i_click "I do not have a TRN number"
     then_i_should_see_the_get_a_trn_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Participant Validation: Get a TRN"
@@ -105,9 +91,9 @@ RSpec.feature "Unhappy ECT participant validation journeys for FIP induction", t
   scenario "Participant has changed their name and wishes to update TRA" do
     given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
     and_i_am_signed_in_as_an_ect_participant
-    then_i_should_see_the_do_you_know_your_trn_page
+    then_i_should_see_the_what_is_your_trn_page
 
-    when_i_select "Yes, I know my TRN"
+    when_i_enter_my_trn
     and_i_click "Continue"
     then_i_should_see_the_have_you_changed_your_name_page
 
