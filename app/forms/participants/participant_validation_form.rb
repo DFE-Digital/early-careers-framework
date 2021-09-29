@@ -45,6 +45,10 @@ module Participants
     def date_of_birth=(value)
       @date_of_birth_invalid = false
       @date_of_birth = ActiveRecord::Type::Date.new.cast(value)
+
+      if invalid_date?(value)
+        @date_of_birth_invalid = true
+      end
     rescue StandardError
       @date_of_birth_invalid = true
     end
@@ -158,6 +162,15 @@ module Participants
       return if national_insurance_number.blank?
 
       national_insurance_number.gsub(/\s+/, "").upcase
+    end
+
+    def invalid_date?(value)
+      return if value.blank?
+
+      day = value[3]
+      month = value[2]
+      year = value[1]
+      !Date.valid_date?(year, month, day)
     end
   end
 end

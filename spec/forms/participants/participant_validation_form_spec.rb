@@ -131,7 +131,7 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
   end
 
   describe "teacher_details validations" do
-    let(:teacher_details) { { trn: "1234567", name: "Wilma Flintstone", date_of_birth: "1996-4-17", national_insurance_number: "AB123456C" } }
+    let(:teacher_details) { { trn: "1234567", name: "Wilma Flintstone", date_of_birth: { 3 => 17, 2 => 4, 1 => 1996 }, national_insurance_number: "AB123456C" } }
     subject(:form) { described_class.new(teacher_details) }
 
     context "when all fields are valid" do
@@ -166,6 +166,14 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
     context "when date_of_birth is not supplied" do
       it "returns false" do
         form.date_of_birth = nil
+        expect(form.valid?(:tell_us_your_details)).to be false
+        expect(form.errors).to include :date_of_birth
+      end
+    end
+
+    context "when date_of_birth is an invalid date" do
+      it "returns false" do
+        form.date_of_birth = { 3 => 31, 2 => 9, 1 => 1988 }
         expect(form.valid?(:tell_us_your_details)).to be false
         expect(form.errors).to include :date_of_birth
       end
@@ -206,7 +214,7 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
         name_not_updated_choice: form.name_not_updated_choices.map(&:id).sample,
         trn: "1234567",
         name: "Ted Smith",
-        date_of_birth: Date.new(1993, 6, 15),
+        date_of_birth: form.date_of_birth,
         national_insurance_number: "AB123456C",
         validation_attempts: 1,
       }
