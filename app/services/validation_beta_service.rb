@@ -141,6 +141,24 @@ class ValidationBetaService
     end
   end
 
+  def tell_fip_induction_coordinators_to_add_ects_and_mentors
+    empty_school_cohorts = SchoolCohort
+                             .where(induction_programme_choice: %i[full_induction_programme])
+                             .where(opt_out_of_updates: false)
+                             .where.not(id: ParticipantProfile::ECF.select(:school_cohort_id))
+
+    School.where(id: empty_school_cohorts.select(:school_id)).includes(:induction_coordinators).find_each do |school|
+      school.induction_coordinator_profiles.each do |sit|
+        next if Email.associated_with(sit).tagged_with(:request_to_add_ects_and_mentors).any?
+
+        SchoolMailer.fip_induction_coordinators_to_add_ects_and_mentors_email(
+          induction_coordinator: sit,
+          campaign: :fip_sit_to_complete_steps,
+        ).deliver_later
+      end
+    end
+  end
+
 private
 
   def send_ects_to_add_validation_information(profile, school)
