@@ -28,7 +28,7 @@ class School < ApplicationRecord
   has_many :induction_coordinator_profiles, through: :induction_coordinator_profiles_schools
   has_many :induction_coordinators, through: :induction_coordinator_profiles, source: :user
 
-  has_many :ecf_participant_profiles, through: :school_cohorts, source: :ecf_participant_profiles
+  has_many :ecf_participant_profiles, through: :school_cohorts, source: :ecf_participant_profiles, class_name: "ParticipantProfile::ECF"
   has_many :ecf_participants, through: :ecf_participant_profiles, source: :user
   has_many :active_ecf_participant_profiles, through: :school_cohorts
   has_many :active_ecf_participants, through: :active_ecf_participant_profiles, source: :user
@@ -62,6 +62,20 @@ class School < ApplicationRecord
 
   scope :opted_out, lambda { |cohort = Cohort.current|
     joins(:school_cohorts).where(school_cohorts: { cohort_id: cohort.id, opt_out_of_updates: true })
+  }
+
+  scope :all_ecf_participants_validated, lambda {
+    left_outer_joins(ecf_participant_profiles: %i[ecf_participant_eligibility ecf_participant_validation_data])
+      .group(:id)
+      .having(<<~SQL)
+        SUM(
+          CASE
+            WHEN COALESCE(ecf_participant_eligibilities.id, ecf_participant_validation_data.id) IS NULL
+            THEN 1
+            ELSE 0
+          END
+          ) = 0
+    SQL
   }
 
   def partnered?(cohort)
