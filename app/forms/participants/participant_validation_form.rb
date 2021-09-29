@@ -48,6 +48,7 @@ module Participants
 
       if invalid_date?(value)
         @date_of_birth_invalid = true
+        @date_of_birth = value
       end
     rescue StandardError
       @date_of_birth_invalid = true
