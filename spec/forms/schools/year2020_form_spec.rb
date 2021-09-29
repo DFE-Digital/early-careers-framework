@@ -61,8 +61,6 @@ RSpec.describe Schools::Year2020Form, type: :model do
     end
 
     it "emails a user a confirmation email of 2020 cohort ECTs" do
-      allow(SchoolMailer).to receive(:year2020_add_participants_confirmation).and_call_original
-
       test_participants = build_list(:user, 3)
       test_participants.each do |participant|
         add_new_participant(subject, name: participant.full_name, email: participant.email)
@@ -71,10 +69,12 @@ RSpec.describe Schools::Year2020Form, type: :model do
       subject.core_induction_programme_id = core_induction_programme.id
       subject.save!
 
-      participants = subject.get_participants
-
-      expect(SchoolMailer).to have_received(:year2020_add_participants_confirmation)
-                                .with(school: school, participants: participants)
+      expect(SchoolMailer).to delay_email_delivery_of(:year2020_add_participants_confirmation)
+                                .with(
+                                  recipient: school.contact_email,
+                                  school_name: school.name,
+                                  teacher_name_list: test_participants.map { |p| "- #{p.full_name}" }.join("\n"),
+                                )
     end
   end
 
