@@ -316,7 +316,7 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_yourself_as_mentor_confirmation_page
-    expect(page).to have_selector("h1", text: "#{@induction_coordinator_profile.user.full_name} has been added as a mentor")
+    expect(page).to have_selector("h1", text: "You've been added as a mentor")
   end
 
   def then_i_receive_a_missing_name_error_message

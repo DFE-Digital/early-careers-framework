@@ -6,7 +6,7 @@
   <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-xl"><%= @school.name %> - <%= @cohort.display_name %> cohort</span>
     <h1 class="govuk-heading-xl">What’s <%= add_participant_form.full_name %>’s email address?</h1>
-    <p>We’ll use this to contact them for more information. This is needed to check their eligibility with the Teaching Regulation Authority.</p>
+    <p class="govuk-body">We’ll use this to contact them for more information. This is needed to check their eligibility with the Teaching Regulation Authority.</p>
     <%= form_for add_participant_form, url: { action: :update }, method: :patch do |f| %>
       <%= f.govuk_text_field :email, label: { hidden: true }, width: "three-quarters", hint: { text: "You can enter their personal or school email address." } %>
 
