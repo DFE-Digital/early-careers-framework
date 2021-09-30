@@ -77,6 +77,10 @@ module ParticipantDeclarationSteps
     submit_request(params)
   end
 
+  def and_the_lead_provider_voids_a_declaration
+    @session.put("/api/v1/participant-declarations/#{@declaration_id}/void", headers: { "Authorization": "Bearer #{@token}" })
+  end
+
   def then_the_declaration_made_is_valid
     expect(ParticipantDeclaration.find(@response["data"]["id"])).to be_present
   end
