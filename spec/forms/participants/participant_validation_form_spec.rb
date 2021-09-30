@@ -264,7 +264,7 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
 
   describe "#pretty_date_of_birth" do
     it "formats the date of birth correctly" do
-      form.date_of_birth = "1989-3-22"
+      form.date_of_birth = { 3 => 22, 2 => 3, 1 => 1989 }
       expect(form.pretty_date_of_birth).to eq "22 March 1989"
     end
   end
