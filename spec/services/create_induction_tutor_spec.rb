@@ -22,7 +22,7 @@ RSpec.describe CreateInductionTutor do
       service.call
 
       expect(SchoolMailer).to have_received(:nomination_confirmation_email)
-                                .with(user: User.find_by(email: email), school: school, start_url: service.start_url)
+                                .with(user: User.find_by(email: email), school: school, start_url: service.start_url, step_by_step_url: service.step_by_step_url)
     end
 
     context "when an induction coordinator for the school exists" do
@@ -58,7 +58,7 @@ RSpec.describe CreateInductionTutor do
         end
 
         context "when the induction coordinator is also a mentor" do
-          let!(:mentor_profile) { create(:mentor_profile, user: existing_profile.user, school: school) }
+          let!(:mentor_profile) { create(:participant_profile, :mentor, user: existing_profile.user, school: school) }
 
           it "removes the school from the existing induction coordinator" do
             expect(school.induction_coordinator_profiles.first).to eq(existing_profile)
@@ -77,7 +77,7 @@ RSpec.describe CreateInductionTutor do
       end
 
       context "when the induction coordinator is also a mentor" do
-        let!(:mentor_profile) { create(:mentor_profile, user: existing_profile.user, school: school) }
+        let!(:mentor_profile) { create(:participant_profile, :mentor, user: existing_profile.user, school: school) }
 
         it "retains the user but deletes the induction coordinator profile" do
           expect(school.induction_coordinator_profiles.first).to eq(existing_profile)
@@ -109,7 +109,12 @@ RSpec.describe CreateInductionTutor do
         expect(existing_induction_coordinator.schools).to include school
 
         expect(SchoolMailer).to have_received(:nomination_confirmation_email)
-                                  .with(user: existing_induction_coordinator, school: school, start_url: service.start_url)
+                                  .with(
+                                    user: existing_induction_coordinator,
+                                    school: school,
+                                    start_url: service.start_url,
+                                    step_by_step_url: service.step_by_step_url,
+                                  )
       end
 
       it "raises an exception if the name does not match the existing name" do

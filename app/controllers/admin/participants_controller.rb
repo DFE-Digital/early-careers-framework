@@ -13,15 +13,23 @@ module Admin
       school_cohort_ids = SchoolCohort.ransack(school_name_or_school_urn_cont: params[:query]).result.pluck(:id)
       query = "%#{(params[:query] || '').downcase}%"
       @participant_profiles = policy_scope(ParticipantProfile).joins(:user)
-                                                              .active
+                                                              .active_record
+                                                              .includes(:validation_decisions)
                                                               .where("lower(users.full_name) LIKE ? OR school_cohort_id IN (?)", query, school_cohort_ids)
                                                               .order("DATE(users.created_at) asc, users.full_name")
+
+      if params[:type].present?
+        @participant_profiles = @participant_profiles.where(type: params[:type])
+      end
     end
 
     def remove; end
 
     def destroy
-      @participant_profile.withdrawn!
+      @participant_profile.withdrawn_record!
+      @participant_profile.mentee_profiles.update_all(mentor_profile_id: nil) if @participant_profile.mentor?
+      Analytics::ECFValidationService.upsert_record(@participant_profile)
+
       render :destroy_success
     end
 

@@ -2,7 +2,7 @@
 
 school = FactoryBot.create :school, name: "Test School", slug: "test-school", urn: "123456"
 cohort = FactoryBot.create :cohort, start_year: 2021
-school_cohort = FactoryBot.create(:school_cohort, school: school, cohort: cohort, induction_programme_choice: "core_induction_programme")
+school_cohort = FactoryBot.create(:school_cohort, :cip, school: school, cohort: cohort)
 
 mentor_1 = FactoryBot.create :participant_profile,
                              :mentor,
@@ -31,7 +31,7 @@ FactoryBot.create :participant_profile,
                   created_at: Date.parse("25/05/2020")
 
 another_school = FactoryBot.create(:school, name: "Some other school", urn: "222222")
-another_school_cohort = FactoryBot.create(:school_cohort, school: another_school, cohort: cohort, induction_programme_choice: "core_induction_programme")
+another_school_cohort = FactoryBot.create(:school_cohort, :cip, school: another_school, cohort: cohort)
 
 FactoryBot.create :participant_profile,
                   :mentor,
@@ -47,17 +47,13 @@ FactoryBot.create :participant_profile,
 
 npq_user = FactoryBot.create(:user, full_name: "Natalie Portman Quebec", email: "natalie.portman@quebec.ca")
 
-npq_profile = FactoryBot.create :participant_profile,
-                                :npq,
-                                validation_data: nil,
-                                user: npq_user
+Timecop.freeze(Date.parse("19/09/2019")) do
+  npq_validation_data = FactoryBot.create :npq_validation_data,
+                                          user: npq_user,
+                                          date_of_birth: Date.parse("10/12/1982"),
+                                          nino: "NI123456",
+                                          teacher_reference_number: "9780824",
+                                          school_urn: school.urn
 
-FactoryBot.create :npq_validation_data,
-                  id: npq_profile.id,
-                  user: npq_user,
-                  date_of_birth: Date.parse("10/12/1982"),
-                  nino: "NI123456",
-                  created_at: Date.parse("19/09/2019"),
-                  teacher_reference_number: "9780824"
-
-npq_profile.update!(updated_at: Date.parse("19/09/2019"))
+  NPQ::CreateOrUpdateProfile.new(npq_validation_data: npq_validation_data).call
+end

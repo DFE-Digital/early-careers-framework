@@ -3,14 +3,8 @@
 module RecordDeclarations
   module Started
     class Mentor < ::RecordDeclarations::Base
-      include RecordDeclarations::Mentor
-      include StartedCompleted
-
-      class << self
-        def schema_validation_params
-          super.merge({ schema_path: "ecf/participant_declarations/started" })
-        end
-      end
+      include Participants::Mentor
+      include RecordDeclarations::ECF
     end
   end
 end

@@ -38,6 +38,10 @@ module paas {
 
   environment                       = var.environment
   app_docker_image                  = var.paas_app_docker_image
+  docker_credentials                =  {
+    username = var.docker_username
+    password = var.docker_password
+  }
   app_env_values                    = local.paas_app_env_values
   app_start_timeout                 = var.paas_app_start_timeout
   app_stopped                       = var.paas_app_stopped

@@ -6,10 +6,19 @@ on:
       - '**'
 
 jobs:
+  create-nonce:
+    name: Create nonce
+    runs-on: ubuntu-20.04
+    outputs:
+      nonce: ${{ steps.generate-nonce.outputs.nonce }}
+    steps:
+      - id: generate-nonce
+        run: echo "::set-output name=nonce::$(tr -dc 0-9 </dev/urandom | head -c 18 ; echo '')"
+
   backend-tests:
     name: Run rspec
-
     runs-on: ubuntu-20.04
+    needs: create-nonce
 
     env:
       RAILS_ENV: test
@@ -17,8 +26,12 @@ jobs:
       DB_PASSWORD: ''
       DB_HOSTNAME: 127.0.0.1
       DB_PORT: 5432
+      ANALYTICS_DB_USERNAME: postgres
+      ANALYTICS_DB_PASSWORD: ''
+      ANALYTICS_DB_HOSTNAME: 127.0.0.1
+      ANALYTICS_DB_PORT: 5432
       PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
-      PERCY_PARALLEL_NONCE: ${{ github.run_number }}
+      PERCY_PARALLEL_NONCE: ${{ needs.create-nonce.outputs.nonce }}
       PERCY_PARALLEL_TOTAL: 2
 
     services:
@@ -36,14 +49,16 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.70.1
+        uses: ruby/setup-ruby@v1.82.0
         with:
           bundler-cache: true
+          ruby-version: '2.7.2'
 
       - name: Set up Node
-        uses: actions/setup-node@v2.1.2
+        uses: actions/setup-node@v2.4.1
         with:
           node-version: '14.x'
+          cache: 'yarn'
 
       - name: Install yarn
         run: npm install yarn -g
@@ -79,9 +94,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up Node
-        uses: actions/setup-node@v2.1.2
+        uses: actions/setup-node@v2.4.1
         with:
           node-version: '14.x'
+          cache: 'yarn'
 
       - name: Install yarn
         run: npm install yarn -g
@@ -106,8 +122,8 @@ jobs:
 
   e2e-tests:
     name: Run Cypress
-
     runs-on: ubuntu-20.04
+    needs: create-nonce
 
     env:
       RAILS_ENV: test
@@ -115,6 +131,10 @@ jobs:
       DB_PASSWORD: ''
       DB_HOSTNAME: 127.0.0.1
       DB_PORT: 5432
+      ANALYTICS_DB_USERNAME: postgres
+      ANALYTICS_DB_PASSWORD: ''
+      ANALYTICS_DB_HOSTNAME: 127.0.0.1
+      ANALYTICS_DB_PORT: 5432
 
     services:
       postgres:
@@ -131,14 +151,16 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.70.1
+        uses: ruby/setup-ruby@v1.82.0
         with:
           bundler-cache: true
+          ruby-version: '2.7.2'
 
       - name: Set up Node
-        uses: actions/setup-node@v2.1.2
+        uses: actions/setup-node@v2.4.1
         with:
           node-version: '14.x'
+          cache:  'yarn'
 
       - name: Install yarn
         run: npm install yarn -g
@@ -177,5 +199,5 @@ jobs:
         env:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
           COMMIT_INFO_BRANCH: ${{ github.head_ref }}
-          PERCY_PARALLEL_NONCE: ${{ github.run_number }}
+          PERCY_PARALLEL_NONCE: ${{ needs.create-nonce.outputs.nonce }}
           PERCY_PARALLEL_TOTAL: 2

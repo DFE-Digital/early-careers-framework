@@ -9,7 +9,7 @@ paas_postgres_service_plan = "small-ha-11"
 paas_app_start_timeout = "180"
 paas_app_stopped = false
 paas_web_app_deployment_strategy = "blue-green-v2"
-paas_web_app_instances = 2
+paas_web_app_instances = 4
 paas_web_app_memory = 8192
 paas_worker_app_instances = 1
 paas_worker_app_start_command = "/app/bin/delayed_job --pool=mailers --pool=*:2 start && bundle exec rake jobs:work"
@@ -26,6 +26,12 @@ statuscake_alerts = {
     website_url   = "https://manage-training-for-early-career-teachers.education.gov.uk"
     contact_group = [206487]
     find_string   = "Manage training for early career teachers"
+  }
+  "alertmanager-prod" = {
+    website_name  = "alertmanager-cpd-monitoring-prod"
+    website_url   = "https://alertmanager-cpd-monitoring-prod.london.cloudapps.digital/-/healthy"
+    contact_group = [206487]
+    find_string   = "OK"
   }
   "PaaS500String" = {
     website_name  = "manage-training-for-early-career-teachers-production"

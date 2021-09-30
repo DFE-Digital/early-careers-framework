@@ -1,39 +1,26 @@
 # frozen_string_literal: true
 
-require "payment_calculator/ecf/contract/uplift_payment_calculations"
+require "rails_helper"
 
-class ModuleTestHarness
-  include PaymentCalculator::Ecf::Contract::UpliftPaymentCalculations
-end
+RSpec.describe PaymentCalculator::ECF::Contract::UpliftPaymentCalculations do
+  let(:dummy_class) { Class.new { include PaymentCalculator::ECF::Contract::UpliftPaymentCalculations } }
+  let(:call_off_contract) { create(:call_off_contract) }
+  let(:calculator) { dummy_class.new({ contract: call_off_contract }) }
 
-describe ::PaymentCalculator::Ecf::Contract::UpliftPaymentCalculations do
-  it "returns the expected types for uplift" do
-    contract = double("Contract Double", uplift_amount: BigDecimal(100.00, 2))
-    call_off_contract = ModuleTestHarness.new({ contract: contract })
-    event_type = :started
-
-    if @combined_results.nil?
-      expect(call_off_contract.uplift_payment_per_participant.round(2)).to be_a(BigDecimal)
-      expect(call_off_contract.uplift_payment_per_participant_for_event(event_type: event_type)).to be_a(BigDecimal)
-      expect(call_off_contract.uplift_payment_for_event(event_type: event_type, uplift_participants: 100)).to be_a(BigDecimal)
-    end
+  it "returns the uplift_payment_per_participant" do
+    expect(calculator.uplift_payment_per_participant).to eq(100)
   end
 
-  it "performs calculations of the uplift payments" do
-    contract = double("Contract Double", uplift_amount: 100)
-    call_off_contract = ModuleTestHarness.new({ contract: contract })
-    total_participants = 330
+  it "returns the expected uplift_payment_per_participant for a each event type" do
+    expect(calculator.uplift_payment_per_participant_for_event(event_type: :started)).to eq(100)
+    expect(calculator.uplift_payment_per_participant_for_event(event_type: :retained_1)).to eq(0)
+    expect(calculator.uplift_payment_per_participant_for_event(event_type: :retained_2)).to eq(0)
+    expect(calculator.uplift_payment_per_participant_for_event(event_type: :retained_3)).to eq(0)
+    expect(calculator.uplift_payment_per_participant_for_event(event_type: :retained_4)).to eq(0)
+    expect(calculator.uplift_payment_per_participant_for_event(event_type: :completed)).to eq(0)
+  end
 
-    expect(call_off_contract.uplift_payment_per_participant.round(0)).to eq(100.00)
-
-    %i[started].each do |event_type|
-      expect(call_off_contract.uplift_payment_per_participant_for_event(event_type: event_type).round(2)).to eq(100.00)
-      expect(call_off_contract.uplift_payment_for_event(event_type: event_type, uplift_participants: total_participants).round(2)).to eq(33_000.00)
-    end
-
-    %i[retention_1 retention_2 retention_3 retention_4 completion].each do |event_type|
-      expect(call_off_contract.uplift_payment_per_participant_for_event(event_type: event_type).round(2)).to eq(0.00)
-      expect(call_off_contract.uplift_payment_for_event(event_type: event_type, uplift_participants: total_participants.round(2))).to eq(0.00)
-    end
+  it "returns a capped uplift_payment_for_events when the total exceeds 5% of the total contract value" do
+    expect(calculator.uplift_payment_for_event(uplift_participants: 10_000, event_type: :started)).to eq(99_500)
   end
 end

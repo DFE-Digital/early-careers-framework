@@ -62,6 +62,14 @@ Rails.application.configure do
   config.dqt_client_host = Rails.application.credentials.DQT_CLIENT_HOST
   config.dqt_client_params = Rails.application.credentials.DQT_CLIENT_PARAMS
 
+  config.dqt_access_url = Rails.application.credentials.DQT_ACCESS_URL
+  config.dqt_access_scope = Rails.application.credentials.DQT_ACCESS_SCOPE
+  config.dqt_access_client_id = Rails.application.credentials.DQT_ACCESS_CLIENT_ID
+  config.dqt_access_client_secret = Rails.application.credentials.DQT_ACCESS_CLIENT_SECRET
+
+  config.dqt_api_url = Rails.application.credentials.DQT_API_URL
+  config.dqt_api_ocp_apim_subscription_key = Rails.application.credentials.DQT_API_OCP_APIM_SUBSCRIPTION_KEY
+
   config.action_mailer.perform_caching = false
   config.action_mailer.delivery_method = :notify
   config.action_mailer.notify_settings = {
@@ -94,7 +102,7 @@ Rails.application.configure do
   # Logging
   config.log_level = :info
   config.log_tags = [:request_id] # Prepend all log lines with the following tags.
-  logger = ActiveSupport::Logger.new(STDOUT)
+  logger = ActiveSupport::Logger.new($stdout)
   logger.formatter = config.log_formatter
   config.logger = ActiveSupport::TaggedLogging.new(logger)
   config.active_record.logger = nil # Don't log SQL in production
@@ -112,6 +120,8 @@ Rails.application.configure do
     {
       params: event.payload[:params].except(*exceptions),
       exception: event.payload[:exception], # ["ExceptionClass", "the message"]
+      current_user_class: event.payload[:current_user_class],
+      current_user_id: event.payload[:current_user_id],
     }
   end
 

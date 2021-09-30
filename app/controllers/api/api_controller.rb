@@ -6,7 +6,19 @@ module Api
     before_action :remove_charset
     rescue_from ActiveRecord::RecordNotFound, with: :not_found
     rescue_from ActionController::ParameterMissing, with: :missing_parameter_response
+    rescue_from ActionController::UnpermittedParameters, with: :unpermitted_parameter_response
     rescue_from ActionController::BadRequest, with: :bad_request_response
+    rescue_from ActiveRecord::StatementInvalid, with: :bad_request_response
+    rescue_from ArgumentError, with: :bad_request_response
+    rescue_from ActiveRecord::RecordNotUnique, with: :bad_request_response
+    rescue_from ActiveRecord::RecordInvalid, with: :invalid_transition
+    rescue_from Api::Errors::InvalidTransitionError, with: :invalid_transition
+
+    def append_info_to_payload(payload)
+      super
+      payload[:current_user_class] = current_user&.class&.name
+      payload[:current_user_id] = current_user.is_a?(String) ? current_user : current_user&.id
+    end
 
   private
 
@@ -19,11 +31,19 @@ module Api
     end
 
     def missing_parameter_response(exception)
-      render json: { bad_or_missing_parameters: exception.param }, status: :unprocessable_entity
+      render json: { errors: Api::ParamErrorFactory.new(error: "Bad or missing parameters", params: exception.param).call }, status: :unprocessable_entity
+    end
+
+    def unpermitted_parameter_response(exception)
+      render json: { errors: Api::ParamErrorFactory.new(error: "Unpermitted parameters", params: exception.params).call }, status: :unprocessable_entity
     end
 
     def bad_request_response(exception)
-      render json: { bad_request: exception.message }, status: :bad_request
+      render json: { errors: Api::ParamErrorFactory.new(error: "Bad request", params: exception.message).call }, status: :bad_request
+    end
+
+    def invalid_transition(exception)
+      render json: { errors: Api::ParamErrorFactory.new(error: "Invalid action", params: exception).call }, status: :unprocessable_entity
     end
   end
 end

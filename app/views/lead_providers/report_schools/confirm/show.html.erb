@@ -6,7 +6,7 @@
 
 <h1 class="govuk-heading-xl">Confirm that you have an agreement with <%= @schools.count %> <%= "school".pluralize(@schools.count) %></h1>
 
-<%= govuk_warning text: "Only confirm schools for the cohort that starts in the next academic year (#{report_schools_form.cohort.display_name})." %>
+<%= govuk_warning_text text: "Only confirm schools for the cohort that starts in the next academic year (#{report_schools_form.cohort.display_name})." %>
 
 <table class="govuk-table">
   <thead>

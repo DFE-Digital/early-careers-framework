@@ -22,8 +22,9 @@ const pagePaths = {
   privacy: "/privacy-policy",
   accessibility: "/accessibility-statement",
   dashboard: "/dashboard",
+  "Manage your training": "/schools/:id",
   "2021 cohort CIP materials info":
-    "/schools/:id/cohorts/2021/core-programme/materials/info",
+    "/schools/:id/cohorts/2021/programme-choice",
   "2021 cohort CIP materials selection":
     "/schools/:id/cohorts/2021/core-programme/materials/edit",
   "2021 cohort CIP materials success":
@@ -68,7 +69,6 @@ const pagePaths = {
   "resend nominations not eligible": "/nominations/not-eligible",
   "resend nominations already nominated": "/nominations/already-nominated",
   "resend nominations limit reached": "/nominations/limit-reached",
-  "resend nominations cip only": "/nominations/cip-only",
   "choose how to continue nominations": "/nominations/choose-how-to-continue",
   "start nominations with token": "/nominations/start?token=foo-bar-baz",
   "lead provider users index": "/admin/suppliers/users",
@@ -82,6 +82,8 @@ const pagePaths = {
   "choose programme success": "/schools/:id/choose-programme/success",
   "design your programme success":
     "/schools/:id/choose-programme/design-your-programme",
+  "school funded fip success":
+    "/schools/:id/choose-programme/school-funded-fip",
   "no early career teachers success":
     "/schools/:id/choose-programme/no-early-career-teachers",
   schools: "/schools",

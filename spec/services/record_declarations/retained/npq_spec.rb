@@ -1,45 +1,40 @@
 # frozen_string_literal: true
 
 require "rails_helper"
+require_relative "../../../shared/context/service_record_declaration_params"
+require_relative "../../../shared/context/lead_provider_profiles_and_courses"
 
-RSpec.describe RecordDeclarations::Started::NPQ do
-  let(:cpd_lead_provider) { create(:cpd_lead_provider) }
-  let(:another_lead_provider) { create(:cpd_lead_provider, name: "Unknown") }
-  let(:npq_lead_provider) { create(:npq_lead_provider, cpd_lead_provider: cpd_lead_provider) }
-  let(:npq_course) { create(:npq_course, identifier: "npq-leading-teaching") }
-  let!(:npq_profile) do
-    create(:npq_validation_data,
-           npq_lead_provider: npq_lead_provider,
-           npq_course: npq_course)
-  end
-  let(:induction_coordinator_profile) { create(:induction_coordinator_profile) }
-  let(:params) do
-    {
-      raw_event: "{\"participant_id\":\"37b300a8-4e99-49f1-ae16-0235672b6708\",\"declaration_type\":\"retained-1\",\"declaration_date\":\"2021-06-21T08:57:31Z\",\"course_identifier\":\"npq-leading-teaching\"}",
-      user_id: npq_profile.user_id,
-      declaration_date: "2021-06-21T08:46:29Z",
-      declaration_type: "retained-1",
-      course_identifier: "npq-leading-teaching",
-      cpd_lead_provider: another_lead_provider,
-    }
+RSpec.describe RecordDeclarations::Retained::NPQ do
+  include_context "lead provider profiles and courses"
+  include_context "service record declaration params"
+
+  let(:cutoff_start_datetime) { npq_profile.schedule.milestones[1].start_date.beginning_of_day }
+  let(:cutoff_end_datetime) { npq_profile.schedule.milestones[1].milestone_date.end_of_day }
+  let(:retained_npq_params) { npq_params.merge(declaration_type: "retained-1", declaration_date: (cutoff_start_datetime + 1.day).rfc3339, evidence_held: "yes") }
+
+  before do
+    travel_to cutoff_start_datetime + 2.days
   end
 
-  let(:npq_params) do
-    params.merge({ cpd_lead_provider: cpd_lead_provider })
-  end
-  let(:induction_coordinator_params) do
-    npq_params.merge({ user_id: induction_coordinator_profile.user_id })
-  end
+  it_behaves_like "a retained participant declaration service" do
+    def given_params
+      retained_npq_params
+    end
 
-  context "when sending event for an npq course" do
-    it "creates a participant and profile declaration" do
-      expect { described_class.call(npq_params) }.to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
+    def given_profile
+      npq_profile
     end
   end
 
-  context "when user is not a participant" do
-    it "does not create a declaration record and raises ParameterMissing for an invalid user_id" do
-      expect { described_class.call(induction_coordinator_params) }.to raise_error(ActionController::ParameterMissing)
+  it_behaves_like "a participant service for npq" do
+    def given_params
+      retained_npq_params
+    end
+  end
+
+  context "when declaration type is valid for ECF but not NPQ" do
+    it "raises a ParameterMissing error" do
+      expect { described_class.call(params: retained_npq_params.merge(declaration_type: "retained-3")) }.to raise_error(ActionController::ParameterMissing)
     end
   end
 end

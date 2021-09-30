@@ -1,20 +1,47 @@
 # frozen_string_literal: true
 
-require "has_di_parameters"
-
 class ParticipantEventAggregator
-  include HasDIParameters
+  class << self
+    def call(cpd_lead_provider:, recorder: ParticipantDeclaration::ECF, event_type: started)
+      new(cpd_lead_provider: cpd_lead_provider, recorder: recorder).call(event_type: event_type)
+    end
+  end
 
   def call(event_type: :started)
-    recorder.send(params[event_type], cpd_lead_provider)
+    aggregations(event_type: event_type)
   end
 
 private
 
-  def default_params
+  attr_reader :cpd_lead_provider, :recorder
+
+  def initialize(cpd_lead_provider:, recorder: ParticipantDeclaration::ECF)
+    @cpd_lead_provider = cpd_lead_provider
+    @recorder = recorder
+  end
+
+  def aggregators(event_type:)
+    @aggregators ||= Hash.new { |hash, key| hash[key] = aggregate(aggregation_type: key, event_type: event_type) }
+  end
+
+  def aggregate(aggregation_type:, event_type:)
+    recorder.send(aggregation_types[event_type][aggregation_type], cpd_lead_provider).count
+  end
+
+  def aggregation_types
     {
-      recorder: ParticipantDeclaration,
-      started: :count_active_for_lead_provider,
+      started: {
+        all: :payable_for_lead_provider,
+        uplift: :payable_uplift_for_lead_provider,
+        ects: :payable_ects_for_lead_provider,
+        mentors: :payable_mentors_for_lead_provider,
+      },
     }
+  end
+
+  def aggregations(event_type:)
+    aggregation_types[event_type].keys.index_with do |key|
+      aggregators(event_type: event_type)[key]
+    end
   end
 end

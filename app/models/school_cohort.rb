@@ -5,6 +5,7 @@ class SchoolCohort < ApplicationRecord
     full_induction_programme: "full_induction_programme",
     core_induction_programme: "core_induction_programme",
     design_our_own: "design_our_own",
+    school_funded_fip: "school_funded_fip",
     no_early_career_teachers: "no_early_career_teachers",
     not_yet_known: "not_yet_known",
   }
@@ -17,19 +18,21 @@ class SchoolCohort < ApplicationRecord
 
   has_many :ecf_participant_profiles, class_name: "ParticipantProfile"
   has_many :ecf_participants, through: :ecf_participant_profiles, source: :user
-  has_many :active_ecf_participant_profiles, -> { ecf.active }, class_name: "ParticipantProfile"
+  has_many :active_ecf_participant_profiles, -> { ecf.active_record }, class_name: "ParticipantProfile"
   has_many :active_ecf_participants, through: :active_ecf_participant_profiles, source: :user
 
   has_many :mentor_profiles, -> { mentors }, class_name: "ParticipantProfile"
   has_many :mentors, through: :mentor_profiles, source: :user
-  has_many :active_mentor_profiles, -> { mentors.active }, class_name: "ParticipantProfile"
+  has_many :active_mentor_profiles, -> { mentors.active_record }, class_name: "ParticipantProfile"
   has_many :active_mentors, through: :active_mentor_profiles, source: :user
 
   scope :for_year, ->(year) { joins(:cohort).where(cohort: { start_year: year }) }
 
-  after_commit do
-    ecf_participant_profiles.touch_all
-    ecf_participants.touch_all
+  after_save do |school_cohort|
+    unless school_cohort.saved_changes.empty?
+      ecf_participant_profiles.touch_all
+      ecf_participants.touch_all
+    end
   end
 
   def training_provider_status
@@ -72,6 +75,10 @@ class SchoolCohort < ApplicationRecord
 
   def school_chose_fip?
     induction_programme_choice == "full_induction_programme"
+  end
+
+  def school_chose_school_funded_fip?
+    induction_programme_choice == "school_funded_fip"
   end
 
 private

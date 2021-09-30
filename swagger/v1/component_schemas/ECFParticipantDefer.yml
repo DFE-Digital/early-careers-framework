@@ -1,0 +1,25 @@
+description: "An ECF participant deferral action"
+type: object
+properties:
+  reason:
+    description: "The reason for the deferral"
+    type: string
+    enum:
+      - adoption
+      - bereavement
+      - long-term-sickness
+      - parental-leave
+    example: career-break
+  course_identifier:
+    description: "The type of course the participant is enrolled in"
+    type: string
+    enum:
+      - ecf-induction
+      - ecf-mentor
+    example: ecf-induction
+required:
+  - reason
+  - course_identifier
+example:
+  reason: career-break
+  course_identifier: ecf-mentor

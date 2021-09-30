@@ -1,0 +1,16 @@
+<%= render Finance::ECF::OutputPaymentRow.with_collection(output_payments) %>
+
+<h3 class="govuk-heading-s">Participants</h3>
+<table class="govuk-table payment-breakdown-table">
+  <tbody>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Total participants paid</th>
+      <td class="govuk-table__cell govuk-table__cell--numeric"><%= participants %></td>
+    </tr>
+    <!--TODO: Add not accepted participants-->
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Total participants not accepted </th>
+      <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
+    </tr>
+  </tbody>
+</table>

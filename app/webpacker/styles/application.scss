@@ -14,6 +14,8 @@ $govuk-image-url-function: frontend-image-url;
 
 @import "notification_banner";
 @import "app_task_list";
+@import "vendor/components/step-by-step-header";
+@import "vendor/components/step-by-step-nav";
 @import "header_overrides";
 @import "lead_providers/dashboard_numbers";
 @import "lead_providers/index_group";
@@ -27,10 +29,10 @@ $govuk-image-url-function: frontend-image-url;
 @import "pagination";
 @import "subnav";
 @import "primary-nav";
-@import "school_search";
 @import "search_box";
 @import "aside";
 @import "vendor/nhs_tables";
+@import "table";
 
 .govuk-tag {
   white-space: nowrap;
@@ -42,4 +44,12 @@ $govuk-image-url-function: frontend-image-url;
 
 .lead-provider-content img {
   max-width: 629px;
+}
+
+.bold-label {
+  font-weight: 700;
+}
+
+.app-govuk-link {
+  white-space: nowrap;
 }

@@ -18,10 +18,11 @@ class School < ApplicationRecord
   has_many :local_authority_districts, through: :school_local_authority_districts
 
   has_many :partnerships
+  has_many :active_partnerships, -> { active }, class_name: "Partnership"
   has_many :lead_providers, through: :partnerships
   has_many :school_cohorts
   has_many :pupil_premiums
-  has_many :nomination_emails
+  has_many :nomination_emails, -> { order(created_at: :desc) }
 
   has_many :induction_coordinator_profiles_schools, dependent: :destroy
   has_many :induction_coordinator_profiles, through: :induction_coordinator_profiles_schools
@@ -33,11 +34,6 @@ class School < ApplicationRecord
   has_many :active_ecf_participants, through: :active_ecf_participant_profiles, source: :user
 
   has_many :additional_school_emails
-
-  after_commit do
-    ecf_participant_profiles.touch_all
-    ecf_participants.touch_all
-  end
 
   scope :with_local_authority, lambda { |local_authority|
     joins(%i[school_local_authorities local_authorities])
@@ -64,6 +60,10 @@ class School < ApplicationRecord
     left_outer_joins(:school_cohorts).where(school_cohorts: { cohort_id: [cohort.id, nil], opt_out_of_updates: [false, nil] })
   }
 
+  scope :opted_out, lambda { |cohort = Cohort.current|
+    joins(:school_cohorts).where(school_cohorts: { cohort_id: cohort.id, opt_out_of_updates: true })
+  }
+
   def partnered?(cohort)
     partnerships.unchallenged.where(cohort: cohort).any?
   end
@@ -81,11 +81,11 @@ class School < ApplicationRecord
   end
 
   def early_career_teacher_profiles_for(cohort)
-    school_cohorts.find_by(cohort: cohort)&.ecf_participant_profiles&.ects&.active || []
+    school_cohorts.find_by(cohort: cohort)&.ecf_participant_profiles&.ects&.active_record || []
   end
 
   def mentor_profiles_for(cohort)
-    school_cohorts.find_by(cohort: cohort)&.ecf_participant_profiles&.mentors&.active || []
+    school_cohorts.find_by(cohort: cohort)&.ecf_participant_profiles&.mentors&.active_record || []
   end
 
   def full_address
@@ -111,11 +111,15 @@ class School < ApplicationRecord
   end
 
   def eligible?
-    eligible_establishment_type? && open? && in_england?
+    open? && in_england? && (eligible_establishment_type? || section_41_approved?)
   end
 
   def cip_only?
-    open? && cip_only_establishment_type?
+    !eligible? && open? && cip_only_establishment_type?
+  end
+
+  def can_access_service?
+    eligible? || cip_only?
   end
 
   def local_authority_district

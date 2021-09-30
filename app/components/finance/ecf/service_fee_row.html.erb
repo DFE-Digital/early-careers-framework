@@ -1,0 +1,17 @@
+<h3 class="govuk-heading-s"><%= t("finance.ecf.bands.#{band}") %></h3>
+<table class="govuk-table payment-breakdown-table">
+  <tbody>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Service fee per participant</th>
+      <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds per_participant %></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Number of participants </th>
+      <td class="govuk-table__cell govuk-table__cell--numeric"><%= participants %></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__cell"><%= t("finance.ecf.bands.#{band}") %> payment</th>
+      <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><%= number_to_pounds monthly %></td>
+    </tr>
+  </tbody>
+</table>

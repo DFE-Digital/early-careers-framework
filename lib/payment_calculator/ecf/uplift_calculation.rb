@@ -3,9 +3,9 @@
 require "payment_calculator/ecf/contract/uplift_payment_calculations"
 
 module PaymentCalculator
-  module Ecf
+  module ECF
     class UpliftCalculation
-      include Ecf::Contract::UpliftPaymentCalculations
+      include ECF::Contract::UpliftPaymentCalculations
 
       # @param [Symbol] event_type
       # @param [Integer] uplift_participants
@@ -15,8 +15,11 @@ module PaymentCalculator
         return nil unless event_type == :started
 
         {
-          per_participant: uplift_payment_per_participant,
-          sub_total: uplift_payment_for_event(event_type: event_type, uplift_participants: uplift_participants),
+          uplift: {
+            participants: uplift_participants,
+            per_participant: uplift_payment_per_participant,
+            subtotal: uplift_payment_for_event(event_type: event_type, uplift_participants: uplift_participants),
+          },
         }
       end
     end

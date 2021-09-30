@@ -1,0 +1,21 @@
+<% title = "What do you want to do now?" %>
+<% content_for :title, title %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: { action: :confirm_updated_record }) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl"><%= title %></h1>
+    <p class="govuk-body">We cannot check your eligibility if your name is different to the one listed in Teaching Regulation Agency records.</p>
+
+    <%= form_for @participant_validation_form, url: { action: @participant_validation_form.step }, method: :put do |f| %>
+      <%= f.hidden_field :step, value: @participant_validation_form.step %>
+      <%= f.govuk_error_summary %>
+      <%= f.govuk_collection_radio_buttons(
+        :name_not_updated_choice, @participant_validation_form.name_not_updated_choices,
+        :id, :name,
+        legend: { text: "Choose an option to continue your registration:", size: "s" },
+      ) %>
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

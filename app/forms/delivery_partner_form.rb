@@ -5,6 +5,7 @@ class DeliveryPartnerForm
   include ActiveModel::Serialization
 
   attr_accessor :name, :lead_provider_ids, :provider_relationship_hashes
+
   validates :name, presence: { message: "Enter a name" }, on: %i[name update]
   validate :lead_providers_validation, on: %i[lead_providers update]
   validate :cohorts_validation, on: %i[cohorts update]

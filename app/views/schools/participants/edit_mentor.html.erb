@@ -2,14 +2,14 @@
 
 <% content_for :before_content, govuk_back_link(
   text: "Back",
-  href: schools_participant_path(id: @participant))
+  href: schools_participant_path(id: @profile))
 %>
 
-<%= form_with model: @mentor_form, url: schools_participant_update_mentor_path(participant_id: @participant), method: :put, id: "school-cohort-participant-update-mentor" do |f| %>
+<%= form_with model: @mentor_form, url: schools_participant_update_mentor_path(participant_id: @profile), method: :put, id: "school-cohort-participant-update-mentor" do |f| %>
   <%= f.govuk_error_summary %>
 
   <%= f.govuk_radio_buttons_fieldset :mentor_id,
-    legend: { text: "Who is the mentor for #{@participant.full_name}?", tag: 'h1', size: 'xl' },
+    legend: { text: "Who is the mentor for #{@profile.user.full_name}?", tag: 'h1', size: 'xl' },
     hint: { text: "If you don't know, or haven't added them yet you can do this later." } do %>
     <% @mentor_form.available_mentors.each_with_index do |mentor, i| %>
       <%= f.govuk_radio_button :mentor_id, mentor.id, label: { text: mentor.full_name }, link_errors: i == 0 %>

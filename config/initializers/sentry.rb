@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Sentry.init do |config|
-  config.enabled_environments = %w[production sandbox]
+  config.enabled_environments = %w[production sandbox staging]
   config.dsn = config.enabled_environments.include?(Rails.env) ? Rails.application.credentials.SENTRY_DSN : "disabled"
   config.breadcrumbs_logger = %i[active_support_logger http_logger]
   config.release = "#{ENV['RELEASE_VERSION']}-#{ENV['SHA']}"
@@ -27,8 +27,10 @@ Sentry.init do |config|
       when /check/
         0.0 # ignore healthcheck requests
       else
-        0.1
+        0.01
       end
+    when /delayed_job/
+      0.001
     else
       0.0 # We don't care about performance of other things
     end

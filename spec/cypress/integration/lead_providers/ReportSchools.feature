@@ -32,6 +32,9 @@ Feature: Report Schools flow
     And the page should be accessible
     And percy should be sent snapshot called "Lead provider report schools csv error page"
 
+    When I click on "input" containing "Continue"
+    Then I should be on "confirm partnerships" page
+
     When I click on "link" containing "Re-upload CSV"
     Then I should be on "partnership csv uploads" page
 

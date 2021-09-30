@@ -24,11 +24,11 @@ class NominationEmail < ApplicationRecord
     (sent_at + relative_time) > Time.zone.now
   end
 
-  def nomination_url
+  def nomination_url(utm_source: :nominate_tutor)
     Rails.application.routes.url_helpers.start_nominate_induction_coordinator_url(
       token: token,
       host: Rails.application.config.domain,
-      **UTMService.email(:nominate_tutor, :nominate_tutor),
+      **UTMService.email(utm_source, utm_source),
     )
   end
 

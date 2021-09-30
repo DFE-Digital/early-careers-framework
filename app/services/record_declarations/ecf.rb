@@ -5,15 +5,17 @@ module RecordDeclarations
     extend ActiveSupport::Concern
 
     included do
-      delegate :participant?, to: :user, allow_nil: true
+      extend ECFClassMethods
     end
 
-    def declaration_type
-      ParticipantDeclaration::ECF
-    end
+    module ECFClassMethods
+      def declaration_model
+        ParticipantDeclaration::ECF
+      end
 
-    def actual_lead_provider
-      user_profile&.school_cohort&.lead_provider&.cpd_lead_provider
+      def valid_declaration_types
+        %w[started completed retained-1 retained-2 retained-3 retained-4]
+      end
     end
   end
 end

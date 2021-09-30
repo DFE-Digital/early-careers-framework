@@ -18,6 +18,13 @@ class Partnership < ApplicationRecord
 
   has_paper_trail
 
+  after_save do |partnership|
+    unless partnership.saved_changes.empty?
+      school.ecf_participant_profiles.touch_all
+      school.ecf_participants.touch_all
+    end
+  end
+
   def challenged?
     challenge_reason.present?
   end

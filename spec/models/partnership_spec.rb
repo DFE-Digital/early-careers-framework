@@ -25,7 +25,8 @@ RSpec.describe Partnership, type: :model do
     user = profile.user
     user.update!(updated_at: 2.weeks.ago)
 
-    partnership.touch
+    partnership.update!(updated_at: 2.weeks.ago)
+
     expect(user.reload.updated_at).to be_within(1.second).of Time.zone.now
     expect(profile.reload.updated_at).to be_within(1.second).of Time.zone.now
   end

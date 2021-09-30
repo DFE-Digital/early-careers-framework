@@ -1,10 +1,12 @@
 <% content_for :title, "Choose your programme" %>
-<% content_for :before_content, govuk_back_link(
-  text: "Back",
-  href: advisory_schools_choose_programme_path)
-%>
+<% if @show_back_link %>
+  <% content_for :before_content, govuk_back_link(text: "Back", href: schools_dashboard_index_path) %>
+<% end %>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-l"><%= @school.name %></span>
+
     <%= form_for @induction_choice_form, url: schools_choose_programme_path, method: :post do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_collection_radio_buttons(
@@ -12,13 +14,18 @@
             @induction_choice_form.programme_choices,
             :id,
             :name,
-            legend: { text: "How do you want to run your #{@induction_choice_form.cohort.academic_year} induction for early career teachers?", size: "l", tag: "h1" },
+            legend: { text: "How do you want to run your training in #{@induction_choice_form.cohort.start_year} to #{@induction_choice_form.cohort.start_year + 1}?", size: "l", tag: "h1" },
             hint: -> { tag.p do
-              concat("Not sure? ")
-              concat(govuk_link_to("Check our guidance", "https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview"))
-              concat(", contact your ")
-              concat(govuk_link_to("local Teaching School Hub", "https://www.gov.uk/guidance/teaching-school-hubs#find-a-teaching-school-hub"))
-              concat(" or appropriate body.")
+              concat("If you’re not sure which type of training to choose, check our guidance on the ")
+              concat(govuk_link_to("statutory changes and new training programmes.", "https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview"))
+              concat(content_tag(:br))
+              concat(" You can also contact your ")
+              unless @school.cip_only?
+                concat(govuk_link_to("local teaching school hub", "https://www.gov.uk/guidance/teaching-school-hubs#find-a-teaching-school-hub"))
+                concat(" or ")
+              end
+              concat(govuk_link_to("appropriate body", "https://www.gov.uk/government/publications/appropriate-bodies-guidance-induction-and-the-early-career-framework"))
+              concat(" for guidance.")
             end }
           ) %>
       <%= f.govuk_submit "Continue" %>

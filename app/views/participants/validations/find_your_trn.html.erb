@@ -1,0 +1,30 @@
+<% title = "Find your teacher reference number" %>
+<% content_for :title, title %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: { action: :do_you_know_your_trn }) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl"><%= title %></h1>
+    <p class="govuk-body">If you do not know your teacher reference number (TRN), you can usually find it on your payslip, teachers’ pension documents, or teacher training records.</p>
+    <p class="govuk-body">QTS, GTC, DfE, DfES or DCSF numbers are the same as TRNs.</p>
+    <p class="govuk-body">Your number:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>is usually 7 digits, for example ‘4567814’</li>
+      <li>may include the letters ‘RP’ or a slash ‘/’ symbol, for example ‘RP99/12345’</li>
+    </ul>
+
+    <h2 class="govuk-heading-m">Request a TRN reminder email</h2>
+    <p class="govuk-body">Email <%= govuk_mail_to "qts.enquiries@education.gov.uk", "qts.enquiries@education.gov.uk" %>. You must include your:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>full name</li>
+      <li>date of birth</li>
+      <li>National Insurance number</li>
+    </ul>
+
+    <h2 class="govuk-heading-m">Request a TRN reminder by phone</h2>
+    <p class="govuk-body">Call the Teaching Regulation Agency on 020 7593 5394.</p>
+    <p class="govuk-body">Make sure you have your National Insurance number ready before you call.</p>
+    <p class="govuk-body">Phone lines are open 9 AM to 5PM Monday to Thursday, and 9AM to 4:30 PM on Friday. Lines are closed on bank holidays.</p>
+  </div>
+</div>

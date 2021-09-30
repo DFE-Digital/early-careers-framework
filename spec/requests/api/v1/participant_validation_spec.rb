@@ -2,6 +2,12 @@
 
 require "rails_helper"
 
+class DummyToken < ApiToken
+  def owner
+    "Test"
+  end
+end
+
 RSpec.describe "participant validation api endpoint", type: :request do
   describe "#show" do
     let(:token) { NPQRegistrationApiToken.create_with_random_token! }
@@ -24,7 +30,13 @@ RSpec.describe "participant validation api endpoint", type: :request do
       before do
         default_headers[:Authorization] = bearer_token
 
-        allow(ParticipantValidationService).to receive(:validate).and_return(service_response)
+        allow(ParticipantValidationService).to receive(:validate).with(
+          trn: trn,
+          full_name: full_name,
+          date_of_birth: date_of_birth,
+          nino: nino,
+          config: { check_first_name_only: true },
+        ).and_return(service_response)
       end
 
       it "returns correct jsonapi content type header" do
@@ -63,7 +75,7 @@ RSpec.describe "participant validation api endpoint", type: :request do
     end
 
     context "using valid token but for different scope" do
-      let(:other_token) { ApiToken.create_with_random_token! }
+      let(:other_token) { DummyToken.create_with_random_token! }
 
       it "returns 403" do
         default_headers[:Authorization] = "Bearer #{other_token}"

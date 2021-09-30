@@ -14,7 +14,18 @@ class ParticipantSerializer
     end
 
     def participant_active?(user)
-      user.early_career_teacher_profile&.active? || user.mentor_profile&.active?
+      user.teacher_profile.ecf_profile&.active_record?
+    end
+
+    def trn(user)
+      user.teacher_profile.trn || user.teacher_profile.ecf_profile.ecf_participant_validation_data&.trn
+    end
+
+    def validated_trn(user)
+      eligibility_status = user.teacher_profile.ecf_profile.ecf_participant_eligibility&.status
+      if %w[matched eligible].include?(eligibility_status)
+        user.teacher_profile.trn
+      end
     end
   end
 
@@ -24,28 +35,58 @@ class ParticipantSerializer
   active_participant_attribute :full_name, &:full_name
 
   active_participant_attribute :mentor_id do |user|
-    user.early_career_teacher_profile&.mentor&.id
+    user.teacher_profile.early_career_teacher_profile&.mentor&.id
   end
 
   active_participant_attribute :school_urn do |user|
-    user.early_career_teacher_profile&.school&.urn ||
-      user.mentor_profile&.school&.urn
+    user.teacher_profile.ecf_profile&.school&.urn
   end
 
-  attribute :participant_type do |user|
-    if user.early_career_teacher?
+  active_participant_attribute :participant_type do |user|
+    case user.teacher_profile.ecf_profile.type
+    when ParticipantProfile::ECT.name
       :ect
-    elsif user.mentor?
+    when ParticipantProfile::Mentor.name
       :mentor
     end
   end
 
   active_participant_attribute :cohort do |user|
-    user.early_career_teacher_profile&.cohort&.start_year ||
-      user.mentor_profile.cohort&.start_year
+    user.teacher_profile.ecf_profile.cohort.start_year.to_s
   end
 
   attribute :status do |user|
-    user.early_career_teacher_profile&.status || user.mentor_profile&.status || "withdrawn"
+    user.teacher_profile.ecf_profile&.status || "withdrawn"
+  end
+
+  active_participant_attribute :teacher_reference_number do |user|
+    trn(user)
+  end
+
+  active_participant_attribute :teacher_reference_number_validated do |user|
+    trn(user).nil? ? nil : validated_trn(user).present?
+  end
+
+  active_participant_attribute :eligible_for_funding do |user|
+    # TODO: we want to check eligibility without communicating it yet - except for sandbox
+    if Rails.env.sandbox?
+      user.teacher_profile.ecf_profile.ecf_participant_eligibility&.eligible_status? || nil
+    end
+  end
+
+  active_participant_attribute :pupil_premium_uplift do |user|
+    user.teacher_profile.ecf_profile&.pupil_premium_uplift
+  end
+
+  active_participant_attribute :sparsity_uplift do |user|
+    user.teacher_profile.ecf_profile&.sparsity_uplift
+  end
+
+  active_participant_attribute :training_status do |user|
+    user.teacher_profile.ecf_profile&.state || "active"
+  end
+
+  active_participant_attribute :schedule_identifier do |user|
+    user.teacher_profile.ecf_profile&.schedule&.schedule_identifier
   end
 end

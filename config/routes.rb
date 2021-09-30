@@ -45,28 +45,40 @@ Rails.application.routes.draw do
   end
 
   namespace :api, defaults: { format: "json" } do
-    resources :school_search, only: %i[index]
     resource :notify_callback, only: :create, path: "notify-callback"
 
     namespace :v1 do
-      resources :participants, only: :index, constraints: ->(_request) { FeatureFlag.active?(:participant_data_api) }
-      resources :participant_declarations, only: %i[create], path: "participant-declarations"
+      resources :ecf_participants, path: "participants/ecf", only: %i[index]
+      resources :participants, only: %i[index], controller: "ecf_participants"
+      resources :participants, only: [] do
+        member do
+          put :defer
+          put :resume
+          put :withdraw
+          put :change_schedule, path: "change-schedule"
+        end
+      end
+      resources :participant_declarations, only: %i[create index show], path: "participant-declarations" do
+        member do
+          put :void
+        end
+      end
       resources :users, only: %i[index create]
       resources :ecf_users, only: %i[index create], path: "ecf-users"
-      resources :dqt_records, only: :show, path: "dqt-records"
       resources :participant_validation, only: :show, path: "participant-validation"
-      resources :npq_applications, only: :index, path: "npq-applications"
+      resources :npq_applications, only: :index, path: "npq-applications" do
+        member do
+          post :accept
+          post :reject
+        end
+      end
 
-      jsonapi_resources :npq_profiles, only: [:create]
+      resources :npq_profiles, only: [:create], path: "npq-profiles"
 
       namespace :data_studio, path: "data-studio" do
         get "/school-rollout", to: "school_rollout#index"
       end
     end
-  end
-
-  namespace :demo do
-    resources :school_search, only: %i[index]
   end
 
   scope :nominations, module: :nominations do
@@ -80,7 +92,6 @@ Rails.application.routes.draw do
         get "review", action: :review
         post "review", action: :create
         get "success", action: :success
-        get "cip-only", action: :cip_only
         get "not-eligible", action: :not_eligible
         get "limit-reached", action: :limit_reached
         get "already-nominated", action: :already_nominated
@@ -237,11 +248,52 @@ Rails.application.routes.draw do
   end
 
   namespace :finance do
-    resources :lead_providers, only: %i[index], path: "lead-providers"
+    resource :landing_page, only: :show, path: "manage-cpd-contracts", controller: "landing_page"
+    resource :payment_breakdowns, only: :show, path: "payment-breakdowns", controller: "payment_breakdowns" do
+      get "/choose-programme", to: "payment_breakdowns#select_programme", as: :select_programme
+      post "/choose-programme", to: "payment_breakdowns#choose_programme", as: :choose_programme
+      get "/choose-provider-ecf", to: "payment_breakdowns#select_provider_ecf", as: :select_provider_ecf
+      post "/choose-provider-ecf", to: "payment_breakdowns#choose_provider_ecf", as: :choose_provider_ecf
+      get "/choose-provider-npq", to: "payment_breakdowns#select_provider_npq", as: :select_provider_npq
+      post "/choose-provider-npq", to: "payment_breakdowns#choose_provider_npq", as: :choose_provider_npq
+    end
+    namespace :ecf do
+      resources :payment_breakdowns, only: %i[show]
+      resources :contracts, only: %i[show]
+    end
+    namespace :npq do
+      resources :payment_breakdowns, only: %i[show]
+    end
   end
 
   namespace :participants do
-    resource :start_registrations, path: "/start-registration", only: :show, constraints: ->(_request) { FeatureFlag.active?(:participant_validation) }
+    resource :no_access, only: :show, controller: "no_access"
+    resource :start_registrations, path: "/start-registration", only: :show
+
+    scope :validation, as: :validation do
+      get "/", to: "validations#start", as: :start
+      get "/do-you-want-to-add-your-mentor-information", to: "validations#do_you_want_to_add_mentor_information", as: :do_you_want_to_add_mentor_information
+      put "/do-you-want-to-add-your-mentor-information", to: "validations#do_you_want_to_add_mentor_information"
+      get "/do-you-know-your-teacher-reference-number", to: "validations#do_you_know_your_trn", as: :do_you_know_your_trn
+      put "/do-you-know-your-teacher-reference-number", to: "validations#do_you_know_your_trn"
+      get "/have-you-changed-your-name", to: "validations#have_you_changed_your_name", as: :have_you_changed_your_name
+      put "/have-you-changed-your-name", to: "validations#have_you_changed_your_name"
+      get "/confirm-name-change", to: "validations#confirm_updated_record", as: :confirm_updated_record
+      put "/confirm-name-change", to: "validations#confirm_updated_record"
+      get "/name-not-updated", to: "validations#name_not_updated", as: :name_not_updated
+      put "/name-not-updated", to: "validations#name_not_updated"
+      get "/tell-us-your-details", to: "validations#tell_us_your_details", as: :tell_us_your_details
+      put "/tell-us-your-details", to: "validations#tell_us_your_details"
+      get "/confirm-these-details", to: "validations#confirm_details", as: :confirm_details
+      put "/confirm-these-details", to: "validations#confirm_details"
+      get "/find-your-teacher-reference-number", to: "validations#find_your_trn", as: :find_your_trn
+      get "/get-a-teacher-reference-number", to: "validations#get_a_trn", as: :get_a_trn
+      get "/change-your-details-with-the-teacher-regulation-agency", to: "validations#change_your_details_with_tra", as: :change_your_details_with_tra
+      get "/check-with-the-teacher-regulation-agency", to: "validations#check_with_tra", as: :check_with_tra
+      get "/cannot-find-your-details", to: "validations#cannot_find_details", as: :cannot_find_details
+      put "/cannot-find-your-details", to: "validations#cannot_find_details"
+      get "/complete", to: "validations#complete", as: :complete
+    end
   end
 
   namespace :schools do
@@ -249,20 +301,17 @@ Rails.application.routes.draw do
 
     scope "/:school_id" do
       resource :choose_programme, controller: :choose_programme, only: %i[show create], path: "choose-programme" do
-        get :advisory
-
         get :confirm_programme, path: "confirm-programme"
         get :choice_saved_design_our_own, path: "design-your-programme"
+        get :choice_saved_school_funded_fip, path: "school-funded-fip"
         get :choice_saved_no_early_career_teachers, path: "no-early-career-teachers"
         post :save_programme, path: "save-programme"
         get :success
       end
 
       resource :year_2020, path: "year-2020", controller: "year2020", only: [], constraints: ->(_request) { FeatureFlag.active?(:year_2020_data_entry) } do
-        get "start", action: :start
+        get "support-materials-for-NQTs", action: :start, as: :start
 
-        get "choose-induction-programme", action: :select_induction_programme
-        put "choose-induction-programme", action: :choose_induction_programme
         get "choose-core-induction-programme", action: :select_cip
         put "choose-core-induction-programme", action: :choose_cip
         get "add-teacher", action: :new_teacher
@@ -275,6 +324,7 @@ Rails.application.routes.draw do
         post "check-your-answers", action: :confirm
         get "success", action: :success
 
+        get "2020-cohort-already-have-access", action: :cohort_already_have_access
         get "no-accredited-materials", action: :no_accredited_materials
       end
 
@@ -283,7 +333,8 @@ Rails.application.routes.draw do
           resources :partnerships, only: :index
           resource :programme, only: %i[edit], controller: "choose_programme"
 
-          resources :participants, only: %i[index show] do
+          resources :participants, only: %i[index show destroy] do
+            get :remove
             get :edit_name, path: "edit-name"
             put :update_name, path: "update-name"
             get :edit_email, path: "edit-email"
@@ -319,10 +370,10 @@ Rails.application.routes.draw do
   mount OpenApi::Rswag::Ui::Engine => "/api-docs"
   mount OpenApi::Rswag::Api::Engine => "/api-docs"
 
-  resource :school_search, only: %i[show create], path: "school-search", controller: :school_search
-
   get "/ministerial-letter", to: redirect("ECF%20Letter.pdf")
   get "/ecf-leaflet", to: redirect("ECFleaflet2021.pdf")
+
+  get "/how-to-set-up-your-programme", to: "step_by_step#show", as: :step_by_step
 
   post "__session", to: "support/request_spec/session_helper#update" if Rails.env.test?
 end

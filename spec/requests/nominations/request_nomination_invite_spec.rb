@@ -57,9 +57,9 @@ RSpec.describe "Requesting an invitation to nominate an induction tutor", type: 
     context "when given a cip eligible only school" do
       let(:school) { create(:school, school_type_code: 10) }
 
-      it "redirects to cip_only" do
+      it "redirects to review" do
         when_i_choose_the_school
-        expect(response).to redirect_to(cip_only_request_nomination_invite_path)
+        expect(response).to redirect_to(review_request_nomination_invite_path)
       end
     end
 
@@ -120,13 +120,6 @@ RSpec.describe "Requesting an invitation to nominate an induction tutor", type: 
     it "renders the success page" do
       get "/nominations/success"
       expect(response).to render_template(:success)
-    end
-  end
-
-  describe "cip only" do
-    it "renders the cip only page" do
-      get "/nominations/cip-only"
-      expect(response).to render_template(:cip_only)
     end
   end
 

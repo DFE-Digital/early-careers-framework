@@ -1,5 +1,5 @@
-<%= govuk_notification_banner(title: "Important") do |banner| %>
-  <% banner.add_heading(text: "#{delivery_partner.name}, with #{lead_provider.name}, has confirmed your school.") %>
+<%= govuk_notification_banner(title_text: "Important") do |banner| %>
+  <% banner.heading(text: "#{delivery_partner.name}, with #{lead_provider.name}, has confirmed your school.") %>
   <p>This means they will be delivering an induction programme to your early career teachers, starting in
     <%= cohort.start_year %>.</p>
   <p>If this is a

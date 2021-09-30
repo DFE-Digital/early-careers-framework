@@ -1,96 +1,141 @@
 # frozen_string_literal: true
 
-require "json_schema/validate_body_against_schema"
+require "abstract_interface"
 
 module RecordDeclarations
   class Base
-    attr_accessor :params
+    include Participants::ProfileAttributes
+    include AbstractInterface
+    implement_class_method :required_params, :valid_declaration_types
+    implement_instance_method :user_profile
 
-    delegate :user_profile, :actual_lead_provider, to: :not_implemented_error
+    RFC3339_DATE_REGEX = /\A\d{4}-\d{2}-\d{2}T(\d{2}):(\d{2}):(\d{2})([.,]\d+)?(Z|[+-](\d{2})(:?\d{2})?)?\z/i.freeze
+
+    attr_accessor :declaration_date, :declaration_type
+
+    validates :declaration_date, :declaration_type, presence: true
+    validates :parsed_date, future_date: true, allow_blank: true
+    validate :date_has_the_right_format
+
+    validates :declaration_type, inclusion: { in: :valid_declaration_types, message: I18n.t(:invalid_declaration_type) }
+    delegate :schedule, :participant_declarations, to: :user_profile, allow_nil: true
 
     class << self
-      delegate :required_params, to: :not_implemented_error
-
-      def call(params)
-        new(params).call
+      def call(params:)
+        new(params: params).call
       end
-
-      def not_implemented_error
-        raise NotImplementedError, "Method must be implemented"
-      end
-
-      def schema_validation_params
-        { version: "0.3" }
-      end
-
-      def schema
-        JSON.parse(File.read(::JsonSchema::VersionEventFileName.call(schema_validation_params)))
-      end
-    end
-
-    def not_implemented_error
-      self.class.not_implemented_error
     end
 
     def call
-      validate_schema!
-      validate_participant_params!
+      unless valid?
+        raise ActionController::ParameterMissing, errors.map(&:message)
+      end
 
-      declaration = create_record!
+      declaration_attempt = create_declaration_attempt!
       validate_provider!
-      { id: declaration.id }
+      validate_milestone!
+      validate_participant_state!
+
+      raise ActiveRecord::RecordNotUnique, "Declaration with given participant ID already exists" if record_exists_with_different_declaration_date?
+
+      declaration = find_or_create_record!
+
+      declaration.refresh_payability!
+      declaration_attempt.update!(participant_declaration: declaration)
+
+      ParticipantDeclarationSerializer.new(declaration).serializable_hash.to_json
     end
 
   private
 
-    def initialize(params)
-      @params = params
+    def initialize(params:)
+      self.participant_id = params[:participant_id]
+      self.course_identifier = params[:course_identifier]
+      self.cpd_lead_provider = params[:cpd_lead_provider]
+      self.declaration_date = params[:declaration_date]
+      self.declaration_type = params[:declaration_type]
     end
 
-    def validate_schema!
-      errors = ::JsonSchema::ValidateBodyAgainstSchema.call(schema: self.class.schema, body: params[:raw_event])
-      raise ActionController::ParameterMissing, (errors.map { |error| error.sub(/\sin schema.*$/, "") }) unless errors.empty?
+    def parsed_date
+      Time.zone.parse(declaration_date)
     end
 
-    def validate_participant_params!
-      raise ActionController::ParameterMissing, [I18n.t(:invalid_course)] unless course_valid_for_participant?
-      raise ActionController::ParameterMissing, [I18n.t(:invalid_participant)] unless participant?
+    def create_declaration_attempt!
+      ParticipantDeclarationAttempt.create!(
+        course_identifier: course_identifier,
+        declaration_date: declaration_date,
+        declaration_type: declaration_type,
+        cpd_lead_provider: cpd_lead_provider,
+        user: user,
+      )
     end
 
-    def user_id
-      params[:user_id]
-    end
-
-    def course
-      params[:course_identifier]
-    end
-
-    def user
-      @user ||= User.find_by(id: user_id)
-    end
-
-    def course_valid_for_participant?
-      self.class.valid_courses.include?(course) && user_profile
-    end
-
-    def create_record!
+    def find_or_create_record!
       ActiveRecord::Base.transaction do
-        declaration_type.create!(params.slice(*self.class.required_params)).tap do |participant_declaration|
-          ProfileDeclaration.create!(
+        self.class.declaration_model.find_or_create_by!(
+          course_identifier: course_identifier,
+          declaration_date: declaration_date,
+          declaration_type: declaration_type,
+          cpd_lead_provider: cpd_lead_provider,
+          user: user,
+        ) do |participant_declaration|
+          profile_declaration = ProfileDeclaration.create!(
             participant_declaration: participant_declaration,
             participant_profile: user_profile,
           )
+          profile_declaration.update!(payable: participant_declaration.currently_payable)
         end
       end
     end
 
-    def lead_provider_from_token
-      params[:cpd_lead_provider]
+    def record_exists_with_different_declaration_date?
+      declaration = self.class.declaration_model.find_by(
+        user: user,
+        course_identifier: course_identifier,
+        declaration_type: declaration_type,
+      )
+
+      declaration.present? && declaration.declaration_date != Time.zone.parse(declaration_date)
+    end
+
+    def date_has_the_right_format
+      return if declaration_date.blank?
+
+      errors.add(:declaration_date, I18n.t(:invalid_declaration_date)) unless declaration_date.match(RFC3339_DATE_REGEX)
+      parsed_date
+    rescue StandardError
+      errors.add(:declaration_date, I18n.t(:invalid_declaration_date))
     end
 
     def validate_provider!
-      # TODO: Remove the nil? check and fix the test setup so that they build the school cohort, partnership and give us back the actual lead_provider.
-      raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless actual_lead_provider.nil? || lead_provider_from_token == actual_lead_provider
+      raise ActionController::ParameterMissing, I18n.t(:invalid_participant) unless matches_lead_provider?
+    end
+
+    def validate_milestone!
+      if parsed_date <= milestone.start_date.beginning_of_day
+        raise ActionController::ParameterMissing, I18n.t(:declaration_before_milestone_start)
+      end
+
+      if milestone.milestone_date.end_of_day < parsed_date
+        raise ActionController::ParameterMissing, I18n.t(:declaration_after_milestone_cutoff)
+      end
+    end
+
+    def validate_participant_state!
+      last_state = user_profile.state_at(declaration_date)
+      raise ActionController::ParameterMissing, I18n.t(:declaration_on_incorrect_state) unless last_state&.state.nil? || last_state.active?
+    end
+
+    def milestone
+      unless schedule
+        raise ActionController::ParameterMissing, I18n.t(:schedule_missing)
+      end
+
+      schedule.milestones.find_by(declaration_type: declaration_type)
+    end
+
+    def valid_declaration_types
+      self.class.valid_declaration_types
     end
   end
 end

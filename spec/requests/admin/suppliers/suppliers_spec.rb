@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-include NewSupplierHelper
 
 RSpec.describe "Admin::Suppliers", type: :request do
+  include NewSupplierHelper
+
   before do
     admin_user = create(:user, :admin)
     sign_in admin_user

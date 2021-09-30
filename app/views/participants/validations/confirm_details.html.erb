@@ -1,0 +1,37 @@
+<% content_for :title, "Confirm these details" %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: { action: :tell_us_your_details }) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Confirm these details</h1>
+    <p class="govuk-body">Check the following details are correct before continuing.</p>
+    <%= govuk_summary_list do |component|
+      component.row do |row|
+        row.key { "Full name" }
+        row.value { @participant_validation_form.name }
+        row.action(text: "Change", href: participants_validation_tell_us_your_details_path)
+      end
+      component.row do |row|
+        row.key { "TRN" }
+        row.value { @participant_validation_form.trn }
+        row.action(text: "Change", href: participants_validation_tell_us_your_details_path)
+      end
+      component.row do |row|
+        row.key { "Date of birth" }
+        row.value { @participant_validation_form.pretty_date_of_birth }
+        row.action(text: "Change", href: participants_validation_tell_us_your_details_path)
+      end
+      component.row do |row|
+        row.key { "National Insurance number" }
+        row.value { @participant_validation_form.national_insurance_number }
+        row.action(text: "Change", href: participants_validation_tell_us_your_details_path)
+      end
+    end %>
+
+    <%= form_for @participant_validation_form, url: { action: @participant_validation_form.step }, method: :put do |f| %>
+      <%= f.hidden_field :step, value: @participant_validation_form.step %>
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

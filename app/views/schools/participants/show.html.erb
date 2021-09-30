@@ -1,17 +1,14 @@
 <% content_for :title, "ECT or mentor details" %>
 
 <% content_for :before_content, govuk_breadcrumbs(
-  breadcrumbs: breadcrumbs(@school, @cohort).merge({ "Early career teachers and mentors" => schools_participants_path })
+  breadcrumbs: breadcrumbs(@school).merge({ "Early career teachers and mentors" => schools_participants_path })
 ) %>
 
 <span class="govuk-caption-l"><%= @cohort.display_name %> cohort</span>
-<h1 class="govuk-heading-l"><%= @participant.full_name %> <%= render GovukComponent::Tag.new(text: "Pending", colour: "grey") %></h1>
+<h1 class="govuk-heading-l"><%= @profile.user.full_name %> <%= render ParticipantStatusTagComponent.new(profile: @profile) %></h1>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <p class="govuk-inset-text">We will let you know if we need any more details, such as their Teacher Reference Number
-      (TRN). We will also update you on their status.</p>
-
     <h2 class="govuk-heading-m">Participant details</h2>
 
     <dl class="govuk-summary-list govuk-!-margin-bottom-9">
@@ -20,10 +17,10 @@
           Full name
         </dt>
         <dd class="govuk-summary-list__value">
-          <%= @participant.full_name %>
+          <%= @profile.user.full_name %>
         </dd>
         <dd class="govuk-summary-list__actions">
-          <%= govuk_link_to schools_participant_edit_name_path(participant_id: @participant) do %>
+          <%= govuk_link_to schools_participant_edit_name_path(participant_id: @profile) do %>
             Change <span class="govuk-visually-hidden">name</span>
           <% end %>
         </dd>
@@ -33,10 +30,10 @@
           Email address
         </dt>
         <dd class="govuk-summary-list__value">
-          <%= @participant.email %>
+          <%= @profile.user.email %>
         </dd>
         <dd class="govuk-summary-list__actions">
-          <%= govuk_link_to schools_participant_edit_email_path(participant_id: @participant) do %>
+          <%= govuk_link_to schools_participant_edit_email_path(participant_id: @profile) do %>
             Change <span class="govuk-visually-hidden">email</span>
           <% end %>
         </dd>
@@ -46,27 +43,27 @@
           Type
         </dt>
         <dd class="govuk-summary-list__value">
-          <%= @participant.user_description %>
+          <%= @profile.user.user_description %>
         </dd>
         <dd class="govuk-summary-list__actions">
         </dd>
       </div>
 
-      <% if @participant.early_career_teacher? %>
+      <% if @profile.ect? %>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">
             Mentor
           </dt>
           <dd class="govuk-summary-list__value">
             <% if @mentor %>
-              <%= govuk_link_to @mentor.full_name, schools_participant_path(id: @mentor.id) %>
+              <%= govuk_link_to @mentor.full_name, schools_participant_path(id: @mentor.mentor_profile.id) %>
             <% else %>
               Not yet assigned
             <% end %>
           </dd>
           <dd class="govuk-summary-list__actions">
             <% if @mentors_added %>
-              <%= govuk_link_to schools_participant_edit_mentor_path(participant_id: @participant.id) do %>
+              <%= govuk_link_to schools_participant_edit_mentor_path(participant_id: @profile.id) do %>
                 Change <span class="govuk-visually-hidden">mentor</span>
               <% end %>
             <% end %>
@@ -76,3 +73,5 @@
     </dl>
   </div>
 </div>
+
+<%= render Schools::Participants::RemoveFromCohortComponent.new(profile: @profile) %>

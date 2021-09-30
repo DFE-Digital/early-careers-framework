@@ -22,6 +22,42 @@ RSpec.describe SchoolMailer, type: :mailer do
     end
   end
 
+  describe "#cip_only_invite_email" do
+    let(:primary_contact_email) { "contact@example.com" }
+    let(:nomination_url) { "https://ecf-dev.london.cloudapps/nominations?token=abc123" }
+
+    let(:cip_only_invite_email) do
+      SchoolMailer.cip_only_invite_email(
+        recipient: primary_contact_email,
+        nomination_url: nomination_url,
+        school_name: "Great Ouse Academy",
+      ).deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(cip_only_invite_email.from).to eq(["mail@example.com"])
+      expect(cip_only_invite_email.to).to eq([primary_contact_email])
+    end
+  end
+
+  describe "#section_41_invite_email" do
+    let(:primary_contact_email) { "contact@example.com" }
+    let(:nomination_url) { "https://ecf-dev.london.cloudapps/nominations?token=abc123" }
+
+    let(:section_41_invite_email) do
+      SchoolMailer.section_41_invite_email(
+        recipient: primary_contact_email,
+        nomination_url: nomination_url,
+        school_name: "Great Ouse Academy",
+      ).deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(section_41_invite_email.from).to eq(["mail@example.com"])
+      expect(section_41_invite_email.to).to eq([primary_contact_email])
+    end
+  end
+
   describe "#nomination_email_confirmation" do
     let(:school) { create(:school) }
     let(:user) { create(:user, :induction_coordinator) }
@@ -32,6 +68,7 @@ RSpec.describe SchoolMailer, type: :mailer do
         user: user,
         school: school,
         start_url: start_url,
+        step_by_step_url: start_url,
       ).deliver_now
     end
 
@@ -92,6 +129,52 @@ RSpec.describe SchoolMailer, type: :mailer do
     it "renders the right headers" do
       expect(partnership_notification_email.from).to eq(["mail@example.com"])
       expect(partnership_notification_email.to).to eq([recipient])
+    end
+  end
+
+  describe "#year2020_add_participants_confirmation" do
+    let(:school) { create(:school) }
+    let(:ect_one) { create(:user, :early_career_teacher) }
+    let(:ect_two) { create(:user, :early_career_teacher) }
+
+    let(:year2020_add_participants_confirmation) do
+      SchoolMailer.year2020_add_participants_confirmation(
+        school: school,
+        participants: [ect_one, ect_two],
+      ).deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(year2020_add_participants_confirmation.to).to eq([school.contact_email])
+      expect(year2020_add_participants_confirmation.from).to eq(["mail@example.com"])
+    end
+  end
+
+  describe "nqt_plus_one_sitless_invite" do
+    let(:email) do
+      SchoolMailer.nqt_plus_one_sitless_invite(
+        recipient: "hello@example.com",
+        start_url: "www.example.com",
+      ).deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(email.to).to eq(["hello@example.com"])
+      expect(email.from).to eq(["mail@example.com"])
+    end
+  end
+
+  describe "nqt_plus_one_sit_invite" do
+    let(:email) do
+      SchoolMailer.nqt_plus_one_sit_invite(
+        recipient: "hello@example.com",
+        start_url: "www.example.com",
+      ).deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(email.to).to eq(["hello@example.com"])
+      expect(email.from).to eq(["mail@example.com"])
     end
   end
 end

@@ -2,13 +2,13 @@
 
 module RecordDeclarations
   module Retained
-    class NPQ < ::RecordDeclarations::Base
+    class NPQ < Base
+      include Participants::NPQ
       include RecordDeclarations::NPQ
-      include Retained
 
       class << self
-        def schema_validation_params
-          super.merge({ schema_path: "npq/participant_declarations/retained" })
+        def valid_evidence_types
+          %w[yes].freeze
         end
       end
     end

@@ -8,21 +8,29 @@ FactoryBot.define do
     declaration_type { "started" }
 
     factory :ect_participant_declaration do
+      user { create(:user, :early_career_teacher) }
       type { "ParticipantDeclaration::ECF" }
       course_identifier { "ecf-induction" }
-      profile_type { :early_career_teacher_profile }
+      profile_type { :ect }
       with_profile_type
     end
 
     factory :mentor_participant_declaration do
+      user { create(:user, :mentor) }
       type { "ParticipantDeclaration::ECF" }
       course_identifier { "ecf-mentor" }
-      profile_type { :mentor_profile }
+      profile_type { :mentor }
       with_profile_type
     end
 
     factory :npq_participant_declaration do
+      initialize_with { ParticipantDeclaration::NPQ.new(attributes) }
+
+      user { create(:user, :npq) }
+      type { "ParticipantDeclaration::NPQ" }
+      profile_type { :npq }
       course_identifier { NPQCourse.all.map(&:identifier).sample }
+      with_profile_type
     end
 
     trait :sparsity_uplift do
@@ -37,18 +45,25 @@ FactoryBot.define do
       uplift { :uplift_flags }
     end
 
+    trait :payable do
+      payable { true }
+    end
+
     transient do
-      uplift { :sparsity_uplift }
-      profile_type { :early_career_teacher_profile }
+      uplift { [] }
+      profile_type { :ect }
+      payable { false }
     end
 
     trait :with_profile_type do
       after(:create) do |participant_declaration, evaluator|
         create(:profile_declaration,
                participant_declaration: participant_declaration,
+               payable: evaluator.payable,
                participant_profile: create(
+                 :participant_profile,
                  evaluator.profile_type,
-                 evaluator.uplift,
+                 *evaluator.uplift,
                ))
       end
     end

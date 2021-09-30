@@ -46,7 +46,7 @@ describe("Accessibility", () => {
     cy.percySnapshot("Confirm sign in page");
 
     cy.get('[action="/users/sign_in_with_token"] [name="commit"]').click();
-    cy.get("h1").should("contain", "User dashboard");
+    cy.get("h1").should("contain", "You cannot use this service yet");
     cy.checkA11y();
 
     cy.logout();

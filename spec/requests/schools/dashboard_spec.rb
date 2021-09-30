@@ -28,7 +28,7 @@ RSpec.describe "Schools::Dashboard", type: :request do
     it "should redirect to programme selection if programme not chosen" do
       get "/schools/#{school.slug}"
 
-      expect(response).to redirect_to("/schools/#{school.slug}/choose-programme/advisory")
+      expect(response).to redirect_to("/schools/#{school.slug}/choose-programme")
     end
 
     context "when the programme has been chosen" do

@@ -2,8 +2,8 @@
 
 require "rails_helper"
 
-RSpec.feature "Participant start registration journey", type: :feature, rutabaga: false do
-  scenario "Visit the registration landing page", js: true, with_feature_flags: { participant_validation: "active" } do
+RSpec.feature "Participant start registration journey", type: :feature do
+  scenario "Visit the registration landing page", js: true do
     when_i_visit_the_start_registration_page
     then_i_should_see_the_registration_heading
     and_i_should_see_a_continue_button

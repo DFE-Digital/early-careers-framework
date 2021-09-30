@@ -3,7 +3,8 @@
 module Tasks
   class PaymentBreakdown
     attr_accessor :total_participants, :uplift_participants, :contract, :total_ects, :total_mentors, :service_fee_calculator, :output_calculator, :uplift_calculator
-    delegate :bands, :recruitment_target, to: :contract
+
+    delegate :bands, :recruitment_target, :revised_target, to: :contract
 
     class << self
       def call(contract:, total_participants:, uplift_participants:, total_ects: 0, total_mentors: 0)
@@ -18,9 +19,9 @@ module Tasks
       @total_ects = total_ects
       @total_mentors = total_mentors
       @logger = set_up_logger
-      @service_fee_calculator = PaymentCalculator::Ecf::ServiceFeesForBand.new({ contract: contract })
-      @output_calculator = PaymentCalculator::Ecf::OutputPaymentAggregator.new({ contract: contract })
-      @uplift_calculator = PaymentCalculator::Ecf::UpliftCalculation.new({ contract: contract })
+      @service_fee_calculator = PaymentCalculator::ECF::ServiceFeesForBand.new({ contract: contract })
+      @output_calculator = PaymentCalculator::ECF::OutputPaymentAggregator.new({ contract: contract })
+      @uplift_calculator = PaymentCalculator::ECF::UpliftCalculation.new({ contract: contract })
     end
 
     def set_up_logger
@@ -32,7 +33,7 @@ module Tasks
     end
 
     def service_fee_per_participant(band)
-      service_fee_calculator.send(:service_fee_per_participant, band)
+      band.service_fee_per_participant
     end
 
     def service_fee_monthly(band)
@@ -49,7 +50,7 @@ module Tasks
 
     # Output helper methods
     def index_to_heading(number)
-      ("a".."c").to_a[number]
+      I18n.t("finance.ecf.bands.#{number}")
     end
 
     def lead_provider_name
@@ -75,10 +76,11 @@ module Tasks
           ["Provider", lead_provider_name],
           %w[Milestone Started],
           ["Recruitment target", recruitment_target],
+          (["Revised target", revised_target] if revised_target),
           ["Current ECTs", total_ects],
           ["Current mentors", total_mentors],
           ["Current participants", total_participants],
-        ]
+        ].compact
       end
     end
 
@@ -86,10 +88,9 @@ module Tasks
       Terminal::Table.new do |t|
         t.title = "Service fee"
         t.headings = ["Band", "Number of Participants", "Payment amount per person", "Payment amount monthly"]
-        t.rows = (0..2).map do |row|
-          band = contract.bands[row]
+        t.rows = contract.bands.map.with_index do |band, row|
           [
-            index_to_heading(row).upcase,
+            I18n.t("finance.ecf.bands.#{row}"),
             band.number_of_participants_in_this_band(recruitment_target),
             as_financial { service_fee_per_participant(band) },
             as_financial { service_fee_monthly(band) },
@@ -103,10 +104,9 @@ module Tasks
       Terminal::Table.new do |t|
         t.title = "Output fee"
         t.headings = ["Band", "Number of Participants", "Payment amount per person", "Payment amount for period"]
-        t.rows = (0..2).map do |row|
-          band = contract.bands[row]
+        t.rows = contract.bands.map.with_index do |band, row|
           [
-            ("A".."C").to_a[row],
+            I18n.t("finance.ecf.bands.#{row}"),
             band.number_of_participants_in_this_band(total_participants),
             as_financial { output_payment_per_participant(band) },
             as_financial { output_payment_total(band) },

@@ -4,6 +4,6 @@
   <%= f.hidden_field :answers_checked, value: true %>
   <div class="govuk-button-group">
     <%= f.govuk_submit "Delete", classes: "govuk-button--warning", "data-test": "delete-button" %>
-    <%= govuk_link_to "Back", edit_admin_delivery_partner_path(@delivery_partner), button: true, class: "govuk-button--secondary" %>
+    <%= govuk_button_link_to "Back", edit_admin_delivery_partner_path(@delivery_partner), class: "govuk-button--secondary" %>
   </div>
 <% end %>

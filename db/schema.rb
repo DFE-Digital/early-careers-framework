@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_02_120418) do
+ActiveRecord::Schema.define(version: 2021_09_24_124114) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -63,6 +63,13 @@ ActiveRecord::Schema.define(version: 2021_08_02_120418) do
     t.index ["user_id"], name: "index_admin_profiles_on_user_id"
   end
 
+  create_table "api_request_audits", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "path"
+    t.jsonb "body"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "api_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "lead_provider_id"
     t.string "hashed_token", null: false
@@ -87,6 +94,7 @@ ActiveRecord::Schema.define(version: 2021_08_02_120418) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "lead_provider_id", default: -> { "gen_random_uuid()" }, null: false
+    t.integer "revised_target"
     t.index ["lead_provider_id"], name: "index_call_off_contracts_on_lead_provider_id"
   end
 
@@ -160,6 +168,8 @@ ActiveRecord::Schema.define(version: 2021_08_02_120418) do
     t.string "school_website"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "section_41_approved"
+    t.string "la_code"
     t.index ["urn"], name: "index_data_stage_schools_on_urn", unique: true
   end
 
@@ -194,6 +204,64 @@ ActiveRecord::Schema.define(version: 2021_08_02_120418) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["local_authority_district_id"], name: "index_district_sparsities_on_local_authority_district_id"
+  end
+
+  create_table "ecf_ineligible_participants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "trn"
+    t.string "reason", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["trn"], name: "index_ecf_ineligible_participants_on_trn", unique: true
+  end
+
+  create_table "ecf_participant_eligibilities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "participant_profile_id", null: false
+    t.boolean "qts"
+    t.boolean "active_flags"
+    t.boolean "previous_participation"
+    t.boolean "previous_induction"
+    t.boolean "manually_validated", default: false
+    t.string "status", default: "manual_check", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["participant_profile_id"], name: "index_ecf_participant_eligibilities_on_participant_profile_id", unique: true
+  end
+
+  create_table "ecf_participant_validation_data", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "participant_profile_id", null: false
+    t.string "full_name"
+    t.date "date_of_birth"
+    t.string "trn"
+    t.string "nino"
+    t.boolean "api_failure", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["participant_profile_id"], name: "index_ecf_participant_validation_data_on_participant_profile_id", unique: true
+  end
+
+  create_table "email_associations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "email_id", null: false
+    t.string "object_type", null: false
+    t.uuid "object_id", null: false
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["email_id"], name: "index_email_associations_on_email_id"
+    t.index ["object_type", "object_id"], name: "index_email_associations_on_object"
+  end
+
+  create_table "emails", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "from"
+    t.string "to", array: true
+    t.uuid "template_id"
+    t.integer "template_version"
+    t.string "uri"
+    t.jsonb "personalisation"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "status", default: "submitted", null: false
+    t.datetime "delivered_at"
+    t.string "tags", default: [], null: false, array: true
   end
 
   create_table "event_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -248,6 +316,7 @@ ActiveRecord::Schema.define(version: 2021_08_02_120418) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "discarded_at"
+    t.datetime "reminder_email_sent_at"
     t.index ["discarded_at"], name: "index_induction_coordinator_profiles_on_discarded_at"
     t.index ["user_id"], name: "index_induction_coordinator_profiles_on_user_id"
   end
@@ -305,6 +374,18 @@ ActiveRecord::Schema.define(version: 2021_08_02_120418) do
     t.string "code"
     t.string "name"
     t.index ["code"], name: "index_local_authority_districts_on_code", unique: true
+  end
+
+  create_table "milestones", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.text "name", null: false
+    t.date "milestone_date", null: false
+    t.date "payment_date", null: false
+    t.uuid "schedule_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.date "start_date"
+    t.string "declaration_type"
+    t.index ["schedule_id"], name: "index_milestones_on_schedule_id"
   end
 
   create_table "networks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -366,6 +447,8 @@ ActiveRecord::Schema.define(version: 2021_08_02_120418) do
     t.boolean "eligible_for_funding", default: false, null: false
     t.text "funding_choice"
     t.text "nino"
+    t.text "lead_provider_approval_status", default: "pending", null: false
+    t.text "school_ukprn"
     t.index ["npq_course_id"], name: "index_npq_profiles_on_npq_course_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_profiles_on_npq_lead_provider_id"
     t.index ["user_id"], name: "index_npq_profiles_on_user_id"
@@ -378,13 +461,27 @@ ActiveRecord::Schema.define(version: 2021_08_02_120418) do
     t.decimal "per_participant"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "output_payment_percantage", default: 60
+    t.integer "service_fee_percentage", default: 40
     t.index ["call_off_contract_id"], name: "index_participant_bands_on_call_off_contract_id"
+  end
+
+  create_table "participant_declaration_attempts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "declaration_type"
+    t.datetime "declaration_date"
+    t.uuid "user_id"
+    t.string "course_identifier"
+    t.string "evidence_held"
+    t.uuid "cpd_lead_provider_id"
+    t.uuid "participant_declaration_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["participant_declaration_id"], name: "index_declaration_attempts_on_declarations"
   end
 
   create_table "participant_declarations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "declaration_type"
     t.datetime "declaration_date"
-    t.jsonb "raw_event"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "user_id", null: false
@@ -392,8 +489,18 @@ ActiveRecord::Schema.define(version: 2021_08_02_120418) do
     t.string "evidence_held"
     t.string "type", default: "ParticipantDeclaration::ECF"
     t.uuid "cpd_lead_provider_id"
+    t.datetime "voided_at"
     t.index ["cpd_lead_provider_id"], name: "index_participant_declarations_on_cpd_lead_provider_id"
     t.index ["user_id"], name: "index_participant_declarations_on_user_id"
+  end
+
+  create_table "participant_profile_states", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "participant_profile_id", null: false
+    t.text "state", default: "active"
+    t.text "reason"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["participant_profile_id"], name: "index_participant_profile_states_on_participant_profile_id"
   end
 
   create_table "participant_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -409,9 +516,16 @@ ActiveRecord::Schema.define(version: 2021_08_02_120418) do
     t.text "status", default: "active", null: false
     t.uuid "school_cohort_id"
     t.uuid "teacher_profile_id"
+    t.uuid "schedule_id", null: false
+    t.uuid "npq_course_id"
+    t.text "school_urn"
+    t.text "school_ukprn"
+    t.datetime "request_for_details_sent_at"
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"
+    t.index ["npq_course_id"], name: "index_participant_profiles_on_npq_course_id"
+    t.index ["schedule_id"], name: "index_participant_profiles_on_schedule_id"
     t.index ["school_cohort_id"], name: "index_participant_profiles_on_school_cohort_id"
     t.index ["school_id"], name: "index_participant_profiles_on_school_id"
     t.index ["teacher_profile_id"], name: "index_participant_profiles_on_teacher_profile_id"
@@ -485,6 +599,7 @@ ActiveRecord::Schema.define(version: 2021_08_02_120418) do
     t.uuid "participant_profile_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "payable", default: false
     t.index ["participant_declaration_id"], name: "index_profile_declarations_on_participant_declaration_id"
   end
 
@@ -520,6 +635,13 @@ ActiveRecord::Schema.define(version: 2021_08_02_120418) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["school_id"], name: "index_pupil_premiums_on_school_id"
+  end
+
+  create_table "schedules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.text "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "schedule_identifier"
   end
 
   create_table "school_cohorts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -583,8 +705,11 @@ ActiveRecord::Schema.define(version: 2021_08_02_120418) do
     t.string "administrative_district_code"
     t.string "administrative_district_name"
     t.string "slug"
+    t.boolean "section_41_approved", default: false, null: false
     t.index ["name"], name: "index_schools_on_name"
     t.index ["network_id"], name: "index_schools_on_network_id"
+    t.index ["school_type_code", "school_status_code"], name: "index_schools_on_school_type_code_and_school_status_code"
+    t.index ["section_41_approved", "school_status_code"], name: "index_schools_on_section_41_approved_and_school_status_code", where: "section_41_approved"
     t.index ["slug"], name: "index_schools_on_slug", unique: true
     t.index ["urn"], name: "index_schools_on_urn", unique: true
   end
@@ -605,7 +730,7 @@ ActiveRecord::Schema.define(version: 2021_08_02_120418) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["school_id"], name: "index_teacher_profiles_on_school_id"
-    t.index ["user_id"], name: "index_teacher_profiles_on_user_id"
+    t.index ["user_id"], name: "index_teacher_profiles_on_user_id", unique: true
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -649,6 +774,9 @@ ActiveRecord::Schema.define(version: 2021_08_02_120418) do
   add_foreign_key "data_stage_school_changes", "data_stage_schools"
   add_foreign_key "data_stage_school_links", "data_stage_schools"
   add_foreign_key "district_sparsities", "local_authority_districts"
+  add_foreign_key "ecf_participant_eligibilities", "participant_profiles"
+  add_foreign_key "ecf_participant_validation_data", "participant_profiles"
+  add_foreign_key "email_associations", "emails"
   add_foreign_key "feature_selected_objects", "features"
   add_foreign_key "finance_profiles", "users"
   add_foreign_key "induction_coordinator_profiles", "users"
@@ -658,13 +786,18 @@ ActiveRecord::Schema.define(version: 2021_08_02_120418) do
   add_foreign_key "lead_provider_profiles", "lead_providers"
   add_foreign_key "lead_provider_profiles", "users"
   add_foreign_key "lead_providers", "cpd_lead_providers"
+  add_foreign_key "milestones", "schedules"
   add_foreign_key "nomination_emails", "partnership_notification_emails"
   add_foreign_key "nomination_emails", "schools"
   add_foreign_key "npq_lead_providers", "cpd_lead_providers"
   add_foreign_key "participant_bands", "call_off_contracts"
+  add_foreign_key "participant_declaration_attempts", "participant_declarations"
+  add_foreign_key "participant_profile_states", "participant_profiles"
   add_foreign_key "participant_profiles", "cohorts"
   add_foreign_key "participant_profiles", "core_induction_programmes"
+  add_foreign_key "participant_profiles", "npq_courses"
   add_foreign_key "participant_profiles", "participant_profiles", column: "mentor_profile_id"
+  add_foreign_key "participant_profiles", "schedules"
   add_foreign_key "participant_profiles", "school_cohorts"
   add_foreign_key "participant_profiles", "schools"
   add_foreign_key "participant_profiles", "teacher_profiles"

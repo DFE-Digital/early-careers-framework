@@ -1,7 +1,7 @@
 <% content_for :title, "Participant #{t :name, scope: step_i18n_scope}" %>
 <% content_for :before_content, govuk_back_link(text: "Back", href: admin_participant_path(@participant_profile)) %>
 
-<span class="govuk-caption-l"><%= @participant_profile.user.full_name %>
+<span class="govuk-caption-l"><%= @participant_profile.user.full_name %></span>
 <h1 class="govuk-heading-l"><%= t :header, scope: step_i18n_scope %></h1>
 
 <p><%= t :description, scope: step_i18n_scope %></p>

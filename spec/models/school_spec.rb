@@ -39,18 +39,6 @@ RSpec.describe School, type: :model do
     it { is_expected.to have_many(:additional_school_emails) }
   end
 
-  it "updates the updated_at on participant profiles and users" do
-    freeze_time
-    school_cohort = create(:school_cohort)
-    profile = create(:participant_profile, :ect, school_cohort: school_cohort, updated_at: 2.weeks.ago)
-    user = profile.user
-    user.update!(updated_at: 2.weeks.ago)
-
-    school_cohort.school.touch
-    expect(user.reload.updated_at).to be_within(1.second).of Time.zone.now
-    expect(profile.reload.updated_at).to be_within(1.second).of Time.zone.now
-  end
-
   describe "eligibility" do
     let!(:open_school) { create(:school, school_status_code: 1) }
     let!(:closed_school) { create(:school, school_status_code: 2) }
@@ -58,6 +46,8 @@ RSpec.describe School, type: :model do
     let!(:ineligible_school_type) { create(:school, school_type_code: 56) }
     let!(:english_school) { create(:school, administrative_district_code: "E123") }
     let!(:welsh_school) { create(:school, administrative_district_code: "W123", school_type_code: 30) }
+    let!(:s41_school) { create(:school, section_41_approved: true, school_type_code: 30) }
+    let!(:closed_s41_school) { create(:school, school_status_code: 2, section_41_approved: true) }
     describe "#eligible?" do
       it "should be true for open schools" do
         expect(open_school.eligible?).to be true
@@ -82,6 +72,14 @@ RSpec.describe School, type: :model do
       it "should be false for schools not in England" do
         expect(welsh_school.eligible?).to be false
       end
+
+      it "should be true for open section 41 schools" do
+        expect(s41_school.eligible?).to be true
+      end
+
+      it "should be false for closed section 41  schools" do
+        expect(closed_s41_school.eligible?).to be false
+      end
     end
 
     describe "scope eligible" do
@@ -89,8 +87,15 @@ RSpec.describe School, type: :model do
       let(:ineligible_school) { closed_school }
 
       it "should only include eligible schools" do
-        expect(School.eligible.all).to include(open_school, eligible_school_type, english_school)
-        expect(School.eligible.all).not_to include(closed_school, ineligible_school_type, welsh_school)
+        expect(School.eligible.all).to include(open_school, eligible_school_type, english_school, s41_school)
+        expect(School.eligible.all).not_to include(closed_school, ineligible_school_type, welsh_school, closed_s41_school)
+      end
+    end
+
+    describe "scope eligible_or_cip_only" do
+      it "should only include schools that are eligible or cip only" do
+        expect(School.eligible_or_cip_only.all).to include(open_school, eligible_school_type, english_school, s41_school, welsh_school)
+        expect(School.eligible_or_cip_only.all).not_to include(closed_school, ineligible_school_type, closed_s41_school)
       end
     end
 
@@ -99,6 +104,7 @@ RSpec.describe School, type: :model do
         expect(open_school.cip_only?).to eql false
         expect(eligible_school_type.cip_only?).to eql false
         expect(english_school.cip_only?).to eql false
+        expect(s41_school.cip_only?).to eql false
       end
 
       it "should be true for welsh schools" do
@@ -471,9 +477,9 @@ RSpec.describe School, type: :model do
       expect(school.participants_for(cohort)).to include(ect_profile.user, mentor_profile.user)
     end
 
-    it "does not include withdrawn participants" do
-      ect = create(:early_career_teacher_profile, status: "withdrawn", school_cohort: school_cohort).user
-      mentor = create(:mentor_profile, status: "withdrawn", school_cohort: school_cohort).user
+    it "does not include participants with withdrawn records" do
+      ect = create(:participant_profile, :ect, :withdrawn_record, school_cohort: school_cohort).user
+      mentor = create(:participant_profile, :mentor, :withdrawn_record, school_cohort: school_cohort).user
 
       expect(school.participants_for(cohort)).not_to include(ect, mentor)
     end
@@ -497,33 +503,33 @@ RSpec.describe School, type: :model do
 
   describe "#early_career_teacher_profiles_for" do
     it "includes active ECTs" do
-      ect_profile = create(:early_career_teacher_profile, school_cohort: school_cohort)
+      ect_profile = create(:participant_profile, :ect, school_cohort: school_cohort)
 
       expect(school.early_career_teacher_profiles_for(cohort)).to include ect_profile
     end
 
-    it "does not include withdrawn ECTs" do
-      ect_profile = create(:early_career_teacher_profile, status: "withdrawn", school_cohort: school_cohort)
+    it "does not include ECTs with withdrawn records" do
+      ect_profile = create(:participant_profile, :ect, :withdrawn_record, school_cohort: school_cohort)
 
       expect(school.early_career_teacher_profiles_for(cohort)).not_to include ect_profile
     end
 
     it "does not include ECTs from other cohorts" do
       another_school_cohort = create(:school_cohort, cohort: create(:cohort), school: school)
-      ect_profile = create(:early_career_teacher_profile, school_cohort: another_school_cohort)
+      ect_profile = create(:participant_profile, :ect, school_cohort: another_school_cohort)
 
       expect(school.early_career_teacher_profiles_for(cohort)).not_to include ect_profile
     end
 
     it "does not include ECTs from other schools" do
       another_school_cohort = create(:school_cohort, school: create(:school), cohort: cohort)
-      ect_profile = create(:early_career_teacher_profile, school_cohort: another_school_cohort)
+      ect_profile = create(:participant_profile, :ect, school_cohort: another_school_cohort)
 
       expect(school.early_career_teacher_profiles_for(cohort)).not_to include ect_profile
     end
 
     it "does not include mentors" do
-      mentor_profile = create(:mentor_profile, school_cohort: school_cohort)
+      mentor_profile = create(:participant_profile, :mentor, school_cohort: school_cohort)
 
       expect(school.early_career_teacher_profiles_for(cohort)).not_to include mentor_profile
     end
@@ -531,33 +537,33 @@ RSpec.describe School, type: :model do
 
   describe "#mentor_profiles_for" do
     it "includes active mentors" do
-      mentor_profile = create(:mentor_profile, school_cohort: school_cohort)
+      mentor_profile = create(:participant_profile, :mentor, school_cohort: school_cohort)
 
       expect(school.mentor_profiles_for(cohort)).to include mentor_profile
     end
 
-    it "does not include withdrawn mentors" do
-      mentor_profile = create(:mentor_profile, status: "withdrawn", school_cohort: school_cohort)
+    it "does not include mentors with withdrawn records" do
+      mentor_profile = create(:participant_profile, :mentor, :withdrawn_record, school_cohort: school_cohort)
 
       expect(school.mentor_profiles_for(cohort)).not_to include mentor_profile
     end
 
     it "does not include mentors from other cohorts" do
       another_school_cohort = create(:school_cohort, cohort: create(:cohort), school: school)
-      mentor_profile = create(:mentor_profile, school_cohort: another_school_cohort)
+      mentor_profile = create(:participant_profile, :mentor, school_cohort: another_school_cohort)
 
       expect(school.mentor_profiles_for(cohort)).not_to include mentor_profile
     end
 
     it "does not include mentors from other schools" do
       another_school_cohort = create(:school_cohort, school: create(:school), cohort: cohort)
-      mentor_profile = create(:mentor_profile, school_cohort: another_school_cohort)
+      mentor_profile = create(:participant_profile, :mentor, school_cohort: another_school_cohort)
 
       expect(school.mentor_profiles_for(cohort)).not_to include mentor_profile
     end
 
     it "does not include ECTs" do
-      ect_profile = create(:early_career_teacher_profile, school_cohort: school_cohort)
+      ect_profile = create(:participant_profile, :ect, school_cohort: school_cohort)
 
       expect(school.mentor_profiles_for(cohort)).not_to include ect_profile
     end

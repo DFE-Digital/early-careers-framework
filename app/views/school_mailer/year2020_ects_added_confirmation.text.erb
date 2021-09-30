@@ -1,0 +1,14 @@
+Hello,
+
+The following teachers from <%= @school.name %>'s 2020 cohort can now access their support materials:
+
+<% @participants.each do |participant| %>
+  - <%= participant[:full_name] %>
+<% end %>
+
+If you need to change any details, reply to this email.
+
+Thanks,
+
+Teacher Continuing Professional Development
+Department for Education

@@ -10,6 +10,10 @@ RSpec.describe ApplicationHelper, type: :helper do
   let(:induction_coordinator) { create(:user, :induction_coordinator) }
   let(:school) { induction_coordinator.induction_coordinator_profile.schools.first }
   let!(:cohort) { create(:cohort, :current) }
+  let(:participant_profile) { create(:participant_profile, :ect) }
+  let(:year_2020_participant_profile) { create(:participant_profile, :ect, school_cohort: build(:school_cohort, cohort: build(:cohort, start_year: 2020))) }
+  let(:participant_school) { participant_profile.school }
+  let(:lead_provider) { create(:user, :lead_provider) }
 
   describe "#profile_dashboard_path" do
     it "returns the admin/schools path for admins" do
@@ -17,11 +21,11 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
 
     it "returns the finance path for finance" do
-      expect(helper.profile_dashboard_path(finance_user)).to eq("/finance/lead-providers")
+      expect(helper.profile_dashboard_path(finance_user)).to eq("/finance/manage-cpd-contracts")
     end
 
     it "returns schools/choose-programme for induction coordinators" do
-      expect(helper.profile_dashboard_path(induction_coordinator)).to eq("/schools/#{school.slug}/choose-programme/advisory")
+      expect(helper.profile_dashboard_path(induction_coordinator)).to eq("/schools/#{school.slug}/choose-programme")
     end
 
     context "when a school has chosen a programme" do
@@ -43,6 +47,18 @@ RSpec.describe ApplicationHelper, type: :helper do
       it "return the schools dashboard path (index)" do
         expect(helper.profile_dashboard_path(induction_coordinator)).to eq("/schools")
       end
+    end
+
+    it "returns the validation start path" do
+      expect(helper.profile_dashboard_path(participant_profile.user)).to eq("/participants/validation")
+    end
+
+    it "returns the no access path for NQT+1s" do
+      expect(helper.profile_dashboard_path(year_2020_participant_profile.user)).to eq("/participants/no_access")
+    end
+
+    it "returns the dashboard path for lead providers" do
+      expect(helper.profile_dashboard_path(lead_provider)).to eq("/dashboard")
     end
   end
 
@@ -87,6 +103,22 @@ RSpec.describe ApplicationHelper, type: :helper do
       data = helper.build_data_layer
       expect(data.analytics_data[:userType]).to eq("DfE admin")
       expect(data.analytics_data[:schoolId]).to eq(school.urn)
+    end
+  end
+
+  describe "#service_name" do
+    context "when the current path doesn't contain 'year-2020'" do
+      it "displays the default service name" do
+        helper.request.path = "/"
+        expect(helper.service_name).to eq "Manage training for early career teachers"
+      end
+    end
+
+    context "when the current path does contain 'year-2020'" do
+      it "displays an NQT-oriented service name" do
+        helper.request.path = start_schools_year_2020_path(school)
+        expect(helper.service_name).to eq "Get support materials for NQTs"
+      end
     end
   end
 end

@@ -22,7 +22,7 @@ ucl_cip = CoreInductionProgramme.find_or_create_by!(name: "UCL Institute of Educ
 end
 
 PrivacyPolicy.find_or_initialize_by(major_version: 1, minor_version: 0)
-  .tap { |pp| pp.html = Rails.root.join("db/seeds/privacy_policy_1.0.html").read }
+  .tap { |pp| pp.html = Rails.root.join("data/privacy_policy.html").read }
   .save!
 
 [
@@ -62,18 +62,4 @@ end
 
 NPQLeadProvider.all.each do |lp|
   lp.update!(cpd_lead_provider: CpdLeadProvider.find_by(name: lp.name))
-end
-
-if Rails.env.development?
-  [
-    { name: "Ambition Institute", token: "ambition-token" },
-    { name: "Best Practice Network", token: "best-practice-token" },
-    { name: "Capita", token: "capita-token" },
-    { name: "Education Development Trust", token: "edt-token" },
-    { name: "Teach First", token: "teach-first-token" },
-    { name: "UCL Institute of Education", token: "ucl-token" },
-  ].each do |hash|
-    cpd_lead_provider = CpdLeadProvider.find_by(name: hash[:name])
-    LeadProviderApiToken.create_with_known_token!(hash[:token], cpd_lead_provider: cpd_lead_provider)
-  end
 end

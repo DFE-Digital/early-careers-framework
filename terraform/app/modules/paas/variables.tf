@@ -4,6 +4,9 @@ variable environment {
 variable app_docker_image {
 }
 
+variable docker_credentials {
+}
+
 variable app_env_values {
 }
 

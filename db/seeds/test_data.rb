@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "tasks/valid_test_data_generator"
+
 DOMAIN = "@digital.education.gov.uk" # Prevent low effort email scraping
 cohort_2022 = Cohort.find_or_create_by!(start_year: 2022)
 
@@ -70,6 +72,8 @@ School.find_or_create_by!(urn: "000004") do |school|
   SchoolCohort.find_or_create_by!(cohort: Cohort.current, school: school, induction_programme_choice: "core_induction_programme", core_induction_programme: cip)
 end
 
+lead_provider = LeadProvider.find_by(name: "Ambition Institute")
+
 School.find_or_create_by!(urn: "000005") do |school|
   school.update!(
     name: "ZZ Test School 5",
@@ -87,13 +91,38 @@ School.find_or_create_by!(urn: "000005") do |school|
   end
   SchoolCohort.find_or_create_by!(cohort: Cohort.current, school: school, induction_programme_choice: "full_induction_programme")
   delivery_partner = DeliveryPartner.find_or_create_by!(name: "Test Delivery Partner")
-  partnership = Partnership.find_or_create_by!(cohort: Cohort.current, delivery_partner: delivery_partner, school: school, lead_provider: LeadProvider.first, challenge_deadline: 2.weeks.from_now)
+  partnership = Partnership.find_or_create_by!(cohort: Cohort.current, delivery_partner: delivery_partner, school: school, lead_provider: lead_provider, challenge_deadline: 2.weeks.from_now)
   PartnershipNotificationEmail.find_or_create_by!(
     partnership: partnership,
     sent_to: "cpd-test+tutor-2#{DOMAIN}",
     email_type: PartnershipNotificationEmail.email_types[:induction_coordinator_email],
     token: "abc123",
   )
+end
+
+School.find_or_create_by!(urn: "181818") do |school|
+  school.name = "ZZ TEST CIP only school"
+  school.postcode = "XM4 5HQ"
+  school.address_line1 = "North pole"
+  school.primary_contact_email = "cip-only-school-info@example.com"
+  school.school_status_code = 1
+  school.school_type_code = 10
+
+  user = User.find_or_create_by!(full_name: "Induction Tutor for CIP only school", email: "cip-only-induction-tutor@example.com")
+  InductionCoordinatorProfile.find_or_create_by!(user: user) do |profile|
+    profile.update!(schools: [school])
+  end
+  SchoolLocalAuthority.find_or_create_by!(school: school, local_authority: local_authority, start_year: 2019)
+end
+
+School.find_or_create_by!(urn: "181815") do |school|
+  school.name = "ZZ TEST CIP only school 2"
+  school.postcode = "XM4 5HQ"
+  school.address_line1 = "South pole"
+  school.primary_contact_email = "cip-only-school-info-2@example.com"
+  school.school_status_code = 1
+  school.school_type_code = 10
+  SchoolLocalAuthority.find_or_create_by!(school: school, local_authority: local_authority, start_year: 2019)
 end
 
 30.times do |idx|
@@ -117,7 +146,7 @@ end
 
     SchoolCohort.find_or_create_by!(cohort: Cohort.current, school: school, induction_programme_choice: "full_induction_programme")
     delivery_partner = DeliveryPartner.find_or_create_by!(name: "Mega Delivery Partner")
-    partnership = Partnership.find_or_create_by!(cohort: Cohort.current, delivery_partner: delivery_partner, school: school, lead_provider: LeadProvider.first, challenge_deadline: 2.weeks.from_now)
+    partnership = Partnership.find_or_create_by!(cohort: Cohort.current, delivery_partner: delivery_partner, school: school, lead_provider: lead_provider, challenge_deadline: 2.weeks.from_now)
     PartnershipNotificationEmail.find_or_create_by!(
       partnership: partnership,
       sent_to: "cpd-test+tutor-3#{DOMAIN}",
@@ -149,7 +178,7 @@ School.find_or_create_by!(urn: "000006") do |school|
   end
   SchoolCohort.find_or_create_by!(cohort: Cohort.current, school: school, induction_programme_choice: "full_induction_programme")
   delivery_partner = DeliveryPartner.find_or_create_by!(name: "Mega Delivery Partner")
-  partnership = Partnership.find_or_create_by!(cohort: Cohort.current, delivery_partner: delivery_partner, school: school, lead_provider: LeadProvider.first)
+  partnership = Partnership.find_or_create_by!(cohort: Cohort.current, delivery_partner: delivery_partner, school: school, lead_provider: lead_provider)
   PartnershipNotificationEmail.find_or_create_by!(
     partnership: partnership,
     sent_to: "cpd-test+tutor-3#{DOMAIN}",
@@ -162,7 +191,7 @@ end
 delivery_partner = DeliveryPartner.find_or_create_by!(name: "Amazing Delivery Partner")
 
 ProviderRelationship.find_or_create_by!(
-  lead_provider: LeadProvider.first,
+  lead_provider: lead_provider,
   delivery_partner: delivery_partner,
   cohort: Cohort.current,
 )
@@ -207,4 +236,270 @@ LeadProvider.all.each do |lp|
       per_participant: src[:per_participant],
     )
   end
+end
+
+# FIP ECT
+user = User.find_or_create_by!(email: "fip-ect@example.com") do |u|
+  u.full_name = "FIP ECT"
+end
+
+teacher_profile = TeacherProfile.find_or_create_by!(user: user)
+ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
+  ect_profile.school_cohort = School.find_by(urn: "000103").school_cohorts.find_by(cohort: Cohort.current)
+  ect_profile.schedule = Finance::Schedule.default
+  ParticipantProfileState.find_or_create_by!(participant_profile: ect_profile)
+end
+
+# FIP mentor
+user = User.find_or_create_by!(email: "fip-mentor@example.com") do |u|
+  u.full_name = "FIP Mentor"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user)
+ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+  mentor_profile.school_cohort = School.find_by(urn: "000104").school_cohorts.find_by(cohort: Cohort.current)
+  mentor_profile.schedule = Finance::Schedule.default
+  ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
+end
+
+# FIP mentor already doing an NPQ with the same email
+user = User.find_or_create_by!(email: "fip-mentor-npq@example.com") do |u|
+  u.full_name = "FIP Mentor NPQ"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
+  profile.trn = "1958553"
+end
+ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+  mentor_profile.school_cohort = School.find_by(urn: "000105").school_cohorts.find_by(cohort: Cohort.current)
+  mentor_profile.schedule = Finance::Schedule.default
+  ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
+end
+npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile, schedule: Finance::Schedule.default)
+ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
+
+# FIP mentor already doing an NPQ with a different email
+user = User.find_or_create_by!(email: "fip-mentor-npq-other-email@example.com") do |u|
+  u.full_name = "FIP Mentor NPQ"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
+  profile.trn = "2369848"
+end
+npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile, schedule: Finance::Schedule.default)
+ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
+
+user = User.find_or_create_by!(email: "fip-mentor2@example.com") do |u|
+  u.full_name = "FIP Mentor"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user)
+ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+  mentor_profile.school_cohort = School.find_by(urn: "000105").school_cohorts.find_by(cohort: Cohort.current)
+  mentor_profile.schedule = Finance::Schedule.default
+  ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
+end
+
+# FIP mentor already mentoring at another school with another email
+user = User.find_or_create_by!(email: "fip-mentor-another-school@example.com") do |u|
+  u.full_name = "FIP Mentor NPQ"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
+  profile.trn = "1357010"
+end
+ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+  mentor_profile.school_cohort = School.find_by(urn: "000105").school_cohorts.find_by(cohort: Cohort.current)
+  mentor_profile.schedule = Finance::Schedule.default
+  ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
+end
+
+user = User.find_or_create_by!(email: "fip-mentor3@example.com") do |u|
+  u.full_name = "FIP Mentor"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user)
+ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+  mentor_profile.school_cohort = School.find_by(urn: "000106").school_cohorts.find_by(cohort: Cohort.current)
+  mentor_profile.schedule = Finance::Schedule.default
+  ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
+end
+
+# SIT also a mentor
+user = User.find_by(email: "cpd-test+tutor-17@example.com")
+teacher_profile = TeacherProfile.find_or_create_by!(user: user)
+ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+  mentor_profile.school_cohort = user.induction_coordinator_profile.schools.first.school_cohorts.find_by(cohort: Cohort.current)
+  mentor_profile.schedule = Finance::Schedule.default
+  ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
+end
+
+# Extra participant records
+user = User.find_or_create_by!(email: "fip-ect2@example.com") do |u|
+  u.full_name = "FIP ECT"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user)
+ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
+  ect_profile.school_cohort = School.find_by(urn: "000107").school_cohorts.find_by(cohort: Cohort.current)
+  ect_profile.schedule = Finance::Schedule.default
+  ParticipantProfileState.find_or_create_by!(participant_profile: ect_profile)
+end
+
+user = User.find_or_create_by!(email: "fip-mentor4@example.com") do |u|
+  u.full_name = "FIP Mentor"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user)
+ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+  mentor_profile.school_cohort = School.find_by(urn: "000108").school_cohorts.find_by(cohort: Cohort.current)
+  mentor_profile.schedule = Finance::Schedule.default
+  ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
+end
+
+user = User.find_or_create_by!(email: "fip-mentor5@example.com") do |u|
+  u.full_name = "FIP Mentor"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user)
+ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+  mentor_profile.school_cohort = School.find_by(urn: "000109").school_cohorts.find_by(cohort: Cohort.current)
+  mentor_profile.schedule = Finance::Schedule.default
+  ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
+end
+# TODO: add validation data and eligibility records when merged
+
+(200..210).each do |index|
+  School.find_or_create_by!(urn: sprintf("%06d", index)) do |school|
+    school.update!(
+      name: "ZZ Test School #{index}",
+      postcode: "AA4 4AA",
+      address_line1: "4 Nowhere lane",
+      school_status_code: 1,
+      school_type_code: 1,
+      administrative_district_code: "E123",
+    )
+    user = User.find_or_create_by!(full_name: "Induction Tutor for School #{index}", email: "cip-tutor-#{index}@example.com")
+    InductionCoordinatorProfile.find_or_create_by!(user: user) do |profile|
+      profile.schools << school
+    end
+
+    SchoolCohort.find_or_create_by!(cohort: Cohort.current, school: school, induction_programme_choice: "core_induction_programme")
+  end
+end
+
+# CIP ECT
+user = User.find_or_create_by!(email: "cip-ect@example.com") do |u|
+  u.full_name = "CIP ECT"
+end
+
+teacher_profile = TeacherProfile.find_or_create_by!(user: user)
+ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
+  ect_profile.school_cohort = School.find_by(urn: "000200").school_cohorts.find_by(cohort: Cohort.current)
+  ect_profile.schedule = Finance::Schedule.default
+  ParticipantProfileState.find_or_create_by!(participant_profile: ect_profile)
+end
+
+# FIP mentor
+user = User.find_or_create_by!(email: "cip-mentor@example.com") do |u|
+  u.full_name = "CIP Mentor"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user)
+ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+  mentor_profile.school_cohort = School.find_by(urn: "000201").school_cohorts.find_by(cohort: Cohort.current)
+  mentor_profile.schedule = Finance::Schedule.default
+  ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
+end
+
+# CIP mentor already doing an NPQ with the same email
+user = User.find_or_create_by!(email: "cip-mentor-npq@example.com") do |u|
+  u.full_name = "CIP Mentor NPQ"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
+  profile.trn = "1162128"
+end
+ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+  mentor_profile.school_cohort = School.find_by(urn: "000202").school_cohorts.find_by(cohort: Cohort.current)
+  mentor_profile.schedule = Finance::Schedule.default
+  ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
+end
+npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile, schedule: Finance::Schedule.default)
+ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
+
+# CIP mentor already doing an NPQ with a different email
+user = User.find_or_create_by!(email: "cip-mentor-npq-other-email@example.com") do |u|
+  u.full_name = "CIP Mentor NPQ"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
+  profile.trn = "2631405"
+end
+npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile, schedule: Finance::Schedule.default)
+ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
+
+user = User.find_or_create_by!(email: "cip-mentor2@example.com") do |u|
+  u.full_name = "CIP Mentor"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user)
+ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+  mentor_profile.school_cohort = School.find_by(urn: "000203").school_cohorts.find_by(cohort: Cohort.current)
+  mentor_profile.schedule = Finance::Schedule.default
+  ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
+end
+
+# FIP mentor already mentoring at another school with another email
+user = User.find_or_create_by!(email: "cip-mentor-another-school@example.com") do |u|
+  u.full_name = "CIP Mentor NPQ"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
+  profile.trn = "1835206"
+end
+ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+  mentor_profile.school_cohort = School.find_by(urn: "000204").school_cohorts.find_by(cohort: Cohort.current)
+  mentor_profile.schedule = Finance::Schedule.default
+  ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
+end
+
+user = User.find_or_create_by!(email: "cip-mentor3@example.com") do |u|
+  u.full_name = "CIP Mentor"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user)
+ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+  mentor_profile.school_cohort = School.find_by(urn: "000205").school_cohorts.find_by(cohort: Cohort.current)
+  mentor_profile.schedule = Finance::Schedule.default
+  ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
+end
+
+# SIT also a mentor
+user = User.find_by(email: "cip-tutor-206@example.com")
+teacher_profile = TeacherProfile.find_or_create_by!(user: user)
+ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+  mentor_profile.school_cohort = user.induction_coordinator_profile.schools.first.school_cohorts.find_by(cohort: Cohort.current)
+  mentor_profile.schedule = Finance::Schedule.default
+  ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
+end
+
+# Extra participant records
+user = User.find_or_create_by!(email: "cip-ect2@example.com") do |u|
+  u.full_name = "CIP ECT"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user)
+ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
+  ect_profile.school_cohort = School.find_by(urn: "000207").school_cohorts.find_by(cohort: Cohort.current)
+  ect_profile.schedule = Finance::Schedule.default
+  ParticipantProfileState.find_or_create_by!(participant_profile: ect_profile)
+end
+
+user = User.find_or_create_by!(email: "cip-mentor4@example.com") do |u|
+  u.full_name = "CIP Mentor"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user)
+ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+  mentor_profile.school_cohort = School.find_by(urn: "000208").school_cohorts.find_by(cohort: Cohort.current)
+  mentor_profile.schedule = Finance::Schedule.default
+  ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
+end
+
+user = User.find_or_create_by!(email: "cip-mentor5@example.com") do |u|
+  u.full_name = "CIP Mentor"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user)
+ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+  mentor_profile.school_cohort = School.find_by(urn: "000209").school_cohorts.find_by(cohort: Cohort.current)
+  mentor_profile.schedule = Finance::Schedule.default
+  ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
+end
+
+["Capita", "Teach First", "UCL Institute of Education", "Best Practice Network", "Ambition Institute", "Education Development Trust"].each do |provider|
+  ValidTestDataGenerator::LeadProviderPopulater.delay.call(name: provider, total_schools: 10, participants_per_school: 10)
 end

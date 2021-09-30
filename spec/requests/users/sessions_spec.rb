@@ -65,6 +65,24 @@ RSpec.describe "Users::Sessions", type: :request do
         post "/users/sign_in", params: { user: { email: email } }
       end
     end
+
+    context "when a blank email is inputted" do
+      email = ""
+      it "renders the new template" do
+        post "/users/sign_in", params: { user: { email: email } }
+        expect(response).to render_template(:new)
+      end
+    end
+
+    context "when an invalid email is inputted" do
+      emails = ["invalid@email,com", "email", "invalid@email", "@email.com"]
+      emails.each do |email|
+        it "renders the new template" do
+          post "/users/sign_in", params: { user: { email: email } }
+          expect(response).to render_template(:new)
+        end
+      end
+    end
   end
 
   describe "Valid mock login" do
@@ -115,7 +133,7 @@ RSpec.describe "Users::Sessions", type: :request do
     context "email domain not in the whitelist" do
       let(:test_email) { "admin@some.other.example.com" }
 
-      context "using a non-production enviromment" do
+      context "using a non-production environment" do
         it "renders the login_email_sent template" do
           post "/users/sign_in", params: { user: { email: test_email } }
           expect(response).to render_template(:login_email_sent) # falls back to prod behaviour
@@ -161,10 +179,11 @@ RSpec.describe "Users::Sessions", type: :request do
   describe "POST /users/sign_in_with_token" do
     context "when user is an ECT" do
       let(:user) { create(:participant_profile, :ect).user }
+      let(:school) { user.teacher_profile.early_career_teacher_profile.school }
 
-      it "redirects to dashboard on successful login" do
+      it "redirects to participant validation on successful login" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }
-        expect(response).to redirect_to(dashboard_path)
+        expect(response).to redirect_to(participants_validation_start_path)
       end
     end
 
@@ -174,7 +193,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
       it "redirects to correct dashboard" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }
-        expect(response).to redirect_to(advisory_schools_choose_programme_path(school_id: school.slug))
+        expect(response).to redirect_to(schools_choose_programme_path(school_id: school.slug))
       end
     end
 
@@ -201,7 +220,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
       it "redirects to correct dashboard" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }
-        expect(response).to redirect_to(finance_lead_providers_path)
+        expect(response).to redirect_to(finance_landing_page_path)
       end
     end
 

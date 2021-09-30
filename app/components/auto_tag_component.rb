@@ -14,6 +14,6 @@ class AutoTagComponent < ViewComponent::Base
   end
 
   def call
-    render GovukComponent::Tag.new(text: @text, colour: @colour)
+    render GovukComponent::TagComponent.new(text: @text, colour: @colour)
   end
 end

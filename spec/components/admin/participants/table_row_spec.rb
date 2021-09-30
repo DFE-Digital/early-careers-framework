@@ -17,4 +17,16 @@ RSpec.describe Admin::Participants::TableRow, type: :view_component do
     it { is_expected.to have_content school.name }
     it { is_expected.to have_content school.urn }
   end
+
+  context "when profile is not associated with the school" do
+    let(:participant_profile) { create :participant_profile, school: nil }
+
+    it { is_expected.to have_css(".govuk-table__cell:nth-child(3)", text: "\n    School\n    \n") }
+  end
+
+  context "when profile is not associated with the school but has school_urn" do
+    let(:participant_profile) { create :participant_profile, school: nil, school_urn: "123456" }
+
+    it { is_expected.to have_content("123456") }
+  end
 end

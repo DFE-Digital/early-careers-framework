@@ -24,7 +24,7 @@ RSpec.describe User, type: :model do
       end
 
       it "returns nil when there is no active profile" do
-        user = create(:participant_profile, :ect, status: "withdrawn").user
+        user = create(:participant_profile, :ect, :withdrawn_record).user
         expect(user.early_career_teacher_profile).to be_nil
       end
     end
@@ -36,7 +36,7 @@ RSpec.describe User, type: :model do
       end
 
       it "returns nil when there is no active profile" do
-        user = create(:participant_profile, :mentor, status: :withdrawn).user
+        user = create(:participant_profile, :mentor, :withdrawn_record).user
 
         expect(user.mentor_profile).to be_nil
       end
@@ -145,7 +145,7 @@ RSpec.describe User, type: :model do
     end
 
     it "is false when the ect profile is withdrawn" do
-      user = create(:participant_profile, :ect, status: "withdrawn").user
+      user = create(:participant_profile, :ect, :withdrawn_record).user
       expect(user.early_career_teacher?).to be false
     end
   end
@@ -164,7 +164,7 @@ RSpec.describe User, type: :model do
     end
 
     it "is false when the mentor profile is withdrawn" do
-      user = create(:mentor_profile, status: "withdrawn").user
+      user = create(:participant_profile, :mentor, :withdrawn_record).user
       expect(user.mentor?).to be false
     end
   end
@@ -255,8 +255,8 @@ RSpec.describe User, type: :model do
 
       subject { User.changed_since(nil) }
 
-      it { should include user }
-      it { should include old_user }
+      it { is_expected.to include user }
+      it { is_expected.to include old_user }
     end
 
     context "with a user that was just updated" do
@@ -267,8 +267,8 @@ RSpec.describe User, type: :model do
 
       subject { User.changed_since(10.minutes.ago) }
 
-      it { should include user }
-      it { should_not include old_user }
+      it { is_expected.to include user }
+      it { is_expected.to_not include old_user }
     end
 
     context "with a user that has been updated less than a second after the given timestamp" do
@@ -277,7 +277,7 @@ RSpec.describe User, type: :model do
 
       subject { User.changed_since(timestamp) }
 
-      it { should include user }
+      it { is_expected.to include user }
     end
 
     context "with a user that has been updated exactly at the given timestamp" do
@@ -286,7 +286,7 @@ RSpec.describe User, type: :model do
 
       subject { User.changed_since(timestamp) }
 
-      it { should_not include user }
+      it { is_expected.to_not include user }
     end
   end
 

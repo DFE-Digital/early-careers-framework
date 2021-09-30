@@ -1,0 +1,74 @@
+name: Smoke Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: GitHub SHA
+        required: true
+      paas_environment:
+        default: 'develop'
+        required: true
+        description: Environment to test
+
+jobs:
+  smoke_test:
+
+    name: Smoke Test ${{ github.event.inputs.paas_environment }} ${{ github.event.inputs.sha }}
+
+    runs-on: ubuntu-20.04
+
+    # Our rspec is deeply coupled with a database. I had a go at decoupling it for smoke tests, and gave up.
+    # This database is provided as a hacky way to get rspec to run, and should not be populated in smoke tests.
+    env:
+      RAILS_ENV: test
+      DB_USERNAME: postgres
+      DB_PASSWORD: ''
+      DB_HOSTNAME: 127.0.0.1
+      DB_PORT: 5432
+      ANALYTICS_DB_USERNAME: postgres
+      ANALYTICS_DB_PASSWORD: ''
+      ANALYTICS_DB_HOSTNAME: 127.0.0.1
+      ANALYTICS_DB_PORT: 5432
+
+    services:
+      postgres:
+        image: postgres:11.6-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ''
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.sha }}
+
+      - name: print environment
+        run: echo ${{ env.ENVIRONMENT}}
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1.82.0
+        with:
+          bundler-cache: true
+          ruby-version: '2.7.2'
+
+      - name: Set up Node
+        uses: actions/setup-node@v2.4.1
+        with:
+          node-version: '12.x'
+          cache: 'yarn'
+
+      - name: set environment (workflow dispatch)
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          echo "ENVIRONMENT=${{ github.event.inputs.paas_environment }}" >> $GITHUB_ENV
+
+      - name: Set up test database
+        run: bin/rails db:create db:schema:load
+
+      - name: Run deployment smoke test
+        run: bundle exec rspec spec/smoke_tests/*_spec.rb --tag smoke_test

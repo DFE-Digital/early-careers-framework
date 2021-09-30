@@ -6,18 +6,18 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby File.read(".ruby-version").chomp
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 6.1.3", ">= 6.1.3.2"
+gem "rails", "~> 6.1.4", ">= 6.1.4.1"
 
 # User management and rbac
 gem "devise", ">= 4.7.3"
 gem "paper_trail"
-gem "pretender"
+gem "pretender", ">= 0.3.4"
 gem "pundit"
 
 # Error and performance monitoring
-gem "sentry-delayed_job", ">= 4.5.1"
-gem "sentry-rails", ">= 4.5.1"
-gem "sentry-ruby", ">= 4.5.1"
+gem "sentry-delayed_job", ">= 4.6.4"
+gem "sentry-rails", ">= 4.6.4"
+gem "sentry-ruby", ">= 4.6.4"
 
 # Pagination
 gem "kaminari", ">= 1.2.0"
@@ -32,10 +32,10 @@ gem "logstash-event"
 gem "pg", ">= 0.18", "< 2.0"
 
 # Use UUIDs as db primary key by default
-gem "ar-uuid", "~> 0.2.1"
+gem "ar-uuid", "~> 0.2.2"
 
 # Use Puma as the app server
-gem "puma", "~> 5.3", ">= 5.3.1"
+gem "puma", "~> 5.4"
 
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
 gem "webpacker", ">= 5.2.1"
@@ -52,7 +52,7 @@ gem "foreman"
 # Canonical meta tag
 gem "canonical-rails", ">= 0.2.11"
 
-gem "listen", ">= 3.0.5", "< 3.4"
+gem "listen", ">= 3.0.5", "< 3.8"
 gem "rack-attack", ">=6.5.0"
 
 # GOV.UK Notify
@@ -61,10 +61,7 @@ gem "mail-notify", ">= 1.0.3"
 # do not rely on host's timezone data, which can be inconsistent
 gem "tzinfo-data"
 
-# serialization gem that offers more features than active model serializer
-gem "blueprinter"
-
-gem "govuk-components", ">= 1.1.5"
+gem "govuk-components", ">= 2.1.0"
 gem "govuk_design_system_formbuilder", "~> 2.3.0b1"
 gem "govuk_markdown", "~> 0.4.0"
 gem "view_component", require: "view_component/engine"
@@ -86,7 +83,7 @@ gem "strong_migrations"
 gem "aasm"
 
 # Pagination for API
-gem "pagy", "~> 3.13"
+gem "pagy", "~> 4.11"
 
 # Json Schema for api validation
 gem "json-schema", ">= 2.8.1"
@@ -101,8 +98,7 @@ gem "rouge"
 
 gem "ransack"
 
-# Payment breackdown
-
+# Payment breakdown
 gem "terminal-table"
 
 gem "friendly_id", "~> 5.4.0"
@@ -114,9 +110,11 @@ end
 # S3 adapter for active storage
 gem "aws-sdk-s3", require: false
 
-gem "activerecord-session_store"
+gem "activerecord-session_store", ">= 2.0.0"
 
-gem "jsonapi-resources"
+gem "google-cloud-bigquery"
+
+gem "jwt"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -130,9 +128,9 @@ group :development, :test do
   gem "pry-byebug"
 
   # Testing framework
-  gem "rspec-rails", "~> 4.0.2"
+  gem "rspec-rails", "~> 5.0.2"
 
-  gem "cypress-on-rails", "~> 1.0"
+  gem "cypress-on-rails", "~> 1.11"
   gem "database_cleaner-active_record"
 
   gem "dotenv-rails", ">= 2.7.6"
@@ -142,10 +140,13 @@ group :development, :test do
   # Swagger generator
   gem "multi_json"
   gem "open_api-rswag-specs", ">= 0.1.0"
+
+  gem "parallel_tests"
 end
 
 group :development, :deployed_development, :test, :sandbox do
   gem "faker"
+  gem "timecop"
 end
 
 group :development do
@@ -165,14 +166,13 @@ group :test do
   gem "capybara", ">= 3.35.3"
   gem "jsonapi-rspec"
   gem "percy-capybara"
-  gem "pundit-matchers", "~> 1.6.0"
+  gem "pundit-matchers", "~> 1.7.0"
   gem "rails-controller-testing", ">= 1.0.5"
-  gem "rspec-default_http_header"
-  gem "rutabaga"
+  gem "rspec-default_http_header", github: "ethanmills/rspec-default_http_header", ref: "b72a803"
   gem "selenium-webdriver"
-  gem "shoulda-matchers", "~> 4.4"
+  gem "shoulda-matchers", "~> 4.5"
   gem "simplecov"
-  gem "webdrivers", "~> 4.4", ">= 4.4.1"
+  gem "webdrivers", "~> 4.6"
   gem "webmock", ">= 3.10.0"
   gem "with_model"
 end

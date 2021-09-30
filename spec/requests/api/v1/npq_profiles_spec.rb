@@ -2,7 +2,14 @@
 
 require "rails_helper"
 
+class DummyToken < ApiToken
+  def owner
+    "Test"
+  end
+end
+
 RSpec.describe "NPQ profiles api endpoint", type: :request do
+  let!(:default_schedule) { create(:schedule, name: "ECF September standard 2021") }
   let(:token) { NPQRegistrationApiToken.create_with_random_token! }
   let(:bearer_token) { "Bearer #{token}" }
   let(:parsed_response) { JSON.parse(response.body) }
@@ -18,7 +25,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
         default_headers["Content-Type"] = "application/vnd.api+json"
       end
 
-      let(:json) do
+      let(:json_hash) do
         {
           data: {
             type: "npq_profiles",
@@ -29,6 +36,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
               date_of_birth: "1990-12-13",
               national_insurance_number: "AB123456C",
               school_urn: "123456",
+              school_ukprn: "12345678",
               headteacher_status: "no",
               eligible_for_funding: true,
               funding_choice: "school",
@@ -54,8 +62,10 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
               },
             },
           },
-        }.to_json
+        }
       end
+
+      let(:json) { json_hash.to_json }
 
       it "creates the npq_profile" do
         expect { post "/api/v1/npq-profiles", params: json }
@@ -75,10 +85,12 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
         expect(validation_data.teacher_reference_number_verified).to be_truthy
         expect(validation_data.active_alert).to be_truthy
         expect(validation_data.school_urn).to eql("123456")
+        expect(validation_data.school_ukprn).to eql("12345678")
         expect(validation_data.headteacher_status).to eql("no")
         expect(validation_data.npq_course).to eql(npq_course)
         expect(validation_data.eligible_for_funding).to eql(true)
         expect(validation_data.funding_choice).to eql("school")
+        expect(validation_data.lead_provider_approval_status).to eql("pending")
       end
 
       it "returns a 201" do
@@ -107,9 +119,24 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
           :headteacher_status,
           :date_of_birth,
           :school_urn,
+          :school_ukprn,
           :eligible_for_funding,
           :funding_choice,
         )
+      end
+
+      context "cannot perform save" do
+        before do
+          json_hash[:data][:relationships][:user][:data][:id] = nil
+          json_hash[:data][:relationships][:npq_lead_provider][:data][:id] = nil
+          json_hash[:data][:relationships][:npq_course][:data][:id] = nil
+        end
+
+        it "returns errors" do
+          post "/api/v1/npq-profiles", params: json
+
+          expect(parsed_response["errors"]).to be_present
+        end
       end
     end
 
@@ -122,7 +149,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
     end
 
     context "using valid token but for different scope" do
-      let(:other_token) { ApiToken.create_with_random_token! }
+      let(:other_token) { DummyToken.create_with_random_token! }
 
       it "returns 403" do
         default_headers[:Authorization] = "Bearer #{other_token}"
