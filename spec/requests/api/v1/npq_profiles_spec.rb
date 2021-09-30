@@ -67,16 +67,13 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
 
       let(:json) { json_hash.to_json }
 
-      it "creates the npq_profile" do
+      it "creates the npq validation data" do
         expect { post "/api/v1/npq-profiles", params: json }
-          .to change(ParticipantProfile::NPQ, :count).by(1)
-          .and change(NPQValidationData, :count).by(1)
+          .to change(NPQValidationData, :count).by(1)
 
-        profile = ParticipantProfile::NPQ.order(created_at: :desc).first
+        validation_data = NPQValidationData.order(created_at: :desc).first
 
-        expect(profile.user).to eql(user)
-
-        validation_data = profile.validation_data
+        expect(validation_data.user).to eql(user)
 
         expect(validation_data.npq_lead_provider).to eql(npq_lead_provider)
         expect(validation_data.date_of_birth).to eql(Date.new(1990, 12, 13))

@@ -21,7 +21,7 @@ RSpec.describe ParticipantStatusTagComponent, type: :view_component do
     context "which has failed to be deliver" do
       let(:email_status) { Email::FAILED_STATUSES.sample }
 
-      it { is_expected.to have_selector(".govuk-tag.govuk-tag--red", text: "Request bounced, check email address") }
+      it { is_expected.to have_selector(".govuk-tag.govuk-tag--red", text: "Could not contact: check email address") }
     end
 
     context "which is still pending" do

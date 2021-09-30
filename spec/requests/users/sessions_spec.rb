@@ -65,6 +65,24 @@ RSpec.describe "Users::Sessions", type: :request do
         post "/users/sign_in", params: { user: { email: email } }
       end
     end
+
+    context "when a blank email is inputted" do
+      email = ""
+      it "renders the new template" do
+        post "/users/sign_in", params: { user: { email: email } }
+        expect(response).to render_template(:new)
+      end
+    end
+
+    context "when an invalid email is inputted" do
+      emails = ["invalid@email,com", "email", "invalid@email", "@email.com"]
+      emails.each do |email|
+        it "renders the new template" do
+          post "/users/sign_in", params: { user: { email: email } }
+          expect(response).to render_template(:new)
+        end
+      end
+    end
   end
 
   describe "Valid mock login" do
@@ -115,7 +133,7 @@ RSpec.describe "Users::Sessions", type: :request do
     context "email domain not in the whitelist" do
       let(:test_email) { "admin@some.other.example.com" }
 
-      context "using a non-production enviromment" do
+      context "using a non-production environment" do
         it "renders the login_email_sent template" do
           post "/users/sign_in", params: { user: { email: test_email } }
           expect(response).to render_template(:login_email_sent) # falls back to prod behaviour

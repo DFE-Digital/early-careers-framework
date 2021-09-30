@@ -58,5 +58,5 @@ Timecop.freeze(Date.parse("19/09/2019")) do
                                           school_urn: school.urn,
                                           npq_course: npq_course
 
-  NPQ::CreateOrUpdateProfile.new(npq_validation_data: npq_validation_data).call
+  NPQ::Accept.new(npq_application: npq_validation_data).call
 end

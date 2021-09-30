@@ -25,7 +25,7 @@ module Mail
           template_version: response.template["version"],
           uri: response.uri,
           tags: mail.tags,
-          personalisation: mail.header["personalisation"].unparsed_value,
+          personalisation: mail.header["personalisation"]&.unparsed_value,
         )
 
         email.create_association_with(*User.where(email: email.to).to_a, as: :recipient)

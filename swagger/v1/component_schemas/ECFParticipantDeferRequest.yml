@@ -13,6 +13,6 @@ properties:
       type:
         description: "The data type"
         type: string
-        example: participant
+        example: participant-defer
       attributes:
         $ref: "#/components/schemas/ECFParticipantDefer"

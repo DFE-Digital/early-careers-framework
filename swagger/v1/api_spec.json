@@ -247,6 +247,75 @@
         }
       }
     },
+    "/api/v1/participants/npq": {
+      "get": {
+        "summary": "Retrieve multiple NPQ participants",
+        "operationId": "npq_participants",
+        "tags": [
+          "NPQ participants"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ListFilter"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "description": "Refine NPQ participants to return.",
+            "example": {
+              "updated_since": "2020-11-13T11:21:55Z"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Pagination"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "example": {
+              "page": 1,
+              "per_page": 5
+            },
+            "description": "Pagination options to navigate through the list of NPQ participants."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of NPQ participants",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultipleNPQParticipantsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/participant-declarations": {
       "post": {
         "summary": "Declare a participant has reached a milestone. Idempotent endpoint - submitting exact copy of a request will return the same response body as submitting it the first time.",
@@ -1069,7 +1138,7 @@
               "type": {
                 "description": "The data type",
                 "type": "string",
-                "example": "participant"
+                "example": "participant-change-schedule"
               },
               "attributes": {
                 "$ref": "#/components/schemas/ECFParticipantChangeSchedule"
@@ -1245,7 +1314,7 @@
               "type": {
                 "description": "The data type",
                 "type": "string",
-                "example": "participant"
+                "example": "participant-defer"
               },
               "attributes": {
                 "$ref": "#/components/schemas/ECFParticipantDefer"
@@ -1305,7 +1374,7 @@
               "type": {
                 "description": "The data type",
                 "type": "string",
-                "example": "participant"
+                "example": "participant-resume"
               },
               "attributes": {
                 "$ref": "#/components/schemas/ECFParticipantResume"
@@ -1479,7 +1548,7 @@
               "type": {
                 "description": "The data type",
                 "type": "string",
-                "example": "participant"
+                "example": "participant-withdraw"
               },
               "attributes": {
                 "$ref": "#/components/schemas/ECFParticipantWithdraw"
@@ -1675,6 +1744,36 @@
                   "eligible_for_funding": true,
                   "funding_choice": "trust",
                   "course_identifier": "npq-leading-teaching"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "MultipleNPQParticipantsResponse": {
+        "description": "A list of NPQ participants",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NPQParticipant"
+            },
+            "example": [
+              {
+                "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                "type": "npq-participant",
+                "attributes": {
+                  "participant_id": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
+                  "full_name": "Isabelle MacDonald",
+                  "email": "isabelle.macdonald2@some-school.example.com",
+                  "npq_courses": [
+                    "npq-leading-teaching"
+                  ],
+                  "teacher_reference_number": "1234567"
                 }
               }
             ]
@@ -2009,6 +2108,81 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/NPQApplication"
+          }
+        }
+      },
+      "NPQParticipant": {
+        "description": "The details of an NPQ Participant",
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "id": {
+            "description": "The unique identifier of the NPQ Participant record",
+            "type": "string",
+            "format": "uuid",
+            "example": "ac3d1243-7308-4879-942a-c4a70ced400a"
+          },
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "npq-participant",
+            "enum": [
+              "npq-participant"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/NPQParticipantAttributes"
+          }
+        }
+      },
+      "NPQParticipantAttributes": {
+        "description": "The data attributes associated with an NPQ participants",
+        "type": "object",
+        "required": [
+          "id",
+          "participant_id",
+          "full_name",
+          "email",
+          "npq_courses",
+          "trn"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
+            "format": "uuid"
+          },
+          "participant_id": {
+            "description": "The unique identifier of this NPQ participant",
+            "type": "string",
+            "example": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
+            "format": "uuid"
+          },
+          "full_name": {
+            "description": "The full name of this NPQ participant",
+            "type": "string",
+            "example": "Isabelle MacDonald"
+          },
+          "email": {
+            "description": "The email address registered for this NPQ participant",
+            "type": "string",
+            "example": "isabelle.macdonald2@some-school.example.com"
+          },
+          "trn": {
+            "description": "The Teacher Reference Number (TRN) for this NPQ participant",
+            "type": "string",
+            "example": "1234567"
+          },
+          "npq_courses": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -2349,7 +2523,7 @@
         ],
         "properties": {
           "id": {
-            "description": "The unique identifier of the participant record",
+            "description": "The unique identifier of the participant declaration record",
             "type": "string",
             "format": "uuid",
             "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
@@ -2357,7 +2531,7 @@
           "type": {
             "description": "The data type",
             "type": "string",
-            "example": "participant"
+            "example": "participant-declaration"
           },
           "attributes": {
             "$ref": "#/components/schemas/ParticipantDeclarationAttributes"

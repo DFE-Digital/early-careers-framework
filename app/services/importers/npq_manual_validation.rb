@@ -20,7 +20,8 @@ class Importers::NPQManualValidation
 
       ApplicationRecord.transaction do
         data.update!(teacher_reference_number: row["validated_trn"], teacher_reference_number_verified: true)
-        NPQ::CreateOrUpdateProfile.new(npq_validation_data: data).call
+        teacher_profile = data.user.teacher_profile
+        teacher_profile.update!(trn: row["validated_trn"])
       end
     end
   end

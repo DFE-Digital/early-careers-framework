@@ -39,7 +39,7 @@ RSpec.describe Admin::Participants::Details, type: :view_component do
 
     before do
       Finance::Schedule.find_or_create_by!(name: "NPQ Specialist November 2021")
-      NPQ::CreateOrUpdateProfile.new(npq_validation_data: npq_validation_data).call
+      NPQ::Accept.new(npq_application: npq_validation_data).call
     end
 
     it "renders all the required information" do
@@ -61,7 +61,7 @@ RSpec.describe Admin::Participants::Details, type: :view_component do
 
     before do
       Finance::Schedule.find_or_create_by!(name: "NPQ Specialist November 2021")
-      NPQ::CreateOrUpdateProfile.new(npq_validation_data: npq_validation_data).call
+      NPQ::Accept.new(npq_application: npq_validation_data).call
     end
 
     before do

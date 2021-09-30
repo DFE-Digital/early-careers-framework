@@ -505,7 +505,6 @@ ActiveRecord::Schema.define(version: 2021_09_24_124114) do
 
   create_table "participant_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "type", null: false
-    t.uuid "user_id"
     t.uuid "school_id"
     t.uuid "core_induction_programme_id"
     t.uuid "cohort_id"
@@ -530,7 +529,6 @@ ActiveRecord::Schema.define(version: 2021_09_24_124114) do
     t.index ["school_cohort_id"], name: "index_participant_profiles_on_school_cohort_id"
     t.index ["school_id"], name: "index_participant_profiles_on_school_id"
     t.index ["teacher_profile_id"], name: "index_participant_profiles_on_teacher_profile_id"
-    t.index ["user_id"], name: "index_participant_profiles_on_user_id"
   end
 
   create_table "partnership_csv_uploads", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -803,7 +801,6 @@ ActiveRecord::Schema.define(version: 2021_09_24_124114) do
   add_foreign_key "participant_profiles", "school_cohorts"
   add_foreign_key "participant_profiles", "schools"
   add_foreign_key "participant_profiles", "teacher_profiles"
-  add_foreign_key "participant_profiles", "users"
   add_foreign_key "partnership_notification_emails", "partnerships"
   add_foreign_key "partnerships", "cohorts"
   add_foreign_key "partnerships", "delivery_partners"

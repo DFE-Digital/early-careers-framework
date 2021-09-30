@@ -111,7 +111,7 @@ module ValidTestDataGenerator
 
   class AmbitionSpecificPopulater < LeadProviderPopulater
     class << self
-      FIRST_AMBITION_SEED_DATA_TIME = ("2021-08-18 13:43".."2021-08-18 13:49")
+      FIRST_AMBITION_SEED_DATA_TIME = ("2021-08-18 13:43".."2021-08-18 13:49").freeze
 
       def call(name:, total_schools: 3, participants_per_school: 3000)
         generator = new(name: name)
