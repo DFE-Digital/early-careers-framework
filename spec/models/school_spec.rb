@@ -98,6 +98,10 @@ RSpec.describe School, type: :model do
           create(:participant_profile, :mentor, school_cohort: school.school_cohorts.first)
         end
 
+        school_with_inactive_mentor_with_eligibilty = create(:school_cohort).school.tap do |school|
+          create(:participant_profile, :mentor, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first, status: :withdrawn)
+        end
+
         school_with_no_participants = create(:school_cohort).school
 
         expect(School.all_ecf_participants_validated).to include(school_with_mentor_with_eligibilty)
@@ -113,6 +117,7 @@ RSpec.describe School, type: :model do
         expect(School.all_ecf_participants_validated).to_not include(school_with_ect_with_eligibility_and_unvalidated_mentor)
         expect(School.all_ecf_participants_validated).to_not include(school_with_ect_with_validation_data_and_unvalidated_mentor)
         expect(School.all_ecf_participants_validated).to_not include(school_with_no_participants)
+        expect(School.all_ecf_participants_validated).to_not include(school_with_inactive_mentor_with_eligibilty)
       end
     end
   end

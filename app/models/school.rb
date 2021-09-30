@@ -65,7 +65,7 @@ class School < ApplicationRecord
   }
 
   scope :all_ecf_participants_validated, lambda {
-    left_outer_joins(ecf_participant_profiles: %i[ecf_participant_eligibility ecf_participant_validation_data])
+    left_outer_joins(active_ecf_participant_profiles: %i[ecf_participant_eligibility ecf_participant_validation_data])
       .group(:id)
       .having(<<~SQL)
         SUM(
