@@ -69,7 +69,7 @@ private
   def store_trn_on_teacher_profile!(trn)
     if participant_profile.teacher_profile.trn.present? && participant_profile.teacher_profile.trn != trn
       Rails.logger.warn("Different TRN already set for user [#{participant_profile.user.email}]")
-      @eligibility_data.manual_check_status!
+      @eligibility_data.update!(status: :manual_check, reason: :different_trn)
     else
       participant_profile.teacher_profile.update!(trn: trn)
     end
