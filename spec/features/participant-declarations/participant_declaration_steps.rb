@@ -53,7 +53,7 @@ module ParticipantDeclarationSteps
 
   def and_the_lead_provider_submits_a_declaration_for_the_ect_using_their_id
     params = common_params(@ect_id, "ecf-induction")
-    submit_request(params)
+    @declaration_id = submit_request(params).dig("data", "id")
   end
 
   def and_the_lead_provider_submits_a_declaration_for_the_mentor_using_their_id
