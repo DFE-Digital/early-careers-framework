@@ -19,6 +19,7 @@ class SchoolMailer < ApplicationMailer
   BASIC_TEMPLATE = "b1ab542e-a8d5-4fdf-a7aa-f0ce49b98262"
   NQT_PLUS_ONE_SITLESS_EMAIL_TEMPLATE = "c10392e4-9d75-402d-a7fd-47df16fa6082"
   NQT_PLUS_ONE_SIT_EMAIL_TEMPLATE = "9e01b5ac-a94c-4c71-a38d-6502d7c4c2e7"
+  PARTNERED_SCHOOL_INVITE_SIT_EMAIL_TEMPLATE = "8cac177e-b094-4a00-9179-94fadde8ced0"
 
   def remind_induction_coordinator_to_setup_cohort_email(recipient:, school_name:, campaign: nil)
     campaign_tracking = campaign ? UTMService.email(campaign, campaign) : {}
@@ -89,6 +90,28 @@ class SchoolMailer < ApplicationMailer
         challenge_url: challenge_url,
         challenge_deadline: challenge_deadline,
         subject: "FAO: NQT coordinator. Training provider confirmed.",
+      },
+    )
+  end
+
+  def partnered_school_invite_sit_email(
+    recipient:,
+    lead_provider_name:,
+    delivery_partner_name:,
+    nominate_url:,
+    challenge_url:
+  )
+
+    template_mail(
+      PARTNERED_SCHOOL_INVITE_SIT_EMAIL_TEMPLATE,
+      to: recipient,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        lead_provider_name: lead_provider_name,
+        delivery_partner_name: delivery_partner_name,
+        nominate_url: nominate_url,
+        challenge_url: challenge_url,
       },
     )
   end
