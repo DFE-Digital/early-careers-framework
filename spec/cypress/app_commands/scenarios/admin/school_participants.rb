@@ -55,5 +55,5 @@ Timecop.freeze(Date.parse("19/09/2019")) do
                                           teacher_reference_number: "9780824",
                                           school_urn: school.urn
 
-  NPQ::CreateOrUpdateProfile.new(npq_validation_data: npq_validation_data).call
+  NPQ::Accept.new(npq_application: npq_validation_data).call
 end
