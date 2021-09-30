@@ -2385,7 +2385,7 @@
             "description": "The event declaration date",
             "type": "string",
             "format": "date-time",
-            "example": "2021-05-31T02:21:32Z"
+            "example": "2021-05-31T02:21:32.000Z"
           },
           "course_identifier": {
             "description": "The type of course the participant is enrolled in",
