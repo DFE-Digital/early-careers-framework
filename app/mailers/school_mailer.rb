@@ -16,7 +16,6 @@ class SchoolMailer < ApplicationMailer
   COORDINATOR_REMINDER_TO_CHOOSE_PROVIDER_EMAIL_TEMPLATE = "11cdb6d8-8a59-4618-ba35-0ebd7e47180c"
   COORDINATOR_REMINDER_TO_CHOOSE_MATERIALS_EMAIL_TEMPLATE = "43baf25c-6a46-437b-9f30-77c57d68a59e"
   ADD_PARTICIPANTS_EMAIL_TEMPLATE = "721787d0-74bc-42a0-a064-ee0c1cb58edb"
-  FIP_ADD_ECTS_AND_MENTORS_EMAIL_TEMPLATE = "63f9fe5b-aff1-4cf7-9593-6843b80d4044"
   BASIC_TEMPLATE = "b1ab542e-a8d5-4fdf-a7aa-f0ce49b98262"
   NQT_PLUS_ONE_SITLESS_EMAIL_TEMPLATE = "c10392e4-9d75-402d-a7fd-47df16fa6082"
   NQT_PLUS_ONE_SIT_EMAIL_TEMPLATE = "9e01b5ac-a94c-4c71-a38d-6502d7c4c2e7"
@@ -265,20 +264,6 @@ class SchoolMailer < ApplicationMailer
         sign_in_url: sign_in_url,
       },
     )
-  end
-
-  def fip_induction_coordinators_to_add_ects_and_mentors_email(induction_coordinator:, campaign: nil)
-    campaign_tracking = campaign ? UTMService.email(campaign, campaign) : {}
-
-    template_mail(
-      FIP_ADD_ECTS_AND_MENTORS_EMAIL_TEMPLATE,
-      to: induction_coordinator.user.email,
-      rails_mailer: mailer_name,
-      rails_mail_template: action_name,
-      personalisation: {
-        sign_in: new_user_session_url(**campaign_tracking),
-      },
-    ).tag(:request_to_add_ects_and_mentors).associate_with(induction_coordinator, as: :induction_coordinator_profile)
   end
 
   def year2020_add_participants_confirmation(school:, participants:)
