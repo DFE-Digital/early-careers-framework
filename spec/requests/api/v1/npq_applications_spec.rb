@@ -233,7 +233,7 @@ RSpec.describe "NPQ Applications API", type: :request do
   end
 
   describe "POST /api/v1/npq-applications/:id/accept" do
-    let(:default_npq_validation_data) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider) }
+    let(:default_npq_validation_data) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, npq_course: npq_course) }
     let(:user) { default_npq_validation_data.user }
 
     before do
@@ -272,7 +272,7 @@ RSpec.describe "NPQ Applications API", type: :request do
     end
 
     context "application has been rejected" do
-      let(:npq_profile) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, lead_provider_approval_status: "rejected") }
+      let(:npq_profile) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, lead_provider_approval_status: "rejected", npq_course: npq_course) }
 
       it "return 400 bad request " do
         post "/api/v1/npq-applications/#{npq_profile.id}/accept"

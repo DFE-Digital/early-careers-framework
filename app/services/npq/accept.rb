@@ -28,7 +28,7 @@ module NPQ
     def create_profile
       ParticipantProfile::NPQ.create!(
         id: npq_application.id,
-        schedule: Finance::Schedule.default,
+        schedule: schedule,
         npq_course: npq_application.npq_course,
         teacher_profile: teacher_profile,
         school_urn: npq_application.school_urn,
@@ -44,6 +44,17 @@ module NPQ
 
     def user
       @user ||= npq_application.user
+    end
+
+    def schedule
+      case npq_application.npq_course.identifier
+      when "npq-leading-teaching", "npq-leading-behaviour-culture", "npq-leading-teaching-development"
+        Finance::Schedule.default_npq_leadership
+      when "npq-senior-leadership", "npq-headship", "npq-executive-leadership"
+        Finance::Schedule.default_npq_specialist
+      else
+        raise ArgumentError "Invalid course identifier"
+      end
     end
   end
 end
