@@ -53,7 +53,7 @@ module ParticipantDeclarationSteps
 
   def and_the_lead_provider_submits_a_declaration_for_the_ect_using_their_id
     params = common_params(@ect_id, "ecf-induction")
-    submit_request(params)
+    @declaration_id = submit_request(params).dig("data", "id")
   end
 
   def and_the_lead_provider_submits_a_declaration_for_the_mentor_using_their_id
@@ -75,6 +75,10 @@ module ParticipantDeclarationSteps
     params = common_params("", "ecf-induction")
     params["data"]["attributes"].reject! { |a| a["participant_id"] }
     submit_request(params)
+  end
+
+  def and_the_lead_provider_voids_a_declaration
+    @session.put("/api/v1/participant-declarations/#{@declaration_id}/void", headers: { "Authorization": "Bearer #{@token}" })
   end
 
   def then_the_declaration_made_is_valid
