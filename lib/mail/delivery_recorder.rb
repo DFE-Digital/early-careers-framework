@@ -51,8 +51,10 @@ module Mail
         @tags ||= []
       end
 
-      def associate_with(object, as: nil) # rubocop:disable Naming/MethodParameterName
-        associations << [object, as]
+      def associate_with(*objects, as: nil) # rubocop:disable Naming/MethodParameterName
+        objects.each do |object|
+          associations << [object, as]
+        end
         self
       end
 

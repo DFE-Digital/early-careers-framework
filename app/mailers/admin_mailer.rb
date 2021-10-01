@@ -14,6 +14,6 @@ class AdminMailer < ApplicationMailer
         full_name: admin.full_name,
         sign_in_link: url,
       },
-    ).tag(:account_created, :admin_account_created)
+    ).tag(:admin_account_created)
   end
 end

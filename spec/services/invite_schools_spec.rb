@@ -32,9 +32,8 @@ RSpec.describe InviteSchools do
     let(:nomination_email) { school.nomination_emails.last }
 
     it "creates a record for the nomination email" do
-      expect {
-        invite_schools.run [school.urn]
-      }.to change { school.nomination_emails.count }.by 1
+      expect { invite_schools.run [school.urn] }
+        .to change { school.nomination_emails.count }.by 1
     end
 
     it "creates a nomination email with the correct fields" do
@@ -48,9 +47,9 @@ RSpec.describe InviteSchools do
       travel_to(Time.utc("2000-1-1")) do
         expect(SchoolMailer).to receive(:nomination_email).with(
           hash_including(
-            school_name: String,
-            nomination_url: String,
             recipient: school.primary_contact_email,
+            school: school,
+            nomination_url: String,
             expiry_date: "22/01/2000",
           ),
         ).and_call_original
@@ -65,17 +64,13 @@ RSpec.describe InviteSchools do
     end
 
     context "when the school is cip only" do
-      let(:school) do
-        create(:school,
-               :cip_only,
-               primary_contact_email: primary_contact_email)
-      end
+      let(:school) { create(:school, :cip_only, primary_contact_email: primary_contact_email) }
 
       it "still sends the nomination email" do
         travel_to(Time.utc("2000-1-1")) do
           expect(SchoolMailer).to receive(:nomination_email).with(
             hash_including(
-              school_name: String,
+              school: school,
               nomination_url: String,
               recipient: school.primary_contact_email,
               expiry_date: "22/01/2000",
@@ -93,7 +88,7 @@ RSpec.describe InviteSchools do
       it "sends the nomination email to the secondary contact" do
         expect(SchoolMailer).to receive(:nomination_email).with(
           hash_including(
-            school_name: String,
+            school: school,
             nomination_url: String,
             recipient: school.secondary_contact_email,
           ),

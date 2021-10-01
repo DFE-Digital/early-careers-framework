@@ -24,14 +24,12 @@ class CreateInductionTutor < BaseService
         InductionCoordinatorProfile.create!(user: user, schools: [school])
       end
 
-      # TODO: This should really be using deliver_later, but this can't be tested via Cypress
-      # After discussion leaving this as deliver_now with  this comment
       SchoolMailer.nomination_confirmation_email(
-        user: user,
+        sit_profile: user.induction_coordinator_profile,
         school: school,
         start_url: start_url,
         step_by_step_url: step_by_step_url,
-      ).deliver_now
+      ).deliver_later
     end
   end
 

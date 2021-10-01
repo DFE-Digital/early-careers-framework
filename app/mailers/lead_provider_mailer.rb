@@ -16,7 +16,7 @@ class LeadProviderMailer < ApplicationMailer
         start_url: start_url,
         subject: "Your account to confirm schools",
       },
-    ).tag(:account_created, :lead_provider_account_created)
+    ).tag(:lead_provider_account_created)
   end
 
   def partnership_challenged_email(partnership:, user:)
