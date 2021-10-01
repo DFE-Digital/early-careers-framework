@@ -16,9 +16,9 @@ class SchoolMailer < ApplicationMailer
   COORDINATOR_REMINDER_TO_CHOOSE_PROVIDER_EMAIL_TEMPLATE = "11cdb6d8-8a59-4618-ba35-0ebd7e47180c"
   COORDINATOR_REMINDER_TO_CHOOSE_MATERIALS_EMAIL_TEMPLATE = "43baf25c-6a46-437b-9f30-77c57d68a59e"
   ADD_PARTICIPANTS_EMAIL_TEMPLATE = "721787d0-74bc-42a0-a064-ee0c1cb58edb"
-  BASIC_TEMPLATE = "b1ab542e-a8d5-4fdf-a7aa-f0ce49b98262"
   NQT_PLUS_ONE_SITLESS_EMAIL_TEMPLATE = "c10392e4-9d75-402d-a7fd-47df16fa6082"
   NQT_PLUS_ONE_SIT_EMAIL_TEMPLATE = "9e01b5ac-a94c-4c71-a38d-6502d7c4c2e7"
+  ADD_2020_PARTICIPANT_CONFIRMATION_TEMPLATE = "08d45879-1f94-48a2-88c1-108f596fa59e"
   DIY_WORDPRESS_NOTIFICATION_TEMPLATE = "e1067a2f-b027-45a6-8e51-668e170090d1"
   PARTNERED_SCHOOL_INVITE_SIT_EMAIL_TEMPLATE = "8cac177e-b094-4a00-9179-94fadde8ced0"
 
@@ -290,17 +290,17 @@ class SchoolMailer < ApplicationMailer
     )
   end
 
-  def year2020_add_participants_confirmation(school:, participants:)
-    @school = school
-    @participants = participants
-
-    view_mail(
-      BASIC_TEMPLATE,
-      to: school.contact_email,
-      subject: "2020 to 2021 NQTs cohort: support materials confirmation",
+  def year2020_add_participants_confirmation(recipient:, school_name:, teacher_name_list:)
+    template_mail(
+      ADD_2020_PARTICIPANT_CONFIRMATION_TEMPLATE,
+      to: recipient,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
-      template_name: :year2020_ects_added_confirmation,
+      personalisation: {
+        subject: "2020 to 2021 NQTs cohort: support materials confirmation",
+        school_name: school_name,
+        teacher_name_list: teacher_name_list,
+      },
     )
   end
 
