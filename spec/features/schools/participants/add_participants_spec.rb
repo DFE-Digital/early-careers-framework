@@ -18,13 +18,13 @@ RSpec.describe "Add participants", js: true, with_feature_flags: { induction_tut
     when_i_click_on_add_a_new_ect_or_mentor_link
     then_i_am_taken_to_add_your_ect_and_mentors_page
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Add ECT and mentors"
+    and_percy_should_be_sent_a_snapshot_named "Induction tutor adds ECT and mentors"
 
     when_i_select_add_ect
     and_select_continue
     then_i_am_taken_to_add_ect_name_page
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Add ECT name"
+    and_percy_should_be_sent_a_snapshot_named "Induction tutor adds ECT name"
     and_select_continue
     then_i_receive_a_missing_name_error_message
 
@@ -32,7 +32,7 @@ RSpec.describe "Add participants", js: true, with_feature_flags: { induction_tut
     and_select_continue
     then_i_am_taken_to_add_ect_or_mentor_email_page
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Add ECT email"
+    and_percy_should_be_sent_a_snapshot_named "Induction tutor adds ECT email"
     and_select_continue
     then_i_receive_a_missing_email_error_message
 
@@ -40,12 +40,12 @@ RSpec.describe "Add participants", js: true, with_feature_flags: { induction_tut
     and_select_continue
     then_i_am_taken_to_check_details_page
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Check details"
+    and_percy_should_be_sent_a_snapshot_named "Induction tutor checks ECT details"
 
     when_i_select_confirm_and_add
     then_i_should_be_taken_to_ect_confirmation_page
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Confirmation"
+    and_percy_should_be_sent_a_snapshot_named "Induction tutor receives add ECT Confirmation"
   end
 
   scenario "Induction tutor can add new mentor participant" do
@@ -56,11 +56,13 @@ RSpec.describe "Add participants", js: true, with_feature_flags: { induction_tut
 
     then_i_am_taken_to_add_mentor_name_page
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Add mentor name"
+    and_percy_should_be_sent_a_snapshot_named "Induction tutor adds mentor name"
 
     when_i_add_ect_or_mentor_name
     and_select_continue
     then_i_am_taken_to_add_ect_or_mentor_email_page
+    and_the_page_should_be_accessible
+    and_percy_should_be_sent_a_snapshot_named "Induction tutor adds mentor email"
 
     when_i_add_ect_or_mentor_email
     and_select_continue
@@ -69,7 +71,7 @@ RSpec.describe "Add participants", js: true, with_feature_flags: { induction_tut
     when_i_select_confirm_and_add
     then_i_should_be_taken_to_mentor_confirmation_page
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Mentor confirmation"
+    and_percy_should_be_sent_a_snapshot_named "Induction tutor receives add mentor Confirmation"
   end
 
   scenario "Induction tutor can add themselves as a mentor" do
@@ -79,18 +81,18 @@ RSpec.describe "Add participants", js: true, with_feature_flags: { induction_tut
     and_select_continue
     then_i_am_taken_to_are_you_sure_page
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Are you sure"
+    and_percy_should_be_sent_a_snapshot_named "Induction tutor add yourself as mentor check"
 
     when_i_click_on_check_what_each_role_needs_to_do
     then_i_am_taken_to_roles_page
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Roles"
+    and_percy_should_be_sent_a_snapshot_named "ECF roles information"
     and_select_back
     then_i_am_taken_to_are_you_sure_page
     and_select_confirm
     then_i_am_taken_to_yourself_as_mentor_confirmation_page
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Yourself as mentor confirmation"
+    and_percy_should_be_sent_a_snapshot_named "Induction tutor add yourself as mentor confirmation"
   end
 
   scenario "Induction tutor cannot add existing ECT/mentor" do

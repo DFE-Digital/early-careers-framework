@@ -70,7 +70,7 @@ RSpec.describe "Update participants details", js: true, with_feature_flags: { in
     and_select_continue
     then_i_am_taken_to_add_mentor_page
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Who will mentor"
+    and_percy_should_be_sent_a_snapshot_named "Induction tutor chooses mentor for ECT"
 
     when_i_select_a_mentor
     and_select_continue
