@@ -8,7 +8,7 @@ RSpec.describe Importers::NPQManualValidation do
 
   before do
     Finance::Schedule.find_or_create_by!(name: "ECF September standard 2021")
-    NPQ::CreateOrUpdateProfile.new(npq_validation_data: npq_validation_data).call
+    NPQ::Accept.new(npq_application: npq_validation_data).call
   end
 
   around do |example|

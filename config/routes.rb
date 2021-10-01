@@ -63,6 +63,7 @@ Rails.application.routes.draw do
           put :void
         end
       end
+      resources :npq_participants, only: %i[index], path: "participants/npq"
       resources :users, only: %i[index create]
       resources :ecf_users, only: %i[index create], path: "ecf-users"
       resources :participant_validation, only: :show, path: "participant-validation"
