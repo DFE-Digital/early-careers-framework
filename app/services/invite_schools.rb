@@ -274,6 +274,18 @@ class InviteSchools
     end
   end
 
+  def inform_diy_schools_of_wordpress
+    User.where(
+      id: diy_school_cohorts_without_pending_partnerships
+            .joins(school: :induction_coordinators)
+            .select(:user_id),
+    ).find_each do |user|
+      SchoolMailer.diy_wordpress_notification(
+        user: user,
+      ).deliver_later
+    end
+  end
+
   def invite_not_opted_out_sits_with_all_validated_participants_for_nqt_plus_one
     School
       .eligible
@@ -435,5 +447,15 @@ private
 
   def logger
     @logger ||= Rails.logger
+  end
+
+  def diy_school_cohorts_with_pending_partnerships
+    SchoolCohort.where(cohort_id: Cohort.current.id, induction_programme_choice: "design_our_own").joins(school: :partnerships).where(school: { partnerships: { challenge_reason: nil } })
+  end
+
+  def diy_school_cohorts_without_pending_partnerships
+    SchoolCohort
+      .where(cohort_id: Cohort.current.id, induction_programme_choice: "design_our_own")
+      .where.not(id: diy_school_cohorts_with_pending_partnerships)
   end
 end
