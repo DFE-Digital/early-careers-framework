@@ -273,6 +273,18 @@ class InviteSchools
     end
   end
 
+  def inform_diy_schools_of_wordpress
+    User.where(
+      id: diy_school_cohorts_without_pending_partnerships
+            .joins(school: :induction_coordinators)
+            .pluck(:user_id),
+    ).distinct.find_each do |user|
+      SchoolMailer.diy_wordpress_notification(
+        user: user,
+      ).deliver_later
+    end
+  end
+
 private
 
   def private_beta_start_url
@@ -417,5 +429,15 @@ private
 
   def logger
     @logger ||= Rails.logger
+  end
+
+  def diy_school_cohorts_with_pending_partnerships
+    SchoolCohort.where(cohort_id: Cohort.current.id, induction_programme_choice: "design_our_own").joins(school: :partnerships).where(school: { partnerships: { challenge_reason: nil } })
+  end
+
+  def diy_school_cohorts_without_pending_partnerships
+    SchoolCohort
+      .where(cohort_id: Cohort.current.id, induction_programme_choice: "design_our_own")
+      .where.not(id: diy_school_cohorts_with_pending_partnerships)
   end
 end
