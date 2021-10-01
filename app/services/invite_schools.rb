@@ -278,7 +278,7 @@ class InviteSchools
     User.where(
       id: diy_school_cohorts_without_pending_partnerships
             .joins(school: :induction_coordinators)
-            .pluck(:user_id),
+            .select(:user_id),
     ).distinct.find_each do |user|
       SchoolMailer.diy_wordpress_notification(
         user: user,
