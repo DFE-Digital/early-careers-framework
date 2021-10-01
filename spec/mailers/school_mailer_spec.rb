@@ -167,6 +167,7 @@ RSpec.describe SchoolMailer, type: :mailer do
   describe "nqt_plus_one_sit_invite" do
     let(:email) do
       SchoolMailer.nqt_plus_one_sit_invite(
+        school: create(:school),
         recipient: "hello@example.com",
         start_url: "www.example.com",
       ).deliver_now

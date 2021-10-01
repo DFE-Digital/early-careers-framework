@@ -249,6 +249,7 @@ class InviteSchools
   def invite_opted_out_sits_for_nqt_plus_one
     School.eligible.opted_out.joins(:induction_coordinators).each do |school|
       SchoolMailer.nqt_plus_one_sit_invite(
+        school: school,
         recipient: school.induction_coordinators.first.email,
         start_url: year2020_start_url(school, utm_source: :year2020_nqt_invite_sit),
       ).deliver_later
@@ -271,6 +272,23 @@ class InviteSchools
         start_url: year2020_start_url(school, utm_source: :year2020_nqt_invite_school_not_opted_out),
       ).deliver_later
     end
+  end
+
+  def invite_not_opted_out_sits_with_all_validated_participants_for_nqt_plus_one
+    School
+      .eligible
+      .not_opted_out
+      .joins(:induction_coordinators)
+      .all_ecf_participants_validated
+      .find_each do |school|
+        next if Email.associated_with(school).tagged_with(:year2020_invite).any?
+
+        SchoolMailer.nqt_plus_one_sit_invite(
+          school: school,
+          recipient: school.induction_coordinators.first.email,
+          start_url: year2020_start_url(school, utm_source: :year2020_nqt_invite_sit_validated),
+        ).deliver_later
+      end
   end
 
 private

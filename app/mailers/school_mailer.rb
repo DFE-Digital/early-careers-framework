@@ -315,7 +315,7 @@ class SchoolMailer < ApplicationMailer
     )
   end
 
-  def nqt_plus_one_sit_invite(recipient:, start_url:)
+  def nqt_plus_one_sit_invite(recipient:, start_url:, school:)
     template_mail(
       NQT_PLUS_ONE_SIT_EMAIL_TEMPLATE,
       to: recipient,
@@ -324,6 +324,6 @@ class SchoolMailer < ApplicationMailer
       personalisation: {
         start_url: start_url,
       },
-    )
+    ).tag(:year2020_invite).associate_with(school, as: :school)
   end
 end

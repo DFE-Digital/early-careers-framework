@@ -18,7 +18,7 @@ class SchoolCohort < ApplicationRecord
 
   has_many :ecf_participant_profiles, class_name: "ParticipantProfile"
   has_many :ecf_participants, through: :ecf_participant_profiles, source: :user
-  has_many :active_ecf_participant_profiles, -> { ecf.active_record }, class_name: "ParticipantProfile"
+  has_many :active_ecf_participant_profiles, -> { ecf.active_record }, class_name: "ParticipantProfile::ECF"
   has_many :active_ecf_participants, through: :active_ecf_participant_profiles, source: :user
 
   has_many :mentor_profiles, -> { mentors }, class_name: "ParticipantProfile"
