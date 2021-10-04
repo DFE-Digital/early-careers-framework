@@ -144,11 +144,6 @@ const pagePaths = {
   "the Lead Provider landing page": "/lead-providers",
   "Partnership guidance": "/lead-providers/partnership-guide",
   "API Documentation": "/api-docs/index.html",
-  "API guidance home": "/lead-providers/guidance/home",
-  "ECF usage guide": "/lead-providers/guidance/ecf-usage",
-  "NPQ usage guide": "/lead-providers/guidance/npq-usage",
-  "API release notes": "/lead-providers/guidance/release-notes",
-  "API guidance support": "/lead-providers/guidance/help",
   "2020 programme choice":
     "/schools/:school_id/year-2020/choose-induction-programme",
   "2020 cip choice":

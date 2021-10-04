@@ -25,4 +25,4 @@ Ticket:
 
 ## External API changes
 
-Does this change anything in our external APIs? If so, did you remember to update the CHANGELOG for Lead Providers? (lead-providers/guidance/release-notes)
+Does this change anything in our external APIs? If so, did you remember to update the CHANGELOG for Lead Providers? (docs/source/release-notes)
