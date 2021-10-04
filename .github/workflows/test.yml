@@ -79,10 +79,10 @@ jobs:
         run: yarn install
 
       - name: Set up test database
-        run: bin/rails db:create db:schema:load
+        run: bundle exec rake parallel:setup
 
       - name: Run tests
-        run: yarn percy exec --parallel -- bundle exec rspec
+        run: yarn percy exec --parallel -- bundle exec rake parallel:spec
 
   frontend-tests:
     name: Run frontend JS unit tests
