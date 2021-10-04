@@ -7,13 +7,14 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
   describe "GET /api/v1/participants/ecf" do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: lead_provider) }
     let(:lead_provider) { create(:lead_provider) }
-    let(:partnership) { create(:partnership, lead_provider: lead_provider) }
-    let(:school_cohort) { create(:school_cohort, school: partnership.school, cohort: partnership.cohort, induction_programme_choice: "full_induction_programme") }
+    let(:cohort) { create(:cohort, :current) }
+    let(:partnership) { create(:partnership, lead_provider: lead_provider, cohort: cohort) }
+    let(:school_cohort) { create(:school_cohort, school: partnership.school, cohort: cohort, induction_programme_choice: "full_induction_programme") }
     let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
     let(:bearer_token) { "Bearer #{token}" }
 
     before :each do
-      mentor_profile = create(:participant_profile, :mentor, school: partnership.school, cohort: partnership.cohort)
+      mentor_profile = create(:participant_profile, :mentor, school_cohort: school_cohort)
       create_list :participant_profile, 2, :ect, mentor_profile: mentor_profile, school_cohort: school_cohort
       ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record = ParticipantProfile::ECT.first.teacher_profile
       create(:participant_profile,
@@ -40,6 +41,16 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
         end
 
         it "returns all users" do
+          get "/api/v1/participants/ecf"
+          expect(parsed_response["data"].size).to eql(4)
+        end
+
+        it "only returns users for the current cohort" do
+          cohort_2020 = create(:cohort, start_year: 2020)
+          partnership_2020 = create(:partnership, lead_provider: lead_provider, cohort: cohort_2020)
+          school_cohort_2020 = create(:school_cohort, school: partnership_2020.school, cohort: cohort_2020, induction_programme_choice: "full_induction_programme")
+          create(:participant_profile, :ect, school_cohort: school_cohort_2020)
+
           get "/api/v1/participants/ecf"
           expect(parsed_response["data"].size).to eql(4)
         end
