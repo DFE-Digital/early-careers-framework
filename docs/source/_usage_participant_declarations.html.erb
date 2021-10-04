@@ -4,10 +4,10 @@
 <h3 class="govuk-heading-m" id="provider-confirms-<%= programme %>-participant-has-started">1. Provider confirms an <%= programme %> participant has started</h3>
 <p class="govuk-body-m">Confirm an <%= programme %> participant has started their induction training before Milestone 1.</p>
 <p class="govuk-body-m"><pre><code>POST /api/v1/participant-declarations</code></pre></p>
-<p class="govuk-body-m">With a <a href="/lead-providers/guidance/reference#ecfparticipantstarteddeclaration-object" class="govuk-link">request body containing an <%= programme %> participant declaration</a>.</p>
-<p class="govuk-body-m">This returns <a href="/lead-providers/guidance/reference#singleparticipantdeclarationresponse-object" class="govuk-link">participant declaration</a>.</p>
+<p class="govuk-body-m">With a <a href="/api-reference/reference#ecfparticipantstarteddeclaration-object" class="govuk-link">request body containing an <%= programme %> participant declaration</a>.</p>
+<p class="govuk-body-m">This returns <a href="/api-reference/reference#singleparticipantdeclarationresponse-object" class="govuk-link">participant declaration</a>.</p>
 <p class="govuk-body-m">This endpoint is idempotent - submitting exact copy of a request will return the same response body as submitting it the first time.</p>
-<p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#post-api-v1-participant-declarations" class="govuk-link">confirm <%= programme %> participant declarations</a> endpoint.</p>
+<p class="govuk-body-m">See <a href="/api-reference/reference#api-v1-participant-declarations-post" class="govuk-link">confirm <%= programme %> participant declarations</a> endpoint.</p>
 
 <h3 class="govuk-heading-m" id="provider-records-<%= programme %>-participant-declaration-id">2. Provider records the <%= programme %> participant declaration ID</h3>
 <p class="govuk-body-m">Store the returned <%= programme %> participant declaration ID for future management tasks.</p>
@@ -20,9 +20,9 @@
 <p class="govuk-body-m">1. Confirm an <%= programme %> participant has been retained by the appropriate number of months for this retained event on their <%= programme %> course.</p>
 <p class="govuk-body-m">An explicit <code>retained-x</code> declaration is required to trigger output payments. You should declare this when a participant has reached a particular milestone in line with contractual reporting requirements.</p>
 <p class="govuk-body-m"><pre><code>POST /api/v1/participant-declarations</code></pre></p>
-<p class="govuk-body-m">With a <a href="/lead-providers/guidance/reference#ecfparticipantretaineddeclaration-object" class="govuk-link">request body containing an <%= programme %> participant retained declaration</a>.</p>
-<p class="govuk-body-m">This returns <a href="/lead-providers/guidance/reference#singleparticipantdeclarationresponse-object" class="govuk-link">participant declaration</a>.</p>
-<p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#post-api-v1-participant-declarations" class="govuk-link">confirm <%= programme %> participant declarations</a> endpoint.</p>
+<p class="govuk-body-m">With a <a href="/api-reference/reference#ecfparticipantretaineddeclaration-object" class="govuk-link">request body containing an <%= programme %> participant retained declaration</a>.</p>
+<p class="govuk-body-m">This returns <a href="/api-reference/reference#singleparticipantdeclarationresponse-object" class="govuk-link">participant declaration</a>.</p>
+<p class="govuk-body-m">See <a href="/api-reference/reference#api-v1-participant-declarations-post" class="govuk-link">confirm <%= programme %> participant declarations</a> endpoint.</p>
 
 <h3 class="govuk-heading-m" id="provider-records-<%= programme %>-participant-declaration-id-2">2. Provider records the <%= programme %> participant declaration ID</h3>
 <p class="govuk-body-m">Store the returned <%= programme %> participant declaration ID for future management tasks.</p>
@@ -35,9 +35,9 @@
 <p class="govuk-body-m">Confirm an <%= programme %> participant has completed their <%= programme %> course.</p>
 <p class="govuk-body-m">An explicit <code>completed</code> declaration is required to trigger output payments. You should declare this when a participant has reached their final milestone and completed their <%= programme %> course.</p>
 <p class="govuk-body-m"><pre><code>POST /api/v1/participant-declarations</code></pre></p>
-<p class="govuk-body-m">With a <a href="/lead-providers/guidance/reference#ecfparticipantstarteddeclaration-object" class="govuk-link">request body containing an <%= programme %> participant completed declaration</a>.</p>
-<p class="govuk-body-m">This returns <a href="/lead-providers/guidance/reference#singleparticipantdeclarationresponse-object" class="govuk-link">participant declaration</a>.</p>
-<p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#post-api-v1-participant-declarations" class="govuk-link">confirm <%= programme %> participant declarations</a> endpoint.</p>
+<p class="govuk-body-m">With a <a href="/api-reference/reference#ecfparticipantstarteddeclaration-object" class="govuk-link">request body containing an <%= programme %> participant completed declaration</a>.</p>
+<p class="govuk-body-m">This returns <a href="/api-reference/reference#singleparticipantdeclarationresponse-object" class="govuk-link">participant declaration</a>.</p>
+<p class="govuk-body-m">See <a href="/api-reference/reference#api-v1-participant-declarations-post" class="govuk-link">confirm <%= programme %> participant declarations</a> endpoint.</p>
 
 <h3 class="govuk-heading-m" id="provider-records-<%= programme %>-participant-declaration-id-3">2. Provider records the <%= programme %> participant declaration ID</h3>
 <p class="govuk-body-m">Store the returned <%= programme %> participant declaration ID for future management tasks.</p>
@@ -51,12 +51,12 @@
 <p class="govuk-body-m">This section lets you review all of the declarations you have made.</p>
 <p class="govuk-body-m">All of your submitted declarations are listed.</p>
 <p class="govuk-body-m"><pre><code>GET /api/v1/participant-declarations</code></pre></p>
-<p class="govuk-body-m">This returns <a href="/lead-providers/guidance/reference#multipleparticipantdeclarationresponse-object" class="govuk-link">participant declarations</a>.</p>
+<p class="govuk-body-m">This returns <a href="/api-reference/reference#multipleparticipantdeclarationresponse-object" class="govuk-link">participant declarations</a>.</p>
 
 <h3 class="govuk-heading-m" id="checking-a-single-previously-submitted-declaration">2. Checking a single previously submitted declaration</h3>
 <p class="govuk-body-m">This section lets you review a single declaration you have made</p>
 <p class="govuk-body-m"><pre><code>GET /api/v1/participant-declarations/{id}</code></pre></p>
-<p class="govuk-body-m">This returns a <a href="/lead-providers/guidance/reference#singleparticipantdeclarationresponse-object" class="govuk-link">participant declaration</a>.</p>
+<p class="govuk-body-m">This returns a <a href="/api-reference/reference#singleparticipantdeclarationresponse-object" class="govuk-link">participant declaration</a>.</p>
 
 
 <h2 id="removing-participant-declaration" class="govuk-heading-l">Removing a declaration submitted in error</h2>
@@ -66,5 +66,5 @@
 <h3 class="govuk-heading-m" id="provider-voids-a-declaration">1. Provider voids a declaration</h3>
 <p class="govuk-body-m">Submit the void to the following endpoint</p>
 <p class="govuk-body-m"><pre><code>PUT /api/v1/participant-declarations/{id}/void</code></pre></p>
-<p class="govuk-body-m">This will return a <a href="/lead-providers/guidance/reference#singleparticipantdeclarationresponse-object" class="govuk-link">participant declaration record</a> with the updates to the record included.</p>
-<p class="govuk-body-m">See <a href="/lead-providers/guidance/reference#put-api-v1-participant-declarations-id-void" class="govuk-link">void participant declaration</a> endpoint.</p>
+<p class="govuk-body-m">This will return a <a href="/api-reference/reference#singleparticipantdeclarationresponse-object" class="govuk-link">participant declaration record</a> with the updates to the record included.</p>
+<p class="govuk-body-m">See <a href="/api-reference/reference#put-api-v1-participant-declarations-id-void" class="govuk-link">void participant declaration</a> endpoint.</p>
