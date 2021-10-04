@@ -45,27 +45,46 @@ FactoryBot.define do
       uplift { :uplift_flags }
     end
 
+    trait :submitted do
+      transient do
+        state { "submitted" }
+      end
+    end
+
     trait :payable do
-      payable { true }
+      transient do
+        state { "payable" }
+      end
+    end
+
+    trait :voided do
+      transient do
+        state { "voided" }
+      end
     end
 
     transient do
       uplift { [] }
       profile_type { :ect }
-      payable { false }
+      state { "submitted" }
     end
 
     trait :with_profile_type do
       after(:create) do |participant_declaration, evaluator|
         create(:profile_declaration,
                participant_declaration: participant_declaration,
-               payable: evaluator.payable,
                participant_profile: create(
                  :participant_profile,
                  evaluator.profile_type,
                  *evaluator.uplift,
                ))
       end
+    end
+
+    after(:create) do |participant_declaration, evaluator|
+      create(:declaration_state,
+             evaluator.state,
+             participant_declaration: participant_declaration)
     end
   end
 end

@@ -6,7 +6,7 @@ class VoidParticipantDeclaration
   def call
     declaration = ParticipantDeclaration.for_lead_provider(cpd_lead_provider).find(id)
 
-    raise Api::Errors::InvalidTransitionError, "Declaration is already voided" if declaration.voided
+    raise Api::Errors::InvalidTransitionError, "Declaration is already voided" if declaration.voided?
 
     latest_declaration = declaration.participant_profile.participant_declarations.order(declaration_date: :desc).first
     raise Api::Errors::InvalidTransitionError, "Can only void last declaration" if latest_declaration != declaration

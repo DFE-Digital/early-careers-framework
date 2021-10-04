@@ -54,7 +54,13 @@ properties:
     nullable: false
     example: true
   voided:
-    description: "Indicates whether this declaration has been voided"
+    description: "[Deprecated - use state instead] Indicates whether this declaration has been voided"
     type: boolean
     nullable: false
     example: false
+  state:
+    description: "[Deprecated - use state instead] Indicates the state of this payment declaration"
+    type: string
+    nullable: false
+    example: paid
+
