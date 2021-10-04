@@ -41,6 +41,7 @@ properties:
       - npq-headship
       - npq-senior-leadership
       - npq-executive-leadership
+      - npq-additional-support-offer
     example: ecf-induction
   eligible_for_payment:
     description: "Indicates whether this declaration would be eligible for funding from the DfE"
