@@ -23,34 +23,35 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
 
     context "when an invalid choice has been made" do
       it "returns false" do
-        form.do_you_know_your_trn_choice = :banana
+        form.do_you_want_to_add_mentor_information_choice = :banana
         expect(form.valid?(:do_you_want_to_add_mentor_information)).to be false
         expect(form.errors).to include :do_you_want_to_add_mentor_information_choice
       end
     end
   end
 
-  describe "do_you_know_your_trn validations" do
-    context "when a valid choice is made" do
-      it "returns true" do
-        form.do_you_know_your_trn_choice = form.trn_choices.map(&:id).sample
-        expect(form.valid?(:do_you_know_your_trn)).to be true
-        expect(form.errors).to be_empty
+  describe "what_is_your_trn validations" do
+    context "when trn is not supplied" do
+      it "returns false" do
+        form.trn = nil
+        expect(form.valid?(:what_is_your_trn)).to be false
+        expect(form.errors).to include :trn
       end
     end
 
-    context "when no choice has been made" do
-      it "returns false" do
-        expect(form.valid?(:do_you_know_your_trn)).to be false
-        expect(form.errors).to include :do_you_know_your_trn_choice
+    context "when trn has leading/trailing whiitespace" do
+      it "strips whitespace and validates" do
+        form.trn = "   1234567  \t\n"
+        expect(form.valid?(:what_is_your_trn)).to be true
+        expect(form.trn).to eq "1234567"
       end
     end
 
-    context "when an invalid choice has been made" do
-      it "returns false" do
-        form.do_you_know_your_trn_choice = :banana
-        expect(form.valid?(:do_you_know_your_trn)).to be false
-        expect(form.errors).to include :do_you_know_your_trn_choice
+    context "when trn has contains RP and slashes" do
+      it "strips invalid characters and validates" do
+        form.trn = " RP12/345 67  \t\n"
+        expect(form.valid?(:what_is_your_trn)).to be true
+        expect(form.trn).to eq "1234567"
       end
     end
   end
@@ -140,29 +141,6 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
       end
     end
 
-    context "when trn is not supplied" do
-      it "returns false" do
-        form.trn = nil
-        expect(form.valid?(:tell_us_your_details)).to be false
-        expect(form.errors).to include :trn
-      end
-    end
-
-    context "when trn has leading/trailing whiitespace" do
-      it "strips whitespace and validates" do
-        form.trn = "   1234567  \t\n"
-        expect(form.valid?(:tell_us_your_details)).to be true
-      end
-    end
-
-    context "when name is not supplied" do
-      it "returns false" do
-        form.name = nil
-        expect(form.valid?(:tell_us_your_details)).to be false
-        expect(form.errors).to include :name
-      end
-    end
-
     context "when date_of_birth is not supplied" do
       it "returns false" do
         form.date_of_birth = nil
@@ -208,7 +186,6 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
       values = {
         step: :my_step,
         do_you_want_to_add_mentor_information_choice: form.add_mentor_information_choices.map(&:id).sample,
-        do_you_know_your_trn_choice: form.trn_choices.map(&:id).sample,
         have_you_changed_your_name_choice: form.name_change_choices.map(&:id).sample,
         updated_record_choice: form.updated_record_choices.map(&:id).sample,
         name_not_updated_choice: form.name_not_updated_choices.map(&:id).sample,
@@ -235,12 +212,6 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
         expect(attributes[:name]).to eq "Shiela Smith"
         expect(attributes[:national_insurance_number]).to eq "AW234444A"
       end
-    end
-  end
-
-  describe "#trn_choices" do
-    it "provides options for the teacher reference number choice" do
-      expect(form.trn_choices.map(&:id)).to match_array %w[yes no i_do_not_have]
     end
   end
 
