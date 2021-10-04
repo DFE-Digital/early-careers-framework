@@ -29,7 +29,7 @@ module GovukTechDocs
         resources = resources
                         .sort_by { |r| [r.data.weight ? 0 : 1, r.data.weight || 0] }
 
-        output = ""
+        output = "<ul>\n"
         resources.each do |resource|
           # Skip from page tree if hide_in_navigation:true frontmatter
           next if resource.data.hide_in_navigation
@@ -68,6 +68,7 @@ module GovukTechDocs
           end
         end
 
+        output += "</ul>\n"
         output
       end
     end
