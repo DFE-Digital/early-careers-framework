@@ -12,7 +12,7 @@ RSpec.describe Participants::Defer::NPQ do
       cpd_lead_provider: cpd_lead_provider,
       participant_id: npq_profile.user.id,
       course_identifier: "npq-leading-teaching",
-      reason: "adoption",
+      reason: "other",
     }
   end
 

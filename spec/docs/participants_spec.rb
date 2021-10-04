@@ -46,7 +46,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
         let(:id) { mentor_profile.user.id }
         let(:attributes) do
           {
-            reason: "adoption",
+            reason: "career-break",
             course_identifier: "ecf-mentor",
           }
         end
@@ -214,7 +214,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
         let(:id) { mentor_profile.user.id }
         let(:attributes) do
           {
-            reason: "career-break",
+            reason: "left-teaching-profession",
             course_identifier: "ecf-mentor",
           }
         end

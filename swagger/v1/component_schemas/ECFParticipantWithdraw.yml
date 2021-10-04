@@ -9,10 +9,8 @@ properties:
       - moved-school
       - mentor-no-longer-being-mentor
       - school-left-fip
-      - career-break
-      - passed-induction
       - other
-    example: career-break
+    example: left-teaching-profession
   course_identifier:
     description: "The type of course the participant is enrolled in"
     type: string
@@ -24,5 +22,5 @@ required:
   - reason
   - course_identifier
 example:
-  reason: career-break
+  reason: left-teaching-profession
   course_identifier: ecf-mentor

@@ -8,7 +8,6 @@ module Participants
           %w[
             left-teaching-profession
             moved-school
-            career-break
             other
           ].freeze
         end

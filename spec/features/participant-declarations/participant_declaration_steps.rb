@@ -108,7 +108,7 @@ module ParticipantDeclarationSteps
       "data" => {
         "type" => "participant-declaration",
         "attributes" => {
-          "reason" => "career-break",
+          "reason" => "left-teaching-profession",
           "course_identifier" => "ecf-induction",
         },
       },

@@ -6,7 +6,7 @@ module Participants
       class << self
         def reasons
           %w[
-            adoption
+            other
           ].freeze
         end
       end

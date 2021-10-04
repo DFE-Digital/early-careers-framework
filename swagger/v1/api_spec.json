@@ -1099,7 +1099,7 @@
               "ecf-january-reduced-2021",
               "ecf-january-extended-2021"
             ],
-            "example": "career-break"
+            "example": "ecf-september-standard-2021"
           },
           "course_identifier": {
             "description": "The type of course the participant is enrolled in",
@@ -1270,10 +1270,11 @@
             "description": "The reason for the deferral",
             "type": "string",
             "enum": [
-              "adoption",
               "bereavement",
               "long-term-sickness",
-              "parental-leave"
+              "parental-leave",
+              "career-break",
+              "other"
             ],
             "example": "career-break"
           },
@@ -1505,11 +1506,9 @@
               "moved-school",
               "mentor-no-longer-being-mentor",
               "school-left-fip",
-              "career-break",
-              "passed-induction",
               "other"
             ],
-            "example": "career-break"
+            "example": "left-teaching-profession"
           },
           "course_identifier": {
             "description": "The type of course the participant is enrolled in",
@@ -1526,7 +1525,7 @@
           "course_identifier"
         ],
         "example": {
-          "reason": "career-break",
+          "reason": "left-teaching-profession",
           "course_identifier": "ecf-mentor"
         }
       },
