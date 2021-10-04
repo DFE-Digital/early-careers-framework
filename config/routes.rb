@@ -376,5 +376,8 @@ Rails.application.routes.draw do
 
   get "/how-to-set-up-your-programme", to: "step_by_step#show", as: :step_by_step
 
+  get "/assets/govuk/assets/fonts/:name.:extension", to: redirect("/api-reference/assets/govuk/assets/fonts/%{name}.%{extension}")
+  get "/assets/govuk/assets/images/:name.:extension", to: redirect("/api-reference/assets/govuk/assets/images/%{name}.%{extension}")
+
   post "__session", to: "support/request_spec/session_helper#update" if Rails.env.test?
 end
