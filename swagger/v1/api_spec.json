@@ -1794,7 +1794,7 @@
             }
           }
         },
-        "example": "id,participant_id,declaration_type,course_identifier,eligible_for_payment,declaration_date,voided\nc88eb9a9-773a-4f53-9716-121b981154d8,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false\n31a521ec-82c5-451c-aea3-426523f1facc,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false\n"
+        "example": "id,participant_id,declaration_type,course_identifier,eligible_for_payment,declaration_date,voided,state\nc88eb9a9-773a-4f53-9716-121b981154d8,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false\n31a521ec-82c5-451c-aea3-426523f1facc,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false\n"
       },
       "MultipleParticipantDeclarationsResponse": {
         "description": "A list of participant declarations",
@@ -2359,7 +2359,8 @@
           "declaration_date",
           "course_identifier",
           "eligible_for_payment",
-          "voided"
+          "voided",
+          "state"
         ],
         "properties": {
           "participant_id": {
@@ -2403,16 +2404,22 @@
             "example": "ecf-induction"
           },
           "eligible_for_payment": {
-            "description": "Indicates whether this declaration would be eligible for funding from the DfE",
+            "description": "[Deprecated - use state instead] Indicates whether this declaration would be eligible for funding from the DfE",
             "type": "boolean",
             "nullable": false,
             "example": true
           },
           "voided": {
-            "description": "Indicates whether this declaration has been voided",
+            "description": "[Deprecated - use state instead] Indicates whether this declaration has been voided",
             "type": "boolean",
             "nullable": false,
             "example": false
+          },
+          "state": {
+            "description": "Indicates the state of this payment declaration",
+            "type": "string",
+            "nullable": false,
+            "example": "paid"
           }
         }
       },
@@ -2506,10 +2513,16 @@
             "example": true
           },
           "voided": {
-            "description": "Indicates whether this declaration has been voided",
+            "description": "[Deprecated - use state instead] Indicates whether this declaration has been voided",
             "type": "boolean",
             "nullable": false,
             "example": false
+          },
+          "state": {
+            "description": "[Deprecated - use state instead] Indicates the state of this payment declaration",
+            "type": "string",
+            "nullable": false,
+            "example": "paid"
           }
         }
       },
