@@ -249,6 +249,7 @@ class InviteSchools
   def invite_opted_out_sits_for_nqt_plus_one
     School.eligible.opted_out.joins(:induction_coordinators).each do |school|
       SchoolMailer.nqt_plus_one_sit_invite(
+        school: school,
         recipient: school.induction_coordinators.first.email,
         start_url: year2020_start_url(school, utm_source: :year2020_nqt_invite_sit),
       ).deliver_later
@@ -271,6 +272,52 @@ class InviteSchools
         start_url: year2020_start_url(school, utm_source: :year2020_nqt_invite_school_not_opted_out),
       ).deliver_later
     end
+  end
+
+  def inform_diy_schools_of_wordpress
+    User.where(
+      id: diy_school_cohorts_without_pending_partnerships
+            .joins(school: :induction_coordinators)
+            .select(:user_id),
+    ).find_each do |user|
+      SchoolMailer.diy_wordpress_notification(
+        user: user,
+      ).deliver_later
+    end
+  end
+
+  def invite_not_opted_out_sits_with_all_validated_participants_for_nqt_plus_one
+    School
+      .eligible
+      .not_opted_out
+      .joins(:induction_coordinators)
+      .all_ecf_participants_validated
+      .find_each do |school|
+        next if Email.associated_with(school).tagged_with(:year2020_invite).any?
+
+        SchoolMailer.nqt_plus_one_sit_invite(
+          school: school,
+          recipient: school.induction_coordinators.first.email,
+          start_url: year2020_start_url(school, utm_source: :year2020_nqt_invite_sit_validated),
+        ).deliver_later
+      end
+  end
+
+  def invite_unpartnered_cip_sits_to_add_ects_and_mentors
+    School.unpartnered(Cohort.current.start_year)
+      .joins(:school_cohorts, :induction_coordinator_profiles)
+      .where(school_cohorts: { induction_programme_choice: "core_induction_programme" })
+      .where.missing(:ecf_participants)
+      .find_each do |school|
+        induction_coordinator = school.induction_coordinators.first
+
+        SchoolMailer.unpartnered_cip_sit_add_participants_email(
+          recipient: induction_coordinator.email,
+          induction_coordinator: induction_coordinator,
+          sign_in_url: sign_in_url_with_campaign(:add_participants_unpartnered_cip),
+          school_name: school.name,
+        ).deliver_later
+      end
   end
 
 private
@@ -417,5 +464,15 @@ private
 
   def logger
     @logger ||= Rails.logger
+  end
+
+  def diy_school_cohorts_with_pending_partnerships
+    SchoolCohort.where(cohort_id: Cohort.current.id, induction_programme_choice: "design_our_own").joins(school: :partnerships).where(school: { partnerships: { challenge_reason: nil } })
+  end
+
+  def diy_school_cohorts_without_pending_partnerships
+    SchoolCohort
+      .where(cohort_id: Cohort.current.id, induction_programme_choice: "design_our_own")
+      .where.not(id: diy_school_cohorts_with_pending_partnerships)
   end
 end

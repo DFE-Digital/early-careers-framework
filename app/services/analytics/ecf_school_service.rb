@@ -6,8 +6,6 @@ module Analytics
       def update_school_analytics
         return unless %w[test development production].include? Rails.env
 
-        before_object_count = ObjectSpace.each_object(ActiveRecord::Base).count
-
         current_cohort_id = Cohort.current.id
 
         School.eligible_or_cip_only.includes(
@@ -51,9 +49,6 @@ module Analytics
 
         ObjectSpace.each_object(ActiveRecord::Relation).each(&:reset)
         GC.start
-
-        after_object_count = ObjectSpace.each_object(ActiveRecord::Base).count
-        Sentry.capture_message("Run analytics. Before object count: #{before_object_count}, after object count: #{after_object_count}")
       end
     end
   end

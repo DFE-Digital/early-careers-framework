@@ -9,12 +9,12 @@ RSpec.feature "Unhappy participant validation journeys for CIP induction", type:
   scenario "ECT provides invalid details" do
     given_there_is_a_school_that_has_chosen_cip_for_2021
     and_i_am_signed_in_as_an_ect_participant
-    then_i_should_see_the_do_you_know_your_trn_page
+    then_i_should_see_the_what_is_your_trn_page
 
     when_i_click "Continue"
-    then_i_see_an_error_message "Select whether you know your teacher reference number"
+    then_i_see_an_error_message "Enter your teacher reference number"
 
-    when_i_select "Yes, I know my TRN"
+    when_i_enter_my_trn
     and_i_click "Continue"
     then_i_should_see_the_have_you_changed_your_name_page
 
@@ -26,26 +26,20 @@ RSpec.feature "Unhappy participant validation journeys for CIP induction", type:
     then_i_should_see_the_tell_us_your_details_page
 
     when_i_click "Continue"
-    then_i_see_an_error_message "Enter your teacher reference number"
     and_i_see_an_error_message "Enter your full name"
     and_i_see_an_error_message "Enter your date of birth"
 
-    when_i_enter_the_participants_details
-    and_i_click "Continue"
-    then_i_should_see_the_confirm_details_page
+    when_i_enter_my_details
+    and_i_click_continue_but_my_details_are_invalid
+    then_i_should_see_the_cannot_find_details_page
+
+    when_i_click_a_change_link
+    then_i_should_see_the_tell_us_your_details_page_filled_in
 
     when_i_click_continue_but_my_details_are_invalid
     then_i_should_see_the_cannot_find_details_page
 
-    when_i_click "Try again"
-    then_i_should_see_the_tell_us_your_details_page_filled_in
-    when_i_click "Continue"
-    then_i_should_see_the_confirm_details_page
-
-    when_i_click_continue_but_my_details_are_invalid
-    then_i_should_see_the_cannot_find_details_page_with_continue_option
-
-    when_i_click "Continue registration"
+    when_i_click "Confirm and send"
     then_i_should_see_the_cip_checking_details_page_for_invalid_cip_ect
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Participant Validation: Checking details - CIP ECT"
@@ -54,12 +48,12 @@ RSpec.feature "Unhappy participant validation journeys for CIP induction", type:
   scenario "Mentor provides invalid details" do
     given_there_is_a_school_that_has_chosen_cip_for_2021
     and_i_am_signed_in_as_a_mentor_participant
-    then_i_should_see_the_do_you_know_your_trn_page
+    then_i_should_see_the_what_is_your_trn_page
 
     when_i_click "Continue"
-    then_i_see_an_error_message "Select whether you know your teacher reference number"
+    then_i_see_an_error_message "Enter your teacher reference number"
 
-    when_i_select "Yes, I know my TRN"
+    when_i_enter_my_trn
     and_i_click "Continue"
     then_i_should_see_the_have_you_changed_your_name_page
 
@@ -71,26 +65,19 @@ RSpec.feature "Unhappy participant validation journeys for CIP induction", type:
     then_i_should_see_the_tell_us_your_details_page
 
     when_i_click "Continue"
-    then_i_see_an_error_message "Enter your teacher reference number"
     and_i_see_an_error_message "Enter your full name"
     and_i_see_an_error_message "Enter your date of birth"
 
-    when_i_enter_the_participants_details
-    and_i_click "Continue"
-    then_i_should_see_the_confirm_details_page
-
-    when_i_click_continue_but_my_details_are_invalid
+    when_i_enter_my_details
+    and_i_click_continue_but_my_details_are_invalid
     then_i_should_see_the_cannot_find_details_page
 
-    when_i_click "Try again"
+    when_i_click_a_change_link
     then_i_should_see_the_tell_us_your_details_page_filled_in
-    when_i_click "Continue"
-    then_i_should_see_the_confirm_details_page
+    and_i_click_continue_but_my_details_are_invalid
+    then_i_should_see_the_cannot_find_details_page
 
-    when_i_click_continue_but_my_details_are_invalid
-    then_i_should_see_the_cannot_find_details_page_with_continue_option
-
-    when_i_click "Continue registration"
+    when_i_click "Confirm and send"
     then_i_should_see_the_cip_checking_details_page_for_invalid_cip_mentor
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Participant Validation: Checking details - CIP mentor"

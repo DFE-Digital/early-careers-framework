@@ -31,6 +31,10 @@ class UTMService
     mentor_validation_info_2709: "mentor-validation-info-2709",
     sit_mentor_validation_info_2709: "sit-mentor-validation-info-2709",
     year2020_nqt_invite_school_not_opted_out: "year2020-nqt-invite-school-not-opted-out",
+    year2020_nqt_invite_sit_validated: "year2020-nqt-invite-sit-validated",
+    year2020_nqt_invite_sit_no_participants: "year2020-nqt-invite-sit-no-participants",
+    partnered_invite_sit_reminder: "partnered-invite-sit-reminder",
+    add_participants_unpartnered_cip: "add-participants-unpartnered-cip",
   }.freeze
 
   # Campaigns aren't showing up in GA at the moment, so use specific sources
@@ -59,6 +63,10 @@ class UTMService
     ect_validation_info_2709: "ect-validation-info-2709",
     mentor_validation_info_2709: "mentor-validation-info-2709",
     sit_mentor_validation_info_2709: "sit-mentor-validation-info-2709",
+    year2020_nqt_invite_sit_validated: "year2020-nqt-invite-sit-validated",
+    year2020_nqt_invite_sit_no_participants: "year2020-nqt-invite-sit-no-participants",
+    partnered_invite_sit_reminder: "partnered-invite-sit-reminder",
+    add_participants_unpartnered_cip: "add-participants-unpartnered-cip",
   }.freeze
 
   def self.email(campaign, source = :service)

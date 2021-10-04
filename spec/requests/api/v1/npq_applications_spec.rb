@@ -254,17 +254,16 @@ RSpec.describe "NPQ Applications API", type: :request do
     end
 
     context "when participant has applied for multiple NPQs" do
-      let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
-      let!(:other_npq_validation_data) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, user: user, npq_course: npq_course) }
-      let!(:other_accepted_npq_validation_data) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, user: user, lead_provider_approval_status: "accepted", npq_course: npq_course) }
+      let!(:other_npq_validation_data) { create(:npq_validation_data, npq_course: npq_course, npq_lead_provider: npq_lead_provider, user: user) }
+      let!(:other_accepted_npq_validation_data) { create(:npq_validation_data, npq_course: npq_course, npq_lead_provider: npq_lead_provider, user: user, lead_provider_approval_status: "accepted") }
 
-      it "rejects all pending NPQs" do
+      it "rejects all pending NPQs on same course" do
         post "/api/v1/npq-applications/#{default_npq_validation_data.id}/accept"
 
         expect(other_npq_validation_data.reload.lead_provider_approval_status).to eql("rejected")
       end
 
-      it "does not reject non-pending NPQs" do
+      it "does not reject non-pending NPQs on same course" do
         post "/api/v1/npq-applications/#{default_npq_validation_data.id}/accept"
 
         expect(other_accepted_npq_validation_data.reload.lead_provider_approval_status).to eql("accepted")

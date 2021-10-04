@@ -91,13 +91,18 @@ module Schools
         end
 
         SchoolMailer.year2020_add_participants_confirmation(
-          school: school,
-          participants: participants,
-        ).deliver_now
+          recipient: school.contact_email,
+          school_name: school.name,
+          teacher_name_list: participant_name_markdown_list(participants),
+        ).deliver_later
       end
     end
 
   private
+
+    def participant_name_markdown_list(participants)
+      participants.map { |p| "- #{p[:full_name]}" }.join("\n")
+    end
 
     def email_is_not_in_use
       errors.add(:email, :taken) if email_already_taken?

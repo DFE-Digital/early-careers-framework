@@ -14,5 +14,6 @@ class PartnershipNotificationEmail < ApplicationRecord
     induction_coordinator_reminder_email: "induction_coordinator_reminder_email",
     school_email: "school_email",
     school_reminder_email: "school_reminder_email",
+    nominate_sit_email: "nominate_sit_email",
   }
 end

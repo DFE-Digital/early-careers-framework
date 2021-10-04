@@ -43,6 +43,44 @@ class PartnershipNotificationService
     end
   end
 
+  def send_invite_sit_reminder_to_partnered_schools
+    current_year = Cohort.current.start_year
+
+    School.joins(:school_cohorts)
+      .partnered(current_year)
+      .where(school_cohorts: { induction_programme_choice: %i[full_induction_programme] })
+      .where.missing(:induction_coordinators)
+      .includes(:partnerships)
+      .find_each do |school|
+        ActiveRecord::Base.transaction do
+          partnership = school.partnerships.unchallenged.in_year(current_year).first
+
+          notification_email = create_notification_email(
+            partnership,
+            PartnershipNotificationEmail.email_types[:nominate_sit_email],
+          )
+
+          nomination_email = NominationEmail.create_nomination_email(
+            sent_at: notification_email.created_at,
+            sent_to: notification_email.sent_to,
+            school: notification_email.partnership.school,
+            partnership_notification_email: notification_email,
+          )
+
+          notify_id = SchoolMailer.partnered_school_invite_sit_email(
+            recipient: notification_email.sent_to,
+            lead_provider_name: notification_email.lead_provider.name,
+            delivery_partner_name: notification_email.delivery_partner.name,
+            nominate_url: nomination_email.nomination_url(utm_source: :partnered_invite_sit_reminder),
+            challenge_url: challenge_url(notification_email.token, utm_source: :partnered_invite_sit_reminder),
+          ).deliver_now.delivery_method.response.id
+
+          partnership.update!(challenge_deadline: 2.weeks.from_now)
+          notification_email.update!(notify_id: notify_id)
+        end
+      end
+  end
+
 private
 
   def create_notification_email(partnership, type)
@@ -100,11 +138,11 @@ private
     notification_email.update!(notify_id: notify_id)
   end
 
-  def challenge_url(token)
+  def challenge_url(token, utm_source: :challenge_partnership)
     Rails.application.routes.url_helpers.challenge_partnership_url(
       token: token,
       host: Rails.application.config.domain,
-      **UTMService.email(:challenge_partnership),
+      **UTMService.email(utm_source, utm_source),
     )
   end
 end

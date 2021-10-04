@@ -15,7 +15,6 @@ module NPQ
     end
 
     def call
-      other_applications = NPQValidationData.where(user_id: user.id).where.not(id: npq_application.id)
       ApplicationRecord.transaction do
         teacher_profile.update!(trn: npq_application.teacher_reference_number) if npq_application.teacher_reference_number_verified?
         create_profile
@@ -24,6 +23,12 @@ module NPQ
     end
 
   private
+
+    def other_applications
+      @other_applications ||= NPQValidationData.where(user_id: user.id)
+                                               .where(npq_course: npq_course)
+                                               .where.not(id: npq_application.id)
+    end
 
     def create_profile
       ParticipantProfile::NPQ.create!(
@@ -55,6 +60,10 @@ module NPQ
       else
         raise ArgumentError "Invalid course identifier"
       end
+    end
+
+    def npq_course
+      npq_application.npq_course
     end
   end
 end

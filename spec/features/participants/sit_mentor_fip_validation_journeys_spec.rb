@@ -20,9 +20,9 @@ RSpec.feature "SIT/mentor participant validation journeys for FIP induction", ty
 
     when_i_select "Yes, I want to add information now"
     and_i_click "Continue"
-    then_i_should_see_the_do_you_know_your_trn_page
+    then_i_should_see_the_what_is_your_trn_page
 
-    when_i_select "Yes, I know my TRN"
+    when_i_enter_my_trn
     and_i_click "Continue"
     then_i_should_see_the_have_you_changed_your_name_page
 
@@ -30,11 +30,8 @@ RSpec.feature "SIT/mentor participant validation journeys for FIP induction", ty
     and_i_click "Continue"
     then_i_should_see_the_tell_us_your_details_page
 
-    when_i_enter_the_participants_details
-    and_i_click "Continue"
-    then_i_should_see_the_confirm_details_page
-
-    when_i_click_continue_to_proceed_with_validation
+    when_i_enter_my_details
+    and_i_click_continue_to_proceed_with_validation
     then_i_should_see_the_complete_page_for_a_sit_mentor
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Participant Validation: SIT/Mentor Complete Partnered FIP"
@@ -58,9 +55,9 @@ RSpec.feature "SIT/mentor participant validation journeys for FIP induction", ty
     and_percy_should_be_sent_a_snapshot_named "Participant Validation: SIT/Mentor dashboard banner"
 
     when_i_click "Update now"
-    then_i_should_see_the_do_you_know_your_trn_page
+    then_i_should_see_the_what_is_your_trn_page
 
-    when_i_select "Yes, I know my TRN"
+    when_i_enter_my_trn
     and_i_click "Continue"
     then_i_should_see_the_have_you_changed_your_name_page
 
@@ -68,11 +65,8 @@ RSpec.feature "SIT/mentor participant validation journeys for FIP induction", ty
     and_i_click "Continue"
     then_i_should_see_the_tell_us_your_details_page
 
-    when_i_enter_the_participants_details
-    and_i_click "Continue"
-    then_i_should_see_the_confirm_details_page
-
-    when_i_click_continue_to_proceed_with_validation
+    when_i_enter_my_details
+    and_i_click_continue_to_proceed_with_validation
     then_i_should_see_the_complete_page_for_a_sit_mentor
 
     when_i_click "Manage induction for your school"
