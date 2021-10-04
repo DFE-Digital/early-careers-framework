@@ -61,7 +61,7 @@ module RecordDeclarations
     end
 
     def create_declaration_attempt!
-      ParticipantDeclarationAttempt.create!(declaration_parameters.except(:participant_profile_id))
+      ParticipantDeclarationAttempt.create!(declaration_parameters)
     end
 
     def find_or_create_record!
@@ -69,7 +69,7 @@ module RecordDeclarations
         self.class.declaration_model.find_or_create_by!(declaration_parameters) do |participant_declaration|
           DeclarationState.create!(
             participant_declaration: participant_declaration,
-            state: user_profile.fundable? ? "eligible" : "submitted",
+            state: user_profile.fundable? ? "payable" : "submitted",
           )
           ProfileDeclaration.create!(
             participant_declaration: participant_declaration,
@@ -86,7 +86,6 @@ module RecordDeclarations
         declaration_type: declaration_type,
         cpd_lead_provider: cpd_lead_provider,
         user: user,
-        participant_profile_id: user_profile.id,
       }
     end
 
