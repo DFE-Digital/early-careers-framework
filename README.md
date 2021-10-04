@@ -244,3 +244,10 @@ We use statuscake for uptime monitoring. Ask a team member for access - this is 
 
 ## Analytics
 In production, we use a separate postgres database for recording anonymous analytics information. The database is hosted in GCP.
+
+## Documentation
+We use a gem called `tech_docs_template` to generate govuk-style documentation. It is heavily inspired by Teacher Training API.
+
+You can find it, with its readme, in `docs` directory.
+
+The project in `docs` directory can be used to generate a static site, which we put in `public/api-reference` to make our app serve it.
