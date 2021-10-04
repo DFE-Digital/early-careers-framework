@@ -303,6 +303,23 @@ class InviteSchools
       end
   end
 
+  def invite_unpartnered_cip_sits_to_add_ects_and_mentors
+    School.unpartnered(Cohort.current.start_year)
+      .joins(:school_cohorts, :induction_coordinator_profiles)
+      .where(school_cohorts: { induction_programme_choice: "core_induction_programme" })
+      .where.missing(:ecf_participants)
+      .find_each do |school|
+        induction_coordinator = school.induction_coordinators.first
+
+        SchoolMailer.unpartnered_cip_sit_add_participants_email(
+          recipient: induction_coordinator.email,
+          induction_coordinator: induction_coordinator,
+          sign_in_url: sign_in_url_with_campaign(:add_participants_unpartnered_cip),
+          school_name: school.name,
+        ).deliver_later
+      end
+  end
+
 private
 
   def private_beta_start_url

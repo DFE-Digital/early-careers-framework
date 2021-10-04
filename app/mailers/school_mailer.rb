@@ -21,6 +21,7 @@ class SchoolMailer < ApplicationMailer
   ADD_2020_PARTICIPANT_CONFIRMATION_TEMPLATE = "08d45879-1f94-48a2-88c1-108f596fa59e"
   DIY_WORDPRESS_NOTIFICATION_TEMPLATE = "e1067a2f-b027-45a6-8e51-668e170090d1"
   PARTNERED_SCHOOL_INVITE_SIT_EMAIL_TEMPLATE = "8cac177e-b094-4a00-9179-94fadde8ced0"
+  UNPARTNERED_CIP_SIT_ADD_PARTICIPANTS_EMAIL_TEMPLATE = "ebc96223-c2ea-416e-8d3e-1f591bbd2f98"
 
   def remind_induction_coordinator_to_setup_cohort_email(recipient:, school_name:, campaign: nil)
     campaign_tracking = campaign ? UTMService.email(campaign, campaign) : {}
@@ -326,6 +327,19 @@ class SchoolMailer < ApplicationMailer
         start_url: start_url,
       },
     ).tag(:year2020_invite).associate_with(school, as: :school)
+  end
+
+  def unpartnered_cip_sit_add_participants_email(recipient:, induction_coordinator:, sign_in_url:, school_name:)
+    template_mail(
+      UNPARTNERED_CIP_SIT_ADD_PARTICIPANTS_EMAIL_TEMPLATE,
+      to: recipient,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        sign_in: sign_in_url,
+        school_name: school_name,
+      },
+    ).tag(:unpartnered_cip_add_participants).associate_with(induction_coordinator, as: :induction_coordinator)
   end
 
   def diy_wordpress_notification(user:)
