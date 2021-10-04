@@ -53,7 +53,7 @@ class ParticipantDeclaration < ApplicationRecord
     DeclarationState.create!(participant_declaration: self, state: new_state) and reload if %w[submitted payable].include?(current_state.state)
   end
 
-  def submit
+  def submit!
     DeclarationState.submit!(participant_declaration: self) and reload if payable?
   end
 

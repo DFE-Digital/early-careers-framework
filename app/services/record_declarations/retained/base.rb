@@ -22,7 +22,7 @@ module RecordDeclarations
       end
 
       def declaration_parameters
-        super.merge({ evidence_held: evidence_held })
+        super.merge(evidence_held: evidence_held)
       end
     end
   end

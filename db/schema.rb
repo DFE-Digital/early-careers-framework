@@ -173,6 +173,15 @@ ActiveRecord::Schema.define(version: 2021_10_07_131604) do
     t.index ["urn"], name: "index_data_stage_schools_on_urn", unique: true
   end
 
+  create_table "declaration_states", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "participant_declaration_id", null: false
+    t.string "state"
+    t.string "submitted"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["participant_declaration_id"], name: "index_declaration_states_on_participant_declaration_id"
+  end
+
   create_table "delayed_jobs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.integer "priority", default: 0, null: false
     t.integer "attempts", default: 0, null: false
