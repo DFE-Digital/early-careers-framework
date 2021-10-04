@@ -28,12 +28,12 @@ RSpec.shared_examples "a participant change schedule action service" do
       declaration
     end
 
-    it "fails when it would invalidate a non-voided declaration" do
+    it "fails when it would invalidate a valid declaration" do
       extended_schedule.milestones.each { |milestone| milestone.update!(start_date: milestone.start_date + 6.months, milestone_date: milestone.milestone_date + 6.months) }
       expect { described_class.call(params: given_params) }.to raise_error(ActionController::ParameterMissing)
     end
 
-    it "changes the schedule on user's profile when it would invalidate a voided declaration" do
+    it "ignores voided declarations when changing the schedule" do
       declaration.void!
       extended_schedule.milestones.each { |milestone| milestone.update!(start_date: milestone.start_date + 6.months, milestone_date: milestone.milestone_date + 6.months) }
 

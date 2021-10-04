@@ -61,31 +61,32 @@ module RecordDeclarations
     end
 
     def create_declaration_attempt!
-      ParticipantDeclarationAttempt.create!(
+      ParticipantDeclarationAttempt.create!(declaration_parameters)
+    end
+
+    def find_or_create_record!
+      ApplicationRecord.transaction do
+        self.class.declaration_model.find_or_create_by!(declaration_parameters) do |participant_declaration|
+          DeclarationState.create!(
+            participant_declaration: participant_declaration,
+            state: user_profile.fundable? ? "payable" : "submitted",
+          )
+          ProfileDeclaration.create!(
+            participant_declaration: participant_declaration,
+            participant_profile: user_profile,
+          )
+        end
+      end
+    end
+
+    def declaration_parameters
+      {
         course_identifier: course_identifier,
         declaration_date: declaration_date,
         declaration_type: declaration_type,
         cpd_lead_provider: cpd_lead_provider,
         user: user,
-      )
-    end
-
-    def find_or_create_record!
-      ActiveRecord::Base.transaction do
-        self.class.declaration_model.find_or_create_by!(
-          course_identifier: course_identifier,
-          declaration_date: declaration_date,
-          declaration_type: declaration_type,
-          cpd_lead_provider: cpd_lead_provider,
-          user: user,
-        ) do |participant_declaration|
-          profile_declaration = ProfileDeclaration.create!(
-            participant_declaration: participant_declaration,
-            participant_profile: user_profile,
-          )
-          profile_declaration.update!(payable: participant_declaration.currently_payable)
-        end
-      end
+      }
     end
 
     def record_exists_with_different_declaration_date?
