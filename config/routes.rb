@@ -48,7 +48,10 @@ Rails.application.routes.draw do
     resource :notify_callback, only: :create, path: "notify-callback"
 
     namespace :v1 do
-      resources :ecf_participants, path: "participants/ecf", only: %i[index]
+      resources :ecf_participants, path: "participants/ecf", only: %i[index] do
+        member { put :withdraw }
+      end
+
       resources :participants, only: %i[index], controller: "ecf_participants"
       resources :participants, only: [] do
         member do
@@ -63,7 +66,9 @@ Rails.application.routes.draw do
           put :void
         end
       end
-      resources :npq_participants, only: %i[index], path: "participants/npq"
+      resources :npq_participants, only: %i[index], path: "participants/npq" do
+        member { put :withdraw }
+      end
       resources :users, only: %i[index create]
       resources :ecf_users, only: %i[index create], path: "ecf-users"
       resources :participant_validation, only: :show, path: "participant-validation"

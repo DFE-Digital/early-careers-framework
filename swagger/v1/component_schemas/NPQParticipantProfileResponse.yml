@@ -1,0 +1,7 @@
+description: "Response received after withdrawing a participant from a course"
+type: object
+required:
+  - data
+properties:
+  data:
+    $ref: "#/components/schemas/NPQParticipantProfile"

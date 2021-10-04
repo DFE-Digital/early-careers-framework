@@ -3,6 +3,6 @@
 FactoryBot.define do
   factory :npq_course do
     sequence(:name) { |n| "NPQ Course #{n}" }
-    sequence(:identifier) { |n| "npq-course-#{n}" }
+    identifier { NPQCourse::SPECIALIST_IDENTIFIER.sample }
   end
 end

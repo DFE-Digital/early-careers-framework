@@ -1,0 +1,12 @@
+<h2 id="declaring-that-an-npq-participant-has-withdrawn-of-their-course" class="govuk-heading-l">Notifying that an NPQ participant has withdrawn from their course</h2>
+
+<p class="govuk-body-m">This operation allows the provider to tell the DfE that a participant has withdrawn from their NPQ course.</p>
+<p class="govuk-body-m">A participant that withdraws in a given milestone period after the submission of a retained event for the same period, will be paid for that period.</p>
+<p class="govuk-body-m">A participant that withdraws before the started milestone cut-off date will not be paid for by the department.</p>
+
+<h3 class="govuk-heading-m" id="notifying-of-withdrawal-provider-withdraws-an-npq-participant">1. Provider withdraws a participant</h3>
+
+<p class="govuk-body-m">Submit the withdrawal notification to the following endpoint</p>
+<p class="govuk-body-m"><code>PUT /api/v1/participants/npq/{id}/withdraw</code></p>
+<p class="govuk-body-m">This will return an <a href="api-reference/reference.html#schema-npqparticipantprofile" class="govuk-link">NPQ participant profile record</a> with the updates to the record included.</p>
+<p class="govuk-body-m">See <a href="/api-reference/reference.html#api-v1-participants-npq-id-withdraw-put" class="govuk-link">withdraw NPQ participant</a> endpoint.</p>

@@ -9,6 +9,7 @@ module Api
       include ApiPagination
       include ApiCsv
       include ApiFilter
+      include Api::ParticipantActions
 
       def index
         respond_to do |format|
@@ -24,6 +25,12 @@ module Api
       end
 
     private
+
+      def serialized_response(profile)
+        ParticipantSerializer
+          .new(profile.user)
+          .serializable_hash.to_json
+      end
 
       def access_scope
         LeadProviderApiToken.joins(cpd_lead_provider: [:lead_provider])
