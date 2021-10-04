@@ -10,9 +10,10 @@ module FinanceHelper
   end
 
   def total_payment(breakdown)
-    service_fee = Finance::ECF::ServiceFees.new(service_fees: breakdown[:service_fees]).monthly
-    output_payment = Finance::ECF::OutputPayments.new(output_payments: breakdown[:output_payments]).subtotal
-    other_fees = breakdown[:other_fees].map { |other_fee| Finance::ECF::OtherFeeRow.new(other_fee: Finance::ECF::OtherFee.new(other_fee)).subtotal }.inject(&:+)
+    service_fee = breakdown[:service_fees].map { |params| params[:monthly] }.inject(&:+)
+    output_payment = breakdown[:output_payments].map { |params| params[:subtotal] }.inject(&:+)
+    other_fees = breakdown[:other_fees].values.map { |other_fee| other_fee[:subtotal] }.inject(&:+)
+
     service_fee + output_payment + other_fees
   end
 
