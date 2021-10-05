@@ -178,6 +178,7 @@ RSpec.describe PartnershipNotificationService do
     it "emails schools that are fip partnered with no SIT, and extends the challenge deadline by 2 weeks" do
       expect(SchoolMailer).to receive(:partnered_school_invite_sit_email).with(
         hash_including(
+          school_name: school.name,
           lead_provider_name: partnership.lead_provider.name,
           delivery_partner_name: partnership.delivery_partner.name,
           challenge_url: a_string_including("utm_campaign=partnered-invite-sit-reminder&utm_medium=email&utm_source=partnered-invite-sit-reminder"),
