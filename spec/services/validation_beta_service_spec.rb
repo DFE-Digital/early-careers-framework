@@ -59,6 +59,89 @@ RSpec.describe ValidationBetaService do
     end
   end
 
+  describe "#sit_with_unvalidated_participants_reminders" do
+    it "emails sits with unvalidated participants who are on fip" do
+      school_cohort = create(:school_cohort, :fip)
+
+      expected_start_url = "http://www.example.com/participants/start-registration?utm_campaign=unvalidated-participants-reminder&utm_medium=email&utm_source=unvalidated-participants-reminder"
+      expected_sign_in_url = "http://www.example.com/users/sign_in?utm_campaign=unvalidated-participants-reminder&utm_medium=email&utm_source=unvalidated-participants-reminder"
+
+      create(:participant_profile, :mentor, school_cohort: school_cohort)
+      create(:participant_profile, :ecf_participant_validation_data, :ect, school_cohort: school_cohort)
+      sit = create(:induction_coordinator_profile, schools: [school_cohort.school])
+
+      validation_beta_service.sit_with_unvalidated_participants_reminders
+
+      expect(ParticipantValidationMailer).to delay_email_delivery_of(:induction_coordinators_we_asked_ects_and_mentors_for_information_email)
+                                               .with(hash_including(
+                                                       recipient: sit.user.email,
+                                                       start_url: expected_start_url,
+                                                       sign_in: expected_sign_in_url,
+                                                     )).once
+    end
+
+    it "emails sits with unvalidated participants who are on cip" do
+      school_cohort = create(:school_cohort, :cip)
+
+      expected_start_url = "http://www.example.com/participants/start-registration?utm_campaign=unvalidated-participants-reminder&utm_medium=email&utm_source=unvalidated-participants-reminder"
+      expected_sign_in_url = "http://www.example.com/users/sign_in?utm_campaign=unvalidated-participants-reminder&utm_medium=email&utm_source=unvalidated-participants-reminder"
+
+      create(:participant_profile, :mentor, school_cohort: school_cohort)
+      create(:participant_profile, :ecf_participant_validation_data, :ect, school_cohort: school_cohort)
+      sit = create(:induction_coordinator_profile, schools: [school_cohort.school])
+
+      validation_beta_service.sit_with_unvalidated_participants_reminders
+
+      expect(ParticipantValidationMailer).to delay_email_delivery_of(:induction_coordinators_we_asked_ects_and_mentors_for_information_email)
+                                               .with(hash_including(
+                                                       recipient: sit.user.email,
+                                                       start_url: expected_start_url,
+                                                       sign_in: expected_sign_in_url,
+                                                     )).once
+    end
+
+    it "doesn't email schools without a sit" do
+      school_cohort = create(:school_cohort, :cip)
+      create(:participant_profile, :mentor, school_cohort: school_cohort)
+      create(:participant_profile, :ecf_participant_validation_data, :ect, school_cohort: school_cohort)
+
+      validation_beta_service.sit_with_unvalidated_participants_reminders
+
+      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:induction_coordinators_we_asked_ects_and_mentors_for_information_email)
+                                               .with(hash_including(
+                                                       recipient: school_cohort.school.contact_email,
+                                                     ))
+    end
+
+    it "doesn't email sits with all validated participants" do
+      school_cohort = create(:school_cohort, :cip)
+      create(:participant_profile, :ecf_participant_validation_data, :ect, school_cohort: school_cohort)
+      sit = create(:induction_coordinator_profile, schools: [school_cohort.school])
+
+      validation_beta_service.sit_with_unvalidated_participants_reminders
+
+      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:induction_coordinators_we_asked_ects_and_mentors_for_information_email)
+                                               .with(hash_including(
+                                                       recipient: sit.user.email,
+                                                     ))
+    end
+
+    it "doesn't email sits on a different induction programme" do
+      school_cohort = create(:school_cohort, :school_funded_fip)
+
+      create(:participant_profile, :mentor, school_cohort: school_cohort)
+      create(:participant_profile, :ecf_participant_validation_data, :ect, school_cohort: school_cohort)
+      sit = create(:induction_coordinator_profile, schools: [school_cohort.school])
+
+      validation_beta_service.sit_with_unvalidated_participants_reminders
+
+      expect(ParticipantValidationMailer).to_not delay_email_delivery_of(:induction_coordinators_we_asked_ects_and_mentors_for_information_email)
+                                               .with(hash_including(
+                                                       recipient: sit.user.email,
+                                                     ))
+    end
+  end
+
   describe "#set_up_missing_chasers" do
     let!(:ect_profile) { create(:participant_profile, :ect) }
     let!(:mentor_profile) { create(:participant_profile, :mentor) }

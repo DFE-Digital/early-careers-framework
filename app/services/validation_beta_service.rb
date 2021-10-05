@@ -52,6 +52,66 @@ class ValidationBetaService
     end
   end
 
+  def send_ects_to_add_validation_information(profile, school)
+    campaign = :ect_validation_info_2709
+
+    participant_validation_start_url = Rails.application.routes.url_helpers.participants_start_registrations_url(
+      host: Rails.application.config.domain,
+      **UTMService.email(campaign, campaign),
+    )
+
+    email = ParticipantValidationMailer.ects_to_add_validation_information_email(
+      recipient: profile.user.email,
+      school_name: school.name,
+      start_url: participant_validation_start_url,
+    )
+
+    ActiveRecord::Base.transaction do
+      email.deliver_later
+      profile.update_column(:request_for_details_sent_at, Time.zone.now)
+    end
+  end
+
+  def send_mentors_to_add_validation_information(profile, school)
+    campaign = :mentor_validation_info_2709
+
+    participant_validation_start_url = Rails.application.routes.url_helpers.participants_start_registrations_url(
+      host: Rails.application.config.domain,
+      **UTMService.email(campaign, campaign),
+    )
+
+    email = ParticipantValidationMailer.mentors_to_add_validation_information_email(
+      recipient: profile.user.email,
+      school_name: school.name,
+      start_url: participant_validation_start_url,
+    )
+
+    ActiveRecord::Base.transaction do
+      email.deliver_later
+      profile.update_column(:request_for_details_sent_at, Time.zone.now)
+    end
+  end
+
+  def send_induction_coordinators_who_are_mentors_to_add_validation_information(profile, school)
+    campaign = :sit_mentor_validation_info_2709
+
+    participant_validation_start_url = Rails.application.routes.url_helpers.participants_start_registrations_url(
+      host: Rails.application.config.domain,
+      **UTMService.email(campaign, campaign),
+    )
+
+    email = ParticipantValidationMailer.induction_coordinators_who_are_mentors_to_add_validation_information_email(
+      recipient: profile.user.email,
+      school_name: school.name,
+      start_url: participant_validation_start_url,
+    )
+
+    ActiveRecord::Base.transaction do
+      email.deliver_later
+      profile.update_column(:request_for_details_sent_at, Time.zone.now)
+    end
+  end
+
   def chosen_programme_and_not_in_beta(school)
     !FeatureFlag.active?(:participant_validation, for: school) && school.chosen_programme?(Cohort.current)
   end
@@ -77,5 +137,41 @@ class ValidationBetaService
 
   def chaser_scheduled?(profile)
     Delayed::Job.where("handler ILIKE ?", "%ParticipantDetailsReminderJob%#{profile.id}%").exists?
+  end
+
+  def sit_with_unvalidated_participants_reminders
+    InductionCoordinatorProfile
+      .joins(schools: :ecf_participant_profiles)
+      .includes(schools: { active_ecf_participant_profiles: %i[ecf_participant_eligibility ecf_participant_validation_data] })
+      .where(
+        school_cohorts: {
+          cohort_id: Cohort.current.id,
+          induction_programme_choice: %w[core_induction_programme full_induction_programme],
+        },
+        ecf_participant_eligibility: {
+          participant_profile_id: nil,
+        },
+        ecf_participant_validation_data: {
+          participant_profile_id: nil,
+        },
+      ).distinct.find_each do |sit|
+        campaign = :unvalidated_participants_reminder
+
+        sign_in_url = Rails.application.routes.url_helpers.new_user_session_url(
+          host: Rails.application.config.domain,
+          **UTMService.email(campaign, campaign),
+        )
+
+        participant_validation_start_url = Rails.application.routes.url_helpers.participants_start_registrations_url(
+          host: Rails.application.config.domain,
+          **UTMService.email(campaign, campaign),
+        )
+
+        ParticipantValidationMailer.induction_coordinators_we_asked_ects_and_mentors_for_information_email(
+          recipient: sit.user.email,
+          start_url: participant_validation_start_url,
+          sign_in: sign_in_url,
+        ).deliver_later
+      end
   end
 end

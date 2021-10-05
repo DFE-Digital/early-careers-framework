@@ -21,7 +21,6 @@ class UTMService
     participant_validation_sit_notification: "participant-validation-sit-notification",
     check_ect_and_mentor_info: "check-ect-and-mentor-info",
     induction_coordinators_who_are_mentors_to_add_validation_information: "induction-coordinators-who-are-mentors-to-add-validation-information",
-    asked_ects_and_mentors_for_information: "asked-ects-and-mentors-for-information",
     sit_to_complete_steps: "sit-to-complete-steps",
     year2020_nqt_invite_school: "year2020-nqt-invite-school",
     year2020_nqt_invite_sit: "year2020-nqt-invite-sit",
@@ -36,6 +35,7 @@ class UTMService
     partnered_invite_sit_reminder: "partnered-invite-sit-reminder",
     remind_fip_sit_to_complete_steps: "remind-fip-sit-to-complete-steps",
     add_participants_unpartnered_cip: "add-participants-unpartnered-cip",
+    unvalidated_participants_reminder: "unvalidated-participants-reminder",
   }.freeze
 
   # Campaigns aren't showing up in GA at the moment, so use specific sources
@@ -54,7 +54,6 @@ class UTMService
     participant_validation_research: "participant-validation-research",
     check_ect_and_mentor_info: "check-ect-and-mentor-info",
     induction_coordinators_who_are_mentors_to_add_validation_information: "induction-coordinators-who-are-mentors-to-add-validation-information",
-    asked_ects_and_mentors_for_information: "asked-ects-and-mentors-for-information",
     sit_to_complete_steps: "sit-to-complete-steps",
     year2020_nqt_invite_school: "year2020-nqt-invite-school",
     year2020_nqt_invite_sit: "year2020-nqt-invite-sit",
@@ -68,6 +67,7 @@ class UTMService
     year2020_nqt_invite_sit_no_participants: "year2020-nqt-invite-sit-no-participants",
     partnered_invite_sit_reminder: "partnered-invite-sit-reminder",
     add_participants_unpartnered_cip: "add-participants-unpartnered-cip",
+    unvalidated_participants_reminder: "unvalidated-participants-reminder",
   }.freeze
 
   def self.email(campaign, source = :service)
