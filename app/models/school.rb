@@ -8,6 +8,12 @@ class School < ApplicationRecord
 
   belongs_to :network, optional: true
 
+  has_many :school_links, dependent: :destroy
+  has_many :successor_links, -> { successor }, class_name: "SchoolLink"
+  has_many :predecessor_links, -> { predecessor }, class_name: "SchoolLink"
+  has_many :successor_schools, through: :successor_links, source: :link_school
+  has_many :predecessor_schools, through: :predecessor_links, source: :link_school
+
   has_many :school_local_authorities
   has_many :local_authorities, through: :school_local_authorities
 
