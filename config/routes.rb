@@ -123,13 +123,15 @@ Rails.application.routes.draw do
     get "/", to: "content#index", as: :landing_page
     get "/partnership-guide", to: "content#partnership_guide", as: :partnership_guide
 
-    get "/guidance/home" => "guidance#index", as: :guidance_home
-    get "/guidance/ecf-usage" => "guidance#ecf_usage", as: :guidance_ecf_usage
-    get "/guidance/npq-usage" => "guidance#npq_usage", as: :guidance_npq_usage
-    get "/guidance/reference" => "guidance#reference", as: :guidance_reference
+    # Keeping the urls to old guidance urls, but they need to lead to new api-reference ones
+    get "/guidance/home", to: redirect("/api-reference")
+    get "/guidance/ecf-usage", to: redirect("/api-reference/ecf-usage")
+    get "/guidance/npq-usage", to: redirect("/api-reference/npq-usage")
+    get "/guidance/reference", to: redirect("/api-reference/reference")
+    get "/guidance/release-notes", to: redirect("/api-reference/release-notes")
+    get "/guidance/help", to: redirect("/api-reference/help")
+
     get "/api-docs/v1/api_spec.yml" => "openapi#api_docs", as: :api_docs
-    get "/guidance/release-notes" => "guidance#release_notes", as: :guidance_release_notes
-    get "/guidance/help" => "guidance#help", as: :guidance_help
 
     resources :your_schools, path: "/your-schools", only: %i[index create]
     resources :partnerships, only: %i[show]
