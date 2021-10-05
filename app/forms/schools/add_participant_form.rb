@@ -17,15 +17,24 @@ module Schools
                 inclusion: { in: :type_options, allow_blank: true }
 
       next_step do
-        type == :self ? :confirm : :details
+        type == :self ? :yourself : :name
       end
     end
 
-    step :details do
+    step :yourself do
+      next_step :confirm
+    end
+
+    step :name do
       attribute :full_name
-      attribute :email
 
       validates :full_name, presence: { message: "Enter a full name" }
+
+      next_step :email
+    end
+
+    step :email do
+      attribute :email
 
       validates :email,
                 presence: { message: "Enter an email address" },
@@ -89,7 +98,7 @@ module Schools
     end
 
     def type=(value)
-      reset_steps(:details, :choose_mentor) if value.to_s != type
+      reset_steps(:name, :email, :choose_mentor) if value.to_s != type
 
       super(value&.to_sym)
       if type == :self
