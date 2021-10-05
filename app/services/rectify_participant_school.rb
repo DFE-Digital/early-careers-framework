@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class MoveParticipant < BaseService
+class RectifyParticipantSchool < BaseService
   attr_reader :participant_profile, :school
 
   def initialize(participant_profile:, school:)
@@ -8,6 +8,9 @@ class MoveParticipant < BaseService
     @school = school
   end
 
+  # NOTE: Don't use this to move participants in cases where they have got a new job
+  # and transferred to a different school. This is intended to fix issues with participants 
+  # that have been added to the wrong school by mistake.
   def call
     cohort = participant_profile.school_cohort.cohort
     school_cohort = school.school_cohorts.find_by(cohort: cohort)

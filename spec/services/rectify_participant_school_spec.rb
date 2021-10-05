@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe MoveParticipant do
+RSpec.describe RectifyParticipantSchool do
   subject(:service) { described_class }
   let(:participant_profile) { create(:participant_profile, :ect) }
   let(:new_school) { create(:school, name: "Big Shiny School", urn: "123000") }
