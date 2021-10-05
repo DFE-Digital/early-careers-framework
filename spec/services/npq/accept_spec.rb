@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require "api/errors/npq_application_already_accepted_error"
 
 RSpec.describe NPQ::Accept do
   before do
