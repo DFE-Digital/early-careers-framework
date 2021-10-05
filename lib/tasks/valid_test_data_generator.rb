@@ -182,9 +182,8 @@ module ValidTestDataGenerator
     end
 
     def generate_new_participants(school:, count:)
-      while count.positive?
-        count -= 1
-        create_participant(school: school, accepted: count.even?)
+      count.times do |index|
+        create_participant(school: school, accepted: index.even?)
       end
     end
 
@@ -217,16 +216,6 @@ module ValidTestDataGenerator
         s.postcode = Faker::Address.postcode
       end
       find_or_create_participants(school: school, number_of_participants: participants_per_school)
-    end
-
-    def random_or_nil_trn
-      [true, false].sample ? nil : TRNGenerator.next
-    end
-
-    def weighted_choice(selection:, odds:)
-      selection.each_with_index.map { |item, index|
-        [item] * odds[index]
-      }.flatten.sample
     end
   end
 end
