@@ -4,12 +4,14 @@ module ParticipantDeclarationSteps
   include Capybara::DSL
 
   def given_an_early_career_teacher_has_been_entered_onto_the_dfe_service
-    @ect_profile = create(:participant_profile, :ect)
+    cohort = create(:cohort, :current)
+    school_cohort = create(:school_cohort, cohort: cohort)
+    @ect_profile = create(:participant_profile, :ect, school_cohort: school_cohort)
     delivery_partner = create(:delivery_partner)
     create(:partnership,
            school: @ect_profile.school,
            lead_provider: @cpd_lead_provider.lead_provider,
-           cohort: @ect_profile.cohort,
+           cohort: cohort,
            delivery_partner: delivery_partner)
 
     @ect_id = @ect_profile.user.id
@@ -17,8 +19,10 @@ module ParticipantDeclarationSteps
   end
 
   def given_an_ecf_mentor_has_been_entered_onto_the_dfe_service
-    partnership = create(:partnership, lead_provider: @lead_provider)
-    mentor_profile = create(:participant_profile, :mentor, school: partnership.school, cohort: partnership.cohort)
+    cohort = create(:cohort, :current)
+    school_cohort = create(:school_cohort, cohort: cohort)
+    create(:partnership, lead_provider: @lead_provider, cohort: cohort, school: school_cohort.school)
+    mentor_profile = create(:participant_profile, :mentor, school_cohort: school_cohort)
     @mentor_id = mentor_profile.user.id
     travel_to mentor_profile.schedule.milestones.first.start_date + 1.day
   end

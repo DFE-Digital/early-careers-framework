@@ -7,13 +7,14 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
   describe "GET /api/v1/participants" do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: lead_provider) }
     let(:lead_provider) { create(:lead_provider) }
-    let(:partnership) { create(:partnership, lead_provider: lead_provider) }
-    let(:school_cohort) { create(:school_cohort, school: partnership.school, cohort: partnership.cohort, induction_programme_choice: "full_induction_programme") }
+    let(:cohort) { create(:cohort, :current) }
+    let(:partnership) { create(:partnership, lead_provider: lead_provider, cohort: cohort) }
+    let(:school_cohort) { create(:school_cohort, school: partnership.school, cohort: cohort, induction_programme_choice: "full_induction_programme") }
     let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
     let(:bearer_token) { "Bearer #{token}" }
 
     before :each do
-      mentor_profile = create(:participant_profile, :mentor, school: partnership.school, cohort: partnership.cohort)
+      mentor_profile = create(:participant_profile, :mentor, school_cohort: school_cohort)
       create_list :participant_profile, 2, :ect, mentor_profile: mentor_profile, school_cohort: school_cohort
       ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record = ParticipantProfile::ECT.first.teacher_profile
       create(:participant_profile,
