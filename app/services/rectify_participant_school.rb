@@ -9,7 +9,7 @@ class RectifyParticipantSchool < BaseService
   end
 
   # NOTE: Don't use this to move participants in cases where they have got a new job
-  # and transferred to a different school. This is intended to fix issues with participants 
+  # and transferred to a different school. This is intended to fix issues with participants
   # that have been added to the wrong school by mistake.
   def call
     cohort = participant_profile.school_cohort.cohort
