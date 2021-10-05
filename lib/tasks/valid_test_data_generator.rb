@@ -161,20 +161,21 @@ module ValidTestDataGenerator
       end
     end
 
-    def call(total_schools: 10, participants_per_school: 100)
-      generate_new_schools(count: total_schools, participants_per_school: participants_per_school)
+    def call(total_schools: 10)
+      generate_new_schools(count: total_schools)
     end
 
   private
 
-    attr_reader :lead_provider
+    attr_reader :lead_provider, :participants_per_school
 
-    def initialize(name:)
+    def initialize(name:, participants_per_school:)
       @lead_provider = ::NPQLeadProvider.find_or_create_by!(name: name)
+      @participants_per_school = participants_per_school
     end
 
-    def generate_new_schools(count:, participants_per_school:)
-      count.times { create_fip_school_with_cohort(urn: SchoolURNGenerator.next, participants_per_school: participants_per_school) }
+    def generate_new_schools(count:)
+      count.times { create_fip_school_with_cohort(urn: SchoolURNGenerator.next) }
     end
 
     def find_or_create_participants(school:, number_of_participants:)
@@ -209,7 +210,7 @@ module ValidTestDataGenerator
       NPQ::Accept.new(npq_application: validation_data).call if accepted
     end
 
-    def create_fip_school_with_cohort(urn:, participants_per_school:)
+    def create_fip_school_with_cohort(urn:)
       school = School.find_or_create_by!(urn: urn) do |s|
         s.name = Faker::Company.name
         s.address_line1 = Faker::Address.street_address
