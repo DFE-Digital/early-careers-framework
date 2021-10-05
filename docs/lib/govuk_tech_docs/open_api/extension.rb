@@ -14,61 +14,39 @@ module GovukTechDocs
 
         @app = app
         @config = @app.config[:tech_docs]
-
-        # If no api path then just return.
-        if api_path.empty?
-          @api_parser = false
-          return
-        end
-
-        if uri?(api_path)
-          @api_parser = true
-          @document = Openapi3Parser.load_url(api_path)
-        elsif File.exist?(api_path)
-          # Load api file and set existence flag.
-          @api_parser = true
-          @document = Openapi3Parser.load_file(api_path)
-        else
-          @api_parser = false
-          raise "Unable to load api path from tech-docs.yml"
-        end
+        @document = Openapi3Parser.load_file(api_path)
         @render = Renderer.new(@app, @document)
       end
 
       def api(text)
-        if @api_parser == true
+        keywords = {
+          "api&gt;" => "default",
+          "api_schema&gt;" => "schema",
+        }
 
-          keywords = {
-            "api&gt;" => "default",
-            "api_schema&gt;" => "schema",
-          }
+        regexp = keywords.map { |k, _| Regexp.escape(k) }.join("|")
 
-          regexp = keywords.map { |k, _| Regexp.escape(k) }.join("|")
+        md = text.match(/^<p>(#{regexp})/)
 
-          md = text.match(/^<p>(#{regexp})/)
+        if md
+          key = md.captures[0]
+          type = keywords[key]
 
-          if md
-            key = md.captures[0]
-            type = keywords[key]
+          text.gsub!(/#{Regexp.escape(key)}\s+?/, "")
 
-            text.gsub!(/#{Regexp.escape(key)}\s+?/, "")
+          # Strip paragraph tags from text
+          text = text.gsub(/<\/?[^>]*>/, "")
+          text = text.strip
 
-            # Strip paragraph tags from text
-            text = text.gsub(/<\/?[^>]*>/, "")
-            text = text.strip
-
-            if text == "api&gt;"
-              @render.api_full
-            elsif type == "default"
-              output = @render.path(text)
-              # Render any schemas referenced in the above path
-              output += @render.schemas_from_path(text)
-              output
-            else
-              @render.schema(text)
-            end
+          if text == "api&gt;"
+            @render.api_full
+          elsif type == "default"
+            output = @render.path(text)
+            # Render any schemas referenced in the above path
+            output += @render.schemas_from_path(text)
+            output
           else
-            text
+            @render.schema(text)
           end
         else
           text

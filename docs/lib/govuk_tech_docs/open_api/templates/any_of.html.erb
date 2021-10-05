@@ -5,7 +5,7 @@
 </p>
 
 <ul>
-  <% schema_data[1]["anyOf"].node_data.each do |schema| %>
+  <% schema["anyOf"].node_data.each do |schema| %>
     <li><%= get_schema_link(schema) %></li>
   <% end %>
 </ul>

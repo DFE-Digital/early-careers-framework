@@ -53,7 +53,7 @@
           end
         end %>
 
-        <% if !request_body.blank? %>
+        <% if request_body.present? %>
           <%
             source = request_body
             formatter = Rouge::Formatters::HTML.new
