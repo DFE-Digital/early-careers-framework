@@ -16,7 +16,7 @@
 
       <p class="govuk-body"><strong>As a lead provider</strong></p>
       <p class="govuk-body">You can manage a list of school partnerships and test Manage teacher CPD’s
-        <%= govuk_link_to 'API integrations', :lead_providers_guidance_reference %> to:</p>
+        <%= govuk_link_to 'API integrations', "/api-reference" %> to:</p>
 
       <ul class="govuk-list govuk-list--bullet">
         <li>retrieve a list of ECF participants or NPQ applications</li>
@@ -65,8 +65,8 @@
       <p class="govuk-body">In the sandbox, you’ll be able to test your integration.</p>
 
       <%= govuk_start_button(
-            text: 'Review our API guidance',
-            href: lead_providers_guidance_home_url,
+            text: "Review our API guidance",
+            href: "/api-reference",
             ) %>
 
       <h2 class="govuk-heading-l">Help and support</h2>

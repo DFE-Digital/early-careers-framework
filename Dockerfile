@@ -4,6 +4,21 @@ ARG BASE_RUBY_IMAGE=ruby:2.7.2-alpine
 # building all layers above it if a value is not specidied during the build
 ARG BASE_RUBY_IMAGE_WITH_GEMS_AND_NODE_MODULES=early-careers-framework-gems-node-modules
 
+FROM ${BASE_RUBY_IMAGE} AS middleman
+
+RUN apk add --update --no-cache npm git build-base
+
+COPY docs/Gemfile docs/Gemfile.lock /
+
+RUN bundle install --jobs=4
+
+COPY docs /docs
+COPY public /public
+COPY swagger /swagger
+
+WORKDIR docs
+RUN bundle exec middleman build --build-dir=../public/api-reference
+
 # Stage 1: Download gems and node modules.
 FROM ${BASE_RUBY_IMAGE} AS builder
 
@@ -77,6 +92,7 @@ RUN apk -U upgrade && \
 
 COPY --from=assets-precompile /app /app
 COPY --from=assets-precompile /usr/local/bundle/ /usr/local/bundle/
+COPY --from=middleman /public/ /app/public/
 
 WORKDIR /app
 
