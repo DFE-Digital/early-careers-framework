@@ -20,6 +20,8 @@ module NPQ
         create_profile
         npq_application.update(lead_provider_approval_status: "accepted") && other_applications.update(lead_provider_approval_status: "rejected")
       end
+    rescue ActiveRecord::StatementInvalid
+      raise ActionController::BadRequest, I18n.t(:npq_application_already_accepted)
     end
 
   private
