@@ -20,7 +20,7 @@ RSpec.describe "NPQ Applications API", type: :request do
       list << create_list(:npq_validation_data, 2, npq_lead_provider: other_npq_lead_provider, school_urn: "123456")
 
       list.flatten.each do |npq_validation_data|
-        NPQ::CreateOrUpdateProfile.new(npq_validation_data: npq_validation_data).call
+        NPQ::Accept.new(npq_application: npq_validation_data).call
       end
     end
 
@@ -62,7 +62,7 @@ RSpec.describe "NPQ Applications API", type: :request do
           expect(parsed_response["data"][0]["attributes"]["teacher_reference_number_validated"]).to eql(profile.teacher_reference_number_verified)
           expect(parsed_response["data"][0]["attributes"]["eligible_for_funding"]).to eql(profile.eligible_for_funding)
           expect(parsed_response["data"][0]["attributes"]["course_identifier"]).to eql(profile.npq_course.identifier)
-          expect(parsed_response["data"][0]["attributes"]["status"]).to eql("pending")
+          expect(parsed_response["data"][0]["attributes"]["status"]).to eql("accepted")
         end
 
         it "can return paginated data" do
@@ -232,20 +232,20 @@ RSpec.describe "NPQ Applications API", type: :request do
   end
 
   describe "POST /api/v1/npq-applications/:id/accept" do
-    let(:npq_profile) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider) }
-    let(:user) { npq_profile.user }
+    let(:default_npq_validation_data) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider) }
+    let(:user) { default_npq_validation_data.user }
 
     before do
       default_headers[:Authorization] = bearer_token
     end
 
     it "update status to accepted" do
-      expect { post "/api/v1/npq-applications/#{npq_profile.id}/accept" }
-        .to change { npq_profile.reload.lead_provider_approval_status }.from("pending").to("accepted")
+      expect { post "/api/v1/npq-applications/#{default_npq_validation_data.id}/accept" }
+        .to change { default_npq_validation_data.reload.lead_provider_approval_status }.from("pending").to("accepted")
     end
 
     it "responds with 200 and representation of the resource" do
-      post "/api/v1/npq-applications/#{npq_profile.id}/accept"
+      post "/api/v1/npq-applications/#{default_npq_validation_data.id}/accept"
 
       expect(response).to be_successful
 
@@ -256,19 +256,14 @@ RSpec.describe "NPQ Applications API", type: :request do
       let!(:other_npq_validation_data) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, user: user) }
       let!(:other_accepted_npq_validation_data) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, user: user, lead_provider_approval_status: "accepted") }
 
-      before do
-        NPQ::CreateOrUpdateProfile.new(npq_validation_data: other_npq_validation_data).call
-        NPQ::CreateOrUpdateProfile.new(npq_validation_data: other_accepted_npq_validation_data).call
-      end
-
       it "rejects all pending NPQs" do
-        post "/api/v1/npq-applications/#{npq_profile.id}/accept"
+        post "/api/v1/npq-applications/#{default_npq_validation_data.id}/accept"
 
         expect(other_npq_validation_data.reload.lead_provider_approval_status).to eql("rejected")
       end
 
       it "does not reject non-pending NPQs" do
-        post "/api/v1/npq-applications/#{npq_profile.id}/accept"
+        post "/api/v1/npq-applications/#{default_npq_validation_data.id}/accept"
 
         expect(other_accepted_npq_validation_data.reload.lead_provider_approval_status).to eql("accepted")
       end
@@ -282,7 +277,7 @@ RSpec.describe "NPQ Applications API", type: :request do
         expect(response.status).to eql(400)
       end
 
-      it "returns error in repsonse" do
+      it "returns error in response" do
         post "/api/v1/npq-applications/#{npq_profile.id}/accept"
 
         expect(parsed_response.key?("errors")).to be_truthy

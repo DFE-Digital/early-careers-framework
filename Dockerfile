@@ -1,5 +1,5 @@
 # To use or update to a ruby version, change {BASE_RUBY_IMAGE}
-ARG BASE_RUBY_IMAGE=ruby:3.0.2-alpine3.14
+ARG BASE_RUBY_IMAGE=ruby:2.7.2-alpine
 # BASE_RUBY_IMAGE_WITH_GEMS_AND_NODE_MODULES will default to early-careers-framework-gems-node-modules
 # building all layers above it if a value is not specidied during the build
 ARG BASE_RUBY_IMAGE_WITH_GEMS_AND_NODE_MODULES=early-careers-framework-gems-node-modules
@@ -7,7 +7,7 @@ ARG BASE_RUBY_IMAGE_WITH_GEMS_AND_NODE_MODULES=early-careers-framework-gems-node
 # Stage 1: Download gems and node modules.
 FROM ${BASE_RUBY_IMAGE} AS builder
 
-ARG BUILD_DEPS="git gcc libc-dev make nodejs yarn postgresql-dev build-base libxml2-dev libxslt-dev ttf-freefont"
+ARG BUILD_DEPS="git gcc libc-dev make nodejs yarn postgresql-dev build-base libxml2-dev libxslt-dev ttf-ubuntu-font-family"
 
 WORKDIR /app
 

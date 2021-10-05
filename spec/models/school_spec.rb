@@ -39,6 +39,89 @@ RSpec.describe School, type: :model do
     it { is_expected.to have_many(:additional_school_emails) }
   end
 
+  describe "scopes" do
+    describe "all_ecf_participants_validated" do
+      it "includes only schools with ecf participants that are all validated" do
+        school_with_mentor_with_eligibilty = create(:school_cohort).school.tap do |school|
+          create(:participant_profile, :mentor, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
+        end
+
+        school_with_mentor_with_validation_data = create(:school_cohort).school.tap do |school|
+          create(:participant_profile, :mentor, :ecf_participant_validation_data, school_cohort: school.school_cohorts.first)
+        end
+
+        school_with_ect_with_eligibility = create(:school_cohort).school.tap do |school|
+          create(:participant_profile, :ect, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
+        end
+
+        school_with_ect_with_validation_data = create(:school_cohort).school.tap do |school|
+          create(:participant_profile, :ect, :ecf_participant_validation_data, school_cohort: school.school_cohorts.first)
+        end
+
+        school_with_mentor_with_eligibilty_and_unvalidated_ect = create(:school_cohort).school.tap do |school|
+          create(:participant_profile, :mentor, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
+          create(:participant_profile, :ect, school_cohort: school.school_cohorts.first)
+        end
+
+        school_with_mentor_with_validation_data_and_unvalidated_ect = create(:school_cohort).school.tap do |school|
+          create(:participant_profile, :mentor, :ecf_participant_validation_data, school_cohort: school.school_cohorts.first)
+          create(:participant_profile, :ect, school_cohort: school.school_cohorts.first)
+        end
+
+        school_with_ect_with_eligibility_and_unvalidated_ect = create(:school_cohort).school.tap do |school|
+          create(:participant_profile, :ect, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
+          create(:participant_profile, :ect, school_cohort: school.school_cohorts.first)
+        end
+
+        school_with_ect_with_validation_data_and_unvalidated_ect = create(:school_cohort).school.tap do |school|
+          create(:participant_profile, :ect, :ecf_participant_validation_data, school_cohort: school.school_cohorts.first)
+          create(:participant_profile, :ect, school_cohort: school.school_cohorts.first)
+        end
+
+        school_with_mentor_with_eligibilty_and_unvalidated_mentor = create(:school_cohort).school.tap do |school|
+          create(:participant_profile, :mentor, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
+          create(:participant_profile, :mentor, school_cohort: school.school_cohorts.first)
+        end
+
+        school_with_mentor_with_validation_data_and_unvalidated_mentor = create(:school_cohort).school.tap do |school|
+          create(:participant_profile, :mentor, :ecf_participant_validation_data, school_cohort: school.school_cohorts.first)
+          create(:participant_profile, :mentor, school_cohort: school.school_cohorts.first)
+        end
+
+        school_with_ect_with_eligibility_and_unvalidated_mentor = create(:school_cohort).school.tap do |school|
+          create(:participant_profile, :ect, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
+          create(:participant_profile, :mentor, school_cohort: school.school_cohorts.first)
+        end
+
+        school_with_ect_with_validation_data_and_unvalidated_mentor = create(:school_cohort).school.tap do |school|
+          create(:participant_profile, :ect, :ecf_participant_validation_data, school_cohort: school.school_cohorts.first)
+          create(:participant_profile, :mentor, school_cohort: school.school_cohorts.first)
+        end
+
+        school_with_inactive_mentor_with_eligibilty = create(:school_cohort).school.tap do |school|
+          create(:participant_profile, :mentor, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first, status: :withdrawn)
+        end
+
+        school_with_no_participants = create(:school_cohort).school
+
+        expect(School.all_ecf_participants_validated).to include(school_with_mentor_with_eligibilty)
+        expect(School.all_ecf_participants_validated).to include(school_with_mentor_with_validation_data)
+        expect(School.all_ecf_participants_validated).to include(school_with_ect_with_eligibility)
+        expect(School.all_ecf_participants_validated).to include(school_with_ect_with_validation_data)
+        expect(School.all_ecf_participants_validated).to_not include(school_with_mentor_with_eligibilty_and_unvalidated_ect)
+        expect(School.all_ecf_participants_validated).to_not include(school_with_mentor_with_validation_data_and_unvalidated_ect)
+        expect(School.all_ecf_participants_validated).to_not include(school_with_ect_with_eligibility_and_unvalidated_ect)
+        expect(School.all_ecf_participants_validated).to_not include(school_with_ect_with_validation_data_and_unvalidated_ect)
+        expect(School.all_ecf_participants_validated).to_not include(school_with_mentor_with_eligibilty_and_unvalidated_mentor)
+        expect(School.all_ecf_participants_validated).to_not include(school_with_mentor_with_validation_data_and_unvalidated_mentor)
+        expect(School.all_ecf_participants_validated).to_not include(school_with_ect_with_eligibility_and_unvalidated_mentor)
+        expect(School.all_ecf_participants_validated).to_not include(school_with_ect_with_validation_data_and_unvalidated_mentor)
+        expect(School.all_ecf_participants_validated).to_not include(school_with_no_participants)
+        expect(School.all_ecf_participants_validated).to_not include(school_with_inactive_mentor_with_eligibilty)
+      end
+    end
+  end
+
   describe "eligibility" do
     let!(:open_school) { create(:school, school_status_code: 1) }
     let!(:closed_school) { create(:school, school_status_code: 2) }

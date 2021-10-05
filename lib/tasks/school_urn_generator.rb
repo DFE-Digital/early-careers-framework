@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-ALL_URNS = (1..999_999) unless defined?(ALL_URNS)
+ALL_URNS = (1..999_999).freeze unless defined?(ALL_URNS)
 
 class SchoolURNGenerator
   class << self

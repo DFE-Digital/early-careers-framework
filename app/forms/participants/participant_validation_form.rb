@@ -6,7 +6,7 @@ module Participants
     include ActiveModel::Model
 
     # lifted from https://github.com/dwp/nino-format-validation
-    NINO_REGEX = /(^(?!BG)(?!GB)(?!NK)(?!KN)(?!TN)(?!NT)(?!ZZ)[A-Z&&[^DFIQUV]][A-Z&&[^DFIOQUV]][0-9]{6}[A-D]$)/
+    NINO_REGEX = /(^(?!BG)(?!GB)(?!NK)(?!KN)(?!TN)(?!NT)(?!ZZ)[A-Z&&[^DFIQUV]][A-Z&&[^DFIOQUV]][0-9]{6}[A-D]$)/.freeze
     attr_accessor :step,
                   :do_you_want_to_add_mentor_information_choice,
                   :do_you_know_your_trn_choice,
@@ -45,6 +45,11 @@ module Participants
     def date_of_birth=(value)
       @date_of_birth_invalid = false
       @date_of_birth = ActiveRecord::Type::Date.new.cast(value)
+
+      if invalid_date?(value)
+        @date_of_birth_invalid = true
+        @date_of_birth = value
+      end
     rescue StandardError
       @date_of_birth_invalid = true
     end
@@ -158,6 +163,15 @@ module Participants
       return if national_insurance_number.blank?
 
       national_insurance_number.gsub(/\s+/, "").upcase
+    end
+
+    def invalid_date?(value)
+      return if value.blank?
+
+      day = value[3]
+      month = value[2]
+      year = value[1]
+      !Date.valid_date?(year, month, day)
     end
   end
 end

@@ -6,13 +6,13 @@ required:
   - attributes
 properties:
   id:
-    description: "The unique identifier of the participant record"
+    description: "The unique identifier of the participant declaration record"
     type: string
     format: uuid
     example: cd3a12347-7308-4879-942a-c4a70ced400a
   type:
     description: "The data type"
     type: string
-    example: participant
+    example: participant-declaration
   attributes:
     $ref: "#/components/schemas/ParticipantDeclarationAttributes"

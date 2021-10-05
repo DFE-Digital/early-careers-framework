@@ -17,7 +17,7 @@ properties:
     description: "The event declaration date"
     type: string
     format: date-time
-    example: 2021-05-31T02:21:32Z
+    example: "2021-05-31T02:21:32.000Z"
   course_identifier:
     description: "The type of course the participant is enrolled in"
     type: string
@@ -44,6 +44,6 @@ required:
 example:
   participant_id: db3a7848-7308-4879-942a-c4a70ced400a
   declaration_type: retained-1
-  declaration_date: 2021-05-31T02:21:32Z
+  declaration_date: "2021-05-31T02:21:32.000Z"
   course_identifier: npq-headship
   evidence_held: "yes"

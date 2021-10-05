@@ -12,6 +12,10 @@ module Devise
 
       class LoginIncompleteError < Error; end
 
+      def valid?
+        NotifyEmailValidator.valid?(params.dig(:user, :email))
+      end
+
       def authenticate!
         if params[:user].present?
           user = User.find_by(email: params[:user][:email])

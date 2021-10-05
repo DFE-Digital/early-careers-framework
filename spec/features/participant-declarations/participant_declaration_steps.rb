@@ -30,9 +30,9 @@ module ParticipantDeclarationSteps
     npq_validation_data = create(:npq_validation_data, npq_lead_provider: npq_lead_provider, npq_course: npq_course)
     @npq_id = npq_validation_data.user.id
 
-    NPQ::CreateOrUpdateProfile.new(npq_validation_data: npq_validation_data).call
+    NPQ::Accept.new(npq_application: npq_validation_data).call
 
-    travel_to npq_validation_data.profile.schedule.milestones.first.start_date + 1.day
+    travel_to npq_validation_data.reload.profile.schedule.milestones.first.start_date + 1.day
   end
 
   def when_the_participant_details_are_passed_to_the_lead_provider
@@ -53,7 +53,7 @@ module ParticipantDeclarationSteps
 
   def and_the_lead_provider_submits_a_declaration_for_the_ect_using_their_id
     params = common_params(@ect_id, "ecf-induction")
-    submit_request(params)
+    @declaration_id = submit_request(params).dig("data", "id")
   end
 
   def and_the_lead_provider_submits_a_declaration_for_the_mentor_using_their_id
@@ -75,6 +75,10 @@ module ParticipantDeclarationSteps
     params = common_params("", "ecf-induction")
     params["data"]["attributes"].reject! { |a| a["participant_id"] }
     submit_request(params)
+  end
+
+  def and_the_lead_provider_voids_a_declaration
+    @session.put("/api/v1/participant-declarations/#{@declaration_id}/void", headers: { "Authorization": "Bearer #{@token}" })
   end
 
   def then_the_declaration_made_is_valid
