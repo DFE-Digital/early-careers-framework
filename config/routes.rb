@@ -355,6 +355,7 @@ Rails.application.routes.draw do
 
           get "programme-choice", as: :programme_choice
           get "add-participants", as: :add_participants
+          get "roles", as: :roles
         end
       end
     end
