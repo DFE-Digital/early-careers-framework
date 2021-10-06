@@ -36,7 +36,7 @@ module ManageTrainingSteps
   end
 
   def and_i_have_added_a_mentor
-    @participant_profile_mentor = create(:participant_profile, :mentor, school_cohort: @school_cohort)
+    @participant_profile_mentor = create(:participant_profile, :mentor, user: create(:user, full_name: "Billy Mentor"), school_cohort: @school_cohort)
   end
 
   def then_i_am_taken_to_add_mentor_page
