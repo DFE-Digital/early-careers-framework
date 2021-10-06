@@ -13,10 +13,9 @@ class UserMailer < ApplicationMailer
         name: user.full_name,
         subject: "Test email",
       },
-    )
+    ).tag(:test_email)
   end
 
-  # TODO: CPDRP-928 - remove sign_in_url when template updated
   def sign_in_email(user:, url:, token_expiry:)
     template_mail(
       SIGN_IN_EMAIL_TEMPLATE,
@@ -25,11 +24,10 @@ class UserMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         full_name: user.full_name,
-        sign_in_url: url,
         sign_in: url,
         token_expiry: token_expiry,
         subject: "Link to sign in",
       },
-    )
+    ).tag(:sign_in)
   end
 end

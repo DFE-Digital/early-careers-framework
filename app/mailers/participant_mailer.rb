@@ -42,7 +42,7 @@ class ParticipantMailer < ApplicationMailer
         school_name: participant_profile.school.name,
         sti_name: sti_profile.user.full_name,
       },
-    ).associate_with(participant_profile, as: :participant_profile)
+    ).tag(:participant_removed).associate_with(participant_profile, as: :participant_profile)
   end
 
   def add_details_reminder(participant_profile:)
