@@ -10,7 +10,7 @@
 <div class="govuk-grid-row govuk-!-margin-top-9">
   <div class="govuk-grid-column-two-thirds">
 
-    <%= render Finance::ECF::BreakdownSummary.new(breakdown_summary: @breakdown) %>
+    <%= render Finance::ECF::BreakdownSummary.new(breakdown_summary: @breakdown, lead_provider: @ecf_lead_provider) %>
 
     <%= govuk_accordion do |accordion| %>
       <%= accordion.section heading_text: "Service fee" do %>

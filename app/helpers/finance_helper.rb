@@ -17,7 +17,7 @@ module FinanceHelper
     service_fee + output_payment + other_fees
   end
 
-  def total_vat(breakdown)
-    total_payment(breakdown) * 0.2
+  def total_vat(breakdown, lead_provider)
+    total_payment(breakdown) * (lead_provider.vat_chargeable ? 0.2 : 0.0)
   end
 end

@@ -8,7 +8,8 @@ module Finance
 
     private
 
-      def initialize(breakdown_summary:)
+      def initialize(breakdown_summary:, lead_provider:)
+        @lead_provider = lead_provider
         @breakdown = breakdown_summary
         @service_fees_participants = @breakdown[:service_fees].map { |params| params[:participants] }.inject(&:+)
         @service_fees_total = @breakdown[:service_fees].map { |params| params[:monthly] }.inject(&:+)

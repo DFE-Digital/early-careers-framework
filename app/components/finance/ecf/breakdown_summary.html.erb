@@ -76,11 +76,11 @@
   <tbody>
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">VAT</th>
-      <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds total_vat(@breakdown) %></td>
+      <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds total_vat(@breakdown, @lead_provider) %></td>
     </tr>
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__cell">Total payment</th>
-      <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><%= number_to_pounds total_payment(@breakdown) + total_vat(@breakdown) %></td>
+      <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><%= number_to_pounds total_payment(@breakdown) + total_vat(@breakdown, @lead_provider) %></td>
     </tr>
   </tbody>
 </table>
