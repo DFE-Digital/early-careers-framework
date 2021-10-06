@@ -3,7 +3,7 @@
 require "abstract_interface"
 
 class ApiToken < ApplicationRecord
-  has_paper_trail
+  has_paper_trail ignore: %i[updated_at last_used_at]
   # This is meant to be an abstract class
   # Since it is a base class for a STI, we can't actually make it abstract (not backed by a table)
   include AbstractInterface
