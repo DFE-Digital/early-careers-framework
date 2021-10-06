@@ -40,22 +40,6 @@
         </dd>
       </div>
 
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Role
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <%= t add_participant_form.participant_type, scope: "schools.participants.type" %>
-        </dd>
-        <dd class="govuk-summary-list__actions">
-          <% unless add_participant_form.type == :self %>
-            <%= govuk_link_to({ action: :show, step: "type" }) do %>
-              Change <span class="govuk-visually-hidden">participant type</span>
-            <% end %>
-          <% end %>
-        </dd>
-      </div>
-
       <% if add_participant_form.type == :ect %>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">

@@ -10,6 +10,23 @@ module Schools
     form AddParticipantForm, as: :add_participant_form
     result as: :participant_profile
 
+    def start
+      reset_form
+
+      if type_param
+        add_participant_form.assign_attributes(type: type_param)
+        store_form_in_session
+
+        if add_participant_form.type == :self
+          redirect_to action: :show, step: :yourself
+        else
+          redirect_to action: :show, step: :name
+        end
+      else
+        redirect_to action: :show, step: form.next_step
+      end
+    end
+
     abandon_journey_path do
       @school_cohort.active_ecf_participants.any? ? schools_participants_path : schools_cohort_path
     end
@@ -20,6 +37,10 @@ module Schools
     end
 
   private
+
+    def type_param
+      params[:type].to_sym
+    end
 
     def email_used_in_the_same_school?
       User.find_by(email: add_participant_form.email).school == add_participant_form.school_cohort.school

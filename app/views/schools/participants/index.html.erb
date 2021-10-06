@@ -3,16 +3,24 @@
 <% content_for :before_content, govuk_back_link(text: "Back", href: schools_dashboard_path) %>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-three-quarters">
-    <span class="govuk-caption-l"><%= @cohort.display_name %> cohort</span>
-    <h1 class="govuk-heading-l">Your early career teachers (ECTs) and mentors</h1>
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-xl"><%= @school.name %></span>
+    <h1 class="govuk-heading-xl">Your ECTs and mentors</h1>
 
-    <%= govuk_button_link_to "Add a new ECT or mentor", add_schools_participants_path %>
+    <p class="govuk-body">Before your early career teachers (ECTs) and mentors can start, we need to check their details in the Teaching Regulation Agency records. This is to make sure they’re eligible for this programme.</p>
 
-    <p class="govuk-body">We contact all ECTs and mentors to check they're eligible for this programme. This may take a few days. You can see the status of our checks below.</p>
-
-    <p class="govuk-body">Select a name to see more details.</p>
+    <p class="govuk-body">You need to tell us their names and email addresses. We’ll then contact them to <%= govuk_link_to "explain their role", roles_schools_cohort_path, class: "govuk-link--no-visited-state" %> and what they need to do next.</p>
   </div>
+</div>
+
+<div class="govuk-inset-text">
+  <ul class="govuk-list">
+    <li><%= govuk_link_to "Add a new ECT", add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :ect), class: "govuk-link--no-visited-state" %></li>
+    <li><%= govuk_link_to "Add a new mentor", add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :mentor), class: "govuk-link--no-visited-state" %></li>
+    <% unless current_user.mentor? %>
+      <li><%= govuk_link_to "Add yourself as a mentor", add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :self), class: "govuk-link--no-visited-state" %></li>
+    <% end %>
+  </ul>
 </div>
 
 <% if @participant_profiles.present? %>
