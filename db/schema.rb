@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2021_10_07_131604) do
+=======
+ActiveRecord::Schema.define(version: 2021_10_05_162156) do
+>>>>>>> Add missing updated schema
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -366,6 +370,7 @@ ActiveRecord::Schema.define(version: 2021_10_07_131604) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "name", null: false
     t.uuid "cpd_lead_provider_id"
+    t.boolean "vat_chargeable", default: true
     t.index ["cpd_lead_provider_id"], name: "index_lead_providers_on_cpd_lead_provider_id"
   end
 
