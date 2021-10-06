@@ -54,12 +54,10 @@ if (stepByStep) {
   function getTextForInsertedElements() {
     stepByStep.actions.showText = stepByStep.getAttribute("data-show-text");
     stepByStep.actions.hideText = stepByStep.getAttribute("data-hide-text");
-    stepByStep.actions.showAllText = stepByStep.getAttribute(
-      "data-show-all-text"
-    );
-    stepByStep.actions.hideAllText = stepByStep.getAttribute(
-      "data-hide-all-text"
-    );
+    stepByStep.actions.showAllText =
+      stepByStep.getAttribute("data-show-all-text");
+    stepByStep.actions.hideAllText =
+      stepByStep.getAttribute("data-hide-all-text");
   }
 
   function addShowHideAllButton() {
@@ -435,9 +433,8 @@ if (stepByStep) {
       }
 
       this.titleButton.setAttribute("aria-expanded", isShown);
-      const showHideText = this.stepElement.querySelectorAll(
-        ".js-toggle-link"
-      )[0];
+      const showHideText =
+        this.stepElement.querySelectorAll(".js-toggle-link")[0];
 
       showHideText.querySelector(".js-toggle-link-text").innerHTML = isShown
         ? this.hideText

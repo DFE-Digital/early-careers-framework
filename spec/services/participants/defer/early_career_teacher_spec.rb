@@ -11,7 +11,7 @@ RSpec.describe Participants::Defer::EarlyCareerTeacher do
       cpd_lead_provider: cpd_lead_provider,
       participant_id: ect_profile.user.id,
       course_identifier: "ecf-induction",
-      reason: "adoption",
+      reason: "career-break",
     }
   end
 

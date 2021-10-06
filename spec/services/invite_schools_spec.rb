@@ -925,6 +925,65 @@ RSpec.describe InviteSchools do
     end
   end
 
+  describe "#invite_unpartnered_cip_sits_to_add_ects_and_mentors" do
+    it "invites unpartnered cip schools with no participants" do
+      school = create(:school)
+      sit = create(:user, :induction_coordinator, schools: [school])
+      create(:school_cohort,
+             school: school,
+             induction_programme_choice: "core_induction_programme")
+
+      expected_url = "http://www.example.com/users/sign_in?utm_campaign=add-participants-unpartnered-cip&utm_medium=email&utm_source=add-participants-unpartnered-cip"
+      InviteSchools.new.invite_unpartnered_cip_sits_to_add_ects_and_mentors
+      expect(SchoolMailer).to delay_email_delivery_of(:unpartnered_cip_sit_add_participants_email)
+                                .with(hash_including(
+                                        recipient: sit.email,
+                                        sign_in_url: expected_url,
+                                        induction_coordinator: sit,
+                                        school_name: school.name,
+                                      )).once
+    end
+
+    it "doesn't invite schools with participants" do
+      school = create(:school)
+      create(:user, :induction_coordinator, schools: [school])
+      create(:school_cohort,
+             school: school,
+             induction_programme_choice: "core_induction_programme")
+      create(:participant_profile, :ect, school_cohort: school.school_cohorts.first)
+      InviteSchools.new.invite_unpartnered_cip_sits_to_add_ects_and_mentors
+
+      expect(SchoolMailer).to_not delay_email_delivery_of(:unpartnered_cip_sit_add_participants_email)
+    end
+
+    it "doesn't invite non-cip schools" do
+      school = create(:school)
+      create(:user, :induction_coordinator, schools: [school])
+      create(:school_cohort,
+             school: school,
+             induction_programme_choice: "full_induction_programme")
+
+      InviteSchools.new.invite_unpartnered_cip_sits_to_add_ects_and_mentors
+
+      expect(SchoolMailer).to_not delay_email_delivery_of(:unpartnered_cip_sit_add_participants_email)
+    end
+
+    it "doesn't invite schools in a partnership" do
+      school = create(:school)
+      create(:induction_coordinator_profile, schools: [school])
+      school_cohort = create(
+        :school_cohort,
+        school: school,
+        induction_programme_choice: "core_induction_programme",
+      )
+      create(:partnership, school: school, cohort: school_cohort.cohort)
+
+      InviteSchools.new.invite_unpartnered_cip_sits_to_add_ects_and_mentors
+
+      expect(SchoolMailer).to_not delay_email_delivery_of(:unpartnered_cip_sit_add_participants_email)
+    end
+  end
+
 private
 
   def create_signed_in_induction_tutor

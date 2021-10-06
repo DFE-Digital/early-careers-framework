@@ -28,6 +28,59 @@ RSpec.describe NPQ::Accept do
       )
     end
 
+    context "when user has applied for the same course with another provider" do
+      let(:other_npq_lead_provider) { create(:npq_lead_provider) }
+
+      let(:other_npq_validation_data) do
+        NPQValidationData.new(
+          teacher_reference_number: trn,
+          user: user,
+          npq_course: npq_course,
+          npq_lead_provider: other_npq_lead_provider,
+          school_urn: "123456",
+          school_ukprn: "12345678",
+        )
+      end
+
+      before do
+        npq_validation_data.save!
+        other_npq_validation_data.save!
+      end
+
+      it "rejects other_npq_validation_data" do
+        described_class.call(npq_application: npq_validation_data)
+        expect(npq_validation_data.reload.lead_provider_approval_status).to eql("accepted")
+        expect(other_npq_validation_data.reload.lead_provider_approval_status).to eql("rejected")
+      end
+    end
+
+    context "when user has applied for different course" do
+      let(:other_npq_lead_provider) { create(:npq_lead_provider) }
+      let(:other_npq_course) { create(:npq_course) }
+
+      let(:other_npq_validation_data) do
+        NPQValidationData.new(
+          teacher_reference_number: trn,
+          user: user,
+          npq_course: other_npq_course,
+          npq_lead_provider: other_npq_lead_provider,
+          school_urn: "123456",
+          school_ukprn: "12345678",
+        )
+      end
+
+      before do
+        npq_validation_data.save!
+        other_npq_validation_data.save!
+      end
+
+      it "does not reject the other course" do
+        described_class.call(npq_application: npq_validation_data)
+        expect(npq_validation_data.reload.lead_provider_approval_status).to eql("accepted")
+        expect(other_npq_validation_data.reload.lead_provider_approval_status).to eql("pending")
+      end
+    end
+
     context "after creating a NPQValidationData record" do
       before do
         npq_validation_data.save!

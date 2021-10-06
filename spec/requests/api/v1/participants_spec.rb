@@ -7,13 +7,14 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
   describe "GET /api/v1/participants" do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: lead_provider) }
     let(:lead_provider) { create(:lead_provider) }
-    let(:partnership) { create(:partnership, lead_provider: lead_provider) }
-    let(:school_cohort) { create(:school_cohort, school: partnership.school, cohort: partnership.cohort, induction_programme_choice: "full_induction_programme") }
+    let(:cohort) { create(:cohort, :current) }
+    let(:partnership) { create(:partnership, lead_provider: lead_provider, cohort: cohort) }
+    let(:school_cohort) { create(:school_cohort, school: partnership.school, cohort: cohort, induction_programme_choice: "full_induction_programme") }
     let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
     let(:bearer_token) { "Bearer #{token}" }
 
     before :each do
-      mentor_profile = create(:participant_profile, :mentor, school: partnership.school, cohort: partnership.cohort)
+      mentor_profile = create(:participant_profile, :mentor, school_cohort: school_cohort)
       create_list :participant_profile, 2, :ect, mentor_profile: mentor_profile, school_cohort: school_cohort
       ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record = ParticipantProfile::ECT.first.teacher_profile
       create(:participant_profile,
@@ -257,7 +258,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
         let(:parsed_response) { JSON.parse(response.body) }
 
         it "changes the training status of a participant to withdrawn" do
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
+          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "left-teaching-profession" } } }
 
           expect(response).to be_successful
 
@@ -265,8 +266,8 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
         end
 
         it "returns an error when the participant is already withdrawn" do
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
+          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "left-teaching-profession" } } }
+          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "left-teaching-profession" } } }
 
           expect(response).not_to be_successful
         end
@@ -292,7 +293,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
         let(:parsed_response) { JSON.parse(response.body) }
 
         it "changes the training status of a participant to deferred" do
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "adoption" } } }
+          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
 
           expect(response).to be_successful
 
@@ -300,15 +301,15 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
         end
 
         it "returns an error when the participant is already withdrawn" do
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "adoption" } } }
+          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "left-teaching-profession" } } }
+          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
 
           expect(response).not_to be_successful
         end
 
         it "returns an error when the participant is already deferred" do
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "adoption" } } }
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "adoption" } } }
+          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
+          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
 
           expect(response).not_to be_successful
         end
@@ -318,7 +319,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
         let(:parsed_response) { JSON.parse(response.body) }
 
         it "changes the training status of a participant to active" do
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "adoption" } } }
+          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
           put "/api/v1/participants/#{early_career_teacher_profile.user.id}/resume", params: { data: { attributes: { course_identifier: "ecf-induction" } } }
 
           expect(response).to be_successful
@@ -327,7 +328,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
         end
 
         it "returns an error when the participant is already active" do
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "adoption" } } }
+          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
           put "/api/v1/participants/#{early_career_teacher_profile.user.id}/resume", params: { data: { attributes: { course_identifier: "ecf-induction" } } }
           put "/api/v1/participants/#{early_career_teacher_profile.user.id}/resume", params: { data: { attributes: { course_identifier: "ecf-induction" } } }
 
@@ -335,7 +336,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
         end
 
         it "returns an error when the participant is withdrawn" do
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
+          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "left-teaching-profession" } } }
           put "/api/v1/participants/#{early_career_teacher_profile.user.id}/resume", params: { data: { attributes: { course_identifier: "ecf-induction" } } }
 
           expect(response).not_to be_successful

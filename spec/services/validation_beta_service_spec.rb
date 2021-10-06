@@ -5,6 +5,60 @@ require "rails_helper"
 RSpec.describe ValidationBetaService do
   subject(:validation_beta_service) { described_class.new }
 
+  describe "#remind_fip_induction_coordinators_to_add_ect_and_mentors" do
+    let!(:school_cohort) { create(:school_cohort, induction_programme_choice: "full_induction_programme") }
+    let(:school) { school_cohort.school }
+    let!(:induction_coordinator) { create(:induction_coordinator_profile, schools: [school]) }
+
+    it "emails SITs that have chosen a FIP programme but have not added any ects or mentors" do
+      validation_beta_service.remind_fip_induction_coordinators_to_add_ect_and_mentors
+      expect(SchoolMailer).to delay_email_delivery_of(:remind_fip_induction_coordinators_to_add_ects_and_mentors_email)
+                                .with(induction_coordinator: induction_coordinator,
+                                      school_name: school.name,
+                                      campaign: :remind_fip_sit_to_complete_steps)
+    end
+
+    it "does not email SIT whose school has added an ECT" do
+      create(:participant_profile, :ect, school_cohort: school_cohort, school: school)
+
+      validation_beta_service.remind_fip_induction_coordinators_to_add_ect_and_mentors
+      expect(SchoolMailer).not_to delay_email_delivery_of(:remind_fip_induction_coordinators_to_add_ects_and_mentors_email)
+                                    .with(induction_coordinator: induction_coordinator,
+                                          school_name: school.name,
+                                          campaign: :remind_fip_sit_to_complete_steps)
+    end
+
+    it "does not email SIT whose school has added an mentor" do
+      create(:participant_profile, :mentor, school_cohort: school_cohort, school: school)
+
+      validation_beta_service.remind_fip_induction_coordinators_to_add_ect_and_mentors
+      expect(SchoolMailer).not_to delay_email_delivery_of(:remind_fip_induction_coordinators_to_add_ects_and_mentors_email)
+                                    .with(induction_coordinator: induction_coordinator,
+                                          school_name: school.name,
+                                          campaign: :remind_fip_sit_to_complete_steps)
+    end
+
+    it "does not email SIT whose school has opted out of updates" do
+      school_cohort.update!(opt_out_of_updates: true)
+
+      validation_beta_service.remind_fip_induction_coordinators_to_add_ect_and_mentors
+      expect(SchoolMailer).not_to delay_email_delivery_of(:remind_fip_induction_coordinators_to_add_ects_and_mentors_email)
+                                .with(induction_coordinator: induction_coordinator,
+                                      school_name: school.name,
+                                      campaign: :remind_fip_sit_to_complete_steps)
+    end
+
+    it "does not email SIT whose school is on a core_induction_programme" do
+      school_cohort.core_induction_programme!
+
+      validation_beta_service.remind_fip_induction_coordinators_to_add_ect_and_mentors
+      expect(SchoolMailer).not_to delay_email_delivery_of(:remind_fip_induction_coordinators_to_add_ects_and_mentors_email)
+                                    .with(induction_coordinator: induction_coordinator,
+                                          school_name: school.name,
+                                          campaign: :remind_fip_sit_to_complete_steps)
+    end
+  end
+
   describe "#set_up_missing_chasers" do
     let!(:ect_profile) { create(:participant_profile, :ect) }
     let!(:mentor_profile) { create(:participant_profile, :mentor) }

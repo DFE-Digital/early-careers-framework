@@ -53,6 +53,7 @@ class PartnershipNotificationService
 
           notify_id = SchoolMailer.partnered_school_invite_sit_email(
             recipient: notification_email.sent_to,
+            school_name: school.name,
             lead_provider_name: notification_email.lead_provider.name,
             delivery_partner_name: notification_email.delivery_partner.name,
             nominate_url: nomination_email.nomination_url(utm_source: :partnered_invite_sit_reminder),

@@ -123,13 +123,15 @@ Rails.application.routes.draw do
     get "/", to: "content#index", as: :landing_page
     get "/partnership-guide", to: "content#partnership_guide", as: :partnership_guide
 
-    get "/guidance/home" => "guidance#index", as: :guidance_home
-    get "/guidance/ecf-usage" => "guidance#ecf_usage", as: :guidance_ecf_usage
-    get "/guidance/npq-usage" => "guidance#npq_usage", as: :guidance_npq_usage
-    get "/guidance/reference" => "guidance#reference", as: :guidance_reference
+    # Keeping the urls to old guidance urls, but they need to lead to new api-reference ones
+    get "/guidance/home", to: redirect("/api-reference")
+    get "/guidance/ecf-usage", to: redirect("/api-reference/ecf-usage")
+    get "/guidance/npq-usage", to: redirect("/api-reference/npq-usage")
+    get "/guidance/reference", to: redirect("/api-reference/reference")
+    get "/guidance/release-notes", to: redirect("/api-reference/release-notes")
+    get "/guidance/help", to: redirect("/api-reference/help")
+
     get "/api-docs/v1/api_spec.yml" => "openapi#api_docs", as: :api_docs
-    get "/guidance/release-notes" => "guidance#release_notes", as: :guidance_release_notes
-    get "/guidance/help" => "guidance#help", as: :guidance_help
 
     resources :your_schools, path: "/your-schools", only: %i[index create]
     resources :partnerships, only: %i[show]
@@ -275,8 +277,8 @@ Rails.application.routes.draw do
       get "/", to: "validations#start", as: :start
       get "/do-you-want-to-add-your-mentor-information", to: "validations#do_you_want_to_add_mentor_information", as: :do_you_want_to_add_mentor_information
       put "/do-you-want-to-add-your-mentor-information", to: "validations#do_you_want_to_add_mentor_information"
-      get "/do-you-know-your-teacher-reference-number", to: "validations#do_you_know_your_trn", as: :do_you_know_your_trn
-      put "/do-you-know-your-teacher-reference-number", to: "validations#do_you_know_your_trn"
+      get "/what-is-your-teacher-reference-number", to: "validations#what_is_your_trn", as: :what_is_your_trn
+      put "/what-is-your-teacher-reference-number", to: "validations#what_is_your_trn"
       get "/have-you-changed-your-name", to: "validations#have_you_changed_your_name", as: :have_you_changed_your_name
       put "/have-you-changed-your-name", to: "validations#have_you_changed_your_name"
       get "/confirm-name-change", to: "validations#confirm_updated_record", as: :confirm_updated_record
@@ -285,9 +287,6 @@ Rails.application.routes.draw do
       put "/name-not-updated", to: "validations#name_not_updated"
       get "/tell-us-your-details", to: "validations#tell_us_your_details", as: :tell_us_your_details
       put "/tell-us-your-details", to: "validations#tell_us_your_details"
-      get "/confirm-these-details", to: "validations#confirm_details", as: :confirm_details
-      put "/confirm-these-details", to: "validations#confirm_details"
-      get "/find-your-teacher-reference-number", to: "validations#find_your_trn", as: :find_your_trn
       get "/get-a-teacher-reference-number", to: "validations#get_a_trn", as: :get_a_trn
       get "/change-your-details-with-the-teacher-regulation-agency", to: "validations#change_your_details_with_tra", as: :change_your_details_with_tra
       get "/check-with-the-teacher-regulation-agency", to: "validations#check_with_tra", as: :check_with_tra
@@ -358,6 +357,7 @@ Rails.application.routes.draw do
 
           get "programme-choice", as: :programme_choice
           get "add-participants", as: :add_participants
+          get "roles", as: :roles
         end
       end
     end
@@ -375,6 +375,9 @@ Rails.application.routes.draw do
   get "/ecf-leaflet", to: redirect("ECFleaflet2021.pdf")
 
   get "/how-to-set-up-your-programme", to: "step_by_step#show", as: :step_by_step
+
+  get "/assets/govuk/assets/fonts/:name.:extension", to: redirect("/api-reference/assets/govuk/assets/fonts/%{name}.%{extension}")
+  get "/assets/govuk/assets/images/:name.:extension", to: redirect("/api-reference/assets/govuk/assets/images/%{name}.%{extension}")
 
   post "__session", to: "support/request_spec/session_helper#update" if Rails.env.test?
 end

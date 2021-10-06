@@ -121,6 +121,24 @@ RSpec.describe SchoolMailer, type: :mailer do
     end
   end
 
+  describe "remind_fip_induction_coordinators_to_add_ects_and_mentors_email" do
+    let(:induction_coordinator) { create(:induction_coordinator_profile) }
+    let(:school_name) { Faker::Company.name }
+    let(:campaign) { "remind_fip_sit_to_complete_steps" }
+
+    let(:reminder_email) do
+      SchoolMailer.remind_fip_induction_coordinators_to_add_ects_and_mentors_email(
+        induction_coordinator: induction_coordinator,
+        campaign: campaign,
+        school_name: school_name,
+      )
+    end
+    it "renders the right headers" do
+      expect(reminder_email.from).to eq(["mail@example.com"])
+      expect(reminder_email.to).to eq([induction_coordinator.user.email])
+    end
+  end
+
   describe "nqt_plus_one_sitless_invite" do
     let(:email) do
       SchoolMailer.nqt_plus_one_sitless_invite(

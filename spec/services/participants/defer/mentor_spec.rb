@@ -11,7 +11,7 @@ RSpec.describe Participants::Defer::Mentor do
       cpd_lead_provider: cpd_lead_provider,
       participant_id: mentor_profile.user.id,
       course_identifier: "ecf-mentor",
-      reason: "adoption",
+      reason: "career-break",
     }
   end
 

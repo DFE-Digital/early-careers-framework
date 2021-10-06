@@ -22,5 +22,9 @@ module Schools
         redirect_to schools_participants_path(@cohort)
       end
     end
+
+    def roles
+      render "shared/roles"
+    end
   end
 end

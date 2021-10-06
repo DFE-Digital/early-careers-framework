@@ -16,11 +16,13 @@ class SchoolMailer < ApplicationMailer
   COORDINATOR_REMINDER_TO_CHOOSE_PROVIDER_EMAIL_TEMPLATE = "11cdb6d8-8a59-4618-ba35-0ebd7e47180c"
   COORDINATOR_REMINDER_TO_CHOOSE_MATERIALS_EMAIL_TEMPLATE = "43baf25c-6a46-437b-9f30-77c57d68a59e"
   ADD_PARTICIPANTS_EMAIL_TEMPLATE = "721787d0-74bc-42a0-a064-ee0c1cb58edb"
+  REMIND_FIP_TO_ADD_ECTS_AND_MENTORS_EMAIL_TEMPLATE = "63f9fe5b-aff1-4cf7-9593-6843b80d4044"
   NQT_PLUS_ONE_SITLESS_EMAIL_TEMPLATE = "c10392e4-9d75-402d-a7fd-47df16fa6082"
   NQT_PLUS_ONE_SIT_EMAIL_TEMPLATE = "9e01b5ac-a94c-4c71-a38d-6502d7c4c2e7"
   ADD_2020_PARTICIPANT_CONFIRMATION_TEMPLATE = "08d45879-1f94-48a2-88c1-108f596fa59e"
   DIY_WORDPRESS_NOTIFICATION_TEMPLATE = "e1067a2f-b027-45a6-8e51-668e170090d1"
   PARTNERED_SCHOOL_INVITE_SIT_EMAIL_TEMPLATE = "8cac177e-b094-4a00-9179-94fadde8ced0"
+  UNPARTNERED_CIP_SIT_ADD_PARTICIPANTS_EMAIL_TEMPLATE = "ebc96223-c2ea-416e-8d3e-1f591bbd2f98"
 
   # This email is currently (30/09/2021) only used for manually sent chaser emails
   def remind_induction_coordinator_to_setup_cohort_email(recipient:, school_name:, campaign: nil)
@@ -94,6 +96,7 @@ class SchoolMailer < ApplicationMailer
 
   def partnered_school_invite_sit_email(
     recipient:,
+    school_name:,
     lead_provider_name:,
     delivery_partner_name:,
     nominate_url:,
@@ -106,6 +109,7 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
+        school_name: school_name,
         lead_provider_name: lead_provider_name,
         delivery_partner_name: delivery_partner_name,
         nominate_url: nominate_url,
@@ -280,6 +284,21 @@ class SchoolMailer < ApplicationMailer
     )
   end
 
+  def remind_fip_induction_coordinators_to_add_ects_and_mentors_email(induction_coordinator:, school_name:, campaign: nil)
+    campaign_tracking = campaign ? UTMService.email(campaign, campaign) : {}
+
+    template_mail(
+      REMIND_FIP_TO_ADD_ECTS_AND_MENTORS_EMAIL_TEMPLATE,
+      to: induction_coordinator.user.email,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        school_name: school_name,
+        sign_in: new_user_session_url(**campaign_tracking),
+      },
+    ).tag(:reminder_request_to_add_ects_and_mentors).associate_with(induction_coordinator, as: :induction_coordinator_profile)
+  end
+
   def year2020_add_participants_confirmation(recipient:, school_name:, teacher_name_list:)
     template_mail(
       ADD_2020_PARTICIPANT_CONFIRMATION_TEMPLATE,
@@ -316,6 +335,19 @@ class SchoolMailer < ApplicationMailer
         start_url: start_url,
       },
     ).tag(:year2020_invite).associate_with(school, as: :school)
+  end
+
+  def unpartnered_cip_sit_add_participants_email(recipient:, induction_coordinator:, sign_in_url:, school_name:)
+    template_mail(
+      UNPARTNERED_CIP_SIT_ADD_PARTICIPANTS_EMAIL_TEMPLATE,
+      to: recipient,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        sign_in: sign_in_url,
+        school_name: school_name,
+      },
+    ).tag(:unpartnered_cip_add_participants).associate_with(induction_coordinator, as: :induction_coordinator)
   end
 
   def diy_wordpress_notification(user:)

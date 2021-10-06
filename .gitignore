@@ -51,3 +51,5 @@ tokens
 /spec/cypress/videos
 /spec/cypress/screenshots
 /spec/examples.txt
+
+/public/api-reference

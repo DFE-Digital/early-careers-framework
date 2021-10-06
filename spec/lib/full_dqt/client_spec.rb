@@ -26,6 +26,7 @@ RSpec.describe FullDqt::Client do
         "state_name": "Active",
       },
       "induction": {
+        "start_date": "2021-07-01T00:00:00Z",
         "completion_date": "2021-07-05T00:00:00Z",
         "status": "Pass",
         "state": 0,
@@ -137,6 +138,7 @@ RSpec.describe FullDqt::Client do
 
       expect(record["dob"]).to be_a(Date)
       expect(record["qualified_teacher_status"]["qts_date"]).to be_a(Date)
+      expect(record["induction"]["start_date"]).to be_a(Date)
       expect(record["induction"]["completion_date"]).to be_a(Date)
       expect(record["initial_teacher_training"]["programme_start_date"]).to be_a(Date)
       expect(record["initial_teacher_training"]["programme_end_date"]).to be_a(Date)
