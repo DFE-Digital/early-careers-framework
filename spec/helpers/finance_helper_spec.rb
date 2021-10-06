@@ -19,7 +19,7 @@ describe FinanceHelper do
     end
 
     it "returns the total VAT for the breakddown" do
-      expect(helper.total_vat(breakdown).to_i).to eq(4_457)
+      expect(helper.total_vat(breakdown, lead_provider).to_i).to eq(4_457)
     end
   end
 end
