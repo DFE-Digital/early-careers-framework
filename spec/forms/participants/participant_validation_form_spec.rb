@@ -78,81 +78,6 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
     end
   end
 
-  describe "name_change_choice validations" do
-    context "when a valid choice is made" do
-      it "returns true" do
-        form.have_you_changed_your_name_choice = form.name_change_choices.map(&:id).sample
-        expect(form.valid?(:have_you_changed_your_name)).to be true
-        expect(form.errors).to be_empty
-      end
-    end
-
-    context "when no choice has been made" do
-      it "returns false" do
-        expect(form.valid?(:have_you_changed_your_name)).to be false
-        expect(form.errors).to include :have_you_changed_your_name_choice
-      end
-    end
-
-    context "when an invalid choice has been made" do
-      it "returns false" do
-        form.have_you_changed_your_name_choice = :pineapple
-        expect(form.valid?(:have_you_changed_your_name)).to be false
-        expect(form.errors).to include :have_you_changed_your_name_choice
-      end
-    end
-  end
-
-  describe "confirm_updated_record validations" do
-    context "when a valid choice is made" do
-      it "returns true" do
-        form.updated_record_choice = form.updated_record_choices.map(&:id).sample
-        expect(form.valid?(:confirm_updated_record)).to be true
-        expect(form.errors).to be_empty
-      end
-    end
-
-    context "when no choice has been made" do
-      it "returns false" do
-        expect(form.valid?(:confirm_updated_record)).to be false
-        expect(form.errors).to include :updated_record_choice
-      end
-    end
-
-    context "when an invalid choice has been made" do
-      it "returns false" do
-        form.updated_record_choice = :grape
-        expect(form.valid?(:confirm_updated_record)).to be false
-        expect(form.errors).to include :updated_record_choice
-      end
-    end
-  end
-
-  describe "name_not_updated validations" do
-    context "when a valid choice is made" do
-      it "returns true" do
-        form.name_not_updated_choice = form.name_not_updated_choices.map(&:id).sample
-        expect(form.valid?(:name_not_updated)).to be true
-        expect(form.errors).to be_empty
-      end
-    end
-
-    context "when no choice has been made" do
-      it "returns false" do
-        expect(form.valid?(:name_not_updated)).to be false
-        expect(form.errors).to include :name_not_updated_choice
-      end
-    end
-
-    context "when an invalid choice has been made" do
-      it "returns false" do
-        form.name_not_updated_choice = :grape
-        expect(form.valid?(:name_not_updated)).to be false
-        expect(form.errors).to include :name_not_updated_choice
-      end
-    end
-  end
-
   describe "teacher_details validations" do
     let(:teacher_details) { { trn: "1234567", name: "Wilma Flintstone", date_of_birth: { 3 => 17, 2 => 4, 1 => 1996 }, national_insurance_number: "AB123456C" } }
     subject(:form) { described_class.new(teacher_details) }
@@ -208,9 +133,6 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
       values = {
         step: :my_step,
         do_you_want_to_add_mentor_information_choice: form.add_mentor_information_choices.map(&:id).sample,
-        have_you_changed_your_name_choice: form.name_change_choices.map(&:id).sample,
-        updated_record_choice: form.updated_record_choices.map(&:id).sample,
-        name_not_updated_choice: form.name_not_updated_choices.map(&:id).sample,
         trn: "1234567",
         name: "Ted Smith",
         date_of_birth: form.date_of_birth,
@@ -234,24 +156,6 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
         expect(attributes[:name]).to eq "Shiela Smith"
         expect(attributes[:national_insurance_number]).to eq "AW234444A"
       end
-    end
-  end
-
-  describe "#name_change_choices" do
-    it "provides options for the name changed choice" do
-      expect(form.name_change_choices.map(&:id)).to match_array %w[yes no]
-    end
-  end
-
-  describe "#updated_record_choices" do
-    it "provides options for the name record updated choice" do
-      expect(form.updated_record_choices.map(&:id)).to match_array %w[yes no i_do_not_know]
-    end
-  end
-
-  describe "#name_not_updated_choices" do
-    it "provides options for the name not updated choice" do
-      expect(form.name_not_updated_choices.map(&:id)).to match_array %w[register_previous_name update_name]
     end
   end
 

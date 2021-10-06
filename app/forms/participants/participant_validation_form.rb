@@ -9,9 +9,6 @@ module Participants
     NINO_REGEX = /(^(?!BG)(?!GB)(?!NK)(?!KN)(?!TN)(?!NT)(?!ZZ)[A-Z&&[^DFIQUV]][A-Z&&[^DFIOQUV]][0-9]{6}[A-D]$)/.freeze
     attr_accessor :step,
                   :do_you_want_to_add_mentor_information_choice,
-                  :have_you_changed_your_name_choice,
-                  :updated_record_choice,
-                  :name_not_updated_choice,
                   :trn,
                   :name,
                   :national_insurance_number,
@@ -23,18 +20,12 @@ module Participants
 
     validate :add_mentor_info_choice, on: :do_you_want_to_add_mentor_information
     validate :trn_entry, on: :what_is_your_trn
-    validate :name_change_choice, on: :have_you_changed_your_name
-    validate :confirm_updated_record_choice, on: :confirm_updated_record
-    validate :confirm_name_not_updated_choice, on: :name_not_updated
     validate :teacher_details, on: :tell_us_your_details
 
     def attributes
       {
         step: step,
         do_you_want_to_add_mentor_information_choice: do_you_want_to_add_mentor_information_choice,
-        have_you_changed_your_name_choice: have_you_changed_your_name_choice,
-        updated_record_choice: updated_record_choice,
-        name_not_updated_choice: name_not_updated_choice,
         trn: trn&.squish,
         name: name&.squish,
         date_of_birth: date_of_birth,
@@ -59,28 +50,6 @@ module Participants
       [
         OpenStruct.new(id: "yes", name: "Yes, I want to add information now"),
         OpenStruct.new(id: "no", name: "No, I’ll do it later"),
-      ]
-    end
-
-    def name_change_choices
-      [
-        OpenStruct.new(id: "yes", name: "Yes, I changed my name"),
-        OpenStruct.new(id: "no", name: "No, I have the same name"),
-      ]
-    end
-
-    def updated_record_choices
-      [
-        OpenStruct.new(id: "yes", name: "Yes, my name has been updated"),
-        OpenStruct.new(id: "no", name: "No, I need to update my name"),
-        OpenStruct.new(id: "i_do_not_know", name: "I’m not sure"),
-      ]
-    end
-
-    def name_not_updated_choices
-      [
-        OpenStruct.new(id: "register_previous_name", name: "Register for this programme using your previous name (you can update this later)"),
-        OpenStruct.new(id: "update_name", name: "Update your name with the Teaching Regulation Agency"),
       ]
     end
 
@@ -120,18 +89,6 @@ module Participants
           errors.add(:trn, :too_long, count: 7)
         end
       end
-    end
-
-    def name_change_choice
-      errors.add(:have_you_changed_your_name_choice, :blank) unless name_change_choices.map(&:id).include?(have_you_changed_your_name_choice)
-    end
-
-    def confirm_updated_record_choice
-      errors.add(:updated_record_choice, :blank) unless updated_record_choices.map(&:id).include?(updated_record_choice)
-    end
-
-    def confirm_name_not_updated_choice
-      errors.add(:name_not_updated_choice, :blank) unless name_not_updated_choices.map(&:id).include?(name_not_updated_choice)
     end
 
     def teacher_details

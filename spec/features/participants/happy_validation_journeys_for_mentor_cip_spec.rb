@@ -13,10 +13,6 @@ RSpec.feature "Mentor participant validation journey for CIP induction", type: :
 
     when_i_enter_my_trn
     and_i_click "Continue"
-    then_i_should_see_the_have_you_changed_your_name_page
-
-    when_i_select "No, I have the same name"
-    and_i_click "Continue"
     then_i_should_see_the_tell_us_your_details_page
 
     when_i_enter_my_details

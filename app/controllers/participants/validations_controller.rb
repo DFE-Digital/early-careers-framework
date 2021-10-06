@@ -6,9 +6,6 @@ module Participants
     before_action :check_not_already_completed, except: :complete
     before_action :validate_request_or_render, only: %i[do_you_want_to_add_mentor_information
                                                         what_is_your_trn
-                                                        have_you_changed_your_name
-                                                        confirm_updated_record
-                                                        name_not_updated
                                                         tell_us_your_details
                                                         cannot_find_details]
 
@@ -36,45 +33,11 @@ module Participants
       if change?
         validate_participant_details_and_redirect
       else
-        store_form_and_redirect_to_step :have_you_changed_your_name
+        store_form_and_redirect_to_step :tell_us_your_details
       end
     end
 
     def get_a_trn; end
-
-    def have_you_changed_your_name
-      choice = @participant_validation_form.have_you_changed_your_name_choice
-      if choice == "yes"
-        store_form_and_redirect_to_step :confirm_updated_record
-      else
-        store_form_and_redirect_to_step :tell_us_your_details
-      end
-    end
-
-    def confirm_updated_record
-      choice = @participant_validation_form.updated_record_choice
-      case choice
-      when "yes"
-        store_form_and_redirect_to_step :tell_us_your_details
-      when "no"
-        store_form_and_redirect_to_step :name_not_updated
-      else
-        store_form_and_redirect_to_step :check_with_tra
-      end
-    end
-
-    def name_not_updated
-      choice = @participant_validation_form.name_not_updated_choice
-      if choice == "register_previous_name"
-        store_form_and_redirect_to_step :tell_us_your_details
-      else
-        store_form_and_redirect_to_step :change_your_details_with_tra
-      end
-    end
-
-    def change_your_details_with_tra; end
-
-    def check_with_tra; end
 
     def tell_us_your_details
       validate_participant_details_and_redirect
@@ -215,9 +178,6 @@ module Participants
     def form_params
       params.fetch(:participants_participant_validation_form, {}).permit(
         :do_you_want_to_add_mentor_information_choice,
-        :have_you_changed_your_name_choice,
-        :updated_record_choice,
-        :name_not_updated_choice,
         :trn,
         :name,
         :date_of_birth,
