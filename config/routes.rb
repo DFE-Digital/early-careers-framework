@@ -300,15 +300,6 @@ Rails.application.routes.draw do
     resources :dashboard, controller: :dashboard, only: %i[index show], path: "/", param: :school_id
 
     scope "/:school_id" do
-      resource :choose_programme, controller: :choose_programme, only: %i[show create], path: "choose-programme" do
-        get :confirm_programme, path: "confirm-programme"
-        get :choice_saved_design_our_own, path: "design-your-programme"
-        get :choice_saved_school_funded_fip, path: "school-funded-fip"
-        get :choice_saved_no_early_career_teachers, path: "no-early-career-teachers"
-        post :save_programme, path: "save-programme"
-        get :success
-      end
-
       resource :year_2020, path: "year-2020", controller: "year2020", only: [], constraints: ->(_request) { FeatureFlag.active?(:year_2020_data_entry) } do
         get "support-materials-for-NQTs", action: :start, as: :start
 
@@ -330,6 +321,10 @@ Rails.application.routes.draw do
 
       resources :cohorts, only: :show, param: :cohort_id do
         member do
+          get "programme-choice", as: :programme_choice
+          get "add-participants", as: :add_participants
+          get "roles", as: :roles
+
           resources :partnerships, only: :index
           resource :programme, only: %i[edit], controller: "choose_programme"
 
@@ -355,9 +350,14 @@ Rails.application.routes.draw do
             end
           end
 
-          get "programme-choice", as: :programme_choice
-          get "add-participants", as: :add_participants
-          get "roles", as: :roles
+          resource :choose_programme, controller: :choose_programme, only: %i[show create], path: "choose-programme" do
+            get :confirm_programme, path: "confirm-programme"
+            get :choice_saved_design_our_own, path: "design-your-programme"
+            get :choice_saved_school_funded_fip, path: "school-funded-fip"
+            get :choice_saved_no_early_career_teachers, path: "no-early-career-teachers"
+            post :save_programme, path: "save-programme"
+            get :success
+          end
         end
       end
     end
