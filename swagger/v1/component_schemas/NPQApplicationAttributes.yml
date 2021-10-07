@@ -1,7 +1,6 @@
 description: "The data attributes associated with an NPQ application"
 type: object
 required:
-  - id
   - participant_id
   - full_name
   - email
@@ -54,7 +53,7 @@ properties:
     type: string
     example: "no"
     enum:
-      - no
+      - "no"
       - yes_when_course_starts
       - yes_in_first_two_years
       - yes_over_two_years
