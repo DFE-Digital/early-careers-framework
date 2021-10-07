@@ -2,6 +2,6 @@
 
 class AddTrainingStatusToParticipantProfile < ActiveRecord::Migration[6.1]
   def change
-    add_column :participant_profiles, :training_status, :string
+    add_column :participant_profiles, :training_status, :string, default: "active", null: false
   end
 end

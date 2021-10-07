@@ -15,6 +15,7 @@ module Participants
 
       def perform_action!
         ParticipantProfileState.create!(participant_profile: user_profile, state: "withdrawn", reason: reason)
+        user_profile.update!(training_status: "withdrawn")
         user_profile
       end
     end

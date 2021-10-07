@@ -5,6 +5,7 @@ module Participants
     module ValidateAndChangeState
       def perform_action!
         ParticipantProfileState.create!(participant_profile: user_profile, state: "active")
+        user_profile.update!(training_status: "active")
         user_profile
       end
     end

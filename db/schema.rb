@@ -522,7 +522,7 @@ ActiveRecord::Schema.define(version: 2021_10_07_131604) do
     t.text "school_urn"
     t.text "school_ukprn"
     t.datetime "request_for_details_sent_at"
-    t.string "training_status"
+    t.string "training_status", default: "active", null: false
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"

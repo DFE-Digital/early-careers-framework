@@ -15,6 +15,7 @@ module Participants
 
       def perform_action!
         ParticipantProfileState.create!(participant_profile: user_profile, state: "deferred", reason: reason)
+        user_profile.update!(training_status: "deferred")
         user_profile
       end
     end
