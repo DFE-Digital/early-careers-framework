@@ -232,10 +232,6 @@ module ManageTrainingSteps
     expect(page).to have_text("You've chosen to: deliver your own programme using the DfE-accredited materials")
   end
 
-  def then_i_am_taken_to_design_our_own_course_programme_choice_info_page
-    expect(page).to have_text("You've chosen to: design and deliver your own programme based on the Early Career Framework")
-  end
-
   def then_i_am_taken_to_the_no_ect_training_info_page
     expect(page).to have_text("You're not expecting any early career teachers this year")
   end

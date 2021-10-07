@@ -322,6 +322,7 @@ Rails.application.routes.draw do
       resources :cohorts, only: :show, param: :cohort_id do
         member do
           get "programme-choice", as: :programme_choice
+          get "change-programme", as: :change_programme
           get "add-participants", as: :add_participants
           get "roles", as: :roles
 

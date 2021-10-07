@@ -190,7 +190,7 @@ RSpec.describe "Users::Sessions", type: :request do
     context "when user is an induction coordinator" do
       let(:user) { create(:user, :induction_coordinator) }
       let(:school) { user.schools.first }
-      let!(:cohort) { create :cohort, :current}
+      let!(:cohort) { create :cohort, :current }
 
       it "redirects to correct dashboard" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }
