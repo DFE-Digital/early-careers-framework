@@ -11,6 +11,7 @@ RSpec.shared_examples "a participant resume action service" do
   it "fails when the participant is already active" do
     ParticipantProfileState.create!(participant_profile: user_profile, state: "active")
     expect { described_class.call(params: given_params) }.to raise_error(ActiveRecord::RecordInvalid)
+    expect(user_profile.training_status_active?)
   end
 
   it "fails when the participant is already withdrawn" do

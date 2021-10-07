@@ -23,6 +23,12 @@ class ParticipantProfile < ApplicationRecord
     withdrawn: "withdrawn",
   }, _suffix: :record
 
+  enum training_status: {
+    active: "active",
+    deferred: "deferred",
+    withdrawn: "withdrawn",
+  }, _prefix: "training_status"
+
   scope :mentors, -> { where(type: Mentor.name) }
   scope :ects, -> { where(type: ECT.name) }
   scope :ecf, -> { where(type: [ECT.name, Mentor.name]) }
