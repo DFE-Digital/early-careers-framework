@@ -2,29 +2,16 @@
 
 class DeclarationState < ApplicationRecord
   class << self
-    def submit!(participant_declaration:)
-      create!(participant_declaration: participant_declaration)
-    end
-
-    def eligible!(participant_declaration:)
-      create!(participant_declaration: participant_declaration, state: "eligible")
-    end
-
-    def void!(participant_declaration:)
-      create!(participant_declaration: participant_declaration, state: "voided")
-    end
-
-    def payable!(participant_declaration:)
-      create!(participant_declaration: participant_declaration, state: "payable")
-    end
-
-    def pay!(participant_declaration:)
-      create!(participant_declaration: participant_declaration, state: "paid")
+    %i[submitted eligible voided payable paid].each do |state|
+      method_name = "#{state}!"
+      define_singleton_method(method_name) do |participant_declaration|
+        create!(participant_declaration: participant_declaration, state: state)
+        # participant_declaration.send(method_name)
+      end
     end
   end
 
   belongs_to :participant_declaration
-  scope :changeable, -> { where(state: %w[submitted eligible]) }
 
   enum state: {
     submitted: "submitted",
