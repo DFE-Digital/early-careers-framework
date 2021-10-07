@@ -45,7 +45,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
           npq_application
         end
 
-        schema({ "$ref": "#/components/schemas/MultipleNPQParticipantsResponse" }, content_type: "application/vnd.api+json")
+        schema({ "$ref": "#/components/schemas/MultipleNPQParticipantsResponse" })
 
         run_test!
       end
@@ -53,7 +53,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
       response "401", "Unauthorized" do
         let(:Authorization) { "Bearer invalid" }
 
-        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" }, content_type: "application/vnd.api+json")
+        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
 
         run_test!
       end

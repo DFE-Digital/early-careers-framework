@@ -129,7 +129,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
                 description: "Pagination options to navigate through the list of participant declarations."
 
       response "200", "A list of participant declarations" do
-        schema({ "$ref": "#/components/schemas/MultipleParticipantDeclarationsResponse" }, content_type: "application/vnd.api+json")
+        schema({ "$ref": "#/components/schemas/MultipleParticipantDeclarationsResponse" })
 
         run_test!
       end
@@ -137,7 +137,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
       response "401", "Unauthorized" do
         let(:Authorization) { "Bearer invalid" }
 
-        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" }, content_type: "application/vnd.api+json")
+        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
 
         run_test!
       end
@@ -159,7 +159,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
       response "401", "Unauthorized" do
         let(:Authorization) { "Bearer invalid" }
 
-        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" }, content_type: "application/vnd.api+json")
+        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
 
         run_test!
       end
@@ -187,7 +187,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
                 description: "The ID of the participant declaration ID"
 
       response "200", "A single participant declaration" do
-        schema({ "$ref": "#/components/schemas/SingleParticipantDeclarationResponse" }, content_type: "application/vnd.api+json")
+        schema({ "$ref": "#/components/schemas/SingleParticipantDeclarationResponse" })
 
         run_test!
       end
@@ -201,7 +201,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
       response "401", "Unauthorized" do
         let(:Authorization) { "Bearer invalid" }
 
-        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" }, content_type: "application/vnd.api+json")
+        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
 
         run_test!
       end
