@@ -14,8 +14,10 @@ module Participants
       end
 
       def perform_action!
-        ParticipantProfileState.create!(participant_profile: user_profile, state: "deferred", reason: reason)
-        user_profile.update!(training_status: "deferred")
+        ActiveRecord::Base.transaction do
+          ParticipantProfileState.create!(participant_profile: user_profile, state: "deferred", reason: reason)
+          user_profile.update!(training_status: "deferred")
+        end
         user_profile
       end
     end

@@ -4,8 +4,10 @@ module Participants
   module Resume
     module ValidateAndChangeState
       def perform_action!
-        ParticipantProfileState.create!(participant_profile: user_profile, state: "active")
-        user_profile.update!(training_status: "active")
+        ActiveRecord::Base.transaction do
+          ParticipantProfileState.create!(participant_profile: user_profile, state: "active")
+          user_profile.update!(training_status: "active")
+        end
         user_profile
       end
     end

@@ -14,8 +14,10 @@ module Participants
       end
 
       def perform_action!
-        ParticipantProfileState.create!(participant_profile: user_profile, state: "withdrawn", reason: reason)
-        user_profile.update!(training_status: "withdrawn")
+        ActiveRecord::Base.transaction do
+          ParticipantProfileState.create!(participant_profile: user_profile, state: "withdrawn", reason: reason)
+          user_profile.update!(training_status: "withdrawn")
+        end
         user_profile
       end
     end
