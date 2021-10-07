@@ -37,6 +37,7 @@ private
   def previous_induction?(validation_data)
     return false if validation_data["induction"].nil?
     return true if validation_data["induction"]["completion_date"].present?
+    return false if validation_data["induction"]["start_date"].nil?
 
     validation_data["induction"]["start_date"] < Date.new(Cohort.current.start_year, 9, 1)
   end

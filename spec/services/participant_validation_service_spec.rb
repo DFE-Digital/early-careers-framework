@@ -209,6 +209,22 @@ RSpec.describe ParticipantValidationService do
         end
       end
 
+      context "when the participant has an induction with nil start_date" do
+        let(:induction) do
+          {
+            "start_date" => nil,
+          }
+        end
+
+        it "does not raise an error" do
+          expect { validation_result }.not_to raise_error
+        end
+
+        it "returns previous_induction as false" do
+          expect(validation_result[:previous_induction]).to be_falsey
+        end
+      end
+
       context "when the participant has previously had an induction and participation" do
         let!(:eligibility) { create(:ineligible_participant, trn: trn, reason: :previous_participation) }
         let(:induction) do
