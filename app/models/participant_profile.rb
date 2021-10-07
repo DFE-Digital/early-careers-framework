@@ -14,6 +14,10 @@ class ParticipantProfile < ApplicationRecord
   has_many :participant_declarations, through: :profile_declarations
 
   has_many :participant_profile_states
+
+  # TODO: Store this on the model to avoid n+1 queries, or spend some time digging into sql / ActiveRecord
+  # Any ordering tools seem to not work when preloading ecf_participants_endpoint_scope
+  # https://github.com/rails/rails/issues/6769 seems to document it
   has_one :participant_profile_state, lambda {
     merge(ParticipantProfileState.most_recent)
   }, class_name: "ParticipantProfileState"

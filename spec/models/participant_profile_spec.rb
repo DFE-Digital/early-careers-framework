@@ -51,4 +51,21 @@ RSpec.describe ParticipantProfile, type: :model do
     it { is_expected.to belong_to(:school).optional }
     it { is_expected.to be_versioned }
   end
+
+  it "correctly shows the profile state when there are two deferred participants" do
+    create(:schedule, name: "ECF September standard 2021")
+
+    profile_one = EarlyCareerTeachers::Create.new(full_name: "Bob", email: "bob@example.com", school_cohort: create(:school_cohort)).call
+    profile_two = EarlyCareerTeachers::Create.new(full_name: "Ted", email: "ted@example.com", school_cohort: create(:school_cohort)).call
+
+    ParticipantProfileState.create!(participant_profile: profile_one, state: "deferred")
+    ParticipantProfileState.create!(participant_profile: profile_two, state: "deferred")
+
+    profile_one.reload
+    profile_two.reload
+
+    User.all.ecf_participants_endpoint_scope.each do |user|
+      expect(user.teacher_profile.ecf_profile&.state).to eq("deferred")
+    end
+  end
 end

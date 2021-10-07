@@ -34,15 +34,7 @@ module Api
       end
 
       def participants
-        participants = lead_provider.ecf_participants
-                                    .distinct
-                                    .includes(
-                                      teacher_profile: {
-                                        ecf_profile: %i[cohort school ecf_participant_eligibility ecf_participant_validation_data participant_profile_state participant_profile_states schedule],
-                                        early_career_teacher_profile: :mentor,
-                                      },
-                                    )
-                                    .where(school_cohorts: { cohort_id: Cohort.current.id })
+        participants = lead_provider.ecf_participants.ecf_participants_endpoint_scope
 
         participants = participants.changed_since(updated_since) if updated_since.present?
 

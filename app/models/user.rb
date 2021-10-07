@@ -126,6 +126,16 @@ class User < ApplicationRecord
     joins(:participant_profiles).merge(ParticipantProfile.active_record)
   }
 
+  scope :ecf_participants_endpoint_scope,
+        lambda {
+          distinct.includes(
+            teacher_profile: {
+              ecf_profile: %i[cohort school ecf_participant_eligibility ecf_participant_validation_data participant_profile_states schedule],
+              early_career_teacher_profile: :mentor,
+            },
+          ).where(school_cohorts: { cohort_id: Cohort.current.id })
+        }
+
 private
 
   def strip_whitespace
