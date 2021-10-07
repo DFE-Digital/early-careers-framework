@@ -5,13 +5,13 @@ RSpec.shared_examples "a participant resume action service" do
 
   it "creates an active state and makes the profile active" do
     expect { described_class.call(params: given_params) }.to change { ParticipantProfileState.count }.by(1)
-    expect(user_profile.participant_profile_state.active?)
+    expect(user_profile.participant_profile_state).to be_active
+    expect(user_profile).to be_training_status_active
   end
 
   it "fails when the participant is already active" do
     ParticipantProfileState.create!(participant_profile: user_profile, state: "active")
     expect { described_class.call(params: given_params) }.to raise_error(ActiveRecord::RecordInvalid)
-    expect(user_profile.training_status_active?)
   end
 
   it "fails when the participant is already withdrawn" do
