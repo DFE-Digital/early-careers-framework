@@ -4,11 +4,18 @@ class ParticipantDeclaration < ApplicationRecord
   has_one :profile_declaration
   has_one :participant_profile, through: :profile_declaration
   has_many :declaration_states
-  has_one :current_state, -> { order(created_at: :desc).limit(1) }, class_name: "DeclarationState"
   belongs_to :cpd_lead_provider
   belongs_to :user
 
-  delegate :submitted?, :eligible?,:payable?, :voided?, :paid?, to: :current_state, allow_nil: false
+  enum state: {
+    submitted: "submitted",
+    eligible: "eligible",
+    payable: "payable",
+    paid: "paid",
+    voided: "voided",
+  }
+
+  alias_attribute :current_state, :state
   delegate :fundable?, to: :participant_profile, allow_nil: true
 
   validates :course_identifier, :user, :cpd_lead_provider, :declaration_date, :declaration_type, presence: true
@@ -23,12 +30,8 @@ class ParticipantDeclaration < ApplicationRecord
   scope :mentor, -> { joins(:profile_declaration).merge(ProfileDeclaration.mentor_profiles) }
   scope :npq, -> { joins(:profile_declaration).merge(ProfileDeclaration.npq_profiles) }
 
-  scope :submitted, -> { joins(:current_state).merge(DeclarationState.submitted) }
-  scope :eligible, -> { joins(:current_state).merge(DeclarationState.eligible) }
-  scope :payable, -> { joins(:current_state).where(DeclarationState.payable) }
-  scope :paid, -> { joins(:current_state).where(DeclarationState.paid) }
-  scope :voided, -> { joins(:current_state).where(DeclarationState.voided) }
-  scope :changeable, -> { joins(:current_state).where(DeclarationState.changable) }
+  scope :current_state, -> { joins(:declaration_states).merge(DeclarationState.current_state) }
+  scope :changeable, -> { where(state: %w[eligible submitted]) }
   scope :unique_id, -> { select(:user_id).distinct }
 
   # Time dependent Range scopes
@@ -36,7 +39,7 @@ class ParticipantDeclaration < ApplicationRecord
   scope :submitted_between, ->(start_date, end_date) { where(created_at: start_date..end_date) }
 
   # Declaration aggregation scopes
-  scope :eligible_for_lead_provider, ->(lead_provider) { for_lead_provider(lead_provider).unique_id.eligible }
+  scope :eligible_for_lead_provider, ->(lead_provider) { for_lead_provider(lead_provider).unique_id.current_state.eligible }
   scope :eligible_ects_for_lead_provider, ->(lead_provider) { eligible_for_lead_provider(lead_provider).ect }
   scope :eligible_mentors_for_lead_provider, ->(lead_provider) { eligible_for_lead_provider(lead_provider).mentor }
   scope :eligible_npqs_for_lead_provider, ->(lead_provider) { eligible_for_lead_provider(lead_provider).npq }
@@ -50,7 +53,7 @@ class ParticipantDeclaration < ApplicationRecord
 
   def refresh_payability!
     new_state = fundable? ? "eligible" : "submitted"
-    return if current_state.state == new_state
+    return if state == new_state
 
     DeclarationState.create!(participant_declaration: self, state: new_state) and reload if changeable?
   end
