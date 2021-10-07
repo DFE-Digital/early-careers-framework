@@ -27,4 +27,8 @@ class ParticipantProfileState < ApplicationRecord
   }
 
   scope :most_recent, -> { order("created_at desc").limit(1) }
+
+  after_create do |profile_state|
+    participant_profile.training_status = profile_state.state
+  end
 end
