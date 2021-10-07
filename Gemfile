@@ -79,7 +79,7 @@ gem "delayed_job_active_record"
 # Strong migration checker for database migrations
 gem "strong_migrations"
 
-# Acts as State Machine for participant states
+# Acts as State Machine for participant and declaration states
 gem "aasm"
 
 # Pagination for API

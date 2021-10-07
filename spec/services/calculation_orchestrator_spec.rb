@@ -138,8 +138,8 @@ RSpec.describe CalculationOrchestrator do
       let(:with_uplift) { :sparsity_uplift }
 
       before do
-        create_list(:ect_participant_declaration, 5, with_uplift, state: "payable", cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
-        create_list(:mentor_participant_declaration, 5, with_uplift, state: "payable", cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+        create_list(:ect_participant_declaration, 5, with_uplift, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+        create_list(:mentor_participant_declaration, 5, with_uplift, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
       end
 
       context "when only sparsity_uplift flag was set" do
@@ -174,8 +174,8 @@ RSpec.describe CalculationOrchestrator do
 
     context "when no uplift flags were set" do
       before do
-        create_list(:ect_participant_declaration, 5, state: "payable", cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
-        create_list(:mentor_participant_declaration, 5, state: "payable", cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+        create_list(:ect_participant_declaration, 5, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+        create_list(:mentor_participant_declaration, 5, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
         normal_outcome[:other_fees][:uplift].tap do |hash|
           hash[:participants] = 0
           hash[:subtotal] = 0
@@ -186,7 +186,7 @@ RSpec.describe CalculationOrchestrator do
         expect(run_calculation).to eq(normal_outcome)
       end
 
-      it "ignores non-payable declarations" do
+      it "ignores non-eligible declarations" do
         create_list(:ect_participant_declaration, 5, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
         expect(run_calculation).to eq(normal_outcome)
       end
@@ -194,7 +194,7 @@ RSpec.describe CalculationOrchestrator do
 
     context "when only mentor profile declaration records available" do
       before do
-        create_list(:mentor_participant_declaration, 10, :sparsity_uplift, state: "payable", cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+        create_list(:mentor_participant_declaration, 10, :sparsity_uplift, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
       end
 
       it "returns the total calculation" do
@@ -204,7 +204,7 @@ RSpec.describe CalculationOrchestrator do
 
     context "when only ect profile declaration records available" do
       before do
-        create_list(:ect_participant_declaration, 10, :sparsity_uplift, state: "payable", cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+        create_list(:ect_participant_declaration, 10, :sparsity_uplift, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
       end
 
       it "returns the total calculation" do
@@ -214,8 +214,8 @@ RSpec.describe CalculationOrchestrator do
 
     context "when both mentor profile and ect profile declaration records available" do
       before do
-        create_list(:ect_participant_declaration, 5, :sparsity_uplift, state: "payable", cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
-        create_list(:mentor_participant_declaration, 5, :sparsity_uplift, state: "payable", cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+        create_list(:ect_participant_declaration, 5, :sparsity_uplift, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+        create_list(:mentor_participant_declaration, 5, :sparsity_uplift, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
       end
 
       it "returns the total calculation" do

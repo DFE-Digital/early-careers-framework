@@ -51,6 +51,12 @@ FactoryBot.define do
       end
     end
 
+    trait :eligible do
+      transient do
+        state { "eligible" }
+      end
+    end
+
     trait :payable do
       transient do
         state { "payable" }

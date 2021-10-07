@@ -49,12 +49,12 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         expect(parsed_response["data"]["id"]).to eq(ParticipantDeclaration.order(:created_at).last.id)
       end
 
-      it "create payable declaration record when user is eligible" do
+      it "create eligible declaration record when user is eligible" do
         params = build_params(valid_params)
         eligibility = ECFParticipantEligibility.create!(participant_profile_id: ect_profile.id)
         eligibility.eligible_status!
         post "/api/v1/participant-declarations", params: params
-        expect(ParticipantDeclaration.order(:created_at).last.payable?).to be_truthy
+        expect(ParticipantDeclaration.order(:created_at).last.eligible?).to be_truthy
       end
 
       it "does not create duplicate declarations with the same declaration date, but stores the duplicate declaration attempts" do
@@ -263,7 +263,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         end
 
         let(:expected_response) do
-          expected_json_response(declaration: participant_declaration, profile: ect_profile, state: "payable")
+          expected_json_response(declaration: participant_declaration, profile: ect_profile, state: "eligible")
         end
 
         before do
@@ -393,7 +393,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       expect(participant_declaration_one_row["course_identifier"]).to eql participant_declaration_one.course_identifier
       expect(participant_declaration_one_row["declaration_date"]).to eql participant_declaration_one.declaration_date.rfc3339
       expect(participant_declaration_one_row["declaration_type"]).to eql participant_declaration_one.declaration_type
-      expect(participant_declaration_one_row["eligible_for_payment"]).to eql participant_declaration_one.payable?.to_s
+      expect(participant_declaration_one_row["eligible_for_payment"]).to eql (participant_declaration_one.eligible? || participant_declaration_one.payable?).to_s
       expect(participant_declaration_one_row["voided"]).to eql participant_declaration_one.voided?.to_s
       expect(participant_declaration_one_row["state"]).to eql participant_declaration_one.current_state.state.to_s
       expect(participant_declaration_one_row["participant_id"]).to eql participant_declaration_one.participant_profile.user.id
@@ -433,7 +433,7 @@ private
         "declaration_date" => declaration.declaration_date.rfc3339,
         "course_identifier" => course_identifier,
         "state" => state,
-        "eligible_for_payment" => state == "payable",
+        "eligible_for_payment" => state == "eligible",
         "voided" => state == "voided",
       },
     }
