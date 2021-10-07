@@ -501,9 +501,9 @@ ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) 
 end
 
 LeadProvider.all.map(&:name).each do |provider|
-  ValidTestDataGenerator::LeadProviderPopulater.delay.call(name: provider, total_schools: 1, participants_per_school: 10)
+  ValidTestDataGenerator::LeadProviderPopulater.call(name: provider, total_schools: 1, participants_per_school: 10)
 end
 
 NPQLeadProvider.all.map(&:name).each do |provider|
-  ValidTestDataGenerator::NPQLeadProviderPopulater.delay.call(name: provider, total_schools: 1, participants_per_school: 10)
+  ValidTestDataGenerator::NPQLeadProviderPopulater.call(name: provider, total_schools: 1, participants_per_school: 10)
 end
