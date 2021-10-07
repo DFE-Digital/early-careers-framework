@@ -2,12 +2,24 @@
 
 class DeclarationState < ApplicationRecord
   class << self
-    %i[submitted eligible voided payable paid].each do |state|
-      method_name = "#{state}!"
-      define_singleton_method(method_name) do |participant_declaration|
-        create!(participant_declaration: participant_declaration, state: state)
-        # participant_declaration.send(method_name)
-      end
+    def submit!(participant_declaration:)
+      create!(participant_declaration: participant_declaration)
+    end
+
+    def eligible!(participant_declaration:)
+      create!(participant_declaration: participant_declaration, state: "eligible")
+    end
+
+    def void!(participant_declaration:)
+      create!(participant_declaration: participant_declaration, state: "voided")
+    end
+
+    def payable!(participant_declaration:)
+      create!(participant_declaration: participant_declaration, state: "payable")
+    end
+
+    def pay!(participant_declaration:)
+      create!(participant_declaration: participant_declaration, state: "paid")
     end
   end
 
@@ -22,4 +34,6 @@ class DeclarationState < ApplicationRecord
     # clawed_back: "clawed_back"
     voided: "voided",
   }
+
+  scope :current_state, -> { select("id, participant_declaration_id, state, MAX(created_at)")}
 end

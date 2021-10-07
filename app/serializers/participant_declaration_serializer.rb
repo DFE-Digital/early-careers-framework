@@ -25,6 +25,6 @@ class ParticipantDeclarationSerializer
   attribute(:participant_id, &:user_id)
 
   attribute :state do |declaration|
-    declaration.current_state.state
+    declaration.current_state
   end
 end
