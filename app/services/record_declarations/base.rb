@@ -69,7 +69,7 @@ module RecordDeclarations
         self.class.declaration_model.find_or_create_by!(declaration_parameters) do |participant_declaration|
           DeclarationState.create!(
             participant_declaration: participant_declaration,
-            state: user_profile.fundable? ? "payable" : "submitted",
+            state: user_profile.fundable? ? "eligible" : "submitted",
           )
           ProfileDeclaration.create!(
             participant_declaration: participant_declaration,
