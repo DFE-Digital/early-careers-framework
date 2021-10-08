@@ -984,6 +984,69 @@ RSpec.describe InviteSchools do
     end
   end
 
+  describe "#catch_all_invite_sits_for_nqt_plus_one" do
+    it "sends an invite to eligible schools without a 2020 cohort" do
+      school = create(:school)
+      sit = create(:induction_coordinator_profile, schools: [school])
+      create(
+        :school_cohort,
+        school: school,
+        induction_programme_choice: "core_induction_programme",
+      )
+
+      expected_url = "http://www.example.com/schools/#{school.friendly_id}/year-2020/support-materials-for-NQTs?utm_campaign=year2020-nqt-invite-sit-catchall&utm_medium=email&utm_source=year2020-nqt-invite-sit-catchall"
+      InviteSchools.new.catch_all_invite_sits_for_nqt_plus_one
+
+      expect(SchoolMailer).to delay_email_delivery_of(:nqt_plus_one_sit_invite)
+                                .with(hash_including(
+                                        recipient: sit.user.email,
+                                        start_url: expected_url,
+                                      )).once
+    end
+
+    it "doesn't send an invite to ineligible schools" do
+      school = create(:school, :cip_only)
+      create(:induction_coordinator_profile, schools: [school])
+      create(
+        :school_cohort,
+        school: school,
+        induction_programme_choice: "core_induction_programme",
+      )
+
+      InviteSchools.new.catch_all_invite_sits_for_nqt_plus_one
+
+      expect(SchoolMailer).to_not delay_email_delivery_of(:nqt_plus_one_sit_invite)
+    end
+
+    it "doesn't send an invite to schools without a SIT" do
+      school = create(:school)
+      create(
+        :school_cohort,
+        school: school,
+        induction_programme_choice: "core_induction_programme",
+      )
+
+      InviteSchools.new.catch_all_invite_sits_for_nqt_plus_one
+
+      expect(SchoolMailer).to_not delay_email_delivery_of(:nqt_plus_one_sit_invite)
+    end
+
+    it "doesn't send an invite to schools who have a 2020 cohort" do
+      school = create(:school)
+      create(:induction_coordinator_profile, schools: [school])
+      create(
+        :school_cohort,
+        school: school,
+        cohort: create(:cohort, start_year: 2020),
+        induction_programme_choice: "core_induction_programme",
+      )
+
+      InviteSchools.new.catch_all_invite_sits_for_nqt_plus_one
+
+      expect(SchoolMailer).to_not delay_email_delivery_of(:nqt_plus_one_sit_invite)
+    end
+  end
+
 private
 
   def create_signed_in_induction_tutor

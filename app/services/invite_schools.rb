@@ -303,6 +303,25 @@ class InviteSchools
       end
   end
 
+  def catch_all_invite_sits_for_nqt_plus_one
+    School
+      .eligible
+      .joins(:induction_coordinators, :school_cohorts)
+      .where.not(
+        school_cohorts: {
+          cohort: Cohort.find_by_start_year(2020),
+        },
+      ).distinct.find_each do |school|
+        next if Email.associated_with(school).tagged_with(:year2020_invite).any?
+
+        SchoolMailer.nqt_plus_one_sit_invite(
+          school: school,
+          recipient: school.induction_coordinators.first.email,
+          start_url: year2020_start_url(school, utm_source: :year2020_nqt_invite_sit_catchall),
+        ).deliver_later
+      end
+  end
+
   def invite_unpartnered_cip_sits_to_add_ects_and_mentors
     School.unpartnered(Cohort.current.start_year)
       .joins(:school_cohorts, :induction_coordinator_profiles)
