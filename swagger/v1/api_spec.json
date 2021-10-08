@@ -73,7 +73,7 @@
           "200": {
             "description": "A list of NPQ applications",
             "content": {
-              "application/vnd.api+json": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MultipleNPQApplicationsResponse"
                 }
@@ -83,7 +83,7 @@
           "401": {
             "description": "Unauthorized",
             "content": {
-              "application/vnd.api+json": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorisedResponse"
                 }
@@ -137,7 +137,7 @@
           "401": {
             "description": "Unauthorized",
             "content": {
-              "application/vnd.api+json": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorisedResponse"
                 }
@@ -177,7 +177,7 @@
           "200": {
             "description": "The NPQ application being accepted",
             "content": {
-              "application/vnd.api+json": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NPQApplicationResponse"
                 }
@@ -187,7 +187,7 @@
           "401": {
             "description": "Unauthorized",
             "content": {
-              "application/vnd.api+json": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorisedResponse"
                 }
@@ -227,7 +227,7 @@
           "200": {
             "description": "The NPQ application being rejected",
             "content": {
-              "application/vnd.api+json": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NPQApplicationResponse"
                 }
@@ -237,7 +237,7 @@
           "401": {
             "description": "Unauthorized",
             "content": {
-              "application/vnd.api+json": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorisedResponse"
                 }
@@ -296,7 +296,7 @@
           "200": {
             "description": "A list of NPQ participants",
             "content": {
-              "application/vnd.api+json": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MultipleNPQParticipantsResponse"
                 }
@@ -306,7 +306,7 @@
           "401": {
             "description": "Unauthorized",
             "content": {
-              "application/vnd.api+json": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorisedResponse"
                 }
@@ -434,7 +434,7 @@
           "200": {
             "description": "A list of participant declarations",
             "content": {
-              "application/vnd.api+json": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MultipleParticipantDeclarationsResponse"
                 }
@@ -444,7 +444,7 @@
           "401": {
             "description": "Unauthorized",
             "content": {
-              "application/vnd.api+json": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorisedResponse"
                 }
@@ -482,7 +482,7 @@
           "401": {
             "description": "Unauthorized",
             "content": {
-              "application/vnd.api+json": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorisedResponse"
                 }
@@ -522,7 +522,7 @@
           "200": {
             "description": "A single participant declaration",
             "content": {
-              "application/vnd.api+json": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
                 }
@@ -535,7 +535,7 @@
           "401": {
             "description": "Unauthorized",
             "content": {
-              "application/vnd.api+json": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorisedResponse"
                 }
@@ -634,7 +634,7 @@
           "200": {
             "description": "A list of ECF participants",
             "content": {
-              "application/vnd.api+json": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MultipleECFParticipantsResponse"
                 }
@@ -644,7 +644,7 @@
           "401": {
             "description": "Unauthorized",
             "content": {
-              "application/vnd.api+json": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorisedResponse"
                 }
@@ -698,7 +698,7 @@
           "401": {
             "description": "Unauthorized",
             "content": {
-              "application/vnd.api+json": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorisedResponse"
                 }
@@ -1852,9 +1852,9 @@
           "type": {
             "description": "The data type",
             "type": "string",
-            "example": "npq-application",
+            "example": "npq_application",
             "enum": [
-              "npq-application"
+              "npq_application"
             ]
           },
           "attributes": {
@@ -1866,7 +1866,6 @@
         "description": "The data attributes associated with an NPQ application",
         "type": "object",
         "required": [
-          "id",
           "participant_id",
           "full_name",
           "email",
@@ -1929,7 +1928,7 @@
             "type": "string",
             "example": "no",
             "enum": [
-              false,
+              "no",
               "yes_when_course_starts",
               "yes_in_first_two_years",
               "yes_over_two_years"
@@ -2144,19 +2143,12 @@
         "description": "The data attributes associated with an NPQ participants",
         "type": "object",
         "required": [
-          "id",
           "participant_id",
           "full_name",
           "email",
-          "npq_courses",
-          "trn"
+          "npq_courses"
         ],
         "properties": {
-          "id": {
-            "type": "string",
-            "example": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
-            "format": "uuid"
-          },
           "participant_id": {
             "description": "The unique identifier of this NPQ participant",
             "type": "string",
@@ -2173,10 +2165,11 @@
             "type": "string",
             "example": "isabelle.macdonald2@some-school.example.com"
           },
-          "trn": {
+          "teacher_reference_number": {
             "description": "The Teacher Reference Number (TRN) for this NPQ participant",
             "type": "string",
-            "example": "1234567"
+            "example": "1234567",
+            "nullable": true
           },
           "npq_courses": {
             "description": "The type of course the participant is enrolled in",
