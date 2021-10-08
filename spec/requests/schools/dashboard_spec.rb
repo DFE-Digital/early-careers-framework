@@ -25,19 +25,20 @@ RSpec.describe "Schools::Dashboard", type: :request do
   end
 
   describe "GET /schools/:school_id" do
+    let!(:cohort) { create :cohort, :current }
+
     it "should redirect to programme selection if programme not chosen" do
       get "/schools/#{school.slug}"
 
-      expect(response).to redirect_to("/schools/#{school.slug}/choose-programme")
+      expect(response).to redirect_to("/schools/#{school.slug}/cohorts/#{cohort.start_year}/choose-programme")
     end
 
     context "when the programme has been chosen" do
       before do
-        cohort = create(:cohort, start_year: "2021")
         create(:school_cohort, cohort: cohort, school: user.induction_coordinator_profile.schools[0])
       end
 
-      it "should render the dashboard when programme chosen" do
+      it "should render the dashboard" do
         get "/schools/#{school.slug}"
 
         expect(response).to render_template("schools/dashboard/show")

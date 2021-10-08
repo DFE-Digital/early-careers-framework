@@ -1,4 +1,4 @@
-Feature: Induction tutors choosing programmes
+Feature: Induction tutors choosing programmes - CIP only
 
   Background:
     Given scenario "cip_only_school" has been run

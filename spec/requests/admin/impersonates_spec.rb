@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe "Admin::Participants", type: :request do
   let(:admin_user) { create(:user, :admin) }
   let(:other_admin_user) { create(:user, :admin) }
-  let(:cohort) { create(:cohort) }
+  let!(:cohort) { create(:cohort, :current) }
   let!(:user) { create(:user, :induction_coordinator) }
 
   before do
@@ -20,7 +20,7 @@ RSpec.describe "Admin::Participants", type: :request do
 
     it "redirects to impersonated user start page" do
       when_i_impersonate(user)
-      expect(response).to redirect_to(schools_choose_programme_path(user.school))
+      expect(response).to redirect_to(schools_choose_programme_path(user.school, cohort.start_year))
     end
 
     it "errors if you impersonate yourself" do
