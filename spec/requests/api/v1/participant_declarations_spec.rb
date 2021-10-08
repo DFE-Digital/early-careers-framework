@@ -244,7 +244,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         end
 
         before do
-          participant_declaration.void!
+          participant_declaration.voided!
         end
 
         it "loads list of declarations" do
@@ -395,7 +395,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       expect(participant_declaration_one_row["declaration_type"]).to eql participant_declaration_one.declaration_type
       expect(participant_declaration_one_row["eligible_for_payment"]).to eql (participant_declaration_one.eligible? || participant_declaration_one.payable?).to_s
       expect(participant_declaration_one_row["voided"]).to eql participant_declaration_one.voided?.to_s
-      expect(participant_declaration_one_row["state"]).to eql participant_declaration_one.current_state.state.to_s
+      expect(participant_declaration_one_row["state"]).to eql participant_declaration_one.state.to_s
       expect(participant_declaration_one_row["participant_id"]).to eql participant_declaration_one.participant_profile.user.id
     end
 

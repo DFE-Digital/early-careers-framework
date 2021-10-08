@@ -6,6 +6,7 @@ FactoryBot.define do
     cpd_lead_provider
     declaration_date { Time.zone.now - 1.week }
     declaration_type { "started" }
+    state { "submitted" }
 
     factory :ect_participant_declaration do
       user { create(:user, :early_career_teacher) }
@@ -46,33 +47,24 @@ FactoryBot.define do
     end
 
     trait :submitted do
-      transient do
-        state { "submitted" }
-      end
+      state { "submitted" }
     end
 
     trait :eligible do
-      transient do
-        state { "eligible" }
-      end
+      state { "eligible" }
     end
 
     trait :payable do
-      transient do
-        state { "payable" }
-      end
+      state { "payable" }
     end
 
     trait :voided do
-      transient do
-        state { "voided" }
-      end
+      state { "voided" }
     end
 
     transient do
       uplift { [] }
       profile_type { :ect }
-      state { "submitted" }
     end
 
     trait :with_profile_type do
@@ -87,9 +79,9 @@ FactoryBot.define do
       end
     end
 
-    after(:create) do |participant_declaration, evaluator|
+    after(:create) do |participant_declaration, _|
       create(:declaration_state,
-             evaluator.state,
+             participant_declaration.state,
              participant_declaration: participant_declaration)
     end
   end

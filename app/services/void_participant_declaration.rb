@@ -11,7 +11,7 @@ class VoidParticipantDeclaration
     latest_declaration = declaration.participant_profile.participant_declarations.order(declaration_date: :desc).first
     raise Api::Errors::InvalidTransitionError, "Can only void last declaration" if latest_declaration != declaration
 
-    declaration.void!
+    declaration.voided!
     ParticipantDeclarationSerializer.new(declaration).serializable_hash.to_json
   end
 
