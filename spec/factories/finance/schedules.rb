@@ -23,5 +23,11 @@ FactoryBot.define do
         ).update!(declaration_type: hash[:declaration_type])
       end
     end
+
+    trait :npq_specialist do
+      name { "NPQ Specialist November 2021" }
+      type { "Finance::Schedule::NPQSpecialist" }
+      schedule_identifier { "npq-specialist-november-2021" }
+    end
   end
 end

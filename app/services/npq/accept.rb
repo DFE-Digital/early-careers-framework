@@ -56,9 +56,9 @@ module NPQ
     def schedule
       case npq_application.npq_course.identifier
       when "npq-leading-teaching", "npq-leading-behaviour-culture", "npq-leading-teaching-development"
-        Finance::Schedule.default_npq_leadership
+        Finance::Schedule::NPQLeadership.default
       when "npq-senior-leadership", "npq-headship", "npq-executive-leadership"
-        Finance::Schedule.default_npq_specialist
+        Finance::Schedule::NPQSpecialist.default
       else
         raise ArgumentError "Invalid course identifier"
       end

@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe NPQ::Accept do
   before do
-    Finance::Schedule.find_or_create_by(name: "NPQ Specialist November 2021")
+    create(:schedule, :npq_specialist)
   end
 
   subject do
@@ -97,7 +97,7 @@ RSpec.describe NPQ::Accept do
 
         profile = user.teacher_profile.npq_profiles&.first
 
-        expect(profile.schedule).to eql(Finance::Schedule.default_npq_specialist)
+        expect(profile.schedule).to eql(Finance::Schedule::NPQSpecialist.default)
         expect(profile.npq_course).to eql(npq_validation_data.npq_course)
         expect(profile.teacher_profile).to eql(user.teacher_profile)
         expect(profile.user).to eql(user)
