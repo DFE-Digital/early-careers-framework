@@ -168,10 +168,9 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
 
   path "/api/v1/participant-declarations/{id}" do
     let(:id) do
-      create(:participant_declaration,
+      create(:ect_participant_declaration,
              user: user,
-             cpd_lead_provider: cpd_lead_provider,
-             course_identifier: "ecf-induction").id
+             cpd_lead_provider: cpd_lead_provider).id
     end
 
     get "Get single participant declaration" do
@@ -224,8 +223,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
 
       response 200, "Successful" do
         let(:id) do
-          declaration = create(:participant_declaration, user: ect_profile.user, cpd_lead_provider: cpd_lead_provider, course_identifier: "ecf-induction")
-          create(:profile_declaration, participant_declaration: declaration, participant_profile: ect_profile)
+          declaration = create(:participant_declaration, user: ect_profile.user, cpd_lead_provider: cpd_lead_provider, course_identifier: "ecf-induction", participant_profile: ect_profile)
           declaration.id
         end
 

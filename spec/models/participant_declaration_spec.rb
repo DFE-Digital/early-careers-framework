@@ -7,7 +7,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
 
   describe "associations" do
     it { is_expected.to belong_to(:cpd_lead_provider) }
-    it { is_expected.to have_one(:participant_profile).through(:profile_declaration) }
+    it { is_expected.to belong_to(:participant_profile) }
     it { is_expected.to have_many(:declaration_states) }
   end
 

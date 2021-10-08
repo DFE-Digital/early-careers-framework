@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 class ParticipantDeclaration < ApplicationRecord
-  has_one :profile_declaration
-  has_one :participant_profile, through: :profile_declaration
   has_many :declaration_states
   belongs_to :cpd_lead_provider
   belongs_to :user
+  belongs_to :participant_profile
 
   enum state: {
     submitted: "submitted",
@@ -23,12 +22,13 @@ class ParticipantDeclaration < ApplicationRecord
   # Helper scopes
   scope :for_lead_provider, ->(cpd_lead_provider) { where(cpd_lead_provider: cpd_lead_provider) }
   scope :for_declaration, ->(declaration_type) { where(declaration_type: declaration_type) }
-  scope :for_profile, ->(profile) { joins(:profile_declaration).joins(:participant_profile).where(participant_profile: profile) }
+  scope :for_profile, ->(profile) { where(participant_profile: profile) }
   scope :started, -> { for_declaration("started").order(declaration_date: "desc").unique_id }
-  scope :uplift, -> { joins(:profile_declaration).merge(ProfileDeclaration.uplift) }
-  scope :ect, -> { joins(:profile_declaration).merge(ProfileDeclaration.ect_profiles) }
-  scope :mentor, -> { joins(:profile_declaration).merge(ProfileDeclaration.mentor_profiles) }
-  scope :npq, -> { joins(:profile_declaration).merge(ProfileDeclaration.npq_profiles) }
+
+  scope :uplift, -> { where(participant_profile_id: ParticipantProfile.uplift.select(:id)) }
+  scope :ect, -> { where(participant_profile_id: ParticipantProfile::ECT.select(:id)) }
+  scope :mentor, -> { where(participant_profile_id: ParticipantProfile::Mentor.select(:id)) }
+  scope :npq, -> { where(participant_profile_id: ParticipantProfile::NPQ.select(:id)) }
 
   scope :changeable, -> { where(state: %w[eligible submitted]) }
   scope :unique_id, -> { select(:user_id).distinct }
