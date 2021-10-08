@@ -21,8 +21,7 @@ module ParticipantDeclarationSteps
   def given_an_ecf_mentor_has_been_entered_onto_the_dfe_service
     cohort = create(:cohort, :current)
     school_cohort = create(:school_cohort, cohort: cohort)
-    create(:partnership, lead_provider: @lead_provider, cohort: cohort, school: school_cohort.school)
-    partnership = create(:partnership, lead_provider: @lead_provider)
+    partnership = create(:partnership, lead_provider: @lead_provider, cohort: cohort, school: school_cohort.school)
     @mentor_profile = create(:participant_profile, :mentor, school: partnership.school, cohort: partnership.cohort)
     @mentor_id = @mentor_profile.user.id
     @declaration_date = @mentor_profile.schedule.milestones.first.start_date + 1.day

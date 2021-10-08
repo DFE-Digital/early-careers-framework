@@ -63,28 +63,16 @@ class ParticipantDeclaration < ApplicationRecord
     DeclarationState.voided!(self) unless voided?
   end
 
-  def make_eligible
-    DeclarationState.eligible!(self)
-  end
-
   def make_eligible!
-    make_eligible if submitted?
-  end
-
-  def make_payable
-    DeclarationState.payable!(self)
+    DeclarationState.eligible!(self) if submitted?
   end
 
   def make_payable!
-    make_payable if eligible?
-  end
-
-  def make_paid
-    DeclarationState.pay!(self)
+    DeclarationState.payable!(self) if eligible?
   end
 
   def make_paid!
-    make_paid if payable?
+    DeclarationState.pay!(self) if payable?
   end
 
   def changeable?

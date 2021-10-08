@@ -36,7 +36,7 @@ private
   end
 
   def and_participant_declaration_made_eligible_for_payment
-    travel_to @submission_date + 1.days do
+    travel_to @submission_date + 1.day do
       ParticipantDeclaration.find_by_id(@declaration_id).eligible!
     end
   end

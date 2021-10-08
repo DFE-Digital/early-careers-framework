@@ -35,7 +35,7 @@ private
         uplift: :eligible_uplift_for_lead_provider,
         ects: :eligible_ects_for_lead_provider,
         mentors: :eligible_mentors_for_lead_provider,
-      }
+      },
     }
   end
 

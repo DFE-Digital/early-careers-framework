@@ -2422,8 +2422,14 @@
           "state": {
             "description": "Indicates the state of this payment declaration",
             "type": "string",
-            "nullable": false,
-            "example": "paid"
+            "enum": [
+              "submitted",
+              "eligible",
+              "payable",
+              "paid",
+              "voided"
+            ],
+            "example": "submitted"
           }
         }
       },

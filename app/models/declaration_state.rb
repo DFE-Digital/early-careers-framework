@@ -11,11 +11,11 @@ class DeclarationState < ApplicationRecord
     voided: "voided",
   }
 
-  states.keys.each do |key|
+  states.each_key do |key|
     bang_method = "#{key}!"
     define_singleton_method(bang_method) do |participant_declaration|
-        create!(participant_declaration: participant_declaration, state: key)
-        participant_declaration.send(bang_method)
-      end
+      create!(participant_declaration: participant_declaration, state: key)
+      participant_declaration.send(bang_method)
+    end
   end
 end
