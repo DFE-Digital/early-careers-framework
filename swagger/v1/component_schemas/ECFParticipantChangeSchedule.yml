@@ -9,7 +9,7 @@ properties:
       - ecf-september-extended-2021
       - ecf-january-reduced-2021
       - ecf-january-extended-2021
-    example: career-break
+    example: ecf-september-standard-2021
   course_identifier:
     description: "The type of course the participant is enrolled in"
     type: string

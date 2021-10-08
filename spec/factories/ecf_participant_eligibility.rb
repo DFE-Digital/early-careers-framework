@@ -15,6 +15,12 @@ FactoryBot.define do
       end
     end
 
+    trait :ineligible do
+      after(:create) do |record, _evaluator|
+        record.ineligible_status!
+      end
+    end
+
     trait :matched do
       after(:create) do |record, _evaluator|
         record.matched_status!

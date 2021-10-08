@@ -10,14 +10,16 @@ RSpec.shared_examples "a participant withdraw action service" do
 
   it "creates a withdrawn state and makes the profile withdrawn" do
     expect { described_class.call(params: given_params) }.to change { ParticipantProfileState.count }.by(1)
-    expect(user_profile.participant_profile_state.withdrawn?)
+    expect(user_profile.participant_profile_state).to be_withdrawn
+    expect(user_profile).to be_training_status_withdrawn
   end
 
   it "creates a withdrawn state when that user is deferred" do
     ParticipantProfileState.create!(participant_profile: user_profile, state: "deferred")
     expect(user_profile.participant_profile_state.deferred?)
     expect { described_class.call(params: given_params) }.to change { ParticipantProfileState.count }.by(1)
-    expect(user_profile.participant_profile_state.withdrawn?)
+    expect(user_profile.participant_profile_state).to be_withdrawn
+    expect(user_profile).to be_training_status_withdrawn
   end
 
   it "fails when the participant is already withdrawn" do

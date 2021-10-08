@@ -31,7 +31,7 @@ private
 
     # This will need to be updated when more than one cohort is supported
     unless @school_cohorts[0]
-      redirect_to schools_choose_programme_path
+      redirect_to schools_choose_programme_path(cohort_id: Cohort.current.start_year)
     end
   end
 end

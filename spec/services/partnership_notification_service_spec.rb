@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe PartnershipNotificationService do
   subject(:partnership_notification_service) { described_class.new }
   before do
@@ -38,12 +36,9 @@ RSpec.describe PartnershipNotificationService do
       it "emails the school primary contact" do
         expect(SchoolMailer).to receive(:school_partnership_notification_email).with(
           hash_including(
-            lead_provider_name: @lead_provider.name,
-            delivery_partner_name: @delivery_partner.name,
-            school_name: school.name,
+            partnership: partnership,
             nominate_url: String,
             challenge_url: String,
-            challenge_deadline: String,
             recipient: contact_email,
           ),
         ).and_call_original
@@ -72,13 +67,10 @@ RSpec.describe PartnershipNotificationService do
       it "emails the induction coordinator" do
         expect(SchoolMailer).to receive(:coordinator_partnership_notification_email).with(
           hash_including(
-            name: coordinator.full_name,
-            lead_provider_name: @lead_provider.name,
-            delivery_partner_name: @delivery_partner.name,
+            partnership: partnership,
+            coordinator: coordinator,
             sign_in_url: String,
             challenge_url: String,
-            challenge_deadline: String,
-            recipient: contact_email,
           ),
         ).and_call_original
         allow_any_instance_of(Mail::TestMailer).to receive_message_chain(:response, :id) { notify_id }
@@ -107,12 +99,9 @@ RSpec.describe PartnershipNotificationService do
       it "emails the school primary contact" do
         expect(SchoolMailer).to receive(:school_partnership_notification_email).with(
           hash_including(
-            school_name: school.name,
-            lead_provider_name: @lead_provider.name,
-            delivery_partner_name: @delivery_partner.name,
+            partnership: partnership,
             nominate_url: String,
             challenge_url: String,
-            challenge_deadline: String,
             recipient: contact_email,
           ),
         ).and_call_original
@@ -140,13 +129,10 @@ RSpec.describe PartnershipNotificationService do
       it "emails the induction coordinator" do
         expect(SchoolMailer).to receive(:coordinator_partnership_notification_email).with(
           hash_including(
-            name: coordinator.full_name,
-            lead_provider_name: @lead_provider.name,
-            delivery_partner_name: @delivery_partner.name,
+            partnership: partnership,
+            coordinator: coordinator,
             sign_in_url: String,
             challenge_url: String,
-            challenge_deadline: String,
-            recipient: contact_email,
           ),
         ).and_call_original
         allow_any_instance_of(Mail::TestMailer).to receive_message_chain(:response, :id) { notify_id }
@@ -178,6 +164,7 @@ RSpec.describe PartnershipNotificationService do
     it "emails schools that are fip partnered with no SIT, and extends the challenge deadline by 2 weeks" do
       expect(SchoolMailer).to receive(:partnered_school_invite_sit_email).with(
         hash_including(
+          school_name: school.name,
           lead_provider_name: partnership.lead_provider.name,
           delivery_partner_name: partnership.delivery_partner.name,
           challenge_url: a_string_including("utm_campaign=partnered-invite-sit-reminder&utm_medium=email&utm_source=partnered-invite-sit-reminder"),

@@ -42,7 +42,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
                 description: "Pagination options to navigate through the list of ECF participants."
 
       response "200", "A list of ECF participants" do
-        schema({ "$ref": "#/components/schemas/MultipleECFParticipantsResponse" }, content_type: "application/vnd.api+json")
+        schema({ "$ref": "#/components/schemas/MultipleECFParticipantsResponse" })
 
         run_test!
       end
@@ -50,7 +50,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
       response "401", "Unauthorized" do
         let(:Authorization) { "Bearer invalid" }
 
-        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" }, content_type: "application/vnd.api+json")
+        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
 
         run_test!
       end
@@ -84,7 +84,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
       response "401", "Unauthorized" do
         let(:Authorization) { "Bearer invalid" }
 
-        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" }, content_type: "application/vnd.api+json")
+        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
 
         run_test!
       end

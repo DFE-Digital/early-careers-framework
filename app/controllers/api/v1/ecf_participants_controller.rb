@@ -42,6 +42,7 @@ module Api
                                         early_career_teacher_profile: :mentor,
                                       },
                                     )
+                                    .where(school_cohorts: { cohort_id: Cohort.current.id })
 
         participants = participants.changed_since(updated_since) if updated_since.present?
 

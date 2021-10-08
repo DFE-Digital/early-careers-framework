@@ -9,19 +9,18 @@
 
     <%= govuk_button_link_to "Add a new ECT or mentor", add_schools_participants_path %>
 
-    <p class="govuk-body">
-      We will verify your ECTs and mentors. Here you can check their status or select a name for more details.
-    </p>
+    <p class="govuk-body">We contact all ECTs and mentors to check they're eligible for this programme. This may take a few days. You can see the status of our checks below.</p>
+
+    <p class="govuk-body">Select a name to see more details.</p>
   </div>
 </div>
-
 
 <% if @participant_profiles.present? %>
   <table class="govuk-table">
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
         <th scope="col" class="govuk-table__header">Full name</th>
-        <th scope="col" class="govuk-table__header">Type</th>
+        <th scope="col" class="govuk-table__header">Role</th>
         <th scope="col" class="govuk-table__header">Mentor</th>
         <th scope="col" class="govuk-table__header">Status</th>
       </tr>

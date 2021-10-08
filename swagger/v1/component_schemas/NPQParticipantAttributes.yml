@@ -1,17 +1,11 @@
 description: "The data attributes associated with an NPQ participants"
 type: object
 required:
-  - id
   - participant_id
   - full_name
   - email
   - npq_courses
-  - trn
 properties:
-  id:
-    type: string
-    example: 7a8fef46-3c43-42c0-b3d5-1ba5904ba562
-    format: uuid
   participant_id:
     description: "The unique identifier of this NPQ participant"
     type: string
@@ -25,10 +19,11 @@ properties:
     description: "The email address registered for this NPQ participant"
     type: string
     example: "isabelle.macdonald2@some-school.example.com"
-  trn:
+  teacher_reference_number:
     description: "The Teacher Reference Number (TRN) for this NPQ participant"
     type: string
     example: "1234567"
+    nullable: true
   npq_courses:
     description: "The type of course the participant is enrolled in"
     type: array

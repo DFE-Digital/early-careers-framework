@@ -14,16 +14,10 @@ module Admin
         attr_reader :cohort, :school_cohort
 
         def cohort_info
-          if school_cohort.nil?
-            NoProgramme.new(cohort: cohort)
-          elsif school_cohort.core_induction_programme?
-            CipInfo.new(school_cohort: school_cohort)
-          elsif school_cohort.full_induction_programme?
-            FipInfo.new(school_cohort: school_cohort)
-          elsif school_cohort.no_early_career_teachers?
-            NoEctsInfo.new(cohort: cohort)
-          elsif school_cohort.design_our_own?
-            DiyInfo.new(cohort: cohort)
+          case school_cohort&.induction_programme_choice
+          when "core_induction_programme" then CipInfo.new(school_cohort: school_cohort)
+          when "full_induction_programme" then FipInfo.new(school_cohort: school_cohort)
+          else OtherInfo.new(school_cohort: school_cohort, cohort: cohort)
           end
         end
       end

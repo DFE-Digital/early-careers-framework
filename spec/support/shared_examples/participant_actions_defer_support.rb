@@ -10,7 +10,8 @@ RSpec.shared_examples "a participant defer action service" do
 
   it "creates a deferred state and makes the profile deferred" do
     expect { described_class.call(params: participant_params) }.to change { ParticipantProfileState.count }.by(1)
-    expect(user_profile.participant_profile_state.deferred?)
+    expect(user_profile.participant_profile_state).to be_deferred
+    expect(user_profile).to be_training_status_deferred
   end
 
   it "fails when the participant is already deferred" do

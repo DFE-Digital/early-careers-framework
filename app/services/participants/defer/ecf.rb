@@ -6,14 +6,14 @@ module Participants
       class << self
         def reasons
           %w[
-            parental-leave
-            adoption
             bereavement
             long-term-sickness
+            parental-leave
+            career-break
+            other
           ].freeze
         end
       end
-
       include Participants::ECF
       include ValidateAndChangeState
     end

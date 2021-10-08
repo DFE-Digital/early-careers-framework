@@ -4,6 +4,7 @@ require "rails_helper"
 
 RSpec.describe SchoolMailer, type: :mailer do
   describe "#nomination_email" do
+    let(:school) { instance_double School, name: "Great Ouse Academy" }
     let(:primary_contact_email) { "contact@example.com" }
     let(:nomination_url) { "https://ecf-dev.london.cloudapps/nominations?token=abc123" }
 
@@ -11,7 +12,7 @@ RSpec.describe SchoolMailer, type: :mailer do
       SchoolMailer.nomination_email(
         recipient: primary_contact_email,
         nomination_url: nomination_url,
-        school_name: "Great Ouse Academy",
+        school: school,
         expiry_date: "1/1/2000",
       ).deliver_now
     end
@@ -60,12 +61,12 @@ RSpec.describe SchoolMailer, type: :mailer do
 
   describe "#nomination_email_confirmation" do
     let(:school) { create(:school) }
-    let(:user) { create(:user, :induction_coordinator) }
+    let(:sit_profile) { create(:induction_coordinator_profile) }
     let(:start_url) { "https://ecf-dev.london.cloudapps" }
 
     let(:nomination_confirmation_email) do
       SchoolMailer.nomination_confirmation_email(
-        user: user,
+        sit_profile: sit_profile,
         school: school,
         start_url: start_url,
         step_by_step_url: start_url,
@@ -73,30 +74,44 @@ RSpec.describe SchoolMailer, type: :mailer do
     end
 
     it "renders the right headers" do
-      expect(nomination_confirmation_email.to).to eq([user.email])
+      expect(nomination_confirmation_email.to).to eq([sit_profile.user.email])
       expect(nomination_confirmation_email.from).to eq(["mail@example.com"])
     end
   end
 
   describe "#coordinator_partnership_notification_email" do
-    let(:recipient) { Faker::Internet.email }
-    let(:name) { Faker::Name.name }
-    let(:provider_name) { Faker::Company.name }
-    let(:school_name) { Faker::Company.name }
+    let(:coordinator) { build_stubbed(:induction_coordinator_profile).user }
     let(:sign_in_url) { "https://www.example.com/sign-in" }
     let(:challenge_url) { "https://www.example.com?token=abc123" }
-    let(:challenge_deadline) { "1/1/1970" }
+    let(:partnership) { build_stubbed :partnership }
 
     let(:partnership_notification_email) do
       SchoolMailer.coordinator_partnership_notification_email(
-        recipient: recipient,
-        name: name,
-        lead_provider_name: provider_name,
-        delivery_partner_name: provider_name,
-        school_name: school_name,
+        coordinator: coordinator,
+        partnership: partnership,
         sign_in_url: sign_in_url,
         challenge_url: challenge_url,
-        challenge_deadline: challenge_deadline,
+      )
+    end
+
+    it "renders the right headers" do
+      expect(partnership_notification_email.from).to eq(["mail@example.com"])
+      expect(partnership_notification_email.to).to eq([coordinator.email])
+    end
+  end
+
+  describe "#school_partnership_notification_email" do
+    let(:recipient) { Faker::Internet.email }
+    let(:nominate_url) { "https://www.example.com?token=def456" }
+    let(:challenge_url) { "https://www.example.com?token=abc123" }
+    let(:partnership) { build_stubbed :partnership }
+
+    let(:partnership_notification_email) do
+      SchoolMailer.school_partnership_notification_email(
+        partnership: partnership,
+        recipient: recipient,
+        nominate_url: nominate_url,
+        challenge_url: challenge_url,
       )
     end
 
@@ -106,29 +121,21 @@ RSpec.describe SchoolMailer, type: :mailer do
     end
   end
 
-  describe "#school_partnership_notification_email" do
-    let(:recipient) { Faker::Internet.email }
-    let(:provider_name) { Faker::Company.name }
+  describe "remind_fip_induction_coordinators_to_add_ects_and_mentors_email" do
+    let(:induction_coordinator) { create(:induction_coordinator_profile) }
     let(:school_name) { Faker::Company.name }
-    let(:nominate_url) { "https://www.example.com?token=def456" }
-    let(:challenge_url) { "https://www.example.com?token=abc123" }
-    let(:challenge_deadline) { "1/1/1970" }
+    let(:campaign) { "remind_fip_sit_to_complete_steps" }
 
-    let(:partnership_notification_email) do
-      SchoolMailer.school_partnership_notification_email(
-        recipient: recipient,
-        lead_provider_name: provider_name,
-        delivery_partner_name: provider_name,
+    let(:reminder_email) do
+      SchoolMailer.remind_fip_induction_coordinators_to_add_ects_and_mentors_email(
+        induction_coordinator: induction_coordinator,
+        campaign: campaign,
         school_name: school_name,
-        nominate_url: nominate_url,
-        challenge_url: challenge_url,
-        challenge_deadline: challenge_deadline,
       )
     end
-
     it "renders the right headers" do
-      expect(partnership_notification_email.from).to eq(["mail@example.com"])
-      expect(partnership_notification_email.to).to eq([recipient])
+      expect(reminder_email.from).to eq(["mail@example.com"])
+      expect(reminder_email.to).to eq([induction_coordinator.user.email])
     end
   end
 

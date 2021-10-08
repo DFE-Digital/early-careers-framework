@@ -5,10 +5,11 @@ properties:
     description: "The reason for the deferral"
     type: string
     enum:
-      - adoption
       - bereavement
       - long-term-sickness
       - parental-leave
+      - career-break
+      - other
     example: career-break
   course_identifier:
     description: "The type of course the participant is enrolled in"

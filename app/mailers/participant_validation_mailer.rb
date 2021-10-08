@@ -48,7 +48,7 @@ class ParticipantValidationMailer < ApplicationMailer
     )
   end
 
-  def induction_coordinators_we_asked_ects_and_mentors_for_information_email(recipient:, sign_in:, school_name:)
+  def induction_coordinators_we_asked_ects_and_mentors_for_information_email(recipient:, sign_in:, start_url:)
     template_mail(
       INDUCTION_COORDINATOR_WE_ASKED_YOUR_ECTS_AND_MENTORS_TEMPLATE,
       to: recipient,
@@ -56,7 +56,7 @@ class ParticipantValidationMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         sign_in: sign_in,
-        school_name: school_name,
+        participant_start: start_url,
       },
     )
   end

@@ -61,10 +61,12 @@ module ValidTestDataGenerator
       if profile_type == :ect
         ParticipantProfile::ECT.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, mentor_profile: mentor_profile, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule) do |profile|
           ParticipantProfileState.create!(participant_profile: profile)
+          ECFParticipantEligibility.create!(participant_profile_id: profile.id).eligible_status!
         end
       else
         ParticipantProfile::Mentor.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule) do |profile|
           ParticipantProfileState.create!(participant_profile: profile)
+          ECFParticipantEligibility.create!(participant_profile_id: profile.id).eligible_status!
         end
       end
     end
@@ -149,6 +151,72 @@ module ValidTestDataGenerator
 
     def random_or_nil_trn
       TRNGenerator.next
+    end
+  end
+
+  class NPQLeadProviderPopulater
+    class << self
+      def call(name:, total_schools: 10, participants_per_school: 10)
+        new(name: name, participants_per_school: participants_per_school).call(total_schools: total_schools)
+      end
+    end
+
+    def call(total_schools: 10)
+      generate_new_schools(count: total_schools)
+    end
+
+  private
+
+    attr_reader :lead_provider, :participants_per_school
+
+    def initialize(name:, participants_per_school:)
+      @lead_provider = ::NPQLeadProvider.find_or_create_by!(name: name)
+      @participants_per_school = participants_per_school
+    end
+
+    def generate_new_schools(count:)
+      count.times { create_fip_school_with_cohort(urn: SchoolURNGenerator.next) }
+    end
+
+    def find_or_create_participants(school:, number_of_participants:)
+      generate_new_participants(school: school, count: number_of_participants)
+    end
+
+    def generate_new_participants(school:, count:)
+      count.times do |index|
+        create_participant(school: school, accepted: index.even?)
+      end
+    end
+
+    def create_participant(school:, accepted:)
+      name = Faker::Name.name
+      user = User.create!(full_name: name, email: Faker::Internet.email(name: name))
+
+      validation_data = NPQValidationData.create!(
+        active_alert: "",
+        date_of_birth: Date.new(1990, 1, 1),
+        eligible_for_funding: true,
+        funding_choice: "",
+        headteacher_status: "",
+        nino: "",
+        school_urn: school.urn,
+        teacher_reference_number: TRNGenerator.next,
+        teacher_reference_number_verified: true,
+        npq_course: NPQCourse.all.sample,
+        npq_lead_provider: lead_provider,
+        user: user,
+      )
+
+      NPQ::Accept.new(npq_application: validation_data).call if accepted
+    end
+
+    def create_fip_school_with_cohort(urn:)
+      school = School.find_or_create_by!(urn: urn) do |s|
+        s.name = Faker::Company.name
+        s.address_line1 = Faker::Address.street_address
+        s.postcode = Faker::Address.postcode
+      end
+      find_or_create_participants(school: school, number_of_participants: participants_per_school)
     end
   end
 end

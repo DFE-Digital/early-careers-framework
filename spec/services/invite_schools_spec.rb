@@ -32,9 +32,8 @@ RSpec.describe InviteSchools do
     let(:nomination_email) { school.nomination_emails.last }
 
     it "creates a record for the nomination email" do
-      expect {
-        invite_schools.run [school.urn]
-      }.to change { school.nomination_emails.count }.by 1
+      expect { invite_schools.run [school.urn] }
+        .to change { school.nomination_emails.count }.by 1
     end
 
     it "creates a nomination email with the correct fields" do
@@ -48,9 +47,9 @@ RSpec.describe InviteSchools do
       travel_to(Time.utc("2000-1-1")) do
         expect(SchoolMailer).to receive(:nomination_email).with(
           hash_including(
-            school_name: String,
-            nomination_url: String,
             recipient: school.primary_contact_email,
+            school: school,
+            nomination_url: String,
             expiry_date: "22/01/2000",
           ),
         ).and_call_original
@@ -65,17 +64,13 @@ RSpec.describe InviteSchools do
     end
 
     context "when the school is cip only" do
-      let(:school) do
-        create(:school,
-               :cip_only,
-               primary_contact_email: primary_contact_email)
-      end
+      let(:school) { create(:school, :cip_only, primary_contact_email: primary_contact_email) }
 
       it "still sends the nomination email" do
         travel_to(Time.utc("2000-1-1")) do
           expect(SchoolMailer).to receive(:nomination_email).with(
             hash_including(
-              school_name: String,
+              school: school,
               nomination_url: String,
               recipient: school.primary_contact_email,
               expiry_date: "22/01/2000",
@@ -93,7 +88,7 @@ RSpec.describe InviteSchools do
       it "sends the nomination email to the secondary contact" do
         expect(SchoolMailer).to receive(:nomination_email).with(
           hash_including(
-            school_name: String,
+            school: school,
             nomination_url: String,
             recipient: school.secondary_contact_email,
           ),
@@ -986,6 +981,69 @@ RSpec.describe InviteSchools do
       InviteSchools.new.invite_unpartnered_cip_sits_to_add_ects_and_mentors
 
       expect(SchoolMailer).to_not delay_email_delivery_of(:unpartnered_cip_sit_add_participants_email)
+    end
+  end
+
+  describe "#catch_all_invite_sits_for_nqt_plus_one" do
+    it "sends an invite to eligible schools without a 2020 cohort" do
+      school = create(:school)
+      sit = create(:induction_coordinator_profile, schools: [school])
+      create(
+        :school_cohort,
+        school: school,
+        induction_programme_choice: "core_induction_programme",
+      )
+
+      expected_url = "http://www.example.com/schools/#{school.friendly_id}/year-2020/support-materials-for-NQTs?utm_campaign=year2020-nqt-invite-sit-catchall&utm_medium=email&utm_source=year2020-nqt-invite-sit-catchall"
+      InviteSchools.new.catch_all_invite_sits_for_nqt_plus_one
+
+      expect(SchoolMailer).to delay_email_delivery_of(:nqt_plus_one_sit_invite)
+                                .with(hash_including(
+                                        recipient: sit.user.email,
+                                        start_url: expected_url,
+                                      )).once
+    end
+
+    it "doesn't send an invite to ineligible schools" do
+      school = create(:school, :cip_only)
+      create(:induction_coordinator_profile, schools: [school])
+      create(
+        :school_cohort,
+        school: school,
+        induction_programme_choice: "core_induction_programme",
+      )
+
+      InviteSchools.new.catch_all_invite_sits_for_nqt_plus_one
+
+      expect(SchoolMailer).to_not delay_email_delivery_of(:nqt_plus_one_sit_invite)
+    end
+
+    it "doesn't send an invite to schools without a SIT" do
+      school = create(:school)
+      create(
+        :school_cohort,
+        school: school,
+        induction_programme_choice: "core_induction_programme",
+      )
+
+      InviteSchools.new.catch_all_invite_sits_for_nqt_plus_one
+
+      expect(SchoolMailer).to_not delay_email_delivery_of(:nqt_plus_one_sit_invite)
+    end
+
+    it "doesn't send an invite to schools who have a 2020 cohort" do
+      school = create(:school)
+      create(:induction_coordinator_profile, schools: [school])
+      create(
+        :school_cohort,
+        school: school,
+        cohort: create(:cohort, start_year: 2020),
+        induction_programme_choice: "core_induction_programme",
+      )
+
+      InviteSchools.new.catch_all_invite_sits_for_nqt_plus_one
+
+      expect(SchoolMailer).to_not delay_email_delivery_of(:nqt_plus_one_sit_invite)
     end
   end
 

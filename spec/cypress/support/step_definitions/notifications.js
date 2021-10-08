@@ -79,7 +79,7 @@ When(
       expect(headersHash["template-id"]).to.eq(SIGN_IN_EMAIL_TEMPLATE);
       expect(headersHash.To).to.eq(email);
       cy.visit(
-        headersHash.personalisation.sign_in_url.replace(
+        headersHash.personalisation.sign_in.replace(
           "http://www.example.com",
           ""
         )

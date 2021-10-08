@@ -81,6 +81,10 @@ class SchoolCohort < ApplicationRecord
     induction_programme_choice == "school_funded_fip"
   end
 
+  def can_change_programme?
+    induction_programme_choice.in? %w[design_our_own no_early_career_teachers]
+  end
+
 private
 
   def cip_status

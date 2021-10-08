@@ -53,6 +53,7 @@ export const computeHeadersFromEmail = (email) =>
     }),
     {}
   );
+
 Cypress.Commands.add("appSentEmails", () =>
   cy.appEval("ActionMailer::Base.deliveries")
 );

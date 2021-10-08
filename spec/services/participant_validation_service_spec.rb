@@ -3,239 +3,279 @@
 require "rails_helper"
 
 RSpec.describe ParticipantValidationService do
+  before do
+    allow(DqtApiAccess).to receive(:token).and_return("jwt-access-token")
+    create(:cohort, :current)
+  end
+
   describe "#validate" do
     let(:trn) { "1234567" }
     let(:nino) { "QQ123456A" }
     let(:full_name) { "John Smith" }
     let(:dob) { Date.new(1970, 1, 2) }
     let(:qts_date) { 6.weeks.ago.to_date }
-    let(:alert) { false }
-    let(:dqt_record) do
-      { teacher_reference_number: trn,
-        national_insurance_number: nino,
-        full_name: full_name,
-        date_of_birth: dob,
-        qts_date: qts_date,
-        active_alert: alert }
+    let(:qts) do
+      {
+        "name" => "Qualified teacher (trained)",
+        "qts_date" => qts_date,
+        "state" => 0,
+        "state_name" => "Active",
+      }
     end
-    # reverse logic - the means eligible for induction
-    let!(:eligibity) { create(:ineligible_participant, trn: trn, reason: :previous_induction) }
+    let(:alert) { false }
+    let(:induction_start_date) { Date.parse("2021-07-01T00:00:00Z") }
+    let(:induction_completion_date) { Date.parse("2021-07-05T00:00:00Z") }
+    let(:induction) { nil }
+    let(:dqt_record) { build_dqt_record(trn: trn, nino: nino, full_name: full_name, dob: dob, alert: alert, qts: qts, induction: induction) }
+    let(:dqt_records) { [dqt_record] }
 
     let(:validation_result) { ParticipantValidationService.validate(trn: trn, nino: nino, full_name: full_name, date_of_birth: dob) }
 
-    it "calls show on the DQT API client" do
-      expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).with(
-        { params: { teacher_reference_number: trn, national_insurance_number: nino } },
-      )
+    it "calls get_record on the DQT API client" do
+      expect_any_instance_of(FullDqt::Client).to receive(:get_record).with({ trn: trn, birthdate: dob, nino: nino })
 
       ParticipantValidationService.validate(trn: trn, nino: nino, full_name: full_name, date_of_birth: dob)
     end
 
-    context "when the participant cannot be found" do
+    context "given that it calls the API" do
       before do
-        expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(nil)
+        expect_any_instance_of(FullDqt::Client).to receive(:get_record).and_return(*dqt_records)
       end
 
-      it "returns nil" do
-        expect(validation_result).to eql nil
-      end
-    end
+      context "when the participant cannot be found" do
+        let(:dqt_records) { [nil] }
 
-    context "when trn is less than 7 characters" do
-      let(:trn) { "123456" }
-      let(:padded_trn) { "0123456" }
-
-      let(:dqt_record) do
-        { teacher_reference_number: "0123456", # API sends padded TRNs
-          national_insurance_number: nino,
-          full_name: full_name,
-          date_of_birth: dob,
-          qts_date: qts_date,
-          active_alert: alert }
+        it "returns nil" do
+          expect(validation_result).to eql nil
+        end
       end
 
-      let(:validation_result) do
-        ParticipantValidationService.validate(
-          trn: trn,
-          nino: "WRONG",
-          full_name: full_name,
-          date_of_birth: dob,
-        )
+      context "when trn is less than 7 characters" do
+        let(:trn) { "0123456" }
+        let(:entered_trn) { "123456" }
+
+        let(:validation_result) do
+          ParticipantValidationService.validate(
+            trn: entered_trn,
+            nino: "WRONG",
+            full_name: full_name,
+            date_of_birth: dob,
+          )
+        end
+
+        it "returns record with padded trn when trn is not padded" do
+          expect(validation_result).to eql(build_validation_result(trn: trn))
+        end
       end
 
-      before do
-        expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(dqt_record)
+      context "when the participant has qts and no active flags" do
+        it "returns true when all fields match" do
+          expect(validation_result).to eql(build_validation_result(trn: trn))
+        end
+
+        it "returns the validated details when date of birth is wrong" do
+          expect(
+            ParticipantValidationService.validate(trn: trn, nino: nino, full_name: full_name, date_of_birth: Date.new(1980, 1, 2)),
+          ).to eql(build_validation_result(trn: trn))
+        end
+
+        it "returns the validated details when name is wrong" do
+          expect(
+            ParticipantValidationService.validate(trn: trn, nino: nino, full_name: "Johnne Smithe", date_of_birth: dob),
+          ).to eql(build_validation_result(trn: trn))
+        end
+
+        it "returns the validated details when nino is wrong" do
+          expect(
+            ParticipantValidationService.validate(trn: trn, nino: "AA654321A", full_name: full_name, date_of_birth: dob),
+          ).to eql(build_validation_result(trn: trn))
+        end
+
+        it "returns the validated details when name is wrong and nino is cased differently" do
+          expect(
+            ParticipantValidationService.validate(trn: trn, nino: nino.downcase, full_name: "Johnne Smithe", date_of_birth: dob),
+          ).to eql(build_validation_result(trn: trn))
+        end
+
+        it "returns validated details when the name is cased differently and the nino is missing" do
+          expect(
+            ParticipantValidationService.validate(trn: trn, nino: "", full_name: "JoHN SMITH", date_of_birth: dob),
+          ).to eql(build_validation_result(trn: trn))
+        end
       end
 
-      it "returns record with padded trn when trn is not padded" do
-        expect(validation_result).to eql(build_validation_result(trn: padded_trn,
-                                                                 options: { previous_induction: true }))
-      end
-    end
-
-    context "when the participant has qts and no active flags" do
-      before do
-        expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(dqt_record)
-      end
-
-      it "returns true when all fields match" do
-        expect(validation_result).to eql(build_validation_result(trn: trn))
-      end
-
-      it "returns the validated details when date of birth is wrong" do
-        expect(
-          ParticipantValidationService.validate(trn: trn, nino: nino, full_name: full_name, date_of_birth: Date.new(1980, 1, 2)),
-        ).to eql(build_validation_result(trn: trn))
-      end
-
-      it "returns the validated details when name is wrong" do
-        expect(
-          ParticipantValidationService.validate(trn: trn, nino: nino, full_name: "John Smithe", date_of_birth: dob),
-        ).to eql(build_validation_result(trn: trn))
-      end
-
-      it "returns the validated details when nino is wrong" do
-        expect(
-          ParticipantValidationService.validate(trn: trn, nino: "AA654321A", full_name: full_name, date_of_birth: dob),
-        ).to eql(build_validation_result(trn: trn))
-      end
-
-      it "returns the validated details when name is wrong and nino is cased differently" do
-        expect(
-          ParticipantValidationService.validate(trn: trn, nino: nino.downcase, full_name: "John Smithe", date_of_birth: dob),
-        ).to eql(build_validation_result(trn: trn))
-      end
-
-      it "returns validated details when the name is cased differently and the nino is missing" do
-        expect(
-          ParticipantValidationService.validate(trn: trn, nino: "", full_name: "John SMITH", date_of_birth: dob),
-        ).to eql(build_validation_result(trn: trn))
-      end
-    end
-
-    context "when 3 of 4 things match and only first name matches" do
-      let(:validation_result) do
-        ParticipantValidationService.validate(
-          trn: trn,
-          nino: "WRONG",
-          full_name: full_name.split(" ").first.to_s,
-          date_of_birth: dob,
-        )
-      end
-
-      it "returns nil" do
-        expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(dqt_record, nil)
-
-        expect(validation_result).to be_nil
-      end
-
-      context "when config check_first_name_only: true" do
+      context "when 3 of 4 things match and only first name matches" do
         let(:validation_result) do
           ParticipantValidationService.validate(
             trn: trn,
             nino: "WRONG",
             full_name: full_name.split(" ").first.to_s,
             date_of_birth: dob,
-            config: { check_first_name_only: true },
           )
         end
+        let(:dqt_records) { [dqt_record, nil] }
 
-        it "returns validated details" do
-          expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(dqt_record)
+        it "returns nil" do
+          expect(validation_result).to be_nil
+        end
 
-          expect(validation_result).to eql(build_validation_result(trn: trn))
+        context "when config check_first_name_only: true" do
+          let(:validation_result) do
+            ParticipantValidationService.validate(
+              trn: trn,
+              nino: "WRONG",
+              full_name: full_name.split(" ").first.to_s,
+              date_of_birth: dob,
+              config: { check_first_name_only: true },
+            )
+          end
+          let(:dqt_records) { [dqt_record] }
+
+          it "returns validated details" do
+            expect(validation_result).to eql(build_validation_result(trn: trn))
+          end
         end
       end
-    end
 
-    context "when the wrong trn is provided" do
-      let(:other_trn) { "7654321" }
-      before do
-        record_for_other_trn = { teacher_reference_number: other_trn,
-                                 national_insurance_number: "AA654321A",
-                                 full_name: "John Smithe",
-                                 date_of_birth: Date.new(1990, 2, 1),
-                                 qts_date: qts_date,
-                                 active_alert: alert }
+      context "when the wrong trn is provided" do
+        let(:other_trn) { "7654321" }
+        let(:record_for_other_trn) do
+          build_dqt_record(trn: other_trn,
+                           nino: "AA654321A",
+                           full_name: "Jenny Mathews",
+                           dob: Date.new(1990, 2, 1),
+                           alert: false,
+                           qts: nil,
+                           induction: nil)
+        end
+        let(:dqt_records) { [record_for_other_trn, dqt_record] }
 
-        expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show)
-                                                             .twice
-                                                             .and_return(record_for_other_trn, dqt_record)
+        it "returns the correct details" do
+          expect(ParticipantValidationService.validate(
+                   trn: other_trn,
+                   nino: nino,
+                   full_name: full_name,
+                   date_of_birth: dob,
+                 )).to eql(build_validation_result(trn: trn))
+        end
       end
 
-      it "returns the correct details" do
-        expect(ParticipantValidationService.validate(
-                 trn: other_trn,
-                 nino: nino,
-                 full_name: full_name,
-                 date_of_birth: dob,
-               )).to eql(build_validation_result(trn: trn))
-      end
-    end
+      context "when the participant has no QTS" do
+        let(:qts_date) { nil }
 
-    context "when the participant has no QTS" do
-      let(:qts_date) { nil }
-      before do
-        expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(dqt_record)
+        it "returns correct QTS information" do
+          expect(validation_result).to eql(build_validation_result(trn: trn, options: { qts: false }))
+        end
       end
 
-      it "returns correct QTS information" do
-        expect(validation_result).to eql(build_validation_result(trn: trn, options: { qts: false }))
-      end
-    end
+      context "when the participant has an active alert" do
+        let(:alert) { true }
 
-    context "when the participant has an active alert" do
-      let(:alert) { true }
-      before do
-        expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(dqt_record)
+        it "returns returns the correct alert details" do
+          expect(validation_result).to eql(build_validation_result(trn: trn, options: { active_alert: true }))
+        end
       end
 
-      it "returns returns the correct alert details" do
-        expect(validation_result).to eql(build_validation_result(trn: trn, options: { active_alert: true }))
-      end
-    end
+      context "when the DQT nino is blank" do
+        let(:nino) { "" }
+        let(:dqt_records) { [dqt_record, nil] }
 
-    context "when the DQT nino is blank" do
-      let(:nino) { "" }
-      before do
-        expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).twice.and_return(dqt_record)
+        it "does not count blank NINos as matching" do
+          expect(ParticipantValidationService.validate(trn: trn, nino: "", full_name: "John Smithe", date_of_birth: dob)).to be_nil
+        end
       end
 
-      it "does not count blank NINos as matching" do
-        expect(ParticipantValidationService.validate(trn: trn, nino: "", full_name: "John Smithe", date_of_birth: dob)).to be_nil
-      end
-    end
+      context "when the participant has previously participated" do
+        let!(:eligibility) { create(:ineligible_participant, trn: trn, reason: :previous_induction_and_participation) }
 
-    context "when the participant has previously participated" do
-      before do
-        ECFIneligibleParticipant.find_by(trn: trn).update!(reason: :previous_induction_and_participation)
-        expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(dqt_record)
+        it "returns returns the correct previous_participation flags" do
+          expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_participation: true }))
+        end
       end
 
-      it "returns returns the correct previous_participation flags" do
-        expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_participation: true }))
-      end
-    end
+      context "when the participant has previously had an induction" do
+        let(:induction) do
+          {
+            "start_date" => induction_start_date,
+            "completion_date" => induction_completion_date,
+            "status" => "Pass",
+            "state" => 0,
+            "state_name" => "Active",
+          }
+        end
 
-    context "when the participant has previously had an induction" do
-      before do
-        ECFIneligibleParticipant.find_by(trn: trn).destroy!
-        expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(dqt_record)
-      end
-
-      it "returns returns the correct previous_participation flags" do
-        expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: true }))
-      end
-    end
-
-    context "when the participant has previously had an induction and participation" do
-      before do
-        ECFIneligibleParticipant.find_by(trn: trn).update!(reason: :previous_participation)
-        expect_any_instance_of(Dqt::Api::V1::DQTRecord).to receive(:show).and_return(dqt_record)
+        it "returns returns the correct previous_participation flags" do
+          expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: true }))
+        end
       end
 
-      it "returns returns both flags" do
-        expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: true, previous_participation: true }))
+      context "when the participant has an induction with nil start_date" do
+        let(:induction) do
+          {
+            "start_date" => nil,
+          }
+        end
+
+        it "does not raise an error" do
+          expect { validation_result }.not_to raise_error
+        end
+
+        it "returns previous_induction as false" do
+          expect(validation_result[:previous_induction]).to be_falsey
+        end
+      end
+
+      context "when the participant has previously had an induction and participation" do
+        let!(:eligibility) { create(:ineligible_participant, trn: trn, reason: :previous_participation) }
+        let(:induction) do
+          {
+            "start_date" => induction_start_date,
+            "completion_date" => induction_completion_date,
+            "status" => "Pass",
+            "state" => 0,
+            "state_name" => "Active",
+          }
+        end
+
+        it "returns returns both flags" do
+          expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: true, previous_participation: true }))
+        end
+      end
+
+      context "when the participant has an induction start date in or after September this year" do
+        let(:induction_start_date) { Date.parse("2021-09-01T00:00:00Z") }
+        let(:induction_completion_date) { nil }
+        let(:induction) do
+          {
+            "start_date" => induction_start_date,
+            "completion_date" => induction_completion_date,
+            "status" => "Pass",
+            "state" => 0,
+            "state_name" => "Active",
+          }
+        end
+
+        it "returns false for previous induction" do
+          expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: false }))
+        end
+      end
+
+      context "when the participant has an induction start date before September this year" do
+        let(:induction_start_date) { Date.parse("2021-08-31T22:59:59Z") }
+        let(:induction_completion_date) { nil }
+        let(:induction) do
+          {
+            "start_date" => induction_start_date,
+            "completion_date" => induction_completion_date,
+            "status" => "Pass",
+            "state" => 0,
+            "state_name" => "Active",
+          }
+        end
+
+        it "returns true for previous induction" do
+          expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: true }))
+        end
       end
     end
   end
@@ -250,295 +290,59 @@ RSpec.describe ParticipantValidationService do
     }.merge(options)
   end
 
-  describe "#validate with full DQT api", with_feature_flags: { full_dqt_api: "active" } do
-    let(:trn) { "1234567" }
-    let(:nino) { "QQ123456A" }
-    let(:full_name) { "John Smith" }
-    let(:dob) { Date.new(1970, 1, 2) }
-    let(:qts_date) { 6.weeks.ago.to_date }
-    let(:alert) { false }
-    let(:dqt_record) do
-      {
-        trn: trn,
-        ni_number: nino,
-        name: full_name,
-        dob: dob,
-        active_alert: alert,
-        qualified_teacher_status: {
-          "qts_date" => qts_date,
+  def build_dqt_record(trn:, nino:, full_name:, dob:, alert:, qts:, induction:)
+    {
+      "trn" => trn,
+      "ni_number" => nino,
+      "name" => full_name,
+      "dob" => dob,
+      "active_alert" => alert,
+      "state" => 0,
+      "state_name" => "Active",
+      "qualified_teacher_status" => qts,
+      "induction" => induction,
+      "initial_teacher_training" => {
+        "programme_start_date" => "2021-06-27T00:00:00Z",
+        "programme_end_date" => "2021-07-04T00:00:00Z",
+        "programme_type" => "Overseas Trained Teacher Programme",
+        "result" => "Pass",
+        "subject1" => "applied biology",
+        "subject2" => "applied chemistry",
+        "subject3" => "applied computing",
+        "qualification" => "BA (Hons)",
+        "state" => 0,
+        "state_name" => "Active",
+      },
+      "qualifications" => [
+        {
+          "name" => "Higher Education",
+          "date_awarded" => nil,
         },
-      }.stringify_keys
-    end
-    let(:validation_result) { ParticipantValidationService.validate(trn: trn, nino: nino, full_name: full_name, date_of_birth: dob) }
-
-    let(:mock_client) { instance_double(FullDqt::Client, get_record: nil) }
-
-    before do
-      allow(DqtApiAccess).to receive(:token).and_return("jwt-access-token")
-      allow(FullDqt::Client).to receive(:new).and_return(mock_client)
-    end
-
-    it "calls get_record on the DQT API client" do
-      expect(mock_client).to receive(:get_record).with(
-        trn: trn,
-        birthdate: dob,
-        nino: nino,
-      )
-
-      ParticipantValidationService.validate(trn: trn, nino: nino, full_name: full_name, date_of_birth: dob)
-    end
-
-    context "when the participant cannot be found" do
-      before do
-        expect(mock_client).to receive(:get_record).and_return(nil)
-      end
-
-      it "returns nil" do
-        expect(validation_result).to eql nil
-      end
-    end
-
-    context "when trn is less than 7 characters" do
-      let(:trn) { "123456" }
-      let(:padded_trn) { "0123456" }
-
-      let(:dqt_record) do
         {
-          trn: "0123456", # API sends padded TRNs
-          ni_number: nino,
-          name: full_name,
-          dob: dob,
-          active_alert: alert,
-          qualified_teacher_status: {
-            "qts_date" => qts_date,
-          },
-        }.stringify_keys
-      end
-
-      let(:validation_result) do
-        ParticipantValidationService.validate(
-          trn: trn,
-          nino: "WRONG",
-          full_name: full_name,
-          date_of_birth: dob,
-        )
-      end
-
-      before do
-        expect(mock_client).to receive(:get_record).and_return(dqt_record)
-      end
-
-      it "returns record with padded trn when trn is not padded" do
-        expect(validation_result).to eql({
-          trn: padded_trn,
-          qts: true,
-          active_alert: false,
-          previous_induction: true,
-          previous_participation: false,
-        })
-      end
-    end
-
-    context "when the participant has qts and no active flags" do
-      before do
-        expect(mock_client).to receive(:get_record).and_return(dqt_record)
-      end
-
-      it "returns true when all fields match" do
-        expect(validation_result).to eql({
-          trn: trn,
-          qts: true,
-          active_alert: false,
-          previous_induction: true,
-          previous_participation: false,
-        })
-      end
-
-      it "returns the validated details when date of birth is wrong" do
-        expect(
-          ParticipantValidationService.validate(trn: trn, nino: nino, full_name: full_name, date_of_birth: Date.new(1980, 1, 2)),
-        ).to eql({
-          trn: trn,
-          qts: true,
-          active_alert: false,
-          previous_induction: true,
-          previous_participation: false,
-        })
-      end
-
-      it "returns the validated details when name is wrong" do
-        expect(
-          ParticipantValidationService.validate(trn: trn, nino: nino, full_name: "John Smithe", date_of_birth: dob),
-        ).to eql({
-          trn: trn,
-          qts: true,
-          active_alert: false,
-          previous_induction: true,
-          previous_participation: false,
-        })
-      end
-
-      it "returns the validated details when nino is wrong" do
-        expect(
-          ParticipantValidationService.validate(trn: trn, nino: "AA654321A", full_name: full_name, date_of_birth: dob),
-        ).to eql({
-          trn: trn,
-          qts: true,
-          active_alert: false,
-          previous_induction: true,
-          previous_participation: false,
-        })
-      end
-
-      it "returns the validated details when name is wrong and nino is cased differently" do
-        expect(
-          ParticipantValidationService.validate(trn: trn, nino: nino.downcase, full_name: "John Smithe", date_of_birth: dob),
-        ).to eql({
-          trn: trn,
-          qts: true,
-          active_alert: false,
-          previous_induction: true,
-          previous_participation: false,
-        })
-      end
-
-      it "returns validated details when the name is cased differently and the nino is missing" do
-        expect(
-          ParticipantValidationService.validate(trn: trn, nino: "", full_name: "John SMITH", date_of_birth: dob),
-        ).to eql({
-          trn: trn,
-          qts: true,
-          active_alert: false,
-          previous_induction: true,
-          previous_participation: false,
-        })
-      end
-    end
-
-    context "when 3 of 4 things match and only first name matches" do
-      let(:validation_result) do
-        ParticipantValidationService.validate(
-          trn: trn,
-          nino: "WRONG",
-          full_name: full_name.split(" ").first.to_s,
-          date_of_birth: dob,
-        )
-      end
-
-      it "returns nil" do
-        expect(mock_client).to receive(:get_record).and_return(dqt_record, nil)
-
-        expect(validation_result).to be_nil
-      end
-
-      context "when config check_first_name_only: true" do
-        let(:validation_result) do
-          ParticipantValidationService.validate(
-            trn: trn,
-            nino: "WRONG",
-            full_name: full_name.split(" ").first.to_s,
-            date_of_birth: dob,
-            config: { check_first_name_only: true },
-          )
-        end
-
-        it "returns validated details" do
-          expect(mock_client).to receive(:get_record).and_return(dqt_record)
-
-          expect(validation_result).to eql({
-            trn: trn,
-            qts: true,
-            active_alert: false,
-            previous_induction: true,
-            previous_participation: false,
-          })
-        end
-      end
-    end
-
-    context "when the wrong trn is provided" do
-      let(:other_trn) { "7654321" }
-      let(:record_for_other_trn) do
+          "name" => "NPQH",
+          "date_awarded" => "2021-07-05T00:00:00Z",
+        },
         {
-          trn: other_trn,
-          ni_number: "AA654321A",
-          name: "John Smithe",
-          dob: Date.new(1990, 2, 1),
-          qualified_teacher_status: {
-            "qts_date" => qts_date.to_s,
-          },
-          active_alert: alert,
-        }.stringify_keys
-      end
-
-      before do
-        expect(mock_client).to receive(:get_record)
-                               .twice
-                               .and_return(record_for_other_trn, dqt_record)
-      end
-
-      it "returns the correct details" do
-        expect(ParticipantValidationService.validate(
-                 trn: other_trn,
-                 nino: nino,
-                 full_name: full_name,
-                 date_of_birth: dob,
-               )).to eql({
-                 trn: trn,
-                 qts: true,
-                 active_alert: false,
-                 previous_induction: true,
-                 previous_participation: false,
-               })
-      end
-    end
-
-    context "when the participant has no QTS" do
-      let(:qts_date) { nil }
-
-      before do
-        expect(mock_client).to receive(:get_record).and_return(dqt_record)
-      end
-
-      it "returns correct QTS information" do
-        expect(validation_result).to eql({
-          trn: trn,
-          qts: false,
-          active_alert: false,
-          previous_induction: true,
-          previous_participation: false,
-        })
-      end
-    end
-
-    context "when the participant has an active alert" do
-      let(:alert) { true }
-
-      before do
-        expect(mock_client).to receive(:get_record).and_return(dqt_record)
-      end
-
-      it "returns returns the correct alert details" do
-        expect(validation_result).to eql({
-          trn: trn,
-          qts: true,
-          active_alert: true,
-          previous_induction: true,
-          previous_participation: false,
-        })
-      end
-    end
-
-    context "when the DQT nino is blank" do
-      let(:nino) { "" }
-
-      before do
-        expect(mock_client).to receive(:get_record).twice.and_return(dqt_record)
-      end
-
-      it "does not count blank NINos as matching" do
-        expect(ParticipantValidationService.validate(trn: trn, nino: "", full_name: "John Smithe", date_of_birth: dob)).to be_nil
-      end
-    end
+          "name" => "Mandatory Qualification",
+          "date_awarded" => nil,
+        },
+        {
+          "name" => "HLTA",
+          "date_awarded" => nil,
+        },
+        {
+          "name" => "NPQML",
+          "date_awarded" => "2021-07-05T00:00:00Z",
+        },
+        {
+          "name" => "NPQSL",
+          "date_awarded" => "2021-07-04T00:00:00Z",
+        },
+        {
+          "name" => "NPQEL",
+          "date_awarded" => "2021-07-04T00:00:00Z",
+        },
+      ],
+    }
   end
 end

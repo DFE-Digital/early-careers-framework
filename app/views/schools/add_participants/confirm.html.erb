@@ -4,21 +4,21 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-l">Confirm these details</h1>
+    <span class="govuk-caption-xl"><%= @school.name %> - <%= @cohort.display_name %> cohort</span>
+    <h1 class="govuk-heading-xl">Check your answers</h1>
 
     <dl class="govuk-summary-list govuk-!-margin-bottom-9">
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-          Details
+          Name
         </dt>
         <dd class="govuk-summary-list__value">
           <div><%= add_participant_form.full_name %></div>
-          <div><%= add_participant_form.email %></div>
         </dd>
         <dd class="govuk-summary-list__actions">
           <% unless add_participant_form.type == :self %>
-            <%= govuk_link_to({ action: :show, step: "details" }) do %>
-              Change <span class="govuk-visually-hidden">personal details</span>
+            <%= govuk_link_to({ action: :show, step: "name" }) do %>
+              Change <span class="govuk-visually-hidden">name</span>
             <% end %>
           <% end %>
         </dd>
@@ -26,7 +26,23 @@
 
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-          Type
+          Email
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <div><%= add_participant_form.email %></div>
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <% unless add_participant_form.type == :self %>
+            <%= govuk_link_to({ action: :show, step: "email" }) do %>
+              Change <span class="govuk-visually-hidden">email</span>
+            <% end %>
+          <% end %>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Role
         </dt>
         <dd class="govuk-summary-list__value">
           <%= t add_participant_form.participant_type, scope: "schools.participants.type" %>
@@ -63,11 +79,12 @@
           </dd>
         </div>
       <% end %>
-
     </dl>
 
+    <p class="govuk-body">We’ll contact this person for information needed to check they're eligible for this training programme.</p>
+
     <%= form_for add_participant_form, url: { action: :complete }, method: :post do |f| %>
-      <%= f.govuk_submit "Continue" %>
+      <%= f.govuk_submit "Confirm and add" %>
     <% end %>
   </div>
 </div>

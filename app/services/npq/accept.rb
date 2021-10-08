@@ -15,6 +15,8 @@ module NPQ
     end
 
     def call
+      raise Api::Errors::NPQApplicationAlreadyAcceptedError, I18n.t(:npq_application_already_accepted) if npq_application.accepted?
+
       ApplicationRecord.transaction do
         teacher_profile.update!(trn: npq_application.teacher_reference_number) if npq_application.teacher_reference_number_verified?
         create_profile

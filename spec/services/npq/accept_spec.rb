@@ -144,7 +144,7 @@ RSpec.describe NPQ::Accept do
         npq_validation_data.update!(teacher_reference_number: new_trn)
 
         expect { subject.call }
-          .to raise_error(ActiveRecord::RecordNotUnique)
+          .to raise_error(Api::Errors::NPQApplicationAlreadyAcceptedError, "This NPQ application has already been accepted")
           .and change(TeacherProfile, :count).by(0)
           .and change(ParticipantProfile::NPQ, :count).by(0)
       end
