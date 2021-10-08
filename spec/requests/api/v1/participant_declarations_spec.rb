@@ -49,12 +49,12 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         expect(parsed_response["data"]["id"]).to eq(ParticipantDeclaration.order(:created_at).last.id)
       end
 
-      it "create payable declaration record when user is eligible" do
+      it "create eligible declaration record when user is eligible" do
         params = build_params(valid_params)
         eligibility = ECFParticipantEligibility.create!(participant_profile_id: ect_profile.id)
         eligibility.eligible_status!
         post "/api/v1/participant-declarations", params: params
-        expect(ParticipantDeclaration.order(:created_at).last.payable).to be_truthy
+        expect(ParticipantDeclaration.order(:created_at).last.eligible?).to be_truthy
       end
 
       it "does not create duplicate declarations with the same declaration date, but stores the duplicate declaration attempts" do
@@ -240,11 +240,11 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
       context "when there is a voided declaration" do
         let(:expected_response) do
-          expected_json_response(declaration: participant_declaration, profile: ect_profile, voided: true)
+          expected_json_response(declaration: participant_declaration, profile: ect_profile, state: "voided")
         end
 
         before do
-          participant_declaration.void!
+          participant_declaration.voided!
         end
 
         it "loads list of declarations" do
@@ -263,7 +263,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         end
 
         let(:expected_response) do
-          expected_json_response(declaration: participant_declaration, profile: ect_profile, eligible_for_payment: true)
+          expected_json_response(declaration: participant_declaration, profile: ect_profile, state: "eligible")
         end
 
         before do
@@ -383,7 +383,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
     it "returns the correct headers" do
       expect(parsed_response.headers).to match_array(
-        %w[id course_identifier declaration_date declaration_type eligible_for_payment participant_id voided],
+        %w[id course_identifier declaration_date declaration_type participant_id state eligible_for_payment voided],
       )
     end
 
@@ -393,7 +393,9 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       expect(participant_declaration_one_row["course_identifier"]).to eql participant_declaration_one.course_identifier
       expect(participant_declaration_one_row["declaration_date"]).to eql participant_declaration_one.declaration_date.rfc3339
       expect(participant_declaration_one_row["declaration_type"]).to eql participant_declaration_one.declaration_type
-      expect(participant_declaration_one_row["eligible_for_payment"]).to eql participant_declaration_one.payable.to_s
+      expect(participant_declaration_one_row["eligible_for_payment"]).to eql (participant_declaration_one.eligible? || participant_declaration_one.payable?).to_s
+      expect(participant_declaration_one_row["voided"]).to eql participant_declaration_one.voided?.to_s
+      expect(participant_declaration_one_row["state"]).to eql participant_declaration_one.state.to_s
       expect(participant_declaration_one_row["participant_id"]).to eql participant_declaration_one.participant_profile.user.id
     end
 
@@ -405,23 +407,23 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
 private
 
-  def expected_json_response(declaration:, profile:, course_identifier: "ecf-induction", eligible_for_payment: false, voided: false)
+  def expected_json_response(declaration:, profile:, course_identifier: "ecf-induction", state: "submitted")
     {
       "data" =>
           [
-            single_json_declaration(declaration: declaration, profile: profile, course_identifier: course_identifier, eligible_for_payment: eligible_for_payment, voided: voided),
+            single_json_declaration(declaration: declaration, profile: profile, course_identifier: course_identifier, state: state),
           ],
     }
   end
 
-  def expected_single_json_response(declaration:, profile:, course_identifier: "ecf-induction", eligible_for_payment: false)
+  def expected_single_json_response(declaration:, profile:, course_identifier: "ecf-induction", state: "submitted")
     {
       "data" =>
-          single_json_declaration(declaration: declaration, profile: profile, course_identifier: course_identifier, eligible_for_payment: eligible_for_payment),
+          single_json_declaration(declaration: declaration, profile: profile, course_identifier: course_identifier, state: state),
     }
   end
 
-  def single_json_declaration(declaration:, profile:, course_identifier: "ecf-induction", eligible_for_payment: false, voided: false)
+  def single_json_declaration(declaration:, profile:, course_identifier: "ecf-induction", state: "submitted")
     {
       "id" => declaration.id,
       "type" => "participant-declaration",
@@ -430,8 +432,9 @@ private
         "declaration_type" => "started",
         "declaration_date" => declaration.declaration_date.rfc3339,
         "course_identifier" => course_identifier,
-        "eligible_for_payment" => eligible_for_payment,
-        "voided" => voided,
+        "state" => state,
+        "eligible_for_payment" => state == "eligible",
+        "voided" => state == "voided",
       },
     }
   end

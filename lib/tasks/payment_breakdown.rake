@@ -18,10 +18,10 @@ namespace :payment_calculation do
     raise "Unknown lead provider: #{ARGV[1]}" if cpd_lead_provider.nil?
     raise "Not an ECF lead provider #{ARGV[1]}" if cpd_lead_provider.lead_provider.nil?
 
-    total_participants = (ARGV[2] || ParticipantDeclaration::ECF.payable_for_lead_provider(cpd_lead_provider).count).to_i
-    uplift_participants = (ARGV[3] || ParticipantDeclaration::ECF.payable_uplift_for_lead_provider(cpd_lead_provider).count).to_i
-    total_ects = (ARGV[2].present? ? ARGV[2].to_i / 2 : ParticipantDeclaration::ECF.payable_ects_for_lead_provider(cpd_lead_provider).count)
-    total_mentors = (ARGV[2].present? ? ARGV[2].to_i - ARGV[2].to_i / 2 : ParticipantDeclaration::ECF.payable_mentors_for_lead_provider(cpd_lead_provider).count)
+    total_participants = (ARGV[2] || ParticipantDeclaration::ECF.eligible_for_lead_provider(cpd_lead_provider).count).to_i
+    uplift_participants = (ARGV[3] || ParticipantDeclaration::ECF.eligible_uplift_for_lead_provider(cpd_lead_provider).count).to_i
+    total_ects = (ARGV[2].present? ? ARGV[2].to_i / 2 : ParticipantDeclaration::ECF.eligible_ects_for_lead_provider(cpd_lead_provider).count)
+    total_mentors = (ARGV[2].present? ? ARGV[2].to_i - ARGV[2].to_i / 2 : ParticipantDeclaration::ECF.eligible_mentors_for_lead_provider(cpd_lead_provider).count)
     Tasks::PaymentBreakdown.new(contract: cpd_lead_provider.lead_provider.call_off_contract, total_participants: total_participants, uplift_participants: uplift_participants, total_ects: total_ects, total_mentors: total_mentors).to_table
   rescue StandardError => e
     puts e.message
@@ -38,10 +38,10 @@ namespace :payment_calculation do
       csv << Tasks::PaymentBreakdown.new(contract: lead_providers.first.call_off_contract, total_participants: 0, uplift_participants: 0).csv_headings
       lead_providers.each do |lead_provider|
         contract = lead_provider.call_off_contract
-        total_participants = ParticipantDeclaration::ECF.payable_for_lead_provider(cpd_lead_provider).count
-        uplift_participants = ParticipantDeclaration::ECF.payable_uplift_for_lead_provider(cpd_lead_provider).count
-        total_ects = ParticipantDeclaration::ECF.payable_ects_for_lead_provider(cpd_lead_provider).count
-        total_mentors = ParticipantDeclaration::ECF.payable_mentors_for_lead_provider(cpd_lead_provider).count
+        total_participants = ParticipantDeclaration::ECF.eligible_for_lead_provider(cpd_lead_provider).count
+        uplift_participants = ParticipantDeclaration::ECF.eligible_uplift_for_lead_provider(cpd_lead_provider).count
+        total_ects = ParticipantDeclaration::ECF.eligible_ects_for_lead_provider(cpd_lead_provider).count
+        total_mentors = ParticipantDeclaration::ECF.eligible_mentors_for_lead_provider(cpd_lead_provider).count
         csv << Tasks::PaymentBreakdown.new(contract: contract, total_participants: total_participants, uplift_participants: uplift_participants, total_ects: total_ects, total_mentors: total_mentors).csv_body
       end
     end

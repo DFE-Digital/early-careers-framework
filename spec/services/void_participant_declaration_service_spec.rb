@@ -20,7 +20,7 @@ RSpec.describe VoidParticipantDeclaration do
     it "voids a participant declaration" do
       declaration = ParticipantDeclaration.order(:declaration_date).first
       described_class.new(cpd_lead_provider: cpd_lead_provider, id: declaration.id).call
-      expect(declaration.reload.voided).to be_truthy
+      expect(declaration.reload.voided?).to be_truthy
     end
 
     it "does not void a voided declaration" do
@@ -39,16 +39,16 @@ RSpec.describe VoidParticipantDeclaration do
     end
 
     it "only voids the last declaration" do
-      old_declaration = create(:participant_declaration, declaration_date: start_date + 1.day, course_identifier: "ecf-induction", declaration_type: "started", cpd_lead_provider: cpd_lead_provider)
+      old_declaration = create(:participant_declaration, :submitted, declaration_date: start_date + 1.day, course_identifier: "ecf-induction", declaration_type: "started", cpd_lead_provider: cpd_lead_provider)
       create(:profile_declaration, participant_declaration: old_declaration, participant_profile: ect_profile)
       expect {
         described_class.new(cpd_lead_provider: cpd_lead_provider, id: old_declaration.id).call
       }.to raise_error Api::Errors::InvalidTransitionError
-      expect(old_declaration.reload.voided).to be_falsey
+      expect(old_declaration.reload.voided?).to be_falsey
 
       new_declaration = ParticipantDeclaration.order(declaration_date: :desc).first
       described_class.new(cpd_lead_provider: cpd_lead_provider, id: new_declaration.id).call
-      expect(new_declaration.reload.voided).to be_truthy
+      expect(new_declaration.reload.voided?).to be_truthy
     end
   end
 end

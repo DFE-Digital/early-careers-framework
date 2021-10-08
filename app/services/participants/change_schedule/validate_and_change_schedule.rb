@@ -30,17 +30,16 @@ module Participants
       end
 
       def schedule_valid_with_pending_declarations
-        return unless user_profile
+        user_profile&.participant_declarations&.each do |declaration|
+          if declaration.changeable?
+            milestone = schedule.milestones.find_by(declaration_type: declaration.declaration_type)
+            if declaration.declaration_date <= milestone.start_date.beginning_of_day
+              errors.add(:schedule_identifier, I18n.t(:schedule_invalidates_declaration))
+            end
 
-        declarations = user_profile.participant_declarations.not_voided
-        declarations.each do |declaration|
-          milestone = schedule.milestones.find_by(declaration_type: declaration.declaration_type)
-          if declaration.declaration_date <= milestone.start_date.beginning_of_day
-            errors.add(:schedule_identifier, I18n.t(:schedule_invalidates_declaration))
-          end
-
-          if milestone.milestone_date.end_of_day < declaration.declaration_date
-            errors.add(:schedule_identifier, I18n.t(:schedule_invalidates_declaration))
+            if milestone.milestone_date.end_of_day < declaration.declaration_date
+              errors.add(:schedule_identifier, I18n.t(:schedule_invalidates_declaration))
+            end
           end
         end
       end

@@ -31,10 +31,10 @@ private
   def aggregation_types
     {
       started: {
-        all: :payable_for_lead_provider,
-        uplift: :payable_uplift_for_lead_provider,
-        ects: :payable_ects_for_lead_provider,
-        mentors: :payable_mentors_for_lead_provider,
+        all: :eligible_for_lead_provider,
+        uplift: :eligible_uplift_for_lead_provider,
+        ects: :eligible_ects_for_lead_provider,
+        mentors: :eligible_mentors_for_lead_provider,
       },
     }
   end
