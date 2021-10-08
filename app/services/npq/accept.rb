@@ -59,6 +59,9 @@ module NPQ
         Finance::Schedule::NPQLeadership.default
       when "npq-senior-leadership", "npq-headship", "npq-executive-leadership"
         Finance::Schedule::NPQSpecialist.default
+      when "npq-additional-support-offer"
+        # TODO: Figure out what ASO schedules look like
+        Finance::Schedule::NPQSpecialist.default
       else
         raise ArgumentError "Invalid course identifier"
       end
