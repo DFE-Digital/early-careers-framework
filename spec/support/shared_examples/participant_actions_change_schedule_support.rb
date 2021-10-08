@@ -34,7 +34,7 @@ RSpec.shared_examples "a participant change schedule action service" do
     end
 
     it "ignores voided declarations when changing the schedule" do
-      declaration.void!
+      declaration.voided!
       extended_schedule.milestones.each { |milestone| milestone.update!(start_date: milestone.start_date + 6.months, milestone_date: milestone.milestone_date + 6.months) }
 
       described_class.call(params: given_params)

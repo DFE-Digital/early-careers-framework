@@ -8,7 +8,6 @@ RSpec.describe ParticipantDeclaration, type: :model do
   describe "associations" do
     it { is_expected.to belong_to(:cpd_lead_provider) }
     it { is_expected.to have_one(:participant_profile).through(:profile_declaration) }
-    it { is_expected.to have_one(:current_state) }
     it { is_expected.to have_many(:declaration_states) }
   end
 
@@ -46,9 +45,10 @@ RSpec.describe ParticipantDeclaration, type: :model do
     let!(:participant_declaration) { create(:ect_participant_declaration) }
 
     it "returns the current state" do
-      state_new = create(:declaration_state, :eligible, participant_declaration: participant_declaration)
+      participant_declaration.make_eligible!
 
-      expect(participant_declaration.current_state).to eq(state_new)
+      expect(participant_declaration.declaration_states.order(created_at: :desc).first.state).to eq("eligible")
+      expect(participant_declaration.eligible?).to be_truthy
     end
   end
 
@@ -63,19 +63,16 @@ RSpec.describe ParticipantDeclaration, type: :model do
       end
 
       context "when declaration becomes not eligible for payment" do
-        before do
-          eligibility.manual_check_status!
-        end
-
         it "makes the declaration submitted if currently eligible for payment" do
           expect(participant_declaration.eligible?).to be_truthy
+          eligibility.manual_check_status!
           expect { participant_declaration.refresh_payability! }.to change { participant_declaration.declaration_states.count }.by(1)
           expect(participant_declaration.eligible?).to be_falsey
           expect(participant_declaration.submitted?).to be_truthy
         end
 
         it "keeps the declaration voided if it was voided already" do
-          participant_declaration.void!
+          participant_declaration.voided!
           expect { participant_declaration.refresh_payability! }.not_to change { participant_declaration.declaration_states.count }
           expect(participant_declaration.voided?).to be_truthy
         end
@@ -108,7 +105,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
         end
 
         it "keeps the declaration voided if it was voided already" do
-          participant_declaration.void!
+          participant_declaration.voided!
           expect { participant_declaration.refresh_payability! }.not_to change { participant_declaration.declaration_states.count }
           expect(participant_declaration.voided?).to be_truthy
         end
@@ -123,7 +120,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
     end
   end
 
-  describe "void!" do
+  describe "voided!" do
     let!(:participant_declaration) { create(:ect_participant_declaration) }
     let!(:eligibility) { ECFParticipantEligibility.create!(participant_profile_id: participant_declaration.participant_profile_id) }
 
@@ -133,7 +130,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
       end
 
       it "voids the declaration" do
-        participant_declaration.void!
+        participant_declaration.voided!
         expect(participant_declaration.eligible?).to be_falsey
         expect(participant_declaration.voided?).to be_truthy
       end
@@ -145,7 +142,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
       end
 
       it "voids the declaration and keeps it not-eligible" do
-        participant_declaration.void!
+        participant_declaration.voided!
         expect(participant_declaration.eligible?).to be_falsy
         expect(participant_declaration.voided?).to be_truthy
       end

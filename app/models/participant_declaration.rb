@@ -30,7 +30,6 @@ class ParticipantDeclaration < ApplicationRecord
   scope :mentor, -> { joins(:profile_declaration).merge(ProfileDeclaration.mentor_profiles) }
   scope :npq, -> { joins(:profile_declaration).merge(ProfileDeclaration.npq_profiles) }
 
-  scope :current_state, -> { joins(:declaration_states).merge(DeclarationState.current_state) }
   scope :changeable, -> { where(state: %w[eligible submitted]) }
   scope :unique_id, -> { select(:user_id).distinct }
 
@@ -39,7 +38,7 @@ class ParticipantDeclaration < ApplicationRecord
   scope :submitted_between, ->(start_date, end_date) { where(created_at: start_date..end_date) }
 
   # Declaration aggregation scopes
-  scope :eligible_for_lead_provider, ->(lead_provider) { for_lead_provider(lead_provider).unique_id.current_state.eligible }
+  scope :eligible_for_lead_provider, ->(lead_provider) { for_lead_provider(lead_provider).unique_id.eligible }
   scope :eligible_ects_for_lead_provider, ->(lead_provider) { eligible_for_lead_provider(lead_provider).ect }
   scope :eligible_mentors_for_lead_provider, ->(lead_provider) { eligible_for_lead_provider(lead_provider).mentor }
   scope :eligible_npqs_for_lead_provider, ->(lead_provider) { eligible_for_lead_provider(lead_provider).npq }
@@ -52,45 +51,43 @@ class ParticipantDeclaration < ApplicationRecord
   scope :payable_uplift_for_lead_provider, ->(lead_provider) { payable_for_lead_provider(lead_provider).uplift }
 
   def refresh_payability!
-    new_state = fundable? ? "eligible" : "submitted"
-    return if state == new_state
-
-    DeclarationState.create!(participant_declaration: self, state: new_state) and reload if changeable?
+    reload
+    fundable? ? make_eligible! : make_submitted!
   end
 
-  def submit!
-    DeclarationState.submit!(participant_declaration: self) and reload if eligible?
+  def make_submitted!
+    DeclarationState.submitted!(self) if eligible?
   end
 
-  def void!
-    DeclarationState.void!(participant_declaration: self) and reload unless voided?
+  def make_voided!
+    DeclarationState.voided!(self) unless voided?
   end
 
-  def eligible
-    DeclarationState.eligible!(participant_declaration: self)
+  def make_eligible
+    DeclarationState.eligible!(self)
   end
 
-  def eligible!
-    eligible and reload if submitted?
+  def make_eligible!
+    make_eligible if submitted?
   end
 
-  def payable
-    DeclarationState.payable!(participant_declaration: self)
+  def make_payable
+    DeclarationState.payable!(self)
   end
 
-  def payable!
-    payable and reload if eligible?
+  def make_payable!
+    make_payable if eligible?
   end
 
-  def pay
-    DeclarationState.pay!(participant_declaration: self)
+  def make_paid
+    DeclarationState.pay!(self)
   end
 
-  def pay!
-    pay and reload if payable?
+  def make_paid!
+    make_paid if payable?
   end
 
   def changeable?
-    %w[submitted eligible].include?(current_state.state)
+    %w[submitted eligible].include?(current_state)
   end
 end
