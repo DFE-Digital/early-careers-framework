@@ -76,16 +76,19 @@ const pagePaths = {
   "new lead provider user details": "/admin/suppliers/users/new/user-details",
   "new lead provider user review": "/admin/suppliers/users/new/review",
   "lead provider user delete": "/lead-providers/users/:id/delete",
-  "choose programme": "/schools/:id/choose-programme",
-  "choose programme advisory": "/schools/:id/choose-programme/advisory",
-  "choose programme confirm": "/schools/:id/choose-programme/confirm-programme",
-  "choose programme success": "/schools/:id/choose-programme/success",
+  "choose programme": "/schools/:school_id/cohorts/:cohort_id/choose-programme",
+  "choose programme advisory":
+    "/schools/:school_id/cohorts/:cohort_id/choose-programme/advisory",
+  "choose programme confirm":
+    "/schools/:school_id/cohorts/:cohort_id/choose-programme/confirm-programme",
+  "choose programme success":
+    "/schools/:school_id/cohorts/:cohort_id/choose-programme/success",
   "design your programme success":
-    "/schools/:id/choose-programme/design-your-programme",
+    "/schools/:school_id/cohorts/:cohort_id/choose-programme/design-your-programme",
   "school funded fip success":
-    "/schools/:id/choose-programme/school-funded-fip",
+    "/schools/:school_id/cohorts/:cohort_id/choose-programme/school-funded-fip",
   "no early career teachers success":
-    "/schools/:id/choose-programme/no-early-career-teachers",
+    "/schools/:school_id/cohorts/:cohort_id/choose-programme/no-early-career-teachers",
   schools: "/schools",
   "school cohorts": "/schools/:id",
   "2021 school cohorts": "/schools/:id/cohorts/2021",

@@ -27,7 +27,7 @@ Feature: Induction tutors choosing programmes
     And the page should be accessible
     And percy should be sent snapshot called "CIP schools page"
 
-    When I navigate to "choose programme" page with id "test-school"
+    When I navigate to "choose programme" page with school_id "test-school" and cohort_id "2021"
     Then I should have been redirected to "school cohorts" page
     And the page should be accessible
     And "page body" should contain "Manage your training"
