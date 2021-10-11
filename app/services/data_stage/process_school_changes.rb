@@ -19,6 +19,8 @@ module DataStage
 
         if change.attribute_changes.key? "school_status_code"
           handle_status_code_change(change)
+        else
+          change.school.create_or_sync_counterpart!
         end
       end
     end
@@ -26,17 +28,19 @@ module DataStage
   private
 
     def has_unhandled_changes?(school_change)
-      unhandled_attrs = (unhandled_attributes & change.attribute_changes.keys)
+      unhandled_attrs = (unhandled_attributes & school_change.attribute_changes.keys)
+      counterpart = school_change.school.counterpart
+
       has_unhandled_changes = false
 
-      if unhandled_attrs.any?
-        counterpart = school_change.school.counterpart
+      if counterpart.present? && unhandled_attrs.any?
         unhandled_attrs.each do |attr|
           next if counterpart.send(attr).blank?
           has_unhandled_changes = true
           break
         end
       end
+
       has_unhandled_changes
     end
 
@@ -75,17 +79,17 @@ module DataStage
         return
       end
 
-      last_link = change.school.school_links.find_by(link_type: "Successor")
-      if last_link.present?
+      successor_link = change.school.school_links.find_by(link_type: "Successor")
+      if successor_link.present?
         ActiveRecord::Base.transaction do
-          successor = find_or_create_successor!(last_link.link_urn)
+          successor = find_or_create_successor!(successor_link.link_urn)
           move_assets_from!(school: change.school.counterpart, successor: successor)
-          change.school.counterpart.school_links.successor.create!(link_school: successor)
-          successor.school_links.predecessor.create!(link_school: change.school.counterpart)
-          change.school.create_or_sync_counterpart!
-          change.update!(handled: true)
+          change.school.counterpart.school_links.successor.simple.create!(link_urn: successor.urn)
+          successor.school_links.predecessor.simple.create!(link_urn: change.school.urn)
         end
       end
+      change.school.create_or_sync_counterpart!
+      change.update!(handled: true)
     end
 
     def find_or_create_successor!(urn)

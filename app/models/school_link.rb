@@ -2,7 +2,9 @@
 
 class SchoolLink < ApplicationRecord
   belongs_to :school
-  belongs_to :link_school, class_name: "School"
+  has_one :link_school, class_name: "School",
+                        foreign_key: :urn,
+                        primary_key: :link_urn
 
   enum link_type: {
     predecessor: "predecessor",
@@ -11,8 +13,8 @@ class SchoolLink < ApplicationRecord
 
   enum link_reason: {
     simple: "simple",
-    merger: "merger",
-    split: "split",
+    school_merger: "school_merger",
+    school_split: "school_split",
     other: "other",
   }
 end
