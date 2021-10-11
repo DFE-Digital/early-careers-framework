@@ -3,6 +3,7 @@
 class ParticipantEventPayableAggregator < ParticipantEventAggregator
 
 private
+
   def aggregation_types
     {
       started: {
