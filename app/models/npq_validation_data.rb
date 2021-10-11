@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class NPQValidationData < ApplicationRecord
-  has_paper_trail
+  has_paper_trail only: %i[user_id npq_lead_provider_id npq_course_id created_at updated_at lead_provider_approval_status]
   # TODO: Rename table
   self.table_name = "npq_profiles"
 
