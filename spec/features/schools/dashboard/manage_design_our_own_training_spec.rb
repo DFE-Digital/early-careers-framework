@@ -15,7 +15,7 @@ RSpec.describe "Manage Design Our Own training", js: true, with_feature_flags: {
   end
 
   scenario "Changing induction programme" do
-    school_cohort = create :school_cohort, induction_programme_choice: "design_our_own"
+    school_cohort = create :school_cohort, induction_programme_choice: "design_our_own", school: create(:school, name: "Test School")
 
     sign_in_as create(:induction_coordinator_profile, schools: [school_cohort.school]).user
     expect(page).to have_text("Design and deliver your own programme")
