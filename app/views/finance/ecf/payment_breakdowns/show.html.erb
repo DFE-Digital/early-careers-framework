@@ -4,7 +4,7 @@
 <h1 class="govuk-heading-xl"><%= @breakdown[:breakdown_summary][:name] %></h1>
 <!--TODO: Un-hardcode the values-->
 <p class="govuk-caption-m govuk-!-margin-0">Payment of</p>
-<h2 class="govuk-heading-xl govuk-!-margin-0"><%= number_to_pounds 100_000 %></h2>
+<h2 class="govuk-heading-xl govuk-!-margin-0"><%= number_to_pounds total_payment(@breakdown) + total_vat(@breakdown, @ecf_lead_provider) %></h2>
 <p class="govuk-caption-m govuk-!-margin-0">On 31 October 2021</p>
 
 <div class="govuk-grid-row govuk-!-margin-top-9">
