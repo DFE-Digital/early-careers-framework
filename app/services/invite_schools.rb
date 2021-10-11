@@ -345,7 +345,7 @@ class InviteSchools
       .where.missing(:induction_coordinators)
       .find_each do |school|
         if school.contact_email.blank?
-          logger.info "No contact details for school urn: #{urn} ... skipping"
+          logger.info "No contact details for school urn: #{school.urn} ... skipping"
           next
         end
 
@@ -357,7 +357,7 @@ class InviteSchools
 
         notify_id = SchoolMailer.unengaged_schools_email(
           recipient: school.contact_email,
-          school_name: school.name,
+          school: school,
           nomination_url: nomination_email.nomination_url(utm_source: :unengaged_schools),
         ).deliver_now.delivery_method.response.id
 

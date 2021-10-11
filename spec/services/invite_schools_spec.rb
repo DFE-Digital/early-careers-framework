@@ -1054,7 +1054,7 @@ RSpec.describe InviteSchools do
       expect(SchoolMailer).to receive(:unengaged_schools_email).with(
         hash_including(
           recipient: school.contact_email,
-          school_name: school.name,
+          school: school,
           nomination_url: a_string_including("utm_campaign=unengaged-schools&utm_medium=email&utm_source=unengaged-schools"),
         ),
       ).and_call_original

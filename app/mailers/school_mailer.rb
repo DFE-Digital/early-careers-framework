@@ -220,17 +220,17 @@ class SchoolMailer < ApplicationMailer
     )
   end
 
-  def unengaged_schools_email(recipient:, school_name:, nomination_url:)
+  def unengaged_schools_email(recipient:, school:, nomination_url:)
     template_mail(
       UNENGAGED_INVITE_EMAIL_TEMPLATE,
       to: recipient,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        school_name: school_name,
+        school_name: school.name,
         nomination_link: nomination_url,
       },
-    )
+    ).tag(:unengaged_school_email).associate_with(school)
   end
 
   def induction_coordinator_sign_in_chaser_email(recipient:, name:, school_name:, sign_in_url:)
