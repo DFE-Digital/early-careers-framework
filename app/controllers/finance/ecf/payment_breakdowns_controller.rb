@@ -14,12 +14,6 @@ module Finance
         @type = "eligible"
       end
 
-      def make_payable
-        @ecf_lead_provider = lead_provider_scope.find(params[:id])
-
-
-      end
-
     private
 
       def lead_provider_scope

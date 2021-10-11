@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ParticipantDeclarationPayableJob < ApplicationJob
   queue_as :default
 
@@ -7,13 +9,13 @@ class ParticipantDeclarationPayableJob < ApplicationJob
     end
 
     def milestone
-      TimeWithZone.new("2021-11-01T00:00:00Z")
+      Time.local(2021,11,1).to_s(:db)
     end
   end
 
+  delegate :milestone, to: ParticipantDeclarationPayableJob
+
   def perform(*)
-    ParticipantDeclaration.where(declaration_date: "<#{milestone.to_s}").where(declaration_type: "started").where(created_at: "<#{milestone.to_s}").each do |participant_declaration|
-      participant_declaration.make_payable!
-    end
+    ParticipantDeclaration.where(state: "eligible").where("declaration_date <= ?", milestone).where(declaration_type: "started").where("created_at <= ?", milestone).each(&:make_payable!)
   end
 end
