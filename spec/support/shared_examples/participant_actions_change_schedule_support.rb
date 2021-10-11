@@ -22,7 +22,7 @@ RSpec.shared_examples "a participant change schedule action service" do
 
   it "creates a schedule on profile" do
     expect { described_class.call(params: participant_params) }.to change { ParticipantProfileSchedule.count }.by(1)
-    expect(user_profile.participant_profile_schedule.schedule_identifier).to eq("ecf-september-extended-2021")
+    expect(user_profile.participant_profile_schedule.schedule.schedule_identifier).to eq("ecf-september-extended-2021")
   end
 
   context "when a pending declaration exists" do

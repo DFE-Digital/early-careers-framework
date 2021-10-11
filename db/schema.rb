@@ -497,10 +497,11 @@ ActiveRecord::Schema.define(version: 2021_10_08_081430) do
 
   create_table "participant_profile_schedules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_profile_id", null: false
-    t.text "schedule_identifier", default: "ecf-september-standard-2021"
+    t.uuid "schedule_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["participant_profile_id"], name: "index_participant_profile_schedules_on_participant_profile_id"
+    t.index ["schedule_id"], name: "index_participant_profile_schedules_on_schedule_id"
   end
 
   create_table "participant_profile_states", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -803,6 +804,7 @@ ActiveRecord::Schema.define(version: 2021_10_08_081430) do
   add_foreign_key "participant_bands", "call_off_contracts"
   add_foreign_key "participant_declaration_attempts", "participant_declarations"
   add_foreign_key "participant_profile_schedules", "participant_profiles"
+  add_foreign_key "participant_profile_schedules", "schedules"
   add_foreign_key "participant_profile_states", "participant_profiles"
   add_foreign_key "participant_profiles", "cohorts"
   add_foreign_key "participant_profiles", "core_induction_programmes"
