@@ -10,8 +10,7 @@ class ParticipantProfile < ApplicationRecord
 
   has_many :validation_decisions, class_name: "ProfileValidationDecision"
 
-  has_many :profile_declarations
-  has_many :participant_declarations, through: :profile_declarations
+  has_many :participant_declarations
 
   has_many :participant_profile_states
   has_one :participant_profile_state, lambda {

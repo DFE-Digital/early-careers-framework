@@ -201,17 +201,12 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
     let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
     let(:bearer_token) { "Bearer #{token}" }
 
-    let(:participant_declaration) do
+    let!(:participant_declaration) do
       create(:participant_declaration,
              user: ect_profile.user,
              cpd_lead_provider: cpd_lead_provider,
+             participant_profile: ect_profile,
              course_identifier: "ecf-induction")
-    end
-
-    let!(:profile_declaration) do
-      create(:profile_declaration,
-             participant_declaration: participant_declaration,
-             participant_profile: ect_profile)
     end
 
     before do
@@ -295,11 +290,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
           create(:participant_declaration,
                  user: second_ect_profile.user,
                  cpd_lead_provider: cpd_lead_provider,
-                 course_identifier: "ecf-induction")
-        end
-        let!(:second_profile_declaration) do
-          create(:profile_declaration,
-                 participant_declaration: second_participant_declaration,
+                 course_identifier: "ecf-induction",
                  participant_profile: second_ect_profile)
         end
         let(:expected_response) do
@@ -347,25 +338,17 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
     let(:bearer_token) { "Bearer #{token}" }
 
     let!(:participant_declaration_one) do
-      participant_declaration = create(:participant_declaration,
-                                       user: ect_profile.user,
-                                       cpd_lead_provider: cpd_lead_provider,
-                                       course_identifier: "ecf-induction")
-      create(:profile_declaration,
-             participant_declaration: participant_declaration,
-             participant_profile: ect_profile)
-      participant_declaration
+      create(:ect_participant_declaration,
+             participant_profile: ect_profile,
+             user: ect_profile.user,
+             cpd_lead_provider: cpd_lead_provider)
     end
 
     let!(:participant_declaration_two) do
-      participant_declaration = create(:participant_declaration,
-                                       user: ect_profile.user,
-                                       cpd_lead_provider: cpd_lead_provider,
-                                       course_identifier: "ecf-induction")
-      create(:profile_declaration,
-             participant_declaration: participant_declaration,
-             participant_profile: ect_profile)
-      participant_declaration
+      create(:ect_participant_declaration,
+             participant_profile: ect_profile,
+             user: ect_profile.user,
+             cpd_lead_provider: cpd_lead_provider)
     end
 
     before do

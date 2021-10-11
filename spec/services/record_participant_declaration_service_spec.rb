@@ -14,8 +14,8 @@ RSpec.describe RecordParticipantDeclaration do
   end
 
   context "when sending event for an npq course" do
-    it "creates a participant and profile declaration" do
-      expect { described_class.call(npq_params) }.to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
+    it "creates a participant declaration" do
+      expect { described_class.call(npq_params) }.to change { ParticipantDeclaration.count }.by(1)
     end
   end
 
@@ -28,7 +28,7 @@ RSpec.describe RecordParticipantDeclaration do
 
     context "when valid user is an early_career_teacher" do
       it "creates a participant and profile declaration" do
-        expect { described_class.call(ect_params) }.to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
+        expect { described_class.call(ect_params) }.to change { ParticipantDeclaration.count }.by(1)
       end
 
       it "fails when course is for mentor" do
@@ -39,7 +39,7 @@ RSpec.describe RecordParticipantDeclaration do
 
     context "when valid user is a mentor" do
       it "creates a participant and profile declaration" do
-        expect { described_class.call(mentor_params) }.to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
+        expect { described_class.call(mentor_params) }.to change { ParticipantDeclaration.count }.by(1)
       end
 
       it "fails when course is for an early_career_teacher" do

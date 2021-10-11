@@ -23,9 +23,7 @@ RSpec.shared_examples "a participant change schedule action service" do
   context "when a pending declaration exists" do
     let!(:declaration) do
       start_date = user_profile.schedule.milestones.first.start_date
-      declaration = create(:participant_declaration, declaration_date: start_date + 1.day, course_identifier: "ecf-induction", declaration_type: "started", cpd_lead_provider: cpd_lead_provider)
-      create(:profile_declaration, participant_declaration: declaration, participant_profile: user_profile)
-      declaration
+      create(:participant_declaration, declaration_date: start_date + 1.day, course_identifier: "ecf-induction", declaration_type: "started", cpd_lead_provider: cpd_lead_provider, participant_profile: user_profile)
     end
 
     it "fails when it would invalidate a valid declaration" do
