@@ -1,7 +1,7 @@
 GIT
-  remote: https://github.com/ethanmills/rspec-default_http_header.git
-  revision: b72a803df9bef16a1da804c93898a432399f9c88
-  ref: b72a803
+  remote: https://github.com/kenchan/rspec-default_http_header.git
+  revision: e91015be8e949b2fe9d0fc0a7d54e9fb3b5186b8
+  ref: e91015b
   specs:
     rspec-default_http_header (0.0.5)
       rspec-rails (> 3.0)
