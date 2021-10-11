@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 require "jsonapi/serializer/instrumentation"
-ActiveSupport::Deprecation.warn("eligible_for_payment is deprecated as a returnable value for declarations")
-ActiveSupport::Deprecation.warn("voided is deprecated as a returnable value for declarations")
 
 class ParticipantDeclarationSerializer
   include JSONAPI::Serializer
   include JSONAPI::Serializer::Instrumentation
+
+  # TODO: eligible_for_payment is deprecated, will need removing in one of next api versions
+  # TODO: voided is deprecated, will need removing in one of next api versions
 
   set_id :id
   set_type :'participant-declaration'
