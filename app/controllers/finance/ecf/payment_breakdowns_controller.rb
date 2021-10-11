@@ -11,6 +11,13 @@ module Finance
           contract: @ecf_lead_provider.call_off_contract,
           event_type: :started,
         )
+        @type = "eligible"
+      end
+
+      def make_payable
+        @ecf_lead_provider = lead_provider_scope.find(params[:id])
+
+
       end
 
     private
