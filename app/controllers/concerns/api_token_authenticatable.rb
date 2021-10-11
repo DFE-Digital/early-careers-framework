@@ -7,6 +7,7 @@ module ApiTokenAuthenticatable
   included do
     before_action :authenticate
     before_action :check_access_scope
+    before_action :set_paper_trail_whodunnit
   end
 
   def authenticate
