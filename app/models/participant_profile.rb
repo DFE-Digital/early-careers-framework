@@ -4,18 +4,30 @@ class ParticipantProfile < ApplicationRecord
   has_paper_trail
   belongs_to :teacher_profile, touch: true
 
-  # TODO: Back-fill, so that every profile has a schedule. Add touch: true afterwards
-  belongs_to :schedule, optional: true, class_name: "Finance::Schedule"
+  belongs_to :schedule, class_name: "Finance::Schedule", touch: true
 
   has_one :user, through: :teacher_profile
 
-  has_one :ecf_participant_validation_data
   has_many :validation_decisions, class_name: "ProfileValidationDecision"
+
+  has_many :profile_declarations
+  has_many :participant_declarations, through: :profile_declarations
+
+  has_many :participant_profile_states
+  has_one :participant_profile_state, lambda {
+    merge(ParticipantProfileState.most_recent)
+  }, class_name: "ParticipantProfileState"
 
   enum status: {
     active: "active",
     withdrawn: "withdrawn",
-  }
+  }, _suffix: :record
+
+  enum training_status: {
+    active: "active",
+    deferred: "deferred",
+    withdrawn: "withdrawn",
+  }, _prefix: "training_status"
 
   scope :mentors, -> { where(type: Mentor.name) }
   scope :ects, -> { where(type: ECT.name) }
@@ -33,6 +45,10 @@ class ParticipantProfile < ApplicationRecord
   self.validation_steps = []
 
   self.ignored_columns = %w[user_id]
+
+  def state
+    participant_profile_state&.state
+  end
 
   def ect?
     false
@@ -58,6 +74,10 @@ class ParticipantProfile < ApplicationRecord
     !approved? && !rejected?
   end
 
+  def request_for_details_sent?
+    request_for_details_sent_at.present?
+  end
+
   def validation_decision(name)
     unless self.class.validation_steps.include?(name.to_sym)
       raise "Unknown validation step: #{name} for #{self.class.name}. Known steps: #{self.class.validation_steps.join(', ')}"
@@ -65,5 +85,18 @@ class ParticipantProfile < ApplicationRecord
 
     decision = validation_decisions.find { |record| record.validation_step.to_s == name.to_s }
     decision || validation_decisions.build(validation_step: name)
+  end
+
+  def state_at(declaration_date)
+    participant_profile_states.where("created_at < ?", declaration_date).order(:created_at).last
+  end
+
+  def fundable?
+    false
+  end
+
+  def update_schedule!(schedule)
+    # TODO: Do we need to store when this happens outside of papertrail?
+    update!(schedule: schedule)
   end
 end

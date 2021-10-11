@@ -6,6 +6,14 @@
     margin-bottom: 0;
   }
 
+  &__input {
+    .govuk-form-group {
+      select {
+        width: 100%;
+      }
+    }
+  }
+
   @include govuk-media-query($from: tablet) {
     &__form {
       display: flex;
@@ -18,12 +26,16 @@
       .govuk-form-group {
         margin-bottom: 0;
       }
+
+      &:nth-of-type(n+2) {
+        margin-left: govuk-spacing(3);
+      }
     }
 
     &__button {
       flex-grow: 0;
       margin-left: govuk-spacing(3);
-     transform: translateY(-2px);
+      transform: translateY(-2px);
     }
   }
 }

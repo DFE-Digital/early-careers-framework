@@ -1,5 +1,5 @@
 {
-  "$id": "https://digital.education.gov.uk/schema/participant_declarations/create/request_schema.json",
+  "$id": "https://digital.education.gov.uk/schema/npq/participant_declarations/create/request_schema.json",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {
@@ -42,7 +42,8 @@
           "npq-leading-behaviour-culture",
           "npq-headship",
           "npq-senior-leadership",
-          "npq-executive-leadership"
+          "npq-executive-leadership",
+          "npq-additional-support-offer"
         ]
       },
       "participant_started_declarations": {

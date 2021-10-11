@@ -5,9 +5,9 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">Update teacher</h1>
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">Add teachers from the year 2020 to 2021 cohort</h1>
     <p class="govuk-body">
-      To give your teachers access to your schools chosen materials we will need their full name and email address.
+      We will send them a link to access their materials.
     </p>
 
     <%= form_for @year_2020_form, url: { action: :update_teacher, index: params[:index] }, method: :put do |f| %>

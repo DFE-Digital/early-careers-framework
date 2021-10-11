@@ -22,8 +22,9 @@ const pagePaths = {
   privacy: "/privacy-policy",
   accessibility: "/accessibility-statement",
   dashboard: "/dashboard",
+  "Manage your training": "/schools/:id",
   "2021 cohort CIP materials info":
-    "/schools/:id/cohorts/2021/core-programme/materials/info",
+    "/schools/:id/cohorts/2021/programme-choice",
   "2021 cohort CIP materials selection":
     "/schools/:id/cohorts/2021/core-programme/materials/edit",
   "2021 cohort CIP materials success":
@@ -57,8 +58,6 @@ const pagePaths = {
   "choose delivery partner cohorts":
     "/admin/suppliers/new/delivery-partner/choose-cohorts",
   "new delivery partner review": "/admin/suppliers/new/delivery-partner/review",
-  "finance lead providers index": "/finance/lead-providers",
-  "ECF payment breakdown": "/finance/lead-providers/:id",
   "delivery partner edit": "/delivery-partners/:id/edit",
   "delivery partner delete": "/delivery-partners/:id/delete",
   "users sign in": "/users/sign_in",
@@ -70,7 +69,6 @@ const pagePaths = {
   "resend nominations not eligible": "/nominations/not-eligible",
   "resend nominations already nominated": "/nominations/already-nominated",
   "resend nominations limit reached": "/nominations/limit-reached",
-  "resend nominations cip only": "/nominations/cip-only",
   "choose how to continue nominations": "/nominations/choose-how-to-continue",
   "start nominations with token": "/nominations/start?token=foo-bar-baz",
   "lead provider users index": "/admin/suppliers/users",
@@ -78,14 +76,19 @@ const pagePaths = {
   "new lead provider user details": "/admin/suppliers/users/new/user-details",
   "new lead provider user review": "/admin/suppliers/users/new/review",
   "lead provider user delete": "/lead-providers/users/:id/delete",
-  "choose programme": "/schools/:id/choose-programme",
-  "choose programme advisory": "/schools/:id/choose-programme/advisory",
-  "choose programme confirm": "/schools/:id/choose-programme/confirm-programme",
-  "choose programme success": "/schools/:id/choose-programme/success",
+  "choose programme": "/schools/:school_id/cohorts/:cohort_id/choose-programme",
+  "choose programme advisory":
+    "/schools/:school_id/cohorts/:cohort_id/choose-programme/advisory",
+  "choose programme confirm":
+    "/schools/:school_id/cohorts/:cohort_id/choose-programme/confirm-programme",
+  "choose programme success":
+    "/schools/:school_id/cohorts/:cohort_id/choose-programme/success",
   "design your programme success":
-    "/schools/:id/choose-programme/design-your-programme",
+    "/schools/:school_id/cohorts/:cohort_id/choose-programme/design-your-programme",
+  "school funded fip success":
+    "/schools/:school_id/cohorts/:cohort_id/choose-programme/school-funded-fip",
   "no early career teachers success":
-    "/schools/:id/choose-programme/no-early-career-teachers",
+    "/schools/:school_id/cohorts/:cohort_id/choose-programme/no-early-career-teachers",
   schools: "/schools",
   "school cohorts": "/schools/:id",
   "2021 school cohorts": "/schools/:id/cohorts/2021",
@@ -144,11 +147,6 @@ const pagePaths = {
   "the Lead Provider landing page": "/lead-providers",
   "Partnership guidance": "/lead-providers/partnership-guide",
   "API Documentation": "/api-docs/index.html",
-  "API guidance home": "/lead-providers/guidance/home",
-  "ECF usage guide": "/lead-providers/guidance/ecf-usage",
-  "NPQ usage guide": "/lead-providers/guidance/npq-usage",
-  "API release notes": "/lead-providers/guidance/release-notes",
-  "API guidance support": "/lead-providers/guidance/help",
   "2020 programme choice":
     "/schools/:school_id/year-2020/choose-induction-programme",
   "2020 cip choice":

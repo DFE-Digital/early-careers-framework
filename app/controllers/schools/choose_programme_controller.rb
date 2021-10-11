@@ -4,17 +4,13 @@ class Schools::ChooseProgrammeController < Schools::BaseController
   skip_after_action :verify_authorized
   skip_after_action :verify_policy_scoped
   before_action :load_programme_form
-  before_action :verify_programme_chosen, only: %i[advisory show]
+  before_action :verify_can_choose_programme, only: %i[show]
 
-  def advisory
-    @school = school
-    @cohort = cohort
+  def show
     if current_user.schools.count > 1
       @show_back_link = true
     end
   end
-
-  def show; end
 
   def create
     render :show and return unless @induction_choice_form.valid?
@@ -32,6 +28,11 @@ class Schools::ChooseProgrammeController < Schools::BaseController
     @cohort = cohort
     @school = school
     render "shared/choice_saved_no_early_career_teachers"
+  end
+
+  def choice_saved_school_funded_fip
+    @cohort = cohort
+    @school = school
   end
 
   def confirm_programme; end
@@ -52,17 +53,20 @@ class Schools::ChooseProgrammeController < Schools::BaseController
 
 private
 
-  def verify_programme_chosen
-    redirect_to helpers.profile_dashboard_path(current_user) if school.chosen_programme?(cohort)
+  def verify_can_choose_programme
+    return if school_cohort.new_record? || school_cohort.can_change_programme?
+
+    redirect_to helpers.profile_dashboard_path(current_user)
   end
 
   def load_programme_form
     session_params = session[:induction_choice_form] || {}
-    @induction_choice_form = InductionChoiceForm.new(session_params.merge(programme_choice_form_params))
+    @induction_choice_form = InductionChoiceForm.new(
+      session_params.merge(programme_choice_form_params).merge(school_cohort: school_cohort),
+    )
   end
 
   def save_school_choice!
-    school_cohort = school.school_cohorts.find_or_initialize_by(cohort: cohort)
     school_cohort.induction_programme_choice = @induction_choice_form.programme_choice
     school_cohort.opt_out_of_updates = @induction_choice_form.opt_out_choice_selected?
     school_cohort.save!
@@ -79,6 +83,10 @@ private
   end
 
   def cohort
-    Cohort.current
+    @cohort ||= Cohort.find_by(start_year: params[:cohort_id])
+  end
+
+  def school_cohort
+    @school_cohort ||= school.school_cohorts.find_or_initialize_by(cohort: cohort)
   end
 end

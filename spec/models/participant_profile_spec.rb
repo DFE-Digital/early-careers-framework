@@ -4,13 +4,13 @@ require "rails_helper"
 
 RSpec.describe ParticipantProfile, type: :model do
   it { is_expected.to belong_to(:teacher_profile) }
-  it { is_expected.to belong_to(:schedule).optional }
+  it { is_expected.to belong_to(:schedule) }
   it { is_expected.to have_one(:user).through(:teacher_profile) }
   it {
     is_expected.to define_enum_for(:status).with_values(
       active: "active",
       withdrawn: "withdrawn",
-    ).backed_by_column_of_type(:text)
+    ).with_suffix(:record).backed_by_column_of_type(:text)
   }
 
   it "updates the updated_at on the users" do

@@ -11,9 +11,9 @@ module Support
       extend ActiveSupport::Concern
 
       class_methods do
-        def new(*args, &block)
+        def new(*args, **kwargs, &block)
           super.tap do |instance|
-            test_context.register_component(instance, args) if stubbed?
+            test_context.register_component(instance, args, kwargs) if stubbed?
           end
         end
 

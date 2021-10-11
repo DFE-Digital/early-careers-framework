@@ -2,6 +2,8 @@
 
 class ParticipantBand < ApplicationRecord
   belongs_to :call_off_contract
+  delegate :set_up_fee, :recruitment_target, to: :call_off_contract
+
   scope :min_nulls_first, -> { order("min asc nulls first") }
 
   def number_of_participants_in_this_band(total_number_of_participants)
@@ -14,12 +16,24 @@ class ParticipantBand < ApplicationRecord
     end
   end
 
-  def deduction_for_setup?
-    lower_boundary.zero?
+  def contract_value
+    number_of_participants_in_this_band(recruitment_target) * per_participant
   end
 
-  def set_up_recruitment_basis
-    deduction_for_setup? ? upper_boundary : 0
+  def output_payment_per_participant
+    (per_participant * output_payment_percantage) / 100
+  end
+
+  def service_fee_total
+    number_of_participants_in_this_band(recruitment_target) * service_fee_per_participant
+  end
+
+  def service_fee_per_participant
+    (per_participant * service_fee_percentage) / 100 - set_up_cost_per_participant
+  end
+
+  def set_up_cost_per_participant
+    lower_boundary.zero? ? set_up_fee / upper_boundary : 0
   end
 
 private

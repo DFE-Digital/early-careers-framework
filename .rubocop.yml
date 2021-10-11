@@ -8,6 +8,7 @@ AllCops:
     - 'node_modules/**/*'
     - 'bin/**/*'
     - 'db/schema.rb'
+    - 'db/analytics_schema.rb'
     - 'vendor/**/*'
     - 'db/seeds/cip_*.rb'
 
@@ -32,3 +33,10 @@ Rails/UnknownEnv:
 
 Naming/VariableNumber:
   EnforcedStyle: snake_case
+
+Rails/Output:
+  Exclude:
+    - "app/services/importers/*"
+
+Lint/MissingSuper:
+  Enabled: false

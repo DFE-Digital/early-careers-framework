@@ -17,6 +17,6 @@
     <p>If you want to add schools to your <%= report_schools_form.cohort.display_name %> cohort after 31 October <%= report_schools_form.cohort.start_year %>, you need to contact:
       <%= render MailToSupportComponent.new %></p>
 
-    <%= govuk_link_to "Continue", lead_providers_report_schools_delivery_partner_path, button: true %>
+    <%= govuk_button_link_to "Continue", lead_providers_report_schools_delivery_partner_path %>
   </div>
 </div>

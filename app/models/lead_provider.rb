@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# This is actually EcfLeadProvider in all but name. See https://github.com/DFE-Digital/early-careers-framework/issues/698
+# This is actually ECFLeadProvider in all but name. See https://github.com/DFE-Digital/early-careers-framework/issues/698
 class LeadProvider < ApplicationRecord
   belongs_to :cpd_lead_provider, optional: true
 

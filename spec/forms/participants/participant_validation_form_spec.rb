@@ -5,27 +5,53 @@ require "rails_helper"
 RSpec.describe Participants::ParticipantValidationForm, type: :model do
   subject(:form) { described_class.new }
 
-  describe "do_you_know_your_trn validations" do
+  describe "do_you_want_to_add_mentor_information validations" do
     context "when a valid choice is made" do
       it "returns true" do
-        form.do_you_know_your_trn_choice = form.trn_choices.map(&:id).sample
-        expect(form.valid?(:do_you_know_your_trn)).to be true
+        form.do_you_want_to_add_mentor_information_choice = form.add_mentor_information_choices.map(&:id).sample
+        expect(form.valid?(:do_you_want_to_add_mentor_information)).to be true
         expect(form.errors).to be_empty
       end
     end
 
     context "when no choice has been made" do
       it "returns false" do
-        expect(form.valid?(:do_you_know_your_trn)).to be false
-        expect(form.errors).to include :do_you_know_your_trn_choice
+        expect(form.valid?(:do_you_want_to_add_mentor_information)).to be false
+        expect(form.errors).to include :do_you_want_to_add_mentor_information_choice
       end
     end
 
     context "when an invalid choice has been made" do
       it "returns false" do
-        form.do_you_know_your_trn_choice = :banana
-        expect(form.valid?(:do_you_know_your_trn)).to be false
-        expect(form.errors).to include :do_you_know_your_trn_choice
+        form.do_you_want_to_add_mentor_information_choice = :banana
+        expect(form.valid?(:do_you_want_to_add_mentor_information)).to be false
+        expect(form.errors).to include :do_you_want_to_add_mentor_information_choice
+      end
+    end
+  end
+
+  describe "what_is_your_trn validations" do
+    context "when trn is not supplied" do
+      it "returns false" do
+        form.trn = nil
+        expect(form.valid?(:what_is_your_trn)).to be false
+        expect(form.errors).to include :trn
+      end
+    end
+
+    context "when trn has leading/trailing whiitespace" do
+      it "strips whitespace and validates" do
+        form.trn = "   1234567  \t\n"
+        expect(form.valid?(:what_is_your_trn)).to be true
+        expect(form.trn).to eq "1234567"
+      end
+    end
+
+    context "when trn has contains RP and slashes" do
+      it "strips invalid characters and validates" do
+        form.trn = " RP12/345 67  \t\n"
+        expect(form.valid?(:what_is_your_trn)).to be true
+        expect(form.trn).to eq "1234567"
       end
     end
   end
@@ -106,7 +132,7 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
   end
 
   describe "teacher_details validations" do
-    let(:teacher_details) { { trn: "1234567", name: "Wilma Flintstone", date_of_birth: "1996-4-17", national_insurance_number: "AB123456C" } }
+    let(:teacher_details) { { trn: "1234567", name: "Wilma Flintstone", date_of_birth: { 3 => 17, 2 => 4, 1 => 1996 }, national_insurance_number: "AB123456C" } }
     subject(:form) { described_class.new(teacher_details) }
 
     context "when all fields are valid" do
@@ -115,32 +141,17 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
       end
     end
 
-    context "when trn is not supplied" do
-      it "returns false" do
-        form.trn = nil
-        expect(form.valid?(:tell_us_your_details)).to be false
-        expect(form.errors).to include :trn
-      end
-    end
-
-    context "when trn has leading/trailing whiitespace" do
-      it "strips whitespace and validates" do
-        form.trn = "   1234567  \t\n"
-        expect(form.valid?(:tell_us_your_details)).to be true
-      end
-    end
-
-    context "when name is not supplied" do
-      it "returns false" do
-        form.name = nil
-        expect(form.valid?(:tell_us_your_details)).to be false
-        expect(form.errors).to include :name
-      end
-    end
-
     context "when date_of_birth is not supplied" do
       it "returns false" do
         form.date_of_birth = nil
+        expect(form.valid?(:tell_us_your_details)).to be false
+        expect(form.errors).to include :date_of_birth
+      end
+    end
+
+    context "when date_of_birth is an invalid date" do
+      it "returns false" do
+        form.date_of_birth = { 3 => 31, 2 => 9, 1 => 1988 }
         expect(form.valid?(:tell_us_your_details)).to be false
         expect(form.errors).to include :date_of_birth
       end
@@ -174,13 +185,13 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
     it "returns a hash of the attribute data" do
       values = {
         step: :my_step,
-        do_you_know_your_trn_choice: form.trn_choices.map(&:id).sample,
+        do_you_want_to_add_mentor_information_choice: form.add_mentor_information_choices.map(&:id).sample,
         have_you_changed_your_name_choice: form.name_change_choices.map(&:id).sample,
         updated_record_choice: form.updated_record_choices.map(&:id).sample,
         name_not_updated_choice: form.name_not_updated_choices.map(&:id).sample,
         trn: "1234567",
         name: "Ted Smith",
-        date_of_birth: Date.new(1993, 6, 15),
+        date_of_birth: form.date_of_birth,
         national_insurance_number: "AB123456C",
         validation_attempts: 1,
       }
@@ -199,14 +210,8 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
         attributes = form.attributes
         expect(attributes[:trn]).to eq "1231222"
         expect(attributes[:name]).to eq "Shiela Smith"
-        expect(attributes[:national_insurance_number]).to eq "AW 23 44 44 A"
+        expect(attributes[:national_insurance_number]).to eq "AW234444A"
       end
-    end
-  end
-
-  describe "#trn_choices" do
-    it "provides options for the teacher reference number choice" do
-      expect(form.trn_choices.map(&:id)).to match_array %w[yes no i_do_not_have]
     end
   end
 
@@ -230,7 +235,7 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
 
   describe "#pretty_date_of_birth" do
     it "formats the date of birth correctly" do
-      form.date_of_birth = "1989-3-22"
+      form.date_of_birth = { 3 => 22, 2 => 3, 1 => 1989 }
       expect(form.pretty_date_of_birth).to eq "22 March 1989"
     end
   end

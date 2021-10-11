@@ -1,0 +1,9 @@
+{
+  "data": {
+    "type": "participant",
+    "attributes": {
+      "course_identifier": "npq-headship",
+      "reason": "career-break"
+    }
+  }
+}

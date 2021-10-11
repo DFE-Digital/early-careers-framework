@@ -14,10 +14,10 @@ RSpec.describe "API Users", type: :request do
       school = create(:school)
       cohort = create(:cohort, start_year: 2021)
       school_cohort = create(:school_cohort, school: school)
-      mentor_profile = create(:mentor_profile, school_cohort: school_cohort, core_induction_programme: cip, cohort: cohort)
+      mentor_profile = create(:participant_profile, :mentor, school_cohort: school_cohort, core_induction_programme: cip, cohort: cohort)
       create(:participant_profile, participant_type: :npq, school: school)
       create(:participant_profile, participant_type: :npq, school: school, teacher_profile: mentor_profile.teacher_profile)
-      create_list(:early_career_teacher_profile, 2, school_cohort: school_cohort, core_induction_programme: cip, cohort: cohort)
+      create_list(:participant_profile, 2, :ect, school_cohort: school_cohort, core_induction_programme: cip, cohort: cohort)
     end
 
     context "when authorized" do

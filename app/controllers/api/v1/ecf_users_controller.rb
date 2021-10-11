@@ -5,6 +5,7 @@ module Api
     class ECFUsersController < Api::ApiController
       include ApiTokenAuthenticatable
       include ApiPagination
+      include ApiFilter
 
       def index
         render json: ECFUserSerializer.new(paginate(users)).serializable_hash.to_json
@@ -42,27 +43,21 @@ module Api
         ApiToken.where(private_api_access: true)
       end
 
-      def updated_since
-        params.dig(:filter, :updated_since)
-      end
-
       def email
-        params.dig(:filter, :email)
+        filter[:email]
       end
 
       def users
         users = User.where(id: ParticipantProfile::ECF.joins(:teacher_profile).select("teacher_profiles.user_id"))
                     .includes(teacher_profile: {
-                      ecf_profile: %i[school_cohort core_induction_programme],
+                      ecf_profile: [
+                        :core_induction_programme,
+                        { school_cohort: :cohort },
+                      ],
                     })
 
-        if updated_since.present?
-          users = users.changed_since(updated_since)
-        end
-
-        if email.present?
-          users = users.where(email: email)
-        end
+        users = users.changed_since(updated_since) if updated_since.present?
+        users = users.where(email: email) if email.present?
 
         users
       end

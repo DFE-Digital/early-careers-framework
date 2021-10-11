@@ -11,11 +11,11 @@
         </div>
       <% elsif type == "success" %>
         <%= govuk_notification_banner(
-              title: msg[:title],
+              title_text: msg[:title],
               success: true,
               html_attributes: { data: { test: "notification-banner" } }
             ) do |banner| %>
-          <% banner.add_heading(text: msg[:heading]) %>
+          <% banner.heading(text: msg[:heading]) %>
           <% msg[:content] %>
         <% end %>
       <% else %>

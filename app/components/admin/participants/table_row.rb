@@ -9,9 +9,14 @@ module Admin
         @profile = profile
       end
 
+      def school_urn
+        school&.urn || profile.school_urn
+      end
+
     private
 
       attr_reader :profile
+
       delegate :school, to: :profile
     end
   end

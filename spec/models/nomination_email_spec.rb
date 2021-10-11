@@ -63,4 +63,26 @@ RSpec.describe NominationEmail, type: :model do
       expect(new_nomination_email.sent_within_last?(1.hour)).to eq true
     end
   end
+
+  describe "nomination_url" do
+    let(:email) { create(:nomination_email) }
+
+    context "without any parameters" do
+      subject { email.nomination_url }
+
+      it "creates a link with nominate_tutor utm tracking" do
+        expect(subject).to include("utm_campaign=nominate-tutor")
+        expect(subject).to include("utm_source=nominate-tutor")
+      end
+    end
+
+    context "with a utm source provided" do
+      subject { email.nomination_url(utm_source: :nominate_tutor_cip_only) }
+
+      it "it uses that urm source in the link" do
+        expect(subject).to include("utm_campaign=nominate-tutor-cip-only")
+        expect(subject).to include("utm_source=nominate-tutor-cip-only")
+      end
+    end
+  end
 end

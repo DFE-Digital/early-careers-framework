@@ -22,6 +22,8 @@ const inputs = {
     "input[value=i_dont_know].govuk-radios__input",
   "design and deliver our own programme radio button":
     "input[value=design_our_own].govuk-radios__input",
+  "use a training provider funded by your school radio button":
+    "input[value=school_funded_fip].govuk-radios__input",
   "no early career teachers radio button":
     "input[value=no_early_career_teachers].govuk-radios__input",
   "new participant mentor radio":

@@ -15,13 +15,15 @@ RSpec.describe "Admin::Schools", type: :request do
       expect(response).to render_template("admin/schools/index")
     end
 
-    it "only displays eligible schools" do
+    it "only displays eligible and cip_only schools" do
       eligible_school = create(:school)
-      ineligible_school = create(:school, school_status_code: 2)
+      closed_school = create(:school, school_status_code: 2)
+      cip_only_school = create(:school, :cip_only)
 
       get "/admin/schools"
       expect(response.body).to include(eligible_school.urn)
-      expect(response.body).not_to include(ineligible_school.urn)
+      expect(response.body).to include(cip_only_school.urn)
+      expect(response.body).not_to include(closed_school.urn)
     end
 
     context "filtering the school list" do
@@ -50,12 +52,34 @@ RSpec.describe "Admin::Schools", type: :request do
   describe "GET /admin/schools/:id" do
     let(:school) { create(:school) }
 
-    it "renders the schools show template" do
-      get "/admin/schools/#{school.id}"
+    context "the school is eligible" do
+      it "renders the schools show template" do
+        get "/admin/schools/#{school.id}"
 
-      expect(response).to render_template("admin/schools/show")
-      expect(response.body).to include(CGI.escapeHTML(school.name))
-      expect(response.body).to include("Add induction tutor")
+        expect(response).to render_template("admin/schools/show")
+        expect(response.body).to include(CGI.escapeHTML(school.name))
+        expect(response.body).to include("Add induction tutor")
+      end
+    end
+
+    context "the school is cip-only" do
+      let(:school) { create(:school, :cip_only) }
+
+      it "renders the schools show template" do
+        get "/admin/schools/#{school.id}"
+
+        expect(response).to render_template("admin/schools/show")
+        expect(response.body).to include(CGI.escapeHTML(school.name))
+        expect(response.body).to include("Add induction tutor")
+      end
+    end
+
+    context "the school is closed" do
+      let(:school) { create(:school, :closed) }
+
+      it "raises a not found error (404)" do
+        expect { get "/admin/schools/#{school.id}" }.to raise_error(ActiveRecord::RecordNotFound)
+      end
     end
 
     context "when school is registered" do

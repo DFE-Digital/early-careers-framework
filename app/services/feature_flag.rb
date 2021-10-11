@@ -27,6 +27,8 @@ class FeatureFlag
     admin_challenge_partnership
     admin_change_materials
     user_research_full_booked
+    sit_user_research_fully_booked
+    full_dqt_api
   ].freeze
 
   FEATURES = (PERMANENT_SETTINGS + TEMPORARY_FEATURE_FLAGS).index_with { |name|

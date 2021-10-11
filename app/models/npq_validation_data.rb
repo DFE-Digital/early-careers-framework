@@ -9,6 +9,8 @@ class NPQValidationData < ApplicationRecord
   belongs_to :npq_lead_provider
   belongs_to :npq_course
 
+  after_save :push_enrollment_to_big_query
+
   enum headteacher_status: {
     no: "no",
     yes_when_course_starts: "yes_when_course_starts",
@@ -44,17 +46,11 @@ class NPQValidationData < ApplicationRecord
     end
   end
 
-  after_save :update_participant_profile
-
 private
 
-  def update_participant_profile
-    profile = ParticipantProfile::NPQ.find_or_initialize_by(id: id)
-    teacher_profile = user.teacher_profile || user.build_teacher_profile
-    teacher_profile.trn = teacher_reference_number
-    teacher_profile.school = profile.school = School.find_by(urn: school_urn)
-    profile.teacher_profile = teacher_profile
-    profile.user_id = user_id
-    profile.save!
+  def push_enrollment_to_big_query
+    if (saved_changes.keys & %w[id lead_provider_approval_status]).present?
+      NPQ::StreamBigQueryEnrollmentJob.perform_later(npq_validation_data_id: id)
+    end
   end
 end

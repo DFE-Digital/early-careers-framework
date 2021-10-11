@@ -102,7 +102,9 @@ module DelayedJobMatchers
     match do |job_class|
       job_arguments = find_job_with_arguments(job_class)
 
-      job_arguments.any? do |job, args|
+      method = @once ? :"one?" : :"any?"
+
+      job_arguments.send(method) do |job, args|
         result = true
         result &&= @arguments.args_match?(*args) if @arguments.present?
         result &&= job.run_at == @at if @at.present?
@@ -116,6 +118,10 @@ module DelayedJobMatchers
 
     chain :at do |datetime|
       @at = datetime
+    end
+
+    chain :once do
+      @once = true
     end
 
     def find_job_with_arguments(job_class)
@@ -150,15 +156,28 @@ module DelayedJobMatchers
   define :delay_email_delivery_of do |email_name|
     match do |mailer_class|
       email_arguments = find_email_args(mailer_class, email_name)
-      return email_arguments.any? unless @arguments
 
-      email_arguments.any? do |args|
-        @arguments.args_match?(*args)
+      if @once
+        return email_arguments.count == 1 unless @arguments
+
+        email_arguments.select { |args|
+          @arguments.args_match?(*args)
+        }.count == 1
+      else
+        return email_arguments.any? unless @arguments
+
+        email_arguments.any? do |args|
+          @arguments.args_match?(*args)
+        end
       end
     end
 
     chain :with do |*args|
       @arguments = RSpec::Mocks::ArgumentListMatcher.new(*args)
+    end
+
+    chain :once do
+      @once = true
     end
 
     # TODO: Also find email enqueued without ActiveJob, i.e. Mailer.delay.email

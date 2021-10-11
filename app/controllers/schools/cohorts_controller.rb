@@ -8,17 +8,21 @@ module Schools
     before_action :set_school_cohort
 
     def show
-      if @school_cohort.design_our_own?
-        render "programme_choice_design_our_own"
-      elsif @school_cohort.no_early_career_teachers?
-        render "programme_choice_no_early_career_teachers"
+      if @school_cohort.can_change_programme?
+        redirect_to(schools_dashboard_path) and return
       end
+
+      render "programme_choice"
     end
 
     def add_participants
       if FeatureFlag.active?(:induction_tutor_manage_participants, for: @school)
         redirect_to schools_participants_path(@cohort)
       end
+    end
+
+    def roles
+      render "shared/roles"
     end
   end
 end

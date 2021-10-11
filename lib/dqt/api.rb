@@ -10,7 +10,7 @@ module Dqt
     end
 
     def v1
-      @v1 ||= V1.new(client: client) # rubocop:disable Naming/VariableNumber
+      @v1 ||= V1.new(client: client)
     end
 
   private

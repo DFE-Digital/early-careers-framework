@@ -1,0 +1,17 @@
+<% content_for :title, "Confirm you want to remove #{@profile.user.full_name}" %>
+
+<% content_for :before_content, govuk_back_link( text: "Back", href: schools_participant_path(id: @profile)) %>
+
+<span class="govuk-caption-xl"><%= @cohort.display_name %> cohort</span>
+<h1 class="govuk-heading-xl">Confirm you want to remove <%= @profile.user.full_name %></h1>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <p class="govuk-body">This means that:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>their information will be removed from this service</li>
+      <li>they will not be able to access the training programme</li>
+    </ul>
+    <%= govuk_button_to "Confirm and remove", schools_participant_path(id: @profile), method: :delete %>
+  </div>
+</div>

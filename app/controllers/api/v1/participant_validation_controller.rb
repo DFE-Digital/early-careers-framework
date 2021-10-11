@@ -11,6 +11,7 @@ module Api
           full_name: params[:full_name],
           date_of_birth: Date.iso8601(params[:date_of_birth]),
           nino: params[:nino],
+          config: { check_first_name_only: true },
         )
 
         if record.present?

@@ -16,7 +16,9 @@ Capybara.register_driver :chrome_headless do |app|
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
 end
 
+Capybara.server_port = 9887 + ENV["TEST_ENV_NUMBER"].to_i
 Capybara.javascript_driver = :chrome_headless
+Capybara.automatic_label_click = true
 
 RSpec.configure do |config|
   config.include AxeAndPercyHelper, type: :feature

@@ -13,7 +13,7 @@ RSpec.describe "Admin::Gias::Home", type: :request do
     it "renders the index template" do
       get "/admin/gias"
       expect(response).to render_template("admin/gias/home/index")
-      expect(assigns(:schools_to_add_count)).to eq(0)
+      expect(assigns(:schools_to_open_count)).to eq(0)
       expect(assigns(:schools_to_close_count)).to eq(0)
       expect(assigns(:schools_with_changes_count)).to eq(0)
     end

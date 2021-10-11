@@ -1,40 +1,40 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require_relative "../../../shared/context/service_record_declaration_params.rb"
-require_relative "../../../shared/context/lead_provider_profiles_and_courses.rb"
+require_relative "../../../shared/context/service_record_declaration_params"
+require_relative "../../../shared/context/lead_provider_profiles_and_courses"
 
 RSpec.describe RecordDeclarations::Retained::NPQ do
   include_context "lead provider profiles and courses"
   include_context "service record declaration params"
 
-  context "when sending event for an npq course" do
-    it "creates a participant and profile declaration" do
-      expect { described_class.call(npq_params) }.to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
+  let(:cutoff_start_datetime) { npq_profile.schedule.milestones[1].start_date.beginning_of_day }
+  let(:cutoff_end_datetime) { npq_profile.schedule.milestones[1].milestone_date.end_of_day }
+  let(:retained_npq_params) { npq_params.merge(declaration_type: "retained-1", declaration_date: (cutoff_start_datetime + 1.day).rfc3339, evidence_held: "yes") }
+
+  before do
+    travel_to cutoff_start_datetime + 2.days
+  end
+
+  it_behaves_like "a retained participant declaration service" do
+    def given_params
+      retained_npq_params
+    end
+
+    def given_profile
+      npq_profile
     end
   end
 
-  context "when user is not a participant" do
-    it "does not create a declaration record and raises ParameterMissing for an invalid user_id" do
-      expect { described_class.call(induction_coordinator_params) }.to raise_error(ActionController::ParameterMissing)
-    end
-  end
-
-  context "when declaration type is invalid" do
-    it "raises a ParameterMissing error" do
-      expect { described_class.call(params.merge(declaration_type: "invalid")) }.to raise_error(ActionController::ParameterMissing)
+  it_behaves_like "a participant service for npq" do
+    def given_params
+      retained_npq_params
     end
   end
 
   context "when declaration type is valid for ECF but not NPQ" do
     it "raises a ParameterMissing error" do
-      expect { described_class.call(params.merge(declaration_type: "retained-3")) }.to raise_error(ActionController::ParameterMissing)
-    end
-  end
-
-  context "when evidence held is invalid" do
-    it "raises a ParameterMissing error" do
-      expect { described_class.call(params.merge(evidence_held: "invalid")) }.to raise_error(ActionController::ParameterMissing)
+      expect { described_class.call(params: retained_npq_params.merge(declaration_type: "retained-3")) }.to raise_error(ActionController::ParameterMissing)
     end
   end
 end

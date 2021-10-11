@@ -51,16 +51,24 @@ class User < ApplicationRecord
     early_career_teacher_profile.present?
   end
 
+  def teacher?
+    teacher_profile.present?
+  end
+
   def mentor?
     mentor_profile.present?
   end
 
   def npq?
-    npq_profiles.any?(&:active?)
+    npq_profiles.any?(&:active_record?)
   end
 
   def participant?
     early_career_teacher? || mentor?
+  end
+
+  def induction_coordinator_and_mentor?
+    induction_coordinator? && mentor?
   end
 
   def core_induction_programme
@@ -111,11 +119,11 @@ class User < ApplicationRecord
   }
 
   scope :is_ecf_participant, lambda {
-    joins(:participant_profiles).merge(ParticipantProfile.ecf.active).includes(mentor_profile: :school_cohort, early_career_teacher_profile: :school_cohort)
+    joins(:participant_profiles).merge(ParticipantProfile.ecf.active_record).includes(mentor_profile: :school_cohort, early_career_teacher_profile: :school_cohort)
   }
 
   scope :is_participant, lambda {
-    joins(:participant_profiles).merge(ParticipantProfile.active)
+    joins(:participant_profiles).merge(ParticipantProfile.active_record)
   }
 
 private

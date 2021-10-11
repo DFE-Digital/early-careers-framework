@@ -5,10 +5,12 @@ module ApplicationHelper
     if user.admin?
       admin_schools_path
     elsif user.finance?
-      finance_lead_providers_path
+      finance_landing_page_path
+    elsif user.induction_coordinator_and_mentor?
+      induction_coordinator_mentor_path(user)
     elsif user.induction_coordinator?
       induction_coordinator_dashboard_path(user)
-    elsif user.mentor? || user.early_career_teacher?
+    elsif user.teacher?
       participant_start_path(user)
     else
       dashboard_path
@@ -26,22 +28,39 @@ module ApplicationHelper
     analytics_data
   end
 
-private
-
   def induction_coordinator_dashboard_path(user)
     return schools_dashboard_index_path if user.schools.count > 1
 
     school = user.induction_coordinator_profile.schools.first
-    return advisory_schools_choose_programme_path(school_id: school.slug) unless school.chosen_programme?(Cohort.current)
+    return schools_choose_programme_path(school_id: school.slug, cohort_id: Cohort.current.start_year) unless school.chosen_programme?(Cohort.current)
 
     schools_dashboard_path(school_id: school.slug)
   end
 
   def participant_start_path(user)
-    if FeatureFlag.active?(:participant_validation, for: user.teacher_profile&.participant_profiles&.ecf&.active&.first&.school)
-      participants_validation_start_path
+    return participants_no_access_path unless post_2020_ecf_participant?(user)
+
+    participants_validation_start_path
+  end
+
+  def service_name
+    if request.path.include? "year-2020"
+      "Get support materials for NQTs"
     else
-      dashboard_path
+      "Manage training for early career teachers"
     end
+  end
+
+private
+
+  def post_2020_ecf_participant?(user)
+    (user.teacher_profile.ecf_profile&.school_cohort&.cohort&.start_year || 0) > 2020
+  end
+
+  def induction_coordinator_mentor_path(user)
+    profile = user.participant_profiles.active_record.mentors.first
+    return participants_validation_start_path unless profile&.completed_validation_wizard?
+
+    induction_coordinator_dashboard_path(user)
   end
 end

@@ -4,6 +4,21 @@ ARG BASE_RUBY_IMAGE=ruby:2.7.2-alpine
 # building all layers above it if a value is not specidied during the build
 ARG BASE_RUBY_IMAGE_WITH_GEMS_AND_NODE_MODULES=early-careers-framework-gems-node-modules
 
+FROM ${BASE_RUBY_IMAGE} AS middleman
+
+RUN apk add --update --no-cache npm git build-base
+
+COPY docs/Gemfile docs/Gemfile.lock /
+
+RUN bundle install --jobs=4
+
+COPY docs /docs
+COPY public /public
+COPY swagger /swagger
+
+WORKDIR docs
+RUN bundle exec middleman build --build-dir=../public/api-reference
+
 # Stage 1: Download gems and node modules.
 FROM ${BASE_RUBY_IMAGE} AS builder
 
@@ -23,7 +38,7 @@ RUN apk -U upgrade && \
     bundle config set no-cache 'true' && \
     bundle config set no-binstubs 'true' && \
     bundle --retry=5 --jobs=4 --without=development test && \
-    yarn install --check-files && \
+    yarn install --check-files --production && \
     apk del .gem-installdeps && \
     rm -rf /usr/local/bundle/cache && \
     find /usr/local/bundle/gems -name "*.c" -delete && \
@@ -55,8 +70,7 @@ ENV GOVUK_APP_DOMAIN="http://localhost:3000" \
 WORKDIR /app
 COPY . .
 
-RUN yarn jest --passWithNoTests && \
-    bundle exec rake assets:precompile && \
+RUN bundle exec rake assets:precompile && \
     apk del nodejs yarn && \
     rm -rf yarn.lock && \
     rm -rf tmp/* log/* node_modules /usr/local/share/.cache /tmp/*
@@ -78,6 +92,7 @@ RUN apk -U upgrade && \
 
 COPY --from=assets-precompile /app /app
 COPY --from=assets-precompile /usr/local/bundle/ /usr/local/bundle/
+COPY --from=middleman /public/ /app/public/
 
 WORKDIR /app
 

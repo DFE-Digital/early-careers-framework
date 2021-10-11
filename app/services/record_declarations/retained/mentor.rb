@@ -2,13 +2,8 @@
 
 module RecordDeclarations
   module Retained
-    class Mentor < ::RecordDeclarations::Base
-      include RecordDeclarations::Mentor
-      include Retained
-
-      def valid_evidence_types
-        %w[training-event-attended self-study-material-completed other]
-      end
+    class Mentor < ECF
+      include Participants::Mentor
     end
   end
 end

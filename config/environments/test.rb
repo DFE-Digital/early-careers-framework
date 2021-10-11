@@ -12,6 +12,8 @@ Rails.application.configure do
 
   config.cache_classes = false
 
+  config.middleware.use TimeTraveler
+
   # Do not eager load code on boot. This avoids loading your whole application
   # just for the purpose of running a single test. If you are using a tool that
   # preloads Rails for running tests, you may have to set it to true.
@@ -43,6 +45,7 @@ Rails.application.configure do
   # The :test delivery method accumulates sent emails in the
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
+  config.record_emails = false
   config.action_mailer.default_options = {
     from: "mail@example.com",
   }
@@ -73,4 +76,16 @@ Rails.application.configure do
   # config.action_view.annotate_rendered_view_with_filenames = true
 
   config.cip_resource_bucket = "https://paas-s3-broker-prod-lon-ac28a7a5-2bc2-4d3b-8d16-a88eaef65526.s3.amazonaws.com"
+
+  if config.respond_to?(:web_console)
+    config.web_console.development_only = false
+  end
+
+  config.dqt_access_url = "https://dqtaccess.example.com/oauth2/v2.0/token"
+  config.dqt_access_scope = "https:///dqtaccess.example.com/some-scope"
+  config.dqt_access_client_id = "dqt-access-guid"
+  config.dqt_access_client_secret = "dqt-access-secret"
+
+  config.dqt_api_url = "https://dtqapi.example.com/dqt-crm/v1/teachers"
+  config.dqt_api_ocp_apim_subscription_key = "ocp-apim-some-guid"
 end

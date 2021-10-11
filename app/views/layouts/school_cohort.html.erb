@@ -1,5 +1,13 @@
 <%= render layout: 'layouts/width_container' do %>
   <%= render SchoolRecruitedTransitionComponent.new(school_cohort: @school_cohort) if @school_cohort %>
-
+    <% if current_user.induction_coordinator_and_mentor? && !current_user.mentor_profile.completed_validation_wizard? %>
+      <%= render GovukComponent::NotificationBannerComponent.new(title_text: "Important", html_attributes: { data: { test: "add-mentor-information-banner" } }) do |banner|
+        banner.heading(
+          text: "You need to add information about yourself as a mentor.",
+          link_text: "Update now",
+          link_href: participants_validation_what_is_your_trn_path,
+        )
+      end %>
+    <% end %>
   <%= yield %>
 <% end %>

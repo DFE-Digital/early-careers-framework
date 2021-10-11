@@ -10,11 +10,6 @@
     <%= form_for @participant_validation_form, url: { action: @participant_validation_form.step }, method: :put do |f| %>
       <%= f.hidden_field :step, value: @participant_validation_form.step %>
       <%= f.govuk_error_summary %>
-      <%= f.govuk_text_field :trn,
-        width: 10,
-        label: { text: "Teacher reference number (TRN)", class: "govuk-label bold-label" },
-        hint: { text: "Your TRN is between 5 and 7 characters long. Enter your TRN without ‘RP’ letters or a slash ‘/’ symbol." }
-      %>
       <%= f.govuk_text_field :name,
         width: "three-quarters",
         label: { text: "Full name", class: "govuk-label bold-label" },
@@ -28,7 +23,8 @@
       <%= f.govuk_text_field :national_insurance_number,
         width: "three-quarters",
         label: { text: "National Insurance number (optional)", class: "govuk-label bold-label" },
-        hint: { text: "This will help us match your details" }
+        hint: { text: "It’s on your National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’." },
+        spellcheck: false
       %>
       <%= f.govuk_submit "Continue" %>
     <% end %>

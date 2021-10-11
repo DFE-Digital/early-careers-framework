@@ -18,25 +18,41 @@ module DataStage
                           foreign_key: :urn,
                           primary_key: :urn
 
-    after_create :log_create
-    before_update :log_changes
-
     scope :schools_to_add, -> { currently_open.left_joins(:counterpart).where(counterpart: { urn: nil }) }
+
+    scope :schools_to_open, -> { currently_open.joins(:counterpart).where(counterpart: { school_status_name: :proposed_to_open }) }
 
     scope :schools_to_close, -> { closed_status.left_joins(:counterpart).where(counterpart: { school_status_code: GiasTypes::ELIGIBLE_STATUS_CODES }) }
 
     scope :schools_with_changes, -> { includes(:school_changes).where(school_changes: { status: :changed, handled: false }) }
 
-  private
-
-    def log_create
-      school_changes.create!(status: :added)
+    def create_or_sync_counterpart!
+      if counterpart.present?
+        counterpart.update!(attributes_to_sync)
+      else
+        create_counterpart!(attributes_to_sync)
+        link_counterpart_to_local_authority_data
+      end
     end
 
-    def log_changes
-      relevant_changes = changes.except(:updated_at, :school_status_code, :school_status_name)
+  private
 
-      school_changes.create!(attribute_changes: relevant_changes, status: :changed) if relevant_changes.any?
+    def attributes_to_sync
+      attributes.except("id", "created_at", "updated_at", "la_code")
+    end
+
+    def link_counterpart_to_local_authority_data(start_year: Time.zone.now.year)
+      SchoolLocalAuthority.create!(
+        school: counterpart,
+        local_authority: LocalAuthority.find_by(code: la_code),
+        start_year: start_year,
+      )
+
+      SchoolLocalAuthorityDistrict.create!(
+        school: counterpart,
+        local_authority_district: LocalAuthorityDistrict.find_by(code: administrative_district_code),
+        start_year: start_year,
+      )
     end
   end
 end

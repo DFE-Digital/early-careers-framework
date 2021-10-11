@@ -17,6 +17,7 @@ FactoryBot.define do
       end
     end
 
+    schedule
     teacher_profile
 
     transient do
@@ -34,6 +35,7 @@ FactoryBot.define do
     trait :ect do
       school_cohort
       teacher_profile { association :teacher_profile, school: school_cohort.school }
+      schedule
 
       participant_type { :ect }
     end
@@ -41,15 +43,24 @@ FactoryBot.define do
     trait :mentor do
       school_cohort
       teacher_profile { association :teacher_profile, school: school_cohort.school }
+      schedule
 
       participant_type { :mentor }
     end
 
-    trait :npq do
-      school
-      teacher_profile { association :teacher_profile, school: school }
+    trait :ecf_participant_validation_data do
+      ecf_participant_validation_data { association :ecf_participant_validation_data }
+    end
 
-      validation_data { association :npq_validation_data, user: teacher_profile.user }
+    trait :ecf_participant_eligibility do
+      ecf_participant_eligibility { association :ecf_participant_eligibility }
+    end
+
+    trait :npq do
+      teacher_profile { association :teacher_profile }
+      schedule
+
+      validation_data { association :npq_validation_data, user: teacher_profile.user, school_urn: rand(100_000..999_999) }
 
       participant_type { :npq }
     end
@@ -67,7 +78,7 @@ FactoryBot.define do
       pupil_premium_uplift
     end
 
-    trait :withdrawn do
+    trait :withdrawn_record do
       status { :withdrawn }
     end
   end

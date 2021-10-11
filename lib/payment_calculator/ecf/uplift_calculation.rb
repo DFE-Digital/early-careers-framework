@@ -3,9 +3,9 @@
 require "payment_calculator/ecf/contract/uplift_payment_calculations"
 
 module PaymentCalculator
-  module Ecf
+  module ECF
     class UpliftCalculation
-      include Ecf::Contract::UpliftPaymentCalculations
+      include ECF::Contract::UpliftPaymentCalculations
 
       # @param [Symbol] event_type
       # @param [Integer] uplift_participants

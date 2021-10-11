@@ -1,27 +1,26 @@
 <% content_for :title, "Early career teachers and mentors" %>
 
-<% content_for :before_content, govuk_breadcrumbs(breadcrumbs: breadcrumbs(@school, @cohort)) %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: schools_dashboard_path) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-three-quarters">
     <span class="govuk-caption-l"><%= @cohort.display_name %> cohort</span>
     <h1 class="govuk-heading-l">Your early career teachers (ECTs) and mentors</h1>
 
-    <%= govuk_link_to "Add a new ECT or mentor", add_schools_participants_path, button: true %>
+    <%= govuk_button_link_to "Add a new ECT or mentor", add_schools_participants_path %>
 
-    <p class="govuk-body">
-      We will verify your ECTs and mentors. Here you can check their status or select a name for more details.
-    </p>
+    <p class="govuk-body">We contact all ECTs and mentors to check they're eligible for this programme. This may take a few days. You can see the status of our checks below.</p>
+
+    <p class="govuk-body">Select a name to see more details.</p>
   </div>
 </div>
-
 
 <% if @participant_profiles.present? %>
   <table class="govuk-table">
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
         <th scope="col" class="govuk-table__header">Full name</th>
-        <th scope="col" class="govuk-table__header">Type</th>
+        <th scope="col" class="govuk-table__header">Role</th>
         <th scope="col" class="govuk-table__header">Mentor</th>
         <th scope="col" class="govuk-table__header">Status</th>
       </tr>
@@ -29,7 +28,7 @@
     <tbody class="govuk-table__body">
       <% @participant_profiles.each do |profile| %>
         <tr class="govuk-table__row">
-          <th scope="row" class="govuk-table__header"><%= govuk_link_to profile.user.full_name, schools_participant_path(id: profile.user.id) %></th>
+          <th scope="row" class="govuk-table__header"><%= govuk_link_to profile.user.full_name, schools_participant_path(id: profile.id) %></th>
           <td class="govuk-table__cell"><%= t(profile.participant_type, scope: "schools.participants.type") %></td>
           <td class="govuk-table__cell">
             <% if @mentors_added %>
@@ -37,7 +36,7 @@
                 <% if profile.mentor %>
                   <%= profile.mentor.full_name %>
                 <% else %>
-                  <%= govuk_link_to("Assign mentor", schools_participant_edit_mentor_path(participant_id: profile.user.id)) %>
+                  <%= govuk_link_to("Assign mentor", schools_participant_edit_mentor_path(participant_id: profile.id)) %>
                 <% end %>
               <% else %>
                 - <span class="govuk-visually-hidden">Not applicable</span>
@@ -47,7 +46,7 @@
             <% end %>
           </td>
           <td class="govuk-table__cell">
-            <%= render GovukComponent::Tag.new(text: "Pending", colour: "grey") %>
+            <%= render ParticipantStatusTagComponent.new(profile: profile) %>
           </td>
         </tr>
       <% end %>

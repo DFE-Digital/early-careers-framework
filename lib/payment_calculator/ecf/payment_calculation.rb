@@ -6,7 +6,7 @@ require "payment_calculator/ecf/output_payment_aggregator"
 require "payment_calculator/ecf/uplift_calculation"
 
 module PaymentCalculator
-  module Ecf
+  module ECF
     class PaymentCalculation
       class << self
         def call(contract:,

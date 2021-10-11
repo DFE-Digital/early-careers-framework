@@ -59,6 +59,19 @@ bundle exec rake
 bundle exec rspec
 ```
 
+## Running specs in parallel
+
+### One time Setup
+```
+bundle exec rake parallel:create
+```
+
+### Running specs thereafter
+```
+bundle exec rake parallel:migrate
+bundle exec rake parallel:spec
+```
+
 ## Running swagger doc generator
 
 It auto-generates swagger/*/api_spec.json from the schema files located in spec/docs
@@ -76,6 +89,12 @@ The precommit hook will ensure linting passes. See [the hook](./.githooks/pre-co
 We use Cypress for end-to-end tests. This integrates with Axe for automated accessibility tests, and Percy for snapshot testing.
 
 We aim to have an accessibility and snapshot test for every page on the service.
+
+## Smoke tests
+
+We run smoke tests against review apps. After a review app is deployed, a smoke test will be run against it automatically.
+
+Tests are written in rspec, so if you need to debug them, you can run them locally - just make sure to set the domain to the review app you want to debug against.
 
 ### Setup
 
@@ -196,6 +215,20 @@ per participant service fee £398 (40%) >> monthly service fee £27k >> total se
 * "Output payments" are payments made based on the performance of the training provider (i.e. their output).
 * "Payment type" for start/retention_x/completion output payments.
 
+## Runbook
+
+### Updating NPQ applications from manual validation
+
+This procedure is used after a batch from manual validation has been complete. The data also needs to be uploaded to the NPQ application as it uses a different database and there is no syncing procedure in place.
+
+1. Log in to a container instance
+2. Save CSV data to disk via `vi` and remember the path
+3. Start rails console
+4. Instantiate service with `svc = Importers::NPQManualValidation.new(path_to_csv: Rails.root.join("batchX.csv"))`
+5. Call service with `svc.call`
+6. Exit rails console
+7. Delete CSV as no longer needed
+
 ## Monitoring, logging, and alerting
 ### Sentry
 We use [sentry.io](https://sentry.io/) for error tracking and performance monitoring. Ask a team member for access - this is done through digi-tools.
@@ -207,3 +240,14 @@ We have a prometheus/grafana stack for metrics and alerting - [production metric
 Your DfE google account should work using SSO. See the [terraform](./terraform/monitoring) for details.
 ### Statuscake
 We use statuscake for uptime monitoring. Ask a team member for access - this is done with a service now ticket.
+
+
+## Analytics
+In production, we use a separate postgres database for recording anonymous analytics information. The database is hosted in GCP.
+
+## Documentation
+We use a gem called `tech_docs_template` to generate govuk-style documentation. It is heavily inspired by Teacher Training API.
+
+You can find it, with its readme, in `docs` directory.
+
+The project in `docs` directory can be used to generate a static site, which we put in `public/api-reference` to make our app serve it.

@@ -3,7 +3,8 @@
 module RecordDeclarations
   module Started
     class Mentor < ::RecordDeclarations::Base
-      include RecordDeclarations::Mentor
+      include Participants::Mentor
+      include RecordDeclarations::ECF
     end
   end
 end

@@ -4,6 +4,6 @@
 <%= form_for :confirmation, url: admin_lead_provider_user_path(@lead_provider_user), method: :delete do |f| %>
   <div class="govuk-button-group">
     <%= f.govuk_submit "Delete", classes: "govuk-button--warning", "data-test": "delete-button" %>
-    <%= govuk_link_to "Back", edit_admin_lead_provider_user_path(@lead_provider_user), button: true, class: "govuk-button--secondary" %>
+    <%= govuk_button_link_to "Back", edit_admin_lead_provider_user_path(@lead_provider_user), class: "govuk-button--secondary" %>
   </div>
 <% end %>

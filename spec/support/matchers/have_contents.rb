@@ -37,7 +37,7 @@ module Support
 
       failure_message do |*_args|
         case @exception
-        when RSpec::Expectations::MultipleExpectationsNotMetError then @exception.message.lines[2..-1].join
+        when RSpec::Expectations::MultipleExpectationsNotMetError then @exception.message.lines[2..].join
         else @exception.message
         end
       end

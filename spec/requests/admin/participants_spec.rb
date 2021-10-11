@@ -11,7 +11,7 @@ RSpec.describe "Admin::Participants", type: :request do
   let!(:mentor_profile) { create :participant_profile, :mentor, school_cohort: school_cohort }
   let!(:ect_profile) { create :participant_profile, :ect, school_cohort: school_cohort, mentor_profile: mentor_profile }
   let!(:npq_profile) { create(:participant_profile, :npq, school: school) }
-  let!(:withdrawn_ect_profile) { create(:participant_profile, :ect, status: "withdrawn", school_cohort: school_cohort) }
+  let!(:withdrawn_ect_profile_record) { create(:participant_profile, :ect, :withdrawn_record, school_cohort: school_cohort) }
 
   before do
     sign_in admin_user
@@ -28,7 +28,15 @@ RSpec.describe "Admin::Participants", type: :request do
       expect(assigns(:participant_profiles)).to include ect_profile
       expect(assigns(:participant_profiles)).to include mentor_profile
       expect(assigns(:participant_profiles)).to include npq_profile
-      expect(assigns(:participant_profiles)).not_to include withdrawn_ect_profile
+      expect(assigns(:participant_profiles)).not_to include withdrawn_ect_profile_record
+    end
+
+    it "can filter by type" do
+      get "/admin/participants?type=ParticipantProfile::NPQ"
+      expect(assigns(:participant_profiles)).not_to include ect_profile
+      expect(assigns(:participant_profiles)).not_to include mentor_profile
+      expect(assigns(:participant_profiles)).to include npq_profile
+      expect(assigns(:participant_profiles)).not_to include withdrawn_ect_profile_record
     end
   end
 
@@ -57,19 +65,24 @@ RSpec.describe "Admin::Participants", type: :request do
   end
 
   describe "DELETE /admin/participants/:id" do
-    it "marks the participant as withdrawn" do
+    it "marks the participant record as withdrawn" do
       delete "/admin/participants/#{ect_profile.id}"
-      expect(ect_profile.reload.withdrawn?).to be true
+      expect(ect_profile.reload.withdrawn_record?).to be true
     end
 
     it "does not withdraw NPQ participants" do
       expect { delete "/admin/participants/#{npq_profile.id}" }.to raise_error Pundit::NotAuthorizedError
-      expect(npq_profile.active?).to be true
+      expect(npq_profile.active_record?).to be true
     end
 
     it "shows a success message" do
       delete "/admin/participants/#{ect_profile.id}"
       expect(response).to render_template "admin/participants/destroy_success"
+    end
+
+    it "updates analytics" do
+      delete "/admin/participants/#{ect_profile.id}"
+      expect(Analytics::ECFValidationService).to delay_execution_of(:upsert_record_without_delay)
     end
   end
 end

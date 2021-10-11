@@ -17,8 +17,11 @@ module Admin
       attr_reader :profile
 
       class NPQPending < Details; end
+
       class NPQ < Details; end
+
       class ECTPending < Details; end
+
       class MentorPending < Details; end
     end
   end

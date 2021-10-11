@@ -5,6 +5,7 @@ import {
   ADMIN_ACCOUNT_CREATED_TEMPLATE,
   NOMINATION_EMAIL_TEMPLATE,
   NOMINATION_CONFIRMATION_EMAIL_TEMPLATE,
+  BASIC_TEMPLATE,
 } from "../commands";
 
 Given(
@@ -57,6 +58,18 @@ Given(
   }
 );
 
+Given(
+  "Confirmation email should be sent to the Induction Coordinator to email {string}",
+  (email) => {
+    cy.appSentEmails().then((emails) => {
+      expect(emails).to.have.lengthOf(1);
+      const headersHash = computeHeadersFromEmail(emails[0]);
+      expect(headersHash["template-id"]).to.eq(BASIC_TEMPLATE);
+      expect(headersHash.To).to.eq(email);
+    });
+  }
+);
+
 When(
   "I should be able to login with magic link for email {string}",
   (email) => {
@@ -66,12 +79,12 @@ When(
       expect(headersHash["template-id"]).to.eq(SIGN_IN_EMAIL_TEMPLATE);
       expect(headersHash.To).to.eq(email);
       cy.visit(
-        headersHash.personalisation.sign_in_url.replace(
+        headersHash.personalisation.sign_in.replace(
           "http://www.example.com",
           ""
         )
       );
-      cy.get("h1").should("contain", "You're now signed in");
+      cy.get("h1").should("contain", "You’re now signed in");
     });
   }
 );

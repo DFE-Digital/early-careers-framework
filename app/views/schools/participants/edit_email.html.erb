@@ -1,8 +1,8 @@
-<% content_for :before_content, govuk_back_link( text: "Back", href: schools_participant_path(id: @participant)) %>
+<% content_for :before_content, govuk_back_link( text: "Back", href: schools_participant_path(id: @profile)) %>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">Change <%= @participant.early_career_teacher? ? "ECT’s" : "mentor’s" %> email address</h1>
-    <%= form_for @participant, url: schools_participant_update_email_path, method: :put do |f| %>
+    <h1 class="govuk-heading-xl">Change <%= @profile.ect? ? "ECT’s" : "mentor’s" %> email address</h1>
+    <%= form_for @profile.user, url: schools_participant_update_email_path, method: :put do |f| %>
       <%= f.govuk_text_field :email, label: { text: "Email address" } %>
       <%= f.govuk_submit %>
     <% end %>

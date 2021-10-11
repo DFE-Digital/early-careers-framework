@@ -13,7 +13,7 @@ class UserMailer < ApplicationMailer
         name: user.full_name,
         subject: "Test email",
       },
-    )
+    ).tag(:test_email)
   end
 
   def sign_in_email(user:, url:, token_expiry:)
@@ -24,10 +24,10 @@ class UserMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         full_name: user.full_name,
-        sign_in_url: url,
+        sign_in: url,
         token_expiry: token_expiry,
         subject: "Link to sign in",
       },
-    )
+    ).tag(:sign_in)
   end
 end
