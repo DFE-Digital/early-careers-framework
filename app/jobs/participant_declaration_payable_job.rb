@@ -5,17 +5,21 @@ class ParticipantDeclarationPayableJob < ApplicationJob
 
   class << self
     def schedule
-      set(wait_until: milestone + 10.hours)
+      set(wait_until: milestone_end + 10.hours)
     end
 
-    def milestone
-      Time.local(2021,11,1).to_s(:db)
+    def milestone_start
+      Time.local(2021,9,1).to_s(:db)
+    end
+
+    def milestone_end
+      Time.local(2021,12,1).to_s(:db)
     end
   end
 
-  delegate :milestone, to: ParticipantDeclarationPayableJob
+  delegate :milestone_start, :milestone_end, to: ParticipantDeclarationPayableJob
 
   def perform(*)
-    ParticipantDeclaration.where(state: "eligible").where("declaration_date <= ?", milestone).where(declaration_type: "started").where("created_at <= ?", milestone).each(&:make_payable!)
+    ParticipantDeclaration.eligible.declared_as_between(milestone_start, milestone_end).submitted_between(milestone_start, milestone_end).each(&:make_payable!)
   end
 end

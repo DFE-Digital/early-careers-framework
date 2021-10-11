@@ -41,10 +41,3 @@
 </div>
 
 <%= govuk_button_link_to t("finance.show_contract"), finance_ecf_contract_path(id: @ecf_lead_provider.id) %>
-<%= case @type
-    when "eligible"
-      govuk_button_link_to t("finance.make_payable"), finance_ecf_payable_path(id: @ecf_lead_provider.id)
-    when "payable"
-      govuk_button_link_to t("finance.pay"), finance_ecf_paid_path(id: @ecf_lead_provider.id)
-    end
-%>
