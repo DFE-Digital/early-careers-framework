@@ -14,12 +14,12 @@ RSpec.feature "Finance users payment breakdowns", type: :feature, js: true do
     and_percy_should_be_sent_a_snapshot_named("Payment breakdown select programme")
 
     when_i_select_ecf
-    and_i_click_the_submit_button
+    and_i_click_the_continue_button
     then_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named("Payment breakdown select ECF provider")
 
     when_i_select_a_provider
-    and_i_click_the_submit_button
+    and_i_click_the_continue_button
     and_i_click_open_all_button
     then_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named("Payment breakdown for an ECF provider")
