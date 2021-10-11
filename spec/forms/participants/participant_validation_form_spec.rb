@@ -5,6 +5,28 @@ require "rails_helper"
 RSpec.describe Participants::ParticipantValidationForm, type: :model do
   subject(:form) { described_class.new }
 
+  describe "populating from session" do
+    let(:saved_attributes) do
+      {
+        step: "start",
+        do_you_know_your_trn_choice: nil,
+        do_you_want_to_add_mentor_information_choice: nil,
+        have_you_changed_your_name_choice: nil,
+        updated_record_choice: nil,
+        name_not_updated_choice: nil,
+        trn: nil,
+        name: nil,
+        date_of_birth: nil,
+        national_insurance_number: nil,
+        validation_attempts: nil,
+      }
+    end
+
+    it "does not raise an error when legacy values are passed in" do
+      expect { described_class.new(saved_attributes) }.not_to raise_error
+    end
+  end
+
   describe "do_you_want_to_add_mentor_information validations" do
     context "when a valid choice is made" do
       it "returns true" do

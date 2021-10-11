@@ -15,7 +15,10 @@ module Participants
                   :trn,
                   :name,
                   :national_insurance_number,
-                  :validation_attempts
+                  :validation_attempts,
+                  # legacy values kept here to prevent breakages with old sessions
+                  :do_you_know_your_trn_choice
+
     attr_reader :date_of_birth
 
     validate :add_mentor_info_choice, on: :do_you_want_to_add_mentor_information
