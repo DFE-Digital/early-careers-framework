@@ -14,7 +14,10 @@ module Participants
                   :national_insurance_number,
                   :validation_attempts,
                   # legacy values kept here to prevent breakages with old sessions
-                  :do_you_know_your_trn_choice
+                  :do_you_know_your_trn_choice,
+                  :have_you_changed_your_name_choice,
+                  :updated_record_choice,
+                  :name_not_updated_choice
 
     attr_reader :date_of_birth
 
