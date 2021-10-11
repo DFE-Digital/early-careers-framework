@@ -20,6 +20,11 @@ RSpec.shared_examples "a participant change schedule action service" do
     expect { described_class.call(params: given_params) }.to raise_error(ActionController::ParameterMissing)
   end
 
+  it "creates a schedule on profile" do
+    expect { described_class.call(params: participant_params) }.to change { ParticipantProfileSchedule.count }.by(1)
+    expect(user_profile.participant_profile_schedule.schedule_identifier).to eq("ecf-september-extended-2021")
+  end
+
   context "when a pending declaration exists" do
     let!(:declaration) do
       start_date = user_profile.schedule.milestones.first.start_date
