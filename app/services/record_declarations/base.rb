@@ -61,7 +61,7 @@ module RecordDeclarations
     end
 
     def create_declaration_attempt!
-      ParticipantDeclarationAttempt.create!(declaration_parameters)
+      ParticipantDeclarationAttempt.create!(declaration_parameters.except(:participant_profile_id))
     end
 
     def find_or_create_record!
@@ -86,6 +86,7 @@ module RecordDeclarations
         declaration_type: declaration_type,
         cpd_lead_provider: cpd_lead_provider,
         user: user,
+        participant_profile_id: user_profile.id,
       }
     end
 
