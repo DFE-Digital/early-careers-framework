@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_11_085631) do
+ActiveRecord::Schema.define(version: 2021_10_11_155601) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -175,7 +175,7 @@ ActiveRecord::Schema.define(version: 2021_10_11_085631) do
 
   create_table "declaration_states", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_declaration_id", null: false
-    t.string "state", default: "submitted", null: false
+    t.string "state", default: "submitted"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["participant_declaration_id"], name: "index_declaration_states_on_participant_declaration_id"
@@ -608,15 +608,6 @@ ActiveRecord::Schema.define(version: 2021_10_11_085631) do
     t.index ["privacy_policy_id", "user_id"], name: "single-acceptance", unique: true
   end
 
-  create_table "profile_declarations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "participant_declaration_id", null: false
-    t.uuid "participant_profile_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.boolean "payable", default: false
-    t.index ["participant_declaration_id"], name: "index_profile_declarations_on_participant_declaration_id"
-  end
-
   create_table "profile_validation_decisions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_profile_id", null: false
     t.string "validation_step", null: false
@@ -808,6 +799,7 @@ ActiveRecord::Schema.define(version: 2021_10_11_085631) do
   add_foreign_key "npq_profiles", "users"
   add_foreign_key "participant_bands", "call_off_contracts"
   add_foreign_key "participant_declaration_attempts", "participant_declarations"
+  add_foreign_key "participant_declarations", "participant_profiles"
   add_foreign_key "participant_profile_states", "participant_profiles"
   add_foreign_key "participant_profiles", "cohorts"
   add_foreign_key "participant_profiles", "core_induction_programmes"
@@ -822,7 +814,6 @@ ActiveRecord::Schema.define(version: 2021_10_11_085631) do
   add_foreign_key "partnerships", "delivery_partners"
   add_foreign_key "partnerships", "lead_providers"
   add_foreign_key "partnerships", "schools"
-  add_foreign_key "profile_declarations", "participant_profiles"
   add_foreign_key "profile_validation_decisions", "participant_profiles"
   add_foreign_key "provider_relationships", "cohorts"
   add_foreign_key "provider_relationships", "delivery_partners"
