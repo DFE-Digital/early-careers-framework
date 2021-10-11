@@ -45,12 +45,12 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
     then_percy_should_be_sent_a_snapshot_named("Payment breakdown select programme")
 
     when_i_select_ecf
-    when_i_click_the_submit_button
+    and_i_click_the_continue_button
     then_the_page_should_be_accessible
     then_percy_should_be_sent_a_snapshot_named("Payment breakdown select ECF provider")
 
     when_i_select_a_provider
-    when_i_click_the_submit_button
+    and_i_click_the_continue_button
     then_i_should_see_correct_breakdown_summary
     then_i_should_see_the_correct_payment_summary
     then_i_should_see_the_correct_service_fees
