@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class NPQValidationData < ApplicationRecord
+  has_paper_trail
   # TODO: Rename table
   self.table_name = "npq_profiles"
 
