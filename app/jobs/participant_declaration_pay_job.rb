@@ -14,6 +14,6 @@ class ParticipantDeclarationPayJob < ApplicationJob
   end
 
   def perform(*)
-    ParticipantDeclaration.payable.each(&:make_paid!)
+    ParticipantDeclaration::ECF.payable.each(&:make_paid!)
   end
 end

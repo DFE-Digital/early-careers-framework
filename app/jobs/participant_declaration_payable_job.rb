@@ -20,6 +20,6 @@ class ParticipantDeclarationPayableJob < ApplicationJob
   delegate :milestone_start, :milestone_end, to: ParticipantDeclarationPayableJob
 
   def perform(*)
-    ParticipantDeclaration.eligible.declared_as_between(milestone_start, milestone_end).submitted_between(milestone_start, milestone_end).each(&:make_payable!)
+    ParticipantDeclaration::ECF.eligible.declared_as_between(milestone_start, milestone_end).submitted_between(milestone_start, milestone_end).each(&:make_payable!)
   end
 end
