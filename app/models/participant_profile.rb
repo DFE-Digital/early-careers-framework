@@ -19,9 +19,6 @@ class ParticipantProfile < ApplicationRecord
   }, class_name: "ParticipantProfileState"
 
   has_many :participant_profile_schedules
-  has_one :participant_profile_schedule, lambda {
-    merge(ParticipantProfileSchedule.most_recent)
-  }, class_name: "ParticipantProfileSchedule"
 
   enum status: {
     active: "active",
