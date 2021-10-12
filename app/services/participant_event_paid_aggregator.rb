@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ParticipantEventPayableAggregator < ParticipantEventAggregator
+class ParticipantEventPaidAggregator < ParticipantEventAggregator
 private
 
   def aggregation_types

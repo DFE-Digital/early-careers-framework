@@ -115,8 +115,6 @@ en:
     monthly: Payment amount monthly
     subtotal: Sub total
     period: Payment amount for period
-    make_payable: Mark records as payable
-    pay: Mark records as paid
     contract:
       uplift_target: Uplift target
       uplift_amount: Uplift amount
