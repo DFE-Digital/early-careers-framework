@@ -4,20 +4,21 @@ require "rails_helper"
 require "csv"
 
 RSpec.describe "NPQ Applications API", type: :request do
-  let!(:default_schedule) { create(:schedule, name: "ECF September standard 2021") }
+  let!(:default_schedule) { create(:schedule, :npq_specialist) }
   let(:npq_lead_provider) { create(:npq_lead_provider) }
   let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider: npq_lead_provider) }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
   let(:bearer_token) { "Bearer #{token}" }
   let(:parsed_response) { JSON.parse(response.body) }
+  let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
 
   describe "GET /api/v1/npq-applications" do
     let(:other_npq_lead_provider) { create(:npq_lead_provider) }
 
     before :each do
       list = []
-      list << create_list(:npq_validation_data, 3, npq_lead_provider: npq_lead_provider, school_urn: "123456")
-      list << create_list(:npq_validation_data, 2, npq_lead_provider: other_npq_lead_provider, school_urn: "123456")
+      list << create_list(:npq_validation_data, 3, npq_lead_provider: npq_lead_provider, school_urn: "123456", npq_course: npq_course)
+      list << create_list(:npq_validation_data, 2, npq_lead_provider: other_npq_lead_provider, school_urn: "123456", npq_course: npq_course)
 
       list.flatten.each do |npq_validation_data|
         NPQ::Accept.new(npq_application: npq_validation_data).call
@@ -232,7 +233,7 @@ RSpec.describe "NPQ Applications API", type: :request do
   end
 
   describe "POST /api/v1/npq-applications/:id/accept" do
-    let(:default_npq_validation_data) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider) }
+    let(:default_npq_validation_data) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, npq_course: npq_course) }
     let(:user) { default_npq_validation_data.user }
 
     before do
@@ -253,7 +254,6 @@ RSpec.describe "NPQ Applications API", type: :request do
     end
 
     context "when participant has applied for multiple NPQs" do
-      let(:npq_course) { default_npq_validation_data.npq_course }
       let!(:other_npq_validation_data) { create(:npq_validation_data, npq_course: npq_course, npq_lead_provider: npq_lead_provider, user: user) }
       let!(:other_accepted_npq_validation_data) { create(:npq_validation_data, npq_course: npq_course, npq_lead_provider: npq_lead_provider, user: user, lead_provider_approval_status: "accepted") }
 
@@ -271,7 +271,7 @@ RSpec.describe "NPQ Applications API", type: :request do
     end
 
     context "application has been rejected" do
-      let(:npq_profile) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, lead_provider_approval_status: "rejected") }
+      let(:npq_profile) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider, lead_provider_approval_status: "rejected", npq_course: npq_course) }
 
       it "return 400 bad request " do
         post "/api/v1/npq-applications/#{npq_profile.id}/accept"

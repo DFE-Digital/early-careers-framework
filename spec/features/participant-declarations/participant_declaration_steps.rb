@@ -29,9 +29,9 @@ module ParticipantDeclarationSteps
   end
 
   def given_an_npq_participant_has_been_entered_onto_the_dfe_service
-    create(:schedule, name: "ECF September standard 2021")
+    create(:schedule, :npq_specialist)
     npq_lead_provider = create(:npq_lead_provider, cpd_lead_provider: @cpd_lead_provider)
-    npq_course = create(:npq_course, identifier: "npq-leading-teaching")
+    npq_course = create(:npq_course, identifier: "npq-senior-leadership")
     @npq_validation_data = create(:npq_validation_data, npq_lead_provider: npq_lead_provider, npq_course: npq_course)
     @npq_id = @npq_validation_data.user.id
 
@@ -71,7 +71,7 @@ module ParticipantDeclarationSteps
   end
 
   def and_the_lead_provider_submits_a_declaration_for_the_npq_using_their_id
-    params = common_params(participant_id: @npq_id, course_identifier: "npq-leading-teaching", declaration_date: @declaration_date)
+    params = common_params(participant_id: @npq_id, course_identifier: "npq-senior-leadership", declaration_date: @declaration_date)
     travel_to @submission_date do
       submit_request(params)
     end

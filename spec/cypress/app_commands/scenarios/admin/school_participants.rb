@@ -45,6 +45,8 @@ FactoryBot.create :participant_profile,
                   school_cohort: another_school_cohort,
                   created_at: Date.parse("29/12/2020")
 
+FactoryBot.create(:schedule, :npq_specialist)
+npq_course = FactoryBot.create(:npq_course, identifier: "npq-senior-leadership")
 npq_user = FactoryBot.create(:user, full_name: "Natalie Portman Quebec", email: "natalie.portman@quebec.ca")
 
 Timecop.freeze(Date.parse("19/09/2019")) do
@@ -53,7 +55,8 @@ Timecop.freeze(Date.parse("19/09/2019")) do
                                           date_of_birth: Date.parse("10/12/1982"),
                                           nino: "NI123456",
                                           teacher_reference_number: "9780824",
-                                          school_urn: school.urn
+                                          school_urn: school.urn,
+                                          npq_course: npq_course
 
   NPQ::Accept.new(npq_application: npq_validation_data).call
 end

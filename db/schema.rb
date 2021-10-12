@@ -656,6 +656,7 @@ ActiveRecord::Schema.define(version: 2021_10_11_085631) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "schedule_identifier"
+    t.string "type", default: "Finance::Schedule::ECF"
   end
 
   create_table "school_cohorts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
