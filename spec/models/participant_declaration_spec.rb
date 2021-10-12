@@ -7,7 +7,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
 
   describe "associations" do
     it { is_expected.to belong_to(:cpd_lead_provider) }
-    it { is_expected.to have_one(:participant_profile).through(:profile_declaration) }
+    it { is_expected.to belong_to(:participant_profile) }
     it { is_expected.to have_many(:declaration_states) }
   end
 
@@ -54,7 +54,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
 
   describe "refresh_payability!" do
     let!(:participant_declaration) { create(:ect_participant_declaration, :submitted) }
-    let!(:eligibility) { ECFParticipantEligibility.create!(participant_profile_id: participant_declaration.participant_profile_id) }
+    let!(:eligibility) { ECFParticipantEligibility.create!(participant_profile: participant_declaration.participant_profile) }
 
     context "when declaration was eligible for payment" do
       before do
@@ -122,7 +122,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
 
   describe "voided!" do
     let!(:participant_declaration) { create(:ect_participant_declaration) }
-    let!(:eligibility) { ECFParticipantEligibility.create!(participant_profile_id: participant_declaration.participant_profile_id) }
+    let!(:eligibility) { ECFParticipantEligibility.create!(participant_profile: participant_declaration.participant_profile) }
 
     context "when declaration was payable" do
       before do

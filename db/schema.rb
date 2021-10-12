@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_08_133055) do
+ActiveRecord::Schema.define(version: 2021_10_11_085631) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -500,7 +500,9 @@ ActiveRecord::Schema.define(version: 2021_10_08_133055) do
     t.uuid "cpd_lead_provider_id"
     t.datetime "voided_at"
     t.string "state", default: "submitted", null: false
+    t.uuid "participant_profile_id"
     t.index ["cpd_lead_provider_id"], name: "index_participant_declarations_on_cpd_lead_provider_id"
+    t.index ["participant_profile_id"], name: "index_participant_declarations_on_participant_profile_id"
     t.index ["user_id"], name: "index_participant_declarations_on_user_id"
   end
 
@@ -802,6 +804,7 @@ ActiveRecord::Schema.define(version: 2021_10_08_133055) do
   add_foreign_key "nomination_emails", "partnership_notification_emails"
   add_foreign_key "nomination_emails", "schools"
   add_foreign_key "npq_lead_providers", "cpd_lead_providers"
+  add_foreign_key "npq_profiles", "users"
   add_foreign_key "participant_bands", "call_off_contracts"
   add_foreign_key "participant_declaration_attempts", "participant_declarations"
   add_foreign_key "participant_profile_states", "participant_profiles"

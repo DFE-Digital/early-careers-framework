@@ -31,7 +31,7 @@ RSpec.describe RecordDeclarations::Retained::EarlyCareerTeacher do
     %w[training-event-attended self-study-material-completed other].each do |evidence_held|
       it "creates a participant and profile declaration for evidence #{evidence_held}" do
         expect { described_class.call(params: retained_ect_params.merge(evidence_held: evidence_held)) }
-            .to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
+            .to change { ParticipantDeclaration.count }.by(1)
       end
     end
   end

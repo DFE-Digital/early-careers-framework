@@ -1047,6 +1047,46 @@ RSpec.describe InviteSchools do
     end
   end
 
+  describe "#invite_unengaged_schools" do
+    it "sends an invite to unpartnered schools without a sit" do
+      school = create(:school)
+
+      expect(SchoolMailer).to receive(:unengaged_schools_email).with(
+        hash_including(
+          recipient: school.contact_email,
+          school: school,
+          nomination_url: a_string_including("utm_campaign=unengaged-schools&utm_medium=email&utm_source=unengaged-schools"),
+        ),
+      ).and_call_original
+
+      InviteSchools.new.invite_unengaged_schools
+    end
+
+    it "doesn't invite partnered schools" do
+      school = create(:school)
+      create(:partnership, school: school, cohort: Cohort.current)
+
+      expect(SchoolMailer).to_not receive(:unengaged_schools_email)
+      InviteSchools.new.invite_unengaged_schools
+    end
+
+    it "doesn't invite opted out schools" do
+      school = create(:school)
+      create(:school_cohort, school: school, opt_out_of_updates: true, cohort: Cohort.current)
+
+      expect(SchoolMailer).to_not receive(:unengaged_schools_email)
+      InviteSchools.new.invite_unengaged_schools
+    end
+
+    it "doesn't invite schools with a sit" do
+      school = create(:school)
+      create(:induction_coordinator_profile, schools: [school])
+
+      expect(SchoolMailer).to_not receive(:unengaged_schools_email)
+      InviteSchools.new.invite_unengaged_schools
+    end
+  end
+
 private
 
   def create_signed_in_induction_tutor

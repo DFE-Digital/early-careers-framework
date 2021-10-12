@@ -339,6 +339,32 @@ class InviteSchools
       end
   end
 
+  def invite_unengaged_schools
+    School.unpartnered(Cohort.current.start_year)
+      .not_opted_out
+      .where.missing(:induction_coordinators)
+      .find_each do |school|
+        if school.contact_email.blank?
+          logger.info "No contact details for school urn: #{school.urn} ... skipping"
+          next
+        end
+
+        nomination_email = NominationEmail.create_nomination_email(
+          sent_at: Time.zone.now,
+          sent_to: school.contact_email,
+          school: school,
+        )
+
+        notify_id = SchoolMailer.unengaged_schools_email(
+          recipient: school.contact_email,
+          school: school,
+          nomination_url: nomination_email.nomination_url(utm_source: :unengaged_schools),
+        ).deliver_now.delivery_method.response.id
+
+        nomination_email.update!(notify_id: notify_id)
+      end
+  end
+
 private
 
   def private_beta_start_url

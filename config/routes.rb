@@ -279,17 +279,9 @@ Rails.application.routes.draw do
       put "/do-you-want-to-add-your-mentor-information", to: "validations#do_you_want_to_add_mentor_information"
       get "/what-is-your-teacher-reference-number", to: "validations#what_is_your_trn", as: :what_is_your_trn
       put "/what-is-your-teacher-reference-number", to: "validations#what_is_your_trn"
-      get "/have-you-changed-your-name", to: "validations#have_you_changed_your_name", as: :have_you_changed_your_name
-      put "/have-you-changed-your-name", to: "validations#have_you_changed_your_name"
-      get "/confirm-name-change", to: "validations#confirm_updated_record", as: :confirm_updated_record
-      put "/confirm-name-change", to: "validations#confirm_updated_record"
-      get "/name-not-updated", to: "validations#name_not_updated", as: :name_not_updated
-      put "/name-not-updated", to: "validations#name_not_updated"
       get "/tell-us-your-details", to: "validations#tell_us_your_details", as: :tell_us_your_details
       put "/tell-us-your-details", to: "validations#tell_us_your_details"
       get "/get-a-teacher-reference-number", to: "validations#get_a_trn", as: :get_a_trn
-      get "/change-your-details-with-the-teacher-regulation-agency", to: "validations#change_your_details_with_tra", as: :change_your_details_with_tra
-      get "/check-with-the-teacher-regulation-agency", to: "validations#check_with_tra", as: :check_with_tra
       get "/cannot-find-your-details", to: "validations#cannot_find_details", as: :cannot_find_details
       put "/cannot-find-your-details", to: "validations#cannot_find_details"
       get "/complete", to: "validations#complete", as: :complete
