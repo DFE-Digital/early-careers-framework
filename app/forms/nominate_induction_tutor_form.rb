@@ -2,13 +2,23 @@
 
 class NominateInductionTutorForm
   include ActiveModel::Model
+  include ActiveRecord::AttributeAssignment
+  include ActiveModel::Serialization
 
   attr_accessor :full_name, :email, :token, :school_id, :user_id
 
-  validates :full_name, presence: true
-  validates :email, presence: true, notify_email: true
-  validate :email_is_not_in_use
-  validate :name_matches
+  validates :full_name, presence: true, on: %i[full_name check_name]
+  validates :email, presence: true, notify_email: true, on: %i[email create]
+  validate :email_is_not_in_use, on: %i[email create]
+  validate :name_matches, on: %i[full_name check_name]
+
+  def attributes
+    {
+      full_name: full_name,
+      email: email,
+      token: token,
+    }
+  end
 
   def school
     if school_id

@@ -1,0 +1,18 @@
+<% content_for :title, "Induction tutor details" %>
+<% content_for :before_content, govuk_back_link(
+  text: "Back",
+  href: start_nomination_nominate_induction_coordinator_path(token: @nominate_induction_tutor_form.token))
+%>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-l"><%= @nominate_induction_tutor_form.school.name %></span>
+    <%= form_for @nominate_induction_tutor_form, url: { action: :check_name }, method: :post do |f| %>
+      <%= f.govuk_error_summary %>
+      <div class="govuk-form-group">
+        <%= f.govuk_text_field(:full_name, label: { text: "What's the full name of your induction tutor?", size: "xl"  }) %>
+      </div>
+      <%= f.hidden_field :token, value: @nominate_induction_tutor_form.token %>
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+</div>
