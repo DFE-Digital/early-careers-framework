@@ -9,11 +9,11 @@ class ParticipantDeclarationPayableJob < ApplicationJob
     end
 
     def milestone_start
-      Time.local(2021,9,1).to_s(:db)
+      Time.zone.local(2021, 9, 1).to_s(:db)
     end
 
     def milestone_end
-      Time.local(2021,12,1).to_s(:db)
+      Time.zone.local(2021, 12, 1).to_s(:db)
     end
   end
 

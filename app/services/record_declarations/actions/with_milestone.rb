@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RecordDeclarations
   module Actions
     module WithMilestone
@@ -13,11 +15,12 @@ module RecordDeclarations
         end
       end
 
-      private
+    private
+
       attr_reader :milestone
 
       def initialize(milestone:)
-        @milestone=milestone
+        @milestone = milestone
       end
     end
   end

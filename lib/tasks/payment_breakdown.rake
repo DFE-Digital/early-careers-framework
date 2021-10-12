@@ -18,8 +18,9 @@ namespace :payment_calculation do
     raise "Unknown lead provider: #{ARGV[1]}" if cpd_lead_provider.nil?
     raise "Not an ECF lead provider #{ARGV[1]}" if cpd_lead_provider.lead_provider.nil?
 
-    aggregation_type = (ARGV[2] || "eligible" )
+    aggregation_type = (ARGV[2] || "eligible")
     raise "Unknown aggregation type: #{ARGV[2]}" unless %w[submitted eligible payable paid].include?(aggregation_type)
+
     total_participants = (ARGV[3] || ParticipantDeclaration::ECF.for_lead_provider(cpd_lead_provider).send(aggregation_type).count).to_i
     uplift_participants = (ARGV[4] || ParticipantDeclaration::ECF.uplift.for_lead_provider(cpd_lead_provider).send(aggregation_type).count).to_i
     total_ects = (ARGV[3].present? ? ARGV[3].to_i / 2 : ParticipantDeclaration::ECF.send(aggregation_type).ect.for_lead_provider(cpd_lead_provider).count)
