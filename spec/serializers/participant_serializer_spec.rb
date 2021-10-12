@@ -87,12 +87,43 @@ RSpec.describe ParticipantSerializer do
           eligibility.eligible_status!
         end
 
-        # TODO: this should be true once we no longer hide the eligibility status
         it "returns nil" do
           expect(ect_profile.ecf_participant_eligibility.status).to eql "eligible"
 
           result = ParticipantSerializer.new(ect).serializable_hash
           expect(result[:data][:attributes][:eligible_for_funding]).to be_nil
+        end
+
+        context "when the feature flag is active", with_feature_flags: { eligibility_notifications: "active" } do
+          it "returns true" do
+            expect(ect_profile.ecf_participant_eligibility.status).to eql "eligible"
+
+            result = ParticipantSerializer.new(ect).serializable_hash
+            expect(result[:data][:attributes][:eligible_for_funding]).to be true
+          end
+        end
+      end
+
+      context "when the eligibility is ineligible" do
+        before do
+          eligibility = ECFParticipantEligibility.create!(participant_profile: ect_profile)
+          eligibility.ineligible_status!
+        end
+
+        it "returns nil" do
+          expect(ect_profile.ecf_participant_eligibility.status).to eql "ineligible"
+
+          result = ParticipantSerializer.new(ect).serializable_hash
+          expect(result[:data][:attributes][:eligible_for_funding]).to be_nil
+        end
+
+        context "when the feature flag is active", with_feature_flags: { eligibility_notifications: "active" } do
+          it "returns false" do
+            expect(ect_profile.ecf_participant_eligibility.status).to eql "ineligible"
+
+            result = ParticipantSerializer.new(ect).serializable_hash
+            expect(result[:data][:attributes][:eligible_for_funding]).to be false
+          end
         end
       end
     end
