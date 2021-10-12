@@ -68,6 +68,7 @@ class UTMService
     year2020_nqt_invite_sit_validated: "year2020-nqt-invite-sit-validated",
     year2020_nqt_invite_sit_no_participants: "year2020-nqt-invite-sit-no-participants",
     partnered_invite_sit_reminder: "partnered-invite-sit-reminder",
+    remind_fip_sit_to_complete_steps: "remind-fip-sit-to-complete-steps",
     add_participants_unpartnered_cip: "add-participants-unpartnered-cip",
     unvalidated_participants_reminder: "unvalidated-participants-reminder",
     year2020_nqt_invite_sit_catchall: "year2020-nqt-invite-sit-catchall",

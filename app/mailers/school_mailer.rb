@@ -299,7 +299,7 @@ class SchoolMailer < ApplicationMailer
   end
 
   def remind_fip_induction_coordinators_to_add_ects_and_mentors_email(induction_coordinator:, school_name:, campaign: nil)
-    campaign_tracking = campaign ? UTMService.email(campaign, campaign) : {}
+    campaign_tracking = campaign ? UTMService.email(campaign.to_sym, campaign.to_sym) : {}
 
     template_mail(
       REMIND_FIP_TO_ADD_ECTS_AND_MENTORS_EMAIL_TEMPLATE,
@@ -307,10 +307,11 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
+        name: induction_coordinator.user.full_name,
         school_name: school_name,
         sign_in: new_user_session_url(**campaign_tracking),
       },
-    ).tag(:reminder_request_to_add_ects_and_mentors).associate_with(induction_coordinator, as: :induction_coordinator_profile)
+    ).tag(:third_request_to_add_ects_and_mentors).associate_with(induction_coordinator, as: :induction_coordinator_profile)
   end
 
   def year2020_add_participants_confirmation(recipient:, school_name:, teacher_name_list:)
