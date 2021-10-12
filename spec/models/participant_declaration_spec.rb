@@ -11,6 +11,98 @@ RSpec.describe ParticipantDeclaration, type: :model do
     it { is_expected.to have_many(:declaration_states) }
   end
 
+  describe "state transitions" do
+    context "when submitted" do
+      let!(:participant_declaration) { create(:ect_participant_declaration, :submitted) }
+
+      it "has an initial state of submitted" do
+        expect(participant_declaration.submitted?).to be_truthy
+      end
+
+      it "will move from submitted to eligible" do
+        expect(participant_declaration.make_eligible!).to be_truthy
+        expect(participant_declaration.eligible?).to be_truthy
+      end
+
+      it "can be voided" do
+        expect(participant_declaration.make_voided!).to be_truthy
+        expect(participant_declaration.voided?).to be_truthy
+      end
+
+      it "cannot be directly be made payable or paid" do
+        expect(participant_declaration.make_paid!).to be_falsey
+        expect(participant_declaration.make_payable!).to be_falsey
+      end
+    end
+
+    context "when eligible" do
+      let(:participant_declaration) { create(:ect_participant_declaration, :eligible) }
+
+      it "has an state of eligible" do
+        expect(participant_declaration.eligible?).to be_truthy
+      end
+
+      it "will move from eligible to submitted" do # TODO: This may not be required
+        expect(participant_declaration.make_submitted!).to be_truthy
+        expect(participant_declaration.submitted?).to be_truthy
+      end
+
+      it "can be voided" do
+        expect(participant_declaration.make_voided!).to be_truthy
+        expect(participant_declaration.voided?).to be_truthy
+      end
+
+      it "can move from eligible to payable" do
+        expect(participant_declaration.make_payable!).to be_truthy
+        expect(participant_declaration.payable?).to be_truthy
+      end
+
+      it "cannot be directly be made paid" do
+        expect(participant_declaration.make_paid!).to be_falsey
+      end
+    end
+
+    context "when payable" do
+      let(:participant_declaration) { create(:ect_participant_declaration, :payable) }
+
+      it "has an state of payable" do
+        expect(participant_declaration.payable?).to be_truthy
+      end
+
+      it "will not move to eligible or submitted" do
+        expect(participant_declaration.make_submitted!).to be_falsey
+        expect(participant_declaration.make_eligible!).to be_falsey
+      end
+
+      it "cannot be voided" do
+        expect(participant_declaration.make_voided!).to be_falsey
+      end
+
+      it "can move from payable to paid" do
+        expect(participant_declaration.make_paid!).to be_truthy
+        expect(participant_declaration.paid?).to be_truthy
+      end
+    end
+
+    context "when paid" do
+      let(:participant_declaration) { create(:ect_participant_declaration, :paid) }
+
+      it "has an state of paid" do
+        expect(participant_declaration.paid?).to be_truthy
+      end
+
+      it "will not move to eligible, payable or submitted" do
+        expect(participant_declaration.make_submitted!).to be_falsey
+        expect(participant_declaration.make_eligible!).to be_falsey
+        expect(participant_declaration.make_payable!).to be_falsey
+      end
+
+      it "cannot be voided" do # TODO: This should trigger clawbacks, but that's a later thing.
+        expect(participant_declaration.make_voided!).to be_falsey
+      end
+    end
+  end
+
   describe "uplift scope" do
     let(:call_off_contract) { create(:call_off_contract) }
 

@@ -66,7 +66,7 @@ class ParticipantDeclaration < ApplicationRecord
   end
 
   def make_voided!
-    DeclarationState.voided!(self) unless voided?
+    DeclarationState.voided!(self) unless voided? || payable? || paid? # TODO: Voiding paid should trigger clawbacks, but currently OOS
   end
 
   def make_eligible!
@@ -78,7 +78,7 @@ class ParticipantDeclaration < ApplicationRecord
   end
 
   def make_paid!
-    DeclarationState.pay!(self) if payable?
+    DeclarationState.paid!(self) if payable?
   end
 
   def changeable?

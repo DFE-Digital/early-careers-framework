@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ParticipantEventPayableAggregator < ParticipantEventAggregator
-
 private
 
   def aggregation_types
