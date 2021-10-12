@@ -10,13 +10,13 @@ RSpec.describe NominateInductionTutorForm, type: :model do
   let(:email) { Faker::Internet.email }
 
   describe "validations" do
-    it { is_expected.to validate_presence_of(:full_name).with_message("Enter a full name") }
-    it { is_expected.to validate_presence_of(:email).with_message("Enter an email") }
+    it { is_expected.to validate_presence_of(:full_name).with_message("Enter a full name").on(%i[full_name check_name]) }
+    it { is_expected.to validate_presence_of(:email).with_message("Enter an email").on(%i[email create]) }
 
     it "validates that the email address is not in use by an ECT" do
       create(:participant_profile, :ect, user: create(:user, email: email))
       form = NominateInductionTutorForm.new(token: token, full_name: name, email: email)
-      expect(form).not_to be_valid
+      expect(form.valid?(:email)).to be false
       expect(form.errors[:email].first).to eq("This email address is already in use")
       expect(form.email_already_taken?).to be_truthy
     end
@@ -45,7 +45,7 @@ RSpec.describe NominateInductionTutorForm, type: :model do
     it "validates that the name matches if the email matches an induction tutor" do
       create(:user, :induction_coordinator, full_name: "One Name", email: email)
       form = NominateInductionTutorForm.new(token: token, full_name: "Different Name", email: email)
-      expect(form).not_to be_valid
+      expect(form.valid?(:full_name)).to be false
       expect(form.errors[:full_name].first).to eq("The name you entered does not match our records")
       expect(form.name_different?).to be_truthy
     end
