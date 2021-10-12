@@ -41,10 +41,10 @@ namespace :payment_calculation do
       csv << Tasks::PaymentBreakdown.new(contract: lead_providers.first.call_off_contract, total_participants: 0, uplift_participants: 0).csv_headings
       lead_providers.each do |lead_provider|
         contract = lead_provider.call_off_contract
-        total_participants = ParticipantDeclaration::ECF.payable.for_lead_provider(cpd_lead_provider).count
-        uplift_participants = ParticipantDeclaration::ECF.payable.uplift_for_lead_provider(cpd_lead_provider).count
-        total_ects = ParticipantDeclaration::ECF.payable.ects_for_lead_provider(cpd_lead_provider).count
-        total_mentors = ParticipantDeclaration::ECF.payable.mentors_for_lead_provider(cpd_lead_provider).count
+        total_participants = ParticipantDeclaration::ECF.payable_for_lead_provider(cpd_lead_provider).count
+        uplift_participants = ParticipantDeclaration::ECF.payable_uplift_for_lead_provider(cpd_lead_provider).count
+        total_ects = ParticipantDeclaration::ECF.payable_ects_for_lead_provider(cpd_lead_provider).count
+        total_mentors = ParticipantDeclaration::ECF.payable_mentors_for_lead_provider(cpd_lead_provider).count
         csv << Tasks::PaymentBreakdown.new(contract: contract, total_participants: total_participants, uplift_participants: uplift_participants, total_ects: total_ects, total_mentors: total_mentors).csv_body
       end
     end
