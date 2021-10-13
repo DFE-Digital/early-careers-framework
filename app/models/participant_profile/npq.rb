@@ -5,7 +5,7 @@ class ParticipantProfile::NPQ < ParticipantProfile
   belongs_to :school, optional: true
   belongs_to :npq_course, optional: true
 
-  has_one :validation_data, class_name: "NPQApplication", foreign_key: :id, dependent: :destroy
+  has_one :npq_application, foreign_key: :id, dependent: :destroy
 
   self.validation_steps = %i[identity decision].freeze
 

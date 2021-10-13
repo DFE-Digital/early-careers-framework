@@ -6,17 +6,17 @@ module Api
       include ApiTokenAuthenticatable
 
       def create
-        validation_data = NPQApplication.new(validation_data_params)
-        validation_data.npq_course = NPQCourse.find_by(id: npq_course_param)
-        validation_data.npq_lead_provider = NPQLeadProvider.find_by(id: npq_lead_provider_param)
-        validation_data.user = User.find_by(id: user_param)
+        npq_application = NPQApplication.new(npq_application_params)
+        npq_application.npq_course = NPQCourse.find_by(id: npq_course_param)
+        npq_application.npq_lead_provider = NPQLeadProvider.find_by(id: npq_lead_provider_param)
+        npq_application.user = User.find_by(id: user_param)
 
-        if validation_data.save
+        if npq_application.save
           render status: :created,
                  content_type: "application/vnd.api+json",
-                 json: NPQValidationDataSerializer.new(validation_data).serializable_hash
+                 json: NPQValidationDataSerializer.new(npq_application).serializable_hash
         else
-          render json: { errors: Api::ErrorFactory.new(model: validation_data).call }, status: :bad_request
+          render json: { errors: Api::ErrorFactory.new(model: npq_application).call }, status: :bad_request
         end
       end
 
@@ -38,7 +38,7 @@ module Api
         params[:data][:relationships][:user][:data][:id]
       end
 
-      def validation_data_params
+      def npq_application_params
         params
           .require(:data)
           .require(:attributes)

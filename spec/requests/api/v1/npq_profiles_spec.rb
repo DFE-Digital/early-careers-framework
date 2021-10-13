@@ -71,23 +71,23 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
         expect { post "/api/v1/npq-profiles", params: json }
           .to change(NPQApplication, :count).by(1)
 
-        validation_data = NPQApplication.order(created_at: :desc).first
+        npq_application = NPQApplication.order(created_at: :desc).first
 
-        expect(validation_data.user).to eql(user)
+        expect(npq_application.user).to eql(user)
 
-        expect(validation_data.npq_lead_provider).to eql(npq_lead_provider)
-        expect(validation_data.date_of_birth).to eql(Date.new(1990, 12, 13))
-        expect(validation_data.nino).to eql("AB123456C")
-        expect(validation_data.teacher_reference_number).to eql("1234567")
-        expect(validation_data.teacher_reference_number_verified).to be_truthy
-        expect(validation_data.active_alert).to be_truthy
-        expect(validation_data.school_urn).to eql("123456")
-        expect(validation_data.school_ukprn).to eql("12345678")
-        expect(validation_data.headteacher_status).to eql("no")
-        expect(validation_data.npq_course).to eql(npq_course)
-        expect(validation_data.eligible_for_funding).to eql(true)
-        expect(validation_data.funding_choice).to eql("school")
-        expect(validation_data.lead_provider_approval_status).to eql("pending")
+        expect(npq_application.npq_lead_provider).to eql(npq_lead_provider)
+        expect(npq_application.date_of_birth).to eql(Date.new(1990, 12, 13))
+        expect(npq_application.nino).to eql("AB123456C")
+        expect(npq_application.teacher_reference_number).to eql("1234567")
+        expect(npq_application.teacher_reference_number_verified).to be_truthy
+        expect(npq_application.active_alert).to be_truthy
+        expect(npq_application.school_urn).to eql("123456")
+        expect(npq_application.school_ukprn).to eql("12345678")
+        expect(npq_application.headteacher_status).to eql("no")
+        expect(npq_application.npq_course).to eql(npq_course)
+        expect(npq_application.eligible_for_funding).to eql(true)
+        expect(npq_application.funding_choice).to eql("school")
+        expect(npq_application.lead_provider_approval_status).to eql("pending")
       end
 
       it "returns a 201" do
@@ -108,9 +108,9 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
       it "response has correct attributes" do
         post "/api/v1/npq-profiles", params: json
 
-        validation_data = NPQApplication.order(created_at: :desc).first
+        npq_application = NPQApplication.order(created_at: :desc).first
 
-        expect(parsed_response["data"]["id"]).to eql(validation_data.id)
+        expect(parsed_response["data"]["id"]).to eql(npq_application.id)
         expect(parsed_response["data"]).to have_jsonapi_attributes(
           :teacher_reference_number,
           :headteacher_status,

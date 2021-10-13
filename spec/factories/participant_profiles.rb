@@ -60,7 +60,7 @@ FactoryBot.define do
       teacher_profile { association :teacher_profile }
       schedule
 
-      validation_data { association :npq_application, user: teacher_profile.user, school_urn: rand(100_000..999_999) }
+      npq_application { association :npq_application, user: teacher_profile.user, school_urn: rand(100_000..999_999) }
 
       participant_type { :npq }
     end
