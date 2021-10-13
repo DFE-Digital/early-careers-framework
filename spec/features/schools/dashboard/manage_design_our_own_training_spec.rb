@@ -12,10 +12,38 @@ RSpec.describe "Manage Design Our Own training", js: true, with_feature_flags: {
     then_i_should_see_the_design_our_own_induction_dashboard
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Design Our Own dashboard"
+  end
 
-    when_i_select_view_details
-    then_i_am_taken_to_design_our_own_course_programme_choice_info_page
-    and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Design Our Own programme info"
+  scenario "Changing induction programme" do
+    school_cohort = create :school_cohort, induction_programme_choice: "design_our_own", school: create(:school, name: "Test School")
+
+    sign_in_as create(:induction_coordinator_profile, schools: [school_cohort.school]).user
+    expect(page).to have_text("Design and deliver your own programme")
+    click_on "Change induction programme choice"
+
+    expect(page).to have_text "Change how you run your programme"
+    expect(page).to be_accessible
+    page.percy_snapshot "Design Our Own - change programme"
+    click_on "Check the other options available"
+
+    expect(page).to have_text "How do you want to run your training"
+    expect(page).to have_selector :label, text: "Use a training provider, funded by the DfE (full induction programme)"
+    expect(page).to have_selector :label, text: "Deliver your own programme using DfE accredited materials (core induction programme)"
+    expect(page).to have_selector :label, text: "We don’t expect to have any early career teachers starting in 2021"
+    expect(page).to have_no_selector :label, text: "Design and deliver your own"
+    expect(page).to be_accessible
+    page.percy_snapshot "Design Our Own - change programme options"
+
+    choose "Use a training provider, funded by the DfE (full induction programme)"
+    click_on "Continue"
+
+    expect(page).to have_text "Confirm your induction programme"
+    click_on "Confirm"
+
+    expect(page).to have_text "Induction programme confirmed"
+    click_on "Continue"
+
+    expect(page).to have_current_path schools_dashboard_path(school_cohort.school)
+    expect(page).to have_text "Use a training provider funded by the DfE"
   end
 end

@@ -303,6 +303,25 @@ class InviteSchools
       end
   end
 
+  def catch_all_invite_sits_for_nqt_plus_one
+    School
+      .eligible
+      .joins(:induction_coordinators, :school_cohorts)
+      .where.not(
+        school_cohorts: {
+          cohort: Cohort.find_by_start_year(2020),
+        },
+      ).distinct.find_each do |school|
+        next if Email.associated_with(school).tagged_with(:year2020_invite).any?
+
+        SchoolMailer.nqt_plus_one_sit_invite(
+          school: school,
+          recipient: school.induction_coordinators.first.email,
+          start_url: year2020_start_url(school, utm_source: :year2020_nqt_invite_sit_catchall),
+        ).deliver_later
+      end
+  end
+
   def invite_unpartnered_cip_sits_to_add_ects_and_mentors
     School.unpartnered(Cohort.current.start_year)
       .joins(:school_cohorts, :induction_coordinator_profiles)
@@ -317,6 +336,32 @@ class InviteSchools
           sign_in_url: sign_in_url_with_campaign(:add_participants_unpartnered_cip),
           school_name: school.name,
         ).deliver_later
+      end
+  end
+
+  def invite_unengaged_schools
+    School.unpartnered(Cohort.current.start_year)
+      .not_opted_out
+      .where.missing(:induction_coordinators)
+      .find_each do |school|
+        if school.contact_email.blank?
+          logger.info "No contact details for school urn: #{school.urn} ... skipping"
+          next
+        end
+
+        nomination_email = NominationEmail.create_nomination_email(
+          sent_at: Time.zone.now,
+          sent_to: school.contact_email,
+          school: school,
+        )
+
+        notify_id = SchoolMailer.unengaged_schools_email(
+          recipient: school.contact_email,
+          school: school,
+          nomination_url: nomination_email.nomination_url(utm_source: :unengaged_schools),
+        ).deliver_now.delivery_method.response.id
+
+        nomination_email.update!(notify_id: notify_id)
       end
   end
 

@@ -1,4 +1,4 @@
-Feature:  Induction Tutor Materials
+Feature: Induction Tutor Materials
   All users should be able to view Induction Tutor materials for each cip provider.
 
   Scenario: Users should be able to view Induction Tutor materials

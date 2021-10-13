@@ -11,15 +11,15 @@ RSpec.shared_examples "a participant declaration service" do
     given_params.merge({ declaration_date: (cutoff_start_datetime + 1.day + 1.second).rfc3339 })
   end
 
-  it "creates a participant and profile declaration" do
-    expect { described_class.call(params: given_params) }.to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
+  it "creates a participant declaration" do
+    expect { described_class.call(params: given_params) }.to change { ParticipantDeclaration.count }.by(1)
   end
 
   it "does not create exact duplicates" do
     expect {
       described_class.call(params: given_params)
       described_class.call(params: given_params)
-    }.to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
+    }.to change { ParticipantDeclaration.count }.by(1)
   end
 
   it "does not create close duplicates and throws an error" do
@@ -137,11 +137,11 @@ RSpec.shared_examples "a participant declaration service" do
 
   it "succeeds when user profile is in a withdrawn state, but was active on declaration date" do
     ParticipantProfileState.create!(participant_profile: given_profile, state: "withdrawn")
-    expect { described_class.call(params: given_params) }.to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
+    expect { described_class.call(params: given_params) }.to change { ParticipantDeclaration.count }.by(1)
   end
 
   it "fails when user profile is in a deferred state, but was active on declaration date" do
     ParticipantProfileState.create!(participant_profile: given_profile, state: "deferred")
-    expect { described_class.call(params: given_params) }.to change { ParticipantDeclaration.count }.by(1).and change { ProfileDeclaration.count }.by(1)
+    expect { described_class.call(params: given_params) }.to change { ParticipantDeclaration.count }.by(1)
   end
 end

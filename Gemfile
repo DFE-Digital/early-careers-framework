@@ -79,7 +79,7 @@ gem "delayed_job_active_record"
 # Strong migration checker for database migrations
 gem "strong_migrations"
 
-# Acts as State Machine for participant states
+# Acts as State Machine for participant and declaration states
 gem "aasm"
 
 # Pagination for API
@@ -168,7 +168,7 @@ group :test do
   gem "percy-capybara"
   gem "pundit-matchers", "~> 1.7.0"
   gem "rails-controller-testing", ">= 1.0.5"
-  gem "rspec-default_http_header", github: "ethanmills/rspec-default_http_header", ref: "b72a803"
+  gem "rspec-default_http_header", github: "kenchan/rspec-default_http_header", ref: "e91015b"
   gem "selenium-webdriver"
   gem "shoulda-matchers", "~> 4.5"
   gem "simplecov"

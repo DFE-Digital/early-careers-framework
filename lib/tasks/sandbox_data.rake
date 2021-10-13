@@ -11,9 +11,8 @@ namespace :lead_providers do
     end
 
     LeadProvider.all.map(&:name).each do |provider|
-      ValidTestDataGenerator::LeadProviderPopulater.call(name: provider, total_schools: 100, participants_per_school: 100)
+      ValidTestDataGenerator::LeadProviderPopulater.call(name: provider, total_schools: 10, participants_per_school: 10)
     end
-    ValidTestDataGenerator::AmbitionSpecificPopulater.call(name: "Ambition Institute", total_schools: 3, participants_per_school: 1500)
   end
 
   desc "create NPQ seed schools and participants for API testing"

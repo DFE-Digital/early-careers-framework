@@ -11,6 +11,7 @@ class SchoolMailer < ApplicationMailer
   CIP_ONLY_INVITE_EMAIL_TEMPLATE = "ee814b67-52e3-409d-8350-5140e6741124"
   FEDERATION_INVITE_EMAIL_TEMPLATE = "9269c50d-b579-425b-b55b-4c93f67074d4"
   SECTION_41_INVITE_EMAIL_TEMPLATE = "a4ba1de4-e401-47f4-ac77-60c1da17a0e5"
+  UNENGAGED_INVITE_EMAIL_TEMPLATE = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f"
   COORDINATOR_SIGN_IN_CHASER_EMAIL_TEMPLATE = "b5c318a4-2171-4ded-809a-af72dd87e7a7"
   COORDINATOR_REMINDER_TO_CHOOSE_ROUTE_EMAIL_TEMPLATE = "c939c27a-9951-4ac3-817d-56b7bf343fb4"
   COORDINATOR_REMINDER_TO_CHOOSE_PROVIDER_EMAIL_TEMPLATE = "11cdb6d8-8a59-4618-ba35-0ebd7e47180c"
@@ -217,6 +218,19 @@ class SchoolMailer < ApplicationMailer
         nomination_link: nomination_url,
       },
     )
+  end
+
+  def unengaged_schools_email(recipient:, school:, nomination_url:)
+    template_mail(
+      UNENGAGED_INVITE_EMAIL_TEMPLATE,
+      to: recipient,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        school_name: school.name,
+        nomination_link: nomination_url,
+      },
+    ).tag(:unengaged_school_email).associate_with(school)
   end
 
   def induction_coordinator_sign_in_chaser_email(recipient:, name:, school_name:, sign_in_url:)

@@ -57,7 +57,7 @@ module ValidTestDataGenerator
       name = Faker::Name.name
       user = User.create!(full_name: name, email: Faker::Internet.email(name: name))
       teacher_profile = TeacherProfile.create!(user: user, trn: random_or_nil_trn)
-      schedule = Finance::Schedule.default
+      schedule = Finance::Schedule::ECF.default
       if profile_type == :ect
         ParticipantProfile::ECT.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, mentor_profile: mentor_profile, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule) do |profile|
           ParticipantProfileState.create!(participant_profile: profile)
@@ -157,7 +157,7 @@ module ValidTestDataGenerator
   class NPQLeadProviderPopulater
     class << self
       def call(name:, total_schools: 10, participants_per_school: 10)
-        new(name: name).call(total_schools: total_schools, participants_per_school: participants_per_school)
+        new(name: name, participants_per_school: participants_per_school).call(total_schools: total_schools)
       end
     end
 

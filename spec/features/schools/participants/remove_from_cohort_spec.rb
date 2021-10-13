@@ -47,4 +47,20 @@ RSpec.describe "STI removing participants from the cohort", js: true, with_featu
     sign_in_as mentor_profile.user
     expect(page).to have_content "You do not have access to this service"
   end
+
+  scenario "removing ineligible participant" do
+    create :ecf_participant_eligibility, :ineligible, participant_profile: ect_profile
+
+    sign_in_as sti_profile.user
+    visit schools_participants_path(school_cohort.school, school_cohort.cohort)
+    click_on ect_profile.user.full_name
+    click_on "Remove #{ect_profile.user.full_name} from this cohort"
+
+    expect(page).to have_content("Confirm you want to remove #{ect_profile.user.full_name}")
+    expect { click_on "Confirm and remove" }.to change { ect_profile.reload.status }.from("active").to("withdrawn")
+    expect(page).to have_content("#{ect_profile.user.full_name} has been removed from this cohort")
+
+    click_on "Return to your ECTs and mentor"
+    expect(page).to have_no_content ect_profile.user.full_name
+  end
 end

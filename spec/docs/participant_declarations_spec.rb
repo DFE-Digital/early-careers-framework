@@ -129,7 +129,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
                 description: "Pagination options to navigate through the list of participant declarations."
 
       response "200", "A list of participant declarations" do
-        schema({ "$ref": "#/components/schemas/MultipleParticipantDeclarationsResponse" }, content_type: "application/vnd.api+json")
+        schema({ "$ref": "#/components/schemas/MultipleParticipantDeclarationsResponse" })
 
         run_test!
       end
@@ -137,7 +137,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
       response "401", "Unauthorized" do
         let(:Authorization) { "Bearer invalid" }
 
-        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" }, content_type: "application/vnd.api+json")
+        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
 
         run_test!
       end
@@ -159,7 +159,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
       response "401", "Unauthorized" do
         let(:Authorization) { "Bearer invalid" }
 
-        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" }, content_type: "application/vnd.api+json")
+        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
 
         run_test!
       end
@@ -168,10 +168,9 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
 
   path "/api/v1/participant-declarations/{id}" do
     let(:id) do
-      create(:participant_declaration,
+      create(:ect_participant_declaration,
              user: user,
-             cpd_lead_provider: cpd_lead_provider,
-             course_identifier: "ecf-induction").id
+             cpd_lead_provider: cpd_lead_provider).id
     end
 
     get "Get single participant declaration" do
@@ -187,7 +186,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
                 description: "The ID of the participant declaration ID"
 
       response "200", "A single participant declaration" do
-        schema({ "$ref": "#/components/schemas/SingleParticipantDeclarationResponse" }, content_type: "application/vnd.api+json")
+        schema({ "$ref": "#/components/schemas/SingleParticipantDeclarationResponse" })
 
         run_test!
       end
@@ -201,7 +200,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
       response "401", "Unauthorized" do
         let(:Authorization) { "Bearer invalid" }
 
-        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" }, content_type: "application/vnd.api+json")
+        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
 
         run_test!
       end
@@ -224,8 +223,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
 
       response 200, "Successful" do
         let(:id) do
-          declaration = create(:participant_declaration, user: ect_profile.user, cpd_lead_provider: cpd_lead_provider, course_identifier: "ecf-induction")
-          create(:profile_declaration, participant_declaration: declaration, participant_profile: ect_profile)
+          declaration = create(:participant_declaration, user: ect_profile.user, cpd_lead_provider: cpd_lead_provider, course_identifier: "ecf-induction", participant_profile: ect_profile)
           declaration.id
         end
 

@@ -12,7 +12,7 @@ module Schools
       attr_reader :profile
 
       def manual_removal_possible?
-        !profile.completed_validation_wizard?
+        !profile.completed_validation_wizard? || profile.ecf_participant_eligibility&.ineligible_status?
       end
 
       def fip?

@@ -107,12 +107,6 @@ module ParticipantValidationSteps
     click_on "Continue"
   end
 
-  def then_i_should_see_the_have_you_changed_your_name_page
-    expect(page).to have_selector("h1", text: "Have you changed your name since you started your initial teacher training (ITT)?")
-    expect(page).to have_field("Yes, I changed my name", visible: :all)
-    expect(page).to have_field("No, I have the same name", visible: :all)
-  end
-
   def then_i_should_see_the_tell_us_your_details_page
     expect(page).to have_selector("h1", text: "Tell us your details")
     expect(page).to have_field("Full name")
@@ -286,24 +280,6 @@ module ParticipantValidationSteps
     expect(page).to have_link("qts.enquiries@education.gov.uk")
     expect(page).to have_link("https://manager.galaxkey.com/services/registerme")
     expect(page).to have_link("teacher self-service site", href: "https://www.gov.uk/guidance/teacher-self-service-portal")
-  end
-
-  def then_i_should_see_the_confirm_your_name_has_been_updated_page
-    expect(page).to have_selector("h1", text: "Confirm if you’ve updated your record")
-    expect(page).to have_field("Yes, my name has been updated", visible: :all)
-    expect(page).to have_field("No, I need to update my name", visible: :all)
-    expect(page).to have_field("I’m not sure", visible: :all)
-  end
-
-  def then_i_should_see_the_what_do_you_want_to_do_now_page
-    expect(page).to have_selector("h1", text: "What do you want to do now?")
-    expect(page).to have_field("Register for this programme using your previous name (you can update this later)", visible: :all)
-    expect(page).to have_field("Update your name with the Teaching Regulation Agency", visible: :all)
-  end
-
-  def then_i_should_see_the_change_your_details_with_the_tra_page
-    expect(page).to have_selector("h1", text: "Change your details with the Teaching Regulation Agency")
-    expect(page).to have_link("Teacher Self-Service Portal", href: "https://teacherservices.education.gov.uk/SelfService/Login")
   end
 
   def then_i_should_see_the_manage_your_training_page

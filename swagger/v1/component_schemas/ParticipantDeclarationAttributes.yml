@@ -7,6 +7,7 @@ required:
   - course_identifier
   - eligible_for_payment
   - voided
+  - state
 properties:
   participant_id:
     description: "The unique id of the participant"
@@ -44,12 +45,22 @@ properties:
       - npq-additional-support-offer
     example: ecf-induction
   eligible_for_payment:
-    description: "Indicates whether this declaration would be eligible for funding from the DfE"
+    description: "[Deprecated - use state instead] Indicates whether this declaration would be eligible for funding from the DfE"
     type: boolean
     nullable: false
     example: true
   voided:
-    description: "Indicates whether this declaration has been voided"
+    description: "[Deprecated - use state instead] Indicates whether this declaration has been voided"
     type: boolean
     nullable: false
     example: false
+  state:
+    description: "Indicates the state of this payment declaration"
+    type: string
+    enum:
+      - submitted
+      - eligible
+      - payable
+      - paid
+      - voided
+    example: submitted

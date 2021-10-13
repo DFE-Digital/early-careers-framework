@@ -6,17 +6,24 @@ class ParticipantDeclarationSerializer
   include JSONAPI::Serializer
   include JSONAPI::Serializer::Instrumentation
 
+  # TODO: eligible_for_payment is deprecated, will need removing in one of next api versions
+  # TODO: voided is deprecated, will need removing in one of next api versions
+
   set_id :id
   set_type :'participant-declaration'
-  attributes :participant_id, :declaration_type, :course_identifier, :voided
+  attributes :participant_id, :declaration_type, :course_identifier
 
   attribute :eligible_for_payment do |declaration|
-    declaration.payable || false
+    declaration.payable? || declaration.eligible?
   end
 
   attribute :declaration_date do |declaration|
     declaration.declaration_date.rfc3339
   end
 
+  attribute :voided, &:voided?
+
   attribute(:participant_id, &:user_id)
+
+  attribute :state, &:current_state
 end

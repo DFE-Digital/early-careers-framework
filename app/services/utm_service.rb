@@ -36,6 +36,8 @@ class UTMService
     remind_fip_sit_to_complete_steps: "remind-fip-sit-to-complete-steps",
     add_participants_unpartnered_cip: "add-participants-unpartnered-cip",
     unvalidated_participants_reminder: "unvalidated-participants-reminder",
+    year2020_nqt_invite_sit_catchall: "year2020-nqt-invite-sit-catchall",
+    unengaged_schools: "unengaged-schools",
   }.freeze
 
   # Campaigns aren't showing up in GA at the moment, so use specific sources
@@ -68,6 +70,8 @@ class UTMService
     partnered_invite_sit_reminder: "partnered-invite-sit-reminder",
     add_participants_unpartnered_cip: "add-participants-unpartnered-cip",
     unvalidated_participants_reminder: "unvalidated-participants-reminder",
+    year2020_nqt_invite_sit_catchall: "year2020-nqt-invite-sit-catchall",
+    unengaged_schools: "unengaged-schools",
   }.freeze
 
   def self.email(campaign, source = :service)

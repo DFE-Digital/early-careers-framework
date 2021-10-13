@@ -32,7 +32,15 @@
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Programme</dt>
           <dd class="govuk-summary-list__value"><%= t(school_cohort.induction_programme_choice, scope: %i[manage_your_training induction_programmes]) %></dd>
-          <dd class="govuk-summary-list__actions"><%= govuk_link_to "View details", schools_cohort_path(cohort_id: school_cohort.cohort.start_year), class: 'app-govuk-link' %></dd>
+          <dd class="govuk-summary-list__actions">
+            <% if school_cohort.can_change_programme? %>
+              <%= govuk_link_to change_programme_schools_cohort_path(cohort_id: school_cohort.cohort.start_year) do %>
+                Change <span class="govuk-visually-hidden">induction programme choice</span>
+              <% end %>
+            <% else %>
+              <%= govuk_link_to "View details", schools_cohort_path(cohort_id: school_cohort.cohort.start_year) %>
+            <% end %>
+          </dd>
         </div>
         <% if school_cohort.core_induction_programme? %>
           <div class="govuk-summary-list__row">

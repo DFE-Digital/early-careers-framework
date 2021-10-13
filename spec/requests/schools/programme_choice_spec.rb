@@ -26,9 +26,9 @@ RSpec.describe "Schools::ProgrammeChoice", type: :request do
         school_cohort.no_early_career_teachers!
       end
 
-      it "renders the no early career teachers template" do
+      it "redirects back to the school dashboard" do
         get "/schools/#{school.slug}/cohorts/#{cohort.start_year}"
-        expect(response).to render_template("schools/cohorts/programme_choice_no_early_career_teachers")
+        expect(response).to redirect_to "/schools/#{school.slug}"
       end
     end
 
@@ -37,9 +37,9 @@ RSpec.describe "Schools::ProgrammeChoice", type: :request do
         school_cohort.design_our_own!
       end
 
-      it "renders the no early career teachers template" do
+      it "redirects back to the school dashboard" do
         get "/schools/#{school.slug}/cohorts/#{cohort.start_year}"
-        expect(response).to render_template("schools/cohorts/programme_choice_design_our_own")
+        expect(response).to redirect_to "/schools/#{school.slug}"
       end
     end
   end

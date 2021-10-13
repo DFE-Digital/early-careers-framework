@@ -11,8 +11,7 @@ module Admin
 
         def show
           @induction_choice_form = InductionChoiceForm.new
-          @induction_choice_form.cohort = @cohort
-          @induction_choice_form.school = @school
+          @induction_choice_form.school_cohort = school_cohort
         end
 
         def confirm
@@ -30,13 +29,16 @@ module Admin
 
         def set_induction_choice_form
           @induction_choice_form = InductionChoiceForm.new(params.require(:induction_choice_form).permit(:programme_choice))
-          @induction_choice_form.cohort = @cohort
-          @induction_choice_form.school = @school
+          @induction_choice_form.school_cohort = school_cohort
         end
 
         def set_school_and_cohort
           @school = School.friendly.find params[:school_id]
           @cohort = ::Cohort.find_by start_year: params[:id]
+        end
+
+        def school_cohort
+          @school_cohort ||= @school.school_cohorts.find_by!(cohort: @cohort)
         end
       end
     end

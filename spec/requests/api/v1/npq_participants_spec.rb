@@ -4,11 +4,12 @@ require "rails_helper"
 
 RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { participant_data_api: "active" } do
   describe "GET /api/v1/participants/npq" do
-    let!(:default_schedule) { create(:schedule, name: "ECF September standard 2021") }
+    let!(:default_schedule) { create(:schedule, :npq_specialist) }
     let(:npq_lead_provider) { create(:npq_lead_provider) }
     let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider: npq_lead_provider) }
     let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
     let(:bearer_token) { "Bearer #{token}" }
+    let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
 
     context "when authorized" do
       before do
@@ -16,7 +17,7 @@ RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { par
       end
 
       before :each do
-        list = create_list(:npq_validation_data, 3, npq_lead_provider: npq_lead_provider, school_urn: "123456")
+        list = create_list(:npq_validation_data, 3, npq_lead_provider: npq_lead_provider, school_urn: "123456", npq_course: npq_course)
 
         list.each do |npq_validation_data|
           NPQ::Accept.new(npq_application: npq_validation_data).call
@@ -75,7 +76,7 @@ RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { par
 
         context "filtering" do
           before do
-            create_list :npq_validation_data, 2, npq_lead_provider: npq_lead_provider, updated_at: 10.days.ago, school_urn: "123456"
+            create_list(:npq_validation_data, 2, npq_lead_provider: npq_lead_provider, updated_at: 10.days.ago, school_urn: "123456", npq_course: npq_course)
           end
 
           it "returns content updated after specified timestamp" do

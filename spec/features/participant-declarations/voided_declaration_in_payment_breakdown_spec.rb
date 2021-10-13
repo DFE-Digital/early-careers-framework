@@ -15,8 +15,8 @@ RSpec.feature "Voided declaration in payment breakdown", type: :feature do
     and_call_off_contract_was_created_for_lead_provider
     when_the_participant_details_are_passed_to_the_lead_provider
     and_the_lead_provider_submits_a_declaration_for_the_ect_using_their_id
+    and_participant_declaration_made_eligible_for_payment
     and_the_lead_provider_voids_a_declaration
-    and_profile_declaration_made_payable
     and_breakdown_calculation_was_run
     then_the_payment_breakdown_does_not_include_voided_declaration
   end
@@ -35,9 +35,10 @@ private
     )
   end
 
-  def and_profile_declaration_made_payable
-    profile_declaration = ProfileDeclaration.find_by(participant_declaration_id: @declaration_id)
-    profile_declaration.update!(payable: true)
+  def and_participant_declaration_made_eligible_for_payment
+    travel_to @submission_date + 1.day do
+      ParticipantDeclaration.find_by_id(@declaration_id).eligible!
+    end
   end
 
   def then_the_payment_breakdown_does_not_include_voided_declaration

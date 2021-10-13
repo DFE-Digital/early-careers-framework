@@ -3,11 +3,12 @@
 require "rails_helper"
 
 RSpec.describe Importers::NPQManualValidation do
-  let(:npq_validation_data) { create(:npq_validation_data) }
+  let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
+  let(:npq_validation_data) { create(:npq_validation_data, npq_course: npq_course) }
   let(:file) { Tempfile.new("test.csv") }
 
   before do
-    Finance::Schedule.find_or_create_by!(name: "ECF September standard 2021")
+    create(:schedule, :npq_specialist)
     NPQ::Accept.new(npq_application: npq_validation_data).call
   end
 
