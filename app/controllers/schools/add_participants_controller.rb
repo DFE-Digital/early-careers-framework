@@ -39,7 +39,7 @@ module Schools
   private
 
     def type_param
-      params[:type].to_sym
+      params[:type]&.to_sym
     end
 
     def email_used_in_the_same_school?
