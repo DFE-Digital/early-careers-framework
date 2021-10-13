@@ -49,21 +49,11 @@ groups:
   - name: Memory-utilisation
     rules:
       - alert: MemoryUtilizationHigh
-        expr: avg by ( app ) (memory_utilization{app="ecf-dev"}) > 75
+        expr: avg by ( app ) (memory_utilization{app=~"ecf-dev"}) > 75
         for: 5m
         annotations:
           summary: Memory Utilization High
-          description: "ecf-dev: Memory utilization at least 75% for more than 5 minutes (current value: {{ $value }})"
-        labels:
-          environment: development
-          severity: low
-    rules:
-      - alert: MemoryUtilizationHigh
-        expr: avg by ( app ) (memory_utilization{app="ecf-dev-worker"}) > 80
-        for: 5m
-        annotations:
-          summary: Memory Utilization High
-          description: "ecf-dev: Memory utilization at least 80% for more than 5 minutes (current value: {{ $value }})"
+          description: "ecf-dev: Memory utilization at least 60% for more than 5 minutes (current value: {{ $value }})"
         labels:
           environment: development
           severity: low

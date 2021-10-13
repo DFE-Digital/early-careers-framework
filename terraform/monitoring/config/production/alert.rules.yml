@@ -49,21 +49,11 @@ groups:
   - name: Memory-utilisation
     rules:
       - alert: MemoryUtilizationHigh
-        expr: avg by ( app ) (memory_utilization{app="ecf-production"}) > 60
+        expr: avg by ( app ) (memory_utilization{app=~"ecf-production"}) > 60
         for: 5m
         annotations:
           summary: Memory Utilization High
           description: "ecf-production: Memory utilization at least 60% for more than 5 minutes (current value: {{ $value }})"
-        labels:
-          environment: production
-          severity: high
-    rules:
-      - alert: MemoryUtilizationHigh
-        expr: avg by ( app ) (memory_utilization{app="ecf-production-worker"}) > 80
-        for: 5m
-        annotations:
-          summary: Memory Utilization High
-          description: "ecf-production: Worker memory utilization at least 80% for more than 5 minutes (current value: {{ $value }})"
         labels:
           environment: production
           severity: high
