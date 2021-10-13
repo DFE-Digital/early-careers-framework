@@ -49,18 +49,13 @@ RSpec.describe "SIT removing participants from the cohort", js: true, with_featu
   end
 
   scenario "removing ineligible participant" do
-    create :ecf_participant_eligibility, :ineligible, participant_profile: ect_profile
+    ineligible_ect = create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort)
+    ineligible_ect.ecf_participant_eligibility.update!(status: "manual_check", reason: "active_flags")
 
     sign_in_as sti_profile.user
     visit schools_participants_path(school_cohort.school, school_cohort.cohort)
-    click_on "Check"
-    click_on "Remove #{ect_profile.user.full_name} from this cohort"
+    first(:link, "Check").click
 
-    expect(page).to have_content("Confirm you want to remove #{ect_profile.user.full_name}")
-    expect { click_on "Confirm and remove" }.to change { ect_profile.reload.status }.from("active").to("withdrawn")
-    expect(page).to have_content("#{ect_profile.user.full_name} has been removed from this cohort")
-
-    click_on "Return to your ECTs and mentor"
-    expect(page).to have_no_content ect_profile.user.full_name
+    expect(page).to have_content("If #{ineligible_ect.user.full_name} should not be in this cohort, contact your training provider to remove them.")
   end
 end
