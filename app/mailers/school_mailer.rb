@@ -299,7 +299,7 @@ class SchoolMailer < ApplicationMailer
   end
 
   def remind_fip_induction_coordinators_to_add_ects_and_mentors_email(induction_coordinator:, school_name:, campaign: nil)
-    campaign_tracking = campaign ? UTMService.email(campaign.to_sym, campaign.to_sym) : {}
+    campaign_tracking = campaign ? UTMService.email(campaign, campaign) : {}
 
     template_mail(
       REMIND_FIP_TO_ADD_ECTS_AND_MENTORS_EMAIL_TEMPLATE,
