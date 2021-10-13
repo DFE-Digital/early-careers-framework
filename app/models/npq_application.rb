@@ -2,8 +2,16 @@
 
 class NPQApplication < ApplicationRecord
   has_paper_trail only: %i[user_id npq_lead_provider_id npq_course_id created_at updated_at lead_provider_approval_status]
+
   # TODO: Rename table
+  # Step 1 (Done): Make a new table, called npq_applications
+  # Step 2 (Done): Write to both tables
+  # Step 3 (Not done): Run a script to migrate all existing data to new table
+  # Step 4 (Not done): Push a new change removing the old table
   self.table_name = "npq_profiles"
+  after_commit do |application|
+    NPQApplicationTemporary.find_or_initialize_by(id: application.id).update!(application.attributes)
+  end
 
   has_one :profile, class_name: "ParticipantProfile::NPQ", foreign_key: :id, touch: true
   belongs_to :user

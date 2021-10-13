@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_11_155601) do
+ActiveRecord::Schema.define(version: 2021_10_13_144609) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -175,7 +175,7 @@ ActiveRecord::Schema.define(version: 2021_10_11_155601) do
 
   create_table "declaration_states", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_declaration_id", null: false
-    t.string "state", default: "submitted"
+    t.string "state", default: "submitted", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["participant_declaration_id"], name: "index_declaration_states_on_participant_declaration_id"
@@ -425,6 +425,28 @@ ActiveRecord::Schema.define(version: 2021_10_11_155601) do
     t.index ["partnership_notification_email_id"], name: "index_nomination_emails_on_partnership_notification_email_id"
     t.index ["school_id"], name: "index_nomination_emails_on_school_id"
     t.index ["token"], name: "index_nomination_emails_on_token", unique: true
+  end
+
+  create_table "npq_applications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "npq_lead_provider_id", null: false
+    t.uuid "npq_course_id", null: false
+    t.date "date_of_birth"
+    t.text "teacher_reference_number"
+    t.boolean "teacher_reference_number_verified", default: false
+    t.text "school_urn"
+    t.text "headteacher_status"
+    t.boolean "active_alert", default: false
+    t.boolean "eligible_for_funding", default: false, null: false
+    t.text "funding_choice"
+    t.text "nino"
+    t.text "lead_provider_approval_status", default: "pending", null: false
+    t.text "school_ukprn"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["npq_course_id"], name: "index_npq_applications_on_npq_course_id"
+    t.index ["npq_lead_provider_id"], name: "index_npq_applications_on_npq_lead_provider_id"
+    t.index ["user_id"], name: "index_npq_applications_on_user_id"
   end
 
   create_table "npq_courses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -795,6 +817,9 @@ ActiveRecord::Schema.define(version: 2021_10_11_155601) do
   add_foreign_key "milestones", "schedules"
   add_foreign_key "nomination_emails", "partnership_notification_emails"
   add_foreign_key "nomination_emails", "schools"
+  add_foreign_key "npq_applications", "npq_courses"
+  add_foreign_key "npq_applications", "npq_lead_providers"
+  add_foreign_key "npq_applications", "users"
   add_foreign_key "npq_lead_providers", "cpd_lead_providers"
   add_foreign_key "npq_profiles", "users"
   add_foreign_key "participant_bands", "call_off_contracts"
