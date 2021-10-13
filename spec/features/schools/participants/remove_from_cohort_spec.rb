@@ -53,7 +53,7 @@ RSpec.describe "SIT removing participants from the cohort", js: true, with_featu
 
     sign_in_as sti_profile.user
     visit schools_participants_path(school_cohort.school, school_cohort.cohort)
-    click_on ect_profile.user.full_name
+    click_on "Check"
     click_on "Remove #{ect_profile.user.full_name} from this cohort"
 
     expect(page).to have_content("Confirm you want to remove #{ect_profile.user.full_name}")
