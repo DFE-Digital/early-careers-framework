@@ -7,7 +7,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
   let(:npq_lead_provider) { create(:npq_lead_provider) }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
   let(:Authorization) { "Bearer #{token}" }
-  let!(:npq_application) { create(:npq_validation_data, npq_lead_provider: npq_lead_provider) }
+  let!(:npq_application) { create(:npq_application, npq_lead_provider: npq_lead_provider) }
 
   path "/api/v1/participants/npq" do
     get "Retrieve multiple NPQ participants" do

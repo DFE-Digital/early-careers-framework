@@ -192,7 +192,7 @@ module ValidTestDataGenerator
       name = Faker::Name.name
       user = User.create!(full_name: name, email: Faker::Internet.email(name: name))
 
-      validation_data = NPQValidationData.create!(
+      validation_data = NPQApplication.create!(
         active_alert: "",
         date_of_birth: Date.new(1990, 1, 1),
         eligible_for_funding: true,

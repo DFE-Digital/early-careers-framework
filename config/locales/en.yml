@@ -231,7 +231,7 @@ en:
               blank: "Select the materials you want to use"
   activerecord:
     attributes:
-      npq_validation_data:
+      npq_application:
         lead_provider_approval_status: Status
     errors:
       models:

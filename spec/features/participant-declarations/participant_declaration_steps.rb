@@ -32,12 +32,12 @@ module ParticipantDeclarationSteps
     create(:schedule, :npq_specialist)
     npq_lead_provider = create(:npq_lead_provider, cpd_lead_provider: @cpd_lead_provider)
     npq_course = create(:npq_course, identifier: "npq-senior-leadership")
-    @npq_validation_data = create(:npq_validation_data, npq_lead_provider: npq_lead_provider, npq_course: npq_course)
-    @npq_id = @npq_validation_data.user.id
+    @npq_application = create(:npq_application, npq_lead_provider: npq_lead_provider, npq_course: npq_course)
+    @npq_id = @npq_application.user.id
 
-    NPQ::Accept.new(npq_application: @npq_validation_data).call
-    @declaration_date = @npq_validation_data.reload.profile.schedule.milestones.first.start_date + 1.day
-    @submission_date = @npq_validation_data.profile.schedule.milestones.first.start_date + 2.days
+    NPQ::Accept.new(npq_application: @npq_application).call
+    @declaration_date = @npq_application.reload.profile.schedule.milestones.first.start_date + 1.day
+    @submission_date = @npq_application.profile.schedule.milestones.first.start_date + 2.days
   end
 
   def when_the_participant_details_are_passed_to_the_lead_provider

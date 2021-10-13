@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class NPQValidationData < ApplicationRecord
+class NPQApplication < ApplicationRecord
   has_paper_trail only: %i[user_id npq_lead_provider_id npq_course_id created_at updated_at lead_provider_approval_status]
   # TODO: Rename table
   self.table_name = "npq_profiles"
@@ -51,7 +51,7 @@ private
 
   def push_enrollment_to_big_query
     if (saved_changes.keys & %w[id lead_provider_approval_status]).present?
-      NPQ::StreamBigQueryEnrollmentJob.perform_later(npq_validation_data_id: id)
+      NPQ::StreamBigQueryEnrollmentJob.perform_later(npq_application_id: id)
     end
   end
 end

@@ -6,7 +6,7 @@ module Api
       include ApiTokenAuthenticatable
 
       def create
-        validation_data = NPQValidationData.new(validation_data_params)
+        validation_data = NPQApplication.new(validation_data_params)
         validation_data.npq_course = NPQCourse.find_by(id: npq_course_param)
         validation_data.npq_lead_provider = NPQLeadProvider.find_by(id: npq_lead_provider_param)
         validation_data.user = User.find_by(id: user_param)

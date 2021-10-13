@@ -26,7 +26,7 @@ RSpec.shared_context "lead provider profiles and courses" do
   let(:npq_course) { create(:npq_course, identifier: "npq-leading-teaching") }
   let!(:npq_profile) do
     validation_data = create(
-      :npq_validation_data,
+      :npq_application,
       npq_lead_provider: npq_lead_provider,
       npq_course: npq_course,
     )

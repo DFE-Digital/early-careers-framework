@@ -69,9 +69,9 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
 
       it "creates the npq validation data" do
         expect { post "/api/v1/npq-profiles", params: json }
-          .to change(NPQValidationData, :count).by(1)
+          .to change(NPQApplication, :count).by(1)
 
-        validation_data = NPQValidationData.order(created_at: :desc).first
+        validation_data = NPQApplication.order(created_at: :desc).first
 
         expect(validation_data.user).to eql(user)
 
@@ -108,7 +108,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
       it "response has correct attributes" do
         post "/api/v1/npq-profiles", params: json
 
-        validation_data = NPQValidationData.order(created_at: :desc).first
+        validation_data = NPQApplication.order(created_at: :desc).first
 
         expect(parsed_response["data"]["id"]).to eql(validation_data.id)
         expect(parsed_response["data"]).to have_jsonapi_attributes(
