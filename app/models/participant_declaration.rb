@@ -50,6 +50,12 @@ class ParticipantDeclaration < ApplicationRecord
   scope :payable_npqs_for_lead_provider, ->(lead_provider) { payable_for_lead_provider(lead_provider).npq }
   scope :payable_uplift_for_lead_provider, ->(lead_provider) { payable_for_lead_provider(lead_provider).uplift }
 
+  scope :paid_for_lead_provider, ->(lead_provider) { for_lead_provider(lead_provider).unique_id.paid }
+  scope :paid_ects_for_lead_provider, ->(lead_provider) { paid_for_lead_provider(lead_provider).ect }
+  scope :paid_mentors_for_lead_provider, ->(lead_provider) { paid_for_lead_provider(lead_provider).mentor }
+  scope :paid_npqs_for_lead_provider, ->(lead_provider) { paid_for_lead_provider(lead_provider).npq }
+  scope :paid_uplift_for_lead_provider, ->(lead_provider) { paid_for_lead_provider(lead_provider).uplift }
+
   def refresh_payability!
     reload
     fundable? ? make_eligible! : make_submitted!
@@ -60,7 +66,7 @@ class ParticipantDeclaration < ApplicationRecord
   end
 
   def make_voided!
-    DeclarationState.voided!(self) unless voided?
+    DeclarationState.voided!(self) unless voided? || payable? || paid? # TODO: Voiding paid should trigger clawbacks, but currently OOS
   end
 
   def make_eligible!
@@ -72,7 +78,7 @@ class ParticipantDeclaration < ApplicationRecord
   end
 
   def make_paid!
-    DeclarationState.pay!(self) if payable?
+    DeclarationState.paid!(self) if payable?
   end
 
   def changeable?

@@ -6,7 +6,7 @@ class CalculationOrchestrator
   class << self
     def call(cpd_lead_provider:,
              contract:,
-             aggregator: ::ParticipantEventAggregator,
+             aggregator: ::ParticipantEventPayableAggregator,
              calculator: ::PaymentCalculator::ECF::PaymentCalculation,
              event_type: :started)
       new(
