@@ -27,6 +27,13 @@ class ParticipantSerializer
         user.teacher_profile.trn
       end
     end
+
+    def eligible_for_funding?(user)
+      ecf_participant_eligibility = user.teacher_profile.ecf_profile.ecf_participant_eligibility
+      return if ecf_participant_eligibility.nil?
+      return true if ecf_participant_eligibility.eligible_status?
+      return false if ecf_participant_eligibility.ineligible_status?
+    end
   end
 
   set_id :id
@@ -69,8 +76,8 @@ class ParticipantSerializer
 
   active_participant_attribute :eligible_for_funding do |user|
     # TODO: we want to check eligibility without communicating it yet - except for sandbox
-    if Rails.env.sandbox?
-      user.teacher_profile.ecf_profile.ecf_participant_eligibility&.eligible_status? || nil
+    if Rails.env.sandbox? || FeatureFlag.active?(:eligibility_notifications)
+      eligible_for_funding?(user)
     end
   end
 
