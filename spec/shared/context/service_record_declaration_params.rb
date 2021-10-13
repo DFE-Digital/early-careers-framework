@@ -24,7 +24,7 @@ RSpec.shared_context "service record declaration params" do
     params.merge({
       cpd_lead_provider: cpd_lead_provider,
       participant_id: npq_profile.user.id,
-      course_identifier: npq_profile.validation_data.npq_course.identifier,
+      course_identifier: npq_profile.npq_application.npq_course.identifier,
       declaration_date: npq_declaration_date.rfc3339,
     })
   end
