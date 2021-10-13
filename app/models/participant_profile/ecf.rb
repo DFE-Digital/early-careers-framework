@@ -11,6 +11,14 @@ class ParticipantProfile::ECF < ParticipantProfile
   has_one :ecf_participant_eligibility, foreign_key: :participant_profile_id
   has_one :ecf_participant_validation_data, foreign_key: :participant_profile_id
 
+  scope :ineligible_status, -> { joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :manual_check, reason: %i[active_flags previous_induction] }) }
+  scope :eligible_status, lambda {
+                            joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :eligible })
+                                                                  .or(joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :manual_check, reason: :previous_participation }))
+                          }
+  scope :contacted_for_info, -> { where.not(request_for_details_sent_at: nil).where.missing(:ecf_participant_validation_data) }
+  scope :details_being_checked, -> { joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :manual_check, reason: :no_qts }) }
+
   def completed_validation_wizard?
     ecf_participant_eligibility.present? || ecf_participant_validation_data.present?
   end
