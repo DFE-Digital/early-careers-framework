@@ -11,13 +11,14 @@ namespace :payment_calculation do
   desc "show participants in each state for a given ECF lead provider"
   task states: :environment do
     cpd_lead_provider = begin
-                          CpdLeadProvider.find(ARGV[1])
-                        rescue StandardError
-                          CpdLeadProvider.find_by(name: ARGV[1])
-                        end
+      CpdLeadProvider.find(ARGV[1])
+    rescue StandardError
+      CpdLeadProvider.find_by(name: ARGV[1])
+    end
     raise "Unknown lead provider: #{ARGV[1]}" if cpd_lead_provider.nil?
     raise "Not an ECF lead provider #{ARGV[1]}" if cpd_lead_provider.lead_provider.nil?
-    pb=Tasks::PaymentBreakdown.new(contract: cpd_lead_provider.lead_provider.call_off_contract)
+
+    pb = Tasks::PaymentBreakdown.new(contract: cpd_lead_provider.lead_provider.call_off_contract)
 
     pb.show_heading
     %w[voided submitted eligible payable paid].each do |aggregation_type|
@@ -27,7 +28,6 @@ namespace :payment_calculation do
       total_mentors = ParticipantDeclaration::ECF.send(aggregation_type).mentor.for_lead_provider(cpd_lead_provider).count
       pb.call(total_participants: total_participants, uplift_participants: uplift_participants, total_ects: total_ects, total_mentors: total_mentors).to_state_summary(aggregation_type)
     end
-
   end
 
   desc "run payment calculator for a given ECF lead provider"

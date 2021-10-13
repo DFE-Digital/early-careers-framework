@@ -85,10 +85,10 @@ module Tasks
       Terminal::Table.new do |t|
         t.title = "Summary of Participants in States"
         t.rows = [
-        ["Provider", lead_provider_name],
-        %w[Milestone Started],
-        ["Recruitment target", recruitment_target],
-        (["Revised target", revised_target] if revised_target)
+          ["Provider", lead_provider_name],
+          %w[Milestone Started],
+          ["Recruitment target", recruitment_target],
+          (["Revised target", revised_target] if revised_target),
         ].compact
       end
     end
@@ -115,7 +115,7 @@ module Tasks
           ["Current ECTs", total_ects],
           ["Current mentors", total_mentors],
           ["Current participants", total_participants],
-          ["Uplift participants", uplift_participants]
+          ["Uplift participants", uplift_participants],
         ].compact
       end
     end
@@ -160,8 +160,8 @@ module Tasks
           [
             "Uplift fee",
             uplift_participants,
-            uplift_calculator.uplift_payment_per_participant,
-            uplift_calculator.uplift_payment_for_event(uplift_participants: uplift_participants, event_type: :started),
+            as_financial { uplift_calculator.uplift_payment_per_participant },
+            as_financial { uplift_calculator.uplift_payment_for_event(uplift_participants: uplift_participants, event_type: :started) },
           ],
         ]
         t.style = { alignment: :left }
