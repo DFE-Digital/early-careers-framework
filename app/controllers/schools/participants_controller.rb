@@ -8,9 +8,11 @@ class Schools::ParticipantsController < Schools::BaseController
   before_action :set_mentors_added, only: %i[index show]
 
   def index
-    @participant_profiles = policy_scope(
-      @school_cohort.active_ecf_participant_profiles.includes(:user).order("users.full_name"),
-    )
+    @ineligible = ineligible_participants
+    @eligible = eligible_participants
+    @contacted_for_info = contacted_for_info_participants
+    @details_being_checked = details_being_checked_participants
+    @participant_profiles = participant_profiles
 
     redirect_to add_schools_participants_path if @participant_profiles.empty?
   end
@@ -130,5 +132,29 @@ private
 
   def email_used?
     User.where.not(id: @profile.user.id).where(email: @profile.user.email).any?
+  end
+
+  def active_participant_profiles
+    @school_cohort.active_ecf_participant_profiles
+  end
+
+  def participant_profiles
+    policy_scope(active_participant_profiles)
+  end
+
+  def ineligible_participants
+    policy_scope(active_participant_profiles.ineligible_status.includes(:user).order("users.full_name"))
+  end
+
+  def eligible_participants
+    policy_scope(active_participant_profiles.eligible_status.includes(:user).order("users.full_name"))
+  end
+
+  def contacted_for_info_participants
+    policy_scope(active_participant_profiles.contacted_for_info.includes(:user).order("users.full_name"))
+  end
+
+  def details_being_checked_participants
+    policy_scope(active_participant_profiles.details_being_checked.includes(:user).order("users.full_name"))
   end
 end

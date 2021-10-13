@@ -7,59 +7,164 @@
     <span class="govuk-caption-xl"><%= @school.name %></span>
     <h1 class="govuk-heading-xl">Your ECTs and mentors</h1>
 
-    <p class="govuk-body">Before your early career teachers (ECTs) and mentors can start, we need to check their details in the Teaching Regulation Agency records. This is to make sure they’re eligible for this programme.</p>
+    <p class="govuk-body">Before your early career teachers (ECTs) and mentors can start, we need to check their details
+      in the Teaching Regulation Agency records. This is to make sure they’re eligible for this programme.</p>
+    <p class="govuk-body">You need to tell us their names and email addresses. We’ll then contact them
+      to <%= govuk_link_to "explain their role", roles_schools_cohort_path, class: "govuk-link--no-visited-state" %> and
+      what they need to do next.</p>
 
-    <p class="govuk-body">You need to tell us their names and email addresses. We’ll then contact them to <%= govuk_link_to "explain their role", roles_schools_cohort_path, class: "govuk-link--no-visited-state" %> and what they need to do next.</p>
+    <div class="govuk-inset-text">
+      <ul class="govuk-list">
+        <li><%= govuk_link_to "Add a new ECT", add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :ect), class: "govuk-link--no-visited-state" %></li>
+        <li><%= govuk_link_to "Add a new mentor", add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :mentor), class: "govuk-link--no-visited-state" %></li>
+        <% unless current_user.mentor? %>
+          <li><%= govuk_link_to "Add yourself as a mentor", add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :self), class: "govuk-link--no-visited-state" %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+  <div class="govuk-grid-column-full">
+    <% if @ineligible.present? %>
+      <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Not eligible for funded training</h2>
+      <p class="govuk-!-margin-bottom-3">We've checked these people's details and found they're not eligible for this programme.</p>
+
+      <table class="govuk-table govuk-!-margin-bottom-9">
+        <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header govuk-!-width-one-third">Name</th>
+          <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Role</th>
+          <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Action Required</th>
+          <th scope="col" class="govuk-table__header"></th>
+        </tr>
+        </thead>
+
+        <tbody class="govuk-table__body">
+
+        <% @ineligible.each do |profile| %>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell"><%= profile.user.full_name %></td>
+            <td class="govuk-table__cell"><%= format_type(profile.participant_type) %></td>
+            <td class="govuk-table__cell">Delete</td>
+            <td class="govuk-table__cell govuk-table__cell--numeric"><%= govuk_link_to "Check", schools_participant_path(id: profile.id) %></td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    <% end %>
+
+    <% if @contacted_for_info.present? %>
+      <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Contacted for information</h2>
+      <p class="govuk-!-margin-bottom-3">We need to check their eligibility with the Teaching Regulation Agency.</p>
+
+      <table class="govuk-table govuk-!-margin-bottom-9">
+        <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header govuk-!-width-one-third">Name</th>
+          <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Role</th>
+          <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Action Required</th>
+          <th scope="col" class="govuk-table__header"></th>
+        </tr>
+        </thead>
+
+        <tbody class="govuk-table__body">
+
+        <% @contacted_for_info.each do |profile| %>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell"><%= profile.user.full_name %></td>
+            <td class="govuk-table__cell"><%= format_type(profile.participant_type) %></td>
+            <td class="govuk-table__cell">
+              <% if latest_email_delivered_for(profile) %>
+                Remind them
+              <% elsif latest_email_failed_for(profile) %>
+                Check email address
+              <% else %>
+                None
+              <% end %>
+            <td class="govuk-table__cell govuk-table__cell--numeric"><%= govuk_link_to (profile.request_for_details_sent_at? ? "Check" : "Details" ), schools_participant_path(id: profile.id) %></td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    <% end %>
+
+    <% if @details_being_checked.present? %>
+      <h2 class="govuk-heading-m govuk-!-margin-bottom-0">DfE checking eligibility</h2>
+      <p class="govuk-!-margin-bottom-3">We’re checking these people's details with the Teaching Regulation Agency. We'll confirm if they are eligible for this programme soon.</p>
+
+      <table class="govuk-table govuk-!-margin-bottom-9">
+        <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header govuk-!-width-one-third">Name</th>
+          <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Role</th>
+          <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Action Required</th>
+          <th scope="col" class="govuk-table__header"></th>
+        </tr>
+        </thead>
+
+        <tbody class="govuk-table__body">
+
+        <% @details_being_checked.each do |profile| %>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell"><%= profile.user.full_name %></td>
+            <td class="govuk-table__cell"><%= format_type(profile.participant_type) %></td>
+            <td class="govuk-table__cell">
+              <% if profile.ect? %>
+                <%= profile.mentor_profile_id? ? "None" : "Assign mentor" %>
+              <% else %>
+                None
+              <% end %>
+            </td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">
+              <% if profile.ect? %>
+                <%= govuk_link_to (profile.mentor_profile_id ? "Details": "Check"), schools_participant_path(id: profile.id) %>
+              <% else %>
+                <%= govuk_link_to "Details", schools_participant_path(id: profile.id) %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    <% end %>
+
+    <% if @eligible.present? %>
+      <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Eligible to start</h2>
+      <p class="govuk-!-margin-bottom-3">We’ve confirmed these people are eligible for this programme. They have access to their materials.</p>
+
+      <table class="govuk-table govuk-!-margin-bottom-9">
+        <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header govuk-!-width-one-third">Name</th>
+          <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Role</th>
+          <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Action Required</th>
+          <th scope="col" class="govuk-table__header"></th>
+        </tr>
+        </thead>
+
+        <tbody class="govuk-table__body">
+
+        <% @eligible.each do |profile| %>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell"><%= profile.user.full_name %></td>
+            <td class="govuk-table__cell"><%= format_type(profile.participant_type) %></td>
+            <td class="govuk-table__cell">
+              <% if profile.ect? %>
+                <%= profile.mentor_profile_id? ? "None" : "Assign mentor" %>
+              <% else %>
+                None
+              <% end %>
+            </td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">
+              <% if profile.ect? %>
+                <%= govuk_link_to (profile.mentor_profile_id ? "Details": "Check"), schools_participant_path(id: profile.id) %>
+              <% else %>
+                <%= govuk_link_to "Details", schools_participant_path(id: profile.id) %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    <% end %>
   </div>
 </div>
-
-<div class="govuk-inset-text">
-  <ul class="govuk-list">
-    <li><%= govuk_link_to "Add a new ECT", add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :ect), class: "govuk-link--no-visited-state" %></li>
-    <li><%= govuk_link_to "Add a new mentor", add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :mentor), class: "govuk-link--no-visited-state" %></li>
-    <% unless current_user.mentor? %>
-      <li><%= govuk_link_to "Add yourself as a mentor", add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :self), class: "govuk-link--no-visited-state" %></li>
-    <% end %>
-  </ul>
-</div>
-
-<% if @participant_profiles.present? %>
-  <table class="govuk-table">
-    <thead class="govuk-table__head">
-      <tr class="govuk-table__row">
-        <th scope="col" class="govuk-table__header">Full name</th>
-        <th scope="col" class="govuk-table__header">Role</th>
-        <th scope="col" class="govuk-table__header">Mentor</th>
-        <th scope="col" class="govuk-table__header">Status</th>
-      </tr>
-    </thead>
-    <tbody class="govuk-table__body">
-      <% @participant_profiles.each do |profile| %>
-        <tr class="govuk-table__row">
-          <th scope="row" class="govuk-table__header"><%= govuk_link_to profile.user.full_name, schools_participant_path(id: profile.id) %></th>
-          <td class="govuk-table__cell"><%= t(profile.participant_type, scope: "schools.participants.type") %></td>
-          <td class="govuk-table__cell">
-            <% if @mentors_added %>
-              <% if profile.ect? %>
-                <% if profile.mentor %>
-                  <%= profile.mentor.full_name %>
-                <% else %>
-                  <%= govuk_link_to("Assign mentor", schools_participant_edit_mentor_path(participant_id: profile.id)) %>
-                <% end %>
-              <% else %>
-                - <span class="govuk-visually-hidden">Not applicable</span>
-              <% end %>
-            <% else %>
-              No mentors added
-            <% end %>
-          </td>
-          <td class="govuk-table__cell">
-            <%= render ParticipantStatusTagComponent.new(profile: profile) %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% else %>
-  <p class="govuk-body-l">No participants found for this school.</p>
-<% end %>
