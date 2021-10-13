@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class NPQCourse < ApplicationRecord
-  has_many :npq_profiles
+  has_many :npq_applications, class_name: "NPQApplication"
 
   class << self
     def identifiers

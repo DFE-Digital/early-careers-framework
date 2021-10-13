@@ -138,23 +138,23 @@ RSpec.describe "NPQ Applications API", type: :request do
         end
 
         it "returns correct data" do
-          profile = npq_lead_provider.npq_profiles[0]
+          application = npq_lead_provider.npq_applications[0]
           row = parsed_response[0]
 
-          expect(row["id"]).to eql(profile.id)
-          expect(row["participant_id"]).to eql(profile.user.id)
-          expect(row["full_name"]).to eql(profile.user.full_name)
-          expect(row["email"]).to eql(profile.user.email)
+          expect(row["id"]).to eql(application.id)
+          expect(row["participant_id"]).to eql(application.user.id)
+          expect(row["full_name"]).to eql(application.user.full_name)
+          expect(row["email"]).to eql(application.user.email)
           expect(row["email_validated"]).to eql("true")
-          expect(row["teacher_reference_number"]).to eql(profile.teacher_reference_number)
-          expect(row["teacher_reference_number_validated"]).to eql(profile.teacher_reference_number_verified.to_s)
-          expect(row["school_urn"]).to eql(profile.school_urn)
-          expect(row["school_ukprn"]).to eql(profile.school_ukprn)
-          expect(row["headteacher_status"]).to eql(profile.headteacher_status)
-          expect(row["eligible_for_funding"]).to eql(profile.eligible_for_funding.to_s)
-          expect(row["funding_choice"]).to eql(profile.funding_choice)
-          expect(row["course_identifier"]).to eql(profile.npq_course.identifier)
-          expect(row["status"]).to eql(profile.lead_provider_approval_status)
+          expect(row["teacher_reference_number"]).to eql(application.teacher_reference_number)
+          expect(row["teacher_reference_number_validated"]).to eql(application.teacher_reference_number_verified.to_s)
+          expect(row["school_urn"]).to eql(application.school_urn)
+          expect(row["school_ukprn"]).to eql(application.school_ukprn)
+          expect(row["headteacher_status"]).to eql(application.headteacher_status)
+          expect(row["eligible_for_funding"]).to eql(application.eligible_for_funding.to_s)
+          expect(row["funding_choice"]).to eql(application.funding_choice)
+          expect(row["course_identifier"]).to eql(application.npq_course.identifier)
+          expect(row["status"]).to eql(application.lead_provider_approval_status)
         end
       end
     end
