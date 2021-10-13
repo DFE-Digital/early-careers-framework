@@ -20,8 +20,6 @@ RSpec.describe "Schools::AddParticipant", type: :request do
       get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add"
     end
 
-    it { is_expected.to redirect_to(action: :show, step: :type) }
-
     it "sets up the form in the session" do
       expect(session[:schools_add_participant_form]).to include("school_cohort_id" => school_cohort.id)
     end

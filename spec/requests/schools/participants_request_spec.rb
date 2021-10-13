@@ -7,10 +7,10 @@ RSpec.describe "Schools::Participants", type: :request do
 
   let!(:school_cohort) { create(:school_cohort, cohort: cohort) }
   let!(:another_cohort) { create(:school_cohort) }
-  let(:mentor_profile) { create(:participant_profile, :mentor, school_cohort: school_cohort) }
+  let(:mentor_profile) { create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
   let!(:mentor_user) { mentor_profile.user }
   let!(:mentor_user_2) { create(:participant_profile, :mentor, school_cohort: school_cohort).user }
-  let(:ect_profile) { create(:participant_profile, :ect, mentor_profile: mentor_user.mentor_profile, school_cohort: school_cohort) }
+  let(:ect_profile) { create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, mentor_profile: mentor_user.mentor_profile, school_cohort: school_cohort) }
   let!(:ect_user) { ect_profile.user }
   let!(:withdrawn_ect) { create(:participant_profile, :ect, :withdrawn_record, school_cohort: school_cohort).user }
   let!(:unrelated_mentor) { create(:participant_profile, :mentor, school_cohort: another_cohort).user }
@@ -48,20 +48,6 @@ RSpec.describe "Schools::Participants", type: :request do
       get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants"
 
       expect(response.body).not_to include(CGI.escapeHTML(withdrawn_ect.full_name))
-    end
-
-    context "when there are no mentors" do
-      let(:other_school) { create(:school) }
-      let(:other_cohort) { create(:cohort) }
-      let!(:other_school_cohort) { create(:school_cohort, cohort: other_cohort, school: other_school) }
-      let!(:ect_profile) { create(:participant_profile, :ect, school_cohort: other_school_cohort) }
-      let(:user) { create(:user, :induction_coordinator, school_ids: [other_school.id]) }
-      it "does not show the assign mentor link" do
-        get "/schools/#{other_school.slug}/cohorts/#{other_cohort.start_year}/participants"
-
-        expect(response.body).to include "No mentors added"
-        expect(response.body).not_to include "Assign mentor"
-      end
     end
   end
 
