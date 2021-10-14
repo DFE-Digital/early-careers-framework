@@ -61,7 +61,7 @@ RSpec.describe ParticipantStatusTagComponent, type: :view_component do
     context "has a previous induction reason" do
       let(:school_cohort) { create(:school_cohort, :cip) }
       let(:participant_profile) { create(:participant_profile, :ect, school_cohort: school_cohort) }
-      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, previous_induction: true, participant_profile: participant_profile) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, previous_induction: true, participant_profile: participant_profile) }
 
       it { is_expected.to have_selector(".govuk-tag.govuk-tag--red", exact_text: "Not eligible: NQT+1") }
     end
@@ -69,15 +69,15 @@ RSpec.describe ParticipantStatusTagComponent, type: :view_component do
     context "has no QTS reason" do
       let(:school_cohort) { create(:school_cohort, :cip) }
       let(:participant_profile) { create(:participant_profile, :ect, school_cohort: school_cohort) }
-      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, qts: false, participant_profile: participant_profile) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, qts: false, participant_profile: participant_profile) }
 
       it { is_expected.to have_selector(".govuk-tag.govuk-tag--red", exact_text: "Not eligible: No QTS") }
     end
 
-    context "has an active flag reason" do
+    context "has an ineligible status" do
       let(:school_cohort) { create(:school_cohort, :cip) }
       let(:participant_profile) { create(:participant_profile, :ect, school_cohort: school_cohort) }
-      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, active_flags: true, participant_profile: participant_profile) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, participant_profile: participant_profile) }
 
       it { is_expected.to have_selector(".govuk-tag.govuk-tag--red", exact_text: "Not eligible") }
     end

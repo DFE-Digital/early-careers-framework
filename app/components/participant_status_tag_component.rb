@@ -51,10 +51,6 @@ private
     profile.ecf_participant_eligibility.previous_participation_reason?
   end
 
-  def on_cip?
-    profile&.school_cohort&.core_induction_programme?
-  end
-
   def on_fip?
     profile&.school_cohort&.full_induction_programme?
   end
@@ -66,9 +62,5 @@ private
   def participant_has_no_qts?
     participant_eligibility = ECFParticipantEligibility.find_by(participant_profile: profile)
     participant_eligibility&.no_qts_reason?
-  end
-
-  def active_flags?
-    profile&.ecf_participant_eligibility&.active_flags_reason?
   end
 end
