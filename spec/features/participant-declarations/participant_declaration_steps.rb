@@ -102,6 +102,14 @@ module ParticipantDeclarationSteps
     expect(ParticipantDeclaration.find(@response["data"]["id"])).to be_present
   end
 
+  def and_schedule_change_is_submitted_for_this_participant
+    @session.put("/api/v1/participants/#{@ect_id}/change-schedule", headers: { "Authorization": "Bearer #{@token}" })
+  end
+
+  def then_new_declaration_is_not_created
+    expect(ParticipantDeclaration.where(course_identifier: "ecf-induction", declaration_type: "started").count).to eq(1)
+  end
+
   def then_the_declaration_made_is_invalid
     expect(@response["errors"]).not_to be_empty
   end
