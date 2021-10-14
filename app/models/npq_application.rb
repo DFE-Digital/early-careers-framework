@@ -9,7 +9,9 @@ class NPQApplication < ApplicationRecord
   # Step 3 (Not done): Run a script to migrate all existing data to new table
   # Step 4 (Not done): Push a new change removing the old table
   self.table_name = "npq_profiles"
-  after_commit do |application|
+  after_save { |application| synchronise_temporary_table(application) }
+  after_touch { |application| synchronise_temporary_table(application) }
+  def synchronise_temporary_table(application)
     NPQApplicationTemporary.find_or_initialize_by(id: application.id).update!(application.attributes)
   end
 
