@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 class ParticipantStatusTagComponent < BaseComponent
-  def initialize(profile:, admin: false)
+  def initialize(profile:)
     @profile = profile
-    @admin = admin
   end
 
   def call
@@ -16,7 +15,7 @@ class ParticipantStatusTagComponent < BaseComponent
 
 private
 
-  attr_reader :admin, :profile
+  attr_reader :profile
 
   def tag_attributes
     return { text: "Not eligible: NQT+1", colour: "red" } if nqt_plus_one?
