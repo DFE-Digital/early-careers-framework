@@ -22,6 +22,8 @@ class Schools::ChooseProgrammeController < Schools::BaseController
   def choice_saved_design_our_own
     @cohort = cohort
     @school = school
+
+    redirect_to action: :success
   end
 
   def choice_saved_no_early_career_teachers

@@ -285,6 +285,8 @@ GEM
       activerecord
       kaminari-core (= 1.2.1)
     kaminari-core (1.2.1)
+    launchy (2.5.0)
+      addressable (~> 2.7)
     listen (3.7.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -627,6 +629,7 @@ DEPENDENCIES
   jsonapi-serializer
   jwt
   kaminari (>= 1.2.0)
+  launchy
   listen (>= 3.0.5, < 3.8)
   lograge (>= 0.11.2)
   logstash-event
@@ -682,4 +685,4 @@ RUBY VERSION
    ruby 2.7.4p191
 
 BUNDLED WITH
-   2.2.22
+   2.2.29

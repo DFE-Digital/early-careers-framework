@@ -14,6 +14,34 @@ RSpec.describe "Manage Design Our Own training", js: true, with_feature_flags: {
     and_percy_should_be_sent_a_snapshot_named "Design Our Own dashboard"
   end
 
+  scenario "Change induction programme to Design Our Own" do
+    school_cohort = create :school_cohort, induction_programme_choice: "no_early_career_teachers", school: create(:school, name: "Test School")
+
+    sign_in_as create(:induction_coordinator_profile, schools: [school_cohort.school]).user
+    expect(page).to have_text("Programme No early career teachers for this cohort")
+    click_on "Change induction programme choice"
+
+    expect(page).to have_text "Change how you run your programme"
+    expect(page).to be_accessible
+    page.percy_snapshot "Design Our Own - change programme"
+    click_on "Check the other options available"
+
+    expect(page).to have_text "How do you want to run your training"
+    expect(page).to have_selector :label, text: "Use a training provider, funded by the DfE (full induction programme)"
+    expect(page).to have_selector :label, text: "Deliver your own programme using DfE accredited materials (core induction programme)"
+    expect(page).to be_accessible
+    page.percy_snapshot "No Early Career Teachers - change programme options"
+
+    choose "Design and deliver your own programme based on the Early Career Framework (ECF)"
+    click_on "Continue"
+
+    expect(page).to have_text "Confirm your induction programme"
+    click_on "Confirm"
+
+    expect(page).to have_text "Training programme confirmed"
+    expect(page).to have_text "design a 2-year programme of support and training that covers every ‘learn that’ and ‘learn how to’ statement"
+  end
+
   scenario "Changing induction programme" do
     school_cohort = create :school_cohort, induction_programme_choice: "design_our_own", school: create(:school, name: "Test School")
 
