@@ -94,7 +94,7 @@ RSpec.describe ParticipantSerializer do
           expect(result[:data][:attributes][:eligible_for_funding]).to be_nil
         end
 
-        context "when the feature flag is active", with_feature_flags: { eligibility_notifications: "active" } do
+        context "when the feature flag is active", with_feature_flags: { eligibility_in_api: "active" } do
           it "returns true" do
             expect(ect_profile.ecf_participant_eligibility.status).to eql "eligible"
 
@@ -117,7 +117,7 @@ RSpec.describe ParticipantSerializer do
           expect(result[:data][:attributes][:eligible_for_funding]).to be_nil
         end
 
-        context "when the feature flag is active", with_feature_flags: { eligibility_notifications: "active" } do
+        context "when the feature flag is active", with_feature_flags: { eligibility_in_api: "active" } do
           it "returns false" do
             expect(ect_profile.ecf_participant_eligibility.status).to eql "ineligible"
 
