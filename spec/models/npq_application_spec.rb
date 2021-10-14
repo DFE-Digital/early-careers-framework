@@ -21,6 +21,12 @@ RSpec.describe NPQApplication, type: :model do
           subject
         }.to change(Delayed::Job, :count).by(1)
       end
+
+      it "creates a NPQApplicationTemporary with matching attributes" do
+        subject
+
+        expect(NPQApplicationTemporary.find(subject.id).attributes).to eq subject.attributes
+      end
     end
 
     context "when lead_provider_approval_status is modified" do
@@ -31,6 +37,13 @@ RSpec.describe NPQApplication, type: :model do
           subject.update(lead_provider_approval_status: "accepted")
         }.to change(Delayed::Job, :count).by(1)
       end
+
+      it "updates a NPQApplicationTemporary with matching attributes" do
+        subject
+        subject.update!(lead_provider_approval_status: "accepted")
+
+        expect(NPQApplicationTemporary.find(subject.id).attributes).to eq subject.attributes
+      end
     end
 
     context "when record is touched" do
@@ -40,6 +53,13 @@ RSpec.describe NPQApplication, type: :model do
         expect {
           subject.touch
         }.not_to change(Delayed::Job, :count)
+      end
+
+      it "updates a NPQApplicationTemporary with matching attributes" do
+        subject
+        subject.touch
+
+        expect(NPQApplicationTemporary.find(subject.id).attributes).to eq subject.attributes
       end
     end
   end

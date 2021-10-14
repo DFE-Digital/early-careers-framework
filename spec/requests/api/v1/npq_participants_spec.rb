@@ -22,6 +22,8 @@ RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { par
         list.each do |npq_application|
           NPQ::Accept.new(npq_application: npq_application).call
         end
+
+        create_list(:npq_application, 3, npq_lead_provider: npq_lead_provider, school_urn: "123456", npq_course: npq_course)
       end
 
       describe "JSON Index API" do
@@ -32,7 +34,7 @@ RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { par
           expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
         end
 
-        it "returns all users" do
+        it "returns all accepted users" do
           get "/api/v1/participants/npq"
           expect(parsed_response["data"].size).to eql(3)
         end

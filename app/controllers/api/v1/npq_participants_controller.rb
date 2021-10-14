@@ -19,7 +19,6 @@ module Api
       end
 
       def npq_participants
-        # TODO: filter out on approved participants
         npq_participants = npq_lead_provider.npq_participants
         npq_participants = npq_participants.where("npq_profiles.updated_at > ?", updated_since) if updated_since.present?
         npq_participants.order(:created_at)
