@@ -17,6 +17,8 @@ class ParticipantProfile < ApplicationRecord
     merge(ParticipantProfileState.most_recent)
   }, class_name: "ParticipantProfileState"
 
+  has_many :participant_profile_schedules
+
   enum status: {
     active: "active",
     withdrawn: "withdrawn",
