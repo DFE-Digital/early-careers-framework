@@ -18,12 +18,13 @@ private
   attr_reader :profile
 
   def tag_attributes
-    return { text: "Not eligible: NQT+1", colour: "red" } if nqt_plus_one?
-    return { text: "Not eligible", colour: "red" } if active_flags? && on_cip?
-    return { text: "DfE checking eligibility", colour: "orange" } if profile.manual_check_needed? && on_cip?
+    return { text: "Eligible to start", colour: "green" } if eligible?
+    return { text: "DfE checking eligibility", colour: "orange" } if profile.manual_check_needed?
+    return { text: "Not eligible: NQT+1", colour: "red" } if nqt_plus_one? && ineligilble?
+    return { text: "Not eligible: No QTS", colour: "red" } if participant_has_no_qts? && ineligilble?
     return { text: "Eligible to start: ERO", colour: "green" } if ineligible? && mentor_was_in_early_rollout? && on_fip?
-    return { text: "Eligible to start", colour: "green" } if eligible? && (on_cip? || on_fip?)
-    return { text: "Not eligible: No QTS", colour: "red" } if participant_has_no_qts?
+    return { text: "Eligible to start", colour: "green" } if ineligible? && mentor_was_in_early_rollout?
+    return { text: "Not eligible", colour: "red" } if ineligible?
     return { text: "Contacted for information", colour: "grey" } if latest_email&.delivered?
     return { text: "Check email address", colour: "grey" } if latest_email&.failed?
 
