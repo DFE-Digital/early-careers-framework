@@ -2,7 +2,7 @@
 
 class IneligibleParticipantMailer < ApplicationMailer
   ECT_PREVIOUS_INDUCTION_TEMPLATE = "e27eabc4-2d54-4356-8073-85cf9a559ce4"
-  MENTOR_PREVIOUS_PARTICIPATION__TEMPLATE = "d64d1f3b-d156-444c-bf05-b5254a0dd0ad"
+  MENTOR_PREVIOUS_PARTICIPATION_TEMPLATE = "d64d1f3b-d156-444c-bf05-b5254a0dd0ad"
 
   ACTIVE_FLAGS_TEMPLATES = {
     ect: "dcab5e33-c7c3-4d5a-84b6-458ae7640061",
@@ -18,7 +18,7 @@ class IneligibleParticipantMailer < ApplicationMailer
     template_mail(
       ACTIVE_FLAGS_TEMPLATES[:ect],
       to: induction_tutor_email,
-      rails_mailer: rails_mailer,
+      rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
         ineligible_ECT_name: participant_profile.user.full_name,
@@ -30,7 +30,7 @@ class IneligibleParticipantMailer < ApplicationMailer
     template_mail(
       ACTIVE_FLAGS_TEMPLATES[:mentor],
       to: induction_tutor_email,
-      rails_mailer: rails_mailer,
+      rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
         ineligible_mentor_name: participant_profile.user.full_name,
@@ -42,7 +42,7 @@ class IneligibleParticipantMailer < ApplicationMailer
     template_mail(
       NO_QTS_TEMPLATES[:ect],
       to: induction_tutor_email,
-      rails_mailer: rails_mailer,
+      rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
         ineligible_ECT_name: participant_profile.user.full_name,
@@ -54,7 +54,7 @@ class IneligibleParticipantMailer < ApplicationMailer
     template_mail(
       NO_QTS_TEMPLATES[:mentor],
       to: induction_tutor_email,
-      rails_mailer: rails_mailer,
+      rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
         ineligible_mentor_name: participant_profile.user.full_name,
@@ -70,6 +70,7 @@ class IneligibleParticipantMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         ineligible_ECT_name: participant_profile.user.full_name,
+        "NQT+1_materials_link": start_schools_year_2020_url(school_id: participant_profile.school.id),
       },
     ).tag(:ineligible_participant).associate_with(participant_profile, as: :participant_profile)
   end
