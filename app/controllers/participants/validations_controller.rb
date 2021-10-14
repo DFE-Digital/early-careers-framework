@@ -54,7 +54,7 @@ module Participants
       @school = participant_profile.school
 
       partial_name =
-        if participant_profile.sit_mentor?
+        if participant_profile.sit_mentor? || !FeatureFlag.active?(:eligibility_notifications)
           nil
         elsif participant_profile.school_cohort.full_induction_programme?
           if participant_profile.ect?

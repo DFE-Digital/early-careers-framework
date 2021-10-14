@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Participant validations", type: :request do
+RSpec.describe "Participant validations", with_feature_flags: { eligibility_notifications: "active" }, type: :request do
   before do
     sign_in user
   end

@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "./participant_validation_steps"
 
-RSpec.feature "ECT participant validation journey for CIP induction", type: :feature, js: true do
+RSpec.feature "ECT participant validation journey for CIP induction", with_feature_flags: { eligibility_notifications: "active" }, type: :feature, js: true do
   include ParticipantValidationSteps
 
   scenario "Participant validates their details" do
