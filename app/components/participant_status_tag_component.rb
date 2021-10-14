@@ -20,8 +20,8 @@ private
   def tag_attributes
     return { text: "Eligible to start", colour: "green" } if eligible?
     return { text: "DfE checking eligibility", colour: "orange" } if profile.manual_check_needed?
-    return { text: "Not eligible: NQT+1", colour: "red" } if nqt_plus_one? && ineligilble?
-    return { text: "Not eligible: No QTS", colour: "red" } if participant_has_no_qts? && ineligilble?
+    return { text: "Not eligible: NQT+1", colour: "red" } if nqt_plus_one? && ineligible?
+    return { text: "Not eligible: No QTS", colour: "red" } if participant_has_no_qts? && ineligible?
     return { text: "Eligible to start: ERO", colour: "green" } if ineligible? && mentor_was_in_early_rollout? && on_fip?
     return { text: "Eligible to start", colour: "green" } if ineligible? && mentor_was_in_early_rollout?
     return { text: "Not eligible", colour: "red" } if ineligible?
