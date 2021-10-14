@@ -307,10 +307,11 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
+        name: induction_coordinator.user.full_name,
         school_name: school_name,
         sign_in: new_user_session_url(**campaign_tracking),
       },
-    ).tag(:reminder_request_to_add_ects_and_mentors).associate_with(induction_coordinator, as: :induction_coordinator_profile)
+    ).tag(:third_request_to_add_ects_and_mentors).associate_with(induction_coordinator, as: :induction_coordinator_profile)
   end
 
   def year2020_add_participants_confirmation(recipient:, school_name:, teacher_name_list:)
