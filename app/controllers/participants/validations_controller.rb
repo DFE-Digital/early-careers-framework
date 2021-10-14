@@ -52,18 +52,92 @@ module Participants
 
     def complete
       @school = participant_profile.school
+
+      partial_name =
+        if participant_profile.school_cohort.full_induction_programme?
+          if participant_profile.ect?
+            fip_ect_completed_page
+          else
+            fip_mentor_completed_page
+          end
+        elsif participant_profile.school_cohort.core_induction_programme?
+          if participant_profile.ect?
+            cip_ect_completed_page
+          else
+            cip_mentor_completed_page
+          end
+        end
+
+      if partial_name.present?
+        render partial_name
+      else
+        render_default_completed_page
+      end
+    end
+
+  private
+
+    def fip_ect_completed_page
+      @partnership = @school.partnerships.active.find_by(cohort: participant_profile.school_cohort.cohort)
+
+      if participant_profile.ecf_participant_eligibility&.eligible_status?
+        if @partnership.present?
+          "fip_eligible_partnership"
+        else
+          "fip_eligible_no_partnership"
+        end
+      elsif participant_profile.ecf_participant_eligibility.blank? || participant_profile.ecf_participant_eligibility.different_trn_reason?
+        if @partnership.present?
+          "fip_no_trn_match_partnership"
+        else
+          "fip_no_trn_match_no_partnership"
+        end
+      elsif participant_profile.ecf_participant_eligibility.manual_check_status?
+        "fip_ect_#{participant_profile.ecf_participant_eligibility.reason}"
+      end
+    end
+
+    def fip_mentor_completed_page
+      @partnership = @school.partnerships.active.find_by(cohort: participant_profile.school_cohort.cohort)
+
+      if participant_profile.ecf_participant_eligibility&.eligible_status?
+        if @partnership.present?
+          "fip_eligible_partnership"
+        else
+          "fip_eligible_no_partnership"
+        end
+      elsif participant_profile.ecf_participant_eligibility.blank? || participant_profile.ecf_participant_eligibility.different_trn_reason?
+        if @partnership.present?
+          "fip_no_trn_match_partnership"
+        else
+          "fip_no_trn_match_no_partnership"
+        end
+      elsif participant_profile.ecf_participant_eligibility.manual_check_status?
+        "fip_mentor_#{participant_profile.ecf_participant_eligibility.reason}"
+      end
+    end
+
+    def cip_ect_completed_page
+      "cip_ect_eligible"
+    end
+
+    def cip_mentor_completed_page
+      if participant_profile.ecf_participant_eligibility&.active_flags_reason?
+        "cip_mentor_active_flags"
+      else
+        "cip_mentor_eligible"
+      end
+    end
+
+    def render_default_completed_page
       if participant_profile.ecf_participant_eligibility&.eligible_status? ||
           participant_profile.ecf_participant_eligibility&.matched_status?
-        # Probably successful - show success message.
-        # Will become: TRN has been validated, qts, no flags, not done before, no previous induction
         render_completed_page
       else
         # all other cases
         render_manual_check_page
       end
     end
-
-  private
 
     def validate_request_or_render
       render unless request.put? && step_valid?
