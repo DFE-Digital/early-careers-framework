@@ -76,7 +76,7 @@ class ParticipantSerializer
 
   active_participant_attribute :eligible_for_funding do |user|
     # TODO: we want to check eligibility without communicating it yet - except for sandbox
-    if Rails.env.sandbox? || FeatureFlag.active?(:eligibility_notifications)
+    if Rails.env.sandbox? || FeatureFlag.active?(:eligibility_in_api)
       eligible_for_funding?(user)
     end
   end
