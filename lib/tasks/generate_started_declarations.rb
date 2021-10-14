@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# frozen_string_input: true
-#
 class GenerateStartedDeclarations
   class << self
     def call
