@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ManuallySetParticipantEligibilityStatus < BaseService
+class ManuallyUpdateParticipantEligibility < BaseService
   attr_reader :participant_profile, :status, :reason, :eligibility_flag_changes
 
   def initialize(participant_profile:, status:, reason:, eligibility_flag_changes: {})
