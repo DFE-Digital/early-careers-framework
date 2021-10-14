@@ -78,6 +78,7 @@ Rails.application.routes.draw do
 
       namespace :data_studio, path: "data-studio" do
         get "/school-rollout", to: "school_rollout#index"
+        get "/participant-declarations", to: "participant_declarations#index"
       end
     end
   end
