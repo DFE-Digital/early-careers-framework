@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Schools::Participants", type: :request do
+RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_flags: { eligibility_notifications: "active" } do
   let(:user) { create(:user, :induction_coordinator, school_ids: [school.id]) }
   let(:school) { school_cohort.school }
   let(:cohort) { create(:cohort) }

@@ -8,10 +8,17 @@ class Schools::ParticipantsController < Schools::BaseController
   before_action :set_mentors_added, only: %i[index show]
 
   def index
-    @ineligible = ineligible_participants
-    @eligible = eligible_participants
-    @contacted_for_info = contacted_for_info_participants
-    @details_being_checked = details_being_checked_participants
+    if FeatureFlag.active?(:eligibility_notifications)
+      @ineligible = ineligible_participants
+      @eligible = eligible_participants
+      @contacted_for_info = contacted_for_info_participants
+      @details_being_checked = details_being_checked_participants
+    else
+      @ineligible = []
+      @eligible = []
+      @contacted_for_info = contacted_for_info_participants
+      @details_being_checked = details_being_checked_participants.merge(ineligible_participants, rewhere: true).merge(eligible_participants, rewhere: true)
+    end
     @participant_profiles = participant_profiles
 
     redirect_to add_schools_participants_path if @participant_profiles.empty?
