@@ -100,4 +100,8 @@ class ParticipantProfile < ApplicationRecord
     # TODO: Do we need to store when this happens outside of papertrail?
     update!(schedule: schedule)
   end
+
+  def sit_mentor?
+    mentor? && user.induction_coordinator?
+  end
 end

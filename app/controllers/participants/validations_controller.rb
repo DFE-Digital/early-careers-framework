@@ -54,7 +54,9 @@ module Participants
       @school = participant_profile.school
 
       partial_name =
-        if participant_profile.school_cohort.full_induction_programme?
+        if participant_profile.sit_mentor?
+          nil
+        elsif participant_profile.school_cohort.full_induction_programme?
           if participant_profile.ect?
             fip_ect_completed_page
           else
@@ -130,6 +132,8 @@ module Participants
     end
 
     def render_default_completed_page
+      @partnership = @school.partnerships.active.find_by(cohort: participant_profile.school_cohort.cohort)
+
       if participant_profile.ecf_participant_eligibility&.eligible_status? ||
           participant_profile.ecf_participant_eligibility&.matched_status?
         render_completed_page
@@ -145,7 +149,6 @@ module Participants
 
     def render_completed_page
       if participant_profile.school_cohort.full_induction_programme?
-        @partnership = @school.partnerships.active.find_by(cohort: participant_profile.school_cohort.cohort)
         render "complete_fip"
       else
         render "complete_cip"
