@@ -4,5 +4,6 @@ class NPQLeadProvider < ApplicationRecord
   belongs_to :cpd_lead_provider, optional: true
 
   has_many :npq_applications, class_name: "NPQApplication"
-  has_many :npq_participants, through: :npq_applications, source: :user
+  has_many :npq_participant_profiles, through: :npq_applications, source: :profile
+  has_many :npq_participants, through: :npq_participant_profiles, source: :user
 end
