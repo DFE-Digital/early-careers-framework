@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_13_144609) do
+ActiveRecord::Schema.define(version: 2021_10_14_133150) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -464,28 +464,6 @@ ActiveRecord::Schema.define(version: 2021_10_13_144609) do
     t.index ["cpd_lead_provider_id"], name: "index_npq_lead_providers_on_cpd_lead_provider_id"
   end
 
-  create_table "npq_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "user_id", null: false
-    t.uuid "npq_lead_provider_id", null: false
-    t.uuid "npq_course_id", null: false
-    t.date "date_of_birth"
-    t.text "teacher_reference_number"
-    t.boolean "teacher_reference_number_verified", default: false
-    t.text "school_urn"
-    t.text "headteacher_status"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.boolean "active_alert", default: false
-    t.boolean "eligible_for_funding", default: false, null: false
-    t.text "funding_choice"
-    t.text "nino"
-    t.text "lead_provider_approval_status", default: "pending", null: false
-    t.text "school_ukprn"
-    t.index ["npq_course_id"], name: "index_npq_profiles_on_npq_course_id"
-    t.index ["npq_lead_provider_id"], name: "index_npq_profiles_on_npq_lead_provider_id"
-    t.index ["user_id"], name: "index_npq_profiles_on_user_id"
-  end
-
   create_table "participant_bands", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "call_off_contract_id", null: false
     t.integer "min"
@@ -830,12 +808,11 @@ ActiveRecord::Schema.define(version: 2021_10_13_144609) do
   add_foreign_key "npq_applications", "npq_lead_providers"
   add_foreign_key "npq_applications", "users"
   add_foreign_key "npq_lead_providers", "cpd_lead_providers"
-  add_foreign_key "npq_profiles", "users"
   add_foreign_key "participant_bands", "call_off_contracts"
   add_foreign_key "participant_declaration_attempts", "participant_declarations"
+  add_foreign_key "participant_declarations", "participant_profiles"
   add_foreign_key "participant_profile_schedules", "participant_profiles"
   add_foreign_key "participant_profile_schedules", "schedules"
-  add_foreign_key "participant_declarations", "participant_profiles"
   add_foreign_key "participant_profile_states", "participant_profiles"
   add_foreign_key "participant_profiles", "cohorts"
   add_foreign_key "participant_profiles", "core_induction_programmes"
