@@ -97,7 +97,7 @@ class SchoolMailer < ApplicationMailer
 
   def partnered_school_invite_sit_email(
     recipient:,
-    school_name:,
+    school:,
     lead_provider_name:,
     delivery_partner_name:,
     nominate_url:,
@@ -110,13 +110,13 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        school_name: school_name,
+        school_name: school.name,
         lead_provider_name: lead_provider_name,
         delivery_partner_name: delivery_partner_name,
         nominate_url: nominate_url,
         challenge_url: challenge_url,
       },
-    )
+    ).tag(:partnered_school_invite_sit).associate_with(school)
   end
 
   # This email is sent to the SIT of the school whe was reported to enter the partnership with lead provider.
