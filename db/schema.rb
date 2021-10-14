@@ -175,7 +175,7 @@ ActiveRecord::Schema.define(version: 2021_10_13_144609) do
 
   create_table "declaration_states", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_declaration_id", null: false
-    t.string "state", default: "submitted", null: false
+    t.string "state", default: "submitted"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["participant_declaration_id"], name: "index_declaration_states_on_participant_declaration_id"
@@ -833,9 +833,9 @@ ActiveRecord::Schema.define(version: 2021_10_13_144609) do
   add_foreign_key "npq_profiles", "users"
   add_foreign_key "participant_bands", "call_off_contracts"
   add_foreign_key "participant_declaration_attempts", "participant_declarations"
+  add_foreign_key "participant_declarations", "participant_profiles"
   add_foreign_key "participant_profile_schedules", "participant_profiles"
   add_foreign_key "participant_profile_schedules", "schedules"
-  add_foreign_key "participant_declarations", "participant_profiles"
   add_foreign_key "participant_profile_states", "participant_profiles"
   add_foreign_key "participant_profiles", "cohorts"
   add_foreign_key "participant_profiles", "core_induction_programmes"

@@ -15,6 +15,7 @@ class ParticipantMailer < ApplicationMailer
     sit_mentor: "fcf85c00-6d96-48a6-bf27-ea09c61f0eee",
   }.freeze
 
+  Mail::Notify::DeliveryMethod
   def participant_added(participant_profile:)
     template_mail(
       PARTICIPANT_ADDED_TEMPLATES[template_type_for participant_profile],
