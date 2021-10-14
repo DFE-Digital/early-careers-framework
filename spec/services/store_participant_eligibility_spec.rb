@@ -22,16 +22,6 @@ RSpec.describe StoreParticipantEligibility do
       }
     end
 
-    let(:previous_induction_flags) do
-      {
-        previous_participation: false,
-        previous_induction: true,
-        qts: true,
-        different_trn: false,
-        active_flags: false,
-      }
-    end
-
     it "creates an eligibility record for the participant" do
       expect {
         service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
