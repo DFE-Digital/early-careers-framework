@@ -233,6 +233,7 @@ ActiveRecord::Schema.define(version: 2021_10_13_144609) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "reason", default: "none", null: false
+    t.boolean "different_trn"
     t.index ["participant_profile_id"], name: "index_ecf_participant_eligibilities_on_participant_profile_id", unique: true
   end
 

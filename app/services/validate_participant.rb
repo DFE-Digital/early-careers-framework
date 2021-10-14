@@ -56,20 +56,23 @@ private
   end
 
   def store_eligibility_data!(dqt_data)
-    record = ECFParticipantEligibility.find_or_initialize_by(participant_profile: participant_profile)
-    record.qts = dqt_data[:qts]
-    record.active_flags = dqt_data[:active_alert]
-    record.previous_participation = dqt_data[:previous_participation]
-    record.previous_induction = dqt_data[:previous_induction]
-    record.determine_status
-    record.save!
-    record
+    StoreParticipantEligibility.call(participant_profile: participant_profile,
+                                     eligibility_options: {
+                                       qts: dqt_data[:qts],
+                                       active_flags: dqt_data[:active_alert],
+                                       previous_participation: dqt_data[:previous_participation],
+                                       previous_induction: dqt_data[:previous_induction],
+                                       different_trn: different_trn?(dqt_data[:trn]),
+                                     })
+  end
+
+  def different_trn?(trn)
+    participant_profile.teacher_profile.trn.present? && participant_profile.teacher_profile.trn != trn
   end
 
   def store_trn_on_teacher_profile!(trn)
-    if participant_profile.teacher_profile.trn.present? && participant_profile.teacher_profile.trn != trn
+    if different_trn?(trn)
       Rails.logger.warn("Different TRN already set for user [#{participant_profile.user.email}]")
-      @eligibility_data.update!(status: :manual_check, reason: :different_trn)
     else
       participant_profile.teacher_profile.update!(trn: trn)
     end
