@@ -40,10 +40,6 @@ RSpec.describe "Manage Design Our Own training", js: true, with_feature_flags: {
     expect(page).to have_text "Confirm your induction programme"
     click_on "Confirm"
 
-    expect(page).to have_text "Induction programme confirmed"
-    click_on "Continue"
-
-    expect(page).to have_current_path schools_dashboard_path(school_cohort.school)
-    expect(page).to have_text "Use a training provider funded by the DfE"
+    expect(page).to have_text "Training programme confirmed"
   end
 end

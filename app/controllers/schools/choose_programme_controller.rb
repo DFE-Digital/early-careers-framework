@@ -49,7 +49,9 @@ class Schools::ChooseProgrammeController < Schools::BaseController
     end
   end
 
-  def success; end
+  def success
+    render locals: { school_cohort: school_cohort }
+  end
 
 private
 
