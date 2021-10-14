@@ -54,7 +54,7 @@ module ApplicationHelper
 private
 
   def post_2020_ecf_participant?(user)
-    user.teacher_profile.ecf_profile_2021.present?
+    user.teacher_profile.current_ecf_profile.present?
   end
 
   def induction_coordinator_mentor_path(user)

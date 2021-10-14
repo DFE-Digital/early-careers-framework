@@ -11,8 +11,7 @@ class TeacherProfile < ApplicationRecord
   has_one :mentor_profile, -> { active_record }, class_name: "ParticipantProfile::Mentor"
 
   has_many :ecf_profiles, -> { active_record.includes(:cohort).order("cohort.start_year DESC") }, class_name: "ParticipantProfile::ECF"
-  has_one :ecf_profile_2020, -> { active_record.includes(:cohort).where(cohort: { start_year: 2020 }) }, class_name: "ParticipantProfile::ECF"
-  has_one :ecf_profile_2021, -> { active_record.includes(:cohort).where(cohort: { start_year: 2021 }) }, class_name: "ParticipantProfile::ECF"
+  has_one :current_ecf_profile, -> { active_record.includes(:cohort).where(cohort: Cohort.current) }, class_name: "ParticipantProfile::ECF"
 
   has_many :npq_profiles, class_name: "ParticipantProfile::NPQ"
   # end: TODO

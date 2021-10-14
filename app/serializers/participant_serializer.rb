@@ -14,22 +14,22 @@ class ParticipantSerializer
     end
 
     def participant_active?(user)
-      user.teacher_profile.ecf_profile_2021&.active_record?
+      user.teacher_profile.current_ecf_profile&.active_record?
     end
 
     def trn(user)
-      user.teacher_profile.trn || user.teacher_profile.ecf_profile_2021.ecf_participant_validation_data&.trn
+      user.teacher_profile.trn || user.teacher_profile.current_ecf_profile.ecf_participant_validation_data&.trn
     end
 
     def validated_trn(user)
-      eligibility_status = user.teacher_profile.ecf_profile_2021.ecf_participant_eligibility&.status
+      eligibility_status = user.teacher_profile.current_ecf_profile.ecf_participant_eligibility&.status
       if %w[matched eligible].include?(eligibility_status)
         user.teacher_profile.trn
       end
     end
 
     def eligible_for_funding?(user)
-      ecf_participant_eligibility = user.teacher_profile.ecf_profile_2021.ecf_participant_eligibility
+      ecf_participant_eligibility = user.teacher_profile.current_ecf_profile.ecf_participant_eligibility
       return if ecf_participant_eligibility.nil?
       return true if ecf_participant_eligibility.eligible_status?
       return false if ecf_participant_eligibility.ineligible_status?
@@ -46,11 +46,11 @@ class ParticipantSerializer
   end
 
   active_participant_attribute :school_urn do |user|
-    user.teacher_profile.ecf_profile_2021&.school&.urn
+    user.teacher_profile.current_ecf_profile&.school&.urn
   end
 
   active_participant_attribute :participant_type do |user|
-    case user.teacher_profile.ecf_profile_2021.type
+    case user.teacher_profile.current_ecf_profile.type
     when ParticipantProfile::ECT.name
       :ect
     when ParticipantProfile::Mentor.name
@@ -59,11 +59,11 @@ class ParticipantSerializer
   end
 
   active_participant_attribute :cohort do |user|
-    user.teacher_profile.ecf_profile_2021.cohort.start_year.to_s
+    user.teacher_profile.current_ecf_profile.cohort.start_year.to_s
   end
 
   attribute :status do |user|
-    user.teacher_profile.ecf_profile_2021&.status || "withdrawn"
+    user.teacher_profile.current_ecf_profile&.status || "withdrawn"
   end
 
   active_participant_attribute :teacher_reference_number do |user|
@@ -82,18 +82,18 @@ class ParticipantSerializer
   end
 
   active_participant_attribute :pupil_premium_uplift do |user|
-    user.teacher_profile.ecf_profile_2021&.pupil_premium_uplift
+    user.teacher_profile.current_ecf_profile&.pupil_premium_uplift
   end
 
   active_participant_attribute :sparsity_uplift do |user|
-    user.teacher_profile.ecf_profile_2021&.sparsity_uplift
+    user.teacher_profile.current_ecf_profile&.sparsity_uplift
   end
 
   active_participant_attribute :training_status do |user|
-    user.teacher_profile.ecf_profile_2021&.training_status || "active"
+    user.teacher_profile.current_ecf_profile&.training_status || "active"
   end
 
   active_participant_attribute :schedule_identifier do |user|
-    user.teacher_profile.ecf_profile_2021&.schedule&.schedule_identifier
+    user.teacher_profile.current_ecf_profile&.schedule&.schedule_identifier
   end
 end
