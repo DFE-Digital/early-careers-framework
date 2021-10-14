@@ -196,6 +196,15 @@ module ManageTrainingSteps
     fill_in "Email", with: @participant_profile_ect.user.email
   end
 
+  def when_i_select_change
+    click_on("Change")
+  end
+
+  def then_i_am_taken_to_change_how_you_run_programme_page
+    expect(page).to have_selector("h1", text: "Change how you run your programme")
+    expect(page).to have_text("Check the other options available for your school if this changes")
+  end
+
   def when_i_select_change_name
     click_on("Change name", visible: false)
   end
