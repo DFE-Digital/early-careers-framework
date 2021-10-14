@@ -54,7 +54,7 @@ module ApplicationHelper
 private
 
   def post_2020_ecf_participant?(user)
-    (user.teacher_profile.ecf_profile&.school_cohort&.cohort&.start_year || 0) > 2020
+    user.teacher_profile.ecf_profile_2021.present?
   end
 
   def induction_coordinator_mentor_path(user)
