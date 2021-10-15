@@ -41,4 +41,17 @@ RSpec.describe RecordDeclarations::Retained::EarlyCareerTeacher do
       retained_ect_params
     end
   end
+
+  context "when user is for 2020 cohort" do
+    let!(:cohort_2020) { create(:cohort, start_year: 2020) }
+    let!(:school_cohort_2020) { create(:school_cohort, cohort: cohort_2020, school: ect_profile.school) }
+
+    before do
+      ect_profile.update!(school_cohort: school_cohort_2020)
+    end
+
+    it "raises a ParameterMissing error" do
+      expect { described_class.call(params: retained_ect_params) }.to raise_error(ActionController::ParameterMissing)
+    end
+  end
 end
