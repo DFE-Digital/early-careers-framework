@@ -45,7 +45,7 @@
           <tr class="govuk-table__row">
             <td class="govuk-table__cell"><%= profile.user.full_name %></td>
             <td class="govuk-table__cell"><%= format_type(profile.participant_type) %></td>
-            <td class="govuk-table__cell">Delete</td>
+            <td class="govuk-table__cell">None</td>
             <td class="govuk-table__cell govuk-table__cell--numeric"><%= govuk_link_to "Check", schools_participant_path(id: profile.id) %></td>
           </tr>
         <% end %>
@@ -131,8 +131,13 @@
 
     <% if @eligible.any? %>
       <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Eligible to start</h2>
-      <p class="govuk-!-margin-bottom-3">We’ve confirmed these people are eligible for this programme. They have access
-        to their materials.</p>
+      <% if @school_cohort.core_induction_programme? %>
+        <p class="govuk-!-margin-bottom-3">We’ve confirmed these people are eligible for this programme. They have access to their materials.</p>
+      <% elsif @school_cohort.delivery_partner.present? %>
+        <p class="govuk-!-margin-bottom-3">We've confirmed these people are eligible for this programme. Your training provider will contact them directly.</p>
+      <% else %>
+        <p class="govuk-!-margin-bottom-3">We've confirmed these people are eligible for this programme. Once you choose a training provider, they'll contact your ECTs and mentors directly.</p>
+      <% end %>
 
       <table class="govuk-table govuk-!-margin-bottom-9">
         <thead class="govuk-table__head">
