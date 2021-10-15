@@ -30,8 +30,6 @@ module Schools
           if eligibility.eligible_status?
             return :eligible_cip if participant_profile.school_cohort.cip?
             return participant_profile.school_cohort.delivery_partner ? :eligible_fip : :eligible_fip_no_partner if participant_profile.school_cohort.fip?
-
-            raise "Unknown status - eligible"
           end
         end
 
