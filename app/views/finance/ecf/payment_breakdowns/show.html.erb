@@ -5,7 +5,7 @@
 <!--TODO: Un-hardcode the values-->
 <p class="govuk-caption-m govuk-!-margin-0">Payment of</p>
 <h2 class="govuk-heading-xl govuk-!-margin-0"><%= number_to_pounds total_payment(@breakdown) + total_vat(@breakdown, @ecf_lead_provider) %></h2>
-<p class="govuk-caption-m govuk-!-margin-0">On 31 October 2021</p>
+<p class="govuk-caption-m govuk-!-margin-0"><%= @cutoff_date %></p>
 
 <div class="govuk-grid-row govuk-!-margin-top-9">
   <div class="govuk-grid-column-two-thirds">

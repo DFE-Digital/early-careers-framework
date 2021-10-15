@@ -15,6 +15,7 @@ module Finance
         @service_fees_total = @breakdown[:service_fees].map { |params| params[:monthly] }.inject(&:+)
         @output_payment_participants = @breakdown[:output_payments].map { |params| params[:participants] }.inject(&:+)
         @output_payment_total = @breakdown[:output_payments].map { |params| params[:subtotal] }.inject(&:+)
+        @payment_period = pretty_payment_period
       end
     end
   end
