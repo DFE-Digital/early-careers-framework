@@ -1,6 +1,6 @@
 <% content_for :title, "Early career teachers and mentors" %>
 
-<% content_for :before_content, govuk_back_link(text: "Back", href: schools_dashboard_path) %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: :back) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -10,7 +10,7 @@
     <p class="govuk-body">Before your early career teachers (ECTs) and mentors can start, we need to check their details
       in the Teaching Regulation Agency records. This is to make sure they’re eligible for this programme.</p>
     <p class="govuk-body">You need to tell us their names and email addresses. We’ll then contact them
-      to <%= govuk_link_to "explain their role", roles_schools_cohort_path, class: "govuk-link--no-visited-state" %> and
+      to <%= govuk_link_to "explain their role", roles_schools_cohort_path(info: true), class: "govuk-link--no-visited-state" %> and
       what they need to do next.</p>
 
     <div class="govuk-inset-text">

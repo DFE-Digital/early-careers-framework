@@ -55,7 +55,9 @@
       <li>meeting with their induction tutor to discuss, agree and review priorities for their induction programme</li>
     </ul>
 
-    <%= govuk_button_link_to "Continue", schools_participants_path(cohort_id: @school_cohort.cohort.start_year) %>
+    <% unless @hide_button %>
+      <%= govuk_button_link_to "Continue", schools_participants_path(cohort_id: @school_cohort.cohort.start_year) %>
+    <% end %>
 
   </div>
 </div>
