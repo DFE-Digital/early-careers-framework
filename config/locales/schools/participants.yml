@@ -25,9 +25,23 @@ en:
           header: "DfE checking eligibility"
           content: "We’re checking these people’s details with the Teaching Regulation Agency. We’ll confirm if they’re eligible for this programme soon."
 
-        ineligible:
-          header: "Not eligible for funded training"
-          content: "We’ve checked these people’s details and found they’re not eligible for this funded training."
+        ineligible_flag:
+          header: "Not eligible"
+          content: "This person is not eligible for this programme."
+
+        ineligible_previous_induction:
+          header: "Not eligible: induction already started"
+          content: "This is because they started or completed their statutory induction before 1 September 2021."
+
+        fip_ect_no_qts:
+          header: "Checking qualified teacher status"
+          content:
+            - "Our checks show this person does not have qualified teacher status (QTS). Their status should be up to date if they completed their ITT in 2021."
+            - "If this person has not completed their ITT, %{contact_us}."
+
+        ero_mentor:
+          header: "Already received funded mentor training"
+          content: "Our checks show this person has already received mentor training as part of the early roll-out of the early career framework (ECF) reforms. They're ready to mentor ECTs."
 
         eligible_cip:
           header: "Eligible to start"
