@@ -22,7 +22,7 @@ RUN bundle exec middleman build --build-dir=../public/api-reference
 # Stage 1: Download gems and node modules.
 FROM ${BASE_RUBY_IMAGE} AS builder
 
-ARG BUILD_DEPS="git gcc libc-dev make nodejs yarn postgresql-dev build-base libxml2-dev libxslt-dev ttf-ubuntu-font-family"
+ARG BUILD_DEPS="git gcc libc-dev make nodejs yarn postgresql-dev build-base libxml2-dev libxslt-dev"
 
 WORKDIR /app
 
