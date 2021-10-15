@@ -2,7 +2,7 @@
 
 RSpec.describe "SIT removing participants from the cohort", js: true, with_feature_flags: { induction_tutor_manage_participants: "active", eligibility_notifications: "active" } do
   let(:sti_profile) { create(:induction_coordinator_profile, schools: [school_cohort.school]) }
-  let(:school_cohort) { create(:school_cohort) }
+  let(:school_cohort) { create(:school_cohort, induction_programme_choice: "full_induction_programme") }
   let(:mentor_user) { create :user, :teacher, full_name: "John Doe", email: "john-doe@example.com" }
   let!(:mentor_profile) { create(:participant_profile, :mentor, request_for_details_sent_at: Date.new(2021, 9, 9), school_cohort: school_cohort, teacher_profile: mentor_user.teacher_profile) }
   let(:ect_user) { create :user, :teacher, full_name: "John Smith", email: "john-smith@example.com" }

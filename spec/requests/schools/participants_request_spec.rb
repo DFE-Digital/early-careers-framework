@@ -5,7 +5,7 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
   let(:school) { school_cohort.school }
   let(:cohort) { create(:cohort) }
 
-  let!(:school_cohort) { create(:school_cohort, cohort: cohort) }
+  let!(:school_cohort) { create(:school_cohort, cohort: cohort, induction_programme_choice: "full_induction_programme") }
   let!(:another_cohort) { create(:school_cohort) }
   let(:mentor_profile) { create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
   let!(:mentor_user) { mentor_profile.user }
@@ -22,11 +22,14 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
   end
 
   describe "GET /schools/:school_id/cohorts/:start_year/participants" do
-    it "shouldn't be available when feature flag turned off" do
-      FeatureFlag.deactivate(:induction_tutor_manage_participants)
-      expect {
-        get "/schools/cohorts/#{cohort.start_year}/participants"
-      }.to raise_error(ActionController::RoutingError)
+    context "when feature flag is turned off" do
+      before { FeatureFlag.deactivate(:induction_tutor_manage_participants) }
+
+      it "shouldn't be available" do
+        expect {
+          get "/schools/cohorts/#{cohort.start_year}/participants"
+        }.to raise_error(ActionController::RoutingError)
+      end
     end
 
     it "renders participants template" do
