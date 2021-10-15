@@ -8,17 +8,14 @@ class Schools::ParticipantsController < Schools::BaseController
   before_action :set_mentors_added, only: %i[index show]
 
   def index
-    if FeatureFlag.active?(:eligibility_notifications)
-      @ineligible = ineligible_participants
-      @eligible = eligible_participants
-      @contacted_for_info = contacted_for_info_participants
-      @details_being_checked = details_being_checked_participants
+    if @school_cohort.core_induction_programme?
+      cip_participant_categories
+    elsif FeatureFlag.active?(:eligibility_notifications)
+      fip_participant_categories_feature_flag_active
     else
-      @ineligible = []
-      @eligible = []
-      @contacted_for_info = contacted_for_info_participants
-      @details_being_checked = details_being_checked_participants.merge(ineligible_participants, rewhere: true).merge(eligible_participants, rewhere: true)
+      fip_participant_categories_feature_flag_inactive
     end
+
     @participant_profiles = participant_profiles
 
     redirect_to add_schools_participants_path if @participant_profiles.empty?
@@ -163,5 +160,26 @@ private
 
   def details_being_checked_participants
     policy_scope(active_participant_profiles.details_being_checked.includes(:user).order("users.full_name"))
+  end
+
+  def fip_participant_categories_feature_flag_active
+    @ineligible = ineligible_participants
+    @eligible = eligible_participants
+    @contacted_for_info = contacted_for_info_participants
+    @details_being_checked = details_being_checked_participants
+  end
+
+  def fip_participant_categories_feature_flag_inactive
+    @ineligible = []
+    @eligible = []
+    @contacted_for_info = contacted_for_info_participants
+    @details_being_checked = details_being_checked_participants.merge(ineligible_participants, rewhere: true).merge(eligible_participants, rewhere: true)
+  end
+
+  def cip_participant_categories
+    @ineligible = []
+    @eligible = eligible_participants.merge(ineligible_participants, rewhere: true).merge(details_being_checked_participants, rewhere: true)
+    @contacted_for_info = contacted_for_info_participants
+    @details_being_checked = []
   end
 end
