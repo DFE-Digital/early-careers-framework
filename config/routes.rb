@@ -352,7 +352,6 @@ Rails.application.routes.draw do
             get :confirm_programme, path: "confirm-programme"
             get :choice_saved_design_our_own, path: "design-your-programme"
             get :choice_saved_school_funded_fip, path: "school-funded-fip"
-            get :choice_saved_no_early_career_teachers, path: "no-early-career-teachers"
             post :save_programme, path: "save-programme"
             get :success
           end

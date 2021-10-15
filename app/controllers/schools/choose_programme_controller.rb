@@ -26,15 +26,11 @@ class Schools::ChooseProgrammeController < Schools::BaseController
     redirect_to action: :success
   end
 
-  def choice_saved_no_early_career_teachers
-    @cohort = cohort
-    @school = school
-    render "shared/choice_saved_no_early_career_teachers"
-  end
-
   def choice_saved_school_funded_fip
     @cohort = cohort
     @school = school
+
+    redirect_to action: :success
   end
 
   def confirm_programme; end

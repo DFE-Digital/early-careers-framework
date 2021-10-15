@@ -71,13 +71,5 @@ RSpec.describe InductionChoiceForm, type: :model do
         expect(form.opt_out_choice_selected?).to eq true
       end
     end
-
-    context "when no early career teachers is selected" do
-      let(:programme_choice) { "no_early_career_teachers" }
-
-      it "returns true" do
-        expect(form.opt_out_choice_selected?).to eq true
-      end
-    end
   end
 end

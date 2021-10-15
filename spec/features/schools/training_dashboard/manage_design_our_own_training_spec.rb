@@ -23,7 +23,6 @@ RSpec.describe "Manage Design Our Own training", js: true, with_feature_flags: {
 
     expect(page).to have_text "Change how you run your programme"
     expect(page).to be_accessible
-    page.percy_snapshot "Design Our Own - change programme"
     click_on "Check the other options available"
 
     expect(page).to have_text "How do you want to run your training"
