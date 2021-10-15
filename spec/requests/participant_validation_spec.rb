@@ -23,24 +23,14 @@ RSpec.describe "Participant validations", with_feature_flags: { eligibility_noti
       let(:school_cohort) { create(:school_cohort, :cip) }
       let(:profile) { create(:participant_profile, :ect, school_cohort: school_cohort) }
 
-      it_behaves_like "it renders the template", "participants/validations/cip_ect_eligible"
+      it_behaves_like "it renders the template", "participants/validations/cip_eligible"
     end
 
     context "user is a cip mentor" do
       let(:school_cohort) { create(:school_cohort, :cip) }
       let(:profile) { create(:participant_profile, :mentor, school_cohort: school_cohort) }
 
-      context "user has active flags reason on their eligibility" do
-        before do
-          create(:ecf_participant_eligibility, :manual_check, participant_profile: profile, active_flags: true)
-        end
-
-        it_behaves_like "it renders the template", "participants/validations/cip_mentor_active_flags"
-      end
-
-      context "user doesn't have active flags reason on their eligibility" do
-        it_behaves_like "it renders the template", "participants/validations/cip_mentor_eligible"
-      end
+      it_behaves_like "it renders the template", "participants/validations/cip_eligible"
     end
 
     context "user is a fip ECT" do

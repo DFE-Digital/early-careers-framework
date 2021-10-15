@@ -63,11 +63,7 @@ module Participants
             fip_mentor_completed_page
           end
         elsif participant_profile.school_cohort.core_induction_programme?
-          if participant_profile.ect?
-            cip_ect_completed_page
-          else
-            cip_mentor_completed_page
-          end
+          cip_completed_page
         end
 
       if partial_name.present?
@@ -145,16 +141,8 @@ module Participants
       end
     end
 
-    def cip_ect_completed_page
-      "cip_ect_eligible"
-    end
-
-    def cip_mentor_completed_page
-      if participant_profile.ecf_participant_eligibility&.active_flags_reason?
-        "cip_mentor_active_flags"
-      else
-        "cip_mentor_eligible"
-      end
+    def cip_completed_page
+      "cip_eligible"
     end
 
     def render_default_completed_page
