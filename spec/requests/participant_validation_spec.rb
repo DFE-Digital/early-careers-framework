@@ -81,18 +81,26 @@ RSpec.describe "Participant validations", with_feature_flags: { eligibility_noti
 
       context "user has a previous induction" do
         before do
-          create(:ecf_participant_eligibility, :manual_check, participant_profile: profile, previous_induction: true)
+          create(:ecf_participant_eligibility, :ineligible, participant_profile: profile, previous_induction: true)
         end
 
         it_behaves_like "it renders the template", "participants/validations/fip_ect_previous_induction"
       end
 
-      context "user has active flags" do
+      context "user has active flags and is in manual check status" do
         before do
           create(:ecf_participant_eligibility, :manual_check, participant_profile: profile, active_flags: true)
         end
 
-        it_behaves_like "it renders the template", "participants/validations/fip_ect_active_flags"
+        it_behaves_like "it renders the template", "participants/validations/fip_active_flags_manual_check"
+      end
+
+      context "user has active flags and is in ineligible status" do
+        before do
+          create(:ecf_participant_eligibility, :ineligible, participant_profile: profile, active_flags: true)
+        end
+
+        it_behaves_like "it renders the template", "participants/validations/fip_active_flags_ineligible"
       end
 
       context "user has no qts" do
@@ -148,17 +156,25 @@ RSpec.describe "Participant validations", with_feature_flags: { eligibility_noti
         it_behaves_like "it renders the template", "participants/validations/fip_mentor_previous_participation"
       end
 
-      context "user has active flags" do
+      context "user has active flags and is in manual check status" do
         before do
           create(:ecf_participant_eligibility, :manual_check, participant_profile: profile, active_flags: true)
         end
 
-        it_behaves_like "it renders the template", "participants/validations/fip_mentor_active_flags"
+        it_behaves_like "it renders the template", "participants/validations/fip_active_flags_manual_check"
+      end
+
+      context "user has active flags and is in ineligible status" do
+        before do
+          create(:ecf_participant_eligibility, :ineligible, participant_profile: profile, active_flags: true)
+        end
+
+        it_behaves_like "it renders the template", "participants/validations/fip_active_flags_ineligible"
       end
 
       context "user has no qts" do
         before do
-          create(:ecf_participant_eligibility, :manual_check, participant_profile: profile, qts: false)
+          create(:ecf_participant_eligibility, :ineligible, participant_profile: profile, qts: false)
         end
 
         it_behaves_like "it renders the template", "participants/validations/fip_mentor_no_qts"

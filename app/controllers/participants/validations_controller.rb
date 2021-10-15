@@ -94,8 +94,21 @@ module Participants
         else
           "fip_no_trn_match_no_partnership"
         end
-      elsif participant_profile.ecf_participant_eligibility.manual_check_status?
-        "fip_ect_#{participant_profile.ecf_participant_eligibility.reason}"
+      elsif participant_profile.ecf_participant_eligibility.manual_check_status? ||
+          participant_profile.ecf_participant_eligibility.ineligible_status?
+
+        case participant_profile.ecf_participant_eligibility.reason
+        when "previous_induction"
+          "fip_ect_previous_induction"
+        when "active_flags"
+          if participant_profile.ecf_participant_eligibility.manual_check_status?
+            "fip_active_flags_manual_check"
+          else
+            "fip_active_flags_ineligible"
+          end
+        when "no_qts"
+          "fip_ect_no_qts"
+        end
       end
     end
 
@@ -114,8 +127,21 @@ module Participants
         else
           "fip_no_trn_match_no_partnership"
         end
-      elsif participant_profile.ecf_participant_eligibility.manual_check_status?
-        "fip_mentor_#{participant_profile.ecf_participant_eligibility.reason}"
+      elsif participant_profile.ecf_participant_eligibility.manual_check_status? ||
+          participant_profile.ecf_participant_eligibility.ineligible_status?
+
+        case participant_profile.ecf_participant_eligibility.reason
+        when "previous_participation"
+          "fip_mentor_previous_participation"
+        when "active_flags"
+          if participant_profile.ecf_participant_eligibility.manual_check_status?
+            "fip_active_flags_manual_check"
+          else
+            "fip_active_flags_ineligible"
+          end
+        when "no_qts"
+          "fip_mentor_no_qts"
+        end
       end
     end
 
