@@ -40,6 +40,10 @@ RSpec.describe RecordDeclarations::Retained::EarlyCareerTeacher do
     def given_params
       retained_ect_params
     end
+
+    def user_profile
+      ect_profile
+    end
   end
 
   context "when user is for 2020 cohort" do
