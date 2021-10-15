@@ -34,21 +34,9 @@ describe FinanceHelper do
   end
 
   describe "#cutoff_date" do
-    milestone_dates = [
-      "30.09.2021",
-      "31.10.2021",
-      "31.01.2022",
-      "30.04.2022",
-      "30.09.2022",
-      "31.01.2023",
-      "30.04.2023",
-      "31.10.2023",
-      "31.01.2024",
-      "30.04.2024",
-      "30.09.2024",
-    ]
+    milestone_dates = FinanceHelper::MILESTONE_DATES
 
-    milestone_dates.first(2).each_with_index do |_date, index|
+    milestone_dates.each_with_index do |_date, index|
       Date.parse(milestone_dates[index - 1]).upto(Date.parse(milestone_dates[index]) - 1.day) do |date|
         it "returns correct milestone cutoff date" do
           travel_to(date) do
