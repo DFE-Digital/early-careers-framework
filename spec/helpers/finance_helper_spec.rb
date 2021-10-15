@@ -35,16 +35,16 @@ describe FinanceHelper do
 
   describe "#cutoff_date" do
     FinanceHelper::MILESTONE_DATES.each_with_index do |_date, index|
-      Date.parse(milestone_dates[index - 1]).upto(Date.parse(milestone_dates[index]) - 1.day) do |date|
+      Date.parse(FinanceHelper::MILESTONE_DATES[index - 1]).upto(Date.parse(FinanceHelper::MILESTONE_DATES[index]) - 1.day) do |date|
         it "returns correct milestone cutoff date" do
           travel_to(date) do
-            expect(cutoff_date).to eq(Date.parse(milestone_dates[index]).strftime("%-d %B %Y"))
+            expect(cutoff_date).to eq(Date.parse(FinanceHelper::MILESTONE_DATES[index]).strftime("%-d %B %Y"))
           end
         end
 
         it "returns correct payment period" do
           travel_to(date) do
-            expect(payment_period).to eq(milestone_dates[index - 1, 2])
+            expect(payment_period).to eq(FinanceHelper::MILESTONE_DATES[index - 1, 2])
           end
         end
       end
