@@ -23,16 +23,20 @@ class ECFParticipantEligibility < ApplicationRecord
   }, _suffix: true
 
   def determine_status
-    self.status, self.reason = if active_flags?
-                                 %i[manual_check active_flags]
-                               elsif previous_participation? # ERO mentors
-                                 %i[manual_check previous_participation]
-                               elsif previous_induction? && participant_profile.ect?
-                                 %i[manual_check previous_induction]
-                               elsif !qts?
-                                 %i[matched no_qts]
-                               else
-                                 %i[eligible none]
-                               end
+    unless manually_validated?
+      self.status, self.reason = if active_flags?
+                                   %i[manual_check active_flags]
+                                 elsif previous_participation? # ERO mentors
+                                   %i[ineligible previous_participation]
+                                 elsif previous_induction? && participant_profile.ect?
+                                   %i[ineligible previous_induction]
+                                 elsif !qts?
+                                   %i[manual_check no_qts]
+                                 elsif different_trn?
+                                   %i[manual_check different_trn]
+                                 else
+                                   %i[eligible none]
+                                 end
+    end
   end
 end
