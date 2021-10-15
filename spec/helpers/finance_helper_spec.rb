@@ -34,9 +34,7 @@ describe FinanceHelper do
   end
 
   describe "#cutoff_date" do
-    milestone_dates = FinanceHelper::MILESTONE_DATES
-
-    milestone_dates.each_with_index do |_date, index|
+    FinanceHelper::MILESTONE_DATES.each_with_index do |_date, index|
       Date.parse(milestone_dates[index - 1]).upto(Date.parse(milestone_dates[index]) - 1.day) do |date|
         it "returns correct milestone cutoff date" do
           travel_to(date) do
