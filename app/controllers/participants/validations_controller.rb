@@ -52,10 +52,104 @@ module Participants
 
     def complete
       @school = participant_profile.school
+
+      partial_name =
+        if participant_profile.sit_mentor? || !FeatureFlag.active?(:eligibility_notifications)
+          nil
+        elsif participant_profile.school_cohort.full_induction_programme?
+          if participant_profile.ect?
+            fip_ect_completed_page
+          else
+            fip_mentor_completed_page
+          end
+        elsif participant_profile.school_cohort.core_induction_programme?
+          cip_completed_page
+        end
+
+      if partial_name.present?
+        render partial_name
+      else
+        render_default_completed_page
+      end
+    end
+
+  private
+
+    def fip_ect_completed_page
+      @partnership = @school.partnerships.active.find_by(cohort: participant_profile.school_cohort.cohort)
+
+      if participant_profile.ecf_participant_eligibility&.eligible_status?
+        if @partnership.present?
+          "fip_eligible_partnership"
+        else
+          "fip_eligible_no_partnership"
+        end
+      elsif participant_profile.ecf_participant_eligibility.blank? || participant_profile.ecf_participant_eligibility.different_trn_reason?
+        if @partnership.present?
+          "fip_no_trn_match_partnership"
+        else
+          "fip_no_trn_match_no_partnership"
+        end
+      elsif participant_profile.ecf_participant_eligibility.manual_check_status? ||
+          participant_profile.ecf_participant_eligibility.ineligible_status?
+
+        case participant_profile.ecf_participant_eligibility.reason
+        when "previous_induction"
+          "fip_ect_previous_induction"
+        when "active_flags"
+          if participant_profile.ecf_participant_eligibility.manual_check_status?
+            "fip_active_flags_manual_check"
+          else
+            "fip_active_flags_ineligible"
+          end
+        when "no_qts"
+          "fip_ect_no_qts"
+        end
+      end
+    end
+
+    def fip_mentor_completed_page
+      @partnership = @school.partnerships.active.find_by(cohort: participant_profile.school_cohort.cohort)
+
+      if participant_profile.ecf_participant_eligibility&.eligible_status?
+        if @partnership.present?
+          "fip_eligible_partnership"
+        else
+          "fip_eligible_no_partnership"
+        end
+      elsif participant_profile.ecf_participant_eligibility.blank? || participant_profile.ecf_participant_eligibility.different_trn_reason?
+        if @partnership.present?
+          "fip_no_trn_match_partnership"
+        else
+          "fip_no_trn_match_no_partnership"
+        end
+      elsif participant_profile.ecf_participant_eligibility.manual_check_status? ||
+          participant_profile.ecf_participant_eligibility.ineligible_status?
+
+        case participant_profile.ecf_participant_eligibility.reason
+        when "previous_participation"
+          "fip_mentor_previous_participation"
+        when "active_flags"
+          if participant_profile.ecf_participant_eligibility.manual_check_status?
+            "fip_active_flags_manual_check"
+          else
+            "fip_active_flags_ineligible"
+          end
+        when "no_qts"
+          "fip_mentor_no_qts"
+        end
+      end
+    end
+
+    def cip_completed_page
+      "cip_eligible"
+    end
+
+    def render_default_completed_page
+      @partnership = @school.partnerships.active.find_by(cohort: participant_profile.school_cohort.cohort)
+
       if participant_profile.ecf_participant_eligibility&.eligible_status? ||
           participant_profile.ecf_participant_eligibility&.matched_status?
-        # Probably successful - show success message.
-        # Will become: TRN has been validated, qts, no flags, not done before, no previous induction
         render_completed_page
       else
         # all other cases
@@ -63,15 +157,12 @@ module Participants
       end
     end
 
-  private
-
     def validate_request_or_render
       render unless request.put? && step_valid?
     end
 
     def render_completed_page
       if participant_profile.school_cohort.full_induction_programme?
-        @partnership = @school.partnerships.active.find_by(cohort: participant_profile.school_cohort.cohort)
         render "complete_fip"
       else
         render "complete_cip"
