@@ -14,7 +14,7 @@ class ParticipantProfile::ECF < ParticipantProfile
   scope :ineligible_status, -> { joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :ineligible }) }
   scope :eligible_status, lambda {
     joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :eligible })
-                                       .or(joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :manual_check, reason: :previous_participation }))
+                                       .or(joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :ineligible, reason: :previous_participation }))
   }
   scope :contacted_for_info, -> { where.not(request_for_details_sent_at: nil).where.missing(:ecf_participant_validation_data) }
   scope :details_being_checked, -> { joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :manual_check }) }
