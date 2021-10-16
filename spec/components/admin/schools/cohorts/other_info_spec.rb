@@ -11,13 +11,7 @@ RSpec.describe Admin::Schools::Cohorts::OtherInfo, type: :view_component do
     allow(controller).to receive(:url_options).and_return(controller.url_options.merge(school_id: 1))
   end
 
-  context "with admin_change_programme feature enabled", with_feature_flags: { admin_change_programme: "active" } do
-    it { is_expected.to have_link "Change", href: admin_school_change_programme_path(id: cohort.start_year) }
-  end
-
-  context "with admin_change_programme feature disabled", with_feature_flags: { admin_change_programme: "inactive" } do
-    it { is_expected.not_to have_link "Change" }
-  end
+  it { is_expected.to have_link "Change", href: admin_school_change_programme_path(id: cohort.start_year) }
 
   context "without school cohort" do
     let(:school_cohort) { nil }

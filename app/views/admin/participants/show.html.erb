@@ -9,12 +9,10 @@
 <%= render Admin::Participants::Details.new(profile: @participant_profile) %>
 <%= render Admin::Participants::ValidationTasks.new(profile: @participant_profile) %>
 
-<% if FeatureFlag.active?(:admin_delete_participants) %>
-  <% unless @participant_profile.npq? %>
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds">
-        <%= govuk_link_to "Delete participant", remove_admin_participant_path %>
-      </div>
+<% unless @participant_profile.npq? || @participant_profile.completed_validation_wizard? %>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <%= govuk_link_to "Delete participant", remove_admin_participant_path %>
     </div>
-  <% end %>
+  </div>
 <% end %>

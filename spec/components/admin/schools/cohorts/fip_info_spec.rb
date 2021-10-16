@@ -10,7 +10,11 @@ RSpec.describe Admin::Schools::Cohorts::FipInfo, type: :view_component do
 
   component { described_class.new school_cohort: school_cohort }
 
-  it { is_expected.to have_content "Use an approved training provider" }
-  it { is_expected.to have_content lead_provider.name }
-  it { is_expected.to have_content school_cohort.delivery_partner.name }
+  it "has the correct content" do
+    with_request_url "/schools/test-school" do
+      expect(rendered).to have_content "Use an approved training provider"
+      expect(rendered).to have_content lead_provider.name
+      expect(rendered).to have_content school_cohort.delivery_partner.name
+    end
+  end
 end

@@ -298,7 +298,7 @@ Rails.application.routes.draw do
     resources :dashboard, controller: :dashboard, only: %i[index show], path: "/", param: :school_id
 
     scope "/:school_id" do
-      resource :year_2020, path: "year-2020", controller: "year2020", only: [], constraints: ->(_request) { FeatureFlag.active?(:year_2020_data_entry) } do
+      resource :year_2020, path: "year-2020", controller: "year2020", only: [] do
         get "support-materials-for-NQTs", action: :start, as: :start
 
         get "choose-core-induction-programme", action: :select_cip
@@ -321,7 +321,6 @@ Rails.application.routes.draw do
         member do
           get "programme-choice", as: :programme_choice
           get "change-programme", as: :change_programme
-          get "add-participants", as: :add_participants
           get "roles", as: :roles
 
           resources :partnerships, only: :index

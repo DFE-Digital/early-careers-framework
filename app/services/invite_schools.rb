@@ -61,52 +61,6 @@ class InviteSchools
     end
   end
 
-  def invite_to_beta(school_urns)
-    school_urns.each do |urn|
-      school = find_school(urn)
-      next if school.nil?
-
-      if FeatureFlag.active?(:induction_tutor_manage_participants, for: school)
-        logger.info "School urn: #{urn} already added to beta ... skipping"
-        next
-      end
-
-      induction_coordinator = school.induction_coordinators.first
-      if induction_coordinator.nil?
-        logger.info "Induction coordinator not found, urn: #{urn} ... skipping"
-        next
-      end
-
-      FeatureFlag.activate(:induction_tutor_manage_participants, for: school)
-      SchoolMailer.beta_invite_email(
-        recipient: induction_coordinator.email,
-        name: induction_coordinator.full_name,
-        school_name: school.name,
-        start_url: private_beta_start_url,
-      ).deliver_later
-    rescue StandardError
-      logger.info "Error emailing school, urn: #{urn} ... skipping"
-    end
-  end
-
-  def send_beta_chasers
-    beta_school_ids = FeatureFlag.new(name: :induction_tutor_manage_participants).feature.selected_objects.pluck(:object_id)
-    beta_schools = School.where(id: beta_school_ids)
-    beta_schools_without_participants = beta_schools.includes(:ecf_participant_profiles).where(participant_profiles: { id: nil })
-
-    beta_schools_without_participants.each do |school|
-      induction_coordinator = school.induction_coordinators.first
-      SchoolMailer.beta_invite_email(
-        recipient: induction_coordinator.email,
-        name: induction_coordinator.full_name,
-        school_name: school.name,
-        start_url: private_beta_start_url,
-      ).deliver_later
-    rescue StandardError
-      logger.info "Error emailing school, urn: #{school.urn} ... skipping"
-    end
-  end
-
   def invite_mats(school_urns)
     invite_group(school_urns, :send_mat_invite_email)
   end
