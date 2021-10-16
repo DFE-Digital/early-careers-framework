@@ -36,15 +36,16 @@ module Schools
 
       def fip_validation_status
         if (eligibility = participant_profile.ecf_participant_eligibility)
-          if eligibility.eligible_status?
-            return delivery_partner ? :eligible_fip : :eligible_fip_no_partner
-          end
-
+          return fip_eligible_status if eligibility.eligible_status?
           return fip_ineligible_status(eligibility) if eligibility.ineligible_status?
           return fip_manual_check_status(eligibility) if eligibility.manual_check_status?
-
-          :checking_eligibility
+          return fip_manual_check_status(eligibility) if eligibility.manual_check_status?
         end
+        :checking_eligibility
+      end
+
+      def fip_eligible_status
+        delivery_partner ? :eligible_fip : :eligible_fip_no_partner
       end
 
       def fip_manual_check_status(eligibility)
@@ -64,12 +65,11 @@ module Schools
         when "active_flags"
           :ineligible_flag
         else
-          :checking_eligibility
+          :ineligible_generic
         end
       end
 
       def awaiting_validation_status
-        return :checking_eligibility if participant_profile.ecf_participant_validation_data.present?
         return :details_required if latest_email&.delivered?
         return :request_for_details_failed if latest_email&.failed?
 
