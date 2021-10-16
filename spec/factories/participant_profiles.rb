@@ -81,5 +81,17 @@ FactoryBot.define do
     trait :withdrawn_record do
       status { :withdrawn }
     end
+
+    trait :email_sent do
+      after(:create) do |profile, _evaluator|
+        create :email, associated_with: profile, status: "delivered", tags: [:request_for_details]
+      end
+    end
+
+    trait :email_bounced do
+      after(:create) do |profile, _evaluator|
+        create :email, associated_with: profile, status: "permanent-failure", tags: [:request_for_details]
+      end
+    end
   end
 end

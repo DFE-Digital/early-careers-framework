@@ -29,6 +29,10 @@ en:
           header: "Not eligible"
           content: "This person is not eligible for this programme."
 
+        ineligible_generic:
+          header: "Not eligible"
+          content: "This person is not eligible for this programme."
+
         ineligible_previous_induction:
           header: "Not eligible: induction already started"
           content: "This is because they started or completed their statutory induction before 1 September 2021."
