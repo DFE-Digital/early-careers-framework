@@ -78,7 +78,14 @@ RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { par
 
         context "filtering" do
           before do
-            create_list(:npq_application, 2, npq_lead_provider: npq_lead_provider, updated_at: 10.days.ago, school_urn: "123456", npq_course: npq_course)
+            current_time = Time.zone.now
+            travel_to 10.days.ago
+            list = create_list(:npq_application, 3, npq_lead_provider: npq_lead_provider, school_urn: "123456", npq_course: npq_course)
+
+            list.each do |npq_application|
+              NPQ::Accept.new(npq_application: npq_application).call
+            end
+            travel_to current_time
           end
 
           it "returns content updated after specified timestamp" do
