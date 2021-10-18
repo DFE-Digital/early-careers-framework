@@ -163,7 +163,7 @@ private
   end
 
   def fip_participant_categories_feature_flag_active
-    @ineligible = ineligible_participants
+    @ineligible = ineligible_participants.without(@eligible)
     @eligible = eligible_participants
     @contacted_for_info = contacted_for_info_participants
     @details_being_checked = details_being_checked_participants
