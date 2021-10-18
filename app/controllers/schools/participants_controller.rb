@@ -173,11 +173,11 @@ private
     @eligible = []
     @ineligible = []
     @contacted_for_info = contacted_for_info_participants
-    @details_being_checked = details_being_checked_participants.merge(ineligible_participants, rewhere: true).merge(eligible_participants, rewhere: true)
+    @details_being_checked = [*details_being_checked_participants, *ineligible_participants, *eligible_participants]
   end
 
   def cip_participant_categories
-    @eligible = eligible_participants.merge(ineligible_participants, rewhere: true).merge(details_being_checked_participants, rewhere: true)
+    @eligible = [*eligible_participants, *ineligible_participants, *details_being_checked_participants]
     @ineligible = []
     @contacted_for_info = contacted_for_info_participants
     @details_being_checked = []
