@@ -112,11 +112,13 @@ module ParticipantDeclarationSteps
     @new_lead_provider = create(:lead_provider)
     @new_cpd_lead_provider = create(:cpd_lead_provider, lead_provider: @new_lead_provider)
 
+    delivery_partner = create(:delivery_partner)
+
     create(:partnership,
            school: @ect_profile.school,
            lead_provider: @new_cpd_lead_provider.lead_provider,
            cohort: partnership.cohort,
-           delivery_partner: partnership.delivery_partner)
+           delivery_partner: delivery_partner)
 
     partnership.destroy!
   end
