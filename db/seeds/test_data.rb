@@ -391,7 +391,7 @@ ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do 
   ParticipantProfileState.find_or_create_by!(participant_profile: ect_profile)
 end
 
-# FIP mentor
+# CIP mentor
 user = User.find_or_create_by!(email: "cip-mentor@example.com") do |u|
   u.full_name = "CIP Mentor"
 end
@@ -499,6 +499,98 @@ ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) 
   mentor_profile.schedule = Finance::Schedule::ECF.default
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
+
+def create_fip_ect_with_eligibility(type, *args)
+  name = "FIP ECT #{type}"
+  create_participant_with_eligibility("000103", name, ParticipantProfile::ECT, *args)
+end
+
+def create_fip_mentor_with_eligibility(type, *args)
+  name = "FIP Mentor #{type}"
+  create_participant_with_eligibility("000103", name, ParticipantProfile::Mentor, *args)
+end
+
+def create_cip_ect_with_eligibility(type, *args)
+  name = "CIP ECT #{type}"
+  create_participant_with_eligibility("000200", name, ParticipantProfile::ECT, *args)
+end
+
+def create_cip_mentor_with_eligibility(type, *args)
+  name = "CIP Mentor #{type}"
+  create_participant_with_eligibility("000200", name, ParticipantProfile::Mentor, *args)
+end
+
+def create_participant_with_eligibility(urn, name, participant_class, options = {})
+  user = User.find_or_create_by!(email: "#{name.parameterize}@example.com") do |u|
+    u.full_name = name
+  end
+
+  teacher_profile = TeacherProfile.find_or_create_by!(user: user)
+  participant_class.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
+    profile.school_cohort = School.find_by(urn: urn).school_cohorts.find_by(cohort: Cohort.current)
+    profile.schedule = Finance::Schedule::ECF.default
+    ParticipantProfileState.find_or_create_by!(participant_profile: profile)
+    ECFParticipantValidationData.find_or_create_by!(participant_profile: profile)
+    default_options = {
+      participant_profile: profile,
+      qts: true,
+      previous_participation: false,
+      previous_induction: false,
+      active_flags: false,
+      different_trn: false,
+    }
+
+    ECFParticipantEligibility.find_or_create_by!(default_options.merge(options))
+  end
+end
+
+user = User.find_or_create_by!(email: "fip-ect-email-sent@example.com") do |u|
+  u.full_name = "FIP ECT Email Sent"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user)
+ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
+  profile.school_cohort = School.find_by(urn: "000200").school_cohorts.find_by(cohort: Cohort.current)
+  profile.schedule = Finance::Schedule::ECF.default
+  ParticipantProfileState.find_or_create_by!(participant_profile: profile)
+  Email.create!(tags: [:request_for_details], status: "delivered").create_association_with(profile)
+end
+
+user = User.find_or_create_by!(email: "fip-ect-email-bounced@example.com") do |u|
+  u.full_name = "FIP ECT Email bounced"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user)
+ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
+  profile.school_cohort = School.find_by(urn: "000200").school_cohorts.find_by(cohort: Cohort.current)
+  profile.schedule = Finance::Schedule::ECF.default
+  ParticipantProfileState.find_or_create_by!(participant_profile: profile)
+  Email.create!(tags: [:request_for_details], status: "permanent-failure").create_association_with(profile)
+end
+
+create_fip_ect_with_eligibility("Eligible")
+create_fip_ect_with_eligibility("Previous Induction", { previous_induction: true })
+create_fip_ect_with_eligibility("No QTS", { qts: false })
+create_fip_ect_with_eligibility("Different TRN", { different_trn: true })
+create_fip_ect_with_eligibility("Active Flags", { active_flags: true })
+
+create_fip_mentor_with_eligibility("Eligible")
+create_fip_mentor_with_eligibility("Previous Induction", { previous_induction: true })
+create_fip_mentor_with_eligibility("Previous Participation ERO", { previous_participation: true })
+create_fip_mentor_with_eligibility("No QTS", { qts: false })
+create_fip_mentor_with_eligibility("Different TRN", { different_trn: true })
+create_fip_mentor_with_eligibility("Active Flags", { active_flags: true })
+
+create_cip_ect_with_eligibility("Eligible")
+create_cip_ect_with_eligibility("Previous Induction", { previous_induction: true })
+create_cip_ect_with_eligibility("No QTS", { qts: false })
+create_cip_ect_with_eligibility("Different TRN", { different_trn: true })
+create_cip_ect_with_eligibility("Active Flags", { active_flags: true })
+
+create_cip_mentor_with_eligibility("Eligible")
+create_cip_mentor_with_eligibility("Previous Induction", { previous_induction: true })
+create_cip_mentor_with_eligibility("Previous Participation ERO", { previous_participation: true })
+create_cip_mentor_with_eligibility("No QTS", { qts: false })
+create_cip_mentor_with_eligibility("Different TRN", { different_trn: true })
+create_cip_mentor_with_eligibility("Active Flags", { active_flags: true })
 
 LeadProvider.all.map(&:name).each do |provider|
   ValidTestDataGenerator::LeadProviderPopulater.call(name: provider, total_schools: 1, participants_per_school: 10)
