@@ -108,6 +108,8 @@ module Participants
         errors.add(:date_of_birth, :blank)
       elsif date_of_birth > Time.zone.now
         errors.add(:date_of_birth, :in_the_future)
+      elsif date_of_birth.year.digits.length != 4
+        errors.add(:date_of_birth, :invalid_year)
       end
 
       if national_insurance_number.present? && national_insurance_number !~ NINO_REGEX
