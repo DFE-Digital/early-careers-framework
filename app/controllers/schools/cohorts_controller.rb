@@ -21,8 +21,6 @@ module Schools
       end
     end
 
-    def roles
-      render "shared/roles"
-    end
+    def roles; end
   end
 end
