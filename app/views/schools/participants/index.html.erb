@@ -34,7 +34,7 @@
         <tr class="govuk-table__row">
           <th scope="col" class="govuk-table__header govuk-!-width-one-third">Name</th>
           <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Role</th>
-          <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Action Required</th>
+          <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Action required</th>
           <th scope="col" class="govuk-table__header"></th>
         </tr>
         </thead>
@@ -55,14 +55,14 @@
 
     <% if @contacted_for_info.any? %>
       <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Contacted for information</h2>
-      <p class="govuk-!-margin-bottom-3">We need to check their eligibility with the Teaching Regulation Agency.</p>
+      <p class="govuk-!-margin-bottom-3">We need this to check their eligibility with the Teaching Regulation Agency.</p>
 
       <table class="govuk-table govuk-!-margin-bottom-9">
         <thead class="govuk-table__head">
         <tr class="govuk-table__row">
           <th scope="col" class="govuk-table__header govuk-!-width-one-third">Name</th>
           <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Role</th>
-          <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Action Required</th>
+          <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Action required</th>
           <th scope="col" class="govuk-table__header"></th>
         </tr>
         </thead>
@@ -78,6 +78,8 @@
                 Remind them
               <% elsif latest_email_failed_for(profile) %>
                 Check email address
+              <% elsif profile.mentor_profile_id %>
+                Assign mentor
               <% else %>
                 None
               <% end %>
@@ -91,14 +93,14 @@
     <% if @details_being_checked.any? %>
       <h2 class="govuk-heading-m govuk-!-margin-bottom-0">DfE checking eligibility</h2>
       <p class="govuk-!-margin-bottom-3">We’re checking these people's details with the Teaching Regulation Agency.
-        We'll confirm if they are eligible for this programme soon.</p>
+        We'll confirm if they're eligible for this programme soon.</p>
 
       <table class="govuk-table govuk-!-margin-bottom-9">
         <thead class="govuk-table__head">
         <tr class="govuk-table__row">
           <th scope="col" class="govuk-table__header govuk-!-width-one-third">Name</th>
           <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Role</th>
-          <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Action Required</th>
+          <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Action required</th>
           <th scope="col" class="govuk-table__header"></th>
         </tr>
         </thead>
@@ -144,7 +146,7 @@
         <tr class="govuk-table__row">
           <th scope="col" class="govuk-table__header govuk-!-width-one-third">Name</th>
           <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Role</th>
-          <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Action Required</th>
+          <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Action required</th>
           <th scope="col" class="govuk-table__header"></th>
         </tr>
         </thead>
@@ -165,6 +167,8 @@
             <td class="govuk-table__cell govuk-table__cell--numeric">
               <% if profile.ect? %>
                 <%= govuk_link_to (profile.mentor_profile_id ? "Details" : "Check"), schools_participant_path(id: profile.id) %>
+              <% elsif profile.ecf_participant_eligibility.ineligible_status? %>
+                <%= govuk_link_to "Check", schools_participant_path(id: profile.id) %>
               <% else %>
                 <%= govuk_link_to "Details", schools_participant_path(id: profile.id) %>
               <% end %>
