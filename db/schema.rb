@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_13_144609) do
+ActiveRecord::Schema.define(version: 2021_10_14_133150) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -175,7 +175,7 @@ ActiveRecord::Schema.define(version: 2021_10_13_144609) do
 
   create_table "declaration_states", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_declaration_id", null: false
-    t.string "state", default: "submitted"
+    t.string "state", default: "submitted", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["participant_declaration_id"], name: "index_declaration_states_on_participant_declaration_id"
@@ -233,6 +233,7 @@ ActiveRecord::Schema.define(version: 2021_10_13_144609) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "reason", default: "none", null: false
+    t.boolean "different_trn"
     t.index ["participant_profile_id"], name: "index_ecf_participant_eligibilities_on_participant_profile_id", unique: true
   end
 
@@ -462,28 +463,6 @@ ActiveRecord::Schema.define(version: 2021_10_13_144609) do
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "cpd_lead_provider_id"
     t.index ["cpd_lead_provider_id"], name: "index_npq_lead_providers_on_cpd_lead_provider_id"
-  end
-
-  create_table "npq_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "user_id", null: false
-    t.uuid "npq_lead_provider_id", null: false
-    t.uuid "npq_course_id", null: false
-    t.date "date_of_birth"
-    t.text "teacher_reference_number"
-    t.boolean "teacher_reference_number_verified", default: false
-    t.text "school_urn"
-    t.text "headteacher_status"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.boolean "active_alert", default: false
-    t.boolean "eligible_for_funding", default: false, null: false
-    t.text "funding_choice"
-    t.text "nino"
-    t.text "lead_provider_approval_status", default: "pending", null: false
-    t.text "school_ukprn"
-    t.index ["npq_course_id"], name: "index_npq_profiles_on_npq_course_id"
-    t.index ["npq_lead_provider_id"], name: "index_npq_profiles_on_npq_lead_provider_id"
-    t.index ["user_id"], name: "index_npq_profiles_on_user_id"
   end
 
   create_table "participant_bands", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -830,7 +809,6 @@ ActiveRecord::Schema.define(version: 2021_10_13_144609) do
   add_foreign_key "npq_applications", "npq_lead_providers"
   add_foreign_key "npq_applications", "users"
   add_foreign_key "npq_lead_providers", "cpd_lead_providers"
-  add_foreign_key "npq_profiles", "users"
   add_foreign_key "participant_bands", "call_off_contracts"
   add_foreign_key "participant_declaration_attempts", "participant_declarations"
   add_foreign_key "participant_declarations", "participant_profiles"

@@ -3,12 +3,17 @@
 module Mail
   module Notify
     class Personalisation
-      def to_h
-        {
-          body: @body,
-          subject: @subject,
-        }.reject { |_, value| value.blank? }.merge(@personalisation)
+      BLANK = Object.new
+
+      module BlankFix
+        def to_h
+          super.transform_values do |value|
+            value == BLANK ? "" : value
+          end
+        end
       end
+
+      prepend BlankFix
     end
   end
 end

@@ -5,7 +5,7 @@ module Mail
     class << self
       def delivering_email(mail)
         mail.original_to = mail.to
-        set_personalisation(mail, :subject_tags, "")#enabled? ? "#{tags(mail)} " : "")
+        set_personalisation(mail, :subject_tags, enabled? ? "#{tags(mail)} " : Mail::Notify::Personalisation::BLANK)
 
         return unless enabled?
 
