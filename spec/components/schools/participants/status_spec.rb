@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Schools::Participants::Status, type: :view_component do
+RSpec.describe Schools::Participants::Status, type: :view_component, with_feature_flags: { eligibility_notifications: "active" } do
   component { described_class.new(participant_profile: profile) }
 
   context "when an email has been sent" do
