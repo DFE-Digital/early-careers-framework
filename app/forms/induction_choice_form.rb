@@ -37,6 +37,10 @@ class InductionChoiceForm
     end
   end
 
+  def opt_out_choice_selected?
+    programme_choice&.in? %i[school_funded_fip design_our_own no_early_career_teachers]
+  end
+
   def programme_choice=(value)
     @programme_choice = value&.to_sym
   end

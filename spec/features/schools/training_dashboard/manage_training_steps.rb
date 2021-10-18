@@ -31,6 +31,10 @@ module ManageTrainingSteps
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "core_induction_programme")
   end
 
+  def given_there_is_a_school_that_has_chosen(induction_programme_choice:)
+    @school_cohort = create :school_cohort, induction_programme_choice: induction_programme_choice, school: create(:school, name: "Test School")
+  end
+
   def and_i_have_added_an_ect
     @participant_profile_ect = create(:participant_profile, :ect, school_cohort: @school_cohort)
   end
@@ -88,6 +92,11 @@ module ManageTrainingSteps
     expect(page).to have_text("View your early career teacher and mentor details")
   end
 
+  def then_i_should_see_the_program_and_click_to_change_it(program_label:)
+    expect(page).to have_text(program_label)
+    click_on "Change induction programme choice"
+  end
+
   def given_there_is_a_school_that_has_chosen_design_our_own_for_2021
     @cohort = create(:cohort, start_year: 2021)
     @school = create(:school, name: "Design Our Own Programme School")
@@ -107,6 +116,23 @@ module ManageTrainingSteps
     sign_in_as @induction_coordinator_profile.user
     set_participant_data
     set_updated_participant_data
+  end
+
+  def and_see_the_other_programs_before_choosing(labels:, choice:, snapshot:)
+    expect(page).to have_text "Change how you run your programme"
+    expect(page).to be_accessible
+    click_on "Check the other options available"
+
+    expect(page).to have_text "How do you want to run your training"
+    labels.each { |label| expect(page).to have_selector(:label, text: label) }
+    expect(page).to be_accessible
+    page.percy_snapshot(snapshot)
+
+    choose choice
+    click_on "Continue"
+
+    expect(page).to have_text "Confirm your induction programme"
+    click_on "Confirm"
   end
 
   def then_i_should_see_the_fip_induction_dashboard
@@ -268,7 +294,11 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_fip_programme_choice_info_page
-    expect(page).to have_text("Your school has chosen to use a training provider, funded by the DfE.")
+    expect(page).to have_text("You’ve chosen to: use a training provider, funded by the DfE")
+  end
+
+  def then_i_am_taken_to_cip_programme_choice_info_page
+    expect(page).to have_text("You’ve chosen to: deliver your own programme using the DfE-accredited materials")
   end
 
   def then_i_am_taken_to_the_no_ect_training_info_page

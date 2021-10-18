@@ -50,6 +50,7 @@ private
 
   def save_school_choice!
     school_cohort.induction_programme_choice = @induction_choice_form.programme_choice
+    school_cohort.opt_out_of_updates = @induction_choice_form.opt_out_choice_selected?
     school_cohort.save!
   end
 

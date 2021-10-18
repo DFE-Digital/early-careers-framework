@@ -60,7 +60,7 @@ Feature: Induction tutors choosing programmes
 
     When I click the submit button
 
-    Then I should be on "design your programme success" page
+    Then I should be on "choose programme success" page
     And the page should be accessible
     And percy should be sent snapshot called "Choose design and deliver success"
 
@@ -72,6 +72,6 @@ Feature: Induction tutors choosing programmes
     And percy should be sent snapshot called "Confirm materials no ECT page"
 
     When I click the submit button
-    Then I should be on "no early career teachers success" page
+    Then I should be on "choose programme success" page
     And the page should be accessible
     And percy should be sent snapshot called "Choose no early career teachers success"

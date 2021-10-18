@@ -16,7 +16,7 @@
       </ul>
 
       <p>
-      <%= govuk_link_to "Read our step by step guidance (opens in new tab)", step_by_step_path, target: "_blank" %> to find out how to complete these steps.
+      <%= govuk_link_to "Read our guidance (opens in new tab)", step_by_step_path, target: "_blank" %> to find out how to complete these steps.
       </p>
 
       <p>You do not need to let the DfE know which provider you choose. Your training provider will contact us to arrange funding.</p>
@@ -24,7 +24,7 @@
       <p class="govuk-link govuk-!-margin-top-7">
       <%= govuk_button_link_to("Continue to manage your training", schools_dashboard_path)  %>
       </p>
-    <%- elsif @school_cohort.school_chose_cip? -%>
+    <%- elsif school_cohort.school_chose_cip? -%>
       <h2 class="govuk-heading-m">What to do next</h2>
 
       <p>You need to:</p>
@@ -36,7 +36,7 @@
       </ul>
 
       <p>
-      <%= govuk_link_to "Read our step by step guidance (opens in new tab)", step_by_step_path, target: "_blank" %> to find out how to complete these steps.
+      <%= govuk_link_to "Read our guidance (opens in new tab)", step_by_step_path, target: "_blank" %> to find out how to complete these steps.
       <p>
 
       <p class="govuk-link govuk-!-margin-top-7">
@@ -63,11 +63,11 @@
       <a class="govuk-link" href="https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview#schools-designing-and-delivering-their-own-ecf-based-induction" class="govuk-link" rel="noreferrer noopener" target="_blank"> See our statutory guidance (open in new tab)</a> for information about funding, time off, and roles.
       </p>
     <%- elsif school_cohort.no_early_career_teachers? -%>
-      <h3 class="govuk-heading-m">What to do next</h3>
+      <h2 class="govuk-heading-m">What to do next</h2>
       <p>Your school will not receive any more messages about statutory inductions for ECTs until the next academic year.</p>
       <p>If any ECTs do join your school this year, you need to use this service to let us know.</a></p>
     <%- else -%>
-      <h3 class="govuk-heading-m">What to do next</h3>
+      <h2 class="govuk-heading-m">What to do next</h2>
 
       <ul class="govuk-list govuk-list--bullet">
         <li>you do not need to use this service to set up your training programme</li>

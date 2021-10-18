@@ -19,28 +19,14 @@ RSpec.describe "Manage No ECT training", js: true, with_feature_flags: { inducti
     and_percy_should_be_sent_a_snapshot_named "No ECT training info"
   end
 
-  scenario "Change induction programme to ECT training" do
-    school_cohort = create :school_cohort, induction_programme_choice: "design_our_own", school: create(:school, name: "Test School")
-
-    sign_in_as create(:induction_coordinator_profile, schools: [school_cohort.school]).user
-    expect(page).to have_text("Design and deliver your own programme based on the Early Career Framework (ECF)")
-    click_on "Change induction programme choice"
-
-    expect(page).to have_text "Change how you run your programme"
-    expect(page).to be_accessible
-    click_on "Check the other options available"
-
-    expect(page).to have_text "How do you want to run your training"
-    expect(page).to have_selector :label, text: "Use a training provider, funded by the DfE (full induction programme)"
-    expect(page).to have_selector :label, text: "Deliver your own programme using DfE accredited materials (core induction programme)"
-    expect(page).to be_accessible
-    page.percy_snapshot "Design Our Own - change programme options"
-
-    choose "We don’t expect to have any early career teachers starting in 2021"
-    click_on "Continue"
-
-    expect(page).to have_text "Confirm your induction programme"
-    click_on "Confirm"
+  scenario "Change induction programme to No ECTs" do
+    given_there_is_a_school_that_has_chosen(induction_programme_choice: "design_our_own")
+    and_i_am_signed_in_as_an_induction_coordinator
+    then_i_should_see_the_program_and_click_to_change_it(program_label: "Design and deliver your own programme")
+    and_see_the_other_programs_before_choosing(labels: ["Use a training provider, funded by the DfE (full induction programme)",
+                                                        "Deliver your own programme using DfE accredited materials (core induction programme)"],
+                                               choice: "We don’t expect to have any early career teachers starting in 2021",
+                                               snapshot: "Design Your Own - change programme options")
 
     expect(page).to have_text "Training programme confirmed"
     expect(page).to have_text "Your school will not receive any more messages about statutory inductions for ECTs until the next academic year."
