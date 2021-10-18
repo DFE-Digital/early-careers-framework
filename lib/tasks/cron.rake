@@ -7,6 +7,7 @@ namespace :cron do
     ImportGiasDataJob.schedule
     ValidationRetryJob.schedule
     SchoolAnalyticsJob.schedule
+    StreamBigQueryParticipantDeclarationsJob.schedule if Rails.env.production?
     CreateNewFakeSandboxDataJob.schedule if Rails.env.sandbox?
   end
 end

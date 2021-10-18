@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
-class StreamBigQueryParticipantDeclarationsJob < ApplicationJob
+class StreamBigQueryParticipantDeclarationsJob < CronJob
+  self.cron_expression = "5 * * * *"
+
+  queue_as :big_query_participant_declarations
+
   # Streams every attribute of a participant declarations (plus the lead provider name) that was
   # updated during the previous hour.
   def perform
