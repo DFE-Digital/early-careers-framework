@@ -14,10 +14,16 @@
         <li>tell us each ECT and mentor’s name and email address as soon as possible</li>
         <li>have an appropriate body in place</li>
       </ul>
+
       <p>
       <%= govuk_link_to "Read our step by step guidance (opens in new tab)", step_by_step_path, target: "_blank" %> to find out how to complete these steps.
-      <p>
+      </p>
+
       <p>You do not need to let the DfE know which provider you choose. Your training provider will contact us to arrange funding.</p>
+
+      <p class="govuk-link govuk-!-margin-top-7">
+      <%= govuk_button_link_to("Continue to manage your training", schools_dashboard_path)  %>
+      </p>
     <%- elsif @school_cohort.school_chose_cip? -%>
       <h2 class="govuk-heading-m">What to do next</h2>
 
