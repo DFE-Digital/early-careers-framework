@@ -2,12 +2,12 @@
 
 RSpec.shared_examples "a participant change schedule action service" do
   it_behaves_like "a participant action service"
-  let!(:extended_schedule) { create(:schedule, schedule_identifier: "ecf-september-extended-2021") }
+  let!(:january_schedule) { create(:schedule, schedule_identifier: "ecf-january-standard-2021") }
 
   it "changes the schedule on user's profile" do
     expect(user_profile.reload.schedule.schedule_identifier).to eq("ecf-september-standard-2021")
     described_class.call(params: given_params)
-    expect(user_profile.reload.schedule.schedule_identifier).to eq("ecf-september-extended-2021")
+    expect(user_profile.reload.schedule.schedule_identifier).to eq("ecf-january-standard-2021")
   end
 
   it "fails when the schedule is invalid" do
@@ -22,7 +22,7 @@ RSpec.shared_examples "a participant change schedule action service" do
 
   it "creates a schedule on profile" do
     expect { described_class.call(params: participant_params) }.to change { ParticipantProfileSchedule.count }.by(1)
-    expect(user_profile.participant_profile_schedules.first.schedule.schedule_identifier).to eq("ecf-september-extended-2021")
+    expect(user_profile.participant_profile_schedules.first.schedule.schedule_identifier).to eq("ecf-january-standard-2021")
   end
 
   context "when a pending declaration exists" do
@@ -32,16 +32,16 @@ RSpec.shared_examples "a participant change schedule action service" do
     end
 
     it "fails when it would invalidate a valid declaration" do
-      extended_schedule.milestones.each { |milestone| milestone.update!(start_date: milestone.start_date + 6.months, milestone_date: milestone.milestone_date + 6.months) }
+      january_schedule.milestones.each { |milestone| milestone.update!(start_date: milestone.start_date + 6.months, milestone_date: milestone.milestone_date + 6.months) }
       expect { described_class.call(params: given_params) }.to raise_error(ActionController::ParameterMissing)
     end
 
     it "ignores voided declarations when changing the schedule" do
       declaration.voided!
-      extended_schedule.milestones.each { |milestone| milestone.update!(start_date: milestone.start_date + 6.months, milestone_date: milestone.milestone_date + 6.months) }
+      january_schedule.milestones.each { |milestone| milestone.update!(start_date: milestone.start_date + 6.months, milestone_date: milestone.milestone_date + 6.months) }
 
       described_class.call(params: given_params)
-      expect(user_profile.reload.schedule.schedule_identifier).to eq("ecf-september-extended-2021")
+      expect(user_profile.reload.schedule.schedule_identifier).to eq("ecf-january-standard-2021")
     end
   end
 end
