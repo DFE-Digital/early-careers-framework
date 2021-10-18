@@ -104,6 +104,15 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
       end
     end
 
+    context "when date_of_birth year is not 4 digits" do
+      it "returns false" do
+        form.date_of_birth = { 3 => 1, 2 => 1, 1 => 1 }
+        expect(form.valid?(:tell_us_your_details)).to be false
+        expect(form.errors).to include :date_of_birth
+        expect(form.errors[:date_of_birth]).to include "The year must be 4 digits long. For example, 1990"
+      end
+    end
+
     context "when national_insurance_number is not supplied" do
       it "returns true" do
         form.national_insurance_number = nil

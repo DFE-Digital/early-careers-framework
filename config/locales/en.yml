@@ -175,6 +175,7 @@ en:
               blank: Enter your date of birth
               invalid: Date of birth must be a valid date
               in_the_future: Date of birth must be in the past
+              invalid_year: The year must be 4 digits long. For example, 1990
             national_insurance_number:
               invalid: National Insurance number is not the correct format (for example, QQ123456C)
         nominate_induction_tutor_form:
