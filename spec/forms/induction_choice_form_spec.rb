@@ -42,34 +42,4 @@ RSpec.describe InductionChoiceForm, type: :model do
       end
     end
   end
-
-  describe "#opt_out_choice_selected?" do
-    before do
-      form.programme_choice = programme_choice
-    end
-
-    context "when full induction programme is selected" do
-      let(:programme_choice) { "full_induction_programme" }
-
-      it "returns false" do
-        expect(form.opt_out_choice_selected?).to eq false
-      end
-    end
-
-    context "when core induction programme is selected" do
-      let(:programme_choice) { "core_induction_programme" }
-
-      it "returns false" do
-        expect(form.opt_out_choice_selected?).to eq false
-      end
-    end
-
-    context "when design our own programme is selected" do
-      let(:programme_choice) { "design_our_own" }
-
-      it "returns true" do
-        expect(form.opt_out_choice_selected?).to eq true
-      end
-    end
-  end
 end
