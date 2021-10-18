@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class StreamBigQueryParticipantDeclarationsJob < CronJob
-  self.cron_expression = "5 * * * *"
+  self.cron_expression = "0 * * * *"
 
   queue_as :big_query_participant_declarations
 
