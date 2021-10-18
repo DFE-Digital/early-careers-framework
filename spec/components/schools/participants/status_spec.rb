@@ -3,10 +3,10 @@
 RSpec.describe Schools::Participants::Status, type: :view_component, with_feature_flags: { eligibility_notifications: "active" } do
   component { described_class.new(participant_profile: profile) }
 
-  context "when an email has been sent" do
+  context "when an email has been sent but the participant has not validated" do
     let(:profile) { create(:participant_profile, :ecf, :email_sent) }
 
-    it "displayed the details required content" do
+    it "displays the details required content" do
       expect(rendered).to have_content I18n.t "schools.participants.status.details_required.header"
       I18n.t("schools.participants.status.details_required.content").each do |content|
         expect(rendered).to have_content content
