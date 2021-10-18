@@ -23,7 +23,7 @@ en:
 
         checking_eligibility:
           header: "DfE checking eligibility"
-          content: "We’re checking these people’s details with the Teaching Regulation Agency. We’ll confirm if they’re eligible for this programme soon."
+          content: "We’re checking this person’s details with the Teaching Regulation Agency. We’ll confirm if they’re eligible for this programme soon."
 
         ineligible_flag:
           header: "Not eligible"

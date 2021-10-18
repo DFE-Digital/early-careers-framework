@@ -20,7 +20,7 @@ module Schools
       end
 
       def content
-        Array.wrap(t(:content, scope: translation_scope, contact_us: render(MailToSupportComponent.new))).map(&:html_safe)
+        Array.wrap(t(:content, scope: translation_scope, contact_us: render(MailToSupportComponent.new("contact us")))).map(&:html_safe)
       end
 
       def translation_scope
