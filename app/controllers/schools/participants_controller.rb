@@ -163,22 +163,22 @@ private
   end
 
   def fip_participant_categories_feature_flag_active
-    @ineligible = ineligible_participants.without(@eligible)
     @eligible = eligible_participants
+    @ineligible = ineligible_participants.without(@eligible)
     @contacted_for_info = contacted_for_info_participants
     @details_being_checked = details_being_checked_participants
   end
 
   def fip_participant_categories_feature_flag_inactive
-    @ineligible = []
     @eligible = []
+    @ineligible = []
     @contacted_for_info = contacted_for_info_participants
     @details_being_checked = details_being_checked_participants.merge(ineligible_participants, rewhere: true).merge(eligible_participants, rewhere: true)
   end
 
   def cip_participant_categories
-    @ineligible = []
     @eligible = eligible_participants.merge(ineligible_participants, rewhere: true).merge(details_being_checked_participants, rewhere: true)
+    @ineligible = []
     @contacted_for_info = contacted_for_info_participants
     @details_being_checked = []
   end
