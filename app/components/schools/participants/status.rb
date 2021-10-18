@@ -31,7 +31,7 @@ module Schools
         return awaiting_validation_status if participant_profile.ecf_participant_validation_data.blank?
         return :eligible_cip if core_induction_programme?
 
-        fip_validation_status
+        FeatureFlag.active?(:eligibility_notifications) ? fip_validation_status : :checking_eligibility
       end
 
       def fip_validation_status
