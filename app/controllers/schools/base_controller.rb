@@ -40,6 +40,6 @@ private
       school: @school,
     )
 
-    redirect_to advisory_schools_choose_programme_path unless @school_cohort
+    redirect_to schools_choose_programme_path(cohort_id: Cohort.current.start_year) unless @school_cohort
   end
 end

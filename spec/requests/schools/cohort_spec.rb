@@ -23,4 +23,13 @@ RSpec.describe "Schools::Cohort", type: :request do
       expect(response.body).to include(CGI.escapeHTML("Add early career teachers and mentors"))
     end
   end
+
+  context "when no programme is chosen" do
+    let(:school_cohort) { nil }
+    it "redirects to choose programme" do
+      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/add-participants"
+
+      expect(response).to redirect_to "/schools/#{school.slug}/cohorts/#{cohort.start_year}/choose-programme"
+    end
+  end
 end
