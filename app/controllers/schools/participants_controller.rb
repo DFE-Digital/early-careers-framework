@@ -15,10 +15,6 @@ class Schools::ParticipantsController < Schools::BaseController
     else
       fip_participant_categories_feature_flag_inactive
     end
-
-    @participant_profiles = participant_profiles
-
-    redirect_to add_schools_participants_path if @participant_profiles.empty?
   end
 
   def show
@@ -140,10 +136,6 @@ private
 
   def active_participant_profiles
     @school_cohort.active_ecf_participant_profiles
-  end
-
-  def participant_profiles
-    policy_scope(active_participant_profiles)
   end
 
   def ineligible_participants

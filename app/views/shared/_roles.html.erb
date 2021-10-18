@@ -54,10 +54,5 @@
       <li>providing evidence that they have QTS and are eligible to start induction</li>
       <li>meeting with their induction tutor to discuss, agree and review priorities for their induction programme</li>
     </ul>
-
-    <% unless @hide_button %>
-      <%= govuk_button_link_to "Continue", schools_participants_path(cohort_id: @school_cohort.cohort.start_year) %>
-    <% end %>
-
   </div>
 </div>
