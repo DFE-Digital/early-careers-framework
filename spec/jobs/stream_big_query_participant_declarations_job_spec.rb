@@ -45,5 +45,11 @@ RSpec.describe StreamBigQueryParticipantDeclarationsJob do
         ),
       ])
     end
+
+    it "doesn't attempt to stream when there are no updates" do
+      ParticipantDeclaration.update_all(updated_at: 2.hours.ago)
+      described_class.perform_now
+      expect(table).not_to have_received(:insert)
+    end
   end
 end
