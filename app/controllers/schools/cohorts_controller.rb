@@ -23,8 +23,6 @@ module Schools
 
     def roles
       @hide_button = true if params[:info]
-
-      render "shared/roles"
     end
   end
 end
