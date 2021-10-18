@@ -10,7 +10,9 @@ module RecordDeclarations
       end
 
       def call(start_date:, end_date:)
-        ParticipantDeclaration::ECF.eligible.declared_as_between(start_date, end_date).submitted_between(start_date, end_date).each(&:make_payable!)
+        ParticipantDeclaration::ECF.eligible.declared_as_between(start_date, end_date).submitted_between(start_date, end_date).in_batches do |participant_declarations_group|
+          participant_declarations_group.each(&:make_payable!)
+        end
       end
     end
   end

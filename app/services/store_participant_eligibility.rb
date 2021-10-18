@@ -15,6 +15,7 @@ class StoreParticipantEligibility < BaseService
 
     update_and_store_eligibility_values!
 
+    RecordDeclarations::Actions::MakeDeclarationsEligibleForParticipantProfile.call(participant_profile: participant_profile) if changed_to_eligible?
     if (changed_to_ineligible? || changed_ineligible_reason?) && FeatureFlag.active?(:eligibility_notifications)
       send_ineligible_notification_email
     end
@@ -31,6 +32,10 @@ private
 
   def changed_to_ineligible?
     @participant_eligibility.ineligible_status? && @previous_status != "ineligible"
+  end
+
+  def changed_to_eligible?
+    @participant_eligibility.eligible_status? && @previous_status != "eligible"
   end
 
   def changed_ineligible_reason?
