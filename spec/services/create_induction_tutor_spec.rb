@@ -108,6 +108,22 @@ RSpec.describe CreateInductionTutor do
           expect(ParticipantProfile::NPQ.exists?(npq_profile.id)).to be true
         end
       end
+
+      context "when the induction coordinator applied for npq" do
+        let!(:npq_application) { create(:npq_application, user: existing_profile.user) }
+
+        it "retains the user but deletes the induction coordinator profile" do
+          expect(school.induction_coordinator_profiles.first).to eq(existing_profile)
+
+          CreateInductionTutor.call(school: school, email: email, full_name: name)
+
+          user = User.find_by(email: email)
+          expect(school.reload.induction_coordinator_profiles.first).to eq(user.induction_coordinator_profile)
+          expect(InductionCoordinatorProfile.exists?(existing_profile.id)).to be false
+          expect(User.exists?(existing_user.id)).to be true
+          expect(NPQApplication.exists?(npq_application.id)).to be true
+        end
+      end
     end
 
     context "when the details match an existing induction coordinator" do
