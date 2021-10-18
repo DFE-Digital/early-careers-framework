@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "tasks/trn_generator"
+
 class CreateNewFakeSandboxDataJob < CronJob
   self.cron_expression = "0 2 * * *"
 
