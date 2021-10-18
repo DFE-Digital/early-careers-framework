@@ -8,7 +8,9 @@ module RecordDeclarations
       end
 
       def call
-        ParticipantDeclaration::ECF.payable.each(&:make_paid!)
+        ParticipantDeclaration::ECF.payable.in_batches do |participant_declarations_group|
+          participant_declarations_group.each(&:make_paid!)
+        end
       end
     end
   end
