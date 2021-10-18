@@ -17,9 +17,9 @@ jobs:
       - name: Yarn install
         run: npm i -g yarn && yarn
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.82.0
+        uses: ruby/setup-ruby@v1.83.0
         with:
-          ruby-version: 2.7.2
+          ruby-version: 2.7.4
       - name: Install dependencies
         run: bundle install
       - name: Create mail log file
