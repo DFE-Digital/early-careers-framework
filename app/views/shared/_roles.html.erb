@@ -4,7 +4,11 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <span class="govuk-caption-xl"><%= @school.name %></span>
+
+    <% if @school&.name %>
+      <span class="govuk-caption-xl"><%= @school&.name %></span>
+    <% end %>
+
     <h1 class="govuk-heading-xl">Check what each person needs to do in the early career teacher training programme</h1>
 
     <p class="govuk-body">Teachers will need to do different things to prepare for and complete the early career teacher (ECT) training programme, depending on their role.</p>
@@ -54,5 +58,6 @@
       <li>providing evidence that they have QTS and are eligible to start induction</li>
       <li>meeting with their induction tutor to discuss, agree and review priorities for their induction programme</li>
     </ul>
+    
   </div>
 </div>

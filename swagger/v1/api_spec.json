@@ -316,6 +316,65 @@
         }
       }
     },
+    "/api/v1/participants/npq/{id}/withdraw": {
+      "put": {
+        "summary": "Withdrawn a participant from a course",
+        "operationId": "npq_participants",
+        "tags": [
+          "NPQ participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NPQParticipantWithdrawRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant to withdraw",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The NPQ participant being withdrawn",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NPQParticipantProfileResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/participant-declarations": {
       "post": {
         "summary": "Declare a participant has reached a milestone. Idempotent endpoint - submitting exact copy of a request will return the same response body as submitting it the first time.",
@@ -701,6 +760,55 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/participants/ecf/{id}/withdraw": {
+      "put": {
+        "summary": "Notify that an ECF participant has withdrawn from their course",
+        "operationId": "participant",
+        "tags": [
+          "ECF Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantWithdrawRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant to withdraw",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ECF participant being withdrawn",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
                 }
               }
             }
@@ -2180,6 +2288,85 @@
           }
         }
       },
+      "NPQParticipantProfile": {
+        "description": "The details of an NPQ Participant Profile for a given course",
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "id": {
+            "description": "The unique identifier of the NPQ Participant profile record for a given course",
+            "type": "string",
+            "format": "uuid",
+            "example": "ac3d1243-7308-4879-942a-c4a70ced400a"
+          },
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "npq-participant-profile",
+            "enum": [
+              "npq-participant-profile"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/NPQParticipantProfileAttributes"
+          }
+        }
+      },
+      "NPQParticipantProfileAttributes": {
+        "description": "The data attributes associated with an NPQ application",
+        "type": "object",
+        "required": [
+          "participant_id",
+          "training_status"
+        ],
+        "properties": {
+          "participant_id": {
+            "description": "The unique identifier of this NPQ participant",
+            "type": "string",
+            "example": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
+            "format": "uuid"
+          },
+          "course_identifier": {
+            "description": "The NPQ course identifier",
+            "type": "string",
+            "enum": [
+              "npq-leading-teaching",
+              "npq-leading-behaviour-culture",
+              "npq-leading-teaching-development",
+              "npq-senior-leadership",
+              "npq-headship",
+              "npq-executive-leadership"
+            ],
+            "example": "npq-leading-teaching-development"
+          },
+          "training_status": {
+            "description": "The training status of the NPQ participant to a given course",
+            "type": "string",
+            "example": "withdrawn",
+            "enum": [
+              "active",
+              "withdrawn",
+              "deferred"
+            ]
+          }
+        }
+      },
+      "NPQParticipantProfileResponse": {
+        "description": "Response received after withdrawing a participant from a course",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/NPQParticipantProfile"
+          }
+        }
+      },
       "NPQParticipantRetainedDeclaration": {
         "description": "An NPQ retained participant declaration",
         "type": "object",
@@ -2294,6 +2481,70 @@
           "declaration_type": "started",
           "declaration_date": "2021-05-31T02:21:32.000Z",
           "course_identifier": "npq-leading-teaching"
+        }
+      },
+      "NPQParticipantWithdraw": {
+        "description": "An NPQ participant withdrawal action",
+        "type": "object",
+        "properties": {
+          "reason": {
+            "description": "The reason for the withdrawal",
+            "type": "string",
+            "enum": [
+              "left-teaching-profession",
+              "moved-school",
+              "other"
+            ],
+            "example": "moved-school"
+          },
+          "course_identifier": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "npq-leading-teaching",
+              "npq-leading-behaviour-culture",
+              "npq-leading-teaching-development",
+              "npq-senior-leadership",
+              "npq-headship",
+              "npq-executive-leadership"
+            ],
+            "example": "npq-leading-teaching-development"
+          }
+        },
+        "required": [
+          "reason",
+          "course_identifier"
+        ],
+        "example": {
+          "reason": "left-teaching-profession",
+          "course_identifier": "npq-headship"
+        }
+      },
+      "NPQParticipantWithdrawRequest": {
+        "description": "The withdrawal request for an NPQ participant",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "description": "The request data",
+            "required": [
+              "type",
+              "attributes"
+            ],
+            "properties": {
+              "type": {
+                "description": "The data type",
+                "type": "string",
+                "example": "participant-withdraw"
+              },
+              "attributes": {
+                "$ref": "#/components/schemas/NPQParticipantWithdraw"
+              }
+            }
+          }
         }
       },
       "Pagination": {

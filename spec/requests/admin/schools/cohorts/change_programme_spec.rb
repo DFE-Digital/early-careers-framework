@@ -8,8 +8,7 @@ RSpec.describe "Admin::Schools::Cohorts::ChangeProgramme", type: :request do
   let(:cohort) { school_cohort.cohort }
 
   before do
-    user = create(:user, :admin)
-    sign_in user
+    sign_in create(:user, :admin)
   end
 
   describe "GET /admin/schools/:school_slug/cohorts/:id/change-programme" do
@@ -53,6 +52,16 @@ RSpec.describe "Admin::Schools::Cohorts::ChangeProgramme", type: :request do
       expect(response).to redirect_to "/admin/schools/#{school.slug}/cohorts"
       follow_redirect!
       expect(response.body).to include "Induction programme has been changed"
+    end
+  end
+
+  context "when given school cohort does not yet exist" do
+    let(:school) { create :school }
+    let(:cohort) { create :cohort }
+
+    it "renders show page" do
+      get "/admin/schools/#{school.slug}/cohorts/#{cohort.start_year}/change-programme"
+      expect(assigns(:school_cohort)).not_to be_persisted
     end
   end
 end

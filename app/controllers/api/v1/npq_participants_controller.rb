@@ -6,22 +6,27 @@ module Api
       include ApiTokenAuthenticatable
       include ApiPagination
       include ApiFilter
+      include Api::ParticipantActions
 
       def index
-        npq_participant_hash = NPQParticipantSerializer.new(paginate(npq_participants)).serializable_hash
-        render json: npq_participant_hash.to_json
+        render json: NPQParticipantSerializer.new(paginate(npq_participants)).serializable_hash.to_json
       end
 
     private
+
+      def serialized_response(participant_profile)
+        NPQ::ParticipantProfileSerializer
+          .new(participant_profile)
+          .serializable_hash.to_json
+      end
 
       def npq_lead_provider
         current_api_token.cpd_lead_provider.npq_lead_provider
       end
 
       def npq_participants
-        # TODO: filter out on approved participants
         npq_participants = npq_lead_provider.npq_participants
-        npq_participants = npq_participants.where("npq_profiles.updated_at > ?", updated_since) if updated_since.present?
+        npq_participants = npq_participants.where("users.updated_at > ?", updated_since) if updated_since.present?
         npq_participants.order(:created_at)
         npq_participants
       end

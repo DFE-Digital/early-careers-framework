@@ -33,3 +33,20 @@ RSpec.shared_examples "a participant withdraw action service" do
     expect { described_class.call(params: given_params) }.to raise_error(ActionController::ParameterMissing)
   end
 end
+
+RSpec.shared_examples "a participant withdraw action endpoint" do
+  let(:parsed_response) { JSON.parse(response.body) }
+
+  it "changes the training status of a participant to withdrawn" do
+    put url, params: params
+
+    expect(response).to be_successful
+    expect(parsed_response.dig("data", "attributes", "training_status")).to eql("withdrawn")
+  end
+
+  it "returns an error when the participant is already withdrawn" do
+    2.times { put url, params: params }
+
+    expect(response).not_to be_successful
+  end
+end

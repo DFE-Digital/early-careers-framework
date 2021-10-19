@@ -48,7 +48,7 @@ groups:
 
   - name: Memory-utilisation
     rules:
-      - alert: MemoryUtilizationHigh
+      - alert: AppMemoryUtilizationHigh
         expr: avg by ( app ) (memory_utilization{app="ecf-dev"}) > 75
         for: 5m
         annotations:
@@ -57,8 +57,7 @@ groups:
         labels:
           environment: development
           severity: low
-    rules:
-      - alert: MemoryUtilizationHigh
+      - alert: WorkerMemoryUtilizationHigh
         expr: avg by ( app ) (memory_utilization{app="ecf-dev-worker"}) > 80
         for: 5m
         annotations:

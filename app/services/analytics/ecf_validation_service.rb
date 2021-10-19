@@ -44,7 +44,7 @@ module Analytics
 
       def eligible_for_funding?(participant_profile)
         true if participant_profile.ecf_participant_eligibility&.eligible_status?
-        # TODO: CPDRP-672 make this false when it's possible for someone to be confirmed not eligible
+        false if participant_profile.ecf_participant_eligibility&.ineligible_status?
       end
 
       def trn_verified?(participant_profile)

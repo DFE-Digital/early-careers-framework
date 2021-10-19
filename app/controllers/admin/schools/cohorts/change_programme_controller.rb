@@ -38,7 +38,7 @@ module Admin
         end
 
         def school_cohort
-          @school_cohort ||= @school.school_cohorts.find_by!(cohort: @cohort)
+          @school_cohort ||= @school.school_cohorts.find_or_initialize_by(cohort: @cohort)
         end
       end
     end

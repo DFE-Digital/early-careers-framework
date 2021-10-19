@@ -12,7 +12,7 @@ class ValidationBetaService
         next if sit.reminder_email_sent_at.present?
 
         email = SchoolMailer.remind_induction_coordinator_to_setup_cohort_email(
-          recipient: sit.user.email,
+          induction_coordinator_profile: sit,
           school_name: school.name,
           campaign: :sit_to_complete_steps,
         )
@@ -33,7 +33,7 @@ class ValidationBetaService
 
     School.where(id: empty_school_cohorts.select(:school_id)).includes(:induction_coordinators).find_each do |school|
       school.induction_coordinator_profiles.each do |sit|
-        next if Email.associated_with(sit).tagged_with(:reminder_request_to_add_ects_and_mentors).any?
+        next if Email.associated_with(sit).tagged_with(:third_request_to_add_ects_and_mentors).any?
 
         SchoolMailer.remind_fip_induction_coordinators_to_add_ects_and_mentors_email(
           induction_coordinator: sit,

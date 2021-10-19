@@ -34,34 +34,34 @@ RSpec.describe Admin::Participants::Details, type: :view_component do
   end
 
   context "for unvalidated npq profile" do
-    let(:npq_validation_data) { create(:npq_validation_data, npq_course: create(:npq_course, identifier: "npq-senior-leadership")) }
-    let(:profile) { npq_validation_data.profile }
+    let(:npq_application) { create(:npq_application, npq_course: create(:npq_course, identifier: "npq-senior-leadership")) }
+    let(:profile) { npq_application.profile }
 
     before do
       create(:schedule, :npq_specialist)
-      NPQ::Accept.new(npq_application: npq_validation_data).call
+      NPQ::Accept.new(npq_application: npq_application).call
     end
 
     it "renders all the required information" do
       expect(rendered).to have_contents(
         profile.user.full_name,
         profile.user.email,
-        profile.validation_data.teacher_reference_number,
-        profile.validation_data.school_urn,
+        profile.npq_application.teacher_reference_number,
+        profile.npq_application.school_urn,
         t(:npq, scope: "schools.participants.type"),
-        profile.validation_data.npq_lead_provider.name,
-        profile.validation_data.npq_course.name,
+        profile.npq_application.npq_lead_provider.name,
+        profile.npq_application.npq_course.name,
       )
     end
   end
 
   context "for validated npq profile" do
-    let(:npq_validation_data) { create(:npq_validation_data, npq_course: create(:npq_course, identifier: "npq-senior-leadership")) }
-    let(:profile) { npq_validation_data.profile }
+    let(:npq_application) { create(:npq_application, npq_course: create(:npq_course, identifier: "npq-senior-leadership")) }
+    let(:profile) { npq_application.profile }
 
     before do
       create(:schedule, :npq_specialist)
-      NPQ::Accept.new(npq_application: npq_validation_data).call
+      NPQ::Accept.new(npq_application: npq_application).call
     end
 
     before do
@@ -73,14 +73,14 @@ RSpec.describe Admin::Participants::Details, type: :view_component do
       expect(rendered).to have_contents(
         profile.user.full_name,
         profile.user.email,
-        profile.validation_data.teacher_reference_number,
-        profile.validation_data.school_urn,
+        profile.npq_application.teacher_reference_number,
+        profile.npq_application.school_urn,
         t(:npq, scope: "schools.participants.type"),
-        profile.validation_data.npq_lead_provider.name,
-        profile.validation_data.npq_course.name,
+        profile.npq_application.npq_lead_provider.name,
+        profile.npq_application.npq_course.name,
       )
 
-      expect(rendered).not_to have_content(profile.validation_data.date_of_birth.to_s(:govuk))
+      expect(rendered).not_to have_content(profile.npq_application.date_of_birth.to_s(:govuk))
     end
   end
 end

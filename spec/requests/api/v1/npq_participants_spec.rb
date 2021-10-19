@@ -9,30 +9,25 @@ RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { par
     let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider: npq_lead_provider) }
     let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
     let(:bearer_token) { "Bearer #{token}" }
-    let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
+    let!(:npq_applications) do
+      create_list(:npq_application, 3, :accepted, npq_lead_provider: npq_lead_provider, school_urn: "123456")
+    end
 
     context "when authorized" do
       before do
         default_headers[:Authorization] = bearer_token
       end
 
-      before :each do
-        list = create_list(:npq_validation_data, 3, npq_lead_provider: npq_lead_provider, school_urn: "123456", npq_course: npq_course)
-
-        list.each do |npq_validation_data|
-          NPQ::Accept.new(npq_application: npq_validation_data).call
-        end
-      end
-
       describe "JSON Index API" do
         let(:parsed_response) { JSON.parse(response.body) }
+        let(:npq_course)      { npq_applications.sample.npq_course }
 
         it "returns correct jsonapi content type header" do
           get "/api/v1/participants/npq"
           expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
         end
 
-        it "returns all users" do
+        it "returns all accepted users" do
           get "/api/v1/participants/npq"
           expect(parsed_response["data"].size).to eql(3)
         end
@@ -46,7 +41,7 @@ RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { par
           get "/api/v1/participants/npq"
 
           user = User.find(parsed_response["data"][0]["id"])
-          expect(parsed_response["data"][0]["id"]).to be_in(NPQValidationData.pluck(:user_id))
+          expect(parsed_response["data"][0]["id"]).to be_in(NPQApplication.pluck(:user_id))
           teacher_profile = user.teacher_profile
 
           expect(parsed_response["data"][0]["attributes"]["email"]).to eql(user.email)
@@ -76,7 +71,14 @@ RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { par
 
         context "filtering" do
           before do
-            create_list(:npq_validation_data, 2, npq_lead_provider: npq_lead_provider, updated_at: 10.days.ago, school_urn: "123456", npq_course: npq_course)
+            current_time = Time.zone.now
+            travel_to 10.days.ago
+            list = create_list(:npq_application, 3, npq_lead_provider: npq_lead_provider, school_urn: "123456", npq_course: npq_course)
+
+            list.each do |npq_application|
+              NPQ::Accept.new(npq_application: npq_application).call
+            end
+            travel_to current_time
           end
 
           it "returns content updated after specified timestamp" do
@@ -97,6 +99,19 @@ RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { par
                 ],
               }))
             end
+          end
+        end
+      end
+
+      describe "JSON Participant Withdrawal" do
+        let(:npq_application) { npq_applications.sample }
+        let(:npq_course)      { npq_application.npq_course }
+        let(:user)            { npq_application.user }
+
+        it_behaves_like "a participant withdraw action endpoint" do
+          let(:url) { "/api/v1/participants/npq/#{user.id}/withdraw" }
+          let(:params) do
+            { data: { attributes: { course_identifier: npq_course.identifier, reason: "moved-school" } } }
           end
         end
       end

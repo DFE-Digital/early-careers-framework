@@ -15,7 +15,10 @@ module Participants
       end
 
       def perform_action!
-        user_profile.update_schedule!(schedule)
+        ActiveRecord::Base.transaction do
+          ParticipantProfileSchedule.create!(participant_profile: user_profile, schedule: schedule)
+          user_profile.update_schedule!(schedule)
+        end
         user_profile
       end
 

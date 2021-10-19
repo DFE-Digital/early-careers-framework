@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe NPQ::StreamBigQueryEnrollmentJob do
-  let(:npq_validation_data) { create(:npq_validation_data) }
+  let(:npq_application) { create(:npq_application) }
 
   describe "#perform" do
     let(:bigquery) { double("bigquery") }
@@ -17,12 +17,12 @@ RSpec.describe NPQ::StreamBigQueryEnrollmentJob do
     end
 
     it "sends correct data to BigQuery" do
-      described_class.perform_now(npq_validation_data_id: npq_validation_data.id)
+      described_class.perform_now(npq_application_id: npq_application.id)
 
       expect(table).to have_received(:insert).with([{
-        "application_ecf_id" => npq_validation_data.id,
+        "application_ecf_id" => npq_application.id,
         "status" => "pending",
-        "updated_at" => npq_validation_data.updated_at,
+        "updated_at" => npq_application.updated_at,
       }])
     end
   end

@@ -9,6 +9,7 @@ module Api
       include ApiPagination
       include ApiCsv
       include ApiFilter
+      include Api::ParticipantActions
 
       def index
         respond_to do |format|
@@ -25,6 +26,12 @@ module Api
 
     private
 
+      def serialized_response(profile)
+        ParticipantSerializer
+          .new(profile.user)
+          .serializable_hash.to_json
+      end
+
       def access_scope
         LeadProviderApiToken.joins(cpd_lead_provider: [:lead_provider])
       end
@@ -38,7 +45,7 @@ module Api
                                     .distinct
                                     .includes(
                                       teacher_profile: {
-                                        ecf_profile: %i[cohort school ecf_participant_eligibility ecf_participant_validation_data participant_profile_state participant_profile_states schedule],
+                                        current_ecf_profile: %i[cohort school ecf_participant_eligibility ecf_participant_validation_data participant_profile_state participant_profile_states schedule],
                                         early_career_teacher_profile: :mentor,
                                       },
                                     )

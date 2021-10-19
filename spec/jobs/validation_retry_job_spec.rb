@@ -11,6 +11,7 @@ RSpec.describe "ValidationRetryJob" do
       nino: "",
     }
   end
+
   let!(:validation_data) do
     create(:ecf_participant_validation_data,
            trn: participant_data[:trn],
@@ -20,13 +21,22 @@ RSpec.describe "ValidationRetryJob" do
            api_failure: true)
   end
 
+  let(:validation_result) do
+    {
+      trn: participant_data[:trn],
+      qts: true,
+      active_alert: false,
+      previous_participation: true,
+    }
+  end
+
   describe "#perform" do
     context "when the API is working" do
       before do
         validator = class_double("ParticipantValidationService").as_stubbed_const(transfer_nested_constants: true)
         allow(validator).to receive(:validate)
           .with(participant_data.merge(config: { check_first_name_only: true }))
-          .and_return({ trn: participant_data[:trn], qts: true, active_alert: false, previous_participation: true })
+          .and_return(validation_result)
       end
 
       it "rechecks the eligibility" do
@@ -36,21 +46,32 @@ RSpec.describe "ValidationRetryJob" do
         ValidationRetryJob.new.perform
         expect(validation_data.reload.api_failure).to be false
         expect(validation_data.participant_profile.ecf_participant_eligibility).to be_present
-        expect(validation_data.participant_profile.ecf_participant_eligibility).to be_manual_check_status
+        expect(validation_data.participant_profile.ecf_participant_eligibility).to be_ineligible_status
         expect(validation_data.participant_profile.ecf_participant_eligibility).to be_previous_participation_reason
         expect(validation_data.participant_profile.teacher_profile.trn).to eql "1234567"
       end
 
-      it "does not update the TRN when a different one is present" do
-        # Given the teacher profile has a different TRN
-        validation_data.participant_profile.teacher_profile.update!(trn: "0123456")
+      context "when the TRN is different to the teacher profile" do
+        let(:validation_result) do
+          {
+            trn: participant_data[:trn],
+            qts: true,
+            active_alert: false,
+            previous_participation: false,
+          }
+        end
 
-        ValidationRetryJob.new.perform
-        expect(validation_data.reload.api_failure).to be false
-        expect(validation_data.participant_profile.ecf_participant_eligibility).to be_present
-        expect(validation_data.participant_profile.ecf_participant_eligibility).to be_manual_check_status
-        expect(validation_data.participant_profile.ecf_participant_eligibility).to be_different_trn_reason
-        expect(validation_data.participant_profile.teacher_profile.trn).to eql "0123456"
+        it "does not update the TRN when a different one is present" do
+          # Given the teacher profile has a different TRN
+          validation_data.participant_profile.teacher_profile.update!(trn: "0123456")
+
+          ValidationRetryJob.new.perform
+          expect(validation_data.reload.api_failure).to be false
+          expect(validation_data.participant_profile.ecf_participant_eligibility).to be_present
+          expect(validation_data.participant_profile.ecf_participant_eligibility).to be_manual_check_status
+          expect(validation_data.participant_profile.ecf_participant_eligibility).to be_different_trn_reason
+          expect(validation_data.participant_profile.teacher_profile.trn).to eql "0123456"
+        end
       end
     end
 

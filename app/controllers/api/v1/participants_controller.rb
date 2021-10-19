@@ -6,6 +6,7 @@ module Api
   module V1
     class ParticipantsController < Api::ApiController
       include ApiTokenAuthenticatable
+      include ParticipantActions
 
       def defer
         perform_action(service_namespace: ::Participants::Defer)
@@ -15,46 +16,20 @@ module Api
         perform_action(service_namespace: ::Participants::Resume)
       end
 
-      def withdraw
-        perform_action(service_namespace: ::Participants::Withdraw)
-      end
-
       def change_schedule
         perform_action(service_namespace: ::Participants::ChangeSchedule)
       end
 
     private
 
-      def perform_action(service_namespace:)
-        params = HashWithIndifferentAccess.new({ cpd_lead_provider: current_user, participant_id: participant_id }).merge(permitted_params["attributes"] || {})
-        profile = recorder(service_namespace: service_namespace, params: params).call(params: params)
-        render json: ParticipantSerializer.new(profile.user).serializable_hash.to_json
-      end
-
-      def recorder(service_namespace:, params:)
-        "#{service_namespace}::#{::Factories::CourseIdentifier.call(params[:course_identifier])}".constantize
+      def serialized_response(profile)
+        ParticipantSerializer
+          .new(profile.user)
+          .serializable_hash.to_json
       end
 
       def access_scope
         LeadProviderApiToken.joins(cpd_lead_provider: [:lead_provider])
-      end
-
-      def lead_provider
-        current_user.lead_provider
-      end
-
-      def participant_id
-        params.require(:id)
-      end
-
-      def permitted_params
-        params.require(:data).permit(:type, attributes: {})
-      rescue ActionController::ParameterMissing => e
-        if e.param == :data
-          raise ActionController::BadRequest, I18n.t(:invalid_data_structure)
-        else
-          raise
-        end
       end
     end
   end

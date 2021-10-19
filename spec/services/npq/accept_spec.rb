@@ -8,7 +8,7 @@ RSpec.describe NPQ::Accept do
   end
 
   subject do
-    described_class.new(npq_application: npq_validation_data)
+    described_class.new(npq_application: npq_application)
   end
 
   describe "#call" do
@@ -17,8 +17,8 @@ RSpec.describe NPQ::Accept do
     let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
     let(:npq_lead_provider) { create(:npq_lead_provider) }
 
-    let(:npq_validation_data) do
-      NPQValidationData.new(
+    let(:npq_application) do
+      NPQApplication.new(
         teacher_reference_number: trn,
         user: user,
         npq_course: npq_course,
@@ -31,8 +31,8 @@ RSpec.describe NPQ::Accept do
     context "when user has applied for the same course with another provider" do
       let(:other_npq_lead_provider) { create(:npq_lead_provider) }
 
-      let(:other_npq_validation_data) do
-        NPQValidationData.new(
+      let(:other_npq_application) do
+        NPQApplication.new(
           teacher_reference_number: trn,
           user: user,
           npq_course: npq_course,
@@ -43,14 +43,14 @@ RSpec.describe NPQ::Accept do
       end
 
       before do
-        npq_validation_data.save!
-        other_npq_validation_data.save!
+        npq_application.save!
+        other_npq_application.save!
       end
 
-      it "rejects other_npq_validation_data" do
-        described_class.call(npq_application: npq_validation_data)
-        expect(npq_validation_data.reload.lead_provider_approval_status).to eql("accepted")
-        expect(other_npq_validation_data.reload.lead_provider_approval_status).to eql("rejected")
+      it "rejects other_npq_application" do
+        described_class.call(npq_application: npq_application)
+        expect(npq_application.reload.lead_provider_approval_status).to eql("accepted")
+        expect(other_npq_application.reload.lead_provider_approval_status).to eql("rejected")
       end
     end
 
@@ -58,8 +58,8 @@ RSpec.describe NPQ::Accept do
       let(:other_npq_lead_provider) { create(:npq_lead_provider) }
       let(:other_npq_course) { create(:npq_course) }
 
-      let(:other_npq_validation_data) do
-        NPQValidationData.new(
+      let(:other_npq_application) do
+        NPQApplication.new(
           teacher_reference_number: trn,
           user: user,
           npq_course: other_npq_course,
@@ -70,20 +70,20 @@ RSpec.describe NPQ::Accept do
       end
 
       before do
-        npq_validation_data.save!
-        other_npq_validation_data.save!
+        npq_application.save!
+        other_npq_application.save!
       end
 
       it "does not reject the other course" do
-        described_class.call(npq_application: npq_validation_data)
-        expect(npq_validation_data.reload.lead_provider_approval_status).to eql("accepted")
-        expect(other_npq_validation_data.reload.lead_provider_approval_status).to eql("pending")
+        described_class.call(npq_application: npq_application)
+        expect(npq_application.reload.lead_provider_approval_status).to eql("accepted")
+        expect(other_npq_application.reload.lead_provider_approval_status).to eql("pending")
       end
     end
 
-    context "after creating a NPQValidationData record" do
+    context "after creating a NPQApplication record" do
       before do
-        npq_validation_data.save!
+        npq_application.save!
       end
 
       it "creates teacher and participant profile" do
@@ -95,19 +95,19 @@ RSpec.describe NPQ::Accept do
       it "creates participant profile correctly" do
         subject.call
 
-        profile = user.teacher_profile.npq_profiles&.first
+        profile = user.teacher_profile.npq_profiles.first
 
         expect(profile.schedule).to eql(Finance::Schedule::NPQSpecialist.default)
-        expect(profile.npq_course).to eql(npq_validation_data.npq_course)
+        expect(profile.npq_course).to eql(npq_application.npq_course)
         expect(profile.teacher_profile).to eql(user.teacher_profile)
         expect(profile.user).to eql(user)
-        expect(profile.school_urn).to eql(npq_validation_data.school_urn)
-        expect(profile.school_ukprn).to eql(npq_validation_data.school_ukprn)
+        expect(profile.school_urn).to eql(npq_application.school_urn)
+        expect(profile.school_ukprn).to eql(npq_application.school_ukprn)
       end
 
       context "when trn is validated" do
-        let(:npq_validation_data) do
-          NPQValidationData.new(
+        let(:npq_application) do
+          NPQApplication.new(
             teacher_reference_number: trn,
             teacher_reference_number_verified: true,
             user: user,
@@ -118,30 +118,30 @@ RSpec.describe NPQ::Accept do
 
         it "stores the TRN on teacher profile" do
           subject.call
-          npq_validation_data.reload
-          expect(npq_validation_data.user.teacher_profile.trn).to eql trn
+          npq_application.reload
+          expect(npq_application.user.teacher_profile.trn).to eql trn
         end
       end
 
       context "when trn is not validated" do
         it "does not store the TRN on teacher profile" do
           subject.call
-          npq_validation_data.reload
-          expect(npq_validation_data.user.teacher_profile.trn).to be_blank
+          npq_application.reload
+          expect(npq_application.user.teacher_profile.trn).to be_blank
         end
       end
     end
 
-    context "after approving an existing NPQValidationData record" do
+    context "after approving an existing NPQApplication record" do
       before do
-        npq_validation_data.save!
+        npq_application.save!
         subject.call
       end
 
       let(:new_trn) { (trn.to_i + 1).to_s }
 
       it "does not create neither teacher nor participant profile" do
-        npq_validation_data.update!(teacher_reference_number: new_trn)
+        npq_application.update!(teacher_reference_number: new_trn)
 
         expect { subject.call }
           .to raise_error(Api::Errors::NPQApplicationAlreadyAcceptedError, "This NPQ application has already been accepted")

@@ -18,15 +18,4 @@ namespace :data do
       )
     end
   end
-
-  namespace :profile_declarations do
-    desc "Copies the profile to the declarations from the deprecated profile_declarations table"
-    task copy: :environment do
-      ProfileDeclaration.in_batches(of: 1000) do |batch|
-        batch.each do |declaration|
-          declaration.participant_declaration.update(participant_profile_id: declaration.participant_profile_id)
-        end
-      end
-    end
-  end
 end

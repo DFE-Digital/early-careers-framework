@@ -12,9 +12,9 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
     let(:school_cohort) { create(:school_cohort, school: partnership.school, cohort: cohort, induction_programme_choice: "full_induction_programme") }
     let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
     let(:bearer_token) { "Bearer #{token}" }
+    let!(:mentor_profile) { create(:participant_profile, :mentor, school_cohort: school_cohort) }
 
     before :each do
-      mentor_profile = create(:participant_profile, :mentor, school_cohort: school_cohort)
       create_list :participant_profile, 2, :ect, mentor_profile: mentor_profile, school_cohort: school_cohort
       ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record = ParticipantProfile::ECT.first.teacher_profile
       create(:participant_profile,
@@ -53,6 +53,24 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
 
           get "/api/v1/participants/ecf"
           expect(parsed_response["data"].size).to eql(4)
+        end
+
+        it "when user is NQT+1 and a mentor, the mentor profile is used" do
+          cohort_2020 = create(:cohort, start_year: 2020)
+          partnership_2020 = create(:partnership, lead_provider: lead_provider, cohort: cohort_2020)
+          school_cohort_2020 = create(:school_cohort, school: partnership_2020.school, cohort: cohort_2020, induction_programme_choice: "full_induction_programme")
+          create(:participant_profile, :ect, school_cohort: school_cohort_2020, teacher_profile: mentor_profile.teacher_profile)
+
+          get "/api/v1/participants/ecf"
+          expect(parsed_response["data"].size).to eql(4)
+
+          parsed_response["data"].each do |user|
+            next unless user["id"] == mentor_profile.user.id
+
+            expect(user["attributes"]["cohort"]).to eq("2021")
+            expect(user["attributes"]["participant_type"]).to eq("mentor")
+            expect(user["attributes"]["mentor_id"]).to be_nil
+          end
         end
 
         it "returns correct type" do
@@ -261,6 +279,13 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           User.first.update!(updated_at: 2.days.ago)
           get "/api/v1/participants/ecf.csv", params: { filter: { updated_since: 1.day.ago.iso8601 } }
           expect(parsed_response.length).to eql(3)
+        end
+      end
+
+      describe "JSON Participant Withdrawal" do
+        it_behaves_like "a participant withdraw action endpoint" do
+          let(:url) { "/api/v1/participants/ecf/#{early_career_teacher_profile.user.id}/withdraw" }
+          let(:params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "moved-school" } } } }
         end
       end
     end
