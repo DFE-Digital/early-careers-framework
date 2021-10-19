@@ -72,10 +72,12 @@ class SchoolCohort < ApplicationRecord
   def school_chose_cip?
     induction_programme_choice == "core_induction_programme"
   end
+  alias_method :cip?, :school_chose_cip?
 
   def school_chose_fip?
     induction_programme_choice == "full_induction_programme"
   end
+  alias_method :fip?, :school_chose_fip?
 
   def school_chose_school_funded_fip?
     induction_programme_choice == "school_funded_fip"
