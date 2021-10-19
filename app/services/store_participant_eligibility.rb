@@ -1,13 +1,6 @@
 # frozen_string_literal: true
 
 class StoreParticipantEligibility < BaseService
-  attr_reader :participant_profile, :eligibility_options
-
-  def initialize(participant_profile:, eligibility_options: {})
-    @participant_profile = participant_profile
-    @eligibility_options = eligibility_options
-  end
-
   def call
     @participant_eligibility = ECFParticipantEligibility.find_or_initialize_by(participant_profile: participant_profile)
 
@@ -15,6 +8,7 @@ class StoreParticipantEligibility < BaseService
 
     update_and_store_eligibility_values!
 
+    eligibility_triggers! if changed_to_eligible?
     if (changed_to_ineligible? || changed_ineligible_reason?) && FeatureFlag.active?(:eligibility_notifications)
       send_ineligible_notification_email
     end
@@ -24,6 +18,17 @@ class StoreParticipantEligibility < BaseService
 
 private
 
+  attr_reader :participant_profile, :eligibility_options
+
+  def initialize(participant_profile:, eligibility_options: {})
+    @participant_profile = participant_profile
+    @eligibility_options = eligibility_options
+  end
+
+  def eligibility_triggers!
+    RecordDeclarations::Actions::MakeDeclarationsEligibleForParticipantProfile.call(participant_profile: participant_profile)
+  end
+
   def grab_current_eligibility_state
     @previous_status = @participant_eligibility.status
     @previous_reason = @participant_eligibility.reason
@@ -31,6 +36,10 @@ private
 
   def changed_to_ineligible?
     @participant_eligibility.ineligible_status? && @previous_status != "ineligible"
+  end
+
+  def changed_to_eligible?
+    @participant_eligibility.eligible_status? && @previous_status != "eligible"
   end
 
   def changed_ineligible_reason?

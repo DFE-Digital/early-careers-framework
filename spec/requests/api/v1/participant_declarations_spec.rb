@@ -50,11 +50,12 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       end
 
       it "create eligible declaration record when user is eligible" do
-        params = build_params(valid_params)
         eligibility = ECFParticipantEligibility.create!(participant_profile_id: ect_profile.id)
         eligibility.eligible_status!
+        params = build_params(valid_params)
         post "/api/v1/participant-declarations", params: params
-        expect(ParticipantDeclaration.order(:created_at).last.eligible?).to be_truthy
+
+        expect(ParticipantDeclaration.order(:created_at).last).to be_eligible
       end
 
       it "does not create duplicate declarations with the same declaration date, but stores the duplicate declaration attempts" do
@@ -252,9 +253,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
       context "when there is an eligible declaration" do
         before do
-          eligibility = ECFParticipantEligibility.create!(participant_profile_id: ect_profile.id)
-          eligibility.eligible_status!
-          participant_declaration.refresh_payability!
+          participant_declaration.make_eligible!
         end
 
         let(:expected_response) do
