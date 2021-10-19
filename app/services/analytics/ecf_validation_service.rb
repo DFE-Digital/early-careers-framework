@@ -20,6 +20,9 @@ module Analytics
         record.eligible_for_funding = eligible_for_funding?(participant_profile)
         record.validation_submitted_at ||= participant_profile.ecf_participant_validation_data&.created_at
         record.active = participant_profile.active_record?
+        record.sparsity = participant_profile.sparsity_uplift
+        record.pupil_premium = participant_profile.pupil_premium_uplift
+        record.training_status = participant_profile.training_status
 
         record.save!
       end
