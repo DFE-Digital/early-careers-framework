@@ -19,6 +19,11 @@ jobs:
     name: Run rspec
     runs-on: ubuntu-20.04
     needs: create-nonce
+    strategy:
+      fail-fast: false
+      matrix:
+        ci_node_total: [6]
+        ci_node_index: [0, 1, 2, 3, 4, 5]
 
     env:
       RAILS_ENV: test
@@ -32,7 +37,9 @@ jobs:
       ANALYTICS_DB_PORT: 5432
       PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
       PERCY_PARALLEL_NONCE: ${{ needs.create-nonce.outputs.nonce }}
-      PERCY_PARALLEL_TOTAL: 2
+      PERCY_PARALLEL_TOTAL: 12
+      CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
+      CI_NODE_INDEX: ${{ matrix.ci_node_index }}
 
     services:
       postgres:
@@ -60,29 +67,15 @@ jobs:
           node-version: '14.x'
           cache: 'yarn'
 
-      - name: Install yarn
-        run: npm install yarn -g
-
-      - name: Yarn cache
-        id: yarn-cache
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: Set up yarn cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.yarn-cache.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
       - name: Install node.js dependencies
-        run: yarn install
+        run: yarn install --production=false --frozen-lockfile --ignore-engines --prefer-offline
 
       - name: Set up test database
         run: bin/rails db:create db:schema:load
 
       - name: Run tests
-        run: yarn percy exec --parallel -- bundle exec rspec
+        run: yarn percy exec --parallel -- bundle exec bin/rspec_ci
+        continue-on-error: true
 
   frontend-tests:
     name: Run frontend JS unit tests
@@ -99,23 +92,8 @@ jobs:
           node-version: '14.x'
           cache: 'yarn'
 
-      - name: Install yarn
-        run: npm install yarn -g
-
-      - name: Yarn cache
-        id: yarn-cache
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: Set up yarn cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.yarn-cache.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
       - name: Install node.js dependencies
-        run: yarn install
+        run: yarn install --production=false --frozen-lockfile --ignore-engines --prefer-offline
 
       - name: run frontend tests and linting
         run: yarn run test
@@ -124,6 +102,12 @@ jobs:
     name: Run Cypress
     runs-on: ubuntu-20.04
     needs: create-nonce
+    strategy:
+      fail-fast: false
+      matrix:
+        ci_node_total: [6]
+        ci_node_index: [0, 1, 2, 3, 4, 5]
+
 
     env:
       RAILS_ENV: test
@@ -135,6 +119,8 @@ jobs:
       ANALYTICS_DB_PASSWORD: ''
       ANALYTICS_DB_HOSTNAME: 127.0.0.1
       ANALYTICS_DB_PORT: 5432
+      CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
+      CI_NODE_INDEX: ${{ matrix.ci_node_index }}
 
     services:
       postgres:
@@ -162,23 +148,8 @@ jobs:
           node-version: '14.x'
           cache:  'yarn'
 
-      - name: Install yarn
-        run: npm install yarn -g
-
-      - name: Yarn cache
-        id: yarn-cache
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: Set up yarn cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.yarn-cache.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
       - name: Install node.js dependencies
-        run: yarn install
+        run: yarn install --production=false --frozen-lockfile --ignore-engines --prefer-offline
 
       - name: Set up test database
         run: bin/rails db:create db:schema:load
@@ -192,12 +163,10 @@ jobs:
         with:
           start: bundle exec rails server -e test -p 5017
           wait-on: 'http://localhost:5017/'
-          env: port=5017
-          project: ./spec
-          command-prefix: 'percy exec --parallel -- npx'
-          config: 'video=false,screenshotOnRunFailure=false'
+          command: npx percy exec --parallel -- ${{ github.workspace }}/bin/cypress_ci
         env:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
           COMMIT_INFO_BRANCH: ${{ github.head_ref }}
           PERCY_PARALLEL_NONCE: ${{ needs.create-nonce.outputs.nonce }}
-          PERCY_PARALLEL_TOTAL: 2
+          PERCY_PARALLEL_TOTAL: 12
+
