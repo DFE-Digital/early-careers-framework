@@ -35,7 +35,13 @@ describe FinanceHelper do
 
   describe "#cutoff_date" do
     FinanceHelper::MILESTONE_DATES.each_with_index do |_date, index|
-      Date.parse(FinanceHelper::MILESTONE_DATES[index - 1]).upto(Date.parse(FinanceHelper::MILESTONE_DATES[index]) - 1.day) do |date|
+      next if index == 0
+
+      milestone_begin_date = Date.parse(FinanceHelper::MILESTONE_DATES[index - 1])
+      milestone_end_date = Date.parse(FinanceHelper::MILESTONE_DATES[index]) - 1.day
+      random_date = rand(milestone_begin_date..milestone_end_date)
+
+      [milestone_begin_date, milestone_end_date, random_date].each do |date|
         it "returns correct milestone cutoff date" do
           travel_to(date) do
             expect(cutoff_date).to eq(Date.parse(FinanceHelper::MILESTONE_DATES[index]).strftime("%-d %B %Y"))
