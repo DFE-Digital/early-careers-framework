@@ -41,10 +41,10 @@ module FinanceHelper
   end
 
   def pretty_payment_period
-    payment_period.map { |date| Date.parse(date).strftime("%-d %B %Y") }.join(" - ")
+    payment_period.map { |date| Date.parse(date).to_s(:govuk) }.join(" - ")
   end
 
   def cutoff_date
-    Date.parse(payment_period.length < 2 ? MILESTONE_DATES[0] : payment_period[1]).strftime("%-d %B %Y")
+    Date.parse(payment_period.length < 2 ? MILESTONE_DATES[0] : payment_period[1]).to_s(:govuk)
   end
 end
