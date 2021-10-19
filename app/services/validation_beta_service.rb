@@ -25,23 +25,6 @@ class ValidationBetaService
     end
   end
 
-  # SITs who have not chosen a programme and are not in a partnership with a training provider
-  def remind_sits_at_schools_without_partnership_to_add_participants
-    School.unpartnered(Cohort.current).where.missing(:school_cohorts).includes(:induction_coordinators).find_each do |school|
-      next unless school.eligible?
-
-      school.induction_coordinator_profiles.each do |sit|
-        next if Email.associated_with(sit).tagged_with(:sit_to_complete_steps)
-
-        SchoolMailer.remind_induction_coordinator_to_setup_cohort_email(
-          induction_coordinator_profile: sit,
-          school_name: school.name,
-          campaign: :sit_to_complete_steps_1058,
-        ).deliver_later
-      end
-    end
-  end
-
   def remind_fip_induction_coordinators_to_add_ect_and_mentors
     empty_school_cohorts = SchoolCohort
                              .where(induction_programme_choice: %i[full_induction_programme])
