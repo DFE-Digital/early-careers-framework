@@ -47,6 +47,8 @@ class ParticipantProfile < ApplicationRecord
 
   self.ignored_columns = %w[user_id]
 
+  after_validation :update_analytics
+
   def state
     participant_profile_state&.state
   end
@@ -103,5 +105,11 @@ class ParticipantProfile < ApplicationRecord
 
   def sit_mentor?
     mentor? && user.induction_coordinator?
+  end
+
+private
+
+  def update_analytics
+    Analytics::ECFValidationService.upsert_record(self) if training_status_changed?
   end
 end
