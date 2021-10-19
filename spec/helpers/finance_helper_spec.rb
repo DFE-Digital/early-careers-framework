@@ -42,13 +42,13 @@ describe FinanceHelper do
       random_date = rand(milestone_begin_date..milestone_end_date)
 
       [milestone_begin_date, milestone_end_date, random_date].each do |date|
-        it "returns correct milestone cutoff date" do
+        it "milestone date #{index} on the day #{date} returns correct cutoff date" do
           travel_to(date) do
             expect(cutoff_date).to eq(Date.parse(FinanceHelper::MILESTONE_DATES[index]).strftime("%-d %B %Y"))
           end
         end
 
-        it "returns correct payment period" do
+        it "milestone date #{index} on the day #{date} returns correct payment period" do
           travel_to(date) do
             expect(payment_period).to eq(FinanceHelper::MILESTONE_DATES[index - 1, 2])
           end
