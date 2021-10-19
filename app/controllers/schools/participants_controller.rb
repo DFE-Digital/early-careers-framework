@@ -169,7 +169,7 @@ private
   end
 
   def cip_participant_categories
-    @eligible = [*eligible_participants, *ineligible_participants, *details_being_checked_participants]
+    @eligible = [*eligible_participants, *ineligible_participants, *details_being_checked_participants].uniq
     @ineligible = []
     @contacted_for_info = contacted_for_info_participants
     @details_being_checked = []

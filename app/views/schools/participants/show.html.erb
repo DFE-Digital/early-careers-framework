@@ -1,6 +1,6 @@
 <% content_for :title, "ECT or mentor details" %>
 
-<% content_for :before_content, govuk_back_link( text: "Back", href: :back) %>
+<% content_for :before_content, govuk_back_link( text: "Back", href: schools_participants_path) %>
 
 <span class="govuk-caption-xl"><%= @school.name %></span>
 <h1 class="govuk-heading-xl"><%= @profile.user.full_name %></h1>
