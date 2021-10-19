@@ -126,6 +126,18 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           expect(parsed_response["data"][1]["id"]).to eq User.first.id
         end
 
+        it "does not return users from challenged partnerships" do
+          new_school = create(:school)
+          create(:partnership, lead_provider: lead_provider, cohort: cohort, school: new_school, challenge_reason: "mistake")
+          new_school_cohort = create(:school_cohort, school: new_school, cohort: cohort, induction_programme_choice: "full_induction_programme")
+          new_profile = create(:participant_profile, :mentor, school_cohort: new_school_cohort)
+
+          get "/api/v1/participants"
+          parsed_response["data"].each do |value|
+            expect(value["id"]).not_to eq new_profile.user.id
+          end
+        end
+
         context "when updated_since parameter is supplied" do
           before do
             User.first.update!(updated_at: 2.days.ago)
