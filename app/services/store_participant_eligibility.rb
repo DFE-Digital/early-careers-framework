@@ -17,6 +17,7 @@ class StoreParticipantEligibility < BaseService
   end
 
 private
+
   attr_reader :participant_profile, :eligibility_options
 
   def initialize(participant_profile:, eligibility_options: {})
