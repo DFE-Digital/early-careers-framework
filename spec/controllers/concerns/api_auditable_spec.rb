@@ -14,6 +14,10 @@ describe "ApiAuditable", type: :controller do
     def base_action
       render json: { params: params.except(:action).to_s }
     end
+
+    def current_user
+      CpdLeadProvider.find_or_create_by!(name: "TestName")
+    end
   end
 
   before do
@@ -60,6 +64,12 @@ describe "ApiAuditable", type: :controller do
 
       expect(ApiRequestAudit.order(created_at: :asc).last.body.to_s).to eq params.to_json
       expect(ApiRequestAudit.order(created_at: :asc).last.path).to eq "/audited_action"
+    end
+
+    it "stores the current user info" do
+      get("audited_action")
+      expect(ApiRequestAudit.order(created_at: :asc).last.current_user_class).to eq "CpdLeadProvider"
+      expect(ApiRequestAudit.order(created_at: :asc).last.current_user_id).to eq CpdLeadProvider.find_by(name: "TestName").id
     end
   end
 end
