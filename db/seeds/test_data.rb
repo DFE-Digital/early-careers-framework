@@ -549,6 +549,7 @@ user = User.find_or_create_by!(email: "cip-ect-email-sent@example.com") do |u|
 end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
+  profile.request_for_details_sent_at = Time.zone.now
   profile.school_cohort = School.find_by(urn: "000200").school_cohorts.find_by(cohort: Cohort.current)
   profile.schedule = Finance::Schedule::ECF.default
   ParticipantProfileState.find_or_create_by!(participant_profile: profile)
@@ -560,6 +561,7 @@ user = User.find_or_create_by!(email: "cip-ect-email-bounced@example.com") do |u
 end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
+  profile.request_for_details_sent_at = Time.zone.now
   profile.school_cohort = School.find_by(urn: "000200").school_cohorts.find_by(cohort: Cohort.current)
   profile.schedule = Finance::Schedule::ECF.default
   ParticipantProfileState.find_or_create_by!(participant_profile: profile)
