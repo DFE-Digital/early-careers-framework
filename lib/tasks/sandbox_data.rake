@@ -11,7 +11,7 @@ namespace :lead_providers do
     end
 
     LeadProvider.all.map(&:name).each do |provider|
-      ValidTestDataGenerator::LeadProviderPopulater.call(name: provider, total_schools: 10, participants_per_school: 10)
+      ValidTestDataGenerator::LeadProviderPopulater.call(name: provider, total_schools: 10, participants_per_school: 100)
     end
   end
 

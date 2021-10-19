@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "./participant_validation_steps"
 
-RSpec.feature "SIT/mentor participant validation journeys for FIP induction", type: :feature, js: true do
+RSpec.feature "SIT/mentor participant validation journeys for FIP induction", with_feature_flags: { eligibility_notifications: "active" }, type: :feature, js: true do
   include ParticipantValidationSteps
 
   scenario "SIT/Mentor Participant validates their details" do

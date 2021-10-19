@@ -26,7 +26,7 @@ class ECFUserSerializer
   attributes :email, :full_name
 
   attributes :user_type do |user|
-    case user.teacher_profile.ecf_profile&.type
+    case user.teacher_profile.ecf_profiles.last&.type
     when ParticipantProfile::ECT.name
       USER_TYPES[:early_career_teacher]
     when ParticipantProfile::Mentor.name
@@ -58,7 +58,7 @@ class ECFUserSerializer
   end
 
   attributes :registration_completed do |user|
-    user.teacher_profile.ecf_profile&.completed_validation_wizard?
+    user.teacher_profile.ecf_profiles.last&.completed_validation_wizard?
   end
 
   attributes :cohort do |user|
@@ -66,11 +66,11 @@ class ECFUserSerializer
   end
 
   def self.find_school_cohort(user)
-    user.teacher_profile.ecf_profile&.school_cohort
+    user.teacher_profile.ecf_profiles.last&.school_cohort
   end
 
   def self.find_core_induction_programme(user)
-    user.teacher_profile.ecf_profile&.core_induction_programme ||
+    user.teacher_profile.ecf_profiles.last&.core_induction_programme ||
       find_school_cohort(user)&.core_induction_programme
   end
 end

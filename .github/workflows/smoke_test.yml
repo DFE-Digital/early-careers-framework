@@ -51,10 +51,10 @@ jobs:
         run: echo ${{ env.ENVIRONMENT}}
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.82.0
+        uses: ruby/setup-ruby@v1.83.0
         with:
           bundler-cache: true
-          ruby-version: '2.7.2'
+          ruby-version: '2.7.4'
 
       - name: Set up Node
         uses: actions/setup-node@v2.4.1

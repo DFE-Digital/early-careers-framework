@@ -27,7 +27,7 @@ module NPQ
   private
 
     def other_applications
-      @other_applications ||= NPQValidationData.where(user_id: user.id)
+      @other_applications ||= NPQApplication.where(user_id: user.id)
                                                .where(npq_course: npq_course)
                                                .where.not(id: npq_application.id)
     end

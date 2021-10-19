@@ -124,7 +124,7 @@ RSpec.describe SchoolMailer, type: :mailer do
   describe "remind_fip_induction_coordinators_to_add_ects_and_mentors_email" do
     let(:induction_coordinator) { create(:induction_coordinator_profile) }
     let(:school_name) { Faker::Company.name }
-    let(:campaign) { "remind_fip_sit_to_complete_steps" }
+    let(:campaign) { :remind_fip_sit_to_complete_steps }
 
     let(:reminder_email) do
       SchoolMailer.remind_fip_induction_coordinators_to_add_ects_and_mentors_email(

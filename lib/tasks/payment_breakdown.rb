@@ -8,20 +8,24 @@ module Tasks
 
     class << self
       def call(contract:, total_participants:, uplift_participants:, total_ects: 0, total_mentors: 0)
-        new(contract: contract, total_participants: total_participants, uplift_participants: uplift_participants, total_ects: total_ects, total_mentors: total_mentors)
+        new(contract: contract).call(total_participants: total_participants, uplift_participants: uplift_participants, total_ects: total_ects, total_mentors: total_mentors)
       end
     end
 
-    def initialize(contract:, total_participants:, uplift_participants:, total_ects: 0, total_mentors: 0)
+    def initialize(contract:)
       @contract = contract
+      @logger = set_up_logger
+    end
+
+    def call(total_participants:, uplift_participants:, total_ects: 0, total_mentors: 0)
       @total_participants = total_participants
       @uplift_participants = uplift_participants
       @total_ects = total_ects
       @total_mentors = total_mentors
-      @logger = set_up_logger
-      @service_fee_calculator = PaymentCalculator::ECF::ServiceFeesForBand.new({ contract: contract })
-      @output_calculator = PaymentCalculator::ECF::OutputPaymentAggregator.new({ contract: contract })
-      @uplift_calculator = PaymentCalculator::ECF::UpliftCalculation.new({ contract: contract })
+      @service_fee_calculator = PaymentCalculator::ECF::ServiceFeesForBand.new({ contract: @contract })
+      @output_calculator = PaymentCalculator::ECF::OutputPaymentAggregator.new({ contract: @contract })
+      @uplift_calculator = PaymentCalculator::ECF::UpliftCalculation.new({ contract: @contract })
+      self
     end
 
     def set_up_logger
@@ -69,6 +73,37 @@ module Tasks
       @logger.info other_fees_table
     end
 
+    def show_heading
+      @logger.info short_heading
+    end
+
+    def to_state_summary(state)
+      @logger.info participant_summary_for_state(state)
+    end
+
+    def short_heading
+      Terminal::Table.new do |t|
+        t.title = "Summary of Participants in States"
+        t.rows = [
+          ["Provider", lead_provider_name],
+          %w[Milestone Started],
+          ["Recruitment target", recruitment_target],
+          (["Revised target", revised_target] if revised_target),
+        ].compact
+      end
+    end
+
+    def participant_summary_for_state(state)
+      Terminal::Table.new do |t|
+        t.title = state.to_s
+        t.rows = [
+          ["Current ECTs", total_ects],
+          ["Current mentors", total_mentors],
+          ["Current participants", total_participants],
+        ].compact
+      end
+    end
+
     def headings_table
       Terminal::Table.new do |t|
         t.title = "Payment breakdown"
@@ -80,6 +115,7 @@ module Tasks
           ["Current ECTs", total_ects],
           ["Current mentors", total_mentors],
           ["Current participants", total_participants],
+          ["Uplift participants", uplift_participants],
         ].compact
       end
     end
@@ -124,8 +160,8 @@ module Tasks
           [
             "Uplift fee",
             uplift_participants,
-            uplift_calculator.uplift_payment_per_participant,
-            uplift_calculator.uplift_payment_for_event(uplift_participants: uplift_participants, event_type: :started),
+            as_financial { uplift_calculator.uplift_payment_per_participant },
+            as_financial { uplift_calculator.uplift_payment_for_event(uplift_participants: uplift_participants, event_type: :started) },
           ],
         ]
         t.style = { alignment: :left }

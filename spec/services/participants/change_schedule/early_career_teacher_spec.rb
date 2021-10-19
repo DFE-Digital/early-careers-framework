@@ -30,5 +30,9 @@ RSpec.describe Participants::ChangeSchedule::EarlyCareerTeacher do
     def given_params
       participant_params
     end
+
+    def user_profile
+      ect_profile.reload
+    end
   end
 end

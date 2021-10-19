@@ -64,7 +64,7 @@
             <p class="app-step-nav__paragraph">You need to do this as soon as possible if you expect ECTs to join your
               school this academic year, or if you’re not sure.</p>
             <ol class="app-step-nav__list" data-length="2">
-              <li class="app-step-nav__list-item js-list-item"><%= govuk_link_to "Check what an induction tutor needs to do", current_user ? roles_schools_cohort_path(current_user.school, Cohort.current) : dashboard_path, class: "app-step-nav__link js-link" %></li>
+              <li class="app-step-nav__list-item js-list-item"><%= govuk_link_to "Check what an induction tutor needs to do", page_path(page: 'what-each-person-does'), class: "app-step-nav__link js-link" %></li>
               <li class="app-step-nav__list-item js-list-item"><%= govuk_link_to "Nominate the induction tutor for your school", resend_email_request_nomination_invite_path, class: "app-step-nav__link js-link" %></li>
             </ol>
           </div>
@@ -171,7 +171,7 @@
             <p class="app-step-nav__paragraph">We’ll contact each ECT and mentor to ask them for more information. We’ll
               use this to check they’re eligible for this funded training and support.</p>
             <ol class="app-step-nav__list" data-length="3">
-              <li class="app-step-nav__list-item js-list-item"><%= govuk_link_to "Check what a mentor needs to do", current_user ? roles_schools_cohort_path(current_user.school, Cohort.current) : dashboard_path, class: "app-step-nav__link js-link" %></li>
+              <li class="app-step-nav__list-item js-list-item"><%= govuk_link_to "Check what a mentor needs to do", page_path(page: "what-each-person-does"), class: "app-step-nav__link js-link" %></li>
               <li class="app-step-nav__list-item js-list-item"><%= govuk_link_to "Tell us about your 2021 to 2022 ECTs and mentors", root_path, class: "app-step-nav__link js-link" %></li>
             </ol>
             <p class="app-step-nav__paragraph">If your school has chosen to design and deliver your own ECF-based

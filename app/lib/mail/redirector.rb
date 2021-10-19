@@ -5,10 +5,15 @@ module Mail
     class << self
       def delivering_email(mail)
         mail.original_to = mail.to
+        set_personalisation(mail, :subject_tags, enabled? ? "#{tags(mail)} " : Mail::Notify::Personalisation::BLANK)
+
         return unless enabled?
 
+        # TODO: This enforces backward compatibility with existing emails and should be deleted as soon as all the emails
+        # are modified to use `subject_tags` instead
         override_personalisation(mail, :subject) { |subject| "#{tags(mail)} #{subject}" }
-        mail.to = target_email if enabled?
+
+        mail.to = target_email
       end
 
       def enabled?
@@ -33,11 +38,15 @@ module Mail
         value = mail.header["personalisation"]&.unparsed_value&.fetch(key, nil)
         return if value.blank?
 
-        mail.header["personalisation"].unparsed_value[key] = block.call(value)
+        set_personalisation(mail, key, block.call(value))
       end
 
       def tags(mail)
         "[#{app_name} to:#{mail.to.join(',')}] "
+      end
+
+      def set_personalisation(mail, key, value)
+        mail.header["personalisation"].unparsed_value[key] = value
       end
     end
 

@@ -4,12 +4,12 @@ require "rails_helper"
 
 RSpec.describe Importers::NPQManualValidation do
   let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
-  let(:npq_validation_data) { create(:npq_validation_data, npq_course: npq_course) }
+  let(:npq_application) { create(:npq_application, npq_course: npq_course) }
   let(:file) { Tempfile.new("test.csv") }
 
   before do
     create(:schedule, :npq_specialist)
-    NPQ::Accept.new(npq_application: npq_validation_data).call
+    NPQ::Accept.new(npq_application: npq_application).call
   end
 
   around do |example|
@@ -32,26 +32,26 @@ RSpec.describe Importers::NPQManualValidation do
         file.write("\n")
         file.write("123,7654321")
         file.write("\n")
-        file.write("#{npq_validation_data.id},7654321")
+        file.write("#{npq_application.id},7654321")
         file.rewind
       end
 
       it "updates trn" do
         expect {
           subject.call
-        }.to change { npq_validation_data.reload.teacher_reference_number }.to("7654321")
+        }.to change { npq_application.reload.teacher_reference_number }.to("7654321")
       end
 
       it "updates teacher_reference_number_verified to true" do
         expect {
           subject.call
-        }.to change { npq_validation_data.reload.teacher_reference_number_verified }.to(true)
+        }.to change { npq_application.reload.teacher_reference_number_verified }.to(true)
       end
 
       it "updates TRN on teacher profile" do
         expect {
           subject.call
-        }.to change { npq_validation_data.reload.user.teacher_profile.trn }.from(nil).to("7654321")
+        }.to change { npq_application.reload.user.teacher_profile.trn }.from(nil).to("7654321")
       end
     end
 

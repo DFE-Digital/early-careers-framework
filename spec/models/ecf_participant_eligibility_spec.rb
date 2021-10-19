@@ -37,6 +37,21 @@ RSpec.describe ECFParticipantEligibility, type: :model do
   end
 
   describe "#determine_status" do
+    context "when manually_validated is true" do
+      it "does not determine a new status and reason" do
+        eligibility.active_flags = true
+        eligibility.valid?
+        expect(eligibility).to be_manual_check_status
+        expect(eligibility).to be_active_flags_reason
+
+        eligibility.status = :ineligible
+        eligibility.manually_validated = true
+        eligibility.determine_status
+        expect(eligibility).to be_ineligible_status
+        expect(eligibility).to be_active_flags_reason
+      end
+    end
+
     context "when active_flags are true" do
       it "sets the status to manual_check" do
         eligibility.active_flags = true
@@ -47,10 +62,10 @@ RSpec.describe ECFParticipantEligibility, type: :model do
     end
 
     context "when previous_participation is true" do
-      it "sets the status to manual_check" do
+      it "sets the status to ineligible" do
         eligibility.previous_participation = true
         eligibility.valid?
-        expect(eligibility).to be_manual_check_status
+        expect(eligibility).to be_ineligible_status
         expect(eligibility).to be_previous_participation_reason
       end
     end
@@ -61,8 +76,8 @@ RSpec.describe ECFParticipantEligibility, type: :model do
         eligibility.valid?
       end
 
-      it "sets the status to manual_check" do
-        expect(eligibility).to be_manual_check_status
+      it "sets the status to ineligible" do
+        expect(eligibility).to be_ineligible_status
         expect(eligibility).to be_previous_induction_reason
       end
 
@@ -77,10 +92,10 @@ RSpec.describe ECFParticipantEligibility, type: :model do
     end
 
     context "when QTS status is false and no other flags are set" do
-      it "sets the status to matched" do
+      it "sets the status to manual_check" do
         eligibility.qts = false
         eligibility.valid?
-        expect(eligibility).to be_matched_status
+        expect(eligibility).to be_manual_check_status
         expect(eligibility).to be_no_qts_reason
       end
     end

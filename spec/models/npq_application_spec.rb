@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe NPQValidationData, type: :model do
+RSpec.describe NPQApplication, type: :model do
   before { create(:schedule, name: "ECF September standard 2021") }
 
   it {
@@ -13,7 +13,7 @@ RSpec.describe NPQValidationData, type: :model do
   }
 
   describe "callbacks" do
-    subject { create(:npq_validation_data) }
+    subject { create(:npq_application) }
 
     context "on creation" do
       it "fires NPQ::StreamBigQueryEnrollmentJob" do

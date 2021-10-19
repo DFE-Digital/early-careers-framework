@@ -183,16 +183,16 @@ module ValidTestDataGenerator
     end
 
     def generate_new_participants(school:, count:)
-      count.times do |index|
-        create_participant(school: school, accepted: index.even?)
+      count.times do
+        create_participant(school: school)
       end
     end
 
-    def create_participant(school:, accepted:)
+    def create_participant(school:)
       name = Faker::Name.name
       user = User.create!(full_name: name, email: Faker::Internet.email(name: name))
 
-      validation_data = NPQValidationData.create!(
+      NPQApplication.create!(
         active_alert: "",
         date_of_birth: Date.new(1990, 1, 1),
         eligible_for_funding: true,
@@ -206,8 +206,6 @@ module ValidTestDataGenerator
         npq_lead_provider: lead_provider,
         user: user,
       )
-
-      NPQ::Accept.new(npq_application: validation_data).call if accepted
     end
 
     def create_fip_school_with_cohort(urn:)
