@@ -47,12 +47,6 @@ RSpec.describe Importers::NPQManualValidation do
           subject.call
         }.to change { npq_application.reload.teacher_reference_number_verified }.to(true)
       end
-
-      it "updates TRN on teacher profile" do
-        expect {
-          subject.call
-        }.to change { npq_application.reload.user.teacher_profile.trn }.from(nil).to("7654321")
-      end
     end
 
     context "with malformed csv" do
