@@ -16,17 +16,17 @@ RSpec.describe ParticipantDeclaration, type: :model do
       let!(:participant_declaration) { create(:ect_participant_declaration, :submitted) }
 
       it "has an initial state of submitted" do
-        expect(participant_declaration.submitted?).to be_truthy
+        expect(participant_declaration).to be_submitted
       end
 
       it "will move from submitted to eligible" do
         expect(participant_declaration.make_eligible!).to be_truthy
-        expect(participant_declaration.eligible?).to be_truthy
+        expect(participant_declaration).to be_eligible
       end
 
       it "can be voided" do
         expect(participant_declaration.make_voided!).to be_truthy
-        expect(participant_declaration.voided?).to be_truthy
+        expect(participant_declaration).to be_voided
       end
 
       it "cannot be directly be made payable or paid" do
@@ -39,22 +39,17 @@ RSpec.describe ParticipantDeclaration, type: :model do
       let(:participant_declaration) { create(:ect_participant_declaration, :eligible) }
 
       it "has an state of eligible" do
-        expect(participant_declaration.eligible?).to be_truthy
-      end
-
-      it "will move from eligible to submitted" do # TODO: This may not be required
-        expect(participant_declaration.make_submitted!).to be_truthy
-        expect(participant_declaration.submitted?).to be_truthy
+        expect(participant_declaration).to be_eligible
       end
 
       it "can be voided" do
         expect(participant_declaration.make_voided!).to be_truthy
-        expect(participant_declaration.voided?).to be_truthy
+        expect(participant_declaration).to be_voided
       end
 
       it "can move from eligible to payable" do
         expect(participant_declaration.make_payable!).to be_truthy
-        expect(participant_declaration.payable?).to be_truthy
+        expect(participant_declaration).to be_payable
       end
 
       it "cannot be directly be made paid" do
@@ -66,7 +61,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
       let(:participant_declaration) { create(:ect_participant_declaration, :payable) }
 
       it "has an state of payable" do
-        expect(participant_declaration.payable?).to be_truthy
+        expect(participant_declaration).to be_payable
       end
 
       it "will not move to eligible or submitted" do
@@ -88,7 +83,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
       let(:participant_declaration) { create(:ect_participant_declaration, :paid) }
 
       it "has an state of paid" do
-        expect(participant_declaration.paid?).to be_truthy
+        expect(participant_declaration).to be_paid
       end
 
       it "will not move to eligible, payable or submitted" do
@@ -136,93 +131,26 @@ RSpec.describe ParticipantDeclaration, type: :model do
   describe "declaration state" do
     let!(:participant_declaration) { create(:ect_participant_declaration) }
 
-    it "returns the current state" do
+    it "mirrors the most recent declaration_state" do
       participant_declaration.make_eligible!
 
-      expect(participant_declaration.declaration_states.order(created_at: :desc).first.state).to eq("eligible")
-      expect(participant_declaration.eligible?).to be_truthy
-    end
-  end
-
-  describe "refresh_payability!" do
-    let!(:participant_declaration) { create(:ect_participant_declaration, :submitted) }
-    let!(:eligibility) { ECFParticipantEligibility.create!(participant_profile: participant_declaration.participant_profile) }
-
-    context "when declaration was eligible for payment" do
-      before do
-        eligibility.eligible_status!
-        participant_declaration.refresh_payability!
-      end
-
-      context "when declaration becomes not eligible for payment" do
-        it "makes the declaration submitted if currently eligible for payment" do
-          expect(participant_declaration.eligible?).to be_truthy
-          eligibility.manual_check_status!
-          expect { participant_declaration.refresh_payability! }.to change { participant_declaration.declaration_states.count }.by(1)
-          expect(participant_declaration.eligible?).to be_falsey
-          expect(participant_declaration.submitted?).to be_truthy
-        end
-
-        it "keeps the declaration voided if it was voided already" do
-          participant_declaration.voided!
-          expect { participant_declaration.refresh_payability! }.not_to change { participant_declaration.declaration_states.count }
-          expect(participant_declaration.voided?).to be_truthy
-        end
-      end
-
-      context "when declaration remains eligible" do
-        it "does not create a new declaration state" do
-          expect(participant_declaration.eligible?).to be_truthy
-          expect { participant_declaration.refresh_payability! }.not_to change { participant_declaration.declaration_states.count }
-          expect(participant_declaration.eligible?).to be_truthy
-        end
-      end
-    end
-
-    context "when declaration was not eligible for payment" do
-      before do
-        eligibility.manual_check_status!
-      end
-
-      context "when participant becomes eligible" do
-        before do
-          eligibility.eligible_status!
-        end
-
-        it "creates a new declaration state which is also eligible" do
-          expect(participant_declaration.submitted?).to be_truthy
-          eligibility.eligible_status!
-          expect { participant_declaration.refresh_payability! }.to change { participant_declaration.declaration_states.count }.by(1)
-          expect(participant_declaration.eligible?).to be_truthy
-        end
-
-        it "keeps the declaration voided if it was voided already" do
-          participant_declaration.voided!
-          expect { participant_declaration.refresh_payability! }.not_to change { participant_declaration.declaration_states.count }
-          expect(participant_declaration.voided?).to be_truthy
-        end
-      end
-
-      context "when declaration remains non-payable" do
-        it "does not create a new declaration state" do
-          expect { participant_declaration.refresh_payability! }.not_to change { participant_declaration.declaration_states.count }
-          expect(participant_declaration.eligible?).to be_falsey
-        end
-      end
+      expect(participant_declaration.declaration_states.order(created_at: :desc).first).to be_eligible
+      expect(participant_declaration).to be_eligible
     end
   end
 
   describe "voided!" do
-    let!(:participant_declaration) { create(:ect_participant_declaration) }
+    let!(:participant_declaration) { create(:ect_participant_declaration, :submitted) }
     let!(:eligibility) { ECFParticipantEligibility.create!(participant_profile: participant_declaration.participant_profile) }
 
     context "when declaration was payable" do
       before do
-        eligibility.eligible_status!
+        participant_declaration.make_eligible!
       end
 
       it "voids the declaration" do
-        participant_declaration.voided!
+        expect(participant_declaration).to be_eligible
+        participant_declaration.make_voided!
         expect(participant_declaration.eligible?).to be_falsey
         expect(participant_declaration.voided?).to be_truthy
       end

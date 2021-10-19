@@ -18,7 +18,7 @@ module RecordDeclarations
     validate :date_has_the_right_format
 
     validates :declaration_type, inclusion: { in: :valid_declaration_types, message: I18n.t(:invalid_declaration_type) }
-    delegate :schedule, :participant_declarations, to: :user_profile, allow_nil: true
+    delegate :schedule, :participant_declarations, :fundable?, to: :user_profile, allow_nil: true
 
     class << self
       def call(params:)
@@ -40,7 +40,6 @@ module RecordDeclarations
 
       declaration = find_or_create_record!
 
-      declaration.refresh_payability!
       declaration_attempt.update!(participant_declaration: declaration)
 
       ParticipantDeclarationSerializer.new(declaration).serializable_hash.to_json
@@ -65,13 +64,8 @@ module RecordDeclarations
     end
 
     def find_or_create_record!
-      ApplicationRecord.transaction do
-        self.class.declaration_model.find_or_create_by!(declaration_parameters) do |participant_declaration|
-          DeclarationState.create!(
-            participant_declaration: participant_declaration,
-            state: user_profile.fundable? ? "eligible" : "submitted",
-          )
-        end
+      self.class.declaration_model.find_or_create_by!(declaration_parameters).tap do |participant_declaration|
+        participant_declaration.make_eligible! if fundable?
       end
     end
 

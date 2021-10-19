@@ -56,11 +56,6 @@ class ParticipantDeclaration < ApplicationRecord
   scope :paid_npqs_for_lead_provider, ->(lead_provider) { paid_for_lead_provider(lead_provider).npq }
   scope :paid_uplift_for_lead_provider, ->(lead_provider) { paid_for_lead_provider(lead_provider).uplift }
 
-  def refresh_payability!
-    reload
-    fundable? ? make_eligible! : make_submitted!
-  end
-
   def make_submitted!
     DeclarationState.submitted!(self) if eligible?
   end
