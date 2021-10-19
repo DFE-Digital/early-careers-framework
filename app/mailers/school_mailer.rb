@@ -26,12 +26,12 @@ class SchoolMailer < ApplicationMailer
   UNPARTNERED_CIP_SIT_ADD_PARTICIPANTS_EMAIL_TEMPLATE = "ebc96223-c2ea-416e-8d3e-1f591bbd2f98"
 
   # This email is currently (30/09/2021) only used for manually sent chaser emails
-  def remind_induction_coordinator_to_setup_cohort_email(induction_coordinator_profile:, school_name:, campaign: nil)
+  def remind_induction_coordinator_to_setup_cohort_email(recipient:, school_name:, campaign: nil)
     campaign_tracking = campaign ? UTMService.email(campaign, campaign) : {}
 
     template_mail(
       "14aabb56-1d6e-419f-8144-58a0439c61a6",
-      to: induction_coordinator_profile.user.email,
+      to: recipient,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
@@ -40,7 +40,7 @@ class SchoolMailer < ApplicationMailer
         sign_in: new_user_session_url(**campaign_tracking),
         step_by_step: step_by_step_url(**campaign_tracking),
       },
-    ).tag(:sit_to_complete_steps).associate_with(induction_coordinator_profile)
+    )
   end
 
   # This email is sent to schools to request an appointment of SIT to coordinate their cohorts
