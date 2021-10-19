@@ -20,6 +20,6 @@ class StreamBigQueryParticipantDeclarationsJob < CronJob
         )
       end
 
-    table.insert rows
+    table.insert(rows) if rows.any?
   end
 end
