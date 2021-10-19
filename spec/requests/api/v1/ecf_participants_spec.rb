@@ -281,6 +281,13 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
           expect(parsed_response.length).to eql(3)
         end
       end
+
+      describe "JSON Participant Withdrawal" do
+        it_behaves_like "a participant withdraw action endpoint" do
+          let(:url) { "/api/v1/participants/ecf/#{early_career_teacher_profile.user.id}/withdraw" }
+          let(:params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "moved-school" } } } }
+        end
+      end
     end
 
     context "when unauthorized" do

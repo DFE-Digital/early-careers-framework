@@ -255,21 +255,9 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
       end
 
       describe "JSON Participant Withdrawal" do
-        let(:parsed_response) { JSON.parse(response.body) }
-
-        it "changes the training status of a participant to withdrawn" do
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "left-teaching-profession" } } }
-
-          expect(response).to be_successful
-
-          expect(parsed_response.dig("data", "attributes", "training_status")).to eql("withdrawn")
-        end
-
-        it "returns an error when the participant is already withdrawn" do
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "left-teaching-profession" } } }
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "left-teaching-profession" } } }
-
-          expect(response).not_to be_successful
+        it_behaves_like "a participant withdraw action endpoint" do
+          let(:url) { "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw" }
+          let(:params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "moved-school" } } } }
         end
       end
 

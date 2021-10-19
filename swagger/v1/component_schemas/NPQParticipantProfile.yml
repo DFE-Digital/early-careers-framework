@@ -1,0 +1,20 @@
+description: "The details of an NPQ Participant Profile for a given course"
+type: object
+required:
+  - id
+  - type
+  - attributes
+properties:
+  id:
+    description: "The unique identifier of the NPQ Participant profile record for a given course"
+    type: string
+    format: uuid
+    example: ac3d1243-7308-4879-942a-c4a70ced400a
+  type:
+    description: "The data type"
+    type: string
+    example: npq-participant-profile
+    enum:
+      - npq-participant-profile
+  attributes:
+    $ref: "#/components/schemas/NPQParticipantProfileAttributes"

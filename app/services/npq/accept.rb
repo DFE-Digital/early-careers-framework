@@ -55,9 +55,9 @@ module NPQ
 
     def schedule
       case npq_application.npq_course.identifier
-      when "npq-leading-teaching", "npq-leading-behaviour-culture", "npq-leading-teaching-development"
+      when *NPQCourse::LEADERSHIP_IDENTIFIER
         Finance::Schedule::NPQLeadership.default
-      when "npq-senior-leadership", "npq-headship", "npq-executive-leadership"
+      when *NPQCourse::SPECIALIST_IDENTIFIER
         Finance::Schedule::NPQSpecialist.default
       when "npq-additional-support-offer"
         # TODO: Figure out what ASO schedules look like

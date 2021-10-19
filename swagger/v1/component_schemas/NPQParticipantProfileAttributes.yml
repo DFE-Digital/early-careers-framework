@@ -1,0 +1,31 @@
+description: "The data attributes associated with an NPQ application"
+type: object
+required:
+  - participant_id
+  - training_status
+properties:
+  participant_id:
+    description: "The unique identifier of this NPQ participant"
+    type: string
+    example: 7a8fef46-3c43-42c0-b3d5-1ba5904ba562
+    format: uuid
+  course_identifier:
+    description: "The NPQ course identifier"
+    type: string
+    enum:
+      - npq-leading-teaching
+      - npq-leading-behaviour-culture
+      - npq-leading-teaching-development
+      - npq-senior-leadership
+      - npq-headship
+      - npq-executive-leadership
+    example: npq-leading-teaching-development
+
+  training_status:
+    description: "The training status of the NPQ participant to a given course"
+    type: string
+    example: withdrawn
+    enum:
+      - active
+      - withdrawn
+      - deferred

@@ -12,5 +12,11 @@ FactoryBot.define do
     school_ukprn { rand(10_000_000..99_999_999).to_s }
     date_of_birth { rand(25..50).years.ago + rand(0..365).days }
     teacher_reference_number { rand(1_000_000..9_999_999).to_s }
+
+    trait :accepted do
+      after :create do |npq_application|
+        NPQ::Accept.call(npq_application: npq_application)
+      end
+    end
   end
 end
