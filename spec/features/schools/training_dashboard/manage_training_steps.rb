@@ -32,7 +32,7 @@ module ManageTrainingSteps
   end
 
   def and_i_have_added_an_ect
-    @participant_profile_ect = create(:participant_profile, :ect, school_cohort: @school_cohort)
+    @participant_profile_ect = create(:participant_profile, :ect, user: create(:user, full_name: "Sally Teacher"), school_cohort: @school_cohort)
   end
 
   def and_i_have_added_a_mentor
