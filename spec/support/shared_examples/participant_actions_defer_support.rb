@@ -25,7 +25,7 @@ RSpec.shared_examples "a participant defer action service" do
   end
 end
 
-RSpec.shared_examples "JSON Participant Deferral endpoint" do
+RSpec.shared_examples "JSON Participant Deferral endpoint" do |serialiser_type|
   let(:parsed_response) { JSON.parse(response.body) }
 
   it "changes the training status of a participant to deferred" do
@@ -33,7 +33,7 @@ RSpec.shared_examples "JSON Participant Deferral endpoint" do
 
     expect(response).to be_successful
 
-    expect(parsed_response.dig("data", "attributes", "training_status")).to eql("deferred")
+    expect(parsed_response.dig("data", "type")).to eq(serialiser_type)
   end
 
   it "returns an error when the participant is already withdrawn" do
@@ -50,11 +50,11 @@ RSpec.shared_examples "JSON Participant Deferral endpoint" do
   end
 end
 
-RSpec.shared_examples "JSON Participant Deferral documentation" do |url, request_schema_ref, response_schema_ref|
+RSpec.shared_examples "JSON Participant Deferral documentation" do |url, request_schema_ref, response_schema_ref, tag|
   path url do
     put "Notify that an ECF participant is taking a break from their course" do
       operationId :participant
-      tags "ECF Participant"
+      tags tag
       security [bearerAuth: []]
       consumes "application/json"
 
@@ -93,9 +93,7 @@ RSpec.shared_examples "JSON Participant Deferral documentation" do |url, request
             },
           }
         end
-        after do
-          print response.body
-        end
+
         schema({ "$ref": response_schema_ref })
         run_test!
       end

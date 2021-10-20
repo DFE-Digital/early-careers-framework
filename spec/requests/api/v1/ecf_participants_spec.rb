@@ -332,7 +332,7 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
     end
   end
 
-  it_behaves_like "JSON Participant Deferral endpoint" do
+  it_behaves_like "JSON Participant Deferral endpoint", "participant" do
     let(:url)               { "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer" }
     let(:params)            { { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } } }
     let(:withdrawal_url)    { "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw" }

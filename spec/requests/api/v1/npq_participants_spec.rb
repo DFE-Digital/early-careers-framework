@@ -110,7 +110,7 @@ RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { par
         it_behaves_like "a participant withdraw action endpoint" do
           let(:url) { "/api/v1/participants/npq/#{npq_application.user.id}/withdraw" }
           let(:params) do
-            { data: { attributes: { course_identifier: npq_course.identifier, reason: Participants::Withdraw::ValidateAndChangeState::REASONS.sample } } }
+            { data: { attributes: { course_identifier: npq_course.identifier, reason: Participants::Withdraw::NPQ.reasons.sample } } }
           end
 
           it "changes the training status of a participant to withdrawn" do
@@ -122,12 +122,12 @@ RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { par
         end
       end
 
-      it_behaves_like "JSON Participant Deferral endpoint" do
+      it_behaves_like "JSON Participant Deferral endpoint", "npq-participant" do
         let(:course_identifier) { npq_course.identifier }
         let(:url)               { "/api/v1/participants/npq/#{npq_application.user.id}/defer" }
         let(:withdrawal_url)    { "/api/v1/participants/npq/#{npq_application.user.id}/withdraw" }
-        let(:params)            { { data: { attributes: { course_identifier: course_identifier, reason: Participants::Defer::ValidateAndChangeState::REASONS.sample } } } }
-        let(:withdrawal_params) { { data: { attributes: { course_identifier: course_identifier, reason: Participants::Withdraw::ValidateAndChangeState::REASONS.sample } } } }
+        let(:params)            { { data: { attributes: { course_identifier: course_identifier, reason: Participants::Defer::NPQ.reasons.sample } } } }
+        let(:withdrawal_params) { { data: { attributes: { course_identifier: course_identifier, reason: Participants::Withdraw::NPQ.reasons.sample } } } }
       end
     end
 

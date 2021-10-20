@@ -11,7 +11,11 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
   let(:bearer_token) { "Bearer #{token}" }
   let(:Authorization) { bearer_token }
 
-  it_behaves_like "JSON Participant Deferral documentation", "/api/v1/participants/{id}/defer" do
+  it_behaves_like "JSON Participant Deferral documentation",
+                  "/api/v1/participants/{id}/defer",
+                  "#/components/schemas/ECFParticipantDeferRequest",
+                  "#/components/schemas/ECFParticipantResponse",
+                  "ECF Participant" do
     let(:participant) { mentor_profile }
     let(:attributes) do
       {

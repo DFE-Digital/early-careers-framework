@@ -5,18 +5,11 @@ module Participants
     module ValidateAndChangeState
       extend ActiveSupport::Concern
       include ActiveModel::Validations
-      REASONS = %w[
-        left-teaching-profession
-        moved-school
-        mentor-no-longer-being-mentor
-        school-left-fip
-        other
-      ].freeze
 
       included do
         attr_accessor :reason
 
-        validates :reason, inclusion: { in: REASONS }
+        validates :reason, inclusion: { in: reasons }
       end
 
       def perform_action!

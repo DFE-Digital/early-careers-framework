@@ -321,7 +321,7 @@
         "summary": "Notify that an ECF participant is taking a break from their course",
         "operationId": "participant",
         "tags": [
-          "ECF Participant"
+          "NPQ Participant"
         ],
         "security": [
           {
@@ -357,7 +357,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NPQParticipantDeferResponse"
+                  "$ref": "#/components/schemas/NPQParticipantResponse"
                 }
               }
             }
@@ -370,7 +370,7 @@
         "summary": "Withdrawn a participant from a course",
         "operationId": "npq_participants",
         "tags": [
-          "NPQ participant"
+          "NPQ Participant"
         ],
         "security": [
           {
@@ -932,7 +932,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": null
+                "$ref": "#/components/schemas/ECFParticipantDeferRequest"
               }
             }
           }
@@ -955,7 +955,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": null
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
                 }
               }
             }
@@ -2379,6 +2379,72 @@
             "type": "array",
             "items": {
               "type": "string"
+            }
+          }
+        }
+      },
+      "NPQParticipantDefer": {
+        "description": "An NPQ participant deferral action",
+        "type": "object",
+        "properties": {
+          "reason": {
+            "description": "The reason for the deferral",
+            "type": "string",
+            "enum": [
+              "bereavement",
+              "long-term-sickness",
+              "parental-leave",
+              "career-break",
+              "other"
+            ],
+            "example": "career-break"
+          },
+          "course_identifier": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "npq-leading-teaching",
+              "npq-leading-behaviour-culture",
+              "npq-leading-teaching-development",
+              "npq-senior-leadership",
+              "npq-headship",
+              "npq-executive-leadership"
+            ],
+            "example": "npq-senior-leadership"
+          }
+        },
+        "required": [
+          "reason",
+          "course_identifier"
+        ],
+        "example": {
+          "reason": "parental-leave",
+          "course_identifier": "npq-senior-leadership"
+        }
+      },
+      "NPQParticipantDeferRequest": {
+        "description": "The deferral request for an NPQ participant",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "description": "The request data",
+            "required": [
+              "type",
+              "attributes"
+            ],
+            "properties": {
+              "type": {
+                "description": "The data type",
+                "type": "string",
+                "example": "participant-defer"
+              },
+              "attributes": {
+                "$ref": "#/components/schemas/NPQParticipantDefer"
+              }
             }
           }
         }

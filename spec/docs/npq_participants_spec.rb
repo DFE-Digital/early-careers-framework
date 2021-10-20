@@ -56,24 +56,24 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
     end
   end
 
-  it_behaves_like "JSON Participant Deferral documentation", "/api/v1/participants/npq/{id}/defer", "#/components/schemas/NPQParticipantDeferRequest", "#/components/schemas/NPQParticipantProfile" do
+  it_behaves_like "JSON Participant Deferral documentation",
+                  "/api/v1/participants/npq/{id}/defer",
+                  "#/components/schemas/NPQParticipantDeferRequest",
+                  "#/components/schemas/NPQParticipantResponse",
+                  "NPQ Participant" do
     let(:participant) { npq_application }
     let(:attributes) do
       {
-        reason: Participants::Defer::NPQ::REASONS.sample,
+        reason: Participants::Defer::NPQ.reasons.sample,
         course_identifier: npq_application.npq_course.identifier,
       }
-    end
-
-    after do
-
     end
   end
 
   path "/api/v1/participants/npq/{id}/withdraw" do
     put "Withdrawn a participant from a course" do
       operationId :npq_participants
-      tags "NPQ participant"
+      tags "NPQ Participant"
       security [bearerAuth: []]
       consumes "application/json"
 
