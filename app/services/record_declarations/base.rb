@@ -65,6 +65,7 @@ module RecordDeclarations
 
     def find_or_create_record!
       self.class.declaration_model.find_or_create_by!(declaration_parameters).tap do |participant_declaration|
+        DeclarationState.submitted!(participant_declaration)
         participant_declaration.make_eligible! if fundable?
       end
     end
