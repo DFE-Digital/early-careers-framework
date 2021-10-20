@@ -6,4 +6,8 @@ class EngageAndLearnApiToken < ApiToken
   def owner
     "Engage and learn application"
   end
+
+  def owner_description
+    owner
+  end
 end

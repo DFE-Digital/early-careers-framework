@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_14_133150) do
+ActiveRecord::Schema.define(version: 2021_10_19_142759) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -68,6 +68,21 @@ ActiveRecord::Schema.define(version: 2021_10_14_133150) do
     t.jsonb "body"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "api_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "request_path"
+    t.integer "status_code"
+    t.jsonb "request_headers"
+    t.jsonb "request_body"
+    t.jsonb "response_body"
+    t.string "request_method"
+    t.jsonb "response_headers"
+    t.uuid "cpd_lead_provider_id"
+    t.string "user_description"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["cpd_lead_provider_id"], name: "index_api_requests_on_cpd_lead_provider_id"
   end
 
   create_table "api_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -782,6 +797,7 @@ ActiveRecord::Schema.define(version: 2021_10_14_133150) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "additional_school_emails", "schools"
   add_foreign_key "admin_profiles", "users"
+  add_foreign_key "api_requests", "cpd_lead_providers"
   add_foreign_key "api_tokens", "cpd_lead_providers"
   add_foreign_key "api_tokens", "lead_providers", on_delete: :cascade
   add_foreign_key "call_off_contracts", "lead_providers"
