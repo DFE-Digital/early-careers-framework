@@ -91,6 +91,19 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
     end
   end
 
+  it_behaves_like "JSON Participant Deferral documentation",
+                  "/api/v1/participants/ecf/{id}/defer",
+                  "#/components/schemas/ECFParticipantDeferRequest",
+                  "#/components/schemas/ECFParticipantResponse" do
+    let(:participant) { mentor_profile }
+    let(:attributes) do
+      {
+        reason: "career-break",
+        course_identifier: "ecf-mentor",
+      }
+    end
+  end
+
   path "/api/v1/participants/ecf/{id}/withdraw" do
     put "Notify that an ECF participant has withdrawn from their course" do
       operationId :participant

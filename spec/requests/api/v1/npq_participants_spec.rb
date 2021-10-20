@@ -14,6 +14,9 @@ RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { par
     end
 
     context "when authorized" do
+      let(:npq_application) { npq_applications.sample }
+      let(:npq_course)      { npq_application.npq_course }
+
       before do
         default_headers[:Authorization] = bearer_token
       end
@@ -104,14 +107,10 @@ RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { par
       end
 
       describe "JSON Participant Withdrawal" do
-        let(:npq_application) { npq_applications.sample }
-        let(:npq_course)      { npq_application.npq_course }
-        let(:user)            { npq_application.user }
-
         it_behaves_like "a participant withdraw action endpoint" do
-          let(:url) { "/api/v1/participants/npq/#{user.id}/withdraw" }
+          let(:url) { "/api/v1/participants/npq/#{npq_application.user.id}/withdraw" }
           let(:params) do
-            { data: { attributes: { course_identifier: npq_course.identifier, reason: Participants::Withdraw::NPQ.reasons.sample } } }
+            { data: { attributes: { course_identifier: npq_course.identifier, reason: Participants::Withdraw::ValidateAndChangeState::REASONS.sample } } }
           end
 
           it "changes the training status of a participant to withdrawn" do
@@ -121,6 +120,14 @@ RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { par
             expect(npq_application.reload.profile.training_status).to eql("withdrawn")
           end
         end
+      end
+
+      it_behaves_like "JSON Participant Deferral endpoint" do
+        let(:course_identifier) { npq_course.identifier }
+        let(:url)               { "/api/v1/participants/npq/#{npq_application.user.id}/defer" }
+        let(:withdrawal_url)    { "/api/v1/participants/npq/#{npq_application.user.id}/withdraw" }
+        let(:params)            { { data: { attributes: { course_identifier: course_identifier, reason: Participants::Defer::ValidateAndChangeState::REASONS.sample } } } }
+        let(:withdrawal_params) { { data: { attributes: { course_identifier: course_identifier, reason: Participants::Withdraw::ValidateAndChangeState::REASONS.sample } } } }
       end
     end
 

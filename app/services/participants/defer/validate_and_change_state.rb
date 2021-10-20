@@ -6,11 +6,19 @@ module Participants
       extend ActiveSupport::Concern
       include ActiveModel::Validations
 
+      REASONS = %w[
+        bereavement
+        long-term-sickness
+        parental-leave
+        career-break
+        other
+      ].freeze
+
       included do
         attr_accessor :reason
 
         validates :reason, presence: true
-        validates :reason, inclusion: { in: reasons }, allow_blank: true
+        validates :reason, inclusion: { in: REASONS }, allow_blank: true
       end
 
       def perform_action!

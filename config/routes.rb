@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "api/participant_actions/routing"
+
 Rails.application.routes.draw do
   devise_for :users, skip: %i[registrations confirmations], controllers: {
     sessions: "users/sessions",
@@ -48,16 +50,16 @@ Rails.application.routes.draw do
     resource :notify_callback, only: :create, path: "notify-callback"
 
     namespace :v1 do
+      concern :participant_actions, Api::ParticipantActions::Routing.new
       resources :ecf_participants, path: "participants/ecf", only: %i[index] do
-        member { put :withdraw }
+        concerns :participant_actions
       end
 
       resources :participants, only: %i[index], controller: "ecf_participants"
       resources :participants, only: [] do
+        concerns :participant_actions
         member do
-          put :defer
           put :resume
-          put :withdraw
           put :change_schedule, path: "change-schedule"
         end
       end
@@ -67,7 +69,7 @@ Rails.application.routes.draw do
         end
       end
       resources :npq_participants, only: %i[index], path: "participants/npq" do
-        member { put :withdraw }
+        concerns :participant_actions
       end
       resources :users, only: %i[index create]
       resources :ecf_users, only: %i[index create], path: "ecf-users"
