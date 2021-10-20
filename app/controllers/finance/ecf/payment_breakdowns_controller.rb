@@ -14,6 +14,19 @@ module Finance
         @cutoff_date = "On #{helpers.cutoff_date}"
       end
 
+      def payable
+        @ecf_lead_provider = lead_provider_scope.find(params[:id])
+
+        @breakdown = CalculationOrchestrator.call(
+          aggregator: ::ParticipantEventPayableAggregator,
+          cpd_lead_provider: @ecf_lead_provider.cpd_lead_provider,
+          contract: @ecf_lead_provider.call_off_contract,
+          event_type: :started,
+        )
+
+        render :show
+      end
+
     private
 
       def lead_provider_scope
