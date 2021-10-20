@@ -60,7 +60,8 @@ class PartnershipNotificationService
             challenge_url: challenge_url(notification_email.token, utm_source: :partnered_invite_sit_reminder),
           ).deliver_now.delivery_method.response.id
 
-          partnership.update!(challenge_deadline: 2.weeks.from_now)
+          # This would usually be two weeks, but we don't want providers to be able challenge after the first milestone date.
+          partnership.update!(challenge_deadline: Date.parse("Oct 31 2021").end_of_day)
           notification_email.update!(notify_id: notify_id)
         end
       end
