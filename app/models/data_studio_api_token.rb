@@ -6,4 +6,8 @@ class DataStudioApiToken < ApiToken
   def owner
     "Data Studio"
   end
+
+  def owner_description
+    owner
+  end
 end

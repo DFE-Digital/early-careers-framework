@@ -6,4 +6,8 @@ class NPQRegistrationApiToken < ApiToken
   def owner
     "npq_registration_application"
   end
+
+  def owner_description
+    "NPQ registration application"
+  end
 end

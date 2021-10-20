@@ -7,4 +7,8 @@ class LeadProviderApiToken < ApiToken
   def owner
     cpd_lead_provider
   end
+
+  def owner_description
+    "CPD lead provider: #{cpd_lead_provider.name}"
+  end
 end

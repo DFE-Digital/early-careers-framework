@@ -9,7 +9,8 @@ class ApiRequestJob
 
   def perform(request_data, response_data, status_code, created_at)
     request_headers = request_data.fetch(:headers, {})
-    provider = provider_from_auth_token(request_headers.delete("HTTP_AUTHORIZATION"))
+    token = auth_token(request_headers.delete("HTTP_AUTHORIZATION"))
+    cpd_lead_provider = token.is_a?(LeadProviderApiToken) ? token.owner : nil
 
     response_headers = response_data[:headers]
     response_body = response_data[:body]
@@ -22,8 +23,8 @@ class ApiRequestJob
       response_headers: response_headers,
       response_body: response_hash(response_body, status_code),
       status_code: status_code,
-      user_description: provider.present? ? "CpdLeadProvider" : "Other - NPQ or E&L",
-      cpd_lead_provider: provider,
+      user_description: token&.owner_description,
+      cpd_lead_provider: cpd_lead_provider,
       created_at: created_at,
     )
   end
@@ -32,11 +33,11 @@ private
 
   AuthorizationStruct = Struct.new(:authorization)
 
-  def provider_from_auth_token(auth_header)
+  def auth_token(auth_header)
     return if auth_header.blank?
 
     token, _options = token_and_options(AuthorizationStruct.new(auth_header))
-    ApiToken.find_by_unhashed_token(token)&.cpd_lead_provider
+    ApiToken.find_by_unhashed_token(token)
   end
 
   def response_hash(response_body, status)
