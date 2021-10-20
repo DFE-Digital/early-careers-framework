@@ -2,7 +2,6 @@
 
 class IneligibleParticipantMailer < ApplicationMailer
   ECT_PREVIOUS_INDUCTION_TEMPLATE = "e27eabc4-2d54-4356-8073-85cf9a559ce4"
-  MENTOR_PREVIOUS_PARTICIPATION_TEMPLATE = "d64d1f3b-d156-444c-bf05-b5254a0dd0ad"
 
   ACTIVE_FLAGS_TEMPLATES = {
     ect: "dcab5e33-c7c3-4d5a-84b6-458ae7640061",
@@ -71,18 +70,6 @@ class IneligibleParticipantMailer < ApplicationMailer
       personalisation: {
         ineligible_ECT_name: participant_profile.user.full_name,
         "NQT+1_materials_link": start_schools_year_2020_url(school_id: participant_profile.school.id),
-      },
-    ).tag(:ineligible_participant).associate_with(participant_profile, as: :participant_profile)
-  end
-
-  def mentor_previous_participation_email(induction_tutor_email:, participant_profile:)
-    template_mail(
-      MENTOR_PREVIOUS_PARTICIPATION_TEMPLATE,
-      to: induction_tutor_email,
-      rails_mailer: mailer_name,
-      rails_mail_template: action_name,
-      personalisation: {
-        ineligible_mentor_name: participant_profile.user.full_name,
       },
     ).tag(:ineligible_participant).associate_with(participant_profile, as: :participant_profile)
   end

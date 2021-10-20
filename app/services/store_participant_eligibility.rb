@@ -40,6 +40,8 @@ private
   def send_ineligible_notification_email
     participant_profile.school_cohort.school.induction_coordinators.each do |induction_tutor|
       mailer_name = "#{participant_profile.participant_type}_#{@participant_eligibility.reason}_email"
+      next if mailer_name == "mentor_previous_participation_email" # Do not send emails about ERO mentors
+
       if IneligibleParticipantMailer.respond_to? mailer_name
         IneligibleParticipantMailer.send(mailer_name, **{ induction_tutor_email: induction_tutor.email, participant_profile: participant_profile }).deliver_later
       else
