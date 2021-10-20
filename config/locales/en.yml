@@ -197,7 +197,7 @@ en:
             participant_id:
               <<: *participant_id_error_messages
             reason:
-              blank: The property '#/reason' must be present
+              inclusion: The property '#/reason' must be present and in the list
         participants/withdraw:
           reason:
             invalid: Cannot withdraw without a valid reason
