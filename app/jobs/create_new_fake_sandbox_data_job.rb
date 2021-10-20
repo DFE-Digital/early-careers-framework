@@ -6,15 +6,17 @@ class CreateNewFakeSandboxDataJob < CronJob
   self.cron_expression = "0 2 * * *"
 
   EDT_NAME = "Education Development Trust"
-  def perform
+  def perform(provider_name: EDT_NAME)
     return if Rails.env.production?
+
+    @provider_name = provider_name
 
     10.times do
       name = Faker::Name.name
       EarlyCareerTeachers::Create.call(
         full_name: name,
         email: Faker::Internet.email(name: name),
-        school_cohort: random_edt_school_cohort,
+        school_cohort: random_school_cohort,
         mentor_profile_id: nil,
         year_2020: false,
       )
@@ -30,11 +32,11 @@ class CreateNewFakeSandboxDataJob < CronJob
         funding_choice: "",
         headteacher_status: "",
         nino: "",
-        school_urn: random_edt_school.urn,
+        school_urn: random_school.urn,
         teacher_reference_number: TRNGenerator.next,
         teacher_reference_number_verified: true,
         npq_course: NPQCourse.all.sample,
-        npq_lead_provider: edt_npq_lead_provider,
+        npq_lead_provider: npq_lead_provider,
         user: user,
       )
     end
@@ -42,19 +44,19 @@ class CreateNewFakeSandboxDataJob < CronJob
 
 private
 
-  def edt_ecf_lead_provider
-    @edt_ecf_lead_provider ||= LeadProvider.find_by(name: EDT_NAME)
+  def ecf_lead_provider
+    @ecf_lead_provider ||= LeadProvider.find_by(name: @provider_name)
   end
 
-  def edt_npq_lead_provider
-    @edt_npq_lead_provider ||= NPQLeadProvider.find_by(name: EDT_NAME)
+  def npq_lead_provider
+    @npq_lead_provider ||= NPQLeadProvider.find_by(name: @provider_name)
   end
 
-  def random_edt_school
-    @random_edt_school ||= edt_ecf_lead_provider.schools.sample
+  def random_school
+    @random_school ||= ecf_lead_provider.schools.sample
   end
 
-  def random_edt_school_cohort
-    @random_edt_school_cohort ||= SchoolCohort.find_by(school: random_edt_school, cohort: Cohort.current)
+  def random_school_cohort
+    @random_school_cohort ||= SchoolCohort.find_by(school: random_school, cohort: Cohort.current)
   end
 end
