@@ -170,3 +170,10 @@ jobs:
           PERCY_PARALLEL_NONCE: ${{ needs.create-nonce.outputs.nonce }}
           PERCY_PARALLEL_TOTAL: 12
 
+  rspec_and_cypress_success:
+    name: Rspec and Cypress success
+    runs-on: ubuntu-20.04
+    needs: [e2e-tests, backend-tests]
+    steps:
+      - run: echo Done!
+
