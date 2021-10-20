@@ -104,13 +104,10 @@ RSpec.describe StoreParticipantEligibility do
         end
 
         context "when participant is a Mentor" do
-          it "sends the mentor_previous_participation_email when reason is previous_participation" do
+          it "does not send the mentor_previous_participation_email when reason is previous_participation" do
             eligibility_options[:previous_participation] = true
             service.call(participant_profile: mentor_profile, eligibility_options: eligibility_options)
-            expect(IneligibleParticipantMailer).to delay_email_delivery_of(:mentor_previous_participation_email).with(
-              induction_tutor_email: induction_tutor.email,
-              participant_profile: mentor_profile,
-            )
+            expect(IneligibleParticipantMailer).not_to delay_email_delivery_of("") # Matches any email
           end
 
           it "sends the mentor_no_qts_email when reason is no_qts" do
