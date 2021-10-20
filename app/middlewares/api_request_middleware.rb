@@ -2,7 +2,7 @@
 
 require "./app/jobs/api_request_job"
 
-class APIRequestMiddleware
+class ApiRequestMiddleware
   REQUEST_HEADER_KEYS = %w[
     HTTP_VERSION
     HTTP_HOST

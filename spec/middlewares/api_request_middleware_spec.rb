@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe APIRequestMiddleware, type: :request do
+RSpec.describe ApiRequestMiddleware, type: :request do
   let(:status) { 200 }
   let(:headers) { { HEADER: "Yeah!" } }
   let(:mock_response) { ["Hellowwworlds!"] }
@@ -14,7 +14,7 @@ RSpec.describe APIRequestMiddleware, type: :request do
     }
 
     builder = Rack::Builder.new
-    builder.use APIRequestMiddleware
+    builder.use ApiRequestMiddleware
     builder.run main_app
     @app = builder.to_app
   end

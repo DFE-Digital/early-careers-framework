@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# TODO: Remove, replaced by APIRequestMiddleware
+# TODO: Remove, replaced by ApiRequestMiddleware
 module ApiAuditable
   extend ActiveSupport::Concern
 
