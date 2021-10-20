@@ -123,7 +123,7 @@ module ParticipantDeclarationSteps
     partnership.destroy!
   end
 
-  def then_new_declaration_is_not_created
+  def then_second_declaration_is_not_created
     expect(ParticipantDeclaration.where(course_identifier: "ecf-induction", declaration_type: "started").count).to eq(1)
   end
 
