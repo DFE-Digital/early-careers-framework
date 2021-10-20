@@ -68,8 +68,6 @@ ActiveRecord::Schema.define(version: 2021_10_19_142759) do
     t.jsonb "body"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "current_user_class"
-    t.string "current_user_id"
   end
 
   create_table "api_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
