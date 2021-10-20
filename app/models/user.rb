@@ -22,6 +22,8 @@ class User < ApplicationRecord
   has_many :npq_profiles, through: :teacher_profile
   # end: TODO
 
+  has_many :npq_applications
+
   before_validation :strip_whitespace
 
   validates :full_name, presence: true
@@ -61,6 +63,10 @@ class User < ApplicationRecord
 
   def npq?
     npq_profiles.any?(&:active_record?)
+  end
+
+  def npq_registered?
+    npq? || npq_applications.any?
   end
 
   def participant?

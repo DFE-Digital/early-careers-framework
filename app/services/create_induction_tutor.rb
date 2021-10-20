@@ -55,7 +55,7 @@ private
 
     if existing_induction_coordinator.induction_coordinator_profile.schools.count > 1
       existing_induction_coordinator.induction_coordinator_profile.schools.delete(school)
-    elsif existing_induction_coordinator.mentor? || existing_induction_coordinator.npq?
+    elsif existing_induction_coordinator.mentor? || existing_induction_coordinator.npq_registered?
       existing_induction_coordinator.induction_coordinator_profile.destroy!
     else
       existing_induction_coordinator.destroy!
