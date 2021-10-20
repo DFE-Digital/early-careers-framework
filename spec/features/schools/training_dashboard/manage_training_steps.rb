@@ -268,15 +268,15 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_fip_programme_choice_info_page
-    expect(page).to have_text("You've chosen to: use a training provider, funded by the DfE")
+    expect(page).to have_text("You’ve chosen to: use a training provider, funded by the DfE")
   end
 
   def then_i_am_taken_to_cip_programme_choice_info_page
-    expect(page).to have_text("You've chosen to: deliver your own programme using the DfE-accredited materials")
+    expect(page).to have_text("You’ve chosen to: deliver your own programme using the DfE-accredited materials")
   end
 
   def then_i_am_taken_to_the_no_ect_training_info_page
-    expect(page).to have_text("You're not expecting any early career teachers this year")
+    expect(page).to have_text("You’re not expecting any early career teachers this year")
   end
 
   def then_i_should_see_the_fip_induction_dashboard_without_partnership_details
