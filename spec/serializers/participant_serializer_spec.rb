@@ -192,6 +192,18 @@ RSpec.describe ParticipantSerializer do
             eligibility.manual_check_status!
           end
 
+          it "returns true" do
+            result = ParticipantSerializer.new(ect).serializable_hash
+            expect(result[:data][:attributes][:teacher_reference_number_validated]).to be true
+          end
+        end
+
+        context "when the reason is different_trn" do
+          before do
+            eligibility = ECFParticipantEligibility.create!(participant_profile: ect_profile)
+            eligibility.different_trn_reason!
+          end
+
           it "returns false" do
             result = ParticipantSerializer.new(ect).serializable_hash
             expect(result[:data][:attributes][:teacher_reference_number_validated]).to be false
