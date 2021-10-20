@@ -266,7 +266,11 @@ Rails.application.routes.draw do
       post "/choose-provider-npq", to: "payment_breakdowns#choose_provider_npq", as: :choose_provider_npq
     end
     namespace :ecf do
-      resources :payment_breakdowns, only: %i[show]
+      resources :payment_breakdowns, only: %i[show payable] do
+        member do
+          get :payable
+        end
+      end
       resources :contracts, only: %i[show]
     end
     namespace :npq do
