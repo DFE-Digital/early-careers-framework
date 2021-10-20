@@ -6,36 +6,8 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
 
   subject(:form) { described_class.new(current_user_id: user.id, school_cohort_id: school_cohort.id) }
 
-  it { is_expected.to validate_presence_of(:type).on(:type).with_message("Please select type of the new participant") }
-  it { is_expected.to validate_inclusion_of(:type).in_array(form.type_options).on(:type) }
-
   it { is_expected.to validate_presence_of(:full_name).on(:name).with_message("Enter a full name") }
   it { is_expected.to validate_presence_of(:email).on(:email).with_message("Enter an email address") }
-
-  describe "type" do
-    context "when it is set to :ect" do
-      it "sets the participant_type to ect" do
-        expect { form.type = "ect" }
-          .to change { form.participant_type }.to :ect
-      end
-    end
-
-    context "when it is set to :mentor" do
-      it "sets the participant_type to ect" do
-        expect { form.type = "mentor" }
-          .to change { form.participant_type }.to :mentor
-      end
-    end
-
-    context "when it is set to :self" do
-      it "sets the participant_type to mentor as well as full name and email to match current_user details" do
-        expect { form.type = "self" }
-          .to change { form.participant_type }.to(:mentor)
-                                                 .and change { form.full_name }.to(user.full_name)
-                                                                                  .and change { form.email }.to(user.email)
-      end
-    end
-  end
 
   describe "mentor_options" do
     it "does not include mentors with withdrawn records" do

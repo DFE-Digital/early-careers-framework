@@ -14,7 +14,7 @@ RSpec.describe "Manage CIP training", js: true, with_feature_flags: { induction_
     and_percy_should_be_sent_a_snapshot_named "CIP induction dashboard without materials"
 
     when_i_click_add_your_early_career_teacher_and_mentor_details
-    then_i_am_taken_to_add_new_ect_or_mentor_page
+    when_i_am_taken_to_roles_page
     and_then_return_to_dashboard
 
     when_i_click_on_view_details

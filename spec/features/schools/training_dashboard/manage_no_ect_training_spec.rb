@@ -13,8 +13,8 @@ RSpec.describe "Manage No ECT training", js: true, with_feature_flags: { inducti
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "No ECT dashboard"
 
-    when_i_select_view_details
-    then_i_am_taken_to_the_no_ect_training_info_page
+    when_i_select_change
+    then_i_am_taken_to_change_how_you_run_programme_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "No ECT training info"
   end

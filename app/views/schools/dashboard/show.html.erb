@@ -18,7 +18,7 @@
           </p>
         <% else %>
           <p class="govuk-body govuk-!-margin-bottom-5">
-            <%= govuk_link_to 'Add your early career teacher and mentor details', schools_participants_path(cohort_id: school_cohort.cohort.start_year), class: "govuk-link--no-visited-state" %>
+            <%= govuk_link_to 'Add your early career teacher and mentor details', roles_schools_cohort_path(cohort_id: school_cohort.cohort.start_year), class: "govuk-link--no-visited-state" %>
           </p>
         <% end %>
       <% end %>

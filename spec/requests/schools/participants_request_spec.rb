@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-RSpec.describe "Schools::Participants", type: :request do
+RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_flags: { eligibility_notifications: "active" } do
   let(:user) { create(:user, :induction_coordinator, school_ids: [school.id]) }
   let(:school) { school_cohort.school }
   let(:cohort) { create(:cohort) }
 
-  let!(:school_cohort) { create(:school_cohort, cohort: cohort) }
+  let!(:school_cohort) { create(:school_cohort, cohort: cohort, induction_programme_choice: "full_induction_programme") }
   let!(:another_cohort) { create(:school_cohort) }
-  let(:mentor_profile) { create(:participant_profile, :mentor, school_cohort: school_cohort) }
+  let(:mentor_profile) { create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
   let!(:mentor_user) { mentor_profile.user }
   let!(:mentor_user_2) { create(:participant_profile, :mentor, school_cohort: school_cohort).user }
-  let(:ect_profile) { create(:participant_profile, :ect, mentor_profile: mentor_user.mentor_profile, school_cohort: school_cohort) }
+  let(:ect_profile) { create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, mentor_profile: mentor_user.mentor_profile, school_cohort: school_cohort) }
   let!(:ect_user) { ect_profile.user }
   let!(:withdrawn_ect) { create(:participant_profile, :ect, :withdrawn_record, school_cohort: school_cohort).user }
   let!(:unrelated_mentor) { create(:participant_profile, :mentor, school_cohort: another_cohort).user }
@@ -22,11 +22,14 @@ RSpec.describe "Schools::Participants", type: :request do
   end
 
   describe "GET /schools/:school_id/cohorts/:start_year/participants" do
-    it "shouldn't be available when feature flag turned off" do
-      FeatureFlag.deactivate(:induction_tutor_manage_participants)
-      expect {
-        get "/schools/cohorts/#{cohort.start_year}/participants"
-      }.to raise_error(ActionController::RoutingError)
+    context "when feature flag is turned off" do
+      before { FeatureFlag.deactivate(:induction_tutor_manage_participants) }
+
+      it "shouldn't be available" do
+        expect {
+          get "/schools/cohorts/#{cohort.start_year}/participants"
+        }.to raise_error(ActionController::RoutingError)
+      end
     end
 
     it "renders participants template" do
@@ -48,20 +51,6 @@ RSpec.describe "Schools::Participants", type: :request do
       get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants"
 
       expect(response.body).not_to include(CGI.escapeHTML(withdrawn_ect.full_name))
-    end
-
-    context "when there are no mentors" do
-      let(:other_school) { create(:school) }
-      let(:other_cohort) { create(:cohort) }
-      let!(:other_school_cohort) { create(:school_cohort, cohort: other_cohort, school: other_school) }
-      let!(:ect_profile) { create(:participant_profile, :ect, school_cohort: other_school_cohort) }
-      let(:user) { create(:user, :induction_coordinator, school_ids: [other_school.id]) }
-      it "does not show the assign mentor link" do
-        get "/schools/#{other_school.slug}/cohorts/#{other_cohort.start_year}/participants"
-
-        expect(response.body).to include "No mentors added"
-        expect(response.body).not_to include "Assign mentor"
-      end
     end
   end
 
