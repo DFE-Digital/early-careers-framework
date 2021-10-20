@@ -22,10 +22,8 @@ class ParticipantSerializer
     end
 
     def validated_trn(user)
-      eligibility_status = user.teacher_profile.current_ecf_profile.ecf_participant_eligibility&.status
-      if %w[matched eligible].include?(eligibility_status)
-        user.teacher_profile.trn
-      end
+      eligibility = user.teacher_profile.current_ecf_profile.ecf_participant_eligibility
+      eligibility.present? && !eligibility.different_trn_reason?
     end
 
     def eligible_for_funding?(user)
