@@ -132,7 +132,7 @@ en:
         "0": Band A
         "1": Band B
         "2": Band C
-        "3": Additional
+        "3": New target
       payment_breakdown: ECF Payment Breakdown
       contract_information: ECF Contract Information
     npq:

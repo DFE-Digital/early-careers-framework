@@ -1,4 +1,9 @@
 <h3 class="govuk-heading-s"><%= t("finance.ecf.bands.#{band}") %></h3>
+
+<% if band == 3 %>
+  <p>Participants over the original band C target up to the new target.</p>
+<% end %>
+
 <table class="govuk-table payment-breakdown-table">
   <tbody>
     <tr class="govuk-table__row">
@@ -15,7 +20,7 @@
       <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
     </tr>
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__cell"><%= t("finance.ecf.bands.#{band}") %> payment</th>
+      <th scope="row" class="govuk-table__cell">Payment</th>
       <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><%= number_to_pounds subtotal %></td>
     </tr>
   </tbody>

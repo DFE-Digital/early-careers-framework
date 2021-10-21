@@ -200,6 +200,7 @@ example_contract_data = {
   "uplift_target": 0.33,
   "uplift_amount": 100,
   "recruitment_target": 2000,
+  "revised_target": 5000,
   "set_up_fee": 149_861,
   "band_a": {
     "max": 2000,
@@ -212,7 +213,13 @@ example_contract_data = {
   },
   "band_c": {
     "min": 4001,
+    "max": 4500,
     "per_participant": 966,
+  },
+  "band_d": {
+    "min": 4501,
+    "max": 5000,
+    "per_participant": 900,
   },
 }
 
@@ -223,11 +230,12 @@ LeadProvider.all.each do |lp|
     uplift_target: example_contract_data[:uplift_target],
     uplift_amount: example_contract_data[:uplift_amount],
     recruitment_target: example_contract_data[:recruitment_target],
+    revised_target: example_contract_data[:revised_target],
     set_up_fee: example_contract_data[:set_up_fee],
     raw: example_contract_data.to_json,
   )
 
-  %i[band_a band_b band_c].each do |band|
+  %i[band_a band_b band_c band_d].each do |band|
     src = example_contract_data[band]
     ParticipantBand.find_or_create_by!(
       call_off_contract: sample_call_off_contract,
