@@ -24,9 +24,9 @@ ecf_january_standard_2021.update!(schedule_identifier: "ecf-january-standard-202
 [
   { name: "Output 1 - Participant Start", start_date: Date.new(2022, 1, 1), milestone_date: Date.new(2022, 1, 31), payment_date: Date.new(2022, 2, 28), declaration_type: "started" },
   { name: "Output 2 – Retention Point 1", start_date: Date.new(2022, 2, 1), milestone_date: Date.new(2022, 4, 30), payment_date: Date.new(2022, 5, 31), declaration_type: "retained-1" },
-  { name: "Output 4 – Retention Point 2", start_date: Date.new(2022, 5, 1), milestone_date: Date.new(2022, 9, 30), payment_date: Date.new(2022, 10, 31), declaration_type: "retained-2" },
-  { name: "Output 5 – Retention Point 3", start_date: Date.new(2022, 10, 1), milestone_date: Date.new(2023, 1, 31), payment_date: Date.new(2023, 2, 28), declaration_type: "retained-3" },
-  { name: "Output 6 – Retention Point 4", start_date: Date.new(2023, 2, 1), milestone_date: Date.new(2023, 4, 30), payment_date: Date.new(2023, 5, 31), declaration_type: "retained-4" },
+  { name: "Output 3 – Retention Point 2", start_date: Date.new(2022, 5, 1), milestone_date: Date.new(2022, 9, 30), payment_date: Date.new(2022, 10, 31), declaration_type: "retained-2" },
+  { name: "Output 4 – Retention Point 3", start_date: Date.new(2022, 10, 1), milestone_date: Date.new(2023, 1, 31), payment_date: Date.new(2023, 2, 28), declaration_type: "retained-3" },
+  { name: "Output 5 – Retention Point 4", start_date: Date.new(2023, 2, 1), milestone_date: Date.new(2023, 4, 30), payment_date: Date.new(2023, 5, 31), declaration_type: "retained-4" },
   { name: "Output 6 – Participant Completion", start_date: Date.new(2023, 2, 1), milestone_date: Date.new(2023, 10, 31), payment_date: Date.new(2023, 11, 30), declaration_type: "completed" },
 ].each do |hash|
   Finance::Milestone.find_or_create_by!(
