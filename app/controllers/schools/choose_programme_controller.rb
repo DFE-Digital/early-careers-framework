@@ -19,22 +19,6 @@ class Schools::ChooseProgrammeController < Schools::BaseController
     redirect_to action: :confirm_programme
   end
 
-  def choice_saved_design_our_own
-    @cohort = cohort
-    @school = school
-  end
-
-  def choice_saved_no_early_career_teachers
-    @cohort = cohort
-    @school = school
-    render "shared/choice_saved_no_early_career_teachers"
-  end
-
-  def choice_saved_school_funded_fip
-    @cohort = cohort
-    @school = school
-  end
-
   def confirm_programme; end
 
   def save_programme
@@ -42,14 +26,12 @@ class Schools::ChooseProgrammeController < Schools::BaseController
 
     session.delete(:induction_choice_form)
 
-    if @induction_choice_form.opt_out_choice_selected?
-      redirect_to action: "choice_saved_#{@induction_choice_form.programme_choice}"
-    else
-      redirect_to success_schools_choose_programme_path
-    end
+    redirect_to success_schools_choose_programme_path
   end
 
-  def success; end
+  def success
+    render locals: { school_cohort: school_cohort }
+  end
 
 private
 

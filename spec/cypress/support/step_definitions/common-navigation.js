@@ -83,12 +83,6 @@ const pagePaths = {
     "/schools/:school_id/cohorts/:cohort_id/choose-programme/confirm-programme",
   "choose programme success":
     "/schools/:school_id/cohorts/:cohort_id/choose-programme/success",
-  "design your programme success":
-    "/schools/:school_id/cohorts/:cohort_id/choose-programme/design-your-programme",
-  "school funded fip success":
-    "/schools/:school_id/cohorts/:cohort_id/choose-programme/school-funded-fip",
-  "no early career teachers success":
-    "/schools/:school_id/cohorts/:cohort_id/choose-programme/no-early-career-teachers",
   schools: "/schools",
   "school cohorts": "/schools/:id",
   "2021 school cohorts": "/schools/:id/cohorts/2021",
