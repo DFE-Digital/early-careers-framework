@@ -2,12 +2,17 @@
 <table class="govuk-table payment-breakdown-table">
   <tbody>
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Fee per event</th>
+      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Fee per participant</th>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds per_participant %></td>
     </tr>
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Number of participants </th>
+      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Current participants</th>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= participants %></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <!-- TODO: Add back payments -->
+      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Back payment participants</th>
+      <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
     </tr>
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__cell"><%= t("finance.ecf.bands.#{band}") %> payment</th>

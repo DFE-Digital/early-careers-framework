@@ -129,9 +129,9 @@ en:
         ceiling: Unlimited
     ecf:
       bands:
-        "0": ECF FIP Band A
-        "1": ECF FIP Band B
-        "2": ECF FIP Band C
+        "0": Band A
+        "1": Band B
+        "2": Band C
         "3": Additional
       payment_breakdown: ECF Payment Breakdown
       contract_information: ECF Contract Information

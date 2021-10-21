@@ -21,23 +21,33 @@
         <%= render Finance::ECF::OutputPayments.new(output_payments: @breakdown[:output_payments]) %>
       <% end %>
 
-      <!--TODO: Add back payments-->
-      <%= accordion.section heading_text: "Milestone 1 back payment" do %>
-        <h3 class="govuk-heading-s">Coming soon!</h3>
-      <% end %>
-
       <% @breakdown[:other_fees].each do |other_fee| %>
-        <%= accordion.section heading_text: "#{Finance::ECF::OtherFee.new(other_fee).name.capitalize} fees" do %>
+        <%= accordion.section heading_text: "#{Finance::ECF::OtherFee.new(other_fee).name.capitalize} fee" do %>
           <%= render Finance::ECF::OtherFeeRow.new(other_fee: Finance::ECF::OtherFee.new(other_fee)) %>
         <% end %>
       <% end %>
 
       <!--TODO: Add clawbacks-->
       <%= accordion.section heading_text: "Clawbacks" do %>
-        <h3 class="govuk-heading-s">Coming soon!</h3>
+        <table class="govuk-table payment-breakdown-table">
+          <tbody>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Clawback per participant</th>
+              <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds 0 %></td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Number of participants</th>
+              <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__cell">Clawbacks</th>
+              <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><%= number_to_pounds 0 %></td>
+            </tr>
+          </tbody>
+        </table>
       <% end %>
     <% end %>
   </div>
 </div>
 
-<%= govuk_button_link_to t("finance.show_contract"), finance_ecf_contract_path(id: @ecf_lead_provider.id) %>
+<%= govuk_link_to t("finance.show_contract"), finance_ecf_contract_path(id: @ecf_lead_provider.id) %>

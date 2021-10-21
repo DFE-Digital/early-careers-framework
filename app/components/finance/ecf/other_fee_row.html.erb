@@ -1,15 +1,15 @@
 <table class="govuk-table payment-breakdown-table">
   <tbody>
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Payment amount per participant</th>
+      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Fee per participant</th>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds per_participant %></td>
     </tr>
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Number of participants </th>
+      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Current participants</th>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= participants %></td>
     </tr>
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__cell"><%= name.capitalize %> fee payment</th>
+      <th scope="row" class="govuk-table__cell">Payment</th>
       <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><%= number_to_pounds subtotal %></td>
     </tr>
   </tbody>
