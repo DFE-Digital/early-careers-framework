@@ -31,9 +31,9 @@
               schema_location = schema.node_context.source_location.to_s
               # Only print a link if it's a referenced schema.
               if !schema_location.include?('/properties/')
-                "This returns a #{get_schema_link(schema)} schema."
+                "It conforms to #{get_schema_link(schema)} schema."
               elsif schema_location.end_with?("data")
-                "This returns a #{get_schema_link_data(schema)} schema."
+                "It conforms to #{get_schema_link_data(schema)} schema."
               end
             %>
 
