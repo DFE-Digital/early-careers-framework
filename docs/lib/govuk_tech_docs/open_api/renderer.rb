@@ -19,6 +19,7 @@ module GovukTechDocs
         @template_schema = get_renderer("schema.html.erb")
         @template_operation = get_renderer("operation.html.erb")
         @template_parameters = get_renderer("parameters.html.erb")
+        @template_request_body = get_renderer("request_body.html.erb")
         @template_responses = get_renderer("responses.html.erb")
         @template_any_of = get_renderer("any_of.html.erb")
         @template_curl_examples = get_renderer("curl_examples.html.erb")
@@ -95,6 +96,7 @@ module GovukTechDocs
           id = "#{path_id}-#{key.parameterize}"
           text = text # rubocop:disable Lint/SelfAssignment
           parameters = parameters(operation, id)
+          request_body = request_body(operation, id) if operation.request_body
           responses = responses(operation, id)
           curl_examples = curl_examples(operation, id)
           memo + @template_operation.result(binding)
@@ -105,6 +107,12 @@ module GovukTechDocs
         parameters = operation.parameters
         id = "#{operation_id}-parameters"
         @template_parameters.result(binding)
+      end
+
+      def request_body(operation, operation_id)
+        request_body = operation.request_body
+        id = "#{operation_id}-request_body"
+        @template_request_body.result(binding)
       end
 
       def curl_examples(operation, operation_id)
@@ -191,7 +199,16 @@ module GovukTechDocs
         end
 
         # Schema dictates that it's always components['schemas']
-        text.gsub(/#\/components\/schemas\//, "")
+        text.gsub(/#\/components\/schemas\//, "").gsub("/properties/data", "")
+      end
+
+      def get_schema_link_data(schema)
+        schemas_from_schema(schema).each do |s|
+          unless s.nil?
+            id = "schema-#{s.parameterize}"
+            return "<a href='\##{id}'>#{s}</a>"
+          end
+        end
       end
 
       def get_schema_link(schema)
@@ -199,7 +216,6 @@ module GovukTechDocs
         unless schema_name.nil?
           id = "schema-#{schema_name.parameterize}"
           "<a href='\##{id}'>#{schema_name}</a>"
-
         end
       end
 
