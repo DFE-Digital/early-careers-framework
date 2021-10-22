@@ -93,6 +93,22 @@ RSpec.describe CreateInductionTutor do
         end
       end
 
+      context "when the induction coordinator was previously a mentor" do
+        let!(:mentor_profile) { create(:participant_profile, :mentor, user: existing_profile.user, school: school, status: "withdrawn") }
+
+        it "retains the user but deletes the induction coordinator profile" do
+          expect(school.induction_coordinator_profiles.first).to eq(existing_profile)
+
+          CreateInductionTutor.call(school: school, email: email, full_name: name)
+
+          user = User.find_by(email: email)
+          expect(school.reload.induction_coordinator_profiles.first).to eq(user.induction_coordinator_profile)
+          expect(InductionCoordinatorProfile.exists?(existing_profile.id)).to be false
+          expect(User.exists?(existing_user.id)).to be true
+          expect(ParticipantProfile::Mentor.exists?(mentor_profile.id)).to be true
+        end
+      end
+
       context "when the induction coordinator is also an npq" do
         let!(:npq_profile) { create(:participant_profile, :npq, user: existing_profile.user, school: school) }
 
