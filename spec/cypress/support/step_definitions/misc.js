@@ -1,8 +1,4 @@
-import { Given, Then } from "cypress-cucumber-preprocessor/steps";
-
-Given("seed data should be loaded", () => {
-  cy.app("load_seed");
-});
+import { Then } from "cypress-cucumber-preprocessor/steps";
 
 Then("the page should be accessible", () => {
   cy.checkA11y();
