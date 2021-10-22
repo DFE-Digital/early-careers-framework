@@ -174,4 +174,10 @@ class ValidationBetaService
         ).deliver_later
       end
   end
+
+  def sit_email_sent_in_error(list_of_induction_coordinator_profile_ids)
+    InductionCoordinatorProfile.where(id: list_of_induction_coordinator_profile_ids).includes(:user).find_each do |profile|
+      ParticipantValidationMailer.sit_email_sent_in_error_email(recipient: profile.user.email).deliver_later
+    end
+  end
 end

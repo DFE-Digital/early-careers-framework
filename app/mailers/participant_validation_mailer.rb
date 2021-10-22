@@ -6,6 +6,7 @@ class ParticipantValidationMailer < ApplicationMailer
   ECTS_TO_ADD_VALIDATIN_INFO_TEMPLATE = "50ee41e5-06b9-41cf-9afd-d5bc4db356c4"
   MENTORS_TO_ADD_VALIDATION_EMAIL_TEMPLATE = "e0198213-c09d-41aa-8197-b167e495e49d"
   INDUCTION_COORDINATORS_WHO_ARE_MENTORS_TO_ADD_VALIDATION_EMAIL_TEMPLATE = "7e7d3fdb-41f5-4e04-a4ae-acf92e8fefe6"
+  SIT_EMAIL_SENT_IN_ERROR_TEMPLATE = "3fdfd8ed-2ad1-4c8c-81cd-f7656afb19a7"
 
   STATUTORY_GUIDANCE_LINK = "https://www.gov.uk/government/publications/induction-for-early-career-teachers-england"
 
@@ -58,6 +59,16 @@ class ParticipantValidationMailer < ApplicationMailer
         sign_in: sign_in,
         participant_start: start_url,
       },
+    )
+  end
+
+  def sit_email_sent_in_error_email(recipient:)
+    template_mail(
+      SIT_EMAIL_SENT_IN_ERROR_TEMPLATE,
+      to: recipient,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: { to: recipient },
     )
   end
 end
