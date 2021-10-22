@@ -28,7 +28,7 @@ private
   end
 
   def and_breakdown_calculation_was_run
-    @breakdown = CalculationOrchestrator.call(
+    @breakdown = Finance::ECF::CalculationOrchestrator.call(
       cpd_lead_provider: @cpd_lead_provider,
       contract: @cpd_lead_provider.lead_provider.call_off_contract,
       event_type: :started,

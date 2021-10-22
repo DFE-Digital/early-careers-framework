@@ -7,7 +7,7 @@ describe FinanceHelper do
     let!(:contract) { create(:call_off_contract, lead_provider: cpd_lead_provider.lead_provider) }
 
     let(:breakdown) do
-      CalculationOrchestrator.call(
+      Finance::ECF::CalculationOrchestrator.call(
         cpd_lead_provider: cpd_lead_provider,
         contract: cpd_lead_provider.lead_provider.call_off_contract,
         event_type: :started,

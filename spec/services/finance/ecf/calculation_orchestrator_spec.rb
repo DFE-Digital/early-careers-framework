@@ -15,7 +15,7 @@ class DummyAggregator
   end
 end
 
-RSpec.describe CalculationOrchestrator do
+RSpec.describe Finance::ECF::CalculationOrchestrator do
   let(:call_off_contract) { create(:call_off_contract) }
   let(:breakdown_summary) do
     {
