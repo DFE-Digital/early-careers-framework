@@ -357,7 +357,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NPQParticipantProfileResponse"
+                  "$ref": "#/components/schemas/NPQParticipantResponse"
                 }
               }
             }
@@ -2288,82 +2288,15 @@
           }
         }
       },
-      "NPQParticipantProfile": {
-        "description": "The details of an NPQ Participant Profile for a given course",
-        "type": "object",
-        "required": [
-          "id",
-          "type",
-          "attributes"
-        ],
-        "properties": {
-          "id": {
-            "description": "The unique identifier of the NPQ Participant profile record for a given course",
-            "type": "string",
-            "format": "uuid",
-            "example": "ac3d1243-7308-4879-942a-c4a70ced400a"
-          },
-          "type": {
-            "description": "The data type",
-            "type": "string",
-            "example": "npq-participant-profile",
-            "enum": [
-              "npq-participant-profile"
-            ]
-          },
-          "attributes": {
-            "$ref": "#/components/schemas/NPQParticipantProfileAttributes"
-          }
-        }
-      },
-      "NPQParticipantProfileAttributes": {
-        "description": "The data attributes associated with an NPQ application",
-        "type": "object",
-        "required": [
-          "participant_id",
-          "training_status"
-        ],
-        "properties": {
-          "participant_id": {
-            "description": "The unique identifier of this NPQ participant",
-            "type": "string",
-            "example": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
-            "format": "uuid"
-          },
-          "course_identifier": {
-            "description": "The NPQ course identifier",
-            "type": "string",
-            "enum": [
-              "npq-leading-teaching",
-              "npq-leading-behaviour-culture",
-              "npq-leading-teaching-development",
-              "npq-senior-leadership",
-              "npq-headship",
-              "npq-executive-leadership"
-            ],
-            "example": "npq-leading-teaching-development"
-          },
-          "training_status": {
-            "description": "The training status of the NPQ participant to a given course",
-            "type": "string",
-            "example": "withdrawn",
-            "enum": [
-              "active",
-              "withdrawn",
-              "deferred"
-            ]
-          }
-        }
-      },
-      "NPQParticipantProfileResponse": {
-        "description": "Response received after withdrawing a participant from a course",
+      "NPQParticipantResponse": {
+        "description": "An NPQ participant",
         "type": "object",
         "required": [
           "data"
         ],
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/NPQParticipantProfile"
+            "$ref": "#/components/schemas/NPQParticipant"
           }
         }
       },
