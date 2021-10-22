@@ -176,6 +176,7 @@ Rails.application.routes.draw do
         end
       end
       resources :participants, controller: "schools/participants", only: :index
+      resource :cohort2020, controller: "schools/cohort2020", only: %i[show new create]
     end
 
     resources :participants, only: %i[show index destroy] do
