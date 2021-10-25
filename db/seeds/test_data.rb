@@ -199,7 +199,7 @@ ProviderRelationship.find_or_create_by!(
 example_contract_data = {
   "uplift_target": 0.33,
   "uplift_amount": 100,
-  "recruitment_target": 2000,
+  "recruitment_target": 4500,
   "revised_target": 5000,
   "set_up_fee": 149_861,
   "band_a": {
@@ -219,7 +219,7 @@ example_contract_data = {
   "band_d": {
     "min": 4501,
     "max": 5000,
-    "per_participant": 900,
+    "per_participant": 966,
   },
 }
 
