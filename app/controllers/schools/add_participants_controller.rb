@@ -49,7 +49,7 @@ module Schools
 
     def school_cohort
       return @school_cohort if defined?(@school_cohort)
-      
+
       set_school_cohort
       @school_cohort
     end

@@ -2,7 +2,6 @@
 
 module Participants
   class ValidationsController < BaseController
-
     include Multistep::Controller
 
     form Participants::ParticipantValidationForm, as: :validation_form

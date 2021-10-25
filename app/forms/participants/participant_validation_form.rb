@@ -106,9 +106,9 @@ module Participants
           trn: trn,
           nino: nino,
           full_name: full_name,
-          dob: dob
+          dob: dob,
         },
-        dtq_response: dtq_response
+        dtq_response: dtq_response,
       )
 
       self.eligibility = eligibility_record.status.to_sym

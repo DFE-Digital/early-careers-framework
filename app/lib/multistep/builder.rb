@@ -38,7 +38,7 @@ module Multistep
         attributes: @attributes,
         next_step: @next_step,
         before_complete: @before_complete,
-        update: @update
+        update: @update,
       )
     end
   end

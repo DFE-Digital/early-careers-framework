@@ -140,6 +140,7 @@ module Multistep
 
     def ensure_form_present
       return if session.key?(self.class.session_key)
+
       redirect_to abandon_journey_path
     end
   end
