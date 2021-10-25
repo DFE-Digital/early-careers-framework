@@ -110,7 +110,6 @@ en:
     mentors: Current Mentors
     participants: Current Participants
     per_participant: Payment amount per person
-    recuitment_target: Recruitment target
     payment_breakdown: Payment Breakdown
     payment_type: Payment type
     number_of_participants: Number of participants
@@ -127,6 +126,7 @@ en:
     contract:
       uplift_target: Uplift target
       uplift_amount: Uplift amount
+      recuitment_target: Recruitment target
       revised_target: Revised recruitment target (+2%)
       set_up_fee: Set-up Fee
       band: Band
