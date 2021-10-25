@@ -6,10 +6,10 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <%= form_for @nominate_induction_tutor_form, url: { action: :create }, method: :post do |f| %>
+    <%= form_for @nominate_induction_tutor_form, url: { action: :create }, method: :put do |f| %>
       <%= f.govuk_error_summary %>
         <div class="govuk-form-group">
-                <%= f.govuk_text_field(:email, label: { text: "What's #{@nominate_induction_tutor_form.full_name.titleize}'s email address", size: "xl" },
+                <%= f.govuk_text_field(:email, label: { text: "What's #{@nominate_induction_tutor_form.full_name.titleize}'s email address?", size: "xl" },
                  hint: { text: "They will sign in with this email and get future notifications about this service" } ) %>
         </div>
       <%= f.hidden_field :token, value: @nominate_induction_tutor_form.token %>
