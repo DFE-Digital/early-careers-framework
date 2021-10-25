@@ -59,6 +59,21 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { induct
     end
   end
 
+  context "ERO mentor" do
+    before { and_i_have_added_an_ero_mentor }
+
+    scenario "Induction coordinators can view and manage participant" do
+      given_i_am_on_the_cip_induction_dashboard
+      when_i_navigate_to_participants_dashboard
+      then_i_can_view_cip_eligible_participants
+      then_the_action_required_is_none
+
+      when_i_click_on_check
+      then_i_am_taken_to_view_details_page
+      then_i_can_view_eligible_cip_status
+    end
+  end
+
   context "Eligible ECTs with a mentor assigned" do
     before do
       and_i_have_added_a_contacted_for_info_mentor

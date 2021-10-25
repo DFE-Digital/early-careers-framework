@@ -598,6 +598,10 @@ module ManageTrainingSteps
     expect(page).to have_text("We’ve confirmed this person is eligible for this programme. They have access to their materials.")
   end
 
+  def then_i_can_see_ero_status
+    expect(page).to have_text("This person is ready to mentor ECTs this year. Our checks show they're already receiving funded mentor training as part of the early roll-out of the early career framework (ECF) reforms.")
+  end
+
   def then_i_am_taken_to_cip_induction_dashboard
     expect(page).to have_selector("h1", text: "Manage your training")
     expect(page).not_to have_text("Programme materials")
