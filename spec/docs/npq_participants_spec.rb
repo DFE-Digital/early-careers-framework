@@ -105,7 +105,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
           }
         end
 
-        schema({ "$ref": "#/components/schemas/NPQParticipantProfileResponse" })
+        schema({ "$ref": "#/components/schemas/NPQParticipantResponse" })
         run_test!
       end
 
