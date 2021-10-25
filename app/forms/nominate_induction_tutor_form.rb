@@ -7,10 +7,10 @@ class NominateInductionTutorForm
 
   attr_accessor :full_name, :email, :token, :school_id, :user_id
 
-  validates :full_name, presence: true, on: %i[full_name check_name]
-  validates :email, presence: true, notify_email: true, on: %i[email create]
-  validate :email_is_not_in_use, on: %i[email create]
-  validate :name_matches, on: %i[full_name check_name]
+  validates :full_name, presence: true, on: :full_name
+  validates :email, presence: true, notify_email: true, on: :email
+  validate :email_is_not_in_use
+  validate :name_matches
 
   def attributes
     {
