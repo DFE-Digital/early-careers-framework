@@ -78,7 +78,7 @@
                 Remind them
               <% elsif latest_email_failed_for(profile) %>
                 Check email address
-              <% elsif profile.mentor_profile_id.nil? %>
+              <% elsif profile.ect? && profile.mentor_profile_id.nil? %>
                 Assign mentor
               <% else %>
                 None
