@@ -1,7 +1,7 @@
 <table class="govuk-table payment-breakdown-table">
   <tbody>
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Submission deadline</th>
+      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.ecf.breakdown_summary.submission_deadline") %></th>
       <td class="govuk-table__cell"><%= @deadline %></td>
     </tr>
   </tbody>
@@ -10,67 +10,67 @@
 <table class="govuk-table payment-breakdown-table">
   <tbody>
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Current ECTs</th>
+      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.ects") %></th>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= @breakdown[:breakdown_summary][:ects] %></td>
       <td class="govuk-table__cell"></td>
     </tr>
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Current mentors</th>
+      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.mentors") %></th>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= @breakdown[:breakdown_summary][:mentors] %></td>
       <td class="govuk-table__cell"></td>
     </tr>
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__cell">Total</th>
+      <th scope="row" class="govuk-table__cell"><%=t("finance.ecf.breakdown_summary.total") %></th>
       <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><%= @breakdown[:breakdown_summary][:participants] %></td>
       <td class="govuk-table__cell"></td>
     </tr>
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Recruitment target</th>
+      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.recuitment_target") %></th>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= @breakdown[:breakdown_summary][:recruitment_target] %></td>
       <td class="govuk-table__cell"></td>
     </tr>
   </tbody>
 </table>
 
-<h2 class="govuk-heading-m">Payment breakdown</h2>
+<h2 class="govuk-heading-m"><%=t("finance.payment_breakdown") %></h2>
 
 <table class="govuk-table payment-breakdown-table">
   <thead>
     <tr class="govuk-table__row">
-      <th class="govuk-table__header">Payment type</th>
-      <th class="govuk-table__header govuk-table__cell--numeric govuk-!-font-weight-bold">Number of <br>participants</th>
-      <th class="govuk-table__header govuk-table__cell--numeric govuk-!-font-weight-bold">Payment amount<br>for period</th>
+      <th class="govuk-table__header"><%=t("finance.payment_type") %></th>
+      <th class="govuk-table__header govuk-table__cell--numeric govuk-!-font-weight-bold"><%=t("finance.number_of_participants") %></th>
+      <th class="govuk-table__header govuk-table__cell--numeric govuk-!-font-weight-bold"><%=t("finance.payment_amount_for_period") %></th>
     </tr>
   </thead>
   <tbody>
     <tr class="govuk-table__row">
-      <td class="govuk-table__cell">Service fee</td>
+      <td class="govuk-table__cell"><%=t("finance.service_fee.caption") %></td>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= @service_fees_participants %></td>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds @service_fees_total %></td>
     </tr>
     <tr class="govuk-table__row">
-      <td class="govuk-table__cell">Output fee </td>
+      <td class="govuk-table__cell"><%=t("finance.output_payment.caption") %></td>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= @output_payment_participants %></td>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds @output_payment_total %></td>
     </tr>
     <tr class="govuk-table__row">
-      <td class="govuk-table__cell">Uplift fee </td>
+      <td class="govuk-table__cell"><%=t("finance.uplift_fee.caption") %></td>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= @breakdown[:other_fees][:uplift][:participants] %></td>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds @breakdown[:other_fees][:uplift][:subtotal] %></td>
     </tr>
     <tr class="govuk-table__row">
       <!--TODO: Add clawbacks-->
-      <td class="govuk-table__cell">Clawbacks </td>
+      <td class="govuk-table__cell"><%=t("finance.clawbacks.caption") %></td>
       <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds 0 %></td>
     </tr>
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">VAT</th>
+      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.vat") %></th>
       <td class="govuk-table__cell"></td>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds total_vat(@breakdown, @lead_provider) %></td>
     </tr>
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__cell">Total payment</th>
+      <th scope="row" class="govuk-table__cell"><%=t("finance.total_payment") %></th>
       <td class="govuk-table__cell"></td>
       <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><%= number_to_pounds total_payment(@breakdown) + total_vat(@breakdown, @lead_provider) %></td>
     </tr>

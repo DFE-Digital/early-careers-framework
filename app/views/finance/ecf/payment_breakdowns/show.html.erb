@@ -13,11 +13,11 @@
     <%= render Finance::ECF::BreakdownSummary.new(breakdown_summary: @breakdown, lead_provider: @ecf_lead_provider) %>
 
     <%= govuk_accordion do |accordion| %>
-      <%= accordion.section heading_text: "Service fee" do %>
+      <%= accordion.section heading_text: t("finance.service_fee.caption") do %>
         <%= render Finance::ECF::ServiceFees.new(service_fees: @breakdown[:service_fees]) %>
       <% end %>
 
-      <%= accordion.section heading_text: "Output fee" do %>
+      <%= accordion.section heading_text: t("finance.output_payment.caption") do %>
         <%= render Finance::ECF::OutputPayments.new(output_payments: @breakdown[:output_payments]) %>
       <% end %>
 
@@ -28,19 +28,19 @@
       <% end %>
 
       <!--TODO: Add clawbacks-->
-      <%= accordion.section heading_text: "Clawbacks" do %>
+      <%= accordion.section heading_text: t("finance.clawbacks.caption") do %>
         <table class="govuk-table payment-breakdown-table">
           <tbody>
             <tr class="govuk-table__row">
-              <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Clawback per participant</th>
+              <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.clawbacks.per_participant") %></th>
               <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds 0 %></td>
             </tr>
             <tr class="govuk-table__row">
-              <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Number of participants</th>
+              <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.number_of_participants") %></th>
               <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
             </tr>
             <tr class="govuk-table__row">
-              <th scope="row" class="govuk-table__cell">Clawbacks</th>
+              <th scope="row" class="govuk-table__cell"><%=t("finance.clawbacks.caption") %></th>
               <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><%= number_to_pounds 0 %></td>
             </tr>
           </tbody>

@@ -52,6 +52,6 @@ private
   end
 
   def when_i_click_on_view_contract_link
-    find("a", text: "View contract information").click
+    find("a", text: I18n.t("finance.show_contract")).click
   end
 end
