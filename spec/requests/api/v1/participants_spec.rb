@@ -265,15 +265,15 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
         let(:parsed_response) { JSON.parse(response.body) }
 
         before do
-          create(:schedule, schedule_identifier: "ecf-september-extended-2021")
+          create(:schedule, schedule_identifier: "ecf-january-standard-2021")
           early_career_teacher_profile.update!(schedule: create(:schedule, schedule_identifier: "ecf-september-standard-2021"))
         end
 
         it "changes participant schedule" do
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/change-schedule", params: { data: { attributes: { course_identifier: "ecf-induction", schedule_identifier: "ecf-september-extended-2021" } } }
+          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/change-schedule", params: { data: { attributes: { course_identifier: "ecf-induction", schedule_identifier: "ecf-january-standard-2021" } } }
 
           expect(response).to be_successful
-          expect(parsed_response.dig("data", "attributes", "schedule_identifier")).to eql("ecf-september-extended-2021")
+          expect(parsed_response.dig("data", "attributes", "schedule_identifier")).to eql("ecf-january-standard-2021")
         end
       end
 

@@ -6,9 +6,7 @@ properties:
     type: string
     enum:
       - ecf-september-standard-2021
-      - ecf-september-extended-2021
-      - ecf-january-reduced-2021
-      - ecf-january-extended-2021
+      - ecf-january-standard-2021
     example: ecf-september-standard-2021
   course_identifier:
     description: "The type of course the participant is enrolled in"
@@ -21,5 +19,5 @@ required:
   - schedule_identifier
   - course_identifier
 example:
-  schedule_identifier: ecf-september-extended-2021
+  schedule_identifier: ecf-january-standard-2021
   course_identifier: ecf-mentor
