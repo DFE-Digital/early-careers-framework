@@ -11,7 +11,6 @@ module Finance
           contract: @ecf_lead_provider.call_off_contract,
           event_type: :started,
         )
-
         @cutoff_date = "On #{helpers.cutoff_date}"
       end
 

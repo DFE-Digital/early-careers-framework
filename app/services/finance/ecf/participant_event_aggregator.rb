@@ -31,6 +31,7 @@ private
   def aggregation_types
     {
       started: {
+        not_paid: :submitted_for_lead_provider,
         all: :eligible_for_lead_provider,
         uplift: :eligible_uplift_for_lead_provider,
         ects: :eligible_ects_for_lead_provider,

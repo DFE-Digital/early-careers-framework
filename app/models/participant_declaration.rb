@@ -38,6 +38,8 @@ class ParticipantDeclaration < ApplicationRecord
   scope :submitted_between, ->(start_date, end_date) { where(created_at: start_date..end_date) }
 
   # Declaration aggregation scopes
+  scope :submitted_for_lead_provider, ->{lead_provider} { for_lead_provider(lead_provider).unique_id.submitted }
+
   scope :eligible_for_lead_provider, ->(lead_provider) { for_lead_provider(lead_provider).unique_id.eligible }
   scope :eligible_ects_for_lead_provider, ->(lead_provider) { eligible_for_lead_provider(lead_provider).ect }
   scope :eligible_mentors_for_lead_provider, ->(lead_provider) { eligible_for_lead_provider(lead_provider).mentor }

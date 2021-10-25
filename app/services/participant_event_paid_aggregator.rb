@@ -4,6 +4,7 @@ class ParticipantEventPaidAggregator < ParticipantEventAggregator
 private
 
   def aggregation_types
+    super.merge(
     {
       started: {
         all: :paid_for_lead_provider,
@@ -11,6 +12,6 @@ private
         ects: :paid_ects_for_lead_provider,
         mentors: :paid_mentors_for_lead_provider,
       },
-    }
+    })
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module PaymentCalculator
-  module ECF
+  module NPQ
     class BreakdownSummary
       class << self
         def call(contract:, aggregations:, event_type: :started)
@@ -14,10 +14,8 @@ module PaymentCalculator
           name: lead_provider.name,
           declaration: event_type,
           recruitment_target: recruitment_target,
-          revised_target: revised_target,
-          ects: aggregations[:ects],
-          mentors: aggregations[:mentors],
-          participants: aggregations[:all]
+          participants: aggregations[:all],
+          participants_not_paid: aggregations[:submitted]
         }
       end
 
@@ -25,14 +23,14 @@ module PaymentCalculator
 
       attr_accessor :contract
 
-      delegate :recruitment_target, :revised_target, to: :contract
+      delegate :recruitment_target, to: :contract
 
       def initialize(contract:)
         self.contract = contract
       end
 
       def lead_provider
-        contract.lead_provider
+        contract.npq_lead_provider
       end
     end
   end
