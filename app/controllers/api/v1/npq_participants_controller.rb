@@ -15,8 +15,8 @@ module Api
     private
 
       def serialized_response(participant_profile)
-        NPQ::ParticipantProfileSerializer
-          .new(participant_profile)
+        NPQParticipantSerializer
+          .new(participant_profile.user)
           .serializable_hash.to_json
       end
 

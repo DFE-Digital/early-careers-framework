@@ -102,6 +102,31 @@ module ParticipantDeclarationSteps
     expect(ParticipantDeclaration.find(@response["data"]["id"])).to be_present
   end
 
+  def and_schedule_change_is_submitted_for_this_participant
+    @session.put("/api/v1/participants/#{@ect_id}/change-schedule", headers: { "Authorization": "Bearer #{@token}" })
+  end
+
+  def and_lead_provider_changed_for_the_participant
+    partnership = Partnership.where(school: @ect_profile.school, lead_provider: @cpd_lead_provider.lead_provider).first
+
+    @new_lead_provider = create(:lead_provider)
+    @new_cpd_lead_provider = create(:cpd_lead_provider, lead_provider: @new_lead_provider)
+
+    delivery_partner = create(:delivery_partner)
+
+    create(:partnership,
+           school: @ect_profile.school,
+           lead_provider: @new_cpd_lead_provider.lead_provider,
+           cohort: partnership.cohort,
+           delivery_partner: delivery_partner)
+
+    partnership.destroy!
+  end
+
+  def then_second_declaration_is_not_created
+    expect(ParticipantDeclaration.where(course_identifier: "ecf-induction", declaration_type: "started").count).to eq(1)
+  end
+
   def then_the_declaration_made_is_invalid
     expect(@response["errors"]).not_to be_empty
   end

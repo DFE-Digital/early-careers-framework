@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require_relative "../dashboard/manage_training_steps"
+require_relative "../training_dashboard/manage_training_steps"
 
 RSpec.describe "Add participants", js: true, with_feature_flags: { induction_tutor_manage_participants: "active" } do
   include ManageTrainingSteps
@@ -15,8 +15,11 @@ RSpec.describe "Add participants", js: true, with_feature_flags: { induction_tut
   end
 
   scenario "Induction tutor can add new ECT participant" do
-    when_i_click_on_add_a_new_ect_or_mentor_link
-    then_i_am_taken_to_add_your_ect_and_mentors_page
+    when_i_am_taken_to_roles_page
+    and_the_page_should_be_accessible
+    and_percy_should_be_sent_a_snapshot_named "ECF roles information"
+    and_select_continue
+    then_i_am_taken_to_your_ect_and_mentors_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Induction tutor adds ECT and mentors"
 
@@ -49,8 +52,9 @@ RSpec.describe "Add participants", js: true, with_feature_flags: { induction_tut
   end
 
   scenario "Induction tutor can add new mentor participant" do
-    when_i_click_on_add_a_new_ect_or_mentor_link
-    then_i_am_taken_to_add_your_ect_and_mentors_page
+    when_i_am_taken_to_roles_page
+    and_select_continue
+    then_i_am_taken_to_your_ect_and_mentors_page
     when_i_select_add_mentor
     and_select_continue
 
@@ -75,18 +79,16 @@ RSpec.describe "Add participants", js: true, with_feature_flags: { induction_tut
   end
 
   scenario "Induction tutor can add themselves as a mentor" do
-    when_i_click_on_add_a_new_ect_or_mentor_link
-    then_i_am_taken_to_add_your_ect_and_mentors_page
-    when_i_select_add_myself_as_mentor
+    when_i_am_taken_to_roles_page
     and_select_continue
+    then_i_am_taken_to_your_ect_and_mentors_page
+    when_i_select_add_myself_as_mentor
     then_i_am_taken_to_are_you_sure_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Induction tutor add yourself as mentor check"
 
     when_i_click_on_check_what_each_role_needs_to_do
-    then_i_am_taken_to_roles_page
-    and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "ECF roles information"
+    when_i_am_taken_to_roles_page
     and_select_back
     then_i_am_taken_to_are_you_sure_page
     and_select_confirm
@@ -96,8 +98,9 @@ RSpec.describe "Add participants", js: true, with_feature_flags: { induction_tut
   end
 
   scenario "Induction tutor cannot add existing ECT/mentor" do
-    when_i_click_on_add_a_new_ect_or_mentor_link
-    then_i_am_taken_to_add_your_ect_and_mentors_page
+    when_i_am_taken_to_roles_page
+    and_select_continue
+    then_i_am_taken_to_your_ect_and_mentors_page
     when_i_select_add_mentor
     and_select_continue
     then_i_am_taken_to_add_mentor_name_page

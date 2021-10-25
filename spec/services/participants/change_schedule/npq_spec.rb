@@ -12,7 +12,7 @@ RSpec.describe Participants::ChangeSchedule::NPQ do
       cpd_lead_provider: cpd_lead_provider,
       participant_id: npq_profile.user.id,
       course_identifier: "npq-leading-teaching",
-      schedule_identifier: "ecf-september-extended-2021",
+      schedule_identifier: "ecf-january-standard-2021",
     }
   end
 

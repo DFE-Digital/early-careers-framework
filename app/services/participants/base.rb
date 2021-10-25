@@ -17,7 +17,7 @@ module Participants
 
     def call
       unless valid?
-        raise ActionController::ParameterMissing, errors.map(&:full_message)
+        raise ActionController::ParameterMissing, errors.map(&:message)
       end
 
       validate_provider!

@@ -1,4 +1,4 @@
-description: "A participant declaration"
+description: "A participant declaration choice"
 type: object
 oneOf:
   - $ref: "#/components/schemas/ECFParticipantStartedDeclaration"

@@ -71,7 +71,7 @@ Rails.application.routes.draw do
       end
       resources :users, only: %i[index create]
       resources :ecf_users, only: %i[index create], path: "ecf-users"
-      resources :participant_validation, only: :show, path: "participant-validation"
+      resources :participant_validation, only: %i[create], path: "participant-validation"
       resources :npq_applications, only: :index, path: "npq-applications" do
         member do
           post :accept
@@ -341,9 +341,6 @@ Rails.application.routes.draw do
 
           resource :choose_programme, controller: :choose_programme, only: %i[show create], path: "choose-programme" do
             get :confirm_programme, path: "confirm-programme"
-            get :choice_saved_design_our_own, path: "design-your-programme"
-            get :choice_saved_school_funded_fip, path: "school-funded-fip"
-            get :choice_saved_no_early_career_teachers, path: "no-early-career-teachers"
             post :save_programme, path: "save-programme"
             get :success
           end

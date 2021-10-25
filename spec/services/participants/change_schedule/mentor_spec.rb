@@ -12,7 +12,7 @@ RSpec.describe Participants::ChangeSchedule::Mentor do
       cpd_lead_provider: cpd_lead_provider,
       participant_id: mentor_profile.user.id,
       course_identifier: "ecf-mentor",
-      schedule_identifier: "ecf-september-extended-2021",
+      schedule_identifier: "ecf-january-standard-2021",
     }
   end
 

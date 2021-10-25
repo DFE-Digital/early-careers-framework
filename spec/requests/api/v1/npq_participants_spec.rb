@@ -111,7 +111,7 @@ RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { par
         it_behaves_like "a participant withdraw action endpoint" do
           let(:url) { "/api/v1/participants/npq/#{user.id}/withdraw" }
           let(:params) do
-            { data: { attributes: { course_identifier: npq_course.identifier, reason: "moved-school" } } }
+            { data: { attributes: { course_identifier: npq_course.identifier, reason: Participants::Withdraw::NPQ.reasons.sample } } }
           end
         end
       end

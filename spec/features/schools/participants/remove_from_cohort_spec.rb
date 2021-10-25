@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-RSpec.describe "STI removing participants from the cohort", js: true, with_feature_flags: { induction_tutor_manage_participants: "active" } do
+RSpec.describe "SIT removing participants from the cohort", js: true, with_feature_flags: { induction_tutor_manage_participants: "active", eligibility_notifications: "active" } do
   let(:sti_profile) { create(:induction_coordinator_profile, schools: [school_cohort.school]) }
-  let(:school_cohort) { create(:school_cohort) }
+  let(:school_cohort) { create(:school_cohort, induction_programme_choice: "full_induction_programme") }
   let(:mentor_user) { create :user, :teacher, full_name: "John Doe", email: "john-doe@example.com" }
-  let!(:mentor_profile) { create(:participant_profile, :mentor, school_cohort: school_cohort, teacher_profile: mentor_user.teacher_profile) }
+  let!(:mentor_profile) { create(:participant_profile, :mentor, request_for_details_sent_at: Date.new(2021, 9, 9), school_cohort: school_cohort, teacher_profile: mentor_user.teacher_profile) }
   let(:ect_user) { create :user, :teacher, full_name: "John Smith", email: "john-smith@example.com" }
   let!(:ect_profile) { create(:participant_profile, :ect, school_cohort: school_cohort, mentor_profile: mentor_profile, teacher_profile: ect_user.teacher_profile) }
   let(:privacy_policy) { create :privacy_policy }
@@ -21,9 +21,9 @@ RSpec.describe "STI removing participants from the cohort", js: true, with_featu
 
     sign_in_as sti_profile.user
     visit schools_participants_path(school_cohort.school, school_cohort.cohort)
-    click_on mentor_profile.user.full_name
-    click_on "Remove #{mentor_profile.user.full_name} from this cohort"
+    click_on "Check"
 
+    click_on "Remove #{mentor_profile.user.full_name} from this cohort"
     expect(page)
       .to have_content("Confirm you want to remove #{mentor_profile.user.full_name}")
       .and be_accessible
@@ -40,7 +40,7 @@ RSpec.describe "STI removing participants from the cohort", js: true, with_featu
 
     page.percy_snapshot("Induction coordinator removing participant")
 
-    click_on "Return to your ECTs and mentor"
+    click_on "Return to your ECTs and mentors"
     expect(page).to have_no_content mentor_profile.user.full_name
     click_on "Sign out"
 
@@ -53,7 +53,7 @@ RSpec.describe "STI removing participants from the cohort", js: true, with_featu
 
     sign_in_as sti_profile.user
     visit schools_participants_path(school_cohort.school, school_cohort.cohort)
-    click_on ect_profile.user.full_name
+    first(:link, "Check").click
     click_on "Remove #{ect_profile.user.full_name} from this cohort"
 
     expect(page).to have_content("Confirm you want to remove #{ect_profile.user.full_name}")

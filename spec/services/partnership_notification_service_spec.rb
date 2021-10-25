@@ -180,7 +180,7 @@ RSpec.describe PartnershipNotificationService do
         expect(partnership_notification_email.sent_to).to eq(contact_email)
         expect(partnership_notification_email.notify_id).to eq(notify_id)
         expect(partnership_notification_email.email_type).to eq("nominate_sit_email")
-        expect(partnership_notification_email.reload.challenge_deadline).to be_within(1.second).of(2.weeks.from_now)
+        expect(partnership_notification_email.reload.challenge_deadline).to be_within(1.second).of(Date.parse("Oct 31 2021").end_of_day)
       end
     end
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require_relative "../dashboard/manage_training_steps"
+require_relative "../training_dashboard/manage_training_steps"
 
 RSpec.describe "Update participants details", js: true, with_feature_flags: { induction_tutor_manage_participants: "active" } do
   include ManageTrainingSteps
@@ -12,13 +12,13 @@ RSpec.describe "Update participants details", js: true, with_feature_flags: { in
     and_i_have_added_an_ect
     then_i_should_see_the_fip_induction_dashboard
     when_i_click_add_your_early_career_teacher_and_mentor_details
-    when_i_click_on_add_a_new_ect_or_mentor_link
-    then_i_am_taken_to_add_your_ect_and_mentors_page
+    when_i_am_taken_to_roles_page
+    and_select_continue
+    then_i_am_taken_to_your_ect_and_mentors_page
   end
 
   scenario "Induction tutor can change ECT / mentor name from check details page" do
     when_i_select_add_ect
-    and_select_continue
     then_i_am_taken_to_add_ect_name_page
     when_i_add_ect_or_mentor_name
     and_select_continue

@@ -12,7 +12,7 @@ RSpec.describe Participants::ChangeSchedule::EarlyCareerTeacher do
       cpd_lead_provider: cpd_lead_provider,
       participant_id: ect_profile.user.id,
       course_identifier: "ecf-induction",
-      schedule_identifier: "ecf-september-extended-2021",
+      schedule_identifier: "ecf-january-standard-2021",
     }
   end
 

@@ -21,6 +21,8 @@ module Schools
       end
     end
 
-    def roles; end
+    def roles
+      @hide_button = true if params[:info]
+    end
   end
 end

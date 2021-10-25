@@ -22,6 +22,7 @@ class NPQApplication < ApplicationRecord
     trust: "trust",
     self: "self",
     another: "another",
+    employer: "employer",
   }
 
   enum lead_provider_approval_status: {

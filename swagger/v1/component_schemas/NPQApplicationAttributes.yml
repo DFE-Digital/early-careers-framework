@@ -70,6 +70,7 @@ properties:
       - trust
       - self
       - another
+      - employer
   course_identifier:
     description: "The Unique Reference Number (URN) of the NPQ course this NPQ application relates to"
     type: string

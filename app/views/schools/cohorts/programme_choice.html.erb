@@ -7,12 +7,12 @@
     <span class="govuk-caption-l"><%= @cohort.display_name %> cohort</span>
     <h1 class="govuk-heading-xl govuk-!-margin-top-2">Choose an induction programme</h1>
     <p class="govuk-body-l">
-      <strong>You've chosen to:</strong>
-      <% if @school_cohort.school_chose_cip? %>
-        deliver your own programme using the DfE-accredited materials
-      <% else %>
-        use a training provider, funded by the DfE
-      <% end %>
+    <strong>You’ve chosen to:</strong>
+    <% if @school_cohort.school_chose_cip? %>
+      deliver your own programme using the DfE-accredited materials
+    <% else %>
+      use a training provider, funded by the DfE
+    <% end %>
     </p>
 
     <h2 class="govuk-heading-m">Changing your programme</h2>
@@ -38,15 +38,15 @@
         <li>contact your local Teaching School Hub</li>
       </ul>
       <p class="govuk-body">
-        They will talk you through how to access this support for your early career teachers and mentors.
-        Not sure? <%= govuk_link_to(
-                        "Find your local Teaching School Hub",
-                        "https://www.gov.uk/guidance/teaching-school-hubs#find-a-teaching-school-hub") %>.
+      They will talk you through how to access this support for your early career teachers and mentors.
+      Not sure? <%= govuk_link_to(
+        "Find your local Teaching School Hub",
+        "https://www.gov.uk/guidance/teaching-school-hubs#find-a-teaching-school-hub") %>.
       </p>
 
       <p class="govuk-body">
-        If your school has decided to design and deliver your own programme based on the Early Career Framework (ECF),
-        you need to:
+      If your school has decided to design and deliver your own programme based on the Early Career Framework (ECF),
+      you need to:
       </p>
       <ul class="govuk-list govuk-list--bullet">
         <li>contact: <%= render MailToSupportComponent.new %></li>

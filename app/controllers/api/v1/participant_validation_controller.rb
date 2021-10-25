@@ -5,9 +5,9 @@ module Api
     class ParticipantValidationController < Api::ApiController
       include ApiTokenAuthenticatable
 
-      def show
+      def create
         record = ParticipantValidationService.validate(
-          trn: params[:id],
+          trn: params[:trn],
           full_name: params[:full_name],
           date_of_birth: Date.iso8601(params[:date_of_birth]),
           nino: params[:nino],

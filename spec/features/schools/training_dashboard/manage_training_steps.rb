@@ -31,12 +31,48 @@ module ManageTrainingSteps
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "core_induction_programme")
   end
 
+  def given_there_is_a_school_that_has_chosen(induction_programme_choice:)
+    @school_cohort = create :school_cohort, induction_programme_choice: induction_programme_choice, school: create(:school, name: "Test School")
+  end
+
   def and_i_have_added_an_ect
-    @participant_profile_ect = create(:participant_profile, :ect, school_cohort: @school_cohort)
+    @participant_profile_ect = create(:participant_profile, :ect, user: create(:user, full_name: "Sally Teacher"), school_cohort: @school_cohort)
   end
 
   def and_i_have_added_a_mentor
     @participant_profile_mentor = create(:participant_profile, :mentor, user: create(:user, full_name: "Billy Mentor"), school_cohort: @school_cohort)
+  end
+
+  def and_i_have_added_an_eligible_ect
+    @eligible_ect = create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: @school_cohort)
+  end
+
+  def and_i_have_added_an_ineligible_ect
+    @ineligible_ect = create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: @school_cohort)
+    @ineligible_ect.ecf_participant_eligibility.update!(status: "manual_check", reason: "active_flags")
+  end
+
+  def and_i_have_added_an_eligible_mentor
+    @eligible_mentor = create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: @school_cohort)
+  end
+
+  def and_i_have_added_an_ineligible_mentor
+    @ineligible_mentor = create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: @school_cohort)
+    @ineligible_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "previous_induction")
+  end
+
+  def and_i_have_added_an_ero_mentor
+    @ero_mentor = create(:participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, :mentor, school_cohort: @school_cohort)
+    @ero_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "previous_participation")
+  end
+
+  def and_i_have_added_an_ect_contacted_for_info
+    @contacted_for_info_ect = create(:participant_profile, :ect, request_for_details_sent_at: 5.days.ago, school_cohort: @school_cohort)
+  end
+
+  def and_i_have_added_an_ect_whose_details_are_being_checked
+    @details_being_checked_ect = create(:participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, :ect, school_cohort: @school_cohort)
+    @details_being_checked_ect.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
   end
 
   def then_i_am_taken_to_add_mentor_page
@@ -54,6 +90,11 @@ module ManageTrainingSteps
 
   def then_i_should_see_the_view_your_ect_and_mentor_link
     expect(page).to have_text("View your early career teacher and mentor details")
+  end
+
+  def then_i_should_see_the_program_and_click_to_change_it(program_label:)
+    expect(page).to have_text(program_label)
+    click_on "Change induction programme choice"
   end
 
   def given_there_is_a_school_that_has_chosen_design_our_own_for_2021
@@ -77,6 +118,23 @@ module ManageTrainingSteps
     set_updated_participant_data
   end
 
+  def and_see_the_other_programs_before_choosing(labels:, choice:, snapshot:)
+    expect(page).to have_text "Change how you run your programme"
+    expect(page).to be_accessible
+    click_on "Check the other options available"
+
+    expect(page).to have_text "How do you want to run your training"
+    labels.each { |label| expect(page).to have_selector(:label, text: label) }
+    expect(page).to be_accessible
+    page.percy_snapshot(snapshot)
+
+    choose choice
+    click_on "Continue"
+
+    expect(page).to have_text "Confirm your induction programme"
+    click_on "Confirm"
+  end
+
   def then_i_should_see_the_fip_induction_dashboard
     expect(page).to have_selector("h1", text: "Manage your training")
     expect(page).to have_text("Training provider")
@@ -98,21 +156,23 @@ module ManageTrainingSteps
     click_on("Add a new ECT or mentor")
   end
 
-  def then_i_am_taken_to_add_your_ect_and_mentors_page
-    expect(page).to have_selector("h1", text: "Add your early career teachers and mentors")
-    expect(page).to have_text("Do you want to add an early career teacher (ECT) or a mentor?")
+  def then_i_am_taken_to_your_ect_and_mentors_page
+    expect(page).to have_selector("h1", text: "Your ECTs and mentors")
+    expect(page).to have_text("Add a new ECT")
+    expect(page).to have_text("Add a new mentor")
+    expect(page).to have_text("Add yourself as a mentor")
   end
 
   def when_i_select_add_ect
-    choose("Early career teacher", allow_label_click: true)
+    click_on("Add a new ECT")
   end
 
   def when_i_select_add_mentor
-    choose("Mentor", allow_label_click: true)
+    click_on("Add a new mentor")
   end
 
   def when_i_select_add_myself_as_mentor
-    choose("Myself as a mentor", allow_label_click: true)
+    click_on("Add yourself as a mentor")
   end
 
   def then_i_am_taken_to_are_you_sure_page
@@ -124,7 +184,7 @@ module ManageTrainingSteps
     click_on("Check what each role needs to do")
   end
 
-  def then_i_am_taken_to_roles_page
+  def when_i_am_taken_to_roles_page
     expect(page).to have_selector("h1", text: "Check what each person needs to do in the early career teacher training programme")
     expect(page).to have_text("An induction tutor should only assign themself as a mentor in exceptional circumstances")
   end
@@ -160,6 +220,15 @@ module ManageTrainingSteps
 
   def when_i_add_ect_or_mentor_email_that_already_exists
     fill_in "Email", with: @participant_profile_ect.user.email
+  end
+
+  def when_i_select_change
+    click_on("Change")
+  end
+
+  def then_i_am_taken_to_change_how_you_run_programme_page
+    expect(page).to have_selector("h1", text: "Change how you run your programme")
+    expect(page).to have_text("Check the other options available for your school if this changes")
   end
 
   def when_i_select_change_name
@@ -225,15 +294,15 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_fip_programme_choice_info_page
-    expect(page).to have_text("You've chosen to: use a training provider, funded by the DfE")
+    expect(page).to have_text("You’ve chosen to: use a training provider, funded by the DfE")
   end
 
   def then_i_am_taken_to_cip_programme_choice_info_page
-    expect(page).to have_text("You've chosen to: deliver your own programme using the DfE-accredited materials")
+    expect(page).to have_text("You’ve chosen to: deliver your own programme using the DfE-accredited materials")
   end
 
   def then_i_am_taken_to_the_no_ect_training_info_page
-    expect(page).to have_text("You're not expecting any early career teachers this year")
+    expect(page).to have_text("You’re not expecting any early career teachers this year")
   end
 
   def then_i_should_see_the_fip_induction_dashboard_without_partnership_details

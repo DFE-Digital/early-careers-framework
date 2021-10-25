@@ -33,7 +33,7 @@ class ValidationBetaService
 
     School.where(id: empty_school_cohorts.select(:school_id)).includes(:induction_coordinators).find_each do |school|
       school.induction_coordinator_profiles.each do |sit|
-        next if Email.associated_with(sit).tagged_with(:third_request_to_add_ects_and_mentors).any?
+        next if Email.associated_with(sit).tagged_with(:fourth_request_to_add_ects_and_mentors).any?
 
         SchoolMailer.remind_fip_induction_coordinators_to_add_ects_and_mentors_email(
           induction_coordinator: sit,
@@ -141,7 +141,7 @@ class ValidationBetaService
 
   def sit_with_unvalidated_participants_reminders
     InductionCoordinatorProfile
-      .joins(schools: :ecf_participant_profiles)
+      .joins(schools: :active_ecf_participant_profiles)
       .includes(schools: { active_ecf_participant_profiles: %i[ecf_participant_eligibility ecf_participant_validation_data] })
       .where(
         school_cohorts: {

@@ -9,7 +9,7 @@ class DummyToken < ApiToken
 end
 
 RSpec.describe "participant validation api endpoint", type: :request do
-  describe "#show" do
+  describe "#create" do
     let(:token) { NPQRegistrationApiToken.create_with_random_token! }
     let(:bearer_token) { "Bearer #{token}" }
     let(:parsed_response) { JSON.parse(response.body) }
@@ -40,17 +40,32 @@ RSpec.describe "participant validation api endpoint", type: :request do
       end
 
       it "returns correct jsonapi content type header" do
-        get "/api/v1/participant-validation/#{trn}?full_name=#{full_name}&date_of_birth=#{date_of_birth}&nino=#{nino}"
+        post "/api/v1/participant-validation", params: {
+          trn: trn,
+          full_name: full_name,
+          date_of_birth: date_of_birth,
+          nino: nino,
+        }
         expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
       end
 
       it "returns correct type" do
-        get "/api/v1/participant-validation/#{trn}?full_name=#{full_name}&date_of_birth=#{date_of_birth}&nino=#{nino}"
+        post "/api/v1/participant-validation", params: {
+          trn: trn,
+          full_name: full_name,
+          date_of_birth: date_of_birth,
+          nino: nino,
+        }
         expect(parsed_response["data"]).to have_type("participant_validation")
       end
 
       it "has correct attributes" do
-        get "/api/v1/participant-validation/#{trn}?full_name=#{full_name}&date_of_birth=#{date_of_birth}&nino=#{nino}"
+        post "/api/v1/participant-validation", params: {
+          trn: trn,
+          full_name: full_name,
+          date_of_birth: date_of_birth,
+          nino: nino,
+        }
 
         expect(parsed_response["data"]["id"]).to eql(service_response[:trn])
         expect(parsed_response["data"]).to have_jsonapi_attributes(:trn, :qts, :active_alert).exactly
@@ -60,7 +75,13 @@ RSpec.describe "participant validation api endpoint", type: :request do
         let(:service_response) { nil }
 
         it "returns a 404" do
-          get "/api/v1/participant-validation/#{trn}?full_name=#{full_name}&date_of_birth=#{date_of_birth}&nino=#{nino}"
+          post "/api/v1/participant-validation", params: {
+            trn: trn,
+            full_name: full_name,
+            date_of_birth: date_of_birth,
+            nino: nino,
+          }
+
           expect(response).to be_not_found
         end
       end
@@ -69,7 +90,12 @@ RSpec.describe "participant validation api endpoint", type: :request do
     context "when unauthorized" do
       it "returns 401" do
         default_headers[:Authorization] = "Bearer ugLPicDrpGZdD_w7hhCL"
-        get "/api/v1/participant-validation/#{trn}?full_name=#{full_name}&date_of_birth=#{date_of_birth}&nino=#{nino}"
+        post "/api/v1/participant-validation", params: {
+          trn: trn,
+          full_name: full_name,
+          date_of_birth: date_of_birth,
+          nino: nino,
+        }
         expect(response.status).to eq 401
       end
     end
@@ -79,7 +105,12 @@ RSpec.describe "participant validation api endpoint", type: :request do
 
       it "returns 403" do
         default_headers[:Authorization] = "Bearer #{other_token}"
-        get "/api/v1/participant-validation/#{trn}?full_name=#{full_name}&date_of_birth=#{date_of_birth}&nino=#{nino}"
+        post "/api/v1/participant-validation", params: {
+          trn: trn,
+          full_name: full_name,
+          date_of_birth: date_of_birth,
+          nino: nino,
+        }
         expect(response.status).to eq 403
       end
     end

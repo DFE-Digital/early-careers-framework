@@ -7,18 +7,7 @@ module Schools
     attribute :school_cohort_id
     attribute :current_user_id
     attribute :participant_type
-
-    step :type do
-      attribute :type
-
-      validates :type,
-                presence: { message: "Please select type of the new participant" },
-                inclusion: { in: :type_options, allow_blank: true }
-
-      next_step do
-        type == :self ? :yourself : :name
-      end
-    end
+    attribute :type
 
     step :yourself do
       next_step :confirm
