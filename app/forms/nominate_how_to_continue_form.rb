@@ -16,7 +16,7 @@ class NominateHowToContinueForm
     [
       OpenStruct.new(id: "yes", name: "Yes"),
       OpenStruct.new(id: "no", name: "No"),
-      OpenStruct.new(id: "i_dont_know", name: "We do not know yet"),
+      OpenStruct.new(id: "we_dont_know", name: "We do not know yet"),
     ]
   end
 
