@@ -64,11 +64,6 @@ module ManageTrainingSteps
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "no_early_career_teachers")
   end
 
-  def given_i_am_on_roles_page
-    expect(page).to have_selector("h1", text: "Check what each person needs to do in the early career teacher training programme")
-    expect(page).to have_text("An induction tutor should only assign themself as a mentor in exceptional circumstances")
-  end
-
   def given_i_am_on_the_cip_induction_dashboard
     expect(page).to have_selector("h1", text: "Manage your training")
     expect(page).not_to have_text("Programme materials")
@@ -331,20 +326,12 @@ module ManageTrainingSteps
     click_on("Add your early career teacher and mentor details")
   end
 
-  def when_i_click_on_add_a_new_ect_or_mentor_link
-    click_on("Add a new ECT or mentor")
-  end
-
   def when_i_click_on_check_what_each_role_needs_to_do
     click_on("Check what each role needs to do")
   end
 
   def when_i_click_on_sign_up
     click_on("Sign up")
-  end
-
-  def when_i_click_on_confirm_and_add
-    click_on("Confirm and add")
   end
 
   def when_i_click_on_change_name
@@ -413,18 +400,6 @@ module ManageTrainingSteps
     end
   end
 
-  def when_i_click_on_check_within_checked
-    within(".checked") do
-      click_on("Check")
-    end
-  end
-
-  def when_i_click_on_details_within_checked
-    within(".checked") do
-      click_on("Details")
-    end
-  end
-
   def when_i_click_on_details_within_details
     within(".details") do
       click_on("Details")
@@ -478,11 +453,6 @@ module ManageTrainingSteps
     expect(page).to have_selector("h1", text: "What’s the full name of this mentor?")
   end
 
-  def then_i_am_taken_to_add_new_ect_or_mentor_page
-    expect(page).to have_text("Add your early career teachers and mentors")
-    expect(page).to have_text("We need to verify that your early career teachers")
-  end
-
   def then_i_am_taken_to_add_ect_or_mentor_email_page
     expect(page).to have_selector("h1", text: "What’s #{@participant_data[:full_name]}’s email address?")
   end
@@ -520,10 +490,6 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_cip_programme_choice_info_page
     expect(page).to have_text("You’ve chosen to: deliver your own programme using DfE-accredited materials")
-  end
-
-  def then_i_am_taken_to_the_no_ect_training_info_page
-    expect(page).to have_text("You’re not expecting any early career teachers this year")
   end
 
   def then_i_am_taken_to_sign_up_to_training_provider_page
