@@ -70,21 +70,36 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
     end
   end
 
-  describe "GET /nominations/new" do
+  describe "GET /nominations/full-name" do
     let(:nomination_email) { create(:nomination_email) }
+    let(:token) { nomination_email.token }
+    let(:school) { nomination_email.school }
+    let(:name) { Faker::Name.name }
+    let(:email) { Faker::Internet.email }
 
     around do |example|
       get "/nominations/start-nomination?token=#{nomination_email.token}"
       example.run
     end
 
-    it "renders the new template" do
-      get "/nominations/new"
-      expect(response).to render_template("nominations/nominate_induction_coordinator/new")
+    it "renders the full-name template" do
+      get "/nominations/full-name"
+      expect(response).to render_template("nominations/nominate_induction_coordinator/full_name")
+    end
+
+    it "shows a validation error when the name is blank" do
+      put "/nominations/full-name", params: { nominate_induction_tutor_form: {
+        full_name: "",
+        email: "",
+        token: token,
+      } }
+
+      expect(response).to render_template("nominations/nominate_induction_coordinator/full_name")
+      expect(response.body).to include(CGI.escapeHTML("Enter a full name"))
     end
   end
 
-  describe "POST /nominations" do
+  describe "PUT /nominations" do
     let(:nomination_email) { create(:nomination_email) }
     let(:token) { nomination_email.token }
     let(:school) { nomination_email.school }
@@ -93,7 +108,7 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
 
     it "creates a user and induction coordinator profile with the given details" do
       expect {
-        post "/nominations", params: { nominate_induction_tutor_form: {
+        put "/nominations/email", params: { nominate_induction_tutor_form: {
           full_name: name,
           email: email,
           token: token,
@@ -111,25 +126,24 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
     end
 
     it "shows a validation error when the email is blank" do
-      post "/nominations", params: { nominate_induction_tutor_form: {
+      put "/nominations/email", params: { nominate_induction_tutor_form: {
         full_name: name,
         email: "",
         token: token,
       } }
 
-      expect(response).to render_template("nominations/nominate_induction_coordinator/new")
+      expect(response).to render_template("nominations/nominate_induction_coordinator/email")
       expect(response.body).to include(CGI.escapeHTML("Enter an email"))
     end
 
-    it "shows a validation error when the name is blank" do
-      post "/nominations", params: { nominate_induction_tutor_form: {
-        full_name: "",
-        email: email,
+    it "shows a validation error when the email is invalid" do
+      put "/nominations/email", params: { nominate_induction_tutor_form: {
+        full_name: name,
+        email: "invalid",
         token: token,
       } }
-
-      expect(response).to render_template("nominations/nominate_induction_coordinator/new")
-      expect(response.body).to include(CGI.escapeHTML("Enter a full name"))
+      expect(response).to render_template("nominations/nominate_induction_coordinator/email")
+      expect(response.body).to include(CGI.escapeHTML("Enter an email address in the correct format, like name@example.com"))
     end
 
     context "when an induction coordinator already exists with the provided email" do
@@ -137,7 +151,7 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
 
       it "adds the schools to their list of schools" do
         expect {
-          post "/nominations", params: { nominate_induction_tutor_form: {
+          put "/nominations/email", params: { nominate_induction_tutor_form: {
             full_name: existing_induction_coordinator.full_name,
             email: email,
             token: token,
@@ -151,7 +165,7 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
 
       it "redirects to the name-different page when the name is different" do
         expect {
-          post "/nominations", params: { nominate_induction_tutor_form: {
+          put "/nominations/email", params: { nominate_induction_tutor_form: {
             full_name: "Different Name",
             email: email,
             token: token,
@@ -169,7 +183,7 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
 
       it "redirects to the email-used page" do
         expect {
-          post "/nominations", params: { nominate_induction_tutor_form: {
+          put "/nominations/email", params: { nominate_induction_tutor_form: {
             full_name: name,
             email: email,
             token: token,
@@ -185,7 +199,7 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
 
       it "adds an induction tutor profile to the existing user" do
         expect {
-          post "/nominations", params: { nominate_induction_tutor_form: {
+          put "/nominations/email", params: { nominate_induction_tutor_form: {
             full_name: name,
             email: email,
             token: token,
@@ -203,7 +217,7 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
 
       it "adds an induction tutor profile to the existing user" do
         expect {
-          post "/nominations", params: { nominate_induction_tutor_form: {
+          put "/nominations/email", params: { nominate_induction_tutor_form: {
             full_name: name,
             email: email,
             token: token,
