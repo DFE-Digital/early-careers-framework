@@ -4,7 +4,7 @@ class ParticipantValidationService
   attr_reader :trn, :nino, :full_name, :date_of_birth, :config
 
   def self.validate(trn:, full_name:, date_of_birth:, nino: nil, config: {})
-    ParticipantValidationService.new(trn: trn, full_name: full_name, date_of_birth: date_of_birth, nino: nino, config: config).validate
+    new(trn: trn || "1", full_name: full_name, date_of_birth: date_of_birth, nino: nino, config: config).validate
   end
 
   def initialize(trn:, full_name:, date_of_birth:, nino: nil, config: {})
@@ -17,6 +17,7 @@ class ParticipantValidationService
 
   def validate
     validated_record = matching_record(trn: trn, nino: nino, full_name: full_name, dob: date_of_birth)
+
     return if validated_record.nil?
 
     {

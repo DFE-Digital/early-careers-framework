@@ -2,134 +2,126 @@
 
 module Participants
   class ParticipantValidationForm
-    include ActiveRecord::AttributeAssignment
-    include ActiveModel::Model
+    include Multistep::Form
 
     # lifted from https://github.com/dwp/nino-format-validation
     NINO_REGEX = /(^(?!BG)(?!GB)(?!NK)(?!KN)(?!TN)(?!NT)(?!ZZ)[A-Z&&[^DFIQUV]][A-Z&&[^DFIOQUV]][0-9]{6}[A-D]$)/.freeze
-    attr_accessor :step,
-                  :do_you_want_to_add_mentor_information_choice,
-                  :trn,
-                  :name,
-                  :national_insurance_number,
-                  :validation_attempts,
-                  # legacy values kept here to prevent breakages with old sessions
-                  :do_you_know_your_trn_choice,
-                  :have_you_changed_your_name_choice,
-                  :updated_record_choice,
-                  :name_not_updated_choice
+    EXTRA_STEPS = %i[nino name_changed].freeze
 
-    attr_reader :date_of_birth
+    attribute :participant_profile_id
+    attribute :eligibility
+    attribute :dtq_response
 
-    validate :add_mentor_info_choice, on: :do_you_want_to_add_mentor_information
-    validate :trn_entry, on: :what_is_your_trn
-    validate :teacher_details, on: :tell_us_your_details
+    step :trn, update: true do
+      attribute :trn, :string
+      attribute :no_trn, :boolean, default: false
 
-    def attributes
-      {
-        step: step,
-        do_you_want_to_add_mentor_information_choice: do_you_want_to_add_mentor_information_choice,
-        trn: trn&.squish,
-        name: name&.squish,
-        date_of_birth: date_of_birth,
-        national_insurance_number: tidy_national_insurance_number,
-        validation_attempts: validation_attempts.to_i, # coerce nil to 0
-      }
+      validates :trn,
+                presence: true,
+                format: { with: /\A\d+\z/ },
+                length: { within: 5..7 },
+                unless: :no_trn
+
+      before_complete { check_eligibility! if dob.present? }
+      next_step { no_trn ? :nino : :dob }
     end
 
-    def date_of_birth=(value)
-      @date_of_birth_invalid = false
-      @date_of_birth = ActiveRecord::Type::Date.new.cast(value)
+    step :nino, update: true do
+      attribute :nino, :string
 
-      if invalid_date?(value)
-        @date_of_birth_invalid = true
-        @date_of_birth = value
-      end
-    rescue StandardError
-      @date_of_birth_invalid = true
+      validates :nino,
+                presence: true,
+                format: { with: NINO_REGEX }
+
+      before_complete { check_eligibility! if dob.present? }
+      next_step { dob.present? ? eligibility : :dob }
     end
 
-    def add_mentor_information_choices
-      [
-        OpenStruct.new(id: "yes", name: "Yes, I want to add information now"),
-        OpenStruct.new(id: "no", name: "No, I’ll do it later"),
-      ]
+    step :dob, update: true do
+      attribute :dob, :date
+
+      validates :dob,
+                presence: true,
+                inclusion: {
+                  in: ->(_) { (Date.new(1900, 1, 1))..(Date.current - 18.years) },
+                  message: :invalid,
+                }
+
+      before_complete { check_eligibility! }
+      next_step { eligibility }
     end
 
-    def pretty_date_of_birth
-      if date_of_birth.present?
-        date_of_birth.to_s(:govuk)
-      end
+    step :name_changed do
+      attribute :name_changed, :boolean
+
+      validates :name_changed, inclusion: { in: [true, false], message: :blank }
+
+      next_step { name_changed ? :name : :no_match }
     end
 
-    def increment_validation_attempts
-      if validation_attempts.nil?
-        @validation_attempts = 1
-      else
-        @validation_attempts += 1
-      end
+    step :name, update: true do
+      attribute :full_name
+
+      validates :full_name, presence: true
+
+      before_complete { check_eligibility! }
+      next_step { eligibility }
     end
 
-  private
-
-    def add_mentor_info_choice
-      errors.add(:do_you_want_to_add_mentor_information_choice, :blank) unless add_mentor_information_choices.map(&:id).include?(do_you_want_to_add_mentor_information_choice)
+    step :no_match, multiple: true do
+      next_step { additional_step }
     end
 
-    def trn_entry
-      @trn = trn&.squish
+    step :eligible
+    step :manual_check
+    step :ineligible
 
-      if trn.blank?
-        errors.add(:trn, :blank)
-      else
-        @trn = trn.gsub(/RP/, "").gsub(/[\/\s]/, "")
+    step :result
 
-        if trn !~ /\A\d+\z/
-          errors.add(:trn, :invalid)
-        elsif trn.length < 5
-          errors.add(:trn, :too_short, count: 5)
-        elsif trn.length > 7
-          errors.add(:trn, :too_long, count: 7)
-        end
-      end
+    def trn=(value)
+      super(value&.squish)
     end
 
-    def teacher_details
-      @name = name&.squish
-      @national_insurance_number = tidy_national_insurance_number
-
-      if name.blank?
-        errors.add(:name, :blank)
-      end
-
-      if @date_of_birth_invalid
-        errors.add(:date_of_birth, :invalid)
-      elsif date_of_birth.blank?
-        errors.add(:date_of_birth, :blank)
-      elsif date_of_birth > Time.zone.now
-        errors.add(:date_of_birth, :in_the_future)
-      elsif date_of_birth.year.digits.length != 4
-        errors.add(:date_of_birth, :invalid_year)
-      end
-
-      if national_insurance_number.present? && national_insurance_number !~ NINO_REGEX
-        errors.add(:national_insurance_number, :invalid)
-      end
+    def nino=(value)
+      super(value&.gsub(/\W/, ""))
     end
 
-    def tidy_national_insurance_number
-      return if national_insurance_number.blank?
-
-      national_insurance_number.gsub(/\s+/, "").upcase
+    def full_name
+      super || participant_profile && participant_profile.user.full_name
     end
 
-    def invalid_date?(value)
-      return if value.blank?
+    def check_eligibility!
+      self.dtq_response = ParticipantValidationService.validate(
+        full_name: full_name,
+        trn: trn,
+        date_of_birth: dob,
+        nino: nino,
+      )
 
-      day = value[3]
-      month = value[2]
-      year = value[1]
-      !Date.valid_date?(year, month, day)
+      return self.eligibility = :no_match if dtq_response.blank?
+
+      eligibility_record = StoreValidationResult.call(
+        participant_profile: participant_profile,
+        validation_data: {
+          trn: trn,
+          nino: nino,
+          full_name: full_name,
+          dob: dob
+        },
+        dtq_response: dtq_response
+      )
+
+      self.eligibility = eligibility_record.status.to_sym
+    end
+
+    def participant_profile
+      return if participant_profile_id.blank?
+
+      @participant_profile ||= ParticipantProfile.find(participant_profile_id)
+    end
+
+    def additional_step
+      (EXTRA_STEPS - completed_steps).first || :manual_check
     end
   end
 end

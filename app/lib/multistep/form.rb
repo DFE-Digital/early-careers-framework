@@ -2,6 +2,7 @@
 
 require_dependency "multistep/builder"
 require_dependency "multistep/step"
+require_dependency "multistep/date_attribute"
 
 module Multistep
   module Form
@@ -9,15 +10,17 @@ module Multistep
 
     included do
       prepend ValidationContext
+      include ActiveModel::Model
       include ActiveModel::Attributes
       include ActiveModel::Serialization
+      include DateAttribute
 
       attribute :completed_steps, default: []
     end
 
     class_methods do
-      def step(step_name, &block)
-        builder = Builder.new(step_name: step_name, form_class: self)
+      def step(step_name, multiple: false, update: false, &block)
+        builder = Builder.new(step_name: step_name, form_class: self, multiple: multiple, update: update)
         builder.instance_exec(&block) if block
 
         steps[step_name] = builder.to_step
@@ -28,12 +31,13 @@ module Multistep
       end
     end
 
-    def record_completed_step(step)
-      if completed_steps.include? step
-        self.completed_steps = completed_steps[0..(completed_steps.index(step))]
-      else
-        completed_steps << step
-      end
+    def complete_step(step, attributes = {})
+      assign_attributes(attributes)
+      return false unless valid?(step)
+
+      self.class.steps[step.to_sym].before_complete(self)
+      record_completed_step(step) unless step_completed?(step) && self.class.steps[step].update?
+      true
     end
 
     def reset_steps(*steps)
@@ -59,6 +63,20 @@ module Multistep
 
     def completed_steps=(value)
       super(value.map(&:to_sym))
+    end
+
+    def step_completed?(step)
+      completed_steps.include?(step)
+    end
+
+  private
+
+    def record_completed_step(step)
+      if completed_steps.include?(step) && !self.class.steps[step].multiple?
+        self.completed_steps = completed_steps[0..(completed_steps.index(step))]
+      else
+        completed_steps << step
+      end
     end
 
     module ValidationContext
