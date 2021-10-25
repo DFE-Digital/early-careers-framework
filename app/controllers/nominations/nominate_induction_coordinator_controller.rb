@@ -23,8 +23,6 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
     if @nominate_induction_tutor_form.valid? :full_name
       store_nominate_induction_tutor_form
       redirect_to action: :email
-    elsif @nominate_induction_tutor_form.name_different?
-      redirect_to action: :name_different
     else
       render :full_name
     end
@@ -40,6 +38,8 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
       session.delete(:nominate_induction_tutor_form)
 
       redirect_to nominate_school_lead_success_nominate_induction_coordinator_path
+    elsif @nominate_induction_tutor_form.name_different?
+      redirect_to action: :name_different
     elsif @nominate_induction_tutor_form.email_already_taken?
       redirect_to action: :email_used
     else
