@@ -22,15 +22,15 @@ module PaymentCalculator
       private
 
         def empty_aggregations
-          { all: 0 }
+          { all: 0, not_paid: 0 }
         end
       end
 
       def call(aggregations:, event_type: :started)
         {
-          breakdown_summary: headings_calculator.call(contract: contract, event_type: event_type, aggregations: aggregations),
-          service_fees: service_fee_calculator.call({ contract: contract }),
-          output_payments: output_payment_aggregator.call({ contract: contract }, event_type: event_type, total_participants: aggregations[:all]),
+          breakdown_summary: headings_calculator.call(contract: contract, aggregations: aggregations),
+          service_fees: contract.monthly_service_fee,
+          output_payments: output_payment_aggregator.call(contract: contract , total_participants: aggregations[:all]),
         }
       end
 

@@ -8,7 +8,7 @@ module Finance
       class << self
         def call(cpd_lead_provider:,
                  contract:,
-                 aggregator: ::ParticipantEventAggregator,
+                 aggregator: ::Finance::ECF::ParticipantEligibleAggregator,
                  calculator: ::PaymentCalculator::ECF::PaymentCalculation,
                  event_type: :started)
           new(
@@ -21,8 +21,7 @@ module Finance
       end
 
       def call(event_type:)
-        aggregator.call(event_type: :none)
-        calculator.call(contract: contract, aggregations: aggregator.call(event_type: event_type), event_type: event_type)
+        calculator.call(contract: contract, aggregations: aggregator.call(cpd_lead_provider: cpd_lead_provider, event_type: event_type), event_type: event_type)
       end
 
     private
@@ -31,11 +30,11 @@ module Finance
 
       def initialize(cpd_lead_provider:,
                      contract:,
-                     aggregator: ::ParticipantEventAggregator,
+                     aggregator: ::Finance::ECF::ParticipantEligibleAggregator,
                      calculator: ::PaymentCalculator::ECF::PaymentCalculation)
         @cpd_lead_provider = cpd_lead_provider
         @contract = contract
-        @aggregator = aggregator.new(cpd_lead_provider: cpd_lead_provider)
+        @aggregator = aggregator
         @calculator = calculator
       end
     end

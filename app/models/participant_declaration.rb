@@ -26,6 +26,7 @@ class ParticipantDeclaration < ApplicationRecord
   scope :started, -> { for_declaration("started").order(declaration_date: "desc").unique_id }
 
   scope :uplift, -> { where(participant_profile_id: ParticipantProfile.uplift.select(:id)) }
+  scope :ecf, -> { ect.or(mentor) }
   scope :ect, -> { where(participant_profile_id: ParticipantProfile::ECT.select(:id)) }
   scope :mentor, -> { where(participant_profile_id: ParticipantProfile::Mentor.select(:id)) }
   scope :npq, -> { where(participant_profile_id: ParticipantProfile::NPQ.select(:id)) }
@@ -38,7 +39,7 @@ class ParticipantDeclaration < ApplicationRecord
   scope :submitted_between, ->(start_date, end_date) { where(created_at: start_date..end_date) }
 
   # Declaration aggregation scopes
-  scope :submitted_for_lead_provider, ->{lead_provider} { for_lead_provider(lead_provider).unique_id.submitted }
+  scope :submitted_for_lead_provider, ->(lead_provider) { for_lead_provider(lead_provider).unique_id.submitted }
 
   scope :eligible_for_lead_provider, ->(lead_provider) { for_lead_provider(lead_provider).unique_id.eligible }
   scope :eligible_ects_for_lead_provider, ->(lead_provider) { eligible_for_lead_provider(lead_provider).ect }

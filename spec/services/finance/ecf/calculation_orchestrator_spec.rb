@@ -226,7 +226,7 @@ RSpec.describe Finance::ECF::CalculationOrchestrator do
 
 private
 
-  def run_calculation(aggregator: ParticipantEventAggregator)
+  def run_calculation(aggregator: Finance::ECF::ParticipantEligibleAggregator)
     set_precision(
       described_class.call(
         aggregator: aggregator,
