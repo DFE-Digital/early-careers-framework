@@ -206,4 +206,14 @@ RSpec.describe SchoolCohort, type: :model do
       end
     end
   end
+
+  describe "#can_change_programme?" do
+    %w[design_our_own no_early_career_teachers school_funded_fip].each do |programme|
+      subject(:school_cohort) { create(:school_cohort, induction_programme_choice: programme) }
+
+      it "returns true" do
+        expect(school_cohort.can_change_programme?).to eq(true)
+      end
+    end
+  end
 end
