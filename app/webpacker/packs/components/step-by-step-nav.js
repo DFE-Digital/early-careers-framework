@@ -236,21 +236,15 @@ if (stepByStep) {
 
     for (let i = 0; i < jsLinks.length; i++) {
       jsLinks[i].addEventListener("click", function (event) {
-        const dataPosition = getAttribute("data-position");
-        const linkClick = new that.ComponentLinkClick(
-          event,
-          dataPosition,
-          stepByStep.stepNavSize
-        );
-        linkClick.trackClick();
+        const dataPosition = this.getAttribute("data-position");
 
         if (this.getAttribute("rel") !== "external") {
-          that.saveToSessionStorage(stepByStep.sessionStoreLink, dataPosition);
+          saveToSessionStorage(stepByStep.sessionStoreLink, dataPosition);
         }
 
         if (this.getAttribute("href") === stepByStep.activeLinkHref) {
-          that.setOnlyThisLinkActive(this);
-          that.setActiveStepClass();
+          setOnlyThisLinkActive(this);
+          setActiveStepClass();
         }
       });
     }

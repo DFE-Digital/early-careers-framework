@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+
+tests = Dir["spec/cypress/**/*.feature"].
+  sort.
+  # Add randomization seed based on SHA of each commit
+  shuffle(random: Random.new(ENV['GITHUB_SHA'].to_i(16))).
+  select.
+  with_index do |el, i|
+    i % ENV["CI_NODE_TOTAL"].to_i == ENV["CI_NODE_INDEX"].to_i
+  end
+
+exec "npx cypress run --config video=false,screenshotOnRunFailure=false --project ./spec --config-file cypress.json --env port=5017 --spec #{tests.join(",")}"

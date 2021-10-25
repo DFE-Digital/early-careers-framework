@@ -2,10 +2,81 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <%= govuk_panel(
-      title_text: "Induction programme confirmed",
-      text: "You can now view the next steps for your programme.",
-      classes: "govuk-!-margin-bottom-8") %>
+      title_text: "Training programme confirmed",
+      classes: "govuk-!-margin-bottom-7") %>
 
-    <%= govuk_button_link_to("Continue", schools_dashboard_path)  %>
+    <%- if school_cohort.school_chose_fip? -%>
+      <h2 class="govuk-heading-m">What to do next</h2>
+
+      <p>You need to:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>choose one of the 6 DfE-funded training providers as soon as possible</li>
+        <li>tell us each ECT and mentor’s name and email address as soon as possible</li>
+        <li>have an appropriate body in place</li>
+      </ul>
+
+      <p>
+      <%= govuk_link_to "Read our guidance (opens in new tab)", step_by_step_path, target: "_blank" %> to find out how to complete these steps.
+      </p>
+
+      <p>You do not need to let the DfE know which provider you choose. Your training provider will contact us to arrange funding.</p>
+
+      <p class="govuk-link govuk-!-margin-top-7">
+      <%= govuk_button_link_to("Continue to manage your training", schools_dashboard_path)  %>
+      </p>
+    <%- elsif school_cohort.school_chose_cip? -%>
+      <h2 class="govuk-heading-m">What to do next</h2>
+
+      <p>You need to:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>compare and choose which DfE-accredited materials you want to use</li>
+        <li>use this service to tell us which materials you want to use</li>
+        <li>tell us each ECT and mentor’s name and email address as soon as possible</li>
+        <li>have an appropriate body in place</li>
+      </ul>
+
+      <p>
+      <%= govuk_link_to "Read our guidance (opens in new tab)", step_by_step_path, target: "_blank" %> to find out how to complete these steps.
+      <p>
+
+      <p class="govuk-link govuk-!-margin-top-7">
+      <%= govuk_button_link_to("Continue to manage your training", schools_dashboard_path)  %>
+      </p>
+
+    <%- elsif school_cohort.design_our_own? -%>
+      <h2 class="govuk-heading-m">What to do next</h2>
+
+      <p>You need to:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>design a 2-year programme of support and training that covers every ‘learn that’ and ‘learn how to’ statement in the <a  href="https://www.gov.uk/government/publications/early-career-framework" class="govuk-link" rel="noreferrer noopener" target="_blank">Early Career Framework (ECF) (opens in new tab)</a></li>
+        <li>contact your appropriate body to find out what evidence is needed to demonstrate that your programme:
+          <ul class="govuk-list govuk-list--bullet">
+            <li>is based on the ECF</li>
+            <li>meets the statutory requirements</li>
+          </ul>
+        </li>
+      </ul>
+
+      <p>You do not need to add information about your ECTs and mentors to this service.</p>
+
+      <p>
+      <a class="govuk-link" href="https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview#schools-designing-and-delivering-their-own-ecf-based-induction" class="govuk-link" rel="noreferrer noopener" target="_blank"> See our statutory guidance (open in new tab)</a> for information about funding, time off, and roles.
+      </p>
+    <%- elsif school_cohort.no_early_career_teachers? -%>
+      <h2 class="govuk-heading-m">What to do next</h2>
+      <p>Your school will not receive any more messages about statutory inductions for ECTs until the next academic year.</p>
+      <p>If any ECTs do join your school this year, you need to use this service to let us know.</a></p>
+    <%- else -%>
+      <h2 class="govuk-heading-m">What to do next</h2>
+
+      <ul class="govuk-list govuk-list--bullet">
+        <li>you do not need to use this service to set up your training programme</li>
+        <li>you'll need to make your own arrangements with a <a href="https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview#FPL">training provider</a>, approved by the DfE</li>
+        <li>if you change your mind about how you want to run your training, contact:
+          <a class="govuk-link" href="continuing-professional-development@digital.education.gov.uk">continuing-professional-development@digital.education.gov.uk</a>
+        </li>
+      </ul>
+    <%- end -%>
+
   </div>
 </div>

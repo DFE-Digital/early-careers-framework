@@ -2686,7 +2686,7 @@
         }
       },
       "ParticipantDeclarationChoices": {
-        "description": "A participant declaration",
+        "description": "A participant declaration choice",
         "type": "object",
         "oneOf": [
           {

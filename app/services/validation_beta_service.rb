@@ -141,7 +141,7 @@ class ValidationBetaService
 
   def sit_with_unvalidated_participants_reminders
     InductionCoordinatorProfile
-      .joins(schools: :ecf_participant_profiles)
+      .joins(schools: :active_ecf_participant_profiles)
       .includes(schools: { active_ecf_participant_profiles: %i[ecf_participant_eligibility ecf_participant_validation_data] })
       .where(
         school_cohorts: {

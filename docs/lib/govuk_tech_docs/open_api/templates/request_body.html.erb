@@ -1,0 +1,6 @@
+<% if request_body %>
+  <h3 id="<%= id %>">Request Body</h3>
+  <p>
+    This consumes a <%= get_schema_link(request_body.content['application/json'].schema) %> schema.
+  </p>
+<% end %>
