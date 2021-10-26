@@ -21,10 +21,10 @@
               concat(content_tag(:br))
               concat(" You can also contact your ")
               unless @school.cip_only?
-                concat(govuk_link_to("local teaching school hub", "https://www.gov.uk/guidance/teaching-school-hubs#find-a-teaching-school-hub"))
+                concat(govuk_link_to("local teaching school hub (opens in a new tab)", "https://www.gov.uk/guidance/teaching-school-hubs#find-a-teaching-school-hub", target: :_blank))
                 concat(" or ")
               end
-              concat(govuk_link_to("appropriate body", "https://www.gov.uk/government/publications/appropriate-bodies-guidance-induction-and-the-early-career-framework"))
+              concat(govuk_link_to("appropriate body (opens in a new tab)", "https://www.gov.uk/government/publications/appropriate-bodies-guidance-induction-and-the-early-career-framework", target: :_blank))
               concat(" for guidance.")
             end }
           ) %>
