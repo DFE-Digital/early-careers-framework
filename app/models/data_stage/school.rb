@@ -31,8 +31,8 @@ module DataStage
         counterpart.update!(attributes_to_sync)
       else
         create_counterpart!(attributes_to_sync)
-        link_counterpart_to_local_authority_data
       end
+      handle_local_authority_changes!
     end
 
   private
@@ -41,18 +41,16 @@ module DataStage
       attributes.except("id", "created_at", "updated_at", "la_code")
     end
 
-    def link_counterpart_to_local_authority_data(start_year: Time.zone.now.year)
-      SchoolLocalAuthority.create!(
-        school: counterpart,
-        local_authority: LocalAuthority.find_by(code: la_code),
-        start_year: start_year,
-      )
+    def handle_local_authority_changes!
+      if counterpart.local_authority&.code != la_code
+        SetSchoolLocalAuthority.call(school: counterpart,
+                                     la_code: la_code)
+      end
 
-      SchoolLocalAuthorityDistrict.create!(
-        school: counterpart,
-        local_authority_district: LocalAuthorityDistrict.find_by(code: administrative_district_code),
-        start_year: start_year,
-      )
+      if counterpart.administrative_district_code != counterpart.local_authority_district&.code
+        SetSchoolLocalAuthorityDistrict.call(school: counterpart,
+                                             administrative_district_code: administrative_district_code)
+      end
     end
   end
 end
