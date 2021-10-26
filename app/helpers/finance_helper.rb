@@ -35,9 +35,22 @@ module FinanceHelper
     total_payment(breakdown) * (lead_provider.vat_chargeable ? 0.2 : 0.0)
   end
 
+  def payment_period_payable
+    index = MILESTONE_DATES.each_index.detect { |date| Time.zone.today.before?(Date.parse(MILESTONE_DATES[date])) }
+    index < 2 ? ["1.09.2021", MILESTONE_DATES[0]] : MILESTONE_DATES.slice(index - 2, 2)
+  end
+
+  def pretty_payment_period_payable
+    payment_period_payable.map { |date| Date.parse(date).to_s(:govuk) }.join(" - ")
+  end
+
+  def cutoff_date_payable
+    Date.parse(payment_period_payable.length < 2 ? MILESTONE_DATES[0] : payment_period_payable[1]).to_s(:govuk)
+  end
+
   def payment_period
     index = MILESTONE_DATES.each_index.detect { |date| Time.zone.today.before?(Date.parse(MILESTONE_DATES[date])) }
-    MILESTONE_DATES.slice(index - 1, 2)
+    index < 1 ? ["1.09.2021", MILESTONE_DATES[0]] : MILESTONE_DATES.slice(index - 1, 2)
   end
 
   def pretty_payment_period

@@ -48,9 +48,25 @@ describe FinanceHelper do
           end
         end
 
+        it "milestone date #{index} on the day #{date} for payable returns correct cutoff date" do
+          travel_to(date) do
+            expect(cutoff_date_payable).to eq(Date.parse(FinanceHelper::MILESTONE_DATES[index - 1]).strftime("%-d %B %Y"))
+          end
+        end
+      end
+
+      next if index < 2
+
+      [milestone_begin_date, milestone_end_date, random_date].each do |date|
         it "milestone date #{index} on the day #{date} returns correct payment period" do
           travel_to(date) do
             expect(payment_period).to eq(FinanceHelper::MILESTONE_DATES[index - 1, 2])
+          end
+        end
+
+        it "milestone date #{index} on the day #{date} for payable returns correct payment period" do
+          travel_to(date) do
+            expect(payment_period_payable).to eq(FinanceHelper::MILESTONE_DATES[index - 2, 2])
           end
         end
       end
