@@ -27,7 +27,7 @@
 
     <p class="govuk-body">
      <%= govuk_link_to "Read more about the induction role in our guidance",
-       current_user ? roles_schools_cohort_path(@nominate_induction_tutor_form.school, Cohort.current) : dashboard_path,
+       page_path(page: 'what-each-person-does'),
        class: "govuk-link--no-visited-state" %>
     </p>
     <p class="govuk-body">
