@@ -75,7 +75,6 @@ jobs:
 
       - name: Run tests
         run: yarn percy exec --parallel -- bundle exec bin/rspec_ci
-        continue-on-error: true
 
   frontend-tests:
     name: Run frontend JS unit tests
