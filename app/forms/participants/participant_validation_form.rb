@@ -69,6 +69,7 @@ module Participants
     end
 
     step :no_match, multiple: true do
+      before_complete { store_validation_result! if additional_step == :manual_check }
       next_step { additional_step }
     end
 
@@ -100,7 +101,12 @@ module Participants
 
       return self.eligibility = :no_match if dtq_response.blank?
 
-      eligibility_record = StoreValidationResult.call(
+      eligibility_record = store_validation_result!
+      self.eligibility = eligibility_record.status.to_sym
+    end
+
+    def store_validation_result!
+      StoreValidationResult.call(
         participant_profile: participant_profile,
         validation_data: {
           trn: trn,
@@ -110,8 +116,6 @@ module Participants
         },
         dtq_response: dtq_response,
       )
-
-      self.eligibility = eligibility_record.status.to_sym
     end
 
     def participant_profile

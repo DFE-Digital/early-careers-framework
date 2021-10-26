@@ -10,9 +10,11 @@ class StoreValidationResult < BaseService
   end
 
   def call
+    store_validation_data!
+    return unless dtq_response.present?
+
     eligibility = store_eligibility_data!(dtq_response)
     store_trn_on_teacher_profile!(dtq_response[:trn])
-    store_validation_data!
     eligibility
   end
 
@@ -31,14 +33,16 @@ private
   end
 
   def store_eligibility_data!(dqt_data)
-    StoreParticipantEligibility.call(participant_profile: participant_profile,
-                                     eligibility_options: {
-                                       qts: dqt_data[:qts],
-                                       active_flags: dqt_data[:active_alert],
-                                       previous_participation: dqt_data[:previous_participation],
-                                       previous_induction: dqt_data[:previous_induction],
-                                       different_trn: different_trn?(dqt_data[:trn]),
-                                     })
+    StoreParticipantEligibility.call(
+      participant_profile: participant_profile,
+      eligibility_options: {
+        qts: dqt_data[:qts],
+        active_flags: dqt_data[:active_alert],
+        previous_participation: dqt_data[:previous_participation],
+        previous_induction: dqt_data[:previous_induction],
+        different_trn: different_trn?(dqt_data[:trn]),
+      }
+    )
   end
 
   def different_trn?(trn)
@@ -57,7 +61,7 @@ private
     record = ECFParticipantValidationData.find_or_initialize_by(participant_profile: participant_profile)
     record.assign_attributes(
       trn: validation_data[:trn],
-      full_name: validation_data[:name],
+      full_name: validation_data[:full_name],
       date_of_birth: validation_data[:dob],
       nino: validation_data[:nino],
     )
