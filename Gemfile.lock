@@ -129,6 +129,7 @@ GEM
       descendants_tracker (~> 0.0.1)
     commonmarker (0.23.2)
     concurrent-ruby (1.1.9)
+    connection_pool (2.2.5)
     crack (0.4.5)
       rexml
     crass (1.0.6)
@@ -412,6 +413,7 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     redcarpet (3.5.1)
+    redis (4.5.1)
     regexp_parser (2.1.1)
     representable (3.1.1)
       declarative (< 0.1.0)
@@ -512,6 +514,10 @@ GEM
       faraday
     shoulda-matchers (4.5.1)
       activesupport (>= 4.2.0)
+    sidekiq (6.2.2)
+      connection_pool (>= 2.2.2)
+      rack (~> 2.0)
+      redis (>= 4.2.0)
     signet (0.16.0)
       addressable (~> 2.8)
       faraday (>= 0.17.3, < 2.0)
@@ -666,6 +672,7 @@ DEPENDENCIES
   sentry-rails (>= 4.6.4)
   sentry-ruby (>= 4.6.4)
   shoulda-matchers (~> 4.5)
+  sidekiq
   simplecov
   spring
   spring-watcher-listen (~> 2.0.0)

@@ -25,7 +25,7 @@ module EarlyCareerTeachers
             ParticipantDetailsReminderJob.schedule(profile)
           end
 
-          Analytics::ECFValidationService.upsert_record(profile)
+          Analytics::UpsertParticipantProfileJob.perform_later(participant_profile: @participant_profile)
         end
       end
     end

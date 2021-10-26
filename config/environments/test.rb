@@ -28,6 +28,7 @@ Rails.application.configure do
 
   # Show full error reports and disable caching.
   config.consider_all_requests_local       = true
+  config.active_job.queue_adapter = :test
   config.action_controller.perform_caching = false
   config.cache_store = :null_store
 

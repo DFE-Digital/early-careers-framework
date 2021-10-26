@@ -26,7 +26,6 @@ module Analytics
 
         record.save!
       end
-      handle_asynchronously :upsert_record
 
       def record_validation(participant_profile:, real_time_attempts:, real_time_success:, nino_entered:)
         return unless %w[test development production].include? Rails.env

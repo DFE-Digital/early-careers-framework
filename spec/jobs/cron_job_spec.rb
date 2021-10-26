@@ -7,7 +7,8 @@ RSpec.describe "CronJob" do
     DelayedJobTestAdapter.new
   end
 
-  describe ".schedule" do
+  # TODO: replace with sidekiq scheduler
+  xdescribe ".schedule" do
     it "schedules the job" do
       expect { TestCronJob.schedule }.to change { TestCronJob.send(:jobs).count }.by(1)
     end

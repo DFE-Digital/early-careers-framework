@@ -80,6 +80,12 @@ RSpec.describe "School leaders adding 2020 participants", js: true do
   end
 
   def and_a_confirmation_email_should_be_sent
-    expect(SchoolMailer).to delay_email_delivery_of(:year2020_add_participants_confirmation)
+    expect(ActionMailer::MailDeliveryJob).to have_been_enqueued
+      .with(
+        "SchoolMailer",
+        "year2020_add_participants_confirmation",
+        "deliver_now",
+        a_hash_including(:args),
+      )
   end
 end

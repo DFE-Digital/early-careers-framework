@@ -81,8 +81,9 @@ RSpec.describe "Admin::Participants", type: :request do
     end
 
     it "updates analytics" do
-      delete "/admin/participants/#{ect_profile.id}"
-      expect(Analytics::ECFValidationService).to delay_execution_of(:upsert_record_without_delay)
+      expect {
+        delete "/admin/participants/#{ect_profile.id}"
+      }.to have_enqueued_job(Analytics::UpsertParticipantProfileJob).with(participant_profile: ect_profile)
     end
   end
 end

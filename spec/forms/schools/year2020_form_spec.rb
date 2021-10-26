@@ -67,14 +67,17 @@ RSpec.describe Schools::Year2020Form, type: :model do
       end
 
       subject.core_induction_programme_id = core_induction_programme.id
-      subject.save!
 
-      expect(SchoolMailer).to delay_email_delivery_of(:year2020_add_participants_confirmation)
-                                .with(
-                                  recipient: school.contact_email,
-                                  school_name: school.name,
-                                  teacher_name_list: test_participants.map { |p| "- #{p.full_name}" }.join("\n"),
-                                )
+      expect {
+        subject.save!
+      }.to have_enqueued_mail(SchoolMailer, :year2020_add_participants_confirmation)
+        .with(
+          args: [{
+            recipient: school.contact_email,
+            school_name: school.name,
+            teacher_name_list: test_participants.map { |p| "- #{p.full_name}" }.join("\n"),
+          }],
+        )
     end
   end
 

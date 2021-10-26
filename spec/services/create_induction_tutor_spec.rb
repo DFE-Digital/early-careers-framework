@@ -16,14 +16,17 @@ RSpec.describe CreateInductionTutor do
 
     it "emails the new induction tutor" do
       service = CreateInductionTutor.new(school: school, email: email, full_name: name)
-      service.call
 
-      expect(SchoolMailer).to delay_email_delivery_of(:nomination_confirmation_email).with(
-        sit_profile: User.find_by(email: email).induction_coordinator_profile,
-        school: school,
-        start_url: service.start_url,
-        step_by_step_url: service.step_by_step_url,
-      )
+      expect { service.call }.to have_enqueued_mail(SchoolMailer, :nomination_confirmation_email)
+        .with(
+          args: [{
+            sit_profile: an_instance_of(InductionCoordinatorProfile),
+            school: school,
+            start_url: service.start_url,
+            step_by_step_url: service.step_by_step_url,
+          }],
+        )
+      service.call
     end
 
     context "when an induction coordinator for the school exists" do
@@ -152,17 +155,19 @@ RSpec.describe CreateInductionTutor do
           full_name: sit_profile.user.full_name,
         )
 
-        expect { service.call }.not_to change { User.count }
+        expect { service.call }.to not_change { User.count }
+          .and have_enqueued_mail(SchoolMailer, :nomination_confirmation_email)
+          .with(
+            args: [{
+              sit_profile: sit_profile,
+              school: school,
+              start_url: service.start_url,
+              step_by_step_url: service.step_by_step_url,
+            }],
+          )
         sit_profile.reload
         expect(sit_profile.schools.count).to eql 2
         expect(sit_profile.schools).to include school
-
-        expect(SchoolMailer).to delay_email_delivery_of(:nomination_confirmation_email).with(
-          sit_profile: sit_profile,
-          school: school,
-          start_url: service.start_url,
-          step_by_step_url: service.step_by_step_url,
-        )
       end
 
       it "raises an exception if the name does not match the existing name" do
@@ -173,9 +178,9 @@ RSpec.describe CreateInductionTutor do
         )
 
         expect { service.call }.to raise_exception(RuntimeError).and not_change { User.count }
+          .and not_have_enqueued_mail(SchoolMailer, :nomination_confirmation_email)
         expect(sit_profile.schools.count).to eql 1
         expect(sit_profile.schools).not_to include school
-        expect(SchoolMailer).not_to delay_email_delivery_of(:nomination_confirmation_email)
       end
     end
   end

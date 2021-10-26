@@ -61,8 +61,9 @@ RSpec.describe StoreParticipantEligibility do
       context "without eligibility_notifications feature enabled" do
         it "does not send email notifications" do
           eligibility_options[:previous_induction] = true
-          service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
-          expect(IneligibleParticipantMailer).not_to delay_email_delivery_of(:ect_previous_induction_email)
+          expect {
+            service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+          }.to_not have_enqueued_mail(IneligibleParticipantMailer, :ect_previous_induction_email)
         end
       end
 
@@ -70,11 +71,15 @@ RSpec.describe StoreParticipantEligibility do
         context "when participant is an ECT" do
           it "sends the ect_previous_induction_email when reason is previous_induction" do
             eligibility_options[:previous_induction] = true
-            service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
-            expect(IneligibleParticipantMailer).to delay_email_delivery_of(:ect_previous_induction_email).with(
-              induction_tutor_email: induction_tutor.email,
-              participant_profile: ect_profile,
-            )
+            expect {
+              service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+            }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_previous_induction_email)
+              .with(
+                args: [{
+                  induction_tutor_email: induction_tutor.email,
+                  participant_profile: ect_profile,
+                }],
+              )
           end
 
           it "sends the ect_no_qts_email when reason is no_qts" do
@@ -82,11 +87,15 @@ RSpec.describe StoreParticipantEligibility do
             eligibility_options[:status] = :ineligible
             eligibility_options[:reason] = :no_qts
             eligibility_options[:manually_validated] = true
-            service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
-            expect(IneligibleParticipantMailer).to delay_email_delivery_of(:ect_no_qts_email).with(
-              induction_tutor_email: induction_tutor.email,
-              participant_profile: ect_profile,
-            )
+            expect {
+              service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+            }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_no_qts_email)
+              .with(
+                args: [{
+                  induction_tutor_email: induction_tutor.email,
+                  participant_profile: ect_profile,
+                }],
+              )
           end
 
           it "sends the ect_active_flags_email when reason is active_flags" do
@@ -94,19 +103,24 @@ RSpec.describe StoreParticipantEligibility do
             eligibility_options[:status] = :ineligible
             eligibility_options[:reason] = :active_flags
             eligibility_options[:manually_validated] = true
-            service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
-            expect(IneligibleParticipantMailer).to delay_email_delivery_of(:ect_active_flags_email).with(
-              induction_tutor_email: induction_tutor.email,
-              participant_profile: ect_profile,
-            )
+            expect {
+              service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+            }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_active_flags_email)
+              .with(
+                args: [{
+                  induction_tutor_email: induction_tutor.email,
+                  participant_profile: ect_profile,
+                }],
+              )
           end
         end
 
         context "when participant is a Mentor" do
           it "does not send the mentor_previous_participation_email when reason is previous_participation" do
             eligibility_options[:previous_participation] = true
-            service.call(participant_profile: mentor_profile, eligibility_options: eligibility_options)
-            expect(IneligibleParticipantMailer).not_to delay_email_delivery_of("") # Matches any email
+            expect {
+              service.call(participant_profile: mentor_profile, eligibility_options: eligibility_options)
+            }.to_not have_enqueued_mail(IneligibleParticipantMailer)
           end
 
           it "sends the mentor_no_qts_email when reason is no_qts" do
@@ -114,11 +128,15 @@ RSpec.describe StoreParticipantEligibility do
             eligibility_options[:status] = :ineligible
             eligibility_options[:reason] = :no_qts
             eligibility_options[:manually_validated] = true
-            service.call(participant_profile: mentor_profile, eligibility_options: eligibility_options)
-            expect(IneligibleParticipantMailer).to delay_email_delivery_of(:mentor_no_qts_email).with(
-              induction_tutor_email: induction_tutor.email,
-              participant_profile: mentor_profile,
-            )
+            expect {
+              service.call(participant_profile: mentor_profile, eligibility_options: eligibility_options)
+            }.to have_enqueued_mail(IneligibleParticipantMailer, :mentor_no_qts_email)
+              .with(
+                args: [{
+                  induction_tutor_email: induction_tutor.email,
+                  participant_profile: mentor_profile,
+                }],
+              )
           end
 
           it "sends the mentor_active_flags_email when reason is active_flags" do
@@ -126,11 +144,15 @@ RSpec.describe StoreParticipantEligibility do
             eligibility_options[:status] = :ineligible
             eligibility_options[:reason] = :active_flags
             eligibility_options[:manually_validated] = true
-            service.call(participant_profile: mentor_profile, eligibility_options: eligibility_options)
-            expect(IneligibleParticipantMailer).to delay_email_delivery_of(:mentor_active_flags_email).with(
-              induction_tutor_email: induction_tutor.email,
-              participant_profile: mentor_profile,
-            )
+            expect {
+              service.call(participant_profile: mentor_profile, eligibility_options: eligibility_options)
+            }.to have_enqueued_mail(IneligibleParticipantMailer, :mentor_active_flags_email)
+              .with(
+                args: [{
+                  induction_tutor_email: induction_tutor.email,
+                  participant_profile: mentor_profile,
+                }],
+              )
           end
         end
 

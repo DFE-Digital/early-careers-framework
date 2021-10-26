@@ -54,6 +54,7 @@ RSpec.configure do |config|
 
   config.before do
     Faker::Number.unique.clear
+    enqueued_jobs.clear
   end
   config.include Devise::Test::IntegrationHelpers, type: :request
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
@@ -95,6 +96,7 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
+RSpec::Matchers.define_negated_matcher :not_have_enqueued_mail, :have_enqueued_mail
 RSpec::Matchers.define_negated_matcher :not_change, :change
 
 RSpec.configure do |config|

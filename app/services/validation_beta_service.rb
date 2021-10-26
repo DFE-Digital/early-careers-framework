@@ -44,14 +44,6 @@ class ValidationBetaService
     end
   end
 
-  def set_up_missing_chasers
-    participants_yet_to_validate.find_each do |profile|
-      next if chaser_scheduled?(profile)
-
-      ParticipantDetailsReminderJob.schedule(profile)
-    end
-  end
-
   def send_ects_to_add_validation_information(profile, school)
     campaign = :ect_validation_info_2709
 
@@ -129,10 +121,6 @@ class ValidationBetaService
           participant_profile_id: nil,
         },
       )
-  end
-
-  def chaser_scheduled?(profile)
-    Delayed::Job.where("handler ILIKE ?", "%ParticipantDetailsReminderJob%#{profile.id}%").exists?
   end
 
   def sit_with_unvalidated_participants_reminders

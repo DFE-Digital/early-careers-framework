@@ -35,7 +35,7 @@ class School < ApplicationRecord
   has_many :induction_coordinator_profiles, through: :induction_coordinator_profiles_schools
   has_many :induction_coordinators, through: :induction_coordinator_profiles, source: :user
 
-  has_many :ecf_participant_profiles, through: :school_cohorts, source: :ecf_participant_profiles, class_name: "ParticipantProfile::ECF"
+  has_many :ecf_participant_profiles, through: :school_cohorts, source: :ecf_participant_profiles, class_name: "::ParticipantProfile::ECF"
   has_many :ecf_participants, through: :ecf_participant_profiles, source: :user
   has_many :active_ecf_participant_profiles, through: :school_cohorts
   has_many :active_ecf_participants, through: :active_ecf_participant_profiles, source: :user

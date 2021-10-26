@@ -28,12 +28,20 @@ RSpec.describe Partnerships::Challenge do
     end
 
     it "schedules partnership challenged emails" do
-      subject.call
-
-      lead_provider_profiles.each do |lp_profile|
-        expect(LeadProviderMailer).to delay_email_delivery_of(:partnership_challenged_email)
-                                        .with(user: lp_profile.user, partnership: partnership)
+      notify_all_lead_providers = lead_provider_profiles do |lp_profile|
+        have_enqueued_mail(LeadProviderMailer, :partnership_challenged_email)
+          .with(
+            args: [
+              user: lp_profile.user,
+              partnership: partnership,
+            ],
+          )
       end
+      notify_all_lead_providers = notify_all_lead_providers.inject do |expectations, expectation|
+        expectations.and expectation
+      end
+
+      expect { subject.call }.to notify_all_lead_providers
     end
 
     context "when the challenge reason is no ECTs this year" do

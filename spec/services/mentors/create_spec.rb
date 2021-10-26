@@ -66,13 +66,13 @@ RSpec.describe Mentors::Create do
   end
 
   it "schedules participant_added email" do
-    profile = described_class.call(
-      email: user.email,
-      full_name: Faker::Name.name,
-      school_cohort: school_cohort,
-    )
-
-    expect(ParticipantMailer).to delay_email_delivery_of(:participant_added).with(participant_profile: profile)
+    expect {
+      described_class.call(
+        email: user.email,
+        full_name: Faker::Name.name,
+        school_cohort: school_cohort,
+      )
+    }.to have_enqueued_mail(ParticipantMailer, :participant_added)
   end
 
   it "scheduled reminder email job" do
@@ -131,12 +131,12 @@ RSpec.describe Mentors::Create do
   end
 
   it "records the profile for analytics" do
-    described_class.call(
-      email: user.email,
-      full_name: user.full_name,
-      school_cohort: school_cohort,
-    )
-
-    expect(Analytics::ECFValidationService).to delay_execution_of(:upsert_record_without_delay)
+    expect {
+      described_class.call(
+        email: user.email,
+        full_name: user.full_name,
+        school_cohort: school_cohort,
+      )
+    }.to have_enqueued_job(Analytics::UpsertParticipantProfileJob)
   end
 end

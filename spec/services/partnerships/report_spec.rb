@@ -34,20 +34,22 @@ RSpec.describe Partnerships::Report do
   end
 
   it "schedules partnership notifications" do
-    expect(an_instance_of(PartnershipNotificationService))
-      .to delay_execution_of(:notify).with(result)
+    expect { result }.to have_enqueued_job(
+      PartnershipNotificationJob,
+    ).with(partnership: instance_of(Partnership))
   end
 
   it "schedules partnership reminder" do
-    expect(PartnershipReminderJob)
-      .to be_enqueued.with(partnership: result, report_id: result.report_id)
+    expect { result }.to have_enqueued_job(
+      PartnershipReminderJob,
+    ).with(partnership: instance_of(Partnership), report_id: instance_of(String))
       .at(described_class::REMINDER_EMAIL_DELAY.from_now)
   end
 
   it "does not schedule activation job" do
-    result
-
-    expect(an_instance_of(PartnershipActivationJob)).not_to delay_execution_of(:perform)
+    expect { result }.to_not have_enqueued_job(
+      PartnershipActivationJob,
+    )
   end
 
   it "produces correct event log" do
@@ -114,11 +116,10 @@ RSpec.describe Partnerships::Report do
     end
 
     it "schedules an activation job" do
-      result
-
-      expect(PartnershipActivationJob)
-        .to be_enqueued.with(partnership: result, report_id: result.report_id)
-                       .at(Partnerships::Report::CHALLENGE_WINDOW.from_now)
+      expect { result }.to have_enqueued_job(
+        PartnershipActivationJob,
+      ).with(partnership: instance_of(Partnership), report_id: instance_of(String))
+        .at(Partnerships::Report::CHALLENGE_WINDOW.from_now)
     end
   end
 
@@ -135,11 +136,10 @@ RSpec.describe Partnerships::Report do
     end
 
     it "schedules an activation job" do
-      result
-
-      expect(PartnershipActivationJob)
-        .to be_enqueued.with(partnership: result, report_id: result.report_id)
-                       .at(Partnerships::Report::CHALLENGE_WINDOW.from_now)
+      expect { result }.to have_enqueued_job(
+        PartnershipActivationJob,
+      ).with(partnership: instance_of(Partnership), report_id: instance_of(String))
+        .at(Partnerships::Report::CHALLENGE_WINDOW.from_now)
     end
   end
 
@@ -156,11 +156,10 @@ RSpec.describe Partnerships::Report do
     end
 
     it "schedules an activation job" do
-      result
-
-      expect(PartnershipActivationJob)
-        .to be_enqueued.with(partnership: result, report_id: result.report_id)
-                       .at(Partnerships::Report::CHALLENGE_WINDOW.from_now)
+      expect { result }.to have_enqueued_job(
+        PartnershipActivationJob,
+      ).with(partnership: instance_of(Partnership), report_id: instance_of(String))
+        .at(Partnerships::Report::CHALLENGE_WINDOW.from_now)
     end
   end
 end
