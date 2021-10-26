@@ -115,27 +115,59 @@ jobs:
           check_for_duplicate_msg: true
           duplicate_msg_pattern: Created review app at*
 
-      - name: Trigger Smoke Test
-        uses: benc-uk/workflow-dispatch@v1.1
-        with:
-          workflow: Smoke Test
-          token: ${{ secrets.PERSONAL_TOKEN }}
-          inputs: '{"paas_environment": "${{ env.ENVIRONMENT }}", "sha": "${{ github.event.pull_request.head.sha }}"}'
-          ref: ${{ github.event.pull_request.head.ref }}
+  smoke-test:
+    runs-on: ubuntu-20.04
+    needs: [deploy]
+    # Our rspec is deeply coupled with a database. I had a go at decoupling it for smoke tests, and gave up.
+    # This database is provided as a hacky way to get rspec to run, and should not be populated in smoke tests.
+    env:
+      RAILS_ENV: test
+      DB_USERNAME: postgres
+      DB_PASSWORD: ''
+      DB_HOSTNAME: 127.0.0.1
+      DB_PORT: 5432
+      ANALYTICS_DB_USERNAME: postgres
+      ANALYTICS_DB_PASSWORD: ''
+      ANALYTICS_DB_HOSTNAME: 127.0.0.1
+      ANALYTICS_DB_PORT: 5432
 
-      - name: Wait for smoke test
-        id: wait_for_smoke_test
-        uses: fountainhead/action-wait-for-check@v1.0.0
-        with:
-          token: ${{ secrets.PERSONAL_TOKEN }}
-          checkName: Smoke Test ${{ env.ENVIRONMENT }} ${{ github.event.pull_request.head.sha }}
-          ref: ${{ github.event.pull_request.head.ref }}
-          timeoutSeconds: 300
-          intervalSeconds: 15
+    services:
+      postgres:
+        image: postgres:11.6-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ''
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
-      - name: Exit whole workflow if ${{ env.ENVIRONMENT }} smoke test was not successful
-        if: steps.wait_for_smoke_test.outputs.conclusion != 'success'
-        run: exit 1
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: setup-inputs
+        run: |
+          echo "ENVIRONMENT=review-pr-${{ github.event.number }}" >> $GITHUB_ENV
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1.84.0
+        with:
+          bundler-cache: true
+          ruby-version: '2.7.4'
+
+      - name: Set up Node
+        uses: actions/setup-node@v2.4.1
+        with:
+          node-version: '12.x'
+          cache: 'yarn'
+
+      - name: Set up test database
+        run: bin/rails db:create db:schema:load
+
+      - name: Run deployment smoke test
+        run: bundle exec rspec spec/smoke_tests/*_spec.rb --tag smoke_test
 
       - name: comment on PR
         uses: unsplash/comment-on-pr@master
