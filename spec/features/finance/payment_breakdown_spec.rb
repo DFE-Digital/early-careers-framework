@@ -24,7 +24,7 @@ RSpec.feature "Finance users payment breakdowns", type: :feature, js: true do
     then_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named("Payment breakdown for an ECF provider")
 
-    when_i_click_on_view_contract_button
+    when_i_click_on_view_contract_link
     then_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named("Contract breakdown for an ECF provider")
   end
@@ -51,7 +51,7 @@ private
     find("button", text: "Open all").click
   end
 
-  def when_i_click_on_view_contract_button
-    find("a", text: "View contract information").click
+  def when_i_click_on_view_contract_link
+    find("a", text: I18n.t("finance.show_contract")).click
   end
 end

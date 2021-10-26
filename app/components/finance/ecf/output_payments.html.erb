@@ -1,16 +1,25 @@
 <%= render Finance::ECF::OutputPaymentRow.with_collection(output_payments) %>
 
-<h3 class="govuk-heading-s">Participants</h3>
+<h3 class="govuk-heading-s"><%=t("finance.participant_breakdown") %></h3>
 <table class="govuk-table payment-breakdown-table">
   <tbody>
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Total participants paid</th>
+      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.current_milestone") %></th>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= participants %></td>
     </tr>
-    <!--TODO: Add not accepted participants-->
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Total participants not accepted </th>
+      <!-- TODO: Add back payments -->
+      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.back_payment_participants") %></th>
       <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__cell"><%=t("finance.total_paid") %></th>
+      <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><%= participants %></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <!--TODO: Add not accepted participants-->
+      <th scope="row" class="govuk-table__cell"><%=t("finance.total_not_paid") %></th>
+      <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold">0</td>
     </tr>
   </tbody>
 </table>

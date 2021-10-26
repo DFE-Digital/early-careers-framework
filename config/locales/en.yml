@@ -106,15 +106,23 @@ en:
     choose_programme: Choose programme scheme
     show_contract: View contract information
     provider: Provider
-    milestone: Milestone
-    target: Recruitment target
     ects: Current ECTs
     mentors: Current Mentors
     participants: Current Participants
     per_participant: Payment amount per person
-    monthly: Payment amount monthly
-    subtotal: Sub total
-    period: Payment amount for period
+    payment_breakdown: Payment Breakdown
+    payment_type: Payment type
+    number_of_participants: Number of participants
+    payment_amount_for_period: Payment amount for period
+    payment: Payment
+    vat: VAT
+    total_payment: Total payment
+    fee_per_participant: Fee per participant
+    back_payment_participants: Back payment participants
+    participant_breakdown: Participant breakdown
+    current_milestone: Current milestone
+    total_paid: Total paid
+    total_not_paid: Total not paid
     contract:
       uplift_target: Uplift target
       uplift_amount: Uplift amount
@@ -129,24 +137,27 @@ en:
         ceiling: Unlimited
     ecf:
       bands:
-        "0": ECF FIP Band A
-        "1": ECF FIP Band B
-        "2": ECF FIP Band C
-        "3": Additional
+        "0": Band A
+        "1": Band B
+        "2": Band C
+        "3": New target
       payment_breakdown: ECF Payment Breakdown
-      contract_information: ECF Contract Information
+      breakdown_summary:
+        submission_deadline: Submission deadline
+        total: Total
+
     npq:
       payment_breakdown: NPQ Payment Breakdown
     service_fee:
       caption: Service Fee
-      participants: Target Participants
     output_payment:
-      caption: Output Payment
-      participants: Current Participants
-    other_fees:
-      caption: Other Fees
-      fee: Fee
-      uplift: Uplift
+      caption: Output Fee
+      band_d_info: Participants over the original band C target up to the new target.
+    uplift_fee:
+      caption: Uplift Fee
+    clawbacks:
+      caption: Clawbacks
+      per_participant: Clawback per participant
 
 
   activemodel:
