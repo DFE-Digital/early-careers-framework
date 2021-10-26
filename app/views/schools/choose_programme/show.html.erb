@@ -17,7 +17,7 @@
             legend: { text: "How do you want to run your training in #{@induction_choice_form.cohort.start_year} to #{@induction_choice_form.cohort.start_year + 1}?", size: "l", tag: "h1" },
             hint: -> { tag.p do
               concat("If you’re not sure which type of training to choose, check our guidance on the ")
-              concat(govuk_link_to("statutory changes and new training programmes.", "https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview"))
+              concat(govuk_link_to("statutory changes and new training programmes (opens in a new tab).", "https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview", target: :_blank))
               concat(content_tag(:br))
               concat(" You can also contact your ")
               unless @school.cip_only?
