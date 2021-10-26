@@ -113,6 +113,13 @@ RSpec.describe "NPQ Participants API", type: :request, with_feature_flags: { par
           let(:params) do
             { data: { attributes: { course_identifier: npq_course.identifier, reason: Participants::Withdraw::NPQ.reasons.sample } } }
           end
+
+          it "changes the training status of a participant to withdrawn" do
+            put url, params: params
+
+            expect(response).to be_successful
+            expect(npq_application.reload.profile.training_status).to eql("withdrawn")
+          end
         end
       end
     end
