@@ -258,13 +258,13 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
         it_behaves_like "a participant withdraw action endpoint" do
           let(:url) { "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw" }
           let(:params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "moved-school" } } } }
-        end
 
-        it "changes the training status of a participant to withdrawn" do
-          put url, params: params
+          it "changes the training status of a participant to withdrawn" do
+            put url, params: params
 
-          expect(response).to be_successful
-          expect(parsed_response.dig("data", "attributes", "training_status")).to eql("withdrawn")
+            expect(response).to be_successful
+            expect(parsed_response.dig("data", "attributes", "training_status")).to eql("withdrawn")
+          end
         end
       end
 
