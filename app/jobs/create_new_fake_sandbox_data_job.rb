@@ -11,34 +11,38 @@ class CreateNewFakeSandboxDataJob < CronJob
 
     @provider_name = provider_name
 
-    10.times do
-      name = Faker::Name.name
-      EarlyCareerTeachers::Create.call(
-        full_name: name,
-        email: Faker::Internet.email(name: name),
-        school_cohort: random_school_cohort,
-        mentor_profile_id: nil,
-        year_2020: false,
-      )
+    if ecf_lead_provider.present?
+      10.times do
+        name = Faker::Name.name
+        EarlyCareerTeachers::Create.call(
+          full_name: name,
+          email: Faker::Internet.email(name: name),
+          school_cohort: random_school_cohort,
+          mentor_profile_id: nil,
+          year_2020: false,
+        )
+      end
     end
 
-    10.times do
-      name = Faker::Name.name
-      user = User.create!(full_name: name, email: Faker::Internet.email(name: name))
-      NPQApplication.create!(
-        active_alert: "",
-        date_of_birth: Date.new(1990, 1, 1),
-        eligible_for_funding: true,
-        funding_choice: "",
-        headteacher_status: "",
-        nino: "",
-        school_urn: random_school.urn,
-        teacher_reference_number: TRNGenerator.next,
-        teacher_reference_number_verified: true,
-        npq_course: NPQCourse.all.sample,
-        npq_lead_provider: npq_lead_provider,
-        user: user,
-      )
+    if npq_lead_provider.present?
+      10.times do
+        name = Faker::Name.name
+        user = User.create!(full_name: name, email: Faker::Internet.email(name: name))
+        NPQApplication.create!(
+          active_alert: "",
+          date_of_birth: Date.new(1990, 1, 1),
+          eligible_for_funding: true,
+          funding_choice: "",
+          headteacher_status: "",
+          nino: "",
+          school_urn: random_school.urn,
+          teacher_reference_number: TRNGenerator.next,
+          teacher_reference_number_verified: true,
+          npq_course: NPQCourse.all.sample,
+          npq_lead_provider: npq_lead_provider,
+          user: user,
+        )
+      end
     end
   end
 
