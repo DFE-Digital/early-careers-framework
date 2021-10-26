@@ -22,7 +22,7 @@ RSpec.feature "Finance users payment breakdowns", type: :feature, js: true do
     and_i_click_the_submit_button
     and_i_click_open_all_button
     then_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named("Payment breakdown for an ECF provider")
+    and_percy_should_be_sent_a_snapshot_named("Payment breakdown for an ECF provider (payable)")
 
     when_i_click_on_view_contract_link
     then_the_page_should_be_accessible
