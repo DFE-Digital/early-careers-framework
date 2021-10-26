@@ -37,13 +37,6 @@ end
 RSpec.shared_examples "a participant withdraw action endpoint" do
   let(:parsed_response) { JSON.parse(response.body) }
 
-  it "changes the training status of a participant to withdrawn" do
-    put url, params: params
-
-    expect(response).to be_successful
-    expect(parsed_response.dig("data", "attributes", "training_status")).to eql("withdrawn")
-  end
-
   it "returns an error when the participant is already withdrawn" do
     2.times { put url, params: params }
 
