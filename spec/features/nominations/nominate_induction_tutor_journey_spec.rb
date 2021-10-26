@@ -9,13 +9,13 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
   scenario "Valid nomination link was sent" do
     given_a_valid_nomination_email_has_been_created
     when_i_click_the_link_to_nominate_a_sit
-    then_i_should_be_taken_to_the_choose_how_to_continue_page
+    then_i_should_be_on_the_choose_how_to_continue_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Choose how to continue"
 
-    when_i_select_yes_to_expecting_ects_to_join
+    when_i_select "yes"
     and_select_continue
-    then_i_should_be_taken_to_the_start_nomination_page
+    then_i_should_be_on_the_start_nomination_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Start school induction tutor nomination"
     and_select_continue
@@ -61,16 +61,16 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
     and_percy_should_be_sent_a_snapshot_named "Sit already nominated"
   end
 
-  scenario "Nominating an induction tutors with name and email that do not match" do
+  scenario "Nominating an induction tutor with name and email that do not match" do
     given_an_email_address_for_another_school_sit_already_exists
     when_i_click_the_link_to_nominate_a_sit
-    then_i_should_be_taken_to_the_choose_how_to_continue_page
+    then_i_should_be_on_the_choose_how_to_continue_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Choose how to continue"
 
-    when_i_select_yes_to_expecting_ects_to_join
+    when_i_select "yes"
     and_select_continue
-    then_i_should_be_taken_to_the_start_nomination_page
+    then_i_should_be_on_the_start_nomination_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Start school induction tutor nomination"
     and_select_continue
@@ -88,7 +88,7 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Different name page"
 
-    when_i_change_name
+    when_i_click "Change the name"
     then_i_should_be_on_the_nominations_full_name_page
 
     when_i_fill_in_the_sits_name
@@ -105,13 +105,13 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
   scenario "Nominating an induction tutor with an email already in use by another school" do
     given_an_email_is_being_used_by_an_existing_ect
     when_i_click_the_link_to_nominate_a_sit
-    then_i_should_be_taken_to_the_choose_how_to_continue_page
+    then_i_should_be_on_the_choose_how_to_continue_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Choose how to continue"
 
-    when_i_select_yes_to_expecting_ects_to_join
+    when_i_select "yes"
     and_select_continue
-    then_i_should_be_taken_to_the_start_nomination_page
+    then_i_should_be_on_the_start_nomination_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Start school induction tutor nomination"
     and_select_continue
@@ -125,7 +125,7 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
     and_select_continue
     then_i_should_be_on_the_email_already_used_page
 
-    when_i_change_email_address
+    when_i_click "Change email address"
     then_i_should_be_on_the_nominations_full_name_page
     when_i_fill_in_the_sits_name
     and_select_continue

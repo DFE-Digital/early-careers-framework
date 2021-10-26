@@ -4,9 +4,8 @@ module NominateInductionTutorSteps
   include Capybara::DSL
 
   def given_a_valid_nomination_email_has_been_created
-    @cohort = create(:cohort, start_year: 2021)
     @nomination_email = create(:nomination_email)
-    @school_cohort = create(:school_cohort, school: @nomination_email.school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
+    @school_cohort = create(:school_cohort, :fip, school: @nomination_email.school)
   end
 
   def given_an_induction_tutor_has_already_been_nominated
@@ -14,16 +13,13 @@ module NominateInductionTutorSteps
   end
 
   def given_an_email_address_for_another_school_sit_already_exists
-    @cohort = create(:cohort, start_year: 2021)
     @nomination_email = create(:nomination_email, :email_address_already_used_for_another_school)
-    @school_cohort = create(:school_cohort, school: @nomination_email.school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
+    @school_cohort = create(:school_cohort, :fip, school: @nomination_email.school)
   end
 
   def given_an_email_is_being_used_by_an_existing_ect
-    @cohort = create(:cohort, start_year: 2021)
-    @nomination_email = create(:nomination_email)
-    @school_cohort = create(:school_cohort, school: @nomination_email.school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
-    @ect =  create(:participant_profile, :ect, user: create(:user, full_name: "John Doe", email: "johndo2@example.com"))
+    given_a_valid_nomination_email_has_been_created
+    @ect = create(:participant_profile, :ect, user: create(:user, full_name: "John Doe", email: "johndo2@example.com"))
   end
 
   def and_the_nomination_email_link_has_expired
@@ -60,22 +56,18 @@ module NominateInductionTutorSteps
     fill_in "nominate_induction_tutor_form[email]", with: "invalid-email@example"
   end
 
-  def when_i_change_email_address
-    click_on("Change email address")
+  def when_i_click(button)
+    click_on(button)
   end
 
-  def when_i_change_name
-    click_on("Change the name")
-  end
-
-  def then_i_should_be_taken_to_the_choose_how_to_continue_page
+  def then_i_should_be_on_the_choose_how_to_continue_page
     expect(page).to have_selector("h1", text: "Do you expect any early career teachers to join your school this academic year?")
     expect(page).to have_field("Yes", visible: :all)
     expect(page).to have_field("No", visible: :all)
     expect(page).to have_field("We do not know", visible: :all)
   end
 
-  def then_i_should_be_taken_to_the_start_nomination_page
+  def then_i_should_be_on_the_start_nomination_page
     expect(page).to have_selector("h1", text: "Nominate an induction tutor for your school")
     expect(page).to have_text("Your induction tutor will use our online service to:")
     expect(page).to have_selector("h2", text: "Who you can nominate")
@@ -127,23 +119,15 @@ module NominateInductionTutorSteps
 
   def then_i_should_be_redirected_to_the_induction_tutor_already_nominated_page
     expect(page).to have_selector("h1", text: "An induction tutor has already been nominated")
-    expect(page).to have_text("our school has already nominated an induction tutor to use our service.")
+    expect(page).to have_text("Your school has already nominated an induction tutor to use our service.")
   end
 
   def then_i_should_be_on_the_email_already_used_page
     expect(page).to have_selector("h1", text: "The email address is being used by another school")
   end
 
-  def when_i_select_yes_to_expecting_ects_to_join
-    choose option: "yes", allow_label_click: true
-  end
-
-  def when_i_select_no_to_expecting_ects_to_join
-    choose option: "no", allow_label_click: true
-  end
-
-  def when_i_select_we_do_not_know_yet_to_expecting_ects_to_join
-    choose option: "we_dont_know", allow_label_click: true
+  def when_i_select(option)
+    choose option: option, allow_label_click: true
   end
 
   def and_select_continue
