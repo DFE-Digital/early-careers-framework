@@ -28,6 +28,8 @@ module Finance
 
         @payment_period = helpers.pretty_payment_period_payable
         @cutoff_date = "On #{helpers.cutoff_date_payable}"
+
+        render :show
       end
 
     private
