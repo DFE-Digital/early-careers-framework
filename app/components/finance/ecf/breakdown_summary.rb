@@ -8,7 +8,7 @@ module Finance
 
     private
 
-      def initialize(breakdown_summary:, lead_provider:)
+      def initialize(breakdown_summary:, lead_provider:, payment_period:)
         @lead_provider = lead_provider
         @breakdown = breakdown_summary
         @service_fees_participants = @breakdown[:service_fees].map { |params| params[:participants] }.inject(&:+)
@@ -17,6 +17,7 @@ module Finance
         @output_payment_total = @breakdown[:output_payments].map { |params| params[:subtotal] }.inject(&:+)
         @payment_period = pretty_payment_period
         @deadline = Date.parse(payment_period.last).to_s(:govuk)
+        @payment_period = payment_period
       end
     end
   end

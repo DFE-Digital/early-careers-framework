@@ -12,6 +12,7 @@ module Finance
           event_type: :started,
         )
 
+        @payment_period = helpers.pretty_payment_period
         @cutoff_date = "On #{helpers.cutoff_date}"
       end
 
@@ -25,7 +26,8 @@ module Finance
           event_type: :started,
         )
 
-        render :show
+        @payment_period = helpers.pretty_payment_period_payable
+        @cutoff_date = "On #{helpers.cutoff_date_payable}"
       end
 
     private
