@@ -311,7 +311,7 @@ class SchoolMailer < ApplicationMailer
         school_name: school_name,
         sign_in: new_user_session_url(**campaign_tracking),
       },
-    ).tag(:fourth_request_to_add_ects_and_mentors).associate_with(induction_coordinator, as: :induction_coordinator_profile)
+    ).tag(:fifth_request_to_add_ects_and_mentors).associate_with(induction_coordinator, as: :induction_coordinator_profile)
   end
 
   def year2020_add_participants_confirmation(recipient:, school_name:, teacher_name_list:)
