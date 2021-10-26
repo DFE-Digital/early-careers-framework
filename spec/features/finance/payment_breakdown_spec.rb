@@ -33,6 +33,7 @@ RSpec.feature "Finance users payment breakdowns", type: :feature, js: true do
     given_i_am_logged_in_as_a_finance_user
     and_there_is_ecf_provider_with_contract
     visit "/finance/ecf/payment_breakdowns/cffd2237-c368-4044-8451-68e4a4f73369/payable"
+    and_i_click_open_all_button
     then_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named("Payment breakdown for an ECF provider")
   end
