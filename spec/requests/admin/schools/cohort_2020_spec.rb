@@ -8,10 +8,10 @@ RSpec.describe "Admin::Schools::Cohort2020", type: :request do
   let(:cip) { create(:core_induction_programme, name: "CIP Programme") }
   let(:cohort_2020) { create(:cohort, start_year: 2020) }
   let(:school_cohort) { create(:school_cohort, :cip, cohort: cohort_2020, school: school, core_induction_programme: cip) }
-  let!(:participants) { create_list(:participant_profile, 5, :ecf, school_cohort: school_cohort) }
+  let!(:participants) { create_list(:participant_profile, 5, :ect, school_cohort: school_cohort) }
   let(:other_cohort) { create(:cohort) }
   let(:other_school_cohort) { create(:school_cohort, :cip, cohort: other_cohort, school: school_cohort.school, core_induction_programme: cip) }
-  let!(:other_participants) { create_list(:participant_profile, 5, :ecf, school_cohort: other_school_cohort) }
+  let!(:other_participants) { create_list(:participant_profile, 5, :ect, school_cohort: other_school_cohort) }
 
   before do
     sign_in admin_user
