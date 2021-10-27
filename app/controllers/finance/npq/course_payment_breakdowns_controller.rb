@@ -8,9 +8,11 @@ module Finance
 
         @breakdown = Finance::NPQ::CalculationOrchestrator.call(
           cpd_lead_provider: @npq_lead_provider.cpd_lead_provider,
-          contract: @npq_lead_provider.npq_contracts.find_by(course_identifier: params[:course_identifier]),
+          contract: @npq_lead_provider.npq_contracts.find_by!(course_identifier: params[:course_identifier]),
           event_type: :started,
         )
+
+        @cutoff_date = "On #{helpers.cutoff_date}"
       end
 
     private

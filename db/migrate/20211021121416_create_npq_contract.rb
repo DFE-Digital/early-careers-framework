@@ -4,19 +4,19 @@ class CreateNPQContract < ActiveRecord::Migration[6.1]
   def change
     create_table :npq_contracts do |t|
       t.jsonb "raw"
-      t.integer :version
+      t.string :version, default: "0.0.1"
 
-      t.references :npq_lead_provider
+      t.references :npq_lead_provider, nil: false
 
-      t.integer :recruitment_target
-      t.string :course_identifier
+      t.integer :recruitment_target, nil: false
+      t.string :course_identifier, nil: false
 
-      t.integer :service_fee_installments
-      t.integer :service_fee_percentage, default: 40
+      t.integer :service_fee_installments, nil: false
+      t.integer :service_fee_percentage, default: 40, nil: false
 
-      t.decimal :per_participant
-      t.integer :number_of_payment_periods
-      t.integer :output_payment_percentage, default: 60
+      t.decimal :per_participant, nil: false
+      t.integer :number_of_payment_periods, nil: false
+      t.integer :output_payment_percentage, default: 60, nil: false
       t.timestamps
     end
   end

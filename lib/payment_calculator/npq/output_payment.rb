@@ -28,7 +28,7 @@ module PaymentCalculator
       end
 
       def milestone_output_payments
-        per_participant * output_payment_percentage / (100 * number_of_payment_periods)
+        output_payment_percentage.zero? ? 0 : per_participant * output_payment_percentage / (100 * number_of_payment_periods)
       end
     end
   end
