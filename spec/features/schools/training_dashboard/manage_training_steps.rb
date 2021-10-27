@@ -278,10 +278,6 @@ module ManageTrainingSteps
 
   # When_steps
 
-  def when_i_visit_manage_training_dashboard
-    visit schools_dashboard_path(@school)
-  end
-
   def when_i_click_on_back
     click_on("Back")
   end
