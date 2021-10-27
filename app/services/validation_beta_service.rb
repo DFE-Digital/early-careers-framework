@@ -174,4 +174,35 @@ class ValidationBetaService
         ).deliver_later
       end
   end
+
+  def send_sit_new_ambition_ects_and_mentors_added(path_to_csv:)
+    sign_in_url = Rails.application.routes.url_helpers.new_user_session_url(
+      host: Rails.application.config.domain
+    )
+
+    sit_ids = []
+
+    CSV.foreach(path_to_csv, headers: true) do |row|
+      participant_email = row["email"]
+      next if participant_email.blank?
+
+      user = User.find_by(email: row["email"])
+      next if user.nil?
+
+      sit = user&.school&.induction_coordinator_profiles&.first
+
+      if sit.present?
+        next if sit_ids.include?(sit.id) || Email.associated_with(sit).tagged_with(:sit_new_ambition_participants_added).any?
+
+        SchoolMailer.sit_new_ambition_ects_and_mentors_added_email(
+          induction_coordinator: sit,
+          school_name: user.school.name,
+          sign_in_url: sign_in_url
+        ).deliver_later
+        sit_ids << sit.id
+      else
+        Rails.logger.warn("Not sending email to SIT of participant_email")
+      end
+    end
+  end
 end
