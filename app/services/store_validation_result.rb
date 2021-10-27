@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
 class StoreValidationResult < BaseService
-  attr_reader :participant_profile, :validation_data, :dtq_response
+  attr_reader :participant_profile, :validation_data, :dqt_response
 
-  def initialize(participant_profile:, validation_data:, dtq_response:)
+  def initialize(participant_profile:, validation_data:, dqt_response:)
     @participant_profile = participant_profile
     @validation_data = validation_data.presence || fetch_validation_data
-    @dtq_response = dtq_response
+    @dqt_response = dqt_response
   end
 
   def call
     store_validation_data!
-    return unless dtq_response.present?
+    return unless dqt_response.present?
 
-    eligibility = store_eligibility_data!(dtq_response)
-    store_trn_on_teacher_profile!(dtq_response[:trn])
+    eligibility = store_eligibility_data!(dqt_response)
+    store_trn_on_teacher_profile!(dqt_response[:trn])
     eligibility
   end
 

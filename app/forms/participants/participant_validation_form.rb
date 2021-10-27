@@ -10,7 +10,7 @@ module Participants
 
     attribute :participant_profile_id
     attribute :eligibility
-    attribute :dtq_response
+    attribute :dqt_response
 
     step :trn, update: true do
       attribute :trn, :string
@@ -92,14 +92,14 @@ module Participants
     end
 
     def check_eligibility!
-      self.dtq_response = ParticipantValidationService.validate(
+      self.dqt_response = ParticipantValidationService.validate(
         full_name: full_name,
         trn: trn,
         date_of_birth: dob,
         nino: nino,
       )
 
-      return self.eligibility = :no_match if dtq_response.blank?
+      return self.eligibility = :no_match if dqt_response.blank?
 
       eligibility_record = store_validation_result!
       self.eligibility = eligibility_record.status.to_sym
@@ -114,7 +114,10 @@ module Participants
           full_name: full_name,
           dob: dob,
         },
-        dtq_response: dtq_response,
+        dqt_response: dqt_response,
+        config: {
+          check_first_name_only: true,
+        }
       )
     end
 
@@ -126,6 +129,13 @@ module Participants
 
     def additional_step
       (EXTRA_STEPS - completed_steps).first || :manual_check
+    end
+
+    def call
+      return false unless valid?
+
+      check_eligibility!
+      store_validation_result!
     end
   end
 end

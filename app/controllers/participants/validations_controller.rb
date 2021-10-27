@@ -7,15 +7,13 @@ module Participants
     form Participants::ParticipantValidationForm, as: :validation_form
 
     setup_form do |form|
-      form.participant_profile_id = current_user.participant_profiles.active_record.ecf.first.id
+      form.participant_profile_id = current_user.teacher_profile.current_ecf_profile.id
     end
 
     abandon_journey_path { { action: :already_completed } }
 
     def no_trn
-      validation_form.no_trn = true
-      validation_form.trn = nil
-      form.record_completed_step :trn
+      form.complete_step(:trn, no_trn: true, trn: nil)
       store_form_in_session
       redirect_to action: :show, step: step_param(validation_form.next_step)
     end

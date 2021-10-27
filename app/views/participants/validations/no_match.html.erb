@@ -51,6 +51,6 @@
 
     </dl>
     <div class="govuk-inset-text"><%= t("participants.validation_form.extra_steps.#{validation_form.additional_step}.note") %></div>
-    <%= button_to t("participants.validation_form.extra_steps.#{validation_form.additional_step}.button"), { action: :update }, method: :patch, class: "govuk-button" %>
+    <%= govuk_button_to t("participants.validation_form.extra_steps.#{validation_form.additional_step}.button"), { action: :update }, method: :patch %>
   </div>
 </div>
