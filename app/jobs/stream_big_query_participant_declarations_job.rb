@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class StreamBigQueryParticipantDeclarationsJob < ApplicationJob
-
   # Streams every attribute of a participant declarations (plus the lead provider name) that was
   # updated during the previous hour.
   def perform

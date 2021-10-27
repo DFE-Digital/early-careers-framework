@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class SessionTrimJob < ApplicationJob
-
   def perform
     Rails.logger.info "Trimming session store..."
 

@@ -12,4 +12,4 @@ paas_web_app_deployment_strategy = "blue-green-v2"
 paas_web_app_instances = 4
 paas_web_app_memory = 8192
 paas_worker_app_instances = 1
-paas_worker_app_start_command = "/app/bin/delayed_job --pool=mailers --pool=priority_mailers --pool=*:2 start && bundle exec rake jobs:work"
+paas_worker_app_start_command = "bundle exec sidekiq -C config/sidekiq.yml"
