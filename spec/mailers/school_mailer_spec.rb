@@ -167,4 +167,23 @@ RSpec.describe SchoolMailer, type: :mailer do
       expect(email.from).to eq(["mail@example.com"])
     end
   end
+
+  describe "sit_new_ambition_ects_and_mentors_added_email" do
+    let(:induction_coordinator_profile) { create(:induction_coordinator_profile) }
+    let(:school_name) { Faker::Company.name }
+    let(:sign_in_url) { "https://www.example.com/sign-in" }
+
+    let(:email) do
+      SchoolMailer.sit_new_ambition_ects_and_mentors_added_email(
+        induction_coordinator_profile: induction_coordinator_profile,
+        sign_in_url: sign_in_url,
+        school_name: school_name,
+      )
+    end
+
+    it "renders the right headers" do
+      expect(email.from).to eq(["mail@example.com"])
+      expect(email.to).to eq([induction_coordinator_profile.user.email])
+    end
+  end
 end

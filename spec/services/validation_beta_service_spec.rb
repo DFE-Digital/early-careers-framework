@@ -234,4 +234,30 @@ RSpec.describe ValidationBetaService do
                                                  .once
     end
   end
+
+  describe "#send_sit_new_ambition_ects_and_mentors_added" do
+    let(:school) { create(:school, name: "Trumpton High School") }
+    let!(:school_cohort) { create(:school_cohort, school: school) }
+
+    let(:ect_user_1) { create(:user, email: "ect1@example.com") }
+    let(:teacher_profile_1) { create(:teacher_profile, school: school, user: ect_user_1) }
+    let!(:ect_profile_1) { create(:participant_profile, :ect, school_cohort: school_cohort, teacher_profile: teacher_profile_1) }
+
+    let(:ect_user_2) { create(:user, email: "ect2@example.com") }
+    let(:teacher_profile_2) { create(:teacher_profile, school: school, user: ect_user_2) }
+    let!(:ect_profile_2) { create(:participant_profile, :ect, school_cohort: school_cohort, teacher_profile: teacher_profile_2) }
+
+    let(:sit_user) { create(:user, email: "sit@example.com") }
+    let!(:sit_profile) { create(:induction_coordinator_profile, user: sit_user, schools: [school]) }
+    let(:csv_file) { file_fixture "ambition_users.csv" }
+
+    it "sends the new ects and mentors email to the sit for the participant once only" do
+      expect(school.induction_coordinator_profiles).to include sit_profile
+      validation_beta_service.send_sit_new_ambition_ects_and_mentors_added(path_to_csv: csv_file)
+      expect(SchoolMailer).to delay_email_delivery_of(:sit_new_ambition_ects_and_mentors_added_email)
+                                .with(induction_coordinator: sit_profile,
+                                      school_name: school.name,
+                                      sign_in_url: "http://www.example.com/users/sign_in").once
+    end
+  end
 end
