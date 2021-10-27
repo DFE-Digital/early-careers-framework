@@ -156,11 +156,16 @@ RSpec.describe ValidationBetaService do
 
     it "sends the new ects and mentors email to the sit for the participant once only" do
       expect(school.induction_coordinator_profiles).to include sit_profile
-      validation_beta_service.send_sit_new_ambition_ects_and_mentors_added(path_to_csv: csv_file)
-      expect(SchoolMailer).to delay_email_delivery_of(:sit_new_ambition_ects_and_mentors_added_email)
-                                .with(induction_coordinator_profile: sit_profile,
-                                      school_name: school.name,
-                                      sign_in_url: "http://www.example.com/users/sign_in").once
+      expect {
+        validation_beta_service.send_sit_new_ambition_ects_and_mentors_added(path_to_csv: csv_file)
+      }.to have_enqueued_mail(SchoolMailer, :sit_new_ambition_ects_and_mentors_added_email)
+        .with(
+          args: [{
+            induction_coordinator: sit_profile,
+            school_name: school.name,
+            sign_in_url: "http://www.example.com/users/sign_in"
+          }],
+        )
     end
   end
 
