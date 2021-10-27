@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
-class ValidationRetryJob < CronJob
-  self.cron_expression = "15 3 * * *"
-
-  queue_as :validation_retry
-
+class ValidationRetryJob < ApplicationJob
   def perform
     ECFParticipantValidationData.where(api_failure: true).find_each do |validation_data|
       ValidateParticipant.call(participant_profile: validation_data.participant_profile,

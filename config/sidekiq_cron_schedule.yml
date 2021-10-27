@@ -1,0 +1,24 @@
+session_trim:
+  cron: "0 1 * * *"
+  class: "SessionTrimJob"
+  queue: session_trim
+create_new_fake_sandbox_data:
+  cron: "0 2 * * *"
+  class: "CreateNewFakeSandboxDataJob"
+  queue: default
+stream_big_query_participant_declarations:
+  cron: "0 * * * *"
+  class: "StreamBigQueryParticipantDeclarationsJob"
+  queue: big_query_participant_declarations
+import_gias_data:
+  cron: "0 6 * * *"
+  class: "ImportGiasDataJob"
+  queue: school_data
+validation_retry:
+  cron: "15 3 * * *"
+  class: "ValidationRetryJob"
+  queue: validation_retry
+school_analytics:
+  cron: "10 * * * *"
+  class: "SchoolAnalyticsJob"
+  queue: school_analytics

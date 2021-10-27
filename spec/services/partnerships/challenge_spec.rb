@@ -28,7 +28,7 @@ RSpec.describe Partnerships::Challenge do
     end
 
     it "schedules partnership challenged emails" do
-      notify_all_lead_providers = lead_provider_profiles do |lp_profile|
+      notify_all_lead_providers = lead_provider_profiles.map do |lp_profile|
         have_enqueued_mail(LeadProviderMailer, :partnership_challenged_email)
           .with(
             args: [

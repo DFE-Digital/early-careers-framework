@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
-class SessionTrimJob < CronJob
-  self.cron_expression = "0 1 * * *"
-
-  queue_as :session_trim
+class SessionTrimJob < ApplicationJob
 
   def perform
     Rails.logger.info "Trimming session store..."

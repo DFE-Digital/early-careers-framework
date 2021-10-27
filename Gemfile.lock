@@ -518,6 +518,9 @@ GEM
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
+    sidekiq-cron (1.2.0)
+      fugit (~> 1.1)
+      sidekiq (>= 4.2.1)
     signet (0.16.0)
       addressable (~> 2.8)
       faraday (>= 0.17.3, < 2.0)
@@ -673,6 +676,7 @@ DEPENDENCIES
   sentry-ruby (>= 4.6.4)
   shoulda-matchers (~> 4.5)
   sidekiq
+  sidekiq-cron
   simplecov
   spring
   spring-watcher-listen (~> 2.0.0)

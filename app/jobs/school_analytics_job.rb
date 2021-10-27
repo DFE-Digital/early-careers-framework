@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
-class SchoolAnalyticsJob < CronJob
-  self.cron_expression = "10 * * * *"
-
-  queue_as :school_analytics
-
+class SchoolAnalyticsJob < ApplicationJob
   def perform
     Rails.logger.info "Updating school analytics..."
     Analytics::ECFSchoolService.update_school_analytics
