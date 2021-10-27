@@ -16,7 +16,7 @@ RSpec.describe RecordDeclarations::Retained::Mentor do
     travel_to cutoff_start_datetime + 2.days
   end
 
-  it_behaves_like "a retained participant declaration service" do
+  it_behaves_like "a participant declaration with evidence held service" do
     def given_params
       retained_mentor_params
     end

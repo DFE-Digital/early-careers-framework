@@ -16,7 +16,7 @@ RSpec.describe RecordDeclarations::Started::NPQ do
     travel_to cutoff_start_datetime + 2.days
   end
 
-  it_behaves_like "a started participant declaration service" do
+  it_behaves_like "a participant declaration without evidence held service" do
     def given_params
       npq_params
     end
