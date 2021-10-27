@@ -133,6 +133,7 @@ RSpec.describe "NPQ Applications API", type: :request do
               funding_choice
               course_identifier
               status
+              created_at
             ],
           )
         end
@@ -155,6 +156,7 @@ RSpec.describe "NPQ Applications API", type: :request do
           expect(row["funding_choice"]).to eql(application.funding_choice)
           expect(row["course_identifier"]).to eql(application.npq_course.identifier)
           expect(row["status"]).to eql(application.lead_provider_approval_status)
+          expect(row["created_at"]).to eql(application.created_at.rfc3339)
         end
       end
     end

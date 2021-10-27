@@ -40,5 +40,9 @@ class NPQApplicationSerializer
     object.npq_course.identifier
   end
 
+  attribute :created_at do |object|
+    object.created_at.rfc3339
+  end
+
   attribute(:status, &:lead_provider_approval_status)
 end

@@ -57,7 +57,7 @@ private
       record.funding_choice,
       record.npq_course.identifier,
       record.lead_provider_approval_status,
-      record.created_at,
+      record.created_at.rfc3339,
     ]
   end
 end
