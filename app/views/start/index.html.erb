@@ -26,7 +26,12 @@
     <section class='govuk-aside'>
       <header class="govuk-aside__header">Related content</header>
       <ul class="govuk-list govuk-aside__links">
-        <li><%= govuk_link_to "Guidance on the ECF and choosing programmes (opens in a new tab)", "https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview", target: :_blank %></li>
+        <li>
+          <%= govuk_link_to "Guidance on the ECF and choosing programmes (opens in a new tab)",
+              "https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview",
+              target: :_blank,
+              rel: "noopener noreferrer" %>
+        </li>
         <li><%= govuk_link_to "Choose accredited study materials for your early career teachers (opens in a new tab)", page_path("core-materials-info") %></li>
       </ul>
     </section>

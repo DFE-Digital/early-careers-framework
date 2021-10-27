@@ -5,7 +5,11 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl"><%= title %></h1>
-    <p class="govuk-body">Sign in to the <%= govuk_link_to "Teacher Self-Service Portal (opens in a new tab)", "https://teacherservices.education.gov.uk/SelfService/Login", target: :_blank %>.</p>
+    <p class="govuk-body">Sign in to the
+      <%= govuk_link_to "Teacher Self-Service Portal (opens in a new tab)", "https://teacherservices.education.gov.uk/SelfService/Login",
+          target: :_blank,
+          rel: "noopener noreferrer" %>.
+    </p>
     <p class="govuk-body">You’ll need to upload one of the following documents as evidence of your change of name:</p>
     <ul class="govuk-list govuk-list--bullet">
       <li>marriage: copy of your marriage certificate</li>

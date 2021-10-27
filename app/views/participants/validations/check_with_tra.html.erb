@@ -6,6 +6,11 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl"><%= title %></h1>
     <p class="govuk-body">If you’re not sure if you updated your name with the Teaching Regulation Agency, you can view your record.</p>
-    <p class="govuk-body"><%= govuk_link_to "Check your record using the Teacher Self-Service Portal (opens in a new tab)", "https://teacherservices.education.gov.uk/SelfService/Login", target: :_blank %></p>
+    <p class="govuk-body">
+      <%= govuk_link_to "Check your record using the Teacher Self-Service Portal (opens in a new tab)",
+          "https://teacherservices.education.gov.uk/SelfService/Login",
+          target: :_blank,
+          rel: "noopener noreferrer" %>
+    </p>
   </div>
 </div>
