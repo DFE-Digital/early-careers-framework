@@ -255,7 +255,7 @@ RSpec.describe ValidationBetaService do
       expect(school.induction_coordinator_profiles).to include sit_profile
       validation_beta_service.send_sit_new_ambition_ects_and_mentors_added(path_to_csv: csv_file)
       expect(SchoolMailer).to delay_email_delivery_of(:sit_new_ambition_ects_and_mentors_added_email)
-                                .with(induction_coordinator: sit_profile,
+                                .with(induction_coordinator_profile: sit_profile,
                                       school_name: school.name,
                                       sign_in_url: "http://www.example.com/users/sign_in").once
     end
