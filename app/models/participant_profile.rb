@@ -32,6 +32,7 @@ class ParticipantProfile < ApplicationRecord
 
   scope :mentors, -> { where(type: Mentor.name) }
   scope :ects, -> { where(type: ECT.name) }
+  scope :ecf, -> { where(type: [ECT.name, Mentor.name]) }
 
   scope :npqs, -> { where(type: NPQ.name) }
 

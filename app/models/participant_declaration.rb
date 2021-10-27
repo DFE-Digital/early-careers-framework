@@ -26,7 +26,7 @@ class ParticipantDeclaration < ApplicationRecord
   scope :started, -> { for_declaration("started").order(declaration_date: "desc").unique_id }
 
   scope :uplift, -> { where(participant_profile_id: ParticipantProfile.uplift.select(:id)) }
-  scope :ecf, -> { ect.or(mentor) }
+
   scope :ect, -> { where(participant_profile_id: ParticipantProfile::ECT.select(:id)) }
   scope :mentor, -> { where(participant_profile_id: ParticipantProfile::Mentor.select(:id)) }
   scope :npq, -> { where(participant_profile_id: ParticipantProfile::NPQ.select(:id)) }
