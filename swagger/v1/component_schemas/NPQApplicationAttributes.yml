@@ -10,6 +10,7 @@ required:
   - eligible_for_funding
   - course_identifier
   - status
+  - created_at
 properties:
   id:
     type: string
@@ -91,3 +92,8 @@ properties:
       - pending
       - accepted
       - rejected
+  created_at:
+    description: "The date the application was created"
+    type: string
+    format: date-time
+    example: "2021-05-31T02:21:32.000Z"
