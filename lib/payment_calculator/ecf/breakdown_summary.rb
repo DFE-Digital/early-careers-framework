@@ -18,6 +18,7 @@ module PaymentCalculator
           ects: aggregations[:ects],
           mentors: aggregations[:mentors],
           participants: aggregations[:all],
+          ineligible_participants: aggregations[:ineligible],
         }
       end
 

@@ -17,9 +17,8 @@
       <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><%= participants %></td>
     </tr>
     <tr class="govuk-table__row">
-      <!--TODO: Add not accepted participants-->
       <th scope="row" class="govuk-table__cell"><%=t("finance.total_not_paid") %></th>
-      <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold">0</td>
+      <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><%= ineligible_participants %></td>
     </tr>
   </tbody>
 </table>
