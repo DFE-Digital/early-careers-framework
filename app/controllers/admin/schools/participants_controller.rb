@@ -6,9 +6,10 @@ module Admin
     skip_after_action :verify_policy_scoped
 
     def index
+      # TODO: multiple cohorts CPDRP-204
       @participant_profiles = policy_scope(ParticipantProfile::ECF, policy_scope_class: ParticipantProfilePolicy::Scope)
         .active_record
-        .where(school_cohort_id: SchoolCohort.where(school: school).select(:id))
+        .where(school_cohort_id: SchoolCohort.where(school: school, cohort: Cohort.current).select(:id))
         .includes(:user)
         .order("users.full_name")
     end

@@ -1,5 +1,5 @@
 <% content_for :title, "Participant detail" %>
-<% content_for :before_content, govuk_back_link(text: "Back", href: admin_participants_path) %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: :back) %>
 
 <h1 class="govuk-heading-l">
   <%= @participant_profile.user.full_name %>
