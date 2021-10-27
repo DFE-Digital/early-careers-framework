@@ -206,4 +206,21 @@ class ValidationBetaService
     end
     Rails.logger.info("Sent emails to #{sit_ids.count} induction coordinators")
   end
+
+  def send_ineligible_previous_induction_batch(batch_size: 200)
+    sent = 0
+    ECFParticipantEligibility.ineligible_status.previous_induction_reason.find_each do |eligibility|
+      next if Email.tagged_with(:ineligible_participant).associated_with(eligibility.participant_profile).any?
+      next if eligibility.participant_profile.withdrawn_record?
+      next unless eligibility.participant_profile.school_cohort.full_induction_programme?
+
+      tutor_email = eligibility.participant_profile.school.contact_email
+      IneligibleParticipantMailer.ect_previous_induction_email(
+        induction_tutor_email: tutor_email,
+        participant_profile: eligibility.participant_profile,
+      ).deliver_later
+      sent += 1
+      break if sent >= batch_size
+    end
+  end
 end
