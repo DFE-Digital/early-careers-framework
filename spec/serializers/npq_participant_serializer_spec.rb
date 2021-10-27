@@ -23,7 +23,7 @@ RSpec.describe NPQParticipantSerializer do
         expect(result[:data][:attributes][:npq_courses]).to eq %w[npq-headship]
       end
 
-      it "does not leak course info when given np provider param" do
+      it "does not leak course info when given no provider param" do
         result = NPQParticipantSerializer.new(participant).serializable_hash
         expect(result[:data][:attributes][:npq_courses]).to eq []
       end
