@@ -9,8 +9,7 @@ module Participants
       included do
         attr_accessor :reason
 
-        validates :reason, presence: true
-        validates :reason, inclusion: { in: reasons }, allow_blank: true
+        validates :reason, inclusion: { in: reasons }
       end
 
       def perform_action!

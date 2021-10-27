@@ -4,29 +4,31 @@ require "rails_helper"
 require "csv"
 
 RSpec.describe "Participants API", type: :request, with_feature_flags: { participant_data_api: "active" } do
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: lead_provider) }
+  let(:lead_provider) { create(:lead_provider) }
+  let(:cohort) { create(:cohort, :current) }
+  let(:partnership) { create(:partnership, lead_provider: lead_provider, cohort: cohort) }
+  let(:school_cohort) { create(:school_cohort, school: partnership.school, cohort: cohort, induction_programme_choice: "full_induction_programme") }
+  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
+  let(:bearer_token) { "Bearer #{token}" }
+  let!(:mentor_profile) { create(:participant_profile, :mentor, school_cohort: school_cohort) }
+
+  before :each do
+    create_list :participant_profile, 2, :ect, mentor_profile: mentor_profile, school_cohort: school_cohort
+    ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record = ParticipantProfile::ECT.first.teacher_profile
+    create(:participant_profile,
+           :withdrawn_record,
+           :ect,
+           teacher_profile: ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record,
+           school_cohort: school_cohort)
+    default_headers[:Authorization] = bearer_token
+  end
+
+  let!(:withdrawn_ect_profile_record) { create(:participant_profile, :withdrawn_record, :ect, school_cohort: school_cohort) }
+  let(:user) { create(:user) }
+  let(:early_career_teacher_profile) { create(:participant_profile, :ect, school_cohort: school_cohort, user: user) }
+
   describe "GET /api/v1/participants/ecf" do
-    let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: lead_provider) }
-    let(:lead_provider) { create(:lead_provider) }
-    let(:cohort) { create(:cohort, :current) }
-    let(:partnership) { create(:partnership, lead_provider: lead_provider, cohort: cohort) }
-    let(:school_cohort) { create(:school_cohort, school: partnership.school, cohort: cohort, induction_programme_choice: "full_induction_programme") }
-    let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
-    let(:bearer_token) { "Bearer #{token}" }
-    let!(:mentor_profile) { create(:participant_profile, :mentor, school_cohort: school_cohort) }
-
-    before :each do
-      create_list :participant_profile, 2, :ect, mentor_profile: mentor_profile, school_cohort: school_cohort
-      ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record = ParticipantProfile::ECT.first.teacher_profile
-      create(:participant_profile,
-             :withdrawn_record,
-             :ect,
-             teacher_profile: ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record,
-             school_cohort: school_cohort)
-    end
-    let!(:withdrawn_ect_profile_record) { create(:participant_profile, :withdrawn_record, :ect, school_cohort: school_cohort) }
-    let(:user) { create(:user) }
-    let(:early_career_teacher_profile) { create(:participant_profile, :ect, school_cohort: school_cohort, user: user) }
-
     context "when authorized" do
       before do
         default_headers[:Authorization] = bearer_token
@@ -298,6 +300,8 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
     end
 
     context "when unauthorized" do
+      before { default_headers[:Authorization] }
+
       it "returns 401 for invalid bearer token" do
         default_headers[:Authorization] = "Bearer ugLPicDrpGZdD_w7hhCL"
         get "/api/v1/participants/ecf"
@@ -326,5 +330,12 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
         expect(response.status).to eq 403
       end
     end
+  end
+
+  it_behaves_like "JSON Participant Deferral endpoint", "participant" do
+    let(:url)               { "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer" }
+    let(:params)            { { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } } }
+    let(:withdrawal_url)    { "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw" }
+    let(:withdrawal_params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "left-teaching-profession" } } } }
   end
 end
