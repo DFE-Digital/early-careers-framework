@@ -195,7 +195,7 @@ class ValidationBetaService
         next if sit_ids.include?(sit.id) || Email.associated_with(sit).tagged_with(:sit_new_ambition_participants_added).any?
 
         SchoolMailer.sit_new_ambition_ects_and_mentors_added_email(
-          induction_coordinator: sit,
+          induction_coordinator_profile: sit,
           school_name: user.school.name,
           sign_in_url: sign_in_url,
         ).deliver_later
