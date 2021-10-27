@@ -10,7 +10,7 @@ module Finance
           cpd_lead_provider: @npq_lead_provider.cpd_lead_provider,
           contract: @npq_lead_provider.npq_contracts.find_by(course_identifier: params[:course_identifier]),
           event_type: :started,
-          )
+        )
       end
 
     private
@@ -18,7 +18,6 @@ module Finance
       def lead_provider_scope
         policy_scope(LeadProvider, policy_scope_class: FinanceProfilePolicy::Scope)
       end
-
     end
   end
 end

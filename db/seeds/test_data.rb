@@ -196,11 +196,13 @@ ProviderRelationship.find_or_create_by!(
   cohort: Cohort.current,
 )
 
+# ECF contracts
+
 example_contract_data = {
   "uplift_target": 0.33,
   "uplift_amount": 100,
   "recruitment_target": 4500,
-  "revised_target": 5000,
+  "revised_target": (4500 * 1.02).to_i,
   "set_up_fee": 149_861,
   "band_a": {
     "max": 2000,
@@ -218,7 +220,7 @@ example_contract_data = {
   },
   "band_d": {
     "min": 4501,
-    "max": 5000,
+    "max": 4590,
     "per_participant": 966,
   },
 }
@@ -243,6 +245,88 @@ LeadProvider.all.each do |lp|
       max: src[:max],
       per_participant: src[:per_participant],
     )
+  end
+end
+
+npq_specifics = [
+  {
+    version: "0.0.1",
+    recruitment_target: 300,
+    course_identifier: "npq-additional-support-offer",
+    number_of_payment_periods: 4,
+    per_participant: 800.00,
+    service_fee_percentage: 0,
+    output_payment_percentage: 100,
+    service_fee_installments: 0,
+  },
+  {
+    version: "0.0.1",
+    recruitment_target: 72,
+    course_identifier: "npq-leading-teaching",
+    number_of_payment_periods: 3,
+    per_participant: 800.00,
+    service_fee_percentage: 40,
+    output_payment_percentage: 60,
+    service_fee_installments: 19,
+  },
+  {
+    version: "0.0.1",
+    recruitment_target: 72,
+    course_identifier: "npq-leading-behaviour-culture",
+    number_of_payment_periods: 3,
+    per_participant: 810.00,
+    service_fee_percentage: 40,
+    output_payment_percentage: 60,
+    service_fee_installments: 19,
+  },
+  {
+    version: "0.0.1",
+    recruitment_target: 211,
+    course_identifier: "npq-leading-teaching-development",
+    number_of_payment_periods: 3,
+    per_participant: 820.00,
+    service_fee_percentage: 40,
+    output_payment_percentage: 60,
+    service_fee_installments: 19,
+  },
+  {
+    version: "0.0.1",
+    recruitment_target: 205,
+    course_identifier: "npq-senior-leadership",
+    number_of_payment_periods: 4,
+    per_participant: 830.00,
+    service_fee_percentage: 40,
+    output_payment_percentage: 60,
+    service_fee_installments: 25,
+  },
+  {
+    version: "0.0.1",
+    recruitment_target: 172,
+    course_identifier: "npq-headship",
+    number_of_payment_periods: 4,
+    per_participant: 840.00,
+    service_fee_percentage: 40,
+    output_payment_percentage: 60,
+    service_fee_installments: 31,
+  },
+  {
+    version: "0.0.1",
+    recruitment_target: 26,
+    course_identifier: "npq-executive-leadership",
+    number_of_payment_periods: 4,
+    per_participant: 850.00,
+    service_fee_percentage: 40,
+    output_payment_percentage: 60,
+    service_fee_installments: 25,
+  },
+]
+
+# NPQ contracts
+NPQLeadProvider.all.each do |npq_lead_provider|
+  npq_specifics.each do |npq_contract|
+    attributes = npq_contract.merge(cpd_lead_provider: npq_lead_provider.cpd_lead_provider)
+    attributes.merge!(raw: attributes.to_json)
+    NPQContract.create!(attributes)
   end
 end
 

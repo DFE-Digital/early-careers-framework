@@ -2,7 +2,7 @@
 
 module Finance
   module NPQ
-    class ParticipantEventAggregator < Finance::ParticipantAggregator
+    class ParticipantEligibleAggregator < Finance::ParticipantAggregator
       class << self
         def call(cpd_lead_provider:, recorder: ParticipantDeclaration::NPQ, event_type: :started)
           new(cpd_lead_provider: cpd_lead_provider, recorder: recorder).call(event_type: event_type)
@@ -18,7 +18,7 @@ module Finance
         end
       end
 
-      private
+    private
 
       attr_reader :cpd_lead_provider, :recorder
 
@@ -26,6 +26,6 @@ module Finance
         @cpd_lead_provider = cpd_lead_provider
         @recorder = recorder
       end
-   end
+    end
   end
 end

@@ -18,6 +18,7 @@ module Finance
     end
 
   private
+
     attr_reader :cpd_lead_provider, :recorder
 
     def initialize(cpd_lead_provider:, recorder: ParticipantDeclaration::ECF)
@@ -30,7 +31,7 @@ module Finance
     end
 
     def aggregate(aggregation_type:, event_type:)
-      recorder.send(aggregation_types[event_type][aggregation_type], cpd_lead_provider).count
+      recorder.send(self.class.aggregation_types[event_type][aggregation_type], cpd_lead_provider).count
     end
 
     def aggregations(event_type:)

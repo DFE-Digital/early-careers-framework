@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateNPQContract < ActiveRecord::Migration[6.1]
   def change
     create_table :npq_contracts do |t|

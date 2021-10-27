@@ -7,5 +7,9 @@ FactoryBot.define do
     trait :with_lead_provider do
       lead_provider
     end
+
+    trait :with_npq_lead_provider do
+      npq_lead_provider
+    end
   end
 end

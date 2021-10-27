@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PaymentCalculator
   module NPQ
     class AggregatedPaymentCalculation
@@ -13,7 +15,8 @@ module PaymentCalculator
         end
       end
 
-      private
+    private
+
       attr_reader :cpd_lead_provider
 
       def initialize(cpd_lead_provider:)

@@ -17,7 +17,7 @@ module PaymentCalculator
           revised_target: revised_target,
           ects: aggregations[:ects],
           mentors: aggregations[:mentors],
-          participants: aggregations[:all]
+          participants: aggregations[:all],
         }
       end
 
