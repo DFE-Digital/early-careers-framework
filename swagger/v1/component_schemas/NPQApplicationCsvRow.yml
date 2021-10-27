@@ -15,6 +15,7 @@ required:
   - funding_choice
   - course_id
   - course_name
+  - created_at
 properties:
   id:
     description: "The unique identifier of the NPQ Application record"
@@ -98,3 +99,8 @@ properties:
       - pending
       - accepted
       - rejected
+  created_at:
+    description: "The date the application was created"
+    type: string
+    format: date-time
+    example: "2021-05-31T02:21:32.000Z"
