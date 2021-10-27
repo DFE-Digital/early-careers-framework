@@ -9,14 +9,14 @@ module Api
       include Api::ParticipantActions
 
       def index
-        render json: NPQParticipantSerializer.new(paginate(npq_participants)).serializable_hash.to_json
+        render json: NPQParticipantSerializer.new(paginate(npq_participants), params: { cpd_lead_provider: current_user }).serializable_hash.to_json
       end
 
     private
 
       def serialized_response(participant_profile)
         NPQParticipantSerializer
-          .new(participant_profile.user)
+          .new(participant_profile.user, params: { cpd_lead_provider: current_user })
           .serializable_hash.to_json
       end
 
