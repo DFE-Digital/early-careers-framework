@@ -177,7 +177,7 @@ class ValidationBetaService
 
   def send_sit_new_ambition_ects_and_mentors_added(path_to_csv:)
     sign_in_url = Rails.application.routes.url_helpers.new_user_session_url(
-      host: Rails.application.config.domain
+      host: Rails.application.config.domain,
     )
 
     sit_ids = []
@@ -197,12 +197,13 @@ class ValidationBetaService
         SchoolMailer.sit_new_ambition_ects_and_mentors_added_email(
           induction_coordinator: sit,
           school_name: user.school.name,
-          sign_in_url: sign_in_url
+          sign_in_url: sign_in_url,
         ).deliver_later
         sit_ids << sit.id
       else
-        Rails.logger.warn("Not sending email to SIT of participant_email")
+        Rails.logger.warn("Not sending email to SIT of #{participant_email}")
       end
     end
+    Rails.logger.info("Sent emails to #{sit_ids.count} induction coordinators")
   end
 end
