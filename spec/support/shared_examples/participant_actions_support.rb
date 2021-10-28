@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.shared_examples "a participant action service" do
-  context "when lead providers don't match" do
+  context "when lead providers don’t match" do
     it "raises a ParameterMissing error" do
       expect { described_class.call(params: given_params.merge({ cpd_lead_provider: another_lead_provider })) }.to raise_error(ActionController::ParameterMissing)
     end

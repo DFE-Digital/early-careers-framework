@@ -44,7 +44,7 @@ en:
             - "If this person has not completed their ITT, %{contact_us}."
 
         ero_mentor:
-          header: "This person is ready to mentor ECTs this year. Our checks show they're already receiving funded mentor training as part of the early roll-out of the early career framework (ECF) reforms."
+          header: "This person is ready to mentor ECTs this year. Our checks show they’re already receiving funded mentor training as part of the early roll-out of the early career framework (ECF) reforms."
           content: ""
 
         eligible_cip:
