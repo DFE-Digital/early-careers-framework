@@ -322,9 +322,9 @@ npq_specifics = [
 ]
 
 # NPQ contracts
-NPQLeadProvider.all.each do |npq_lead_provider|
+NPQLeadProvider.all.each do |cpd_lead_provider|
   npq_specifics.each do |npq_contract|
-    attributes = npq_contract.merge(npq_lead_provider: npq_lead_provider)
+    attributes = npq_contract.merge(npq_lead_provider: cpd_lead_provider)
     attributes.merge!(raw: attributes.to_json)
     NPQContract.create!(attributes)
   end

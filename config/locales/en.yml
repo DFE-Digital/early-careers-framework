@@ -102,16 +102,27 @@ en:
     cpd_lead_provider: &cpd_lead_provider_error_messages
       blank: The lead provider must be present
 
+  courses:
+    npq:
+      npq-leading-teaching: Leading Teaching
+      npq-leading-behaviour-culture: Leading Behaviour and Culture
+      npq-leading-teaching-development: Leading Teacher Development
+      npq-senior-leadership: Senior Leadership
+      npq-headship: Headship
+      npq-executive-leadership: Executive Leadership
+      npq-additional-support-offer: Additional Support Offer
   finance:
+    submission_deadline: Submission deadline
     choose_programme: Choose programme scheme
     show_contract: View contract information
     provider: Provider
     ects: Current ECTs
     mentors: Current Mentors
-    participants: Current Participants
+    participants: Current participants
     per_participant: Payment amount per person
     payment_breakdown: Payment Breakdown
     payment_type: Payment type
+    payment_reference: Payment reference
     number_of_participants: Number of participants
     payment_amount_for_period: Payment amount for period
     payment: Payment
@@ -124,9 +135,12 @@ en:
     total_paid: Total paid
     total_not_paid: Total not paid
     contract:
+      version: Contract reference
+      per_participant: Per participant
+      service_fee_installments: Service fee installments
       uplift_target: Uplift target
       uplift_amount: Uplift amount
-      recuitment_target: Recruitment target
+      recruitment_target: Recruitment target
       revised_target: Revised recruitment target (+2%)
       set_up_fee: Set-up Fee
       band: Band
@@ -143,7 +157,6 @@ en:
         "3": New target
       payment_breakdown: ECF Payment Breakdown
       breakdown_summary:
-        submission_deadline: Submission deadline
         total: Total
 
     npq:

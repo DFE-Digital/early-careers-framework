@@ -13,8 +13,8 @@ class RecordParticipantDeclaration
   end
 
   def call
-    recorder = "::RecordDeclarations::#{::Factories::Event.call(event)}::#{::Factories::CourseIdentifier.call(course_identifier)}".constantize
-    recorder.call(params: params)
+    participant_declarationant_declaration = "::RecordDeclarations::#{::Factories::Event.call(event)}::#{::Factories::CourseIdentifier.call(course_identifier)}".constantize
+    participant_declaration.call(params: params)
   end
 
 private

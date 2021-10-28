@@ -8,8 +8,8 @@ module Finance
     implement_class_method :aggregation_types
 
     class << self
-      def call(cpd_lead_provider:, recorder: ParticipantDeclaration::ECF, event_type: :started)
-        new(cpd_lead_provider: cpd_lead_provider, recorder: recorder).call(event_type: event_type)
+      def call(cpd_lead_provider:, participant_declaration: ParticipantDeclaration::ECF, event_type: :started)
+        new(cpd_lead_provider: cpd_lead_provider, participant_declaration: participant_declaration).call(event_type: event_type)
       end
     end
 
@@ -19,11 +19,11 @@ module Finance
 
   private
 
-    attr_reader :cpd_lead_provider, :recorder
+    attr_reader :cpd_lead_provider, :participant_declaration
 
-    def initialize(cpd_lead_provider:, recorder: ParticipantDeclaration::ECF)
-      @cpd_lead_provider = cpd_lead_provider
-      @recorder = recorder
+    def initialize(cpd_lead_provider:, participant_declaration: ParticipantDeclaration::ECF)
+      self.cpd_lead_provider = cpd_lead_provider
+      self.participant_declaration = participant_declaration
     end
 
     def aggregators(event_type:)
@@ -31,7 +31,7 @@ module Finance
     end
 
     def aggregate(aggregation_type:, event_type:)
-      recorder.send(self.class.aggregation_types[event_type][aggregation_type], cpd_lead_provider).count
+      participant_declaration.send(self.class.aggregation_types[event_type][aggregation_type], cpd_lead_provider).count
     end
 
     def aggregations(event_type:)

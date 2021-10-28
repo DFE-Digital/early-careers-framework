@@ -1,7 +1,7 @@
 <table class="govuk-table payment-breakdown-table">
   <tbody>
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.ecf.breakdown_summary.submission_deadline") %></th>
+      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.submission_deadline") %></th>
       <td class="govuk-table__cell"><%= @deadline %></td>
     </tr>
   </tbody>
@@ -25,7 +25,7 @@
       <td class="govuk-table__cell"></td>
     </tr>
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.contract.recuitment_target") %></th>
+      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.contract.recruitment_target") %></th>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= @breakdown[:breakdown_summary][:recruitment_target] %></td>
       <td class="govuk-table__cell"></td>
     </tr>

@@ -6,11 +6,6 @@ module Api
       include ApiTokenAuthenticatable
 
       def create
-        npq_application = NPQApplication.new(npq_application_params)
-        npq_application.npq_course = NPQCourse.find_by(id: npq_course_param)
-        npq_application.npq_lead_provider = NPQLeadProvider.find_by(id: npq_lead_provider_param)
-        npq_application.user = User.find_by(id: user_param)
-
         if npq_application.save
           render status: :created,
                  content_type: "application/vnd.api+json",
@@ -26,16 +21,37 @@ module Api
         ApiToken.where(private_api_access: true)
       end
 
-      def npq_course_param
-        params[:data][:relationships][:npq_course][:data][:id]
+      def npq_application
+        @npq_application ||= NPQ::BuildApplication.call(
+          npq_application_params: npq_application_params,
+          npq_course_id: npq_course_id,
+          npq_lead_provider_id: npq_lead_provider_id,
+          user_id: user_id,
+        )
       end
 
-      def npq_lead_provider_param
-        params[:data][:relationships][:npq_lead_provider][:data][:id]
+      def npq_course_id
+        params.require(:data)
+          .require(:relationships)
+          .require(:npq_course)
+          .require(:data)
+          .permit(:id)[:id]
       end
 
-      def user_param
-        params[:data][:relationships][:user][:data][:id]
+      def npq_lead_provider_id
+        params.require(:data)
+          .require(:relationships)
+          .require(:npq_lead_provider)
+          .require(:data)
+          .permit(:id)[:id]
+      end
+
+      def user_id
+        params.require(:data)
+          .require(:relationships)
+          .require(:user)
+          .require(:data)
+          .permit(:id)[:id]
       end
 
       def npq_application_params

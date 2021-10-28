@@ -1,0 +1,12 @@
+<% content_for :title, t("finance.npq.payment_breakdown") %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: finance_npq_lead_provider_path(@npq_lead_provider)) %>
+
+<h1 class="govuk-heading-xl"><%= @npq_lead_provider.cpd_lead_provider.name %></h1>
+<h2 class="govuk-heading-l"><%= @npq_lead_provider.name %></h2>
+<div class="govuk-grid-row govuk-!-margin-top-9">
+  <div class="govuk-grid-column-two-thirds">
+    <%= render Finance::NPQ::BreakdownSummary.new(@breakdown[:breakdown_summary]) %>
+  </div>
+</div>
+
+<%= govuk_link_to t("finance.show_contract"), finance_ecf_contract_path(id: @npq_lead_provider.id) %>

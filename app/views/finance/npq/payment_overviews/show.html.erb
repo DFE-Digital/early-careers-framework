@@ -1,0 +1,27 @@
+<% content_for :title, t("finance.npq.payment_breakdown") %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: select_provider_npq_finance_payment_breakdowns_path) %>
+
+<h1 class="govuk-heading-xl">
+  <%= @breakdowns.dig(0, :breakdown_summary, :name) %>
+</h1>
+<!--TODO: Un-hardcode the values-->
+<p class="govuk-caption-m govuk-!-margin-0">Payment of</p>
+<h2 class="govuk-heading-xl govuk-!-margin-0"><%= number_to_pounds aggregated_payment(@breakdowns) + aggregated_vat(@breakdowns, @npq_lead_provider) %></h2>
+<p class="govuk-caption-m govuk-!-margin-0">On <%= cutoff_date %></p>
+
+<div class="govuk-grid-row govuk-!-margin-top-9">
+  <div class="govuk-grid-column-two-thirds">
+    <%= render Finance::NPQ::PaymentOverviews::References.new(
+      references: @breakdowns.first,
+      npq_lead_provider: @npq_lead_provider
+    ) %>
+
+    <h2 class="govuk-heading-m"><%=t("finance.npq.payment_breakdown") %></h2>
+
+    <table class="govuk-table payment-breakdown-table">
+      <tbody>
+        <%= render Finance::NPQ::PaymentOverviews::PaymentCoursesRow.with_collection(@breakdowns, npq_lead_provider: @npq_lead_provider) %>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -19,5 +19,19 @@ class NPQCourse < ApplicationRecord
     def identifiers
       pluck(:identifier)
     end
+
+    def schedule_for(npq_course)
+      case npq_course.identifier
+      when *NPQCourse::LEADERSHIP_IDENTIFIER
+        Finance::Schedule::NPQLeadership.default
+      when *NPQCourse::SPECIALIST_IDENTIFIER
+        Finance::Schedule::NPQSpecialist.default
+      when "npq-additional-support-offer"
+        # TODO: Figure out what ASO schedules look like
+        Finance::Schedule::NPQSpecialist.default
+      else
+        raise ArgumentError, "Invalid course identifier"
+      end
+    end
   end
 end
