@@ -18,7 +18,7 @@
       <% end %>
 
       <%= accordion.section heading_text: t("finance.output_payment.caption") do %>
-        <%= render Finance::ECF::OutputPayments.new(output_payments: @breakdown[:output_payments]) %>
+        <%= render Finance::ECF::OutputPayments.new(output_payments: @breakdown[:output_payments], breakdown_summary: @breakdown[:breakdown_summary]) %>
       <% end %>
 
       <% @breakdown[:other_fees].each do |other_fee| %>
