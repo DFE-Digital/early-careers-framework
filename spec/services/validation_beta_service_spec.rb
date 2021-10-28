@@ -161,7 +161,7 @@ RSpec.describe ValidationBetaService do
       }.to have_enqueued_mail(SchoolMailer, :sit_new_ambition_ects_and_mentors_added_email)
         .with(
           args: [{
-            induction_coordinator: sit_profile,
+            induction_coordinator_profile: sit_profile,
             school_name: school.name,
             sign_in_url: "http://www.example.com/users/sign_in",
           }],
@@ -179,11 +179,10 @@ RSpec.describe ValidationBetaService do
     end
 
     it "sends the correct batch size" do
-      # When called with a batch size of 5
-      subject.send_ineligible_previous_induction_batch(batch_size: 5)
-
-      # Then 5 emails should be sent
-      expect(IneligibleParticipantMailer).to delay_email_delivery_of(:ect_previous_induction_email).exactly(5).times
+      expect {
+        subject.send_ineligible_previous_induction_batch(batch_size: 5)
+      }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_previous_induction_email)
+        .exactly(5).times
     end
 
     context "when emails have been sent" do
@@ -194,11 +193,9 @@ RSpec.describe ValidationBetaService do
       end
 
       it "does not email participants already emailed" do
-        # When called
-        subject.send_ineligible_previous_induction_batch(batch_size: 5)
-
-        # Then no emails should be sent
-        expect(IneligibleParticipantMailer).not_to delay_email_delivery_of(:ect_previous_induction_email)
+        expect {
+          subject.send_ineligible_previous_induction_batch(batch_size: 5)
+        }.to_not have_enqueued_mail(IneligibleParticipantMailer, :ect_previous_induction_email)
       end
     end
 
@@ -206,11 +203,9 @@ RSpec.describe ValidationBetaService do
       let(:school_cohort) { create(:school_cohort, :cip) }
 
       it "does not email CIP participants" do
-        # When called
-        subject.send_ineligible_previous_induction_batch(batch_size: 5)
-
-        # Then no emails should be sent
-        expect(IneligibleParticipantMailer).not_to delay_email_delivery_of(:ect_previous_induction_email)
+        expect {
+          subject.send_ineligible_previous_induction_batch(batch_size: 5)
+        }.to_not have_enqueued_mail(IneligibleParticipantMailer, :ect_previous_induction_email)
       end
     end
 
@@ -222,11 +217,9 @@ RSpec.describe ValidationBetaService do
       end
 
       it "does not email eligible participants" do
-        # When called
-        subject.send_ineligible_previous_induction_batch(batch_size: 5)
-
-        # Then no emails should be sent
-        expect(IneligibleParticipantMailer).not_to delay_email_delivery_of(:ect_previous_induction_email)
+        expect {
+          subject.send_ineligible_previous_induction_batch(batch_size: 5)
+        }.to_not have_enqueued_mail(IneligibleParticipantMailer, :ect_previous_induction_email)
       end
     end
 
@@ -234,11 +227,9 @@ RSpec.describe ValidationBetaService do
       let(:participant_profiles) { create_list(:participant_profile, 10, :ect, :withdrawn_record, school_cohort: school_cohort) }
 
       it "does not email inactive participants" do
-        # When called
-        subject.send_ineligible_previous_induction_batch(batch_size: 5)
-
-        # Then no emails should be sent
-        expect(IneligibleParticipantMailer).not_to delay_email_delivery_of(:ect_previous_induction_email)
+        expect {
+          subject.send_ineligible_previous_induction_batch(batch_size: 5)
+        }.to_not have_enqueued_mail(IneligibleParticipantMailer, :ect_previous_induction_email)
       end
     end
 
@@ -250,11 +241,9 @@ RSpec.describe ValidationBetaService do
       end
 
       it "does not email participants who are only ineligible for a different reason" do
-        # When called
-        subject.send_ineligible_previous_induction_batch(batch_size: 5)
-
-        # Then no emails should be sent
-        expect(IneligibleParticipantMailer).not_to delay_email_delivery_of(:ect_previous_induction_email)
+        expect {
+          subject.send_ineligible_previous_induction_batch(batch_size: 5)
+        }.to_not have_enqueued_mail(IneligibleParticipantMailer, :ect_previous_induction_email)
       end
     end
   end
