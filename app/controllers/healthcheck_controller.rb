@@ -13,7 +13,7 @@ class HealthcheckController < ApplicationController
         migration_version: migration_version,
       },
       delayed_job: {
-        job_count: delayed_jobs,
+        job_count: jobs_count,
         errors: jobs_with_errors,
         failed: failed_jobs,
         last_failure: last_job_failure,
@@ -39,26 +39,29 @@ private
     I18n.t(:fail)
   end
 
-  def delayed_jobs
-    Delayed::Job.count
+  def jobs_count
+    Sidekiq::Queue.all.map(&:size).sum
   rescue StandardError
     I18n.t(:fail)
   end
 
   def jobs_with_errors
-    Delayed::Job.where.not(last_error: nil).count
+    Sidekiq::RetrySet.new.size
   rescue StandardError
     I18n.t(:fail)
   end
 
   def failed_jobs
-    Delayed::Job.where.not(failed_at: nil).count
+    Sidekiq::DeadSet.new.size
   rescue StandardError
     I18n.t(:fail)
   end
 
   def last_job_failure
-    Delayed::Job.order(failed_at: :desc).first&.failed_at
+    last_failed_at = Sidekiq::DeadSet.new.to_a.max { |j| j["failed_at"] }&.fetch("failed_at")
+    return nil unless last_failed_at
+
+    Time.zone.at last_failed_at
   rescue StandardError
     I18n.t(:fail)
   end
