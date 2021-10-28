@@ -34,11 +34,6 @@
         ]
       }
     },
-    "evidence_type": {
-      "enum": [
-        "yes"
-      ]
-    },
     "npq": {
       "courses": {
         "enum": [
@@ -65,18 +60,14 @@
           },
           "course_identifier": {
             "$ref": "#/definitions/npq/courses"
-          },
-          "evidence_held": {
-            "$ref": "#/definitions/evidence_type"
           }
         },
-        "additionalProperties": false,
+        "additionalProperties": true,
         "required": [
           "declaration_date",
           "declaration_type",
           "participant_id",
-          "course_identifier",
-          "evidence_held"
+          "course_identifier"
         ]
       }
     }
