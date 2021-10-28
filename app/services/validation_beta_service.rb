@@ -167,6 +167,7 @@ class ValidationBetaService
           recipient: sit.user.email,
           start_url: participant_validation_start_url,
           sign_in: sign_in_url,
+          induction_coordinator_profile: sit,
         ).deliver_later
       end
   end
