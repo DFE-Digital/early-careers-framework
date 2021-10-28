@@ -79,6 +79,7 @@ locals {
   app_cloudfoundry_service_instances = [
     cloudfoundry_service_instance.postgres_instance.id,
     cloudfoundry_service_instance.csv_bucket.id,
+    cloudfoundry_service_instance.worker_redis_instance.id,
     cloudfoundry_user_provided_service.logging.id,
   ]
   app_service_bindings = concat(
