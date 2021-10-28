@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe "SIT removing participants from the cohort", js: true, with_feature_flags: { induction_tutor_manage_participants: "active", eligibility_notifications: "active" } do
-  let(:sti_profile) { create(:induction_coordinator_profile, schools: [school_cohort.school]) }
+RSpec.describe "SIT removing participants from the cohort", js: true, with_feature_flags: { eligibility_notifications: "active" } do
+  let(:sit_profile) { create(:induction_coordinator_profile, schools: [school_cohort.school]) }
   let(:school_cohort) { create(:school_cohort, induction_programme_choice: "full_induction_programme") }
   let(:mentor_user) { create :user, :teacher, full_name: "John Doe", email: "john-doe@example.com" }
   let!(:mentor_profile) { create(:participant_profile, :mentor, request_for_details_sent_at: Date.new(2021, 9, 9), school_cohort: school_cohort, teacher_profile: mentor_user.teacher_profile) }
@@ -10,7 +10,7 @@ RSpec.describe "SIT removing participants from the cohort", js: true, with_featu
   let(:privacy_policy) { create :privacy_policy }
 
   before do
-    privacy_policy.accept!(sti_profile.user)
+    privacy_policy.accept!(sit_profile.user)
     privacy_policy.accept!(mentor_profile.user)
   end
 
@@ -19,7 +19,7 @@ RSpec.describe "SIT removing participants from the cohort", js: true, with_featu
     expect(page).to have_no_content "You do not have access to this service"
     click_on "Sign out"
 
-    sign_in_as sti_profile.user
+    sign_in_as sit_profile.user
     visit schools_participants_path(school_cohort.school, school_cohort.cohort)
     click_on "Check"
 
@@ -51,7 +51,7 @@ RSpec.describe "SIT removing participants from the cohort", js: true, with_featu
   scenario "removing ineligible participant" do
     create :ecf_participant_eligibility, :ineligible, participant_profile: ect_profile
 
-    sign_in_as sti_profile.user
+    sign_in_as sit_profile.user
     visit schools_participants_path(school_cohort.school, school_cohort.cohort)
     first(:link, "Check").click
     click_on "Remove #{ect_profile.user.full_name} from this cohort"

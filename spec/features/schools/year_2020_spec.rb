@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "School leaders adding 2020 participants", js: true, with_feature_flags: { year_2020_data_entry: "active" } do
+RSpec.describe "School leaders adding 2020 participants", js: true do
   let(:school) { create(:school, name: "Test School") }
   let!(:cohort_2020) { create(:cohort, start_year: 2020) }
   let!(:core_induction_programme) { create(:core_induction_programme, name: "Awesome induction course") }

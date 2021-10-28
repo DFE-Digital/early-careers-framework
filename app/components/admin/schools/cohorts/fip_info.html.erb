@@ -7,11 +7,9 @@
       Use an approved training provider
     </dd>
     <dd class="govuk-summary-list__actions">
-      <% if FeatureFlag.active?(:admin_change_programme) %>
-        <% if school_cohort.lead_provider.nil? %>
-          <%= govuk_link_to "Change", admin_school_change_programme_path(id: school_cohort.cohort.start_year) %>
-          <span class="govuk-visually-hidden"> induction programme</span>
-        <% end %>
+      <% if school_cohort.lead_provider.nil? %>
+        <%= govuk_link_to "Change", admin_school_change_programme_path(id: school_cohort.cohort.start_year) %>
+        <span class="govuk-visually-hidden"> induction programme</span>
       <% end %>
     </dd>
   </div>
@@ -23,11 +21,9 @@
       <%= school_cohort.lead_provider&.name %>
     </dd>
     <dd class="govuk-summary-list__actions">
-      <% if FeatureFlag.active?(:admin_challenge_partnership) %>
-        <% if school_cohort.lead_provider.present? %>
-          <%= govuk_link_to "Change", new_admin_school_challenge_partnership_path(id: school_cohort.cohort.start_year) %>
-          <span class="govuk-visually-hidden"> partnership</span>
-        <% end %>
+      <% if school_cohort.lead_provider.present? %>
+        <%= govuk_link_to "Change", new_admin_school_challenge_partnership_path(id: school_cohort.cohort.start_year) %>
+        <span class="govuk-visually-hidden"> partnership</span>
       <% end %>
     </dd>
   </div>

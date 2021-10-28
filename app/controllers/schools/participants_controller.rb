@@ -3,7 +3,6 @@
 class Schools::ParticipantsController < Schools::BaseController
   before_action :set_school_cohort
   before_action :set_participant, except: %i[index email_used]
-  before_action :check_feature_flag
   before_action :build_mentor_form, only: :edit_mentor
   before_action :set_mentors_added, only: %i[index show]
 
@@ -109,12 +108,6 @@ private
       school_id: @school.id,
       cohort_id: @cohort.id,
     )
-  end
-
-  def check_feature_flag
-    return if FeatureFlag.active?(:induction_tutor_manage_participants, for: @school)
-
-    raise ActionController::RoutingError, "Not enabled for this school"
   end
 
   def set_participant

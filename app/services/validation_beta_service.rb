@@ -112,10 +112,6 @@ class ValidationBetaService
     end
   end
 
-  def chosen_programme_and_not_in_beta(school)
-    !FeatureFlag.active?(:participant_validation, for: school) && school.chosen_programme?(Cohort.current)
-  end
-
   def participants_yet_to_validate
     ParticipantProfile::ECF
       .ecf
