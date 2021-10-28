@@ -9,28 +9,47 @@ weight: 6
   If you have any questions or comments about these notes, please contact DfE via Slack or email.
 </p>
 
-<h2 class="govuk-heading-l" id="5-10-2021">27th October 2021</h2>
-<p class="govuk-body-m">Added created_at date to NPQ applications (GET endpoints).</p>
+<h2 class="govuk-heading-l" id="28-10-2021">28th October 2021</h2>
+<p class="govuk-body-m">
+  <ul class="govuk-list govuk-list--bullet">
+    <li>Add ability to defer an NPQ participant from a given course. <code>PUT /api/v1/participants/npq/{id}/defer</code></li>
+    <li>
+      <p class="govuk-body-m" >
+        Added the new endpoint to defer an NPQ participant from a given course.
+        <code>PUT /api/v1/participants/npq/{id}/defer</code>.
+      </p>
+    </li>
+
+    <li>Add ability to resume an NPQ participant from a given course. <code>PUT /api/v1/participants/npq/{id}/resume</code></li>
+    <li>
+      <p class="govuk-body-m" >
+        Added the new endpoint to resume an NPQ participant from a given course.
+        <code>PUT /api/v1/participants/npq/{id}/resume</code>.
+      </p>
+    </li>
+  </ul>
+</p>
 
 <h2 class="govuk-heading-l" id="25-10-2021">25th October 2021</h2>
 <p class="govuk-body-m">Add <code>employer</code> as possible option for NPQ <code>funding_choice</code>.</p>
 
 <h2 class="govuk-heading-l" id="19-10-2021">19th October 2021</h2>
 <p class="govuk-body-m">
-   <ul class="govuk-list govuk-list--bullet">
-     <li>Add ability to withdraw an NPQ participant from a given course. <code>PUT /api/v1/participants/npq/{id}/withdraw</code></li>
-     <li>
-       <p class="govuk-body-m" >
-         Added the new endpoint to withdraw an NPQ participant from a given course.
-         <code>PUT /api/v1/participants/npq/{id}/withdraw</code>.
-       </p>
-       The previous endpoint <code>PUT /api/v1/participants/npq/{id}/withdraw</code> is deprecated and will be remove in a later version of the API.
-     </li>
-   </ul>
- </p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>Add ability to withdraw an NPQ participant from a given course. <code>PUT /api/v1/participants/npq/{id}/withdraw</code></li>
+    <li>
+      <p class="govuk-body-m" >
+        Added the new endpoint to withdraw an NPQ participant from a given course.
+        <code>PUT /api/v1/participants/npq/{id}/withdraw</code>.
+      </p>
+      The previous endpoint <code>PUT /api/v1/participants/npq/{id}/withdraw</code> is deprecated and will be remove in a later version of the API.
+    </li>
+  </ul>
+</p>
 
 <h2 class="govuk-heading-l" id="5-10-2021">5th October 2021</h2>
 <p class="govuk-body-m">Update withdrawal and deferral reason codes.</p>
+<p class="govuk-body-m">Added created_at date to NPQ applications (GET endpoints).</p>
 
 <h2 class="govuk-heading-l" id="29-09-2021">29th September 2021</h2>
 <p class="govuk-body-m">Add <code>GET /api/v1/participants/npq</code> endpoint.</p>

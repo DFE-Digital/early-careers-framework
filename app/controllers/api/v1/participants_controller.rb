@@ -8,10 +8,6 @@ module Api
       include ApiTokenAuthenticatable
       include ParticipantActions
 
-      def resume
-        perform_action(service_namespace: ::Participants::Resume)
-      end
-
       def change_schedule
         perform_action(service_namespace: ::Participants::ChangeSchedule)
       end

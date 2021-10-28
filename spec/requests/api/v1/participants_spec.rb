@@ -291,31 +291,14 @@ RSpec.describe "Participants API", type: :request do
         let(:withdrawal_params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "left-teaching-profession" } } } }
       end
 
-      describe "JSON Participant Resume" do
-        let(:parsed_response) { JSON.parse(response.body) }
-
-        it "changes the training status of a participant to active" do
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/resume", params: { data: { attributes: { course_identifier: "ecf-induction" } } }
-
-          expect(response).to be_successful
-
-          expect(parsed_response.dig("data", "attributes", "training_status")).to eql("active")
-        end
-
-        it "returns an error when the participant is already active" do
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/resume", params: { data: { attributes: { course_identifier: "ecf-induction" } } }
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/resume", params: { data: { attributes: { course_identifier: "ecf-induction" } } }
-
-          expect(response).not_to be_successful
-        end
-
-        it "returns an error when the participant is withdrawn" do
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "left-teaching-profession" } } }
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/resume", params: { data: { attributes: { course_identifier: "ecf-induction" } } }
-
-          expect(response).not_to be_successful
+      it_behaves_like "JSON Participant Resume endpoint", "participant" do
+        let(:url)               { "/api/v1/participants/#{early_career_teacher_profile.user.id}/resume" }
+        let(:withdrawal_url)    { "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw" }
+        let(:params)            { { data: { attributes: { course_identifier: "ecf-induction" } } } }
+        let(:withdrawal_params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "left-teaching-profession" } } } }
+        before do
+          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer",
+              params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
         end
       end
     end
