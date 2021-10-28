@@ -127,6 +127,30 @@ module ParticipantDeclarationSteps
     expect(ParticipantDeclaration.where(course_identifier: "ecf-induction", declaration_type: "started").count).to eq(1)
   end
 
+  def and_the_npq_declaration_date_is_early
+    @declaration_date = @npq_application.reload.profile.schedule.milestones.first.start_date - 1.day
+  end
+
+  def and_the_npq_declaration_date_is_late
+    @declaration_date = @npq_application.reload.profile.schedule.milestones.first.milestone_date + 1.day
+  end
+
+  def and_the_ect_declaration_date_is_early
+    @declaration_date = @ect_profile.schedule.milestones.first.start_date - 1.day
+  end
+
+  def and_the_ect_declaration_date_is_late
+    @declaration_date = @ect_profile.schedule.milestones.first.milestone_date + 1.day
+  end
+
+  def and_the_mentor_declaration_date_is_early
+    @declaration_date = @mentor_profile.schedule.milestones.first.start_date - 1.day
+  end
+
+  def and_the_mentor_declaration_date_is_late
+    @declaration_date = @mentor_profile.schedule.milestones.first.milestone_date + 1.day
+  end
+
   def then_the_declaration_made_is_invalid
     expect(@response["errors"]).not_to be_empty
   end
