@@ -56,6 +56,7 @@ module paas {
   worker_app_instances              = var.paas_worker_app_instances
   worker_app_memory                 = var.paas_worker_app_memory
   worker_app_deployment_strategy    = var.paas_worker_app_deployment_strategy
+  redis_service_plan                = var.paas_redis_service_plan
   logstash_url                      = var.logstash_url
   govuk_hostnames                   = var.govuk_hostnames
 }

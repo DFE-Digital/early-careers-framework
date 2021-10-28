@@ -11,3 +11,4 @@ paas_web_app_deployment_strategy = "blue-green-v2"
 paas_web_app_instances = 1
 paas_web_app_memory = 1024
 paas_web_app_start_command = "bundle exec rake cf:on_first_instance db:migrate && bundle exec sidekiq -C config/sidekiq.yml && rails db:safe_reset && && rails s"
+paas_redis_service_plan = "micro-5_x"

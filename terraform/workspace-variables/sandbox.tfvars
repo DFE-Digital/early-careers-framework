@@ -13,3 +13,4 @@ paas_web_app_instances = 4
 paas_web_app_memory = 8192
 paas_worker_app_instances = 1
 paas_worker_app_start_command = "bundle exec sidekiq -C config/sidekiq.yml"
+paas_redis_service_plan = "tiny-ha-5_x"
