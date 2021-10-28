@@ -379,25 +379,25 @@ module ManageTrainingSteps
   end
 
   def when_i_click_on_details_within_eligible
-    within(".eligible") do
+    within("[data-test='eligible']") do
       click_on("Details")
     end
   end
 
   def when_i_click_on_check_within_eligible
-    within(".eligible") do
+    within("[data-test='eligible']") do
       click_on("Check")
     end
   end
 
   def when_i_click_on_check_within_ineligible
-    within(".ineligible") do
+    within("[data-test='ineligible']") do
       click_on("Check")
     end
   end
 
   def when_i_click_on_details_within_details
-    within(".details") do
+    within("[data-test='details']") do
       click_on("Details")
     end
   end
@@ -473,7 +473,7 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_yourself_as_mentor_confirmation_page
-    expect(page).to have_selector("h1", text: "You've been added as a mentor")
+    expect(page).to have_selector("h1", text: "You’ve been added as a mentor")
   end
 
   def then_i_am_taken_to_add_ect_or_mentor_updated_email_page
@@ -595,7 +595,7 @@ module ManageTrainingSteps
   end
 
   def then_i_can_see_ero_status
-    expect(page).to have_text("This person is ready to mentor ECTs this year. Our checks show they're already receiving funded mentor training as part of the early roll-out of the early career framework (ECF) reforms.")
+    expect(page).to have_text("This person is ready to mentor ECTs this year. Our checks show they’re already receiving funded mentor training as part of the early roll-out of the early career framework (ECF) reforms.")
   end
 
   def then_i_am_taken_to_cip_induction_dashboard
@@ -605,7 +605,7 @@ module ManageTrainingSteps
 
   def then_i_can_view_ineligible_participants
     expect(page).to have_text("Not eligible for funded training")
-    expect(page).to have_text("We’ve checked these people's details and found they're not eligible for this programme.")
+    expect(page).to have_text("We’ve checked these people’s details and found they’re not eligible for this programme.")
   end
 
   def then_the_action_required_is_none
@@ -626,12 +626,12 @@ module ManageTrainingSteps
 
   def then_i_can_view_fip_unpartnered_eligible_participants
     expect(page).to have_text("Eligible to start")
-    expect(page).to have_text("We’ve confirmed these people are eligible for this programme. Once you choose a training provider, they'll contact your ECTs and mentors directly.")
+    expect(page).to have_text("We’ve confirmed these people are eligible for this programme. Once you choose a training provider, they’ll contact your ECTs and mentors directly.")
   end
 
   def then_i_can_view_details_being_checked_participants
     expect(page).to have_text("DfE checking eligibility")
-    expect(page).to have_text("We’re checking these people's details with the Teaching Regulation Agency. We'll confirm if they're eligible for this programme soon.")
+    expect(page).to have_text("We’re checking these people’s details with the Teaching Regulation Agency. We’ll confirm if they’re eligible for this programme soon.")
   end
 
   def then_i_can_view_eligible_participants
