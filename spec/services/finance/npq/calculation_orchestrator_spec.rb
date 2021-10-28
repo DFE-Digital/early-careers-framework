@@ -9,7 +9,7 @@ RSpec.describe Finance::NPQ::CalculationOrchestrator do
     {
       declaration: :started,
       participants: 5,
-      participants_not_paid: 0,
+      not_yet_included: 0,
       recruitment_target: 72,
     }
   end
@@ -42,7 +42,7 @@ RSpec.describe Finance::NPQ::CalculationOrchestrator do
       it "ignores non-eligible declarations" do
         create_list(:npq_participant_declaration, 5, :submitted, cpd_lead_provider: cpd_lead_provider)
         returned_hash = run_calculation
-        expect(returned_hash[:breakdown_summary].except(:name)).to eq(breakdown_summary.merge(participants_not_paid: 5))
+        expect(returned_hash[:breakdown_summary].except(:name)).to eq(breakdown_summary.merge(not_yet_included: 5))
         expect(returned_hash[:service_fees][:monthly]).to be_within(0.001).of(service_fees[:monthly])
         expect(returned_hash[:output_payments]).to eq(output_payments)
       end

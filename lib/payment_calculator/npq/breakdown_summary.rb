@@ -15,7 +15,7 @@ module PaymentCalculator
           declaration: event_type,
           recruitment_target: recruitment_target,
           participants: aggregations[:all],
-          participants_not_paid: aggregations[:not_paid],
+          not_yet_included: aggregations[:not_yet_included],
         }
       end
 

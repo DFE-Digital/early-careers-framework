@@ -11,7 +11,7 @@ module Finance
         def aggregation_types
           {
             started: {
-              not_eligible: :not_eligible_for_lead_provider,
+              not_yet_included: :not_eligible_for_lead_provider,
               all: :eligible_for_lead_provider,
             },
           }

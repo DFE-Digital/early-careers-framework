@@ -24,7 +24,7 @@ module PaymentCalculator
       private
 
         def empty_aggregations
-          { all: 0, not_paid: 0 }
+          { all: 0, not_yet_included: 0 }
         end
       end
 
