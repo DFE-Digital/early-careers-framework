@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "./manage_training_steps"
 
-RSpec.describe "Manage FIP training", js: true, with_feature_flags: { induction_tutor_manage_participants: "active" } do
+RSpec.describe "Manage FIP training", js: true do
   include ManageTrainingSteps
 
   before { freeze_dynamic_dates_or_times_for_percy }

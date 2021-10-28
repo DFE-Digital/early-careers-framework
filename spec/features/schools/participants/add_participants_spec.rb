@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "../training_dashboard/manage_training_steps"
 
-RSpec.describe "Add participants", js: true, with_feature_flags: { induction_tutor_manage_participants: "active" } do
+RSpec.describe "Add participants", js: true do
   include ManageTrainingSteps
 
   before do

@@ -12,6 +12,7 @@ RSpec.describe LeadProviderApiSpecification do
         /api/v1/npq-applications/{id}/accept
         /api/v1/npq-applications/{id}/reject
         /api/v1/participants/npq
+        /api/v1/participants/npq/{id}/defer
         /api/v1/participants/npq/{id}/withdraw
         /api/v1/participant-declarations
         /api/v1/participant-declarations.csv
@@ -19,6 +20,7 @@ RSpec.describe LeadProviderApiSpecification do
         /api/v1/participant-declarations/{id}/void
         /api/v1/participants/ecf
         /api/v1/participants/ecf.csv
+        /api/v1/participants/ecf/{id}/defer
         /api/v1/participants/ecf/{id}/withdraw
         /api/v1/participants/{id}/defer
         /api/v1/participants/{id}/resume

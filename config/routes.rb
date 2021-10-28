@@ -48,16 +48,16 @@ Rails.application.routes.draw do
     resource :notify_callback, only: :create, path: "notify-callback"
 
     namespace :v1 do
+      concern :participant_actions, Participants::Routing.new
       resources :ecf_participants, path: "participants/ecf", only: %i[index] do
-        member { put :withdraw }
+        concerns :participant_actions
       end
 
       resources :participants, only: %i[index], controller: "ecf_participants"
       resources :participants, only: [] do
+        concerns :participant_actions
         member do
-          put :defer
           put :resume
-          put :withdraw
           put :change_schedule, path: "change-schedule"
         end
       end
@@ -67,7 +67,7 @@ Rails.application.routes.draw do
         end
       end
       resources :npq_participants, only: %i[index], path: "participants/npq" do
-        member { put :withdraw }
+        concerns :participant_actions
       end
       resources :users, only: %i[index create]
       resources :ecf_users, only: %i[index create], path: "ecf-users"
@@ -176,6 +176,7 @@ Rails.application.routes.draw do
         end
       end
       resources :participants, controller: "schools/participants", only: :index
+      resource :cohort2020, controller: "schools/cohort2020", only: %i[show new create]
     end
 
     resources :participants, only: %i[show index destroy] do
@@ -297,7 +298,7 @@ Rails.application.routes.draw do
     resources :dashboard, controller: :dashboard, only: %i[index show], path: "/", param: :school_id
 
     scope "/:school_id" do
-      resource :year_2020, path: "year-2020", controller: "year2020", only: [], constraints: ->(_request) { FeatureFlag.active?(:year_2020_data_entry) } do
+      resource :year_2020, path: "year-2020", controller: "year2020", only: [] do
         get "support-materials-for-NQTs", action: :start, as: :start
 
         get "choose-core-induction-programme", action: :select_cip
@@ -320,7 +321,6 @@ Rails.application.routes.draw do
         member do
           get "programme-choice", as: :programme_choice
           get "change-programme", as: :change_programme
-          get "add-participants", as: :add_participants
           get "roles", as: :roles
 
           resources :partnerships, only: :index

@@ -15,12 +15,6 @@ module Schools
       render "programme_choice"
     end
 
-    def add_participants
-      if FeatureFlag.active?(:induction_tutor_manage_participants, for: @school)
-        redirect_to schools_participants_path(@cohort)
-      end
-    end
-
     def roles
       @hide_button = true if params[:info]
     end

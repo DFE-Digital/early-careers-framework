@@ -6,6 +6,10 @@ module Api
       perform_action(service_namespace: ::Participants::Withdraw)
     end
 
+    def defer
+      perform_action(service_namespace: ::Participants::Defer)
+    end
+
   private
 
     def perform_action(service_namespace:)

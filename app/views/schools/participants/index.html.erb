@@ -26,7 +26,7 @@
   <div class="govuk-grid-column-full">
     <% if @ineligible.any? %>
       <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Not eligible for funded training</h2>
-      <p class="govuk-!-margin-bottom-3">We’ve checked these people's details and found they're not eligible for this
+      <p class="govuk-!-margin-bottom-3">We’ve checked these people's details and found they’re not eligible for this
         programme.</p>
 
       <table class="govuk-table govuk-!-margin-bottom-9">
@@ -101,8 +101,8 @@
 
     <% if @details_being_checked.any? %>
       <h2 class="govuk-heading-m govuk-!-margin-bottom-0">DfE checking eligibility</h2>
-      <p class="govuk-!-margin-bottom-3">We’re checking these people's details with the Teaching Regulation Agency.
-        We'll confirm if they're eligible for this programme soon.</p>
+      <p class="govuk-!-margin-bottom-3">We’re checking these people’s details with the Teaching Regulation Agency.
+        We'll confirm if they’re eligible for this programme soon.</p>
 
       <table class="govuk-table govuk-!-margin-bottom-9">
         <thead class="govuk-table__head">
@@ -147,7 +147,7 @@
       <% elsif @school_cohort.delivery_partner.present? %>
         <p class="govuk-!-margin-bottom-3">We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly.</p>
       <% else %>
-        <p class="govuk-!-margin-bottom-3">We’ve confirmed these people are eligible for this programme. Once you choose a training provider, they'll contact your ECTs and mentors directly.</p>
+        <p class="govuk-!-margin-bottom-3">We’ve confirmed these people are eligible for this programme. Once you choose a training provider, they’ll contact your ECTs and mentors directly.</p>
       <% end %>
 
       <table class="govuk-table govuk-!-margin-bottom-9">

@@ -6,7 +6,7 @@ RSpec.describe StoreParticipantEligibility do
   describe ".call" do
     subject(:service) { described_class }
     let(:school) { create(:school) }
-    let(:school_cohort) { create(:school_cohort, school: school) }
+    let(:school_cohort) { create(:school_cohort, :fip, school: school) }
     let(:ect_teacher_profile) { create(:teacher_profile, school: school, trn: nil) }
     let(:mentor_teacher_profile) { create(:teacher_profile, school: school, trn: nil) }
     let(:ect_profile) { create(:participant_profile, :ect, school_cohort: school_cohort, teacher_profile: ect_teacher_profile) }
@@ -132,6 +132,62 @@ RSpec.describe StoreParticipantEligibility do
               induction_tutor_email: induction_tutor.email,
               participant_profile: mentor_profile,
             )
+          end
+        end
+
+        context "when the school is doing CIP" do
+          let(:school_cohort) { create(:school_cohort, :cip, school: school) }
+
+          context "when participant is an ECT" do
+            it "does not send the ect_previous_induction_email when reason is previous_induction" do
+              eligibility_options[:previous_induction] = true
+              service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+              expect(IneligibleParticipantMailer).not_to delay_email_delivery_of("")
+            end
+
+            it "does not send the ect_no_qts_email when reason is no_qts" do
+              eligibility_options[:qts] = false
+              eligibility_options[:status] = :ineligible
+              eligibility_options[:reason] = :no_qts
+              eligibility_options[:manually_validated] = true
+              service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+              expect(IneligibleParticipantMailer).not_to delay_email_delivery_of("")
+            end
+
+            it "does not send the ect_active_flags_email when reason is active_flags" do
+              eligibility_options[:active_flags] = true
+              eligibility_options[:status] = :ineligible
+              eligibility_options[:reason] = :active_flags
+              eligibility_options[:manually_validated] = true
+              service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+              expect(IneligibleParticipantMailer).not_to delay_email_delivery_of("")
+            end
+          end
+
+          context "when participant is a Mentor" do
+            it "does not send the mentor_previous_participation_email when reason is previous_participation" do
+              eligibility_options[:previous_participation] = true
+              service.call(participant_profile: mentor_profile, eligibility_options: eligibility_options)
+              expect(IneligibleParticipantMailer).not_to delay_email_delivery_of("") # Matches any email
+            end
+
+            it "does not send the mentor_no_qts_email when reason is no_qts" do
+              eligibility_options[:qts] = false
+              eligibility_options[:status] = :ineligible
+              eligibility_options[:reason] = :no_qts
+              eligibility_options[:manually_validated] = true
+              service.call(participant_profile: mentor_profile, eligibility_options: eligibility_options)
+              expect(IneligibleParticipantMailer).not_to delay_email_delivery_of("")
+            end
+
+            it "sends the mentor_active_flags_email when reason is active_flags" do
+              eligibility_options[:active_flags] = true
+              eligibility_options[:status] = :ineligible
+              eligibility_options[:reason] = :active_flags
+              eligibility_options[:manually_validated] = true
+              service.call(participant_profile: mentor_profile, eligibility_options: eligibility_options)
+              expect(IneligibleParticipantMailer).not_to delay_email_delivery_of("")
+            end
           end
         end
       end

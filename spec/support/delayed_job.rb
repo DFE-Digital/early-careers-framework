@@ -157,12 +157,12 @@ module DelayedJobMatchers
     match do |mailer_class|
       email_arguments = find_email_args(mailer_class, email_name)
 
-      if @once
-        return email_arguments.count == 1 unless @arguments
+      if @exactly
+        return email_arguments.count == @exactly unless @arguments
 
         email_arguments.select { |args|
           @arguments.args_match?(*args)
-        }.count == 1
+        }.count == @exactly
       else
         return email_arguments.any? unless @arguments
 
@@ -177,7 +177,15 @@ module DelayedJobMatchers
     end
 
     chain :once do
-      @once = true
+      @exactly = 1
+    end
+
+    chain :exactly do |number|
+      @exactly = number
+    end
+
+    chain :times do |*_args|
+      # noop for style
     end
 
     # TODO: Also find email enqueued without ActiveJob, i.e. Mailer.delay.email

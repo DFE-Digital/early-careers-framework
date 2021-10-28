@@ -1,4 +1,4 @@
-<% title = "You're not eligible for the early career teacher training programme" %>
+<% title = "You’re not eligible for the early career teacher training programme" %>
 <% content_for :title, title %>
 
 <div class="govuk-grid-row">
@@ -6,6 +6,6 @@
     <%= govuk_panel title_text: title, text: nil, classes: "govuk-!-margin-bottom-8" %>
     <h2 class="govuk-heading-m">Why?</h2>
     <p class="govuk-body">Please <%= mail_to Rails.application.config.support_email, "contact our support team" %> for more information.</p>
-    <p class="govuk-body">We've let the induction tutor at your school know. Contact them to find out what you need to do next.</p>
+    <p class="govuk-body">We’ve let the induction tutor at your school know. Contact them to find out what you need to do next.</p>
   </div>
 </div>

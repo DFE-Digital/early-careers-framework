@@ -27,7 +27,6 @@ FactoryBot.define do
 
       user { create(:user, :npq) }
       type { "ParticipantDeclaration::NPQ" }
-      profile_type { :npq }
       course_identifier { NPQCourse.all.map(&:identifier).sample }
       participant_profile { create(:participant_profile, :npq) }
     end
