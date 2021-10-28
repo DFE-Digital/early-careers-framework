@@ -46,7 +46,7 @@
             <td class="govuk-table__cell"><%= profile.user.full_name %></td>
             <td class="govuk-table__cell"><%= format_type(profile.participant_type) %></td>
             <td class="govuk-table__cell">None</td>
-            <td class="govuk-table__cell govuk-table__cell--numeric ineligible"><%= govuk_link_to "Check", schools_participant_path(id: profile.id) %></td>
+            <td class="govuk-table__cell govuk-table__cell--numeric" data-test="ineligible"><%= govuk_link_to "Check", schools_participant_path(id: profile.id) %></td>
           </tr>
         <% end %>
         </tbody>
@@ -84,7 +84,7 @@
                 None
               <% end %>
             </td>
-            <td class="govuk-table__cell govuk-table__cell--numeric contacted">
+            <td class="govuk-table__cell govuk-table__cell--numeric" data-test="checked">
             <% if profile.request_for_details_sent_at %>
               <%= govuk_link_to "Check", schools_participant_path(id: profile.id) %>
             <% elsif profile.request_for_details_sent_at.nil? && profile.mentor_profile_id.nil? %>
@@ -127,7 +127,7 @@
                 None
               <% end %>
             </td>
-            <td class="govuk-table__cell govuk-table__cell--numeric details">
+            <td class="govuk-table__cell govuk-table__cell--numeric" data-test="details">
               <% if profile.ect? %>
                 <%= govuk_link_to (profile.mentor_profile_id ? "Details" : "Check"), schools_participant_path(id: profile.id) %>
               <% else %>
@@ -173,7 +173,7 @@
                 None
               <% end %>
             </td>
-            <td class="govuk-table__cell govuk-table__cell--numeric eligible">
+            <td class="govuk-table__cell govuk-table__cell--numeric" data-test="eligible">
               <% if profile.ect? %>
                 <%= govuk_link_to (profile.mentor_profile_id ? "Details" : "Check"), schools_participant_path(id: profile.id) %>
               <% elsif profile.ecf_participant_eligibility.ineligible_status? %>
