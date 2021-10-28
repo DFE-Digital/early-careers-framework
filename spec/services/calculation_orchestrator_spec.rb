@@ -26,7 +26,7 @@ RSpec.describe CalculationOrchestrator do
       participants: 10,
       recruitment_target: 2000,
       revised_target: nil,
-      ineligible_participants: 0,
+      not_yet_included_participants: 0,
     }
   end
   let(:service_fees) do
@@ -222,7 +222,7 @@ RSpec.describe CalculationOrchestrator do
     context "when ineligible records available" do
       let(:ineligible_outcome) do
         normal_outcome.merge(
-          breakdown_summary: breakdown_summary.merge({ ects: 10, mentors: 0, ineligible_participants: 10, participants: 10 }),
+          breakdown_summary: breakdown_summary.merge({ ects: 10, mentors: 0, not_yet_included_participants: 10, participants: 10 }),
         )
       end
 
@@ -231,7 +231,7 @@ RSpec.describe CalculationOrchestrator do
         create_list(:ect_participant_declaration, 10, :sparsity_uplift, :submitted, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
       end
 
-      it "returns the total calculation, and ineligible declarations are put in ineligible_participants field" do
+      it "returns the total calculation, and ineligible declarations are put in not_yet_included_participants field" do
         expect(run_calculation).to eq(ineligible_outcome)
       end
     end
