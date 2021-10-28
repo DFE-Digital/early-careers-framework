@@ -26,6 +26,7 @@ class ParticipantDeclaration < ApplicationRecord
   scope :started, -> { for_declaration("started").order(declaration_date: "desc").unique_id }
 
   scope :uplift, -> { where(participant_profile_id: ParticipantProfile.uplift.select(:id)) }
+
   scope :ect, -> { where(participant_profile_id: ParticipantProfile::ECT.select(:id)) }
   scope :mentor, -> { where(participant_profile_id: ParticipantProfile::Mentor.select(:id)) }
   scope :npq, -> { where(participant_profile_id: ParticipantProfile::NPQ.select(:id)) }
@@ -38,18 +39,25 @@ class ParticipantDeclaration < ApplicationRecord
   scope :submitted_between, ->(start_date, end_date) { where(created_at: start_date..end_date) }
 
   # Declaration aggregation scopes
+  scope :submitted_for_lead_provider, ->(lead_provider) { for_lead_provider(lead_provider).unique_id.submitted }
+
+  # NOTE: Most of the following will need to be supplemented with the date qualifiers above to get the correct numbers
+  # for payment breakdown periods when view is restricted to a milestone period.
+  scope :not_eligible_for_lead_provider, ->(lead_provider) { submitted_for_lead_provider(lead_provider) }
   scope :eligible_for_lead_provider, ->(lead_provider) { for_lead_provider(lead_provider).unique_id.eligible }
   scope :eligible_ects_for_lead_provider, ->(lead_provider) { eligible_for_lead_provider(lead_provider).ect }
   scope :eligible_mentors_for_lead_provider, ->(lead_provider) { eligible_for_lead_provider(lead_provider).mentor }
   scope :eligible_npqs_for_lead_provider, ->(lead_provider) { eligible_for_lead_provider(lead_provider).npq }
   scope :eligible_uplift_for_lead_provider, ->(lead_provider) { eligible_for_lead_provider(lead_provider).uplift }
 
+  scope :not_payable_for_lead_provider, ->(lead_provider) { submitted_for_lead_provider(lead_provider).or(eligible_for_lead_provider(lead_provider)) }
   scope :payable_for_lead_provider, ->(lead_provider) { for_lead_provider(lead_provider).unique_id.payable }
   scope :payable_ects_for_lead_provider, ->(lead_provider) { payable_for_lead_provider(lead_provider).ect }
   scope :payable_mentors_for_lead_provider, ->(lead_provider) { payable_for_lead_provider(lead_provider).mentor }
   scope :payable_npqs_for_lead_provider, ->(lead_provider) { payable_for_lead_provider(lead_provider).npq }
   scope :payable_uplift_for_lead_provider, ->(lead_provider) { payable_for_lead_provider(lead_provider).uplift }
 
+  scope :not_paid_for_lead_provider, ->(lead_provider) { submitted_for_lead_provider(lead_provider).or(eligible_for_lead_provider(lead_provider)) }
   scope :paid_for_lead_provider, ->(lead_provider) { for_lead_provider(lead_provider).unique_id.paid }
   scope :paid_ects_for_lead_provider, ->(lead_provider) { paid_for_lead_provider(lead_provider).ect }
   scope :paid_mentors_for_lead_provider, ->(lead_provider) { paid_for_lead_provider(lead_provider).mentor }

@@ -2,20 +2,24 @@
 
 require "rails_helper"
 
-class DummyAggregator
-  class << self
-    def call(*)
-      {
-        all: 10_000,
-        uplift: 10_000,
-        ects: 5_000,
-        mentors: 5_000,
-      }
+module Finance
+  module ECF
+    class DummyAggregator
+      class << self
+        def call(*)
+          {
+            all: 10_000,
+            uplift: 10_000,
+            ects: 5_000,
+            mentors: 5_000,
+          }
+        end
+      end
     end
   end
 end
 
-RSpec.describe CalculationOrchestrator do
+RSpec.describe Finance::ECF::CalculationOrchestrator do
   let(:call_off_contract) { create(:call_off_contract) }
   let(:breakdown_summary) do
     {
@@ -166,7 +170,7 @@ RSpec.describe CalculationOrchestrator do
 
       context "when excessive uplift records are passed" do
         it "limits the amount to the capped level" do
-          results = run_calculation(aggregator: DummyAggregator)
+          results = run_calculation(aggregator: ::Finance::ECF::DummyAggregator)
           expect(results[:other_fees]).to eq(capped_uplift)
         end
       end
@@ -226,7 +230,7 @@ RSpec.describe CalculationOrchestrator do
 
 private
 
-  def run_calculation(aggregator: ParticipantEventAggregator)
+  def run_calculation(aggregator: Finance::ECF::ParticipantEligibleAggregator)
     set_precision(
       described_class.call(
         aggregator: aggregator,

@@ -15,6 +15,9 @@
     "recruitment_target": {
       "type": "integer"
     },
+    "revised_target": {
+      "type": "integer"
+    },
     "set-up_fees": {
       "type": "number"
     },
@@ -70,6 +73,26 @@
       },
       "required": [
         "min",
+        "max",
+        "per_participant"
+      ]
+    },
+    "band_d": {
+      "type": "object",
+      "properties": {
+        "min": {
+          "type": "integer"
+        },
+        "max": {
+          "type": "integer"
+        },
+        "per_participant": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "min",
+        "max",
         "per_participant"
       ]
     }
@@ -79,9 +102,11 @@
     "uplift_target",
     "uplift_amount",
     "recruitment_target",
+    "revised_target",
     "set-up_fees",
     "band_a",
     "band_b",
-    "band_c"
+    "band_c",
+    "band_d"
   ]
 }

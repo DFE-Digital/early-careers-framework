@@ -1,0 +1,10 @@
+{
+  "version": "1.0",
+  "course_identifier": "npq-headship",
+  "recruitment_target": 72,
+  "service_fee_installments": 20,
+  "service_fee_percentage": 40,
+  "per_participant": 1985.00,
+  "number_of_payment_periods": 4,
+  "output_payment_percentage": 60
+}

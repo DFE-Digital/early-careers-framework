@@ -12,7 +12,7 @@ module PaymentCalculator
         def call(contract:,
                  breakdown_summary_compiler: BreakdownSummary,
                  service_fee_calculator: ServiceFees,
-                 output_payment_aggregator: OutputPaymentAggregator,
+                 output_payment_calculator: OutputPaymentAggregator,
                  uplift_payment_calculator: UpliftCalculation,
                  aggregations: empty_aggregations,
                  event_type: :started)
@@ -20,7 +20,7 @@ module PaymentCalculator
             contract: contract,
             headings_calculator: breakdown_summary_compiler,
             service_fee_calculator: service_fee_calculator,
-            output_payment_aggregator: output_payment_aggregator,
+            output_payment_calculator: output_payment_calculator,
             uplift_payment_calculator: uplift_payment_calculator,
           ).call(aggregations: aggregations,
                  event_type: event_type)
@@ -37,23 +37,23 @@ module PaymentCalculator
         {
           breakdown_summary: headings_calculator.call(contract: contract, event_type: event_type, aggregations: aggregations),
           service_fees: service_fee_calculator.call({ contract: contract }),
-          output_payments: output_payment_aggregator.call({ contract: contract }, event_type: event_type, total_participants: aggregations[:all]),
+          output_payments: output_payment_calculator.call({ contract: contract }, event_type: event_type, total_participants: aggregations[:all]),
           other_fees: uplift_payment_calculator.call({ contract: contract }, event_type: event_type, uplift_participants: aggregations[:uplift]),
         }
       end
 
     private
 
-      attr_accessor :contract, :service_fee_calculator, :headings_calculator, :output_payment_aggregator, :uplift_payment_calculator
+      attr_accessor :contract, :service_fee_calculator, :headings_calculator, :output_payment_calculator, :uplift_payment_calculator
 
       def initialize(contract:,
                      headings_calculator: BreakdownSummary,
-                     output_payment_aggregator: OutputPaymentAggregator,
+                     output_payment_calculator: OutputPaymentAggregator,
                      service_fee_calculator: ServiceFees,
                      uplift_payment_calculator: UpliftCalculation)
         @contract = contract
         @headings_calculator = headings_calculator
-        @output_payment_aggregator = output_payment_aggregator
+        @output_payment_calculator = output_payment_calculator
         @service_fee_calculator = service_fee_calculator
         @uplift_payment_calculator = uplift_payment_calculator
       end
