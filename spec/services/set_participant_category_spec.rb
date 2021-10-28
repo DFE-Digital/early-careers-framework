@@ -6,16 +6,14 @@ RSpec.describe SetParticipantCategories do
   describe "#run" do
     subject(:service) { described_class }
 
-    before { FeatureFlag.activate(:induction_tutor_manage_participants) }
+    let!(:eligible_ect) { create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
+    let!(:ineligible_mentor) { create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
+    let!(:contacted_for_info_ect) { create(:participant_profile, :ect, :email_sent, request_for_details_sent_at: 5.days.ago, school_cohort: school_cohort) }
+    let!(:ero_mentor) { create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
+    let!(:details_being_checked_ect) { create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
 
     context "CIP cohorts" do
       let(:school_cohort) { create(:school_cohort, :cip) }
-
-      let!(:eligible_ect) { create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-      let!(:ineligible_mentor) { create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-      let!(:contacted_for_info_ect) { create(:participant_profile, :ect, :email_sent, request_for_details_sent_at: 5.days.ago, school_cohort: school_cohort) }
-      let!(:ero_mentor) { create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-      let!(:details_being_checked_ect) { create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
 
       let(:cip_eligible_participants) { [eligible_ect, ineligible_mentor, ero_mentor, details_being_checked_ect] }
       let(:cip_ineligible_participants) { [] }
@@ -52,12 +50,6 @@ RSpec.describe SetParticipantCategories do
     context "FIP cohorts with active eligibility_notifications feature flag" do
       let(:school_cohort) { create(:school_cohort, :fip) }
 
-      let!(:eligible_ect) { create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-      let!(:ineligible_mentor) { create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-      let!(:contacted_for_info_ect) { create(:participant_profile, :ect, :email_sent, request_for_details_sent_at: 5.days.ago, school_cohort: school_cohort) }
-      let!(:ero_mentor) { create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-      let!(:details_being_checked_ect) { create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-
       let(:fip_eligible_participants) { [eligible_ect, ero_mentor] }
       let(:fip_ineligible_participants) { [ineligible_mentor] }
       let(:fip_contacted_for_info_participants) { [contacted_for_info_ect] }
@@ -92,12 +84,6 @@ RSpec.describe SetParticipantCategories do
 
     context "FIP cohorts with inactive eligibility_notifications feature flag" do
       let(:school_cohort) { create(:school_cohort, :fip) }
-
-      let!(:eligible_ect) { create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-      let!(:ineligible_mentor) { create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-      let!(:contacted_for_info_ect) { create(:participant_profile, :ect, :email_sent, request_for_details_sent_at: 5.days.ago, school_cohort: school_cohort) }
-      let!(:ero_mentor) { create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-      let!(:details_being_checked_ect) { create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
 
       let(:fip_eligible_participants) { [] }
       let(:fip_ineligible_participants) { [] }
