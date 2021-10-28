@@ -9,6 +9,14 @@ FactoryBot.define do
     previous_participation { false }
     previous_induction { false }
 
+    transient do
+      reason {}
+    end
+
+    after(:create) do |record, evaluator|
+      record.update!(reason: evaluator.reason) if evaluator.reason
+    end
+
     trait :eligible do
       after(:create) do |record, _evaluator|
         record.eligible_status!

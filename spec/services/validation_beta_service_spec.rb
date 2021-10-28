@@ -260,4 +260,94 @@ RSpec.describe ValidationBetaService do
                                       sign_in_url: "http://www.example.com/users/sign_in").once
     end
   end
+
+  describe "#send_ineligible_previous_induction_batch" do
+    let(:school_cohort) { create(:school_cohort, :fip) }
+    let(:participant_profiles) { create_list(:participant_profile, 10, :ect, school_cohort: school_cohort) }
+    let!(:eligibilities) do
+      participant_profiles.each do |profile|
+        create(:ecf_participant_eligibility, :ineligible, previous_induction: true, reason: :previous_induction, participant_profile: profile)
+      end
+    end
+
+    it "sends the correct batch size" do
+      # When called with a batch size of 5
+      subject.send_ineligible_previous_induction_batch(batch_size: 5)
+
+      # Then 5 emails should be sent
+      expect(IneligibleParticipantMailer).to delay_email_delivery_of(:ect_previous_induction_email).exactly(5).times
+    end
+
+    context "when emails have been sent" do
+      before do
+        participant_profiles.each do |profile|
+          create(:email, associated_with: [profile], tags: %w[ineligible_participant])
+        end
+      end
+
+      it "does not email participants already emailed" do
+        # When called
+        subject.send_ineligible_previous_induction_batch(batch_size: 5)
+
+        # Then no emails should be sent
+        expect(IneligibleParticipantMailer).not_to delay_email_delivery_of(:ect_previous_induction_email)
+      end
+    end
+
+    context "when participants are for CIP" do
+      let(:school_cohort) { create(:school_cohort, :cip) }
+
+      it "does not email CIP participants" do
+        # When called
+        subject.send_ineligible_previous_induction_batch(batch_size: 5)
+
+        # Then no emails should be sent
+        expect(IneligibleParticipantMailer).not_to delay_email_delivery_of(:ect_previous_induction_email)
+      end
+    end
+
+    context "when participants are eligible" do
+      let!(:eligibilities) do
+        participant_profiles.each do |profile|
+          create(:ecf_participant_eligibility, :eligible, previous_induction: true, reason: :previous_induction, participant_profile: profile)
+        end
+      end
+
+      it "does not email eligible participants" do
+        # When called
+        subject.send_ineligible_previous_induction_batch(batch_size: 5)
+
+        # Then no emails should be sent
+        expect(IneligibleParticipantMailer).not_to delay_email_delivery_of(:ect_previous_induction_email)
+      end
+    end
+
+    context "when participants are withdrawn" do
+      let(:participant_profiles) { create_list(:participant_profile, 10, :ect, :withdrawn_record, school_cohort: school_cohort) }
+
+      it "does not email inactive participants" do
+        # When called
+        subject.send_ineligible_previous_induction_batch(batch_size: 5)
+
+        # Then no emails should be sent
+        expect(IneligibleParticipantMailer).not_to delay_email_delivery_of(:ect_previous_induction_email)
+      end
+    end
+
+    context "when the participants are ineligible for a different reason" do
+      let!(:eligibilities) do
+        participant_profiles.each do |profile|
+          create(:ecf_participant_eligibility, :ineligible, previous_participation: true, reason: :previous_participation, participant_profile: profile)
+        end
+      end
+
+      it "does not email participants who are only ineligible for a different reason" do
+        # When called
+        subject.send_ineligible_previous_induction_batch(batch_size: 5)
+
+        # Then no emails should be sent
+        expect(IneligibleParticipantMailer).not_to delay_email_delivery_of(:ect_previous_induction_email)
+      end
+    end
+  end
 end
