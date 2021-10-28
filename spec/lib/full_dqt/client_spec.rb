@@ -136,14 +136,14 @@ RSpec.describe FullDqt::Client do
 
       record = subject.get_record(trn: trn, birthdate: birthdate)
 
-      expect(record["dob"]).to be_a(Date)
-      expect(record["qualified_teacher_status"]["qts_date"]).to be_a(Date)
-      expect(record["induction"]["start_date"]).to be_a(Date)
-      expect(record["induction"]["completion_date"]).to be_a(Date)
-      expect(record["initial_teacher_training"]["programme_start_date"]).to be_a(Date)
-      expect(record["initial_teacher_training"]["programme_end_date"]).to be_a(Date)
+      expect(record["dob"]).to be_an_instance_of(Date)
+      expect(record["qualified_teacher_status"]["qts_date"]).to be_an_instance_of(ActiveSupport::TimeWithZone)
+      expect(record["induction"]["start_date"]).to be_an_instance_of(ActiveSupport::TimeWithZone)
+      expect(record["induction"]["completion_date"]).to be_an_instance_of(ActiveSupport::TimeWithZone)
+      expect(record["initial_teacher_training"]["programme_start_date"]).to be_an_instance_of(ActiveSupport::TimeWithZone)
+      expect(record["initial_teacher_training"]["programme_end_date"]).to be_an_instance_of(ActiveSupport::TimeWithZone)
       expect(record["qualifications"][0]["date_awarded"]).to be_nil
-      expect(record["qualifications"][1]["date_awarded"]).to be_a(Date)
+      expect(record["qualifications"][1]["date_awarded"]).to be_an_instance_of(ActiveSupport::TimeWithZone)
     end
 
     context "when record does not exist" do
