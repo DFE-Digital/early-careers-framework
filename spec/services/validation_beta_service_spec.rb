@@ -163,7 +163,7 @@ RSpec.describe ValidationBetaService do
           args: [{
             induction_coordinator: sit_profile,
             school_name: school.name,
-            sign_in_url: "http://www.example.com/users/sign_in"
+            sign_in_url: "http://www.example.com/users/sign_in",
           }],
         )
     end

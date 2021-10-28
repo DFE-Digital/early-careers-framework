@@ -55,6 +55,7 @@ export const computeHeadersFromEmail = (email) =>
   );
 
 Cypress.Commands.add("appSentEmails", () =>
+  cy.appEval("perform_enqueued_jobs");
   cy.appEval("ActionMailer::Base.deliveries")
 );
 
