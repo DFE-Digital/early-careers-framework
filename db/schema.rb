@@ -190,7 +190,7 @@ ActiveRecord::Schema.define(version: 2021_10_21_121416) do
 
   create_table "declaration_states", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_declaration_id", null: false
-    t.string "state", default: "submitted"
+    t.string "state", default: "submitted", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["participant_declaration_id"], name: "index_declaration_states_on_participant_declaration_id"
@@ -467,8 +467,8 @@ ActiveRecord::Schema.define(version: 2021_10_21_121416) do
 
   create_table "npq_contracts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.jsonb "raw"
+    t.string "version", default: "0.0.1"
     t.uuid "npq_lead_provider_id", null: false
-    t.integer "version"
     t.integer "recruitment_target"
     t.string "course_identifier"
     t.integer "service_fee_installments"
