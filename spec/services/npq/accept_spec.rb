@@ -186,5 +186,18 @@ RSpec.describe NPQ::Accept do
         expect(npq_application.errors).to be_present
       end
     end
+
+    context "when application has already been rejected" do
+      before do
+        npq_application.lead_provider_approval_status = "rejected"
+        npq_application.save!
+      end
+
+      it "cannot then be accepted" do
+        expect {
+          subject.call
+        }.not_to change { npq_application.reload.lead_provider_approval_status }
+      end
+    end
   end
 end
