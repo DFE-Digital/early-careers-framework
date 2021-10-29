@@ -16,7 +16,7 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
 
   scenario "School expects ECTs to join in the current academic year" do
     when_i_select "yes"
-    and_select_continue
+    click_on "Continue"
     then_i_should_be_on_the_start_nomination_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Start school induction tutor nomination"
@@ -24,7 +24,7 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
 
   scenario "School does not expect any early career teachers to join in the current academic year" do
     when_i_select "no"
-    and_select_continue
+    click_on "Continue"
     then_i_should_be_redirected_to_the_choice_saved_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Opt out choice saved"
@@ -32,7 +32,7 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
 
   scenario "School does not know whether they will have an early career teachers join in the current academic year" do
     when_i_select "we_dont_know"
-    and_select_continue
+    click_on "Continue"
     then_i_should_be_on_the_start_nomination_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Start school induction tutor nomination"
