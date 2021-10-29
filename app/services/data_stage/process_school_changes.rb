@@ -5,8 +5,6 @@ module DataStage
     include GiasTypes
 
     UNHANDLED_ATTRIBUTES = %w[
-      administrative_district_code
-      administrative_district_name
       school_type_code
       school_type_name
       section_41_approved
@@ -29,13 +27,15 @@ module DataStage
 
     def has_unhandled_changes?(school_change)
       unhandled_attrs = (unhandled_attributes & school_change.attribute_changes.keys)
-      counterpart = school_change.school.counterpart
+      school = school_change.school
+      counterpart = school.counterpart
 
       has_unhandled_changes = false
 
       if counterpart.present? && unhandled_attrs.any?
         unhandled_attrs.each do |attr|
-          next if counterpart.send(attr).blank?
+          current_value = counterpart.send(attr)
+          next if current_value.blank? || current_value == school.send(attr)
           has_unhandled_changes = true
           break
         end
@@ -79,17 +79,17 @@ module DataStage
         return
       end
 
-      successor_link = change.school.school_links.find_by(link_type: "Successor")
-      if successor_link.present?
-        ActiveRecord::Base.transaction do
+      ActiveRecord::Base.transaction do
+        successor_link = change.school.school_links.find_by(link_type: "Successor")
+        if successor_link.present?
           successor = find_or_create_successor!(successor_link.link_urn)
           move_assets_from!(school: change.school.counterpart, successor: successor)
           change.school.counterpart.school_links.successor.simple.create!(link_urn: successor.urn)
           successor.school_links.predecessor.simple.create!(link_urn: change.school.urn)
         end
+        change.school.create_or_sync_counterpart!
+        change.update!(handled: true)
       end
-      change.school.create_or_sync_counterpart!
-      change.update!(handled: true)
     end
 
     def find_or_create_successor!(urn)
@@ -99,14 +99,17 @@ module DataStage
     end
 
     def move_assets_from!(school:, successor:)
-      # move everything to the new school
+      raise ActiveRecord::Rollback if successor.school_cohorts.any?
+
       Partnership.active.where(school: school).each { |partnership| partnership.update!(school: successor) }
-      # TODO: What should we do here if the school already has a school_cohort (if anything)?
-      if successor.school_cohorts.empty?
-        SchoolCohort.where(school: school).each { |cohort| cohort.update!(school: successor) }
+
+      SchoolCohort.where(school: school).each do |school_cohort|
+        school_cohort.update!(school: successor)
+        school_cohort.ecf_participant_profiles.each do |profile|
+          RectifyParticipantSchool.call(participant_profile: profile, school: successor)
+        end
       end
 
-      TeacherProfile.where(school: school).each { |profile| profile.update!(school: successor) }
       InductionCoordinatorProfilesSchool.where(school: school).each { |profile| profile.update!(school: successor) }
     end
   end
