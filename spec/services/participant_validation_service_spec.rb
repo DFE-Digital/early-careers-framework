@@ -243,7 +243,7 @@ RSpec.describe ParticipantValidationService do
       end
 
       context "when the participant has an induction start date in or after September this year" do
-        let(:induction_start_date) { Date.parse("2021-09-01T00:00:00Z") }
+        let(:induction_start_date) { Time.zone.parse("2021-09-01T00:00:00Z") }
         let(:induction_completion_date) { nil }
         let(:induction) do
           {
@@ -260,8 +260,26 @@ RSpec.describe ParticipantValidationService do
         end
       end
 
+      context "when the participant has an induction start date is exactly on the threshold" do
+        let(:induction_start_date) { Time.zone.parse("2021-08-31T23:00:00Z") }
+        let(:induction_completion_date) { nil }
+        let(:induction) do
+          {
+            "start_date" => induction_start_date,
+            "completion_date" => induction_completion_date,
+            "status" => "Pass",
+            "state" => 0,
+            "state_name" => "Active",
+          }
+        end
+
+        it "returns false for previous induction and parses timezones correctly" do
+          expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: false }))
+        end
+      end
+
       context "when the participant has an induction start date before September this year" do
-        let(:induction_start_date) { Date.parse("2021-08-31T22:59:59Z") }
+        let(:induction_start_date) { Time.zone.parse("2021-08-31T22:59:59Z") }
         let(:induction_completion_date) { nil }
         let(:induction) do
           {
