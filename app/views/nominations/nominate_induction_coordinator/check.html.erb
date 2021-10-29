@@ -1,0 +1,50 @@
+<% content_for :title, "Confirm these details" %>
+
+<% content_for :before_content, govuk_back_link(
+  text: "Back",
+  href: { action: :email })
+%>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Check your answers for <%= @nominate_induction_tutor_form.full_name.titleize %></h1>
+
+    <h2 class="govuk-heading-m">School induction tutor details</h2>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Name
+        </dt>
+        <dd class="govuk-summary-list__value govuk-!-width-one-quarter">
+          <div><%= @nominate_induction_tutor_form.full_name %></div>
+        </dd>
+        <dd class="govuk-summary-list__actions govuk-!-width-one-quarter">
+          <%= govuk_link_to({ action: :full_name }) do %>
+            Change <span class="govuk-visually-hidden">name</span>
+          <% end %>
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Email
+        </dt>
+        <dd class="govuk-summary-list__value govuk-!-width-one-half">
+          <div><%= @nominate_induction_tutor_form.email %></div>
+        </dd>
+        <dd class="govuk-summary-list__actions govuk-!-width-one-quarter">
+          <%= govuk_link_to({ action: :email }) do %>
+            Change <span class="govuk-visually-hidden">email</span>
+          <% end %>
+        </dd>
+      </div>
+    </dl>
+
+    <p>
+      Check these details before confirming. You cannot change them within this application once you have clicked 'Confirm'.
+    </p>
+
+    <%= form_for @nominate_induction_tutor_form, url: { action: :create }, method: :post do |f| %>
+      <%= f.govuk_submit "Confirm and submit" %>
+    <% end %>
+  </div>
+</div>

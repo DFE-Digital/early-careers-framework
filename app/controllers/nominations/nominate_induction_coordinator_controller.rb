@@ -4,7 +4,7 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
   include NominationEmailTokenConsumer
 
   before_action :check_token_status, only: :start_nomination
-  before_action :load_nominate_induction_tutor_form, only: %i[full_name check_name email create]
+  before_action :load_nominate_induction_tutor_form, only: %i[full_name check_name email check_email check create]
 
   def start_nomination
     unless params[:continue]
@@ -30,14 +30,10 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
 
   def email; end
 
-  def create
+  def check_email
     if @nominate_induction_tutor_form.valid? :email
-      CreateInductionTutor.call(school: @nominate_induction_tutor_form.school,
-                                email: @nominate_induction_tutor_form.email,
-                                full_name: @nominate_induction_tutor_form.full_name)
-      session.delete(:nominate_induction_tutor_form)
-
-      redirect_to nominate_school_lead_success_nominate_induction_coordinator_path
+      store_nominate_induction_tutor_form
+      redirect_to action: :check
     elsif @nominate_induction_tutor_form.name_different?
       redirect_to action: :name_different
     elsif @nominate_induction_tutor_form.email_already_taken?
@@ -45,6 +41,17 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
     else
       render :email
     end
+  end
+
+  def check; end
+
+  def create
+    CreateInductionTutor.call(school: @nominate_induction_tutor_form.school,
+                              email: @nominate_induction_tutor_form.email,
+                              full_name: @nominate_induction_tutor_form.full_name)
+    session.delete(:nominate_induction_tutor_form)
+
+    redirect_to nominate_school_lead_success_nominate_induction_coordinator_path
   end
 
   def link_expired

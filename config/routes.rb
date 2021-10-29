@@ -117,7 +117,9 @@ Rails.application.routes.draw do
         get "full-name", action: :full_name
         put "full-name", action: :check_name
         get "email", action: :email
-        put "email", action: :create
+        put "email", action: :check_email
+        get "check-details", action: :check
+        post "check-details", action: :create
         get "email-used", action: :email_used
         get "name-different", action: :name_different
         get "link-expired", action: :link_expired
