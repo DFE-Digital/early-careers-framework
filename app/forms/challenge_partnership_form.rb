@@ -5,7 +5,7 @@ class ChallengePartnershipForm
 
   attr_accessor :challenge_reason, :token, :school_name, :partnership_id
 
-  validates :challenge_reason, presence: { message: "Select a reason why you think this confirmation is incorrect" }
+  validates :challenge_reason, presence: { message: I18n.t("errors.challenge_reason.blank") }
 
   def challenge_reason_options
     %w[another_provider not_confirmed do_not_recognise no_ects mistake].map do |key|
