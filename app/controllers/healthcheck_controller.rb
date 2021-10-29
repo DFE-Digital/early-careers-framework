@@ -36,45 +36,45 @@ private
   def migration_version
     ApplicationRecord.connection.migration_context.current_version
   rescue StandardError
-    "FAIL"
+    I18n.t(:fail)
   end
 
   def delayed_jobs
     Delayed::Job.count
   rescue StandardError
-    "FAIL"
+    I18n.t(:fail)
   end
 
   def jobs_with_errors
     Delayed::Job.where.not(last_error: nil).count
   rescue StandardError
-    "FAIL"
+    I18n.t(:fail)
   end
 
   def failed_jobs
     Delayed::Job.where.not(failed_at: nil).count
   rescue StandardError
-    "FAIL"
+    I18n.t(:fail)
   end
 
   def last_job_failure
     Delayed::Job.order(failed_at: :desc).first&.failed_at
   rescue StandardError
-    "FAIL"
+    I18n.t(:fail)
   end
 
   def notify_incident
     status_response = HTTPClient.get(NOTIFY_STATUS_API)
-    return "Status request failed" unless status_response.status == 200
+    return I18n.t(:status_request_failed) unless status_response.status == 200
 
     JSON.parse(status_response.body)["status"]["indicator"]
   rescue StandardError
-    "FAIL"
+    I18n.t(:fail)
   end
 
   def puma_stats
     JSON.parse(Puma.stats)
   rescue StandardError
-    "FAIL"
+    I18n.t(:fail)
   end
 end

@@ -14,7 +14,7 @@ class Schools::BaseController < ApplicationController
 private
 
   def ensure_school_user
-    raise Pundit::NotAuthorizedError, "Forbidden" unless current_user.induction_coordinator?
+    raise Pundit::NotAuthorizedError, I18n.t(:forbidden) unless current_user.induction_coordinator?
 
     authorize(active_school, :show?) if active_school.present?
   end
