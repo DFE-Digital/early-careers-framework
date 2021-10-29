@@ -56,8 +56,8 @@ module NominateInductionTutorSteps
     fill_in "nominate_induction_tutor_form[email]", with: "invalid-email@example"
   end
 
-  def when_i_click(button)
-    click_on(button)
+  def when_i_select(option)
+    choose option: option, allow_label_click: true
   end
 
   def then_i_should_be_on_the_choose_how_to_continue_page
@@ -124,14 +124,6 @@ module NominateInductionTutorSteps
 
   def then_i_should_be_on_the_email_already_used_page
     expect(page).to have_selector("h1", text: "The email address is being used by another school")
-  end
-
-  def when_i_select(option)
-    choose option: option, allow_label_click: true
-  end
-
-  def and_select_continue
-    click_on("Continue")
   end
 
   def set_participant_data
