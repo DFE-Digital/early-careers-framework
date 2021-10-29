@@ -163,20 +163,27 @@ RSpec.describe NPQ::Accept do
     end
 
     context "after approving an existing NPQApplication record" do
+      let(:new_trn) { (trn.to_i + 1).to_s }
+
       before do
         npq_application.save!
         subject.call
+        npq_application.update!(teacher_reference_number: new_trn)
       end
 
-      let(:new_trn) { (trn.to_i + 1).to_s }
-
       it "does not create neither teacher nor participant profile" do
-        npq_application.update!(teacher_reference_number: new_trn)
-
         expect { subject.call }
-          .to raise_error(Api::Errors::NPQApplicationAlreadyAcceptedError, "This NPQ application has already been accepted")
-          .and change(TeacherProfile, :count).by(0)
+          .to change(TeacherProfile, :count).by(0)
           .and change(ParticipantProfile::NPQ, :count).by(0)
+      end
+
+      it "returns false" do
+        expect(subject.call).to eql(false)
+      end
+
+      it "adds errors to object" do
+        subject.call
+        expect(npq_application.errors).to be_present
       end
     end
   end

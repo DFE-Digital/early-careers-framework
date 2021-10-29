@@ -15,7 +15,10 @@ module NPQ
     end
 
     def call
-      raise Api::Errors::NPQApplicationAlreadyAcceptedError, I18n.t(:npq_application_already_accepted) if npq_application.accepted?
+      if npq_application.accepted?
+        npq_application.errors.add(:lead_provider_approval_status, :has_already_been_accepted)
+        return false
+      end
 
       if has_other_accepted_applications_with_same_course?
         npq_application.errors.add(:lead_provider_approval_status, :has_another_accepted_application)

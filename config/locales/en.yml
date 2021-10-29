@@ -39,7 +39,6 @@ en:
   declaration_before_milestone_start: "The property '#/declaration_date' can not be before milestone start"
   declaration_after_milestone_cutoff: "The property '#/declaration_date' can not be after milestone end"
   invalid_data_structure: correct json data structure required. See API docs for reference
-  npq_application_already_accepted: This NPQ application has already been accepted
   estimate_participants_default_message: &default_message "Enter a number between 0 and 1000"
   estimate_participants_defaults: &defaults
     not_a_number: *default_message
@@ -234,6 +233,7 @@ en:
           attributes:
             lead_provider_approval_status:
               has_another_accepted_application: The participant already has an accepted application for this course
+              has_already_been_accepted: This NPQ application has already been accepted
   page_titles:
     lead_providers:
       guidance:
