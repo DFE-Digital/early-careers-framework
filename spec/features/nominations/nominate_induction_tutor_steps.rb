@@ -86,6 +86,10 @@ module NominateInductionTutorSteps
     expect(page).to have_selector("label", text: "What's John Smith's email address?")
   end
 
+  def then_i_should_be_on_the_check_details_page
+    expect(page).to have_selector("h1", text: "Check your answers for #{@sit_data[:full_name]}")
+  end
+
   def then_i_should_be_on_the_nominate_sit_success_page
     expect(page).to have_selector("h1", text: "Induction tutor nominated")
     expect(page).to have_selector("h2", text: "What happens next")

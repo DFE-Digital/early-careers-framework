@@ -14,31 +14,37 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
     and_percy_should_be_sent_a_snapshot_named "Choose how to continue"
 
     when_i_select "yes"
-    and_select_continue
+    click_on "Continue"
     then_i_should_be_on_the_start_nomination_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Start school induction tutor nomination"
-    and_select_continue
+
+    click_on "Continue"
     then_i_should_be_on_the_nominations_full_name_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Add SIT name"
-    and_select_continue
+
+    click_on "Continue"
     then_i_should_receive_a_full_name_error_message
 
     when_i_fill_in_the_sits_name
-    and_select_continue
+    click_on "Continue"
     then_i_should_be_on_the_nominations_email_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Add SIT email"
-    and_select_continue
+
+    click_on "Continue"
     then_i_should_receive_a_blank_email_error_message
 
     when_i_input_an_invalid_email_format
-    and_select_continue
+    click_on "Continue"
     then_i_should_receive_an_invalid_email_error_message
 
     when_i_fill_in_the_sits_email
-    and_select_continue
+    click_on "Continue"
+    then_i_should_be_on_the_check_details_page
+
+    click_on "Confirm and submit"
     then_i_should_be_on_the_nominate_sit_success_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Nominate SIT success"
@@ -69,34 +75,40 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
     and_percy_should_be_sent_a_snapshot_named "Choose how to continue"
 
     when_i_select "yes"
-    and_select_continue
+    click_on "Continue"
     then_i_should_be_on_the_start_nomination_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Start school induction tutor nomination"
-    and_select_continue
+
+    click_on "Continue"
     then_i_should_be_on_the_nominations_full_name_page
 
     when_i_fill_in_the_sits_name
-    and_select_continue
+    click_on "Continue"
     then_i_should_be_on_the_nominations_email_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Add SIT email"
 
     when_i_fill_in_using_an_email_that_is_already_being_used
-    and_select_continue
+    click_on "Continue"
     then_i_should_be_redirected_to_name_different_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Different name page"
 
-    when_i_click "Change the name"
+    click_on "Change the name"
     then_i_should_be_on_the_nominations_full_name_page
 
     when_i_fill_in_the_sits_name
-    and_select_continue
+    click_on "Continue"
     then_i_should_be_on_the_nominations_email_page
 
     when_i_fill_in_the_sits_email
-    and_select_continue
+    click_on "Continue"
+    then_i_should_be_on_the_check_details_page
+    and_the_page_should_be_accessible
+    and_percy_should_be_sent_a_snapshot_named "Check details"
+
+    click_on "Confirm and submit"
     then_i_should_be_on_the_nominate_sit_success_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Nominate SIT success"
@@ -106,35 +118,35 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
     given_an_email_is_being_used_by_an_existing_ect
     when_i_click_the_link_to_nominate_a_sit
     then_i_should_be_on_the_choose_how_to_continue_page
-    and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Choose how to continue"
 
     when_i_select "yes"
-    and_select_continue
+    click_on "Continue"
     then_i_should_be_on_the_start_nomination_page
-    and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Start school induction tutor nomination"
-    and_select_continue
-    then_i_should_be_on_the_nominations_full_name_page
 
+    click_on "Continue"
+    then_i_should_be_on_the_nominations_full_name_page
     when_i_fill_in_the_sits_name
-    and_select_continue
+    click_on "Continue"
     then_i_should_be_on_the_nominations_email_page
 
     when_i_fill_in_using_an_ects_email
-    and_select_continue
+    click_on "Continue"
     then_i_should_be_on_the_email_already_used_page
+    and_the_page_should_be_accessible
+    and_percy_should_be_sent_a_snapshot_named "SIT nomination - Email already in use"
 
     when_i_click "Change email address"
     then_i_should_be_on_the_nominations_full_name_page
+
     when_i_fill_in_the_sits_name
-    and_select_continue
+    click_on "Continue"
     then_i_should_be_on_the_nominations_email_page
 
     when_i_fill_in_the_sits_email
-    and_select_continue
+    click_on "Continue"
+    then_i_should_be_on_the_check_details_page
+
+    click_on "Confirm and submit"
     then_i_should_be_on_the_nominate_sit_success_page
-    and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Nominate SIT success"
   end
 end
