@@ -17,6 +17,11 @@ module NPQ
     def call
       raise Api::Errors::NPQApplicationAlreadyAcceptedError, I18n.t(:npq_application_already_accepted) if npq_application.accepted?
 
+      if has_other_accepted_applications_with_same_course?
+        npq_application.errors.add(:lead_provider_approval_status, :has_another_accepted_application)
+        return false
+      end
+
       ApplicationRecord.transaction do
         teacher_profile.update!(trn: npq_application.teacher_reference_number) if npq_application.teacher_reference_number_verified?
         create_profile
@@ -25,6 +30,14 @@ module NPQ
     end
 
   private
+
+    def has_other_accepted_applications_with_same_course?
+      NPQApplication.where(user_id: user.id)
+        .where(npq_course: npq_course)
+        .where(lead_provider_approval_status: "accepted")
+        .where.not(id: npq_application.id)
+        .exists?
+    end
 
     def other_applications
       @other_applications ||= NPQApplication.where(user_id: user.id)

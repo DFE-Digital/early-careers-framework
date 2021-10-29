@@ -54,6 +54,36 @@ RSpec.describe NPQ::Accept do
       end
     end
 
+    context "when accepting an application for a course that has already been accepted by another provider" do
+      let(:other_npq_lead_provider) { create(:npq_lead_provider) }
+
+      let(:other_npq_application) do
+        NPQApplication.create!(
+          teacher_reference_number: trn,
+          user: user,
+          npq_course: npq_course,
+          npq_lead_provider: other_npq_lead_provider,
+          school_urn: "123456",
+          school_ukprn: "12345678",
+        )
+      end
+
+      before do
+        npq_application.update!(lead_provider_approval_status: "accepted")
+      end
+
+      it "does not allow 2 applications with same course to be accepted" do
+        expect {
+          described_class.call(npq_application: other_npq_application)
+        }.not_to change { other_npq_application.reload.lead_provider_approval_status }
+      end
+
+      it "attaches errors to the object" do
+        described_class.call(npq_application: other_npq_application)
+        expect(other_npq_application.errors).to be_present
+      end
+    end
+
     context "when user has applied for different course" do
       let(:other_npq_lead_provider) { create(:npq_lead_provider) }
       let(:other_npq_course) { create(:npq_course) }

@@ -11,6 +11,7 @@ RSpec.describe "NPQ Applications API", type: :request do
   let(:bearer_token) { "Bearer #{token}" }
   let(:parsed_response) { JSON.parse(response.body) }
   let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
+  let(:another_npq_course) { create(:npq_course, identifier: "npq-leading-teaching") }
 
   describe "GET /api/v1/npq-applications" do
     let(:other_npq_lead_provider) { create(:npq_lead_provider) }
@@ -228,7 +229,7 @@ RSpec.describe "NPQ Applications API", type: :request do
 
         expect(parsed_response["errors"][0].key?("title")).to be_truthy
         expect(parsed_response["errors"][0].key?("detail")).to be_truthy
-        expect(parsed_response["errors"][0]["title"]).to eql("Status is invalid")
+        expect(parsed_response["errors"][0]["title"]).to eql("Status invalid")
         expect(parsed_response["errors"][0]["detail"]).to eql("Once accepted an application cannot change state")
       end
     end
@@ -257,7 +258,7 @@ RSpec.describe "NPQ Applications API", type: :request do
 
     context "when participant has applied for multiple NPQs" do
       let!(:other_npq_application) { create(:npq_application, npq_course: npq_course, npq_lead_provider: npq_lead_provider, user: user) }
-      let!(:other_accepted_npq_application) { create(:npq_application, npq_course: npq_course, npq_lead_provider: npq_lead_provider, user: user, lead_provider_approval_status: "accepted") }
+      let!(:other_accepted_npq_application) { create(:npq_application, npq_course: another_npq_course, npq_lead_provider: npq_lead_provider, user: user, lead_provider_approval_status: "accepted") }
 
       it "rejects all pending NPQs on same course" do
         post "/api/v1/npq-applications/#{default_npq_application.id}/accept"
@@ -287,7 +288,7 @@ RSpec.describe "NPQ Applications API", type: :request do
 
         expect(parsed_response["errors"][0].key?("title")).to be_truthy
         expect(parsed_response["errors"][0].key?("detail")).to be_truthy
-        expect(parsed_response["errors"][0]["title"]).to eql("Status is invalid")
+        expect(parsed_response["errors"][0]["title"]).to eql("Status invalid")
         expect(parsed_response["errors"][0]["detail"]).to eql("Once rejected an application cannot change state")
       end
     end
