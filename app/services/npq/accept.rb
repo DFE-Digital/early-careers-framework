@@ -44,8 +44,8 @@ module NPQ
 
     def other_applications
       @other_applications ||= NPQApplication.where(user_id: user.id)
-                                               .where(npq_course: npq_course)
-                                               .where.not(id: npq_application.id)
+                                            .where(npq_course: npq_course)
+                                            .where.not(id: npq_application.id)
     end
 
     def create_profile
