@@ -13,6 +13,8 @@ class IneligibleParticipantMailer < ApplicationMailer
     mentor: "08f36052-4073-47c9-9dc7-ddf79ab5b371",
   }.freeze
 
+  ECT_NOW_ELIGIBLE_PREVIOUS_INDUCTION_TEMPLATE = "ceca360c-985c-4518-aaf9-a9963fd39f45"
+
   def ect_active_flags_email(induction_tutor_email:, participant_profile:)
     template_mail(
       ACTIVE_FLAGS_TEMPLATES[:ect],
@@ -69,8 +71,21 @@ class IneligibleParticipantMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         ineligible_ECT_name: participant_profile.user.full_name,
-        "NQT+1_materials_link": start_schools_year_2020_url(school_id: participant_profile.school.id),
+        "NQT+1_materials_link": start_schools_year_2020_url(school_id: participant_profile.school.slug),
       },
     ).tag(:ineligible_participant).associate_with(participant_profile, as: :participant_profile)
+  end
+
+  def ect_now_eligible_previous_induction_email(induction_tutor_email:, participant_profile:)
+    template_mail(
+      ECT_NOW_ELIGIBLE_PREVIOUS_INDUCTION_TEMPLATE,
+      to: induction_tutor_email,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        fip_ect_name: participant_profile.user.full_name,
+        sign_in: new_user_session_url,
+      },
+    ).tag(:now_eligible_previous_induction).associate_with(participant_profile, as: :participant_profile)
   end
 end
