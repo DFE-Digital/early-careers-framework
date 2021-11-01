@@ -17,7 +17,7 @@ class ParticipantProfile::ECF < ParticipantProfile
                                        .or(joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :ineligible, reason: :previous_participation }))
   }
   scope :contacted_for_info, -> { where.missing(:ecf_participant_validation_data) }
-  scope :details_being_checked, -> { joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :manual_check }) }
+  scope :details_being_checked, -> { joins(:ecf_participant_validation_data).left_joins(:ecf_participant_eligibility).where("ecf_participant_eligibilities.id IS NULL OR ecf_participant_eligibilities.status = 'manual_check'") }
 
   def completed_validation_wizard?
     ecf_participant_eligibility.present? || ecf_participant_validation_data.present?
