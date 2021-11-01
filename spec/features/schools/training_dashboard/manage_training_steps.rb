@@ -35,17 +35,19 @@ module ManageTrainingSteps
     @school_cohort = create :school_cohort, induction_programme_choice: induction_programme_choice, school: create(:school, name: "Test School")
   end
 
-  def given_there_are_multiple_schools
+  def given_there_are_multiple_schools_and_an_induction_coordinator
     cohort = create :cohort, :current
 
-    @first_school = create :school, name: "Test School 1", slug: "111111-test-school-1", urn: "111111"
-    create :school_cohort, :cip, school: @first_school, cohort: cohort
+    first_school = create :school, name: "Test School 1", slug: "111111-test-school-1", urn: "111111"
+    create :school_cohort, :cip, school: first_school, cohort: cohort
 
-    @second_school = create :school, name: "Test School 2", slug: "111112-test-school-2", urn: "111112"
-    create :school_cohort, :cip, school: @second_school, cohort: cohort
+    second_school = create :school, name: "Test School 2", slug: "111112-test-school-2", urn: "111112"
+    create :school_cohort, :cip, school: second_school, cohort: cohort
 
-    @third_school = FactoryBot.create(:school, name: "Test School 3", slug: "111113-test-school-3", urn: "111113")
-    create :school_cohort, :cip, school: @third_school, cohort: cohort
+    create :user, :induction_coordinator, email: "school-leader@example.com", schools: [first_school, second_school]
+
+    third_school = FactoryBot.create(:school, name: "Test School 3", slug: "111113-test-school-3", urn: "111113")
+    create :school_cohort, :cip, school: third_school, cohort: cohort
   end
 
   def and_i_have_added_an_ect
@@ -88,7 +90,7 @@ module ManageTrainingSteps
     @details_being_checked_ect.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
   end
 
-  def and_i_am_on_schools_page
+  def then_i_am_on_schools_page
     visit "/schools"
   end
 
@@ -114,7 +116,7 @@ module ManageTrainingSteps
     click_on "Change induction programme choice"
   end
 
-  def then_i_should_see_multiple_schools
+  def and_i_should_see_multiple_schools
     expect(page).to have_text("Test School 1")
     expect(page).to have_text("Test School 2")
     expect(page).not_to have_text("Test School 3")
@@ -145,11 +147,11 @@ module ManageTrainingSteps
   end
 
   def then_i_should_be_on_school_cohorts_1_page
-    expect(current_path).to eq("/schools/#{@first_school.slug}")
+    expect(current_path).to eq("/schools/111111-test-school-1")
   end
 
   def then_i_should_be_on_school_cohorts_2_page
-    expect(current_path).to eq("/schools/#{@second_school.slug}")
+    expect(current_path).to eq("/schools/111112-test-school-2")
   end
 
   def and_i_should_see_school_1_data
@@ -172,8 +174,8 @@ module ManageTrainingSteps
   end
 
   def and_i_am_signed_in_as_an_induction_coordinator_for_multiple_schools
-    @induction_coordinator = create :user, :induction_coordinator, email: "school-leader@example.com", schools: [@first_school, @second_school]
-    sign_in_as @induction_coordinator
+    induction_coordinator = User.find_by(email: "school-leader@example.com")
+    sign_in_as induction_coordinator
   end
 
   def and_see_the_other_programs_before_choosing(labels:, choice:, snapshot:)

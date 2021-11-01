@@ -7,10 +7,10 @@ RSpec.feature "School Tutors should be abled to manage schools", type: :feature,
   include ManageTrainingSteps
 
   scenario "Change school" do
-    given_there_are_multiple_schools
+    given_there_are_multiple_schools_and_an_induction_coordinator
     and_i_am_signed_in_as_an_induction_coordinator_for_multiple_schools
-    and_i_am_on_schools_page
-    then_i_should_see_multiple_schools
+    then_i_am_on_schools_page
+    and_i_should_see_multiple_schools
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Induction Coordinator Select School"
 
@@ -20,8 +20,8 @@ RSpec.feature "School Tutors should be abled to manage schools", type: :feature,
     and_the_page_should_be_accessible
 
     given_i_click_on_manage_your_schools
-    and_i_am_on_schools_page
-    then_i_should_see_multiple_schools
+    then_i_am_on_schools_page
+    and_i_should_see_multiple_schools
 
     given_i_click_on_test_school_2
     then_i_should_be_on_school_cohorts_2_page
