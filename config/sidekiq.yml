@@ -2,11 +2,4 @@
 :concurrency: 5
 :queues:
   - mailers
-  - school_data
-  - validation_retry
   - default
-  - big_query_participant_declarations
-  - school_analytics
-  - session_trim
-
-
