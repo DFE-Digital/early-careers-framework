@@ -4751,10 +4751,10 @@ cypress-file-upload@^5.0.8:
   resolved "https://registry.yarnpkg.com/cypress-file-upload/-/cypress-file-upload-5.0.8.tgz#d8824cbeaab798e44be8009769f9a6c9daa1b4a1"
   integrity sha512-+8VzNabRk3zG6x8f8BWArF/xA/W0VK4IZNx3MV0jFWrJS/qKn8eHfa5nU73P9fOQAgwHFJx7zjg4lwOnljMO8g==
 
-cypress-intellij-reporter@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/cypress-intellij-reporter/-/cypress-intellij-reporter-0.0.6.tgz#5c396b6fe0a6fcef3b380ec6e62b9c229d62781c"
-  integrity sha512-KDxeWKKAAGekhg1xmGToSsHDWgogM1hUYakAL4yjKQr9gSI2iyRxcrKlq1/jG4omCbUEY+AZGiiwyKOscY9+Gg==
+cypress-intellij-reporter@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/cypress-intellij-reporter/-/cypress-intellij-reporter-0.0.7.tgz#248dd17e74cfa4b69dbba503e79c54c58124028c"
+  integrity sha512-P4A0BPz5h9TWLZFVhMJsAMktqCEdeKA0+bS+zfTGLohUtM89pmU5kAWLEGFOYRcRlVR39XbUWhyFyTjs8AoFLA==
   dependencies:
     mocha latest
 
