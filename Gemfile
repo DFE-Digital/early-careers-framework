@@ -18,6 +18,7 @@ gem "pundit"
 gem "sentry-delayed_job", ">= 4.6.4"
 gem "sentry-rails", ">= 4.6.4"
 gem "sentry-ruby", ">= 4.6.4"
+gem "sentry-sidekiq"
 
 # Pagination
 gem "kaminari", ">= 1.2.0"
