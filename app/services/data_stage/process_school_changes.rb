@@ -36,6 +36,7 @@ module DataStage
         unhandled_attrs.each do |attr|
           current_value = counterpart.send(attr)
           next if current_value.blank? || current_value == school.send(attr)
+
           has_unhandled_changes = true
           break
         end
