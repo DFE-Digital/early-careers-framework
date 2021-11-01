@@ -6,6 +6,7 @@ class ParticipantValidationMailer < ApplicationMailer
   ECTS_TO_ADD_VALIDATIN_INFO_TEMPLATE = "50ee41e5-06b9-41cf-9afd-d5bc4db356c4"
   MENTORS_TO_ADD_VALIDATION_EMAIL_TEMPLATE = "e0198213-c09d-41aa-8197-b167e495e49d"
   INDUCTION_COORDINATORS_WHO_ARE_MENTORS_TO_ADD_VALIDATION_EMAIL_TEMPLATE = "7e7d3fdb-41f5-4e04-a4ae-acf92e8fefe6"
+  INDUCTION_COORDINATOR_PARTICIPANT_EMAIL_BOUNCED_TEMPLATE = "d46b1f7b-4d80-4a91-91c7-f1cfac3bdbe1"
 
   STATUTORY_GUIDANCE_LINK = "https://www.gov.uk/government/publications/induction-for-early-career-teachers-england"
 
@@ -59,5 +60,18 @@ class ParticipantValidationMailer < ApplicationMailer
         participant_start: start_url,
       },
     ).tag(:sit_unvalidated_participants_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
+  end
+
+  def induction_coordinator_participant_email_bounced_email(recipient:, sign_in_url:, participant_profile:)
+    template_mail(
+      INDUCTION_COORDINATOR_PARTICIPANT_EMAIL_BOUNCED_TEMPLATE,
+      to: recipient,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        sign_in: sign_in_url,
+        participant_name: participant_profile.user.full_name,
+      },
+    ).tag(:sit_participant_email_bounced).associate_with(participant_profile, as: :participant_profile)
   end
 end
