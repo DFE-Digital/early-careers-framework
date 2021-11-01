@@ -18,6 +18,7 @@ require "pundit/rspec"
 require "pundit/matchers"
 require "support/new_supplier_helper"
 require "paper_trail/frameworks/rspec"
+require "sidekiq/testing"
 
 # require features_helper after support files have been loaded
 require "features_helper"
