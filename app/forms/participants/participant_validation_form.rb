@@ -22,7 +22,7 @@ module Participants
                 length: { within: 5..7 },
                 unless: :no_trn
 
-      before_complete { check_eligibility! if dob.present? }
+      before_complete { check_eligibility! if dob.present? && !no_trn }
       next_step { no_trn ? :nino : :dob }
     end
 
@@ -97,6 +97,9 @@ module Participants
         trn: trn,
         date_of_birth: dob,
         nino: nino,
+        config: {
+          check_first_name_only: true,
+        },
       )
 
       return self.eligibility = :no_match if dqt_response.blank?
@@ -115,9 +118,6 @@ module Participants
           dob: dob,
         },
         dqt_response: dqt_response,
-        config: {
-          check_first_name_only: true,
-        }
       )
     end
 

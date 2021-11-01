@@ -7,16 +7,22 @@
     <p class="govuk-body">Check the information you entered is correct</p>
     <dl class="govuk-summary-list govuk-!-margin-bottom-9">
 
-      <% unless validation_form.no_trn %>
+      <%# unless validation_form.no_trn %>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">TRN</dt>
-          <dd class="govuk-summary-list__value"><%= validation_form.trn %></dd>
+          <dd class="govuk-summary-list__value">
+            <% if validation_form.no_trn %>
+              Not provided
+            <% else %>
+              <%= validation_form.trn %>
+            <% end %>
+          </dd>
           <dd class="govuk-summary-list__actions">
-            <%= govuk_link_to "Change", { action: :show, step: :trn } %>
+            <%#= govuk_link_to "Change", { action: :show, step: :trn } %>
             <span class="govuk-visually-hidden">your Teacher Reference Number</span>
           </dd>
         </div>
-      <% end %>
+      <%# end %>
 
       <% if validation_form.step_completed?(:nino) %>
         <div class="govuk-summary-list__row">

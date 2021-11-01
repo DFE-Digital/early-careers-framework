@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require_relative "./participant_validation_steps"
 
 RSpec.feature "ECT participant validation journey for CIP induction", with_feature_flags: { eligibility_notifications: "active" }, type: :feature, js: true do

@@ -107,8 +107,8 @@ module ParticipantValidationSteps
     click_on "Continue"
   end
 
-  def then_i_should_see_the_tell_us_your_details_page
-    expect(page).to have_selector("h1", text: "Tell us your details")
+  def then_i_should_see_the_trn_page
+    expect(page).to have_selector("h1", text: "What’s your teacher reference number (TRN)?")
     expect(page).to have_field("Full name")
     expect(page).to have_field("Day")
     expect(page).to have_field("Month")
