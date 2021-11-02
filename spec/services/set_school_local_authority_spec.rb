@@ -24,9 +24,6 @@ RSpec.describe SetSchoolLocalAuthority do
       expect(school.latest_school_authority.local_authority).to eq local_authority
     end
 
-    it "updates pupil premium uplift on ECF participants" do
-    end
-
     context "when the local authority is already linked" do
       before do
         SchoolLocalAuthority.create!(school: school, local_authority: local_authority, start_year: 2020)
