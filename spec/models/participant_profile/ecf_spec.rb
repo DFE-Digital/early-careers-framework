@@ -81,4 +81,19 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
       end
     end
   end
+
+  describe "details_being_checked" do
+    let!(:validation_data) { create(:ecf_participant_validation_data, participant_profile: profile) }
+    context "when the details have not been matched" do
+      it "returns the profile" do
+        expect(ParticipantProfile::ECF.details_being_checked).to match_array([profile])
+      end
+    end
+    context "when the eligibility is manual check" do
+      let!(:eligibility) { create(:ecf_participant_eligibility, :manual_check, participant_profile: profile) }
+      it "returns the profile" do
+        expect(ParticipantProfile::ECF.details_being_checked).to match_array([profile])
+      end
+    end
+  end
 end
