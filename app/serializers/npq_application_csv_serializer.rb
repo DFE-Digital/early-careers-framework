@@ -38,6 +38,7 @@ private
       course_identifier
       status
       created_at
+      updated_at
     ]
   end
 
@@ -58,6 +59,7 @@ private
       record.npq_course.identifier,
       record.lead_provider_approval_status,
       record.created_at.rfc3339,
+      record.updated_at.rfc3339,
     ]
   end
 end

@@ -11,6 +11,7 @@ required:
   - course_identifier
   - status
   - created_at
+  - updated_at
 properties:
   id:
     type: string
@@ -97,3 +98,8 @@ properties:
     type: string
     format: date-time
     example: "2021-05-31T02:21:32.000Z"
+  updated_at:
+    description: "The date the application was last updated"
+    type: string
+    format: date-time
+    example: "2021-05-31T02:22:32.000Z"
