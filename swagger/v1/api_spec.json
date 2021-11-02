@@ -1191,7 +1191,8 @@
           "cohort",
           "status",
           "training_status",
-          "schedule_identifier"
+          "schedule_identifier",
+          "updated_at"
         ],
         "properties": {
           "email": {
@@ -1287,6 +1288,12 @@
               "ecf-september-standard-2021",
               "ecf-january-standard-2021"
             ]
+          },
+          "updated_at": {
+            "description": "The date the ECF participant was last updated",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
           }
         }
       },
@@ -1361,7 +1368,8 @@
           "participant_type",
           "cohort",
           "status",
-          "training_status"
+          "training_status",
+          "updated_at"
         ],
         "properties": {
           "id": {
@@ -1461,6 +1469,12 @@
               "deferred",
               "withdrawn"
             ]
+          },
+          "updated_at": {
+            "description": "The date the ECF participant was last updated",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
           }
         }
       },
@@ -1825,7 +1839,7 @@
             }
           }
         },
-        "example": "id,type,email,full_name,mentor_id,school_urn,participant_type,cohort,status,teacher_reference_number,teacher_reference_number_validated,eligible_for_funding,pupil_premium_uplift,sparsity_uplift,training_status\ndb3a7848-7308-4879-942a-c4a70ced400a,participant,jane.smith@some-school.example.com,Jane Smith,bb36d74a-68a7-47b6-86b6-1fd0d141c590,106286,ect,2021,active,0012345,true,true,true,true,active\nbb36d74a-68a7-47b6-86b6-1fd0d141c590,participant,martin.jones@some-school.example.com,Martin Jones,,106286,mentor,2021,active,\"\",false,false,false,false,deferred\neb475531-bf08-48ae-b0ef-c2ff5e5bdef0,participant,\"\",\"\",\"\",\"\",ect,\"\",withdrawn,\"\",\"\",\"\",\"\",\"\",withdrawn\n"
+        "example": "id,type,email,full_name,mentor_id,school_urn,participant_type,cohort,status,teacher_reference_number,teacher_reference_number_validated,eligible_for_funding,pupil_premium_uplift,sparsity_uplift,training_status,updated_at\ndb3a7848-7308-4879-942a-c4a70ced400a,participant,jane.smith@some-school.example.com,Jane Smith,bb36d74a-68a7-47b6-86b6-1fd0d141c590,106286,ect,2021,active,0012345,true,true,true,true,active\nbb36d74a-68a7-47b6-86b6-1fd0d141c590,participant,martin.jones@some-school.example.com,Martin Jones,,106286,mentor,2021,active,\"\",false,false,false,false,deferred\neb475531-bf08-48ae-b0ef-c2ff5e5bdef0,participant,\"\",\"\",\"\",\"\",ect,\"\",withdrawn,\"\",\"\",\"\",\"\",\"\",withdrawn,2021-05-31T02:22:32.000Z\n"
       },
       "MultipleECFParticipantsResponse": {
         "description": "A list of ECF participants",
@@ -1856,7 +1870,8 @@
                   "eligible_for_funding": true,
                   "pupil_premium_uplift": false,
                   "sparsity_uplift": true,
-                  "training_status": "active"
+                  "training_status": "active",
+                  "updated_at": "2021-05-31T02:22:32.000Z"
                 }
               },
               {
@@ -1874,7 +1889,8 @@
                   "eligible_for_funding": null,
                   "pupil_premium_uplift": true,
                   "sparsity_uplift": false,
-                  "training_status": "deferred"
+                  "training_status": "deferred",
+                  "updated_at": "2021-05-31T02:22:32.000Z"
                 }
               },
               {
@@ -1893,7 +1909,8 @@
                   "eligible_for_funding": null,
                   "pupil_premium_uplift": null,
                   "sparsity_uplift": null,
-                  "training_status": "withdrawn"
+                  "training_status": "withdrawn",
+                  "updated_at": "2021-05-31T02:22:32.000Z"
                 }
               }
             ]
