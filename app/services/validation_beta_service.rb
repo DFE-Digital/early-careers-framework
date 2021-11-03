@@ -205,7 +205,7 @@ class ValidationBetaService
       .find_each do |sit|
         sit.schools
           .joins(:school_cohorts, :partnerships)
-          .where(school_cohorts: { cohort_id: Cohort.current.id, opt_out_of_updates: false })
+          .where(school_cohorts: { cohort_id: Cohort.current.id })
           .merge(Partnership.active)
           .find_each do |school|
           participants = school
