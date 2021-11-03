@@ -33,6 +33,7 @@ class UTMService
     sit_to_complete_steps: "sit-to-complete-steps",
     unengaged_schools: "unengaged-schools",
     unvalidated_participants_reminder: "unvalidated-participants-reminder",
+    unvalidated_participants_deadline_reminder: "unvalidated-participants-deadline-reminder",
     year2020_nqt_invite_school: "year2020-nqt-invite-school",
     year2020_nqt_invite_school_not_opted_out: "year2020-nqt-invite-school-not-opted-out",
     year2020_nqt_invite_sit: "year2020-nqt-invite-sit",
@@ -72,6 +73,7 @@ class UTMService
     remind_fip_sit_to_complete_steps: "remind-fip-sit-to-complete-steps",
     add_participants_unpartnered_cip: "add-participants-unpartnered-cip",
     unvalidated_participants_reminder: "unvalidated-participants-reminder",
+    unvalidated_participants_deadline_reminder: "unvalidated-participants-deadline-reminder",
     year2020_nqt_invite_sit_catchall: "year2020-nqt-invite-sit-catchall",
     unengaged_schools: "unengaged-schools",
   }.freeze

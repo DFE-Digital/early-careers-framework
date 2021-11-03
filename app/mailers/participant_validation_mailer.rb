@@ -7,6 +7,7 @@ class ParticipantValidationMailer < ApplicationMailer
   MENTORS_TO_ADD_VALIDATION_EMAIL_TEMPLATE = "e0198213-c09d-41aa-8197-b167e495e49d"
   INDUCTION_COORDINATORS_WHO_ARE_MENTORS_TO_ADD_VALIDATION_EMAIL_TEMPLATE = "7e7d3fdb-41f5-4e04-a4ae-acf92e8fefe6"
   INDUCTION_COORDINATOR_PARTICIPANT_EMAIL_BOUNCED_TEMPLATE = "d46b1f7b-4d80-4a91-91c7-f1cfac3bdbe1"
+  FIP_PARTICIPANT_VALIDATION_DEADLINE_REMINDER_TEMPLATE = "0bc719e5-760a-412c-b5ec-080f47b3d9db"
 
   STATUTORY_GUIDANCE_LINK = "https://www.gov.uk/government/publications/induction-for-early-career-teachers-england"
 
@@ -73,5 +74,19 @@ class ParticipantValidationMailer < ApplicationMailer
         participant_name: participant_profile.user.full_name,
       },
     ).tag(:sit_participant_email_bounced).associate_with(participant_profile, as: :participant_profile)
+  end
+
+  def fip_participant_validation_deadline_reminder_email(participant_profile:, participant_start_url:)
+    template_mail(
+      FIP_PARTICIPANT_VALIDATION_DEADLINE_REMINDER_TEMPLATE,
+      to: participant_profile.user.email,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        name: participant_profile.user.full_name,
+        school_name: participant_profile.school.name,
+        participant_start: participant_start_url,
+      },
+    ).tag(:fip_participant_validation_deadline).associate_with(participant_profile, as: :participant_profile)
   end
 end
