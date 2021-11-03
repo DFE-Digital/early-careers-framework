@@ -370,7 +370,7 @@
         "summary": "Notify that a participant is resuming their course",
         "operationId": "participant",
         "tags": [
-          "NQP Participant"
+          "NPQ Participant"
         ],
         "security": [
           {
