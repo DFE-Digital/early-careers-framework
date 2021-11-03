@@ -6,6 +6,9 @@ on:
     paths-ignore:
       - 'documentation/**'
 
+env:
+  DOCKER_REPOSITORY: ghcr.io/dfe-digital/teacher-cpd
+
 jobs:
   deploy:
     runs-on: ubuntu-20.04
@@ -36,11 +39,12 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Login to DockerHub
+      - name: Login to GHCR
         uses: docker/login-action@v1
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_DEV_PASSWORD }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push docker image from builder target
         uses: docker/build-push-action@v2
@@ -48,9 +52,9 @@ jobs:
           context: .
           build-args: BUILDKIT_INLINE_CACHE=1
           cache-from: |
-            dfedigital/early-careers-framework-dev:builder
+            ${{ env.DOCKER_REPOSITORY }}:builder
           push: true
-          tags: dfedigital/early-careers-framework-dev:builder
+          tags: ${{ env.DOCKER_REPOSITORY }}:builder
           target: builder
 
       - name: Build and push docker image from early-careers-framework-gems-node-modules target
@@ -59,9 +63,9 @@ jobs:
           context: .
           build-args: BUILDKIT_INLINE_CACHE=1
           cache-from: |
-            dfedigital/early-careers-framework-dev:gems-node-modules
+            ${{ env.DOCKER_REPOSITORY }}:gems-node-modules
           push: true
-          tags: dfedigital/early-careers-framework-dev:gems-node-modules
+          tags: ${{ env.DOCKER_REPOSITORY }}:gems-node-modules
           target: early-careers-framework-gems-node-modules
 
       - name: Build and push docker image from assets-precompile target
@@ -70,9 +74,9 @@ jobs:
           context: .
           build-args: BUILDKIT_INLINE_CACHE=1
           cache-from: |
-            dfedigital/early-careers-framework-dev:assets-precompile
+            ${{ env.DOCKER_REPOSITORY }}:assets-precompile
           push: true
-          tags: dfedigital/early-careers-framework-dev:assets-precompile
+          tags: ${{ env.DOCKER_REPOSITORY }}:assets-precompile
           target: assets-precompile
 
       - name: Build and push docker image from production target
@@ -83,13 +87,13 @@ jobs:
             BUILDKIT_INLINE_CACHE=1
             SHA=${{ github.event.pull_request.head.sha }}
           cache-from: |
-            dfedigital/early-careers-framework-dev:${{ env.ENVIRONMENT }}
-            dfedigital/early-careers-framework-dev:latest
+            ${{ env.DOCKER_REPOSITORY }}:${{ env.ENVIRONMENT }}
+            ${{ env.DOCKER_REPOSITORY }}:latest
           push: true
           tags: |
-            dfedigital/early-careers-framework-dev:${{ github.event.pull_request.head.sha }}
-            dfedigital/early-careers-framework-dev:${{ env.ENVIRONMENT }}
-            dfedigital/early-careers-framework-dev:latest
+            ${{ env.DOCKER_REPOSITORY }}:${{ github.event.pull_request.head.sha }}
+            ${{ env.DOCKER_REPOSITORY }}:${{ env.ENVIRONMENT }}
+            ${{ env.DOCKER_REPOSITORY }}:latest
           target: production
 
       - name: Deploy review app to dev
@@ -101,7 +105,7 @@ jobs:
           TF_VAR_statuscake_username: ${{ secrets.STATUSCAKE_USERNAME }}
           TF_VAR_statuscake_apikey: ${{ secrets.STATUSCAKE_APIKEY }}
         run: |
-          export TF_VAR_paas_app_docker_image=dfedigital/early-careers-framework-dev:${{ github.event.pull_request.head.sha }}
+          export TF_VAR_paas_app_docker_image=${{ env.DOCKER_REPOSITORY }}:${{ github.event.pull_request.head.sha }}
           cd terraform/app
           terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-7f2ca242-9929-4662-a79c-c454ea56ea7b" -backend-config="key=${{ env.ENVIRONMENT }}/terraform.tfstate"
           terraform apply -input=false -auto-approve -var-file ../workspace-variables/review.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_DEV}}"}' -var='environment=${{env.ENVIRONMENT}}' -var 'logstash_url=${{secrets.SYSLOG_DRAIN_URL}}' -var 'docker_username=${{ secrets.DOCKER_USERNAME }}' -var 'docker_password=${{ secrets.DOCKER_DEV_PASSWORD }}'
