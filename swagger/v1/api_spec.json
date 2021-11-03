@@ -1991,7 +1991,8 @@
                   "npq_courses": [
                     "npq-leading-teaching"
                   ],
-                  "teacher_reference_number": "1234567"
+                  "teacher_reference_number": "1234567",
+                  "updated_at": "2021-05-31T02:21:32.000Z"
                 }
               }
             ]
@@ -2394,7 +2395,8 @@
           "participant_id",
           "full_name",
           "email",
-          "npq_courses"
+          "npq_courses",
+          "updated_at"
         ],
         "properties": {
           "participant_id": {
@@ -2425,6 +2427,12 @@
             "items": {
               "type": "string"
             }
+          },
+          "updated_at": {
+            "description": "The date the NPQ participant was last updated",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
           }
         }
       },
