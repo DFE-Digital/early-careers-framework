@@ -205,14 +205,17 @@ class ValidationBetaService
       .find_each do |sit|
         sit.schools
           .joins(:school_cohorts, :partnerships)
-          .where(school_cohorts: { cohort_id: Cohort.current.id })
+          .where(school_cohorts: { cohort_id: Cohort.current.id, opt_out_of_updates: false })
           .merge(Partnership.active)
           .find_each do |school|
+
           participants = school
             .school_cohorts
             .find_by(cohort_id: Cohort.current.id)
             .active_ecf_participant_profiles
             .contacted_for_info
+
+          next unless participants.any?
 
           participant_name_list = participant_name_markdown_list(participants)
 
