@@ -8,6 +8,7 @@ required:
   - eligible_for_payment
   - declaration_date
   - voided
+  - updated_at
 properties:
   id:
     description: "The unique identifier of the participant declaration record"
@@ -64,4 +65,8 @@ properties:
     type: string
     nullable: false
     example: paid
-
+  updated_at:
+    description: "The date the declaration was last updated"
+    type: string
+    format: date-time
+    example: "2021-05-31T02:22:32.000Z"

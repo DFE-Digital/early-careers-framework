@@ -2013,7 +2013,7 @@
             }
           }
         },
-        "example": "id,participant_id,declaration_type,course_identifier,eligible_for_payment,declaration_date,voided,state\nc88eb9a9-773a-4f53-9716-121b981154d8,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false\n31a521ec-82c5-451c-aea3-426523f1facc,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false\n"
+        "example": "id,participant_id,declaration_type,course_identifier,eligible_for_payment,declaration_date,voided,state,updated_at\nc88eb9a9-773a-4f53-9716-121b981154d8,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false\n31a521ec-82c5-451c-aea3-426523f1facc,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false,2021-05-31T02:22:32.000Z\n"
       },
       "MultipleParticipantDeclarationsResponse": {
         "description": "A list of participant declarations",
@@ -2766,7 +2766,8 @@
           "course_identifier",
           "eligible_for_payment",
           "voided",
-          "state"
+          "state",
+          "updated_at"
         ],
         "properties": {
           "participant_id": {
@@ -2833,6 +2834,12 @@
               "voided"
             ],
             "example": "submitted"
+          },
+          "updated_at": {
+            "description": "The date the declaration was last updated",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
           }
         }
       },
@@ -2870,7 +2877,8 @@
           "course_identifier",
           "eligible_for_payment",
           "declaration_date",
-          "voided"
+          "voided",
+          "updated_at"
         ],
         "properties": {
           "id": {
@@ -2937,6 +2945,12 @@
             "type": "string",
             "nullable": false,
             "example": "paid"
+          },
+          "updated_at": {
+            "description": "The date the declaration was last updated",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
           }
         }
       },
