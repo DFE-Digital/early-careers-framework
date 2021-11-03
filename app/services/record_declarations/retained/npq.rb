@@ -2,15 +2,9 @@
 
 module RecordDeclarations
   module Retained
-    class NPQ < Base
+    class NPQ < ::RecordDeclarations::Base
       include Participants::NPQ
       include RecordDeclarations::NPQ
-
-      class << self
-        def valid_evidence_types
-          %w[yes].freeze
-        end
-      end
     end
   end
 end

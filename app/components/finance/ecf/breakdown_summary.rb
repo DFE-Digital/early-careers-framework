@@ -16,6 +16,7 @@ module Finance
         @output_payment_participants = @breakdown[:output_payments].map { |params| params[:participants] }.inject(&:+)
         @output_payment_total = @breakdown[:output_payments].map { |params| params[:subtotal] }.inject(&:+)
         @payment_period = pretty_payment_period
+        @deadline = Date.parse(payment_period.last).to_s(:govuk)
       end
     end
   end

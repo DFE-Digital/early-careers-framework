@@ -18,8 +18,8 @@
   "devDependencies": {
     "@percy/cli": "^1.0.0-beta.70",
     "@percy/cypress": "^3.1.1",
-    "axe-core": "^4.3.3",
-    "cypress": "8.6.0",
+    "axe-core": "^4.3.4",
+    "cypress": "8.7.0",
     "cypress-axe": "^0.13.0",
     "cypress-cucumber-preprocessor": "^4.3.0",
     "cypress-file-upload": "^5.0.8",

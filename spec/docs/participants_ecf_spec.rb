@@ -4,7 +4,7 @@ require "swagger_helper"
 
 require_relative "../shared/context/lead_provider_profiles_and_courses"
 
-describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_flags: { participant_data_api: "active" } do
+describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
   include_context "lead provider profiles and courses"
 
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
@@ -88,6 +88,20 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json", with_feature_fl
 
         run_test!
       end
+    end
+  end
+
+  it_behaves_like "JSON Participant Deferral documentation",
+                  "/api/v1/participants/ecf/{id}/defer",
+                  "#/components/schemas/ECFParticipantDeferRequest",
+                  "#/components/schemas/ECFParticipantResponse",
+                  "ECF Participant" do
+    let(:participant) { mentor_profile }
+    let(:attributes) do
+      {
+        reason: "career-break",
+        course_identifier: "ecf-mentor",
+      }
     end
   end
 

@@ -34,7 +34,10 @@ module FullDqt
 
     def translate_hash(hash)
       hash.deep_transform_values do |value|
-        if value =~ /^\d{4}-\d{2}-\d{2}/
+        case value
+        when /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/
+          Time.zone.parse(value)
+        when /^\d{4}-\d{2}-\d{2}/
           Date.parse(value)
         else
           value

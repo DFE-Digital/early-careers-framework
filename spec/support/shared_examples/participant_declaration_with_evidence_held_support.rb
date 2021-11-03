@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "a retained participant declaration service" do
+RSpec.shared_examples "a participant declaration with evidence held service" do
   it_behaves_like "a participant declaration service"
 
   context "when evidence held is invalid" do

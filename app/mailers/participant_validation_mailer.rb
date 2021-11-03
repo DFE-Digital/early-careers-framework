@@ -48,7 +48,7 @@ class ParticipantValidationMailer < ApplicationMailer
     )
   end
 
-  def induction_coordinators_we_asked_ects_and_mentors_for_information_email(recipient:, sign_in:, start_url:)
+  def induction_coordinators_we_asked_ects_and_mentors_for_information_email(recipient:, sign_in:, start_url:, induction_coordinator_profile:)
     template_mail(
       INDUCTION_COORDINATOR_WE_ASKED_YOUR_ECTS_AND_MENTORS_TEMPLATE,
       to: recipient,
@@ -58,6 +58,6 @@ class ParticipantValidationMailer < ApplicationMailer
         sign_in: sign_in,
         participant_start: start_url,
       },
-    )
+    ).tag(:sit_unvalidated_participants_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
   end
 end

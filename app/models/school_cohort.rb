@@ -48,11 +48,7 @@ class SchoolCohort < ApplicationRecord
   end
 
   def add_participants_status
-    if FeatureFlag.active?(:induction_tutor_manage_participants, for: school)
-      "To do"
-    else
-      "Cannot start yet"
-    end
+    "To do"
   end
 
   def choose_training_materials_status

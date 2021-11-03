@@ -8,10 +8,6 @@ module Api
       include ApiTokenAuthenticatable
       include ParticipantActions
 
-      def defer
-        perform_action(service_namespace: ::Participants::Defer)
-      end
-
       def resume
         perform_action(service_namespace: ::Participants::Resume)
       end

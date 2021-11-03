@@ -2,20 +2,24 @@
 
 require "rails_helper"
 
-class DummyAggregator
-  class << self
-    def call(*)
-      {
-        all: 10_000,
-        uplift: 10_000,
-        ects: 5_000,
-        mentors: 5_000,
-      }
+module Finance
+  module ECF
+    class DummyAggregator
+      class << self
+        def call(*)
+          {
+            all: 10_000,
+            uplift: 10_000,
+            ects: 5_000,
+            mentors: 5_000,
+          }
+        end
+      end
     end
   end
 end
 
-RSpec.describe CalculationOrchestrator do
+RSpec.describe Finance::ECF::CalculationOrchestrator do
   let(:call_off_contract) { create(:call_off_contract) }
   let(:breakdown_summary) do
     {
@@ -26,13 +30,8 @@ RSpec.describe CalculationOrchestrator do
       participants: 10,
       recruitment_target: 2000,
       revised_target: nil,
+      not_yet_included_participants: 0,
     }
-  end
-  let(:ect_focussed_headings) do
-    breakdown_summary.merge({ ects: 10, mentors: 0 })
-  end
-  let(:mentor_focussed_headings) do
-    breakdown_summary.merge({ ects: 0, mentors: 10 })
   end
   let(:service_fees) do
     [
@@ -105,12 +104,6 @@ RSpec.describe CalculationOrchestrator do
       other_fees: other_fees,
     }
   end
-  let(:mentor_outcome) do
-    normal_outcome.merge(breakdown_summary: mentor_focussed_headings)
-  end
-  let(:ect_outcome) do
-    normal_outcome.merge(breakdown_summary: ect_focussed_headings)
-  end
 
   def set_precision(hash, rounding)
     with_rounding(hash) { |sub_hash, k, v| sub_hash[k] = v.round(rounding) }
@@ -166,7 +159,7 @@ RSpec.describe CalculationOrchestrator do
 
       context "when excessive uplift records are passed" do
         it "limits the amount to the capped level" do
-          results = run_calculation(aggregator: DummyAggregator)
+          results = run_calculation(aggregator: ::Finance::ECF::DummyAggregator)
           expect(results[:other_fees]).to eq(capped_uplift)
         end
       end
@@ -185,14 +178,15 @@ RSpec.describe CalculationOrchestrator do
       it "returns the total calculation" do
         expect(run_calculation).to eq(normal_outcome)
       end
-
-      it "ignores non-eligible declarations" do
-        create_list(:ect_participant_declaration, 5, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
-        expect(run_calculation).to eq(normal_outcome)
-      end
     end
 
     context "when only mentor profile declaration records available" do
+      let(:mentor_outcome) do
+        normal_outcome.merge(
+          breakdown_summary: breakdown_summary.merge({ ects: 0, mentors: 10 }),
+        )
+      end
+
       before do
         create_list(:mentor_participant_declaration, 10, :sparsity_uplift, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
       end
@@ -203,6 +197,12 @@ RSpec.describe CalculationOrchestrator do
     end
 
     context "when only ect profile declaration records available" do
+      let(:ect_outcome) do
+        normal_outcome.merge(
+          breakdown_summary: breakdown_summary.merge({ ects: 10, mentors: 0 }),
+        )
+      end
+
       before do
         create_list(:ect_participant_declaration, 10, :sparsity_uplift, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
       end
@@ -222,11 +222,28 @@ RSpec.describe CalculationOrchestrator do
         expect(run_calculation).to eq(normal_outcome)
       end
     end
+
+    context "when ineligible records available" do
+      let(:ineligible_outcome) do
+        normal_outcome.merge(
+          breakdown_summary: breakdown_summary.merge({ ects: 10, mentors: 0, not_yet_included_participants: 10, participants: 10 }),
+        )
+      end
+
+      before do
+        create_list(:ect_participant_declaration, 10, :sparsity_uplift, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+        create_list(:ect_participant_declaration, 10, :sparsity_uplift, :submitted, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+      end
+
+      it "returns the total calculation, and ineligible declarations are put in not_yet_included_participants field" do
+        expect(run_calculation).to eq(ineligible_outcome)
+      end
+    end
   end
 
 private
 
-  def run_calculation(aggregator: ParticipantEventAggregator)
+  def run_calculation(aggregator: Finance::ECF::ParticipantEligibleAggregator)
     set_precision(
       described_class.call(
         aggregator: aggregator,

@@ -1,8 +1,10 @@
 {
+  "version": "1.0",
   "name": "example",
   "uplift_target": 0.33,
   "uplift_amount": 100,
-  "recruitment_target": 2000,
+  "recruitment_target": 4500,
+  "revised_target": 4590,
   "set-up_fees": 149861,
   "band_a": {
     "max": 2000,
@@ -15,6 +17,12 @@
   },
   "band_c": {
     "min": 4001,
+    "max": 4500,
+    "per_participant": 995
+  },
+  "band_d": {
+    "min": 4501,
+    "max": 4590,
     "per_participant": 995
   }
 }

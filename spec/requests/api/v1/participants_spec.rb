@@ -3,7 +3,7 @@
 require "rails_helper"
 require "csv"
 
-RSpec.describe "Participants API", type: :request, with_feature_flags: { participant_data_api: "active" } do
+RSpec.describe "Participants API", type: :request do
   describe "GET /api/v1/participants" do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: lead_provider) }
     let(:lead_provider) { create(:lead_provider) }
@@ -258,6 +258,13 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
         it_behaves_like "a participant withdraw action endpoint" do
           let(:url) { "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw" }
           let(:params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "moved-school" } } } }
+
+          it "changes the training status of a participant to withdrawn" do
+            put url, params: params
+
+            expect(response).to be_successful
+            expect(parsed_response.dig("data", "attributes", "training_status")).to eql("withdrawn")
+          end
         end
       end
 
@@ -277,30 +284,11 @@ RSpec.describe "Participants API", type: :request, with_feature_flags: { partici
         end
       end
 
-      describe "JSON Participant Deferral" do
-        let(:parsed_response) { JSON.parse(response.body) }
-
-        it "changes the training status of a participant to deferred" do
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
-
-          expect(response).to be_successful
-
-          expect(parsed_response.dig("data", "attributes", "training_status")).to eql("deferred")
-        end
-
-        it "returns an error when the participant is already withdrawn" do
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "left-teaching-profession" } } }
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
-
-          expect(response).not_to be_successful
-        end
-
-        it "returns an error when the participant is already deferred" do
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
-
-          expect(response).not_to be_successful
-        end
+      it_behaves_like "JSON Participant Deferral endpoint", "participant" do
+        let(:url)               { "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer" }
+        let(:withdrawal_url)    { "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw" }
+        let(:params)            { { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } } }
+        let(:withdrawal_params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "left-teaching-profession" } } } }
       end
 
       describe "JSON Participant Resume" do

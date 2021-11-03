@@ -31,8 +31,8 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_SANDBOX }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_SANDBOX }}
-          TF_VAR_paas_user: ${{ secrets.GOVPAAS_SAND_USERNAME }}
-          TF_VAR_paas_password: ${{ secrets.GOVPAAS_SAND_PASSWORD }}
+          TF_VAR_paas_user: ${{ secrets.GOVPAAS_STAG_USERNAME }}
+          TF_VAR_paas_password: ${{ secrets.GOVPAAS_STAG_PASSWORD }}
           TF_VAR_statuscake_username: ${{ secrets.STATUSCAKE_USERNAME }}
           TF_VAR_statuscake_apikey: ${{ secrets.STATUSCAKE_APIKEY }}
         run: |

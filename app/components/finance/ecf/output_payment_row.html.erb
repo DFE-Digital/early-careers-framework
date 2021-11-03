@@ -1,16 +1,26 @@
 <h3 class="govuk-heading-s"><%= t("finance.ecf.bands.#{band}") %></h3>
+
+<% if band == 3 %>
+  <p><%= t("finance.output_payment.band_d_info") %></p>
+<% end %>
+
 <table class="govuk-table payment-breakdown-table">
   <tbody>
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Fee per event</th>
+      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.fee_per_participant") %></th>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds per_participant %></td>
     </tr>
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular">Number of participants </th>
+      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.participants") %></th>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= participants %></td>
     </tr>
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__cell"><%= t("finance.ecf.bands.#{band}") %> payment</th>
+      <!-- TODO: Add back payments -->
+      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.back_payment_participants") %></th>
+      <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__cell"><%=t("finance.payment") %></th>
       <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><%= number_to_pounds subtotal %></td>
     </tr>
   </tbody>

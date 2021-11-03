@@ -7,7 +7,7 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl govuk-!-margin-bottom-4">Are you sure you want to delete <%= @year_2020_form.full_name %></h1>
     <p>
-      You won't be able to undo this action and will have to input their details again
+      You won’t be able to undo this action and will have to input their details again
     </p>
 
     <%= form_for @year_2020_form, url: { action: :delete_teacher, index: params[:index] }, method: :put do |f| %>

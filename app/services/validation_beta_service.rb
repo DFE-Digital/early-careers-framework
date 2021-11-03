@@ -33,7 +33,7 @@ class ValidationBetaService
 
     School.where(id: empty_school_cohorts.select(:school_id)).includes(:induction_coordinators).find_each do |school|
       school.induction_coordinator_profiles.each do |sit|
-        next if Email.associated_with(sit).tagged_with(:fourth_request_to_add_ects_and_mentors).any?
+        next if Email.associated_with(sit).tagged_with(:fifth_request_to_add_ects_and_mentors).any?
 
         SchoolMailer.remind_fip_induction_coordinators_to_add_ects_and_mentors_email(
           induction_coordinator: sit,
@@ -112,10 +112,6 @@ class ValidationBetaService
     end
   end
 
-  def chosen_programme_and_not_in_beta(school)
-    !FeatureFlag.active?(:participant_validation, for: school) && school.chosen_programme?(Cohort.current)
-  end
-
   def participants_yet_to_validate
     ParticipantProfile::ECF
       .ecf
@@ -171,7 +167,57 @@ class ValidationBetaService
           recipient: sit.user.email,
           start_url: participant_validation_start_url,
           sign_in: sign_in_url,
+          induction_coordinator_profile: sit,
         ).deliver_later
       end
+  end
+
+  def send_sit_new_ambition_ects_and_mentors_added(path_to_csv:)
+    sign_in_url = Rails.application.routes.url_helpers.new_user_session_url(
+      host: Rails.application.config.domain,
+    )
+
+    sit_ids = []
+
+    CSV.foreach(path_to_csv, headers: true) do |row|
+      participant_email = row["email"]
+      next if participant_email.blank?
+
+      user = User.find_by(email: row["email"])
+      next if user.nil?
+
+      sit = user&.school&.induction_coordinator_profiles&.first
+
+      if sit.present?
+        next if sit_ids.include?(sit.id) || Email.associated_with(sit).tagged_with(:sit_new_ambition_participants_added).any?
+
+        SchoolMailer.sit_new_ambition_ects_and_mentors_added_email(
+          induction_coordinator_profile: sit,
+          school_name: user.school.name,
+          sign_in_url: sign_in_url,
+        ).deliver_later
+        sit_ids << sit.id
+      else
+        Rails.logger.warn("Not sending email to SIT of #{participant_email}")
+      end
+    end
+    Rails.logger.info("Sent emails to #{sit_ids.count} induction coordinators")
+  end
+
+  def send_ineligible_previous_induction_batch(batch_size: 200)
+    sent = 0
+    ECFParticipantEligibility.ineligible_status.previous_induction_reason.find_each do |eligibility|
+      next if Email.tagged_with(:ineligible_participant).associated_with(eligibility.participant_profile).any?
+      next if eligibility.participant_profile.withdrawn_record?
+      next unless eligibility.participant_profile.school_cohort.full_induction_programme?
+
+      tutor_email = eligibility.participant_profile.school.contact_email
+      IneligibleParticipantMailer.ect_previous_induction_email(
+        induction_tutor_email: tutor_email,
+        participant_profile: eligibility.participant_profile,
+      ).deliver_later
+      sent += 1
+      break if sent >= batch_size
+    end
   end
 end

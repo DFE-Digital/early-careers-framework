@@ -9,7 +9,12 @@ class StoreParticipantEligibility < BaseService
     update_and_store_eligibility_values!
 
     eligibility_triggers! if changed_to_eligible?
-    if (changed_to_ineligible? || changed_ineligible_reason?) && FeatureFlag.active?(:eligibility_notifications)
+
+    if changed_to_eligible? && changed_from_ineligible? && changed_from_previous_induction? && doing_fip?
+      send_now_eligible_email
+    end
+
+    if (changed_to_ineligible? || changed_ineligible_reason?) && doing_fip? && FeatureFlag.active?(:eligibility_notifications)
       send_ineligible_notification_email
     end
 
@@ -42,8 +47,29 @@ private
     @participant_eligibility.eligible_status? && @previous_status != "eligible"
   end
 
+  def changed_from_ineligible?
+    @previous_status == "ineligible"
+  end
+
+  def changed_from_previous_induction?
+    @previous_reason == "previous_induction"
+  end
+
   def changed_ineligible_reason?
     @participant_eligibility.ineligible_status? && @participant_eligibility.reason != @previous_reason
+  end
+
+  def doing_fip?
+    @participant_eligibility.participant_profile.school_cohort.full_induction_programme?
+  end
+
+  def send_now_eligible_email
+    participant_profile.school_cohort.school.induction_coordinators.each do |induction_tutor|
+      IneligibleParticipantMailer.ect_now_eligible_previous_induction_email(
+        induction_tutor_email: induction_tutor.email,
+        participant_profile: participant_profile,
+      ).deliver_later
+    end
   end
 
   def send_ineligible_notification_email
