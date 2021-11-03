@@ -74,7 +74,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
                   "/api/v1/participants/npq/{id}/resume",
                   "#/components/schemas/NPQParticipantResumeRequest",
                   "#/components/schemas/NPQParticipantResponse",
-                  "NQP Participant" do
+                  "NPQ Participant" do
     let(:participant) { npq_application }
     let(:attributes) { { course_identifier: npq_application.npq_course.identifier } }
     before do
