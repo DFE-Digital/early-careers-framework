@@ -208,7 +208,6 @@ class ValidationBetaService
           .where(school_cohorts: { cohort_id: Cohort.current.id, opt_out_of_updates: false })
           .merge(Partnership.active)
           .find_each do |school|
-
           participants = school
             .school_cohorts
             .find_by(cohort_id: Cohort.current.id)
