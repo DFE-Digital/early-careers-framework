@@ -35,6 +35,21 @@ module ManageTrainingSteps
     @school_cohort = create :school_cohort, induction_programme_choice: induction_programme_choice, school: create(:school, name: "Test School")
   end
 
+  def given_there_are_multiple_schools_and_an_induction_coordinator
+    cohort = create :cohort, :current
+
+    first_school = create :school, name: "Test School 1", slug: "111111-test-school-1", urn: "111111"
+    create :school_cohort, :cip, school: first_school, cohort: cohort
+
+    second_school = create :school, name: "Test School 2", slug: "111112-test-school-2", urn: "111112"
+    create :school_cohort, :cip, school: second_school, cohort: cohort
+
+    create :user, :induction_coordinator, email: "school-leader@example.com", schools: [first_school, second_school]
+
+    third_school = FactoryBot.create(:school, name: "Test School 3", slug: "111113-test-school-3", urn: "111113")
+    create :school_cohort, :cip, school: third_school, cohort: cohort
+  end
+
   def and_i_have_added_an_ect
     @participant_profile_ect = create(:participant_profile, :ect, user: create(:user, full_name: "Sally Teacher"), school_cohort: @school_cohort)
   end
@@ -75,6 +90,10 @@ module ManageTrainingSteps
     @details_being_checked_ect.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
   end
 
+  def then_i_am_on_schools_page
+    visit "/schools"
+  end
+
   def then_i_am_taken_to_add_mentor_page
     expect(page).to have_selector("h1", text: "Who will mentor")
     expect(page).to have_text("You can tell us later if you’re not sure")
@@ -97,6 +116,12 @@ module ManageTrainingSteps
     click_on "Change induction programme choice"
   end
 
+  def and_i_should_see_multiple_schools
+    expect(page).to have_text("Test School 1")
+    expect(page).to have_text("Test School 2")
+    expect(page).not_to have_text("Test School 3")
+  end
+
   def given_there_is_a_school_that_has_chosen_design_our_own_for_2021
     @cohort = create(:cohort, start_year: 2021)
     @school = create(:school, name: "Design Our Own Programme School")
@@ -109,6 +134,36 @@ module ManageTrainingSteps
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "no_early_career_teachers")
   end
 
+  def given_i_click_on_test_school_1
+    click_on "Test School 1"
+  end
+
+  def given_i_click_on_test_school_2
+    click_on "Test School 2"
+  end
+
+  def given_i_click_on_manage_your_schools
+    click_on "Manage your schools"
+  end
+
+  def then_i_should_be_on_school_cohorts_1_page
+    expect(current_path).to eq("/schools/111111-test-school-1")
+  end
+
+  def then_i_should_be_on_school_cohorts_2_page
+    expect(current_path).to eq("/schools/111112-test-school-2")
+  end
+
+  def and_i_should_see_school_1_data
+    expect(page).to have_text("Test School 1")
+    expect(page).not_to have_text("Test School 2")
+  end
+
+  def and_i_should_see_school_2_data
+    expect(page).to have_text("Test School 2")
+    expect(page).not_to have_text("Test School 1")
+  end
+
   def and_i_am_signed_in_as_an_induction_coordinator
     @induction_coordinator_profile = create(:induction_coordinator_profile, schools: [@school_cohort.school])
     privacy_policy = create(:privacy_policy)
@@ -116,6 +171,11 @@ module ManageTrainingSteps
     sign_in_as @induction_coordinator_profile.user
     set_participant_data
     set_updated_participant_data
+  end
+
+  def and_i_am_signed_in_as_an_induction_coordinator_for_multiple_schools
+    induction_coordinator = User.find_by(email: "school-leader@example.com")
+    sign_in_as induction_coordinator
   end
 
   def and_see_the_other_programs_before_choosing(labels:, choice:, snapshot:)
