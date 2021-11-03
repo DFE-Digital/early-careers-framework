@@ -13,7 +13,7 @@ module Finance
         )
 
         @payment_period = helpers.payment_period
-        @cutoff_date = "On #{helpers.cutoff_date}"
+        @cutoff_date = helpers.cutoff_date
       end
 
       def payable
@@ -27,7 +27,7 @@ module Finance
         )
 
         @payment_period = helpers.payment_period_payable
-        @cutoff_date = "On #{helpers.cutoff_date_payable}"
+        @cutoff_date = helpers.cutoff_date_payable
 
         render :show
       end
