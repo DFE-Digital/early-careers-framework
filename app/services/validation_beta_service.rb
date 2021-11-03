@@ -186,7 +186,7 @@ class ValidationBetaService
     )
 
     InductionCoordinatorProfile
-      .joins(schools: [:active_ecf_participant_profiles, :partnerships])
+      .joins(schools: %i[active_ecf_participant_profiles partnerships])
       .includes(schools: { active_ecf_participant_profiles: %i[ecf_participant_eligibility ecf_participant_validation_data] })
       .where(
         school_cohorts: {
@@ -198,7 +198,7 @@ class ValidationBetaService
         },
         ecf_participant_validation_data: {
           participant_profile_id: nil,
-        }
+        },
       )
       .merge(Partnership.active)
       .distinct
@@ -208,7 +208,6 @@ class ValidationBetaService
           .where(school_cohorts: { cohort_id: Cohort.current.id })
           .merge(Partnership.active)
           .find_each do |school|
-
           participants = school
             .school_cohorts
             .find_by(cohort_id: Cohort.current.id)
@@ -221,13 +220,13 @@ class ValidationBetaService
             induction_coordinator_profile: sit,
             participant_name_list: participant_name_list,
             participant_start_url: participant_start_url,
-            sign_in_url: sign_in_url
+            sign_in_url: sign_in_url,
           ).deliver_later
 
           participants.each do |participant_profile|
             ParticipantValidationMailer.fip_participant_validation_deadline_reminder_email(
               participant_profile: participant_profile,
-              participant_start_url: participant_start_url
+              participant_start_url: participant_start_url,
             ).deliver_later
           end
         end
