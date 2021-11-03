@@ -13,9 +13,9 @@
     <h1 class="govuk-heading-xl"><%= @breakdown[:breakdown_summary][:name] %></h1>
     <p class="govuk-caption-m govuk-!-margin-0">Payment of</p>
     <h2 class="govuk-heading-xl govuk-!-margin-0"><%= number_to_pounds total_payment(@breakdown) + total_vat(@breakdown, @ecf_lead_provider) %></h2>
-    <p class="govuk-caption-m govuk-!-margin-top-0">On <%= @cutoff_date %></p>
+    <p class="govuk-caption-m govuk-!-margin-top-0">On <%= @payment_date.to_s(:govuk) %></p>
 
-    <%= render Finance::ECF::BreakdownSummary.new(breakdown_summary: @breakdown, lead_provider: @ecf_lead_provider, payment_period: @payment_period) %>
+    <%= render Finance::ECF::BreakdownSummary.new(breakdown_summary: @breakdown, lead_provider: @ecf_lead_provider, deadline_date: @deadline_date) %>
 
     <%= govuk_accordion do |accordion| %>
       <%= accordion.section heading_text: t("finance.service_fee.caption") do %>

@@ -6,6 +6,7 @@ RSpec.feature "Finance users payment breakdowns", type: :feature, js: true do
   scenario "Can get to ECF payment breakdown page for a provider" do
     given_i_am_logged_in_as_a_finance_user
     and_there_is_ecf_provider_with_contract
+    and_there_is_a_schedule
     then_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named("Finance dashboard")
 
@@ -32,6 +33,7 @@ RSpec.feature "Finance users payment breakdowns", type: :feature, js: true do
   scenario "Can get to ECF payment breakdown page for payable declarations" do
     given_i_am_logged_in_as_a_finance_user
     and_there_is_ecf_provider_with_contract
+    and_there_is_a_schedule
     visit "/finance/ecf/payment_breakdowns/cffd2237-c368-4044-8451-68e4a4f73369/payable"
     and_i_click_open_all_button
     then_the_page_should_be_accessible
@@ -39,6 +41,10 @@ RSpec.feature "Finance users payment breakdowns", type: :feature, js: true do
   end
 
 private
+
+  def and_there_is_a_schedule
+    create(:schedule)
+  end
 
   def and_there_is_ecf_provider_with_contract
     create(:lead_provider, :contract, name: "Test provider", id: "cffd2237-c368-4044-8451-68e4a4f73369")
