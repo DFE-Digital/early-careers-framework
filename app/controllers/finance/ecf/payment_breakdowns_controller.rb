@@ -54,8 +54,6 @@ module Finance
         payable_milestone.milestone_date
       end
 
-      ###
-
       def current_milestone
         Finance::Milestone
           .joins(:schedule)
