@@ -11,7 +11,7 @@ class StoreValidationResult < BaseService
 
   def call
     store_validation_data!
-    return unless dqt_response.present?
+    return if dqt_response.blank?
 
     eligibility = store_eligibility_data!(dqt_response)
     store_trn_on_teacher_profile!(dqt_response[:trn])
@@ -41,7 +41,7 @@ private
         previous_participation: dqt_data[:previous_participation],
         previous_induction: dqt_data[:previous_induction],
         different_trn: different_trn?(dqt_data[:trn]),
-      }
+      },
     )
   end
 

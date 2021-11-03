@@ -11,7 +11,7 @@ RSpec.describe StoreValidationResult do
     )
   end
 
-  let(:trn_on_profile) { '11111' }
+  let(:trn_on_profile) { "11111" }
   let(:teacher_profile) { create(:teacher_profile, trn: trn_on_profile) }
   let(:participant_profile) { create(:participant_profile, :ect, teacher_profile: teacher_profile) }
 

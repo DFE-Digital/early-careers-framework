@@ -48,7 +48,6 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
       before { form.dob = dob }
 
       context "when both trn and date of birth are present" do
-
         it "attempts to validate the participant" do
           form.complete_step(:trn, trn: Array.new(rand(5..7)) { rand(1..9) }.join)
 
@@ -56,7 +55,7 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
             hash_including(
               date_of_birth: form.dob,
               trn: form.trn,
-            )
+            ),
           )
         end
       end
@@ -95,7 +94,6 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
       before { form.dob = dob }
 
       context "when date of birth is present" do
-
         it "attempts to validate the participant" do
           form.complete_step(:nino, nino: "AB123456C")
 
@@ -112,7 +110,7 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
         let(:dob) { nil }
 
         it "does not attempt to validate the participant" do
-          form.complete_step(:nino, nino: "AB123456C" )
+          form.complete_step(:nino, nino: "AB123456C")
           expect(ParticipantValidationService).not_to have_received(:validate)
         end
       end

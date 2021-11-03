@@ -18,7 +18,7 @@ RSpec.describe "Participant validations", with_feature_flags: { eligibility_noti
     expect(response).to redirect_to participants_validation_step_path(:trn)
   end
 
-  Participants::ParticipantValidationForm.steps.keys.each do |step|
+  Participants::ParticipantValidationForm.steps.each_key do |step|
     describe "#{step} step" do
       before do
         get participants_validation_path
