@@ -35,4 +35,8 @@ Sentry.init do |config|
       0.0 # We don't care about performance of other things
     end
   end
+
+  config.excluded_exceptions = Sentry::Configuration::IGNORE_DEFAULT + [
+    "Pundit::NotAuthorizedError",
+  ]
 end
