@@ -19,7 +19,7 @@ module Finance
       def payable
         @ecf_lead_provider = lead_provider_scope.find(params[:id])
 
-        @breakdown = CalculationOrchestrator.call(
+        @breakdown = Finance::ECF::CalculationOrchestrator.call(
           aggregator: ParticipantPayableAggregator,
           cpd_lead_provider: @ecf_lead_provider.cpd_lead_provider,
           contract: @ecf_lead_provider.call_off_contract,
