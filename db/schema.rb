@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_19_142759) do
+ActiveRecord::Schema.define(version: 2021_10_21_121416) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -463,6 +463,22 @@ ActiveRecord::Schema.define(version: 2021_10_19_142759) do
     t.index ["npq_course_id"], name: "index_npq_applications_on_npq_course_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_applications_on_npq_lead_provider_id"
     t.index ["user_id"], name: "index_npq_applications_on_user_id"
+  end
+
+  create_table "npq_contracts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.jsonb "raw"
+    t.string "version", default: "0.0.1"
+    t.uuid "npq_lead_provider_id", null: false
+    t.integer "recruitment_target"
+    t.string "course_identifier"
+    t.integer "service_fee_installments"
+    t.integer "service_fee_percentage", default: 40
+    t.decimal "per_participant"
+    t.integer "number_of_payment_periods"
+    t.integer "output_payment_percentage", default: 60
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["npq_lead_provider_id"], name: "index_npq_contracts_on_npq_lead_provider_id"
   end
 
   create_table "npq_courses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

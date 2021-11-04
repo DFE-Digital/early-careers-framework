@@ -13,7 +13,12 @@
       <li>listen to most of the service using a screen reader (including the most recent versions of JAWS, NVDA and VoiceOver)</li>
     </ul>
     <p class="govuk-body">We have also made the service text as simple as possible to understand.</p>
-    <p class="govuk-body"><%= govuk_link_to 'AbilityNet', "https://mcmw.abilitynet.org.uk/" %> has advice on making your device easier to use if you have an access need.</p>
+    <p class="govuk-body">
+      <%= govuk_link_to 'AbilityNet (opens in a new tab)',
+          "https://mcmw.abilitynet.org.uk/",
+          target: :_blank,
+          rel: "noopener noreferrer" %> has advice on making your device easier to use if you have an access need.
+    </p>
 
     <h2 class="govuk-heading-l">How accessible this service is</h2>
     <p class="govuk-body">All parts of this service are fully accessible.</p>
@@ -23,17 +28,30 @@
     <p class="govuk-body">If you find any problems not listed on this page or think we are not meeting accessibility requirements, contact us:</p>
     <p class="govuk-body">Email:<br>
     <%= render MailToSupportComponent.new %></p>
-    <p class="govuk-body"><%= govuk_link_to 'Read tips on contacting organisations about inaccessible websites', "http://www.w3.org/WAI/users/inaccessible" %></p>
-
+    <p class="govuk-body">
+      <%= govuk_link_to 'Read tips on contacting organisations about inaccessible websites (opens in a new tab)',
+          "http://www.w3.org/WAI/users/inaccessible",
+          target: :_blank,
+          rel: "noopener noreferrer" %>
+    </p>
     <h2 class="govuk-heading-l">Enforcement procedure</h2>
     <p class="govuk-body">The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the 'accessibility regulations').</p>
-    <p class="govuk-body">If you are not happy with how we respond to your complaint, <%= govuk_link_to 'contact the Equality Advisory and Support Service (EASS)', "https://www.equalityadvisoryservice.com/" %></p>
+    <p class="govuk-body">If you are not happy with how we respond to your complaint,
+      <%= govuk_link_to 'contact the Equality Advisory and Support Service (EASS) (opens in a new tab)',
+          "https://www.equalityadvisoryservice.com/",
+          target: :_blank,
+          rel: "noopener noreferrer" %>
+    </p>
 
     <h2 class="govuk-heading-l">Technical information about this service’s accessibility</h2>
     <p class="govuk-body">The Department for Education is committed to making this service accessible, in accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018.</p>
 
     <h2 class="govuk-heading-l">Compliance status</h2>
-    <p class="govuk-body">This service is fully compliant with the <%= govuk_link_to 'Web Content Accessibility Guidelines version 2.1) AA standard.', "https://www.w3.org/TR/WCAG21/" %>
+    <p class="govuk-body">This service is fully compliant with the
+      <%= govuk_link_to 'Web Content Accessibility Guidelines version 2.1) AA standard (opens in a new tab).',
+          "https://www.w3.org/TR/WCAG21/",
+          target: :_blank,
+          rel: "noopener noreferrer"  %>
     <p class="govuk-body">There may be accessibility issues we have not found yet. If you find any please contact us so we can continue to improve the services we provide.</p>
 
     <h3 class="govuk-heading-m">Disproportionate burden</h3>

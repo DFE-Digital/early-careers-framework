@@ -1,34 +1,3 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t 'hello'
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t('hello') %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# The following keys must be escaped otherwise they will not be retrieved by
-# the default I18n backend:
-#
-# true, false, on, off, yes, no
-#
-# Instead, surround them with single quotes.
-#
-# en:
-#   'true': 'foo'
-#
-# To learn more, please read the Rails Internationalization guide
-# available at https://guides.rubyonrails.org/i18n.html.
-
 en:
   currency: "£"
   event_types:
@@ -70,7 +39,6 @@ en:
   declaration_before_milestone_start: "The property '#/declaration_date' can not be before milestone start"
   declaration_after_milestone_cutoff: "The property '#/declaration_date' can not be after milestone end"
   invalid_data_structure: correct json data structure required. See API docs for reference
-  npq_application_already_accepted: This NPQ application has already been accepted
   estimate_participants_default_message: &default_message "Enter a number between 0 and 1000"
   estimate_participants_defaults: &defaults
     not_a_number: *default_message
@@ -261,6 +229,11 @@ en:
             estimated_teacher_count:
               <<: *defaults
               blank: "enter your expected number of teachers"
+        npq_application:
+          attributes:
+            lead_provider_approval_status:
+              has_another_accepted_application: The participant already has an accepted application for this course
+              has_already_been_accepted: This NPQ application has already been accepted
   page_titles:
     lead_providers:
       guidance:

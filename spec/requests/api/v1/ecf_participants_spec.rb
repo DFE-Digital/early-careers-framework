@@ -103,6 +103,7 @@ RSpec.describe "Participants API", type: :request do
               :sparsity_uplift,
               :training_status,
               :schedule_identifier,
+              :updated_at,
             ).exactly)
         end
 
@@ -219,7 +220,8 @@ RSpec.describe "Participants API", type: :request do
                pupil_premium_uplift
                sparsity_uplift
                training_status
-               schedule_identifier],
+               schedule_identifier
+               updated_at],
           )
         end
 

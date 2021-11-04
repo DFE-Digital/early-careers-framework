@@ -34,6 +34,8 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
     end
 
     context "when authorized" do
+      let(:fake_logger) { double("logger", info: nil) }
+
       before do
         default_headers[:Authorization] = bearer_token
         default_headers[:CONTENT_TYPE] = "application/json"
@@ -90,6 +92,16 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
         expect(response.status).to eq 400
         expect(parsed_response["id"]).to eq(original_id)
+      end
+
+      it "logs passing schema validation" do
+        allow(Rails).to receive(:logger).and_return(fake_logger)
+
+        params = build_params(valid_params)
+        post "/api/v1/participant-declarations", params: params
+
+        expect(response.status).to eq 200
+        expect(fake_logger).to have_received(:info).with("Passed schema validation").ordered
       end
 
       context "when lead provider has no access to the user" do
@@ -184,6 +196,20 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         post "/api/v1/participant-declarations", params: {}.to_json
         expect(response.status).to eq 400
         expect(response.body).to eq({ errors: [{ title: "Bad request", detail: I18n.t(:invalid_data_structure) }] }.to_json)
+      end
+
+      context "when it fails schema validation" do
+        let(:params) { build_params(valid_params.merge(foo: "bar")) }
+
+        it "logs info to rails logger" do
+          allow(Rails).to receive(:logger).and_return(fake_logger)
+
+          post "/api/v1/participant-declarations", params: params
+
+          expect(response.status).to eql(200)
+          expect(fake_logger).to have_received(:info).with("Failed schema validation for #{request.body.read}").ordered
+          expect(fake_logger).to have_received(:info).with(instance_of(Array)).ordered
+        end
       end
     end
 
@@ -365,7 +391,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
     it "returns the correct headers" do
       expect(parsed_response.headers).to match_array(
-        %w[id course_identifier declaration_date declaration_type participant_id state eligible_for_payment voided],
+        %w[id course_identifier declaration_date declaration_type participant_id state eligible_for_payment voided updated_at],
       )
     end
 
@@ -379,6 +405,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       expect(participant_declaration_one_row["voided"]).to eql participant_declaration_one.voided?.to_s
       expect(participant_declaration_one_row["state"]).to eql participant_declaration_one.state.to_s
       expect(participant_declaration_one_row["participant_id"]).to eql participant_declaration_one.participant_profile.user.id
+      expect(participant_declaration_one_row["updated_at"]).to eql participant_declaration_one.updated_at.rfc3339
     end
 
     it "ignores pagination parameters" do
@@ -417,6 +444,7 @@ private
         "state" => state,
         "eligible_for_payment" => state == "eligible",
         "voided" => state == "voided",
+        "updated_at" => declaration.updated_at.rfc3339,
       },
     }
   end

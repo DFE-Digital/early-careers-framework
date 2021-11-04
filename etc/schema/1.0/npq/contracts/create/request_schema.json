@@ -1,0 +1,47 @@
+{
+  "$id": "https://digital.education.gov.uk/schema/ecf/contracts/create/request_schema.json/#",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "course_identifier": {
+      "type": "enum",
+      "values": [
+        "npq-additional-support-offer",
+        "npq-leading-teaching",
+        "npq-leading-behaviour-and-culture",
+        "npq-leading-teacher-development",
+        "npq-senior-leadership",
+        "npq-headship",
+        "npq-executive-leadership"
+      ]
+    },
+    "recruitment_target": {
+      "type": "integer"
+    },
+    "set-up_fees": {
+      "type": "number"
+    },
+    "service_fee_installments": {
+      "type": "integer"
+    },
+    "service_fee_percentage": {
+      "type": "integer"
+    },
+    "per_participant": {
+      "type": "number"
+    },
+    "number_of_payment_periods": {
+      "type": "integer"
+    },
+    "output_payment_percentage": {
+      "type": "integer"
+    }
+  },
+  "required": [
+    "course_identifier",
+    "recruitment_target",
+    "service_fee_installments",
+    "per_participant",
+    "number_of_payment_periods"
+  ]
+}

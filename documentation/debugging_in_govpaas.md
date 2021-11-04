@@ -42,3 +42,22 @@ Then,
 and finally
 
 `/usr/local/bin/bundle exec rails console`
+
+### Other SSH access (SCP)
+Find the instance guid
+
+`GUID=$(cf app ecf-production-worker --guid)`
+
+Generate a single use login code
+
+`cf ssh-code`
+
+Perform the SCP command
+
+`scp -P 2222 -o StrictHostKeyChecking=no -o User=cf:${GUID}/0 [from] [to]`
+
+e.g.
+
+`scp -P 2222 -o StrictHostKeyChecking=no -o User=cf:${GUID}/0 ssh.london.cloud.service.gov.uk:/app/*.csv .`
+
+In cases where the is more than one instance, change the `/0` to match the desired instance number

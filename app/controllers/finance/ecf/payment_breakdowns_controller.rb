@@ -6,12 +6,11 @@ module Finance
       def show
         @ecf_lead_provider = lead_provider_scope.find(params[:id])
 
-        @breakdown = CalculationOrchestrator.call(
+        @breakdown = Finance::ECF::CalculationOrchestrator.call(
           cpd_lead_provider: @ecf_lead_provider.cpd_lead_provider,
           contract: @ecf_lead_provider.call_off_contract,
           event_type: :started,
         )
-
         @cutoff_date = "On #{helpers.cutoff_date}"
       end
 

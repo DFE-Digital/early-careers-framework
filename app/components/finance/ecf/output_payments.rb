@@ -9,16 +9,21 @@ module Finance
         output_payments.map { |params| params[:participants] }.inject(&:+)
       end
 
+      def not_yet_included_participants
+        breakdown_summary[:not_yet_included_participants]
+      end
+
       def subtotal
         output_payments.map { |params| params[:subtotal] }.inject(&:+)
       end
 
     private
 
-      attr_reader :output_payments
+      attr_reader :output_payments, :breakdown_summary
 
-      def initialize(output_payments:)
+      def initialize(output_payments:, breakdown_summary:)
         @output_payments = output_payments
+        @breakdown_summary = breakdown_summary
       end
     end
   end
