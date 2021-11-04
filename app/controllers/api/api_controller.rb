@@ -13,7 +13,6 @@ module Api
     rescue_from ActiveRecord::RecordNotUnique, with: :bad_request_response
     rescue_from ActiveRecord::RecordInvalid, with: :invalid_transition
     rescue_from Api::Errors::InvalidTransitionError, with: :invalid_transition
-    rescue_from Api::Errors::NPQApplicationAlreadyAcceptedError, with: :invalid_transition
 
     def append_info_to_payload(payload)
       super

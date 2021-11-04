@@ -34,6 +34,8 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
     end
 
     context "when authorized" do
+      let(:fake_logger) { double("logger", info: nil) }
+
       before do
         default_headers[:Authorization] = bearer_token
         default_headers[:CONTENT_TYPE] = "application/json"
@@ -90,6 +92,16 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
         expect(response.status).to eq 400
         expect(parsed_response["id"]).to eq(original_id)
+      end
+
+      it "logs passing schema validation" do
+        allow(Rails).to receive(:logger).and_return(fake_logger)
+
+        params = build_params(valid_params)
+        post "/api/v1/participant-declarations", params: params
+
+        expect(response.status).to eq 200
+        expect(fake_logger).to have_received(:info).with("Passed schema validation").ordered
       end
 
       context "when lead provider has no access to the user" do
@@ -184,6 +196,20 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         post "/api/v1/participant-declarations", params: {}.to_json
         expect(response.status).to eq 400
         expect(response.body).to eq({ errors: [{ title: "Bad request", detail: I18n.t(:invalid_data_structure) }] }.to_json)
+      end
+
+      context "when it fails schema validation" do
+        let(:params) { build_params(valid_params.merge(foo: "bar")) }
+
+        it "logs info to rails logger" do
+          allow(Rails).to receive(:logger).and_return(fake_logger)
+
+          post "/api/v1/participant-declarations", params: params
+
+          expect(response.status).to eql(200)
+          expect(fake_logger).to have_received(:info).with("Failed schema validation for #{request.body.read}").ordered
+          expect(fake_logger).to have_received(:info).with(instance_of(Array)).ordered
+        end
       end
     end
 

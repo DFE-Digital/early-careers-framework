@@ -78,8 +78,6 @@ module Participants
     step :manual_check
     step :ineligible
 
-    step :result
-
     def trn=(value)
       super(value&.squish)
     end

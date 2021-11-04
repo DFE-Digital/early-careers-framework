@@ -25,6 +25,7 @@ class SchoolMailer < ApplicationMailer
   PARTNERED_SCHOOL_INVITE_SIT_EMAIL_TEMPLATE = "8cac177e-b094-4a00-9179-94fadde8ced0"
   UNPARTNERED_CIP_SIT_ADD_PARTICIPANTS_EMAIL_TEMPLATE = "ebc96223-c2ea-416e-8d3e-1f591bbd2f98"
   SIT_NEW_AMBITION_ECTS_AND_MENTORS_ADDED_TEMPLATE = "90d86c1b-2dca-4cca-9dcb-5940e7f28577"
+  SIT_FIP_PARTICIPANT_VALIDATION_DEADLINE_REMINDER_TEMPLATE = "48f63205-a8d9-49a2-a76c-93d48ec9b23b"
 
   # This email is currently (30/09/2021) only used for manually sent chaser emails
   def remind_induction_coordinator_to_setup_cohort_email(induction_coordinator_profile:, school_name:, campaign: nil)
@@ -387,5 +388,20 @@ class SchoolMailer < ApplicationMailer
         school_name: school_name,
       },
     ).tag(:sit_new_ambition_participants_added).associate_with(induction_coordinator_profile, as: :induction_coordinator)
+  end
+
+  def sit_fip_participant_validation_deadline_reminder_email(induction_coordinator_profile:, participant_name_list:, participant_start_url:, sign_in_url:)
+    template_mail(
+      SIT_FIP_PARTICIPANT_VALIDATION_DEADLINE_REMINDER_TEMPLATE,
+      to: induction_coordinator_profile.user.email,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        name: induction_coordinator_profile.user.full_name,
+        participant_name_list: participant_name_list,
+        participant_start: participant_start_url,
+        sign_in: sign_in_url,
+      },
+    ).tag(:sit_fip_participant_validation_deadline_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator)
   end
 end
