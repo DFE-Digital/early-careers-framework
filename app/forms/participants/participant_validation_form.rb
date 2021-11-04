@@ -11,6 +11,7 @@ module Participants
     attribute :participant_profile_id
     attribute :eligibility
     attribute :dqt_response
+    attribute :attempts, default: 0
 
     step :trn, update: true do
       attribute :trn, :string
@@ -102,10 +103,15 @@ module Participants
         },
       )
 
+      self.attempts += 1
+      store_analytics!
+
       return self.eligibility = :no_match if dqt_response.blank?
 
       eligibility_record = store_validation_result!
       self.eligibility = eligibility_record.status.to_sym
+
+
     end
 
     def store_validation_result!
@@ -119,6 +125,15 @@ module Participants
         },
         dqt_response: dqt_response,
       )
+    end
+
+    def store_analytics!
+      Analytics::ECFValidationService.record_validation(
+        participant_profile: participant_profile,
+        real_time_attempts: attempts,
+        real_time_success: dqt_response.present?,
+        nino_entered: nino.present?,
+        )
     end
 
     def participant_profile
