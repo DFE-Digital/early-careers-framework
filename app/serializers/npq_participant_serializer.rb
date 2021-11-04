@@ -21,6 +21,10 @@ class NPQParticipantSerializer
     object.teacher_profile&.trn
   end
 
+  attribute(:updated_at) do |object|
+    object.updated_at.rfc3339
+  end
+
   def self.provider_matches(profile, params)
     profile.npq_application&.npq_lead_provider&.cpd_lead_provider == params[:cpd_lead_provider]
   end
