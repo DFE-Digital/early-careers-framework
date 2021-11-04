@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
-require_relative "./participant_validation_steps"
-
 RSpec.feature "ECT participant validation journey", with_feature_flags: { eligibility_notifications: "active" }, type: :feature, js: true do
-  include ParticipantValidationSteps
-
-  let(:school_cohort) { create :school_cohort, :fip }
-  let(:participant_profile) { create :participant_profile, :ect, school_cohort: school_cohort }
+  let(:school) { create :school, name: "Awesome school" }
+  let(:school_cohort) { create :school_cohort, :fip, school: school }
+  let(:user) { create :user, full_name: "Lena zavroni" }
+  let(:teacher_profile) { create :teacher_profile, user: user }
+  let(:participant_profile) { create :participant_profile, :ect, school_cohort: school_cohort, teacher_profile: teacher_profile }
   before { set_dtq_validation_result nil }
 
   scenario "Participant validates their details with trn" do
