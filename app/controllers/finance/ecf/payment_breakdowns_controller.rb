@@ -12,8 +12,8 @@ module Finance
           event_type: :started,
         )
 
-        @payment_date = current_payment_date
-        @deadline_date = current_deadline_date
+        @payment_date = current_milestone.payment_date
+        @deadline_date = current_milestone.milestone_date
       end
 
       def payable
@@ -26,8 +26,8 @@ module Finance
           event_type: :started,
         )
 
-        @payment_date = payable_payment_date
-        @deadline_date = payable_deadline_date
+        @payment_date = payable_milestone.payment_date
+        @deadline_date = payable_milestone.milestone_date
 
         render :show
       end
@@ -39,35 +39,19 @@ module Finance
       end
 
       def payable_milestone
-        Finance::Milestone
+        @payable_milestone ||= Finance::Milestone
           .joins(:schedule)
           .where(schedule: { type: "Finance::Schedule::ECF" })
           .order(payment_date: :asc)
           .find { |milestone| milestone.payment_date >= Time.zone.today }
       end
 
-      def payable_payment_date
-        payable_milestone.payment_date
-      end
-
-      def payable_deadline_date
-        payable_milestone.milestone_date
-      end
-
       def current_milestone
-        Finance::Milestone
+        @current_milestone ||= Finance::Milestone
           .joins(:schedule)
           .where(schedule: { type: "Finance::Schedule::ECF" })
           .order(payment_date: :asc)
           .find { |milestone| milestone.milestone_date >= Time.zone.today }
-      end
-
-      def current_payment_date
-        current_milestone.payment_date
-      end
-
-      def current_deadline_date
-        current_milestone.milestone_date
       end
     end
   end
