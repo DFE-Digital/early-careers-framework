@@ -108,8 +108,6 @@ module Participants
 
       eligibility_record = store_validation_result!
       self.eligibility = eligibility_record.status.to_sym
-
-
     end
 
     def store_validation_result!
@@ -131,7 +129,7 @@ module Participants
         real_time_attempts: attempts,
         real_time_success: dqt_response.present?,
         nino_entered: nino.present?,
-        )
+      )
     end
 
     def participant_profile
