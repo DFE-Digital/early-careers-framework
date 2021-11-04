@@ -299,6 +299,17 @@ RSpec.describe "Participants API", type: :request do
           end
         end
       end
+
+      it_behaves_like "JSON Participant Resume endpoint", "participant" do
+        let(:url)               { "/api/v1/participants/ecf/#{early_career_teacher_profile.user.id}/resume" }
+        let(:withdrawal_url)    { "/api/v1/participants/ecf/#{early_career_teacher_profile.user.id}/withdraw" }
+        let(:params)            { { data: { attributes: { course_identifier: "ecf-induction" } } } }
+        let(:withdrawal_params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "left-teaching-profession" } } } }
+        before do
+          put "/api/v1/participants/ecf/#{early_career_teacher_profile.user.id}/defer",
+              params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
+        end
+      end
     end
 
     context "when unauthorized" do

@@ -365,6 +365,55 @@
         }
       }
     },
+    "/api/v1/participants/npq/{id}/resume": {
+      "put": {
+        "summary": "Notify that a participant is resuming their course",
+        "operationId": "participant",
+        "tags": [
+          "NPQ Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NPQParticipantResumeRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant to resume",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The participant being resumed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NPQParticipantResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/participants/npq/{id}/withdraw": {
       "put": {
         "summary": "Withdrawn a participant from a course",
@@ -865,6 +914,55 @@
         }
       }
     },
+    "/api/v1/participants/ecf/{id}/resume": {
+      "put": {
+        "summary": "Notify that a participant is resuming their course",
+        "operationId": "participant",
+        "tags": [
+          "ECF Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantResumeRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant to resume",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The participant being resumed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/participants/ecf/{id}/withdraw": {
       "put": {
         "summary": "Notify that an ECF participant has withdrawn from their course",
@@ -965,7 +1063,7 @@
     },
     "/api/v1/participants/{id}/resume": {
       "put": {
-        "summary": "Notify that an ECF participant is resuming their course",
+        "summary": "Notify that a participant is resuming their course",
         "operationId": "participant",
         "tags": [
           "ECF Participant"
@@ -1000,7 +1098,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The ECF participant being resumed",
+            "description": "The participant being resumed",
             "content": {
               "application/json": {
                 "schema": {
@@ -2513,6 +2611,58 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/NPQParticipant"
+          }
+        }
+      },
+      "NPQParticipantResume": {
+        "description": "An NPQ participant resume action",
+        "type": "object",
+        "properties": {
+          "course_identifier": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "npq-leading-teaching",
+              "npq-leading-behaviour-culture",
+              "npq-leading-teaching-development",
+              "npq-senior-leadership",
+              "npq-headship",
+              "npq-executive-leadership"
+            ],
+            "example": "npq-senior-leadership"
+          }
+        },
+        "required": [
+          "course_identifier"
+        ],
+        "example": {
+          "course_identifier": "npq-leading-teaching-development"
+        }
+      },
+      "NPQParticipantResumeRequest": {
+        "description": "The resume request for an NPQ participant",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "description": "The request data",
+            "required": [
+              "type",
+              "attributes"
+            ],
+            "properties": {
+              "type": {
+                "description": "The data type",
+                "type": "string",
+                "example": "participant-resume"
+              },
+              "attributes": {
+                "$ref": "#/components/schemas/NPQParticipantResume"
+              }
+            }
           }
         }
       },
