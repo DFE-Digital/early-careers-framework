@@ -12,7 +12,7 @@ module DataStage
     ].freeze
 
     def call
-      DataStage::SchoolChange.includes(:school).unhandled.status_changed.find_each do |change|
+      DataStage::SchoolChange.includes(:school).unprocessed.status_changed.find_each do |change|
         next if has_unhandled_changes?(change)
 
         if change.attribute_changes.key? "school_status_code"
@@ -26,7 +26,7 @@ module DataStage
   private
 
     def has_unhandled_changes?(school_change)
-      unhandled_attrs = (unhandled_attributes & school_change.attribute_changes.keys)
+      unhandled_attrs = (UNHANDLED_ATTRIBUTES & school_change.attribute_changes.keys)
       school = school_change.school
       counterpart = school.counterpart
 
@@ -45,27 +45,17 @@ module DataStage
       has_unhandled_changes
     end
 
-    def has_unhandled_attributes?(attributes)
-      (unhandled_attributes & attributes.keys).any?
-    end
-
-    def unhandled_attributes
-      MAJOR_CHANGE_ATTRIBUTES - %w[school_status_code school_status_name]
-    end
-
     def handle_status_code_change(change)
       from_code = change.school.school_status_code
 
-      if from_code.in? [1, 3]
-        # open status codes
-        open_school(change)
-      elsif from_code.in? [2, 4]
-        # closed statuses
+      if from_code.in? CLOSED_STATUS_CODES
         close_school(change)
+      else
+        open_or_sync_school(change)
       end
     end
 
-    def open_school(change)
+    def open_or_sync_school(change)
       # simple opening/sync of school
       ActiveRecord::Base.transaction do
         change.school.create_or_sync_counterpart!
@@ -111,7 +101,7 @@ module DataStage
         end
       end
 
-      InductionCoordinatorProfilesSchool.where(school: school).each { |profile| profile.update!(school: successor) }
+      InductionCoordinatorProfilesSchool.where(school: school).each { |link_record| link_record.update!(school: successor) }
     end
   end
 end

@@ -7,7 +7,7 @@ module DataStage
     belongs_to :school, class_name: "DataStage::School",
                         foreign_key: :data_stage_school_id
 
-    scope :unhandled, -> { where(handled: false) }
+    scope :unprocessed, -> { where(handled: false) }
 
     enum status: {
       added: "added",
