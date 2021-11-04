@@ -2516,14 +2516,6 @@
               "npq-additional-support-offer"
             ],
             "example": "npq-headship"
-          },
-          "evidence_held": {
-            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
-            "type": "string",
-            "enum": [
-              "yes"
-            ],
-            "example": "yes"
           }
         },
         "required": [
