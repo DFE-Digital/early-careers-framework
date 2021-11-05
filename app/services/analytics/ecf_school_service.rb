@@ -40,7 +40,7 @@ module Analytics
                 lead_provider: school.active_partnerships.first&.lead_provider&.name || school.partnerships.first&.lead_provider&.name,
                 delivery_partner: school.active_partnerships.first&.delivery_partner&.name || school.partnerships.first&.delivery_partner&.name,
                 chosen_cip: school.school_cohorts.find { |sc| sc.cohort_id == current_cohort_id }&.core_induction_programme&.name,
-                active_participants: school.school_cohorts.find { |sc| sc.cohort_id == current_cohort_id }&.active_ecf_participants&.any?,
+                active_participants: school.school_cohorts.find { |sc| sc.cohort_id == current_cohort_id }&.active_ecf_participants&.any? || false,
               }
             end,
             unique_by: :urn,
