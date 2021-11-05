@@ -191,7 +191,7 @@ module ManageTrainingSteps
     choose choice
     click_on "Continue"
 
-    expect(page).to have_text "Confirm your induction programme"
+    expect(page).to have_text "Confirm your training programme"
     click_on "Confirm"
   end
 
