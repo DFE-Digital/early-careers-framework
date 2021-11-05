@@ -14,11 +14,11 @@
       <% if school_cohort.core_induction_programme? || school_cohort.full_induction_programme? %>
         <% if school_cohort.active_ecf_participant_profiles.any? %>
           <p class="govuk-body govuk-!-margin-bottom-5">
-            <%= govuk_link_to 'View your early career teacher and mentor details', schools_participants_path(cohort_id: school_cohort.cohort.start_year), class: "govuk-link--no-visited-state" %>
+          <%= govuk_link_to 'View your early career teacher and mentor details', schools_participants_path(cohort_id: school_cohort.cohort.start_year), class: "govuk-link--no-visited-state" %>
           </p>
         <% else %>
           <p class="govuk-body govuk-!-margin-bottom-5">
-            <%= govuk_link_to 'Add your early career teacher and mentor details', roles_schools_cohort_path(cohort_id: school_cohort.cohort.start_year), class: "govuk-link--no-visited-state" %>
+          <%= govuk_link_to 'Add your early career teacher and mentor details', roles_schools_cohort_path(cohort_id: school_cohort.cohort.start_year), class: "govuk-link--no-visited-state" %>
           </p>
         <% end %>
       <% end %>
@@ -72,27 +72,31 @@
         <% end %>
       </dl>
 
+      <% if school_cohort.school_funded_fip? %>
+        <p>You do not need to add information about your ECTs and mentors to this service.</p>
+      <% end %>
+
       <% if @partnership %>
         <% if @report_mistake_link.present? %>
           <p class="govuk-body">
-            If this does not look right, <%= govuk_link_to "report that your school has been confirmed incorrectly", @report_mistake_link %>.
+          If this does not look right, <%= govuk_link_to "report that your school has been confirmed incorrectly", @report_mistake_link %>.
           </p>
           <p class="govuk-body">
-            This link will expire on <%= @mistake_link_expiry %>.
+          This link will expire on <%= @mistake_link_expiry %>.
           </p>
         <% else %>
           <p class="govuk-body">
-            If this does not look right, contact: <%= render MailToSupportComponent.new %>
+          If this does not look right, contact: <%= render MailToSupportComponent.new %>
           </p>
         <% end %>
       <% end %>
 
       <% if school_cohort.core_induction_programme.present? %>
         <p class="govuk-body">Use these handbooks and training materials to help you plan your school’s
-          <%= govuk_link_to school_cohort.core_induction_programme.name, induction_tutor_materials_path(
-            provider: school_cohort.core_induction_programme.name.downcase.tr(" ", "-"), year: "year-one"
-          ) %>
-          training programme.
+        <%= govuk_link_to school_cohort.core_induction_programme.name, induction_tutor_materials_path(
+          provider: school_cohort.core_induction_programme.name.downcase.tr(" ", "-"), year: "year-one"
+        ) %>
+      training programme.
         </p>
       <% end %>
 

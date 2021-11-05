@@ -358,7 +358,7 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_cip_programme_choice_info_page
-    expect(page).to have_text("You’ve chosen to: deliver your own programme using the DfE-accredited materials")
+    expect(page).to have_text("You’ve chosen to: deliver your own programme using DfE-accredited materials")
   end
 
   def then_i_am_taken_to_the_no_ect_training_info_page
