@@ -29,7 +29,7 @@
       <p class="govuk-!-margin-bottom-3">We’ve checked these people’s details and found they’re not eligible for this
         programme.</p>
 
-      <table class="govuk-table govuk-!-margin-bottom-9">
+      <table class="govuk-table govuk-!-margin-bottom-9" data-test="ineligible">
         <thead class="govuk-table__head">
         <tr class="govuk-table__row">
           <th scope="col" class="govuk-table__header govuk-!-width-one-third">Name</th>
@@ -46,7 +46,7 @@
             <td class="govuk-table__cell"><%= profile.user.full_name %></td>
             <td class="govuk-table__cell"><%= format_type(profile.participant_type) %></td>
             <td class="govuk-table__cell">None</td>
-            <td class="govuk-table__cell govuk-table__cell--numeric" data-test="ineligible"><%= govuk_link_to "Check", schools_participant_path(id: profile.id) %></td>
+            <td class="govuk-table__cell govuk-table__cell--numeric"><%= govuk_link_to "Check", schools_participant_path(id: profile.id) %></td>
           </tr>
         <% end %>
         </tbody>
@@ -57,7 +57,7 @@
       <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Contacted for information</h2>
       <p class="govuk-!-margin-bottom-3">We need this to check their eligibility with the Teaching Regulation Agency.</p>
 
-      <table class="govuk-table govuk-!-margin-bottom-9">
+      <table class="govuk-table govuk-!-margin-bottom-9" data-test="checked">
         <thead class="govuk-table__head">
         <tr class="govuk-table__row">
           <th scope="col" class="govuk-table__header govuk-!-width-one-third">Name</th>
@@ -84,7 +84,7 @@
                 None
               <% end %>
             </td>
-            <td class="govuk-table__cell govuk-table__cell--numeric" data-test="checked">
+            <td class="govuk-table__cell govuk-table__cell--numeric">
             <% if profile.request_for_details_sent_at %>
               <%= govuk_link_to "Check", schools_participant_path(id: profile.id) %>
             <% elsif profile.request_for_details_sent_at.nil? && profile.mentor_profile_id.nil? %>
@@ -104,7 +104,7 @@
       <p class="govuk-!-margin-bottom-3">We’re checking these people’s details with the Teaching Regulation Agency.
         We’ll confirm if they’re eligible for this programme soon.</p>
 
-      <table class="govuk-table govuk-!-margin-bottom-9">
+      <table class="govuk-table govuk-!-margin-bottom-9" data-test="details">
         <thead class="govuk-table__head">
         <tr class="govuk-table__row">
           <th scope="col" class="govuk-table__header govuk-!-width-one-third">Name</th>
@@ -127,7 +127,7 @@
                 None
               <% end %>
             </td>
-            <td class="govuk-table__cell govuk-table__cell--numeric" data-test="details">
+            <td class="govuk-table__cell govuk-table__cell--numeric">
               <% if profile.ect? %>
                 <%= govuk_link_to (profile.mentor_profile_id ? "Details" : "Check"), schools_participant_path(id: profile.id) %>
               <% else %>
@@ -150,7 +150,7 @@
         <p class="govuk-!-margin-bottom-3">We’ve confirmed these people are eligible for this programme. Once you choose a training provider, they’ll contact your ECTs and mentors directly.</p>
       <% end %>
 
-      <table class="govuk-table govuk-!-margin-bottom-9">
+      <table class="govuk-table govuk-!-margin-bottom-9" data-test="eligible">
         <thead class="govuk-table__head">
         <tr class="govuk-table__row">
           <th scope="col" class="govuk-table__header govuk-!-width-one-third">Name</th>
@@ -173,7 +173,7 @@
                 None
               <% end %>
             </td>
-            <td class="govuk-table__cell govuk-table__cell--numeric" data-test="eligible">
+            <td class="govuk-table__cell govuk-table__cell--numeric">
               <% if profile.ect? %>
                 <%= govuk_link_to (profile.mentor_profile_id ? "Details" : "Check"), schools_participant_path(id: profile.id) %>
               <% elsif profile.ecf_participant_eligibility.ineligible_status? %>
