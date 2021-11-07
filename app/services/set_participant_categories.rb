@@ -9,12 +9,15 @@ class SetParticipantCategories < BaseService
 
 private
 
-  def initialize(school_cohort)
+  attr_reader :school_cohort, :user
+
+  def initialize(school_cohort, user)
     @school_cohort = school_cohort
+    @user = user
   end
 
   def set_participant_categories
-    if @school_cohort.core_induction_programme?
+    if school_cohort.core_induction_programme?
       cip_participant_categories
     elsif FeatureFlag.active?(:eligibility_notifications)
       fip_participant_categories_feature_flag_active
@@ -36,7 +39,7 @@ private
   end
 
   def active_participant_profiles
-    @school_cohort.active_ecf_participant_profiles
+    ParticipantProfilePolicy::Scope.new(user, ParticipantProfile::ECF.active_record).resolve
   end
 
   def ineligible_participants

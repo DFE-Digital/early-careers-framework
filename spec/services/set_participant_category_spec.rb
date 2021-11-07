@@ -14,6 +14,7 @@ RSpec.describe SetParticipantCategories do
 
     context "CIP cohorts" do
       let(:school_cohort) { create(:school_cohort, :cip) }
+      let(:induction_coordinator) { create(:induction_coordinator_profile, schools: [school_cohort.school]) }
 
       let(:cip_eligible_participants) { [eligible_ect, ineligible_mentor, ero_mentor, details_being_checked_ect] }
       let(:cip_ineligible_participants) { [] }
@@ -27,7 +28,7 @@ RSpec.describe SetParticipantCategories do
         ero_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "previous_participation")
         details_being_checked_ect.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
 
-        @participant_categories = service.call(school_cohort)
+        @participant_categories = service.call(school_cohort, induction_coordinator.user)
       end
 
       it "returns eligible, ineligible and details_being_checked participants in eligible category" do
@@ -49,6 +50,7 @@ RSpec.describe SetParticipantCategories do
 
     context "FIP cohorts with active eligibility_notifications feature flag" do
       let(:school_cohort) { create(:school_cohort, :fip) }
+      let(:induction_coordinator) { create(:induction_coordinator_profile, schools: [school_cohort.school]) }
 
       let(:fip_eligible_participants) { [eligible_ect, ero_mentor] }
       let(:fip_ineligible_participants) { [ineligible_mentor] }
@@ -62,7 +64,7 @@ RSpec.describe SetParticipantCategories do
         ero_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "previous_participation")
         details_being_checked_ect.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
 
-        @participant_categories = service.call(school_cohort)
+        @participant_categories = service.call(school_cohort, induction_coordinator.user)
       end
 
       it "returns eligible participants in eligible category" do
@@ -84,6 +86,7 @@ RSpec.describe SetParticipantCategories do
 
     context "FIP cohorts with inactive eligibility_notifications feature flag" do
       let(:school_cohort) { create(:school_cohort, :fip) }
+      let(:induction_coordinator) { create(:induction_coordinator_profile, schools: [school_cohort.school]) }
 
       let(:fip_eligible_participants) { [] }
       let(:fip_ineligible_participants) { [] }
@@ -97,7 +100,7 @@ RSpec.describe SetParticipantCategories do
         ero_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "previous_participation")
         details_being_checked_ect.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
 
-        @participant_categories = service.call(school_cohort)
+        @participant_categories = service.call(school_cohort, induction_coordinator.user)
       end
 
       it "does not return participants in eligible category" do

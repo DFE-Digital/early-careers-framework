@@ -7,7 +7,7 @@ class Schools::ParticipantsController < Schools::BaseController
   before_action :set_mentors_added, only: %i[index show]
 
   def index
-    participant_categories = SetParticipantCategories.call(@school_cohort)
+    participant_categories = SetParticipantCategories.call(@school_cohort, current_user)
     @eligible = participant_categories.eligible
     @ineligible = participant_categories.ineligible
     @contacted_for_info = participant_categories.contacted_for_info
