@@ -4,7 +4,7 @@ class SetSchoolLocalAuthorityDistrict < BaseService
   def call
     if school.local_authority_district&.code != administrative_district_code
       ActiveRecord::Base.transaction do
-        school.school_local_authority_districts.latest.first&.update!(end_year: start_year)
+        school.latest_school_authority_district&.update!(end_year: start_year)
 
         SchoolLocalAuthorityDistrict.create!(school: school,
                                              local_authority_district: la_district,
