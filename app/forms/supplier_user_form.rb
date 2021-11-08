@@ -6,10 +6,10 @@ class SupplierUserForm
 
   attr_accessor :full_name, :email, :supplier
 
-  validates :supplier, presence: { message: "Select one" }, on: :supplier
-  validates :full_name, presence: { message: "Enter a name" }, on: :details
+  validates :supplier, presence: { message: I18n.t("errors.supplier.blank") }, on: :supplier
+  validates :full_name, presence: { message: I18n.t("errors.name.blank") }, on: :details
   validates :email,
-            presence: { message: "Enter email" },
+            presence: { message: I18n.t("errors.supplier_email.blank") },
             notify_email: true,
             on: :details
   validate :email_not_taken, on: :details
@@ -37,6 +37,6 @@ class SupplierUserForm
 private
 
   def email_not_taken
-    errors.add(:email, :unique, message: "There is already a user with this email address") if User.find_by(email: email)
+    errors.add(:email, :unique, message: I18n.t("errors.supplier_email.taken")) if User.find_by(email: email)
   end
 end

@@ -31,19 +31,19 @@ module Api
     end
 
     def missing_parameter_response(exception)
-      render json: { errors: Api::ParamErrorFactory.new(error: "Bad or missing parameters", params: exception.param).call }, status: :unprocessable_entity
+      render json: { errors: Api::ParamErrorFactory.new(error: I18n.t(:missing_parameters), params: exception.param).call }, status: :unprocessable_entity
     end
 
     def unpermitted_parameter_response(exception)
-      render json: { errors: Api::ParamErrorFactory.new(error: "Unpermitted parameters", params: exception.params).call }, status: :unprocessable_entity
+      render json: { errors: Api::ParamErrorFactory.new(error: I18n.t(:unpermitted_parameters), params: exception.params).call }, status: :unprocessable_entity
     end
 
     def bad_request_response(exception)
-      render json: { errors: Api::ParamErrorFactory.new(error: "Bad request", params: exception.message).call }, status: :bad_request
+      render json: { errors: Api::ParamErrorFactory.new(error: I18n.t(:bad_request), params: exception.message).call }, status: :bad_request
     end
 
     def invalid_transition(exception)
-      render json: { errors: Api::ParamErrorFactory.new(error: "Invalid action", params: exception).call }, status: :unprocessable_entity
+      render json: { errors: Api::ParamErrorFactory.new(error: I18n.t(:invalid_transition), params: exception).call }, status: :unprocessable_entity
     end
   end
 end

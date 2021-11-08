@@ -11,7 +11,7 @@ private
 
   def validate_filter_param
     unless filter.as_json.is_a?(Hash)
-      error_factory = Api::ParamErrorFactory.new(params: ["Filter must be a hash"], error: "Bad parameter")
+      error_factory = Api::ParamErrorFactory.new(params: ["Filter must be a hash"], error: I18n.t(:bad_parameter))
       render json: { errors: error_factory.call }, status: :bad_request
     end
   end
