@@ -36,10 +36,8 @@ required:
   - declaration_type
   - declaration_date
   - course_identifier
-  - evidence_held
 example:
   participant_id: db3a7848-7308-4879-942a-c4a70ced400a
   declaration_type: retained-1
   declaration_date: "2021-05-31T02:21:32.000Z"
   course_identifier: npq-headship
-  evidence_held: "yes"
