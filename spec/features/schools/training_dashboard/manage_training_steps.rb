@@ -173,18 +173,6 @@ module ManageTrainingSteps
     expect(page).not_to have_text("Test School 3")
   end
 
-  def given_there_is_a_school_that_has_chosen_design_our_own_for_2021
-    @cohort = create(:cohort, start_year: 2021)
-    @school = create(:school, name: "Design Our Own Programme School")
-    @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "design_our_own")
-  end
-
-  def given_there_is_a_school_that_has_chosen_no_ect_for_2021
-    @cohort = create(:cohort, start_year: 2021)
-    @school = create(:school, name: "No ECT Programme School")
-    @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "no_early_career_teachers")
-  end
-
   def given_i_click_on_test_school_1
     click_on "Test School 1"
   end
@@ -213,15 +201,6 @@ module ManageTrainingSteps
   def and_i_should_see_school_2_data
     expect(page).to have_text("Test School 2")
     expect(page).not_to have_text("Test School 1")
-  end
-
-  def and_i_am_signed_in_as_an_induction_coordinator
-    @induction_coordinator_profile = create(:induction_coordinator_profile, schools: [@school_cohort.school])
-    privacy_policy = create(:privacy_policy)
-    privacy_policy.accept!(@induction_coordinator_profile.user)
-    sign_in_as @induction_coordinator_profile.user
-    set_participant_data
-    set_updated_participant_data
   end
 
   def and_i_have_added_ects_and_mentors
@@ -424,11 +403,6 @@ module ManageTrainingSteps
     expect(page).to have_text("An induction tutor should only assign themself as a mentor in exceptional circumstances")
   end
 
-  def then_i_am_taken_to_add_mentor_page
-    expect(page).to have_selector("h1", text: "Who will mentor")
-    expect(page).to have_text("You can tell us later if you’re not sure")
-  end
-
   def then_i_am_taken_to_your_ect_and_mentors_page
     expect(page).to have_selector("h1", text: "Your ECTs and mentors")
     expect(page).to have_text("Add a new ECT")
@@ -551,11 +525,6 @@ module ManageTrainingSteps
 
   def then_i_receive_an_email_already_taken_error_message
     expect(page).to have_text("This email has already been added")
-  end
-
-  def then_i_should_see_the_program_and_click_to_change_it(program_label:)
-    expect(page).to have_text(program_label)
-    click_on "Change induction programme choice"
   end
 
   def then_i_am_taken_to_view_details_page
