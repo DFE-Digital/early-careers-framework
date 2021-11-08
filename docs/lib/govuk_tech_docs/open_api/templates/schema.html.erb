@@ -18,22 +18,22 @@
         <tr>
           <td><%= property[0] %></td>
           <td><%= property[1].type %></td>
-          <td><%= property[1].required.present? %></td>
+          <td><%= schema.requires?(property[0]) %></td>
           <td>
             <%= markdown(property[1].description) %>
 
             <%=
-              schema = property[1]
+              nested_schema = property[1]
               # If property is an array, check the items property for a reference.
               if property[1].type == 'array'
-                schema = property[1]['items']
+                nested_schema = property[1]['items']
               end
-              schema_location = schema.node_context.source_location.to_s
+              schema_location = nested_schema.node_context.source_location.to_s
               # Only print a link if it's a referenced schema.
               if !schema_location.include?('/properties/')
-                "It conforms to #{get_schema_link(schema)} schema."
+                "It conforms to #{get_schema_link(nested_schema)} schema."
               elsif schema_location.end_with?("data")
-                "It conforms to #{get_schema_link_data(schema)} schema."
+                "It conforms to #{get_schema_link_data(nested_schema)} schema."
               end
             %>
 
