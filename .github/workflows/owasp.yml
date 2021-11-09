@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 env:
-  TARGET: https://s-manage-training-for-early-career-teachers.education.gov.uk
+  TARGET: s-manage-training-for-early-career-teachers.education.gov.uk
 
 
 jobs:
@@ -29,7 +29,7 @@ jobs:
           SLACK_USERNAME: Zap2Docker
           SLACK_ICON: https://avatars.githubusercontent.com/u/6716868?s=100&v=4
           SLACK_TITLE: OWASP Full scan starting!
-          SLACK_MESSAGE: Beginning OWasp full scan against ${{ env.TARGET }}
+          SLACK_MESSAGE: Beginning OWasp full scan against https://${{ env.TARGET }}
           MSG_MINIMAL: true
           SLACK_WEBHOOK: ${{ secrets.ALERTMANAGER_SLACK_URL }}
 
@@ -38,7 +38,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           docker_name: owasp/zap2docker-stable
-          target: ${{ env.TARGET }}/sandbox
+          target: https://${{ env.TARGET }}/sandbox
           rules_file_name: .zap/rules.tsv
           cmd_options: -a
           allow_issue_writing: true
@@ -50,7 +50,7 @@ jobs:
           SLACK_USERNAME: Zap2Docker
           SLACK_ICON: https://avatars.githubusercontent.com/u/6716868?s=100&v=4
           SLACK_TITLE: OWASP Full scan completed!
-          SLACK_MESSAGE: OWasp scan completed against ${{ env.TARGET }}
+          SLACK_MESSAGE: OWasp scan completed against https://${{ env.TARGET }}
           SLACK_COLOR: ${{ job.status }}
           MSG_MINIMAL: actions url
           SLACK_WEBHOOK: ${{ secrets.ALERTMANAGER_SLACK_URL }}
@@ -70,7 +70,7 @@ jobs:
           SLACK_USERNAME: Zap2Docker
           SLACK_ICON: https://avatars.githubusercontent.com/u/6716868?s=100&v=4
           SLACK_TITLE: OWASP API scan starting!
-          SLACK_MESSAGE: Beginning OWasp API scan against ${{ env.TARGET }}
+          SLACK_MESSAGE: Beginning OWasp API scan against https://${{ env.TARGET }}
           MSG_MINIMAL: true
           SLACK_WEBHOOK: ${{ secrets.ALERTMANAGER_SLACK_URL }}
 
@@ -79,11 +79,10 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           docker_name: owasp/zap2docker-stable
-          target: ${{ env.TARGET }}/lead-providers/api-docs/v1/api_spec.yml
+          target: https://${{ env.TARGET }}/lead-providers/api-docs/v1/api_spec.yml
           format: openapi
           rules_file_name: .zap/rules.tsv
-          cmd_options: -a
-          # cmd_options: -a -O ${{ env.TARGET }}
+          cmd_options: -a -O ${{ env.TARGET }}
           allow_issue_writing: true
 
       - name: Post API scan completed notice on cpd-dev-alerts
@@ -93,7 +92,7 @@ jobs:
           SLACK_USERNAME: Zap2Docker
           SLACK_ICON: https://avatars.githubusercontent.com/u/6716868?s=100&v=4
           SLACK_TITLE: OWASP API scan completed!
-          SLACK_MESSAGE: OWasp API scan completed against ${{ env.TARGET }}
+          SLACK_MESSAGE: OWasp API scan completed against https://${{ env.TARGET }}
           SLACK_COLOR: ${{ job.status }}
           MSG_MINIMAL: actions url
           SLACK_WEBHOOK: ${{ secrets.ALERTMANAGER_SLACK_URL }}
