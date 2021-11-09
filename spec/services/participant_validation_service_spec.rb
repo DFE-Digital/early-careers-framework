@@ -37,6 +37,14 @@ RSpec.describe ParticipantValidationService do
       ParticipantValidationService.validate(trn: trn, nino: nino, full_name: full_name, date_of_birth: dob)
     end
 
+    context "when no trn is provided" do
+      let(:trn) { nil }
+
+      it "returns nil" do
+        expect(validation_result).to be_nil
+      end
+    end
+
     context "given that it calls the API" do
       before do
         expect_any_instance_of(FullDqt::Client).to receive(:get_record).and_return(*dqt_records)
