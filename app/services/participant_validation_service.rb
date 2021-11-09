@@ -55,6 +55,8 @@ private
   end
 
   def matching_record(trn:, nino:, full_name:, dob:)
+    return if trn.blank?
+
     padded_trn = trn.rjust(7, "0")
     dqt_record = dqt_record(padded_trn, nino)
     return if dqt_record.nil?
