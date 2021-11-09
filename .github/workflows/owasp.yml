@@ -2,7 +2,10 @@ name: OWasp Security Scan
 
 on:
   push:
-    branches: [ owasp ]
+    branches:
+      - develop
+    paths-ignore:
+      - 'documentation/**'
 
 # schedule:
 #   - cron: '0 12 * * *'
@@ -11,7 +14,6 @@ on:
 
 env:
   TARGET: s-manage-training-for-early-career-teachers.education.gov.uk
-
 
 jobs:
   owasp-full:
@@ -55,9 +57,24 @@ jobs:
           MSG_MINIMAL: actions url
           SLACK_WEBHOOK: ${{ secrets.ALERTMANAGER_SLACK_URL }}
 
+      - uses: actions/download-artifact@v2
+        with:
+          name: zap_scan
+          path: ~/full_scan_report
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: full_scan_report
+          path: ~/full_scan_report
+
+      - uses: geekyeggo/delete-artifact@v1
+        with:
+          name: zap_scan
+
   owasp-api:
     name: OWASP API Scan on Staging
     runs-on: ubuntu-latest
+    needs: owasp-full
 
     steps:
       - name: Checkout
@@ -96,3 +113,17 @@ jobs:
           SLACK_COLOR: ${{ job.status }}
           MSG_MINIMAL: actions url
           SLACK_WEBHOOK: ${{ secrets.ALERTMANAGER_SLACK_URL }}
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: zap_scan
+          path: ~/api_scan_report
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: api_scan_report
+          path: ~/api_scan_report
+
+      - uses: geekyeggo/delete-artifact@v1
+        with:
+          name: zap_scan
