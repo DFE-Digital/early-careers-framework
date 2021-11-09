@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 env:
-  TARGET: https://s-manage-training-for-early-career-teachers.education.gov.uk/sandbox
+  TARGET: https://s-manage-training-for-early-career-teachers.education.gov.uk
 
 
 jobs:
@@ -27,7 +27,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           docker_name: owasp/zap2docker-stable
-          target: ${{ env.TARGET }}
+          target: ${{ env.TARGET }}/sandbox
           rules_file_name: .zap/rules.tsv
           cmd_options: -a
           allow_issue_writing: true
