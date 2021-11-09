@@ -1,7 +1,8 @@
 name: OWasp Security Scan
 
 on:
-  push: [ owasp ]
+  push:
+    branches: [ owasp ]
 
 # schedule:
 #   - cron: '0 12 * * *'
