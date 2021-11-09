@@ -22,6 +22,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2.3.4
 
+      - name: Post scan started notice on cpd-dev-alerts
+        uses: rtCamp/action-slack-notify@v2.2.0
+        env:
+          SLACK_CHANNEL: cpd-dev-alerts
+          SLACK_USERNAME: Zap2Docker
+          SLACK_ICON: https://avatars.githubusercontent.com/u/6716868?s=100&v=4
+          SLACK_TITLE: OWASP Full scan starting!
+          SLACK_MESSAGE: Beginning OWasp full scan against ${{ env.TARGET }}
+          MSG_MINIMAL: true
+          SLACK_WEBHOOK: ${{ secrets.ALERTMANAGER_SLACK_URL }}
+
       - name: ZAP Scan
         uses: zaproxy/action-full-scan@v0.3.0
         with:
@@ -32,16 +43,16 @@ jobs:
           cmd_options: -a
           allow_issue_writing: true
 
-      - name: Post scan failure notice on cpd-dev-alerts
-        if: failure()
+      - name: Post scan completed notice on cpd-dev-alerts
         uses: rtCamp/action-slack-notify@v2.2.0
         env:
           SLACK_CHANNEL: cpd-dev-alerts
           SLACK_USERNAME: Zap2Docker
           SLACK_ICON: https://avatars.githubusercontent.com/u/6716868?s=100&v=4
-          SLACK_TITLE: OWASP scan results
-          SLACK_MESSAGE: Issues identified!
-          MSG_MINIMAL: true
+          SLACK_TITLE: OWASP Full scan completed!
+          SLACK_MESSAGE: OWasp scan completed against ${{ env.TARGET }}
+          SLACK_COLOR: ${{ job.status }}
+          MSG_MINIMAL: actions url
           SLACK_WEBHOOK: ${{ secrets.ALERTMANAGER_SLACK_URL }}
 
   owasp-api:
@@ -52,6 +63,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2.3.4
 
+      - name: Post API scan started notice on cpd-dev-alerts
+        uses: rtCamp/action-slack-notify@v2.2.0
+        env:
+          SLACK_CHANNEL: cpd-dev-alerts
+          SLACK_USERNAME: Zap2Docker
+          SLACK_ICON: https://avatars.githubusercontent.com/u/6716868?s=100&v=4
+          SLACK_TITLE: OWASP API scan starting!
+          SLACK_MESSAGE: Beginning OWasp API scan against ${{ env.TARGET }}
+          MSG_MINIMAL: true
+          SLACK_WEBHOOK: ${{ secrets.ALERTMANAGER_SLACK_URL }}
+
       - name: ZAP Scan
         uses: zaproxy/action-api-scan@v0.1.0
         with:
@@ -60,17 +82,18 @@ jobs:
           target: ${{ env.TARGET }}/lead-providers/api-docs/v1/api_spec.yml
           format: openapi
           rules_file_name: .zap/rules.tsv
-          cmd_options: -a -O ${{ env.TARGET }}
+          cmd_options: -a
+          # cmd_options: -a -O ${{ env.TARGET }}
           allow_issue_writing: true
 
-      - name: Post scan failure notice on cpd-dev-alerts
-        if: failure()
+      - name: Post API scan completed notice on cpd-dev-alerts
         uses: rtCamp/action-slack-notify@v2.2.0
         env:
           SLACK_CHANNEL: cpd-dev-alerts
           SLACK_USERNAME: Zap2Docker
           SLACK_ICON: https://avatars.githubusercontent.com/u/6716868?s=100&v=4
-          SLACK_TITLE: OWASP API scan results
-          SLACK_MESSAGE: Issues identified!
-          MSG_MINIMAL: true
+          SLACK_TITLE: OWASP API scan completed!
+          SLACK_MESSAGE: OWasp API scan completed against ${{ env.TARGET }}
+          SLACK_COLOR: ${{ job.status }}
+          MSG_MINIMAL: actions url
           SLACK_WEBHOOK: ${{ secrets.ALERTMANAGER_SLACK_URL }}
