@@ -97,7 +97,9 @@ module DataStage
       SchoolCohort.where(school: school).each do |school_cohort|
         school_cohort.update!(school: successor)
         school_cohort.ecf_participant_profiles.each do |profile|
-          RectifyParticipantSchool.call(participant_profile: profile, school: successor)
+          RectifyParticipantSchool.call(participant_profile: profile,
+                                        school: successor,
+                                        transfer_pupil_premium_and_sparsity: false)
         end
       end
 

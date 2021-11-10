@@ -7,10 +7,11 @@ RSpec.describe RectifyParticipantSchool do
   let(:participant_profile) { create(:participant_profile, :ect) }
   let(:new_school) { create(:school, name: "Big Shiny School", urn: "123000") }
   let!(:school_cohort) { create(:school_cohort, cohort: participant_profile.school_cohort.cohort, school: new_school) }
+  let(:transfer_uplift) { true }
 
   describe ".call" do
     before do
-      service.call(participant_profile: participant_profile, school: new_school)
+      service.call(participant_profile: participant_profile, school: new_school, transfer_pupil_premium_and_sparsity: transfer_uplift)
       participant_profile.reload
     end
 
@@ -48,6 +49,19 @@ RSpec.describe RectifyParticipantSchool do
 
       it "clears the pupil premium uplift flag on the participant profile" do
         expect(participant_profile).not_to be_pupil_premium_uplift
+      end
+    end
+
+    context "when the transfer_pupil_premium_and_sparsity flag is false" do
+      let(:new_school) { create(:school, :pupil_premium_uplift, :sparsity_uplift, name: "Big Shiny School", urn: "123000") }
+      let(:transfer_uplift) { false }
+
+      it "does not change the pupil premium uplift flag on the participant profile" do
+        expect(participant_profile).not_to be_pupil_premium_uplift
+      end
+
+      it "does not change the sparsity uplift flag on the participant profile" do
+        expect(participant_profile).not_to be_sparsity_uplift
       end
     end
   end

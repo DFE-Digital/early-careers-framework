@@ -32,28 +32,6 @@ RSpec.describe SetSchoolLocalAuthorityDistrict do
       expect(school_district.local_authority_district).to eq local_authority_district
     end
 
-    it "updates sparsity uplift on the school's ECF participants" do
-      service.call(school: school,
-                   administrative_district_code: administrative_district_code,
-                   start_year: start_year)
-      participants.each do |participant|
-        expect(participant.reload).to be_sparsity_uplift
-      end
-    end
-
-    context "when a partnership exists" do
-      let!(:partnership) { create(:partnership, school: school) }
-
-      it "does not update sparsity uplift on the school's ECF participants" do
-        service.call(school: school,
-                     administrative_district_code: administrative_district_code,
-                     start_year: start_year)
-        participants.each do |participant|
-          expect(participant.reload).not_to be_sparsity_uplift
-        end
-      end
-    end
-
     context "when the local authority district is already linked" do
       before do
         SchoolLocalAuthorityDistrict.create!(school: school,
