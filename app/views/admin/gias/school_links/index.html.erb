@@ -1,0 +1,83 @@
+<% content_for :title, "Major school changes" %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: admin_gias_home_index_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-xl">Major school changes</h1>
+
+    <% if @closed_schools.any? || @opened_schools.any? %>
+      <% if @closed_schools.any? %>
+        <h2 class="govuk-heading-m">Closed schools</h2>
+        <table class="govuk-table govuk-!-margin-bottom-8">
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">URN</th>
+              <th scope="col" class="govuk-table__header">Name</th>
+              <th scope="col" class="govuk-table__header">Successor</th>
+              <th scope="col" class="govuk-table__header">Actioned on</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <% @closed_schools.each do |link| %>
+              <tr class="govuk-table__row">
+                <td class="govuk-table__cell">
+                  <%= govuk_link_to admin_gias_school_change_path(id: link.school.urn) do %>
+                    <span class="govuk-visually-hidden">View closed school </span><%= link.school.urn %>
+                  <% end %>
+                </td>
+                <td class="govuk-table__cell">
+                  <%= link.school.name %>
+                </td>
+                <td class="govuk-table__cell">
+                  <%= govuk_link_to admin_school_path(id: link.link_school.urn) do %>
+                    <span class="govuk-visually-hidden">View successor school </span><%= "#{link.link_school.name} (#{link.link_school.urn})" %>
+                  <% end %>
+                </td>
+                <td class="govuk-table__cell">
+                  <%= link.created_at.to_s(:govuk) %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% end %>
+      <% if @opened_schools.any? %>
+        <h2 class="govuk-heading-m">Opened schools</h2>
+        <table class="govuk-table govuk-!-margin-bottom-8">
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">URN</th>
+              <th scope="col" class="govuk-table__header">Name</th>
+              <th scope="col" class="govuk-table__header">Predecessor</th>
+              <th scope="col" class="govuk-table__header">Actioned on</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <% @opened_schools.each do |link| %>
+              <tr class="govuk-table__row">
+                <td class="govuk-table__cell">
+                  <%= govuk_link_to admin_gias_school_change_path(id: link.school.urn) do %>
+                    <span class="govuk-visually-hidden">View opened school </span><%= link.school.urn %>
+                  <% end %>
+                </td>
+                <td class="govuk-table__cell">
+                  <%= link.school.name %>
+                </td>
+                <td class="govuk-table__cell">
+                  <%= govuk_link_to admin_gias_school_change_path(id: link.link_school.urn) do %>
+                    <span class="govuk-visually-hidden">View predecessor school </span><%= "#{link.link_school.name} (#{link.link_school.urn})" %>
+                  <% end %>
+                </td>
+                <td class="govuk-table__cell">
+                  <%= link.created_at.to_s(:govuk) %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% end %>
+    <% else %>
+      <p class="govuk-body">No major changes</p>
+    <% end %>
+  </div>
+</div>

@@ -196,6 +196,7 @@ Rails.application.routes.draw do
       resources :school_changes, only: %i[index show], path: "school-changes"
       resources :schools_to_add, only: %i[index show], path: "schools-to-add"
       resources :schools_to_close, only: %i[index show], path: "schools-to-close"
+      resources :school_links, only: %i[index show], path: "school-links"
     end
 
     scope :suppliers, module: "suppliers" do
