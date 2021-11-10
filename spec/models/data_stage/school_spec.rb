@@ -66,18 +66,9 @@ RSpec.describe DataStage::School, type: :model do
         expect(counterpart_school.reload.local_authority_district).to eq local_authority_district
       end
 
-      it "updates the participant profiles with the sparsity uplift of the new district" do
+      it "does not update the participant profiles with the sparsity uplift of the new district" do
         school.create_or_sync_counterpart!
-        expect(participant.reload).not_to be_sparsity_uplift
-      end
-
-      context "when the school has a partnership" do
-        let!(:partnership) { create(:partnership, school: counterpart_school, cohort: cohort) }
-
-        it "does not update the participant profiles with the sparsity uplift of the new district" do
-          school.create_or_sync_counterpart!
-          expect(participant.reload).to be_sparsity_uplift
-        end
+        expect(participant.reload).to be_sparsity_uplift
       end
     end
   end
