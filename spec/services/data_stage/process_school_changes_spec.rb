@@ -124,17 +124,6 @@ RSpec.describe DataStage::ProcessSchoolChanges do
         end
       end
 
-      context "when the live school already exists" do
-        let!(:live_school) { create(:school, urn: 20_001, name: "The Starship Children's Centre", school_status_code: 3, school_status_name: "Open, but proposed to close") }
-
-        it "updates the live school attributes from the staged school" do
-          service.call
-          live_attrs = live_school.reload.attributes.except(*excluded_attrs)
-          staged_attrs = staged_school.attributes.except(*excluded_attrs)
-          expect(live_attrs).to eq staged_attrs
-        end
-      end
-
       context "when a successor school exists" do
         let!(:live_school) { create(:school, urn: 20_001, name: "The Starship Children's Centre", school_status_code: 3, school_status_name: "Open, but proposed to close") }
         let(:successor_school) { create(:school, urn: 10_001, name: "Starship Juniors School") }
