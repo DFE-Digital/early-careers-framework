@@ -45,7 +45,7 @@ class InviteSchools
                  .uniq
 
       emails.each do |email|
-        delay(queue: "mailers", priority: 1).create_and_send_nomination_email(email, school)
+        delay(queue: "mailers").create_and_send_nomination_email(email, school)
       rescue StandardError
         logger.info "Error emailing school, urn: #{school.urn}, email: #{email} ... skipping"
       end
@@ -57,7 +57,7 @@ class InviteSchools
   def send_ministerial_letters
     School.eligible.each do |school|
       recipient = school.contact_email
-      delay(queue: "mailers", priority: 1).send_ministerial_letter(recipient) if recipient.present?
+      delay(queue: "mailers").send_ministerial_letter(recipient) if recipient.present?
     end
   end
 
@@ -182,7 +182,7 @@ class InviteSchools
         school: school,
       )
 
-      delay(queue: "mailers", priority: 1).send_cip_only_invite_email(nomination_email)
+      delay(queue: "mailers").send_cip_only_invite_email(nomination_email)
     end
   end
 
@@ -415,7 +415,7 @@ private
         school: school,
       )
 
-      delay(queue: "mailers", priority: 1).__send__(send_method, nomination_email)
+      delay(queue: "mailers").__send__(send_method, nomination_email)
     rescue StandardError
       logger.info "Error emailing school, urn: #{urn} ... skipping"
     end

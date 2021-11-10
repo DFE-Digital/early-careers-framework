@@ -33,7 +33,7 @@ module Devise
               **UTMService.email(:sign_in),
             )
 
-            UserMailer.sign_in_email(user: user, url: url, token_expiry: token_expiry.localtime.to_s(:time)).deliver_later
+            UserMailer.sign_in_email(user: user, url: url, token_expiry: token_expiry.localtime.to_s(:time)).deliver_later(queue: "priority_mailers")
             raise LoginIncompleteError
           else
             raise EmailNotFoundError
