@@ -77,9 +77,9 @@ module DataStage
           move_assets_from!(school: change.school.counterpart, successor: successor)
           change.school.counterpart.school_links.successor.simple.create!(link_urn: successor.urn)
           successor.school_links.predecessor.simple.create!(link_urn: change.school.urn)
+          change.school.create_or_sync_counterpart!
+          change.update!(handled: true)
         end
-        change.school.create_or_sync_counterpart!
-        change.update!(handled: true)
       end
     end
 
