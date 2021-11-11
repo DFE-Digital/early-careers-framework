@@ -5,7 +5,7 @@ RSpec.describe Schools::Participants::RemoveFromCohortComponent, type: :view_com
   let(:profile) { create :participant_profile, :ecf, school_cohort: school_cohort }
   component { described_class.new(profile: profile) }
 
-  context "when the validation hasn't started yet" do
+  context "when the validation hasn’t started yet" do
     it "displays the link to remove the participant" do
       expect(rendered).to have_link(href: schools_participant_remove_path(profile.school, profile.cohort, profile))
     end
