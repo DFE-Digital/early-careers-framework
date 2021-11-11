@@ -19,8 +19,15 @@ module Admin
       end
 
       def create
-        @user = User.new(params.require(:user).permit(:full_name, :email))
+        @user = User.find_or_initialize_by(params.require(:user).permit(:email))
+        @user.full_name = params.dig(:user, :full_name)
+
         render :new and return unless @user.valid?
+
+        if @user.early_career_teacher?
+          @user.errors.add(:base, "A user with this email address is currently participating as an ECT at school with urn #{@user.teacher_profile.current_ecf_profile.school.urn}")
+          render :new and return
+        end
 
         EarlyCareerTeachers::Create.call(
           full_name: @user.full_name,

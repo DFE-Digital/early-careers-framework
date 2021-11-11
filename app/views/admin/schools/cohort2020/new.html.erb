@@ -3,7 +3,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">Enter NQT+1 details</h1>
-    <%= form_with(model: @user, url: admin_school_cohort2020_path) do |f| %>
+    <%= form_with(model: @user, url: admin_school_cohort2020_path, method: :post) do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_text_field(
             :full_name,
