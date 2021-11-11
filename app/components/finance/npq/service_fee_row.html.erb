@@ -1,19 +1,6 @@
-<% if band < 3 %>
-  <h3 class="govuk-heading-s"><%= t("finance.ecf.bands.#{band}") %></h3>
-  <table class="govuk-table payment-breakdown-table">
-    <tbody>
-      <tr class="govuk-table__row">
-        <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.fee_per_participant") %></th>
-        <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds per_participant %></td>
-      </tr>
-      <tr class="govuk-table__row">
-        <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.number_of_participants") %></th>
-        <td class="govuk-table__cell govuk-table__cell--numeric"><%= participants %></td>
-      </tr>
-      <tr class="govuk-table__row">
-        <th scope="row" class="govuk-table__cell"><%=t("finance.payment") %></th>
-        <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><%= number_to_pounds monthly %></td>
-      </tr>
-    </tbody>
-  </table>
-<% end %>
+<tr class="govuk-table__row">
+  <td scope="row" class="govuk-table__cell govuk-!-width-one-quarter"><%= t("finance.service_fee.caption") %></td>
+  <td scope="row" class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter"><%= number_to_pounds(service_per_fee_participant) %></td>
+  <td scope="row" class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter">N/A</td>
+  <td scope="row" class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter"><%= number_to_pounds(service_fees_total) %></td>
+</tr>

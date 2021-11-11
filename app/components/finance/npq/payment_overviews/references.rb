@@ -5,18 +5,14 @@ module Finance
     module PaymentOverviews
       class References < BaseComponent
         include FinanceHelper
-        attr_reader :deadline, :breakdown
+        attr_reader :cohort, :payment_reference
 
-        def version
-          breakdown[:version]
+        def submission_deadline
+          Date.parse(payment_period.last).to_s(:govuk)
         end
-
       private
 
-        def initialize(references)
-          @breakdown = references
-          @deadline  = Date.parse(payment_period.last).to_s(:govuk)
-        end
+        attr_writer :cohort, :payment_reference
       end
     end
   end

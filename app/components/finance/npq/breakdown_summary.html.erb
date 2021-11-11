@@ -1,27 +1,29 @@
-<h2 class="govuk-heading-m"><%=t("finance.payment_breakdown") %></h2>
+<dl class="govuk-summary-list">
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key"><%= t("finance.contract.recruitment_target") %></dt>
+    <dd class="govuk-summary-list__value"><%= recruitment_target %></dd>
+    <dd class="govuk-summary-list__actions"/>
+  </div>
 
-<div class="govuk-summary-list__row">
-  <dt class="govuk-summary-list__key"><%= t("finance.submission_deadline") %></dt>
-  <dd class="govuk-summary-list__value"><%= cutoff_date %></dd>
-</div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key"><%= t("finance.participants") %></dt>
+    <dd class="govuk-summary-list__value"><%= participants %></dd>
+    <dd class="govuk-summary-list__actions"/>
+  </div>
 
-<div class="govuk-summary-list__row">
-  <dt class="govuk-summary-list__key"><%= t("finance.contract.recruitment_target") %></dt>
-  <dd class="govuk-summary-list__value"><%= recruitment_target %></dd>
-</div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key"><%= t("finance.total_paid") %></dt>
+    <dd class="govuk-summary-list__value"><%= total_paid %></dd>
+    <dd class="govuk-summary-list__actions">
+      <%= govuk_link_to "view", "#" %>
+    </dd>
+  </div>
 
-<div class="govuk-summary-list__row">
-  <dt class="govuk-summary-list__key"><%= t("finance.participants") %></dt>
-  <dd class="govuk-summary-list__value"><%= participants %></dd>
-</div>
-
-<div class="govuk-summary-list__row">
-  <dt class="govuk-summary-list__key"><%= t("finance.total_paid") %></dt>
-  <dd class="govuk-summary-list__value"><%= total_paid %></dd>
-</div>
-
-<div class="govuk-summary-list__row">
-  <dt class="govuk-summary-list__key"><%= t("finance.total_not_paid") %></dt>
-  <dd class="govuk-summary-list__value"><%= total_not_paid %></dd>
-</div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key"><%= t("finance.total_not_paid") %></dt>
+    <dd class="govuk-summary-list__value"><%= total_not_paid %></dd>
+    <dd class="govuk-summary-list__actions">
+      <%= govuk_link_to "view", "#" %>
+    </dd>
+  </div>
 </dl>

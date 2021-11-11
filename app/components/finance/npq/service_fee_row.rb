@@ -1,20 +1,25 @@
 # frozen_string_literal: true
 
 module Finance
-  module ECF
+  module NPQ
     class ServiceFeeRow < BaseComponent
       include FinanceHelper
-      attr_reader :band, :participants, :per_participant, :monthly
+      attr_reader :service_fee
 
-      with_collection_parameter :service_fee
+      def service_per_fee_participant
+        service_fee[:per_participant]
+      end
+
+      def service_fees_total
+        service_fee[:monthly]
+      end
 
     private
 
-      def initialize(service_fee:)
-        @band = service_fee[:band]
-        @participants = service_fee[:participants]
-        @per_participant = service_fee[:per_participant]
-        @monthly = service_fee[:monthly]
+      attr_writer :service_fee
+
+      def initialize(service_fee)
+        self.service_fee = service_fee
       end
     end
   end

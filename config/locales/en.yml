@@ -114,12 +114,14 @@ en:
   finance:
     submission_deadline: Submission deadline
     choose_programme: Choose programme scheme
+    cohort: Cohort
     show_contract: View contract information
     provider: Provider
     ects: Current ECTs
     mentors: Current Mentors
     participants: Current participants
     per_participant: Payment amount per person
+    amount: Amount
     payment_breakdown: Payment Breakdown
     payment_type: Payment type
     payment_reference: Payment reference
@@ -162,12 +164,12 @@ en:
     npq:
       payment_breakdown: NPQ Payment Breakdown
     service_fee:
-      caption: Service Fee
+      caption: Service fee
     output_payment:
-      caption: Output Fee
+      caption: Output fee
       band_d_info: Participants over the original band C target up to the new target.
     uplift_fee:
-      caption: Uplift Fee
+      caption: Uplift fee
     clawbacks:
       caption: Clawbacks
       per_participant: Clawback per participant
