@@ -706,6 +706,16 @@ ActiveRecord::Schema.define(version: 2021_11_09_123940) do
     t.index ["school_id"], name: "index_school_cohorts_on_school_id"
   end
 
+  create_table "school_links", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "school_id", null: false
+    t.string "link_urn", null: false
+    t.string "link_type", null: false
+    t.string "link_reason", default: "simple", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["school_id"], name: "index_school_links_on_school_id"
+  end
+
   create_table "school_local_authorities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "school_id", null: false
     t.uuid "local_authority_id", null: false
