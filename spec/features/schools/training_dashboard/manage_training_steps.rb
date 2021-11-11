@@ -186,18 +186,6 @@ module ManageTrainingSteps
     expect(page).not_to have_text("Test School 3")
   end
 
-  def given_i_click_on_test_school_1
-    click_on "Test School 1"
-  end
-
-  def given_i_click_on_test_school_2
-    click_on "Test School 2"
-  end
-
-  def given_i_click_on_manage_your_schools
-    click_on "Manage your schools"
-  end
-
   def and_i_should_see_school_1_data
     expect(page).to have_text("Test School 1")
     expect(page).not_to have_text("Test School 2")
