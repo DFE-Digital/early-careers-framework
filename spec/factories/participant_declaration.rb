@@ -15,18 +15,14 @@ FactoryBot.define do
       participant_profile { create(:participant_profile, :ect, *uplift) }
     end
 
-    factory :mentor_participant_declaration do
+    factory :mentor_participant_declaration, class: "ParticipantDeclaration::ECF" do
       user { create(:user, :mentor) }
-      type { "ParticipantDeclaration::ECF" }
       course_identifier { "ecf-mentor" }
       participant_profile { create(:participant_profile, :mentor, *uplift) }
     end
 
-    factory :npq_participant_declaration do
-      initialize_with { ParticipantDeclaration::NPQ.new(attributes) }
-
+    factory :npq_participant_declaration, class: "ParticipantDeclaration::NPQ" do
       user { create(:user, :npq) }
-      type { "ParticipantDeclaration::NPQ" }
       course_identifier { NPQCourse.all.map(&:identifier).sample }
       participant_profile { create(:participant_profile, :npq) }
     end
@@ -49,12 +45,6 @@ FactoryBot.define do
 
     trait :eligible do
       state { "eligible" }
-    end
-
-    trait :eligible do
-      transient do
-        state { "eligible" }
-      end
     end
 
     trait :payable do

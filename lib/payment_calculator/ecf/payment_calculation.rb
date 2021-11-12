@@ -47,12 +47,12 @@ module PaymentCalculator
       attr_accessor :contract, :service_fee_calculator, :headings_calculator, :output_payment_calculator, :uplift_payment_calculator
 
       def initialize(contract:,
-                     headings_calculator: BreakdownSummary,
+                     breakdown_summary_calculatoralculator: BreakdownSummary,
                      output_payment_calculator: OutputPaymentAggregator,
                      service_fee_calculator: ServiceFees,
                      uplift_payment_calculator: UpliftCalculation)
         @contract = contract
-        @headings_calculator = headings_calculator
+        @headings_calculator = breakdown_summary_calculator
         @output_payment_calculator = output_payment_calculator
         @service_fee_calculator = service_fee_calculator
         @uplift_payment_calculator = uplift_payment_calculator

@@ -21,7 +21,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
 
   before { Finance::Schedule.all }
 
-  scenario "Can get to NPQ payment breakdown page for a provider" do
+  scenario "Can get to NPQ payment breakdown page for a provider", :js do
     given_i_am_logged_in_as_a_finance_user
     and_there_is_npq_provider_with_contracts
     and_those_courses_have_submitted_declations
@@ -30,6 +30,8 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
     and_i_select_an_npq_lead_provider
     then_i_should_have_the_correct_payment_breakdown_per_npq_lead_provider
     when_i_click_on(npq_leading_teaching_contract)
+    save_and_open_screenshot
+    byebug
     then_i_should_see_correct_breakdown_summary(cpd_lead_provider, npq_leading_teaching_contract)
     then_i_should_see_correct_payment_breakdown(cpd_lead_provider, npq_leading_teaching_contract)
     when_i_click "Back"

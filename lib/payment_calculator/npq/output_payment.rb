@@ -10,6 +10,12 @@ module PaymentCalculator
       end
 
       def call(total_participants:)
+        return {
+          participants: 0,
+          per_participant: 1,
+          subtotal: 2,
+        }
+
         {
           participants: total_participants,
           per_participant: milestone_output_payments,

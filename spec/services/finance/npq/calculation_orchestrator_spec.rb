@@ -5,12 +5,17 @@ require "rails_helper"
 RSpec.describe Finance::NPQ::CalculationOrchestrator do
   let(:cpd_lead_provider) { create :cpd_lead_provider, :with_npq_lead_provider, name: "Contract Test Lead Provider" }
   let(:contract) { create(:npq_contract, npq_lead_provider: cpd_lead_provider.npq_lead_provider) }
+  let(:npq_course) { create(:npq_course, identifier: contract.course_identifier) }
   let(:breakdown_summary) do
     {
+      name: cpd_lead_provider.npq_lead_provider.name,
       declaration: :started,
-      participants: 5,
-      not_yet_included: 0,
-      recruitment_target: 72,
+      recruitment_target: contract.recruitment_target,
+      participants: 9,
+      total_participants_paid: 5,
+      total_participants_not_paid: 4,
+      version: contract.version,
+      course_identifier: contract.course_identifier,
     }
   end
   let(:service_fees) do
@@ -29,12 +34,18 @@ RSpec.describe Finance::NPQ::CalculationOrchestrator do
   context ".call" do
     context "normal operation" do
       before do
-        create_list(:npq_participant_declaration, 5, :eligible, cpd_lead_provider: cpd_lead_provider)
+        FactoryBot.with_options cpd_lead_provider: cpd_lead_provider, course_identifier: contract.course_identifier do |factory|
+          factory.create_list(:npq_participant_declaration, 3, :eligible)
+          factory.create_list(:npq_participant_declaration, 2, :payable)
+          factory.create_list(:npq_participant_declaration, 4, :submitted)
+          factory.create_list(:npq_participant_declaration, 3, :voided)
+          factory.create_list(:npq_participant_declaration, 7, :paid)
+        end
       end
 
       it "returns the total calculation" do
         returned_hash = run_calculation
-        expect(returned_hash[:breakdown_summary].except(:name)).to eq(breakdown_summary)
+        expect(returned_hash[:breakdown_summary]).to eq(breakdown_summary)
         expect(returned_hash[:service_fees][:monthly]).to be_within(0.001).of(service_fees[:monthly])
         expect(returned_hash[:output_payments]).to eq(output_payments)
       end
@@ -51,7 +62,7 @@ RSpec.describe Finance::NPQ::CalculationOrchestrator do
 
 private
 
-  def run_calculation(aggregator: Finance::NPQ::ParticipantEligibleAggregator)
+  def run_calculation(aggregator: Finance::NPQ::StartedParticipantAggregator)
     described_class.call(
       aggregator: aggregator,
       contract: contract,

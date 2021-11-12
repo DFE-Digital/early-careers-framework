@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "payment_calculator/npq/payment_calculation"
+
 module Finance
   module NPQ
     class PaymentOverviewsController < BaseController
@@ -7,7 +9,10 @@ module Finance
         @npq_lead_provider = lead_provider_scope.find(params[:id])
         @breakdowns        = Finance::NPQ::CalculationOverviewOrchestrator.call(
           cpd_lead_provider: @npq_lead_provider.cpd_lead_provider,
-          event_type: :started,
+          calculation_orchestrator: ::Finance::NPQ::CalculationOrchestrator.new(
+            aggregator: CurrentMilestoneParticipantDeclarationAggregator,
+            calculator: PaymentCalculator::NPQ::PaymentCalculation,
+          )
         )
       end
 

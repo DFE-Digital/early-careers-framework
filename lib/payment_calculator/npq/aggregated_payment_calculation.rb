@@ -2,7 +2,8 @@
 
 module PaymentCalculator
   module NPQ
-    class AggregatedPaymentCalculation
+    class
+      AggregatedPaymentCalculation
       class << self
         def call(cpd_lead_provider:)
           new(cpd_lead_provider: cpd_lead_provider).call
