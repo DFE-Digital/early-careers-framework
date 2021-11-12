@@ -29,16 +29,16 @@ module Finance
 
   private
 
-    attr_reader :cpd_lead_provider, :contract, :aggregator, :calculator
+    attr_accessor :cpd_lead_provider, :contract, :aggregator, :calculator
 
     def initialize(cpd_lead_provider:,
                    contract:,
                    aggregator: self.class.default_aggregator,
                    calculator: self.class.default_calculator)
-      @cpd_lead_provider = cpd_lead_provider
-      @contract = contract
-      @aggregator = aggregator
-      @calculator = calculator
+      self.cpd_lead_provider = cpd_lead_provider
+      self.contract          = contract
+      self.aggregator        = aggregator
+      self.calculator        = calculator
     end
   end
 end

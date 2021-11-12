@@ -5,8 +5,7 @@ module Finance
     class PaymentOverviewsController < BaseController
       def show
         @npq_lead_provider = lead_provider_scope.find(params[:id])
-
-        @breakdowns = Finance::NPQ::CalculationOverviewOrchestrator.call(
+        @breakdowns        = Finance::NPQ::CalculationOverviewOrchestrator.call(
           cpd_lead_provider: @npq_lead_provider.cpd_lead_provider,
           event_type: :started,
         )

@@ -18,7 +18,7 @@ module PaymentCalculator
 
     private
 
-      attr_reader :contract
+      attr_accessor :contract
 
       delegate :recruitment_target, :per_participant, :service_fee_percentage, :service_fee_installments, to: :contract
 
@@ -31,7 +31,7 @@ module PaymentCalculator
       end
 
       def initialize(contract:)
-        @contract = contract
+        self.contract = contract
       end
     end
   end

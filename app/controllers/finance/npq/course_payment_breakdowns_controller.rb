@@ -5,8 +5,8 @@ module Finance
     class CoursePaymentBreakdownsController < BaseController
       def show
         @npq_lead_provider = lead_provider_scope.find(params[:lead_provider_id])
-
-        @breakdown = Finance::NPQ::CalculationOrchestrator.call(
+        @npq_course        = NPQCourse.find_by!(identifier: params[:id])
+        @breakdown         = Finance::NPQ::CalculationOrchestrator.call(
           cpd_lead_provider: @npq_lead_provider.cpd_lead_provider,
           contract: @npq_lead_provider.npq_contracts.find_by!(course_identifier: params[:id]),
           event_type: :started,

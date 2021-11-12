@@ -10,6 +10,7 @@ module Finance
         def submission_deadline
           Date.parse(payment_period.last).to_s(:govuk)
         end
+
       private
 
         attr_writer :cohort, :payment_reference

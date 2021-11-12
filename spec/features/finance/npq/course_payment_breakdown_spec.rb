@@ -32,7 +32,6 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
     when_i_click_on(npq_leading_teaching_contract)
     then_i_should_see_correct_breakdown_summary(cpd_lead_provider, npq_leading_teaching_contract)
     then_i_should_see_correct_payment_breakdown(cpd_lead_provider, npq_leading_teaching_contract)
-    save_and_open_screenshot
     when_i_click "Back"
     when_i_click_on(npq_leading_behaviour_culture_contract)
     then_i_should_see_correct_breakdown_summary(cpd_lead_provider, npq_leading_behaviour_culture_contract)
@@ -93,6 +92,8 @@ private
   end
 
   def then_i_should_see_correct_breakdown_summary(npq_lead_provider, npq_contract)
+    expect(page).to have_css("h2.govuk-heading-l", text: NPQCourse.find_by!(identifier: npq_contract.course_identifier).name)
+
     expect(page.find("dt.govuk-summary-list__key", text: "Submission deadline"))
       .to have_sibling("dd.govuk-summary-list__value", text: cutoff_date)
 
@@ -109,7 +110,7 @@ private
       .to have_sibling("dd.govuk-summary-list__value", text: ParticipantDeclaration::NPQ.submitted_for_lead_provider_and_course(npq_lead_provider, npq_contract.course_identifier).count)
   end
 
-  def then_i_should_see_correct_payment_breakdown(cpd_lead_provider, npq_leading_teaching_contract)
+  def then_i_should_see_correct_payment_breakdown
     expect(page)
       .to have_css("table.govuk-table tbody tr.govuk-table__row:nth-child(1) td:nth-child(1)", text: "Service fee")
   end
