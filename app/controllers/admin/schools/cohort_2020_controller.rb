@@ -25,7 +25,12 @@ module Admin
         render :new and return unless @user.valid?
 
         if @user.early_career_teacher?
-          @user.errors.add(:base, "A user with this email address is currently participating as an ECT at school with urn #{@user.teacher_profile.current_ecf_profile.school.urn}")
+          if (ect_profile = @user.teacher_profile.current_ecf_profile)
+            @user.errors.add(:base, I18n.t(:admin_nqt_1_email_used_ect, urn: ect_profile.school.urn))
+          else
+            nqt_profile = @user.teacher_profile.early_career_teacher_profile
+            @user.errors.add(:base, I18n.t(:admin_nqt_1_email_used_nqt, urn: nqt_profile.school.urn))
+          end
           render :new and return
         end
 
