@@ -30,8 +30,8 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
     and_i_select_an_npq_lead_provider
     then_i_should_have_the_correct_payment_breakdown_per_npq_lead_provider
     when_i_click_on(npq_leading_teaching_contract)
-    save_and_open_screenshot
-    byebug
+    # save_and_open_screenshot
+    # byebug
     then_i_should_see_correct_breakdown_summary(cpd_lead_provider, npq_leading_teaching_contract)
     then_i_should_see_correct_payment_breakdown(cpd_lead_provider, npq_leading_teaching_contract)
     when_i_click "Back"
@@ -42,20 +42,52 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
     then_i_should_see_correct_breakdown_summary(cpd_lead_provider, npq_leading_teaching_development_contract)
   end
 
-private
+  private
+
+  def create_accepted_application(user, npq_course, npq_lead_provider)
+    npq_application = NPQ::BuildApplication.call(
+      npq_application_params: attributes_for(:npq_application),
+      npq_course_id: npq_course.id,
+      npq_lead_provider_id: npq_lead_provider.id,
+      user_id: user.id,
+    )
+    npq_application.save!
+    NPQ::Accept.call(npq_application: npq_application)
+    npq_application
+  end
+
+  def create_started_declarations(npq_application)
+    RecordDeclarations::Started::NPQ.call(
+      params: {
+        participant_id: npq_application.user.id,
+        course_identifier: npq_application.npq_course.identifier,
+        declaration_date: (npq_application.profile.schedule.milestones.first.start_date + 1.day).rfc3339,
+        cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider,
+        declaration_type: RecordDeclarations::NPQ::STARTED,
+      },
+    )
+    byebug
+  end
 
   def and_those_courses_have_submitted_declations
-    create_list(:user, 4, :with_started_npq_declaration, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_teaching)
-    create_list(:user, 4, :with_started_npq_declaration, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_behaviour_culture)
-    create_list(:user, 4, :with_started_npq_declaration, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_teaching_development)
+    [npq_course_leading_teaching, npq_course_leading_behaviour_culture, npq_course_leading_teaching_development].each do |npq_course|
+      users = create_list(:user, 9)
+      with_started_declaration = users[0, 3]
+      with_started_declaration.each { |user| create_accepted_application(user, npq_course, npq_lead_provider) }
 
-    create_list(:user, 3, :with_eligible_npq_declaration, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_teaching)
-    create_list(:user, 3, :with_eligible_npq_declaration, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_behaviour_culture)
-    create_list(:user, 3, :with_eligible_npq_declaration, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_teaching_development)
+      with_eligible_npq_declaration = users[4, 6]
+      with_eligible_npq_declaration
+        .map { |user| create_accepted_application(user, npq_course, npq_lead_provider) }
+        .map { |npq_application| create_started_declarations(npq_application) }
+    end
 
-    create_list(:user, 2, :with_payable_npq_declarations, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_teaching)
-    create_list(:user, 2, :with_payable_npq_declarations, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_behaviour_culture)
-    create_list(:user, 2, :with_payable_npq_declarations, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_teaching_development)
+    # create_list(:user, 3, :with_eligible_npq_declaration, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_teaching)
+    # create_list(:user, 3, :with_eligible_npq_declaration, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_behaviour_culture)
+    # create_list(:user, 3, :with_eligible_npq_declaration, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_teaching_development)
+
+    # create_list(:user, 2, :with_payable_npq_declarations, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_teaching)
+    # create_list(:user, 2, :with_payable_npq_declarations, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_behaviour_culture)
+    # create_list(:user, 2, :with_payable_npq_declarations, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_teaching_development)
   end
 
   def and_there_is_npq_provider_with_contracts

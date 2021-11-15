@@ -7,48 +7,6 @@ FactoryBot.define do
     login_token { Faker::Alphanumeric.alpha(number: 10) }
     login_token_valid_until { 1.hour.from_now }
 
-    trait :with_accepted_npq_application do
-      transient do
-        npq_application_attributes { attributes_for(:npq_application) }
-        npq_course { create(:npq_course) }
-        npq_lead_provider { create(:npq_lead_provider) }
-      end
-      after(:create) do |user, evaluator|
-        npq_application = NPQ::BuildApplication.call(
-          npq_application_params: evaluator.npq_application_attributes,
-          npq_course_id: evaluator.npq_course.id,
-          npq_lead_provider_id: evaluator.npq_lead_provider.id,
-          user_id: user.id,
-        )
-        npq_application.save!
-
-        NPQ::Accept.call(npq_application: npq_application)
-        user.reload
-      end
-    end
-
-    trait :with_started_npq_declaration do
-      with_accepted_npq_application
-
-      transient do
-        declaration_type { RecordDeclarations::NPQ::STARTED }
-        npq_application { |user| user.npq_applications.first }
-      end
-
-      after(:create) do |user, evaluator|
-        RecordDeclarations::Started::NPQ.call(
-          params: {
-            participant_id: user.id,
-            course_identifier: evaluator.npq_application.npq_course.identifier,
-            declaration_date: (evaluator.npq_application.profile.schedule.milestones.first.start_date + 1.day).rfc3339,
-            cpd_lead_provider: evaluator.npq_application.npq_lead_provider.cpd_lead_provider,
-            declaration_type: evaluator.declaration_type,
-          },
-        )
-        user.reload
-      end
-    end
-
     trait :admin do
       admin_profile
     end
