@@ -283,6 +283,8 @@ Rails.application.routes.draw do
     end
   end
 
+  get "/finance", to: redirect("/finance/manage-cpd-contracts")
+
   namespace :participants do
     resource :no_access, only: :show, controller: "no_access"
     resource :start_registrations, path: "/start-registration", only: :show
