@@ -12,7 +12,7 @@ module Finance
           calculation_orchestrator: ::Finance::NPQ::CalculationOrchestrator.new(
             aggregator: CurrentMilestoneParticipantDeclarationAggregator,
             calculator: PaymentCalculator::NPQ::PaymentCalculation,
-          )
+          ),
         )
       end
 

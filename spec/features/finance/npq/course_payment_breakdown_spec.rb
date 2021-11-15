@@ -30,8 +30,8 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
     and_i_select_an_npq_lead_provider
     then_i_should_have_the_correct_payment_breakdown_per_npq_lead_provider
     when_i_click_on(npq_leading_teaching_contract)
-    save_and_open_screenshot
-    byebug
+    # save_and_open_screenshot
+    # byebug
     then_i_should_see_correct_breakdown_summary(cpd_lead_provider, npq_leading_teaching_contract)
     then_i_should_see_correct_payment_breakdown(cpd_lead_provider, npq_leading_teaching_contract)
     when_i_click "Back"
@@ -39,23 +39,59 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
     then_i_should_see_correct_breakdown_summary(cpd_lead_provider, npq_leading_behaviour_culture_contract)
     when_i_click "Back"
     when_i_click_on(npq_leading_teaching_development_contract)
-    then_i_should_see_correct_breakdown_summary(cpd_lead_provider, npq_leading_teaching_development_contract)
+    then_i_should_see_correct_breakdown_summary(npq_leading_teaching_development_contract)
   end
 
 private
 
+  def create_accepted_application(user, npq_course, npq_lead_provider)
+    npq_application = NPQ::BuildApplication.call(
+      npq_application_params: attributes_for(:npq_application),
+      npq_course_id: npq_course.id,
+      npq_lead_provider_id: npq_lead_provider.id,
+      user_id: user.id,
+    )
+    npq_application.save!
+    NPQ::Accept.call(npq_application: npq_application)
+    npq_application
+  end
+
+  def create_started_declarations(npq_application)
+    RecordDeclarations::Started::NPQ.call(
+      params: {
+        participant_id: npq_application.user.id,
+        course_identifier: npq_application.npq_course.identifier,
+        declaration_date: (npq_application.profile.schedule.milestones.first.start_date + 1.day).rfc3339,
+        cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider,
+        declaration_type: RecordDeclarations::NPQ::STARTED,
+      },
+    )
+  end
+
   def and_those_courses_have_submitted_declations
-    create_list(:user, 4, :with_started_npq_declaration, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_teaching)
-    create_list(:user, 4, :with_started_npq_declaration, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_behaviour_culture)
-    create_list(:user, 4, :with_started_npq_declaration, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_teaching_development)
+    [npq_course_leading_teaching, npq_course_leading_behaviour_culture, npq_course_leading_teaching_development].each do |npq_course|
+      create_list(:user, 1)
+        .map { |user| create_accepted_application(user, npq_course, npq_lead_provider) }
 
-    create_list(:user, 3, :with_eligible_npq_declaration, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_teaching)
-    create_list(:user, 3, :with_eligible_npq_declaration, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_behaviour_culture)
-    create_list(:user, 3, :with_eligible_npq_declaration, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_teaching_development)
+      create_list(:user, 1)
+        .map { |user| create_accepted_application(user, npq_course, npq_lead_provider) }
+        .map { |npq_application| create_started_declarations(npq_application) }
 
-    create_list(:user, 2, :with_payable_npq_declarations, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_teaching)
-    create_list(:user, 2, :with_payable_npq_declarations, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_behaviour_culture)
-    create_list(:user, 2, :with_payable_npq_declarations, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_teaching_development)
+      create_list(:user, 1)
+        .map { |user| create_accepted_application(user, npq_course, npq_lead_provider) }
+        .map { |npq_application| create_started_declarations(npq_application) }
+        .map(&JSON.method(:parse))
+        .map { |deserialised_participant_declaration| ParticipantDeclaration::NPQ.find(deserialised_participant_declaration.dig("data", "id")) }
+        .each(&:make_eligible!)
+
+      create_list(:user, 1)
+        .map { |user| create_accepted_application(user, npq_course, npq_lead_provider) }
+        .map { |npq_application| create_started_declarations(npq_application) }
+        .map(&JSON.method(:parse))
+        .map { |deserialised_participant_declaration| ParticipantDeclaration::NPQ.find(deserialised_participant_declaration.dig("data", "id")) }
+        .map { |participant_declaration| participant_declaration.make_eligible! && participant_declaration }
+        .each(&:make_payable!)
+    end
   end
 
   def and_there_is_npq_provider_with_contracts
@@ -105,6 +141,8 @@ private
     expect(page.find("dt.govuk-summary-list__key", text: "Current participants"))
       .to have_sibling("dd.govuk-summary-list__value", text: ParticipantDeclaration::NPQ.for_lead_provider_and_course(npq_lead_provider, npq_contract.course_identifier).count)
 
+    save_and_open_page
+
     expect(page.find("dt.govuk-summary-list__key", text: "Total paid"))
       .to have_sibling("dd.govuk-summary-list__value", text: ParticipantDeclaration::NPQ.eligible_and_payable_for_lead_provider_and_course(npq_lead_provider, npq_contract.course_identifier).count)
 
@@ -112,7 +150,7 @@ private
       .to have_sibling("dd.govuk-summary-list__value", text: ParticipantDeclaration::NPQ.submitted_for_lead_provider_and_course(npq_lead_provider, npq_contract.course_identifier).count)
   end
 
-  def then_i_should_see_correct_payment_breakdown
+  def then_i_should_see_correct_payment_breakdown(_cpd_lead_provider, _npq_contract)
     expect(page)
       .to have_css("table.govuk-table tbody tr.govuk-table__row:nth-child(1) td:nth-child(1)", text: "Service fee")
   end

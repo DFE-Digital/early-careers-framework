@@ -6,15 +6,12 @@ module Finance
   module NPQ
     class CalculationOverviewOrchestrator
       class << self
-        def call(cpd_lead_provider:, calculation_orchestrator: ::Finance::NPQ::CalculationOrchestrator)
-          new(
-            cpd_lead_provider: cpd_lead_provider,
-            calculation_orchestrator: calculation_orchestrator,
-          ).call
+        def call(cpd_lead_provider:, calculation_orchestrator:)
+          new(calculation_orchestrator).call(cpd_lead_provider)
         end
       end
 
-      def call
+      def call(cpd_lead_provider)
         cpd_lead_provider.npq_lead_provider.npq_contracts.map do |contract|
           calculation_orchestrator.call(contract)
         end
@@ -22,10 +19,9 @@ module Finance
 
     private
 
-      attr_accessor :cpd_lead_provider, :calculation_orchestrator
+      attr_accessor :calculation_orchestrator
 
-      def initialize(cpd_lead_provider:, calculation_orchestrator: )
-        self.cpd_lead_provider        = cpd_lead_provider
+      def initialize(calculation_orchestrator)
         self.calculation_orchestrator = calculation_orchestrator
       end
     end

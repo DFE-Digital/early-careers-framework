@@ -12,7 +12,7 @@ module Finance
       def aggregate
         {
           current_participants_count: current_participants_count,
-          total_participant_paid_count: total_participant_paid_count,
+          total_participant_eligible_and_payable_count: total_participant_eligible_and_payable_count,
           total_participant_not_paid_count: total_participant_not_paid_count,
         }
       end
@@ -29,24 +29,25 @@ module Finance
       def current_participants_count
         ParticipantDeclaration::NPQ
           .for_lead_provider_and_course(cpd_lead_provider, course_identifier)
+          .where.not(state: ParticipantDeclaration.states[:paid])
           .unique_id
-          .where.not(ParticipantDeclaration::NPQ.paid.where_values_hash).count
+          .count
       end
 
-      def total_participant_paid_count
+      def total_participant_eligible_and_payable_count
         ParticipantDeclaration::NPQ
           .for_lead_provider_and_course(cpd_lead_provider, course_identifier)
+          .eligible_or_payable
           .unique_id
-          .eligible
-          .payable.count
+          .count
       end
 
       def total_participant_not_paid_count
         ParticipantDeclaration::NPQ
           .for_lead_provider_and_course(cpd_lead_provider, course_identifier)
+          .where.not(state: ParticipantDeclaration.states.values_at("payable", "eligible"))
           .unique_id
-          .where.not(ParticipantDeclaration::NPQ.eligible.where_values_hash)
-          .where.not(ParticipantDeclaration::NPQ.payable.where_values_hash).count
+          .count
       end
     end
   end
