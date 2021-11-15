@@ -35,6 +35,10 @@ module DataStage
       handle_local_authority_changes!
     end
 
+    def local_authority
+      ::LocalAuthority.find_by(code: la_code)
+    end
+
   private
 
     def attributes_to_sync

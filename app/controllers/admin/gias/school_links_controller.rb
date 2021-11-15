@@ -11,10 +11,14 @@ module Admin
       end
 
       def show
-        @link = school_links_scope.joins(:school).find_by(school: { urn: params[:id]})
+        @school = school_scope.find_by(urn: params[:id])
       end
 
     private
+
+      def school_scope
+        policy_scope(::School, policy_scope_class: GiasPolicy::Scope)
+      end
 
       def school_links_scope
         policy_scope(::SchoolLink, policy_scope_class: GiasPolicy::Scope)

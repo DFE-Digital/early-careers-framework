@@ -21,7 +21,7 @@
             <% @closed_schools.each do |link| %>
               <tr class="govuk-table__row">
                 <td class="govuk-table__cell">
-                  <%= govuk_link_to admin_gias_school_change_path(id: link.school.urn) do %>
+                  <%= govuk_link_to admin_gias_school_path(id: link.school.urn) do %>
                     <span class="govuk-visually-hidden">View closed school </span><%= link.school.urn %>
                   <% end %>
                 </td>
@@ -29,7 +29,7 @@
                   <%= link.school.name %>
                 </td>
                 <td class="govuk-table__cell">
-                  <%= govuk_link_to admin_school_path(id: link.link_school.urn) do %>
+                  <%= govuk_link_to admin_gias_school_path(id: link.link_school.urn) do %>
                     <span class="govuk-visually-hidden">View successor school </span><%= "#{link.link_school.name} (#{link.link_school.urn})" %>
                   <% end %>
                 </td>
@@ -56,7 +56,7 @@
             <% @opened_schools.each do |link| %>
               <tr class="govuk-table__row">
                 <td class="govuk-table__cell">
-                  <%= govuk_link_to admin_gias_school_change_path(id: link.school.urn) do %>
+                  <%= govuk_link_to admin_gias_school_path(id: link.school.urn) do %>
                     <span class="govuk-visually-hidden">View opened school </span><%= link.school.urn %>
                   <% end %>
                 </td>
@@ -64,7 +64,7 @@
                   <%= link.school.name %>
                 </td>
                 <td class="govuk-table__cell">
-                  <%= govuk_link_to admin_gias_school_change_path(id: link.link_school.urn) do %>
+                  <%= govuk_link_to admin_gias_school_path(id: link.link_school.urn) do %>
                     <span class="govuk-visually-hidden">View predecessor school </span><%= "#{link.link_school.name} (#{link.link_school.urn})" %>
                   <% end %>
                 </td>
