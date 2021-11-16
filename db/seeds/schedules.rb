@@ -3,7 +3,7 @@
 ecf_september_standard_2021 = Finance::Schedule::ECF.find_or_create_by!(name: "ECF September standard 2021")
 ecf_september_standard_2021.update!(schedule_identifier: "ecf-september-standard-2021")
 [
-  { name: "Output 1 - Participant Start", start_date: Date.new(2021, 9, 1), milestone_date: Date.new(2021, 10, 31), payment_date: Date.new(2021, 11, 30), declaration_type: "started" },
+  { name: "Output 1 - Participant Start", start_date: Date.new(2021, 9, 1), milestone_date: Date.new(2021, 11, 30), payment_date: Date.new(2021, 11, 30), declaration_type: "started" },
   { name: "Output 2 – Retention Point 1", start_date: Date.new(2021, 11, 1), milestone_date: Date.new(2022, 1, 31), payment_date: Date.new(2022, 2, 28), declaration_type: "retained-1" },
   { name: "Output 3 – Retention Point 2", start_date: Date.new(2022, 2, 1), milestone_date: Date.new(2022, 4, 30), payment_date: Date.new(2022, 5, 31), declaration_type: "retained-2" },
   { name: "Output 4 – Retention Point 3", start_date: Date.new(2022, 5, 1), milestone_date: Date.new(2022, 9, 30), payment_date: Date.new(2022, 10, 31), declaration_type: "retained-3" },
