@@ -18,12 +18,4 @@ RSpec.describe "Admin::Gias::SchoolsToAdd", type: :request do
       expect(assigns(:schools)).to match_array [staged_school]
     end
   end
-
-  describe "GET /admin/gias/schools-to-add/:id" do
-    it "renders the show template" do
-      get "/admin/gias/schools-to-add/#{staged_school.urn}"
-      expect(response).to render_template("admin/gias/schools_to_add/show")
-      expect(assigns(:school)).to eq staged_school
-    end
-  end
 end

@@ -10,15 +10,7 @@ module Admin
         @opened_schools = school_links_scope.predecessor.joins(:school).order("schools.urn asc")
       end
 
-      def show
-        @school = school_scope.find_by(urn: params[:id])
-      end
-
     private
-
-      def school_scope
-        policy_scope(::School, policy_scope_class: GiasPolicy::Scope)
-      end
 
       def school_links_scope
         policy_scope(::SchoolLink, policy_scope_class: GiasPolicy::Scope)
