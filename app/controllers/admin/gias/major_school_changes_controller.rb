@@ -2,7 +2,7 @@
 
 module Admin
   module Gias
-    class SchoolLinksController < Admin::BaseController
+    class MajorSchoolChangesController < Admin::BaseController
       before_action { authorize :gias }
 
       def index

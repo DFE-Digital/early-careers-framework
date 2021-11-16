@@ -16,8 +16,8 @@ module Admin
       attr_reader :school
 
       def tag_attributes
-        return { text: "Closed", colour: "grey" } if school.closed_status?
-        return { text: "Proposed to open", colour: "grey" } if school.proposed_to_open_status?
+        return { text: "Closed", colour: "red" } if school.closed_status?
+        return { text: "Proposed to open", colour: "orange" } if school.proposed_to_open_status?
         return { text: "Proposed to close", colour: "orange" } if school.proposed_to_close_status?
 
         { text: "Open", colour: "green" }

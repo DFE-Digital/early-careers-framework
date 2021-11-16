@@ -5,10 +5,13 @@
 
 <h1 class="govuk-heading-xl">School details</h1>
 <% if @school.counterpart&.eligible? %>
-  <div class="govuk-body">
-    <%= govuk_link_to "View live school", admin_school_path(id: @school.counterpart.slug) %>
-  </div>
+  <p class="govuk-body">
+    <%= govuk_link_to "View live school", admin_school_path(id: @school.counterpart.slug), target: "_blank" %>
+  </p>
 <% end %>
+<p class="govuk-body">
+  <%= govuk_link_to "View school details on GIAS", "https://get-information-schools.service.gov.uk/Establishments/Establishment/Details/#{@school.urn}", target: "_blank" %>
+</p>
 <dl class="govuk-summary-list">
   <div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key">
