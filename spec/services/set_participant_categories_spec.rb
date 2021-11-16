@@ -12,6 +12,25 @@ RSpec.describe SetParticipantCategories do
     let!(:ero_mentor) { create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
     let!(:details_being_checked_ect) { create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
 
+    context "SIT for multiple schools" do
+      let(:school_cohorts) { create_list(:school_cohort, 3, :cip) }
+      let(:school_cohort) { school_cohorts.first }
+      let(:induction_coordinator) { create(:induction_coordinator_profile, schools: school_cohorts.map(&:school)) }
+
+      before do
+        @ects = []
+        school_cohorts.each do |a_school_cohort|
+          @ects << create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: a_school_cohort)
+        end
+      end
+
+      it "only returns participants for the selected school cohort" do
+        participant_categories = service.call(school_cohort, induction_coordinator.user)
+        expect(participant_categories.eligible).to match_array [eligible_ect, ineligible_mentor, ero_mentor, details_being_checked_ect, @ects.first]
+        expect(participant_categories.eligible).not_to include(@ects[1], @ects[2])
+      end
+    end
+
     context "CIP cohorts" do
       let(:school_cohort) { create(:school_cohort, :cip) }
       let(:induction_coordinator) { create(:induction_coordinator_profile, schools: [school_cohort.school]) }
