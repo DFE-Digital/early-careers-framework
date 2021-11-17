@@ -45,7 +45,7 @@ RSpec.describe NominateInductionTutorForm, type: :model do
     it "validates that the name matches if the email matches an induction tutor" do
       create(:user, :induction_coordinator, full_name: "One Name", email: email)
       form = NominateInductionTutorForm.new(token: token, full_name: "Different Name", email: email)
-      expect(form.valid?(:full_name)).to be false
+      expect(form.valid?(:email)).to be false
       expect(form.errors[:full_name].first).to eq("The name you entered does not match our records")
       expect(form.name_different?).to be_truthy
     end

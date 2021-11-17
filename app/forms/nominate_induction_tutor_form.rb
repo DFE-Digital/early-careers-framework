@@ -9,8 +9,8 @@ class NominateInductionTutorForm
 
   validates :full_name, presence: true, on: :full_name
   validates :email, presence: true, notify_email: true, on: :email
-  validate :email_is_not_in_use
-  validate :name_matches
+  validate :email_is_not_in_use, on: :email
+  validate :name_matches, on: :email
 
   def attributes
     {
