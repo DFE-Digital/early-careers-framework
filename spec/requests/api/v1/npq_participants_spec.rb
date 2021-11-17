@@ -3,8 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "NPQ Participants API", type: :request do
-  describe "GET /api/v1/participants/npq" do
-    let!(:default_schedule) { create(:schedule, :npq_specialist) }
+  describe "GET /api/v1/participants/npq", :with_default_schedules do
     let(:npq_lead_provider) { create(:npq_lead_provider) }
     let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider: npq_lead_provider) }
     let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
