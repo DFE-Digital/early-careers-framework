@@ -6,7 +6,7 @@ module ParticipantDeclarationSteps
   def given_an_early_career_teacher_has_been_entered_onto_the_dfe_service
     cohort = create(:cohort, :current)
     school_cohort = create(:school_cohort, cohort: cohort)
-    @ect_profile = create(:participant_profile, :ect, school_cohort: school_cohort)
+    @ect_profile = create(:ect_participant_profile, school_cohort: school_cohort)
     delivery_partner = create(:delivery_partner)
     create(:partnership,
            school: @ect_profile.school,
@@ -22,14 +22,14 @@ module ParticipantDeclarationSteps
     cohort = create(:cohort, :current)
     school_cohort = create(:school_cohort, cohort: cohort)
     partnership = create(:partnership, lead_provider: @lead_provider, cohort: cohort, school: school_cohort.school)
-    @mentor_profile = create(:participant_profile, :mentor, school: partnership.school, cohort: partnership.cohort)
+    @mentor_profile = create(:mentor_participant_profile, school: partnership.school, cohort: partnership.cohort)
     @mentor_id = @mentor_profile.user.id
     @declaration_date = @mentor_profile.schedule.milestones.first.start_date + 1.day
     @submission_date = @mentor_profile.schedule.milestones.first.start_date + 2.days
   end
 
   def given_an_npq_participant_has_been_entered_onto_the_dfe_service
-    create(:schedule, :npq_specialist)
+    create(:npq_specialist_schedule)
     npq_lead_provider = create(:npq_lead_provider, cpd_lead_provider: @cpd_lead_provider)
     npq_course = create(:npq_course, identifier: "npq-senior-leadership")
     @npq_application = create(:npq_application, npq_lead_provider: npq_lead_provider, npq_course: npq_course)
@@ -211,7 +211,7 @@ module ParticipantDeclarationSteps
            "participant_id": "#{participant_id}",
            "declaration_type": "started",
            "declaration_date": "#{declaration_date.rfc3339}",
-      		 "course_identifier": "#{course_identifier}"
+           "course_identifier": "#{course_identifier}"
          }
        }
       }

@@ -4,10 +4,10 @@ module RecordDeclarations
   module NPQ
     extend ActiveSupport::Concern
 
-    STARTED = :started
-    COMPLETED = :completed
-    RETAINED_ONE = :"retained-1"
-    RETAINED_TWO = :"retained-2"
+    STARTED      = "started"
+    COMPLETED    = "completed"
+    RETAINED_ONE = "retained-1"
+    RETAINED_TWO = "retained-2"
 
     included { extend NPQClassMethods }
 

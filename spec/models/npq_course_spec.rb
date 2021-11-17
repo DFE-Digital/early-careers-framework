@@ -6,7 +6,7 @@ RSpec.describe NPQCourse do
     let(:npq_course) { build(:npq_course, identifier: identifier) }
 
     context "when a course is one of NPQCourse::LEADERSHIP_IDENTIFIER" do
-      let(:identifier) { NPQCourse::LEADERSHIP_IDENTIFIER.sample }
+      let(:identifier) { Finance::Schedule::NPQLeadership::IDENTIFIERS.sample }
 
       it "returns the defaut NPQ leadership schedule" do
         expect(described_class.schedule_for(npq_course))
@@ -15,7 +15,7 @@ RSpec.describe NPQCourse do
     end
 
     context "when a course is one of NPQCourse::SPECIALIST_IDENTIFIER" do
-      let(:identifier) { NPQCourse::SPECIALIST_IDENTIFIER.sample }
+      let(:identifier) { Finance::Schedule::NPQSpecialist::IDENTIFIERS.sample }
 
       it "returns the defaut NPQ specialist schedule" do
         expect(described_class.schedule_for(npq_course)).to eq(Finance::Schedule::NPQSpecialist.default)

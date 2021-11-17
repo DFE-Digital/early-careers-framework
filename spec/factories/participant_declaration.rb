@@ -12,19 +12,19 @@ FactoryBot.define do
       user { create(:user, :early_career_teacher) }
       type { "ParticipantDeclaration::ECF" }
       course_identifier { "ecf-induction" }
-      participant_profile { create(:participant_profile, :ect, *uplift) }
+      participant_profile { create(:ect_participant_profile, *uplift) }
     end
 
     factory :mentor_participant_declaration, class: "ParticipantDeclaration::ECF" do
       user { create(:user, :mentor) }
       course_identifier { "ecf-mentor" }
-      participant_profile { create(:participant_profile, :mentor, *uplift) }
+      participant_profile { create(:mentor_participant_profile, *uplift) }
     end
 
     factory :npq_participant_declaration, class: "ParticipantDeclaration::NPQ" do
       user { create(:user, :npq) }
       course_identifier { NPQCourse.all.map(&:identifier).sample }
-      participant_profile { create(:participant_profile, :npq) }
+      participant_profile { create(:npq_participant_profile) }
     end
 
     trait :sparsity_uplift do

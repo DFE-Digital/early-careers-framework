@@ -6,8 +6,8 @@ RSpec.describe EarlyCareerTeachers::Create do
   let(:pupil_premium_school) { create :school, :pupil_premium_uplift }
   let(:sparsity_school) { create :school, :sparsity_uplift }
   let(:uplift_school) { create :school, :sparsity_uplift, :pupil_premium_uplift }
-  let!(:mentor_profile) { create :participant_profile, :mentor }
-  let!(:npq_participant) { create(:participant_profile, :npq).teacher_profile.user }
+  let!(:mentor_profile) { create :mentor_participant_profile }
+  let!(:npq_participant) { create(:npq_participant_profile).teacher_profile.user }
 
   it "creates an Early Career Teacher Profile record" do
     expect {
@@ -106,7 +106,7 @@ RSpec.describe EarlyCareerTeachers::Create do
 
   context "when the user has an active participant profile" do
     before do
-      create(:participant_profile, teacher_profile: create(:teacher_profile, user: user))
+      create(:ect_participant_profile, teacher_profile: create(:teacher_profile, user: user))
     end
 
     it "does not update the users name" do

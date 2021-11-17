@@ -2,7 +2,7 @@
 
 module Finance
   module NPQ
-    class CurrentMilestoneParticipantDeclarationAggregator < Finance::ParticipantAggregator
+    class CurrentMilestoneParticipantDeclarationAggregator
       class << self
         def call(cpd_lead_provider:, course_identifier:)
           new(cpd_lead_provider: cpd_lead_provider, course_identifier: course_identifier).aggregate

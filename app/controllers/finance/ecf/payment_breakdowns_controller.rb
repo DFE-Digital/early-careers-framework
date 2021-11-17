@@ -10,6 +10,8 @@ module Finance
           cpd_lead_provider: @ecf_lead_provider.cpd_lead_provider,
           contract: @ecf_lead_provider.call_off_contract,
           event_type: :started,
+          calculator: Finance::ECF::ParticipantEligibleAggregator,
+          aggregator: PaymentCalculator::ECF::PaymentCalculation,
         )
         @cutoff_date = "On #{helpers.cutoff_date}"
       end

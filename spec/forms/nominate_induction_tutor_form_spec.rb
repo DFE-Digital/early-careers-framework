@@ -14,7 +14,7 @@ RSpec.describe NominateInductionTutorForm, type: :model do
     it { is_expected.to validate_presence_of(:email).with_message("Enter an email") }
 
     it "validates that the email address is not in use by an ECT" do
-      create(:participant_profile, :ect, user: create(:user, email: email))
+      create(:ect_participant_profile, user: create(:user, email: email))
       form = NominateInductionTutorForm.new(token: token, full_name: name, email: email)
       expect(form).not_to be_valid
       expect(form.errors[:email].first).to eq("This email address is already in use")
@@ -22,7 +22,7 @@ RSpec.describe NominateInductionTutorForm, type: :model do
     end
 
     it "allows the email to be in use by a mentor" do
-      create(:participant_profile, :mentor, user: create(:user, email: email))
+      create(:mentor_participant_profile, user: create(:user, email: email))
 
       form = NominateInductionTutorForm.new(token: token, full_name: name, email: email)
       expect(form).to be_valid
@@ -36,7 +36,7 @@ RSpec.describe NominateInductionTutorForm, type: :model do
 
     it "allows the email to be in use by a NPQ registrant" do
       npq_user = create(:user, full_name: name, email: email)
-      create(:participant_profile, :npq, user: npq_user)
+      create(:npq_participant_profile, user: npq_user)
 
       form = NominateInductionTutorForm.new(token: token, full_name: name, email: email)
       expect(form).to be_valid

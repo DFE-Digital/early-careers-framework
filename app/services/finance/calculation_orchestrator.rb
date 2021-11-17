@@ -6,17 +6,17 @@ require "abstract_interface"
 module Finance
   class CalculationOrchestrator
     class << self
-      def call(cpd_lead_provider:, contract:, aggregator:, calculator:)
+      def call(cpd_lead_provider:, contract:, aggregator:, calculator:, event_type: :started)
         new(
           cpd_lead_provider: cpd_lead_provider,
-          contract: contract,
           aggregator: aggregator,
           calculator: calculator,
+          event_type: event_type,
         ).call(contract)
       end
     end
 
-    def call
+    def call(contract)
       calculator.call(
         contract: contract,
         aggregations: aggregations,
@@ -25,13 +25,13 @@ module Finance
 
   private
 
-    attr_accessor :cpd_lead_provider, :contract, :aggregator, :calculator
+    attr_accessor :cpd_lead_provider, :aggregator, :calculator, :event_type
 
-    def initialize(cpd_lead_provider:, contract:, aggregator:, calculator:)
+    def initialize(cpd_lead_provider:, aggregator:, calculator:, event_type:)
       self.cpd_lead_provider = cpd_lead_provider
-      self.contract          = contract
       self.aggregator        = aggregator
       self.calculator        = calculator
+      self.event_type        = event_type
     end
 
     def aggregations

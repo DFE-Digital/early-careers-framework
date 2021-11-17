@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::Participants::TableRow, type: :view_component do
-  let(:participant_profile) { create :participant_profile }
+  let(:participant_profile) { create :ecf_participant_profile }
   let(:school) { participant_profile.school }
 
   component { described_class.new profile: participant_profile }

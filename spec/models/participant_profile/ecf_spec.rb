@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe ParticipantProfile::ECF, type: :model do
-  let(:profile) { create(:participant_profile, :ecf) }
+  let(:profile) { create(:ecf_participant_profile) }
 
   describe "completed_validation_wizard?" do
     context "before any details have been entered" do

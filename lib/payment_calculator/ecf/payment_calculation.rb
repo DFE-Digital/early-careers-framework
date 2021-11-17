@@ -10,7 +10,7 @@ module PaymentCalculator
     class PaymentCalculation
       class << self
         def call(contract:,
-                 breakdown_summary_compiler: BreakdownSummary,
+                 headings_compiler: BreakdownSummary,
                  service_fee_calculator: ServiceFees,
                  output_payment_calculator: OutputPaymentAggregator,
                  uplift_payment_calculator: UpliftCalculation,
@@ -18,7 +18,7 @@ module PaymentCalculator
                  event_type: :started)
           new(
             contract: contract,
-            headings_calculator: breakdown_summary_compiler,
+            headings_calculator: headings_compiler,
             service_fee_calculator: service_fee_calculator,
             output_payment_calculator: output_payment_calculator,
             uplift_payment_calculator: uplift_payment_calculator,
@@ -47,12 +47,12 @@ module PaymentCalculator
       attr_accessor :contract, :service_fee_calculator, :headings_calculator, :output_payment_calculator, :uplift_payment_calculator
 
       def initialize(contract:,
-                     breakdown_summary_calculatoralculator: BreakdownSummary,
+                     headings_calculator: BreakdownSummary,
                      output_payment_calculator: OutputPaymentAggregator,
                      service_fee_calculator: ServiceFees,
                      uplift_payment_calculator: UpliftCalculation)
         @contract = contract
-        @headings_calculator = breakdown_summary_calculator
+        @headings_calculator = headings_calculator
         @output_payment_calculator = output_payment_calculator
         @service_fee_calculator = service_fee_calculator
         @uplift_payment_calculator = uplift_payment_calculator

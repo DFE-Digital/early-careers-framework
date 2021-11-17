@@ -19,8 +19,6 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
     )
   end
 
-  before { Finance::Schedule.all }
-
   scenario "Can get to NPQ payment breakdown page for a provider", :js do
     given_i_am_logged_in_as_a_finance_user
     and_there_is_npq_provider_with_contracts
@@ -30,19 +28,22 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
     and_i_select_an_npq_lead_provider
     then_i_should_have_the_correct_payment_breakdown_per_npq_lead_provider
     when_i_click_on(npq_leading_teaching_contract)
-    # save_and_open_screenshot
-    # byebug
+
     then_i_should_see_correct_breakdown_summary(cpd_lead_provider, npq_leading_teaching_contract)
-    then_i_should_see_correct_payment_breakdown(cpd_lead_provider, npq_leading_teaching_contract)
+    then_i_should_see_correct_payment_breakdown(npq_leading_teaching_contract)
     when_i_click "Back"
+
     when_i_click_on(npq_leading_behaviour_culture_contract)
     then_i_should_see_correct_breakdown_summary(cpd_lead_provider, npq_leading_behaviour_culture_contract)
+    then_i_should_see_correct_payment_breakdown(npq_leading_behaviour_culture_contract)
     when_i_click "Back"
+
     when_i_click_on(npq_leading_teaching_development_contract)
-    then_i_should_see_correct_breakdown_summary(npq_leading_teaching_development_contract)
+    then_i_should_see_correct_breakdown_summary(cpd_lead_provider, npq_leading_teaching_development_contract)
+    then_i_should_see_correct_payment_breakdown(npq_leading_teaching_development_contract)
   end
 
-  private
+private
 
   def create_accepted_application(user, npq_course, npq_lead_provider)
     npq_application = NPQ::BuildApplication.call(
@@ -66,19 +67,6 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
         declaration_type: RecordDeclarations::NPQ::STARTED,
       },
     )
-    byebug
-  end
-
-  def create_accepted_application(user, npq_course, npq_lead_provider)
-    npq_application = NPQ::BuildApplication.call(
-      npq_application_params: attributes_for(:npq_application),
-      npq_course_id: npq_course.id,
-      npq_lead_provider_id: npq_lead_provider.id,
-      user_id: user.id,
-    )
-    npq_application.save!
-    NPQ::Accept.call(npq_application: npq_application)
-    npq_application
   end
 
   def create_started_declarations(npq_application)
@@ -166,17 +154,28 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
     expect(page.find("dt.govuk-summary-list__key", text: "Current participants"))
       .to have_sibling("dd.govuk-summary-list__value", text: ParticipantDeclaration::NPQ.for_lead_provider_and_course(npq_lead_provider, npq_contract.course_identifier).count)
 
-    save_and_open_page
+    expected_total_paid = ParticipantDeclaration::NPQ
+                            .for_lead_provider_and_course(cpd_lead_provider, npq_contract.course_identifier)
+                            .eligible_or_payable
+                            .unique_id
+                            .count
 
     expect(page.find("dt.govuk-summary-list__key", text: "Total paid"))
-      .to have_sibling("dd.govuk-summary-list__value", text: ParticipantDeclaration::NPQ.eligible_and_payable_for_lead_provider_and_course(npq_lead_provider, npq_contract.course_identifier).count)
+      .to have_sibling("dd.govuk-summary-list__value", text: expected_total_paid)
 
     expect(page.find("dt.govuk-summary-list__key", text: "Total not paid"))
       .to have_sibling("dd.govuk-summary-list__value", text: ParticipantDeclaration::NPQ.submitted_for_lead_provider_and_course(npq_lead_provider, npq_contract.course_identifier).count)
   end
 
-  def then_i_should_see_correct_payment_breakdown(_cpd_lead_provider, _npq_contract)
-    expect(page)
-      .to have_css("table.govuk-table tbody tr.govuk-table__row:nth-child(1) td:nth-child(1)", text: "Service fee")
+  def then_i_should_see_correct_payment_breakdown(npq_contract)
+    within "table.govuk-table tbody tr.govuk-table__row:nth-child(1)" do
+      expected_per_participant_portion = npq_contract.per_participant * npq_contract.service_fee_percentage / (100 * npq_contract.service_fee_installments)
+
+      expect(page.find("td:nth-child(1)", text: "Service fee"))
+        .to have_sibling("td", text: number_to_pounds(expected_per_participant_portion))
+
+      expect(page.find("td:nth-child(1)", text: "Service fee"))
+        .to have_sibling("td", text: number_to_pounds(npq_contract.recruitment_target * expected_per_participant_portion))
+    end
   end
 end

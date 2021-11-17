@@ -4,9 +4,9 @@ require "rails_helper"
 
 RSpec.describe ParticipantSerializer do
   describe "serialization" do
-    let(:mentor_profile) { create(:participant_profile, :mentor) }
+    let(:mentor_profile) { create(:mentor_participant_profile) }
     let(:mentor) { mentor_profile.user }
-    let(:ect_profile) { create(:participant_profile, :ect, mentor_profile: mentor.mentor_profile) }
+    let(:ect_profile) { create(:ect_participant_profile, mentor_profile: mentor.mentor_profile) }
     let(:ect) { ect_profile.user }
     let(:ect_cohort) { ect.early_career_teacher_profile.cohort }
     let(:mentor_cohort) { mentor.mentor_profile.cohort }
@@ -29,8 +29,8 @@ RSpec.describe ParticipantSerializer do
     end
 
     context "when the participant record is withdrawn" do
-      let(:mentor) { create(:participant_profile, :mentor, :withdrawn_record).user }
-      let(:ect) { create(:participant_profile, :ect, :withdrawn_record, mentor_profile: mentor.mentor_profile).user }
+      let(:mentor) { create(:mentor_participant_profile, :withdrawn_record).user }
+      let(:ect) { create(:ect_participant_profile, :withdrawn_record, mentor_profile: mentor.mentor_profile).user }
 
       it "outputs correctly formatted serialized Mentors" do
         expected_json_string = "{\"data\":{\"id\":\"#{mentor.id}\",\"type\":\"participant\",\"attributes\":{\"email\":null,\"full_name\":null,\"mentor_id\":null,\"school_urn\":null,\"participant_type\":null,\"cohort\":null,\"status\":\"withdrawn\",\"teacher_reference_number\":null,\"teacher_reference_number_validated\":null,\"eligible_for_funding\":null,\"pupil_premium_uplift\":null,\"sparsity_uplift\":null,\"training_status\":null,\"schedule_identifier\":null}}}"

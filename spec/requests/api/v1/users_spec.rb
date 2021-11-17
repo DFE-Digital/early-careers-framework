@@ -13,10 +13,10 @@ RSpec.describe "API Users", type: :request do
       cip = create(:core_induction_programme, name: "Teach First")
       school = create(:school)
       school_cohort = create(:school_cohort, school: school)
-      mentor_profile = create(:participant_profile, :mentor, school_cohort: school_cohort, core_induction_programme: cip)
-      create(:participant_profile, :npq, school: school)
-      create(:participant_profile, :npq, school: school, teacher_profile: mentor_profile.teacher_profile)
-      create_list(:participant_profile, 2, :ect, school_cohort: school_cohort, core_induction_programme: cip)
+      mentor_profile = create(:mentor_participant_profile, school_cohort: school_cohort, core_induction_programme: cip)
+      create(:npq_participant_profile, school: school)
+      create(:npq_participant_profile, school: school, teacher_profile: mentor_profile.teacher_profile)
+      create_list(:ect_participant_profile, 2, school_cohort: school_cohort, core_induction_programme: cip)
     end
 
     context "when authorized" do

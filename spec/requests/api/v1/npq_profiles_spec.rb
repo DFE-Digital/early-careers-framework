@@ -9,7 +9,7 @@ class DummyToken < ApiToken
 end
 
 RSpec.describe "NPQ profiles api endpoint", type: :request do
-  let!(:default_schedule) { create(:schedule, :npq_specialist) }
+  let!(:default_schedule) { create(:npq_specialist_schedule) }
   let(:token) { NPQRegistrationApiToken.create_with_random_token! }
   let(:bearer_token) { "Bearer #{token}" }
   let(:parsed_response) { JSON.parse(response.body) }

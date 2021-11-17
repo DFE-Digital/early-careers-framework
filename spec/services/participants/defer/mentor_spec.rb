@@ -4,7 +4,7 @@ require "rails_helper"
 
 require_relative "../../../shared/context/lead_provider_profiles_and_courses"
 
-RSpec.describe Participants::Defer::Mentor do
+RSpec.describe Participants::Defer::Mentor, :with_default_schedules do
   include_context "lead provider profiles and courses"
   let(:participant_params) do
     {

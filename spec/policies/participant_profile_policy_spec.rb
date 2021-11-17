@@ -12,17 +12,17 @@ RSpec.describe ParticipantProfilePolicy, type: :policy do
     it { is_expected.to permit_action(:show) }
 
     context "ECT" do
-      let(:participant_profile) { create(:participant_profile, :ect) }
+      let(:participant_profile) { create(:ect_participant_profile) }
       it { is_expected.to permit_action(:destroy) }
     end
 
     context "mentor" do
-      let(:participant_profile) { create(:participant_profile, :mentor) }
+      let(:participant_profile) { create(:mentor_participant_profile) }
       it { is_expected.to permit_action(:destroy) }
     end
 
     context "NPQ" do
-      let(:participant_profile) { create(:participant_profile, :npq) }
+      let(:participant_profile) { create(:npq_participant_profile) }
       it { is_expected.to forbid_action(:destroy) }
     end
   end
@@ -46,9 +46,9 @@ RSpec.describe ParticipantProfilePolicy, type: :policy do
     context "for an induction coordinator" do
       let(:schools) { create_list :school, rand(2..3) }
       let(:user) { create(:induction_coordinator_profile, schools: schools).user }
-      let(:ect_profiles_for_stis_schools) { Array.new(rand(3..5)) { create :participant_profile, :ect, school_cohort: create(:school_cohort, school: schools.sample) } }
-      let(:mentor_profiles_for_stis_schools) { Array.new(rand(3..5)) { create :participant_profile, :mentor, school_cohort: create(:school_cohort, school: schools.sample) } }
-      let(:npq_profiles_for_stis_schools) { Array.new(rand(3..5)) { create :participant_profile, :npq, school: schools.sample } }
+      let(:ect_profiles_for_stis_schools) { Array.new(rand(3..5)) { create :ect_participant_profile, school_cohort: create(:school_cohort, school: schools.sample) } }
+      let(:mentor_profiles_for_stis_schools) { Array.new(rand(3..5)) { create :mentor_participant_profile, school_cohort: create(:school_cohort, school: schools.sample) } }
+      let(:npq_profiles_for_stis_schools) { Array.new(rand(3..5)) { create :npq_participant_profile, school: schools.sample } }
       let(:other_participant_profiles) { create_list :participant_profile, rand(2..3) }
 
       it { is_expected.to include(*ect_profiles_for_stis_schools) }

@@ -14,7 +14,6 @@ module PaymentCalculator
       end
 
       def call(aggregations)
-        ap aggregations
         {
           name: lead_provider.name,
           recruitment_target: recruitment_target,

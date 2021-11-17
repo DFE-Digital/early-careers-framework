@@ -2,8 +2,9 @@
 
 RSpec.shared_context "with default schedules", shared_context: :metadata do
   before do
-    create(:schedule, :npq_specialist)
-    create(:schedule, :npq_leadership)
+    create(:ecf_schedule)
+    create(:npq_specialist_schedule)
+    create(:npq_leadership_schedule)
   end
 end
 

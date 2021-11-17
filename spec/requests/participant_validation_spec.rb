@@ -21,21 +21,21 @@ RSpec.describe "Participant validations", with_feature_flags: { eligibility_noti
   describe "complete" do
     context "user is a cip ECT" do
       let(:school_cohort) { create(:school_cohort, :cip) }
-      let(:profile) { create(:participant_profile, :ect, school_cohort: school_cohort) }
+      let(:profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
 
       it_behaves_like "it renders the template", "participants/validations/cip_eligible"
     end
 
     context "user is a cip mentor" do
       let(:school_cohort) { create(:school_cohort, :cip) }
-      let(:profile) { create(:participant_profile, :mentor, school_cohort: school_cohort) }
+      let(:profile) { create(:mentor_participant_profile, school_cohort: school_cohort) }
 
       it_behaves_like "it renders the template", "participants/validations/cip_eligible"
     end
 
     context "user is a fip ECT" do
       let(:school_cohort) { create(:school_cohort, :fip) }
-      let(:profile) { create(:participant_profile, :ect, school_cohort: school_cohort) }
+      let(:profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
 
       context "user is eligible" do
         before do
@@ -104,7 +104,7 @@ RSpec.describe "Participant validations", with_feature_flags: { eligibility_noti
 
     context "user is a fip mentor" do
       let(:school_cohort) { create(:school_cohort, :fip) }
-      let(:profile) { create(:participant_profile, :mentor, school_cohort: school_cohort) }
+      let(:profile) { create(:mentor_participant_profile, school_cohort: school_cohort) }
 
       context "user is eligible" do
         before do

@@ -5,7 +5,7 @@ require "rails_helper"
 require_relative "../../../shared/context/service_record_declaration_params"
 require_relative "../../../shared/context/lead_provider_profiles_and_courses"
 
-RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
+RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher, :with_default_schedule do
   include_context "lead provider profiles and courses"
   include_context "service record declaration params"
 

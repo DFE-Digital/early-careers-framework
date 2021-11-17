@@ -14,18 +14,17 @@ RSpec.describe "Participants API", type: :request do
     let(:bearer_token) { "Bearer #{token}" }
 
     before :each do
-      mentor_profile = create(:participant_profile, :mentor, school_cohort: school_cohort)
-      create_list :participant_profile, 2, :ect, mentor_profile: mentor_profile, school_cohort: school_cohort
+      mentor_profile = create(:mentor_participant_profile, school_cohort: school_cohort)
+      create_list :ect_participant_profile, 2, mentor_profile: mentor_profile, school_cohort: school_cohort
       ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record = ParticipantProfile::ECT.first.teacher_profile
-      create(:participant_profile,
+      create(:ect_participant_profile,
              :withdrawn_record,
-             :ect,
              teacher_profile: ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record,
              school_cohort: school_cohort)
     end
-    let!(:withdrawn_ect_profile_record) { create(:participant_profile, :withdrawn_record, :ect, school_cohort: school_cohort) }
+    let!(:withdrawn_ect_profile_record) { create(:ect_participant_profile, :withdrawn_record, school_cohort: school_cohort) }
     let(:user) { create(:user) }
-    let(:early_career_teacher_profile) { create(:participant_profile, :ect, school_cohort: school_cohort, user: user) }
+    let(:early_career_teacher_profile) { create(:ect_participant_profile, school_cohort: school_cohort, user: user) }
 
     context "when authorized" do
       before do

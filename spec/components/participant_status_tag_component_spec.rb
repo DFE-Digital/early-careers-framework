@@ -34,7 +34,7 @@ RSpec.describe ParticipantStatusTagComponent, type: :view_component do
   context "full induction programme participant" do
     context "has submitted validation data" do
       let(:school_cohort) { create(:school_cohort, :fip) }
-      let(:participant_profile) { create(:participant_profile, :ect, school_cohort: school_cohort) }
+      let(:participant_profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
       let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :eligible, participant_profile: participant_profile) }
 
       it { is_expected.to have_selector(".govuk-tag.govuk-tag--green", exact_text: "Eligible to start") }
@@ -42,7 +42,7 @@ RSpec.describe ParticipantStatusTagComponent, type: :view_component do
 
     context "was a participant in early roll out" do
       let(:school_cohort) { create(:school_cohort, :fip) }
-      let(:participant_profile) { create(:participant_profile, :mentor, school_cohort: school_cohort) }
+      let(:participant_profile) { create(:mentor_participant_profile, school_cohort: school_cohort) }
       let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, previous_participation: true, participant_profile: participant_profile) }
 
       it { is_expected.to have_selector(".govuk-tag.govuk-tag--green", exact_text: "Eligible to start: ERO") }
@@ -52,7 +52,7 @@ RSpec.describe ParticipantStatusTagComponent, type: :view_component do
   context "core induction programme participant" do
     context "has submitted validation data" do
       let(:school_cohort) { create(:school_cohort, :cip) }
-      let(:participant_profile) { create(:participant_profile, :ect, school_cohort: school_cohort) }
+      let(:participant_profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
       let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :manual_check, participant_profile: participant_profile) }
 
       it { is_expected.to have_selector(".govuk-tag.govuk-tag--orange", exact_text: "DfE checking eligibility") }
@@ -60,7 +60,7 @@ RSpec.describe ParticipantStatusTagComponent, type: :view_component do
 
     context "has a previous induction reason" do
       let(:school_cohort) { create(:school_cohort, :cip) }
-      let(:participant_profile) { create(:participant_profile, :ect, school_cohort: school_cohort) }
+      let(:participant_profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
       let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, previous_induction: true, participant_profile: participant_profile) }
 
       it { is_expected.to have_selector(".govuk-tag.govuk-tag--red", exact_text: "Not eligible: NQT+1") }
@@ -68,7 +68,7 @@ RSpec.describe ParticipantStatusTagComponent, type: :view_component do
 
     context "has no QTS reason" do
       let(:school_cohort) { create(:school_cohort, :cip) }
-      let(:participant_profile) { create(:participant_profile, :ect, school_cohort: school_cohort) }
+      let(:participant_profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
       let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, qts: false, participant_profile: participant_profile) }
 
       it { is_expected.to have_selector(".govuk-tag.govuk-tag--red", exact_text: "Not eligible: No QTS") }
@@ -76,7 +76,7 @@ RSpec.describe ParticipantStatusTagComponent, type: :view_component do
 
     context "has an ineligible status" do
       let(:school_cohort) { create(:school_cohort, :cip) }
-      let(:participant_profile) { create(:participant_profile, :ect, school_cohort: school_cohort) }
+      let(:participant_profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
       let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, participant_profile: participant_profile) }
 
       it { is_expected.to have_selector(".govuk-tag.govuk-tag--red", exact_text: "Not eligible") }

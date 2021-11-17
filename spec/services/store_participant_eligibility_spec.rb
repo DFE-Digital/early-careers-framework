@@ -9,8 +9,8 @@ RSpec.describe StoreParticipantEligibility do
     let(:school_cohort) { create(:school_cohort, :fip, school: school) }
     let(:ect_teacher_profile) { create(:teacher_profile, school: school, trn: nil) }
     let(:mentor_teacher_profile) { create(:teacher_profile, school: school, trn: nil) }
-    let(:ect_profile) { create(:participant_profile, :ect, school_cohort: school_cohort, teacher_profile: ect_teacher_profile) }
-    let(:mentor_profile) { create(:participant_profile, :mentor, school_cohort: school_cohort, teacher_profile: mentor_teacher_profile) }
+    let(:ect_profile) { create(:ect_participant_profile, school_cohort: school_cohort, teacher_profile: ect_teacher_profile) }
+    let(:mentor_profile) { create(:mentor_participant_profile, school_cohort: school_cohort, teacher_profile: mentor_teacher_profile) }
 
     let(:eligibility_options) do
       {

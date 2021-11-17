@@ -10,8 +10,8 @@ RSpec.describe ApplicationHelper, type: :helper do
   let(:induction_coordinator) { create(:user, :induction_coordinator) }
   let(:school) { induction_coordinator.induction_coordinator_profile.schools.first }
   let!(:cohort) { create(:cohort, :current) }
-  let(:participant_profile) { create(:participant_profile, :ect) }
-  let(:year_2020_participant_profile) { create(:participant_profile, :ect, school_cohort: build(:school_cohort, cohort: build(:cohort, start_year: 2020))) }
+  let(:participant_profile) { create(:ect_participant_profile) }
+  let(:year_2020_participant_profile) { create(:ect_participant_profile, school_cohort: build(:school_cohort, cohort: build(:cohort, start_year: 2020))) }
   let(:participant_school) { participant_profile.school }
   let(:lead_provider) { create(:user, :lead_provider) }
 
