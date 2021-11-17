@@ -20,6 +20,10 @@ class ParticipantProfile::ECF < ParticipantProfile
   scope :contacted_for_info, -> { where.missing(:ecf_participant_validation_data) }
   scope :details_being_checked, -> { joins(:ecf_participant_validation_data).left_joins(:ecf_participant_eligibility).where("ecf_participant_eligibilities.id IS NULL OR ecf_participant_eligibilities.status = 'manual_check'") }
 
+  def ecf?
+    true
+  end
+
   def completed_validation_wizard?
     ecf_participant_eligibility.present? || ecf_participant_validation_data.present?
   end
@@ -31,5 +35,9 @@ class ParticipantProfile::ECF < ParticipantProfile
 
   def fundable?
     ecf_participant_eligibility&.eligible_status?
+  end
+
+  def policy_class
+    ParticipantProfile::ECFPolicy
   end
 end
