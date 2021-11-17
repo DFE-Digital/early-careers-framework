@@ -4,7 +4,7 @@ class ParticipantValidationService
   attr_reader :trn, :nino, :full_name, :date_of_birth, :config
 
   def self.validate(trn:, full_name:, date_of_birth:, nino: nil, config: {})
-    new(trn: trn || "1", full_name: full_name, date_of_birth: date_of_birth, nino: nino, config: config).validate
+    new(trn: trn, full_name: full_name, date_of_birth: date_of_birth, nino: nino, config: config).validate
   end
 
   def initialize(trn:, full_name:, date_of_birth:, nino: nil, config: {})
@@ -56,9 +56,13 @@ private
   end
 
   def matching_record(trn:, nino:, full_name:, dob:)
+    return if trn.blank? && nino.blank?
+
+    trn ||= "1"
+
     padded_trn = trn.rjust(7, "0")
     dqt_record = dqt_record(padded_trn, nino)
-    return if dqt_record.nil?
+    return if dqt_record.nil? || dqt_record["state_name"] != "Active"
 
     matches = 0
     trn_matches = padded_trn == dqt_record["trn"]

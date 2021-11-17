@@ -5,6 +5,7 @@ required:
   - full_name
   - email
   - npq_courses
+  - updated_at
 properties:
   participant_id:
     description: "The unique identifier of this NPQ participant"
@@ -29,3 +30,8 @@ properties:
     type: array
     items:
       type: string
+  updated_at:
+    description: "The date the NPQ participant was last updated"
+    type: string
+    format: date-time
+    example: "2021-05-31T02:22:32.000Z"

@@ -80,7 +80,7 @@ class SchoolCohort < ApplicationRecord
   end
 
   def can_change_programme?
-    induction_programme_choice.in? %w[design_our_own no_early_career_teachers]
+    induction_programme_choice.in? %w[design_our_own no_early_career_teachers school_funded_fip]
   end
 
 private

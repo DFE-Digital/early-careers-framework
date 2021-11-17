@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_21_121416) do
+ActiveRecord::Schema.define(version: 2021_11_09_154453) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -691,6 +691,17 @@ ActiveRecord::Schema.define(version: 2021_10_21_121416) do
     t.string "type", default: "Finance::Schedule::ECF"
   end
 
+  create_table "school_access_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "school_id", null: false
+    t.string "token", null: false
+    t.string "permitted_actions", default: [], array: true
+    t.datetime "expires_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["school_id"], name: "index_school_access_tokens_on_school_id"
+    t.index ["token"], name: "index_school_access_tokens_on_token", unique: true
+  end
+
   create_table "school_cohorts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "induction_programme_choice", null: false
     t.uuid "school_id", null: false
@@ -704,6 +715,16 @@ ActiveRecord::Schema.define(version: 2021_10_21_121416) do
     t.index ["cohort_id"], name: "index_school_cohorts_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_school_cohorts_on_core_induction_programme_id"
     t.index ["school_id"], name: "index_school_cohorts_on_school_id"
+  end
+
+  create_table "school_links", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "school_id", null: false
+    t.string "link_urn", null: false
+    t.string "link_type", null: false
+    t.string "link_reason", default: "simple", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["school_id"], name: "index_school_links_on_school_id"
   end
 
   create_table "school_local_authorities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -844,6 +865,7 @@ ActiveRecord::Schema.define(version: 2021_10_21_121416) do
   add_foreign_key "participant_bands", "call_off_contracts"
   add_foreign_key "participant_declaration_attempts", "participant_declarations"
   add_foreign_key "participant_declarations", "participant_profiles"
+  add_foreign_key "participant_declarations", "users"
   add_foreign_key "participant_profile_schedules", "participant_profiles"
   add_foreign_key "participant_profile_schedules", "schedules"
   add_foreign_key "participant_profile_states", "participant_profiles"
@@ -865,6 +887,7 @@ ActiveRecord::Schema.define(version: 2021_10_21_121416) do
   add_foreign_key "provider_relationships", "delivery_partners"
   add_foreign_key "provider_relationships", "lead_providers"
   add_foreign_key "pupil_premiums", "schools"
+  add_foreign_key "school_access_tokens", "schools"
   add_foreign_key "school_cohorts", "cohorts"
   add_foreign_key "school_cohorts", "core_induction_programmes"
   add_foreign_key "school_cohorts", "schools"

@@ -15,7 +15,7 @@ class InductionChoiceForm
     { programme_choice: nil }
   end
 
-  validates :programme_choice, presence: { message: "Select how you want to run your induction" }, inclusion: { in: PROGRAMME_OPTIONS }
+  validates :programme_choice, presence: { message: I18n.t("errors.programme_choice.blank") }, inclusion: { in: PROGRAMME_OPTIONS }
 
   def programme_choices(i18n_scope: "schools.induction_choice_form.options")
     options =

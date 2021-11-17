@@ -15,7 +15,21 @@ en:
     career_break: Career break
     passed_induction: Passed Induction
     other: "Other"
-  parameter_required: Parameter is required
+
+  # Errors
+  fail: "FAIL"
+  status_request_failed: "Status request failed"
+  forbidden: "Forbidden"
+  not_found: "Not Found"
+  resource_not_found: "Resource not Found"
+  unprocessable_entity: "Unprocessable entity"
+  internal_server_error: "Internal server error"
+  parameter_required: "Parameter is required"
+  missing_parameters: "Bad or missing parameters"
+  unpermitted_parameters: "Unpermitted parameters"
+  bad_request: "Bad request"
+  bad_parameter: "Bad parameter"
+  invalid_transition: "Invalid action"
   invalid_participant: "The property '#/participant_id' must be a valid Participant ID"
   invalid_identifier: "The property '#/course_identifier' must be an available course to '#/participant_id'"
   invalid_declaration_type: "The property '#/declaration_type' must be available for '#/course_identifier'"
@@ -35,30 +49,31 @@ en:
   schedule_invalidates_declaration: Changing schedule would invalidate existing declarations. Please void them first.
   withdrawn_participant: Cannot perform actions on a withdrawn participant
   declaration_on_incorrect_state: "The declaration on withdrawn or deferred participant can not be accepted"
+  declaration_already_voided: "Declaration is already voided"
+  void_last_declaration_only: "Can only void last declaration"
   schedule_missing: "The participant does not have a schedule"
   declaration_before_milestone_start: "The property '#/declaration_date' can not be before milestone start"
   declaration_after_milestone_cutoff: "The property '#/declaration_date' can not be after milestone end"
   invalid_data_structure: correct json data structure required. See API docs for reference
+  admin_nqt_1_email_used_ect: "A user with this email address is currently participating as an ECT at school with urn %{urn}"
+  admin_nqt_1_email_used_nqt: "A user with this email address is currently participating as an NQT+1 at school with urn %{urn}"
   estimate_participants_default_message: &default_message "Enter a number between 0 and 1000"
   estimate_participants_defaults: &defaults
     not_a_number: *default_message
     less_than: *default_message
     greater_than_or_equal_to: *default_message
-
-  manage_your_training:
-    induction_programmes:
-      full_induction_programme: "Use a training provider funded by the DfE"
-      core_induction_programme: "Use DfE-accredited materials"
-      design_our_own: "Design and deliver your own programme based on the Early Career Framework (ECF)"
-      school_funded_fip: "Use a training provider funded by your school"
-      no_early_career_teachers: "No early career teachers for this cohort"
-      not_yet_known: "Not yet decided"
-
   errors:
     email: &email_error_messages
       blank: "Enter an email"
       taken: "This email address is already in use"
       invalid: "Enter an email address in the correct format, like name@example.com"
+    supplier_email:
+      blank: "Enter email"
+      taken: "There is already a user with this email address"
+    email_address:
+      blank: "Enter an email address"
+    name:
+      blank: "Enter a name"
     full_name: &full_name_error_messages
       blank: "Enter a full name"
       does_not_match: "The name you entered does not match our records"
@@ -69,6 +84,133 @@ en:
       invalid: The property '#/participant_id' must have a valid UUID format
     cpd_lead_provider: &cpd_lead_provider_error_messages
       blank: The lead provider must be present
+    select_file: "Please select a CSV file to upload."
+    supplier:
+      blank: "Select one"
+    mentor:
+      blank: "Choose one"
+    how_to_continue:
+      blank: "Tell us whether you expect to have any early career teachers this year"
+    schools:
+      blank: "The details you entered do not match any schools"
+    programme_choice:
+      blank: "Select how you want to run your induction"
+    cohorts:
+      blank: "Choose at least one"
+    lead_providers:
+      blank: "Choose at least one cohort for every lead provider"
+    core_induction_programme:
+      blank: "Select the training materials you want to use"
+    challenge_reason:
+      blank: "Select a reason why you think this confirmation is incorrect"
+    delivery_partner:
+      blank: "Choose a delivery partner"
+    programme:
+      blank: "Please select programme type"
+    provider:
+      blank: "Please select a provider"
+
+  activerecord:
+    attributes:
+      npq_application:
+        lead_provider_approval_status: Status
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              <<: *email_error_messages
+            full_name:
+              <<: *full_name_error_messages
+        school_cohort_form:
+          attributes:
+            estimated_mentor_count:
+              blank: "Enter your expected number of mentors"
+              <<: *defaults
+            estimated_teacher_count:
+              <<: *defaults
+              blank: "enter your expected number of teachers"
+        npq_application:
+          attributes:
+            lead_provider_approval_status:
+              has_another_accepted_application: The participant already has an accepted application for this course
+              has_already_been_accepted: This NPQ application has already been accepted
+
+  activemodel:
+    errors:
+      models:
+        nominate_induction_tutor_form:
+          attributes:
+            email:
+              <<: *email_error_messages
+            full_name:
+              <<: *full_name_error_messages
+        replace_or_update_tutor_form:
+          attributes:
+            choice:
+              blank: "Choose whether to replace or update the tutor"
+        participants/base:
+          attributes:
+            course_identifier:
+              <<: *course_identifier_error_messages
+            cpd_lead_provider:
+              <<: *cpd_lead_provider_error_messages
+            participant_id:
+              <<: *participant_id_error_messages
+            reason:
+              inclusion: The property '#/reason' must be present and in the list
+        participants/withdraw:
+          reason:
+            invalid: Cannot withdraw without a valid reason
+        participants/defer:
+          reason:
+            invalid: Cannot defer without a valid reason
+        record_declarations/base:
+          attributes:
+            course_identifier:
+              <<: *course_identifier_error_messages
+            cpd_lead_provider:
+              <<: *cpd_lead_provider_error_messages
+            participant_id:
+              <<: *participant_id_error_messages
+            declaration_date:
+              blank: The property '#/declaration_date' must be present
+            declaration_type:
+              inclusion:   The property '#/declaration_type' must be available for '#/course_identifier'
+            evidence_held:
+              blank: The property '#/evidence_held' must be present
+              present: The propert '#/evidence_held' should not be supplied for '#/declaration_type' started or completed
+        schools/year2020_form:
+          attributes:
+            full_name:
+              <<: *full_name_error_messages
+              blank: "Enter a full name for your teacher"
+            email:
+              <<: *email_error_messages
+              blank: "Enter an email address for your teacher"
+            core_induction_programme_id:
+              blank: "Select the materials you want to use"
+
+  page_titles:
+    lead_providers:
+      guidance:
+        index: "Manage teacher continuing professional development"
+        ecf_usage: "Usage scenarios for ECF Lead Providers"
+        npq_usage: "Usage scenarios for NPQ Lead Providers"
+        reference: "API reference"
+        release_notes: "Release notes"
+        help: "Get help"
+      content:
+        partnership_guide: "Guide for providers to manage their schools on the ECF service"
+
+  manage_your_training:
+    induction_programmes:
+      full_induction_programme: "Use a training provider funded by the DfE"
+      core_induction_programme: "Use DfE-accredited materials"
+      design_our_own: "Design and deliver your own programme based on the Early Career Framework (ECF)"
+      school_funded_fip: "Use a training provider funded by your school"
+      no_early_career_teachers: "No early career teachers for this cohort"
+      not_yet_known: "Not yet decided"
 
   finance:
     choose_programme: Choose programme scheme
@@ -113,7 +255,6 @@ en:
       breakdown_summary:
         submission_deadline: Submission deadline
         total: Total
-
     npq:
       payment_breakdown: NPQ Payment Breakdown
     service_fee:
@@ -126,96 +267,3 @@ en:
     clawbacks:
       caption: Clawbacks
       per_participant: Clawback per participant
-
-
-  activemodel:
-    errors:
-      models:
-        nominate_induction_tutor_form:
-          attributes:
-            email:
-              <<: *email_error_messages
-            full_name:
-              <<: *full_name_error_messages
-        replace_or_update_tutor_form:
-          attributes:
-            choice:
-              blank: "Choose whether to replace or update the tutor"
-        participants/base:
-          attributes:
-            course_identifier:
-              <<: *course_identifier_error_messages
-            cpd_lead_provider:
-              <<: *cpd_lead_provider_error_messages
-            participant_id:
-              <<: *participant_id_error_messages
-            reason:
-              inclusion: The property '#/reason' must be present and in the list
-        participants/withdraw:
-          reason:
-            invalid: Cannot withdraw without a valid reason
-        participants/defer:
-          reason:
-            invalid: Cannot defer without a valid reason
-
-        record_declarations/base:
-          attributes:
-            course_identifier:
-              <<: *course_identifier_error_messages
-            cpd_lead_provider:
-              <<: *cpd_lead_provider_error_messages
-            participant_id:
-              <<: *participant_id_error_messages
-            declaration_date:
-              blank: The property '#/declaration_date' must be present
-            declaration_type:
-              inclusion:   The property '#/declaration_type' must be available for '#/course_identifier'
-            evidence_held:
-              blank: The property '#/evidence_held' must be present
-              present: The propert '#/evidence_held' should not be supplied for '#/declaration_type' started or completed
-        schools/year2020_form:
-          attributes:
-            full_name:
-              <<: *full_name_error_messages
-              blank: "Enter a full name for your teacher"
-            email:
-              <<: *email_error_messages
-              blank: "Enter an email address for your teacher"
-            core_induction_programme_id:
-              blank: "Select the materials you want to use"
-  activerecord:
-    attributes:
-      npq_application:
-        lead_provider_approval_status: Status
-    errors:
-      models:
-        user:
-          attributes:
-            email:
-              <<: *email_error_messages
-            full_name:
-              <<: *full_name_error_messages
-        school_cohort_form:
-          attributes:
-            estimated_mentor_count:
-              blank: "Enter your expected number of mentors"
-              <<: *defaults
-            estimated_teacher_count:
-              <<: *defaults
-              blank: "enter your expected number of teachers"
-        npq_application:
-          attributes:
-            lead_provider_approval_status:
-              has_another_accepted_application: The participant already has an accepted application for this course
-              has_already_been_accepted: This NPQ application has already been accepted
-  page_titles:
-    lead_providers:
-      guidance:
-        index: "Manage teacher continuing professional development"
-        ecf_usage: "Usage scenarios for ECF Lead Providers"
-        npq_usage: "Usage scenarios for NPQ Lead Providers"
-        reference: "API reference"
-        release_notes: "Release notes"
-        help: "Get help"
-      content:
-        partnership_guide: "Guide for providers to manage their schools on the ECF service"

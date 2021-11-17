@@ -94,4 +94,8 @@ class ParticipantSerializer
   active_participant_attribute :schedule_identifier do |user|
     user.teacher_profile.current_ecf_profile&.schedule&.schedule_identifier
   end
+
+  attribute :updated_at do |user|
+    user.updated_at.rfc3339
+  end
 end

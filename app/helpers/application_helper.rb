@@ -51,6 +51,14 @@ module ApplicationHelper
     end
   end
 
+  def text_otherwise_link_to(text, url, condition_for_text)
+    if condition_for_text
+      text
+    else
+      govuk_link_to text, url
+    end
+  end
+
 private
 
   def post_2020_ecf_participant?(user)

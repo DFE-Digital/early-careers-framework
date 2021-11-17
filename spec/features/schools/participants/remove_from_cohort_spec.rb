@@ -7,11 +7,15 @@ RSpec.describe "SIT removing participants from the cohort", js: true, with_featu
   let!(:mentor_profile) { create(:participant_profile, :mentor, request_for_details_sent_at: Date.new(2021, 9, 9), school_cohort: school_cohort, teacher_profile: mentor_user.teacher_profile) }
   let(:ect_user) { create :user, :teacher, full_name: "John Smith", email: "john-smith@example.com" }
   let!(:ect_profile) { create(:participant_profile, :ect, school_cohort: school_cohort, mentor_profile: mentor_profile, teacher_profile: ect_user.teacher_profile) }
+  let!(:ineligible_ect_profile) { create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort, teacher_profile: ineligible_user.teacher_profile) }
+  let(:ineligible_user) { create :user, :teacher, full_name: "Kate Edwards", email: "kate-edwards@example.com" }
+
   let(:privacy_policy) { create :privacy_policy }
 
   before do
     privacy_policy.accept!(sit_profile.user)
     privacy_policy.accept!(mentor_profile.user)
+    ineligible_ect_profile.ecf_participant_eligibility.update!(status: "ineligible", reason: "active_flags")
   end
 
   scenario "removing participant who didn't start validation" do
@@ -21,7 +25,10 @@ RSpec.describe "SIT removing participants from the cohort", js: true, with_featu
 
     sign_in_as sit_profile.user
     visit schools_participants_path(school_cohort.school, school_cohort.cohort)
-    click_on "Check"
+
+    within("[data-test='checked']") do
+      click_on("Check")
+    end
 
     click_on "Remove #{mentor_profile.user.full_name} from this cohort"
     expect(page)
@@ -49,18 +56,18 @@ RSpec.describe "SIT removing participants from the cohort", js: true, with_featu
   end
 
   scenario "removing ineligible participant" do
-    create :ecf_participant_eligibility, :ineligible, participant_profile: ect_profile
-
     sign_in_as sit_profile.user
     visit schools_participants_path(school_cohort.school, school_cohort.cohort)
-    first(:link, "Check").click
-    click_on "Remove #{ect_profile.user.full_name} from this cohort"
+    within("[data-test='ineligible']") do
+      click_on("Check")
+    end
+    click_on "Remove #{ineligible_user.full_name} from this cohort"
 
-    expect(page).to have_content("Confirm you want to remove #{ect_profile.user.full_name}")
-    expect { click_on "Confirm and remove" }.to change { ect_profile.reload.status }.from("active").to("withdrawn")
-    expect(page).to have_content("#{ect_profile.user.full_name} has been removed from this cohort")
+    expect(page).to have_content("Confirm you want to remove #{ineligible_user.full_name}")
+    expect { click_on "Confirm and remove" }.to change { ineligible_ect_profile.reload.status }.from("active").to("withdrawn")
+    expect(page).to have_content("#{ineligible_user.full_name} has been removed from this cohort")
 
     click_on "Return to your ECTs and mentor"
-    expect(page).to have_no_content ect_profile.user.full_name
+    expect(page).to have_no_content ineligible_user.full_name
   end
 end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class TeacherProfile < ApplicationRecord
+  has_paper_trail
   belongs_to :user, touch: true
   belongs_to :school, optional: true
 

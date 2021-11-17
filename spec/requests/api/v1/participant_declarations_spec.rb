@@ -391,7 +391,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
     it "returns the correct headers" do
       expect(parsed_response.headers).to match_array(
-        %w[id course_identifier declaration_date declaration_type participant_id state eligible_for_payment voided],
+        %w[id course_identifier declaration_date declaration_type participant_id state eligible_for_payment voided updated_at],
       )
     end
 
@@ -405,6 +405,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       expect(participant_declaration_one_row["voided"]).to eql participant_declaration_one.voided?.to_s
       expect(participant_declaration_one_row["state"]).to eql participant_declaration_one.state.to_s
       expect(participant_declaration_one_row["participant_id"]).to eql participant_declaration_one.participant_profile.user.id
+      expect(participant_declaration_one_row["updated_at"]).to eql participant_declaration_one.updated_at.rfc3339
     end
 
     it "ignores pagination parameters" do
@@ -443,6 +444,7 @@ private
         "state" => state,
         "eligible_for_payment" => state == "eligible",
         "voided" => state == "voided",
+        "updated_at" => declaration.updated_at.rfc3339,
       },
     }
   end

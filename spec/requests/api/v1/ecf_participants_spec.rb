@@ -103,6 +103,7 @@ RSpec.describe "Participants API", type: :request do
               :sparsity_uplift,
               :training_status,
               :schedule_identifier,
+              :updated_at,
             ).exactly)
         end
 
@@ -219,7 +220,8 @@ RSpec.describe "Participants API", type: :request do
                pupil_premium_uplift
                sparsity_uplift
                training_status
-               schedule_identifier],
+               schedule_identifier
+               updated_at],
           )
         end
 
@@ -295,6 +297,17 @@ RSpec.describe "Participants API", type: :request do
             expect(response).to be_successful
             expect(parsed_response.dig("data", "attributes", "training_status")).to eql("withdrawn")
           end
+        end
+      end
+
+      it_behaves_like "JSON Participant Resume endpoint", "participant" do
+        let(:url)               { "/api/v1/participants/ecf/#{early_career_teacher_profile.user.id}/resume" }
+        let(:withdrawal_url)    { "/api/v1/participants/ecf/#{early_career_teacher_profile.user.id}/withdraw" }
+        let(:params)            { { data: { attributes: { course_identifier: "ecf-induction" } } } }
+        let(:withdrawal_params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "left-teaching-profession" } } } }
+        before do
+          put "/api/v1/participants/ecf/#{early_career_teacher_profile.user.id}/defer",
+              params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
         end
       end
     end

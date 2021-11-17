@@ -7,7 +7,7 @@ module Finance
         def aggregation_types
           {
             started: {
-              not_payable: :not_payable_for_lead_provider,
+              not_yet_included: :not_payable_for_lead_provider,
               all: :payable_for_lead_provider,
               uplift: :payable_uplift_for_lead_provider,
               ects: :payable_ects_for_lead_provider,

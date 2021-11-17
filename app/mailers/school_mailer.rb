@@ -14,7 +14,7 @@ class SchoolMailer < ApplicationMailer
   UNENGAGED_INVITE_EMAIL_TEMPLATE = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f"
   COORDINATOR_SIGN_IN_CHASER_EMAIL_TEMPLATE = "b5c318a4-2171-4ded-809a-af72dd87e7a7"
   COORDINATOR_REMINDER_TO_CHOOSE_ROUTE_EMAIL_TEMPLATE = "c939c27a-9951-4ac3-817d-56b7bf343fb4"
-  COORDINATOR_REMINDER_TO_CHOOSE_PROVIDER_EMAIL_TEMPLATE = "11cdb6d8-8a59-4618-ba35-0ebd7e47180c"
+  UNPARTNERED_FIP_CHASER_EMAIL_TEMPLATE = "41fe132b-d0bd-4b94-8feb-536701d79fc6"
   COORDINATOR_REMINDER_TO_CHOOSE_MATERIALS_EMAIL_TEMPLATE = "43baf25c-6a46-437b-9f30-77c57d68a59e"
   ADD_PARTICIPANTS_EMAIL_TEMPLATE = "721787d0-74bc-42a0-a064-ee0c1cb58edb"
   REMIND_FIP_TO_ADD_ECTS_AND_MENTORS_EMAIL_TEMPLATE = "63f9fe5b-aff1-4cf7-9593-6843b80d4044"
@@ -263,14 +263,17 @@ class SchoolMailer < ApplicationMailer
     )
   end
 
-  def induction_coordinator_reminder_to_choose_provider_email(recipient:)
+  def induction_coordinator_reminder_to_choose_provider_email(induction_coordinator:, school:)
     template_mail(
-      COORDINATOR_REMINDER_TO_CHOOSE_PROVIDER_EMAIL_TEMPLATE,
-      to: recipient,
+      UNPARTNERED_FIP_CHASER_EMAIL_TEMPLATE,
+      to: induction_coordinator.email,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
-      personalisation: {},
-    )
+      personalisation: {
+        name: induction_coordinator.full_name,
+        school_name: school.name,
+      },
+    ).tag(:chase_unpartnered_fip_schools).associate_with(school, as: :school)
   end
 
   def induction_coordinator_reminder_to_choose_materials_email(recipient:, name:, school_name:, sign_in_url:)

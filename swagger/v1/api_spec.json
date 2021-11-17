@@ -365,6 +365,55 @@
         }
       }
     },
+    "/api/v1/participants/npq/{id}/resume": {
+      "put": {
+        "summary": "Notify that a participant is resuming their course",
+        "operationId": "participant",
+        "tags": [
+          "NPQ Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NPQParticipantResumeRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant to resume",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The participant being resumed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NPQParticipantResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/participants/npq/{id}/withdraw": {
       "put": {
         "summary": "Withdrawn a participant from a course",
@@ -865,6 +914,55 @@
         }
       }
     },
+    "/api/v1/participants/ecf/{id}/resume": {
+      "put": {
+        "summary": "Notify that a participant is resuming their course",
+        "operationId": "participant",
+        "tags": [
+          "ECF Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantResumeRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant to resume",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The participant being resumed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/participants/ecf/{id}/withdraw": {
       "put": {
         "summary": "Notify that an ECF participant has withdrawn from their course",
@@ -965,7 +1063,7 @@
     },
     "/api/v1/participants/{id}/resume": {
       "put": {
-        "summary": "Notify that an ECF participant is resuming their course",
+        "summary": "Notify that a participant is resuming their course",
         "operationId": "participant",
         "tags": [
           "ECF Participant"
@@ -1000,7 +1098,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The ECF participant being resumed",
+            "description": "The participant being resumed",
             "content": {
               "application/json": {
                 "schema": {
@@ -1191,7 +1289,8 @@
           "cohort",
           "status",
           "training_status",
-          "schedule_identifier"
+          "schedule_identifier",
+          "updated_at"
         ],
         "properties": {
           "email": {
@@ -1287,6 +1386,12 @@
               "ecf-september-standard-2021",
               "ecf-january-standard-2021"
             ]
+          },
+          "updated_at": {
+            "description": "The date the ECF participant was last updated",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
           }
         }
       },
@@ -1361,7 +1466,8 @@
           "participant_type",
           "cohort",
           "status",
-          "training_status"
+          "training_status",
+          "updated_at"
         ],
         "properties": {
           "id": {
@@ -1461,6 +1567,12 @@
               "deferred",
               "withdrawn"
             ]
+          },
+          "updated_at": {
+            "description": "The date the ECF participant was last updated",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
           }
         }
       },
@@ -1827,7 +1939,7 @@
             }
           }
         },
-        "example": "id,type,email,full_name,mentor_id,school_urn,participant_type,cohort,status,teacher_reference_number,teacher_reference_number_validated,eligible_for_funding,pupil_premium_uplift,sparsity_uplift,training_status\ndb3a7848-7308-4879-942a-c4a70ced400a,participant,jane.smith@some-school.example.com,Jane Smith,bb36d74a-68a7-47b6-86b6-1fd0d141c590,106286,ect,2021,active,0012345,true,true,true,true,active\nbb36d74a-68a7-47b6-86b6-1fd0d141c590,participant,martin.jones@some-school.example.com,Martin Jones,,106286,mentor,2021,active,\"\",false,false,false,false,deferred\neb475531-bf08-48ae-b0ef-c2ff5e5bdef0,participant,\"\",\"\",\"\",\"\",ect,\"\",withdrawn,\"\",\"\",\"\",\"\",\"\",withdrawn\n"
+        "example": "id,type,email,full_name,mentor_id,school_urn,participant_type,cohort,status,teacher_reference_number,teacher_reference_number_validated,eligible_for_funding,pupil_premium_uplift,sparsity_uplift,training_status,updated_at\ndb3a7848-7308-4879-942a-c4a70ced400a,participant,jane.smith@some-school.example.com,Jane Smith,bb36d74a-68a7-47b6-86b6-1fd0d141c590,106286,ect,2021,active,0012345,true,true,true,true,active\nbb36d74a-68a7-47b6-86b6-1fd0d141c590,participant,martin.jones@some-school.example.com,Martin Jones,,106286,mentor,2021,active,\"\",false,false,false,false,deferred\neb475531-bf08-48ae-b0ef-c2ff5e5bdef0,participant,\"\",\"\",\"\",\"\",ect,\"\",withdrawn,\"\",\"\",\"\",\"\",\"\",withdrawn,2021-05-31T02:22:32.000Z\n"
       },
       "MultipleECFParticipantsResponse": {
         "description": "A list of ECF participants",
@@ -1858,7 +1970,8 @@
                   "eligible_for_funding": true,
                   "pupil_premium_uplift": false,
                   "sparsity_uplift": true,
-                  "training_status": "active"
+                  "training_status": "active",
+                  "updated_at": "2021-05-31T02:22:32.000Z"
                 }
               },
               {
@@ -1876,7 +1989,8 @@
                   "eligible_for_funding": null,
                   "pupil_premium_uplift": true,
                   "sparsity_uplift": false,
-                  "training_status": "deferred"
+                  "training_status": "deferred",
+                  "updated_at": "2021-05-31T02:22:32.000Z"
                 }
               },
               {
@@ -1895,7 +2009,8 @@
                   "eligible_for_funding": null,
                   "pupil_premium_uplift": null,
                   "sparsity_uplift": null,
-                  "training_status": "withdrawn"
+                  "training_status": "withdrawn",
+                  "updated_at": "2021-05-31T02:22:32.000Z"
                 }
               }
             ]
@@ -1916,7 +2031,7 @@
             }
           }
         },
-        "example": "id,type,participant_id,full_name,email,email_validated,email_validated,teacher_reference_number,teacher_reference_number_validated,school_urn,headteacher_status,eligible_for_funding,funding_choice,course_identifier,status,created_at\ndb3a7848-7308-4879-942a-c4a70ced400a,npq-application,7a8fef46-3c43-42c0-b3d5-1ba5904ba562,Isabelle MacDonald,isabelle.macdonald2@some-school.example.com,true,1234567,true,106286,no,true,trust,npq-leading-teaching,pending,2021-05-31T02:21:32.000Z\n"
+        "example": "id,type,participant_id,full_name,email,email_validated,email_validated,teacher_reference_number,teacher_reference_number_validated,school_urn,headteacher_status,eligible_for_funding,funding_choice,course_identifier,status,created_at,updated_at\ndb3a7848-7308-4879-942a-c4a70ced400a,npq-application,7a8fef46-3c43-42c0-b3d5-1ba5904ba562,Isabelle MacDonald,isabelle.macdonald2@some-school.example.com,true,1234567,true,106286,no,true,trust,npq-leading-teaching,pending,2021-05-31T02:21:32.000Z,2021-05-31T02:22:32.000Z\n"
       },
       "MultipleNPQApplicationsResponse": {
         "description": "A list of NPQ applications",
@@ -1976,7 +2091,8 @@
                   "npq_courses": [
                     "npq-leading-teaching"
                   ],
-                  "teacher_reference_number": "1234567"
+                  "teacher_reference_number": "1234567",
+                  "updated_at": "2021-05-31T02:21:32.000Z"
                 }
               }
             ]
@@ -1997,7 +2113,7 @@
             }
           }
         },
-        "example": "id,participant_id,declaration_type,course_identifier,eligible_for_payment,declaration_date,voided,state\nc88eb9a9-773a-4f53-9716-121b981154d8,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false\n31a521ec-82c5-451c-aea3-426523f1facc,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false\n"
+        "example": "id,participant_id,declaration_type,course_identifier,eligible_for_payment,declaration_date,voided,state,updated_at\nc88eb9a9-773a-4f53-9716-121b981154d8,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false\n31a521ec-82c5-451c-aea3-426523f1facc,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false,2021-05-31T02:22:32.000Z\n"
       },
       "MultipleParticipantDeclarationsResponse": {
         "description": "A list of participant declarations",
@@ -2079,7 +2195,8 @@
           "eligible_for_funding",
           "course_identifier",
           "status",
-          "created_at"
+          "created_at",
+          "updated_at"
         ],
         "properties": {
           "id": {
@@ -2185,6 +2302,12 @@
             "type": "string",
             "format": "date-time",
             "example": "2021-05-31T02:21:32.000Z"
+          },
+          "updated_at": {
+            "description": "The date the application was last updated",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
           }
         }
       },
@@ -2206,7 +2329,8 @@
           "funding_choice",
           "course_id",
           "course_name",
-          "created_at"
+          "created_at",
+          "updated_at"
         ],
         "properties": {
           "id": {
@@ -2315,6 +2439,12 @@
             "type": "string",
             "format": "date-time",
             "example": "2021-05-31T02:21:32.000Z"
+          },
+          "updated_at": {
+            "description": "The date the application was last updated",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
           }
         }
       },
@@ -2365,7 +2495,8 @@
           "participant_id",
           "full_name",
           "email",
-          "npq_courses"
+          "npq_courses",
+          "updated_at"
         ],
         "properties": {
           "participant_id": {
@@ -2396,6 +2527,12 @@
             "items": {
               "type": "string"
             }
+          },
+          "updated_at": {
+            "description": "The date the NPQ participant was last updated",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
           }
         }
       },
@@ -2477,6 +2614,58 @@
           }
         }
       },
+      "NPQParticipantResume": {
+        "description": "An NPQ participant resume action",
+        "type": "object",
+        "properties": {
+          "course_identifier": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "npq-leading-teaching",
+              "npq-leading-behaviour-culture",
+              "npq-leading-teaching-development",
+              "npq-senior-leadership",
+              "npq-headship",
+              "npq-executive-leadership"
+            ],
+            "example": "npq-senior-leadership"
+          }
+        },
+        "required": [
+          "course_identifier"
+        ],
+        "example": {
+          "course_identifier": "npq-leading-teaching-development"
+        }
+      },
+      "NPQParticipantResumeRequest": {
+        "description": "The resume request for an NPQ participant",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "description": "The request data",
+            "required": [
+              "type",
+              "attributes"
+            ],
+            "properties": {
+              "type": {
+                "description": "The data type",
+                "type": "string",
+                "example": "participant-resume"
+              },
+              "attributes": {
+                "$ref": "#/components/schemas/NPQParticipantResume"
+              }
+            }
+          }
+        }
+      },
       "NPQParticipantRetainedDeclaration": {
         "description": "An NPQ retained participant declaration",
         "type": "object",
@@ -2516,29 +2705,19 @@
               "npq-additional-support-offer"
             ],
             "example": "npq-headship"
-          },
-          "evidence_held": {
-            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
-            "type": "string",
-            "enum": [
-              "yes"
-            ],
-            "example": "yes"
           }
         },
         "required": [
           "participant_id",
           "declaration_type",
           "declaration_date",
-          "course_identifier",
-          "evidence_held"
+          "course_identifier"
         ],
         "example": {
           "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
           "declaration_type": "retained-1",
           "declaration_date": "2021-05-31T02:21:32.000Z",
-          "course_identifier": "npq-headship",
-          "evidence_held": "yes"
+          "course_identifier": "npq-headship"
         }
       },
       "NPQParticipantStartedDeclaration": {
@@ -2731,7 +2910,8 @@
           "course_identifier",
           "eligible_for_payment",
           "voided",
-          "state"
+          "state",
+          "updated_at"
         ],
         "properties": {
           "participant_id": {
@@ -2798,6 +2978,12 @@
               "voided"
             ],
             "example": "submitted"
+          },
+          "updated_at": {
+            "description": "The date the declaration was last updated",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
           }
         }
       },
@@ -2835,7 +3021,8 @@
           "course_identifier",
           "eligible_for_payment",
           "declaration_date",
-          "voided"
+          "voided",
+          "updated_at"
         ],
         "properties": {
           "id": {
@@ -2902,6 +3089,12 @@
             "type": "string",
             "nullable": false,
             "example": "paid"
+          },
+          "updated_at": {
+            "description": "The date the declaration was last updated",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
           }
         }
       },

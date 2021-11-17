@@ -16,7 +16,7 @@ module Schools
     step :name do
       attribute :full_name
 
-      validates :full_name, presence: { message: "Enter a full name" }
+      validates :full_name, presence: { message: I18n.t("errors.full_name.blank") }
 
       next_step :email
     end
@@ -25,7 +25,7 @@ module Schools
       attribute :email
 
       validates :email,
-                presence: { message: "Enter an email address" },
+                presence: { message: I18n.t("errors.email_address.blank") },
                 notify_email: { allow_blank: true }
 
       next_step do
