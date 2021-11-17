@@ -11,7 +11,6 @@ module Finance
           calculator: PaymentCalculator::NPQ::PaymentCalculation,
           npq_contract: @npq_lead_provider.npq_contracts.find_by!(course_identifier: params[:id]),
         )
-
         @cutoff_date = "On #{helpers.cutoff_date}"
       end
 
