@@ -44,7 +44,7 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
     click_on "Continue"
     then_i_should_be_on_the_check_details_page
 
-    click_on "Confirm and submit"
+    click_on "Confirm and nominate"
     then_i_should_be_on_the_nominate_sit_success_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Nominate SIT success"
@@ -108,7 +108,7 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Check details"
 
-    click_on "Confirm and submit"
+    click_on "Confirm and nominate"
     then_i_should_be_on_the_nominate_sit_success_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Nominate SIT success"
@@ -146,7 +146,7 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
     click_on "Continue"
     then_i_should_be_on_the_check_details_page
 
-    click_on "Confirm and submit"
+    click_on "Confirm and nominate"
     then_i_should_be_on_the_nominate_sit_success_page
   end
 end
