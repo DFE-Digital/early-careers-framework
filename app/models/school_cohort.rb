@@ -35,34 +35,12 @@ class SchoolCohort < ApplicationRecord
     end
   end
 
-  def training_provider_status
-    school.partnerships&.active&.exists?(cohort: cohort) ? "Done" : "To do"
-  end
-
   def lead_provider
     school.lead_provider(cohort.start_year)
   end
 
   def delivery_partner
     school.delivery_partner_for(cohort.start_year)
-  end
-
-  def add_participants_status
-    "To do"
-  end
-
-  def choose_training_materials_status
-    core_induction_programme_id ? "Done" : "To do"
-  end
-
-  def status
-    if core_induction_programme?
-      cip_status
-    elsif full_induction_programme?
-      fip_status
-    elsif not_yet_known?
-      "To do"
-    end
   end
 
   def school_chose_cip?
@@ -81,23 +59,5 @@ class SchoolCohort < ApplicationRecord
 
   def can_change_programme?
     induction_programme_choice.in? %w[design_our_own no_early_career_teachers school_funded_fip]
-  end
-
-private
-
-  def cip_status
-    if choose_training_materials_status == "Done" && add_participants_status == "Done"
-      "Done"
-    else
-      "To do"
-    end
-  end
-
-  def fip_status
-    if training_provider_status == "Done" && add_participants_status == "Done"
-      "Done"
-    else
-      "To do"
-    end
   end
 end
