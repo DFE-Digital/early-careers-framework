@@ -4,25 +4,22 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl"><%= title %></h1>
-    <p class="govuk-body">Check the information you entered is correct</p>
+    <p class="govuk-body">Check the information you entered is correct.</p>
     <dl class="govuk-summary-list govuk-!-margin-bottom-9">
 
-      <%# unless validation_form.no_trn %>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">TRN</dt>
-          <dd class="govuk-summary-list__value">
-            <% if validation_form.no_trn %>
-              Not provided
-            <% else %>
-              <%= validation_form.trn %>
-            <% end %>
-          </dd>
-          <dd class="govuk-summary-list__actions">
-            <%#= govuk_link_to "Change", { action: :show, step: :trn } %>
-            <span class="govuk-visually-hidden">your Teacher Reference Number</span>
-          </dd>
-        </div>
-      <%# end %>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">TRN</dt>
+        <dd class="govuk-summary-list__value">
+          <% if validation_form.no_trn %>
+            Not provided
+          <% else %>
+            <%= validation_form.trn %>
+          <% end %>
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <span class="govuk-visually-hidden">your Teacher Reference Number</span>
+        </dd>
+      </div>
 
       <% if validation_form.step_completed?(:nino) %>
         <div class="govuk-summary-list__row">

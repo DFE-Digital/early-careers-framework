@@ -20,25 +20,6 @@ en:
             full_name:
               blank: Enter your full name at the time you started ITT
 
-
-            do_you_want_to_add_mentor_information_choice:
-              blank: Select whether you want to add your mentor information now
-            do_you_know_your_trn_choice:
-              blank: Select whether you know your teacher reference number
-            have_you_changed_your_name_choice:
-              blank: Select if your name has changed since ITT
-            updated_record_choice:
-              blank: Select whether you have updated your name
-            name_not_updated_choice:
-              blank: Select how you want to continue
-            name:
-              blank: Enter your full name
-            date_of_birth:
-              blank: Enter your date of birth
-              invalid: Date of birth must be a valid date
-              in_the_future: Date of birth must be in the past
-              invalid_year: The year must be 4 digits long. For example, 1990
-
   participants:
     validation_form:
       extra_steps:
@@ -46,7 +27,7 @@ en:
           note: Tell us your National Insurance number to help us to find your details.
           button: Add your National Insurance number
         name_changed:
-          note: Confirming the full name we have for you may help us find your details
+          note: Confirming the full name we have for you may help us find your details.
           button: Continue to confirm your name
         manual_check:
           note: Our support team may contact you for more information to help us complete our checks.
