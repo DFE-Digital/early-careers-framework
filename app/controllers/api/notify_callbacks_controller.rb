@@ -10,10 +10,6 @@ class Api::NotifyCallbacksController < Api::ApiController
 
     log_email if failed_email?
 
-    # TODO: Replace PartnershipNotificationEmail and NominationEmail with more generic Email
-    mail = PartnershipNotificationEmail.find_by(notify_id: params[:id]) || NominationEmail.find_by(notify_id: params[:id])
-    mail.update!(notify_status: params[:status], delivered_at: params[:sent_at]&.to_datetime) if mail
-
     Email.where(id: params[:id]).update_all(
       status: params[:status],
       delivered_at: params[:sent_at],

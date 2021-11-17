@@ -13,30 +13,35 @@ class InviteSchools
       school = find_school(urn)
       next if school.nil?
 
-      nomination_email = NominationEmail.create_nomination_email(
-        sent_at: Time.zone.now,
-        sent_to: school.contact_email,
+      access_token = SchoolAccessToken.create!(
         school: school,
+        permitted_actions: %i[nominate_tutor],
       )
 
-      send_nomination_email(nomination_email)
-    rescue Notifications::Client::RateLimitError
-      sleep(1)
-      send_nomination_email(nomination_email)
+      begin
+        send_nomination_email(to: school.contact_email, access_token: access_token)
+      rescue Notifications::Client::RateLimitError
+        sleep(1)
+        retry
+      end
     rescue StandardError
       logger.info "Error emailing school, urn: #{urn} ... skipping"
     end
   end
 
   def reached_limit(school)
-    EMAIL_LIMITS.find do |**kwargs|
-      NominationEmail.where(school: school, sent_at: kwargs[:within].ago..Float::INFINITY).count >= kwargs[:max]
+    EMAIL_LIMITS.find do |within:, max:|
+      Email
+        .associated_with(school)
+        .tagged_with(:request_to_nominate_sit)
+        .where(created_at: within.ago..Float::INFINITY)
+        .count >= max
     end
   end
 
   def send_chasers
     logger.info "Sending chaser emails"
-    logger.info "Nomination email count before: #{NominationEmail.count}"
+    logger.info "Nomination email count before: #{Email.tagged_with(:request_to_nominate_sit).count}"
     School.eligible.not_opted_out.without_induction_coordinator.each do |school|
       additional_emails = school.additional_school_emails.pluck(:email_address)
       emails = [school.primary_contact_email, school.secondary_contact_email, *additional_emails]
@@ -170,19 +175,23 @@ class InviteSchools
   end
 
   def invite_cip_only_schools
-    School.currently_open.where(school_type_code: GiasTypes::CIP_ONLY_EXCEPT_WELSH_CODES).where(section_41_approved: false).find_each do |school|
+    schools = School
+      .currently_open
+      .where(school_type_code: GiasTypes::CIP_ONLY_EXCEPT_WELSH_CODES)
+      .where(section_41_approved: false)
+
+    schools.find_each do |school|
       if school.contact_email.blank?
         logger.info "No contact details for school urn: #{school.urn} ... skipping"
         next
       end
 
-      nomination_email = NominationEmail.create_nomination_email(
-        sent_at: Time.zone.now,
-        sent_to: school.contact_email,
+      access_token = SchoolAccessToken.create!(
         school: school,
+        permitted_actions: %i[nominate_tutor],
       )
 
-      delay(queue: "mailers", priority: 1).send_cip_only_invite_email(nomination_email)
+      delay(queue: "mailers", priority: 1).send_cip_only_invite_email(school: school, access_token: access_token)
     end
   end
 
@@ -303,19 +312,16 @@ class InviteSchools
           next
         end
 
-        nomination_email = NominationEmail.create_nomination_email(
-          sent_at: Time.zone.now,
-          sent_to: school.contact_email,
+        access_token = SchoolAccessToken.create!(
           school: school,
+          permitted_actions: %i[nominate_tutor],
         )
 
-        notify_id = SchoolMailer.unengaged_schools_email(
+        SchoolMailer.unengaged_schools_email(
           recipient: school.contact_email,
           school: school,
-          nomination_url: nomination_email.nomination_url(utm_source: :unengaged_schools),
-        ).deliver_now.delivery_method.response.id
-
-        nomination_email.update!(notify_id: notify_id)
+          access_token: access_token,
+        ).deliver_now
       end
   end
 
@@ -366,26 +372,19 @@ private
   end
 
   def create_and_send_nomination_email(email, school)
-    nomination_email = NominationEmail.create_nomination_email(
-      sent_at: Time.zone.now,
-      sent_to: email,
+    access_token = SchoolAccessToken.create!(
       school: school,
+      permitted_actions: %i[nominate_tutor],
     )
-    send_nomination_email(nomination_email)
-  rescue Notifications::Client::RateLimitError
-    sleep(1)
-    send_nomination_email(nomination_email)
+    send_nomination_email(to: email, access_token: access_token)
   end
 
-  def send_nomination_email(nomination_email)
-    notify_id = SchoolMailer.nomination_email(
-      recipient: nomination_email.sent_to,
-      school: nomination_email.school,
-      nomination_url: nomination_email.nomination_url,
-      expiry_date: email_expiry_date,
-    ).deliver_now.delivery_method.response.id
-
-    nomination_email.update!(notify_id: notify_id)
+  def send_nomination_email(to:, access_token:)
+    SchoolMailer.nomination_email(
+      recipient: to,
+      school: access_token.school,
+      access_token: access_token,
+    ).deliver_later
   end
 
   def send_ministerial_letter(recipient)
@@ -393,10 +392,6 @@ private
   rescue Notifications::Client::RateLimitError
     sleep(1)
     SchoolMailer.ministerial_letter_email(recipient: recipient).deliver_now
-  end
-
-  def email_expiry_date
-    NominationEmail::NOMINATION_EXPIRY_TIME.from_now.strftime("%d/%m/%Y")
   end
 
   def invite_group(school_urns, send_method)
@@ -409,56 +404,48 @@ private
         next
       end
 
-      nomination_email = NominationEmail.create_nomination_email(
-        sent_at: Time.zone.now,
-        sent_to: school.contact_email,
+      access_token = SchoolAccessToken.create!(
         school: school,
+        permitted_actions: %i[nominate_tutor],
       )
 
-      delay(queue: "mailers", priority: 1).__send__(send_method, nomination_email)
+      delay(queue: "mailers", priority: 1).__send__(send_method, school: school, access_token: access_token)
     rescue StandardError
       logger.info "Error emailing school, urn: #{urn} ... skipping"
     end
   end
 
-  def send_mat_invite_email(nomination_email)
-    notify_id = SchoolMailer.mat_invite_email(
-      recipient: nomination_email.sent_to,
-      school_name: nomination_email.school.name,
-      nomination_url: nomination_email.nomination_url,
-    ).deliver_now.delivery_method.response.id
-
-    nomination_email.update!(notify_id: notify_id)
+  def send_mat_invite_email(school:, access_token:)
+    SchoolMailer.mat_invite_email(
+      recipient: school.contact_email,
+      school_name: school.name,
+      access_token: access_token,
+    ).deliver_now
   end
 
-  def send_federation_invite_email(nomination_email)
-    notify_id = SchoolMailer.federation_invite_email(
-      recipient: nomination_email.sent_to,
-      school_name: nomination_email.school.name,
-      nomination_url: nomination_email.nomination_url,
-    ).deliver_now.delivery_method.response.id
-
-    nomination_email.update!(notify_id: notify_id)
+  def send_federation_invite_email(school:, access_token:)
+    SchoolMailer.federation_invite_email(
+      recipient: school.contact_email,
+      school_name: school.name,
+      access_token: access_token,
+    ).deliver_now
   end
 
-  def send_cip_only_invite_email(nomination_email)
-    notify_id = SchoolMailer.cip_only_invite_email(
-      recipient: nomination_email.sent_to,
-      school_name: nomination_email.school.name,
-      nomination_url: nomination_email.nomination_url(utm_source: :nominate_tutor_cip_only),
-    ).deliver_now.delivery_method.response.id
-
-    nomination_email.update!(notify_id: notify_id)
+  def send_cip_only_invite_email(school:, access_token:)
+    SchoolMailer.cip_only_invite_email(
+      recipient: school.contact_email,
+      school_name: school.name,
+      access_token: access_token,
+    ).deliver_now
   end
 
-  def send_section_41_invite_email(nomination_email)
-    notify_id = SchoolMailer.section_41_invite_email(
-      recipient: nomination_email.sent_to,
-      school_name: nomination_email.school.name,
-      nomination_url: nomination_email.nomination_url(utm_source: :nominate_section_41),
-    ).deliver_now.delivery_method.response.id
-
-    nomination_email.update!(notify_id: notify_id)
+  def send_section_41_invite_email(school:, access_token:)
+    SchoolMailer.section_41_invite_email(
+      recipient: school.contact_email,
+      school_name: school.name,
+      access_token: access_token,
+      campaign: :nominate_section_41,
+    ).deliver_now
   end
 
   def logger

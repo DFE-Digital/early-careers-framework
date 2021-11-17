@@ -22,8 +22,9 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
     end
 
     context "with a valid token" do
-      let(:nomination_email) { create(:nomination_email) }
-      let(:token) { nomination_email.token }
+      let(:school) { create :school }
+      let(:access_token) { create :school_access_token, school: school, permitted_actions: %i[nominate_tutor] }
+      let(:token) { access_token.token }
 
       it "renders the start nomination template" do
         get "/nominations/start-nomination?token=#{token}"
@@ -33,7 +34,6 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
 
       context "when an induction tutor for the school has already been nominated" do
         before do
-          school = nomination_email.school
           create(:user, :induction_coordinator, schools: [school])
         end
 
@@ -48,19 +48,19 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
     end
 
     context "with an expired token" do
-      let(:nomination_email) { create(:nomination_email, :expired_nomination_email) }
-      let(:token) { nomination_email.token }
+      let(:access_token) { create(:school_access_token, :expired) }
+      let(:token) { access_token.token }
 
       it "redirects to link-expired" do
         get "/nominations/start-nomination?token=#{token}"
 
-        expect(response).to redirect_to("/nominations/link-expired?school_id=#{nomination_email.school.id}")
+        expect(response).to redirect_to("/nominations/link-expired?school_id=#{access_token.school.id}")
       end
     end
 
     context "with a nearly expired token" do
-      let(:nomination_email) { create(:nomination_email, :nearly_expired_nomination_email) }
-      let(:token) { nomination_email.token }
+      let(:access_token) { create(:school_access_token, :nearly_expired, permitted_actions: %i[nominate_tutor]) }
+      let(:token) { access_token.token }
 
       it "renders the start nomination template" do
         get "/nominations/start-nomination?token=#{token}"
@@ -71,11 +71,10 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
   end
 
   describe "GET /nominations/new" do
-    let(:nomination_email) { create(:nomination_email) }
+    let(:access_token) { create(:school_access_token, permitted_actions: %i[nominate_tutor]) }
 
-    around do |example|
-      get "/nominations/start-nomination?token=#{nomination_email.token}"
-      example.run
+    before do
+      get "/nominations/start-nomination?token=#{access_token.token}"
     end
 
     it "renders the new template" do
@@ -85,18 +84,21 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
   end
 
   describe "POST /nominations" do
-    let(:nomination_email) { create(:nomination_email) }
-    let(:token) { nomination_email.token }
-    let(:school) { nomination_email.school }
+    let(:access_token) { create(:school_access_token, school: school, permitted_actions: %i[nominate_tutor]) }
+    let(:token) { access_token.token }
+    let(:school) { create :school }
     let(:name) { Faker::Name.name }
     let(:email) { Faker::Internet.email }
+
+    before do
+      get "/nominations/start-nomination?token=#{access_token.token}"
+    end
 
     it "creates a user and induction coordinator profile with the given details" do
       expect {
         post "/nominations", params: { nominate_induction_tutor_form: {
           full_name: name,
           email: email,
-          token: token,
         } }
       }
         .to change { User.count }
@@ -114,7 +116,6 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
       post "/nominations", params: { nominate_induction_tutor_form: {
         full_name: name,
         email: "",
-        token: token,
       } }
 
       expect(response).to render_template("nominations/nominate_induction_coordinator/new")
@@ -125,7 +126,6 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
       post "/nominations", params: { nominate_induction_tutor_form: {
         full_name: "",
         email: email,
-        token: token,
       } }
 
       expect(response).to render_template("nominations/nominate_induction_coordinator/new")
@@ -140,12 +140,11 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
           post "/nominations", params: { nominate_induction_tutor_form: {
             full_name: existing_induction_coordinator.full_name,
             email: email,
-            token: token,
           } }
         }.not_to(change { User.count })
 
         expect(existing_induction_coordinator.schools.count).to eql 2
-        expect(existing_induction_coordinator.schools).to include nomination_email.school
+        expect(existing_induction_coordinator.schools).to include access_token.school
         expect(response).to redirect_to("/nominations/nominate-school-lead-success")
       end
 
@@ -154,12 +153,11 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
           post "/nominations", params: { nominate_induction_tutor_form: {
             full_name: "Different Name",
             email: email,
-            token: token,
           } }
         }.not_to(change { User.count })
 
         expect(existing_induction_coordinator.schools.count).to eql 1
-        expect(existing_induction_coordinator.schools).not_to include nomination_email.school
+        expect(existing_induction_coordinator.schools).not_to include access_token.school
         expect(response).to redirect_to("/nominations/name-different")
       end
     end
@@ -172,7 +170,6 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
           post "/nominations", params: { nominate_induction_tutor_form: {
             full_name: name,
             email: email,
-            token: token,
           } }
         }.not_to(change { User.count })
 
@@ -188,12 +185,11 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
           post "/nominations", params: { nominate_induction_tutor_form: {
             full_name: name,
             email: email,
-            token: token,
           } }
         }.not_to change { User.count }
 
         expect(existing_user.induction_coordinator_profile).not_to be_nil
-        expect(existing_user.schools).to match_array [nomination_email.school]
+        expect(existing_user.schools).to match_array [access_token.school]
       end
     end
 
@@ -206,12 +202,11 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
           post "/nominations", params: { nominate_induction_tutor_form: {
             full_name: name,
             email: email,
-            token: token,
           } }
         }.not_to change { User.count }
 
         expect(existing_user.induction_coordinator_profile).not_to be_nil
-        expect(existing_user.schools).to match_array [nomination_email.school]
+        expect(existing_user.schools).to match_array [access_token.school]
       end
     end
   end

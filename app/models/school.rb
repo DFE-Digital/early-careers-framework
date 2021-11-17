@@ -22,7 +22,6 @@ class School < ApplicationRecord
   has_many :lead_providers, through: :partnerships
   has_many :school_cohorts
   has_many :pupil_premiums
-  has_many :nomination_emails, -> { order(created_at: :desc) }
 
   has_many :induction_coordinator_profiles_schools, dependent: :destroy
   has_many :induction_coordinator_profiles, through: :induction_coordinator_profiles_schools

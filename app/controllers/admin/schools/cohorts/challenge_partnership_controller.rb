@@ -13,7 +13,6 @@ module Admin
           partnership = Partnership.find_by(school: school, cohort: cohort)
           authorize partnership, :update?
           @challenge_partnership_form = ChallengePartnershipForm.new(
-            school_name: school.name,
             partnership_id: partnership.id,
           )
         end

@@ -5,6 +5,7 @@ require "capybara/rspec"
 require "axe-rspec"
 require "webdrivers/chromedriver"
 require "percy/capybara"
+require "capybara/email/rspec"
 
 Capybara.register_driver :chrome_headless do |app|
   options = ::Selenium::WebDriver::Chrome::Options.new

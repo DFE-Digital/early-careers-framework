@@ -4,7 +4,7 @@ class NominateHowToContinueForm
   include ActiveModel::Model
   include ActiveModel::Serialization
 
-  attr_accessor :how_to_continue, :token, :school, :cohort
+  attr_accessor :how_to_continue, :school, :cohort
 
   def attributes
     { how_to_continue: nil }

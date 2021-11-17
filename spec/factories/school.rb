@@ -12,6 +12,11 @@ FactoryBot.define do
     school_type_code { 1 }
     administrative_district_code { "E123" }
 
+    trait :ineligible do
+      section_41_approved { false }
+      school_type_code { [*1..100].without(GiasTypes::ELIGIBLE_TYPE_CODES).sample }
+    end
+
     trait :pupil_premium_uplift do
       pupil_premiums { [build(:pupil_premium, :eligible)] }
     end

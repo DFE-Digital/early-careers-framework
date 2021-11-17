@@ -32,13 +32,10 @@ class NominationRequestForm
   end
 
   def save!
-    if valid?(:save)
-      ActiveRecord::Base.transaction do
-        raise TooManyEmailsError if reached_email_limit
+    return unless valid?(:save)
+    raise TooManyEmailsError if reached_email_limit
 
-        invite_schools_service.run([school.urn])
-      end
-    end
+    invite_schools_service.run([school.urn])
   end
 
 private

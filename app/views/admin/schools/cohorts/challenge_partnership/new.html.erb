@@ -2,7 +2,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">Report that <%= @challenge_partnership_form.school_name %> has been signed up incorrectly</h1>
+    <h1 class="govuk-heading-xl">Report that <%= @challenge_partnership_form.partnership.school.name %> has been signed up incorrectly</h1>
 
     <%= form_for @challenge_partnership_form, url: confirm_admin_school_challenge_partnership_path do |f| %>
       <%= f.hidden_field :partnership_id %>

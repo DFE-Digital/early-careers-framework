@@ -1,28 +1,30 @@
 # frozen_string_literal: true
 
 class Nominations::NominateInductionCoordinatorController < ApplicationController
-  include NominationEmailTokenConsumer
+  include SchoolAccessTokenConsumer
 
   before_action :check_token_status, only: :start_nomination
+  before_action :load_nominate_induction_tutor_form, only: %i[new create]
 
   def start_nomination
-    token = params[:token]
-    load_nominate_induction_tutor_form
-    @nominate_induction_tutor_form.token = token
+    require_access_token!(:nominate_tutor)
+
+    @nominate_induction_tutor_form = ::NominateInductionTutorForm.new(
+      school_id: access_token.school_id,
+    )
+
     session[:nominate_induction_tutor_form] = @nominate_induction_tutor_form.as_json
   end
 
-  def new
-    load_nominate_induction_tutor_form
-  end
+  def new; end
 
   def create
-    load_nominate_induction_tutor_form
-
     if @nominate_induction_tutor_form.valid?
-      CreateInductionTutor.call(school: @nominate_induction_tutor_form.school,
-                                email: @nominate_induction_tutor_form.email,
-                                full_name: @nominate_induction_tutor_form.full_name)
+      CreateInductionTutor.call(
+        school: @nominate_induction_tutor_form.school,
+        email: @nominate_induction_tutor_form.email,
+        full_name: @nominate_induction_tutor_form.full_name,
+      )
       redirect_to nominate_school_lead_success_nominate_induction_coordinator_path
     elsif @nominate_induction_tutor_form.name_different?
       redirect_to action: :name_different
@@ -62,7 +64,7 @@ private
   def nominate_induction_tutor_form_params
     return {} unless params.key?(:nominate_induction_tutor_form)
 
-    params.require(:nominate_induction_tutor_form).permit(:full_name, :email, :token)
+    params.require(:nominate_induction_tutor_form).permit(:full_name, :email)
   end
 
   def build_nomination_request_form
@@ -71,5 +73,15 @@ private
       local_authority_id: school.local_authority.id,
       school_id: school.id,
     )
+  end
+
+  def check_token_status
+    if access_token.nil?
+      redirect_to link_invalid_nominate_induction_coordinator_path
+    elsif access_token.expired?
+      redirect_to link_expired_nominate_induction_coordinator_path(school_id: access_token.school_id)
+    elsif access_token.school.registered?
+      redirect_to already_nominated_request_nomination_invite_path
+    end
   end
 end

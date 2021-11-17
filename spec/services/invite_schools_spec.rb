@@ -16,69 +16,36 @@ RSpec.describe InviteSchools do
     )
   end
 
-  before(:all) do
-    RSpec::Mocks.configuration.verify_partial_doubles = false
-  end
-
-  before(:each) do
-    allow_any_instance_of(Mail::TestMailer).to receive_message_chain(:response, :id) { "notify_id" }
-  end
-
-  after(:all) do
-    RSpec::Mocks.configuration.verify_partial_doubles = true
-  end
-
   describe "#run" do
-    let(:nomination_email) { school.nomination_emails.last }
-
-    it "creates a record for the nomination email" do
-      expect { invite_schools.run [school.urn] }
-        .to change { school.nomination_emails.count }.by 1
-    end
-
-    it "creates a nomination email with the correct fields" do
+    it "enqueues nomination email" do
       invite_schools.run [school.urn]
-      expect(nomination_email.sent_to).to eq school.primary_contact_email
-      expect(nomination_email.sent_at).to be_present
-      expect(nomination_email.token).to be_present
-    end
 
-    it "sends the nomination email" do
-      travel_to(Time.utc("2000-1-1")) do
-        expect(SchoolMailer).to receive(:nomination_email).with(
-          hash_including(
-            recipient: school.primary_contact_email,
-            school: school,
-            nomination_url: String,
-            expiry_date: "22/01/2000",
-          ),
-        ).and_call_original
-
-        invite_schools.run [school.urn]
-      end
-    end
-
-    it "sets the notify id on the nomination email record" do
-      invite_schools.run [school.urn]
-      expect(nomination_email.notify_id).to eq "notify_id"
+      expect(SchoolMailer).to delay_email_delivery_of(:nomination_email).with(
+        recipient: school.primary_contact_email,
+        school: school,
+        access_token: having_attributes(
+          class: SchoolAccessToken,
+          school: school,
+          permitted_actions: %i[nominate_tutor],
+        ),
+      )
     end
 
     context "when the school is cip only" do
       let(:school) { create(:school, :cip_only, primary_contact_email: primary_contact_email) }
 
       it "still sends the nomination email" do
-        travel_to(Time.utc("2000-1-1")) do
-          expect(SchoolMailer).to receive(:nomination_email).with(
-            hash_including(
-              school: school,
-              nomination_url: String,
-              recipient: school.primary_contact_email,
-              expiry_date: "22/01/2000",
-            ),
-          ).and_call_original
+        invite_schools.run [school.urn]
 
-          invite_schools.run [school.urn]
-        end
+        expect(SchoolMailer).to delay_email_delivery_of(:nomination_email).with(
+          recipient: school.primary_contact_email,
+          school: school,
+          access_token: having_attributes(
+            class: SchoolAccessToken,
+            school: school,
+            permitted_actions: %i[nominate_tutor],
+          ),
+        )
       end
     end
 
@@ -86,33 +53,37 @@ RSpec.describe InviteSchools do
       let(:primary_contact_email) { "" }
 
       it "sends the nomination email to the secondary contact" do
-        expect(SchoolMailer).to receive(:nomination_email).with(
-          hash_including(
-            school: school,
-            nomination_url: String,
-            recipient: school.secondary_contact_email,
-          ),
-        ).and_call_original
-
         invite_schools.run [school.urn]
+
+        expect(SchoolMailer).to delay_email_delivery_of(:nomination_email).with(
+          recipient: school.secondary_contact_email,
+          school: school,
+          access_token: having_attributes(
+            class: SchoolAccessToken,
+            school: school,
+            permitted_actions: %i[nominate_tutor],
+          ),
+        )
       end
     end
 
     context "when there is an error creating the nomination email" do
-      let(:primary_contact_email) { nil }
-      let(:secondary_contact_email) { nil }
       let(:another_school) { create(:school) }
 
       it "skips to the next school_id" do
+        allow(SchoolMailer).to receive(:nomination_email).and_call_original
+        allow(SchoolMailer).to receive(:nomination_email).with(hash_including(school: school)).and_raise(StandardError)
+
         invite_schools.run [school.urn, another_school.urn]
-        expect(school.nomination_emails).to be_empty
-        expect(another_school.nomination_emails).not_to be_empty
+
+        expect(SchoolMailer).not_to delay_email_delivery_of(:nomination_email).with hash_including(school: school)
+        expect(SchoolMailer).to delay_email_delivery_of(:nomination_email).with hash_including(school: another_school)
       end
     end
   end
 
   describe "#reached_limit" do
-    subject { invite_schools.reached_limit(school) }
+    subject(:reached_limit) { invite_schools.reached_limit(school) }
 
     context "when the school has not been emailed yet" do
       it { is_expected.to be_nil }
@@ -120,7 +91,13 @@ RSpec.describe InviteSchools do
 
     context "when the school has been emailed more than 5 minutes ago" do
       before do
-        create(:nomination_email, school: school, sent_at: 6.minutes.ago)
+        SchoolMailer.nomination_email(
+          recipient: Faker::Internet.email,
+          school: school,
+          access_token: create(:school_access_token),
+        ).deliver_now
+
+        travel_to 6.minutes.from_now
       end
 
       it { is_expected.to be nil }
@@ -128,7 +105,13 @@ RSpec.describe InviteSchools do
 
     context "when the school has been emailed within the last 5 minutes" do
       before do
-        create(:nomination_email, school: school, sent_at: 4.minutes.ago)
+        SchoolMailer.nomination_email(
+          recipient: Faker::Internet.email,
+          school: school,
+          access_token: create(:school_access_token),
+        ).deliver_now
+
+        travel_to 3.minutes.from_now
       end
 
       it { is_expected.to eq(max: 1, within: 5.minutes) }
@@ -136,7 +119,15 @@ RSpec.describe InviteSchools do
 
     context "when the school has been emailed four times in the last 24 hours" do
       before do
-        create_list(:nomination_email, 4, school: school, sent_at: 22.hours.ago)
+        4.times do
+          SchoolMailer.nomination_email(
+            recipient: Faker::Internet.email,
+            school: school,
+            access_token: create(:school_access_token),
+          ).deliver_now
+
+          travel_to 5.hours.from_now
+        end
       end
 
       it { is_expected.to be nil }
@@ -144,8 +135,15 @@ RSpec.describe InviteSchools do
 
     context "when the school has been emailed five times in the last 24 hours" do
       before do
-        create_list(:nomination_email, 4, school: school, sent_at: 22.hours.ago)
-        create(:nomination_email, school: school, sent_at: 3.minutes.ago)
+        5.times do
+          SchoolMailer.nomination_email(
+            recipient: Faker::Internet.email,
+            school: school,
+            access_token: create(:school_access_token),
+          ).deliver_now
+
+          travel_to 3.hours.from_now
+        end
       end
 
       it { is_expected.to eq(max: 5, within: 24.hours) }
@@ -154,11 +152,13 @@ RSpec.describe InviteSchools do
 
   describe "#send_chasers" do
     let!(:cohort) { create(:cohort, :current) }
+
     it "does not send emails to schools who have nominated tutors" do
-      # Given there is a school with an induction coordinator
       create(:user, :induction_coordinator)
       expect(School.count).to eq 1
       expect(School.without_induction_coordinator.count).to eq 0
+
+      invite_schools.send_chasers
 
       expect(an_instance_of(InviteSchools)).not_to delay_execution_of(:create_and_send_nomination_email)
     end
@@ -186,152 +186,49 @@ RSpec.describe InviteSchools do
   end
 
   describe "#invite_mats" do
-    context "when the is an induction coordinator" do
-      let(:induction_coordinator) { create(:user, :induction_coordinator) }
-      let(:school) { induction_coordinator.schools.first }
+    let(:school) { create :school }
 
-      it "sends the email to the induction coordinator" do
-        expect { InviteSchools.new.invite_mats([school.urn]) }.to change { NominationEmail.count }.by(1)
-        expect(an_instance_of(InviteSchools)).to delay_execution_of(:send_mat_invite_email).with(
-          an_object_having_attributes(
-            class: NominationEmail,
-            sent_to: induction_coordinator.email,
-            school: school,
-          ),
-        )
-      end
-    end
+    it "sends the email to the school" do
+      InviteSchools.new.invite_mats([school.urn])
 
-    context "when the school has a primary contact email" do
-      let(:primary_email) { "primary@example.com" }
-      let(:school) { create(:school, primary_contact_email: primary_email) }
-
-      it "sends an email to the primary contact" do
-        expect { InviteSchools.new.invite_mats([school.urn]) }.to change { NominationEmail.count }.by(1)
-        expect(an_instance_of(InviteSchools)).to delay_execution_of(:send_mat_invite_email).with(
-          an_object_having_attributes(
-            class: NominationEmail,
-            sent_to: primary_email,
-            school: school,
-          ),
-        )
-      end
-    end
-
-    context "when the school has a secondary contact email" do
-      let(:secondary_email) { "secondary@example.com" }
-      let(:school) { create(:school, primary_contact_email: nil, secondary_contact_email: secondary_email) }
-
-      it "sends an email to the secondary contact" do
-        expect { InviteSchools.new.invite_mats([school.urn]) }.to change { NominationEmail.count }.by(1)
-        expect(an_instance_of(InviteSchools)).to delay_execution_of(:send_mat_invite_email).with(
-          an_object_having_attributes(
-            class: NominationEmail,
-            sent_to: secondary_email,
-            school: school,
-          ),
-        )
-      end
+      expect(an_instance_of(InviteSchools)).to delay_execution_of(:send_mat_invite_email).with(
+        school: school,
+        access_token: an_object_having_attributes(
+          class: SchoolAccessToken,
+          school: school,
+        ),
+      )
     end
   end
 
   describe "#invite_federations" do
-    context "when the is an induction coordinator" do
-      let(:induction_coordinator) { create(:user, :induction_coordinator) }
-      let(:school) { induction_coordinator.schools.first }
+    let(:school) { create :school }
 
-      it "sends the email to the induction coordinator" do
-        expect { InviteSchools.new.invite_federations([school.urn]) }.to change { NominationEmail.count }.by(1)
-        expect(an_instance_of(InviteSchools)).to delay_execution_of(:send_federation_invite_email).with(
-          an_object_having_attributes(
-            class: NominationEmail,
-            sent_to: induction_coordinator.email,
-            school: school,
-          ),
-        )
-      end
-    end
+    it "sends the email to the school" do
+      InviteSchools.new.invite_federations([school.urn])
 
-    context "when the school has a primary contact email" do
-      let(:primary_email) { "primary@example.com" }
-      let(:school) { create(:school, primary_contact_email: primary_email) }
-
-      it "sends an email to the primary contact" do
-        expect { InviteSchools.new.invite_federations([school.urn]) }.to change { NominationEmail.count }.by(1)
-        expect(an_instance_of(InviteSchools)).to delay_execution_of(:send_federation_invite_email).with(
-          an_object_having_attributes(
-            class: NominationEmail,
-            sent_to: primary_email,
-            school: school,
-          ),
-        )
-      end
-    end
-
-    context "when the school has a secondary contact email" do
-      let(:secondary_email) { "secondary@example.com" }
-      let(:school) { create(:school, primary_contact_email: nil, secondary_contact_email: secondary_email) }
-
-      it "sends an email to the secondary contact" do
-        expect { InviteSchools.new.invite_federations([school.urn]) }.to change { NominationEmail.count }.by(1)
-        expect(an_instance_of(InviteSchools)).to delay_execution_of(:send_federation_invite_email).with(
-          an_object_having_attributes(
-            class: NominationEmail,
-            sent_to: secondary_email,
-            school: school,
-          ),
-        )
-      end
+      expect(an_instance_of(InviteSchools)).to delay_execution_of(:send_federation_invite_email).with(
+        school: school,
+        access_token: an_object_having_attributes(
+          class: SchoolAccessToken,
+          school: school,
+        ),
+      )
     end
   end
 
   describe "#invite_section_41" do
-    context "when the is an induction coordinator" do
-      let(:induction_coordinator) { create(:user, :induction_coordinator) }
-      let(:school) { induction_coordinator.schools.first }
+    let(:school) { create :school }
 
-      it "sends the email to the induction coordinator" do
-        expect { InviteSchools.new.invite_section_41([school.urn]) }.to change { NominationEmail.count }.by(1)
-        expect(an_instance_of(InviteSchools)).to delay_execution_of(:send_section_41_invite_email).with(
-          an_object_having_attributes(
-            class: NominationEmail,
-            sent_to: induction_coordinator.email,
-            school: school,
-          ),
-        )
-      end
-    end
-
-    context "when the school has a primary contact email" do
-      let(:primary_email) { "primary@example.com" }
-      let(:school) { create(:school, primary_contact_email: primary_email) }
-
-      it "sends an email to the primary contact" do
-        expect { InviteSchools.new.invite_section_41([school.urn]) }.to change { NominationEmail.count }.by(1)
-        expect(an_instance_of(InviteSchools)).to delay_execution_of(:send_section_41_invite_email).with(
-          an_object_having_attributes(
-            class: NominationEmail,
-            sent_to: primary_email,
-            school: school,
-          ),
-        )
-      end
-    end
-
-    context "when the school has a secondary contact email" do
-      let(:secondary_email) { "secondary@example.com" }
-      let(:school) { create(:school, primary_contact_email: nil, secondary_contact_email: secondary_email) }
-
-      it "sends an email to the secondary contact" do
-        expect { InviteSchools.new.invite_section_41([school.urn]) }.to change { NominationEmail.count }.by(1)
-        expect(an_instance_of(InviteSchools)).to delay_execution_of(:send_section_41_invite_email).with(
-          an_object_having_attributes(
-            class: NominationEmail,
-            sent_to: secondary_email,
-            school: school,
-          ),
-        )
-      end
+    it "sends the email to the school" do
+      InviteSchools.new.invite_section_41([school.urn])
+      expect(an_instance_of(InviteSchools)).to delay_execution_of(:send_section_41_invite_email).with(
+        school: school,
+        access_token: an_object_having_attributes(
+          class: SchoolAccessToken,
+          school: school,
+        ),
+      )
     end
   end
 
@@ -343,14 +240,22 @@ RSpec.describe InviteSchools do
       let!(:fip_school) { create(:school, :open) }
 
       it "sends invites to non-welsh cip-only schools" do
-        expect { InviteSchools.new.invite_cip_only_schools }.to change { NominationEmail.count }.by(1)
+        InviteSchools.new.invite_cip_only_schools
+
         expect(an_instance_of(InviteSchools)).to delay_execution_of(:send_cip_only_invite_email).with(
-          an_object_having_attributes(
-            class: NominationEmail,
-            sent_to: cip_only_school.contact_email,
+          school: cip_only_school,
+          access_token: an_object_having_attributes(
+            class: SchoolAccessToken,
             school: cip_only_school,
           ),
         )
+
+        [welsh_cip_only_school, section_41_school, fip_school].each do |school|
+          expect(an_instance_of(InviteSchools)).not_to delay_execution_of(:send_cip_only_invite_email).with(
+            school: school,
+            access_token: SchoolAccessToken,
+          )
+        end
       end
     end
   end
@@ -982,7 +887,11 @@ RSpec.describe InviteSchools do
         hash_including(
           recipient: school.contact_email,
           school: school,
-          nomination_url: a_string_including("utm_campaign=unengaged-schools&utm_medium=email&utm_source=unengaged-schools"),
+          access_token: having_attributes(
+            class: SchoolAccessToken,
+            school: school,
+            permitted_actions: %i[nominate_tutor],
+          ),
         ),
       ).and_call_original
 

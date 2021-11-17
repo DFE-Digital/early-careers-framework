@@ -46,7 +46,7 @@ Rails.application.configure do
   # The :test delivery method accumulates sent emails in the
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
-  config.record_emails = false
+  config.record_emails = true
   config.action_mailer.default_options = {
     from: "mail@example.com",
   }

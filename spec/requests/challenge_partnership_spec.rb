@@ -3,28 +3,27 @@
 require "rails_helper"
 
 RSpec.describe "Challenging a partnership", type: :request do
-  let(:partnership_notification_email) { create :partnership_notification_email, partnership: partnership }
+  let(:access_token) { create :school_access_token, school: partnership.school, permitted_actions: %i[challenge_partnership] }
   let(:partnership) { create :partnership, :in_challenge_window }
   let(:induction_coordinator) { create(:user, :induction_coordinator, schools: [partnership.school]) }
 
-  describe "GET /report-incorrect-partnership?token=:token" do
+  describe "GET /report-incorrect-partnership?token=:token,partnership_id=:partnership_id" do
     it "renders the challenge partnership template" do
-      get "/report-incorrect-partnership", params: { token: partnership_notification_email.token }
+      get "/report-incorrect-partnership", params: { token: access_token.token, partnership: partnership.id }
 
       expect(response).to render_template("challenge_partnerships/show")
     end
 
-    it "404s if the token is not valid" do
-      expect { get "/report-incorrect-partnership", params: { token: "invalid" } }.to raise_error(ActionController::RoutingError)
+    it "403s if the token is not valid" do
+      expect { get "/report-incorrect-partnership", params: { token: "invalid", partnership: partnership.id } }
+        .to raise_error(Pundit::NotAuthorizedError)
     end
 
-    context "when the link has expired" do
-      let!(:partnership) { create(:partnership) }
-      let!(:partnership_notification_email) { create(:partnership_notification_email, partnership: partnership) }
+    context "when the partnership is no longer in the challenge window" do
+      let(:partnership) { create :partnership, :out_of_challenge_window }
 
       it "redirects to link-expired" do
-        travel 4.weeks
-        get "/report-incorrect-partnership", params: { token: partnership_notification_email.token }
+        get "/report-incorrect-partnership", params: { token: access_token.token, partnership: partnership.id }
 
         expect(response).to redirect_to("/report-incorrect-partnership/link-expired")
       end
@@ -34,14 +33,14 @@ RSpec.describe "Challenging a partnership", type: :request do
       let!(:partnership) { create(:partnership, :challenged) }
 
       it "redirects to already-challenged" do
-        get "/report-incorrect-partnership", params: { token: partnership_notification_email.token }
+        get "/report-incorrect-partnership", params: { token: access_token.token, partnership: partnership.id }
 
         expect(response).to redirect_to(/\/report-incorrect-partnership\/already-challenged\?school_name=.*/)
       end
 
       it "redirects to already-challenged even if the token has expired" do
         travel 15.days
-        get "/report-incorrect-partnership", params: { token: partnership_notification_email.token }
+        get "/report-incorrect-partnership", params: { token: access_token.token, partnership: partnership.id }
 
         expect(response).to redirect_to(/\/report-incorrect-partnership\/already-challenged\?school_name=.*/)
       end
@@ -113,9 +112,9 @@ RSpec.describe "Challenging a partnership", type: :request do
       freeze_time
       when_i_submit_form_with_reason("mistake")
 
-      partnership_notification_email.partnership.reload
-      expect(partnership_notification_email.partnership.challenge_reason).to eql "mistake"
-      expect(partnership_notification_email.partnership.challenged_at).to eql Time.zone.now
+      partnership.reload
+      expect(partnership.challenge_reason).to eql "mistake"
+      expect(partnership.challenged_at).to eql Time.zone.now
     end
 
     it "shows an error message when no option is selected" do
@@ -136,9 +135,12 @@ RSpec.describe "Challenging a partnership", type: :request do
 private
 
   def when_i_submit_form_with_reason(reason)
-    post "/report-incorrect-partnership", params: { challenge_partnership_form: {
-      challenge_reason: reason,
-      token: partnership_notification_email.token,
-    } }
+    post "/report-incorrect-partnership", params: {
+      token: access_token.token,
+      challenge_partnership_form: {
+        partnership_id: partnership.id,
+        challenge_reason: reason,
+      },
+    }
   end
 end

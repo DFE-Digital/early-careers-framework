@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_21_121416) do
+ActiveRecord::Schema.define(version: 2021_11_09_154453) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -691,6 +691,17 @@ ActiveRecord::Schema.define(version: 2021_10_21_121416) do
     t.string "type", default: "Finance::Schedule::ECF"
   end
 
+  create_table "school_access_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "school_id", null: false
+    t.string "token", null: false
+    t.string "permitted_actions", default: [], array: true
+    t.datetime "expires_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["school_id"], name: "index_school_access_tokens_on_school_id"
+    t.index ["token"], name: "index_school_access_tokens_on_token", unique: true
+  end
+
   create_table "school_cohorts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "induction_programme_choice", null: false
     t.uuid "school_id", null: false
@@ -865,6 +876,7 @@ ActiveRecord::Schema.define(version: 2021_10_21_121416) do
   add_foreign_key "provider_relationships", "delivery_partners"
   add_foreign_key "provider_relationships", "lead_providers"
   add_foreign_key "pupil_premiums", "schools"
+  add_foreign_key "school_access_tokens", "schools"
   add_foreign_key "school_cohorts", "cohorts"
   add_foreign_key "school_cohorts", "core_induction_programmes"
   add_foreign_key "school_cohorts", "schools"

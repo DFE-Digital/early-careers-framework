@@ -16,84 +16,36 @@ RSpec.describe "Nominations::NotifyCallbacks", type: :request do
   end
 
   describe "POST /api/notify-callback" do
-    context "when the email is a nomination email" do
-      let(:nomination_email) { create(:nomination_email) }
+    it "updates matching email record" do
+      email = Email.create!(id: SecureRandom.uuid)
 
-      it "updates matching nomination email" do
+      post "/api/notify-callback", headers: headers, params: {
+        id: email.id,
+        status: "failed",
+      }
+
+      expect(email.reload.status).to eq "failed"
+    end
+
+    context "when reference is nil" do
+      it "returns successfully" do
         post "/api/notify-callback", headers: headers, params: {
-          id: nomination_email.notify_id,
-          status: "failed",
+          reference: nil,
+          status: "delivered",
         }
 
-        expect(nomination_email.reload.notify_status).to eq "failed"
-      end
-
-      it "updates matching email record" do
-        email = Email.create!(id: nomination_email.notify_id)
-
-        post "/api/notify-callback", headers: headers, params: {
-          id: nomination_email.notify_id,
-          status: "failed",
-        }
-
-        expect(email.reload.status).to eq "failed"
-      end
-
-      context "when reference is nil" do
-        it "returns successfully" do
-          post "/api/notify-callback", headers: headers, params: {
-            reference: nil,
-            status: "delivered",
-          }
-
-          expect(response).to have_http_status(:success)
-        end
-      end
-
-      context "when reference does not match any records" do
-        it "returns successfully" do
-          post "/api/notify-callback", headers: headers, params: {
-            reference: "reference",
-            status: "delivered",
-          }
-
-          expect(response).to have_http_status(:success)
-        end
+        expect(response).to have_http_status(:success)
       end
     end
 
-    context "when the email is a partnership notification email" do
-      let(:partnership_notification_email) { create(:partnership_notification_email) }
-
-      it "updates matching email" do
+    context "when reference does not match any records" do
+      it "returns successfully" do
         post "/api/notify-callback", headers: headers, params: {
-          id: partnership_notification_email.notify_id,
-          status: "failed",
+          reference: "reference",
+          status: "delivered",
         }
 
-        expect(partnership_notification_email.reload.notify_status).to eq "failed"
-      end
-
-      context "when id is nil" do
-        it "returns successfully" do
-          post "/api/notify-callback", headers: headers, params: {
-            id: nil,
-            status: "delivered",
-          }
-
-          expect(response).to have_http_status(:success)
-        end
-      end
-
-      context "when id does not match any records" do
-        it "returns successfully" do
-          post "/api/notify-callback", headers: headers, params: {
-            id: "reference",
-            status: "delivered",
-          }
-
-          expect(response).to have_http_status(:success)
-        end
+        expect(response).to have_http_status(:success)
       end
     end
 

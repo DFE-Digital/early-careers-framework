@@ -35,25 +35,30 @@ RSpec.describe NominationRequestForm, type: :model do
   end
 
   describe "#save!" do
-    it "calls InviteSchools with the correct school" do
-      expect_any_instance_of(InviteSchools).to receive(:run).with([school.urn])
+    let(:invite_schools) { instance_spy InviteSchools }
 
-      nomination_request_form.save!
+    before do
+      allow(InviteSchools).to receive(:new).and_return invite_schools
+      allow(invite_schools).to receive(:reached_limit).with(school).and_return reached_limit
     end
 
-    context "when the school has been emailed in the last 24 hours" do
-      before do
-        create(:nomination_email, school: school)
-      end
+    context "when nomination email limits for given school has not been breached yet" do
+      let(:reached_limit) { nil }
 
-      it "does not call run on InviteSchools" do
-        expect_any_instance_of(InviteSchools).not_to receive(:run)
-      end
+      it "calls InviteSchools with the correct school" do
+        nomination_request_form.save!
 
-      it "raises TooManyEmailsError if the school has been emailed in the last 24 hours" do
-        expect {
-          nomination_request_form.save!
-        }.to raise_error TooManyEmailsError
+        expect(invite_schools).to have_received(:run).with([school.urn])
+      end
+    end
+
+    context "when nomination email limits for given school has been breached" do
+      let(:reached_limit) { { max: 100, within: 1.second } }
+
+      it "raises TooManyEmailsError" do
+        expect { nomination_request_form.save! }.to raise_error TooManyEmailsError
+
+        expect(invite_schools).not_to have_received(:run)
       end
     end
   end

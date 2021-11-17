@@ -4,17 +4,16 @@ require "rails_helper"
 
 RSpec.describe SchoolMailer, type: :mailer do
   describe "#nomination_email" do
-    let(:school) { instance_double School, name: "Great Ouse Academy" }
+    let(:school) { create :school }
     let(:primary_contact_email) { "contact@example.com" }
-    let(:nomination_url) { "https://ecf-dev.london.cloudapps/nominations?token=abc123" }
+    let(:access_token) { SchoolAccessToken.create(school: school, permitted_actions: %i[some_action]) }
 
     let(:nomination_email) do
       SchoolMailer.nomination_email(
         recipient: primary_contact_email,
-        nomination_url: nomination_url,
         school: school,
-        expiry_date: "1/1/2000",
-      ).deliver_now
+        access_token: access_token,
+      )
     end
 
     it "renders the right headers" do
@@ -25,13 +24,12 @@ RSpec.describe SchoolMailer, type: :mailer do
 
   describe "#cip_only_invite_email" do
     let(:primary_contact_email) { "contact@example.com" }
-    let(:nomination_url) { "https://ecf-dev.london.cloudapps/nominations?token=abc123" }
 
     let(:cip_only_invite_email) do
       SchoolMailer.cip_only_invite_email(
         recipient: primary_contact_email,
-        nomination_url: nomination_url,
         school_name: "Great Ouse Academy",
+        access_token: create(:school_access_token),
       ).deliver_now
     end
 
@@ -43,12 +41,11 @@ RSpec.describe SchoolMailer, type: :mailer do
 
   describe "#section_41_invite_email" do
     let(:primary_contact_email) { "contact@example.com" }
-    let(:nomination_url) { "https://ecf-dev.london.cloudapps/nominations?token=abc123" }
 
     let(:section_41_invite_email) do
       SchoolMailer.section_41_invite_email(
         recipient: primary_contact_email,
-        nomination_url: nomination_url,
+        access_token: create(:school_access_token),
         school_name: "Great Ouse Academy",
       ).deliver_now
     end
@@ -80,17 +77,13 @@ RSpec.describe SchoolMailer, type: :mailer do
   end
 
   describe "#coordinator_partnership_notification_email" do
-    let(:coordinator) { build_stubbed(:induction_coordinator_profile).user }
-    let(:sign_in_url) { "https://www.example.com/sign-in" }
-    let(:challenge_url) { "https://www.example.com?token=abc123" }
-    let(:partnership) { build_stubbed :partnership }
+    let!(:coordinator) { create(:induction_coordinator_profile, schools: [partnership.school]).user }
+    let(:partnership) { create :partnership }
 
     let(:partnership_notification_email) do
       SchoolMailer.coordinator_partnership_notification_email(
-        coordinator: coordinator,
         partnership: partnership,
-        sign_in_url: sign_in_url,
-        challenge_url: challenge_url,
+        access_token: create(:school_access_token),
       )
     end
 
@@ -101,23 +94,18 @@ RSpec.describe SchoolMailer, type: :mailer do
   end
 
   describe "#school_partnership_notification_email" do
-    let(:recipient) { Faker::Internet.email }
-    let(:nominate_url) { "https://www.example.com?token=def456" }
-    let(:challenge_url) { "https://www.example.com?token=abc123" }
-    let(:partnership) { build_stubbed :partnership }
+    let(:partnership) { create :partnership }
 
     let(:partnership_notification_email) do
       SchoolMailer.school_partnership_notification_email(
         partnership: partnership,
-        recipient: recipient,
-        nominate_url: nominate_url,
-        challenge_url: challenge_url,
+        access_token: create(:school_access_token),
       )
     end
 
     it "renders the right headers" do
       expect(partnership_notification_email.from).to eq(["mail@example.com"])
-      expect(partnership_notification_email.to).to eq([recipient])
+      expect(partnership_notification_email.to).to eq([partnership.school.contact_email])
     end
   end
 

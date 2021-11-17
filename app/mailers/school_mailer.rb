@@ -46,7 +46,7 @@ class SchoolMailer < ApplicationMailer
   end
 
   # This email is sent to schools to request an appointment of SIT to coordinate their cohorts
-  def nomination_email(recipient:, school:, nomination_url:, expiry_date:)
+  def nomination_email(recipient:, school:, access_token:, campaign: nil)
     template_mail(
       NOMINATION_EMAIL_TEMPLATE,
       to: recipient,
@@ -54,11 +54,11 @@ class SchoolMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         school_name: school.name,
-        nomination_link: nomination_url,
-        expiry_date: expiry_date,
+        nomination_link: nomination_url(access_token, campaign: campaign),
+        expiry_date: access_token.expires_at.strftime("%d/%m/%Y"),
         subject: "Important: NQT induction changes",
       },
-    ).tag(:request_to_nominate_sit).associate_with(school)
+    ).tag(:request_to_nominate_sit).associate_with(school, access_token)
   end
 
   # This email is sent to newly appointed SIT
@@ -79,52 +79,35 @@ class SchoolMailer < ApplicationMailer
 
   # This email is sent to the school which has been reported by the lead provider and which hasn't yet nominated SIT
   # It also contains request to nominate SIT.
-  def school_partnership_notification_email(recipient:, partnership:, challenge_url:, nominate_url:)
-    template_mail(
+  def school_partnership_notification_email(partnership:, access_token:, reminder: false, campaign: nil)
+    email = template_mail(
       SCHOOL_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE,
-      to: recipient,
+      to: partnership.school.contact_email.presence || "ecf-tech@digital.education.gov.uk",
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
         lead_provider_name: partnership.lead_provider.name,
         delivery_partner_name: partnership.delivery_partner.name,
         school_name: partnership.school.name,
-        nominate_url: nominate_url,
-        challenge_url: challenge_url,
+        nominate_url: nomination_url(access_token, campaign: campaign),
+        challenge_url: partnership_challenge_url(partnership, access_token, campaign: campaign),
         challenge_deadline: partnership.challenge_deadline.strftime("%d/%m/%Y"),
         subject: "FAO: NQT coordinator. Training provider confirmed.",
       },
-    ).tag(:partnership_created, :request_to_nominate_sit).associate_with(partnership, partnership.school)
-  end
+    )
 
-  def partnered_school_invite_sit_email(
-    recipient:,
-    school:,
-    lead_provider_name:,
-    delivery_partner_name:,
-    nominate_url:,
-    challenge_url:
-  )
-
-    template_mail(
-      PARTNERED_SCHOOL_INVITE_SIT_EMAIL_TEMPLATE,
-      to: recipient,
-      rails_mailer: mailer_name,
-      rails_mail_template: action_name,
-      personalisation: {
-        school_name: school.name,
-        lead_provider_name: lead_provider_name,
-        delivery_partner_name: delivery_partner_name,
-        nominate_url: nominate_url,
-        challenge_url: challenge_url,
-      },
-    ).tag(:partnered_school_invite_sit).associate_with(school)
+    email.tag(:partnership_created, :request_to_nominate_sit)
+    email.tag(:reminder) if reminder # rubocop:disable Rails/ContentTag
+    email.associate_with(partnership, partnership.school)
   end
 
   # This email is sent to the SIT of the school whe was reported to enter the partnership with lead provider.
   # If given school has no appointed SIT, the `school_partnership_notification_email` should be sent instead
-  def coordinator_partnership_notification_email(coordinator:, partnership:, sign_in_url:, challenge_url:)
-    template_mail(
+  def coordinator_partnership_notification_email(partnership:, access_token:, campaign: nil, reminder: false)
+    coordinator = partnership.school.induction_tutor
+    campaign_tracking = campaign ? UTMService.email(campaign, campaign) : {}
+
+    email = template_mail(
       COORDINATOR_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE,
       to: coordinator.email,
       rails_mailer: mailer_name,
@@ -134,12 +117,34 @@ class SchoolMailer < ApplicationMailer
         lead_provider_name: partnership.lead_provider.name,
         delivery_partner_name: partnership.delivery_partner.name,
         school_name: partnership.school.name,
-        sign_in_url: sign_in_url,
-        challenge_url: challenge_url,
+        sign_in_url: new_user_session_url(**campaign_tracking),
+        challenge_url: partnership_challenge_url(partnership, access_token, campaign: campaign),
         challenge_deadline: partnership.challenge_deadline,
         subject: "Training provider confirmed: add your ECTs and mentors",
       },
-    ).tag(:partnership_created).associate_with(partnership, partnership.school)
+    )
+
+    email.tag(:partnership_created)
+    email.tag(:reminder) if reminder # rubocop:disable Rails/ContentTag
+    email.associate_with(partnership, partnership.school)
+  end
+
+  def partnered_school_invite_sit_email(partnership:, access_token:, campaign: nil)
+    school = partnership.school
+
+    template_mail(
+      PARTNERED_SCHOOL_INVITE_SIT_EMAIL_TEMPLATE,
+      to: partnership.school.contact_email.presence || "ecf-tech@digital.education.gov.uk",
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        school_name: school.name,
+        lead_provider_name: partnership.lead_provider.name,
+        delivery_partner_name: partnership.delivery_partner.name,
+        nominate_url: nomination_url(access_token, campaign: campaign),
+        challenge_url: partnership_challenge_url(partnership, access_token, campaign: campaign),
+      },
+    ).tag(:partnered_school_invite_sit).associate_with(school)
   end
 
   def ministerial_letter_email(recipient:)
@@ -170,7 +175,7 @@ class SchoolMailer < ApplicationMailer
     )
   end
 
-  def mat_invite_email(recipient:, school_name:, nomination_url:)
+  def mat_invite_email(recipient:, school_name:, access_token:)
     template_mail(
       MAT_INVITE_EMAIL_TEMPLATE,
       to: recipient,
@@ -178,12 +183,12 @@ class SchoolMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         school_name: school_name,
-        nomination_url: nomination_url,
+        nomination_url: nomination_url(access_token),
       },
     )
   end
 
-  def federation_invite_email(recipient:, school_name:, nomination_url:)
+  def federation_invite_email(recipient:, school_name:, access_token:, campaign: nil)
     template_mail(
       FEDERATION_INVITE_EMAIL_TEMPLATE,
       to: recipient,
@@ -191,12 +196,12 @@ class SchoolMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         school_name: school_name,
-        nomination_url: nomination_url,
+        nomination_url: nomination_url(access_token, campaign: campaign),
       },
     )
   end
 
-  def cip_only_invite_email(recipient:, school_name:, nomination_url:)
+  def cip_only_invite_email(recipient:, school_name:, access_token:)
     template_mail(
       CIP_ONLY_INVITE_EMAIL_TEMPLATE,
       to: recipient,
@@ -204,12 +209,12 @@ class SchoolMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         school_name: school_name,
-        nomination_link: nomination_url,
+        nomination_link: nomination_url(access_token),
       },
     )
   end
 
-  def section_41_invite_email(recipient:, school_name:, nomination_url:)
+  def section_41_invite_email(recipient:, school_name:, access_token:, campaign: nil)
     template_mail(
       SECTION_41_INVITE_EMAIL_TEMPLATE,
       to: recipient,
@@ -217,12 +222,12 @@ class SchoolMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         school_name: school_name,
-        nomination_link: nomination_url,
+        nomination_link: nomination_url(access_token, campaign: campaign),
       },
     )
   end
 
-  def unengaged_schools_email(recipient:, school:, nomination_url:)
+  def unengaged_schools_email(recipient:, school:, access_token:, campaign: nil)
     template_mail(
       UNENGAGED_INVITE_EMAIL_TEMPLATE,
       to: recipient,
@@ -230,7 +235,7 @@ class SchoolMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         school_name: school.name,
-        nomination_link: nomination_url,
+        nomination_link: nomination_url(access_token, campaign: campaign),
       },
     ).tag(:unengaged_school_email).associate_with(school)
   end
@@ -403,5 +408,17 @@ class SchoolMailer < ApplicationMailer
         sign_in: sign_in_url,
       },
     ).tag(:sit_fip_participant_validation_deadline_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator)
+  end
+
+private
+
+  def nomination_url(access_token, campaign: nil)
+    campaign_tracking = campaign ? UTMService.email(campaign, campaign) : {}
+    start_nominate_induction_coordinator_url(token: access_token.token, **campaign_tracking)
+  end
+
+  def partnership_challenge_url(partnership, access_token, campaign: nil)
+    campaign_tracking = campaign ? UTMService.email(campaign, campaign) : {}
+    challenge_partnership_url(partnership: partnership.id, token: access_token.token, **campaign_tracking)
   end
 end

@@ -25,6 +25,7 @@ FactoryBot.define do
     end
 
     trait :ecf do
+      # TODO: This is evaluated at the time factory is defined and remains constant for the whole test suite
       if [true, false].sample
         ect
       else

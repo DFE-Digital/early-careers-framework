@@ -3,7 +3,7 @@
 class ChallengePartnershipForm
   include ActiveModel::Model
 
-  attr_accessor :challenge_reason, :token, :school_name, :partnership_id
+  attr_accessor :challenge_reason, :partnership_id
 
   validates :challenge_reason, presence: { message: I18n.t("errors.challenge_reason.blank") }
 

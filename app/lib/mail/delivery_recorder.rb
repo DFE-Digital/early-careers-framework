@@ -14,16 +14,16 @@ module Mail
     def delivered_email(mail)
       return unless enabled?
 
-      response = mail.delivery_method.response
+      response = mail.delivery_method.response if mail.delivery_method.respond_to?(:response)
 
       ApplicationRecord.transaction do
         email = Email.create!(
-          id: response.id,
-          from: response.content["from_email"],
+          id: response&.id,
+          from: response ? response.content["from_email"] : "test@mailer.com",
           to: mail.original_to,
-          template_id: response.template["id"],
-          template_version: response.template["version"],
-          uri: response.uri,
+          template_id: response ? response.template["id"] : SecureRandom.uuid,
+          template_version: response ? response.template["version"] : "1",
+          uri: response&.uri,
           tags: mail.tags,
           personalisation: mail.header["personalisation"]&.unparsed_value,
         )

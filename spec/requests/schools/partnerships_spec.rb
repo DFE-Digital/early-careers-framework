@@ -72,13 +72,12 @@ RSpec.describe "Schools::Partnerships", type: :request do
       end
 
       context "when the school entered a partnership a long time ago" do
-        before do
-          PartnershipNotificationEmail.create!(
-            token: "abc123",
-            sent_to: user.email,
-            partnership: partnership,
-            email_type: PartnershipNotificationEmail.email_types[:induction_coordinator_email],
-          )
+        let!(:partnership) do
+          create(:partnership, :out_of_challenge_window,
+                 cohort: cohort,
+                 lead_provider: lead_provider,
+                 school: school,
+                 delivery_partner: delivery_partner1)
         end
 
         it "does not show the challenge link" do

@@ -3,7 +3,7 @@
 class NominateInductionTutorForm
   include ActiveModel::Model
 
-  attr_accessor :full_name, :email, :token, :school_id, :user_id
+  attr_accessor :full_name, :email, :school_id, :user_id
 
   validates :full_name, presence: true
   validates :email, presence: true, notify_email: true
@@ -11,14 +11,11 @@ class NominateInductionTutorForm
   validate :name_matches
 
   def school
-    if school_id
-      School.find school_id
-    else
-      NominationEmail.find_by(token: token).school
-    end
+    School.find school_id
   end
 
   def email_already_taken?
+    # byebug
     ParticipantProfile.active_record.ects.joins(:user).where(user: { email: email }).any?
   end
 

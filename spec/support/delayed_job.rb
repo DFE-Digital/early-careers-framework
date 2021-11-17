@@ -155,21 +155,11 @@ module DelayedJobMatchers
 
   define :delay_email_delivery_of do |email_name|
     match do |mailer_class|
-      email_arguments = find_email_args(mailer_class, email_name)
+      @email_name = email_name
+      filtered = @email_arguments = find_email_args(mailer_class, email_name)
+      filtered = filtered.select { |args| @arguments.args_match?(*args) } if @arguments
 
-      if @exactly
-        return email_arguments.count == @exactly unless @arguments
-
-        email_arguments.select { |args|
-          @arguments.args_match?(*args)
-        }.count == @exactly
-      else
-        return email_arguments.any? unless @arguments
-
-        email_arguments.any? do |args|
-          @arguments.args_match?(*args)
-        end
-      end
+      @exactly ? filtered.count == @exactly : filtered.any?
     end
 
     chain :with do |*args|
@@ -188,6 +178,21 @@ module DelayedJobMatchers
       # noop for style
     end
 
+    failure_message do
+      first_line = "expected #{@actual}.#{@email_name} to have been scheduled for delivery"
+      first_line += " #{@exactly} #{'time'.pluralize(@exactly)}" if @exactly
+      first_line += " with arguments:\n #{@arguments.expected_args.inspect}" if @arguments
+
+      second_line = "but was scheduled #{@email_arguments.count} #{'time'.pluralize(@email_arguments.count)}"
+      second_line += " with" if @arguments
+
+      [
+        first_line,
+        second_line,
+        (@email_arguments.map(&:inspect) if @arguments),
+      ].compact.join("\n\n")
+    end
+
     # TODO: Also find email enqueued without ActiveJob, i.e. Mailer.delay.email
     def find_email_args(mailer_class, email_name)
       find_active_job_mails_arguments(mailer_class, email_name)
@@ -203,6 +208,34 @@ module DelayedJobMatchers
         .each { |aj_job| aj_job.send(:deserialize_arguments_if_needed) }
         .map { |aj_job| aj_job.arguments[3][:args] } # MailDeliveryJobs arguments are `[mailer_class, email_name, delivery_method, {args:, params:}]`
     end
+  end
+
+  EnqueuedEmail = Struct.new(:to, :template_id, :personalisation, :mailer, :email_name)
+
+  def enqueued_emails(mailer: nil, email_name: nil, to: nil)
+    scope = Delayed::Job
+      .where("handler LIKE '--- !ruby/object:ActiveJob::QueueAdapters::DelayedJobAdapter::JobWrapper%'")
+      .where("handler LIKE '%\n  job_class: ActionMailer::MailDeliveryJob%'")
+
+    scope = scope.where("handler LIKE ?", "%\n  arguments:\n  - #{mailer.name}\n%") if mailer
+    scope = scope.where("handler LIKE ?", "%\n  arguments:\n  - %\n  - #{email_name}\n%") if email_name
+
+    messages = scope.map { |dj_job| ActiveJob::Base.deserialize(dj_job.payload_object.job_data) }
+      .each { |aj_job| aj_job.send(:deserialize_arguments_if_needed) }
+      .map(&:arguments)
+      .map do |mailer_name, mail, _, opts|
+      message = mailer_name.constantize.new.public_send(mail, *opts[:args])
+      EnqueuedEmail.new(
+        message.to,
+        message.header[:template_id].unparsed_value,
+        message.header[:personalisation].unparsed_value,
+        mailer_name.constantize,
+        mail,
+      )
+    end
+
+    messages = messages.select { |msg| msg.to.include? to } if to
+    messages
   end
 
   RSpec.configure do |rspec|
