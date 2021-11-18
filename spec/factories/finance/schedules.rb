@@ -25,6 +25,11 @@ FactoryBot.define do
     factory :ecf_schedule, class: "Finance::Schedule::ECF", parent: :schedule do
       name { "ECF September standard 2021" }
       schedule_identifier { "ecf-september-standard-2021" }
+
+      factory :ecf_schedule_january do
+        name { "ECF January standard 2021" }
+        schedule_identifier { "ecf-january-standard-2021" }
+      end
     end
 
     factory :npq_specialist_schedule, class: "Finance::Schedule::NPQSpecialist", parent: :schedule do
