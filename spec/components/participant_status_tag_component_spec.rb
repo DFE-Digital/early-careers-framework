@@ -3,7 +3,7 @@
 RSpec.describe ParticipantStatusTagComponent, type: :view_component do
   component { described_class.new profile: participant_profile }
 
-  let!(:participant_profile) { create :participant_profile, :ecf }
+  let!(:participant_profile) { create :ecf_participant_profile }
 
   context "when the request for details has not been sent yet" do
     it { is_expected.to have_selector(".govuk-tag.govuk-tag--grey", exact_text: "Contacting for information") }
