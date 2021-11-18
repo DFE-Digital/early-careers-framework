@@ -4,8 +4,8 @@ module Finance
   module NPQ
     class ParticipantEligibleAggregator < Finance::ParticipantAggregator
       class << self
-        def call(cpd_lead_provider:, recorder: ParticipantDeclaration::NPQ, event_type: :started)
-          new(cpd_lead_provider: cpd_lead_provider, recorder: recorder).call(event_type: event_type)
+        def call(cpd_lead_provider:, recorder: ParticipantDeclaration::NPQ, event_type: :started, interval: nil)
+          new(cpd_lead_provider: cpd_lead_provider, recorder: recorder).call(event_type: event_type, interval: interval)
         end
 
         def aggregation_types
