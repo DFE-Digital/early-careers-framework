@@ -2,10 +2,10 @@
 
 require "rails_helper"
 
-RSpec.describe ParticipantProfilePolicy, type: :policy do
+RSpec.describe ParticipantProfilePolicy, :with_default_schedules, type: :policy do
   subject { described_class.new(user, participant_profile) }
 
-  let(:participant_profile) { create(:participant_profile) }
+  let(:participant_profile) { create(:ecf_participant_profile) }
 
   context "being an admin" do
     let(:user) { create(:user, :admin) }
@@ -37,7 +37,7 @@ RSpec.describe ParticipantProfilePolicy, type: :policy do
     subject(:result) { described_class.new(user, ParticipantProfile).resolve }
 
     context "for an admin user" do
-      let(:all_participant_profiles) { create_list :participant_profile, rand(2..3) }
+      let(:all_participant_profiles) { create_list :ecf_participant_profile, rand(2..3) }
       let(:user) { create :user, :admin }
 
       it { is_expected.to include(*all_participant_profiles) }
@@ -49,7 +49,7 @@ RSpec.describe ParticipantProfilePolicy, type: :policy do
       let(:ect_profiles_for_stis_schools) { Array.new(rand(3..5)) { create :ect_participant_profile, school_cohort: create(:school_cohort, school: schools.sample) } }
       let(:mentor_profiles_for_stis_schools) { Array.new(rand(3..5)) { create :mentor_participant_profile, school_cohort: create(:school_cohort, school: schools.sample) } }
       let(:npq_profiles_for_stis_schools) { Array.new(rand(3..5)) { create :npq_participant_profile, school: schools.sample } }
-      let(:other_participant_profiles) { create_list :participant_profile, rand(2..3) }
+      let(:other_participant_profiles) { create_list :ecf_participant_profile, rand(2..3) }
 
       it { is_expected.to include(*ect_profiles_for_stis_schools) }
       it { is_expected.to include(*mentor_profiles_for_stis_schools) }
@@ -59,7 +59,7 @@ RSpec.describe ParticipantProfilePolicy, type: :policy do
 
     context "for a regular user" do
       let(:user) { create :user }
-      let!(:participant_profiles) { create_list :participant_profile, rand(2..3) }
+      let!(:participant_profiles) { create_list :ecf_participant_profile, rand(2..3) }
 
       it { is_expected.to be_empty }
     end
