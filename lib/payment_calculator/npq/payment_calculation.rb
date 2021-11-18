@@ -25,7 +25,6 @@ module PaymentCalculator
       end
 
       def call(aggregations:)
-        pp aggregations
         {
           breakdown_summary: breakdown_summary_calculator.call(contract: contract, aggregations: aggregations),
           service_fees: service_fee_calculator.call(contract: contract),
