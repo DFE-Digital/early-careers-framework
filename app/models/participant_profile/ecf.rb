@@ -20,6 +20,12 @@ class ParticipantProfile::ECF < ParticipantProfile
   scope :contacted_for_info, -> { where.missing(:ecf_participant_validation_data) }
   scope :details_being_checked, -> { joins(:ecf_participant_validation_data).left_joins(:ecf_participant_eligibility).where("ecf_participant_eligibilities.id IS NULL OR ecf_participant_eligibilities.status = 'manual_check'") }
 
+  enum profile_duplicity: {
+    single: "single",
+    primary: "primary",
+    secondary: "secondary",
+  }, _suffix: "profile"
+
   def completed_validation_wizard?
     ecf_participant_eligibility.present? || ecf_participant_validation_data.present?
   end

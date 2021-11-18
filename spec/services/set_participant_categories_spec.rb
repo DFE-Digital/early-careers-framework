@@ -11,6 +11,8 @@ RSpec.describe SetParticipantCategories do
     let!(:contacted_for_info_ect) { create(:participant_profile, :ect, :email_sent, request_for_details_sent_at: 5.days.ago, school_cohort: school_cohort) }
     let!(:ero_mentor) { create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
     let!(:details_being_checked_ect) { create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
+    let!(:primary_mentor) { create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, :primary_profile, school_cohort: school_cohort) }
+    let!(:secondary_mentor) { create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, :secondary_profile, school_cohort: school_cohort) }
 
     context "SIT for multiple schools" do
       let(:school_cohorts) { create_list(:school_cohort, 3, :cip) }
@@ -26,7 +28,7 @@ RSpec.describe SetParticipantCategories do
 
       it "only returns participants for the selected school cohort" do
         participant_categories = service.call(school_cohort, induction_coordinator.user)
-        expect(participant_categories.eligible).to match_array [eligible_ect, ineligible_mentor, ero_mentor, details_being_checked_ect, @ects.first]
+        expect(participant_categories.eligible).to match_array [eligible_ect, ineligible_mentor, ero_mentor, details_being_checked_ect, primary_mentor, secondary_mentor, @ects.first]
         expect(participant_categories.eligible).not_to include(@ects[1], @ects[2])
       end
     end
@@ -35,7 +37,7 @@ RSpec.describe SetParticipantCategories do
       let(:school_cohort) { create(:school_cohort, :cip) }
       let(:induction_coordinator) { create(:induction_coordinator_profile, schools: [school_cohort.school]) }
 
-      let(:cip_eligible_participants) { [eligible_ect, ineligible_mentor, ero_mentor, details_being_checked_ect] }
+      let(:cip_eligible_participants) { [eligible_ect, ineligible_mentor, ero_mentor, details_being_checked_ect, primary_mentor, secondary_mentor] }
       let(:cip_ineligible_participants) { [] }
       let(:cip_contacted_for_info_participants) { [contacted_for_info_ect] }
       let(:cip_details_being_checked_participants) { [] }
@@ -71,7 +73,7 @@ RSpec.describe SetParticipantCategories do
       let(:school_cohort) { create(:school_cohort, :fip) }
       let(:induction_coordinator) { create(:induction_coordinator_profile, schools: [school_cohort.school]) }
 
-      let(:fip_eligible_participants) { [eligible_ect, ero_mentor] }
+      let(:fip_eligible_participants) { [eligible_ect, ero_mentor, primary_mentor, secondary_mentor] }
       let(:fip_ineligible_participants) { [ineligible_mentor] }
       let(:fip_contacted_for_info_participants) { [contacted_for_info_ect] }
       let(:fip_details_being_checked_participants) { [details_being_checked_ect] }
@@ -110,7 +112,7 @@ RSpec.describe SetParticipantCategories do
       let(:fip_eligible_participants) { [] }
       let(:fip_ineligible_participants) { [] }
       let(:fip_contacted_for_info_participants) { [contacted_for_info_ect] }
-      let(:fip_details_being_checked_participants) { [eligible_ect, ineligible_mentor, ero_mentor, details_being_checked_ect] }
+      let(:fip_details_being_checked_participants) { [eligible_ect, ineligible_mentor, ero_mentor, details_being_checked_ect, primary_mentor, secondary_mentor] }
 
       before do
         FeatureFlag.deactivate(:eligibility_notifications)
