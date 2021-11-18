@@ -32,7 +32,7 @@ module Finance
 
     def aggregate(aggregation_type:, event_type:, interval: nil)
       scope = recorder.public_send(self.class.aggregation_types[event_type][aggregation_type], cpd_lead_provider)
-      scope = scope.where(created_at: interval) if interval.present?
+      scope = scope.submitted_between(interval.begin, interval.end) if interval.present?
       scope.count
     end
 
