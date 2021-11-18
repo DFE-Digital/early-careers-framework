@@ -28,37 +28,6 @@ FactoryBot.define do
       end
     end
 
-    trait :with_eligible_npq_declaration do
-      with_started_npq_declaration
-
-      transient do
-        npq_participant_profile { |user| user.npq_applications.first.profile }
-      end
-
-      after(:create) do |_user, evaluator|
-        RecordDeclarations::Actions::MakeDeclarationsEligibleForParticipantProfile
-          .call(participant_profile: evaluator.npq_participant_profile)
-      end
-    end
-
-    trait :with_payable_npq_declarations do
-      with_eligible_npq_declaration
-
-      transient do
-        start_date { Time.zone.today.beginning_of_month }
-        end_date { Time.zone.today.end_of_month + 1.day }
-      end
-
-      after(:create) do |_user, evaluator|
-        ParticipantDeclaration::NPQ
-          .eligible
-          .declared_as_between(evaluator.start_date, evaluator.end_date)
-          .submitted_between(evaluator.start_date, evaluator.end_date).in_batches do |participant_declarations_group|
-          participant_declarations_group.each(&:make_payable!)
-        end
-      end
-    end
-
     trait :lead_provider do
       lead_provider_profile
     end

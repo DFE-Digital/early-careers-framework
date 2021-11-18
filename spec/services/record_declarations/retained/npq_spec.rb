@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require_relative "../../../shared/context/lead_provider_profiles_and_courses"
 require_relative "../../../shared/context/service_record_declaration_params"
+require_relative "../../../shared/context/lead_provider_profiles_and_courses"
 
 RSpec.describe RecordDeclarations::Retained::NPQ do
   include_context "lead provider profiles and courses"

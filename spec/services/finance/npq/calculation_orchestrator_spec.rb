@@ -30,6 +30,14 @@ RSpec.describe Finance::NPQ::CalculationOrchestrator do
     }
   end
 
+  subject(:run_calculation) do
+    described_class.call(
+      aggregator: Finance::NPQ::CurrentMilestoneParticipantDeclarationAggregator,
+      npq_contract: contract,
+      calculator: PaymentCalculator::NPQ::PaymentCalculation,
+    )
+  end
+
   context ".call" do
     context "normal operation" do
       before do
@@ -43,29 +51,17 @@ RSpec.describe Finance::NPQ::CalculationOrchestrator do
       end
 
       it "returns the total calculation" do
-        returned_hash = run_calculation
-        expect(returned_hash[:breakdown_summary]).to eq(breakdown_summary)
-        expect(returned_hash[:service_fees][:monthly]).to be_within(0.001).of(service_fees[:monthly])
-        expect(returned_hash[:output_payments]).to eqv(output_payments)
+        expect(run_calculation[:breakdown_summary]).to eq(breakdown_summary)
+        expect(run_calculation[:service_fees][:monthly]).to be_within(0.001).of(service_fees[:monthly])
+        expect(run_calculation[:output_payments]).to eq(output_payments)
       end
 
       it "ignores non-eligible declarations" do
         create_list(:npq_participant_declaration, 5, :submitted, cpd_lead_provider: cpd_lead_provider, course_identifier: "other-course")
-        returned_hash = run_calculation
-        expect(returned_hash[:breakdown_summary]).to eq(breakdown_summary)
-        expect(returned_hash[:service_fees][:monthly]).to be_within(0.001).of(service_fees[:monthly])
-        expect(returned_hash[:output_payments]).to eq(output_payments)
+        expect(run_calculation[:breakdown_summary]).to eq(breakdown_summary)
+        expect(run_calculation[:service_fees][:monthly]).to be_within(0.001).of(service_fees[:monthly])
+        expect(run_calculation[:output_payments]).to eq(output_payments)
       end
     end
-  end
-
-private
-
-  def run_calculation(aggregator: Finance::NPQ::CurrentMilestoneParticipantDeclarationAggregator)
-    described_class.call(
-      aggregator: aggregator,
-      npq_contract: contract,
-      calculator: PaymentCalculator::NPQ::PaymentCalculation,
-    )
   end
 end
