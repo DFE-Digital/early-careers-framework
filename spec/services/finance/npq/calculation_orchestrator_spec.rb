@@ -46,7 +46,7 @@ RSpec.describe Finance::NPQ::CalculationOrchestrator do
         returned_hash = run_calculation
         expect(returned_hash[:breakdown_summary]).to eq(breakdown_summary)
         expect(returned_hash[:service_fees][:monthly]).to be_within(0.001).of(service_fees[:monthly])
-        # expect(returned_hash[:output_payments]).to eq(output_payments)
+        expect(returned_hash[:output_payments]).to eq(output_payments)
       end
 
       it "ignores non-eligible declarations" do
