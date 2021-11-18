@@ -19,8 +19,6 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
     )
   end
 
-  before { Finance::Schedule.all }
-
   scenario "Can get to NPQ payment breakdown page for a provider", :js do
     given_i_am_logged_in_as_a_finance_user
     and_there_is_npq_provider_with_contracts
@@ -69,18 +67,6 @@ private
         declaration_type: RecordDeclarations::NPQ::STARTED,
       },
     )
-  end
-
-  def create_accepted_application(user, npq_course, npq_lead_provider)
-    npq_application = NPQ::BuildApplication.call(
-      npq_application_params: attributes_for(:npq_application),
-      npq_course_id: npq_course.id,
-      npq_lead_provider_id: npq_lead_provider.id,
-      user_id: user.id,
-    )
-    npq_application.save!
-    NPQ::Accept.call(npq_application: npq_application)
-    npq_application
   end
 
   def create_started_declarations(npq_application)

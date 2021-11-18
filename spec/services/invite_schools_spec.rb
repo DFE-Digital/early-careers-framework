@@ -518,7 +518,7 @@ RSpec.describe InviteSchools do
     it "sends emails to tutors who have withdrawn all of their participants" do
       induction_coordinator = create(:user, :induction_coordinator)
       school_cohort = create(:school_cohort, school: induction_coordinator.schools.first, induction_programme_choice: "full_induction_programme")
-      create(:participant_profile, :withdrawn_record, :ect, school_cohort: school_cohort)
+      create(:ecf_participant_profile, :withdrawn_record, school_cohort: school_cohort)
 
       InviteSchools.new.send_induction_coordinator_add_participants_email
       expect_send_participants_email(induction_coordinator)
@@ -563,7 +563,7 @@ RSpec.describe InviteSchools do
     it "does not send emails to tutors who have participants at all of their schools" do
       induction_coordinator = create(:user, :induction_coordinator)
       school_cohort = create(:school_cohort, school: induction_coordinator.schools.first, induction_programme_choice: "core_induction_programme")
-      create(:participant_profile, :ect, school_cohort: school_cohort)
+      create(:ect_participant_profile, school_cohort: school_cohort)
 
       InviteSchools.new.send_induction_coordinator_add_participants_email
       expect(SchoolMailer).not_to delay_email_delivery_of(:induction_coordinator_add_participants_email)
@@ -573,7 +573,7 @@ RSpec.describe InviteSchools do
       schools_with_participants = create_list(:school, 10)
       schools_with_participants.each do |school|
         school_cohort = create(:school_cohort, school: school, induction_programme_choice: "core_induction_programme")
-        create(:participant_profile, :ect, school_cohort: school_cohort)
+        create(:ect_participant_profile, school_cohort: school_cohort)
       end
       school_without_participants = create(:school)
       create(:school_cohort, school: school_without_participants, induction_programme_choice: "core_induction_programme")
@@ -784,7 +784,7 @@ RSpec.describe InviteSchools do
              induction_programme_choice: "core_induction_programme",
              core_induction_programme: nil,
              opt_out_of_updates: false)
-      create(:participant_profile, :ect, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
+      create(:ect_participant_profile, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
 
       expected_url = "http://www.example.com/schools/#{school.friendly_id}/year-2020/support-materials-for-NQTs?utm_campaign=year2020-nqt-invite-sit-validated&utm_medium=email&utm_source=year2020-nqt-invite-sit-validated"
       InviteSchools.new.invite_not_opted_out_sits_with_all_validated_participants_for_nqt_plus_one
@@ -803,8 +803,8 @@ RSpec.describe InviteSchools do
              induction_programme_choice: "core_induction_programme",
              core_induction_programme: nil,
              opt_out_of_updates: false)
-      create(:participant_profile, :ect, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
-      create(:participant_profile, :ect, school_cohort: school.school_cohorts.first)
+      create(:ect_participant_profile, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
+      create(:ect_participant_profile, school_cohort: school.school_cohorts.first)
 
       InviteSchools.new.invite_not_opted_out_sits_with_all_validated_participants_for_nqt_plus_one
       expect(SchoolMailer).to_not delay_email_delivery_of(:nqt_plus_one_sit_invite)
@@ -818,7 +818,7 @@ RSpec.describe InviteSchools do
              induction_programme_choice: "core_induction_programme",
              core_induction_programme: nil,
              opt_out_of_updates: false)
-      create(:participant_profile, :ect, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
+      create(:ect_participant_profile, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
 
       InviteSchools.new.invite_not_opted_out_sits_with_all_validated_participants_for_nqt_plus_one
       expect(SchoolMailer).to_not delay_email_delivery_of(:nqt_plus_one_sit_invite)
@@ -832,7 +832,7 @@ RSpec.describe InviteSchools do
              induction_programme_choice: "core_induction_programme",
              core_induction_programme: nil,
              opt_out_of_updates: true)
-      create(:participant_profile, :ect, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
+      create(:ect_participant_profile, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
 
       InviteSchools.new.invite_not_opted_out_sits_with_all_validated_participants_for_nqt_plus_one
       expect(SchoolMailer).to_not delay_email_delivery_of(:nqt_plus_one_sit_invite)
@@ -845,7 +845,7 @@ RSpec.describe InviteSchools do
              induction_programme_choice: "core_induction_programme",
              core_induction_programme: nil,
              opt_out_of_updates: false)
-      create(:participant_profile, :ect, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
+      create(:ect_participant_profile, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
 
       InviteSchools.new.invite_not_opted_out_sits_with_all_validated_participants_for_nqt_plus_one
       expect(SchoolMailer).to_not delay_email_delivery_of(:nqt_plus_one_sit_invite)
@@ -877,7 +877,7 @@ RSpec.describe InviteSchools do
       create(:school_cohort,
              school: school,
              induction_programme_choice: "core_induction_programme")
-      create(:participant_profile, :ect, school_cohort: school.school_cohorts.first)
+      create(:ect_participant_profile, school_cohort: school.school_cohorts.first)
       InviteSchools.new.invite_unpartnered_cip_sits_to_add_ects_and_mentors
 
       expect(SchoolMailer).to_not delay_email_delivery_of(:unpartnered_cip_sit_add_participants_email)

@@ -11,7 +11,7 @@ RSpec.describe SchoolCohort, type: :model do
   it "updates the updated_at on participant profiles and users when meaningfully updated" do
     freeze_time
     school_cohort = create(:school_cohort)
-    profile = create(:participant_profile, :ect, school_cohort: school_cohort, updated_at: 2.weeks.ago)
+    profile = create(:ect_participant_profile, school_cohort: school_cohort, updated_at: 2.weeks.ago)
     user = profile.user
     user.update!(updated_at: 2.weeks.ago)
 
@@ -24,7 +24,7 @@ RSpec.describe SchoolCohort, type: :model do
   it "does not update the updated_at on participant profiles and users when not changed" do
     freeze_time
     school_cohort = create(:school_cohort)
-    profile = create(:participant_profile, :ect, school_cohort: school_cohort, updated_at: 2.weeks.ago)
+    profile = create(:ect_participant_profile, school_cohort: school_cohort, updated_at: 2.weeks.ago)
     user = profile.user
     user.update!(updated_at: 2.weeks.ago)
 

@@ -27,7 +27,7 @@ module PaymentCalculator
       def call(aggregations:)
         pp aggregations
         {
-          breakdown_summary: breakdown_summart_calculator.call(contract: contract, aggregations: aggregations),
+          breakdown_summary: breakdown_summary_calculator.call(contract: contract, aggregations: aggregations),
           service_fees: service_fee_calculator.call(contract: contract),
           output_payments: output_payment_calculator.call(contract: contract, total_participants: aggregations[:eligible_and_payable]),
         }
@@ -35,7 +35,7 @@ module PaymentCalculator
 
     private
 
-      attr_accessor :contract, :service_fee_calculator, :breakdown_summart_calculator, :output_payment_calculator, :course_identifier
+      attr_accessor :contract, :service_fee_calculator, :breakdown_summary_calculator, :output_payment_calculator, :course_identifier
 
       def initialize(contract:,
                      course_identifier:,
@@ -44,7 +44,7 @@ module PaymentCalculator
                      service_fee_calculator: ServiceFees)
         self.contract = contract
         self.course_identifier = course_identifier
-        self.breakdown_summart_calculator = breakdown_summary_calculator
+        self.breakdown_summary_calculator = breakdown_summary_calculator
         self.output_payment_calculator = output_payment_calculator
         self.service_fee_calculator = service_fee_calculator
       end

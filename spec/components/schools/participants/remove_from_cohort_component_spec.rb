@@ -2,7 +2,7 @@
 
 RSpec.describe Schools::Participants::RemoveFromCohortComponent, type: :view_component do
   let(:school_cohort) { create :school_cohort }
-  let(:profile) { create :participant_profile, :ecf, school_cohort: school_cohort }
+  let(:profile) { create :ecf_participant_profile, school_cohort: school_cohort }
   component { described_class.new(profile: profile) }
 
   context "when the validation hasn't started yet" do

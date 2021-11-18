@@ -3,18 +3,6 @@
 class NPQCourse < ApplicationRecord
   has_many :npq_applications
 
-  LEADERSHIP_IDENTIFIER = %w[
-    npq-leading-teaching
-    npq-leading-behaviour-culture
-    npq-leading-teaching-development
-  ].freeze
-
-  SPECIALIST_IDENTIFIER = %w[
-    npq-senior-leadership
-    npq-headship
-    npq-executive-leadership
-  ].freeze
-
   class << self
     def identifiers
       pluck(:identifier)
@@ -22,9 +10,9 @@ class NPQCourse < ApplicationRecord
 
     def schedule_for(npq_course)
       case npq_course.identifier
-      when *NPQCourse::LEADERSHIP_IDENTIFIER
+      when *Finance::Schedule::NPQLeadership::IDENTIFIERS
         Finance::Schedule::NPQLeadership.default
-      when *NPQCourse::SPECIALIST_IDENTIFIER
+      when *Finance::Schedule::NPQSpecialist::IDENTIFIERS
         Finance::Schedule::NPQSpecialist.default
       when "npq-additional-support-offer"
         # TODO: Figure out what ASO schedules look like

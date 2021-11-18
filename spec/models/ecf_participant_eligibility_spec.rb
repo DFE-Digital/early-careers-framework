@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe ECFParticipantEligibility, type: :model do
-  let(:participant_profile) { create(:participant_profile, :ect) }
+  let(:participant_profile) { create(:ect_participant_profile) }
   subject(:eligibility) { described_class.new(participant_profile: participant_profile, active_flags: false, previous_participation: false, previous_induction: false, qts: true) }
 
   it { is_expected.to belong_to(:participant_profile) }
@@ -82,7 +82,7 @@ RSpec.describe ECFParticipantEligibility, type: :model do
       end
 
       context "when participant is a mentor" do
-        let!(:participant_profile) { create(:participant_profile, :mentor) }
+        let!(:participant_profile) { create(:mentor_participant_profile) }
 
         it "does not consider the previous_induction flag" do
           expect(eligibility).to be_eligible_status

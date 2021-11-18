@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe NPQ::Accept do
   before do
-    create(:schedule, :npq_specialist)
+    create(:npq_specialist_schedule)
   end
 
   subject do

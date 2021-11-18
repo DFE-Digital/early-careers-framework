@@ -135,7 +135,7 @@ RSpec.describe Admin::ChangeInductionService do
     end
 
     context "when the school has participants" do
-      let!(:participant_profiles) { create_list(:participant_profile, 5, :ecf, school_cohort: school.school_cohorts.first) }
+      let!(:participant_profiles) { create_list(:ect_participant_profile, 5, school_cohort: school.school_cohorts.first) }
 
       context "when the school is doing CIP" do
         let(:school) { create(:school_cohort, induction_programme_choice: "core_induction_programme", cohort: cohort).school }

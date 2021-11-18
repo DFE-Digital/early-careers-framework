@@ -165,7 +165,7 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
     end
 
     context "when an ECT user already exists with the provided email" do
-      let!(:existing_user) { create(:participant_profile, :ect, user: create(:user, email: email)).user }
+      let!(:existing_user) { create(:ect_participant_profile, user: create(:user, email: email)).user }
 
       it "redirects to the email-used page" do
         expect {
@@ -181,7 +181,7 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
     end
 
     context "when a Mentor user already exists with the provided email" do
-      let!(:existing_user) { create(:participant_profile, :mentor, user: create(:user, email: email)).user }
+      let!(:existing_user) { create(:mentor_participant_profile, user: create(:user, email: email)).user }
 
       it "adds an induction tutor profile to the existing user" do
         expect {
@@ -199,7 +199,7 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
 
     context "when a NPQ registrant already exists with that email address" do
       let(:existing_user) { create(:user, email: email) }
-      let!(:npq_profile) { create(:participant_profile, :npq, user: existing_user) }
+      let!(:npq_profile) { create(:npq_participant_profile, user: existing_user) }
 
       it "adds an induction tutor profile to the existing user" do
         expect {

@@ -1,3 +1,4 @@
+# coding: utf-8
 # frozen_string_literal: true
 
 module ManageTrainingSteps
@@ -36,42 +37,42 @@ module ManageTrainingSteps
   end
 
   def and_i_have_added_an_ect
-    @participant_profile_ect = create(:participant_profile, :ect, user: create(:user, full_name: "Sally Teacher"), school_cohort: @school_cohort)
+    @participant_profile_ect = create(:ect_participant_profile, user: create(:user, full_name: "Sally Teacher"), school_cohort: @school_cohort)
   end
 
   def and_i_have_added_a_mentor
-    @participant_profile_mentor = create(:participant_profile, :mentor, user: create(:user, full_name: "Billy Mentor"), school_cohort: @school_cohort)
+    @participant_profile_mentor = create(:mentor_participant_profile, user: create(:user, full_name: "Billy Mentor"), school_cohort: @school_cohort)
   end
 
   def and_i_have_added_an_eligible_ect
-    @eligible_ect = create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: @school_cohort)
+    @eligible_ect = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: @school_cohort)
   end
 
   def and_i_have_added_an_ineligible_ect
-    @ineligible_ect = create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: @school_cohort)
+    @ineligible_ect = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: @school_cohort)
     @ineligible_ect.ecf_participant_eligibility.update!(status: "manual_check", reason: "active_flags")
   end
 
   def and_i_have_added_an_eligible_mentor
-    @eligible_mentor = create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: @school_cohort)
+    @eligible_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: @school_cohort)
   end
 
   def and_i_have_added_an_ineligible_mentor
-    @ineligible_mentor = create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: @school_cohort)
+    @ineligible_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: @school_cohort)
     @ineligible_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "previous_induction")
   end
 
   def and_i_have_added_an_ero_mentor
-    @ero_mentor = create(:participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, :mentor, school_cohort: @school_cohort)
+    @ero_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: @school_cohort)
     @ero_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "previous_participation")
   end
 
   def and_i_have_added_an_ect_contacted_for_info
-    @contacted_for_info_ect = create(:participant_profile, :ect, request_for_details_sent_at: 5.days.ago, school_cohort: @school_cohort)
+    @contacted_for_info_ect = create(:ect_participant_profile, request_for_details_sent_at: 5.days.ago, school_cohort: @school_cohort)
   end
 
   def and_i_have_added_an_ect_whose_details_are_being_checked
-    @details_being_checked_ect = create(:participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, :ect, school_cohort: @school_cohort)
+    @details_being_checked_ect = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: @school_cohort)
     @details_being_checked_ect.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
   end
 

@@ -45,22 +45,22 @@ RSpec.describe LeadProvider, type: :model do
       let(:school_cohort) { create(:school_cohort, school: school) }
 
       it "should include active participants" do
-        participant_profile = create(:participant_profile, :ect, school_cohort: school_cohort)
+        participant_profile = create(:ect_participant_profile, school_cohort: school_cohort)
         expect(lead_provider.ecf_participant_profiles).to include participant_profile
       end
 
       it "should include participants whose records have been withdrawn" do
-        participant_profile = create(:participant_profile, :ect, :withdrawn_record, school_cohort: school_cohort)
+        participant_profile = create(:ect_participant_profile, :withdrawn_record, school_cohort: school_cohort)
         expect(lead_provider.ecf_participant_profiles).to include participant_profile
       end
 
       it "should include mentors" do
-        participant_profile = create(:participant_profile, :mentor, school_cohort: school_cohort)
+        participant_profile = create(:mentor_participant_profile, school_cohort: school_cohort)
         expect(lead_provider.ecf_participant_profiles).to include participant_profile
       end
 
       it "should not include NPQ participants" do
-        participant_profile = create(:participant_profile, :npq, school: school)
+        participant_profile = create(:npq_participant_profile, school: school)
         expect(lead_provider.ecf_participant_profiles).not_to include participant_profile
       end
     end
@@ -72,17 +72,17 @@ RSpec.describe LeadProvider, type: :model do
       let(:school_cohort) { create(:school_cohort, school: school) }
 
       it "should include active participants" do
-        participant_profile = create(:participant_profile, :ect, school_cohort: school_cohort)
+        participant_profile = create(:ect_participant_profile, school_cohort: school_cohort)
         expect(lead_provider.active_ecf_participant_profiles).to include participant_profile
       end
 
       it "should not include participants whose records have been withdrawn" do
-        participant_profile = create(:participant_profile, :withdrawn_record, :ect, school_cohort: school_cohort)
+        participant_profile = create(:ect_participant_profile, :withdrawn_record, school_cohort: school_cohort)
         expect(lead_provider.active_ecf_participant_profiles).not_to include participant_profile
       end
 
       it "should not include NPQ participants" do
-        participant_profile = create(:participant_profile, :npq, school: school)
+        participant_profile = create(:npq_participant_profile, school: school)
         expect(lead_provider.active_ecf_participant_profiles).not_to include participant_profile
       end
     end

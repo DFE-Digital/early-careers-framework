@@ -1,3 +1,4 @@
+# coding: utf-8
 # frozen_string_literal: true
 
 module ParticipantValidationSteps
@@ -23,7 +24,7 @@ module ParticipantValidationSteps
   end
 
   def and_i_am_signed_in_as_an_ect_participant
-    profile = create(:participant_profile, :ect, school_cohort: @school_cohort)
+    profile = create(:ect_participant_profile, school_cohort: @school_cohort)
     @user = profile.user
     @user.teacher_profile.update!(trn: nil)
     set_participant_data
@@ -31,7 +32,7 @@ module ParticipantValidationSteps
   end
 
   def and_i_am_signed_in_as_a_mentor_participant
-    profile = create(:participant_profile, :mentor, school_cohort: @school_cohort)
+    profile = create(:mentor_participant_profile, school_cohort: @school_cohort)
     @user = profile.user
     @user.teacher_profile.update!(trn: nil)
     set_participant_data
@@ -44,7 +45,7 @@ module ParticipantValidationSteps
   end
 
   def and_i_am_signed_in_as_a_sit_mentor_participant
-    profile = create(:participant_profile, :mentor, school_cohort: @school_cohort)
+    profile = create(:mentor_participant_profile, school_cohort: @school_cohort)
     @user = profile.user
     @user.create_induction_coordinator_profile!
     @user.induction_coordinator_profile.schools << @school

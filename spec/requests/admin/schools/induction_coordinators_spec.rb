@@ -72,7 +72,7 @@ RSpec.describe "Admin::Schools::InductionCoordinators", type: :request do
     end
 
     context "when an ECT user already exists with that email address" do
-      let!(:existing_user) { create(:participant_profile, :ect).user }
+      let!(:existing_user) { create(:ect_participant_profile).user }
 
       it "render to email_used" do
         expect {
@@ -89,7 +89,7 @@ RSpec.describe "Admin::Schools::InductionCoordinators", type: :request do
     end
 
     context "when a mentor user already exists with that email address" do
-      let!(:existing_user) { create(:participant_profile, :mentor).user }
+      let!(:existing_user) { create(:mentor_participant_profile).user }
 
       it "adds an induction tutor profile to the existing user" do
         expect {
@@ -124,7 +124,7 @@ RSpec.describe "Admin::Schools::InductionCoordinators", type: :request do
     end
 
     context "when a NPQ registrant already exists with that email address" do
-      let(:npq_profile) { create(:participant_profile, :npq) }
+      let(:npq_profile) { create(:npq_participant_profile) }
       let!(:existing_user) { npq_profile.user }
 
       it "adds an induction tutor profile to the existing user" do

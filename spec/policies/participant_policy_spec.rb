@@ -7,7 +7,7 @@ RSpec.describe ParticipantPolicy, type: :policy do
 
   %i[ect mentor].each do |profile_type|
     context "when the participant has #{profile_type} profile" do
-      let(:profile) { create(:participant_profile, profile_type) }
+      let(:profile) { create(:"#{profile_type}_participant_profile") }
       let(:user_under_test) { profile.user }
 
       context "being an admin" do
