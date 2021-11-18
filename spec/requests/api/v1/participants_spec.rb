@@ -3,7 +3,7 @@
 require "rails_helper"
 require "csv"
 
-RSpec.describe "Participants API", type: :request do
+RSpec.describe "Participants API", :with_default_schdules, type: :request do
   describe "GET /api/v1/participants" do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: lead_provider) }
     let(:lead_provider) { create(:lead_provider) }
@@ -271,8 +271,7 @@ RSpec.describe "Participants API", type: :request do
         let(:parsed_response) { JSON.parse(response.body) }
 
         before do
-          create(:schedule, schedule_identifier: "ecf-january-standard-2021")
-          early_career_teacher_profile.update!(schedule: create(:schedule, schedule_identifier: "ecf-september-standard-2021"))
+          create(:schedule, schedule_identifier: "ecf-january-standard-2021", name: "ECF January standard 2021")
         end
 
         it "changes participant schedule" do
