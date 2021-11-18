@@ -72,6 +72,7 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
               :sparsity_uplift,
               :training_status,
               :schedule_identifier,
+              :updated_at,
             ).exactly)
         end
 
@@ -188,7 +189,8 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
                pupil_premium_uplift
                sparsity_uplift
                training_status
-               schedule_identifier],
+               schedule_identifier
+               updated_at],
           )
         end
 
@@ -220,10 +222,10 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
           expect(ect_row["cohort"]).to eql partnership.cohort.start_year.to_s
           expect(ect_row["teacher_reference_number"]).to eql ect.teacher_profile.trn
           expect(ect_row["teacher_reference_number_validated"]).to eql "false"
-          expect(mentor_row["eligible_for_funding"]).to be_empty
-          expect(mentor_row["pupil_premium_uplift"]).to eql "false"
-          expect(mentor_row["sparsity_uplift"]).to eql "false"
-          expect(mentor_row["training_status"]).to eql "active"
+          expect(ect_row["eligible_for_funding"]).to be_empty
+          expect(ect_row["pupil_premium_uplift"]).to eql "false"
+          expect(ect_row["sparsity_uplift"]).to eql "false"
+          expect(ect_row["training_status"]).to eql "active"
 
           withdrawn_record_row = parsed_response.find { |row| row["id"] == withdrawn_ect_profile_record.user.id }
           expect(withdrawn_record_row).not_to be_nil
@@ -289,31 +291,14 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
         let(:withdrawal_params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "left-teaching-profession" } } } }
       end
 
-      describe "JSON Participant Resume" do
-        let(:parsed_response) { JSON.parse(response.body) }
-
-        it "changes the training status of a participant to active" do
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/resume", params: { data: { attributes: { course_identifier: "ecf-induction" } } }
-
-          expect(response).to be_successful
-
-          expect(parsed_response.dig("data", "attributes", "training_status")).to eql("active")
-        end
-
-        it "returns an error when the participant is already active" do
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/resume", params: { data: { attributes: { course_identifier: "ecf-induction" } } }
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/resume", params: { data: { attributes: { course_identifier: "ecf-induction" } } }
-
-          expect(response).not_to be_successful
-        end
-
-        it "returns an error when the participant is withdrawn" do
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw", params: { data: { attributes: { course_identifier: "ecf-induction", reason: "left-teaching-profession" } } }
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/resume", params: { data: { attributes: { course_identifier: "ecf-induction" } } }
-
-          expect(response).not_to be_successful
+      it_behaves_like "JSON Participant Resume endpoint", "participant" do
+        let(:url)               { "/api/v1/participants/#{early_career_teacher_profile.user.id}/resume" }
+        let(:withdrawal_url)    { "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw" }
+        let(:params)            { { data: { attributes: { course_identifier: "ecf-induction" } } } }
+        let(:withdrawal_params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "left-teaching-profession" } } } }
+        before do
+          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer",
+              params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
         end
       end
     end

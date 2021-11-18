@@ -165,18 +165,5 @@ RSpec.describe FullDqt::Client do
         expect(record["trn"]).to eql(trn)
       end
     end
-
-    context "trn is less than 7 characters" do
-      let(:trn) { "0001000" }
-      let(:short_trn) { "001000" }
-
-      it "pads the trn with zeros on the left" do
-        stub_api_request
-
-        record = subject.get_record(trn: short_trn, birthdate: birthdate)
-
-        expect(record["trn"]).to eql(trn)
-      end
-    end
   end
 end

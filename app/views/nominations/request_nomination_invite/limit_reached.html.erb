@@ -6,7 +6,11 @@
     <p>You can try again later.</p>
 
     <h2 class="govuk-heading-m">If your school has not received this email</h2>
-    <p> <%= govuk_link_to "Sign in to DfE", "https://www.get-information-schools.service.gov.uk/" %> and make sure that your GIAS email address is up to date.
+    <p>
+      <%= govuk_link_to "Sign in to DfE (opens in a new tab)",
+          "https://www.get-information-schools.service.gov.uk/",
+          target: :_blank,
+          rel: "noopener noreferrer" %> and make sure that your GIAS email address is up to date.
     </p>
   </div>
 </div>

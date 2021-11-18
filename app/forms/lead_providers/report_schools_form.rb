@@ -12,7 +12,7 @@ module LeadProviders
     attribute :cohort_id
     attribute :lead_provider_id
 
-    validates :delivery_partner_id, presence: { message: "Choose a delivery partner" }, on: :delivery_partner
+    validates :delivery_partner_id, presence: { message: I18n.t("errors.delivery_partner.blank") }, on: :delivery_partner
 
     def save!
       ActiveRecord::Base.transaction do

@@ -60,5 +60,161 @@ RSpec.describe "Admin::Schools::Cohort2020", type: :request do
         user: { full_name: name, email: email },
       }
     end
+
+    context "when there is an active ECT with that email" do
+      let!(:participant_profile) { create(:participant_profile, :ect) }
+      let(:name) { participant_profile.user.full_name }
+      let(:email) { participant_profile.user.email }
+
+      it "shows an error message" do
+        expect(EarlyCareerTeachers::Create).not_to receive(:call)
+
+        post "/admin/schools/#{school_cohort.school.slug}/cohort2020", params: {
+          user: { full_name: name, email: email },
+        }
+
+        expect(response).to render_template("admin/schools/cohort2020/new")
+        expect(response.body).to include("A user with this email address is currently participating as an ECT")
+      end
+    end
+
+    context "when there is an inactive ECT with that email" do
+      let!(:participant_profile) { create(:participant_profile, :ect, :withdrawn_record) }
+      let(:name) { participant_profile.user.full_name }
+      let(:email) { participant_profile.user.email }
+
+      it "adds an NQT+1 profile to the user" do
+        expect(EarlyCareerTeachers::Create).to receive(:call).with({
+          full_name: name,
+          email: email,
+          school_cohort: school_cohort,
+          mentor_profile_id: nil,
+          year_2020: true,
+        }).and_call_original
+
+        post "/admin/schools/#{school_cohort.school.slug}/cohort2020", params: {
+          user: { full_name: name, email: email },
+        }
+
+        expect(User.find_by(email: email).participant_profiles.count).to eql 2
+      end
+
+      it "changes the name on the user" do
+        other_name = "Other Name"
+
+        expect(EarlyCareerTeachers::Create).to receive(:call).with({
+          full_name: other_name,
+          email: email,
+          school_cohort: school_cohort,
+          mentor_profile_id: nil,
+          year_2020: true,
+        }).and_call_original
+
+        post "/admin/schools/#{school_cohort.school.slug}/cohort2020", params: {
+          user: { full_name: other_name, email: email },
+        }
+
+        expect(User.find_by(email: email).full_name).to eql other_name
+      end
+    end
+
+    context "when there is an active mentor with that email" do
+      let!(:participant_profile) { create(:participant_profile, :mentor) }
+      let(:name) { participant_profile.user.full_name }
+      let(:email) { participant_profile.user.email }
+
+      it "adds an NQT+1 profile to the user" do
+        expect(EarlyCareerTeachers::Create).to receive(:call).with({
+          full_name: name,
+          email: email,
+          school_cohort: school_cohort,
+          mentor_profile_id: nil,
+          year_2020: true,
+        }).and_call_original
+
+        post "/admin/schools/#{school_cohort.school.slug}/cohort2020", params: {
+          user: { full_name: name, email: email },
+        }
+
+        expect(User.find_by(email: email).participant_profiles.count).to eql 2
+      end
+
+      it "does not change the name on the user" do
+        original_name = name
+        other_name = "Other name"
+
+        expect(EarlyCareerTeachers::Create).to receive(:call).with({
+          full_name: other_name,
+          email: email,
+          school_cohort: school_cohort,
+          mentor_profile_id: nil,
+          year_2020: true,
+        }).and_call_original
+
+        post "/admin/schools/#{school_cohort.school.slug}/cohort2020", params: {
+          user: { full_name: other_name, email: email },
+        }
+
+        expect(User.find_by(email: email).full_name).to eql original_name
+      end
+    end
+
+    context "when there is an npq participant with that email" do
+      let!(:participant_profile) { create(:participant_profile, :npq) }
+      let(:name) { participant_profile.user.full_name }
+      let(:email) { participant_profile.user.email }
+
+      it "adds an NQT+1 profile to the user" do
+        expect(EarlyCareerTeachers::Create).to receive(:call).with({
+          full_name: name,
+          email: email,
+          school_cohort: school_cohort,
+          mentor_profile_id: nil,
+          year_2020: true,
+        }).and_call_original
+
+        post "/admin/schools/#{school_cohort.school.slug}/cohort2020", params: {
+          user: { full_name: name, email: email },
+        }
+
+        expect(User.find_by(email: email).participant_profiles.count).to eql 2
+      end
+
+      it "does not change the name on the user" do
+        original_name = name
+        other_name = "Other name"
+
+        expect(EarlyCareerTeachers::Create).to receive(:call).with({
+          full_name: other_name,
+          email: email,
+          school_cohort: school_cohort,
+          mentor_profile_id: nil,
+          year_2020: true,
+        }).and_call_original
+
+        post "/admin/schools/#{school_cohort.school.slug}/cohort2020", params: {
+          user: { full_name: other_name, email: email },
+        }
+
+        expect(User.find_by(email: email).full_name).to eql original_name
+      end
+    end
+
+    context "when there is an NQT+1 with that email" do
+      let!(:participant_profile) { create(:participant_profile, :ect, school_cohort: build(:school_cohort, cohort: cohort_2020)) }
+      let(:name) { participant_profile.user.full_name }
+      let(:email) { participant_profile.user.email }
+
+      it "shows an error message" do
+        expect(EarlyCareerTeachers::Create).not_to receive(:call)
+
+        post "/admin/schools/#{school_cohort.school.slug}/cohort2020", params: {
+          user: { full_name: name, email: email },
+        }
+
+        expect(response).to render_template("admin/schools/cohort2020/new")
+        expect(response.body).to include("A user with this email address is currently participating as an NQT+1")
+      end
+    end
   end
 end

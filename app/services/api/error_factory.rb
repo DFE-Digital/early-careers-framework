@@ -11,7 +11,7 @@ module Api
     def call
       model.errors.map do |e|
         {
-          title: "#{model.class.human_attribute_name(e.attribute)} is #{e.type.to_s.humanize.downcase}",
+          title: "#{model.class.human_attribute_name(e.attribute)} #{e.type.to_s.humanize.downcase}",
           detail: e.message,
         }
       end

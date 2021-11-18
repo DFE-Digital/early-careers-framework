@@ -4,16 +4,18 @@ require "rails_helper"
 
 RSpec.describe NPQParticipantSerializer do
   describe "serialization" do
+    let(:participant) { create(:user) }
+
     describe "multiple providers" do
       let!(:schedule) { create(:npq_specialist_schedule) }
       let!(:participant) { create(:user) }
 
-      let!(:cpd_provider_one) { create(:cpd_lead_provider) }
-      let!(:cpd_provider_two) { create(:cpd_lead_provider) }
-      let!(:provider_one) { create(:npq_lead_provider, cpd_lead_provider: cpd_provider_one) }
-      let!(:provider_two) { create(:npq_lead_provider, cpd_lead_provider: cpd_provider_two) }
-      let!(:course_one) { create(:npq_course, identifier: "npq-headship") }
-      let!(:course_two) { create(:npq_course, identifier: "npq-senior-leadership") }
+      let(:cpd_provider_one) { create(:cpd_lead_provider) }
+      let(:cpd_provider_two) { create(:cpd_lead_provider) }
+      let(:provider_one) { create(:npq_lead_provider, cpd_lead_provider: cpd_provider_one) }
+      let(:provider_two) { create(:npq_lead_provider, cpd_lead_provider: cpd_provider_two) }
+      let(:course_one) { create(:npq_course, identifier: "npq-headship") }
+      let(:course_two) { create(:npq_course, identifier: "npq-senior-leadership") }
 
       let!(:application_one) { create(:npq_application, :accepted, npq_lead_provider: provider_one, npq_course: course_one, user: participant) }
       let!(:application_two) { create(:npq_application, :accepted, npq_lead_provider: provider_two, npq_course: course_two, user: participant) }
@@ -27,6 +29,11 @@ RSpec.describe NPQParticipantSerializer do
         result = NPQParticipantSerializer.new(participant).serializable_hash
         expect(result[:data][:attributes][:npq_courses]).to eq []
       end
+    end
+
+    it "includes updated_at" do
+      result = NPQParticipantSerializer.new(participant).serializable_hash
+      expect(result[:data][:attributes][:updated_at]).to eq participant.updated_at.rfc3339
     end
   end
 end

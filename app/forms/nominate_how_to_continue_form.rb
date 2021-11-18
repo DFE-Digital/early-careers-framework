@@ -10,7 +10,7 @@ class NominateHowToContinueForm
     { how_to_continue: nil }
   end
 
-  validates :how_to_continue, presence: { message: "Tell us whether you expect to have any early career teachers this year" }
+  validates :how_to_continue, presence: { message: I18n.t("errors.how_to_continue.blank") }
 
   def choices
     [

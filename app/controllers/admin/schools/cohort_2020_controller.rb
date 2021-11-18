@@ -19,8 +19,20 @@ module Admin
       end
 
       def create
-        @user = User.new(params.require(:user).permit(:full_name, :email))
+        @user = User.find_or_initialize_by(params.require(:user).permit(:email))
+        @user.full_name = params.dig(:user, :full_name)
+
         render :new and return unless @user.valid?
+
+        if @user.early_career_teacher?
+          if (ect_profile = @user.teacher_profile.current_ecf_profile)
+            @user.errors.add(:base, I18n.t(:admin_nqt_1_email_used_ect, urn: ect_profile.school.urn))
+          else
+            nqt_profile = @user.teacher_profile.early_career_teacher_profile
+            @user.errors.add(:base, I18n.t(:admin_nqt_1_email_used_nqt, urn: nqt_profile.school.urn))
+          end
+          render :new and return
+        end
 
         EarlyCareerTeachers::Create.call(
           full_name: @user.full_name,

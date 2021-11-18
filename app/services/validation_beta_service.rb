@@ -151,24 +151,87 @@ class ValidationBetaService
           participant_profile_id: nil,
         },
       ).distinct.find_each do |sit|
-        campaign = :unvalidated_participants_reminder
+      campaign = :unvalidated_participants_reminder
 
-        sign_in_url = Rails.application.routes.url_helpers.new_user_session_url(
-          host: Rails.application.config.domain,
-          **UTMService.email(campaign, campaign),
-        )
+      sign_in_url = Rails.application.routes.url_helpers.new_user_session_url(
+        host: Rails.application.config.domain,
+        **UTMService.email(campaign, campaign),
+      )
 
-        participant_validation_start_url = Rails.application.routes.url_helpers.participants_start_registrations_url(
-          host: Rails.application.config.domain,
-          **UTMService.email(campaign, campaign),
-        )
+      participant_validation_start_url = Rails.application.routes.url_helpers.participants_start_registrations_url(
+        host: Rails.application.config.domain,
+        **UTMService.email(campaign, campaign),
+      )
 
-        ParticipantValidationMailer.induction_coordinators_we_asked_ects_and_mentors_for_information_email(
-          recipient: sit.user.email,
-          start_url: participant_validation_start_url,
-          sign_in: sign_in_url,
-          induction_coordinator_profile: sit,
-        ).deliver_later
+      ParticipantValidationMailer.induction_coordinators_we_asked_ects_and_mentors_for_information_email(
+        recipient: sit.user.email,
+        start_url: participant_validation_start_url,
+        sign_in: sign_in_url,
+        induction_coordinator_profile: sit,
+      ).deliver_later
+    end
+  end
+
+  def sit_fip_with_unvalidated_participants_deadline_reminders
+    campaign = :unvalidated_participants_deadline_reminder
+
+    sign_in_url = Rails.application.routes.url_helpers.new_user_session_url(
+      host: Rails.application.config.domain,
+      **UTMService.email(campaign, campaign),
+    )
+
+    participant_start_url = Rails.application.routes.url_helpers.participants_start_registrations_url(
+      host: Rails.application.config.domain,
+      **UTMService.email(campaign, campaign),
+    )
+
+    InductionCoordinatorProfile
+      .joins(schools: %i[active_ecf_participant_profiles partnerships])
+      .includes(schools: { active_ecf_participant_profiles: %i[ecf_participant_eligibility ecf_participant_validation_data] })
+      .where(
+        school_cohorts: {
+          cohort_id: Cohort.current.id,
+          induction_programme_choice: "full_induction_programme",
+        },
+        ecf_participant_eligibility: {
+          participant_profile_id: nil,
+        },
+        ecf_participant_validation_data: {
+          participant_profile_id: nil,
+        },
+      )
+      .merge(Partnership.active)
+      .distinct
+      .find_each do |sit|
+        sit.schools
+          .joins(:school_cohorts, :partnerships)
+          .where(school_cohorts: { cohort_id: Cohort.current.id })
+          .merge(Partnership.active)
+          .find_each do |school|
+          participants = school
+            .school_cohorts
+            .find_by(cohort_id: Cohort.current.id)
+            .active_ecf_participant_profiles
+            .contacted_for_info
+
+          next unless participants.any?
+
+          participant_name_list = participant_name_markdown_list(participants)
+
+          SchoolMailer.sit_fip_participant_validation_deadline_reminder_email(
+            induction_coordinator_profile: sit,
+            participant_name_list: participant_name_list,
+            participant_start_url: participant_start_url,
+            sign_in_url: sign_in_url,
+          ).deliver_later
+
+          participants.each do |participant_profile|
+            ParticipantValidationMailer.fip_participant_validation_deadline_reminder_email(
+              participant_profile: participant_profile,
+              participant_start_url: participant_start_url,
+            ).deliver_later
+          end
+        end
       end
   end
 
@@ -219,5 +282,44 @@ class ValidationBetaService
       sent += 1
       break if sent >= batch_size
     end
+  end
+
+  def inform_sits_of_bounced_emails
+    sign_in_url = Rails.application.routes.url_helpers.new_user_session_url(
+      host: Rails.application.config.domain,
+      **UTMService.email(:sit_participant_email_bounced),
+    )
+
+    unvalidated_participant_profiles_with_failed_email_in_the_last_month = ParticipantProfile::ECF.joins(
+      :user,
+      :school_cohort,
+    ).where(
+      school_cohort:
+        { cohort_id: Cohort.current.id },
+      user: {
+        id: Email::Association.where(name: "recipient")
+                              .joins(:email)
+                              .where(email: {
+                                status: %w[permanent-failure temporary-failure technical-failure],
+                              })
+                              .where("email.created_at > ?", 1.month.ago)
+                              .pluck(:object_id),
+      },
+    ).contacted_for_info.active_record
+
+    unvalidated_participant_profiles_with_failed_email_in_the_last_month.each do |participant_profile|
+      next if Email.associated_with(participant_profile).tagged_with(:sit_participant_email_bounced).any?
+
+      tutor_email = participant_profile.school.contact_email
+      ParticipantValidationMailer.induction_coordinator_participant_email_bounced_email(
+        recipient: tutor_email,
+        sign_in_url: sign_in_url,
+        participant_profile: participant_profile,
+      ).deliver_later
+    end
+  end
+
+  def participant_name_markdown_list(participants)
+    participants.map { |p| "- #{p.user.full_name}" }.join("\n")
   end
 end

@@ -26,7 +26,8 @@ RSpec.describe ParticipantValidationService do
     let(:induction_start_date) { Date.parse("2021-07-01T00:00:00Z") }
     let(:induction_completion_date) { Date.parse("2021-07-05T00:00:00Z") }
     let(:induction) { nil }
-    let(:dqt_record) { build_dqt_record(trn: trn, nino: nino, full_name: full_name, dob: dob, alert: alert, qts: qts, induction: induction) }
+    let(:inactive_record) { false }
+    let(:dqt_record) { build_dqt_record(trn: trn, nino: nino, full_name: full_name, dob: dob, alert: alert, qts: qts, induction: induction, inactive: inactive_record) }
     let(:dqt_records) { [dqt_record] }
 
     let(:validation_result) { ParticipantValidationService.validate(trn: trn, nino: nino, full_name: full_name, date_of_birth: dob) }
@@ -35,6 +36,14 @@ RSpec.describe ParticipantValidationService do
       expect_any_instance_of(FullDqt::Client).to receive(:get_record).with({ trn: trn, birthdate: dob, nino: nino })
 
       ParticipantValidationService.validate(trn: trn, nino: nino, full_name: full_name, date_of_birth: dob)
+    end
+
+    context "when no trn is provided" do
+      let(:trn) { nil }
+
+      it "returns nil" do
+        expect(validation_result).to be_nil
+      end
     end
 
     context "given that it calls the API" do
@@ -47,6 +56,14 @@ RSpec.describe ParticipantValidationService do
 
         it "returns nil" do
           expect(validation_result).to eql nil
+        end
+      end
+
+      context "when an inactive record is returned" do
+        let(:inactive_record) { true }
+
+        it "returns nil" do
+          expect(validation_result).to be_nil
         end
       end
 
@@ -308,15 +325,15 @@ RSpec.describe ParticipantValidationService do
     }.merge(options)
   end
 
-  def build_dqt_record(trn:, nino:, full_name:, dob:, alert:, qts:, induction:)
+  def build_dqt_record(trn:, nino:, full_name:, dob:, alert:, qts:, induction:, inactive: false)
     {
       "trn" => trn,
       "ni_number" => nino,
       "name" => full_name,
       "dob" => dob,
       "active_alert" => alert,
-      "state" => 0,
-      "state_name" => "Active",
+      "state" => (inactive ? 1 : 0),
+      "state_name" => (inactive ? "Inactive" : "Active"),
       "qualified_teacher_status" => qts,
       "induction" => induction,
       "initial_teacher_training" => {

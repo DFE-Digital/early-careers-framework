@@ -74,7 +74,7 @@ private
   end
 
   def login_token_expired?
-    Time.zone.now > @user.login_token_valid_until
+    @user.login_token_valid_until.blank? || Time.zone.now > @user.login_token_valid_until
   end
 
   def mock_login

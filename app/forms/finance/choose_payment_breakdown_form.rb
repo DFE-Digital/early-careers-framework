@@ -6,8 +6,8 @@ module Finance
 
     attr_accessor :programme, :provider
 
-    validates :programme, presence: { message: "Please select programme type" }, on: :choose_programme
-    validates :provider, presence: { message: "Please select a provider" }, on: :choose_provider
+    validates :programme, presence: { message: I18n.t("errors.programme.blank") }, on: :choose_programme
+    validates :provider, presence: { message: I18n.t("errors.provider.blank") }, on: :choose_provider
 
     def programme_choices
       [

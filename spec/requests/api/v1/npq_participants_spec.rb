@@ -60,6 +60,7 @@ RSpec.describe "NPQ Participants API", type: :request do
               :email,
               :full_name,
               :teacher_reference_number,
+              :updated_at,
             ).exactly)
         end
 
@@ -127,6 +128,18 @@ RSpec.describe "NPQ Participants API", type: :request do
         let(:withdrawal_url)    { "/api/v1/participants/npq/#{npq_application.user.id}/withdraw" }
         let(:params)            { { data: { attributes: { course_identifier: course_identifier, reason: Participants::Defer::NPQ.reasons.sample } } } }
         let(:withdrawal_params) { { data: { attributes: { course_identifier: course_identifier, reason: Participants::Withdraw::NPQ.reasons.sample } } } }
+      end
+
+      it_behaves_like "JSON Participant Resume endpoint", "npq-participant" do
+        let(:course_identifier) { npq_course.identifier }
+        let(:url)               { "/api/v1/participants/npq/#{npq_application.user.id}/resume" }
+        let(:withdrawal_url)    { "/api/v1/participants/npq/#{npq_application.user.id}/withdraw" }
+        let(:params)            { { data: { attributes: { course_identifier: course_identifier } } } }
+        let(:withdrawal_params) { { data: { attributes: { course_identifier: course_identifier, reason: Participants::Withdraw::NPQ.reasons.sample } } } }
+        before do
+          put "/api/v1/participants/npq/#{npq_application.user.id}/defer",
+              params: { data: { attributes: { course_identifier: course_identifier, reason: Participants::Defer::NPQ.reasons.sample } } }
+        end
       end
     end
 
