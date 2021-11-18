@@ -8,6 +8,8 @@ describe FinanceHelper do
 
     let(:breakdown) do
       Finance::ECF::CalculationOrchestrator.call(
+        aggregator: Finance::ECF::ParticipantEligibleAggregator,
+        calculator: PaymentCalculator::ECF::PaymentCalculation,
         cpd_lead_provider: cpd_lead_provider,
         contract: cpd_lead_provider.lead_provider.call_off_contract,
         event_type: :started,

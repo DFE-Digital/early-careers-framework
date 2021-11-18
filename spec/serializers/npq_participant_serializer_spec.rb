@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe NPQParticipantSerializer do
   describe "serialization" do
     describe "multiple providers" do
-      let!(:schedule) { create(:schedule, :npq_specialist) }
+      let!(:schedule) { create(:npq_specialist_schedule) }
       let!(:participant) { create(:user) }
 
       let!(:cpd_provider_one) { create(:cpd_lead_provider) }

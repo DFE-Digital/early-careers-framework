@@ -5,37 +5,44 @@ require "abstract_interface"
 
 module Finance
   class CalculationOrchestrator
+    include AbstractInterface
+    implement_class_method :default_aggregator, :default_calculator
+
     class << self
-      def call(cpd_lead_provider:, contract:, aggregator:, calculator:, event_type: :started)
+      def call(cpd_lead_provider:,
+               contract:,
+               aggregator: default_aggregator,
+               calculator: default_calculator,
+               event_type: :started)
         new(
           cpd_lead_provider: cpd_lead_provider,
+          contract: contract,
           aggregator: aggregator,
           calculator: calculator,
-          event_type: event_type,
-        ).call(contract)
+        ).call(event_type: event_type)
       end
     end
 
-    def call(contract)
+    def call(event_type:)
       calculator.call(
         contract: contract,
-        aggregations: aggregations,
+        aggregations: aggregator.call(cpd_lead_provider: cpd_lead_provider, event_type: event_type),
+        event_type: event_type,
       )
     end
 
   private
 
-    attr_accessor :cpd_lead_provider, :aggregator, :calculator, :event_type
+    attr_reader :cpd_lead_provider, :contract, :aggregator, :calculator
 
-    def initialize(cpd_lead_provider:, aggregator:, calculator:, event_type:)
-      self.cpd_lead_provider = cpd_lead_provider
-      self.aggregator        = aggregator
-      self.calculator        = calculator
-      self.event_type        = event_type
-    end
-
-    def aggregations
-      aggregator.call(cpd_lead_provider: cpd_lead_provider)
+    def initialize(cpd_lead_provider:,
+                   contract:,
+                   aggregator: self.class.default_aggregator,
+                   calculator: self.class.default_calculator)
+      @cpd_lead_provider = cpd_lead_provider
+      @contract = contract
+      @aggregator = aggregator
+      @calculator = calculator
     end
   end
 end
