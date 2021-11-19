@@ -111,30 +111,30 @@ en:
       blank: "Please select a provider"
 
   activerecord:
-   attributes:
-     npq_application:
-       lead_provider_approval_status: Status
-   errors:
-     models:
-       user:
-         attributes:
-           email:
-             <<: *email_error_messages
-           full_name:
-             <<: *full_name_error_messages
-       school_cohort_form:
-         attributes:
-           estimated_mentor_count:
-             blank: "Enter your expected number of mentors"
-             <<: *defaults
-           estimated_teacher_count:
-             <<: *defaults
-             blank: "enter your expected number of teachers"
-       npq_application:
-         attributes:
-           lead_provider_approval_status:
-             has_another_accepted_application: The participant already has an accepted application for this course
-             has_already_been_accepted: This NPQ application has already been accepted
+    attributes:
+      npq_application:
+        lead_provider_approval_status: Status
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              <<: *email_error_messages
+            full_name:
+              <<: *full_name_error_messages
+        school_cohort_form:
+          attributes:
+            estimated_mentor_count:
+              blank: "Enter your expected number of mentors"
+              <<: *defaults
+            estimated_teacher_count:
+              <<: *defaults
+              blank: "enter your expected number of teachers"
+        npq_application:
+          attributes:
+            lead_provider_approval_status:
+              has_another_accepted_application: The participant already has an accepted application for this course
+              has_already_been_accepted: This NPQ application has already been accepted
   courses:
     npq:
       npq-leading-teaching: Leading Teaching
