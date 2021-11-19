@@ -13,4 +13,4 @@ en:
         full_induction_programme: "use a training provider, funded by the DfE"
         design_our_own: "design and deliver your own programme based on the Early Career Framework (ECF)"
         school_funded_fip: "use a training provider funded by your school."
-        no_early_career_teachers: "opt out of notifications because you don't expect to have any early career teachers starting in %{cohort}"
+        no_early_career_teachers: "opt out of notifications because you don’t expect to have any early career teachers starting in %{cohort}"

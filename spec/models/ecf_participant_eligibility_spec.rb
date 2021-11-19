@@ -23,6 +23,7 @@ RSpec.describe ECFParticipantEligibility, type: :model do
       previous_induction: "previous_induction",
       no_qts: "no_qts",
       different_trn: "different_trn",
+      duplicate_profile: "duplicate_profile",
       none: "none",
     ).backed_by_column_of_type(:string).with_suffix
   }
