@@ -65,7 +65,6 @@ private
   end
 
   def and_i_click_open_all_button
-    byebug
     find("button", text: "Open all").click
   end
 
