@@ -6,7 +6,8 @@ RSpec.describe "SIT removing participants from the cohort", js: true, with_featu
   let(:mentor_user) { create :user, :teacher, full_name: "John Doe", email: "john-doe@example.com" }
   let!(:mentor_profile) { create(:mentor_participant_profile, request_for_details_sent_at: Date.new(2021, 9, 9), school_cohort: school_cohort, teacher_profile: mentor_user.teacher_profile) }
   let(:ect_user) { create :user, :teacher, full_name: "John Smith", email: "john-smith@example.com" }
-  let!(:ineligible_ect_profile) { create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort, teacher_profile: ineligible_user.teacher_profile) }
+  let!(:ect_profile) { create(:ect_participant_profile, school_cohort: school_cohort, mentor_profile: mentor_profile, teacher_profile: ect_user.teacher_profile) }
+  let!(:ineligible_ect_profile) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort, teacher_profile: ineligible_user.teacher_profile) }
   let(:ineligible_user) { create :user, :teacher, full_name: "Kate Edwards", email: "kate-edwards@example.com" }
 
   let(:privacy_policy) { create :privacy_policy }

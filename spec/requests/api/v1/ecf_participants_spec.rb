@@ -188,7 +188,7 @@ RSpec.describe "Participants API", type: :request do
           end
         end
         context "when the participant is withdrawn with this lead provider but has another active profile not associated with the provider" do
-          let!(:active_profile_with_other_provider) { create(:participant_profile, :ect, teacher_profile: withdrawn_ect_profile_record.teacher_profile) }
+          let!(:active_profile_with_other_provider) { create(:ect_participant_profile, teacher_profile: withdrawn_ect_profile_record.teacher_profile) }
 
           it "shows the participant as withdrawn" do
             get "/api/v1/participants/ecf"

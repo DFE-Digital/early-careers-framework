@@ -6,11 +6,11 @@ RSpec.describe SetParticipantCategories do
   describe "#run" do
     subject(:service) { described_class }
 
-    let!(:eligible_ect) { create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let!(:ineligible_mentor) { create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let!(:contacted_for_info_ect) { create(:participant_profile, :ect, :email_sent, request_for_details_sent_at: 5.days.ago, school_cohort: school_cohort) }
-    let!(:ero_mentor) { create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let!(:details_being_checked_ect) { create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
+    let!(:eligible_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
+    let!(:ineligible_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
+    let!(:contacted_for_info_ect) { create(:ect_participant_profile, :email_sent, request_for_details_sent_at: 5.days.ago, school_cohort: school_cohort) }
+    let!(:ero_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
+    let!(:details_being_checked_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
 
     context "SIT for multiple schools" do
       let(:school_cohorts) { create_list(:school_cohort, 3, :cip) }
@@ -20,7 +20,7 @@ RSpec.describe SetParticipantCategories do
       before do
         @ects = []
         school_cohorts.each do |a_school_cohort|
-          @ects << create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: a_school_cohort)
+          @ects << create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: a_school_cohort)
         end
       end
 

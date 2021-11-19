@@ -98,7 +98,15 @@ module ManageTrainingSteps
   end
 
   def and_i_have_added_a_mentor
-    @participant_profile_mentor = create(:mentor_participant_profile, user: create(:user, full_name: "Billy Mentor"), school_cohort: @school_cohort)
+    @participant_profile_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Billy Mentor"), school_cohort: @school_cohort)
+  end
+
+  def and_i_have_added_an_eligible_ect_with_mentor
+    @eligible_ect_with_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Eligible With-mentor"), mentor_profile_id: @contacted_for_info_mentor.id, school_cohort: @school_cohort)
+  end
+
+  def and_i_have_added_an_eligible_ect_without_mentor
+    @eligible_ect_without_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Eligible Without-mentor"), school_cohort: @school_cohort)
   end
 
   def and_i_have_added_an_eligible_ect
@@ -110,18 +118,36 @@ module ManageTrainingSteps
     @ineligible_ect.ecf_participant_eligibility.update!(status: "manual_check", reason: "active_flags")
   end
 
+  def and_i_have_added_an_ineligible_ect_without_mentor
+    @ineligible_ect_without_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Ineligible Without-mentor"), school_cohort: @school_cohort)
+    @ineligible_ect_without_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "active_flags")
+  end
+
   def and_i_have_added_an_eligible_mentor
     @eligible_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: @school_cohort)
   end
 
+  def and_i_have_added_an_ineligible_ect_with_mentor
+    @ineligible_ect_with_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Ineligible With-mentor"), mentor_profile_id: @contacted_for_info_mentor.id, school_cohort: @school_cohort)
+    @ineligible_ect_with_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "active_flags")
+  end
+
   def and_i_have_added_an_ineligible_mentor
     @ineligible_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: @school_cohort)
-    @ineligible_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "previous_induction")
+    @ineligible_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "active_flags")
+  end
+
+  def and_i_have_added_a_contacted_for_info_ect_with_mentor
+    @contacted_for_info_ect_with_mentor = create(:ect_participant_profile, :email_sent, request_for_details_sent_at: 5.days.ago, user: create(:user, full_name: "CFI With-mentor"), mentor_profile_id: @participant_profile_mentor.id, school_cohort: @school_cohort)
   end
 
   def and_i_have_added_an_ero_mentor
     @ero_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: @school_cohort)
-    @ero_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "previous_participation")
+    @ero_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "previous_participation")
+  end
+
+  def and_i_have_added_a_contacted_for_info_ect_without_mentor
+    @contacted_for_info_ect_without_mentor = create(:ect_participant_profile, :email_bounced, request_for_details_sent_at: 5.days.ago, user: create(:user, full_name: "CFI Without-mentor"), school_cohort: @school_cohort)
   end
 
   def and_i_have_added_an_ect_contacted_for_info
@@ -140,6 +166,10 @@ module ManageTrainingSteps
 
   def when_i_select_a_mentor
     choose(@participant_profile_mentor.user.full_name.to_s, allow_label_click: true)
+  end
+
+  def then_i_am_on_schools_page
+    visit "/schools"
   end
 
   def then_i_should_see_the_add_your_ect_and_mentor_link
@@ -203,7 +233,7 @@ module ManageTrainingSteps
   end
 
   def and_i_have_added_a_contacted_for_info_mentor
-    @contacted_for_info_mentor = create(:participant_profile, :mentor, :email_sent, request_for_details_sent_at: 5.days.ago, user: create(:user, full_name: "CFI Mentor"), school_cohort: @school_cohort)
+    @contacted_for_info_mentor = create(:mentor_participant_profile, :email_sent, request_for_details_sent_at: 5.days.ago, user: create(:user, full_name: "CFI Mentor"), school_cohort: @school_cohort)
   end
 
   def and_i_am_signed_in_as_an_induction_coordinator_for_multiple_schools
@@ -229,17 +259,17 @@ module ManageTrainingSteps
   end
 
   def and_i_have_added_a_details_being_checked_ect_with_mentor
-    @details_being_checked_ect_with_mentor = create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "DBC With-Mentor"), mentor_profile_id: @contacted_for_info_mentor.id, school_cohort: @school_cohort)
+    @details_being_checked_ect_with_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "DBC With-Mentor"), mentor_profile_id: @contacted_for_info_mentor.id, school_cohort: @school_cohort)
     @details_being_checked_ect_with_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
   end
 
   def and_i_have_added_a_details_being_checked_ect_without_mentor
-    @details_being_checked_ect_without_mentor = create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "DBC Without-Mentor"), school_cohort: @school_cohort)
+    @details_being_checked_ect_without_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "DBC Without-Mentor"), school_cohort: @school_cohort)
     @details_being_checked_ect_without_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
   end
 
   def and_i_have_added_a_details_being_checked_mentor
-    @details_being_checked_mentor = create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "DBC Mentor"), school_cohort: @school_cohort)
+    @details_being_checked_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "DBC Mentor"), school_cohort: @school_cohort)
     @details_being_checked_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
   end
 
@@ -310,7 +340,7 @@ module ManageTrainingSteps
   end
 
   def when_i_choose_a_mentor
-    choose(@mentor.user.full_name.to_s, allow_label_click: true)
+    choose(@participant_profile_mentor.user.full_name.to_s, allow_label_click: true)
   end
 
   def when_i_add_ect_or_mentor_name
@@ -322,7 +352,7 @@ module ManageTrainingSteps
   end
 
   def when_i_add_ect_or_mentor_email_that_already_exists
-    fill_in "Email", with: @ect.user.email
+    fill_in "Email", with: @participant_profile_ect.user.email
   end
 
   def when_i_choose_assign_mentor_later
@@ -484,7 +514,7 @@ module ManageTrainingSteps
 
   def then_i_can_view_mentor_name
     expect(page).to have_selector("h1", text: "Check your answers")
-    expect(page).to have_text(@mentor.user.full_name.to_s)
+    expect(page).to have_text(@participant_profile_mentor.user.full_name.to_s)
   end
 
   def then_i_can_view_updated_name

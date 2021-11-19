@@ -62,7 +62,7 @@ RSpec.describe "Admin::Schools::Cohort2020", type: :request do
     end
 
     context "when there is an active ECT with that email" do
-      let!(:participant_profile) { create(:participant_profile, :ect) }
+      let!(:participant_profile) { create(:ect_participant_profile) }
       let(:name) { participant_profile.user.full_name }
       let(:email) { participant_profile.user.email }
 
@@ -79,7 +79,7 @@ RSpec.describe "Admin::Schools::Cohort2020", type: :request do
     end
 
     context "when there is an inactive ECT with that email" do
-      let!(:participant_profile) { create(:participant_profile, :ect, :withdrawn_record) }
+      let!(:participant_profile) { create(:ect_participant_profile, :withdrawn_record) }
       let(:name) { participant_profile.user.full_name }
       let(:email) { participant_profile.user.email }
 
@@ -119,7 +119,7 @@ RSpec.describe "Admin::Schools::Cohort2020", type: :request do
     end
 
     context "when there is an active mentor with that email" do
-      let!(:participant_profile) { create(:participant_profile, :mentor) }
+      let!(:participant_profile) { create(:mentor_participant_profile) }
       let(:name) { participant_profile.user.full_name }
       let(:email) { participant_profile.user.email }
 
@@ -160,7 +160,7 @@ RSpec.describe "Admin::Schools::Cohort2020", type: :request do
     end
 
     context "when there is an npq participant with that email" do
-      let!(:participant_profile) { create(:participant_profile, :npq) }
+      let!(:participant_profile) { create(:npq_participant_profile) }
       let(:name) { participant_profile.user.full_name }
       let(:email) { participant_profile.user.email }
 
@@ -201,7 +201,7 @@ RSpec.describe "Admin::Schools::Cohort2020", type: :request do
     end
 
     context "when there is an NQT+1 with that email" do
-      let!(:participant_profile) { create(:participant_profile, :ect, school_cohort: build(:school_cohort, cohort: cohort_2020)) }
+      let!(:participant_profile) { create(:ect_participant_profile, school_cohort: build(:school_cohort, cohort: cohort_2020)) }
       let(:name) { participant_profile.user.full_name }
       let(:email) { participant_profile.user.email }
 
