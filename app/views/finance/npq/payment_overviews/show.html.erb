@@ -4,7 +4,7 @@
 <h1 class="govuk-heading-xl">
   <%= @breakdowns.dig(0, :breakdown_summary, :name) %>
 </h1>
-<!--TODO: Un-hardcode the values-->
+
 <p class="govuk-caption-m govuk-!-margin-0">Payment of</p>
 <h2 class="govuk-heading-xl govuk-!-margin-0"><%= number_to_pounds aggregated_payment(@breakdowns) + aggregated_vat(@breakdowns, @npq_lead_provider) %></h2>
 <p class="govuk-caption-m govuk-!-margin-0">On <%= cutoff_date %></p>
