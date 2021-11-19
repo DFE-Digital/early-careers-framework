@@ -29,11 +29,11 @@ jobs:
       RAILS_ENV: test
       DB_USERNAME: postgres
       DB_PASSWORD: ''
-      DB_HOSTNAME: 127.0.0.1
+      DB_HOSTNAME: localhost
       DB_PORT: 5432
       ANALYTICS_DB_USERNAME: postgres
       ANALYTICS_DB_PASSWORD: ''
-      ANALYTICS_DB_HOSTNAME: 127.0.0.1
+      ANALYTICS_DB_HOSTNAME: localhost
       ANALYTICS_DB_PORT: 5432
       PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
       PERCY_PARALLEL_NONCE: ${{ needs.create-nonce.outputs.nonce }}
@@ -43,10 +43,11 @@ jobs:
 
     services:
       postgres:
-        image: postgres:11.6-alpine
+        image: postgres:11.6
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: ''
+          POSTGRES_DB: postgres
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
@@ -70,7 +71,7 @@ jobs:
       - name: Install node.js dependencies
         run: yarn install --production=false --frozen-lockfile --ignore-engines --prefer-offline
 
-      - name: Set up test database
+      - name: Setup test database
         run: bin/rails db:create db:schema:load
 
       - name: Run tests
