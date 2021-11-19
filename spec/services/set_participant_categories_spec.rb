@@ -14,6 +14,13 @@ RSpec.describe SetParticipantCategories do
     let!(:primary_mentor) { create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, :primary_profile, school_cohort: school_cohort) }
     let!(:secondary_mentor) { create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, :secondary_profile, school_cohort: school_cohort) }
 
+    before do
+      [primary_mentor, secondary_mentor].each do |profile|
+        profile.ecf_participant_eligibility.determine_status
+        profile.ecf_participant_eligibility.save!
+      end
+    end
+
     context "SIT for multiple schools" do
       let(:school_cohorts) { create_list(:school_cohort, 3, :cip) }
       let(:school_cohort) { school_cohorts.first }
