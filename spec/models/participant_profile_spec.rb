@@ -22,6 +22,15 @@ RSpec.describe ParticipantProfile, type: :model do
     expect(user.reload.updated_at).to be_within(1.second).of Time.zone.now
   end
 
+  it "updates analytics when training_status_changed?" do
+    allow(Analytics::ECFValidationService).to receive(:upsert_record)
+
+    profile = create(:participant_profile, training_status: :active)
+    profile.training_status = :withdrawn
+    profile.save!
+    expect(Analytics::ECFValidationService).to have_received(:upsert_record).with(profile)
+  end
+
   describe described_class::Mentor do
     it { is_expected.to belong_to(:school_cohort) }
     it { is_expected.to have_one(:cohort).through(:school_cohort) }

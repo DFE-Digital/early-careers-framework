@@ -10,6 +10,7 @@ import "../styles/application.scss";
 
 // External dependencies
 import { initAll } from "govuk-frontend";
+import "es6-promise/auto";
 import "whatwg-fetch";
 
 // Project JS

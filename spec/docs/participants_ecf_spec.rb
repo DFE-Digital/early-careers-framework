@@ -105,6 +105,15 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
     end
   end
 
+  it_behaves_like "JSON Participant resume documentation",
+                  "/api/v1/participants/ecf/{id}/resume",
+                  "#/components/schemas/ECFParticipantResumeRequest",
+                  "#/components/schemas/ECFParticipantResponse",
+                  "ECF Participant" do
+    let(:participant) { mentor_profile }
+    let(:attributes) { { course_identifier: "ecf-mentor" } }
+  end
+
   path "/api/v1/participants/ecf/{id}/withdraw" do
     put "Notify that an ECF participant has withdrawn from their course" do
       operationId :participant

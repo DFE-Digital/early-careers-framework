@@ -54,6 +54,36 @@ RSpec.describe NPQ::Accept do
       end
     end
 
+    context "when accepting an application for a course that has already been accepted by another provider" do
+      let(:other_npq_lead_provider) { create(:npq_lead_provider) }
+
+      let(:other_npq_application) do
+        NPQApplication.create!(
+          teacher_reference_number: trn,
+          user: user,
+          npq_course: npq_course,
+          npq_lead_provider: other_npq_lead_provider,
+          school_urn: "123456",
+          school_ukprn: "12345678",
+        )
+      end
+
+      before do
+        npq_application.update!(lead_provider_approval_status: "accepted")
+      end
+
+      it "does not allow 2 applications with same course to be accepted" do
+        expect {
+          described_class.call(npq_application: other_npq_application)
+        }.not_to change { other_npq_application.reload.lead_provider_approval_status }
+      end
+
+      it "attaches errors to the object" do
+        described_class.call(npq_application: other_npq_application)
+        expect(other_npq_application.errors).to be_present
+      end
+    end
+
     context "when user has applied for different course" do
       let(:other_npq_lead_provider) { create(:npq_lead_provider) }
       let(:other_npq_course) { create(:npq_course) }
@@ -133,20 +163,40 @@ RSpec.describe NPQ::Accept do
     end
 
     context "after approving an existing NPQApplication record" do
+      let(:new_trn) { (trn.to_i + 1).to_s }
+
       before do
         npq_application.save!
         subject.call
+        npq_application.update!(teacher_reference_number: new_trn)
       end
 
-      let(:new_trn) { (trn.to_i + 1).to_s }
-
       it "does not create neither teacher nor participant profile" do
-        npq_application.update!(teacher_reference_number: new_trn)
-
         expect { subject.call }
-          .to raise_error(Api::Errors::NPQApplicationAlreadyAcceptedError, "This NPQ application has already been accepted")
-          .and change(TeacherProfile, :count).by(0)
+          .to change(TeacherProfile, :count).by(0)
           .and change(ParticipantProfile::NPQ, :count).by(0)
+      end
+
+      it "returns false" do
+        expect(subject.call).to eql(false)
+      end
+
+      it "adds errors to object" do
+        subject.call
+        expect(npq_application.errors).to be_present
+      end
+    end
+
+    context "when application has already been rejected" do
+      before do
+        npq_application.lead_provider_approval_status = "rejected"
+        npq_application.save!
+      end
+
+      it "cannot then be accepted" do
+        expect {
+          subject.call
+        }.not_to change { npq_application.reload.lead_provider_approval_status }
       end
     end
   end

@@ -10,6 +10,10 @@ module Api
       perform_action(service_namespace: ::Participants::Defer)
     end
 
+    def resume
+      perform_action(service_namespace: ::Participants::Resume)
+    end
+
   private
 
     def perform_action(service_namespace:)

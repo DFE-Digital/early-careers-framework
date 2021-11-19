@@ -258,6 +258,7 @@ Rails.application.routes.draw do
 
   namespace :finance do
     resource :landing_page, only: :show, path: "manage-cpd-contracts", controller: "landing_page"
+
     resource :payment_breakdowns, only: :show, path: "payment-breakdowns", controller: "payment_breakdowns" do
       get "/choose-programme", to: "payment_breakdowns#select_programme", as: :select_programme
       post "/choose-programme", to: "payment_breakdowns#choose_programme", as: :choose_programme
@@ -266,16 +267,25 @@ Rails.application.routes.draw do
       get "/choose-provider-npq", to: "payment_breakdowns#select_provider_npq", as: :select_provider_npq
       post "/choose-provider-npq", to: "payment_breakdowns#choose_provider_npq", as: :choose_provider_npq
     end
+
     namespace :ecf do
-      resources :payment_breakdowns, only: %i[show]
+      resources :payment_breakdowns, only: %i[show] do
+        member do
+          get :payable
+        end
+      end
+
       resources :contracts, only: %i[show]
     end
+
     namespace :npq do
       resources :lead_providers, path: "payment-overviews", controller: "payment_overviews", only: %i[show] do
         resources :courses, only: %i[show], controller: "course_payment_breakdowns"
       end
     end
   end
+
+  get "/finance", to: redirect("/finance/manage-cpd-contracts")
 
   namespace :participants do
     resource :no_access, only: :show, controller: "no_access"

@@ -7,13 +7,11 @@ class Schools::ParticipantsController < Schools::BaseController
   before_action :set_mentors_added, only: %i[index show]
 
   def index
-    if @school_cohort.core_induction_programme?
-      cip_participant_categories
-    elsif FeatureFlag.active?(:eligibility_notifications)
-      fip_participant_categories_feature_flag_active
-    else
-      fip_participant_categories_feature_flag_inactive
-    end
+    participant_categories = SetParticipantCategories.call(@school_cohort, current_user)
+    @eligible = participant_categories.eligible
+    @ineligible = participant_categories.ineligible
+    @contacted_for_info = participant_categories.contacted_for_info
+    @details_being_checked = participant_categories.details_being_checked
   end
 
   def show
@@ -125,46 +123,5 @@ private
 
   def email_used?
     User.where.not(id: @profile.user.id).where(email: @profile.user.email).any?
-  end
-
-  def active_participant_profiles
-    @school_cohort.active_ecf_participant_profiles
-  end
-
-  def ineligible_participants
-    policy_scope(active_participant_profiles.ineligible_status.includes(:user).order("users.full_name"))
-  end
-
-  def eligible_participants
-    policy_scope(active_participant_profiles.eligible_status.includes(:user).order("users.full_name"))
-  end
-
-  def contacted_for_info_participants
-    policy_scope(active_participant_profiles.contacted_for_info.includes(:user).order("users.full_name"))
-  end
-
-  def details_being_checked_participants
-    policy_scope(active_participant_profiles.details_being_checked.includes(:user).order("users.full_name"))
-  end
-
-  def fip_participant_categories_feature_flag_active
-    @eligible = eligible_participants
-    @ineligible = ineligible_participants.without(@eligible)
-    @contacted_for_info = contacted_for_info_participants
-    @details_being_checked = details_being_checked_participants
-  end
-
-  def fip_participant_categories_feature_flag_inactive
-    @eligible = []
-    @ineligible = []
-    @contacted_for_info = contacted_for_info_participants
-    @details_being_checked = [*details_being_checked_participants, *ineligible_participants, *eligible_participants]
-  end
-
-  def cip_participant_categories
-    @eligible = [*eligible_participants, *ineligible_participants, *details_being_checked_participants].uniq
-    @ineligible = []
-    @contacted_for_info = contacted_for_info_participants
-    @details_being_checked = []
   end
 end

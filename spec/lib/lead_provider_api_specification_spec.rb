@@ -14,6 +14,7 @@ RSpec.describe LeadProviderApiSpecification do
         /api/v1/participants/npq
         /api/v1/participants/npq/{id}/defer
         /api/v1/participants/npq/{id}/withdraw
+        /api/v1/participants/npq/{id}/resume
         /api/v1/participant-declarations
         /api/v1/participant-declarations.csv
         /api/v1/participant-declarations/{id}
@@ -22,13 +23,14 @@ RSpec.describe LeadProviderApiSpecification do
         /api/v1/participants/ecf.csv
         /api/v1/participants/ecf/{id}/defer
         /api/v1/participants/ecf/{id}/withdraw
+        /api/v1/participants/ecf/{id}/resume
         /api/v1/participants/{id}/defer
         /api/v1/participants/{id}/resume
         /api/v1/participants/{id}/change-schedule
         /api/v1/participants/{id}/withdraw
       ]
 
-      expect(LeadProviderApiSpecification.as_hash["paths"].keys).to eq(paths)
+      expect(LeadProviderApiSpecification.as_hash["paths"].keys).to match_array(paths)
     end
   end
 end

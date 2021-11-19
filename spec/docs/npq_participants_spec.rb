@@ -69,6 +69,25 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/api_sp
     end
   end
 
+  it_behaves_like "JSON Participant resume documentation",
+                  "/api/v1/participants/npq/{id}/resume",
+                  "#/components/schemas/NPQParticipantResumeRequest",
+                  "#/components/schemas/NPQParticipantResponse",
+                  "NPQ Participant" do
+    let(:participant) { npq_application }
+    let(:attributes) { { course_identifier: npq_application.npq_course.identifier } }
+    before do
+      Participants::Defer::NPQ.call(
+        params: {
+          participant_id: npq_application.user_id,
+          reason: Participants::Defer::NPQ.reasons.sample,
+          course_identifier: npq_application.npq_course.identifier,
+          cpd_lead_provider: cpd_lead_provider,
+        },
+      )
+    end
+  end
+
   path "/api/v1/participants/npq/{id}/withdraw" do
     put "Withdrawn a participant from a course" do
       operationId :npq_participants

@@ -25,58 +25,13 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
     end
   end
 
-  path "/api/v1/participants/{id}/resume" do
-    put "Notify that an ECF participant is resuming their course" do
-      operationId :participant
-      tags "ECF Participant"
-      security [bearerAuth: []]
-      consumes "application/json"
-
-      request_body content: {
-        "application/json": {
-          "schema": {
-            "$ref": "#/components/schemas/ECFParticipantResumeRequest",
-          },
-        },
-      }
-
-      parameter name: :id,
-                in: :path,
-                type: :string,
-                required: true,
-                example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-                description: "The ID of the participant to resume"
-
-      parameter name: :params,
-                in: :body,
-                type: :object,
-                style: :deepObject,
-                required: true,
-                schema: {
-                  "$ref": "#/components/schemas/ECFParticipantResumeRequest",
-                }
-
-      response "200", "The ECF participant being resumed" do
-        let(:id) { mentor_profile.user.id }
-        let(:attributes) do
-          {
-            course_identifier: "ecf-mentor",
-          }
-        end
-
-        let(:params) do
-          {
-            "data": {
-              "type": "participant",
-              "attributes": attributes,
-            },
-          }
-        end
-
-        schema({ "$ref": "#/components/schemas/ECFParticipantResponse" })
-        run_test!
-      end
-    end
+  it_behaves_like "JSON Participant resume documentation",
+                  "/api/v1/participants/{id}/resume",
+                  "#/components/schemas/ECFParticipantResumeRequest",
+                  "#/components/schemas/ECFParticipantResponse",
+                  "ECF Participant" do
+    let(:participant) { mentor_profile }
+    let(:attributes) { { course_identifier: "ecf-mentor" } }
   end
 
   path "/api/v1/participants/{id}/change-schedule" do

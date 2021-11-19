@@ -12,7 +12,7 @@ module LeadProviders
     def ensure_lead_provider
       return if current_user&.lead_provider?
 
-      raise Pundit::NotAuthorizedError, "Forbidden"
+      raise Pundit::NotAuthorizedError, I18n.t(:forbidden)
     end
   end
 end

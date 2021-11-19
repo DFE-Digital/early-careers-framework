@@ -7,3 +7,11 @@
 .technical-documentation pre code {
   font-size: 14px;
 }
+
+@include govuk-media-query(desktop) {
+  .flexbox {
+    .app-pane__toc {
+      width: 400px;
+    }
+  }
+}

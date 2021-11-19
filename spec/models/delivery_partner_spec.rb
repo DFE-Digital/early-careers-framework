@@ -17,6 +17,9 @@ RSpec.describe DeliveryPartner, type: :model do
     it { is_expected.to have_many(:provider_relationships) }
     it { is_expected.to have_many(:lead_providers).through(:provider_relationships) }
     it { is_expected.to have_many(:partnership_csv_uploads) }
+    it { is_expected.to have_many(:partnerships) }
+    it { is_expected.to have_many(:active_partnerships) }
+    it { is_expected.to have_many(:schools).through(:active_partnerships) }
   end
 
   describe "#cohorts_with_lead_provider" do
@@ -39,6 +42,55 @@ RSpec.describe DeliveryPartner, type: :model do
 
     it "does not include a cohort for a lead provider where no provider relationship exists" do
       expect(delivery_partner.cohorts_with_provider(lead_provider)).not_to include(unpartnered_cohort)
+    end
+  end
+
+  describe "participant_profiles" do
+    let(:partnership) { create(:partnership) }
+    let(:school) { partnership.school }
+    let(:delivery_partner) { partnership.delivery_partner }
+    let(:school_cohort) { create(:school_cohort, school: school) }
+
+    it "should include active participants" do
+      participant_profile = create(:participant_profile, :ect, school_cohort: school_cohort)
+      expect(delivery_partner.ecf_participant_profiles).to include participant_profile
+    end
+
+    it "should include participants whose records have been withdrawn" do
+      participant_profile = create(:participant_profile, :ect, :withdrawn_record, school_cohort: school_cohort)
+      expect(delivery_partner.ecf_participant_profiles).to include participant_profile
+    end
+
+    it "should include mentors" do
+      participant_profile = create(:participant_profile, :mentor, school_cohort: school_cohort)
+      expect(delivery_partner.ecf_participant_profiles).to include participant_profile
+    end
+
+    it "should not include NPQ participants" do
+      participant_profile = create(:participant_profile, :npq, school: school)
+      expect(delivery_partner.ecf_participant_profiles).not_to include participant_profile
+    end
+  end
+
+  describe "active_ecf_participant_profiles" do
+    let(:partnership) { create(:partnership) }
+    let(:school) { partnership.school }
+    let(:delivery_partner) { partnership.delivery_partner }
+    let(:school_cohort) { create(:school_cohort, school: school) }
+
+    it "should include active participants" do
+      participant_profile = create(:participant_profile, :ect, school_cohort: school_cohort)
+      expect(delivery_partner.active_ecf_participant_profiles).to include participant_profile
+    end
+
+    it "should not include participants whose records have been withdrawn" do
+      participant_profile = create(:participant_profile, :withdrawn_record, :ect, school_cohort: school_cohort)
+      expect(delivery_partner.active_ecf_participant_profiles).not_to include participant_profile
+    end
+
+    it "should not include NPQ participants" do
+      participant_profile = create(:participant_profile, :npq, school: school)
+      expect(delivery_partner.active_ecf_participant_profiles).not_to include participant_profile
     end
   end
 

@@ -165,6 +165,19 @@ RSpec.describe "Users::Sessions", type: :request do
       end
     end
 
+    context "when no token is provided" do
+      before do
+        user.update!(login_token_valid_until: nil)
+        user.update!(login_token: nil)
+      end
+
+      it "redirects to link invalid" do
+        get "/users/confirm_sign_in"
+
+        expect(response).to redirect_to "/users/link-invalid"
+      end
+    end
+
     context "when already signed in" do
       before { sign_in user }
 

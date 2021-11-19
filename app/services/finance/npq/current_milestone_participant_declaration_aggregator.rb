@@ -29,7 +29,7 @@ module Finance
       def current_participants_count
         ParticipantDeclaration::NPQ
           .for_lead_provider_and_course(cpd_lead_provider, course_identifier)
-          .where.not(state: ParticipantDeclaration.states[:paid])
+          .where.not(state: ParticipantDeclaration.states.values_at("paid", "voided"))
           .unique_id
           .count
       end
@@ -45,7 +45,7 @@ module Finance
       def total_participant_not_paid_count
         ParticipantDeclaration::NPQ
           .for_lead_provider_and_course(cpd_lead_provider, course_identifier)
-          .where.not(state: ParticipantDeclaration.states.values_at("payable", "eligible"))
+          .submitted
           .unique_id
           .count
       end

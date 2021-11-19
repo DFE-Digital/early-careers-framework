@@ -83,21 +83,21 @@ private
 
   def and_those_courses_have_submitted_declations
     [npq_course_leading_teaching, npq_course_leading_behaviour_culture, npq_course_leading_teaching_development].each do |npq_course|
-      create_list(:user, 1)
+      create_list(:user, 2)
         .map { |user| create_accepted_application(user, npq_course, npq_lead_provider) }
 
-      create_list(:user, 1)
+      create_list(:user, 3)
         .map { |user| create_accepted_application(user, npq_course, npq_lead_provider) }
         .map { |npq_application| create_started_declarations(npq_application) }
 
-      create_list(:user, 1)
+      create_list(:user, 4)
         .map { |user| create_accepted_application(user, npq_course, npq_lead_provider) }
         .map { |npq_application| create_started_declarations(npq_application) }
         .map(&JSON.method(:parse))
         .map { |deserialised_participant_declaration| ParticipantDeclaration::NPQ.find(deserialised_participant_declaration.dig("data", "id")) }
         .each(&:make_eligible!)
 
-      create_list(:user, 1)
+      create_list(:user, 5)
         .map { |user| create_accepted_application(user, npq_course, npq_lead_provider) }
         .map { |npq_application| create_started_declarations(npq_application) }
         .map(&JSON.method(:parse))

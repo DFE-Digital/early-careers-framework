@@ -5,6 +5,15 @@ class DeliveryPartner < DiscardableRecord
   has_many :lead_providers, through: :provider_relationships
   has_many :partnership_csv_uploads
 
+  has_many :partnerships
+  has_many :active_partnerships, -> { active }, class_name: "Partnership"
+  has_many :schools, through: :active_partnerships
+
+  has_many :ecf_participant_profiles, through: :schools, class_name: "ParticipantProfile"
+  has_many :ecf_participants, through: :ecf_participant_profiles, source: :user
+  has_many :active_ecf_participant_profiles, through: :schools
+  has_many :active_ecf_participants, through: :active_ecf_participant_profiles, source: :user
+
   has_paper_trail
 
   after_discard do

@@ -6,7 +6,7 @@ class DeliveryPartnerForm
 
   attr_accessor :name, :lead_provider_ids, :provider_relationship_hashes
 
-  validates :name, presence: { message: "Enter a name" }, on: %i[name update]
+  validates :name, presence: { message: I18n.t("errors.name.blank") }, on: %i[name update]
   validate :lead_providers_validation, on: %i[lead_providers update]
   validate :cohorts_validation, on: %i[cohorts update]
 
@@ -88,7 +88,7 @@ private
 
   def lead_providers_validation
     unless current_lead_provider_ids&.any?
-      errors.add(:lead_provider_ids, :blank, message: "Choose at least one")
+      errors.add(:lead_provider_ids, :blank, message: I18n.t("errors.cohorts.blank"))
     end
   end
 
@@ -96,7 +96,7 @@ private
     # Ensure all selected lead providers have at least one selected cohort
     # This is indicated by the presence of a provider relationship for that lead provider
     if (current_lead_provider_ids - chosen_provider_relationships_lead_provider_ids).any?
-      errors.add(:provider_relationship_hashes, :blank, message: "Choose at least one cohort for every lead provider")
+      errors.add(:provider_relationship_hashes, :blank, message: I18n.t("errors.lead_providers.blank"))
     end
   end
 end

@@ -11,6 +11,7 @@ RSpec.describe StoreParticipantEligibility do
     let(:mentor_teacher_profile) { create(:teacher_profile, school: school, trn: nil) }
     let(:ect_profile) { create(:ect_participant_profile, school_cohort: school_cohort, teacher_profile: ect_teacher_profile) }
     let(:mentor_profile) { create(:mentor_participant_profile, school_cohort: school_cohort, teacher_profile: mentor_teacher_profile) }
+    let!(:induction_tutor) { create(:user, :induction_coordinator, schools: [school]) }
 
     let(:eligibility_options) do
       {
@@ -57,7 +58,7 @@ RSpec.describe StoreParticipantEligibility do
     end
 
     context "when ineligible status is determined" do
-      context "without eligibility_notificiations feature enabled" do
+      context "without eligibility_notifications feature enabled" do
         it "does not send email notifications" do
           eligibility_options[:previous_induction] = true
           service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
@@ -65,9 +66,7 @@ RSpec.describe StoreParticipantEligibility do
         end
       end
 
-      context "with eligibility_notificiations feature enabled", with_feature_flags: { eligibility_notifications: "active" } do
-        let!(:induction_tutor) { create(:user, :induction_coordinator, schools: [school]) }
-
+      context "with eligibility_notifications feature enabled", with_feature_flags: { eligibility_notifications: "active" } do
         context "when participant is an ECT" do
           it "sends the ect_previous_induction_email when reason is previous_induction" do
             eligibility_options[:previous_induction] = true
@@ -188,6 +187,51 @@ RSpec.describe StoreParticipantEligibility do
               service.call(participant_profile: mentor_profile, eligibility_options: eligibility_options)
               expect(IneligibleParticipantMailer).not_to delay_email_delivery_of("")
             end
+          end
+        end
+      end
+    end
+
+    context "when eligible status is determined" do
+      context "when no record existed previously" do
+        it "does not send an email" do
+          service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+          expect(IneligibleParticipantMailer).not_to delay_email_delivery_of("")
+        end
+      end
+
+      context "when the status was manual check before" do
+        let!(:manual_check_record) { create(:ecf_participant_eligibility, :manual_check, participant_profile: ect_profile) }
+
+        it "does not send an email" do
+          service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+          expect(IneligibleParticipantMailer).not_to delay_email_delivery_of("")
+        end
+      end
+
+      context "when the status was ineligible and the reason was not previous induction" do
+        let!(:ineligible_record) { create(:ecf_participant_eligibility, :ineligible, reason: "no_qts", participant_profile: ect_profile) }
+
+        it "does not send an email" do
+          service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+          expect(IneligibleParticipantMailer).not_to delay_email_delivery_of("")
+        end
+      end
+
+      context "when the status was ineligible and the reason was previous induction" do
+        let!(:ineligible_record) { create(:ecf_participant_eligibility, :ineligible, reason: "previous_induction", participant_profile: ect_profile) }
+
+        it "sends an ect now eligible email" do
+          service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+          expect(IneligibleParticipantMailer).to delay_email_delivery_of(:ect_now_eligible_previous_induction_email)
+        end
+
+        context "when the school is doing CIP" do
+          let(:school_cohort) { create(:school_cohort, :cip, school: school) }
+
+          it "does not send an email" do
+            service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+            expect(IneligibleParticipantMailer).not_to delay_email_delivery_of("")
           end
         end
       end

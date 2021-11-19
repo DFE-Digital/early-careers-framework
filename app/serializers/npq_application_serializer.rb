@@ -19,7 +19,8 @@ class NPQApplicationSerializer
              :funding_choice,
              :course_identifier,
              :status,
-             :created_at
+             :created_at,
+             :updated_at
 
   attribute(:participant_id, &:user_id)
   attribute(:teacher_reference_number_validated, &:teacher_reference_number_verified)
@@ -42,6 +43,10 @@ class NPQApplicationSerializer
 
   attribute :created_at do |object|
     object.created_at.rfc3339
+  end
+
+  attribute :updated_at do |object|
+    object.updated_at.rfc3339
   end
 
   attribute(:status, &:lead_provider_approval_status)

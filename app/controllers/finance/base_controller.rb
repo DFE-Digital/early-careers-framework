@@ -10,7 +10,7 @@ module Finance
   private
 
     def ensure_finance
-      raise Pundit::NotAuthorizedError, "Forbidden" unless current_user.finance?
+      raise Pundit::NotAuthorizedError, I18n.t(:forbidden) unless current_user.finance?
     end
   end
 end

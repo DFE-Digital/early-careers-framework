@@ -25,11 +25,11 @@ module PaymentCalculator
       end
 
       def call(aggregations:)
-        pp aggregations
         {
           breakdown_summary: breakdown_summary_calculator.call(contract: contract, aggregations: aggregations),
           service_fees: service_fee_calculator.call(contract: contract),
-          output_payments: output_payment_calculator.call(contract: contract, total_participants: aggregations[:eligible_and_payable]),
+          output_payments: output_payment_calculator
+            .call(contract: contract, total_participants: aggregations[:total_participant_eligible_and_payable_count]),
         }
       end
 

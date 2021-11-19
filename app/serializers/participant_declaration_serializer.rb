@@ -21,6 +21,10 @@ class ParticipantDeclarationSerializer
     declaration.declaration_date.rfc3339
   end
 
+  attribute :updated_at do |declaration|
+    declaration.updated_at.rfc3339
+  end
+
   attribute :voided, &:voided?
 
   attribute(:participant_id, &:user_id)

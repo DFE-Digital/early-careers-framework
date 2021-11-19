@@ -11,7 +11,7 @@ module FullDqt
     end
 
     def get_record(trn:, birthdate:, nino: nil)
-      uri_for_record = uri(trn: padded_trn(trn), birthdate: birthdate, nino: nino)
+      uri_for_record = uri(trn: trn, birthdate: birthdate, nino: nino)
 
       request = Net::HTTP::Get.new(uri_for_record)
       request["Authorization"] = "Bearer #{token}"
@@ -27,10 +27,6 @@ module FullDqt
     end
 
   private
-
-    def padded_trn(trn)
-      trn.rjust(7, "0")
-    end
 
     def translate_hash(hash)
       hash.deep_transform_values do |value|

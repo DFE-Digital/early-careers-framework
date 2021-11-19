@@ -14,4 +14,4 @@ CypressOnRails::SmartFactoryWrapper.configure(
   ],
 )
 Webpacker.compile
-Delayed::Worker.delay_jobs = ->(job) { job.queue != "mailers" }
+Delayed::Worker.delay_jobs = ->(job) { %w[mailers priority_mailers].exclude?(job.queue) }

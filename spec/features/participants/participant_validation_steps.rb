@@ -1,4 +1,3 @@
-# coding: utf-8
 # frozen_string_literal: true
 
 module ParticipantValidationSteps
@@ -184,7 +183,7 @@ module ParticipantValidationSteps
   end
 
   def then_i_should_see_the_complete_page
-    expect(page).to have_selector("h1", text: "You're eligible for this programme")
+    expect(page).to have_selector("h1", text: "You’re eligible for this programme")
     expect(page).to have_text("You will not need to use this service again during your training.")
     expect(page).to have_text("Big Provider Ltd")
     expect(page).to have_text("Amazing Delivery Team")
@@ -208,7 +207,7 @@ module ParticipantValidationSteps
   end
 
   def then_i_should_see_the_complete_page_for_matched_cip_ect_participant
-    expect(page).to have_selector("h1", text: "You're eligible for this programme")
+    expect(page).to have_selector("h1", text: "You’re eligible for this programme")
     expect(page).to have_text("We’ll email you a link to access your materials within the next 24 hours.")
     expect(@user.reload.teacher_profile.trn).to eq(@participant_data[:trn])
     expect(@user.teacher_profile.participant_profiles.ecf.first.ecf_participant_eligibility).to be_eligible_status
@@ -216,7 +215,7 @@ module ParticipantValidationSteps
   end
 
   def then_i_should_see_the_complete_page_for_matched_cip_mentor_participant
-    expect(page).to have_selector("h1", text: "You're eligible for this programme")
+    expect(page).to have_selector("h1", text: "You’re eligible for this programme")
     expect(page).to have_text("We’ll email you a link to access your materials within the next 24 hours.")
     expect(@user.reload.teacher_profile.trn).to eq(@participant_data[:trn])
     expect(@user.teacher_profile.participant_profiles.ecf.first.ecf_participant_eligibility).to be_eligible_status
@@ -240,7 +239,7 @@ module ParticipantValidationSteps
   end
 
   def then_i_should_see_the_cip_checking_details_page_for_invalid_cip_ect
-    expect(page).to have_selector("h1", text: "You're eligible for this programme")
+    expect(page).to have_selector("h1", text: "You’re eligible for this programme")
     expect(page).to have_text("We’ll email you a link to access your materials within the next 24 hours.")
     expect(page).not_to have_link("Manage induction for your school")
     expect(@user.reload.teacher_profile.trn).to be_nil

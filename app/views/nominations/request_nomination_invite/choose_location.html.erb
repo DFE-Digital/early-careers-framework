@@ -14,7 +14,7 @@
               label: { text: "What’s your school’s local authority?", tag: "h1", size: "l" },
               hint: -> { tag.span do
                 concat("This is the authority or council in your area. For example, Gloucestershire or Barnet. Not sure? ")
-                concat(govuk_link_to("Find your school on our register", "https://get-information-schools.service.gov.uk/"))
+                concat(govuk_link_to("Find your school on our register (opens in a new tab)", "https://get-information-schools.service.gov.uk/", target: :_blank, rel: "noopener noreferrer"))
               end },
               options: { include_blank: true },
               class: ["js-location-select"]) %>

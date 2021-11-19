@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_21_112511) do
+ActiveRecord::Schema.define(version: 2021_11_12_150638) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -36,6 +36,9 @@ ActiveRecord::Schema.define(version: 2021_09_21_112511) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "active", default: true
+    t.string "training_status"
+    t.boolean "sparsity"
+    t.boolean "pupil_premium"
     t.index ["participant_profile_id"], name: "index_ecf_participants_on_participant_profile_id"
   end
 
@@ -62,6 +65,9 @@ ActiveRecord::Schema.define(version: 2021_09_21_112511) do
     t.string "postcode"
     t.string "administrative_district_code"
     t.string "administrative_district_name"
+    t.boolean "active_participants"
+    t.boolean "pupil_premium"
+    t.boolean "sparsity"
     t.index ["urn"], name: "index_ecf_schools_on_urn", unique: true
   end
 

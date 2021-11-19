@@ -9,6 +9,7 @@ required:
   - status
   - training_status
   - schedule_identifier
+  - updated_at
 properties:
   email:
     description: "The email address registered for this ECF participant"
@@ -86,3 +87,8 @@ properties:
     enum:
       - ecf-september-standard-2021
       - ecf-january-standard-2021
+  updated_at:
+    description: "The date the ECF participant was last updated"
+    type: string
+    format: date-time
+    example: "2021-05-31T02:22:32.000Z"

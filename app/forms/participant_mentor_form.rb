@@ -5,7 +5,7 @@ class ParticipantMentorForm
 
   attr_accessor :mentor_id, :school_id, :user_id, :cohort_id
 
-  validates :mentor_id, presence: { message: "Choose one" }
+  validates :mentor_id, presence: { message: I18n.t("errors.mentor.blank") }
   validate :mentor_exists
 
   def mentor
