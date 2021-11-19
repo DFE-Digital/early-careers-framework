@@ -2,7 +2,7 @@
   <tbody>
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.submission_deadline") %></th>
-      <td class="govuk-table__cell"><%= @deadline %></td>
+      <td class="govuk-table__cell"><%= @deadline_date.to_s(:govuk) %></td>
     </tr>
   </tbody>
 </table>
