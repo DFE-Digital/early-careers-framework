@@ -3,8 +3,8 @@ default: &default
     adapter: postgresql
     pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
     variables:
-       statement_timeout: 10000
-       idle_in_transaction_session_timeout: 10000
+      statement_timeout: 10000
+      idle_in_transaction_session_timeout: 10000
     username: <%= ENV['DB_USERNAME'] %>
     password: <%= ENV['DB_PASSWORD'] %>
     host: <%= ENV['DB_HOSTNAME'] %>
@@ -61,9 +61,6 @@ production:
   primary:
     <<: *default_primary
     sslmode: require
-    variables:
-      statement_timeout: 10000
-      idle_in_transaction_session_timeout: 10000
   analytics:
     <<: *default_analytics
     sslmode: require
