@@ -33,4 +33,13 @@ module FinanceHelper
   def total_vat(breakdown, lead_provider)
     total_payment(breakdown) * (lead_provider.vat_chargeable ? 0.2 : 0.0)
   end
+
+  def payment_period
+    index = MILESTONE_DATES.each_index.detect { |date| Time.zone.today.before?(Date.parse(MILESTONE_DATES[date])) }
+    index < 1 ? ["1.09.2021", MILESTONE_DATES[0]] : MILESTONE_DATES.slice(index - 1, 2)
+  end
+
+  def cutoff_date
+    Date.parse(payment_period.length < 2 ? MILESTONE_DATES[0] : payment_period[1]).to_s(:govuk)
+  end
 end

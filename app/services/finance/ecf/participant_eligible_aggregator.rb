@@ -5,7 +5,7 @@ module Finance
     class ParticipantEligibleAggregator < Finance::ParticipantAggregator
       class << self
         def call(cpd_lead_provider:, participant_declaration: ParticipantDeclaration::ECF, event_type: :started, interval: nil)
-          new(cpd_lead_provider: cpd_lead_provider, participant_declaration: participant_declaration, interval: interval).call(event_type: event_type)
+          new(cpd_lead_provider: cpd_lead_provider, participant_declaration: participant_declaration).call(event_type: event_type, interval: interval)
         end
 
         def aggregation_types
