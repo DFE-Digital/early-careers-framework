@@ -146,25 +146,23 @@ private
     expect(page).to have_css("h2.govuk-heading-l", text: NPQCourse.find_by!(identifier: npq_contract.course_identifier).name)
 
     expect(page.find("dt.govuk-summary-list__key", text: "Submission deadline"))
-      .to have_sibling("dd.govuk-summary-list__value", text: cutoff_date)
+      .to have_sibling("dd.govuk-summary-list__value", text: Finance::Invoice.find_by_name("current").deadline_date.to_s(:govuk))
 
     expect(page.find("dt.govuk-summary-list__key", text: "Recruitment target"))
       .to have_sibling("dd.govuk-summary-list__value", text: npq_contract.recruitment_target)
 
     expect(page.find("dt.govuk-summary-list__key", text: "Current participants"))
-      .to have_sibling("dd.govuk-summary-list__value", text: ParticipantDeclaration::NPQ.for_lead_provider_and_course(npq_lead_provider, npq_contract.course_identifier).count)
+      .to have_sibling("dd.govuk-summary-list__value", text: ParticipantDeclaration::NPQ.neither_paid_nor_voided_lead_provider_and_course(npq_lead_provider, npq_contract.course_identifier).count)
 
     expected_total_paid = ParticipantDeclaration::NPQ
-                            .for_lead_provider_and_course(cpd_lead_provider, npq_contract.course_identifier)
-                            .eligible_or_payable
-                            .unique_id
+                            .eligible_or_payable_for_lead_provider_and_course(cpd_lead_provider, npq_contract.course_identifier)
                             .count
 
     expect(page.find("dt.govuk-summary-list__key", text: "Total paid"))
       .to have_sibling("dd.govuk-summary-list__value", text: expected_total_paid)
 
     expect(page.find("dt.govuk-summary-list__key", text: "Total not paid"))
-      .to have_sibling("dd.govuk-summary-list__value", text: ParticipantDeclaration::NPQ.for_lead_provider_and_course(npq_lead_provider, npq_contract.course_identifier).submitted.unique_id.count)
+      .to have_sibling("dd.govuk-summary-list__value", text: ParticipantDeclaration::NPQ.submitted_for_lead_provider_and_course(npq_lead_provider, npq_contract.course_identifier).count)
   end
 
   def then_i_should_see_correct_payment_breakdown(npq_contract)

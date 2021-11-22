@@ -4,35 +4,36 @@ require "payment_calculator/npq/payment_calculation"
 
 module Finance
   module NPQ
-    class CalculationOrchestrator
+    class CalculationOrchestrator < ::Finance::CalculationOrchestrator
       class << self
-        def call(npq_contract:, aggregator:, calculator:, interval:)
-          new(aggregator: aggregator, calculator: calculator)
-            .call(contract: npq_contract, interval: interval)
+        def default_aggregator
+          ::Finance::NPQ::ParticipantEligibleAndPayableAggregator
+        end
+
+        def default_calculator
+          ::PaymentCalculator::NPQ::PaymentCalculation
         end
       end
 
-      def call(contract:, interval:)
+      def call(event_type:)
         calculator
           .call(
             contract: contract,
             course_identifier: contract.course_identifier,
-            aggregations: aggregations_for(contract: contract, interval: interval),
+            aggregations: aggregations_for(event_type: event_type),
           )
       end
 
     private
 
-      attr_accessor :cpd_lead_provider, :contract, :aggregator, :calculator
-
-      def initialize(aggregator:, calculator:)
-        self.aggregator        = aggregator
-        self.calculator        = calculator
+      def aggregate(aggregation_type:, course_identifier:, event_type:)
+        recorder.public_send(self.class.aggregation_types[event_type][aggregation_type], cpd_lead_provider, course_identifier).count
       end
 
-      def aggregations_for(contract:, interval:)
+      def aggregations_for(event_type:)
         aggregator.call(
-          cpd_lead_provider: contract.npq_lead_provider.cpd_lead_provider,
+          cpd_lead_provider: cpd_lead_provider,
+          event_type: event_type,
           course_identifier: contract.course_identifier,
           interval: interval,
         )

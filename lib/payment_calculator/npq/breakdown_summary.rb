@@ -3,9 +3,9 @@
 module PaymentCalculator
   module NPQ
     class BreakdownSummary
-      CURRENT_PARTICIPANTS = :current_participants_count
-      NOT_PAID             = :total_participant_not_paid_count
-      ELIGIBLE_AND_PAYABLE = :total_participant_eligible_and_payable_count
+      CURRENT_PARTICIPANTS = :all
+      NOT_PAID             = :not_paid
+      ELIGIBLE_AND_PAYABLE = :eligible_or_payable
 
       class << self
         def call(contract:, aggregations:)

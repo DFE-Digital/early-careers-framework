@@ -32,10 +32,10 @@ RSpec.describe Finance::NPQ::CalculationOrchestrator do
 
   subject(:run_calculation) do
     described_class.call(
-      aggregator: Finance::NPQ::CurrentMilestoneParticipantDeclarationAggregator,
-      npq_contract: contract,
-      calculator: PaymentCalculator::NPQ::PaymentCalculation,
-      interval: Finance.find_by_name("current"),
+      cpd_lead_provider: cpd_lead_provider,
+      contract: contract,
+      contract: contract,
+      interval: Finance::Invoice.find_by_name("current").interval,
     )
   end
 

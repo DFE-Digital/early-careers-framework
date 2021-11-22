@@ -6,10 +6,7 @@
 <div class="govuk-grid-row govuk-!-margin-top-9">
 
   <div class="govuk-grid-column-two-thirds">
-    <%= render Finance::NPQ::PaymentOverviews::References.new(
-      references: @breakdown,
-      npq_lead_provider: @npq_lead_provider
-    ) %>
+    <%= render Finance::NPQ::PaymentOverviews::References.new(@invoice) %>
     <%= render Finance::NPQ::BreakdownSummary.new(@breakdown[:breakdown_summary]) %>
 
     <h3 class="govuk-heading-m" style="margin-top:55px"><%= t("finance.payment_breakdown")  %></h3>
