@@ -4,16 +4,17 @@ module Finance
   module NPQ
     module PaymentOverviews
       class References < BaseComponent
-        include FinanceHelper
-        attr_reader :cohort, :payment_reference
+        def initialize(invoice)
+          self.invoice = invoice
+        end
 
         def submission_deadline
-          Date.parse(payment_period.last).to_s(:govuk)
+          invoice.deadline_date.to_s(:govuk)
         end
 
       private
 
-        attr_writer :cohort, :payment_reference
+        attr_accessor :invoice
       end
     end
   end

@@ -135,78 +135,6 @@ en:
             lead_provider_approval_status:
               has_another_accepted_application: The participant already has an accepted application for this course
               has_already_been_accepted: This NPQ application has already been accepted
-  courses:
-    npq:
-      npq-leading-teaching: Leading Teaching
-      npq-leading-behaviour-culture: Leading Behaviour and Culture
-      npq-leading-teaching-development: Leading Teacher Development
-      npq-senior-leadership: Senior Leadership
-      npq-headship: Headship
-      npq-executive-leadership: Executive Leadership
-      npq-additional-support-offer: Additional Support Offer
-  finance:
-    submission_deadline: Submission deadline
-    choose_programme: Choose programme scheme
-    cohort: Cohort
-    show_contract: View contract information
-    provider: Provider
-    ects: Current ECTs
-    mentors: Current Mentors
-    participants: Current participants
-    per_participant: Payment amount per person
-    amount: Amount
-    payment_breakdown: Payment Breakdown
-    payment_type: Payment type
-    payment_reference: Payment reference
-    number_of_participants: Number of participants
-    payment_amount_for_period: Payment amount for period
-    payment: Payment
-    vat: VAT
-    total_payment: Total payment
-    fee_per_participant: Fee per participant
-    back_payment_participants: Back payment participants
-    participant_breakdown: Participant breakdown
-    current_milestone: Current milestone
-    total_paid: Total paid
-    total_not_paid: Total not paid
-    contract:
-      version: Contract reference
-      per_participant: Per participant
-      service_fee_installments: Service fee installments
-      uplift_target: Uplift target
-      uplift_amount: Uplift amount
-      recruitment_target: Recruitment target
-      revised_target: Revised recruitment target (+2%)
-      set_up_fee: Set-up Fee
-      band: Band
-      bands:
-        min: Min
-        max: Max
-        floor: 0
-        ceiling: Unlimited
-    ecf:
-      bands:
-        "0": Band A
-        "1": Band B
-        "2": Band C
-        "3": New target
-      payment_breakdown: ECF Payment Breakdown
-      breakdown_summary:
-        total: Total
-
-    npq:
-      payment_breakdown: NPQ Payment Breakdown
-    service_fee:
-      caption: Service fee
-    output_payment:
-      caption: Output fee
-      band_d_info: Participants over the original band C target up to the new target.
-    uplift_fee:
-      caption: Uplift fee
-    clawbacks:
-      caption: Clawbacks
-      per_participant: Clawback per participant
-
 
   activemodel:
     errors:
@@ -309,3 +237,75 @@ en:
       school_funded_fip: "Use a training provider funded by your school"
       no_early_career_teachers: "No early career teachers for this cohort"
       not_yet_known: "Not yet decided"
+
+  courses:
+    npq:
+      npq-leading-teaching: Leading Teaching
+      npq-leading-behaviour-culture: Leading Behaviour and Culture
+      npq-leading-teaching-development: Leading Teacher Development
+      npq-senior-leadership: Senior Leadership
+      npq-headship: Headship
+      npq-executive-leadership: Executive Leadership
+      npq-additional-support-offer: Additional Support Offer
+  finance:
+    submission_deadline: Submission deadline
+    choose_programme: Choose programme scheme
+    cohort: Cohort
+    show_contract: View contract information
+    provider: Provider
+    ects: Current ECTs
+    mentors: Current Mentors
+    participants: Current participants
+    per_participant: Payment amount per person
+    amount: Amount
+    payment_breakdown: Payment Breakdown
+    payment_type: Payment type
+    payment_reference: Payment reference
+    number_of_participants: Number of participants
+    payment_amount_for_period: Payment amount for period
+    payment: Payment
+    vat: VAT
+    total_payment: Total payment
+    fee_per_participant: Fee per participant
+    back_payment_participants: Back payment participants
+    participant_breakdown: Participant breakdown
+    current_milestone: Current milestone
+    total_paid: Total paid
+    total_not_paid: Total not paid
+    contract:
+      version: Contract reference
+      per_participant: Per participant
+      service_fee_installments: Service fee installments
+      uplift_target: Uplift target
+      uplift_amount: Uplift amount
+      recruitment_target: Recruitment target
+      revised_target: Revised recruitment target (+2%)
+      set_up_fee: Set-up Fee
+      band: Band
+      bands:
+        min: Min
+        max: Max
+        floor: 0
+        ceiling: Unlimited
+    ecf:
+      bands:
+        "0": Band A
+        "1": Band B
+        "2": Band C
+        "3": New target
+      payment_breakdown: ECF Payment Breakdown
+      breakdown_summary:
+        total: Total
+
+    npq:
+      payment_breakdown: NPQ Payment Breakdown
+    service_fee:
+      caption: Service fee
+    output_payment:
+      caption: Output fee
+      band_d_info: Participants over the original band C target up to the new target.
+    uplift_fee:
+      caption: Uplift fee
+    clawbacks:
+      caption: Clawbacks
+      per_participant: Clawback per participant

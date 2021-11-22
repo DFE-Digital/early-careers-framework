@@ -8,8 +8,8 @@ module Finance
     implement_class_method :aggregation_types
 
     class << self
-      def call(cpd_lead_provider:, interval: nil, participant_declaration: ParticipantDeclaration::ECF, event_type: :started)
-        new(cpd_lead_provider: cpd_lead_provider, participant_declaration: participant_declaration).call(event_type: event_type, interval: interval)
+      def call(cpd_lead_provider:, interval: nil, recorder: ParticipantDeclaration::ECF, event_type: :started)
+        new(cpd_lead_provider: cpd_lead_provider, recorder: recorder).call(event_type: event_type, interval: interval)
       end
     end
 
@@ -19,11 +19,11 @@ module Finance
 
   private
 
-    attr_reader :cpd_lead_provider, :participant_declaration
+    attr_reader :cpd_lead_provider, :recorder
 
-    def initialize(cpd_lead_provider:, participant_declaration: ParticipantDeclaration::ECF)
+    def initialize(cpd_lead_provider:, recorder: ParticipantDeclaration::ECF)
       self.cpd_lead_provider = cpd_lead_provider
-      self.participant_declaration = participant_declaration
+      self.recorder = recorder
     end
 
     def aggregators(event_type:, interval:)
@@ -31,7 +31,7 @@ module Finance
     end
 
     def aggregate(aggregation_type:, event_type:, interval: nil)
-      scope = participant_declaration.public_send(self.class.aggregation_types[event_type][aggregation_type], cpd_lead_provider)
+      scope = recorder.public_send(self.class.aggregation_types[event_type][aggregation_type], cpd_lead_provider)
       scope = scope.submitted_between(interval.begin, interval.end) if interval.present?
       scope.count
     end

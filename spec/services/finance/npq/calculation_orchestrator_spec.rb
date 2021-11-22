@@ -35,6 +35,7 @@ RSpec.describe Finance::NPQ::CalculationOrchestrator do
       aggregator: Finance::NPQ::CurrentMilestoneParticipantDeclarationAggregator,
       npq_contract: contract,
       calculator: PaymentCalculator::NPQ::PaymentCalculation,
+      interval: Finance.find_by_name("current"),
     )
   end
 
