@@ -209,11 +209,15 @@ module ValidTestDataGenerator
 
       return if [true, false].sample
 
+      accept_application(npq_application)
+
+      return if [true, false].sample
+
       json_participant_declaration = create_started_declarations(npq_application)
 
       return if [true, false].sample
 
-      JSON.parse(json_participant_declaration)
+      deserialised_participant_declaration = JSON.parse(json_participant_declaration)
       participant_declaration = ParticipantDeclaration::NPQ
                                   .find(deserialised_participant_declaration.dig("data", "id"))
                                   .tap(&:make_eligible!)
@@ -221,6 +225,11 @@ module ValidTestDataGenerator
       return if [true, false].sample
 
       participant_declaration.make_payable!
+    end
+
+    def accept_application(npq_application)
+      NPQ::Accept.call(npq_application: npq_application)
+      npq_application
     end
 
     def create_started_declarations(npq_application)

@@ -3,6 +3,7 @@
 FactoryBot.define do
   factory :participant_profile do
     teacher_profile
+    profile_duplicity { :single }
 
     factory :ecf_participant_profile, class: ParticipantProfile::ECF do
       school_cohort
@@ -61,6 +62,14 @@ FactoryBot.define do
       after(:create) do |profile, _evaluator|
         create :email, associated_with: profile, status: "permanent-failure", tags: [:request_for_details]
       end
+    end
+
+    trait :primary_profile do
+      profile_duplicity { :primary }
+    end
+
+    trait :secondary_profile do
+      profile_duplicity { :secondary }
     end
   end
 end

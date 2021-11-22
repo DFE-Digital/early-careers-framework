@@ -19,30 +19,30 @@ coordinator = FactoryBot.create(:user, :induction_coordinator, email: "school-le
 coordinator.induction_coordinator_profile.schools = [school]
 
 mentor_profile = FactoryBot.create(
-  :participant_profile, :mentor,
+  :mentor_participant_profile,
   user: FactoryBot.create(
     :user,
     full_name: "Abdul Mentor",
     id: "51223b41-a562-4d94-b50c-0ce59a8bb34d",
   ),
-  school_cohort: school_cohort
+  school_cohort: school_cohort,
 )
 
 FactoryBot.create(
-  :participant_profile, :mentor,
+  :mentor_participant_profile,
   user: FactoryBot.create(:user, full_name: "Unrelated user", email: "unrelated@example.com"),
-  school_cohort: another_school_cohort
+  school_cohort: another_school_cohort,
 )
 
 FactoryBot.create(
-  :participant_profile, :ect,
+  :ecf_participant_profile,
   school_cohort: school_cohort,
   mentor_profile: mentor_profile,
-  user: FactoryBot.create(:user, full_name: "Joe Bloggs", email: "joe-bloggs@example.com")
+  user: FactoryBot.create(:user, full_name: "Joe Bloggs", email: "joe-bloggs@example.com"),
 )
 
 FactoryBot.create(
-  :participant_profile, :ect,
+  :ect_participant_profile,
   school_cohort: school_cohort,
-  user: FactoryBot.create(:user, full_name: "Dan Smith", email: "dan-smith@example.com")
+  user: FactoryBot.create(:user, full_name: "Dan Smith", email: "dan-smith@example.com"),
 )

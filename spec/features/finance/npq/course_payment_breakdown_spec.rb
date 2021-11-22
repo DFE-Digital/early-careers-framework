@@ -164,7 +164,7 @@ private
       .to have_sibling("dd.govuk-summary-list__value", text: expected_total_paid)
 
     expect(page.find("dt.govuk-summary-list__key", text: "Total not paid"))
-      .to have_sibling("dd.govuk-summary-list__value", text: ParticipantDeclaration::NPQ.submitted_for_lead_provider_and_course(npq_lead_provider, npq_contract.course_identifier).count)
+      .to have_sibling("dd.govuk-summary-list__value", text: ParticipantDeclaration::NPQ.for_lead_provider_and_course(npq_lead_provider, npq_contract.course_identifier).submitted.unique_id.count)
   end
 
   def then_i_should_see_correct_payment_breakdown(npq_contract)

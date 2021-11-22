@@ -1,6 +1,20 @@
 # frozen_string_literal: true
 
 module FinanceHelper
+  MILESTONE_DATES = [
+    "30.09.2021",
+    "31.10.2021",
+    "31.01.2022",
+    "30.04.2022",
+    "30.09.2022",
+    "31.01.2023",
+    "30.04.2023",
+    "31.10.2023",
+    "31.01.2024",
+    "30.04.2024",
+    "30.09.2024",
+  ].freeze
+
   def number_to_pounds(number)
     number_to_currency number, precision: 2, unit: "£"
   end
