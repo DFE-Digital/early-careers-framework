@@ -34,7 +34,6 @@ RSpec.describe Finance::NPQ::CalculationOrchestrator do
     described_class.call(
       cpd_lead_provider: cpd_lead_provider,
       contract: contract,
-      contract: contract,
       interval: Finance::Invoice.find_by_name("current").interval,
     )
   end
