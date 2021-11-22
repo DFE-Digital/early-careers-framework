@@ -691,5 +691,5 @@ LeadProvider.all.map(&:name).each do |provider|
 end
 
 NPQLeadProvider.all.map(&:name).each do |provider|
-  ValidTestDataGenerator::NPQLeadProviderPopulater.call(name: provider, total_schools: 1, participants_per_school: 50)
+  ValidTestDataGenerator::NPQLeadProviderPopulater.call(name: provider, total_schools: 1, participants_per_school: 20)
 end
