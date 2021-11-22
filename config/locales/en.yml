@@ -50,6 +50,7 @@ en:
   withdrawn_participant: Cannot perform actions on a withdrawn participant
   declaration_on_incorrect_state: "The declaration on withdrawn or deferred participant can not be accepted"
   declaration_already_voided: "Declaration is already voided"
+  declaration_not_voidable: "Declaration not voidable"
   void_last_declaration_only: "Can only void last declaration"
   schedule_missing: "The participant does not have a schedule"
   declaration_before_milestone_start: "The property '#/declaration_date' can not be before milestone start"

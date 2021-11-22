@@ -3,16 +3,17 @@
 module Schools
   module Participants
     class RemoveFromCohortComponent < BaseComponent
-      def initialize(profile:)
+      def initialize(profile:, current_user:)
         @profile = profile
+        @current_user = current_user
       end
 
     private
 
-      attr_reader :profile
+      attr_reader :current_user, :profile
 
       def manual_removal_possible?
-        !profile.completed_validation_wizard? || profile.ecf_participant_eligibility&.ineligible_status?
+        ParticipantProfile::ECFPolicy.new(current_user, profile).withdraw_record?
       end
 
       def fip?

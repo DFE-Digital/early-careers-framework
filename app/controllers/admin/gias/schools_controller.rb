@@ -2,11 +2,11 @@
 
 module Admin
   module Gias
-    class SchoolsToCloseController < Admin::BaseController
+    class SchoolsController < Admin::BaseController
       before_action { authorize :gias }
 
-      def index
-        @schools = schools_scope.schools_to_close.order(urn: :asc)
+      def show
+        @school = schools_scope.find_by(urn: params[:id])
       end
 
     private

@@ -26,6 +26,10 @@ class ParticipantProfile::ECF < ParticipantProfile
     secondary: "secondary",
   }, _suffix: "profile"
 
+  def ecf?
+    true
+  end
+
   def completed_validation_wizard?
     ecf_participant_eligibility.present? || ecf_participant_validation_data.present?
   end
@@ -37,6 +41,10 @@ class ParticipantProfile::ECF < ParticipantProfile
 
   def fundable?
     ecf_participant_eligibility&.eligible_status?
+  end
+
+  def policy_class
+    ParticipantProfile::ECFPolicy
   end
 end
 

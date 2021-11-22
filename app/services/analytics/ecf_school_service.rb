@@ -44,7 +44,7 @@ module Analytics
                 delivery_partner: school.active_partnerships.first&.delivery_partner&.name || school.partnerships.first&.delivery_partner&.name,
                 chosen_cip: school.school_cohorts.find { |sc| sc.cohort_id == current_cohort_id }&.core_induction_programme&.name,
                 active_participants: school.school_cohorts.find { |sc| sc.cohort_id == current_cohort_id }&.active_ecf_participants&.any? || false,
-                sparsity: school.local_authority_district&.district_sparsities&.find { |ds| ds.start_year <= current_cohort_year && (ds.end_year.nil? || ds.end_year > current_cohort_year) }&.any? || false,
+                sparsity: school.local_authority_district&.district_sparsities&.find { |ds| ds.start_year <= current_cohort_year && (ds.end_year.nil? || ds.end_year > current_cohort_year) }&.present? || false,
                 pupil_premium: school.pupil_premiums.find { |pp| pp.start_year == current_cohort_year }&.uplift?,
               }
             end,

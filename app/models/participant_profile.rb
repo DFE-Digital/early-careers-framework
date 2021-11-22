@@ -107,6 +107,10 @@ class ParticipantProfile < ApplicationRecord
     mentor? && user.induction_coordinator?
   end
 
+  def policy_class
+    ParticipantProfilePolicy
+  end
+
 private
 
   def update_analytics

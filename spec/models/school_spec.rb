@@ -252,12 +252,7 @@ RSpec.describe School, type: :model do
         postcode: postcode,
       )
 
-      expected_address = <<~ADDR
-        #{address_line1}
-        #{address_line2}
-        #{address_line3}
-        #{postcode}
-      ADDR
+      expected_address = [address_line1, address_line2, address_line3, postcode].compact_blank.join("\n")
       expect(school.full_address).to eq(expected_address)
     end
 
@@ -268,10 +263,7 @@ RSpec.describe School, type: :model do
         postcode: postcode,
       )
 
-      expected_address = <<~ADDR
-        #{address_line1}
-        #{postcode}
-      ADDR
+      expected_address = [address_line1, postcode].join("\n")
       expect(school.full_address).to eq(expected_address)
     end
   end

@@ -11,16 +11,6 @@ RSpec.describe ParticipantProfilePolicy, :with_default_schedules, type: :policy 
     let(:user) { create(:user, :admin) }
     it { is_expected.to permit_action(:show) }
 
-    context "ECT" do
-      let(:participant_profile) { create(:ect_participant_profile) }
-      it { is_expected.to permit_action(:destroy) }
-    end
-
-    context "mentor" do
-      let(:participant_profile) { create(:mentor_participant_profile) }
-      it { is_expected.to permit_action(:destroy) }
-    end
-
     context "NPQ" do
       let(:participant_profile) { create(:npq_participant_profile) }
       it { is_expected.to forbid_action(:destroy) }
@@ -51,9 +41,9 @@ RSpec.describe ParticipantProfilePolicy, :with_default_schedules, type: :policy 
       let(:npq_profiles_for_stis_schools) { Array.new(rand(3..5)) { create :npq_participant_profile, school: schools.sample } }
       let(:other_participant_profiles) { create_list :ecf_participant_profile, rand(2..3) }
 
-      it { is_expected.to include(*ect_profiles_for_stis_schools) }
-      it { is_expected.to include(*mentor_profiles_for_stis_schools) }
-      it { is_expected.not_to include(*npq_profiles_for_stis_schools) }
+      it { is_expected.to include(*ect_profiles_for_sits_schools) }
+      it { is_expected.to include(*mentor_profiles_for_sits_schools) }
+      it { is_expected.not_to include(*npq_profiles_for_sits_schools) }
       it { is_expected.not_to include(*other_participant_profiles) }
     end
 

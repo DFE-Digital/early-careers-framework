@@ -3,12 +3,20 @@
 <h1 class="govuk-heading-xl">GIAS changes to schools</h1>
 
 <h2 class="govuk-heading-l">
+  <%= govuk_link_to "Major school changes", admin_gias_major_school_changes_path %>
+</h2>
+<p class="govuk-body">Use this section to:</p>
+<ul class="govuk-list govuk-list--bullet">
+  <li>view schools that have recently opened or closed</li>
+  <li>view predecessor and successor schools</li>
+</ul>
+
+<h2 class="govuk-heading-l">
   <%= govuk_link_to "Schools to add (#{@schools_to_open_count})", admin_gias_schools_to_add_index_path %>
 </h2>
 <p class="govuk-body">Use this section to:</p>
 <ul class="govuk-list govuk-list--bullet">
-  <li>view schools that have recently opened</li>
-  <li>add new schools to the service</li>
+  <li>view schools that have recently opened but not yet been added to the service</li>
 </ul>
 
 <h2 class="govuk-heading-l">
@@ -16,15 +24,13 @@
 </h2>
 <p class="govuk-body">Use this section to:</p>
 <ul class="govuk-list govuk-list--bullet">
-  <li>view schools that have recently closed</li>
-  <li>action school closures</li>
+  <li>view schools that have recently closed but are not yet closed on the service</li>
 </ul>
 
 <h2 class="govuk-heading-l">
-  <%= govuk_link_to "Schools with changes (#{@schools_with_changes_count})", admin_gias_school_changes_path %>
+  <%= govuk_link_to "Schools with changes to be applied (#{@schools_with_changes_count})", admin_gias_school_changes_path %>
 </h2>
 <p class="govuk-body">Use this section to:</p>
 <ul class="govuk-list govuk-list--bullet">
   <li>view schools that have changes to their information</li>
-  <li>apply changes to school</li>
 </ul>
