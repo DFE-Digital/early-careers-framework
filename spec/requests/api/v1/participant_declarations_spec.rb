@@ -10,7 +10,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
   let(:bearer_token) { "Bearer #{token}" }
 
-  describe "post" do
+  describe "POST /api/v1/participant-declarations" do
     let(:valid_params) do
       {
         participant_id: ect_profile.user.id,
@@ -414,7 +414,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
     end
   end
 
-  describe "#void" do
+  describe "PUT /api/v1/participant-declarations/:id/void" do
     before do
       default_headers[:Authorization] = bearer_token
       default_headers[:CONTENT_TYPE] = "application/json"
@@ -444,7 +444,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         }.not_to change { declaration.reload.state }
       end
 
-      it "returns a 400" do
+      it "returns a 422" do
         put "/api/v1/participant-declarations/#{declaration.id}/void"
         expect(response.status).to eql(422)
       end
