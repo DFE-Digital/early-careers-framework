@@ -39,3 +39,6 @@ class ParticipantProfile::ECF < ParticipantProfile
     ecf_participant_eligibility&.eligible_status?
   end
 end
+
+require_dependency "participant_profile/ect"
+require_dependency "participant_profile/mentor"
