@@ -23,7 +23,7 @@ private
     return { text: "Not eligible: NQT+1", colour: "red" } if nqt_plus_one? && ineligible?
     return { text: "Not eligible: No QTS", colour: "red" } if participant_has_no_qts? && ineligible?
     return { text: "Eligible to start: ERO", colour: "green" } if ineligible? && mentor_was_in_early_rollout? && on_fip?
-    return { text: "Eligible to start", colour: "green" } if ineligible? && mentor_was_in_early_rollout?
+    return { text: "Eligible to start", colour: "green" } if ineligible? && (mentor_was_in_early_rollout? || mentor_with_duplicate_profile?)
     return { text: "Not eligible", colour: "red" } if ineligible?
     return { text: "Contacted for information", colour: "grey" } if latest_email&.delivered?
     return { text: "Check email address", colour: "grey" } if latest_email&.failed?
@@ -48,7 +48,13 @@ private
   def mentor_was_in_early_rollout?
     return unless profile.mentor?
 
-    profile.ecf_participant_eligibility.previous_participation_reason?
+    profile.ecf_participant_eligibility&.previous_participation_reason?
+  end
+
+  def mentor_with_duplicate_profile?
+    return unless profile.mentor?
+
+    profile.ecf_participant_eligibility&.duplicate_profile_reason?
   end
 
   def on_fip?

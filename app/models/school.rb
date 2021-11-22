@@ -109,16 +109,6 @@ class School < ApplicationRecord
     school_cohorts.find_by(cohort: cohort)&.ecf_participant_profiles&.mentors&.active_record || []
   end
 
-  def full_address
-    address = <<~ADDRESS
-      #{address_line1}
-      #{address_line2}
-      #{address_line3}
-      #{postcode}
-    ADDRESS
-    address.squeeze("\n")
-  end
-
   def registered?
     induction_coordinator_profiles.any?
   end

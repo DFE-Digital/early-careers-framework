@@ -188,6 +188,24 @@ RSpec.describe "Participants API", type: :request do
             end
           end
         end
+        context "when the participant is withdrawn with this lead provider but has another active profile not associated with the provider" do
+          let!(:active_profile_with_other_provider) { create(:participant_profile, :ect, teacher_profile: withdrawn_ect_profile_record.teacher_profile) }
+
+          it "shows the participant as withdrawn" do
+            get "/api/v1/participants/ecf"
+            matching_records = parsed_response["data"].select { |record| record["id"] == active_profile_with_other_provider.user.id }
+            expect(matching_records.size).to eql 1
+            expect(matching_records.first["attributes"]["status"]).to eql "withdrawn"
+          end
+
+          it "does not include personal information of the participant" do
+            get "/api/v1/participants/ecf"
+            matching_records = parsed_response["data"].select { |record| record["id"] == active_profile_with_other_provider.user.id }
+            expect(matching_records.first["attributes"]["full_name"]).to be_nil
+            expect(matching_records.first["attributes"]["email"]).to be_nil
+            expect(matching_records.first["attributes"]["teacher_reference_number"]).to be_nil
+          end
+        end
       end
 
       describe "CSV Index API" do

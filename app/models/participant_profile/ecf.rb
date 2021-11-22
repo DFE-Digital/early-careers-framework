@@ -11,14 +11,20 @@ class ParticipantProfile::ECF < ParticipantProfile
   has_one :ecf_participant_eligibility, foreign_key: :participant_profile_id
   has_one :ecf_participant_validation_data, foreign_key: :participant_profile_id
 
-  scope :ineligible_status, -> { joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :ineligible }) }
+  scope :ineligible_status, -> { joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :ineligible }).where.not(ecf_participant_eligibility: { reason: :duplicate_profile }) }
   scope :eligible_status, lambda {
     joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :eligible })
-                                       .or(joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :ineligible, reason: :previous_participation }))
+                                       .or(joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :ineligible, reason: %i[previous_participation duplicate_profile] }))
   }
   scope :current_cohort, -> { joins(:school_cohort).where(school_cohort: { cohort_id: Cohort.current.id }) }
   scope :contacted_for_info, -> { where.missing(:ecf_participant_validation_data) }
   scope :details_being_checked, -> { joins(:ecf_participant_validation_data).left_joins(:ecf_participant_eligibility).where("ecf_participant_eligibilities.id IS NULL OR ecf_participant_eligibilities.status = 'manual_check'") }
+
+  enum profile_duplicity: {
+    single: "single",
+    primary: "primary",
+    secondary: "secondary",
+  }, _suffix: "profile"
 
   def ecf?
     true

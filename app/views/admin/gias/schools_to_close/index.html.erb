@@ -15,7 +15,7 @@
       <% @schools.each do |school| %>
         <tr class="govuk-table__row">
           <td class="govuk-table__cell">
-            <%= govuk_link_to admin_gias_schools_to_close_path(id: school.urn) do %>
+            <%= govuk_link_to admin_gias_school_path(id: school.urn) do %>
               <span class="govuk-visually-hidden">View details of closed school </span><%= school.urn %>
             <% end %>
           </td>
