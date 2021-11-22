@@ -10,7 +10,7 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
   let(:mentor_profile) { create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
   let!(:mentor_user) { mentor_profile.user }
   let!(:mentor_user_2) { create(:participant_profile, :mentor, school_cohort: school_cohort).user }
-  let(:ect_profile) { create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, mentor_profile: mentor_user.mentor_profile, school_cohort: school_cohort) }
+  let(:ect_profile) { create(:participant_profile, :ect, mentor_profile: mentor_user.mentor_profile, school_cohort: school_cohort) }
   let!(:ect_user) { ect_profile.user }
   let!(:withdrawn_ect) { create(:participant_profile, :ect, :withdrawn_record, school_cohort: school_cohort).user }
   let!(:unrelated_mentor) { create(:participant_profile, :mentor, school_cohort: another_cohort).user }
