@@ -109,14 +109,6 @@ module ManageTrainingSteps
     @eligible_ect_without_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Eligible Without-mentor"), school_cohort: @school_cohort)
   end
 
-  def and_i_have_added_an_eligible_ect_with_mentor
-    @eligible_ect_with_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Eligible With-mentor"), mentor_profile_id: @contacted_for_info_mentor.id, school_cohort: @school_cohort)
-  end
-
-  def and_i_have_added_an_eligible_ect_without_mentor
-    @eligible_ect_without_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Eligible Without-mentor"), school_cohort: @school_cohort)
-  end
-
   def and_i_have_added_an_eligible_ect
     @eligible_ect = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: @school_cohort)
   end
@@ -149,17 +141,9 @@ module ManageTrainingSteps
     @contacted_for_info_ect_with_mentor = create(:ect_participant_profile, :email_sent, request_for_details_sent_at: 5.days.ago, user: create(:user, full_name: "CFI With-mentor"), mentor_profile_id: @participant_profile_mentor.id, school_cohort: @school_cohort)
   end
 
-  def and_i_have_added_a_contacted_for_info_ect_with_mentor
-    @contacted_for_info_ect_with_mentor = create(:ect_participant_profile, :email_sent, request_for_details_sent_at: 5.days.ago, user: create(:user, full_name: "CFI With-mentor"), mentor_profile_id: @participant_profile_mentor.id, school_cohort: @school_cohort)
-  end
-
   def and_i_have_added_an_ero_mentor
     @ero_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: @school_cohort)
     @ero_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "previous_participation")
-  end
-
-  def and_i_have_added_a_contacted_for_info_ect_without_mentor
-    @contacted_for_info_ect_without_mentor = create(:ect_participant_profile, :email_bounced, request_for_details_sent_at: 5.days.ago, user: create(:user, full_name: "CFI Without-mentor"), school_cohort: @school_cohort)
   end
 
   def and_i_have_added_a_contacted_for_info_ect_without_mentor
