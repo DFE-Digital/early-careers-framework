@@ -58,7 +58,7 @@ Feature: Nominate induction tutor
 
     Given user was created with email "different-user-type@example.com"
     And teacher_profile was created with created user
-    And participant_profile was created as "ect" with created teacher_profile
+    And ect_participant_profile was created with created teacher_profiles
     When I click on "link" containing "Change the name"
     And I type "John Wick" into "name input"
     And I type "different-user-type@example.com" into "email input"
