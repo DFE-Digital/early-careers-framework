@@ -1,10 +1,10 @@
 <dl class="govuk-summary-list govuk-summary-list--no-border">
   <div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key">
-      <%=t("finance.provider") %>
+      <%= t("finance.provider") %>
     </dt>
     <dd class="govuk-summary-list__value">
-      <%=name %>
+      <%= name %>
     </dd>
   </div>
 </dl>
@@ -14,7 +14,7 @@
       <%=t("finance.contract.recruitment_target") %>
     </dt>
     <dd class="govuk-summary-list__value">
-      <%=recruitment_target %>
+      <%= recruitment_target %>
     </dd>
   </div>
   <% if revised_target.present? %>
@@ -23,13 +23,13 @@
         <%=t("finance.contract.revised_target") %>
       </dt>
       <dd class="govuk-summary-list__value">
-        <%=revised_target %>
+        <%= revised_target %>
       </dd>
     </div>
   <% end %>
   <div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key">
-      <%=t("finance.contract.uplift_target") %>
+      <%= t("finance.contract.uplift_target") %>
     </dt>
     <dd class="govuk-summary-list__value">
       <%= float_to_percentage uplift_target %>
@@ -37,7 +37,7 @@
   </div>
   <div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key">
-      <%=t("finance.contract.uplift_amount") %>
+      <%= t("finance.contract.uplift_amount") %>
     </dt>
     <dd class="govuk-summary-list__value">
       <%= number_to_pounds uplift_amount %>
@@ -57,10 +57,10 @@
 <table class="govuk-table">
   <thead class="govuk-table__head">
   <tr class="govuk-table__row">
-    <th class="govuk-table__header"><%=t "finance.contract.band" %></th>
-    <th class="govuk-table__header govuk-table__cell--numeric"><%=t "finance.contract.bands.min" %></th>
-    <th class="govuk-table__header govuk-table__cell--numeric"><%=t "finance.contract.bands.max" %></th>
-    <th class="govuk-table__header govuk-table__cell--numeric"><%=t "finance.per_participant"%></th>
+    <th class="govuk-table__header"><%= t("finance.contract.band") %></th>
+    <th class="govuk-table__header govuk-table__cell--numeric"><%= t("finance.contract.bands.min") %></th>
+    <th class="govuk-table__header govuk-table__cell--numeric"><%= t("finance.contract.bands.max") %></th>
+    <th class="govuk-table__header govuk-table__cell--numeric"><%= t("finance.per_participant")%></th>
   </tr>
   </thead>
   <tbody class="govuk-table__body">
