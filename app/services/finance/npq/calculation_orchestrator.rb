@@ -6,17 +6,18 @@ module Finance
   module NPQ
     class CalculationOrchestrator
       class << self
-        def call(npq_contract:, aggregator:, calculator:)
-          new(aggregator: aggregator, calculator: calculator).call(npq_contract)
+        def call(npq_contract:, aggregator:, calculator:, interval:)
+          new(aggregator: aggregator, calculator: calculator)
+            .call(contract: npq_contract, interval: interval)
         end
       end
 
-      def call(npq_contract)
+      def call(contract:, interval:)
         calculator
           .call(
-            contract: npq_contract,
-            course_identifier: npq_contract.course_identifier,
-            aggregations: aggregations_for(npq_contract),
+            contract: contract,
+            course_identifier: contract.course_identifier,
+            aggregations: aggregations_for(contract: contract, interval: interval),
           )
       end
 
@@ -29,10 +30,11 @@ module Finance
         self.calculator        = calculator
       end
 
-      def aggregations_for(npq_contract)
+      def aggregations_for(contract:, interval:)
         aggregator.call(
-          cpd_lead_provider: npq_contract.npq_lead_provider.cpd_lead_provider,
-          course_identifier: npq_contract.course_identifier,
+          cpd_lead_provider: contract.npq_lead_provider.cpd_lead_provider,
+          course_identifier: contract.course_identifier,
+          interval: interval,
         )
       end
     end

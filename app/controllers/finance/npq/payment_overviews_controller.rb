@@ -6,6 +6,7 @@ module Finance
   module NPQ
     class PaymentOverviewsController < BaseController
       def show
+
         @npq_lead_provider = lead_provider_scope.find(params[:id])
         @breakdowns        = Finance::NPQ::CalculationOverviewOrchestrator.call(
           cpd_lead_provider: @npq_lead_provider.cpd_lead_provider,
@@ -13,6 +14,7 @@ module Finance
             aggregator: CurrentMilestoneParticipantDeclarationAggregator,
             calculator: PaymentCalculator::NPQ::PaymentCalculation,
           ),
+          interval: Finance::Invoice.find_by_name("current").interval,
         )
       end
 
