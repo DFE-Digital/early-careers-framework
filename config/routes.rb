@@ -193,9 +193,11 @@ Rails.application.routes.draw do
 
     namespace :gias do
       resources :home, only: :index, path: "/"
+      resources :schools, only: :show, path: "schools"
       resources :school_changes, only: %i[index show], path: "school-changes"
-      resources :schools_to_add, only: %i[index show], path: "schools-to-add"
-      resources :schools_to_close, only: %i[index show], path: "schools-to-close"
+      resources :schools_to_add, only: %i[index], path: "schools-to-add"
+      resources :schools_to_close, only: %i[index], path: "schools-to-close"
+      resources :major_school_changes, only: %i[index], path: "major-school-changes"
     end
 
     scope :suppliers, module: "suppliers" do

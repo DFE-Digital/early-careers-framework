@@ -1,0 +1,145 @@
+<% content_for :title, @school.name_and_urn %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: :back) %>
+
+<span class="govuk-caption-l"><%= @school.name_and_urn %></span>
+
+<h1 class="govuk-heading-xl">School details</h1>
+<% if @school.counterpart&.eligible? %>
+  <p class="govuk-body">
+    <%= govuk_link_to "View live school", admin_school_path(id: @school.counterpart.slug), target: "_blank" %>
+  </p>
+<% end %>
+<p class="govuk-body">
+  <%= govuk_link_to "View school details on GIAS", "https://get-information-schools.service.gov.uk/Establishments/Establishment/Details/#{@school.urn}", target: "_blank" %>
+</p>
+<dl class="govuk-summary-list">
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Name
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= @school.name %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      URN
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= @school.urn %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      UKPRN
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= @school.ukprn %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Phase of education
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= @school.school_phase_name %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      School type
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= @school.school_type_name %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Establishment status
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= render Admin::Gias::SchoolStatusTag.new(school: @school) %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Local Authority
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <% if @school.local_authority.present? %>
+        <%= "#{@school.local_authority.name} (#{@school.la_code})" %>
+      <% else %>
+        <%= "(#{@school.la_code})" %>
+      <% end %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Administrative district
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= "#{@school.administrative_district_name} (#{@school.administrative_district_code})" %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Address
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= @school.full_address.gsub(/\n/, "<br/>").html_safe %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Primary contact email
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= @school.primary_contact_email %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Secondary contact email
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= @school.secondary_contact_email %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      School website
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= @school.school_website %>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Section 41 approval
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= @school.section_41_approved? %>
+    </dd>
+  </div>
+</dl>
+
+<% if @school.school_links.any? %>
+  <h2 class="govuk-heading-l">School links</h2>
+  <dl class="govuk-summary-list">
+    <% @school.school_links.order(created_at: :desc).each do |link| %>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          <%= link.link_type %>
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <% if link.link_school.present? %>
+            <%= govuk_link_to link.link_school.name_and_urn,
+              admin_gias_school_path(id: link.link_school.urn) %>
+          <% else %>
+            <%= "URN: #{link.link_urn} (not on service)" %>
+          <% end %>
+        </dd>
+      </div>
+    <% end %>
+  </dl>
+<% end %>
