@@ -7,10 +7,10 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
   include_context "lead provider profiles and courses"
   let(:parsed_response) { JSON.parse(response.body) }
 
-  describe "post" do
-    let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
-    let(:bearer_token) { "Bearer #{token}" }
+  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
+  let(:bearer_token) { "Bearer #{token}" }
 
+  describe "POST /api/v1/participant-declarations" do
     let(:valid_params) do
       {
         participant_id: ect_profile.user.id,
@@ -411,6 +411,43 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
     it "ignores pagination parameters" do
       get "/api/v1/participant-declarations.csv", params: { page: { per_page: 1, page: 1 } }
       expect(parsed_response.length).to eql 2
+    end
+  end
+
+  describe "PUT /api/v1/participant-declarations/:id/void" do
+    before do
+      default_headers[:Authorization] = bearer_token
+      default_headers[:CONTENT_TYPE] = "application/json"
+    end
+
+    context "when declaration is submitted" do
+      let(:declaration) { create(:ect_participant_declaration, cpd_lead_provider: cpd_lead_provider) }
+
+      it "can be voided" do
+        expect {
+          put "/api/v1/participant-declarations/#{declaration.id}/void"
+        }.to change { declaration.reload.state }.from("submitted").to("voided")
+      end
+
+      it "returns a 200" do
+        put "/api/v1/participant-declarations/#{declaration.id}/void"
+        expect(response.status).to eql(200)
+      end
+    end
+
+    context "when declaration is payable" do
+      let(:declaration) { create(:ect_participant_declaration, :payable, cpd_lead_provider: cpd_lead_provider) }
+
+      it "cannot be voided" do
+        expect {
+          put "/api/v1/participant-declarations/#{declaration.id}/void"
+        }.not_to change { declaration.reload.state }
+      end
+
+      it "returns a 422" do
+        put "/api/v1/participant-declarations/#{declaration.id}/void"
+        expect(response.status).to eql(422)
+      end
     end
   end
 
