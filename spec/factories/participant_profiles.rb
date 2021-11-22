@@ -5,13 +5,13 @@ FactoryBot.define do
     teacher_profile
     profile_duplicity { :single }
 
-    factory :ecf_participant_profile, class: ParticipantProfile::ECF do
+    factory :ecf_participant_profile, class: "ParticipantProfile::ECF" do
       school_cohort
       teacher_profile { association :teacher_profile, school: school_cohort.school }
       schedule { Finance::Schedule::ECF.default || create(:ecf_schedule) }
 
-      factory :ect_participant_profile, class: ParticipantProfile::ECT
-      factory :mentor_participant_profile, class: ParticipantProfile::Mentor
+      factory :ect_participant_profile, class: "ParticipantProfile::ECT"
+      factory :mentor_participant_profile, class: "ParticipantProfile::Mentor"
     end
 
     trait :ecf_participant_validation_data do
@@ -22,7 +22,7 @@ FactoryBot.define do
       ecf_participant_eligibility { association :ecf_participant_eligibility }
     end
 
-    factory :npq_participant_profile, class: ParticipantProfile::NPQ do
+    factory :npq_participant_profile, class: "ParticipantProfile::NPQ" do
       npq_application { association :npq_application, user: teacher_profile.user, school_urn: rand(100_000..999_999) }
       schedule do |participant_profile|
         if Finance::Schedule::NPQLeadership::IDENTIFIERS.include?(participant_profile.npq_application.npq_course.identifier)
