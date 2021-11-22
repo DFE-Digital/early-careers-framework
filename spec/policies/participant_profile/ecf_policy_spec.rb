@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
   subject { described_class.new(user, participant_profile) }
 
-  let(:participant_profile) { create(:participant_profile, :ecf) }
+  let(:participant_profile) { create(:ecf_participant_profile) }
 
   context "being an admin" do
     let(:user) { create(:user, :admin) }
