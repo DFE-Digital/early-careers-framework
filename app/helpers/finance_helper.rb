@@ -12,7 +12,7 @@ module FinanceHelper
   def aggregated_payment(breakdown_array)
     breakdown_array.map { |breakdown|
       breakdown[:service_fees][:monthly] + breakdown[:output_payments][:subtotal]
-    }.inject(&:+)
+    }.inject(0, &:+)
   end
 
   # TODO: The VAT flag is set on the ECF lead_provider and not on the cpd_lead_provider table. Once someone is VAT
