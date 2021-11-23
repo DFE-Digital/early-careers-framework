@@ -254,7 +254,7 @@ module Participants
     end
 
     def store_analytics(matched:)
-      Analytics::ECFValidationService.record_validation(
+      Analytics::RecordValidationJob.perform_later(
         participant_profile: participant_profile,
         real_time_attempts: [@participant_validation_form.validation_attempts, 1].max,
         real_time_success: matched,

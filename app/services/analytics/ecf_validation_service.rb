@@ -40,7 +40,6 @@ module Analytics
 
         record.save!
       end
-      handle_asynchronously :record_validation
 
     private
 
