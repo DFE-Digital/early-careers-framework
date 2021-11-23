@@ -225,7 +225,7 @@ RSpec.describe StoreParticipantEligibility do
       context "when no record existed previously" do
         it "does not send an email" do
           service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
-          expect(IneligibleParticipantMailer).not_to delay_email_delivery_of("")
+          expect(IneligibleParticipantMailer).not_to have_enqueued_mail
         end
       end
 
@@ -234,7 +234,7 @@ RSpec.describe StoreParticipantEligibility do
 
         it "does not send an email" do
           service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
-          expect(IneligibleParticipantMailer).not_to delay_email_delivery_of("")
+          expect(IneligibleParticipantMailer).not_to have_enqueued_mail
         end
       end
 
@@ -243,7 +243,7 @@ RSpec.describe StoreParticipantEligibility do
 
         it "does not send an email" do
           service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
-          expect(IneligibleParticipantMailer).not_to delay_email_delivery_of("")
+          expect(IneligibleParticipantMailer).not_to have_enqueued_mail
         end
       end
 
@@ -252,7 +252,7 @@ RSpec.describe StoreParticipantEligibility do
 
         it "sends an ect now eligible email" do
           service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
-          expect(IneligibleParticipantMailer).to delay_email_delivery_of(:ect_now_eligible_previous_induction_email)
+          expect(IneligibleParticipantMailer).to have_enqueued_mail
         end
 
         context "when the school is doing CIP" do
@@ -260,7 +260,7 @@ RSpec.describe StoreParticipantEligibility do
 
           it "does not send an email" do
             service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
-            expect(IneligibleParticipantMailer).not_to delay_email_delivery_of("")
+            expect(IneligibleParticipantMailer).not_to have_enqueued_mail
           end
         end
       end
