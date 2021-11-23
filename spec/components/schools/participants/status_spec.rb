@@ -150,6 +150,29 @@ RSpec.describe Schools::Participants::Status, type: :view_component, with_featur
         end
       end
 
+      context "when the participant is a duplicate profile" do
+        let(:profile) { create(:participant_profile, :mentor, :secondary_profile, school_cohort: school_cohort) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, participant_profile: profile) }
+
+        before do
+          profile.reload
+        end
+
+        it "displays the eligible fip no partner content" do
+          expect(rendered).to have_content I18n.t "schools.participants.status.eligible_fip_no_partner.header"
+          expect(rendered).to have_content I18n.t "schools.participants.status.eligible_fip_no_partner.content"
+        end
+
+        context "when the school is in a partnership" do
+          let!(:partnership) { create(:partnership, school: school_cohort.school, cohort: school_cohort.cohort) }
+
+          it "displays the eligible fip content" do
+            expect(rendered).to have_content I18n.t "schools.participants.status.eligible_fip.header"
+            expect(rendered).to have_content I18n.t "schools.participants.status.eligible_fip.content"
+          end
+        end
+      end
+
       context "when the participant has active flags and manual check status" do
         let!(:eligibility) { create(:ecf_participant_eligibility, active_flags: true, participant_profile: profile) }
 

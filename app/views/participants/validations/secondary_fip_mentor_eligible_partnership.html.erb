@@ -1,0 +1,11 @@
+<% title = "You’re eligible for this programme" %>
+<% content_for :title, title %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= govuk_panel title_text: title, text: nil, classes: "govuk-!-margin-bottom-8" %>
+    <h2 class="govuk-heading-m">What happens next</h2>
+    <p class="govuk-body">Our checks show you’re also registered to mentor ECTs at <%= @school_names.join(" and ") %>.</p>
+    <p class="govuk-body">Your schools have chosen <%= @partnership.delivery_partner.name %> and <%= @partnership.lead_provider.name %> to deliver your training programme. These organisations will contact you directly with more information. They can also answer any questions you may have about your training materials.</p>
+  </div>
+</div>
