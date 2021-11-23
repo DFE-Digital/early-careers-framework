@@ -10,9 +10,10 @@ module Api
       include ApiFilter
 
       def create
-        params = HashWithIndifferentAccess.new({ cpd_lead_provider: cpd_lead_provider })
-                   .merge(permitted_params["attributes"] || {})
+        params = HashWithIndifferentAccess.new({ cpd_lead_provider: cpd_lead_provider }).merge(permitted_params["attributes"] || {})
+
         log_schema_validation_results
+
         render json: RecordParticipantDeclaration.call(params)
       end
 
