@@ -66,7 +66,7 @@ private
   def template_type_for(profile)
     type = profile.participant_type
     type = :sit_mentor if type == :mentor && profile.user.induction_coordinator?
-    "#{type}_#{profile.school_cohort.cip? ? 'cip' : 'fip'}"
+    "#{type}_#{profile.school_cohort.cip? ? 'cip' : 'fip'}".to_sym
   end
 
   def what_each_person_does_url
