@@ -22,8 +22,8 @@ module Finance
     attr_reader :cpd_lead_provider, :recorder
 
     def initialize(cpd_lead_provider:, recorder: ParticipantDeclaration::ECF)
-      self.cpd_lead_provider = cpd_lead_provider
-      self.recorder = recorder
+      @cpd_lead_provider = cpd_lead_provider
+      @recorder = recorder
     end
 
     def aggregators(event_type:, interval:)

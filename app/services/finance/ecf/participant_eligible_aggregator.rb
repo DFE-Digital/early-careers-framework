@@ -4,7 +4,7 @@ module Finance
   module ECF
     class ParticipantEligibleAggregator < Finance::ParticipantAggregator
       class << self
-        def call(cpd_lead_provider:, recorder: ParticipantDeclaration::ECF, event_type: :started, interval: nil)
+        def call(cpd_lead_provider:, interval: nil, recorder: ParticipantDeclaration::ECF, event_type: :started)
           new(cpd_lead_provider: cpd_lead_provider, recorder: recorder).call(event_type: event_type, interval: interval)
         end
 
@@ -23,11 +23,11 @@ module Finance
 
     private
 
-      attr_accessor :cpd_lead_provider, :recorder
+      attr_reader :cpd_lead_provider, :recorder
 
       def initialize(cpd_lead_provider:, recorder: ParticipantDeclaration::ECF)
-        self.cpd_lead_provider = cpd_lead_provider
-        self.recorder          = recorder
+        @cpd_lead_provider = cpd_lead_provider
+        @recorder = recorder
       end
     end
   end
