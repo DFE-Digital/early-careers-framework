@@ -1482,7 +1482,8 @@
           "participant_type",
           "cohort",
           "status",
-          "training_status"
+          "training_status",
+          "updated_at"
         ],
         "properties": {
           "id": {
@@ -1582,6 +1583,12 @@
               "deferred",
               "withdrawn"
             ]
+          },
+          "updated_at": {
+            "description": "The date the ECF participant was last updated",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
           }
         }
       },
@@ -1979,7 +1986,8 @@
                   "eligible_for_funding": true,
                   "pupil_premium_uplift": false,
                   "sparsity_uplift": true,
-                  "training_status": "active"
+                  "training_status": "active",
+                  "updated_at": "2021-05-31T02:22:32.000Z"
                 }
               },
               {
@@ -1997,7 +2005,8 @@
                   "eligible_for_funding": null,
                   "pupil_premium_uplift": true,
                   "sparsity_uplift": false,
-                  "training_status": "deferred"
+                  "training_status": "deferred",
+                  "updated_at": "2021-05-31T02:22:32.000Z"
                 }
               },
               {
@@ -2016,7 +2025,8 @@
                   "eligible_for_funding": null,
                   "pupil_premium_uplift": null,
                   "sparsity_uplift": null,
-                  "training_status": "withdrawn"
+                  "training_status": "withdrawn",
+                  "updated_at": "2021-05-31T02:22:32.000Z"
                 }
               }
             ]
@@ -2097,7 +2107,8 @@
                   "npq_courses": [
                     "npq-leading-teaching"
                   ],
-                  "teacher_reference_number": "1234567"
+                  "teacher_reference_number": "1234567",
+                  "updated_at": "2021-05-31T02:21:32.000Z"
                 }
               }
             ]
@@ -2118,7 +2129,7 @@
             }
           }
         },
-        "example": "id,participant_id,declaration_type,course_identifier,eligible_for_payment,declaration_date,voided,state\nc88eb9a9-773a-4f53-9716-121b981154d8,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false\n31a521ec-82c5-451c-aea3-426523f1facc,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false\n"
+        "example": "id,participant_id,declaration_type,course_identifier,eligible_for_payment,declaration_date,voided,state,updated_at\nc88eb9a9-773a-4f53-9716-121b981154d8,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false,2021-05-31T02:22:32.000Z\n31a521ec-82c5-451c-aea3-426523f1facc,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false,2021-05-31T02:22:32.000Z\n"
       },
       "MultipleParticipantDeclarationsResponse": {
         "description": "A list of participant declarations",

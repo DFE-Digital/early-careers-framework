@@ -16,3 +16,4 @@ properties:
           email: "isabelle.macdonald2@some-school.example.com"
           npq_courses: ["npq-leading-teaching"]
           teacher_reference_number: "1234567"
+          updated_at: "2021-05-31T02:21:32.000Z"
