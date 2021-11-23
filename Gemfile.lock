@@ -303,6 +303,7 @@ GEM
     marcel (1.0.2)
     matrix (0.4.2)
     memoist (0.16.2)
+    memory_profiler (1.0.0)
     method_source (1.0.0)
     mini_mime (1.1.2)
     mini_portile2 (2.6.1)
@@ -365,6 +366,8 @@ GEM
     rack (2.2.3)
     rack-attack (6.5.0)
       rack (>= 1.0, < 3)
+    rack-mini-profiler (2.3.3)
+      rack (>= 1.2.0)
     rack-proxy (0.7.0)
       rack
     rack-test (1.1.0)
@@ -532,6 +535,7 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    stackprof (0.2.17)
     strong_migrations (0.7.8)
       activerecord (>= 5)
     terminal-table (3.0.2)
@@ -628,6 +632,7 @@ DEPENDENCIES
   lograge (>= 0.11.2)
   logstash-event
   mail-notify (>= 1.0.3)
+  memory_profiler
   multi_json
   open_api-rswag-api (>= 0.1.0)
   open_api-rswag-specs (>= 0.1.0)
@@ -644,6 +649,7 @@ DEPENDENCIES
   pundit
   pundit-matchers (~> 1.7.0)
   rack-attack (>= 6.5.0)
+  rack-mini-profiler
   rails (~> 6.1.4, >= 6.1.4.1)
   rails-controller-testing (>= 1.0.5)
   ransack
@@ -663,6 +669,7 @@ DEPENDENCIES
   simplecov
   spring
   spring-watcher-listen (~> 2.0.0)
+  stackprof
   strong_migrations
   terminal-table
   timecop
