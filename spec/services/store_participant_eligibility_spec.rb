@@ -224,8 +224,9 @@ RSpec.describe StoreParticipantEligibility do
     context "when eligible status is determined" do
       context "when no record existed previously" do
         it "does not send an email" do
-          service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
-          expect(IneligibleParticipantMailer).not_to have_enqueued_mail
+          expect {
+            service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+          }.not_to have_enqueued_mail
         end
       end
 
@@ -233,8 +234,9 @@ RSpec.describe StoreParticipantEligibility do
         let!(:manual_check_record) { create(:ecf_participant_eligibility, :manual_check, participant_profile: ect_profile) }
 
         it "does not send an email" do
-          service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
-          expect(IneligibleParticipantMailer).not_to have_enqueued_mail
+          expect {
+            service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+          }.not_to have_enqueued_mail
         end
       end
 
@@ -242,8 +244,9 @@ RSpec.describe StoreParticipantEligibility do
         let!(:ineligible_record) { create(:ecf_participant_eligibility, :ineligible, reason: "no_qts", participant_profile: ect_profile) }
 
         it "does not send an email" do
-          service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
-          expect(IneligibleParticipantMailer).not_to have_enqueued_mail
+          expect {
+            service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+          }.not_to have_enqueued_mail
         end
       end
 
@@ -251,16 +254,18 @@ RSpec.describe StoreParticipantEligibility do
         let!(:ineligible_record) { create(:ecf_participant_eligibility, :ineligible, reason: "previous_induction", participant_profile: ect_profile) }
 
         it "sends an ect now eligible email" do
-          service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
-          expect(IneligibleParticipantMailer).to have_enqueued_mail
+          expect {
+            service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+          }.to have_enqueued_mail(IneligibleParticipantMailer)
         end
 
         context "when the school is doing CIP" do
           let(:school_cohort) { create(:school_cohort, :cip, school: school) }
 
           it "does not send an email" do
-            service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
-            expect(IneligibleParticipantMailer).not_to have_enqueued_mail
+            expect {
+              service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+            }.not_to have_enqueued_mail
           end
         end
       end
