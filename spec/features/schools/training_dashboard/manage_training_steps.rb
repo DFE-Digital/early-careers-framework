@@ -203,6 +203,10 @@ module ManageTrainingSteps
     click_on "Manage your schools"
   end
 
+  def then_i_should_be_on_school_cohorts_page
+    expect(current_path).to eq("/schools/#{@school_cohort.school.slug}")
+  end
+
   def then_i_should_be_on_school_cohorts_1_page
     expect(current_path).to eq("/schools/111111-test-school-1")
   end
@@ -271,6 +275,17 @@ module ManageTrainingSteps
   def and_i_have_added_a_details_being_checked_mentor
     @details_being_checked_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "DBC Mentor"), school_cohort: @school_cohort)
     @details_being_checked_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
+  end
+
+  def and_it_should_show_the_withdrawn_participant
+    expect(page).to have_text("No longer being trained")
+    expect(page).to have_text("Sally ECT")
+    expect(page).to have_text("Big Provider Ltd")
+    expect(page).to have_text("Amazing Delivery Team")
+  end
+
+  def and_it_should_not_allow_a_sit_edit_the_participant_details
+    expect(page).not_to have_link("Change")
   end
 
   # When_steps
@@ -647,6 +662,10 @@ module ManageTrainingSteps
     expect(page).to have_text(@school_cohort.lead_provider.name)
     expect(page).to have_text("Delivery partner")
     expect(page).to have_text(@school_cohort.delivery_partner.name)
+  end
+
+  def then_they_have_been_withdrawn_by_the_provider
+    @ect.training_status_withdrawn!
   end
 
   # Set_steps

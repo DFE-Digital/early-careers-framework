@@ -29,4 +29,23 @@ RSpec.feature "School Tutors should be abled to manage schools", type: :feature,
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "School Cohorts with Breadcrumbs"
   end
+
+  scenario "view withdrawn participants" do
+    given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+    and_i_am_signed_in_as_an_induction_coordinator
+    and_i_have_added_an_ect
+    then_they_have_been_withdrawn_by_the_provider
+
+    when_i_visit_manage_training_dashboard
+    then_i_am_taken_to_fip_induction_dashboard
+    and_it_should_show_the_withdrawn_participant
+    and_the_page_should_be_accessible
+    and_percy_should_be_sent_a_snapshot_named "Withdrawn participant shown on dashboard"
+
+    when_i_click_on_details
+    then_i_am_taken_to_view_details_page
+    and_it_should_not_allow_a_sit_edit_the_participant_details
+    and_the_page_should_be_accessible
+    and_percy_should_be_sent_a_snapshot_named "Participant details without change links"
+  end
 end
