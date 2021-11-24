@@ -80,6 +80,16 @@ It auto-generates swagger/*/api_spec.json from the schema files located in spec/
 bundle exec rake rswag:specs:swaggerize
 ```
 
+## Importing swagger JSON spec into Postman
+
+To import the JSON spec into Postman (or equivalent) copy from:
+
+```
+https://github.com/DFE-Digital/early-careers-framework/blob/develop/swagger/v1/api_spec.json
+```
+
+Ideally change baseUrl to http://localhost:3000, since sandbox is used for testing. A bearer token is required per request and should be created in each respective environment e.g. development, sandbox
+
 ## Linting
 
 The precommit hook will ensure linting passes. See [the hook](./.githooks/pre-commit) for details.

@@ -223,10 +223,10 @@ RSpec.describe "Participants API", type: :request do
           expect(ect_row["cohort"]).to eql partnership.cohort.start_year.to_s
           expect(ect_row["teacher_reference_number"]).to eql ect.teacher_profile.trn
           expect(ect_row["teacher_reference_number_validated"]).to eql "false"
-          expect(mentor_row["eligible_for_funding"]).to be_empty
-          expect(mentor_row["pupil_premium_uplift"]).to eql "false"
-          expect(mentor_row["sparsity_uplift"]).to eql "false"
-          expect(mentor_row["training_status"]).to eql "active"
+          expect(ect_row["eligible_for_funding"]).to be_empty
+          expect(ect_row["pupil_premium_uplift"]).to eql "false"
+          expect(ect_row["sparsity_uplift"]).to eql "false"
+          expect(ect_row["training_status"]).to eql "active"
 
           withdrawn_record_row = parsed_response.find { |row| row["id"] == withdrawn_ect_profile_record.user.id }
           expect(withdrawn_record_row).not_to be_nil

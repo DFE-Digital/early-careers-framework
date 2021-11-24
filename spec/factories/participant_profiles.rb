@@ -19,6 +19,7 @@ FactoryBot.define do
 
     schedule
     teacher_profile
+    profile_duplicity { :single }
 
     transient do
       participant_type {}
@@ -93,6 +94,14 @@ FactoryBot.define do
       after(:create) do |profile, _evaluator|
         create :email, associated_with: profile, status: "permanent-failure", tags: [:request_for_details]
       end
+    end
+
+    trait :primary_profile do
+      profile_duplicity { :primary }
+    end
+
+    trait :secondary_profile do
+      profile_duplicity { :secondary }
     end
   end
 end

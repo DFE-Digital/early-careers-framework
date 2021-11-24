@@ -50,7 +50,7 @@ class InviteSchools
                  .uniq
 
       emails.each do |email|
-        delay(queue: "mailers", priority: 1).create_and_send_nomination_email(email, school)
+        delay(queue: "mailers").create_and_send_nomination_email(email, school)
       rescue StandardError
         logger.info "Error emailing school, urn: #{school.urn}, email: #{email} ... skipping"
       end
@@ -62,7 +62,7 @@ class InviteSchools
   def send_ministerial_letters
     School.eligible.each do |school|
       recipient = school.contact_email
-      delay(queue: "mailers", priority: 1).send_ministerial_letter(recipient) if recipient.present?
+      delay(queue: "mailers").send_ministerial_letter(recipient) if recipient.present?
     end
   end
 
@@ -112,21 +112,21 @@ class InviteSchools
     end
   end
 
-  def send_induction_coordinator_choose_provider_chasers(delivery_params: {})
-    induction_coordinators_not_in_partnership = User.where(
-      id:
-        School.unpartnered(Cohort.current.start_year)
-              .joins(:school_cohorts, :induction_coordinator_profiles)
-              .where(school_cohorts: { induction_programme_choice: "full_induction_programme" })
-              .pluck(:user_id),
-    )
-
-    induction_coordinators_not_in_partnership.find_each do |induction_coordinator|
+  def send_unpartnered_fip_chasers
+    unpartnered_schools = School.unpartnered(Cohort.current.start_year)
+                                .joins(:school_cohorts)
+                                .where(school_cohorts: { induction_programme_choice: "full_induction_programme" })
+    unpartnered_schools.find_each do |school|
+      if school.induction_coordinators.none?
+        logger.info "No SIT for school URN: #{school.urn}, id: #{school.id}"
+        next
+      end
       SchoolMailer.induction_coordinator_reminder_to_choose_provider_email(
-        recipient: induction_coordinator.email,
-      ).deliver_later(delivery_params)
+        induction_coordinator: school.induction_coordinators.first,
+        school: school,
+      ).deliver_later(priority: 2)
     rescue StandardError
-      logger.info "Error emailing induction coordinator, email: #{induction_coordinator.email} ... skipping"
+      logger.info "Error emailing induction coordinator, school URN: #{school.urn}, id: #{school.id} ... skipping"
     end
   end
 
@@ -191,7 +191,7 @@ class InviteSchools
         permitted_actions: %i[nominate_tutor],
       )
 
-      delay(queue: "mailers", priority: 1).send_cip_only_invite_email(school: school, access_token: access_token)
+      delay(queue: "mailers").send_cip_only_invite_email(school: school, access_token: access_token)
     end
   end
 
@@ -256,14 +256,14 @@ class InviteSchools
       .joins(:induction_coordinators)
       .all_ecf_participants_validated
       .find_each do |school|
-        next if Email.associated_with(school).tagged_with(:year2020_invite).any?
+      next if Email.associated_with(school).tagged_with(:year2020_invite).any?
 
-        SchoolMailer.nqt_plus_one_sit_invite(
-          school: school,
-          recipient: school.induction_coordinators.first.email,
-          start_url: year2020_start_url(school, utm_source: :year2020_nqt_invite_sit_validated),
-        ).deliver_later
-      end
+      SchoolMailer.nqt_plus_one_sit_invite(
+        school: school,
+        recipient: school.induction_coordinators.first.email,
+        start_url: year2020_start_url(school, utm_source: :year2020_nqt_invite_sit_validated),
+      ).deliver_later
+    end
   end
 
   def catch_all_invite_sits_for_nqt_plus_one
@@ -275,54 +275,56 @@ class InviteSchools
           cohort: Cohort.find_by_start_year(2020),
         },
       ).distinct.find_each do |school|
-        next if Email.associated_with(school).tagged_with(:year2020_invite).any?
+      next if Email.associated_with(school).tagged_with(:year2020_invite).any?
 
-        SchoolMailer.nqt_plus_one_sit_invite(
-          school: school,
-          recipient: school.induction_coordinators.first.email,
-          start_url: year2020_start_url(school, utm_source: :year2020_nqt_invite_sit_catchall),
-        ).deliver_later
-      end
+      SchoolMailer.nqt_plus_one_sit_invite(
+        school: school,
+        recipient: school.induction_coordinators.first.email,
+        start_url: year2020_start_url(school, utm_source: :year2020_nqt_invite_sit_catchall),
+      ).deliver_later
+    end
   end
 
   def invite_unpartnered_cip_sits_to_add_ects_and_mentors
     School.unpartnered(Cohort.current.start_year)
-      .joins(:school_cohorts, :induction_coordinator_profiles)
-      .where(school_cohorts: { induction_programme_choice: "core_induction_programme" })
-      .where.missing(:ecf_participants)
-      .find_each do |school|
-        induction_coordinator = school.induction_coordinators.first
+          .joins(:school_cohorts, :induction_coordinator_profiles)
+          .where(school_cohorts: { induction_programme_choice: "core_induction_programme" })
+          .where.missing(:ecf_participants)
+          .find_each do |school|
+      induction_coordinator = school.induction_coordinators.first
 
-        SchoolMailer.unpartnered_cip_sit_add_participants_email(
-          recipient: induction_coordinator.email,
-          induction_coordinator: induction_coordinator,
-          sign_in_url: sign_in_url_with_campaign(:add_participants_unpartnered_cip),
-          school_name: school.name,
-        ).deliver_later
-      end
+      SchoolMailer.unpartnered_cip_sit_add_participants_email(
+        recipient: induction_coordinator.email,
+        induction_coordinator: induction_coordinator,
+        sign_in_url: sign_in_url_with_campaign(:add_participants_unpartnered_cip),
+        school_name: school.name,
+      ).deliver_later
+    end
   end
 
   def invite_unengaged_schools
-    School.unpartnered(Cohort.current.start_year)
+    schools = School
+      .unpartnered(Cohort.current.start_year)
       .not_opted_out
       .where.missing(:induction_coordinators)
-      .find_each do |school|
-        if school.contact_email.blank?
-          logger.info "No contact details for school urn: #{school.urn} ... skipping"
-          next
-        end
 
-        access_token = SchoolAccessToken.create!(
-          school: school,
-          permitted_actions: %i[nominate_tutor],
-        )
-
-        SchoolMailer.unengaged_schools_email(
-          recipient: school.contact_email,
-          school: school,
-          access_token: access_token,
-        ).deliver_now
+    schools.find_each do |school|
+      if school.contact_email.blank?
+        logger.info "No contact details for school urn: #{school.urn} ... skipping"
+        next
       end
+
+      access_token = SchoolAccessToken.create!(
+        school: school,
+        permitted_actions: %i[nominate_tutor],
+      )
+
+      SchoolMailer.unengaged_schools_email(
+        recipient: school.contact_email,
+        school: school,
+        access_token: access_token,
+      ).deliver_now
+    end
   end
 
 private
@@ -409,7 +411,7 @@ private
         permitted_actions: %i[nominate_tutor],
       )
 
-      delay(queue: "mailers", priority: 1).__send__(send_method, school: school, access_token: access_token)
+      delay(queue: "mailers").__send__(send_method, school: school, access_token: access_token)
     rescue StandardError
       logger.info "Error emailing school, urn: #{urn} ... skipping"
     end

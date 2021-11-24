@@ -16,7 +16,7 @@ module Api
 
       def serialized_response(profile)
         ParticipantSerializer
-          .new(profile.user)
+          .new(profile)
           .serializable_hash.to_json
       end
 

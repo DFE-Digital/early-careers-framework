@@ -11,16 +11,6 @@ RSpec.describe ParticipantProfilePolicy, type: :policy do
     let(:user) { create(:user, :admin) }
     it { is_expected.to permit_action(:show) }
 
-    context "ECT" do
-      let(:participant_profile) { create(:participant_profile, :ect) }
-      it { is_expected.to permit_action(:destroy) }
-    end
-
-    context "mentor" do
-      let(:participant_profile) { create(:participant_profile, :mentor) }
-      it { is_expected.to permit_action(:destroy) }
-    end
-
     context "NPQ" do
       let(:participant_profile) { create(:participant_profile, :npq) }
       it { is_expected.to forbid_action(:destroy) }
@@ -46,14 +36,14 @@ RSpec.describe ParticipantProfilePolicy, type: :policy do
     context "for an induction coordinator" do
       let(:schools) { create_list :school, rand(2..3) }
       let(:user) { create(:induction_coordinator_profile, schools: schools).user }
-      let(:ect_profiles_for_stis_schools) { Array.new(rand(3..5)) { create :participant_profile, :ect, school_cohort: create(:school_cohort, school: schools.sample) } }
-      let(:mentor_profiles_for_stis_schools) { Array.new(rand(3..5)) { create :participant_profile, :mentor, school_cohort: create(:school_cohort, school: schools.sample) } }
-      let(:npq_profiles_for_stis_schools) { Array.new(rand(3..5)) { create :participant_profile, :npq, school: schools.sample } }
+      let(:ect_profiles_for_sits_schools) { Array.new(rand(3..5)) { create :participant_profile, :ect, school_cohort: create(:school_cohort, school: schools.sample) } }
+      let(:mentor_profiles_for_sits_schools) { Array.new(rand(3..5)) { create :participant_profile, :mentor, school_cohort: create(:school_cohort, school: schools.sample) } }
+      let(:npq_profiles_for_sits_schools) { Array.new(rand(3..5)) { create :participant_profile, :npq, school: schools.sample } }
       let(:other_participant_profiles) { create_list :participant_profile, rand(2..3) }
 
-      it { is_expected.to include(*ect_profiles_for_stis_schools) }
-      it { is_expected.to include(*mentor_profiles_for_stis_schools) }
-      it { is_expected.not_to include(*npq_profiles_for_stis_schools) }
+      it { is_expected.to include(*ect_profiles_for_sits_schools) }
+      it { is_expected.to include(*mentor_profiles_for_sits_schools) }
+      it { is_expected.not_to include(*npq_profiles_for_sits_schools) }
       it { is_expected.not_to include(*other_participant_profiles) }
     end
 

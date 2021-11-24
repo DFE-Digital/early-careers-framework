@@ -50,11 +50,14 @@ en:
   withdrawn_participant: Cannot perform actions on a withdrawn participant
   declaration_on_incorrect_state: "The declaration on withdrawn or deferred participant can not be accepted"
   declaration_already_voided: "Declaration is already voided"
+  declaration_not_voidable: "Declaration not voidable"
   void_last_declaration_only: "Can only void last declaration"
   schedule_missing: "The participant does not have a schedule"
   declaration_before_milestone_start: "The property '#/declaration_date' can not be before milestone start"
   declaration_after_milestone_cutoff: "The property '#/declaration_date' can not be after milestone end"
   invalid_data_structure: correct json data structure required. See API docs for reference
+  admin_nqt_1_email_used_ect: "A user with this email address is currently participating as an ECT at school with urn %{urn}"
+  admin_nqt_1_email_used_nqt: "A user with this email address is currently participating as an NQT+1 at school with urn %{urn}"
   estimate_participants_default_message: &default_message "Enter a number between 0 and 1000"
   estimate_participants_defaults: &defaults
     not_a_number: *default_message

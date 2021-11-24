@@ -39,7 +39,7 @@ private
   end
 
   def active_participant_profiles
-    ParticipantProfilePolicy::Scope.new(user, ParticipantProfile::ECF.active_record).resolve
+    ParticipantProfilePolicy::Scope.new(user, school_cohort.active_ecf_participant_profiles).resolve
   end
 
   def ineligible_participants

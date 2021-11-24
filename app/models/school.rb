@@ -8,14 +8,21 @@ class School < ApplicationRecord
 
   belongs_to :network, optional: true
 
+  has_many :school_links, dependent: :destroy
+  has_many :successor_links, -> { successor }, class_name: "SchoolLink"
+  has_many :predecessor_links, -> { predecessor }, class_name: "SchoolLink"
+  has_many :successor_schools, through: :successor_links, source: :link_school
+  has_many :predecessor_schools, through: :predecessor_links, source: :link_school
+
   has_many :school_local_authorities
   has_many :local_authorities, through: :school_local_authorities
-
   has_one :latest_school_authority, -> { latest }, class_name: "SchoolLocalAuthority"
   has_one :local_authority, through: :latest_school_authority
 
   has_many :school_local_authority_districts
   has_many :local_authority_districts, through: :school_local_authority_districts
+  has_one :latest_school_authority_district, -> { latest }, class_name: "SchoolLocalAuthorityDistrict"
+  has_one :local_authority_district, through: :latest_school_authority_district
 
   has_many :partnerships
   has_many :active_partnerships, -> { active }, class_name: "Partnership"
@@ -101,16 +108,6 @@ class School < ApplicationRecord
     school_cohorts.find_by(cohort: cohort)&.ecf_participant_profiles&.mentors&.active_record || []
   end
 
-  def full_address
-    address = <<~ADDRESS
-      #{address_line1}
-      #{address_line2}
-      #{address_line3}
-      #{postcode}
-    ADDRESS
-    address.squeeze("\n")
-  end
-
   def registered?
     induction_coordinator_profiles.any?
   end
@@ -133,10 +130,6 @@ class School < ApplicationRecord
 
   def can_access_service?
     eligible? || cip_only?
-  end
-
-  def local_authority_district
-    school_local_authority_districts.latest.first&.local_authority_district
   end
 
   def pupil_premium_uplift?(start_year)

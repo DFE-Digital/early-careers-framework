@@ -159,6 +159,11 @@ group :development do
 
   # State machine diagrams - https://github.com/Katee/aasm-diagram
   gem "aasm-diagram"
+
+  # Profiling
+  gem "memory_profiler"
+  gem "rack-mini-profiler"
+  gem "stackprof"
 end
 
 group :test do

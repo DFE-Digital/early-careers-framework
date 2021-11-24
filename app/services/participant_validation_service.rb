@@ -55,9 +55,11 @@ private
   end
 
   def matching_record(trn:, nino:, full_name:, dob:)
+    return if trn.blank?
+
     padded_trn = trn.rjust(7, "0")
     dqt_record = dqt_record(padded_trn, nino)
-    return if dqt_record.nil?
+    return if dqt_record.nil? || dqt_record["state_name"] != "Active"
 
     matches = 0
     trn_matches = padded_trn == dqt_record["trn"]

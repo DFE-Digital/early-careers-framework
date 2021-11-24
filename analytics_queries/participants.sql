@@ -12,8 +12,9 @@ SELECT u.id                                                    as participant_id
        c.start_year                                            as cohort,
        pp.training_status                                      as training_status,
        s.name                                                  as schedule,
+       tp.trn                                                  as trn,
        epvd.created_at                                         as trn_provided_at,
-       (epe.status IN ('eligible', 'matched'))                 AS trn_validated,
+       (epe.status IN ('eligible', 'matched'))                 as trn_validated,
        (epe.manually_validated OR epe.status = 'manual_check') as manual_validation_required,
        (CASE
             WHEN epe.status = 'eligible' THEN true

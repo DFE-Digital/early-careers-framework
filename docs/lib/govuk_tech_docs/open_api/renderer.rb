@@ -22,6 +22,7 @@ module GovukTechDocs
         @template_request_body = get_renderer("request_body.html.erb")
         @template_responses = get_renderer("responses.html.erb")
         @template_any_of = get_renderer("any_of.html.erb")
+        @template_one_of = get_renderer("one_of.html.erb")
         @template_curl_examples = get_renderer("curl_examples.html.erb")
       end
 
@@ -52,10 +53,12 @@ module GovukTechDocs
         properties = properties_for_schema(schema)
 
         if schema["anyOf"]
-          return @template_any_of.result(binding)
+          @template_any_of.result(binding)
+        elsif schema["oneOf"]
+          @template_one_of.result(binding)
+        else
+          @template_schema.result(binding)
         end
-
-        @template_schema.result(binding)
       end
 
       def schemas_from_path(text)
@@ -212,7 +215,7 @@ module GovukTechDocs
       end
 
       def get_schema_link(schema)
-        schema_name = get_schema_name schema.node_context.source_location.to_s
+        schema_name = get_schema_name(schema.node_context.source_location.to_s)
         unless schema_name.nil?
           id = "schema-#{schema_name.parameterize}"
           "<a href='\##{id}'>#{schema_name}</a>"
