@@ -1,5 +1,6 @@
 ---
 :concurrency: 5
 :queues:
+  - priority_mailers
   - mailers
   - default
