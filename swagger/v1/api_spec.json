@@ -1406,6 +1406,26 @@
         "description": "An ECF participant change schedule action",
         "type": "object",
         "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "enum": [
+              "participant-change-schedule"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ECFParticipantChangeScheduleAttributes"
+          }
+        },
+        "required": [
+          "type",
+          "attributes"
+        ]
+      },
+      "ECFParticipantChangeScheduleAttributes": {
+        "description": "An ECF participant change schedule action",
+        "type": "object",
+        "properties": {
           "schedule_identifier": {
             "description": "The new schedule of the participant",
             "type": "string",
@@ -1593,8 +1613,33 @@
         }
       },
       "ECFParticipantDefer": {
+        "description": "The details of a participant deferral request",
+        "type": "object",
+        "required": [
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "participant-defer",
+            "enum": [
+              "participant-defer"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ECFParticipantDeferAttributes"
+          }
+        }
+      },
+      "ECFParticipantDeferAttributes": {
         "description": "An ECF participant deferral action",
         "type": "object",
+        "required": [
+          "reason",
+          "course_identifier"
+        ],
         "properties": {
           "reason": {
             "description": "The reason for the deferral",
@@ -1618,10 +1663,6 @@
             "example": "ecf-induction"
           }
         },
-        "required": [
-          "reason",
-          "course_identifier"
-        ],
         "example": {
           "reason": "career-break",
           "course_identifier": "ecf-mentor"
@@ -1667,6 +1708,27 @@
         }
       },
       "ECFParticipantResume": {
+        "description": "An ECF participant resume action",
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "enum": [
+              "participant-resume"
+            ],
+            "example": "participant-resume"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ECFParticipantResumeAttributes"
+          }
+        },
+        "required": [
+          "type",
+          "attributes"
+        ]
+      },
+      "ECFParticipantResumeAttributes": {
         "description": "An ECF participant resume action",
         "type": "object",
         "properties": {
@@ -1827,6 +1889,23 @@
         }
       },
       "ECFParticipantWithdraw": {
+        "description": "An ECF participant withdrawal action",
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "participant-withdraw",
+            "enum": [
+              "participant-withdraw"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ECFParticipantWithdrawAttributes"
+          }
+        }
+      },
+      "ECFParticipantWithdrawAttributes": {
         "description": "An ECF participant withdrawal action",
         "type": "object",
         "properties": {
@@ -2553,8 +2632,33 @@
         }
       },
       "NPQParticipantDefer": {
+        "description": "The details of an NPQ participant deferral request",
+        "type": "object",
+        "required": [
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "participant-defer",
+            "enum": [
+              "participant-defer"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/NPQParticipantDeferAttributes"
+          }
+        }
+      },
+      "NPQParticipantDeferAttributes": {
         "description": "An NPQ participant deferral action",
         "type": "object",
+        "required": [
+          "reason",
+          "course_identifier"
+        ],
         "properties": {
           "reason": {
             "description": "The reason for the deferral",
@@ -2582,10 +2686,6 @@
             "example": "npq-senior-leadership"
           }
         },
-        "required": [
-          "reason",
-          "course_identifier"
-        ],
         "example": {
           "reason": "parental-leave",
           "course_identifier": "npq-senior-leadership"
@@ -2631,6 +2731,27 @@
         }
       },
       "NPQParticipantResume": {
+        "description": "An NPQ participant resume action",
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "enum": [
+              "participant-resume"
+            ],
+            "example": "participant-resume"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/NPQParticipantResumeAttributes"
+          }
+        },
+        "required": [
+          "type",
+          "attributes"
+        ]
+      },
+      "NPQParticipantResumeAttributes": {
         "description": "An NPQ participant resume action",
         "type": "object",
         "properties": {
@@ -2791,6 +2912,23 @@
         }
       },
       "NPQParticipantWithdraw": {
+        "description": "An NPQ participant withdrawal action",
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "participant-withdraw",
+            "enum": [
+              "participant-withdraw"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/NPQParticipantWithdrawAttributes"
+          }
+        }
+      },
+      "NPQParticipantWithdrawAttributes": {
         "description": "An NPQ participant withdrawal action",
         "type": "object",
         "properties": {
