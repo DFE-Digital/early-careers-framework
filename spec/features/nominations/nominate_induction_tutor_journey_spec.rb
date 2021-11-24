@@ -17,7 +17,7 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
     click_on "Continue"
     then_i_should_be_on_the_start_nomination_page
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Start school induction tutor nomination"
+    and_percy_should_be_sent_a_snapshot_named "Start SIT nomination"
 
     click_on "Continue"
     then_i_should_be_on_the_nominations_full_name_page
@@ -47,7 +47,7 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
     click_on "Confirm and nominate"
     then_i_should_be_on_the_nominate_sit_success_page
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Nominate SIT success"
+    and_percy_should_be_sent_a_snapshot_named "Nominate SIT completed"
   end
 
   scenario "Expired nomination link was sent" do
@@ -64,7 +64,7 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
     when_i_click_the_link_to_nominate_a_sit
     then_i_should_be_redirected_to_the_induction_tutor_already_nominated_page
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Sit already nominated"
+    and_percy_should_be_sent_a_snapshot_named "SIT already nominated"
   end
 
   scenario "Nominating an induction tutor with name and email that do not match" do
@@ -72,7 +72,7 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
     when_i_click_the_link_to_nominate_a_sit
     then_i_should_be_on_the_choose_how_to_continue_page
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Choose how to continue"
+    and_percy_should_be_sent_a_snapshot_named "How to continue"
 
     when_i_select "yes"
     click_on "Continue"
@@ -87,7 +87,7 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
     click_on "Continue"
     then_i_should_be_on_the_nominations_email_page
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Add SIT email"
+    and_percy_should_be_sent_a_snapshot_named "SIT email does not match name"
 
     when_i_fill_in_using_an_email_that_is_already_being_used
     click_on "Continue"
