@@ -160,6 +160,6 @@ RSpec.describe EarlyCareerTeachers::Create do
         school_cohort: school_cohort,
         mentor_profile_id: mentor_profile.id,
       )
-    }.to have_enqueued_job(Analytics::UpsertParticipantProfileJob)
+    }.to have_enqueued_job(Analytics::UpsertECFParticipantProfileJob)
   end
 end

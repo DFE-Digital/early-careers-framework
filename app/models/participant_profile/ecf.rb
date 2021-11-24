@@ -52,6 +52,6 @@ class ParticipantProfile::ECF < ParticipantProfile
 private
 
   def update_analytics
-    Analytics::UpsertParticipantProfileJob.perform_later(participant_profile: self) if saved_change_to_training_status?
+    Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile: self) if saved_change_to_training_status?
   end
 end

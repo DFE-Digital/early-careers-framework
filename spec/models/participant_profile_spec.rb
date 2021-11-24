@@ -27,7 +27,7 @@ RSpec.describe ParticipantProfile, type: :model do
     profile.training_status = :withdrawn
     expect {
       profile.save!
-    }.to have_enqueued_job(Analytics::UpsertParticipantProfileJob).with(
+    }.to have_enqueued_job(Analytics::UpsertECFParticipantProfileJob).with(
       participant_profile: profile,
     )
   end

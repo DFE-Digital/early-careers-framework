@@ -105,7 +105,7 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
       params = { participant_mentor_form: { mentor_id: mentor_user_2.id } }
       expect {
         put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-mentor", params: params
-      }.to have_enqueued_job(Analytics::UpsertParticipantProfileJob).with(participant_profile: ect_profile)
+      }.to have_enqueued_job(Analytics::UpsertECFParticipantProfileJob).with(participant_profile: ect_profile)
     end
   end
 

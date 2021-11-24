@@ -137,6 +137,6 @@ RSpec.describe Mentors::Create do
         full_name: user.full_name,
         school_cohort: school_cohort,
       )
-    }.to have_enqueued_job(Analytics::UpsertParticipantProfileJob)
+    }.to have_enqueued_job(Analytics::UpsertECFParticipantProfileJob)
   end
 end

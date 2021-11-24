@@ -83,7 +83,7 @@ RSpec.describe "Admin::Participants", type: :request do
     it "updates analytics" do
       expect {
         delete "/admin/participants/#{ect_profile.id}"
-      }.to have_enqueued_job(Analytics::UpsertParticipantProfileJob).with(participant_profile: ect_profile)
+      }.to have_enqueued_job(Analytics::UpsertECFParticipantProfileJob).with(participant_profile: ect_profile)
     end
   end
 end
