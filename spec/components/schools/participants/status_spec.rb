@@ -127,8 +127,8 @@ RSpec.describe Schools::Participants::Status, type: :view_component, with_featur
         let!(:eligibility) { create(:ecf_participant_eligibility, qts: false, participant_profile: profile) }
 
         it "displays the checking eligibility content" do
-          expect(rendered).to have_content I18n.t "schools.participants.status.checking_eligibility.header"
-          expect(rendered).to have_content I18n.t "schools.participants.status.checking_eligibility.content"
+          expect(rendered).to have_content I18n.t "schools.participants.status.eligible_fip_no_partner.header"
+          expect(rendered).to have_content I18n.t "schools.participants.status.eligible_fip_no_partner.content"
         end
       end
 
