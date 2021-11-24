@@ -12,6 +12,7 @@
 - NodeJS 14.16.0
 - Yarn 1.12.x
 - Docker
+- Redis 6.2
 
 ### Without docker
 
