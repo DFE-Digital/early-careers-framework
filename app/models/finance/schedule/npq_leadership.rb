@@ -2,9 +2,9 @@
 
 class Finance::Schedule::NPQLeadership < Finance::Schedule
   IDENTIFIERS = %w[
-    npq-leading-teaching
-    npq-leading-behaviour-culture
-    npq-leading-teaching-development
+    npq-senior-leadership
+    npq-headship
+    npq-executive-leadership
   ].freeze
 
   def self.default
