@@ -81,6 +81,29 @@ resource "cloudfoundry_app" "worker_app" {
   environment = local.app_environment
 }
 
+resource "cloudfoundry_app" "sidekiq_worker_app" {
+  name = local.sidekiq_worker_app_name
+  command = var.sidekiq_worker_app_start_command
+  docker_image = var.app_docker_image
+  docker_credentials = var.docker_credentials
+  health_check_type = "process"
+  health_check_timeout = 10
+  instances = var.sidekiq_worker_app_instances
+  memory = var.sidekiq_worker_app_memory
+
+  space = data.cloudfoundry_space.space.id
+  stopped = var.app_stopped
+  strategy = var.sidekiq_worker_app_deployment_strategy
+  timeout = var.app_start_timeout
+  dynamic "service_binding" {
+    for_each = local.app_service_bindings
+    content {
+      service_instance = service_binding.value
+    }
+  }
+  environment = local.app_environment
+}
+
 resource cloudfoundry_user_provided_service logging {
   name = local.logging_service_name
   space = data.cloudfoundry_space.space.id

@@ -10,5 +10,13 @@ paas_app_stopped = false
 paas_web_app_deployment_strategy = "blue-green-v2"
 paas_web_app_instances = 1
 paas_web_app_memory = 1024
-paas_web_app_start_command = "bundle exec rake cf:on_first_instance db:migrate db:safe_reset redis:flushall && /app/bin/delayed_job --pool=mailers --pool=priority_mailers --pool=*:2 start && (bundle exec sidekiq -C config/sidekiq.yml &) && rails s"
+paas_web_app_start_command = "bundle exec rake cf:on_first_instance db:migrate db:safe_reset redis:flushall && /app/bin/delayed_job --pool=mailers --pool=priority_mailers --pool=* start && (bundle exec sidekiq -C config/sidekiq.yml &) && rails s"
 paas_redis_service_plan = "micro-6_x"
+
+# Temporarily added for testing purposes, delete before merging
+paas_worker_app_instances = 1
+paas_worker_app_memory = 1024
+paas_worker_app_start_command = "/app/bin/delayed_job --pool=mailers --pool=priority_mailers --pool=* start && bundle exec rake jobs:work"
+paas_sidekiq_worker_app_instances = 1
+paas_sidekiq_worker_app_memory = 1024
+paas_sidekiq_worker_app_start_command = "bundle exec sidekiq -C config/sidekiq.yml"
