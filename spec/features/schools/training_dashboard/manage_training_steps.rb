@@ -82,6 +82,10 @@ module ManageTrainingSteps
     expect(page).to have_text(@school_cohort.delivery_partner.name)
   end
 
+  def given_an_ect_has_been_withdrawn_by_the_provider
+    @ect.training_status_withdrawn!
+  end
+
   # And_steps
 
   def and_i_am_signed_in_as_an_induction_coordinator
@@ -277,15 +281,19 @@ module ManageTrainingSteps
     @details_being_checked_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
   end
 
-  def and_it_should_show_the_withdrawn_participant
+  def then_it_should_show_the_withdrawn_participant
     expect(page).to have_text("No longer being trained")
     expect(page).to have_text("Sally ECT")
     expect(page).to have_text("Big Provider Ltd")
     expect(page).to have_text("Amazing Delivery Team")
   end
 
-  def and_it_should_not_allow_a_sit_edit_the_participant_details
+  def and_it_should_not_allow_a_sit_to_edit_the_participant_details
     expect(page).not_to have_link("Change")
+  end
+
+  def and_i_click_on_view_your_early_career_teacher_and_mentor_details
+    click_on("View your early career teacher and mentor details")
   end
 
   # When_steps
@@ -410,6 +418,12 @@ module ManageTrainingSteps
 
   def when_i_click_on_details_within_details
     within("[data-test='details']") do
+      click_on("Details")
+    end
+  end
+
+  def when_i_click_on_details_within_withdrawn
+    within("[data-test='withdrawn']") do
       click_on("Details")
     end
   end
@@ -664,8 +678,11 @@ module ManageTrainingSteps
     expect(page).to have_text(@school_cohort.delivery_partner.name)
   end
 
-  def then_they_have_been_withdrawn_by_the_provider
-    @ect.training_status_withdrawn!
+  def then_it_should_show_the_withdrawn_participant
+    expect(page).to have_text("No longer being trained")
+    expect(page).to have_text("Sally ECT")
+    expect(page).to have_text("Big Provider Ltd")
+    expect(page).to have_text("Amazing Delivery Team")
   end
 
   # Set_steps

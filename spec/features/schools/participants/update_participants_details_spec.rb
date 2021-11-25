@@ -98,4 +98,19 @@ RSpec.describe "Update participants details", js: true do
     then_i_am_taken_to_check_details_page
     then_i_can_view_assign_mentor_later_status
   end
+
+  scenario "withdrawn participants" do
+    given_an_ect_has_been_withdrawn_by_the_provider
+    when_i_visit_manage_training_dashboard
+    and_i_click_on_view_your_early_career_teacher_and_mentor_details
+    then_it_should_show_the_withdrawn_participant
+    and_the_page_should_be_accessible
+    and_percy_should_be_sent_a_snapshot_named "Withdrawn participant shown on dashboard"
+
+    when_i_click_on_details_within_withdrawn
+    then_i_am_taken_to_view_details_page
+    and_it_should_not_allow_a_sit_to_edit_the_participant_details
+    and_the_page_should_be_accessible
+    and_percy_should_be_sent_a_snapshot_named "Participant details without change links"
+  end
 end
