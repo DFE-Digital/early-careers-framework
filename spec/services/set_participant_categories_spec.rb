@@ -13,6 +13,7 @@ RSpec.describe SetParticipantCategories do
     let!(:details_being_checked_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
     let!(:primary_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, :primary_profile, school_cohort: school_cohort) }
     let!(:secondary_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, :secondary_profile, school_cohort: school_cohort) }
+    let!(:withdrawn_ect) { create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, training_status: "withdrawn", school_cohort: school_cohort) }
 
     before do
       [primary_mentor, secondary_mentor].each do |profile|
@@ -74,6 +75,10 @@ RSpec.describe SetParticipantCategories do
       it "does not return participants in details_being_checked category" do
         expect(@participant_categories.details_being_checked).to match_array(cip_details_being_checked_participants)
       end
+
+      it "returns participants in withdrawn category" do
+        expect(@participant_categories.withdrawn).to match_array(withdrawn_participants)
+      end
     end
 
     context "FIP cohorts with active eligibility_notifications feature flag" do
@@ -84,6 +89,7 @@ RSpec.describe SetParticipantCategories do
       let(:fip_ineligible_participants) { [ineligible_mentor] }
       let(:fip_contacted_for_info_participants) { [contacted_for_info_ect] }
       let(:fip_details_being_checked_participants) { [details_being_checked_ect] }
+      let(:withdrawn_participants) { [withdrawn_ect] }
 
       before do
         FeatureFlag.activate(:eligibility_notifications)
@@ -110,6 +116,10 @@ RSpec.describe SetParticipantCategories do
       it "returns details_being_checked participants in details_being_checked category" do
         expect(@participant_categories.details_being_checked).to match_array(fip_details_being_checked_participants)
       end
+
+      it "returns withdrawn participants in withdrawn category" do
+        expect(@participant_categories.withdrawn).to match_array(withdrawn_participants)
+      end
     end
 
     context "FIP cohorts with inactive eligibility_notifications feature flag" do
@@ -120,6 +130,7 @@ RSpec.describe SetParticipantCategories do
       let(:fip_ineligible_participants) { [] }
       let(:fip_contacted_for_info_participants) { [contacted_for_info_ect] }
       let(:fip_details_being_checked_participants) { [eligible_ect, ineligible_mentor, ero_mentor, details_being_checked_ect, primary_mentor, secondary_mentor] }
+      let(:withdrawn_participants) { [withdrawn_ect] }
 
       before do
         FeatureFlag.deactivate(:eligibility_notifications)
@@ -145,6 +156,10 @@ RSpec.describe SetParticipantCategories do
 
       it "returns details_being_checked, ineligible and eligible participants in details_being_checked category" do
         expect(@participant_categories.details_being_checked).to match_array(fip_details_being_checked_participants)
+      end
+
+      it "returns details_being_checked, ineligible and eligible participants in details_being_checked category" do
+        expect(@participant_categories.withdrawn).to match_array(withdrawn_participants)
       end
     end
   end

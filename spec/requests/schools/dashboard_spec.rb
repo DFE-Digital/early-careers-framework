@@ -50,23 +50,6 @@ RSpec.describe "Schools::Dashboard", type: :request do
 
         expect(response).to render_template("schools/dashboard/show")
       end
-
-      context "when a provider has withdrawn an ect" do
-        it "renders a list of withdrawn ects on the dashboard" do
-          school_cohort = school.school_cohorts[0]
-          ect = create(:participant_profile, :ecf_participant_eligibility, :ect, training_status: "withdrawn", school_cohort: school_cohort)
-          cohort = create(:cohort, :current)
-          delivery_partner = create(:delivery_partner, name: "Delivery Partner")
-          lead_provider = create(:lead_provider, name: "Lead Provider", cohorts: [cohort])
-          create(:partnership, school: school, lead_provider: lead_provider, delivery_partner: delivery_partner, cohort: cohort)
-
-          get "/schools/#{school.slug}"
-          expect(response).to render_template("schools/dashboard/show")
-          expect(response.body).to include(CGI.escapeHTML(ect.user.full_name))
-          expect(response.body).to include(CGI.escapeHTML(delivery_partner.name))
-          expect(response.body).to include(CGI.escapeHTML(lead_provider.name))
-        end
-      end
     end
   end
 end

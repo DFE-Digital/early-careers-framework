@@ -281,13 +281,6 @@ module ManageTrainingSteps
     @details_being_checked_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
   end
 
-  def then_it_should_show_the_withdrawn_participant
-    expect(page).to have_text("No longer being trained")
-    expect(page).to have_text("Sally ECT")
-    expect(page).to have_text("Big Provider Ltd")
-    expect(page).to have_text("Amazing Delivery Team")
-  end
-
   def and_it_should_not_allow_a_sit_to_edit_the_participant_details
     expect(page).not_to have_link("Change")
   end
