@@ -27,10 +27,11 @@
     <% if @withdrawn.any? %>
       <h2 class="govuk-heading-m govuk-!-margin-bottom-0">No longer being trained</h2>
       <p>
-        Your provider reported that they're not training the people listed below. If this is wrong, contact
-        <%= @school.lead_provider(@school_cohort.cohort.start_year).name %> or <%= @school.delivery_partner_for(@school_cohort.cohort.start_year).name %>
+        Your provider reported that they're not training the people listed below. If this is wrong, contact <%= @school.lead_provider(@school_cohort.cohort.start_year).name %>
+        <% if @school.delivery_partner_for(@school_cohort.cohort.start_year) %>
+          or <%= @school.delivery_partner_for(@school_cohort.cohort.start_year).name %>.
+        <% end %>
       </p>
-
       <table class="govuk-table govuk-!-margin-bottom-9" data-test="withdrawn">
       <thead class="govuk-table__head">
         <tr class="govuk-table__row">
