@@ -6,7 +6,7 @@ module Participants
 
     def self.call(participant_profile)
       validation_data = participant_profile.ecf_participant_validation_data
-      return false unless validation_data.present?
+      return false if validation_data.blank?
 
       new(
         participant_profile_id: participant_profile.id,

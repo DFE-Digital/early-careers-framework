@@ -877,7 +877,6 @@ ActiveRecord::Schema.define(version: 2021_11_18_153946) do
   add_foreign_key "provider_relationships", "delivery_partners"
   add_foreign_key "provider_relationships", "lead_providers"
   add_foreign_key "pupil_premiums", "schools"
-  add_foreign_key "school_access_tokens", "schools"
   add_foreign_key "school_cohorts", "cohorts"
   add_foreign_key "school_cohorts", "core_induction_programmes"
   add_foreign_key "school_cohorts", "schools"

@@ -1,0 +1,21 @@
+<h2 class="govuk-heading-m">What happens next</h2>
+
+<% if current_step == :manual_check %>
+  <p class="govuk-body">We may need to contact you for more information to complete your registration.</p>
+<% end %>
+
+<% if school_cohort.cip? %>
+  <p class="govuk-body">We’ll email you a link to access your materials within the next 24 hours.</p>
+<% elsif school_cohort.fip? %>
+  <p class="govuk-body">You will not need to use this service again during your training.</p>
+  <% if school_cohort.delivery_partner.blank? %>
+    <p class="govuk-body">
+      <%= school_cohort.school.name %> has been asked to choose a training provider to deliver your programme. The provider will contact you directly.
+    </p>
+  <% else %>
+    <p class="govuk-body">
+      <%= school_cohort.school.name %> has chosen <%= school_cohort.delivery_partner.name %> and <% school_cohort.lead_provider.name %> to deliver your training programme.
+      These organisations will contact you directly with more information. They can also answer any questions you may have about your training materials.
+    </p>
+  <% end %>
+<% end %>
