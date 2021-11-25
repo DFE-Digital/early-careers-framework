@@ -7,7 +7,9 @@ SELECT DISTINCT s.urn,
                 icp.created_at                     as tutor_nominated_at,
                 (u.current_sign_in_at IS NOT NULL) as tutor_signed_in,
                 u.full_name                        as tutor_name,
-                u.email                            as tutor_email
+                u.email                            as tutor_email,
+                (pp.id IS NOT NULL)                as sit_mentor
+
 FROM schools s
          LEFT OUTER JOIN school_cohorts sc on s.id = sc.school_id
          LEFT OUTER JOIN cohorts c on sc.cohort_id = c.id
@@ -17,4 +19,7 @@ FROM schools s
          LEFT OUTER JOIN induction_coordinator_profiles_schools icps on s.id = icps.school_id
          LEFT OUTER JOIN induction_coordinator_profiles icp on icps.induction_coordinator_profile_id = icp.id
          LEFT OUTER JOIN users u on icp.user_id = u.id
+         LEFT OUTER JOIN teacher_profiles tp on u.id = tp.user_id
+         LEFT OUTER JOIN participant_profiles pp on tp.id = pp.teacher_profile_id and pp.status = 'active' and
+                                                    pp.type = 'ParticipantProfile::Mentor'
 WHERE c.start_year > 2020;

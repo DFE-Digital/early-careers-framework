@@ -1,18 +1,14 @@
 description: "An NPQ participant resume action"
 type: object
 properties:
-  course_identifier:
-    description: "The type of course the participant is enrolled in"
+  type:
+    description: "The data type"
     type: string
     enum:
-      - npq-leading-teaching
-      - npq-leading-behaviour-culture
-      - npq-leading-teaching-development
-      - npq-senior-leadership
-      - npq-headship
-      - npq-executive-leadership
-    example: npq-senior-leadership
+      - participant-resume
+    example: participant-resume
+  attributes:
+    $ref: "#/components/schemas/NPQParticipantResumeAttributes"
 required:
-  - course_identifier
-example:
-  course_identifier: npq-leading-teaching-development
+  - type
+  - attributes

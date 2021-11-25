@@ -29,5 +29,11 @@ FactoryBot.define do
       type { "Finance::Schedule::NPQSpecialist" }
       schedule_identifier { "npq-specialist-november-2021" }
     end
+
+    trait :npq_leadership do
+      name { "NPQ Leadership November 2021" }
+      type { "Finance::Schedule::NPQLeadership" }
+      schedule_identifier { "npq-leadership-november-2021" }
+    end
   end
 end

@@ -9,10 +9,6 @@ module Admin
         @schools = schools_scope.schools_to_close.order(urn: :asc)
       end
 
-      def show
-        @school = schools_scope.find_by(urn: params[:id])
-      end
-
     private
 
       def schools_scope

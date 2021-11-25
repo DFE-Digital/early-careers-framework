@@ -19,8 +19,13 @@ class ECFParticipantEligibility < ApplicationRecord
     previous_induction: "previous_induction",
     no_qts: "no_qts",
     different_trn: "different_trn",
+    duplicate_profile: "duplicate_profile",
     none: "none",
   }, _suffix: true
+
+  def duplicate_profile?
+    participant_profile&.mentor? && participant_profile&.secondary_profile?
+  end
 
   def determine_status
     unless manually_validated?
@@ -34,6 +39,8 @@ class ECFParticipantEligibility < ApplicationRecord
                                    %i[manual_check no_qts]
                                  elsif different_trn?
                                    %i[manual_check different_trn]
+                                 elsif duplicate_profile?
+                                   %i[ineligible duplicate_profile]
                                  else
                                    %i[eligible none]
                                  end

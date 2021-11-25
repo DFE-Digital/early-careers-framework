@@ -38,7 +38,7 @@ RSpec.describe Admin::Participants::Details, type: :view_component do
     let(:profile) { npq_application.profile }
 
     before do
-      create(:schedule, :npq_specialist)
+      create(:schedule, :npq_leadership)
       NPQ::Accept.new(npq_application: npq_application).call
     end
 
@@ -60,7 +60,7 @@ RSpec.describe Admin::Participants::Details, type: :view_component do
     let(:profile) { npq_application.profile }
 
     before do
-      create(:schedule, :npq_specialist)
+      create(:schedule, :npq_leadership)
       NPQ::Accept.new(npq_application: npq_application).call
     end
 

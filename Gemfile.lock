@@ -80,8 +80,8 @@ GEM
       activerecord
     ast (2.4.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.525.0)
-    aws-sdk-core (3.122.0)
+    aws-partitions (1.532.0)
+    aws-sdk-core (3.122.1)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.525.0)
       aws-sigv4 (~> 1.1)
@@ -89,7 +89,7 @@ GEM
     aws-sdk-kms (1.51.0)
       aws-sdk-core (~> 3, >= 3.122.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.105.1)
+    aws-sdk-s3 (1.106.0)
       aws-sdk-core (~> 3, >= 3.122.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.4)
@@ -203,7 +203,7 @@ GEM
       raabro (~> 1.4)
     globalid (0.5.2)
       activesupport (>= 5.0)
-    google-apis-bigquery_v2 (0.19.0)
+    google-apis-bigquery_v2 (0.21.0)
       google-apis-core (>= 0.4, < 2.a)
     google-apis-core (0.4.1)
       addressable (~> 2.5, >= 2.5.1)
@@ -214,7 +214,7 @@ GEM
       retriable (>= 2.0, < 4.a)
       rexml
       webrick
-    google-cloud-bigquery (1.37.0)
+    google-cloud-bigquery (1.38.0)
       concurrent-ruby (~> 1.0)
       google-apis-bigquery_v2 (~> 0.1)
       google-cloud-core (~> 1.6)
@@ -226,7 +226,7 @@ GEM
     google-cloud-env (1.5.0)
       faraday (>= 0.17.3, < 2.0)
     google-cloud-errors (1.2.0)
-    googleauth (1.0.0)
+    googleauth (1.1.0)
       faraday (>= 0.17.3, < 2.0)
       jwt (>= 1.4, < 3.0)
       memoist (~> 0.16)
@@ -303,6 +303,7 @@ GEM
     marcel (1.0.2)
     matrix (0.4.2)
     memoist (0.16.2)
+    memory_profiler (1.0.0)
     method_source (1.0.0)
     mini_mime (1.1.2)
     mini_portile2 (2.6.1)
@@ -331,7 +332,7 @@ GEM
       commonmarker (~> 0.17)
       psych (~> 3.1)
     orm_adapter (0.5.0)
-    os (1.1.1)
+    os (1.1.4)
     pagy (4.11.0)
     paper_trail (12.1.0)
       activerecord (>= 5.2)
@@ -365,6 +366,8 @@ GEM
     rack (2.2.3)
     rack-attack (6.5.0)
       rack (>= 1.0, < 3)
+    rack-mini-profiler (2.3.3)
+      rack (>= 1.2.0)
     rack-proxy (0.7.0)
       rack
     rack-test (1.1.0)
@@ -441,32 +444,31 @@ GEM
       rspec-mocks (~> 3.10)
       rspec-support (~> 3.10)
     rspec-support (3.10.2)
-    rubocop (1.21.0)
+    rubocop (1.23.0)
       parallel (~> 1.10)
       parser (>= 3.0.0.0)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.8, < 3.0)
       rexml
-      rubocop-ast (>= 1.9.1, < 2.0)
+      rubocop-ast (>= 1.12.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 3.0)
-    rubocop-ast (1.11.0)
+    rubocop-ast (1.13.0)
       parser (>= 3.0.1.1)
-    rubocop-govuk (4.1.0)
-      rubocop (= 1.21.0)
-      rubocop-ast (= 1.11.0)
-      rubocop-rails (= 2.12.2)
+    rubocop-govuk (4.2.0)
+      rubocop (= 1.23.0)
+      rubocop-ast (= 1.13.0)
+      rubocop-rails (= 2.12.4)
       rubocop-rake (= 0.6.0)
-      rubocop-rspec (= 2.4.0)
-    rubocop-rails (2.12.2)
+      rubocop-rspec (= 2.6.0)
+    rubocop-rails (2.12.4)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 1.7.0, < 2.0)
     rubocop-rake (0.6.0)
       rubocop (~> 1.0)
-    rubocop-rspec (2.4.0)
-      rubocop (~> 1.0)
-      rubocop-ast (>= 1.1.0)
+    rubocop-rspec (2.6.0)
+      rubocop (~> 1.19)
     ruby-graphviz (1.2.5)
       rexml
     ruby-progressbar (1.11.0)
@@ -533,6 +535,7 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    stackprof (0.2.17)
     strong_migrations (0.7.8)
       activerecord (>= 5)
     terminal-table (3.0.2)
@@ -540,7 +543,7 @@ GEM
     thor (1.1.0)
     thread_safe (0.3.6)
     timecop (0.9.4)
-    trailblazer-option (0.1.1)
+    trailblazer-option (0.1.2)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
     tzinfo-data (1.2021.5)
@@ -560,7 +563,7 @@ GEM
       addressable
       httpi (~> 2.0)
       nokogiri (>= 1.4.2)
-    web-console (4.1.0)
+    web-console (4.2.0)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
@@ -629,6 +632,7 @@ DEPENDENCIES
   lograge (>= 0.11.2)
   logstash-event
   mail-notify (>= 1.0.3)
+  memory_profiler
   multi_json
   open_api-rswag-api (>= 0.1.0)
   open_api-rswag-specs (>= 0.1.0)
@@ -645,6 +649,7 @@ DEPENDENCIES
   pundit
   pundit-matchers (~> 1.7.0)
   rack-attack (>= 6.5.0)
+  rack-mini-profiler
   rails (~> 6.1.4, >= 6.1.4.1)
   rails-controller-testing (>= 1.0.5)
   ransack
@@ -664,6 +669,7 @@ DEPENDENCIES
   simplecov
   spring
   spring-watcher-listen (~> 2.0.0)
+  stackprof
   strong_migrations
   terminal-table
   timecop

@@ -64,12 +64,17 @@ class ParticipantDeclaration < ApplicationRecord
   scope :paid_npqs_for_lead_provider, ->(lead_provider) { paid_for_lead_provider(lead_provider).npq }
   scope :paid_uplift_for_lead_provider, ->(lead_provider) { paid_for_lead_provider(lead_provider).uplift }
 
+  # TODO: Voiding paid should trigger clawbacks, but currently OOS
+  def voidable?
+    !voided? && !payable? && !paid?
+  end
+
   def make_submitted!
     DeclarationState.submitted!(self) if eligible?
   end
 
   def make_voided!
-    DeclarationState.voided!(self) unless voided? || payable? || paid? # TODO: Voiding paid should trigger clawbacks, but currently OOS
+    DeclarationState.voided!(self) if voidable?
   end
 
   def make_eligible!

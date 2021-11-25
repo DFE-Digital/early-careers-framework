@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
+require "sti_preload"
+
 class ParticipantProfile < ApplicationRecord
+  include STIPreload
   has_paper_trail
   belongs_to :teacher_profile, touch: true
 
@@ -105,6 +108,10 @@ class ParticipantProfile < ApplicationRecord
 
   def sit_mentor?
     mentor? && user.induction_coordinator?
+  end
+
+  def policy_class
+    ParticipantProfilePolicy
   end
 
 private

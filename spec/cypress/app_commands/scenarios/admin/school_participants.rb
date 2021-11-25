@@ -45,7 +45,7 @@ FactoryBot.create :participant_profile,
                   school_cohort: another_school_cohort,
                   created_at: Date.parse("29/12/2020")
 
-FactoryBot.create(:schedule, :npq_specialist)
+FactoryBot.create(:schedule, :npq_leadership)
 npq_course = FactoryBot.create(:npq_course, identifier: "npq-senior-leadership")
 npq_user = FactoryBot.create(:user, full_name: "Natalie Portman Quebec", email: "natalie.portman@quebec.ca")
 

@@ -8,7 +8,7 @@ RSpec.describe Importers::NPQManualValidation do
   let(:file) { Tempfile.new("test.csv") }
 
   before do
-    create(:schedule, :npq_specialist)
+    create(:schedule, :npq_leadership)
     NPQ::Accept.new(npq_application: npq_application).call
   end
 

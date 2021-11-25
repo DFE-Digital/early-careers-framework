@@ -37,7 +37,11 @@ module Admin
 
     def load_participant
       @participant_profile = ParticipantProfile.find(params[:id])
-      authorize @participant_profile, policy_class: ParticipantProfilePolicy
+      if %w[remove destroy].include?(action_name)
+        authorize @participant_profile, :withdraw_record?
+      else
+        authorize @participant_profile
+      end
     end
   end
 end

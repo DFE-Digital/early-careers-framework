@@ -9,10 +9,6 @@ module Admin
         @schools = fetch_schools_to_open
       end
 
-      def show
-        @school = schools_scope.find_by(urn: params[:id])
-      end
-
     private
 
       def schools_scope

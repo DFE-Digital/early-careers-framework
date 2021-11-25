@@ -24,6 +24,7 @@ properties:
           pupil_premium_uplift: false
           sparsity_uplift: true
           training_status: active
+          updated_at: "2021-05-31T02:22:32.000Z"
       - id: bb36d74a-68a7-47b6-86b6-1fd0d141c590
         type: participant
         attributes:
@@ -39,6 +40,7 @@ properties:
           pupil_premium_uplift: true
           sparsity_uplift: false
           training_status: deferred
+          updated_at: "2021-05-31T02:22:32.000Z"
       - id: eb475531-bf08-48ae-b0ef-c2ff5e5bdef0
         type: participant
         attributes:
@@ -55,3 +57,4 @@ properties:
           pupil_premium_uplift: null
           sparsity_uplift: null
           training_status: withdrawn
+          updated_at: "2021-05-31T02:22:32.000Z"

@@ -24,6 +24,10 @@ module GiasHelpers
     "#{name} (#{urn})"
   end
 
+  def full_address
+    [address_line1, address_line2, address_line3, postcode].compact_blank.join("\n")
+  end
+
   def open?
     open_status_code?(school_status_code)
   end

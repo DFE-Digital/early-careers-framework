@@ -16,7 +16,13 @@ module Finance
       end
 
       def call(event_type:)
-        calculator.call(contract: contract, aggregations: aggregator.call(cpd_lead_provider: cpd_lead_provider, event_type: event_type))
+        calculator.call(
+          contract: contract,
+          aggregations: aggregator.call(
+            cpd_lead_provider: cpd_lead_provider,
+            event_type: event_type,
+          ),
+        )
       end
     end
   end

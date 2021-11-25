@@ -10,6 +10,7 @@ required:
   - cohort
   - status
   - training_status
+  - updated_at
 properties:
   id:
     description: "The unique identifier of the ECF participant record"
@@ -90,3 +91,8 @@ properties:
       - active
       - deferred
       - withdrawn
+  updated_at:
+    description: "The date the ECF participant was last updated"
+    type: string
+    format: date-time
+    example: "2021-05-31T02:22:32.000Z"
