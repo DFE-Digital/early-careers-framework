@@ -27,6 +27,15 @@ module ApiTokenAuthenticatable
 
 private
 
+  def request_http_token_authentication(realm = "Application", message = nil)
+    case request.format
+    when Mime[:json]
+      render json: { errors: [{ title: "Unauthorized" }] }, status: :unauthorized
+    else
+      super
+    end
+  end
+
   def current_api_token
     @current_api_token
   end

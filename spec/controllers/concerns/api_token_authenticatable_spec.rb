@@ -12,12 +12,17 @@ RSpec.describe ApiTokenAuthenticatable, type: :controller do
   end
 
   describe "#authenticate" do
+    before do
+      request.headers["Accept"] = "application/json"
+    end
+
     context "when authorization header not present" do
       let(:bearer_token) { "Bearer invalid" }
 
       it "returns 401" do
         get :index
-        expect(response.status).to eq(401)
+        expect(response.status).to eql(401)
+        expect(JSON.parse(response.body)).to eql({ "errors" => [{ "title" => "Unauthorized" }] })
       end
     end
 
@@ -30,7 +35,7 @@ RSpec.describe ApiTokenAuthenticatable, type: :controller do
 
       it "returns 401" do
         get :index
-        expect(response.status).to eq(401)
+        expect(response.status).to eql(401)
       end
     end
 
@@ -45,7 +50,7 @@ RSpec.describe ApiTokenAuthenticatable, type: :controller do
 
       it "passes through" do
         get :index
-        expect(response.status).to eq(200)
+        expect(response.status).to eql(200)
       end
     end
   end

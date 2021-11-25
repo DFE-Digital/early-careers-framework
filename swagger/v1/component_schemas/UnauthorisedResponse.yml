@@ -1,3 +1,17 @@
 description: "Authorization information is missing or invalid"
-type: string
-example: "HTTP Token: Access denied."
+type: object
+required:
+  - errors
+example: >-
+  {
+    "errors": [
+      {
+        "title": "Unauthorized"
+      }
+    ]
+  }
+properties:
+  errors:
+    type: array
+    items:
+      $ref: "#/components/schemas/Error"

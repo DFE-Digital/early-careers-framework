@@ -48,6 +48,8 @@
         <% if response.content['application/json']
           if response.content['application/json']["example"]
             request_body = json_prettyprint(response.content['application/json']["example"])
+          elsif response.content['application/json'].schema.example
+            request_body = response.content['application/json'].schema.example
           else
             request_body = json_output(response.content['application/json'].schema)
           end

@@ -56,7 +56,12 @@
 <% if schema.example.present? && schema.type == "object" %>
   <h4 id="<%= id = 'schema-' + title + '-example'; id.parameterize %>">Example</h4>
   <%
-    source = json_prettyprint(schema.example)
+    source = if schema.example.class.to_s == "Hash"
+      json_prettyprint(schema.example)
+    else
+      json_prettyprint(JSON.parse(schema.example))
+    end
+
     formatter = Rouge::Formatters::HTML.new
     lexer = Rouge::Lexers::JSON.new
     output = formatter.format(lexer.lex(source))

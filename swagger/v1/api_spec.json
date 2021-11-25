@@ -1245,14 +1245,7 @@
       "BadRequestResponse": {
         "description": "Bad Request",
         "type": "object",
-        "example": {
-          "errors": [
-            {
-              "title": "Bad request",
-              "detail": "correct json data structure required. See API docs for reference"
-            }
-          ]
-        },
+        "example": "{\n  \"errors\": [\n    {\n      \"title\": \"Bad request\",\n      \"detail\": \"correct json data structure required. See API docs for reference\"\n    }\n  ]\n}",
         "properties": {
           "bad_request": {
             "description": "An error message for bad request",
@@ -3291,8 +3284,19 @@
       },
       "UnauthorisedResponse": {
         "description": "Authorization information is missing or invalid",
-        "type": "string",
-        "example": "HTTP Token: Access denied."
+        "type": "object",
+        "required": [
+          "errors"
+        ],
+        "example": "{\n  \"errors\": [\n    {\n      \"title\": \"Unauthorized\"\n    }\n  ]\n}",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
       }
     }
   },
