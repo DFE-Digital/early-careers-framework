@@ -1245,7 +1245,14 @@
       "BadRequestResponse": {
         "description": "Bad Request",
         "type": "object",
-        "example": "Bad Request",
+        "example": {
+          "errors": [
+            {
+              "title": "Bad request",
+              "detail": "correct json data structure required. See API docs for reference"
+            }
+          ]
+        },
         "properties": {
           "bad_request": {
             "description": "An error message for bad request",
@@ -1399,6 +1406,26 @@
         "description": "An ECF participant change schedule action",
         "type": "object",
         "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "enum": [
+              "participant-change-schedule"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ECFParticipantChangeScheduleAttributes"
+          }
+        },
+        "required": [
+          "type",
+          "attributes"
+        ]
+      },
+      "ECFParticipantChangeScheduleAttributes": {
+        "description": "An ECF participant change schedule action",
+        "type": "object",
+        "properties": {
           "schedule_identifier": {
             "description": "The new schedule of the participant",
             "type": "string",
@@ -1450,6 +1477,15 @@
               "attributes": {
                 "$ref": "#/components/schemas/ECFParticipantChangeSchedule"
               }
+            }
+          }
+        },
+        "example": {
+          "data": {
+            "type": "participant-change-schedule",
+            "attributes": {
+              "schedule_identifier": "ecf-january-standard-2021",
+              "course_identifier": "ecf-mentor"
             }
           }
         }
@@ -1577,8 +1613,33 @@
         }
       },
       "ECFParticipantDefer": {
+        "description": "The details of a participant deferral request",
+        "type": "object",
+        "required": [
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "participant-defer",
+            "enum": [
+              "participant-defer"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ECFParticipantDeferAttributes"
+          }
+        }
+      },
+      "ECFParticipantDeferAttributes": {
         "description": "An ECF participant deferral action",
         "type": "object",
+        "required": [
+          "reason",
+          "course_identifier"
+        ],
         "properties": {
           "reason": {
             "description": "The reason for the deferral",
@@ -1602,10 +1663,6 @@
             "example": "ecf-induction"
           }
         },
-        "required": [
-          "reason",
-          "course_identifier"
-        ],
         "example": {
           "reason": "career-break",
           "course_identifier": "ecf-mentor"
@@ -1651,6 +1708,27 @@
         }
       },
       "ECFParticipantResume": {
+        "description": "An ECF participant resume action",
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "enum": [
+              "participant-resume"
+            ],
+            "example": "participant-resume"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ECFParticipantResumeAttributes"
+          }
+        },
+        "required": [
+          "type",
+          "attributes"
+        ]
+      },
+      "ECFParticipantResumeAttributes": {
         "description": "An ECF participant resume action",
         "type": "object",
         "properties": {
@@ -1814,6 +1892,23 @@
         "description": "An ECF participant withdrawal action",
         "type": "object",
         "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "participant-withdraw",
+            "enum": [
+              "participant-withdraw"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ECFParticipantWithdrawAttributes"
+          }
+        }
+      },
+      "ECFParticipantWithdrawAttributes": {
+        "description": "An ECF participant withdrawal action",
+        "type": "object",
+        "properties": {
           "reason": {
             "description": "The reason for the withdrawal",
             "type": "string",
@@ -1939,7 +2034,7 @@
             }
           }
         },
-        "example": "id,type,email,full_name,mentor_id,school_urn,participant_type,cohort,status,teacher_reference_number,teacher_reference_number_validated,eligible_for_funding,pupil_premium_uplift,sparsity_uplift,training_status,updated_at\ndb3a7848-7308-4879-942a-c4a70ced400a,participant,jane.smith@some-school.example.com,Jane Smith,bb36d74a-68a7-47b6-86b6-1fd0d141c590,106286,ect,2021,active,0012345,true,true,true,true,active\nbb36d74a-68a7-47b6-86b6-1fd0d141c590,participant,martin.jones@some-school.example.com,Martin Jones,,106286,mentor,2021,active,\"\",false,false,false,false,deferred\neb475531-bf08-48ae-b0ef-c2ff5e5bdef0,participant,\"\",\"\",\"\",\"\",ect,\"\",withdrawn,\"\",\"\",\"\",\"\",\"\",withdrawn,2021-05-31T02:22:32.000Z\n"
+        "example": "id,type,email,full_name,mentor_id,school_urn,participant_type,cohort,status,teacher_reference_number,teacher_reference_number_validated,eligible_for_funding,pupil_premium_uplift,sparsity_uplift,training_status,updated_at\ndb3a7848-7308-4879-942a-c4a70ced400a,participant,jane.smith@some-school.example.com,Jane Smith,bb36d74a-68a7-47b6-86b6-1fd0d141c590,106286,ect,2021,active,0012345,true,true,true,true,active,2021-05-31T02:22:32.000Z\nbb36d74a-68a7-47b6-86b6-1fd0d141c590,participant,martin.jones@some-school.example.com,Martin Jones,,106286,mentor,2021,active,\"\",false,false,false,false,deferred,2021-05-31T02:22:32.000Z\neb475531-bf08-48ae-b0ef-c2ff5e5bdef0,participant,\"\",\"\",\"\",\"\",ect,\"\",withdrawn,\"\",\"\",\"\",\"\",\"\",withdrawn\n"
       },
       "MultipleECFParticipantsResponse": {
         "description": "A list of ECF participants",
@@ -2113,7 +2208,7 @@
             }
           }
         },
-        "example": "id,participant_id,declaration_type,course_identifier,eligible_for_payment,declaration_date,voided,state,updated_at\nc88eb9a9-773a-4f53-9716-121b981154d8,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false\n31a521ec-82c5-451c-aea3-426523f1facc,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false,2021-05-31T02:22:32.000Z\n"
+        "example": "id,participant_id,declaration_type,course_identifier,eligible_for_payment,declaration_date,voided,state,updated_at\nc88eb9a9-773a-4f53-9716-121b981154d8,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false,2021-05-31T02:22:32.000Z\n31a521ec-82c5-451c-aea3-426523f1facc,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false,2021-05-31T02:22:32.000Z\n"
       },
       "MultipleParticipantDeclarationsResponse": {
         "description": "A list of participant declarations",
@@ -2537,8 +2632,33 @@
         }
       },
       "NPQParticipantDefer": {
+        "description": "The details of an NPQ participant deferral request",
+        "type": "object",
+        "required": [
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "participant-defer",
+            "enum": [
+              "participant-defer"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/NPQParticipantDeferAttributes"
+          }
+        }
+      },
+      "NPQParticipantDeferAttributes": {
         "description": "An NPQ participant deferral action",
         "type": "object",
+        "required": [
+          "reason",
+          "course_identifier"
+        ],
         "properties": {
           "reason": {
             "description": "The reason for the deferral",
@@ -2566,10 +2686,6 @@
             "example": "npq-senior-leadership"
           }
         },
-        "required": [
-          "reason",
-          "course_identifier"
-        ],
         "example": {
           "reason": "parental-leave",
           "course_identifier": "npq-senior-leadership"
@@ -2615,6 +2731,27 @@
         }
       },
       "NPQParticipantResume": {
+        "description": "An NPQ participant resume action",
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "enum": [
+              "participant-resume"
+            ],
+            "example": "participant-resume"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/NPQParticipantResumeAttributes"
+          }
+        },
+        "required": [
+          "type",
+          "attributes"
+        ]
+      },
+      "NPQParticipantResumeAttributes": {
         "description": "An NPQ participant resume action",
         "type": "object",
         "properties": {
@@ -2775,6 +2912,23 @@
         }
       },
       "NPQParticipantWithdraw": {
+        "description": "An NPQ participant withdrawal action",
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "participant-withdraw",
+            "enum": [
+              "participant-withdraw"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/NPQParticipantWithdrawAttributes"
+          }
+        }
+      },
+      "NPQParticipantWithdrawAttributes": {
         "description": "An NPQ participant withdrawal action",
         "type": "object",
         "properties": {

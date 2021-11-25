@@ -21,6 +21,7 @@ class UTMService
     nominate_tutor: "nominate-tutor",
     nominate_tutor_cip_only: "nominate-tutor-cip-only",
     participant_validation_beta: "participant-validation-beta",
+    participant_validation_invitation: "participant-validation-invitation",
     participant_validation_research: "participant-validation-research",
     participant_validation_sit_notification: "participant-validation-sit-notification",
     partnered_invite_sit_reminder: "partnered-invite-sit-reminder",
@@ -74,8 +75,8 @@ class UTMService
     add_participants_unpartnered_cip: "add-participants-unpartnered-cip",
     unvalidated_participants_reminder: "unvalidated-participants-reminder",
     unvalidated_participants_deadline_reminder: "unvalidated-participants-deadline-reminder",
-    year2020_nqt_invite_sit_catchall: "year2020-nqt-invite-sit-catchall",
     unengaged_schools: "unengaged-schools",
+    year2020_nqt_invite_sit_catchall: "year2020-nqt-invite-sit-catchall",
   }.freeze
 
   def self.email(campaign, source = :service)

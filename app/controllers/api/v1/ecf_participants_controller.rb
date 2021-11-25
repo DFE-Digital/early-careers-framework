@@ -74,8 +74,10 @@ module Api
         # I can't figure out a way to preload the mentor IDs with the other data here, since that would include two copies of the
         # users table, and active_record picks the wrong one. This horrible hack is to keep the number of db queries sane by
         # constructing a hash from profile ID to mentor ID in a single query
-        ect_profiles = ParticipantProfile::ECT.where(id: participant_profile_ids).includes(:mentor)
-        ect_profiles.map { |profile| [profile.id, profile.mentor&.id] }.to_h
+        ParticipantProfile::ECT.where(id: participant_profile_ids)
+                               .joins(:mentor)
+                               .pluck(:id, User.arel_table["id"])
+                               .to_h
       end
     end
   end

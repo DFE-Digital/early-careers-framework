@@ -16,3 +16,9 @@ properties:
         example: participant-change-schedule
       attributes:
         $ref: "#/components/schemas/ECFParticipantChangeSchedule"
+example:
+  data:
+    type: "participant-change-schedule"
+    attributes:
+      schedule_identifier: "ecf-january-standard-2021"
+      course_identifier: "ecf-mentor"
