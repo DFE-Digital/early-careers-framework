@@ -29,7 +29,7 @@ module ParticipantDeclarationSteps
   end
 
   def given_an_npq_participant_has_been_entered_onto_the_dfe_service
-    create(:npq_specialist_schedule)
+    create(:npq_leadership_schedule)
     npq_lead_provider = create(:npq_lead_provider, cpd_lead_provider: @cpd_lead_provider)
     npq_course = create(:npq_course, identifier: "npq-senior-leadership")
     @npq_application = create(:npq_application, npq_lead_provider: npq_lead_provider, npq_course: npq_course)

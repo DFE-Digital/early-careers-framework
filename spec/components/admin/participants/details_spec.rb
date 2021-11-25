@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Admin::Participants::Details, type: :view_component do
+RSpec.describe Admin::Participants::Details, :with_default_schedules, type: :view_component do
   component { described_class.new profile: profile }
 
   context "for ECT profile" do
@@ -38,7 +38,6 @@ RSpec.describe Admin::Participants::Details, type: :view_component do
     let(:profile) { npq_application.profile }
 
     before do
-      create(:npq_specialist_schedule)
       NPQ::Accept.new(npq_application: npq_application).call
     end
 
@@ -60,7 +59,6 @@ RSpec.describe Admin::Participants::Details, type: :view_component do
     let(:profile) { npq_application.profile }
 
     before do
-      create(:npq_specialist_schedule)
       NPQ::Accept.new(npq_application: npq_application).call
     end
 
