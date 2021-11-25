@@ -4,6 +4,20 @@ module Participants
   class ParticipantValidationForm
     include Multistep::Form
 
+    def self.call(participant_profile)
+      validation_data = participant_profile.ecf_participant_validation_data
+      return false unless validation_data.present?
+
+      new(
+        participant_profile_id: participant_profile.id,
+        trn: validation_data.trn,
+        no_trn: validation_data.trn.blank?,
+        nino: validation_data.nino,
+        dob: validation_data.date_of_birth,
+        full_name: validation_data.full_name,
+      ).call
+    end
+
     # lifted from https://github.com/dwp/nino-format-validation
     NINO_REGEX = /(^(?!BG)(?!GB)(?!NK)(?!KN)(?!TN)(?!NT)(?!ZZ)[A-Z&&[^DFIQUV]][A-Z&&[^DFIOQUV]][0-9]{6}[A-D]$)/.freeze
     EXTRA_STEPS = %i[nino name_changed].freeze
@@ -110,7 +124,9 @@ module Participants
       self.eligibility = eligibility_record.status.to_sym
     end
 
-    def store_validation_result!
+    def store_validation_result!(save_validation_data_without_match: true)
+      return unless dqt_response || save_validation_data_without_match
+
       StoreValidationResult.call(
         participant_profile: participant_profile,
         validation_data: {
@@ -142,11 +158,9 @@ module Participants
       (EXTRA_STEPS - completed_steps).first || :manual_check
     end
 
-    def call
-      return false unless valid?
-
+    def call(save_validation_data_without_match: true)
       check_eligibility!
-      store_validation_result!
+      store_validation_result!(save_validation_data_without_match: save_validation_data_without_match)
     end
   end
 end
