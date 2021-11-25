@@ -27,7 +27,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
       request_body content: {
         "application/json": {
           "schema": {
-            "$ref": "#/components/schemas/ParticipantDeclaration",
+            "$ref": "#/components/schemas/ParticipantDeclarationRequest",
           },
         },
       }
@@ -35,7 +35,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
       parameter name: :params,
                 in: :body,
                 schema: {
-                  "$ref": "#/components/schemas/ParticipantDeclaration",
+                  "$ref": "#/components/schemas/ParticipantDeclarationRequest",
                 }
 
       response 200, "Successful" do

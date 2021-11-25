@@ -9,3 +9,5 @@ properties:
       - participant-withdraw
   attributes:
     $ref: "#/components/schemas/NPQParticipantWithdrawAttributes"
+required:
+  - attributes

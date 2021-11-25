@@ -1,0 +1,13 @@
+description: "An ECF retained participant declaration"
+type: object
+additionalProperties: false
+properties:
+  type:
+    description: "The data type"
+    type: string
+    enum:
+      - participant-declaration
+  attributes:
+    $ref: "#/components/schemas/ECFParticipantStartedDeclarationAttributes"
+required:
+  - attributes
