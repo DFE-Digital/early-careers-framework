@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  mount Sidekiq::Web => "/sidekiq"
+
   devise_for :users, skip: %i[registrations confirmations], controllers: {
     sessions: "users/sessions",
   }

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "sidekiq/web"
+
 if ENV.key?("VCAP_SERVICES")
   service_config = JSON.parse(ENV["VCAP_SERVICES"])
   redis_config = service_config["redis"]
