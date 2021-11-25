@@ -44,6 +44,8 @@ npq_course = FactoryBot.create(:npq_course, identifier: "npq-senior-leadership")
 npq_user = FactoryBot.create(:user, full_name: "Natalie Portman Quebec", email: "natalie.portman@quebec.ca")
 
 Timecop.freeze(Date.parse("19/09/2019")) do
+  FactoryBot.create(:npq_leadership_schedule)
+  FactoryBot.create(:npq_specialist_schedule)
   npq_application = FactoryBot.create :npq_application,
                                       user: npq_user,
                                       date_of_birth: Date.parse("10/12/1982"),
