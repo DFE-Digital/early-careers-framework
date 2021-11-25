@@ -5,13 +5,29 @@ class ParticipantProfile::ECFPolicy < ParticipantProfilePolicy
     admin? || (user.induction_coordinator? && same_school?)
   end
 
+  alias_method :edit_mentor?, :show?
+  alias_method :update_mentor?, :show?
+
+  def update?
+    return true if admin?
+    return false if record.user.npq_applications.any?
+    return false if record.completed_validation_wizard?
+    return false if record.participant_declarations.any?
+
+    user.induction_coordinator? && same_school?
+  end
+
+  alias_method :update_name?, :update?
+  alias_method :edit_name?, :update?
+  alias_method :update_email?, :update?
+  alias_method :edit_email?, :update?
+
   def withdraw_record?
     return false if record.participant_declarations.where.not(state: :voided).any?
-    return true if admin?
-    return false unless user.induction_coordinator?
+    return false unless user.induction_coordinator? || admin?
     return false if record.completed_validation_wizard? && !record.ecf_participant_eligibility&.ineligible_status?
 
-    same_school?
+    admin? || same_school?
   end
 
   alias_method :remove?, :withdraw_record?

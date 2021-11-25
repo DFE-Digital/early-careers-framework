@@ -7,7 +7,7 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
 
   let!(:school_cohort) { create(:school_cohort, cohort: cohort, induction_programme_choice: "full_induction_programme") }
   let!(:another_cohort) { create(:school_cohort) }
-  let(:mentor_profile) { create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
+  let(:mentor_profile) { create(:participant_profile, :mentor, school_cohort: school_cohort) }
   let!(:mentor_user) { mentor_profile.user }
   let!(:mentor_user_2) { create(:participant_profile, :mentor, school_cohort: school_cohort).user }
   let(:ect_profile) { create(:participant_profile, :ect, mentor_profile: mentor_user.mentor_profile, school_cohort: school_cohort) }
