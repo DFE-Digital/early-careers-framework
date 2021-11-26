@@ -37,15 +37,15 @@ FactoryBot.define do
     end
 
     trait :early_career_teacher do
-      teacher_profile { create(:teacher_profile, early_career_teacher_profile: create(:participant_profile, :ect)) }
+      teacher_profile { create(:teacher_profile, early_career_teacher_profile: create(:ect_participant_profile)) }
     end
 
     trait :mentor do
-      teacher_profile { create(:teacher_profile, mentor_profile: create(:participant_profile, :mentor)) }
+      teacher_profile { create(:teacher_profile, mentor_profile: create(:mentor_participant_profile)) }
     end
 
     trait :npq do
-      teacher_profile { create(:teacher_profile, participant_profiles: [create(:participant_profile, :npq)]) }
+      teacher_profile { create(:teacher_profile, participant_profiles: [create(:npq_participant_profile)]) }
     end
 
     trait :finance do

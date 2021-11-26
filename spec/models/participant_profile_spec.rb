@@ -16,16 +16,16 @@ RSpec.describe ParticipantProfile, type: :model do
   it "updates the updated_at on the users" do
     freeze_time
     user = create(:user, updated_at: 2.weeks.ago)
-    profile = create(:participant_profile, teacher_profile: user.create_teacher_profile)
+    profile = create(:ecf_participant_profile, teacher_profile: user.create_teacher_profile)
 
     profile.touch
     expect(user.reload.updated_at).to be_within(1.second).of Time.zone.now
   end
 
-  it "updates analytics when training_status_changed?" do
+  it "updates analytics when training_status_changed?", :with_default_schedules do
     allow(Analytics::ECFValidationService).to receive(:upsert_record)
 
-    profile = create(:participant_profile, training_status: :active)
+    profile = create(:ecf_participant_profile, training_status: :active)
     profile.training_status = :withdrawn
     profile.save!
     expect(Analytics::ECFValidationService).to have_received(:upsert_record).with(profile)

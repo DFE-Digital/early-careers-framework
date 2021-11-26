@@ -30,7 +30,7 @@ private
     cohort = create(:cohort, start_year: 2020)
     core_induction_programme = create(:core_induction_programme)
     @school_cohort = create(:school_cohort, :cip, school: school, cohort: cohort, core_induction_programme: core_induction_programme)
-    create(:participant_profile, :ect, school_cohort: @school_cohort, user: create(:user, full_name: "Test NQT+1"))
+    create(:ect_participant_profile, school_cohort: @school_cohort, user: create(:user, full_name: "Test NQT+1"))
   end
 
   def the_school_2020_cohort_page

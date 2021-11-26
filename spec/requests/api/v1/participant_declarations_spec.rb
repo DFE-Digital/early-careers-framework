@@ -310,7 +310,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       end
 
       context "when a participant id filter used" do
-        let!(:second_ect_profile) { create(:participant_profile, :ect, schedule: default_schedule) }
+        let!(:second_ect_profile) { create(:ect_participant_profile, schedule: default_schedule) }
         let!(:second_participant_declaration) do
           create(:participant_declaration,
                  user: second_ect_profile.user,

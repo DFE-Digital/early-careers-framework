@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe ECFUserSerializer do
-  let(:ect_profile) { create(:participant_profile, :ect) }
+  let(:ect_profile) { create(:ect_participant_profile) }
 
   describe "registration_completed" do
     context "before validation started" do

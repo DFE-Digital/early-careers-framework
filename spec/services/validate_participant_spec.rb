@@ -7,7 +7,7 @@ RSpec.describe ValidateParticipant do
     subject(:service) { described_class }
     let(:school_cohort) { create(:school_cohort) }
     let(:teacher_profile) { create(:teacher_profile, school: school_cohort.school, trn: nil) }
-    let(:participant_profile) { create(:participant_profile, :ect, school_cohort: school_cohort, teacher_profile: teacher_profile) }
+    let(:participant_profile) { create(:ect_participant_profile, school_cohort: school_cohort, teacher_profile: teacher_profile) }
 
     let(:request_data) do
       {

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency "participant_profile/ecf"
-
 class ParticipantProfile < ApplicationRecord
   class Mentor < ECF
     self.ignored_columns = %i[mentor_profile_id school_id]

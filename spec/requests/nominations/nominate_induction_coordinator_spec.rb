@@ -176,7 +176,7 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
       end
 
       context "when an ECT user already exists with the provided email" do
-        let!(:existing_user) { create(:participant_profile, :ect, user: create(:user, email: email)).user }
+        let!(:existing_user) { create(:ect_participant_profile, user: create(:user, email: email)).user }
 
         it "redirects to the email-used page" do
           expect {

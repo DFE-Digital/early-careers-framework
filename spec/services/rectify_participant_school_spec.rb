@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe RectifyParticipantSchool do
   subject(:service) { described_class }
-  let(:participant_profile) { create(:participant_profile, :ect) }
+  let(:participant_profile) { create(:ect_participant_profile) }
   let(:new_school) { create(:school, name: "Big Shiny School", urn: "123000") }
   let!(:school_cohort) { create(:school_cohort, cohort: participant_profile.school_cohort.cohort, school: new_school) }
   let(:transfer_uplift) { true }
@@ -29,7 +29,7 @@ RSpec.describe RectifyParticipantSchool do
     end
 
     context "when the new school does not have sparsity uplift" do
-      let(:participant_profile) { create(:participant_profile, :ect, :sparsity_uplift) }
+      let(:participant_profile) { create(:ect_participant_profile, :sparsity_uplift) }
 
       it "clears the sparsity uplift flag on the participant profile" do
         expect(participant_profile).not_to be_sparsity_uplift
@@ -45,7 +45,7 @@ RSpec.describe RectifyParticipantSchool do
     end
 
     context "when the new school does not pupil premium uplift" do
-      let(:participant_profile) { create(:participant_profile, :ect, :pupil_premium_uplift) }
+      let(:participant_profile) { create(:ect_participant_profile, :pupil_premium_uplift) }
 
       it "clears the pupil premium uplift flag on the participant profile" do
         expect(participant_profile).not_to be_pupil_premium_uplift
