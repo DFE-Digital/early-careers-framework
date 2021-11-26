@@ -26,14 +26,17 @@ RSpec.feature "Nominating tutors", :js do
 
     it "shows error messages" do
       visit start_nominate_induction_coordinator_path(token: nomination_email.token)
-      choose "Yes, (nominate someone to set up your induction for 2021/22)"
+
+      choose "Yes"
       click_on "Continue"
 
-      click_on "Start"
+      click_on "Continue"
 
-      fill_in "Full name", with: "John Wick"
-      fill_in "Work email address", with: "john-smith@example.com"
-      click_on "Confirm"
+      fill_in "What’s the full name of your induction tutor?", with: "John Wick"
+      click_on "Continue"
+
+      fill_in "nominate_induction_tutor_form[email]", with: "john-smith@example.com"
+      click_on "Continue"
 
       expect(page).to have_css("h1", text: "The name you entered does not match our records")
 
@@ -42,19 +45,38 @@ RSpec.feature "Nominating tutors", :js do
 
       click_on "Change the name"
 
-      fill_in "Full name", with: "John Wick"
-      fill_in "Work email address", with: different_user.email
-      click_on "Confirm"
+      fill_in "What’s the full name of your induction tutor?", with: "John Wick"
+      click_on "Continue"
 
-      expect(page).to have_css("h1", text: "The email you entered is used by another school")
+      fill_in "nominate_induction_tutor_form[email]", with: different_user.email
+      click_on "Continue"
+
+      expect(page).to have_css("h1", text: "The email address is being used by another school")
+
       and_the_page_should_be_accessible
       and_percy_should_be_sent_a_snapshot_named "Start nominations email already used"
 
       click_on "Change email address"
 
-      fill_in "Full name", with: "John Smith"
-      fill_in "Work email address", with: "john-smith@example.com"
-      click_on "Confirm"
+      fill_in "What’s the full name of your induction tutor?", with: "John Smith"
+      click_on "Continue"
+
+      fill_in "nominate_induction_tutor_form[email]", with: "john-smith@example.com"
+      click_on "Continue"
+
+      expect(
+        page
+          .find(".govuk-summary-list dt.govuk-summary-list__key", text: "Name")
+          .sibling("dd.govuk-summary-list__value"),
+      ).to have_text("John Smith")
+
+      expect(
+        page
+          .find(".govuk-summary-list dt.govuk-summary-list__key", text: "Email")
+          .sibling("dd.govuk-summary-list__value"),
+      ).to have_text("john-smith@example.com")
+
+      click_on "Confirm and nominate"
 
       expect(page).to have_css(".govuk-panel--confirmation", text: "Induction tutor nominated")
 
