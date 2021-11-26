@@ -10,6 +10,7 @@ SELECT u.id                                                    as participant_id
                  JOIN users u2 on tp2.user_id = u2.id
         WHERE pp2.id = pp.mentor_profile_id)                   as mentor_id,
        c.start_year                                            as cohort,
+       pp.status                                               as status,
        pp.training_status                                      as training_status,
        s.name                                                  as schedule,
        tp.trn                                                  as trn,
