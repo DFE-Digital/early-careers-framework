@@ -491,7 +491,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ParticipantDeclaration"
+                "$ref": "#/components/schemas/ParticipantDeclarationRequest"
               }
             }
           }
@@ -1776,14 +1776,97 @@
           }
         }
       },
+      "ECFParticipantRetainedDeclaration": {
+        "description": "An participant retain declaration request body",
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "The request data",
+            "type": "object",
+            "example": "participant-declaration",
+            "enum": [
+              "participant-declaration"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ECFParticipantRetainedDeclarationAttributes"
+          }
+        },
+        "required": [
+          "attributes"
+        ]
+      },
       "ECFParticipantRetainedDeclarationAttributes": {
         "description": "An ECF retained participant declaration",
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "type": {
-            "description": "The data type",
+          "participant_id": {
+            "description": "The unique id of the participant",
             "type": "string",
+            "format": "uuid",
+            "example": "db3a7848-7308-4879-942a-c4a70ced400a"
+          },
+          "declaration_type": {
+            "description": "The event declaration type",
+            "type": "string",
+            "enum": [
+              "retained-1",
+              "retained-2",
+              "retained-3",
+              "retained-4"
+            ],
+            "example": "retained-1"
+          },
+          "declaration_date": {
+            "description": "The event declaration date",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:21:32.000Z"
+          },
+          "course_identifier": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "ecf-induction",
+              "ecf-mentor"
+            ],
+            "example": "ecf-induction"
+          },
+          "evidence_held": {
+            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
+            "type": "string",
+            "enum": [
+              "training-event-attended",
+              "self-study-material-completed",
+              "other"
+            ],
+            "example": "training-event-attended"
+          }
+        },
+        "required": [
+          "participant_id",
+          "declaration_type",
+          "declaration_date",
+          "course_identifier",
+          "evidence_held"
+        ],
+        "example": {
+          "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+          "declaration_type": "retained-1",
+          "declaration_date": "2021-05-31T02:21:32.000Z",
+          "course_identifier": "ecf-induction",
+          "evidence_held": "training-event-attended"
+        }
+      },
+      "ECFParticipantStartedDeclaration": {
+        "description": "An participant started declaration request body",
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "The request data",
+            "type": "object",
+            "example": "participant-declaration",
             "enum": [
               "participant-declaration"
             ]
@@ -2760,6 +2843,26 @@
           }
         }
       },
+      "NPQParticipantRetainedDeclaration": {
+        "description": "An NPQ participant retain declaration request body",
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "The request data",
+            "type": "object",
+            "example": "participant-declaration",
+            "enum": [
+              "participant-declaration"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/NPQParticipantRetainedDeclarationAttributes"
+          }
+        },
+        "required": [
+          "attributes"
+        ]
+      },
       "NPQParticipantRetainedDeclarationAttributes": {
         "description": "An NPQ retained participant declaration",
         "type": "object",
@@ -2813,6 +2916,26 @@
           "declaration_date": "2021-05-31T02:21:32.000Z",
           "course_identifier": "npq-headship"
         }
+      },
+      "NPQParticipantStartedDeclaration": {
+        "description": "An NPQ participant started declaration request body",
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "The request data",
+            "type": "object",
+            "example": "participant-declaration",
+            "enum": [
+              "participant-declaration"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/NPQParticipantStartedDeclarationAttributes"
+          }
+        },
+        "required": [
+          "attributes"
+        ]
       },
       "NPQParticipantStartedDeclarationAttributes": {
         "description": "An NPQ started and completed participant declaration",
@@ -2997,7 +3120,7 @@
                 ]
               },
               "attributes": {
-                "$ref": "#/components/schemas/ParticipantDeclarationChoices"
+                "$ref": "#/components/schemas/ParticipantDeclarationRequest"
               }
             }
           }
@@ -3101,30 +3224,6 @@
           }
         }
       },
-      "ParticipantDeclarationChoices": {
-        "description": "A participant declaration choice",
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/ECFParticipantStartedDeclarationRequest"
-          },
-          {
-            "$ref": "#/components/schemas/ECFParticipantRetainedDeclarationRequest"
-          },
-          {
-            "$ref": "#/components/schemas/NPQParticipantStartedDeclarationRequest"
-          },
-          {
-            "$ref": "#/components/schemas/NPQParticipantRetainedDeclarationRequest"
-          }
-        ],
-        "example": {
-          "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
-          "declaration_type": "started",
-          "declaration_date": "2021-05-31T02:21:32.000Z",
-          "course_identifier": "ecf-mentor"
-        }
-      },
       "ParticipantDeclarationCsvRow": {
         "description": "The details of a participant declaration",
         "type": "object",
@@ -3215,39 +3314,20 @@
       "ParticipantDeclarationRequest": {
         "description": "An participant declaration request",
         "type": "object",
-        "properties": {
-          "data": {
-            "properties": {
-              "type": {
-                "description": "The request data",
-                "type": "object",
-                "example": "participant-declaration",
-                "enum": [
-                  "participant-declaration"
-                ]
-              },
-              "attributes": {
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/ECFParticipantStartedDeclarationAttributes"
-                  },
-                  {
-                    "$ref": "#/components/schemas/ECFParticipantRetainedDeclarationAttributes"
-                  },
-                  {
-                    "$ref": "#/components/schemas/NPQParticipantStartedDeclarationAttributes"
-                  },
-                  {
-                    "$ref": "#/components/schemas/NPQParticipantRetainedDeclarationAttributes"
-                  }
-                ]
-              },
-              "required": [
-                "attributes"
-              ]
-            }
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ECFParticipantStartedDeclaration"
+          },
+          {
+            "$ref": "#/components/schemas/ECFParticipantRetainedDeclaration"
+          },
+          {
+            "$ref": "#/components/schemas/NPQParticipantStartedDeclaration"
+          },
+          {
+            "$ref": "#/components/schemas/NPQParticipantRetainedDeclaration"
           }
-        },
+        ],
         "required": [
           "data"
         ]
