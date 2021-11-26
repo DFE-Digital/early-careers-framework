@@ -7,7 +7,7 @@ RSpec.describe SetSchoolLocalAuthorityDistrict do
   let(:cohort) { create(:cohort) }
   let(:school) { create(:school, name: "Big Shiny School", urn: "123000") }
   let(:school_cohort) { create(:school_cohort, cohort: cohort, school: school) }
-  let!(:participants) { create_list(:participant_profile, 2, :ecf, school_cohort: school_cohort) }
+  let!(:participants) { create_list(:ect_participant_profile, 2, school_cohort: school_cohort) }
   let(:administrative_district_code) { "E12345" }
   let(:start_year) { cohort.start_year }
   let!(:local_authority_district) { create(:local_authority_district, :sparse, code: administrative_district_code) }

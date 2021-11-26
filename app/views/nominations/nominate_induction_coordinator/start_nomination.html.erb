@@ -1,35 +1,39 @@
 <% content_for :title, "Nominate an induction tutor" %>
-
+<% content_for :before_content, govuk_back_link(
+  text: "Back",
+  href: choose_how_to_continue_path(token: @nominate_induction_tutor_form.token))
+%>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">Nominate an induction tutor for <%= @nominate_induction_tutor_form.school.name %></h1>
+    <span class="govuk-caption-l"><%= @nominate_induction_tutor_form.school.name %></span>
+    <h1 class="govuk-heading-xl">Nominate an induction tutor for your school</h1>
 
     <p class="govuk-body">Your induction tutor will use our online service to:</p>
     <ul class="govuk-list govuk-list--bullet">
-      <li>choose how your school wants to run an induction</li>
+      <li>choose how your school wants to run your early career teacher(ECT) training programme</li>
       <li>complete some steps to set up a programme</li>
-      <li>receive any further updates</li>
+      <li>tell us if things change at your school, for example if ECTs join or not</li>
+      <li>be our point of contact for your ECT training</li>
     </ul>
     <h2 class="govuk-heading-m">Who you can nominate</h2>
     <p class="govuk-body">
-      Schools need to choose the best person to do these tasks.
+      You should choose the best person to complete these tasks for your schools:
+    </p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>choose the right training provider or study materials</li>
+      <li>provide contact information for your ECTs and their mentors</li>
+      <li>coordinate training, support and assessment for ECTs</li>
+    </ul>
+
+    <p class="govuk-body">
+     <%= govuk_link_to "Read more about the induction role in our guidance",
+       page_path(page: 'what-each-person-does'),
+       class: "govuk-link--no-visited-state" %>.
     </p>
     <p class="govuk-body">
-      For example, you can nominate someone who:
+      If you're supported by a MAT (multi-academy trust) or federation, you can choose someone who manages traning for a number of schools.
     </p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>coordinates the training, support and assessment that early career teachers receive at your school</li>
-    </ul>
-    <p class="govuk-body">Or</p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>can confirm details for your programme, such as study materials or training providers and information about your ECTs and mentors</li>
-    </ul>
-    <p class="govuk-body">Or</p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>wants to manage a number of schools, for example, if you’re supported by a MAT (multi-academy trust) or federation</li>
-    </ul>
-    <p class="govuk-body">If you think this is your role, you can nominate yourself.</p>
 
-    <%= govuk_button_link_to "Start", { action: :new } %>
+    <%= govuk_button_link_to "Continue", { action: :full_name  } %>
   </div>
 </div>

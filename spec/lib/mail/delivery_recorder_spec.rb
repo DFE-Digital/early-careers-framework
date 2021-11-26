@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Mail::DeliveryRecorder do
+RSpec.describe Mail::DeliveryRecorder, :with_default_schedules do
   let(:mail) do
     Mail::Message.new(to: Faker::Internet.email, from: Faker::Internet.email, personalisation: personalisation)
   end
@@ -46,7 +46,7 @@ RSpec.describe Mail::DeliveryRecorder do
   end
 
   context "with some other associated objects" do
-    let(:object) { create %i[participant_profile school school_cohort].sample }
+    let(:object) { create %i[ecf_participant_profile school school_cohort].sample }
     let(:name) { Faker::Lorem.words.join("_").to_sym }
 
     it "records the association between email and an object" do

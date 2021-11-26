@@ -8,7 +8,7 @@ RSpec.describe "Participant validations", with_feature_flags: { eligibility_noti
   end
 
   let(:school_cohort) { create(:school_cohort) }
-  let(:profile) { create(:participant_profile, :ect, school_cohort: school_cohort) }
+  let(:profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
   let(:user) { profile.user }
 
   describe "starting the journey"

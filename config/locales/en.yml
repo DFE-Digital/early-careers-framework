@@ -213,16 +213,29 @@ en:
       no_early_career_teachers: "No early career teachers for this cohort"
       not_yet_known: "Not yet decided"
 
+  courses:
+    npq:
+      npq-leading-teaching: Leading Teaching
+      npq-leading-behaviour-culture: Leading Behaviour and Culture
+      npq-leading-teaching-development: Leading Teacher Development
+      npq-senior-leadership: Senior Leadership
+      npq-headship: Headship
+      npq-executive-leadership: Executive Leadership
+      npq-additional-support-offer: Additional Support Offer
   finance:
+    submission_deadline: Submission deadline
     choose_programme: Choose programme scheme
+    cohort: Cohort
     show_contract: View contract information
     provider: Provider
     ects: Current ECTs
     mentors: Current Mentors
-    participants: Current Participants
+    participants: Current participants
     per_participant: Payment amount per person
+    amount: Amount
     payment_breakdown: Payment Breakdown
     payment_type: Payment type
+    payment_reference: Payment reference
     number_of_participants: Number of participants
     payment_amount_for_period: Payment amount for period
     payment: Payment
@@ -235,9 +248,12 @@ en:
     total_paid: Total paid
     total_not_paid: Total not paid
     contract:
+      version: Contract reference
+      per_participant: Per participant
+      service_fee_installments: Service fee installments
       uplift_target: Uplift target
       uplift_amount: Uplift amount
-      recuitment_target: Recruitment target
+      recruitment_target: Recruitment target
       revised_target: Revised recruitment target (+2%)
       set_up_fee: Set-up Fee
       band: Band
@@ -254,17 +270,17 @@ en:
         "3": New target
       payment_breakdown: ECF Payment Breakdown
       breakdown_summary:
-        submission_deadline: Submission deadline
         total: Total
+
     npq:
       payment_breakdown: NPQ Payment Breakdown
     service_fee:
-      caption: Service Fee
+      caption: Service fee
     output_payment:
-      caption: Output Fee
+      caption: Output fee
       band_d_info: Participants over the original band C target up to the new target.
     uplift_fee:
-      caption: Uplift Fee
+      caption: Uplift fee
     clawbacks:
       caption: Clawbacks
       per_participant: Clawback per participant

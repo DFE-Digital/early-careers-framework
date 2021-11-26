@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe Participants::ParticipantValidationForm, type: :model do
   subject(:form) { described_class.new(participant_profile_id: participant_profile.id) }
 
-  let(:participant_profile) { create :participant_profile, :ecf }
+  let(:participant_profile) { create :ect_participant_profile }
   let(:validation_result) { [nil, spy].sample }
   let(:eligibility_record) { build :ecf_participant_eligibility }
 

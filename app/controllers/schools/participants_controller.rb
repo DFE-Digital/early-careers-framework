@@ -110,11 +110,7 @@ private
 
   def set_participant
     @profile = ParticipantProfile.find(params[:participant_id] || params[:id])
-    if %w[remove destroy].include?(action_name)
-      authorize @profile, :withdraw_record?, policy_class: ParticipantProfile::ECFPolicy
-    else
-      authorize @profile.user, policy_class: ParticipantPolicy
-    end
+    authorize @profile, policy_class: @profile.policy_class
   end
 
   def participant_mentor_form_params

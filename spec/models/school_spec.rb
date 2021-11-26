@@ -43,63 +43,63 @@ RSpec.describe School, type: :model do
     describe "all_ecf_participants_validated" do
       it "includes only schools with ecf participants that are all validated" do
         school_with_mentor_with_eligibilty = create(:school_cohort).school.tap do |school|
-          create(:participant_profile, :mentor, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
+          create(:mentor_participant_profile, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
         end
 
         school_with_mentor_with_validation_data = create(:school_cohort).school.tap do |school|
-          create(:participant_profile, :mentor, :ecf_participant_validation_data, school_cohort: school.school_cohorts.first)
+          create(:mentor_participant_profile, :ecf_participant_validation_data, school_cohort: school.school_cohorts.first)
         end
 
         school_with_ect_with_eligibility = create(:school_cohort).school.tap do |school|
-          create(:participant_profile, :ect, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
+          create(:ect_participant_profile, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
         end
 
         school_with_ect_with_validation_data = create(:school_cohort).school.tap do |school|
-          create(:participant_profile, :ect, :ecf_participant_validation_data, school_cohort: school.school_cohorts.first)
+          create(:ect_participant_profile, :ecf_participant_validation_data, school_cohort: school.school_cohorts.first)
         end
 
         school_with_mentor_with_eligibilty_and_unvalidated_ect = create(:school_cohort).school.tap do |school|
-          create(:participant_profile, :mentor, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
-          create(:participant_profile, :ect, school_cohort: school.school_cohorts.first)
+          create(:mentor_participant_profile, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
+          create(:ect_participant_profile, school_cohort: school.school_cohorts.first)
         end
 
         school_with_mentor_with_validation_data_and_unvalidated_ect = create(:school_cohort).school.tap do |school|
-          create(:participant_profile, :mentor, :ecf_participant_validation_data, school_cohort: school.school_cohorts.first)
-          create(:participant_profile, :ect, school_cohort: school.school_cohorts.first)
+          create(:mentor_participant_profile, :ecf_participant_validation_data, school_cohort: school.school_cohorts.first)
+          create(:ect_participant_profile, school_cohort: school.school_cohorts.first)
         end
 
         school_with_ect_with_eligibility_and_unvalidated_ect = create(:school_cohort).school.tap do |school|
-          create(:participant_profile, :ect, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
-          create(:participant_profile, :ect, school_cohort: school.school_cohorts.first)
+          create(:ect_participant_profile, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
+          create(:ect_participant_profile, school_cohort: school.school_cohorts.first)
         end
 
         school_with_ect_with_validation_data_and_unvalidated_ect = create(:school_cohort).school.tap do |school|
-          create(:participant_profile, :ect, :ecf_participant_validation_data, school_cohort: school.school_cohorts.first)
-          create(:participant_profile, :ect, school_cohort: school.school_cohorts.first)
+          create(:ect_participant_profile, :ecf_participant_validation_data, school_cohort: school.school_cohorts.first)
+          create(:ect_participant_profile, school_cohort: school.school_cohorts.first)
         end
 
         school_with_mentor_with_eligibilty_and_unvalidated_mentor = create(:school_cohort).school.tap do |school|
-          create(:participant_profile, :mentor, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
-          create(:participant_profile, :mentor, school_cohort: school.school_cohorts.first)
+          create(:mentor_participant_profile, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
+          create(:mentor_participant_profile, school_cohort: school.school_cohorts.first)
         end
 
         school_with_mentor_with_validation_data_and_unvalidated_mentor = create(:school_cohort).school.tap do |school|
-          create(:participant_profile, :mentor, :ecf_participant_validation_data, school_cohort: school.school_cohorts.first)
-          create(:participant_profile, :mentor, school_cohort: school.school_cohorts.first)
+          create(:mentor_participant_profile, :ecf_participant_validation_data, school_cohort: school.school_cohorts.first)
+          create(:mentor_participant_profile, school_cohort: school.school_cohorts.first)
         end
 
         school_with_ect_with_eligibility_and_unvalidated_mentor = create(:school_cohort).school.tap do |school|
-          create(:participant_profile, :ect, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
-          create(:participant_profile, :mentor, school_cohort: school.school_cohorts.first)
+          create(:ect_participant_profile, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first)
+          create(:mentor_participant_profile, school_cohort: school.school_cohorts.first)
         end
 
         school_with_ect_with_validation_data_and_unvalidated_mentor = create(:school_cohort).school.tap do |school|
-          create(:participant_profile, :ect, :ecf_participant_validation_data, school_cohort: school.school_cohorts.first)
-          create(:participant_profile, :mentor, school_cohort: school.school_cohorts.first)
+          create(:ect_participant_profile, :ecf_participant_validation_data, school_cohort: school.school_cohorts.first)
+          create(:mentor_participant_profile, school_cohort: school.school_cohorts.first)
         end
 
         school_with_inactive_mentor_with_eligibilty = create(:school_cohort).school.tap do |school|
-          create(:participant_profile, :mentor, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first, status: :withdrawn)
+          create(:mentor_participant_profile, :ecf_participant_eligibility, school_cohort: school.school_cohorts.first, status: :withdrawn)
         end
 
         school_with_no_participants = create(:school_cohort).school
@@ -546,31 +546,31 @@ RSpec.describe School, type: :model do
 
   describe "#participants_for" do
     it "includes active participants" do
-      ect_profile = create(:participant_profile, :ect, school_cohort: school_cohort)
-      mentor_profile = create(:participant_profile, :mentor, school_cohort: school_cohort)
+      ect_profile = create(:ect_participant_profile, school_cohort: school_cohort)
+      mentor_profile = create(:mentor_participant_profile, school_cohort: school_cohort)
 
       expect(school.participants_for(cohort)).to include(ect_profile.user, mentor_profile.user)
     end
 
     it "does not include participants with withdrawn records" do
-      ect = create(:participant_profile, :ect, :withdrawn_record, school_cohort: school_cohort).user
-      mentor = create(:participant_profile, :mentor, :withdrawn_record, school_cohort: school_cohort).user
+      ect = create(:ect_participant_profile, :withdrawn_record, school_cohort: school_cohort).user
+      mentor = create(:mentor_participant_profile, :withdrawn_record, school_cohort: school_cohort).user
 
       expect(school.participants_for(cohort)).not_to include(ect, mentor)
     end
 
     it "does not include participants from other cohorts" do
       another_school_cohort = create(:school_cohort, cohort: create(:cohort), school: school)
-      ect_profile = create(:participant_profile, :ect, school_cohort: another_school_cohort)
-      mentor_profile = create(:participant_profile, :mentor, school_cohort: another_school_cohort)
+      ect_profile = create(:ect_participant_profile, school_cohort: another_school_cohort)
+      mentor_profile = create(:mentor_participant_profile, school_cohort: another_school_cohort)
 
       expect(school.participants_for(cohort)).not_to include(ect_profile.user, mentor_profile.user)
     end
 
     it "does not include participants from other schools" do
       another_school_cohort = create(:school_cohort, school: create(:school), cohort: cohort)
-      ect_profile = create(:participant_profile, :ect, school_cohort: another_school_cohort)
-      mentor_profile = create(:participant_profile, :mentor, school_cohort: another_school_cohort)
+      ect_profile = create(:ect_participant_profile, school_cohort: another_school_cohort)
+      mentor_profile = create(:mentor_participant_profile, school_cohort: another_school_cohort)
 
       expect(school.participants_for(cohort)).not_to include(ect_profile.user, mentor_profile.user)
     end
@@ -578,33 +578,33 @@ RSpec.describe School, type: :model do
 
   describe "#early_career_teacher_profiles_for" do
     it "includes active ECTs" do
-      ect_profile = create(:participant_profile, :ect, school_cohort: school_cohort)
+      ect_profile = create(:ect_participant_profile, school_cohort: school_cohort)
 
       expect(school.early_career_teacher_profiles_for(cohort)).to include ect_profile
     end
 
     it "does not include ECTs with withdrawn records" do
-      ect_profile = create(:participant_profile, :ect, :withdrawn_record, school_cohort: school_cohort)
+      ect_profile = create(:ect_participant_profile, :withdrawn_record, school_cohort: school_cohort)
 
       expect(school.early_career_teacher_profiles_for(cohort)).not_to include ect_profile
     end
 
     it "does not include ECTs from other cohorts" do
       another_school_cohort = create(:school_cohort, cohort: create(:cohort), school: school)
-      ect_profile = create(:participant_profile, :ect, school_cohort: another_school_cohort)
+      ect_profile = create(:ect_participant_profile, school_cohort: another_school_cohort)
 
       expect(school.early_career_teacher_profiles_for(cohort)).not_to include ect_profile
     end
 
     it "does not include ECTs from other schools" do
       another_school_cohort = create(:school_cohort, school: create(:school), cohort: cohort)
-      ect_profile = create(:participant_profile, :ect, school_cohort: another_school_cohort)
+      ect_profile = create(:ect_participant_profile, school_cohort: another_school_cohort)
 
       expect(school.early_career_teacher_profiles_for(cohort)).not_to include ect_profile
     end
 
     it "does not include mentors" do
-      mentor_profile = create(:participant_profile, :mentor, school_cohort: school_cohort)
+      mentor_profile = create(:mentor_participant_profile, school_cohort: school_cohort)
 
       expect(school.early_career_teacher_profiles_for(cohort)).not_to include mentor_profile
     end
@@ -612,33 +612,33 @@ RSpec.describe School, type: :model do
 
   describe "#mentor_profiles_for" do
     it "includes active mentors" do
-      mentor_profile = create(:participant_profile, :mentor, school_cohort: school_cohort)
+      mentor_profile = create(:mentor_participant_profile, school_cohort: school_cohort)
 
       expect(school.mentor_profiles_for(cohort)).to include mentor_profile
     end
 
     it "does not include mentors with withdrawn records" do
-      mentor_profile = create(:participant_profile, :mentor, :withdrawn_record, school_cohort: school_cohort)
+      mentor_profile = create(:mentor_participant_profile, :withdrawn_record, school_cohort: school_cohort)
 
       expect(school.mentor_profiles_for(cohort)).not_to include mentor_profile
     end
 
     it "does not include mentors from other cohorts" do
       another_school_cohort = create(:school_cohort, cohort: create(:cohort), school: school)
-      mentor_profile = create(:participant_profile, :mentor, school_cohort: another_school_cohort)
+      mentor_profile = create(:mentor_participant_profile, school_cohort: another_school_cohort)
 
       expect(school.mentor_profiles_for(cohort)).not_to include mentor_profile
     end
 
     it "does not include mentors from other schools" do
       another_school_cohort = create(:school_cohort, school: create(:school), cohort: cohort)
-      mentor_profile = create(:participant_profile, :mentor, school_cohort: another_school_cohort)
+      mentor_profile = create(:mentor_participant_profile, school_cohort: another_school_cohort)
 
       expect(school.mentor_profiles_for(cohort)).not_to include mentor_profile
     end
 
     it "does not include ECTs" do
-      ect_profile = create(:participant_profile, :ect, school_cohort: school_cohort)
+      ect_profile = create(:ect_participant_profile, school_cohort: school_cohort)
 
       expect(school.mentor_profiles_for(cohort)).not_to include ect_profile
     end

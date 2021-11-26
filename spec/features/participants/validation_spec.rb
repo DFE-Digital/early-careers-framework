@@ -5,7 +5,7 @@ RSpec.feature "ECT participant validation journey", with_feature_flags: { eligib
   let(:school_cohort) { create :school_cohort, :fip, school: school }
   let(:user) { create :user, full_name: "Lena zavroni" }
   let(:teacher_profile) { create :teacher_profile, user: user }
-  let(:participant_profile) { create :participant_profile, :ect, school_cohort: school_cohort, teacher_profile: teacher_profile }
+  let(:participant_profile) { create :ect_participant_profile, school_cohort: school_cohort, teacher_profile: teacher_profile }
   before { set_dtq_validation_result nil }
 
   scenario "Participant validates their details with trn" do

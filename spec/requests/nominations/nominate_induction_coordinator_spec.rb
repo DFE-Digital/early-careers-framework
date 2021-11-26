@@ -70,148 +70,175 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
     end
   end
 
-  describe "GET /nominations/new" do
-    let(:nomination_email) { create(:nomination_email) }
+  context "user has started sit nomination" do
+    let!(:nomination_email) { create(:nomination_email) }
+    let!(:token) { nomination_email.token }
+    let!(:school) { nomination_email.school }
+    let!(:name) { Faker::Name.name }
+    let!(:email) { Faker::Internet.email }
 
-    around do |example|
-      get "/nominations/start-nomination?token=#{nomination_email.token}"
-      example.run
+    describe "GET /nominations/full-name" do
+      around do |example|
+        get "/nominations/start-nomination?token=#{nomination_email.token}"
+        example.run
+      end
+
+      it "renders the full-name template" do
+        get "/nominations/full-name"
+        expect(response).to render_template("nominations/nominate_induction_coordinator/full_name")
+      end
     end
 
-    it "renders the new template" do
-      get "/nominations/new"
-      expect(response).to render_template("nominations/nominate_induction_coordinator/new")
+    describe "PUT /nominations/full-name" do
+      it "redirects to the email template when a valid name is inputted" do
+        put "/nominations/full-name", params: { nominate_induction_tutor_form: {
+          full_name: name,
+          email: "",
+          token: token,
+        } }
+
+        expect(response).to redirect_to("/nominations/email")
+      end
+
+      it "shows a validation error when the name is blank" do
+        put "/nominations/full-name", params: { nominate_induction_tutor_form: {
+          full_name: "",
+          email: "",
+          token: token,
+        } }
+
+        expect(response).to render_template("nominations/nominate_induction_coordinator/full_name")
+        expect(response.body).to include(CGI.escapeHTML("Enter a full name"))
+      end
     end
-  end
 
-  describe "POST /nominations" do
-    let(:nomination_email) { create(:nomination_email) }
-    let(:token) { nomination_email.token }
-    let(:school) { nomination_email.school }
-    let(:name) { Faker::Name.name }
-    let(:email) { Faker::Internet.email }
+    describe "GET /nominations/email" do
+      it "renders the email template" do
+        get "/nominations/email", params: { nominate_induction_tutor_form: {
+          full_name: name,
+          email: "",
+          token: token,
+        } }
 
-    it "creates a user and induction coordinator profile with the given details" do
-      expect {
-        post "/nominations", params: { nominate_induction_tutor_form: {
+        expect(response).to render_template("nominations/nominate_induction_coordinator/email")
+      end
+    end
+
+    describe "PUT /nominations/email" do
+      it "redirects to the check template when a valid email is inputted" do
+        put "/nominations/email", params: { nominate_induction_tutor_form: {
           full_name: name,
           email: email,
           token: token,
         } }
-      }
-        .to change { User.count }
-              .by(1)
-              .and change { InductionCoordinatorProfile.count }.by(1)
 
-      created_user = User.find_by(email: email)
-      expect(created_user).not_to be_nil
-      expect(created_user.full_name).to eql name
-      expect(created_user.induction_coordinator_profile.schools).to contain_exactly(school)
-      expect(response).to redirect_to("/nominations/nominate-school-lead-success")
+        expect(response).to redirect_to("/nominations/check-details")
+      end
+
+      it "shows a validation error when the email is blank" do
+        put "/nominations/email", params: { nominate_induction_tutor_form: {
+          full_name: name,
+          email: "",
+          token: token,
+        } }
+
+        expect(response).to render_template("nominations/nominate_induction_coordinator/email")
+        expect(response.body).to include(CGI.escapeHTML("Enter an email"))
+      end
+
+      it "shows a validation error when the email is invalid" do
+        put "/nominations/email", params: { nominate_induction_tutor_form: {
+          full_name: name,
+          email: "invalid@email",
+          token: token,
+        } }
+
+        expect(response).to render_template("nominations/nominate_induction_coordinator/email")
+        expect(response.body).to include(CGI.escapeHTML("Enter an email address in the correct format, like name@example.com"))
+      end
+
+      context "when an induction coordinator already exists with the provided email" do
+        let!(:existing_induction_coordinator) { create(:user, :induction_coordinator, email: email) }
+
+        it "redirects to the name-different page when the form name does not match our records" do
+          expect {
+            put "/nominations/email", params: { nominate_induction_tutor_form: {
+              full_name: "Different Name",
+              email: email,
+              token: token,
+            } }
+          }.not_to(change { User.count })
+
+          expect(existing_induction_coordinator.schools.count).to eql 1
+          expect(existing_induction_coordinator.schools).not_to include nomination_email.school
+          expect(response).to redirect_to("/nominations/name-different")
+        end
+      end
+
+      context "when an ECT user already exists with the provided email" do
+        let!(:existing_user) { create(:ect_participant_profile, user: create(:user, email: email)).user }
+
+        it "redirects to the email-used page" do
+          expect {
+            put "/nominations/email", params: { nominate_induction_tutor_form: {
+              full_name: name,
+              email: email,
+              token: token,
+            } }
+          }.not_to(change { User.count })
+
+          expect(response).to redirect_to("/nominations/email-used")
+        end
+      end
     end
 
-    it "shows a validation error when the email is blank" do
-      post "/nominations", params: { nominate_induction_tutor_form: {
-        full_name: name,
-        email: "",
-        token: token,
-      } }
-
-      expect(response).to render_template("nominations/nominate_induction_coordinator/new")
-      expect(response.body).to include(CGI.escapeHTML("Enter an email"))
+    describe "GET /nominations/check-details" do
+      it "renders the check template" do
+        get "/nominations/check-details", params: { nominate_induction_tutor_form: {
+          full_name: name,
+          email: email,
+          token: token,
+        } }
+        expect(response).to render_template("nominations/nominate_induction_coordinator/check")
+      end
     end
 
-    it "shows a validation error when the name is blank" do
-      post "/nominations", params: { nominate_induction_tutor_form: {
-        full_name: "",
-        email: email,
-        token: token,
-      } }
-
-      expect(response).to render_template("nominations/nominate_induction_coordinator/new")
-      expect(response.body).to include(CGI.escapeHTML("Enter a full name"))
-    end
-
-    context "when an induction coordinator already exists with the provided email" do
-      let!(:existing_induction_coordinator) { create(:user, :induction_coordinator, email: email) }
-
-      it "adds the schools to their list of schools" do
+    describe "POST /nominations/check-details" do
+      it "creates a user and induction coordinator profile with the given details" do
         expect {
-          post "/nominations", params: { nominate_induction_tutor_form: {
-            full_name: existing_induction_coordinator.full_name,
+          post "/nominations/check-details", params: { nominate_induction_tutor_form: {
+            full_name: name,
             email: email,
             token: token,
           } }
-        }.not_to(change { User.count })
+        }
+          .to change { User.count }
+                .by(1)
+                .and change { InductionCoordinatorProfile.count }.by(1)
 
-        expect(existing_induction_coordinator.schools.count).to eql 2
-        expect(existing_induction_coordinator.schools).to include nomination_email.school
+        created_user = User.find_by(email: email)
+        expect(created_user).not_to be_nil
+        expect(created_user.full_name).to eql name
+        expect(created_user.induction_coordinator_profile.schools).to contain_exactly(school)
         expect(response).to redirect_to("/nominations/nominate-school-lead-success")
       end
 
-      it "redirects to the name-different page when the name is different" do
-        expect {
-          post "/nominations", params: { nominate_induction_tutor_form: {
-            full_name: "Different Name",
-            email: email,
-            token: token,
-          } }
-        }.not_to(change { User.count })
+      context "when an induction coordinator already exists with the provided email" do
+        let!(:existing_induction_coordinator) { create(:user, :induction_coordinator, email: email) }
 
-        expect(existing_induction_coordinator.schools.count).to eql 1
-        expect(existing_induction_coordinator.schools).not_to include nomination_email.school
-        expect(response).to redirect_to("/nominations/name-different")
-      end
-    end
+        it "adds the schools to their list of schools" do
+          expect {
+            post "/nominations/check-details", params: { nominate_induction_tutor_form: {
+              full_name: existing_induction_coordinator.full_name,
+              email: email,
+              token: token,
+            } }
+          }.not_to(change { User.count })
 
-    context "when an ECT user already exists with the provided email" do
-      let!(:existing_user) { create(:participant_profile, :ect, user: create(:user, email: email)).user }
-
-      it "redirects to the email-used page" do
-        expect {
-          post "/nominations", params: { nominate_induction_tutor_form: {
-            full_name: name,
-            email: email,
-            token: token,
-          } }
-        }.not_to(change { User.count })
-
-        expect(response).to redirect_to("/nominations/email-used")
-      end
-    end
-
-    context "when a Mentor user already exists with the provided email" do
-      let!(:existing_user) { create(:participant_profile, :mentor, user: create(:user, email: email)).user }
-
-      it "adds an induction tutor profile to the existing user" do
-        expect {
-          post "/nominations", params: { nominate_induction_tutor_form: {
-            full_name: name,
-            email: email,
-            token: token,
-          } }
-        }.not_to change { User.count }
-
-        expect(existing_user.induction_coordinator_profile).not_to be_nil
-        expect(existing_user.schools).to match_array [nomination_email.school]
-      end
-    end
-
-    context "when a NPQ registrant already exists with that email address" do
-      let(:existing_user) { create(:user, email: email) }
-      let!(:npq_profile) { create(:participant_profile, :npq, user: existing_user) }
-
-      it "adds an induction tutor profile to the existing user" do
-        expect {
-          post "/nominations", params: { nominate_induction_tutor_form: {
-            full_name: name,
-            email: email,
-            token: token,
-          } }
-        }.not_to change { User.count }
-
-        expect(existing_user.induction_coordinator_profile).not_to be_nil
-        expect(existing_user.schools).to match_array [nomination_email.school]
+          expect(existing_induction_coordinator.schools.count).to eql 2
+          expect(existing_induction_coordinator.schools).to include nomination_email.school
+          expect(response).to redirect_to("/nominations/nominate-school-lead-success")
+        end
       end
     end
   end

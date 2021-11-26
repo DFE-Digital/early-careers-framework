@@ -47,3 +47,6 @@ class ParticipantProfile::ECF < ParticipantProfile
     ParticipantProfile::ECFPolicy
   end
 end
+
+require_dependency "participant_profile/ect"
+require_dependency "participant_profile/mentor"

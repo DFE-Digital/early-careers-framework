@@ -14,9 +14,9 @@ class NominateHowToContinueForm
 
   def choices
     [
-      OpenStruct.new(id: "yes", name: "Yes, (nominate someone to set up your induction for #{cohort.academic_year})"),
-      OpenStruct.new(id: "no", name: "No, (opt out of updates about this service until the next academic year)"),
-      OpenStruct.new(id: "i_dont_know", name: "I don’t know, (nominate someone to receive updates)"),
+      OpenStruct.new(id: "yes", name: "Yes"),
+      OpenStruct.new(id: "no", name: "No"),
+      OpenStruct.new(id: "we_dont_know", name: "We do not know yet"),
     ]
   end
 

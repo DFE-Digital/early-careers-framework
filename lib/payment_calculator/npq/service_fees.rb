@@ -10,21 +10,28 @@ module PaymentCalculator
       end
 
       def call
-        { monthly: calculated_service_fee }
+        {
+          per_participant: per_participant_portion,
+          monthly: calculated_service_fee,
+        }
       end
 
     private
 
-      attr_reader :contract
+      attr_accessor :contract
 
       delegate :recruitment_target, :per_participant, :service_fee_percentage, :service_fee_installments, to: :contract
 
+      def per_participant_portion
+        service_fee_percentage.zero? ? 0 : per_participant * service_fee_percentage / (100 * service_fee_installments)
+      end
+
       def calculated_service_fee
-        service_fee_percentage.zero? ? 0 : recruitment_target * per_participant * service_fee_percentage / (100 * service_fee_installments)
+        recruitment_target * per_participant_portion
       end
 
       def initialize(contract:)
-        @contract = contract
+        self.contract = contract
       end
     end
   end

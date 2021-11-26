@@ -4,33 +4,54 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
   include NominationEmailTokenConsumer
 
   before_action :check_token_status, only: :start_nomination
+  before_action :load_nominate_induction_tutor_form, only: %i[full_name check_name email check_email check create]
 
   def start_nomination
+    unless params[:continue]
+      session.delete(:nominate_induction_tutor_form)
+    end
+
     token = params[:token]
     load_nominate_induction_tutor_form
     @nominate_induction_tutor_form.token = token
-    session[:nominate_induction_tutor_form] = @nominate_induction_tutor_form.as_json
+    store_nominate_induction_tutor_form
   end
 
-  def new
-    load_nominate_induction_tutor_form
+  def full_name; end
+
+  def check_name
+    if @nominate_induction_tutor_form.valid? :full_name
+      store_nominate_induction_tutor_form
+      redirect_to action: :email
+    else
+      render :full_name
+    end
   end
 
-  def create
-    load_nominate_induction_tutor_form
+  def email; end
 
-    if @nominate_induction_tutor_form.valid?
-      CreateInductionTutor.call(school: @nominate_induction_tutor_form.school,
-                                email: @nominate_induction_tutor_form.email,
-                                full_name: @nominate_induction_tutor_form.full_name)
-      redirect_to nominate_school_lead_success_nominate_induction_coordinator_path
+  def check_email
+    if @nominate_induction_tutor_form.valid? :email
+      store_nominate_induction_tutor_form
+      redirect_to action: :check
     elsif @nominate_induction_tutor_form.name_different?
       redirect_to action: :name_different
     elsif @nominate_induction_tutor_form.email_already_taken?
       redirect_to action: :email_used
     else
-      render :new
+      render :email
     end
+  end
+
+  def check; end
+
+  def create
+    CreateInductionTutor.call(school: @nominate_induction_tutor_form.school,
+                              email: @nominate_induction_tutor_form.email,
+                              full_name: @nominate_induction_tutor_form.full_name)
+    session.delete(:nominate_induction_tutor_form)
+
+    redirect_to nominate_school_lead_success_nominate_induction_coordinator_path
   end
 
   def link_expired
@@ -71,5 +92,9 @@ private
       local_authority_id: school.local_authority.id,
       school_id: school.id,
     )
+  end
+
+  def store_nominate_induction_tutor_form
+    session[:nominate_induction_tutor_form] = @nominate_induction_tutor_form.serializable_hash
   end
 end
