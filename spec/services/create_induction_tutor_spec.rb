@@ -62,7 +62,7 @@ RSpec.describe CreateInductionTutor do
         end
 
         context "when the induction coordinator is also a mentor" do
-          let!(:mentor_profile) { create(:participant_profile, :mentor, user: existing_profile.user, school: school) }
+          let!(:mentor_profile) { create(:mentor_participant_profile, user: existing_profile.user, school: school) }
 
           it "removes the school from the existing induction coordinator" do
             expect(school.induction_coordinator_profiles.first).to eq(existing_profile)
@@ -81,7 +81,7 @@ RSpec.describe CreateInductionTutor do
       end
 
       context "when the induction coordinator is also a mentor" do
-        let!(:mentor_profile) { create(:participant_profile, :mentor, user: existing_profile.user, school: school) }
+        let!(:mentor_profile) { create(:mentor_participant_profile, user: existing_profile.user, school: school) }
 
         it "retains the user but deletes the induction coordinator profile" do
           expect(school.induction_coordinator_profiles.first).to eq(existing_profile)
@@ -97,7 +97,7 @@ RSpec.describe CreateInductionTutor do
       end
 
       context "when the induction coordinator was previously a mentor" do
-        let!(:mentor_profile) { create(:participant_profile, :mentor, user: existing_profile.user, school: school, status: "withdrawn") }
+        let!(:mentor_profile) { create(:mentor_participant_profile, user: existing_profile.user, school: school, status: "withdrawn") }
 
         it "retains the user but deletes the induction coordinator profile" do
           expect(school.induction_coordinator_profiles.first).to eq(existing_profile)
@@ -113,7 +113,7 @@ RSpec.describe CreateInductionTutor do
       end
 
       context "when the induction coordinator is also an npq" do
-        let!(:npq_profile) { create(:participant_profile, :npq, user: existing_profile.user, school: school) }
+        let!(:npq_profile) { create(:npq_participant_profile, user: existing_profile.user, school: school) }
 
         it "retains the user but deletes the induction coordinator profile" do
           expect(school.induction_coordinator_profiles.first).to eq(existing_profile)

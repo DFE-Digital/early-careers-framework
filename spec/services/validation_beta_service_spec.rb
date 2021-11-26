@@ -24,7 +24,7 @@ RSpec.describe ValidationBetaService do
     end
 
     it "does not email SIT whose school has added an ECT" do
-      create(:participant_profile, :ect, school_cohort: school_cohort, school: school)
+      create(:ect_participant_profile, school_cohort: school_cohort, school: school)
 
       expect {
         validation_beta_service.remind_fip_induction_coordinators_to_add_ect_and_mentors
@@ -32,7 +32,7 @@ RSpec.describe ValidationBetaService do
     end
 
     it "does not email SIT whose school has added an mentor" do
-      create(:participant_profile, :mentor, school_cohort: school_cohort, school: school)
+      create(:mentor_participant_profile, school_cohort: school_cohort, school: school)
 
       expect {
         validation_beta_service.remind_fip_induction_coordinators_to_add_ect_and_mentors
@@ -63,8 +63,8 @@ RSpec.describe ValidationBetaService do
       expected_start_url = "http://www.example.com/participants/start-registration?utm_campaign=unvalidated-participants-reminder&utm_medium=email&utm_source=unvalidated-participants-reminder"
       expected_sign_in_url = "http://www.example.com/users/sign_in?utm_campaign=unvalidated-participants-reminder&utm_medium=email&utm_source=unvalidated-participants-reminder"
 
-      create(:participant_profile, :mentor, school_cohort: school_cohort)
-      create(:participant_profile, :ecf_participant_validation_data, :ect, school_cohort: school_cohort)
+      create(:mentor_participant_profile, school_cohort: school_cohort)
+      create(:ecf_participant_profile, :ecf_participant_validation_data, school_cohort: school_cohort)
       sit = create(:induction_coordinator_profile, schools: [school_cohort.school])
 
       expect {
@@ -87,8 +87,8 @@ RSpec.describe ValidationBetaService do
       expected_start_url = "http://www.example.com/participants/start-registration?utm_campaign=unvalidated-participants-reminder&utm_medium=email&utm_source=unvalidated-participants-reminder"
       expected_sign_in_url = "http://www.example.com/users/sign_in?utm_campaign=unvalidated-participants-reminder&utm_medium=email&utm_source=unvalidated-participants-reminder"
 
-      create(:participant_profile, :mentor, school_cohort: school_cohort)
-      create(:participant_profile, :ecf_participant_validation_data, :ect, school_cohort: school_cohort)
+      create(:mentor_participant_profile, school_cohort: school_cohort)
+      create(:ecf_participant_profile, :ecf_participant_validation_data, school_cohort: school_cohort)
       sit = create(:induction_coordinator_profile, schools: [school_cohort.school])
 
       expect {
@@ -107,8 +107,8 @@ RSpec.describe ValidationBetaService do
 
     it "doesn't email schools without a sit" do
       school_cohort = create(:school_cohort, :cip)
-      create(:participant_profile, :mentor, school_cohort: school_cohort)
-      create(:participant_profile, :ecf_participant_validation_data, :ect, school_cohort: school_cohort)
+      create(:mentor_participant_profile, school_cohort: school_cohort)
+      create(:ecf_participant_profile, :ecf_participant_validation_data, school_cohort: school_cohort)
 
       expect {
         validation_beta_service.sit_with_unvalidated_participants_reminders
@@ -117,7 +117,7 @@ RSpec.describe ValidationBetaService do
 
     it "doesn't email sits with all validated participants" do
       school_cohort = create(:school_cohort, :cip)
-      create(:participant_profile, :ecf_participant_validation_data, :ect, school_cohort: school_cohort)
+      create(:ect_participant_profile, :ecf_participant_validation_data, school_cohort: school_cohort)
       create(:induction_coordinator_profile, schools: [school_cohort.school])
 
       expect {
@@ -128,8 +128,8 @@ RSpec.describe ValidationBetaService do
     it "doesn't email sits on a different induction programme" do
       school_cohort = create(:school_cohort, :school_funded_fip)
 
-      create(:participant_profile, :mentor, school_cohort: school_cohort)
-      create(:participant_profile, :ecf_participant_validation_data, :ect, school_cohort: school_cohort)
+      create(:mentor_participant_profile, school_cohort: school_cohort)
+      create(:ecf_participant_profile, :ecf_participant_validation_data, school_cohort: school_cohort)
       create(:induction_coordinator_profile, schools: [school_cohort.school])
 
       expect {
@@ -144,11 +144,11 @@ RSpec.describe ValidationBetaService do
 
     let(:ect_user_1) { create(:user, email: "ect1@example.com") }
     let(:teacher_profile_1) { create(:teacher_profile, school: school, user: ect_user_1) }
-    let!(:ect_profile_1) { create(:participant_profile, :ect, school_cohort: school_cohort, teacher_profile: teacher_profile_1) }
+    let!(:ect_profile_1) { create(:ect_participant_profile, school_cohort: school_cohort, teacher_profile: teacher_profile_1) }
 
     let(:ect_user_2) { create(:user, email: "ect2@example.com") }
     let(:teacher_profile_2) { create(:teacher_profile, school: school, user: ect_user_2) }
-    let!(:ect_profile_2) { create(:participant_profile, :ect, school_cohort: school_cohort, teacher_profile: teacher_profile_2) }
+    let!(:ect_profile_2) { create(:ect_participant_profile, school_cohort: school_cohort, teacher_profile: teacher_profile_2) }
 
     let(:sit_user) { create(:user, email: "sit@example.com") }
     let!(:sit_profile) { create(:induction_coordinator_profile, user: sit_user, schools: [school]) }
@@ -171,7 +171,7 @@ RSpec.describe ValidationBetaService do
 
   describe "#send_ineligible_previous_induction_batch" do
     let(:school_cohort) { create(:school_cohort, :fip) }
-    let(:participant_profiles) { create_list(:participant_profile, 10, :ect, school_cohort: school_cohort) }
+    let(:participant_profiles) { create_list(:ect_participant_profile, 10, school_cohort: school_cohort) }
     let!(:eligibilities) do
       participant_profiles.each do |profile|
         create(:ecf_participant_eligibility, :ineligible, previous_induction: true, reason: :previous_induction, participant_profile: profile)
@@ -224,7 +224,7 @@ RSpec.describe ValidationBetaService do
     end
 
     context "when participants are withdrawn" do
-      let(:participant_profiles) { create_list(:participant_profile, 10, :ect, :withdrawn_record, school_cohort: school_cohort) }
+      let(:participant_profiles) { create_list(:ect_participant_profile, 10, :withdrawn_record, school_cohort: school_cohort) }
 
       it "does not email inactive participants" do
         expect {

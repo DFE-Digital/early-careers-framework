@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
-require "sti_preload"
-
 class ParticipantProfile < ApplicationRecord
-  include STIPreload
   has_paper_trail
   belongs_to :teacher_profile, touch: true
 

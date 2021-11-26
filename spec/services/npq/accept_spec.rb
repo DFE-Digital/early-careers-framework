@@ -3,9 +3,7 @@
 require "rails_helper"
 
 RSpec.describe NPQ::Accept do
-  before do
-    create(:schedule, :npq_leadership)
-  end
+  before { create(:npq_leadership_schedule) }
 
   subject do
     described_class.new(npq_application: npq_application)

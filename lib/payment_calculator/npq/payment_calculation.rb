@@ -9,45 +9,44 @@ module PaymentCalculator
     class PaymentCalculation
       class << self
         def call(contract:,
-                 breakdown_summary_compiler: BreakdownSummary,
+                 course_identifier:,
+                 aggregations:,
+                 breakdown_summary_calculator: BreakdownSummary,
                  service_fee_calculator: ServiceFees,
-                 output_payment_calculator: OutputPayment,
-                 aggregations: empty_aggregations)
+                 output_payment_calculator: OutputPayment)
           new(
             contract: contract,
-            headings_calculator: breakdown_summary_compiler,
+            course_identifier: course_identifier,
+            breakdown_summary_calculator: breakdown_summary_calculator,
             service_fee_calculator: service_fee_calculator,
             output_payment_calculator: output_payment_calculator,
           ).call(aggregations: aggregations)
-        end
-
-      private
-
-        def empty_aggregations
-          { all: 0, not_yet_included: 0 }
         end
       end
 
       def call(aggregations:)
         {
-          breakdown_summary: headings_calculator.call(contract: contract, aggregations: aggregations),
+          breakdown_summary: breakdown_summary_calculator.call(contract: contract, aggregations: aggregations),
           service_fees: service_fee_calculator.call(contract: contract),
-          output_payments: output_payment_calculator.call(contract: contract, total_participants: aggregations[:all]),
+          output_payments: output_payment_calculator
+            .call(contract: contract, total_participants: aggregations[:eligible_or_payable]),
         }
       end
 
     private
 
-      attr_accessor :contract, :service_fee_calculator, :headings_calculator, :output_payment_calculator
+      attr_accessor :contract, :service_fee_calculator, :breakdown_summary_calculator, :output_payment_calculator, :course_identifier
 
       def initialize(contract:,
-                     headings_calculator: BreakdownSummary,
+                     course_identifier:,
+                     breakdown_summary_calculator: BreakdownSummary,
                      output_payment_calculator: OutputPayment,
                      service_fee_calculator: ServiceFees)
-        @contract = contract
-        @headings_calculator = headings_calculator
-        @output_payment_calculator = output_payment_calculator
-        @service_fee_calculator = service_fee_calculator
+        self.contract = contract
+        self.course_identifier = course_identifier
+        self.breakdown_summary_calculator = breakdown_summary_calculator
+        self.output_payment_calculator = output_payment_calculator
+        self.service_fee_calculator = service_fee_calculator
       end
     end
   end

@@ -1,0 +1,9 @@
+<tr class="govuk-table__row">
+  <td class="govuk-table__cell" scope="row">
+    <%= link_to t(course_identifier, scope: %i[courses npq]), finance_npq_lead_provider_course_path(npq_lead_provider, id: course_identifier) %>
+  </td>
+
+  <td class="govuk-table__cell" scope="row">
+    <%= number_to_pounds(total) %>
+  </td>
+</tr>

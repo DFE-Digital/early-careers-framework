@@ -3,10 +3,10 @@
 require "rails_helper"
 
 RSpec.describe ParticipantDetailsReminderJob do
-  let(:participant_profile) { create :participant_profile, :ecf }
+  let(:participant_profile) { create :ecf_participant_profile }
 
   describe ".schedule" do
-    let(:participant_profile) { create :participant_profile, :ecf }
+    let(:participant_profile) { create :ecf_participant_profile }
 
     it "schedules the reminder email" do
       freeze_time
@@ -48,7 +48,7 @@ RSpec.describe ParticipantDetailsReminderJob do
     end
 
     context "when participant has been withdrawn" do
-      let(:participant_profile) { create :participant_profile, :ecf, :withdrawn }
+      let(:participant_profile) { create :ecf_participant_profile, :withdrawn }
 
       it "does not enqueue reminder email" do
         expect {
@@ -68,7 +68,7 @@ RSpec.describe ParticipantDetailsReminderJob do
     end
 
     context "when participant has submitted their details" do
-      let(:participant_profile) { create :participant_profile, :ecf }
+      let(:participant_profile) { create :ecf_participant_profile }
 
       before do
         create(:ecf_participant_validation_data, participant_profile: participant_profile)

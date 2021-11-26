@@ -3,19 +3,25 @@
 module PaymentCalculator
   module NPQ
     class BreakdownSummary
+      CURRENT_PARTICIPANTS = :all
+      NOT_PAID             = :not_paid
+      ELIGIBLE_AND_PAYABLE = :eligible_or_payable
+
       class << self
-        def call(contract:, aggregations:, event_type: :started)
-          new(contract: contract).call(aggregations: aggregations, event_type: event_type)
+        def call(contract:, aggregations:)
+          new(contract: contract).call(aggregations)
         end
       end
 
-      def call(aggregations:, event_type: :started)
+      def call(aggregations)
         {
           name: lead_provider.name,
-          declaration: event_type,
           recruitment_target: recruitment_target,
-          participants: aggregations[:all],
-          not_yet_included: aggregations[:not_yet_included],
+          participants: aggregations[CURRENT_PARTICIPANTS],
+          total_participants_paid: aggregations[ELIGIBLE_AND_PAYABLE],
+          total_participants_not_paid: aggregations[NOT_PAID],
+          version: contract.version,
+          course_identifier: contract.course_identifier,
         }
       end
 

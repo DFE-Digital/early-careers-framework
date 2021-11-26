@@ -4,7 +4,7 @@ RSpec.describe Admin::Participants::ValidationTasks, type: :view_component do
   component { described_class.new profile: profile }
 
   context "for NPQ profile" do
-    let!(:profile) { create :participant_profile, :npq }
+    let!(:profile) { create :npq_participant_profile }
 
     ParticipantProfile::NPQ.validation_steps.each do |task|
       describe "#{task} validation task" do

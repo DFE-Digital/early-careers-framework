@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-RSpec.describe Mentors::Create do
+RSpec.describe Mentors::Create, :with_default_schedules do
   let!(:user) { create :user }
   let(:school_cohort) { create :school_cohort }
   let(:pupil_premium_school) { create :school, :pupil_premium_uplift }
   let(:sparsity_school) { create :school, :sparsity_uplift }
   let(:uplift_school) { create :school, :sparsity_uplift, :pupil_premium_uplift }
-  let!(:npq_participant) { create(:participant_profile, :npq).teacher_profile.user }
+  let!(:npq_participant) { create(:npq_participant_profile).teacher_profile.user }
 
   it "creates a Mentor record" do
     expect {
@@ -89,7 +89,7 @@ RSpec.describe Mentors::Create do
 
   context "when the user has an active participant profile" do
     before do
-      create(:participant_profile, teacher_profile: create(:teacher_profile, user: user))
+      create(:ecf_participant_profile, teacher_profile: create(:teacher_profile, user: user))
     end
 
     it "does not update the users name" do

@@ -11,22 +11,21 @@ RSpec.describe "Participants API", type: :request do
   let(:school_cohort) { create(:school_cohort, school: partnership.school, cohort: cohort, induction_programme_choice: "full_induction_programme") }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
   let(:bearer_token) { "Bearer #{token}" }
-  let!(:mentor_profile) { create(:participant_profile, :mentor, school_cohort: school_cohort) }
+  let!(:mentor_profile) { create(:mentor_participant_profile, school_cohort: school_cohort) }
 
   before :each do
-    create_list :participant_profile, 2, :ect, mentor_profile: mentor_profile, school_cohort: school_cohort
+    create_list :ect_participant_profile, 2, mentor_profile: mentor_profile, school_cohort: school_cohort
     ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record = ParticipantProfile::ECT.first.teacher_profile
-    create(:participant_profile,
+    create(:ect_participant_profile,
            :withdrawn_record,
-           :ect,
            teacher_profile: ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record,
            school_cohort: school_cohort)
     default_headers[:Authorization] = bearer_token
   end
 
-  let!(:withdrawn_ect_profile_record) { create(:participant_profile, :withdrawn_record, :ect, school_cohort: school_cohort) }
+  let!(:withdrawn_ect_profile_record) { create(:ect_participant_profile, :withdrawn_record, school_cohort: school_cohort) }
   let(:user) { create(:user) }
-  let(:early_career_teacher_profile) { create(:participant_profile, :ect, school_cohort: school_cohort, user: user) }
+  let(:early_career_teacher_profile) { create(:ect_participant_profile, school_cohort: school_cohort, user: user) }
 
   describe "GET /api/v1/participants/ecf" do
     context "when authorized" do
@@ -51,7 +50,7 @@ RSpec.describe "Participants API", type: :request do
           cohort_2020 = create(:cohort, start_year: 2020)
           partnership_2020 = create(:partnership, lead_provider: lead_provider, cohort: cohort_2020)
           school_cohort_2020 = create(:school_cohort, school: partnership_2020.school, cohort: cohort_2020, induction_programme_choice: "full_induction_programme")
-          create(:participant_profile, :ect, school_cohort: school_cohort_2020)
+          create(:ect_participant_profile, school_cohort: school_cohort_2020)
 
           get "/api/v1/participants/ecf"
           expect(parsed_response["data"].size).to eql(4)
@@ -61,7 +60,7 @@ RSpec.describe "Participants API", type: :request do
           cohort_2020 = create(:cohort, start_year: 2020)
           partnership_2020 = create(:partnership, lead_provider: lead_provider, cohort: cohort_2020)
           school_cohort_2020 = create(:school_cohort, school: partnership_2020.school, cohort: cohort_2020, induction_programme_choice: "full_induction_programme")
-          create(:participant_profile, :ect, school_cohort: school_cohort_2020, teacher_profile: mentor_profile.teacher_profile)
+          create(:ect_participant_profile, school_cohort: school_cohort_2020, teacher_profile: mentor_profile.teacher_profile)
 
           get "/api/v1/participants/ecf"
           expect(parsed_response["data"].size).to eql(4)
@@ -189,7 +188,7 @@ RSpec.describe "Participants API", type: :request do
           end
         end
         context "when the participant is withdrawn with this lead provider but has another active profile not associated with the provider" do
-          let!(:active_profile_with_other_provider) { create(:participant_profile, :ect, teacher_profile: withdrawn_ect_profile_record.teacher_profile) }
+          let!(:active_profile_with_other_provider) { create(:ect_participant_profile, teacher_profile: withdrawn_ect_profile_record.teacher_profile) }
 
           it "shows the participant as withdrawn" do
             get "/api/v1/participants/ecf"

@@ -38,7 +38,7 @@ RSpec.describe DataStage::School, type: :model do
       let(:old_local_authority_district) { create(:local_authority_district, :sparse, code: "E234") }
       let!(:counterpart_school) { create(:school, urn: school.urn) }
       let(:school_cohort) { create(:school_cohort, cohort: cohort, school: counterpart_school) }
-      let!(:participant) { create(:participant_profile, :ect, school_cohort: school_cohort, sparsity_uplift: true) }
+      let!(:participant) { create(:ect_participant_profile, school_cohort: school_cohort, sparsity_uplift: true) }
 
       before do
         SchoolLocalAuthority.create!(school: counterpart_school,

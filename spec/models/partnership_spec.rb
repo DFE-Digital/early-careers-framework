@@ -21,7 +21,7 @@ RSpec.describe Partnership, type: :model do
     freeze_time
     school_cohort = create(:school_cohort)
     partnership = create(:partnership, school: school_cohort.school)
-    profile = create(:participant_profile, :ect, school_cohort: school_cohort, updated_at: 2.weeks.ago)
+    profile = create(:ect_participant_profile, school_cohort: school_cohort, updated_at: 2.weeks.ago)
     user = profile.user
     user.update!(updated_at: 2.weeks.ago)
 

@@ -7,7 +7,7 @@ RSpec.describe ECFParticipantValidationData, type: :model do
 
   it "updates the updated_at on the User" do
     freeze_time
-    profile = create(:participant_profile, :ect)
+    profile = create(:ect_participant_profile)
     user = profile.user
     validation_data = profile.create_ecf_participant_validation_data!(trn: "1234567", full_name: "Gordon Banks")
     user.update!(updated_at: 2.weeks.ago)

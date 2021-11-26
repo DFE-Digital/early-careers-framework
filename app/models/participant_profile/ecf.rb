@@ -55,3 +55,6 @@ private
     Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile: self) if saved_change_to_training_status?
   end
 end
+
+require_dependency "participant_profile/ect"
+require_dependency "participant_profile/mentor"

@@ -16,7 +16,7 @@ RSpec.describe Schools::Year2020Form, type: :model do
     it { is_expected.to validate_presence_of(:email).on(:create_teacher).with_message("Enter an email address for your teacher") }
 
     it "validates that the email address is not already in use by an ECT" do
-      create(:participant_profile, :ect, user: create(:user, email: email))
+      create(:ect_participant_profile, user: create(:user, email: email))
       form = Schools::Year2020Form.new(full_name: name, email: email)
       expect(form).not_to be_valid(:create_teacher)
       expect(form.errors[:email].first).to eq("This email address is already in use")

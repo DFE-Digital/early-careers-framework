@@ -166,7 +166,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
 
   context "trying to add more ects when a schools 2020 cohort has already been to the service" do
     before do
-      create(:participant_profile, :ect, school_cohort: school_cohort)
+      create(:ect_participant_profile, school_cohort: school_cohort)
     end
 
     describe "GET /schools/:school_id/year-2020/start" do

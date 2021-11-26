@@ -191,7 +191,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
   describe "POST /users/sign_in_with_token" do
     context "when user is an ECT" do
-      let(:user) { create(:participant_profile, :ect).user }
+      let(:user) { create(:ect_participant_profile).user }
       let(:school) { user.teacher_profile.early_career_teacher_profile.school }
 
       it "redirects to participant validation on successful login" do

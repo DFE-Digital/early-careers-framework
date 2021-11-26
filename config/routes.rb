@@ -289,7 +289,9 @@ Rails.application.routes.draw do
     end
 
     namespace :npq do
-      resources :payment_breakdowns, only: %i[show]
+      resources :lead_providers, path: "payment-overviews", controller: "payment_overviews", only: %i[show] do
+        resources :courses, only: %i[show], controller: "course_payment_breakdowns"
+      end
     end
   end
 

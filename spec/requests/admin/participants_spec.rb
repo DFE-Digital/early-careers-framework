@@ -8,10 +8,10 @@ RSpec.describe "Admin::Participants", type: :request do
   let(:school) { create(:school) }
 
   let(:school_cohort) { create(:school_cohort, school: school, cohort: cohort) }
-  let!(:mentor_profile) { create :participant_profile, :mentor, school_cohort: school_cohort }
-  let!(:ect_profile) { create :participant_profile, :ect, school_cohort: school_cohort, mentor_profile: mentor_profile }
-  let!(:npq_profile) { create(:participant_profile, :npq, school: school) }
-  let!(:withdrawn_ect_profile_record) { create(:participant_profile, :ect, :withdrawn_record, school_cohort: school_cohort) }
+  let!(:mentor_profile) { create :mentor_participant_profile, school_cohort: school_cohort }
+  let!(:ect_profile) { create :ect_participant_profile, school_cohort: school_cohort, mentor_profile: mentor_profile }
+  let!(:npq_profile) { create(:npq_participant_profile, school: school) }
+  let!(:withdrawn_ect_profile_record) { create(:ect_participant_profile, :withdrawn_record, school_cohort: school_cohort) }
 
   before do
     sign_in admin_user

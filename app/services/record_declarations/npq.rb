@@ -4,9 +4,12 @@ module RecordDeclarations
   module NPQ
     extend ActiveSupport::Concern
 
-    included do
-      extend NPQClassMethods
-    end
+    STARTED      = "started"
+    COMPLETED    = "completed"
+    RETAINED_ONE = "retained-1"
+    RETAINED_TWO = "retained-2"
+
+    included { extend NPQClassMethods }
 
     module NPQClassMethods
       def declaration_model
@@ -14,7 +17,7 @@ module RecordDeclarations
       end
 
       def valid_declaration_types
-        %w[started completed retained-1 retained-2]
+        [STARTED, COMPLETED, RETAINED_ONE, RETAINED_TWO]
       end
     end
   end
