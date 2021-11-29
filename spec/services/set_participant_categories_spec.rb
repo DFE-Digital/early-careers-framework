@@ -13,7 +13,7 @@ RSpec.describe SetParticipantCategories do
     let!(:details_being_checked_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
     let!(:primary_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, :primary_profile, school_cohort: school_cohort) }
     let!(:secondary_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, :secondary_profile, school_cohort: school_cohort) }
-    let!(:withdrawn_ect) { create(:participant_profile, :ect, :ecf_participant_eligibility, :ecf_participant_validation_data, training_status: "withdrawn", school_cohort: school_cohort) }
+    let!(:withdrawn_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, training_status: "withdrawn", school_cohort: school_cohort) }
 
     before do
       [primary_mentor, secondary_mentor].each do |profile|
@@ -49,6 +49,7 @@ RSpec.describe SetParticipantCategories do
       let(:cip_ineligible_participants) { [] }
       let(:cip_contacted_for_info_participants) { [contacted_for_info_ect] }
       let(:cip_details_being_checked_participants) { [] }
+      let(:withdrawn_participants) { [withdrawn_ect] }
 
       before do
         FeatureFlag.activate(:eligibility_notifications)

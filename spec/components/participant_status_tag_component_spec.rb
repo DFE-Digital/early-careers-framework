@@ -84,7 +84,7 @@ RSpec.describe ParticipantStatusTagComponent, type: :view_component do
 
     context "has a withdrawn status" do
       let(:school_cohort) { create(:school_cohort, :cip) }
-      let(:participant_profile) {  create(:participant_profile, :ect, training_status: "withdrawn", school_cohort: school_cohort, user: create(:user, email: "ray.clemence@example.com")) }
+      let(:participant_profile) {  create(:ect_participant_profile, training_status: "withdrawn", school_cohort: school_cohort, user: create(:user, email: "ray.clemence@example.com")) }
 
       it { is_expected.to have_selector(".govuk-tag.govuk-tag--red", exact_text: "Withdrawn by provider") }
     end

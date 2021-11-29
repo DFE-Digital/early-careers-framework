@@ -83,7 +83,7 @@ module ManageTrainingSteps
   end
 
   def given_an_ect_has_been_withdrawn_by_the_provider
-    @ect.training_status_withdrawn!
+    @participant_profile_ect.training_status_withdrawn!
   end
 
   # And_steps
@@ -673,7 +673,7 @@ module ManageTrainingSteps
 
   def then_it_should_show_the_withdrawn_participant
     expect(page).to have_text("No longer being trained")
-    expect(page).to have_text("Sally ECT")
+    expect(page).to have_text("Sally Teacher")
     expect(page).to have_text("Big Provider Ltd")
     expect(page).to have_text("Amazing Delivery Team")
   end
