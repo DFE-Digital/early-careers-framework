@@ -1,4 +1,4 @@
-description: "An ECF retained participant declaration"
+description: "An ECF participant retained declaration"
 type: object
 additionalProperties: false
 properties:

@@ -1,9 +1,0 @@
-description: "An participant declaration request"
-type: object
-oneOf:
-  - $ref: "#/components/schemas/ECFParticipantStartedDeclaration"
-  - $ref: "#/components/schemas/ECFParticipantRetainedDeclaration"
-  - $ref: "#/components/schemas/NPQParticipantStartedDeclaration"
-  - $ref: "#/components/schemas/NPQParticipantRetainedDeclaration"
-required:
-  - data

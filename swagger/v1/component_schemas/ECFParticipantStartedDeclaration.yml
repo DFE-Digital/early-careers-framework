@@ -1,4 +1,4 @@
-description: "An participant started declaration request body"
+description: "A participant started declaration request body"
 type: object
 properties:
   type:

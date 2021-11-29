@@ -25,7 +25,7 @@ private
 
   def schema
     # TODO: need to pull in correct schema depending on request
-    hash = YAML.safe_load(File.read(Rails.root.join("swagger/v1/component_schemas/ParticipantDeclarationRequest.yml")))
+    hash = YAML.safe_load(File.read(Rails.root.join("swagger/v1/component_schemas/ParticipantDeclaration.yml")))
 
     hash["components"] = {}
     hash["components"]["schemas"] = {}

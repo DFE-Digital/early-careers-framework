@@ -491,7 +491,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ParticipantDeclarationRequest"
+                "$ref": "#/components/schemas/ParticipantDeclaration"
               }
             }
           }
@@ -1777,7 +1777,7 @@
         }
       },
       "ECFParticipantRetainedDeclaration": {
-        "description": "An participant retain declaration request body",
+        "description": "An ECF participant retained declaration request body",
         "type": "object",
         "properties": {
           "type": {
@@ -1797,7 +1797,7 @@
         ]
       },
       "ECFParticipantRetainedDeclarationAttributes": {
-        "description": "An ECF retained participant declaration",
+        "description": "An ECF participant retained declaration",
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -1860,7 +1860,7 @@
         }
       },
       "ECFParticipantStartedDeclaration": {
-        "description": "An participant started declaration request body",
+        "description": "A participant started declaration request body",
         "type": "object",
         "properties": {
           "type": {
@@ -2844,7 +2844,7 @@
         }
       },
       "NPQParticipantRetainedDeclaration": {
-        "description": "An NPQ participant retain declaration request body",
+        "description": "An NPQ participant retained declaration request body",
         "type": "object",
         "properties": {
           "type": {
@@ -2864,7 +2864,7 @@
         ]
       },
       "NPQParticipantRetainedDeclarationAttributes": {
-        "description": "An NPQ retained participant declaration",
+        "description": "An NPQ participant retained declaration",
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -3120,7 +3120,20 @@
                 ]
               },
               "attributes": {
-                "$ref": "#/components/schemas/ParticipantDeclarationRequest"
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ECFParticipantStartedDeclarationAttributes"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ECFParticipantRetainedDeclarationAttributes"
+                  },
+                  {
+                    "$ref": "#/components/schemas/NPQParticipantStartedDeclarationAttributes"
+                  },
+                  {
+                    "$ref": "#/components/schemas/NPQParticipantRetainedDeclarationAttributes"
+                  }
+                ]
               }
             }
           }
@@ -3310,27 +3323,6 @@
             "example": "2021-05-31T02:22:32.000Z"
           }
         }
-      },
-      "ParticipantDeclarationRequest": {
-        "description": "An participant declaration request",
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/ECFParticipantStartedDeclaration"
-          },
-          {
-            "$ref": "#/components/schemas/ECFParticipantRetainedDeclaration"
-          },
-          {
-            "$ref": "#/components/schemas/NPQParticipantStartedDeclaration"
-          },
-          {
-            "$ref": "#/components/schemas/NPQParticipantRetainedDeclaration"
-          }
-        ],
-        "required": [
-          "data"
-        ]
       },
       "ParticipantDeclarationResponse": {
         "description": "A participant declaration response",

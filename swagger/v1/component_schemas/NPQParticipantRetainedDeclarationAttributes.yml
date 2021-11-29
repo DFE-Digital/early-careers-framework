@@ -1,4 +1,4 @@
-description: "An NPQ retained participant declaration"
+description: "An NPQ participant retained declaration"
 type: object
 additionalProperties: false
 properties:

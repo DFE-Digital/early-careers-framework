@@ -98,6 +98,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         allow(Rails).to receive(:logger).and_return(fake_logger)
 
         params = build_params(valid_params)
+
         post "/api/v1/participant-declarations", params: params
 
         expect(response.status).to eq 200
