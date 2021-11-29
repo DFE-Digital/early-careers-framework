@@ -43,11 +43,11 @@ private
   end
 
   def ineligible_participants
-    active_participant_profiles.ineligible_status.includes(:user).order("users.full_name").where.not(training_status: "withdrawn")
+    active_participant_profiles.ineligible_status.includes(:user).order("users.full_name").where.not(training_status: :withdrawn)
   end
 
   def eligible_participants
-    active_participant_profiles.eligible_status.includes(:user).order("users.full_name").where.not(training_status: "withdrawn")
+    active_participant_profiles.eligible_status.includes(:user).order("users.full_name").where.not(training_status: :withdrawn)
   end
 
   def withdrawn_participants
@@ -55,11 +55,11 @@ private
   end
 
   def contacted_for_info_participants
-    active_participant_profiles.contacted_for_info.includes(:user).order("users.full_name").where.not(training_status: "withdrawn")
+    active_participant_profiles.contacted_for_info.includes(:user).order("users.full_name").where.not(training_status: :withdrawn)
   end
 
   def details_being_checked_participants
-    active_participant_profiles.details_being_checked.includes(:user).order("users.full_name").where.not(training_status: "withdrawn")
+    active_participant_profiles.details_being_checked.includes(:user).order("users.full_name").where.not(training_status: :withdrawn)
   end
 
   def fip_flag_active_ineligible_participants
