@@ -111,7 +111,7 @@ RSpec.describe ECFParticipantEligibility, type: :model do
     end
 
     context "when QTS status is false and the participant is a mentor" do
-      let(:participant_profile) { create(:participant_profile, :mentor) }
+      let(:participant_profile) { create(:mentor_participant_profile) }
       subject(:eligibility) { described_class.new(participant_profile: participant_profile, active_flags: false, previous_participation: false, previous_induction: false, qts: true) }
 
       it "sets the status to eligible" do
