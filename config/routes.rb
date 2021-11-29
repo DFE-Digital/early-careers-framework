@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  mount Sidekiq::Web => "/sidekiq"
+  mount_sidekiq = -> { mount Sidekiq::Web => "/sidekiq" }
+  authenticate(:user, :admin?.to_proc, &mount_sidekiq)
 
   devise_for :users, skip: %i[registrations confirmations], controllers: {
     sessions: "users/sessions",
