@@ -161,14 +161,6 @@ RSpec.describe "Participant validations", with_feature_flags: { eligibility_noti
 
         it_behaves_like "it renders the template", "participants/validations/fip_active_flags_ineligible"
       end
-
-      context "user has no qts" do
-        before do
-          create(:ecf_participant_eligibility, :ineligible, participant_profile: profile, qts: false)
-        end
-
-        it_behaves_like "it renders the template", "participants/validations/fip_mentor_no_qts"
-      end
     end
   end
 end

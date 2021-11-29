@@ -35,7 +35,7 @@ class ECFParticipantEligibility < ApplicationRecord
                                    %i[ineligible previous_participation]
                                  elsif previous_induction? && participant_profile.ect?
                                    %i[ineligible previous_induction]
-                                 elsif !qts?
+                                 elsif !qts? && !participant_profile.mentor?
                                    %i[manual_check no_qts]
                                  elsif different_trn?
                                    %i[manual_check different_trn]

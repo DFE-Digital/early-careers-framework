@@ -135,8 +135,6 @@ module Participants
           else
             "fip_active_flags_ineligible"
           end
-        when "no_qts"
-          "fip_mentor_no_qts"
         end
       end
     end
