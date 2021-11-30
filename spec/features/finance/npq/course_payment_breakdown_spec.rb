@@ -31,23 +31,22 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
 
     then_i_should_see_correct_breakdown_summary(cpd_lead_provider, npq_leading_teaching_contract)
     then_i_should_see_correct_service_fee_payment_breakdown(npq_leading_teaching_contract)
-    then_i_should_see_correct_output_payment_breakdown(npq_leading_teaching_development_contract)
+    then_i_should_see_correct_output_payment_breakdown(npq_leading_teaching_contract)
     when_i_click "Back"
 
     when_i_click_on(npq_leading_behaviour_culture_contract)
     then_i_should_see_correct_breakdown_summary(cpd_lead_provider, npq_leading_behaviour_culture_contract)
     then_i_should_see_correct_service_fee_payment_breakdown(npq_leading_behaviour_culture_contract)
-    then_i_should_see_correct_output_payment_breakdown(npq_leading_teaching_development_contract)
+    then_i_should_see_correct_output_payment_breakdown(npq_leading_behaviour_culture_contract)
     when_i_click "Back"
 
     when_i_click_on(npq_leading_teaching_development_contract)
     then_i_should_see_correct_breakdown_summary(cpd_lead_provider, npq_leading_teaching_development_contract)
     then_i_should_see_correct_service_fee_payment_breakdown(npq_leading_teaching_development_contract)
     then_i_should_see_correct_output_payment_breakdown(npq_leading_teaching_development_contract)
-    save_and_open_page
   end
 
-  private
+private
 
   def create_accepted_application(user, npq_course, npq_lead_provider)
     npq_application = NPQ::BuildApplication.call(
@@ -183,12 +182,19 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
 
   def then_i_should_see_correct_output_payment_breakdown(npq_contract)
     within "table.govuk-table tbody tr.govuk-table__row:nth-child(2)" do
-      expected_per_participant_portion = npq_contract.per_participant * npq_contract.output_payment_percentage / (100 * npq_contract.number_of_payment_periods)
-      save_and_open_page
-      byebug
+      expected_per_participant_portion = (npq_contract.per_participant * npq_contract.output_payment_percentage) / (100 * npq_contract.number_of_payment_periods)
+
       expect(page.find("td:nth-child(1)", text: "Output fee"))
         .to have_sibling("td", text: number_to_pounds(expected_per_participant_portion))
 
+      expected_output_fee = expected_per_participant_portion * \
+        ParticipantDeclaration::NPQ
+          .eligible_or_payable_for_lead_provider_and_course(
+            npq_contract.npq_lead_provider.cpd_lead_provider, npq_contract.course_identifier
+          ).count
+
+      expect(page.find("td:nth-child(1)", text: "Output fee"))
+        .to have_sibling("td", text: number_to_pounds(expected_output_fee))
     end
   end
 end

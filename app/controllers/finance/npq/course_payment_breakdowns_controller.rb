@@ -12,7 +12,6 @@ module Finance
           cpd_lead_provider: @npq_lead_provider.cpd_lead_provider,
           contract: @npq_lead_provider.npq_contracts.find_by!(course_identifier: params[:id]),
         )
-        ap @breakdown
       end
 
     private
