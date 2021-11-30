@@ -349,7 +349,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
           expect(JSON.parse(response.body)).to eq(expected_response)
         end
 
-        it "returns 404 if participant declaration does not exist" do
+        it "returns 404 if participant declaration does not exist", exceptions_app: true do
           get "/api/v1/participant-declarations/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
           expect(response.status).to eq 404
         end

@@ -4,7 +4,6 @@ module Api
   class ApiController < ActionController::API
     include ActionController::MimeResponds
     before_action :remove_charset
-    rescue_from ActiveRecord::RecordNotFound, with: :not_found
     rescue_from ActionController::ParameterMissing, with: :missing_parameter_response
     rescue_from ActionController::UnpermittedParameters, with: :unpermitted_parameter_response
     rescue_from ActionController::BadRequest, with: :bad_request_response
@@ -21,10 +20,6 @@ module Api
     end
 
   private
-
-    def not_found
-      head :not_found
-    end
 
     def remove_charset
       ActionDispatch::Response.default_charset = nil
