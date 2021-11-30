@@ -51,9 +51,12 @@ RSpec.shared_examples "JSON Participant Deferral endpoint" do |serialiser_type|
 end
 
 RSpec.shared_examples "JSON Participant Deferral documentation" do |url, request_schema_ref, response_schema_ref, tag|
+  humanised_description = TAG_TO_HUMANISED_DESCRIPTION[tag]
+  operation_id = TAG_TO_OPERATION_ID[tag]
+
   path url do
-    put "Notify that an ECF participant is taking a break from their course" do
-      operationId :participant
+    put "Notify that an #{humanised_description} is taking a break from their course" do
+      operationId operation_id
       tags tag
       security [bearerAuth: []]
       consumes "application/json"
@@ -82,7 +85,7 @@ RSpec.shared_examples "JSON Participant Deferral documentation" do |url, request
                   "$ref": request_schema_ref,
                 }
 
-      response "200", "The ECF participant being deferred" do
+      response "200", "The #{humanised_description} being deferred" do
         let(:id) { participant.user.id }
 
         let(:params) do
