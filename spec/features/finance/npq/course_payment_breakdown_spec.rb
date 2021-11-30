@@ -41,6 +41,8 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
     when_i_click_on(npq_leading_teaching_development_contract)
     then_i_should_see_correct_breakdown_summary(cpd_lead_provider, npq_leading_teaching_development_contract)
     then_i_should_see_correct_payment_breakdown(npq_leading_teaching_development_contract)
+
+    save_and_open_page
   end
 
 private
