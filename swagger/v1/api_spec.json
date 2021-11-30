@@ -318,8 +318,8 @@
     },
     "/api/v1/participants/npq/{id}/defer": {
       "put": {
-        "summary": "Notify that an ECF participant is taking a break from their course",
-        "operationId": "participant",
+        "summary": "Notify that an NPQ participant is taking a break from their course",
+        "operationId": "npq_participant",
         "tags": [
           "NPQ Participant"
         ],
@@ -353,7 +353,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The ECF participant being deferred",
+            "description": "The NPQ participant being deferred",
             "content": {
               "application/json": {
                 "schema": {
@@ -367,8 +367,8 @@
     },
     "/api/v1/participants/npq/{id}/resume": {
       "put": {
-        "summary": "Notify that a participant is resuming their course",
-        "operationId": "participant",
+        "summary": "Notify that an NPQ participant is resuming their course",
+        "operationId": "npq_participant",
         "tags": [
           "NPQ Participant"
         ],
@@ -402,7 +402,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The participant being resumed",
+            "description": "The NPQ participant being resumed",
             "content": {
               "application/json": {
                 "schema": {
@@ -916,7 +916,7 @@
     },
     "/api/v1/participants/ecf/{id}/resume": {
       "put": {
-        "summary": "Notify that a participant is resuming their course",
+        "summary": "Notify that an ECF participant is resuming their course",
         "operationId": "participant",
         "tags": [
           "ECF Participant"
@@ -951,7 +951,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The participant being resumed",
+            "description": "The ECF participant being resumed",
             "content": {
               "application/json": {
                 "schema": {
@@ -1063,7 +1063,7 @@
     },
     "/api/v1/participants/{id}/resume": {
       "put": {
-        "summary": "Notify that a participant is resuming their course",
+        "summary": "Notify that an ECF participant is resuming their course",
         "operationId": "participant",
         "tags": [
           "ECF Participant"
@@ -1098,7 +1098,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The participant being resumed",
+            "description": "The ECF participant being resumed",
             "content": {
               "application/json": {
                 "schema": {

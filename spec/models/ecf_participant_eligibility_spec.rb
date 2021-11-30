@@ -109,5 +109,17 @@ RSpec.describe ECFParticipantEligibility, type: :model do
         expect(eligibility).to be_none_reason
       end
     end
+
+    context "when QTS status is false and the participant is a mentor" do
+      let(:participant_profile) { create(:mentor_participant_profile) }
+      subject(:eligibility) { described_class.new(participant_profile: participant_profile, active_flags: false, previous_participation: false, previous_induction: false, qts: true) }
+
+      it "sets the status to eligible" do
+        eligibility.qts = false
+        eligibility.valid?
+        expect(eligibility).to be_eligible_status
+        expect(eligibility).to be_none_reason
+      end
+    end
   end
 end
