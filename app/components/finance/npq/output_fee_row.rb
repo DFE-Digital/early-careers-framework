@@ -1,6 +1,8 @@
 module Finance
   module NPQ
     class OutputFeeRow < BaseComponent
+      include FinanceHelper
+
       def subtotal
         output_fee[:subtotal]
       end
