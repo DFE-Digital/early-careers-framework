@@ -19,7 +19,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
     )
   end
 
-  scenario "Can get to NPQ payment breakdown page for a provider", :js do
+  scenario "can get to NPQ payment breakdown page for a provider" do
     given_i_am_logged_in_as_a_finance_user
     and_there_is_npq_provider_with_contracts
     and_those_courses_have_submitted_declations
