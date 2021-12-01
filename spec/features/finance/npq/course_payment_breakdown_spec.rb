@@ -19,7 +19,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
     )
   end
 
-  scenario "can get to NPQ payment breakdown page for a provider" do
+  scenario "see a payment breakdown per NPQ course and a payment breakdown of each individual NPQ courses for each provider" do
     given_i_am_logged_in_as_a_finance_user
     and_there_is_npq_provider_with_contracts
     and_those_courses_have_submitted_declations
@@ -160,18 +160,18 @@ private
       .to have_sibling("dd.govuk-summary-list__value", text: ParticipantDeclaration::NPQ.submitted_for_lead_provider_and_course(npq_lead_provider, npq_contract.course_identifier).count)
   end
 
-  def expected_per_participant_service_fee_portion(npq_contract)
+  def expected_service_fee_portion_per_participant(npq_contract)
     npq_contract.per_participant * npq_contract.service_fee_percentage / (100 * npq_contract.service_fee_installments)
   end
 
   def expected_service_fee_payment(npq_contract)
-    npq_contract.recruitment_target * expected_per_participant_service_fee_portion(npq_contract)
+    npq_contract.recruitment_target * expected_service_fee_portion_per_participant(npq_contract)
   end
 
   def then_i_should_see_correct_service_fee_payment_breakdown(npq_contract)
     within "table.govuk-table tbody tr.govuk-table__row:nth-child(1)" do
       expect(page.find("td:nth-child(1)", text: "Service fee"))
-        .to have_sibling("td", text: number_to_pounds(expected_per_participant_service_fee_portion(npq_contract)))
+        .to have_sibling("td", text: number_to_pounds(expected_service_fee_portion_per_participant(npq_contract)))
 
       expect(page.find("td:nth-child(1)", text: "Service fee"))
         .to have_sibling("td", text: number_to_pounds(expected_service_fee_payment(npq_contract)))
