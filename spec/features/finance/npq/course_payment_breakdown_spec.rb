@@ -32,6 +32,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
     then_i_should_see_correct_breakdown_summary(cpd_lead_provider, npq_leading_teaching_contract)
     then_i_should_see_correct_service_fee_payment_breakdown(npq_leading_teaching_contract)
     then_i_should_see_correct_output_payment_breakdown(npq_leading_teaching_contract)
+    then_i_should_see_the_correct_total(npq_leading_teaching_contract)
     when_i_click "Back"
 
     when_i_click_on(npq_leading_behaviour_culture_contract)
@@ -168,24 +169,49 @@ private
       .to have_sibling("dd.govuk-summary-list__value", text: ParticipantDeclaration::NPQ.submitted_for_lead_provider_and_course(npq_lead_provider, npq_contract.course_identifier).count)
   end
 
+  def expected_per_participant_service_fee_portion(npq_contract)
+    npq_contract.per_participant * npq_contract.service_fee_percentage / (100 * npq_contract.service_fee_installments)
+  end
+
   def then_i_should_see_correct_service_fee_payment_breakdown(npq_contract)
     within "table.govuk-table tbody tr.govuk-table__row:nth-child(1)" do
-      expected_per_participant_portion = npq_contract.per_participant * npq_contract.service_fee_percentage / (100 * npq_contract.service_fee_installments)
+      expect(page.find("td:nth-child(1)", text: "Service fee"))
+        .to have_sibling("td", text: number_to_pounds(expected_per_participant_service_fee_portion(npq_contract)))
 
       expect(page.find("td:nth-child(1)", text: "Service fee"))
-        .to have_sibling("td", text: number_to_pounds(expected_per_participant_portion))
-
-      expect(page.find("td:nth-child(1)", text: "Service fee"))
-        .to have_sibling("td", text: number_to_pounds(npq_contract.recruitment_target * expected_per_participant_portion))
+        .to have_sibling("td", text: number_to_pounds(npq_contract.recruitment_target * expected_per_participant_service_fee_portion(npq_contract)))
     end
+  end
+
+  def expected_per_participant_output_payment_portion(npq_contract)
+    (npq_contract.per_participant * npq_contract.output_payment_percentage) / (100 * npq_contract.number_of_payment_periods)
+  end
+
+  def expected_output_fee(npq_contract)
+    eligible_and_payable_participant_count = ParticipantDeclaration::NPQ
+        .eligible_or_payable_for_lead_provider_and_course(
+          npq_contract.npq_lead_provider.cpd_lead_provider, npq_contract.course_identifier
+        ).count
+
+    expected_per_participant_output_payment_portion(npq_contract) * eligible_and_payable_participant_count
   end
 
   def then_i_should_see_correct_output_payment_breakdown(npq_contract)
     within "table.govuk-table tbody tr.govuk-table__row:nth-child(2)" do
-      expected_per_participant_portion = (npq_contract.per_participant * npq_contract.output_payment_percentage) / (100 * npq_contract.number_of_payment_periods)
 
       expect(page.find("td:nth-child(1)", text: "Output fee"))
-        .to have_sibling("td", text: number_to_pounds(expected_per_participant_portion))
+        .to have_sibling("td", text: number_to_pounds(expected_per_participant_output_payment_portion(npq_contract)))
+
+      expect(page.find("td:nth-child(1)", text: "Output fee"))
+        .to have_sibling("td", text: number_to_pounds(expected_output_fee(npq_contrat)))
+    end
+  end
+
+  def then_i_should_see_the_correct_total(npq_contract)
+    within "table.govuk-table tbody tr.govuk-table__row:nth-child(3)" do
+      save_and_open_page
+      expected_per_participant_portion = npq_contract.per_participant * npq_contract.service_fee_percentage / (100 * npq_contract.service_fee_installments)
+      expected_service_fee_payment = npq_contract.recruitment_target * expected_per_participant_portion
 
       expected_output_fee = expected_per_participant_portion * \
         ParticipantDeclaration::NPQ
@@ -193,8 +219,9 @@ private
             npq_contract.npq_lead_provider.cpd_lead_provider, npq_contract.course_identifier
           ).count
 
-      expect(page.find("td:nth-child(1)", text: "Output fee"))
-        .to have_sibling("td", text: number_to_pounds(expected_output_fee))
+      expected_total = expected_service_fee_payment + expected_output_fee
+      expect(page.find("td:nth-child(1)", text: "Total payment"))
+        .to have_sibling("td", text: number_to_pounds(expected_total))
     end
   end
 end
