@@ -173,6 +173,9 @@ Background jobs are run using sidekiq, which relies on redis. You will need to i
 ```
 redis-server
 ```
+This should run on `*:6379`, which sidekiq will expect outside of
+cloudfoundry.
+
 And start sidekiq running using:
 ```
 bundle exec sidekiq
