@@ -17,4 +17,4 @@ paas_sidekiq_worker_app_instances = 1
 paas_sidekiq_worker_app_start_command = "bundle exec sidekiq -C config/sidekiq.yml"
 paas_sidekiq_worker_app_memory = 1024
 govuk_hostnames = ["s-manage-training-for-early-career-teachers"]
-paas_redis_service_plan = "tiny-6_x"
+paas_redis_service_plan = "tiny-ha-6_x"
