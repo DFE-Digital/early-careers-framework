@@ -108,7 +108,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
   it_behaves_like "JSON Participant resume documentation",
                   "/api/v1/participants/ecf/{id}/resume",
                   "#/components/schemas/ECFParticipantResumeRequest",
-                  "#/components/schemas/ECFParticipantResponse",
+                  "#/components/schemas/ECFParticipantResumeResponse",
                   "ECF Participant" do
     let(:participant) { mentor_profile }
     let(:attributes) { { course_identifier: "ecf-mentor" } }
