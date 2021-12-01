@@ -11,10 +11,6 @@ RSpec.describe "Schools::AddParticipant", type: :request do
 
   subject { response }
 
-  before do
-    FeatureFlag.activate(:year_2020_data_entry)
-  end
-
   describe "GET /schools/:school_id/year-2020/support-materials-for-NQTs" do
     before do
       get "/schools/#{school.slug}/year-2020/support-materials-for-NQTs"
