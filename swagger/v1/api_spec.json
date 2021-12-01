@@ -1777,7 +1777,27 @@
         }
       },
       "ECFParticipantRetainedDeclaration": {
-        "description": "An ECF retained participant declaration",
+        "description": "An ECF participant retained declaration request body",
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "The request data",
+            "type": "object",
+            "example": "participant-declaration",
+            "enum": [
+              "participant-declaration"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ECFParticipantRetainedDeclarationAttributes"
+          }
+        },
+        "required": [
+          "attributes"
+        ]
+      },
+      "ECFParticipantRetainedDeclarationAttributes": {
+        "description": "An ECF participant retained declaration",
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -1840,6 +1860,26 @@
         }
       },
       "ECFParticipantStartedDeclaration": {
+        "description": "A participant started declaration request body",
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "The request data",
+            "type": "object",
+            "example": "participant-declaration",
+            "enum": [
+              "participant-declaration"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ECFParticipantStartedDeclarationAttributes"
+          }
+        },
+        "required": [
+          "attributes"
+        ]
+      },
+      "ECFParticipantStartedDeclarationAttributes": {
         "description": "An ECF started and completed participant declaration",
         "type": "object",
         "additionalProperties": false,
@@ -2804,7 +2844,27 @@
         }
       },
       "NPQParticipantRetainedDeclaration": {
-        "description": "An NPQ retained participant declaration",
+        "description": "An NPQ participant retained declaration request body",
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "The request data",
+            "type": "object",
+            "example": "participant-declaration",
+            "enum": [
+              "participant-declaration"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/NPQParticipantRetainedDeclarationAttributes"
+          }
+        },
+        "required": [
+          "attributes"
+        ]
+      },
+      "NPQParticipantRetainedDeclarationAttributes": {
+        "description": "An NPQ participant retained declaration",
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -2858,6 +2918,26 @@
         }
       },
       "NPQParticipantStartedDeclaration": {
+        "description": "An NPQ participant started declaration request body",
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "The request data",
+            "type": "object",
+            "example": "participant-declaration",
+            "enum": [
+              "participant-declaration"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/NPQParticipantStartedDeclarationAttributes"
+          }
+        },
+        "required": [
+          "attributes"
+        ]
+      },
+      "NPQParticipantStartedDeclarationAttributes": {
         "description": "An NPQ started and completed participant declaration",
         "type": "object",
         "additionalProperties": false,
@@ -2926,7 +3006,10 @@
           "attributes": {
             "$ref": "#/components/schemas/NPQParticipantWithdrawAttributes"
           }
-        }
+        },
+        "required": [
+          "attributes"
+        ]
       },
       "NPQParticipantWithdrawAttributes": {
         "description": "An NPQ participant withdrawal action",
@@ -3037,7 +3120,20 @@
                 ]
               },
               "attributes": {
-                "$ref": "#/components/schemas/ParticipantDeclarationChoices"
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ECFParticipantStartedDeclarationAttributes"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ECFParticipantRetainedDeclarationAttributes"
+                  },
+                  {
+                    "$ref": "#/components/schemas/NPQParticipantStartedDeclarationAttributes"
+                  },
+                  {
+                    "$ref": "#/components/schemas/NPQParticipantRetainedDeclarationAttributes"
+                  }
+                ]
               }
             }
           }
@@ -3139,30 +3235,6 @@
             "format": "date-time",
             "example": "2021-05-31T02:22:32.000Z"
           }
-        }
-      },
-      "ParticipantDeclarationChoices": {
-        "description": "A participant declaration choice",
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/ECFParticipantStartedDeclaration"
-          },
-          {
-            "$ref": "#/components/schemas/ECFParticipantRetainedDeclaration"
-          },
-          {
-            "$ref": "#/components/schemas/NPQParticipantStartedDeclaration"
-          },
-          {
-            "$ref": "#/components/schemas/NPQParticipantRetainedDeclaration"
-          }
-        ],
-        "example": {
-          "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
-          "declaration_type": "started",
-          "declaration_date": "2021-05-31T02:21:32.000Z",
-          "course_identifier": "ecf-mentor"
         }
       },
       "ParticipantDeclarationCsvRow": {
