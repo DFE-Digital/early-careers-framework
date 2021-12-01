@@ -1,0 +1,59 @@
+<% title = validation_form.step_completed?(:no_match) ? "We still cannot find your details" : "We cannot find your details" %>
+<% content_for :title, title %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl"><%= title %></h1>
+    <p class="govuk-body">Check the information you entered is correct.</p>
+    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">TRN</dt>
+        <dd class="govuk-summary-list__value">
+          <% if validation_form.no_trn %>
+            Not provided
+          <% else %>
+            <%= validation_form.trn %>
+          <% end %>
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <span class="govuk-visually-hidden">your Teacher Reference Number</span>
+        </dd>
+      </div>
+
+      <% if validation_form.step_completed?(:nino) %>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">National Insurance Number</dt>
+          <dd class="govuk-summary-list__value"><%= validation_form.nino %></dd>
+          <dd class="govuk-summary-list__actions">
+            <%= govuk_link_to "Change", { action: :show, step: :nino } %>
+            <span class="govuk-visually-hidden">your National Insurance number</span>
+          </dd>
+        </div>
+      <% end %>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Date of birth</dt>
+        <dd class="govuk-summary-list__value"><%= validation_form.dob.to_s(:govuk) %></dd>
+        <dd class="govuk-summary-list__actions">
+          <%= govuk_link_to "Change", { action: :show, step: :dob } %>
+          <span class="govuk-visually-hidden">your date of birth</span>
+        </dd>
+      </div>
+
+      <% if validation_form.step_completed?(:name_changed) %>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Name</dt>
+          <dd class="govuk-summary-list__value"><%= validation_form.full_name %></dd>
+          <dd class="govuk-summary-list__actions">
+            <%= govuk_link_to "Change", { action: :show, step: :name } %>
+            <span class="govuk-visually-hidden">your name</span>
+          </dd>
+        </div>
+      <% end %>
+
+    </dl>
+    <div class="govuk-inset-text"><%= t("participants.validation_form.extra_steps.#{validation_form.additional_step}.note") %></div>
+    <%= govuk_button_to t("participants.validation_form.extra_steps.#{validation_form.additional_step}.button"), { action: :update }, method: :patch %>
+  </div>
+</div>

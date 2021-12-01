@@ -1,0 +1,12 @@
+<% content_for :title, "Confirm your name" %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: back_link_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">What was your full name when you started your initial teacher training?</h1>
+    <%= form_for validation_form, url: { action: :update }, method: :patch do |f| %>
+      <%= f.govuk_text_field :full_name, label: { text: "Your name", class: "govuk-visually-hidden" }, class: %w[govuk-!-width-two-thirds] %>
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

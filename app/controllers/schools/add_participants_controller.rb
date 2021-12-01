@@ -28,7 +28,7 @@ module Schools
     end
 
     abandon_journey_path do
-      @school_cohort.active_ecf_participants.any? ? schools_participants_path : schools_cohort_path
+      school_cohort.active_ecf_participants.any? ? schools_participants_path : schools_cohort_path
     end
 
     setup_form do |form|
@@ -45,7 +45,13 @@ module Schools
     def email_used_in_the_same_school?
       User.find_by(email: add_participant_form.email).school == add_participant_form.school_cohort.school
     end
-
     helper_method :email_used_in_the_same_school?
+
+    def school_cohort
+      return @school_cohort if defined?(@school_cohort)
+
+      set_school_cohort
+      @school_cohort
+    end
   end
 end

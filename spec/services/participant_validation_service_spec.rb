@@ -35,14 +35,24 @@ RSpec.describe ParticipantValidationService do
     it "calls get_record on the DQT API client" do
       expect_any_instance_of(FullDqt::Client).to receive(:get_record).with({ trn: trn, birthdate: dob, nino: nino })
 
-      ParticipantValidationService.validate(trn: trn, nino: nino, full_name: full_name, date_of_birth: dob)
+      validation_result
     end
 
-    context "when no trn is provided" do
+    context "when neither trn nor nino is provided" do
       let(:trn) { nil }
+      let(:nino) { nil }
 
       it "returns nil" do
         expect(validation_result).to be_nil
+      end
+    end
+
+    context "when trn is not provided, but nino is" do
+      let(:trn) { nil }
+
+      it "queries dqt with fake trn" do
+        expect_any_instance_of(FullDqt::Client).to receive(:get_record).with({ trn: "0000001", birthdate: dob, nino: nino })
+        validation_result
       end
     end
 

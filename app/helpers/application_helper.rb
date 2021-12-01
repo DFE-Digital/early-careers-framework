@@ -40,7 +40,7 @@ module ApplicationHelper
   def participant_start_path(user)
     return participants_no_access_path unless post_2020_ecf_participant?(user)
 
-    participants_validation_start_path
+    participants_validation_path
   end
 
   def service_name

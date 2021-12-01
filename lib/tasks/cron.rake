@@ -5,7 +5,6 @@ namespace :cron do
   task schedule: :environment do
     SessionTrimJob.schedule
     ImportGiasDataJob.schedule
-    ValidationRetryJob.schedule
     SchoolAnalyticsJob.schedule
     StreamBigQueryParticipantDeclarationsJob.schedule if Rails.env.production?
     CreateNewFakeSandboxDataJob.schedule if Rails.env.sandbox?
