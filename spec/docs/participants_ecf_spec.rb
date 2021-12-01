@@ -94,7 +94,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
   it_behaves_like "JSON Participant Deferral documentation",
                   "/api/v1/participants/ecf/{id}/defer",
                   "#/components/schemas/ECFParticipantDeferRequest",
-                  "#/components/schemas/ECFParticipantResponse",
+                  "#/components/schemas/ECFParticipantDeferResponse",
                   "ECF Participant" do
     let(:participant) { mentor_profile }
     let(:attributes) do
