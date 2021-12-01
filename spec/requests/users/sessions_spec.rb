@@ -196,7 +196,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
       it "redirects to participant validation on successful login" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }
-        expect(response).to redirect_to(participants_validation_start_path)
+        expect(response).to redirect_to(participants_validation_path)
       end
     end
 

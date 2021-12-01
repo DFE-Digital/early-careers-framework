@@ -302,18 +302,9 @@ Rails.application.routes.draw do
     resource :no_access, only: :show, controller: "no_access"
     resource :start_registrations, path: "/start-registration", only: :show
 
-    scope :validation, as: :validation do
-      get "/", to: "validations#start", as: :start
-      get "/do-you-want-to-add-your-mentor-information", to: "validations#do_you_want_to_add_mentor_information", as: :do_you_want_to_add_mentor_information
-      put "/do-you-want-to-add-your-mentor-information", to: "validations#do_you_want_to_add_mentor_information"
-      get "/what-is-your-teacher-reference-number", to: "validations#what_is_your_trn", as: :what_is_your_trn
-      put "/what-is-your-teacher-reference-number", to: "validations#what_is_your_trn"
-      get "/tell-us-your-details", to: "validations#tell_us_your_details", as: :tell_us_your_details
-      put "/tell-us-your-details", to: "validations#tell_us_your_details"
-      get "/get-a-teacher-reference-number", to: "validations#get_a_trn", as: :get_a_trn
-      get "/cannot-find-your-details", to: "validations#cannot_find_details", as: :cannot_find_details
-      put "/cannot-find-your-details", to: "validations#cannot_find_details"
-      get "/complete", to: "validations#complete", as: :complete
+    multistep_form :validation, Participants::ParticipantValidationForm, controller: :validations do
+      get :no_trn, as: nil
+      get :already_completed, as: nil
     end
   end
 

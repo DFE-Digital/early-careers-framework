@@ -11,7 +11,11 @@ properties:
         enum:
           - participant-declaration
       attributes:
-        $ref: "#/components/schemas/ParticipantDeclarationChoices"
+        oneOf:
+          - $ref: "#/components/schemas/ECFParticipantStartedDeclarationAttributes"
+          - $ref: "#/components/schemas/ECFParticipantRetainedDeclarationAttributes"
+          - $ref: "#/components/schemas/NPQParticipantStartedDeclarationAttributes"
+          - $ref: "#/components/schemas/NPQParticipantRetainedDeclarationAttributes"
 example:
   data:
     type: "participant-declaration"
