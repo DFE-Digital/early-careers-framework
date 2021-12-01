@@ -6,13 +6,13 @@
   <%= render ParticipantStatusTagComponent.new(profile: @participant_profile) %>
 </h1>
 
-<%= render Admin::Participants::Details.new(profile: @participant_profile) %>
-<%= render Admin::Participants::ValidationTasks.new(profile: @participant_profile) %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= render Admin::Participants::Details.new(profile: @participant_profile) %>
+    <%= render Admin::Participants::ValidationTasks.new(profile: @participant_profile) %>
 
-<% if @participant_profile.policy_class.new(current_user, @participant_profile).withdraw_record? %>
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+    <% if @participant_profile.policy_class.new(current_user, @participant_profile).withdraw_record? %>
       <%= govuk_link_to "Delete participant", remove_admin_participant_path %>
-    </div>
+    <% end %>
   </div>
-<% end %>
+</div>
