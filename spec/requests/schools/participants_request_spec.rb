@@ -15,6 +15,9 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
   let!(:withdrawn_ect) { create(:ect_participant_profile, :withdrawn_record, school_cohort: school_cohort).user }
   let!(:unrelated_mentor) { create(:mentor_participant_profile, school_cohort: another_cohort).user }
   let!(:unrelated_ect) { create(:ect_participant_profile, school_cohort: another_cohort).user }
+  let!(:delivery_partner) { create(:delivery_partner, name: "Delivery Partner") }
+  let!(:lead_provider) { create(:lead_provider, name: "Lead Provider", cohorts: [cohort]) }
+  let!(:partnership) { create(:partnership, school: school, lead_provider: lead_provider, delivery_partner: delivery_partner, cohort: cohort) }
 
   before do
     FeatureFlag.activate(:induction_tutor_manage_participants)
@@ -45,6 +48,16 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
       expect(response.body).to include(CGI.escapeHTML(mentor_user.full_name))
       expect(response.body).not_to include(CGI.escapeHTML(unrelated_mentor.full_name))
       expect(response.body).not_to include(CGI.escapeHTML(unrelated_ect.full_name))
+    end
+
+    it "renders participant details when they have been withdrawn by the provider" do
+      ect_profile.training_status_withdrawn!
+      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants"
+
+      expect(response).to render_template("schools/participants/index")
+      expect(response.body).to include(CGI.escapeHTML(ect_user.full_name))
+      expect(response.body).to include(CGI.escapeHTML(delivery_partner.name))
+      expect(response.body).to include(CGI.escapeHTML(lead_provider.name))
     end
 
     it "does not list participants with withdrawn profile records" do

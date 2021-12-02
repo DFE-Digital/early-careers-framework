@@ -24,6 +24,38 @@
     </div>
   </div>
   <div class="govuk-grid-column-full">
+    <% if @withdrawn.any? %>
+      <h2 class="govuk-heading-m govuk-!-margin-bottom-0">No longer being trained</h2>
+      <p>
+        Your provider reported that they're not training the people listed below. If this is wrong, contact <%= @school.lead_provider(@school_cohort.cohort.start_year).name %>
+        <% if @school.delivery_partner_for(@school_cohort.cohort.start_year) %>
+          or <%= @school.delivery_partner_for(@school_cohort.cohort.start_year).name %>.
+        <% end %>
+      </p>
+      <table class="govuk-table govuk-!-margin-bottom-9" data-test="withdrawn">
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header govuk-!-width-one-third">Name</th>
+          <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Role</th>
+          <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Action required</th>
+          <th scope="col" class="govuk-table__header"></th>
+        </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+
+         <% @withdrawn.each do |profile| %>
+           <tr class="govuk-table__row">
+             <td class="govuk-table__cell"><%= profile.user.full_name %></td>
+             <td class="govuk-table__cell"><%= format_type(profile.participant_type) %></td>
+             <td class="govuk-table__cell">None</td>
+             <td class="govuk-table__cell govuk-table__cell--numeric">
+             <%= govuk_link_to "Details", schools_participant_path(cohort_id: profile.school_cohort.cohort, id: profile) %>
+             </td>
+           </tr>
+         <% end %>
+         </tbody>
+       </table>
+    <% end %>
     <% if @ineligible.any? %>
       <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Not eligible for funded training</h2>
       <p class="govuk-!-margin-bottom-3">We’ve checked these people’s details and found they’re not eligible for this
