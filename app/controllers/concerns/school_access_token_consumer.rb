@@ -9,7 +9,13 @@ module SchoolAccessTokenConsumer
 
 private
 
+  LEGACY_EMAILS_PERMISSIONS = {
+    NominationEmail => [:nominate_tutor],
+    PartnershipNotificationEmail => [:challenge_partnership],
+  }.freeze
+
   def store_token
+    handle_legacy_email_records
     session[:access_token] = params[:token] if params[:token]
   end
 
@@ -23,9 +29,19 @@ private
     raise Pundit::NotAuthorizedError, "Access token does not permit #{action}"
   end
 
-  # def record_nomination_email_opened
-  #   NominationEmail
-  #     .where(token: nomination_email.token, opened_at: nil)
-  #     .update_all(opened_at: Time.zone.now)
-  # end
+  # TODO: Delete this when all the NominationEmail and PartnershipNotificationEmail tokens expires
+  def handle_legacy_email_records
+    legacy_mail = [NominationEmail, PartnershipNotificationEmail].find do |email_class|
+      record = email_class.find_by(token: params[:token])
+      break record if record
+    end
+    return if legacy_mail.blank?
+
+    # We're handling an email that was sent before SchoolAccessToken deployment.
+    access_token = SchoolAccessToken.find_or_create_by!(token: "legacy-#{legacy_mail.token}") do |sat|
+      sat.permitted_actions = LEGACY_EMAILS_PERMISSIONS[legacy_mail.class]
+      sat.school = legacy_mail.school
+    end
+    params[:token] = access_token.token
+  end
 end

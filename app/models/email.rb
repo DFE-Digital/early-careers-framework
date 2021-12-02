@@ -34,4 +34,10 @@ class Email < ApplicationRecord
   def self.latest
     order(:created_at).last
   end
+
+  def actioned!(at: Time.zone.now, override: false)
+    return if !override && actioned_at.present?
+
+    update_column(:actioned_at, at)
+  end
 end
