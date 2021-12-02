@@ -19,7 +19,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
     )
   end
 
-  scenario "Can get to NPQ payment breakdown page for a provider", :js do
+  scenario "see a payment breakdown per NPQ course and a payment breakdown of each individual NPQ courses for each provider" do
     given_i_am_logged_in_as_a_finance_user
     and_there_is_npq_provider_with_contracts
     and_those_courses_have_submitted_declations
@@ -27,20 +27,15 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
     and_choose_to_see_npq_payment_breakdown
     and_i_select_an_npq_lead_provider
     then_i_should_have_the_correct_payment_breakdown_per_npq_lead_provider
-    when_i_click_on(npq_leading_teaching_contract)
 
-    then_i_should_see_correct_breakdown_summary(cpd_lead_provider, npq_leading_teaching_contract)
-    then_i_should_see_correct_payment_breakdown(npq_leading_teaching_contract)
-    when_i_click "Back"
-
-    when_i_click_on(npq_leading_behaviour_culture_contract)
-    then_i_should_see_correct_breakdown_summary(cpd_lead_provider, npq_leading_behaviour_culture_contract)
-    then_i_should_see_correct_payment_breakdown(npq_leading_behaviour_culture_contract)
-    when_i_click "Back"
-
-    when_i_click_on(npq_leading_teaching_development_contract)
-    then_i_should_see_correct_breakdown_summary(cpd_lead_provider, npq_leading_teaching_development_contract)
-    then_i_should_see_correct_payment_breakdown(npq_leading_teaching_development_contract)
+    [npq_leading_teaching_contract, npq_leading_behaviour_culture_contract, npq_leading_teaching_development_contract].each do |npq_contract|
+      when_i_click_on(npq_contract)
+      then_i_should_see_correct_breakdown_summary(npq_contract.npq_lead_provider.cpd_lead_provider, npq_contract)
+      then_i_should_see_correct_service_fee_payment_breakdown(npq_contract)
+      then_i_should_see_correct_output_payment_breakdown(npq_contract)
+      then_i_should_see_the_correct_total(npq_contract)
+      when_i_click "Back"
+    end
   end
 
 private
@@ -165,15 +160,55 @@ private
       .to have_sibling("dd.govuk-summary-list__value", text: ParticipantDeclaration::NPQ.submitted_for_lead_provider_and_course(npq_lead_provider, npq_contract.course_identifier).count)
   end
 
-  def then_i_should_see_correct_payment_breakdown(npq_contract)
+  def expected_service_fee_portion_per_participant(npq_contract)
+    npq_contract.per_participant * npq_contract.service_fee_percentage / (100 * npq_contract.service_fee_installments)
+  end
+
+  def expected_service_fee_payment(npq_contract)
+    npq_contract.recruitment_target * expected_service_fee_portion_per_participant(npq_contract)
+  end
+
+  def then_i_should_see_correct_service_fee_payment_breakdown(npq_contract)
     within "table.govuk-table tbody tr.govuk-table__row:nth-child(1)" do
-      expected_per_participant_portion = npq_contract.per_participant * npq_contract.service_fee_percentage / (100 * npq_contract.service_fee_installments)
+      expect(page.find("td:nth-child(1)", text: "Service fee"))
+        .to have_sibling("td", text: number_to_pounds(expected_service_fee_portion_per_participant(npq_contract)))
 
       expect(page.find("td:nth-child(1)", text: "Service fee"))
-        .to have_sibling("td", text: number_to_pounds(expected_per_participant_portion))
+        .to have_sibling("td", text: number_to_pounds(expected_service_fee_payment(npq_contract)))
+    end
+  end
 
-      expect(page.find("td:nth-child(1)", text: "Service fee"))
-        .to have_sibling("td", text: number_to_pounds(npq_contract.recruitment_target * expected_per_participant_portion))
+  def expected_per_participant_output_payment_portion(npq_contract)
+    (npq_contract.per_participant * npq_contract.output_payment_percentage) / (100 * npq_contract.number_of_payment_periods)
+  end
+
+  def expected_output_fee_payment(npq_contract)
+    eligible_and_payable_participant_count = ParticipantDeclaration::NPQ
+        .eligible_or_payable_for_lead_provider_and_course(
+          npq_contract.npq_lead_provider.cpd_lead_provider, npq_contract.course_identifier
+        ).count
+
+    expected_per_participant_output_payment_portion(npq_contract) * eligible_and_payable_participant_count
+  end
+
+  def then_i_should_see_correct_output_payment_breakdown(npq_contract)
+    within "table.govuk-table tbody tr.govuk-table__row:nth-child(2)" do
+      expect(page.find("td:nth-child(1)", text: "Output fee"))
+        .to have_sibling("td", text: number_to_pounds(expected_per_participant_output_payment_portion(npq_contract)))
+
+      expect(page.find("td:nth-child(1)", text: "Output fee"))
+        .to have_sibling("td", text: number_to_pounds(expected_output_fee_payment(npq_contract)))
+    end
+  end
+
+  def then_i_should_see_the_correct_total(npq_contract)
+    within "table.govuk-table tbody tr.govuk-table__row:nth-child(3)" do
+      expected_service_fee_payment = expected_service_fee_payment(npq_contract)
+      expected_output_fee_payment  = expected_output_fee_payment(npq_contract)
+      expected_total               = expected_service_fee_payment + expected_output_fee_payment
+
+      expect(page.find("td:nth-child(1)", text: "Total payment"))
+        .to have_sibling("td", text: number_to_pounds(expected_total))
     end
   end
 end

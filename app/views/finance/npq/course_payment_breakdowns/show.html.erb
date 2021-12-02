@@ -22,6 +22,8 @@
       </thead>
       <tbody>
         <%= render Finance::NPQ::ServiceFeeRow.new(@breakdown[:service_fees]) %>
+        <%= render Finance::NPQ::OutputFeeRow.new(@breakdown[:output_payments]) %>
+        <%= render Finance::NPQ::TotalPaymentRow.new(@breakdown) %>
       </tbody>
     </table>
   </div>
