@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Cohort < ApplicationRecord
+  has_many :schedules, class_name: "Finance::Schedule"
+
   def self.current
     # TODO: Register and Partner 262: Figure out how to update current year
     find_by(start_year: 2021)
