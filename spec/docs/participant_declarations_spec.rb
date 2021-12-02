@@ -191,8 +191,10 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
         run_test!
       end
 
-      response "404", "Not found" do
+      response "404", "Not found", exceptions_app: true do
         let(:id) { "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee" }
+
+        schema({ "$ref": "#/components/schemas/NotFoundResponse" })
 
         run_test!
       end
