@@ -67,7 +67,7 @@ private
 
   def induction_coordinator_mentor_path(user)
     profile = user.participant_profiles.active_record.mentors.first
-    return participants_validation_start_path unless profile&.completed_validation_wizard?
+    return participants_validation_path unless profile&.completed_validation_wizard?
 
     induction_coordinator_dashboard_path(user)
   end
