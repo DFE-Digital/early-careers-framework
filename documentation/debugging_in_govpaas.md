@@ -50,14 +50,16 @@ Find the instance guid
 
 Generate a single use login code
 
-`cf ssh-code`
+`cf ssh-code` | [xsel|pbcoby]
 
 Perform the SCP command
 
-`scp -P 2222 -o StrictHostKeyChecking=no -o User=cf:${GUID}/0 [from] [to]`
+`scp -P 2222 -o StrictHostKeyChecking=no -oHostKeyAlgorithms=+ssh-rsa -o User=cf:${GUID}/0 [from] [to]`
+
+using the password from `cf ss-code`
 
 e.g.
 
-`scp -P 2222 -o StrictHostKeyChecking=no -o User=cf:${GUID}/0 ssh.london.cloud.service.gov.uk:/app/*.csv .`
+`scp -P 2222 -o StrictHostKeyChecking=no -oHostKeyAlgorithms=+ssh-rsa -o User=cf:${GUID}/0 ssh.london.cloud.service.gov.uk:/app/*.csv .`
 
 In cases where the is more than one instance, change the `/0` to match the desired instance number
