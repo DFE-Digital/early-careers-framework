@@ -18,7 +18,10 @@ module Devise
 
       def authenticate!
         if params[:user].present?
-          user = User.find_by(email: params[:user][:email])
+          email = params.dig(:user, :email)
+          user = ParticipantIdentity.find_by(email: email)&.user || User.find_by(email: email)
+
+          # user = User.find_by(email: params[:user][:email])
 
           token_expiry = 60.minutes.from_now
           result = user&.update(

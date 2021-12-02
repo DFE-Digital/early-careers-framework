@@ -56,6 +56,7 @@ module NPQ
         teacher_profile: teacher_profile,
         school_urn: npq_application.school_urn,
         school_ukprn: npq_application.school_ukprn,
+        participant_identity: CreateUserIdentity.call(user: user, origin: :npq),
       ) do |participant_profile|
         ParticipantProfileState.find_or_create_by!(participant_profile: participant_profile)
       end

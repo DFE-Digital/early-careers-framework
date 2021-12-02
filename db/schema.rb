@@ -539,6 +539,18 @@ ActiveRecord::Schema.define(version: 2021_12_02_162431) do
     t.index ["user_id"], name: "index_participant_declarations_on_user_id"
   end
 
+  create_table "participant_identities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.string "email", null: false
+    t.uuid "external_identifier", null: false
+    t.string "origin", default: "ecf", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["email"], name: "index_participant_identities_on_email", unique: true
+    t.index ["external_identifier"], name: "index_participant_identities_on_external_identifier", unique: true
+    t.index ["user_id"], name: "index_participant_identities_on_user_id"
+  end
+
   create_table "participant_profile_schedules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_profile_id", null: false
     t.uuid "schedule_id", null: false
@@ -577,10 +589,12 @@ ActiveRecord::Schema.define(version: 2021_12_02_162431) do
     t.datetime "request_for_details_sent_at"
     t.string "training_status", default: "active", null: false
     t.string "profile_duplicity", default: "single", null: false
+    t.uuid "participant_identity_id"
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"
     t.index ["npq_course_id"], name: "index_participant_profiles_on_npq_course_id"
+    t.index ["participant_identity_id"], name: "index_participant_profiles_on_participant_identity_id"
     t.index ["schedule_id"], name: "index_participant_profiles_on_schedule_id"
     t.index ["school_cohort_id"], name: "index_participant_profiles_on_school_cohort_id"
     t.index ["school_id"], name: "index_participant_profiles_on_school_id"
@@ -858,6 +872,7 @@ ActiveRecord::Schema.define(version: 2021_12_02_162431) do
   add_foreign_key "participant_declaration_attempts", "participant_declarations"
   add_foreign_key "participant_declarations", "participant_profiles"
   add_foreign_key "participant_declarations", "users"
+  add_foreign_key "participant_identities", "users"
   add_foreign_key "participant_profile_schedules", "participant_profiles"
   add_foreign_key "participant_profile_schedules", "schedules"
   add_foreign_key "participant_profile_states", "participant_profiles"

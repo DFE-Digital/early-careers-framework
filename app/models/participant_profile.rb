@@ -6,6 +6,8 @@ class ParticipantProfile < ApplicationRecord
 
   belongs_to :schedule, class_name: "Finance::Schedule", touch: true
 
+  belongs_to :participant_identity
+
   has_one :user, through: :teacher_profile
 
   has_many :validation_decisions, class_name: "ProfileValidationDecision"

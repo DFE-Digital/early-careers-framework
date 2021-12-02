@@ -4,6 +4,7 @@ FactoryBot.define do
   factory :participant_profile do
     teacher_profile
     profile_duplicity { :single }
+    participant_identity { association :participant_identity, user: teacher_profile&.user || user }
 
     factory :ecf_participant_profile, class: "ParticipantProfile::ECF" do
       school_cohort
