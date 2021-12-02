@@ -1761,7 +1761,7 @@
           "training_status": {
             "description": "The training status of the ECF participant",
             "type": "string",
-            "example": "deffered",
+            "example": "deferred",
             "enum": [
               "active",
               "deferred",
