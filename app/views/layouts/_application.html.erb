@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template ">
+<html lang="en" class="govuk-template">
   <head>
     <%= tag :meta, charset: 'utf-8' %>
     <% if Rails.env.to_s.in? Sentry.configuration.enabled_environments %>
@@ -56,7 +56,7 @@
     </script>
   </head>
 
-  <body class="govuk-template__body ">
+  <body class="govuk-template__body">
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N58Z5PG"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -104,7 +104,7 @@
     <div class="govuk-width-container">
       <div class="govuk-phase-banner app-phase-banner--no-border govuk-!-display-none-print">
         <p class="govuk-phase-banner__content">
-          <strong class="govuk-tag govuk-phase-banner__content__tag ">
+          <strong class="govuk-tag govuk-phase-banner__content__tag">
             <% if Rails.env.production?  %>
               Beta
             <% elsif Rails.env.staging? %>
@@ -143,7 +143,7 @@
     <%= yield %>
 
     <footer class="govuk-footer " role="contentinfo">
-      <div class="govuk-width-container ">
+      <div class="govuk-width-container">
         <div class="govuk-footer__meta">
           <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
             <%= render 'layouts/support_links' %>
