@@ -8,7 +8,8 @@ SELECT DISTINCT s.urn,
                 (u.current_sign_in_at IS NOT NULL) as tutor_signed_in,
                 u.full_name                        as tutor_name,
                 u.email                            as tutor_email,
-                (pp.id IS NOT NULL)                as sit_mentor
+                (pp.id IS NOT NULL)                as sit_mentor,
+                pp.id                              as sit_mentor_id
 
 FROM schools s
          LEFT OUTER JOIN school_cohorts sc on s.id = sc.school_id
