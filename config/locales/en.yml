@@ -140,32 +140,6 @@ en:
   activemodel:
     errors:
       models:
-        participants/participant_validation_form:
-          attributes:
-            do_you_want_to_add_mentor_information_choice:
-              blank: Select whether you want to add your mentor information now
-            do_you_know_your_trn_choice:
-              blank: Select whether you know your teacher reference number
-            have_you_changed_your_name_choice:
-              blank: Select if your name has changed since ITT
-            updated_record_choice:
-              blank: Select whether you have updated your name
-            name_not_updated_choice:
-              blank: Select how you want to continue
-            trn:
-              blank: Enter your teacher reference number
-              too_short: Teacher reference number is at least %{count} digits long
-              too_long: Teacher reference number is at most %{count} digits long
-              invalid: Teacher reference number must only contain numbers
-            name:
-              blank: Enter your full name
-            date_of_birth:
-              blank: Enter your date of birth
-              invalid: Date of birth must be a valid date
-              in_the_future: Date of birth must be in the past
-              invalid_year: The year must be 4 digits long. For example, 1990
-            national_insurance_number:
-              invalid: National Insurance number is not the correct format (for example, QQ123456C)
         nominate_induction_tutor_form:
           attributes:
             email:
@@ -239,16 +213,29 @@ en:
       no_early_career_teachers: "No early career teachers for this cohort"
       not_yet_known: "Not yet decided"
 
+  courses:
+    npq:
+      npq-leading-teaching: Leading Teaching
+      npq-leading-behaviour-culture: Leading Behaviour and Culture
+      npq-leading-teaching-development: Leading Teacher Development
+      npq-senior-leadership: Senior Leadership
+      npq-headship: Headship
+      npq-executive-leadership: Executive Leadership
+      npq-additional-support-offer: Additional Support Offer
   finance:
+    submission_deadline: Submission deadline
     choose_programme: Choose programme scheme
+    cohort: Cohort
     show_contract: View contract information
     provider: Provider
     ects: Current ECTs
     mentors: Current Mentors
-    participants: Current Participants
+    participants: Current participants
     per_participant: Payment amount per person
+    amount: Amount
     payment_breakdown: Payment Breakdown
     payment_type: Payment type
+    payment_reference: Payment reference
     number_of_participants: Number of participants
     payment_amount_for_period: Payment amount for period
     payment: Payment
@@ -261,9 +248,12 @@ en:
     total_paid: Total paid
     total_not_paid: Total not paid
     contract:
+      version: Contract reference
+      per_participant: Per participant
+      service_fee_installments: Service fee installments
       uplift_target: Uplift target
       uplift_amount: Uplift amount
-      recuitment_target: Recruitment target
+      recruitment_target: Recruitment target
       revised_target: Revised recruitment target (+2%)
       set_up_fee: Set-up Fee
       band: Band
@@ -280,17 +270,17 @@ en:
         "3": New target
       payment_breakdown: ECF Payment Breakdown
       breakdown_summary:
-        submission_deadline: Submission deadline
         total: Total
+
     npq:
       payment_breakdown: NPQ Payment Breakdown
     service_fee:
-      caption: Service Fee
+      caption: Service fee
     output_payment:
-      caption: Output Fee
+      caption: Output fee
       band_d_info: Participants over the original band C target up to the new target.
     uplift_fee:
-      caption: Uplift Fee
+      caption: Uplift fee
     clawbacks:
       caption: Clawbacks
       per_participant: Clawback per participant

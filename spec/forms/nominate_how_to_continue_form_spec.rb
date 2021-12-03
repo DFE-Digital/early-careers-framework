@@ -12,7 +12,7 @@ RSpec.describe NominateHowToContinueForm, type: :model do
     subject(:form) { described_class.new(cohort: cohort) }
 
     it "provides options for the nomination induction tutor choices" do
-      options = %w[yes no i_dont_know]
+      options = %w[yes no we_dont_know]
       expect(form.choices.map(&:id)).to match_array options
     end
   end
@@ -34,8 +34,8 @@ RSpec.describe NominateHowToContinueForm, type: :model do
       end
     end
 
-    context "when 'i_dont_know' is selected" do
-      subject(:form) { described_class.new(how_to_continue: "i_dont_know") }
+    context "when 'we_dont_know' is selected" do
+      subject(:form) { described_class.new(how_to_continue: "we_dont_know") }
 
       it "returns false" do
         expect(form.opt_out?).to eq false

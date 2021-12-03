@@ -51,13 +51,13 @@ module NPQ
     def create_profile
       ParticipantProfile::NPQ.create!(
         id: npq_application.id,
-        schedule: schedule,
+        schedule: NPQCourse.schedule_for(npq_application.npq_course),
         npq_course: npq_application.npq_course,
         teacher_profile: teacher_profile,
         school_urn: npq_application.school_urn,
         school_ukprn: npq_application.school_ukprn,
       ) do |participant_profile|
-        ParticipantProfileState.find_or_create_by(participant_profile: participant_profile)
+        ParticipantProfileState.find_or_create_by!(participant_profile: participant_profile)
       end
     end
 
@@ -67,20 +67,6 @@ module NPQ
 
     def user
       @user ||= npq_application.user
-    end
-
-    def schedule
-      case npq_application.npq_course.identifier
-      when *NPQCourse::LEADERSHIP_IDENTIFIER
-        Finance::Schedule::NPQLeadership.default
-      when *NPQCourse::SPECIALIST_IDENTIFIER
-        Finance::Schedule::NPQSpecialist.default
-      when "npq-additional-support-offer"
-        # TODO: Figure out what ASO schedules look like
-        Finance::Schedule::NPQSpecialist.default
-      else
-        raise ArgumentError "Invalid course identifier"
-      end
     end
 
     def npq_course

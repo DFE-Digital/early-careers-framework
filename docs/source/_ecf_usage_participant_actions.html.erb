@@ -3,13 +3,16 @@
 <p class="govuk-body-m">This operation allows the provider to tell the DfE that a participant has deferred from their ECF course.</p>
 <p class="govuk-body-m">A participant is deemed to have deferred from an ECF course if he or she will be resuming it at a later date.</p>
 
-<h3 class="govuk-heading-m" id="notifying-of-deferral-provider-defers-a-participant">1. Provider defers a participant</h3>
+<h3 class="govuk-heading-m" id="notifying-of-deferral">1. Provider defers a participant</h3>
 
 <p class="govuk-body-m">Submit the deferral notification to the following endpoint</p>
-<p class="govuk-body-m"><code>PUT /api/v1/participants/{id}/defer</code></p>
-<p class="govuk-body-m">This will return an <a href="/api-reference/reference#ecfparticipant-object" class="govuk-link">ECF participant record</a> with the updates to the record included.</p>
-<p class="govuk-body-m">See <a href="/api-reference/reference#put-api-v1-participants-id-defer" class="govuk-link">defer ECF participant</a> endpoint.</p>
-
+<pre>
+  <code>PUT /api/v1/participants/{id}/defer</code>
+</pre>
+<p class="govuk-body-m">
+  This will return an <a href="/api-reference/reference#schema-ecfparticipantresponse" class="govuk-link">ECF participant response</a> with the updates to the record included.
+</p>
+<p class="govuk-body-m">See <a href="/api-reference/reference#api-v1-participants-ecf-id-defer-put" class="govuk-link">defer ECF participant</a> endpoint.</p>
 
 <h2 id="notifying-of-resume" class="govuk-heading-l">Notifying that an ECF participant is resuming their course</h2>
 
@@ -18,10 +21,11 @@
 <h3 class="govuk-heading-m" id="notifying-of-resume-provider-resumes-a-participant">1. Provider resumes a participant</h3>
 
 <p class="govuk-body-m">Submit the resumed notification to the following endpoint</p>
-<p class="govuk-body-m"><code>PUT /api/v1/participants/{id}/resume</code></p>
-<p class="govuk-body-m">This will return an <a href="/api-reference/reference#ecfparticipant-object" class="govuk-link">ECF participant record</a> with the updates to the record included.</p>
-<p class="govuk-body-m">See <a href="/api-reference/reference#put-api-v1-participants-id-resume" class="govuk-link">resume ECF participant</a> endpoint.</p>
-
+<pre>
+  <code>PUT /api/v1/participants/{id}/resume</code>
+</pre>
+<p class="govuk-body-m">This will return an <a href="/api-reference/reference#schema-ecfparticipantresponse" class="govuk-link">ECF participant record</a> with the updates to the record included.</p>
+<p class="govuk-body-m">See <a href="/api-reference/reference#api-v1-participants-ecf-id-resume-put" class="govuk-link">resume ECF participant</a> endpoint.</p>
 
 <h2 id="notifying-of-schedule-change" class="govuk-heading-l">Notifying that an ECF participant is changing training schedule</h2>
 
@@ -30,9 +34,11 @@
 <h3 class="govuk-heading-m" id="notifying-of-schedule-change-provider-changes-schedule-of-a-participant">1. Provider changes a participant's schedule</h3>
 
 <p class="govuk-body-m">Submit the change of schedule notification to the following endpoint</p>
-<p class="govuk-body-m"><code>PUT /api/v1/participants/{id}/change-schedule</code></p>
-<p class="govuk-body-m">This will return an <a href="/api-reference/reference#ecfparticipant-object" class="govuk-link">ECF participant record</a> with the updates to the record included.</p>
-<p class="govuk-body-m">See <a href="/api-reference/reference#put-api-v1-participants-id-change-schedule" class="govuk-link">change schedule of ECF participant</a> endpoint.</p>
+<pre>
+  <code>PUT /api/v1/participants/{id}/change-schedule</code>
+</pre>
+<p class="govuk-body-m">This will return an <a href="/api-reference/reference#schema-ecfparticipantresponse" class="govuk-link">ECF participant record</a> with the updates to the record included.</p>
+<p class="govuk-body-m">See <a href="/api-reference/reference#api-v1-participants-id-change-schedule-put" class="govuk-link">change schedule of ECF participant</a> endpoint.</p>
 
 <h3 class="govuk-heading-m" id="notifying-of-schedule-change-standard-induction">Standard induction</h3>
 <p class="govuk-body-m">
@@ -143,7 +149,6 @@
   </tbody>
 </table>
 
-
 <h2 id="notifying-of-withdrawal" class="govuk-heading-l">Notifying that an ECF participant has withdrawn from their course</h2>
 
 <p class="govuk-body-m">This operation allows the provider to tell the DfE that a participant has withdrawn from their ECF course.</p>
@@ -153,6 +158,8 @@
 <h3 class="govuk-heading-m" id="notifying-of-withdrawal-provider-withdraws-a-participant">1. Provider withdraws a participant</h3>
 
 <p class="govuk-body-m">Submit the withdrawal notification to the following endpoint</p>
-<p class="govuk-body-m"><code>PUT /api/v1/participants/{id}/withdraw</code></p>
-<p class="govuk-body-m">This will return an <a href="/api-reference/reference#ecfparticipant-object" class="govuk-link">ECF participant record</a> with the updates to the record included.</p>
-<p class="govuk-body-m">See <a href="/api-reference/reference#put-api-v1-participants-id-withdraw" class="govuk-link">withdraw ECF participant</a> endpoint.</p>
+<pre>
+  <code>PUT /api/v1/participants/ecf/{id}/withdraw</code>
+</pre>
+<p class="govuk-body-m">This will return an <a href="/api-reference/reference#schema-ecfparticipantresponse" class="govuk-link">ECF participant record</a> with the updates to the record included.</p>
+<p class="govuk-body-m">See <a href="/api-reference/reference#api-v1-participants-ecf-id-withdraw-put" class="govuk-link">withdraw ECF participant</a> endpoint.</p>

@@ -4,7 +4,7 @@ RSpec.describe Schools::Participants::Status, type: :view_component, with_featur
   component { described_class.new(participant_profile: profile) }
 
   context "when an email has been sent but the participant has not validated" do
-    let(:profile) { create(:participant_profile, :ecf, :email_sent) }
+    let(:profile) { create(:ect_participant_profile, :email_sent) }
 
     it "displays the details required content" do
       expect(rendered).to have_content I18n.t "schools.participants.status.details_required.header"
@@ -15,7 +15,7 @@ RSpec.describe Schools::Participants::Status, type: :view_component, with_featur
   end
 
   context "when an email bounced" do
-    let(:profile) { create(:participant_profile, :ecf, :email_bounced) }
+    let(:profile) { create(:ect_participant_profile, :email_bounced) }
 
     it "displays the request for details failed content" do
       expect(rendered).to have_content I18n.t "schools.participants.status.request_for_details_failed.header"
@@ -24,7 +24,7 @@ RSpec.describe Schools::Participants::Status, type: :view_component, with_featur
   end
 
   context "when no email has been sent" do
-    let(:profile) { create(:participant_profile, :ecf) }
+    let(:profile) { create(:ect_participant_profile) }
 
     it "displays the request to be sent content" do
       expect(rendered).to have_content I18n.t "schools.participants.status.request_to_be_sent.header"
@@ -35,7 +35,7 @@ RSpec.describe Schools::Participants::Status, type: :view_component, with_featur
   context "when the participant is doing FIP" do
     let(:school_cohort) { create(:school_cohort, :fip) }
     context "when the participant is an ECT" do
-      let(:profile) { create(:participant_profile, :ect, school_cohort: school_cohort) }
+      let(:profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
       let!(:validation_data) { create(:ecf_participant_validation_data, participant_profile: profile) }
 
       context "when the participant is eligible" do
@@ -103,7 +103,7 @@ RSpec.describe Schools::Participants::Status, type: :view_component, with_featur
     end
 
     context "when the participant is a mentor" do
-      let(:profile) { create(:participant_profile, :mentor, school_cohort: school_cohort) }
+      let(:profile) { create(:mentor_participant_profile, school_cohort: school_cohort) }
       let!(:validation_data) { create(:ecf_participant_validation_data, participant_profile: profile) }
 
       context "when the participant is eligible" do
@@ -127,8 +127,8 @@ RSpec.describe Schools::Participants::Status, type: :view_component, with_featur
         let!(:eligibility) { create(:ecf_participant_eligibility, qts: false, participant_profile: profile) }
 
         it "displays the checking eligibility content" do
-          expect(rendered).to have_content I18n.t "schools.participants.status.checking_eligibility.header"
-          expect(rendered).to have_content I18n.t "schools.participants.status.checking_eligibility.content"
+          expect(rendered).to have_content I18n.t "schools.participants.status.eligible_fip_no_partner.header"
+          expect(rendered).to have_content I18n.t "schools.participants.status.eligible_fip_no_partner.content"
         end
       end
 
@@ -173,7 +173,7 @@ RSpec.describe Schools::Participants::Status, type: :view_component, with_featur
   context "when the participant is doing CIP" do
     let(:school_cohort) { create(:school_cohort, :cip) }
     context "when the participant is an ECT" do
-      let(:profile) { create(:participant_profile, :ect, school_cohort: school_cohort) }
+      let(:profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
       let!(:validation_data) { create(:ecf_participant_validation_data, participant_profile: profile) }
 
       context "when the participant is eligible" do
@@ -232,7 +232,7 @@ RSpec.describe Schools::Participants::Status, type: :view_component, with_featur
     end
 
     context "when the participant is a mentor" do
-      let(:profile) { create(:participant_profile, :mentor, school_cohort: school_cohort) }
+      let(:profile) { create(:mentor_participant_profile, school_cohort: school_cohort) }
       let!(:validation_data) { create(:ecf_participant_validation_data, participant_profile: profile) }
 
       context "when the participant is eligible" do

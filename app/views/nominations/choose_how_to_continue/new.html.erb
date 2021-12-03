@@ -1,5 +1,6 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-l"><%= @how_to_continue_form.school.name %></span>
     <%= form_for @how_to_continue_form, url: choose_how_to_continue_path do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_collection_radio_buttons(
@@ -7,8 +8,9 @@
         @how_to_continue_form.choices,
         :id,
         :name,
-        legend: { text: "Do you expect to have any early career teachers at #{@how_to_continue_form.school.name} this year?", size: "xl", tag: "h1" },
-        hint: { text: "These are teachers who have finished their initial teacher training" },
+        legend: { text: "Do you expect any early career teachers to join your school this academic year?", size: "xl", tag: "h1" },
+        hint: { text: "These are teachers who have finished their initial teacher training. It does not include teachers
+        who started or completed their statutory induction before 1 September 2021" },
       ) %>
       <%= f.govuk_submit "Continue" %>
     <% end %>

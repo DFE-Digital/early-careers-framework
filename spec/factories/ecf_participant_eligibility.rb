@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :ecf_participant_eligibility, class: ECFParticipantEligibility do
-    association :participant_profile, :ecf
+    association :participant_profile, factory: :ecf_participant_profile
 
     qts { true }
     active_flags { false }

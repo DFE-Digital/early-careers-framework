@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-RSpec.describe Admin::Participants::Details, type: :view_component do
+RSpec.describe Admin::Participants::Details, :with_default_schedules, type: :view_component do
   component { described_class.new profile: profile }
 
   context "for ECT profile" do
-    let(:mentor_profile) { create :participant_profile, :mentor }
-    let(:profile) { create :participant_profile, :ect, mentor_profile: mentor_profile }
+    let(:mentor_profile) { create :mentor_participant_profile }
+    let(:profile) { create :ect_participant_profile, mentor_profile: mentor_profile }
 
     it "renders all the required information" do
       expect(rendered).to have_contents(
@@ -20,7 +20,7 @@ RSpec.describe Admin::Participants::Details, type: :view_component do
   end
 
   context "for mentor profile" do
-    let(:profile) { create :participant_profile, :mentor }
+    let(:profile) { create :mentor_participant_profile }
 
     it "renders all the required information" do
       expect(rendered).to have_contents(
@@ -38,7 +38,6 @@ RSpec.describe Admin::Participants::Details, type: :view_component do
     let(:profile) { npq_application.profile }
 
     before do
-      create(:schedule, :npq_leadership)
       NPQ::Accept.new(npq_application: npq_application).call
     end
 
@@ -60,7 +59,6 @@ RSpec.describe Admin::Participants::Details, type: :view_component do
     let(:profile) { npq_application.profile }
 
     before do
-      create(:schedule, :npq_leadership)
       NPQ::Accept.new(npq_application: npq_application).call
     end
 

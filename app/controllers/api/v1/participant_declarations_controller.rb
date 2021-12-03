@@ -40,7 +40,7 @@ module Api
         if record.present?
           render json: ParticipantDeclarationSerializer.new(record).serializable_hash.to_json
         else
-          head :not_found
+          raise ActiveRecord::RecordNotFound
         end
       end
 

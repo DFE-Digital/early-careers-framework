@@ -2,7 +2,6 @@
 
 module Schools
   class AddParticipantForm
-    include ActiveModel::Model
     include Multistep::Form
 
     attribute :school_cohort_id

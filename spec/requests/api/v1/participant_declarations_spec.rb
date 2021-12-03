@@ -98,6 +98,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         allow(Rails).to receive(:logger).and_return(fake_logger)
 
         params = build_params(valid_params)
+
         post "/api/v1/participant-declarations", params: params
 
         expect(response.status).to eq 200
@@ -310,7 +311,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       end
 
       context "when a participant id filter used" do
-        let!(:second_ect_profile) { create(:participant_profile, :ect, schedule: default_schedule) }
+        let!(:second_ect_profile) { create(:ect_participant_profile, schedule: default_schedule) }
         let!(:second_participant_declaration) do
           create(:participant_declaration,
                  user: second_ect_profile.user,
@@ -349,7 +350,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
           expect(JSON.parse(response.body)).to eq(expected_response)
         end
 
-        it "returns 404 if participant declaration does not exist" do
+        it "returns 404 if participant declaration does not exist", exceptions_app: true do
           get "/api/v1/participant-declarations/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
           expect(response.status).to eq 404
         end

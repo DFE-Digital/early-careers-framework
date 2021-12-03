@@ -107,7 +107,7 @@
         </dt>
         <dd class="govuk-summary-list__value">
           <% if @school.induction_coordinators.any? %>
-            <%= mail_to @school.induction_coordinators.first.email %>
+            <%= govuk_mail_to @school.induction_coordinators.first.email, @school.induction_coordinators.first.email %>
           <% end %>
         </dd>
       </div>

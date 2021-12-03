@@ -1,14 +1,14 @@
 description: "An ECF participant resume action"
 type: object
 properties:
-  course_identifier:
-    description: "The type of course the participant is enrolled in"
+  type:
+    description: "The data type"
     type: string
     enum:
-      - ecf-induction
-      - ecf-mentor
-    example: ecf-induction
+      - participant-resume
+    example: participant-resume
+  attributes:
+    $ref: "#/components/schemas/ECFParticipantResumeAttributes"
 required:
-  - course_identifier
-example:
-  course_identifier: ecf-mentor
+  - type
+  - attributes

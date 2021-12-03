@@ -11,13 +11,13 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
 
   describe "mentor_options" do
     it "does not include mentors with withdrawn records" do
-      withdrawn_mentor_record = create(:participant_profile, :mentor, :withdrawn_record, school_cohort: school_cohort).user
+      withdrawn_mentor_record = create(:mentor_participant_profile, :withdrawn_record, school_cohort: school_cohort).user
 
       expect(form.mentor_options).not_to include(withdrawn_mentor_record)
     end
 
     it "includes active mentors" do
-      active_mentor_record = create(:participant_profile, :mentor, school_cohort: school_cohort).user
+      active_mentor_record = create(:mentor_participant_profile, school_cohort: school_cohort).user
 
       expect(form.mentor_options).to include(active_mentor_record)
     end
@@ -36,7 +36,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
 
     context "when the email is in use by an ECT user" do
       let!(:ect_profile) do
-        create(:participant_profile, :ect, user: create(:user, email: "ray.clemence@example.com"))
+        create(:ect_participant_profile, user: create(:user, email: "ray.clemence@example.com"))
       end
 
       it "returns true" do
@@ -45,7 +45,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
 
       context "when the ECT profile record is withdrawn" do
         let!(:ect_profile) do
-          create(:participant_profile, :withdrawn_record, :ect, user: create(:user, email: "ray.clemence@example.com"))
+          create(:ect_participant_profile, :withdrawn_record, user: create(:user, email: "ray.clemence@example.com"))
         end
 
         it "returns false" do
@@ -56,7 +56,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
 
     context "when the email is in use by a Mentor" do
       let!(:mentor_profile) do
-        create(:participant_profile, :mentor, user: create(:user, email: "ray.clemence@example.com"))
+        create(:mentor_participant_profile, user: create(:user, email: "ray.clemence@example.com"))
       end
 
       it "returns true" do
@@ -65,7 +65,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
 
       context "when the mentor profile record is withdrawn" do
         let!(:mentor_profile) do
-          create(:participant_profile, :withdrawn_record, :mentor, user: create(:user, email: "ray.clemence@example.com"))
+          create(:mentor_participant_profile, :withdrawn_record, user: create(:user, email: "ray.clemence@example.com"))
         end
 
         it "returns false" do
@@ -77,7 +77,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
     context "when the email is in use by a NPQ registrant" do
       before do
         existing_user = create(:user, email: "ray.clemence@example.com")
-        create(:participant_profile, :npq, user: existing_user)
+        create(:npq_participant_profile, user: existing_user)
       end
 
       it "returns false" do
@@ -95,7 +95,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
 
     context "when the user is a mentor at another school" do
       before do
-        create(:participant_profile, :mentor, user: user)
+        create(:mentor_participant_profile, user: user)
       end
 
       it "returns false" do
@@ -105,7 +105,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
 
     context "when the user is a mentor at this school" do
       before do
-        create(:participant_profile, :mentor, user: user, school_cohort: school_cohort)
+        create(:mentor_participant_profile, user: user, school_cohort: school_cohort)
       end
 
       it "returns false" do
@@ -121,13 +121,11 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
       form.email = Faker::Internet.email
       form.mentor_id = (form.mentor_options.pluck(:id) + %w[later]).sample if form.type == :ect
 
-      create :schedule
+      create :ecf_schedule
     end
 
-    subject(:execution) { form.method(:save!).to_proc }
-
     it "creates new participant record" do
-      expect(execution).to change(ParticipantProfile::ECF, :count).by 1
+      expect { form.save! }.to change(ParticipantProfile::ECF, :count).by 1
     end
   end
 end

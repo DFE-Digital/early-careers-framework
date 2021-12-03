@@ -3,7 +3,7 @@
 RSpec.describe Admin::Participants::NPQValidationStatusTag, type: :view_component do
   component { described_class.new profile: participant_profile }
 
-  let!(:participant_profile) { create :participant_profile, :npq }
+  let!(:participant_profile) { create :npq_participant_profile }
 
   context "when profile is approved" do
     before { allow(participant_profile).to receive(:approved?).and_return true }

@@ -17,7 +17,7 @@ module Api
         if record.present?
           render json: ParticipantValidationSerializer.new(OpenStruct.new(record)).serializable_hash.to_json
         else
-          head :not_found
+          raise ActiveRecord::RecordNotFound
         end
       end
 

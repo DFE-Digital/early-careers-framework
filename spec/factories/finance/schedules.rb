@@ -2,9 +2,6 @@
 
 FactoryBot.define do
   factory :schedule, class: "Finance::Schedule" do
-    name { "ECF September standard 2021" }
-    schedule_identifier { "ecf-september-standard-2021" }
-
     after(:create) do |schedule|
       [
         { name: "Output 1 - Participant Start", start_date: Date.new(2021, 9, 1), milestone_date: Date.new(2021, 11, 30), payment_date: Date.new(2021, 11, 30), declaration_type: "started" },
@@ -24,15 +21,23 @@ FactoryBot.define do
       end
     end
 
-    trait :npq_specialist do
+    factory :ecf_schedule, class: "Finance::Schedule::ECF", parent: :schedule do
+      name { "ECF September standard 2021" }
+      schedule_identifier { "ecf-september-standard-2021" }
+
+      factory :ecf_schedule_january do
+        name { "ECF January standard 2021" }
+        schedule_identifier { "ecf-january-standard-2021" }
+      end
+    end
+
+    factory :npq_specialist_schedule, class: "Finance::Schedule::NPQSpecialist", parent: :schedule do
       name { "NPQ Specialist November 2021" }
-      type { "Finance::Schedule::NPQSpecialist" }
       schedule_identifier { "npq-specialist-november-2021" }
     end
 
-    trait :npq_leadership do
+    factory :npq_leadership_schedule, class: "Finance::Schedule::NPQLeadership", parent: :schedule do
       name { "NPQ Leadership November 2021" }
-      type { "Finance::Schedule::NPQLeadership" }
       schedule_identifier { "npq-leadership-november-2021" }
     end
   end

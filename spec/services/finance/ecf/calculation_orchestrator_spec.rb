@@ -246,6 +246,7 @@ private
   def run_calculation(aggregator: Finance::ECF::ParticipantEligibleAggregator)
     set_precision(
       described_class.call(
+        calculator: PaymentCalculator::ECF::PaymentCalculation,
         aggregator: aggregator,
         contract: call_off_contract,
         cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider,

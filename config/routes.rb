@@ -108,12 +108,18 @@ Rails.application.routes.draw do
     post "/choose-how-to-continue", to: "choose_how_to_continue#create"
     get "/choice-saved", to: "choose_how_to_continue#choice_saved"
 
-    resource :nominate_induction_coordinator, controller: :nominate_induction_coordinator, only: %i[new create], path: "/" do
+    resource :nominate_induction_coordinator, controller: :nominate_induction_coordinator, only: [], path: "/" do
       collection do
         # start method is redirected to Nominations::ChooseHowToContinueController#new
         # because URL was given in email to schools, so entry point here is now start_nomination
         get "start", to: redirect(path: "/nominations/choose-how-to-continue")
         get "start-nomination", action: :start_nomination
+        get "full-name", action: :full_name
+        put "full-name", action: :check_name
+        get "email", action: :email
+        put "email", action: :check_email
+        get "check-details", action: :check
+        post "check-details", action: :create
         get "email-used", action: :email_used
         get "name-different", action: :name_different
         get "link-expired", action: :link_expired
@@ -281,7 +287,9 @@ Rails.application.routes.draw do
     end
 
     namespace :npq do
-      resources :payment_breakdowns, only: %i[show]
+      resources :lead_providers, path: "payment-overviews", controller: "payment_overviews", only: %i[show] do
+        resources :courses, only: %i[show], controller: "course_payment_breakdowns"
+      end
     end
   end
 
@@ -291,18 +299,9 @@ Rails.application.routes.draw do
     resource :no_access, only: :show, controller: "no_access"
     resource :start_registrations, path: "/start-registration", only: :show
 
-    scope :validation, as: :validation do
-      get "/", to: "validations#start", as: :start
-      get "/do-you-want-to-add-your-mentor-information", to: "validations#do_you_want_to_add_mentor_information", as: :do_you_want_to_add_mentor_information
-      put "/do-you-want-to-add-your-mentor-information", to: "validations#do_you_want_to_add_mentor_information"
-      get "/what-is-your-teacher-reference-number", to: "validations#what_is_your_trn", as: :what_is_your_trn
-      put "/what-is-your-teacher-reference-number", to: "validations#what_is_your_trn"
-      get "/tell-us-your-details", to: "validations#tell_us_your_details", as: :tell_us_your_details
-      put "/tell-us-your-details", to: "validations#tell_us_your_details"
-      get "/get-a-teacher-reference-number", to: "validations#get_a_trn", as: :get_a_trn
-      get "/cannot-find-your-details", to: "validations#cannot_find_details", as: :cannot_find_details
-      put "/cannot-find-your-details", to: "validations#cannot_find_details"
-      get "/complete", to: "validations#complete", as: :complete
+    multistep_form :validation, Participants::ParticipantValidationForm, controller: :validations do
+      get :no_trn, as: nil
+      get :already_completed, as: nil
     end
   end
 

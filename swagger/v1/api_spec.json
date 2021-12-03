@@ -318,8 +318,8 @@
     },
     "/api/v1/participants/npq/{id}/defer": {
       "put": {
-        "summary": "Notify that an ECF participant is taking a break from their course",
-        "operationId": "participant",
+        "summary": "Notify that an NPQ participant is taking a break from their course",
+        "operationId": "npq_participant",
         "tags": [
           "NPQ Participant"
         ],
@@ -353,7 +353,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The ECF participant being deferred",
+            "description": "The NPQ participant being deferred",
             "content": {
               "application/json": {
                 "schema": {
@@ -367,8 +367,8 @@
     },
     "/api/v1/participants/npq/{id}/resume": {
       "put": {
-        "summary": "Notify that a participant is resuming their course",
-        "operationId": "participant",
+        "summary": "Notify that an NPQ participant is resuming their course",
+        "operationId": "npq_participant",
         "tags": [
           "NPQ Participant"
         ],
@@ -402,7 +402,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The participant being resumed",
+            "description": "The NPQ participant being resumed",
             "content": {
               "application/json": {
                 "schema": {
@@ -687,7 +687,14 @@
             }
           },
           "404": {
-            "description": "Not found"
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized",
@@ -916,7 +923,7 @@
     },
     "/api/v1/participants/ecf/{id}/resume": {
       "put": {
-        "summary": "Notify that a participant is resuming their course",
+        "summary": "Notify that an ECF participant is resuming their course",
         "operationId": "participant",
         "tags": [
           "ECF Participant"
@@ -951,7 +958,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The participant being resumed",
+            "description": "The ECF participant being resumed",
             "content": {
               "application/json": {
                 "schema": {
@@ -1063,7 +1070,7 @@
     },
     "/api/v1/participants/{id}/resume": {
       "put": {
-        "summary": "Notify that a participant is resuming their course",
+        "summary": "Notify that an ECF participant is resuming their course",
         "operationId": "participant",
         "tags": [
           "ECF Participant"
@@ -1098,7 +1105,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The participant being resumed",
+            "description": "The ECF participant being resumed",
             "content": {
               "application/json": {
                 "schema": {
@@ -1245,7 +1252,14 @@
       "BadRequestResponse": {
         "description": "Bad Request",
         "type": "object",
-        "example": "Bad Request",
+        "example": {
+          "errors": [
+            {
+              "title": "Bad request",
+              "detail": "correct json data structure required. See API docs for reference"
+            }
+          ]
+        },
         "properties": {
           "bad_request": {
             "description": "An error message for bad request",
@@ -1399,6 +1413,26 @@
         "description": "An ECF participant change schedule action",
         "type": "object",
         "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "enum": [
+              "participant-change-schedule"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ECFParticipantChangeScheduleAttributes"
+          }
+        },
+        "required": [
+          "type",
+          "attributes"
+        ]
+      },
+      "ECFParticipantChangeScheduleAttributes": {
+        "description": "An ECF participant change schedule action",
+        "type": "object",
+        "properties": {
           "schedule_identifier": {
             "description": "The new schedule of the participant",
             "type": "string",
@@ -1450,6 +1484,15 @@
               "attributes": {
                 "$ref": "#/components/schemas/ECFParticipantChangeSchedule"
               }
+            }
+          }
+        },
+        "example": {
+          "data": {
+            "type": "participant-change-schedule",
+            "attributes": {
+              "schedule_identifier": "ecf-january-standard-2021",
+              "course_identifier": "ecf-mentor"
             }
           }
         }
@@ -1577,8 +1620,33 @@
         }
       },
       "ECFParticipantDefer": {
+        "description": "The details of a participant deferral request",
+        "type": "object",
+        "required": [
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "participant-defer",
+            "enum": [
+              "participant-defer"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ECFParticipantDeferAttributes"
+          }
+        }
+      },
+      "ECFParticipantDeferAttributes": {
         "description": "An ECF participant deferral action",
         "type": "object",
+        "required": [
+          "reason",
+          "course_identifier"
+        ],
         "properties": {
           "reason": {
             "description": "The reason for the deferral",
@@ -1602,10 +1670,6 @@
             "example": "ecf-induction"
           }
         },
-        "required": [
-          "reason",
-          "course_identifier"
-        ],
         "example": {
           "reason": "career-break",
           "course_identifier": "ecf-mentor"
@@ -1654,6 +1718,27 @@
         "description": "An ECF participant resume action",
         "type": "object",
         "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "enum": [
+              "participant-resume"
+            ],
+            "example": "participant-resume"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ECFParticipantResumeAttributes"
+          }
+        },
+        "required": [
+          "type",
+          "attributes"
+        ]
+      },
+      "ECFParticipantResumeAttributes": {
+        "description": "An ECF participant resume action",
+        "type": "object",
+        "properties": {
           "course_identifier": {
             "description": "The type of course the participant is enrolled in",
             "type": "string",
@@ -1699,7 +1784,27 @@
         }
       },
       "ECFParticipantRetainedDeclaration": {
-        "description": "An ECF retained participant declaration",
+        "description": "An ECF participant retained declaration request body",
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "The request data",
+            "type": "object",
+            "example": "participant-declaration",
+            "enum": [
+              "participant-declaration"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ECFParticipantRetainedDeclarationAttributes"
+          }
+        },
+        "required": [
+          "attributes"
+        ]
+      },
+      "ECFParticipantRetainedDeclarationAttributes": {
+        "description": "An ECF participant retained declaration",
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -1762,6 +1867,26 @@
         }
       },
       "ECFParticipantStartedDeclaration": {
+        "description": "A participant started declaration request body",
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "The request data",
+            "type": "object",
+            "example": "participant-declaration",
+            "enum": [
+              "participant-declaration"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ECFParticipantStartedDeclarationAttributes"
+          }
+        },
+        "required": [
+          "attributes"
+        ]
+      },
+      "ECFParticipantStartedDeclarationAttributes": {
         "description": "An ECF started and completed participant declaration",
         "type": "object",
         "additionalProperties": false,
@@ -1811,6 +1936,23 @@
         }
       },
       "ECFParticipantWithdraw": {
+        "description": "An ECF participant withdrawal action",
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "participant-withdraw",
+            "enum": [
+              "participant-withdraw"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ECFParticipantWithdrawAttributes"
+          }
+        }
+      },
+      "ECFParticipantWithdrawAttributes": {
         "description": "An ECF participant withdrawal action",
         "type": "object",
         "properties": {
@@ -1939,7 +2081,7 @@
             }
           }
         },
-        "example": "id,type,email,full_name,mentor_id,school_urn,participant_type,cohort,status,teacher_reference_number,teacher_reference_number_validated,eligible_for_funding,pupil_premium_uplift,sparsity_uplift,training_status,updated_at\ndb3a7848-7308-4879-942a-c4a70ced400a,participant,jane.smith@some-school.example.com,Jane Smith,bb36d74a-68a7-47b6-86b6-1fd0d141c590,106286,ect,2021,active,0012345,true,true,true,true,active\nbb36d74a-68a7-47b6-86b6-1fd0d141c590,participant,martin.jones@some-school.example.com,Martin Jones,,106286,mentor,2021,active,\"\",false,false,false,false,deferred\neb475531-bf08-48ae-b0ef-c2ff5e5bdef0,participant,\"\",\"\",\"\",\"\",ect,\"\",withdrawn,\"\",\"\",\"\",\"\",\"\",withdrawn,2021-05-31T02:22:32.000Z\n"
+        "example": "id,type,email,full_name,mentor_id,school_urn,participant_type,cohort,status,teacher_reference_number,teacher_reference_number_validated,eligible_for_funding,pupil_premium_uplift,sparsity_uplift,training_status,updated_at\ndb3a7848-7308-4879-942a-c4a70ced400a,participant,jane.smith@some-school.example.com,Jane Smith,bb36d74a-68a7-47b6-86b6-1fd0d141c590,106286,ect,2021,active,0012345,true,true,true,true,active,2021-05-31T02:22:32.000Z\nbb36d74a-68a7-47b6-86b6-1fd0d141c590,participant,martin.jones@some-school.example.com,Martin Jones,,106286,mentor,2021,active,\"\",false,false,false,false,deferred,2021-05-31T02:22:32.000Z\neb475531-bf08-48ae-b0ef-c2ff5e5bdef0,participant,\"\",\"\",\"\",\"\",ect,\"\",withdrawn,\"\",\"\",\"\",\"\",\"\",withdrawn\n"
       },
       "MultipleECFParticipantsResponse": {
         "description": "A list of ECF participants",
@@ -2113,7 +2255,7 @@
             }
           }
         },
-        "example": "id,participant_id,declaration_type,course_identifier,eligible_for_payment,declaration_date,voided,state,updated_at\nc88eb9a9-773a-4f53-9716-121b981154d8,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false\n31a521ec-82c5-451c-aea3-426523f1facc,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false,2021-05-31T02:22:32.000Z\n"
+        "example": "id,participant_id,declaration_type,course_identifier,eligible_for_payment,declaration_date,voided,state,updated_at\nc88eb9a9-773a-4f53-9716-121b981154d8,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false,2021-05-31T02:22:32.000Z\n31a521ec-82c5-451c-aea3-426523f1facc,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false,2021-05-31T02:22:32.000Z\n"
       },
       "MultipleParticipantDeclarationsResponse": {
         "description": "A list of participant declarations",
@@ -2537,8 +2679,33 @@
         }
       },
       "NPQParticipantDefer": {
+        "description": "The details of an NPQ participant deferral request",
+        "type": "object",
+        "required": [
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "participant-defer",
+            "enum": [
+              "participant-defer"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/NPQParticipantDeferAttributes"
+          }
+        }
+      },
+      "NPQParticipantDeferAttributes": {
         "description": "An NPQ participant deferral action",
         "type": "object",
+        "required": [
+          "reason",
+          "course_identifier"
+        ],
         "properties": {
           "reason": {
             "description": "The reason for the deferral",
@@ -2566,10 +2733,6 @@
             "example": "npq-senior-leadership"
           }
         },
-        "required": [
-          "reason",
-          "course_identifier"
-        ],
         "example": {
           "reason": "parental-leave",
           "course_identifier": "npq-senior-leadership"
@@ -2615,6 +2778,27 @@
         }
       },
       "NPQParticipantResume": {
+        "description": "An NPQ participant resume action",
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "enum": [
+              "participant-resume"
+            ],
+            "example": "participant-resume"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/NPQParticipantResumeAttributes"
+          }
+        },
+        "required": [
+          "type",
+          "attributes"
+        ]
+      },
+      "NPQParticipantResumeAttributes": {
         "description": "An NPQ participant resume action",
         "type": "object",
         "properties": {
@@ -2667,7 +2851,27 @@
         }
       },
       "NPQParticipantRetainedDeclaration": {
-        "description": "An NPQ retained participant declaration",
+        "description": "An NPQ participant retained declaration request body",
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "The request data",
+            "type": "object",
+            "example": "participant-declaration",
+            "enum": [
+              "participant-declaration"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/NPQParticipantRetainedDeclarationAttributes"
+          }
+        },
+        "required": [
+          "attributes"
+        ]
+      },
+      "NPQParticipantRetainedDeclarationAttributes": {
+        "description": "An NPQ participant retained declaration",
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -2721,6 +2925,26 @@
         }
       },
       "NPQParticipantStartedDeclaration": {
+        "description": "An NPQ participant started declaration request body",
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "The request data",
+            "type": "object",
+            "example": "participant-declaration",
+            "enum": [
+              "participant-declaration"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/NPQParticipantStartedDeclarationAttributes"
+          }
+        },
+        "required": [
+          "attributes"
+        ]
+      },
+      "NPQParticipantStartedDeclarationAttributes": {
         "description": "An NPQ started and completed participant declaration",
         "type": "object",
         "additionalProperties": false,
@@ -2775,6 +2999,26 @@
         }
       },
       "NPQParticipantWithdraw": {
+        "description": "An NPQ participant withdrawal action",
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "participant-withdraw",
+            "enum": [
+              "participant-withdraw"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/NPQParticipantWithdrawAttributes"
+          }
+        },
+        "required": [
+          "attributes"
+        ]
+      },
+      "NPQParticipantWithdrawAttributes": {
         "description": "An NPQ participant withdrawal action",
         "type": "object",
         "properties": {
@@ -2850,6 +3094,16 @@
           }
         }
       },
+      "NotFoundResponse": {
+        "description": "The requested resource was not found",
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "Resource not found"
+          }
+        }
+      },
       "Pagination": {
         "type": "object",
         "description": "This schema used to paginate through a collection.",
@@ -2883,7 +3137,20 @@
                 ]
               },
               "attributes": {
-                "$ref": "#/components/schemas/ParticipantDeclarationChoices"
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ECFParticipantStartedDeclarationAttributes"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ECFParticipantRetainedDeclarationAttributes"
+                  },
+                  {
+                    "$ref": "#/components/schemas/NPQParticipantStartedDeclarationAttributes"
+                  },
+                  {
+                    "$ref": "#/components/schemas/NPQParticipantRetainedDeclarationAttributes"
+                  }
+                ]
               }
             }
           }
@@ -2985,30 +3252,6 @@
             "format": "date-time",
             "example": "2021-05-31T02:22:32.000Z"
           }
-        }
-      },
-      "ParticipantDeclarationChoices": {
-        "description": "A participant declaration choice",
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/ECFParticipantStartedDeclaration"
-          },
-          {
-            "$ref": "#/components/schemas/ECFParticipantRetainedDeclaration"
-          },
-          {
-            "$ref": "#/components/schemas/NPQParticipantStartedDeclaration"
-          },
-          {
-            "$ref": "#/components/schemas/NPQParticipantRetainedDeclaration"
-          }
-        ],
-        "example": {
-          "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
-          "declaration_type": "started",
-          "declaration_date": "2021-05-31T02:21:32.000Z",
-          "course_identifier": "ecf-mentor"
         }
       },
       "ParticipantDeclarationCsvRow": {

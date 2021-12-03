@@ -7,14 +7,14 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
 
   let!(:school_cohort) { create(:school_cohort, cohort: cohort, induction_programme_choice: "full_induction_programme") }
   let!(:another_cohort) { create(:school_cohort) }
-  let(:mentor_profile) { create(:participant_profile, :mentor, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
+  let(:mentor_profile) { create(:mentor_participant_profile, school_cohort: school_cohort) }
   let!(:mentor_user) { mentor_profile.user }
-  let!(:mentor_user_2) { create(:participant_profile, :mentor, school_cohort: school_cohort).user }
-  let(:ect_profile) { create(:participant_profile, :ect, mentor_profile: mentor_user.mentor_profile, school_cohort: school_cohort) }
+  let!(:mentor_user_2) { create(:mentor_participant_profile, school_cohort: school_cohort).user }
+  let(:ect_profile) { create(:ect_participant_profile, mentor_profile: mentor_user.mentor_profile, school_cohort: school_cohort) }
   let!(:ect_user) { ect_profile.user }
-  let!(:withdrawn_ect) { create(:participant_profile, :ect, :withdrawn_record, school_cohort: school_cohort).user }
-  let!(:unrelated_mentor) { create(:participant_profile, :mentor, school_cohort: another_cohort).user }
-  let!(:unrelated_ect) { create(:participant_profile, :ect, school_cohort: another_cohort).user }
+  let!(:withdrawn_ect) { create(:ect_participant_profile, :withdrawn_record, school_cohort: school_cohort).user }
+  let!(:unrelated_mentor) { create(:mentor_participant_profile, school_cohort: another_cohort).user }
+  let!(:unrelated_ect) { create(:ect_participant_profile, school_cohort: another_cohort).user }
 
   before do
     FeatureFlag.activate(:induction_tutor_manage_participants)
@@ -95,7 +95,7 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
     end
 
     it "shows error when a blank form is submitted" do
-      ect_profile = create(:participant_profile, :ect, school_cohort: school_cohort)
+      ect_profile = create(:ect_participant_profile, school_cohort: school_cohort)
       put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-mentor"
       expect(response).to render_template("schools/participants/edit_mentor")
       expect(response.body).to include "Choose one"

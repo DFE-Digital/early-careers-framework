@@ -50,7 +50,7 @@ RSpec.describe Multistep::Form do
     end
 
     context "when at least one step has been completed" do
-      before { form.record_completed_step completed_step }
+      before { form.completed_steps = [completed_step] }
 
       context "and that step defines next step with a block" do
         let(:completed_step) { :first_step }
@@ -83,8 +83,8 @@ RSpec.describe Multistep::Form do
 
     context "when some steps has been completed" do
       before do
-        form.record_completed_step(:first_step)
-        form.record_completed_step(:second_step)
+        form.complete_step(:first_step, first_step_attribute: :value)
+        form.complete_step(:second_step, second_step_attribute: 1)
       end
 
       it "returns most recent step when no `from` argument is given" do
@@ -97,23 +97,23 @@ RSpec.describe Multistep::Form do
     end
   end
 
-  describe "#record_completed_step" do
+  describe "#omplete_step" do
     before do
-      form.record_completed_step(:first_step)
-      form.record_completed_step(:interim_step)
-      form.record_completed_step(:second_step)
+      form.complete_step(:first_step, first_step_attribute: :value)
+      form.complete_step(:interim_step)
+      form.complete_step(:second_step, second_step_attribute: 1)
     end
 
     context "when recording given step for the first time" do
       it "adds the step to completed steps list" do
-        expect { form.record_completed_step :final_step }
+        expect { form.complete_step :final_step }
           .to change { form.completed_steps.dup }.by [:final_step]
       end
     end
 
     context "when re-recording already completed step" do
       it "trims the completed_steps back to that step" do
-        expect { form.record_completed_step :interim_step }
+        expect { form.complete_step :interim_step }
           .to change { form.completed_steps.dup }.to %i[first_step interim_step]
       end
     end

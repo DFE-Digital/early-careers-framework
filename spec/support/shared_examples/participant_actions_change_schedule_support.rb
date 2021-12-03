@@ -2,12 +2,13 @@
 
 RSpec.shared_examples "a participant change schedule action service" do
   it_behaves_like "a participant action service"
-  let!(:january_schedule) { create(:schedule, schedule_identifier: "ecf-january-standard-2021") }
+  let!(:january_schedule) { create(:schedule, schedule_identifier: "ecf-january-standard-2021", name: "ECF January standard schedule 2021") }
 
   it "changes the schedule on user's profile" do
-    expect(user_profile.reload.schedule.schedule_identifier).to eq("ecf-september-standard-2021")
-    described_class.call(params: given_params)
-    expect(user_profile.reload.schedule.schedule_identifier).to eq("ecf-january-standard-2021")
+    expect {
+      described_class.call(params: given_params)
+      user_profile.reload
+    }.to change(user_profile, :schedule).to(january_schedule)
   end
 
   it "fails when the schedule is invalid" do

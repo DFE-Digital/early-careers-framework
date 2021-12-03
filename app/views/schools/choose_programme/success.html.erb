@@ -60,7 +60,7 @@
       <p>You do not need to add information about your ECTs and mentors to this service.</p>
 
       <p>
-      <a class="govuk-link" href="https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview#schools-designing-and-delivering-their-own-ecf-based-induction" class="govuk-link" rel="noreferrer noopener" target="_blank"> See our statutory guidance (open in new tab)</a> for information about funding, time off, and roles.
+      <a class="govuk-link" href="https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview#schools-designing-and-delivering-their-own-ecf-based-induction" rel="noreferrer noopener" target="_blank"> See our statutory guidance (open in new tab)</a> for information about funding, time off, and roles.
       </p>
     <%- elsif school_cohort.no_early_career_teachers? -%>
       <h2 class="govuk-heading-m">What to do next</h2>
@@ -68,7 +68,7 @@
       <p>If any ECTs do join your school this year, you need to use this service to let us know.</a></p>
     <%- elsif school_cohort.school_funded_fip? -%>
       <h2 class="govuk-heading-m">What to do next</h2>
-      <p>You need to <a href="https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview#FPL"> make your own arrangements with a training provider</a>, approved by the DfE.</p>
+      <p>You need to <a class="govuk-link" href="https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview#FPL"> make your own arrangements with a training provider</a>, approved by the DfE.</p>
       <p>You do not need to add information about your ECTs and mentors to this service.</p>
       <p>If you change your mind about how you want to run your training, <%= render MailToSupportComponent.new("contact us") %></p>
 
@@ -80,6 +80,7 @@
         <li>you do not need to use this service to set up your training programme</li>
         <li>you’ll need to make your own arrangements with a
           <a href="https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview#FPL"
+             class="govuk-link"
              target="_blank"
              rel="noopener noreferrer">training provider
           </a>, approved by the DfE

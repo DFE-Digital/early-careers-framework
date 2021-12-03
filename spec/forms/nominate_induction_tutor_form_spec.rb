@@ -8,19 +8,20 @@ RSpec.describe NominateInductionTutorForm, type: :model do
   let(:email) { Faker::Internet.email }
 
   describe "validations" do
-    it { is_expected.to validate_presence_of(:full_name).with_message("Enter a full name") }
-    it { is_expected.to validate_presence_of(:email).with_message("Enter an email") }
+    it { is_expected.to validate_presence_of(:full_name).with_message("Enter a full name").on(%i[full_name check_name]) }
+    it { is_expected.to validate_presence_of(:email).with_message("Enter an email").on(%i[email create]) }
 
     it "validates that the email address is not in use by an ECT" do
-      create(:participant_profile, :ect, user: create(:user, email: email))
+      create(:ect_participant_profile, user: create(:user, email: email))
       form = NominateInductionTutorForm.new(school_id: school.id, full_name: name, email: email)
-      expect(form).not_to be_valid
+
+      expect(form.valid?(:email)).to be false
       expect(form.errors[:email].first).to eq("This email address is already in use")
       expect(form.email_already_taken?).to be_truthy
     end
 
     it "allows the email to be in use by a mentor" do
-      create(:participant_profile, :mentor, user: create(:user, email: email))
+      create(:mentor_participant_profile, user: create(:user, email: email))
 
       form = NominateInductionTutorForm.new(school_id: school.id, full_name: name, email: email)
       expect(form).to be_valid
@@ -34,7 +35,7 @@ RSpec.describe NominateInductionTutorForm, type: :model do
 
     it "allows the email to be in use by a NPQ registrant" do
       npq_user = create(:user, full_name: name, email: email)
-      create(:participant_profile, :npq, user: npq_user)
+      create(:npq_participant_profile, user: npq_user)
 
       form = NominateInductionTutorForm.new(school_id: school.id, full_name: name, email: email)
       expect(form).to be_valid
@@ -43,7 +44,7 @@ RSpec.describe NominateInductionTutorForm, type: :model do
     it "validates that the name matches if the email matches an induction tutor" do
       create(:user, :induction_coordinator, full_name: "One Name", email: email)
       form = NominateInductionTutorForm.new(school_id: school.id, full_name: "Different Name", email: email)
-      expect(form).not_to be_valid
+      expect(form.valid?(:email)).to be false
       expect(form.errors[:full_name].first).to eq("The name you entered does not match our records")
       expect(form.name_different?).to be_truthy
     end

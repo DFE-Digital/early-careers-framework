@@ -2,13 +2,24 @@
 
 class NominateInductionTutorForm
   include ActiveModel::Model
+  include ActiveRecord::AttributeAssignment
+  include ActiveModel::Serialization
 
   attr_accessor :full_name, :email, :school_id, :user_id
 
-  validates :full_name, presence: true
-  validates :email, presence: true, notify_email: true
-  validate :email_is_not_in_use
-  validate :name_matches
+  validates :full_name, presence: true, on: :full_name
+  validates :email, presence: true, notify_email: true, on: :email
+  validate :email_is_not_in_use, on: :email
+  validate :name_matches, on: :email
+
+  def attributes
+    {
+      full_name: full_name,
+      email: email,
+      school_id: school_id,
+      user_id: user_id,
+    }
+  end
 
   def school
     School.find school_id
@@ -29,6 +40,10 @@ class NominateInductionTutorForm
     return if existing_user.blank?
 
     existing_user.full_name
+  end
+
+  def full_name_to_display
+    full_name.split("-").map(&:titleize).join("-") << (full_name[-1..].downcase == "s" ? "’" : "’s")
   end
 
 private

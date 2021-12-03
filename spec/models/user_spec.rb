@@ -19,24 +19,24 @@ RSpec.describe User, type: :model do
 
     describe "early_career_teacher_profile" do
       it "returns an active profile" do
-        user = create(:participant_profile, :ect).user
+        user = create(:ect_participant_profile).user
         expect(user.early_career_teacher_profile).to be_an_instance_of ParticipantProfile::ECT
       end
 
       it "returns nil when there is no active profile" do
-        user = create(:participant_profile, :ect, :withdrawn_record).user
+        user = create(:ect_participant_profile, :withdrawn_record).user
         expect(user.early_career_teacher_profile).to be_nil
       end
     end
 
     describe "mentor_profile" do
       it "returns an active profile" do
-        user = create(:participant_profile, :mentor).user
+        user = create(:mentor_participant_profile).user
         expect(user.mentor_profile).to be_an_instance_of ParticipantProfile::Mentor
       end
 
       it "returns nil when there is no active profile" do
-        user = create(:participant_profile, :mentor, :withdrawn_record).user
+        user = create(:mentor_participant_profile, :withdrawn_record).user
 
         expect(user.mentor_profile).to be_nil
       end
@@ -133,7 +133,7 @@ RSpec.describe User, type: :model do
 
   describe "#early_career_teacher?" do
     it "is expected to be true when the user has an early career teacher profile" do
-      user = create(:participant_profile, :ect).user
+      user = create(:ect_participant_profile).user
 
       expect(user.early_career_teacher?).to be true
     end
@@ -145,14 +145,14 @@ RSpec.describe User, type: :model do
     end
 
     it "is false when the ect profile is withdrawn" do
-      user = create(:participant_profile, :ect, :withdrawn_record).user
+      user = create(:ect_participant_profile, :withdrawn_record).user
       expect(user.early_career_teacher?).to be false
     end
   end
 
   describe "#mentor?" do
     it "is expected to be true when the user has a mentor profile" do
-      user = create(:participant_profile, :mentor).user
+      user = create(:mentor_participant_profile).user
 
       expect(user.mentor?).to be true
     end
@@ -164,7 +164,7 @@ RSpec.describe User, type: :model do
     end
 
     it "is false when the mentor profile is withdrawn" do
-      user = create(:participant_profile, :mentor, :withdrawn_record).user
+      user = create(:mentor_participant_profile, :withdrawn_record).user
       expect(user.mentor?).to be false
     end
   end
@@ -186,14 +186,14 @@ RSpec.describe User, type: :model do
   describe "#core_induction_programme" do
     it "is expected to return mentor cip for mentor users" do
       cip = create(:core_induction_programme)
-      user = create(:participant_profile, :mentor, core_induction_programme: cip).user
+      user = create(:mentor_participant_profile, core_induction_programme: cip).user
 
       expect(user.core_induction_programme).to eq cip
     end
 
     it "is expected to return ect cip for ect users" do
       cip = create(:core_induction_programme)
-      user = create(:participant_profile, :ect, core_induction_programme: cip).user
+      user = create(:ect_participant_profile, core_induction_programme: cip).user
 
       expect(user.core_induction_programme).to eq cip
     end
@@ -207,14 +207,14 @@ RSpec.describe User, type: :model do
   describe "#cohort" do
     it "is expected to return mentor cohort for mentor users" do
       cohort = create(:cohort)
-      user = create(:participant_profile, :mentor, cohort: cohort).user
+      user = create(:mentor_participant_profile, cohort: cohort).user
 
       expect(user.cohort).to eq cohort
     end
 
     it "is expected to return ect cohort for ect users" do
       cohort = create(:cohort)
-      user = create(:participant_profile, :ect, cohort: cohort).user
+      user = create(:ect_participant_profile, cohort: cohort).user
 
       expect(user.cohort).to eq cohort
     end
@@ -229,7 +229,7 @@ RSpec.describe User, type: :model do
     it "is expected to return mentor school for mentor users" do
       school = create(:school)
       school_cohort = create(:school_cohort, school: school)
-      user = create(:participant_profile, :mentor, school_cohort: school_cohort).user
+      user = create(:mentor_participant_profile, school_cohort: school_cohort).user
 
       expect(user.school).to eq school
     end
@@ -237,7 +237,7 @@ RSpec.describe User, type: :model do
     it "is expected to return ect school for ect users" do
       school = create(:school)
       school_cohort = create(:school_cohort, school: school)
-      user = create(:participant_profile, :ect, school_cohort: school_cohort).user
+      user = create(:ect_participant_profile, school_cohort: school_cohort).user
 
       expect(user.school).to eq school
     end
@@ -324,7 +324,7 @@ RSpec.describe User, type: :model do
     end
 
     context "when the user is an early career teacher" do
-      subject(:user) { create(:participant_profile, :ect).user }
+      subject(:user) { create(:ect_participant_profile).user }
 
       it "returns Early career teacher" do
         expect(user.user_description).to eq("Early career teacher")
@@ -332,7 +332,7 @@ RSpec.describe User, type: :model do
     end
 
     context "when the user is a mentor" do
-      subject(:user) { create(:participant_profile, :mentor).user }
+      subject(:user) { create(:mentor_participant_profile).user }
 
       it "returns Mentor" do
         expect(user.user_description).to eq("Mentor")

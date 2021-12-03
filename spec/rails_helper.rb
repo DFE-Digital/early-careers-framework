@@ -105,6 +105,19 @@ RSpec.configure do |config|
   config.include Capybara::RSpecMatchers, type: :component
   config.include Rails.application.routes.url_helpers
 
+  config.before(:each, exceptions_app: true) do
+    # Make the app behave how it does in non dev/test environments and use the
+    # ErrorsController via config.exceptions_app = routes in config/application.rb
+    method = Rails.application.method(:env_config)
+    expect(Rails.application).to receive(:env_config).with(no_args) do
+      method.call.merge(
+        "action_dispatch.show_exceptions" => true,
+        "action_dispatch.show_detailed_exceptions" => false,
+        "consider_all_requests_local" => false,
+      )
+    end
+  end
+
   config.before(:suite) do
     Webpacker.compile
   end
