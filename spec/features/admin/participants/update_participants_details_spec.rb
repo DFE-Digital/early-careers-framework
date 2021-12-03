@@ -76,10 +76,6 @@ private
     click_on name
   end
 
-  # def when_i_click_to_change_the_participants_name
-  #   expect(page).to have_text(@participant_profile_ect.user.full_name)
-  # end
-
   def when_i_click_on_change_name
     click_on("Change name", visible: false)
   end
