@@ -21,6 +21,8 @@ FactoryBot.define do
       end
     end
 
+    cohort { Cohort.find_or_create_by(start_year: 2021) }
+
     factory :ecf_schedule, class: "Finance::Schedule::ECF", parent: :schedule do
       name { "ECF September standard 2021" }
       schedule_identifier { "ecf-september-standard-2021" }
