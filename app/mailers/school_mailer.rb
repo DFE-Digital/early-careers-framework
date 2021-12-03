@@ -97,8 +97,8 @@ class SchoolMailer < ApplicationMailer
     )
 
     email.tag(:partnership_created, :request_to_nominate_sit)
-    email.tag(:reminder) if reminder # rubocop:disable Rails/ContentTag
-    email.associate_with(partnership, partnership.school)
+    email.tag(:reminder) if reminder
+    email.associate_with(partnership, partnership.school, access_token)
   end
 
   # This email is sent to the SIT of the school whe was reported to enter the partnership with lead provider.
@@ -125,8 +125,8 @@ class SchoolMailer < ApplicationMailer
     )
 
     email.tag(:partnership_created)
-    email.tag(:reminder) if reminder # rubocop:disable Rails/ContentTag
-    email.associate_with(partnership, partnership.school)
+    email.tag(:reminder) if reminder
+    email.associate_with(partnership, partnership.school, access_token)
   end
 
   def partnered_school_invite_sit_email(partnership:, access_token:, campaign: nil)
@@ -144,7 +144,7 @@ class SchoolMailer < ApplicationMailer
         nominate_url: nomination_url(access_token, campaign: campaign),
         challenge_url: partnership_challenge_url(partnership, access_token, campaign: campaign),
       },
-    ).tag(:partnered_school_invite_sit).associate_with(school)
+    ).tag(:partnered_school_invite_sit).associate_with(school, access_token)
   end
 
   def ministerial_letter_email(recipient:)

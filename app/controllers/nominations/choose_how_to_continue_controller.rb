@@ -15,8 +15,10 @@ class Nominations::ChooseHowToContinueController < ApplicationController
   def create
     @how_to_continue_form = NominateHowToContinueForm.new(how_to_continue_form_params)
     @how_to_continue_form.school = access_token.school
-    # TODO: re-enable
-    # record_nomination_email_opened
+
+    associated_email_records.each do |email_record|
+      email_record.actioned!(override: false)
+    end
 
     if @how_to_continue_form.valid?
       record_opt_out_state_and_redirect!

@@ -31,17 +31,29 @@ private
 
   # TODO: Delete this when all the NominationEmail and PartnershipNotificationEmail tokens expires
   def handle_legacy_email_records
-    legacy_mail = [NominationEmail, PartnershipNotificationEmail].find do |email_class|
+    return if legacy_record.blank?
+
+    # We're handling an email that was sent before SchoolAccessToken deployment.
+    access_token = SchoolAccessToken.find_or_create_by!(token: "legacy-#{legacy_record.token}") do |sat|
+      sat.permitted_actions = LEGACY_EMAILS_PERMISSIONS[legacy_record.class]
+      sat.school = legacy_record.school
+    end
+    params[:token] = access_token.token
+  end
+
+  def associated_email_records
+    [
+      Email.associated_with(access_token).first,
+      legacy_record,
+    ].compact
+  end
+
+  def legacy_record
+    return @legacy_record if defined?(@legacy_record)
+
+    @legacy_record = [NominationEmail, PartnershipNotificationEmail].find do |email_class|
       record = email_class.find_by(token: params[:token])
       break record if record
     end
-    return if legacy_mail.blank?
-
-    # We're handling an email that was sent before SchoolAccessToken deployment.
-    access_token = SchoolAccessToken.find_or_create_by!(token: "legacy-#{legacy_mail.token}") do |sat|
-      sat.permitted_actions = LEGACY_EMAILS_PERMISSIONS[legacy_mail.class]
-      sat.school = legacy_mail.school
-    end
-    params[:token] = access_token.token
   end
 end

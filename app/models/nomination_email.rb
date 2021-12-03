@@ -40,4 +40,10 @@ class NominationEmail < ApplicationRecord
   end
 
   private_class_method :generate_token
+
+  def actioned!(at: Time.zone.now, override: true)
+    return if !override && actioned_at.present?
+
+    update_column(:opened_at, at)
+  end
 end
