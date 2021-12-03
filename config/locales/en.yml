@@ -27,6 +27,7 @@ en:
   parameter_required: "Parameter is required"
   missing_parameters: "Bad or missing parameters"
   unpermitted_parameters: "Unpermitted parameters"
+  unauthorized: "HTTP Token: Access denied"
   bad_request: "Bad request"
   bad_parameter: "Bad parameter"
   invalid_transition: "Invalid action"
