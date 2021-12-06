@@ -207,15 +207,18 @@ RSpec.describe "Participants API", type: :request do
         end
 
         context "when the participant is de-duped" do
+          let(:primary_user) { create(:user, email: "primary@example.com") }
+          let(:primary_teacher_profile) { create(:teacher_profile, user: primary_user, trn: "1234567", school: school_cohort.school) }
+          let!(:primary_npq_profile) { create(:participant_profile, :npq, teacher_profile: primary_teacher_profile) }
+
           let(:dup_user) { create(:user, email: "duplicate@example.com") }
           let(:dup_teacher_profile) { create(:teacher_profile, user: dup_user, trn: "9990001") }
-          let!(:dup_profile) { create(:participant_profile, :ect, mentor_profile: mentor_profile, school_cohort: school_cohort, teacher_profile: dup_teacher_profile) }
+          let!(:dup_profile) { create(:participant_profile, :ect, school_cohort: school_cohort, teacher_profile: dup_teacher_profile, school: school_cohort.school) }
 
           before do
-            early_career_teacher_profile
-            Identity::Transfer.call(from_user: dup_user, to_user: user)
+            Identity::Transfer.call(from_user: dup_user, to_user: primary_user)
             dup_user.reload
-            user.reload
+            primary_user.reload
           end
 
           it "exposes the original ID and email" do
@@ -223,8 +226,8 @@ RSpec.describe "Participants API", type: :request do
             matching_records = parsed_response["data"].select { |record| record["id"] == dup_user.id }
             expect(matching_records.count).to eq 1
             expect(matching_records.first["attributes"]["email"]).to eq dup_user.email
-            expect(matching_records.first["attributes"]["full_name"]).to eq user.full_name
-            expect(matching_records.first["attributes"]["teacher_reference_number"]).to eq "1112223"
+            expect(matching_records.first["attributes"]["full_name"]).to eq primary_user.full_name
+            expect(matching_records.first["attributes"]["teacher_reference_number"]).to eq primary_user.teacher_profile.trn
           end
         end
       end
