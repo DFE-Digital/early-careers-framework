@@ -209,11 +209,11 @@ RSpec.describe "Participants API", type: :request do
         context "when the participant is de-duped" do
           let(:primary_user) { create(:user, email: "primary@example.com") }
           let(:primary_teacher_profile) { create(:teacher_profile, user: primary_user, trn: "1234567", school: school_cohort.school) }
-          let!(:primary_npq_profile) { create(:participant_profile, :npq, teacher_profile: primary_teacher_profile) }
+          let!(:primary_npq_profile) { create(:npq_participant_profile, teacher_profile: primary_teacher_profile) }
 
           let(:dup_user) { create(:user, email: "duplicate@example.com") }
           let(:dup_teacher_profile) { create(:teacher_profile, user: dup_user, trn: "9990001") }
-          let!(:dup_profile) { create(:participant_profile, :ect, school_cohort: school_cohort, teacher_profile: dup_teacher_profile, school: school_cohort.school) }
+          let!(:dup_profile) { create(:ect_participant_profile, school_cohort: school_cohort, teacher_profile: dup_teacher_profile, school: school_cohort.school) }
 
           before do
             Identity::Transfer.call(from_user: dup_user, to_user: primary_user)
