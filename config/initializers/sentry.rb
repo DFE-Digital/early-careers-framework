@@ -16,6 +16,8 @@ Sentry.init do |config|
     filter.filter(event.to_hash)
   end
 
+  config.excluded_exceptions += ["Pundit::NotAuthorizedError"]
+
   config.traces_sampler = lambda do |sampling_context|
     transaction_context = sampling_context[:transaction_context]
     op = transaction_context[:op]

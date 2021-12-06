@@ -3,6 +3,16 @@
 require "rails_helper"
 
 RSpec.describe Cohort, type: :model do
+  describe "#schedules" do
+    subject { described_class.create!(start_year: 3000) }
+
+    let!(:schedule) { create(:ecf_schedule, cohort: subject) }
+
+    it "returns associated scheules" do
+      expect(subject.schedules).to include(schedule)
+    end
+  end
+
   it "can be created" do
     expect {
       Cohort.create(start_year: 2021)

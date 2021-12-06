@@ -32,29 +32,15 @@ You can add content by editing the `.html.md.erb` files. These files support con
 
 👉 Learn more about [producing more complex page structures][multipage] for your website.
 
-## Preview your changes locally
-
-To preview your new website locally, navigate to your project folder and run:
-
-```sh
-bundle exec middleman server
-```
-
-👉 See the generated website on `http://localhost:4567` in your browser. Any content changes you make to your website will be updated in real time.
-
-To shut down the Middleman instance running on your machine, use `ctrl+C`.
-
-If you make changes to the `config/tech-docs.yml` configuration file, you need to restart Middleman to see the changes.
-
 ## Build
 
 To build the HTML pages from content in your `source` folder, run:
 
 ```
-bundle exec middleman build`
+bundle exec middleman build --build-dir=../public/api-reference
 ```
 
-Every time you run this command, the `build` folder gets generated from scratch. This means any changes to the `build` folder that are not part of the build command will get overwritten.
+This will place all the built static assets into the public folder ofthe rails app in the parent directory. This site will then be available at `/api-reference`. Attempting to build this site alone will not work as it relies on other assets being served by rails under the `/api-reference` path.
 
 ## Troubleshooting
 

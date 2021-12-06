@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_01_152439) do
+ActiveRecord::Schema.define(version: 2021_12_02_162431) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -691,6 +691,8 @@ ActiveRecord::Schema.define(version: 2021_12_01_152439) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "schedule_identifier"
     t.string "type", default: "Finance::Schedule::ECF"
+    t.uuid "cohort_id"
+    t.index ["cohort_id"], name: "index_schedules_on_cohort_id"
   end
 
   create_table "school_access_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -889,6 +891,7 @@ ActiveRecord::Schema.define(version: 2021_12_01_152439) do
   add_foreign_key "provider_relationships", "delivery_partners"
   add_foreign_key "provider_relationships", "lead_providers"
   add_foreign_key "pupil_premiums", "schools"
+  add_foreign_key "schedules", "cohorts"
   add_foreign_key "school_access_tokens", "schools"
   add_foreign_key "school_cohorts", "cohorts"
   add_foreign_key "school_cohorts", "core_induction_programmes"

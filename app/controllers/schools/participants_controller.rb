@@ -8,6 +8,7 @@ class Schools::ParticipantsController < Schools::BaseController
 
   def index
     participant_categories = SetParticipantCategories.call(@school_cohort, current_user)
+    @withdrawn = participant_categories.withdrawn
     @eligible = participant_categories.eligible
     @ineligible = participant_categories.ineligible
     @contacted_for_info = participant_categories.contacted_for_info

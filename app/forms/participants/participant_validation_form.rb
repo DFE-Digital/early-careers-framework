@@ -4,7 +4,7 @@ module Participants
   class ParticipantValidationForm
     include Multistep::Form
 
-    def self.call(participant_profile)
+    def self.call(participant_profile, save_validation_data_without_match: true)
       validation_data = participant_profile.ecf_participant_validation_data
       return false if validation_data.blank?
 
@@ -15,7 +15,7 @@ module Participants
         nino: validation_data.nino,
         dob: validation_data.date_of_birth,
         full_name: validation_data.full_name,
-      ).call
+      ).call(save_validation_data_without_match: save_validation_data_without_match)
     end
 
     # lifted from https://github.com/dwp/nino-format-validation
