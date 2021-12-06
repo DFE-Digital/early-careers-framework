@@ -19,6 +19,11 @@ module ManageTrainingSteps
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
   end
 
+  def given_there_is_a_cip_only_school
+    @cohort = create(:cohort, start_year: 2021)
+    @school = create(:school, name: "CIP only school", school_status_code: 1, school_type_code: 10, primary_contact_email: "cip-only-school-info@example.com")
+  end
+
   def given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
     given_there_is_a_school_that_has_chosen_fip_for_2021
     @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
@@ -84,6 +89,18 @@ module ManageTrainingSteps
 
   def given_an_ect_has_been_withdrawn_by_the_provider
     @participant_profile_ect.training_status_withdrawn!
+  end
+
+  def given_i_click_on_test_school_1
+    click_on "Test School 1"
+  end
+
+  def given_i_click_on_test_school_2
+    click_on "Test School 2"
+  end
+
+  def given_i_click_on_manage_your_schools
+    click_on "Manage your schools"
   end
 
   # And_steps
@@ -163,32 +180,6 @@ module ManageTrainingSteps
     @details_being_checked_ect.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
   end
 
-  def then_i_am_taken_to_add_mentor_page
-    expect(page).to have_selector("h1", text: "Who will mentor")
-    expect(page).to have_text("You can tell us later if you’re not sure")
-  end
-
-  def when_i_select_a_mentor
-    choose(@participant_profile_mentor.user.full_name.to_s, allow_label_click: true)
-  end
-
-  def then_i_am_on_schools_page
-    visit "/schools"
-  end
-
-  def then_i_should_see_the_add_your_ect_and_mentor_link
-    expect(page).to have_text("Add your early career teacher and mentor details")
-  end
-
-  def then_i_should_see_the_view_your_ect_and_mentor_link
-    expect(page).to have_text("View your early career teacher and mentor details")
-  end
-
-  def then_i_should_see_the_program_and_click_to_change_it(program_label:)
-    expect(page).to have_text(program_label)
-    click_on "Change induction programme choice"
-  end
-
   def and_i_should_see_multiple_schools
     expect(page).to have_text("Test School 1")
     expect(page).to have_text("Test School 2")
@@ -205,18 +196,6 @@ module ManageTrainingSteps
 
   def given_i_click_on_manage_your_schools
     click_on "Manage your schools"
-  end
-
-  def then_i_should_be_on_school_cohorts_page
-    expect(current_path).to eq("/schools/#{@school_cohort.school.slug}")
-  end
-
-  def then_i_should_be_on_school_cohorts_1_page
-    expect(current_path).to eq("/schools/111111-test-school-1")
-  end
-
-  def then_i_should_be_on_school_cohorts_2_page
-    expect(current_path).to eq("/schools/111112-test-school-2")
   end
 
   def and_i_should_see_school_1_data
@@ -242,6 +221,11 @@ module ManageTrainingSteps
 
   def and_i_have_added_a_contacted_for_info_mentor
     @contacted_for_info_mentor = create(:mentor_participant_profile, :email_sent, request_for_details_sent_at: 5.days.ago, user: create(:user, full_name: "CFI Mentor"), school_cohort: @school_cohort)
+  end
+
+  def and_i_am_signed_in_as_an_induction_coordinator_for_a_school
+    induction_coordinator_profile = create(:induction_coordinator_profile, schools: [@school])
+    sign_in_as induction_coordinator_profile.user
   end
 
   def and_i_am_signed_in_as_an_induction_coordinator_for_multiple_schools
@@ -290,6 +274,29 @@ module ManageTrainingSteps
   end
 
   # When_steps
+
+  def when_i_see_the_program_and_click_to_change_it(program_label:)
+    expect(page).to have_text(program_label)
+    click_on "Change induction programme choice"
+  end
+
+  def when_i_am_on_choose_programme_page_and_choose(labels:, choice:, snapshot:)
+    expect(page).to have_text("How do you want to run your training in 2021 to 2022?")
+
+    labels.each { |label| expect(page).to have_selector(:label, text: label) }
+    expect(page).to be_accessible
+    page.percy_snapshot(snapshot)
+
+    choose choice
+    click_on "Continue"
+
+    expect(page).to have_text "Confirm your training programme"
+    click_on "Confirm"
+  end
+
+  def when_i_click_add_your_early_career_teacher_and_mentor_details
+    click_on("Add your early career teacher and mentor details")
+  end
 
   def when_i_click_on_back
     click_on("Back")
@@ -438,6 +445,27 @@ module ManageTrainingSteps
 
   # Then_steps
 
+  def then_i_am_on_schools_page
+    visit "/schools"
+  end
+
+  def then_i_am_taken_to_add_mentor_page
+    expect(page).to have_selector("h1", text: "Who will mentor")
+    expect(page).to have_text("You can tell us later if you’re not sure")
+  end
+
+  def then_i_should_be_on_school_cohorts_page
+    expect(current_path).to eq("/schools/#{@school_cohort.school.slug}")
+  end
+
+  def then_i_should_be_on_school_cohorts_1_page
+    expect(current_path).to eq("/schools/111111-test-school-1")
+  end
+
+  def then_i_should_be_on_school_cohorts_2_page
+    expect(current_path).to eq("/schools/111112-test-school-2")
+  end
+
   def then_i_am_taken_to_roles_page
     expect(page).to have_selector("h1", text: "Check what each person needs to do in the early career teacher training programme")
     expect(page).to have_text("An induction tutor should only assign themself as a mentor in exceptional circumstances")
@@ -496,6 +524,16 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_fip_programme_choice_info_page
     expect(page).to have_text("You’ve chosen to: use a training provider, funded by the DfE")
+  end
+
+  def then_i_am_taken_to_change_school_funded_fip_page
+    expect(page).to have_text("Your school has chosen to use a training provider, funded by your school.")
+    expect(page).to have_text("Contact your training provider, if you've signed up with one.")
+    expect(page).to have_text("Email the DfE to let us know that you want to make a change: ecf-support@example.com")
+  end
+
+  def when_i_select_change_name
+    click_on("Change name", visible: false)
   end
 
   def then_i_am_taken_to_cip_programme_choice_info_page
@@ -676,6 +714,38 @@ module ManageTrainingSteps
     expect(page).to have_text("Sally Teacher")
     expect(page).to have_text("Big Provider Ltd")
     expect(page).to have_text("Amazing Delivery Team")
+  end
+
+  def then_i_should_see_the_cip_success_page
+    expect(page).to have_text("compare and choose which DfE-accredited materials you want to use")
+    expect(page).to have_text("use this service to tell us which materials you want to use")
+    expect(page).to have_text("tell us each ECT and mentor’s name and email address as soon as possible")
+    expect(page).to have_text("have an appropriate body in place")
+    expect(page).to have_text "Training programme confirmed"
+  end
+
+  def then_i_should_see_the_design_our_own_training_success_page
+    expect(page).to have_text("design a 2-year programme of support and training that covers every ‘learn that’ and ‘learn how to’ statement")
+    expect(page).to have_text("contact your appropriate body to find out what evidence is needed")
+    expect(page).to have_text("You do not need to add information about your ECTs and mentors to this service.")
+  end
+
+  def then_i_should_see_the_no_ect_success_page
+    expect(page).to have_text("Your school will not receive any more messages about statutory inductions for ECTs until the next academic year.")
+    expect(page).to have_text("If any ECTs do join your school this year, you need to use this service to let us know.")
+    expect(page).to have_text("Training programme confirmed")
+  end
+
+  def then_i_should_see_the_fip_success_page
+    expect(page).to have_text("choose one of the 6 DfE-funded training providers as soon as possible")
+    expect(page).to have_text("tell us each ECT and mentor’s name and email address as soon as possible")
+    expect(page).to have_text("have an appropriate body in place")
+    expect(page).to have_text("Training programme confirmed")
+  end
+
+  def then_i_should_see_the_school_funded_fip_success_page
+    expect(page).to have_text("Training programme confirmed")
+    expect(page).to have_text("You need to make your own arrangements with a training provider, approved by the DfE.")
   end
 
   # Set_steps
