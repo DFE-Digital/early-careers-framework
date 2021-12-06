@@ -12,11 +12,17 @@ class HealthcheckController < ApplicationController
         connected: database_connected?,
         migration_version: migration_version,
       },
+      sidekiq: {
+        job_count: sidekiq_jobs_count,
+        errors: sidekiq_jobs_with_errors,
+        failed: sidekiq_failures,
+        sidekiq_last_failure: sidekiq_last_failure,
+      },
       delayed_job: {
-        job_count: delayed_jobs,
-        errors: jobs_with_errors,
-        failed: failed_jobs,
-        last_failure: last_job_failure,
+        job_count: delayed_jobs_count,
+        errors: delayed_jobs_with_errors,
+        failed: failed_delayed_jobs,
+        last_failure: last_delayed_job_failure,
       },
       notify: {
         incident_status: notify_incident,
@@ -39,25 +45,52 @@ private
     I18n.t(:fail)
   end
 
-  def delayed_jobs
+  def sidekiq_jobs_count
+    Sidekiq::Queue.all.map(&:size).sum
+  rescue StandardError
+    I18n.t(:fail)
+  end
+
+  def sidekiq_jobs_with_errors
+    Sidekiq::RetrySet.new.size
+  rescue StandardError
+    I18n.t(:fail)
+  end
+
+  def sidekiq_failures
+    Sidekiq::DeadSet.new.size
+  rescue StandardError
+    I18n.t(:fail)
+  end
+
+  def sidekiq_last_failure
+    last_failed_at = Sidekiq::DeadSet.new.to_a.max { |j| j["failed_at"] }&.fetch("failed_at")
+    return nil unless last_failed_at
+
+    Time.zone.at last_failed_at
+  rescue StandardError
+    I18n.t(:fail)
+  end
+
+  def delayed_jobs_count
     Delayed::Job.count
   rescue StandardError
     I18n.t(:fail)
   end
 
-  def jobs_with_errors
+  def delayed_jobs_with_errors
     Delayed::Job.where.not(last_error: nil).count
   rescue StandardError
     I18n.t(:fail)
   end
 
-  def failed_jobs
+  def failed_delayed_jobs
     Delayed::Job.where.not(failed_at: nil).count
   rescue StandardError
     I18n.t(:fail)
   end
 
-  def last_job_failure
+  def last_delayed_job_failure
     Delayed::Job.order(failed_at: :desc).first&.failed_at
   rescue StandardError
     I18n.t(:fail)

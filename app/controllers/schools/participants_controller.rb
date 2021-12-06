@@ -8,6 +8,7 @@ class Schools::ParticipantsController < Schools::BaseController
 
   def index
     participant_categories = SetParticipantCategories.call(@school_cohort, current_user)
+    @withdrawn = participant_categories.withdrawn
     @eligible = participant_categories.eligible
     @ineligible = participant_categories.ineligible
     @contacted_for_info = participant_categories.contacted_for_info
@@ -67,7 +68,7 @@ class Schools::ParticipantsController < Schools::BaseController
 
     if @mentor_form.valid?
       @profile.update!(mentor_profile: @mentor_form.mentor ? @mentor_form.mentor.mentor_profile : nil)
-      Analytics::ECFValidationService.upsert_record(@profile)
+      Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile: @profile)
 
       flash[:success] = { title: "Success", heading: "The mentor for this participant has been updated" }
       redirect_to schools_participant_path(id: @profile)
@@ -88,7 +89,7 @@ class Schools::ParticipantsController < Schools::BaseController
           sti_profile: current_user.induction_coordinator_profile,
         ).deliver_later
       end
-      Analytics::ECFValidationService.upsert_record(@profile)
+      Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile: @profile)
     end
 
     render :removed

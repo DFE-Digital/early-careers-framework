@@ -62,12 +62,15 @@ module Api
       end
 
       def participant_profile_ids
-        @participant_profile_ids ||= lead_provider.ecf_participant_profiles
-                                                  .select("DISTINCT ON (participant_profiles.teacher_profile_id) teacher_profile_id, participant_profiles.status, participant_profiles.id")
-                                                  .joins(:school_cohort)
-                                                  .where(school_cohort: { cohort_id: Cohort.current.id })
-                                                  .order(:teacher_profile_id, status: :asc)
-                                                  .map(&:id)
+        @participant_profile_ids ||= begin
+          inner_query = lead_provider.ecf_participant_profiles
+                                     .select("DISTINCT ON (participant_profiles.teacher_profile_id) teacher_profile_id, participant_profiles.status, participant_profiles.id as id")
+                                     .joins(:school_cohort)
+                                     .where(school_cohort: { cohort_id: Cohort.current.id })
+                                     .order(:teacher_profile_id, status: :asc)
+                                     .to_sql
+          ActiveRecord::Base.connection.query_values("SELECT id FROM (#{inner_query}) AS inner_query")
+        end
       end
 
       def mentor_ids

@@ -74,7 +74,7 @@ RSpec.describe "participant validation api endpoint", type: :request do
       context "when no record is found for given teacher_reference_number" do
         let(:service_response) { nil }
 
-        it "returns a 404" do
+        it "returns a 404", exceptions_app: true do
           post "/api/v1/participant-validation", params: {
             trn: trn,
             full_name: full_name,

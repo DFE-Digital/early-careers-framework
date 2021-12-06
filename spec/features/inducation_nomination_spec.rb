@@ -1,11 +1,8 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require "features/participants/participant_validation_steps"
 
 RSpec.feature "Nominating tutors", :js do
-  include ParticipantValidationSteps
-
   describe "When nominating an induction tutors with details that are not acceptable" do
     let(:cohort) { create(:cohort, start_year: "2021") }
     let(:school) { create(:school, name: "CIP School") }

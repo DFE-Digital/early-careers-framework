@@ -46,9 +46,12 @@ RSpec.shared_examples "JSON Participant Resume endpoint" do |serialiser_type|
 end
 
 RSpec.shared_examples "JSON Participant resume documentation" do |url, request_schema_ref, response_schema_ref, tag|
+  humanised_description = TAG_TO_HUMANISED_DESCRIPTION[tag]
+  operation_id = TAG_TO_OPERATION_ID[tag]
+
   path url do
-    put "Notify that a participant is resuming their course" do
-      operationId :participant
+    put "Notify that an #{humanised_description} is resuming their course" do
+      operationId operation_id
       tags tag
       security [bearerAuth: []]
       consumes "application/json"
@@ -77,7 +80,7 @@ RSpec.shared_examples "JSON Participant resume documentation" do |url, request_s
                   "$ref": request_schema_ref,
                 }
 
-      response "200", "The participant being resumed" do
+      response "200", "The #{humanised_description} being resumed" do
         let(:id) { participant.user_id }
 
         let(:params) do

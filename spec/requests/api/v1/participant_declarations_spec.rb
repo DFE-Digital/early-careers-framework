@@ -98,6 +98,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         allow(Rails).to receive(:logger).and_return(fake_logger)
 
         params = build_params(valid_params)
+
         post "/api/v1/participant-declarations", params: params
 
         expect(response.status).to eq 200
@@ -349,7 +350,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
           expect(JSON.parse(response.body)).to eq(expected_response)
         end
 
-        it "returns 404 if participant declaration does not exist" do
+        it "returns 404 if participant declaration does not exist", exceptions_app: true do
           get "/api/v1/participant-declarations/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
           expect(response.status).to eq 404
         end

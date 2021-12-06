@@ -12,6 +12,7 @@
 - NodeJS 14.16.0
 - Yarn 1.12.x
 - Docker
+- Redis 6.2
 
 ### Without docker
 
@@ -141,7 +142,7 @@ These are deployed using terraform. See the documentation for [details on terraf
 
 In addition to a web app, some environments have a worker app for running background jobs. For details, see the terraform code.
 
-The `/heathcheck` endpoint on each deployed app will give details on things like version number, commit SHA, delayed jobs, and database migrations.
+The `/heathcheck` endpoint on each deployed app will give details on things like version number, commit SHA, background jobs, and database migrations.
 
 ### Creating an initial admin user
 1. Follow the [debugging instructions](./documentation/debugging_in_govpaas.md) to gain SSH access to the instance and cd to the app dir
@@ -157,15 +158,28 @@ The `/heathcheck` endpoint on each deployed app will give details on things like
 3. Run `bundle exec rake sparsity:import` to populate the sparsity tables
 4. Run `bundle exec rake pupil_premium:import` to populate the pupil premium tables
 
-Note: running `db:seed` schedules the `schools_data:import` as a delayed job. You can run `bin/delayed_job start --exit-on-complete`
-to execute this delayed job in the background.
+Note: running `db:seed` schedules the `schools_data:import` as a background. You can run `bundle exe sidekiq` to execute this in the background.
 
 ## Resetting the database on a dev environment
 
 Much like review apps, the dev database is truncated and reseeded on every merge to develop.
 
-If the database needs to be reset for testing, there is a github action for this called `Run task in dev space`. 
+If the database needs to be reset for testing, there is a github action for this called `Run task in dev space`.
 The default parameters will reset the dev database. This action can also be used to run a rake task on dev or any review app.
+
+## Running background jobs locally
+
+Background jobs are run using sidekiq, which relies on redis. You will need to install redis and run it using:
+```
+redis-server
+```
+This should run on `*:6379`, which sidekiq will expect outside of
+cloudfoundry.
+
+And start sidekiq running using:
+```
+bundle exec sidekiq
+```
 
 ## Sending emails
 

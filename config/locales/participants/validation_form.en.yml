@@ -1,0 +1,37 @@
+en:
+  activemodel:
+    errors:
+      models:
+        participants/participant_validation_form:
+          attributes:
+            trn:
+              blank: Enter your teacher reference number
+              too_short: Teacher reference number is at least %{count} digits long
+              too_long: Teacher reference number is at most %{count} digits long
+              invalid: Teacher reference number must only contain numbers
+            nino:
+              blank: Enter your National Insurance Number
+              invalid: National Insurance number is not the correct format (for example, QQ123456C)
+            dob:
+              blank: Enter your date of birth
+              invalid: Enter valid date of birth
+            name_changed:
+              blank: Select how you want to continue
+            full_name:
+              blank: Enter your full name at the time you started ITT
+
+  participants:
+    validation_form:
+      extra_steps:
+        nino:
+          note: Tell us your National Insurance number to help us to find your details.
+          button: Add your National Insurance number
+        name_changed:
+          note: Confirming the full name we have for you may help us find your details.
+          button: Continue to confirm your name
+        manual_check:
+          note: Our support team may contact you for more information to help us complete our checks.
+          button: Continue
+
+
+

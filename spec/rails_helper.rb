@@ -18,6 +18,7 @@ require "pundit/rspec"
 require "pundit/matchers"
 require "support/new_supplier_helper"
 require "paper_trail/frameworks/rspec"
+require "sidekiq/testing"
 
 # require features_helper after support files have been loaded
 require "features_helper"
@@ -54,6 +55,7 @@ RSpec.configure do |config|
 
   config.before do
     Faker::Number.unique.clear
+    enqueued_jobs.clear
   end
   config.include Devise::Test::IntegrationHelpers, type: :request
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
@@ -95,6 +97,7 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
+RSpec::Matchers.define_negated_matcher :not_have_enqueued_mail, :have_enqueued_mail
 RSpec::Matchers.define_negated_matcher :not_change, :change
 
 RSpec.configure do |config|
@@ -104,6 +107,19 @@ RSpec.configure do |config|
   config.include ViewComponent::TestHelpers, type: :component
   config.include Capybara::RSpecMatchers, type: :component
   config.include Rails.application.routes.url_helpers
+
+  config.before(:each, exceptions_app: true) do
+    # Make the app behave how it does in non dev/test environments and use the
+    # ErrorsController via config.exceptions_app = routes in config/application.rb
+    method = Rails.application.method(:env_config)
+    expect(Rails.application).to receive(:env_config).with(no_args) do
+      method.call.merge(
+        "action_dispatch.show_exceptions" => true,
+        "action_dispatch.show_detailed_exceptions" => false,
+        "consider_all_requests_local" => false,
+      )
+    end
+  end
 
   config.before(:suite) do
     Webpacker.compile

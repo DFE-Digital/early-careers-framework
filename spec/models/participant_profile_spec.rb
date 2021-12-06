@@ -23,12 +23,13 @@ RSpec.describe ParticipantProfile, type: :model do
   end
 
   it "updates analytics when training_status_changed?", :with_default_schedules do
-    allow(Analytics::ECFValidationService).to receive(:upsert_record)
-
     profile = create(:ecf_participant_profile, training_status: :active)
     profile.training_status = :withdrawn
-    profile.save!
-    expect(Analytics::ECFValidationService).to have_received(:upsert_record).with(profile)
+    expect {
+      profile.save!
+    }.to have_enqueued_job(Analytics::UpsertECFParticipantProfileJob).with(
+      participant_profile: profile,
+    )
   end
 
   describe described_class::Mentor do

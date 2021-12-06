@@ -70,10 +70,18 @@ groups:
   - name: Crashed-apps
     rules:
       - alert: AppsCrashed
-        expr: rate(crash{app=~"ecf-production"}[1m])*60 > 1
+        expr: rate(crash{app="ecf-production"}[1m])*60 > 1
         annotations:
           summary: Crashed Apps non-zero
           description: "ecf-production: At least 1 crashed app (current value: {{ $value }})"
+        labels:
+          environment: production
+          severity: high
+      - alert: AppsWorkerCrashed
+        expr: rate(crash{app="ecf-production-worker"}[1m])*60 > 1
+        annotations:
+          summary: Crashed Apps non-zero
+          description: "ecf-production-worker: At least 1 crashed app (current value: {{ $value }})"
         labels:
           environment: production
           severity: high

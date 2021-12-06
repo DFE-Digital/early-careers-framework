@@ -16,6 +16,8 @@ Sentry.init do |config|
     filter.filter(event.to_hash)
   end
 
+  config.excluded_exceptions += ["Pundit::NotAuthorizedError"]
+
   config.traces_sampler = lambda do |sampling_context|
     transaction_context = sampling_context[:transaction_context]
     op = transaction_context[:op]
@@ -30,6 +32,8 @@ Sentry.init do |config|
         0.01
       end
     when /delayed_job/
+      0.001
+    when /sidekiq/
       0.001
     else
       0.0 # We don't care about performance of other things

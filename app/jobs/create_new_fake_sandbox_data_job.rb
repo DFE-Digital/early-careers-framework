@@ -2,10 +2,9 @@
 
 require "tasks/trn_generator"
 
-class CreateNewFakeSandboxDataJob < CronJob
-  self.cron_expression = "0 2 * * *"
-
+class CreateNewFakeSandboxDataJob < ApplicationJob
   EDT_NAME = "Education Development Trust"
+
   def perform(provider_name: EDT_NAME)
     return if Rails.env.production?
 

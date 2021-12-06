@@ -17,13 +17,15 @@
         <dd class="govuk-summary-list__value">
           <%= @profile.user.full_name %>
         </dd>
-        <dd class="govuk-summary-list__actions">
-          <% if @profile.policy_class.new(current_user, @profile).edit_name? %>
-            <%= govuk_link_to schools_participant_edit_name_path(participant_id: @profile) do %>
-              Change <span class="govuk-visually-hidden">name</span>
+        <% unless @profile.training_status_withdrawn? %>
+          <dd class="govuk-summary-list__actions">
+            <% if @profile.policy_class.new(current_user, @profile).edit_name? %>
+              <%= govuk_link_to schools_participant_edit_name_path(participant_id: @profile) do %>
+                Change <span class="govuk-visually-hidden">name</span>
+              <% end %>
             <% end %>
-          <% end %>
-        </dd>
+          </dd>
+        <% end %>
       </div>
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
@@ -32,13 +34,15 @@
         <dd class="govuk-summary-list__value">
           <%= @profile.user.email %>
         </dd>
-        <dd class="govuk-summary-list__actions">
-          <% if @profile.policy_class.new(current_user, @profile).edit_email? %>
-            <%= govuk_link_to schools_participant_edit_email_path(participant_id: @profile) do %>
-              Change <span class="govuk-visually-hidden">email</span>
+        <% unless @profile.training_status_withdrawn? %>
+          <dd class="govuk-summary-list__actions">
+            <% if @profile.policy_class.new(current_user, @profile).edit_email? %>
+              <%= govuk_link_to schools_participant_edit_email_path(participant_id: @profile) do %>
+                Change <span class="govuk-visually-hidden">email</span>
+              <% end %>
             <% end %>
-          <% end %>
-        </dd>
+          </dd>
+        <% end %>
       </div>
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
@@ -50,39 +54,42 @@
         <dd class="govuk-summary-list__actions">
         </dd>
       </div>
-
-      <% if @profile.ect? %>
+      <% unless @profile.training_status_withdrawn? %>
+        <% if @profile.ect? %>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Mentor
+            </dt>
+            <dd class="govuk-summary-list__value">
+              <% if @mentor %>
+                <%= govuk_link_to @mentor.full_name, schools_participant_path(id: @mentor.mentor_profile.id) %>
+              <% else %>
+                Not yet assigned
+              <% end %>
+            </dd>
+            <dd class="govuk-summary-list__actions">
+              <% if @mentors_added %>
+                <%= govuk_link_to schools_participant_edit_mentor_path(participant_id: @profile.id) do %>
+                  Change <span class="govuk-visually-hidden">mentor</span>
+                <% end %>
+              <% end %>
+            </dd>
+          </div>
+        <% end %>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">
-            Mentor
+            Status
           </dt>
           <dd class="govuk-summary-list__value">
-            <% if @mentor %>
-              <%= govuk_link_to @mentor.full_name, schools_participant_path(id: @mentor.mentor_profile.id) %>
-            <% else %>
-              Not yet assigned
-            <% end %>
+            <%= render Schools::Participants::Status.new(participant_profile: @profile) %>
           </dd>
-          <dd class="govuk-summary-list__actions">
-            <% if @mentors_added %>
-              <%= govuk_link_to schools_participant_edit_mentor_path(participant_id: @profile.id) do %>
-                Change <span class="govuk-visually-hidden">mentor</span>
-              <% end %>
-            <% end %>
-          </dd>
+          <dd class="govuk-summary-list__actions"></dd>
         </div>
       <% end %>
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Status
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <%= render Schools::Participants::Status.new(participant_profile: @profile) %>
-        </dd>
-        <dd class="govuk-summary-list__actions"></dd>
-      </div>
     </dl>
   </div>
 </div>
 
-<%= render Schools::Participants::RemoveFromCohortComponent.new(profile: @profile, current_user: current_user) %>
+<% unless @profile.training_status_withdrawn? %>
+  <%= render Schools::Participants::RemoveFromCohortComponent.new(profile: @profile, current_user: current_user) %>
+<% end %>

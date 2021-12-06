@@ -75,7 +75,7 @@ RSpec.describe "Users::Sessions", type: :request do
     end
 
     context "when an invalid email is inputted" do
-      emails = ["invalid@email,com", "email", "invalid@email", "@email.com"]
+      emails = %w[invalid@email,com email invalid@email @email.com]
       emails.each do |email|
         it "renders the new template" do
           post "/users/sign_in", params: { user: { email: email } }
@@ -196,7 +196,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
       it "redirects to participant validation on successful login" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }
-        expect(response).to redirect_to(participants_validation_start_path)
+        expect(response).to redirect_to(participants_validation_path)
       end
     end
 
@@ -208,6 +208,18 @@ RSpec.describe "Users::Sessions", type: :request do
       it "redirects to correct dashboard" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }
         expect(response).to redirect_to(schools_choose_programme_path(school_id: school.slug, cohort_id: cohort.start_year))
+      end
+    end
+
+    context "when user is an induction coordinator and a non-validated mentor" do
+      let(:user) { create(:user, :induction_coordinator) }
+      let(:teacher_profile) { create :teacher_profile, user: user }
+      let!(:participant_profile) { create :mentor_participant_profile, teacher_profile: teacher_profile }
+      let!(:cohort) { create :cohort, :current }
+
+      it "redirects to correct dashboard" do
+        post "/users/sign_in_with_token", params: { login_token: user.login_token }
+        expect(response).to redirect_to participants_validation_path
       end
     end
 
