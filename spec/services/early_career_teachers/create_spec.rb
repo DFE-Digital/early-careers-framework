@@ -161,5 +161,6 @@ RSpec.describe EarlyCareerTeachers::Create do
         mentor_profile_id: mentor_profile.id,
       )
     }.to have_enqueued_job(Analytics::UpsertECFParticipantProfileJob)
+      .with(participant_profile: instance_of(ParticipantProfile::ECT))
   end
 end
