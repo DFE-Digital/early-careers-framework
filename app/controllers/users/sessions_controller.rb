@@ -81,7 +81,6 @@ private
     email = params.dig(:user, :email)
     return unless TEST_DOMAINS.any? { |domain| email.include?(domain) }
 
-    # user = User.find_by_email(email) || return
     user = ParticipantIdentity.find_by(email: email)&.user || User.find_by(email: email) || return
 
     sign_in(user, scope: :user)

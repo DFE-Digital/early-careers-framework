@@ -541,7 +541,7 @@ ActiveRecord::Schema.define(version: 2021_12_02_162431) do
 
   create_table "participant_identities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
-    t.string "email", null: false
+    t.citext "email", null: false
     t.uuid "external_identifier", null: false
     t.string "origin", default: "ecf", null: false
     t.datetime "created_at", precision: 6, null: false

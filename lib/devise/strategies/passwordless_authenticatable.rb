@@ -19,9 +19,15 @@ module Devise
       def authenticate!
         if params[:user].present?
           email = params.dig(:user, :email)
-          user = ParticipantIdentity.find_by(email: email)&.user || User.find_by(email: email)
 
-          # user = User.find_by(email: params[:user][:email])
+          identity = ParticipantIdentity.find_by(email: email)
+          if identity.present?
+            confirmed_email = identity.email
+            user = identity.user
+          else
+            user = User.find_by(email: email)
+            confirmed_email = user&.email
+          end
 
           token_expiry = 60.minutes.from_now
           result = user&.update(
@@ -36,7 +42,7 @@ module Devise
               **UTMService.email(:sign_in),
             )
 
-            UserMailer.sign_in_email(user: user, url: url, token_expiry: token_expiry.localtime.to_s(:time)).deliver_later(queue: "priority_mailers")
+            UserMailer.sign_in_email(email: confirmed_email, full_name: user.full_name, url: url, token_expiry: token_expiry.localtime.to_s(:time)).deliver_later(queue: "priority_mailers")
             raise LoginIncompleteError
           else
             raise EmailNotFoundError

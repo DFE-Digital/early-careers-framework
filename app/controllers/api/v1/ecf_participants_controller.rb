@@ -52,7 +52,7 @@ module Api
                                                         :ecf_participant_validation_data,
                                                         :schedule,
                                                         teacher_profile: { current_ect_profile: { mentor_profile: :user } },
-        )
+                                                      )
 
         if updated_since.present?
           participant_profiles = participant_profiles.where(user: { updated_at: updated_since.. })

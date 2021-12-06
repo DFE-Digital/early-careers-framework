@@ -22,7 +22,7 @@ module Mentors
         ParticipantProfile::Mentor.create!({
           teacher_profile: teacher_profile,
           schedule: Finance::Schedule::ECF.default,
-          participant_identity: CreateUserIdentity.call(user: user)
+          participant_identity: Identity::Create.call(user: user),
         }.merge(mentor_attributes)) do |mentor_profile|
           ParticipantProfileState.create!(participant_profile: mentor_profile)
           ParticipantMailer.participant_added(participant_profile: mentor_profile).deliver_later

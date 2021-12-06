@@ -60,115 +60,101 @@ User.find_or_create_by!(email: "school-leader@example.com") do |user|
   end
 end
 
-begin
-  user = User.find_or_create_by!(email: "npq-registrant@example.com") do |user|
-    user.full_name = "NPQ registrant"
-  end
-
-  teacher_profile = user.teacher_profile || user.create_teacher_profile
-
-  profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
-    profile.schedule = Finance::Schedule::NPQSpecialist.default
-    profile.participant_identity = CreateUserIdentity.call(user: user, origin: :npq)
-  end
-
-  ParticipantProfileState.find_or_create_by!(participant_profile: profile)
+user = User.find_or_create_by!(email: "npq-registrant@example.com") do |npq_user|
+  npq_user.full_name = "NPQ registrant"
 end
 
-begin
-  mentor = User.find_or_create_by!(email: "rp-mentor-ambition@example.com") do |user|
-    user.full_name = "Sally Mentor"
-  end
+teacher_profile = user.teacher_profile || user.create_teacher_profile
 
-  teacher_profile = mentor.teacher_profile || mentor.create_teacher_profile
-
-  profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
-    profile.school_cohort = school_cohort
-    profile.core_induction_programme = CoreInductionProgramme.find_by(name: "Ambition Institute")
-    profile.schedule = Finance::Schedule::ECF.default
-    profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
-  end
-  ParticipantProfileState.find_or_create_by!(participant_profile: profile)
+profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile) do |npq_profile|
+  npq_profile.schedule = Finance::Schedule::NPQSpecialist.default
+  npq_profile.participant_identity = Identity::Create.call(user: user, origin: :npq)
 end
 
-begin
-  mentor_two = User.find_or_create_by!(email: "rp-mentor-edt@example.com") do |user|
-    user.full_name = "Jane Doe"
-  end
+ParticipantProfileState.find_or_create_by!(participant_profile: profile)
 
-  teacher_profile = mentor_two.teacher_profile || mentor_two.create_teacher_profile
-
-  profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
-    profile.school_cohort = school_two_cohort
-    profile.core_induction_programme = CoreInductionProgramme.find_by(name: "Education Development Trust")
-    profile.schedule = Finance::Schedule::ECF.default
-    profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
-  end
-  ParticipantProfileState.find_or_create_by!(participant_profile: profile)
+user = User.find_or_create_by!(email: "rp-mentor-ambition@example.com") do |mentor_user|
+  mentor_user.full_name = "Sally Mentor"
 end
 
-begin
-  mentor_three = User.find_or_create_by!(email: "rp-mentor-ucl@example.com") do |user|
-    user.full_name = "Abdul Mentor"
-  end
-  teacher_profile = mentor_three.teacher_profile || mentor_three.create_teacher_profile
+teacher_profile = user.teacher_profile || user.create_teacher_profile
 
-  profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
-    profile.school_cohort = school_three_cohort
-    profile.core_induction_programme = CoreInductionProgramme.find_by(name: "UCL Institute of Education")
-    profile.schedule = Finance::Schedule::ECF.default
-    profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
-  end
-  ParticipantProfileState.find_or_create_by!(participant_profile: profile)
+profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+  mentor_profile.school_cohort = school_cohort
+  mentor_profile.core_induction_programme = CoreInductionProgramme.find_by(name: "Ambition Institute")
+  mentor_profile.schedule = Finance::Schedule::ECF.default
+  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+end
+ParticipantProfileState.find_or_create_by!(participant_profile: profile)
+
+user = User.find_or_create_by!(email: "rp-mentor-edt@example.com") do |mentor_user|
+  mentor_user.full_name = "Jane Doe"
 end
 
-begin
-  user = User.find_or_create_by!(email: "rp-ect-ambition@example.com") do |user|
-    user.full_name = "Joe Bloggs"
-  end
-  teacher_profile = user.teacher_profile || user.create_teacher_profile
+teacher_profile = user.teacher_profile || user.create_teacher_profile
 
-  profile = ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
-    profile.school_cohort = school_cohort
-    profile.core_induction_programme = CoreInductionProgramme.find_by(name: "Ambition Institute")
-    profile.mentor_profile = mentor.mentor_profile
-    profile.schedule = Finance::Schedule::ECF.default
-    profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
-  end
-  ParticipantProfileState.find_or_create_by!(participant_profile: profile)
+profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+  mentor_profile.school_cohort = school_two_cohort
+  mentor_profile.core_induction_programme = CoreInductionProgramme.find_by(name: "Education Development Trust")
+  mentor_profile.schedule = Finance::Schedule::ECF.default
+  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
 end
+ParticipantProfileState.find_or_create_by!(participant_profile: profile)
 
-begin
-  user = User.find_or_create_by!(email: "rp-ect-edt@example.com") do |user|
-    user.full_name = "John Doe"
-  end
-  teacher_profile = user.teacher_profile || user.create_teacher_profile
-
-  profile = ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
-    profile.school_cohort = school_two_cohort
-    profile.core_induction_programme = CoreInductionProgramme.find_by(name: "Education Development Trust")
-    profile.mentor_profile = mentor_two.mentor_profile
-    profile.schedule = Finance::Schedule::ECF.default
-    profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
-  end
-  ParticipantProfileState.find_or_create_by!(participant_profile: profile)
+user = User.find_or_create_by!(email: "rp-mentor-ucl@example.com") do |mentor_user|
+  mentor_user.full_name = "Abdul Mentor"
 end
+teacher_profile = user.teacher_profile || user.create_teacher_profile
 
-begin
-  user = User.find_or_create_by!(email: "rp-ect-ucl@example.com") do |user|
-    user.full_name = "Dan Smith"
-  end
-  teacher_profile = user.teacher_profile || user.create_teacher_profile
-
-  profile = ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
-    profile.school_cohort = school_three_cohort
-    profile.core_induction_programme = CoreInductionProgramme.find_by(name: "UCL Institute of Education")
-    profile.mentor_profile = mentor_three.mentor_profile
-    profile.schedule = Finance::Schedule::ECF.default
-    profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
-  end
-  ParticipantProfileState.find_or_create_by!(participant_profile: profile)
+profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+  mentor_profile.school_cohort = school_three_cohort
+  mentor_profile.core_induction_programme = CoreInductionProgramme.find_by(name: "UCL Institute of Education")
+  mentor_profile.schedule = Finance::Schedule::ECF.default
+  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
 end
+ParticipantProfileState.find_or_create_by!(participant_profile: profile)
+
+user = User.find_or_create_by!(email: "rp-ect-ambition@example.com") do |ect_user|
+  ect_user.full_name = "Joe Bloggs"
+end
+teacher_profile = user.teacher_profile || user.create_teacher_profile
+
+profile = ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
+  ect_profile.school_cohort = school_cohort
+  ect_profile.core_induction_programme = CoreInductionProgramme.find_by(name: "Ambition Institute")
+  ect_profile.mentor_profile = user.mentor_profile
+  ect_profile.schedule = Finance::Schedule::ECF.default
+  ect_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+end
+ParticipantProfileState.find_or_create_by!(participant_profile: profile)
+
+user = User.find_or_create_by!(email: "rp-ect-edt@example.com") do |ect_user|
+  ect_user.full_name = "John Doe"
+end
+teacher_profile = user.teacher_profile || user.create_teacher_profile
+
+profile = ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
+  ect_profile.school_cohort = school_two_cohort
+  ect_profile.core_induction_programme = CoreInductionProgramme.find_by(name: "Education Development Trust")
+  ect_profile.mentor_profile = user.mentor_profile
+  ect_profile.schedule = Finance::Schedule::ECF.default
+  ect_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+end
+ParticipantProfileState.find_or_create_by!(participant_profile: profile)
+
+user = User.find_or_create_by!(email: "rp-ect-ucl@example.com") do |ect_user|
+  ect_user.full_name = "Dan Smith"
+end
+teacher_profile = user.teacher_profile || user.create_teacher_profile
+
+profile = ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
+  ect_profile.school_cohort = school_three_cohort
+  ect_profile.core_induction_programme = CoreInductionProgramme.find_by(name: "UCL Institute of Education")
+  ect_profile.mentor_profile = user.mentor_profile
+  ect_profile.schedule = Finance::Schedule::ECF.default
+  ect_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+end
+ParticipantProfileState.find_or_create_by!(participant_profile: profile)
 
 # We clear the database on a regular basis, but we want a stable token that E&L can use in its dev environments
 # Hashed token with the same unhashed version will be different between dev and deployed dev

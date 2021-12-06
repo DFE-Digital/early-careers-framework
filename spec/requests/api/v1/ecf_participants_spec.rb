@@ -205,6 +205,28 @@ RSpec.describe "Participants API", type: :request do
             expect(matching_records.first["attributes"]["teacher_reference_number"]).to be_nil
           end
         end
+
+        context "when the participant is de-duped" do
+          let(:dup_user) { create(:user, email: "duplicate@example.com") }
+          let(:dup_teacher_profile) { create(:teacher_profile, user: dup_user, trn: "9990001") }
+          let!(:dup_profile) { create(:participant_profile, :ect, mentor_profile: mentor_profile, school_cohort: school_cohort, teacher_profile: dup_teacher_profile) }
+
+          before do
+            early_career_teacher_profile
+            Identity::Transfer.call(from_user: dup_user, to_user: user)
+            dup_user.reload
+            user.reload
+          end
+
+          it "exposes the original ID and email" do
+            get "/api/v1/participants/ecf"
+            matching_records = parsed_response["data"].select { |record| record["id"] == dup_user.id }
+            expect(matching_records.count).to eq 1
+            expect(matching_records.first["attributes"]["email"]).to eq dup_user.email
+            expect(matching_records.first["attributes"]["full_name"]).to eq user.full_name
+            expect(matching_records.first["attributes"]["teacher_reference_number"]).to eq "1112223"
+          end
+        end
       end
 
       describe "CSV Index API" do

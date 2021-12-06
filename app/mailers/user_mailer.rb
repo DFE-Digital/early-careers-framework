@@ -16,14 +16,14 @@ class UserMailer < ApplicationMailer
     ).tag(:test_email)
   end
 
-  def sign_in_email(user:, url:, token_expiry:)
+  def sign_in_email(email:, full_name:, url:, token_expiry:)
     template_mail(
       SIGN_IN_EMAIL_TEMPLATE,
-      to: user.email,
+      to: email,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        full_name: user.full_name,
+        full_name: full_name,
         sign_in: url,
         token_expiry: token_expiry,
         subject: "Link to sign in",

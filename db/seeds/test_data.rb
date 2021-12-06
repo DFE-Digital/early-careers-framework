@@ -339,7 +339,7 @@ teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
   ect_profile.school_cohort = School.find_by(urn: "000103").school_cohorts.find_by(cohort: Cohort.current)
   ect_profile.schedule = Finance::Schedule::ECF.default
-  ect_profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
+  ect_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: ect_profile)
 end
 
@@ -363,7 +363,7 @@ teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000104").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
@@ -377,12 +377,12 @@ end
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000105").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
   profile.schedule = Finance::Schedule::NPQSpecialist.default
-  profile.participant_identity = CreateUserIdentity.call(user: user, origin: :npq)
+  profile.participant_identity = Identity::Create.call(user: user, origin: :npq)
 end
 ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
 
@@ -397,7 +397,7 @@ end
 
 npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
   profile.schedule = Finance::Schedule::NPQSpecialist.default
-  profile.participant_identity = CreateUserIdentity.call(user: user, origin: :npq)
+  profile.participant_identity = Identity::Create.call(user: user, origin: :npq)
 end
 ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
 
@@ -408,7 +408,7 @@ teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000105").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
@@ -422,7 +422,7 @@ end
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000105").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
@@ -433,7 +433,7 @@ teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000106").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
@@ -443,7 +443,7 @@ teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = user.induction_coordinator_profile.schools.first.school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
@@ -455,7 +455,7 @@ teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
   ect_profile.school_cohort = School.find_by(urn: "000107").school_cohorts.find_by(cohort: Cohort.current)
   ect_profile.schedule = Finance::Schedule::ECF.default
-  ect_profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
+  ect_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: ect_profile)
 end
 
@@ -466,7 +466,7 @@ teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000108").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
@@ -477,7 +477,7 @@ teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000109").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 # TODO: add validation data and eligibility records when merged
@@ -510,7 +510,7 @@ teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
   ect_profile.school_cohort = School.find_by(urn: "000200").school_cohorts.find_by(cohort: Cohort.current)
   ect_profile.schedule = Finance::Schedule::ECF.default
-  ect_profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
+  ect_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: ect_profile)
 end
 
@@ -522,7 +522,7 @@ teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000201").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
@@ -536,12 +536,12 @@ end
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000202").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
   profile.schedule = Finance::Schedule::NPQSpecialist.default
-  profile.participant_identity = CreateUserIdentity.call(user: user, origin: :npq)
+  profile.participant_identity = Identity::Create.call(user: user, origin: :npq)
 end
 ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
 
@@ -554,7 +554,7 @@ teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
 end
 npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
   profile.schedule = Finance::Schedule::NPQSpecialist.default
-  profile.participant_identity = CreateUserIdentity.call(user: user, origin: :npq)
+  profile.participant_identity = Identity::Create.call(user: user, origin: :npq)
 end
 ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
 
@@ -565,7 +565,7 @@ teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000203").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
@@ -579,7 +579,7 @@ end
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000204").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
@@ -590,7 +590,7 @@ teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000205").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
@@ -600,7 +600,7 @@ teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = user.induction_coordinator_profile.schools.first.school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
@@ -612,7 +612,7 @@ teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
   ect_profile.school_cohort = School.find_by(urn: "000207").school_cohorts.find_by(cohort: Cohort.current)
   ect_profile.schedule = Finance::Schedule::ECF.default
-  ect_profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
+  ect_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: ect_profile)
 end
 
@@ -623,7 +623,7 @@ teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000208").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
@@ -634,7 +634,7 @@ teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000209").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
@@ -667,7 +667,7 @@ def create_participant_with_eligibility(urn, name, participant_class, options = 
   participant_class.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
     profile.school_cohort = School.find_by(urn: urn).school_cohorts.find_by(cohort: Cohort.current)
     profile.schedule = Finance::Schedule::ECF.default
-    profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
+    profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
     ParticipantProfileState.find_or_create_by!(participant_profile: profile)
     ECFParticipantValidationData.find_or_create_by!(participant_profile: profile)
     default_options = {
@@ -691,7 +691,7 @@ ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do 
   profile.request_for_details_sent_at = Time.zone.now
   profile.school_cohort = School.find_by(urn: "000200").school_cohorts.find_by(cohort: Cohort.current)
   profile.schedule = Finance::Schedule::ECF.default
-  profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
+  profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: profile)
   Email.create!(tags: [:request_for_details], status: "delivered").create_association_with(profile)
 end
@@ -704,7 +704,7 @@ ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do 
   profile.request_for_details_sent_at = Time.zone.now
   profile.school_cohort = School.find_by(urn: "000200").school_cohorts.find_by(cohort: Cohort.current)
   profile.schedule = Finance::Schedule::ECF.default
-  profile.participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
+  profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: profile)
   Email.create!(tags: [:request_for_details], status: "permanent-failure").create_association_with(profile)
 end

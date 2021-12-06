@@ -58,7 +58,7 @@ module ValidTestDataGenerator
       user = User.create!(full_name: name, email: Faker::Internet.email(name: name))
       teacher_profile = TeacherProfile.create!(user: user, trn: random_or_nil_trn)
       schedule = Finance::Schedule::ECF.default
-      participant_identity = CreateUserIdentity.call(user: user, origin: :ecf)
+      participant_identity = Identity::Create.call(user: user, origin: :ecf)
 
       if profile_type == :ect
         ParticipantProfile::ECT.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, mentor_profile: mentor_profile, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule, participant_identity: participant_identity) do |profile|
