@@ -54,9 +54,10 @@ export const computeHeadersFromEmail = (email) =>
     {}
   );
 
-Cypress.Commands.add("appSentEmails", () =>
-  cy.appEval("ActionMailer::Base.deliveries")
-);
+Cypress.Commands.add("appSentEmails", () => {
+  cy.appEval("perform_enqueued_jobs");
+  cy.appEval("ActionMailer::Base.deliveries");
+});
 
 Cypress.Commands.add("verifySignInEmailSentToUser", (user) => {
   cy.appSentEmails().then((emails) => {

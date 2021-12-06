@@ -26,6 +26,8 @@ class ParticipantProfile::ECF < ParticipantProfile
     secondary: "secondary",
   }, _suffix: "profile"
 
+  after_save :update_analytics
+
   def ecf?
     true
   end
@@ -45,6 +47,12 @@ class ParticipantProfile::ECF < ParticipantProfile
 
   def policy_class
     ParticipantProfile::ECFPolicy
+  end
+
+private
+
+  def update_analytics
+    Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile: self) if saved_change_to_training_status?
   end
 end
 

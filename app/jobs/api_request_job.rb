@@ -1,11 +1,8 @@
 # frozen_string_literal: true
 
 class ApiRequestJob
+  include Sidekiq::Worker
   include ActionController::HttpAuthentication::Token
-
-  def self.perform(request_data, response_data, status_code, created_at)
-    new.delay.perform(request_data, response_data, status_code, created_at)
-  end
 
   def perform(request_data, response_data, status_code, created_at)
     request_headers = request_data.fetch(:headers, {})

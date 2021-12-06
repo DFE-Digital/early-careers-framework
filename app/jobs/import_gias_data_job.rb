@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
-class ImportGiasDataJob < CronJob
-  self.cron_expression = "0 6 * * *"
-
-  queue_as :school_data
-
+class ImportGiasDataJob < ApplicationJob
   def perform
     Rails.logger.info "Importing GIAS data..."
     DataStage::FetchGiasDataFiles.call { |files| DataStage::UpdateStagedSchools.call(files) }

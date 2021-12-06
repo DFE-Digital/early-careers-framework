@@ -140,7 +140,7 @@ module Participants
     end
 
     def store_analytics!
-      Analytics::ECFValidationService.record_validation(
+      Analytics::RecordValidationJob.perform_later(
         participant_profile: participant_profile,
         real_time_attempts: attempts,
         real_time_success: dqt_response.present?,

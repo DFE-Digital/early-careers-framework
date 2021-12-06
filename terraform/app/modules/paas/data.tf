@@ -22,3 +22,7 @@ data cloudfoundry_service postgres {
 data cloudfoundry_service aws-s3-bucket {
   name = "aws-s3-bucket"
 }
+
+data cloudfoundry_service redis {
+  name = "redis"
+}

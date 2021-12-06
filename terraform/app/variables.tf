@@ -87,6 +87,22 @@ variable paas_worker_app_start_command {
   default = ""
 }
 
+variable paas_sidekiq_worker_app_deployment_strategy {
+  default = "blue-green-v2"
+}
+
+variable paas_sidekiq_worker_app_instances {
+  default = 0
+}
+
+variable paas_sidekiq_worker_app_memory {
+  default = 1024
+}
+
+variable paas_sidekiq_worker_app_start_command {
+  default = ""
+}
+
 variable logstash_url {
   default = ""
 }

@@ -55,6 +55,7 @@ const reset = () => {
   createdRecords = {};
   cy.app("clean");
   cy.appEval("ActionMailer::Base.deliveries.clear");
+  cy.appEval("enqueued_jobs.clear");
 };
 
 beforeEach(() => {

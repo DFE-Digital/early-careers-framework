@@ -35,7 +35,7 @@ module Partnerships
           event: :reported,
         )
 
-        PartnershipNotificationService.new.delay.notify(partnership)
+        PartnershipNotificationJob.perform_later(partnership: partnership)
         PartnershipReminderJob.set(wait: REMINDER_EMAIL_DELAY).perform_later(
           partnership: partnership,
           report_id: partnership.report_id,

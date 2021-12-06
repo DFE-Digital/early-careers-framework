@@ -42,22 +42,27 @@ module paas {
     username = var.docker_username
     password = var.docker_password
   }
-  app_env_values                    = local.paas_app_env_values
-  app_start_timeout                 = var.paas_app_start_timeout
-  app_stopped                       = var.paas_app_stopped
-  service_name                      = local.service_name
-  postgres_service_plan             = var.paas_postgres_service_plan
-  space_name                        = var.paas_space_name
-  web_app_deployment_strategy       = var.paas_web_app_deployment_strategy
-  web_app_instances                 = var.paas_web_app_instances
-  web_app_memory                    = var.paas_web_app_memory
-  web_app_start_command             = var.paas_web_app_start_command
-  worker_app_start_command          = var.paas_worker_app_start_command
-  worker_app_instances              = var.paas_worker_app_instances
-  worker_app_memory                 = var.paas_worker_app_memory
-  worker_app_deployment_strategy    = var.paas_worker_app_deployment_strategy
-  logstash_url                      = var.logstash_url
-  govuk_hostnames                   = var.govuk_hostnames
+  app_env_values                            = local.paas_app_env_values
+  app_start_timeout                         = var.paas_app_start_timeout
+  app_stopped                               = var.paas_app_stopped
+  service_name                              = local.service_name
+  postgres_service_plan                     = var.paas_postgres_service_plan
+  space_name                                = var.paas_space_name
+  web_app_deployment_strategy               = var.paas_web_app_deployment_strategy
+  web_app_instances                         = var.paas_web_app_instances
+  web_app_memory                            = var.paas_web_app_memory
+  web_app_start_command                     = var.paas_web_app_start_command
+  worker_app_start_command                  = var.paas_worker_app_start_command
+  worker_app_instances                      = var.paas_worker_app_instances
+  worker_app_memory                         = var.paas_worker_app_memory
+  worker_app_deployment_strategy            = var.paas_worker_app_deployment_strategy
+  sidekiq_worker_app_start_command          = var.paas_sidekiq_worker_app_start_command
+  sidekiq_worker_app_instances              = var.paas_sidekiq_worker_app_instances
+  sidekiq_worker_app_memory                 = var.paas_sidekiq_worker_app_memory
+  sidekiq_worker_app_deployment_strategy    = var.paas_sidekiq_worker_app_deployment_strategy
+  redis_service_plan                        = var.paas_redis_service_plan
+  logstash_url                              = var.logstash_url
+  govuk_hostnames                           = var.govuk_hostnames
 }
 
 module "statuscake" {

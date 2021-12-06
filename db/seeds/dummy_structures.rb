@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-SchoolDataImporter.new(Rails.logger).delay.run
+SchoolDataImporterJob.perform_later
 
 User.find_or_create_by!(email: "admin@example.com") do |user|
   user.update!(full_name: "Admin User")
