@@ -5,21 +5,25 @@ module Finance
     class OutputFeeRow < BaseComponent
       include FinanceHelper
 
+      def initialize(breakdown)
+        self.breakdown = breakdown
+      end
+
       def subtotal
-        output_fee[:subtotal]
+        breakdown.dig(:output_payments, :subtotal)
       end
 
       def per_participant
-        output_fee[:per_participant]
+        breakdown.dig(:output_payments, :per_participant)
       end
 
-      def initialize(output_fee)
-        self.output_fee = output_fee
+      def total_participants
+        breakdown.dig(:breakdown_summary, :total_participants_paid)
       end
 
     private
 
-      attr_accessor :output_fee
+      attr_accessor :breakdown
     end
   end
 end

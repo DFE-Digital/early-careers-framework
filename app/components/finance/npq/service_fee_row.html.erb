@@ -1,6 +1,6 @@
 <tr class="govuk-table__row">
   <td scope="row" class="govuk-table__cell govuk-!-width-one-quarter"><%= t("finance.service_fee.caption") %></td>
   <td scope="row" class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter"><%= number_to_pounds(service_per_fee_participant) %></td>
-  <td scope="row" class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter">N/A</td>
+  <td scope="row" class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter"><%= total_participants %></td>
   <td scope="row" class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter"><%= number_to_pounds(service_fees_total) %></td>
 </tr>
