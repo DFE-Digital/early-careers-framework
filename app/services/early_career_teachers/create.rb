@@ -25,7 +25,7 @@ module EarlyCareerTeachers
             ParticipantDetailsReminderJob.schedule(profile)
           end
 
-          Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile: @participant_profile)
+          Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile: profile)
         end
       end
     end
