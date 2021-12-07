@@ -20,14 +20,11 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
   let!(:partnership) { create(:partnership, school: school, lead_provider: lead_provider, delivery_partner: delivery_partner, cohort: cohort) }
 
   before do
-    FeatureFlag.activate(:induction_tutor_manage_participants)
     sign_in user
   end
 
   describe "GET /schools/:school_id/cohorts/:start_year/participants" do
     context "when feature flag is turned off" do
-      before { FeatureFlag.deactivate(:induction_tutor_manage_participants) }
-
       it "shouldn't be available" do
         expect {
           get "/schools/cohorts/#{cohort.start_year}/participants"
