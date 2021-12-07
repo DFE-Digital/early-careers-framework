@@ -29,7 +29,7 @@ module Participants
     end
 
     def school_names_for_multi_school_mentor
-      @school_names ||= fetch_multi_school_names.join(" and ")
+      @school_names_for_multi_school_mentor ||= fetch_multi_school_names.join(" and ")
     end
 
     def partnership
