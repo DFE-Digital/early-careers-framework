@@ -2,12 +2,12 @@
   <%= Rouge::Themes::Github.render(scope: '.highlight') %>
 </style>
 
-<h1 id="<%= info.title.parameterize %>"><%= info.title %> v<%= info.version %></h1>
+<h1 id="<%= info.title.parameterize %>">Endpoints</h1>
 
 <%= markdown(info.description) %>
 
 <% unless servers.empty? %>
-  <h2 id="servers">Servers</h2>
+  <h2 id="servers">Base URLs</h2>
   <div id="server-list">
     <% servers.each do |server| %>
       <% if server.description %>
