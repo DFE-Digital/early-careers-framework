@@ -74,6 +74,8 @@ en:
       taken: "There is already a user with this email address"
     email_address:
       blank: "Enter an email address"
+    start_term:
+      blank: "Enter a start term"
     name:
       blank: "Enter a name"
     full_name: &full_name_error_messages

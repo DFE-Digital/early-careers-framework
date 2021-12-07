@@ -1,0 +1,17 @@
+<% content_for :before_content, govuk_back_link( text: "Back", href: schools_participant_path(id: @profile)) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for @profile, url: schools_participant_update_start_term_path, method: :put do |f| %>
+      <%= f.govuk_radio_buttons_fieldset :start_term,
+        legend: { text: I18n.t("schools.participants.change.start_term.#{@profile.participant_type}", full_name: @profile.user.full_name), tag: 'h1', size: 'xl' } do %>
+
+        <% ParticipantProfile.start_terms.each do |term_key, term_value| %>
+          <%= f.govuk_radio_button :start_term, term_key, label: { text: term_value } %>
+        <% end %>
+      <% end %>
+
+      <%= f.govuk_submit %>
+    <% end %>
+  </div>
+</div>

@@ -22,6 +22,15 @@ class ParticipantProfile::ECFPolicy < ParticipantProfilePolicy
   alias_method :update_email?, :update?
   alias_method :edit_email?, :update?
 
+  def update_start_term?
+    return true if admin?
+    return false if record.participant_declarations.any?
+
+    user.induction_coordinator? && same_school?
+  end
+
+  alias_method :edit_start_term?, :update_start_term?
+
   def withdraw_record?
     return false if record.participant_declarations.where.not(state: :voided).any?
     return false unless user.induction_coordinator? || admin?

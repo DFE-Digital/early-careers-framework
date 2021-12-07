@@ -114,11 +114,37 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
     end
   end
 
+  describe "start_term_legend" do
+    context "when the user is not a mentor" do
+      before do
+        form.full_name = "John Doe"
+      end
+
+      it "returns the right legend" do
+        expect(form.start_term_legend).to eq(I18n.t("schools.participants.add.start_term.ect", full_name: "John Doe"))
+      end
+    end
+
+    context "when the user is a mentor" do
+      let(:mentor) { create :user, :mentor }
+
+      before do
+        form.full_name = "John Doe"
+        create(:mentor_participant_profile, school_cohort: school_cohort).user
+      end
+
+      it "returns the right string" do
+        expect(form.start_term_legend).to eq(I18n.t("schools.participants.add.start_term.mentor", full_name: "John Doe"))
+      end
+    end
+  end
+
   describe "#save!" do
     before do
       form.type = form.type_options.sample
       form.full_name = Faker::Name.name
       form.email = Faker::Internet.email
+      form.start_term = "Autumn 2021"
       form.mentor_id = (form.mentor_options.pluck(:id) + %w[later]).sample if form.type == :ect
 
       create :ecf_schedule

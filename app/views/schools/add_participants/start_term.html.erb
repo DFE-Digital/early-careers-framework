@@ -1,0 +1,21 @@
+<% content_for :title, "Add early career teacher - choose start term" %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: back_link_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-xl"><%= @school.name %> - <%= @cohort.display_name %> cohort</span>
+
+    <%= form_for add_participant_form, url: { action: :update }, method: :patch do |f| %>
+      <%= f.govuk_radio_buttons_fieldset :start_term,
+          legend: { text: add_participant_form.start_term_legend, tag: 'h1', size: 'xl' } do %>
+
+        <% ParticipantProfile.start_terms.each do |term_key, term_value| %>
+          <%= f.govuk_radio_button :start_term, term_key, label: { text: term_value } %>
+        <% end %>
+      <% end %>
+
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>
