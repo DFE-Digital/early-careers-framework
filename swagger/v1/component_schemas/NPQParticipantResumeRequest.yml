@@ -16,3 +16,8 @@ properties:
         example: participant-resume
       attributes:
         $ref: "#/components/schemas/NPQParticipantResume"
+example:
+  data:
+    type: "participant-resume"
+    attributes:
+      course_identifier: "npq-leading-teaching-development"

@@ -1817,6 +1817,15 @@
               }
             }
           }
+        },
+        "example": {
+          "data": {
+            "type": "participant-defer",
+            "attributes": {
+              "reason": "career-break",
+              "course_identifier": "ecf-mentor"
+            }
+          }
         }
       },
       "ECFParticipantDeferResponse": {
@@ -2050,6 +2059,14 @@
               "attributes": {
                 "$ref": "#/components/schemas/ECFParticipantResume"
               }
+            }
+          }
+        },
+        "example": {
+          "data": {
+            "type": "participant-resume",
+            "attributes": {
+              "course_identifier": "ecf-mentor"
             }
           }
         }
@@ -2460,6 +2477,15 @@
               "attributes": {
                 "$ref": "#/components/schemas/ECFParticipantWithdraw"
               }
+            }
+          }
+        },
+        "example": {
+          "data": {
+            "type": "participant-withdraw",
+            "attributes": {
+              "reason": "left-teaching-profession",
+              "course_identifier": "ecf-mentor"
             }
           }
         }
@@ -3225,6 +3251,15 @@
               }
             }
           }
+        },
+        "example": {
+          "data": {
+            "type": "participant-defer",
+            "attributes": {
+              "reason": "parental-leave",
+              "course_identifier": "npq-senior-leadership"
+            }
+          }
         }
       },
       "NPQParticipantResponse": {
@@ -3308,6 +3343,14 @@
               "attributes": {
                 "$ref": "#/components/schemas/NPQParticipantResume"
               }
+            }
+          }
+        },
+        "example": {
+          "data": {
+            "type": "participant-resume",
+            "attributes": {
+              "course_identifier": "npq-leading-teaching-development"
             }
           }
         }
@@ -3552,6 +3595,15 @@
               "attributes": {
                 "$ref": "#/components/schemas/NPQParticipantWithdraw"
               }
+            }
+          }
+        },
+        "example": {
+          "data": {
+            "type": "participant-withdraw",
+            "attributes": {
+              "reason": "quality-of-programme-other",
+              "course_identifier": "npq-leading-teaching-development"
             }
           }
         }

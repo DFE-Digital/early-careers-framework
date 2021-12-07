@@ -16,3 +16,9 @@ properties:
         example: participant-defer
       attributes:
         $ref: "#/components/schemas/NPQParticipantDefer"
+example:
+  data:
+    type: "participant-defer"
+    attributes:
+      reason: "parental-leave"
+      course_identifier: "npq-senior-leadership"
