@@ -151,7 +151,7 @@ RSpec.describe Schools::Participants::Status, type: :view_component, with_featur
       end
 
       context "when the participant is a duplicate profile" do
-        let(:profile) { create(:participant_profile, :mentor, :secondary_profile, school_cohort: school_cohort) }
+        let(:profile) { create(:mentor_participant_profile, :secondary_profile, school_cohort: school_cohort) }
         let!(:eligibility) { create(:ecf_participant_eligibility, participant_profile: profile) }
 
         before do

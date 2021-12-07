@@ -27,6 +27,25 @@ module Participants
     def school_cohort
       @school_cohort ||= validation_form.participant_profile.school_cohort
     end
-    helper_method :school_cohort
+
+    def school_names_for_multi_school_mentor
+      @school_names ||= fetch_multi_school_names.join(" and ")
+    end
+
+    def partnership
+      @partnership ||= school_cohort.school.partnerships.active.find_by(cohort: school_cohort.cohort)
+    end
+
+    def fetch_multi_school_names
+      ParticipantProfile::Mentor
+        .active_record
+        .joins(:teacher_profile, :school_cohort)
+        .where(teacher_profile: { trn: validation_form.participant_profile.teacher_profile.trn },
+               school_cohort: { cohort_id: school_cohort.cohort_id })
+        .where.not(id: validation_form.participant_profile.id)
+        .map { |profile| profile.teacher_profile.school.name }
+    end
+
+    helper_method :school_cohort, :partnership, :school_names_for_multi_school_mentor
   end
 end

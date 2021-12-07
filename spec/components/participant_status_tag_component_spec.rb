@@ -35,7 +35,7 @@ RSpec.describe ParticipantStatusTagComponent, type: :view_component do
     let(:school_cohort) { create(:school_cohort) }
 
     context "when the primary profile is eligible" do
-      let(:participant_profile) { create(:participant_profile, :mentor, :primary_profile, school_cohort: school_cohort) }
+      let(:participant_profile) { create(:mentor_participant_profile, :primary_profile, school_cohort: school_cohort) }
       let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :eligible, participant_profile: participant_profile) }
 
       before do
@@ -46,7 +46,7 @@ RSpec.describe ParticipantStatusTagComponent, type: :view_component do
     end
 
     context "when the secondary profile is ineligible because it is a duplicate" do
-      let(:participant_profile) { create(:participant_profile, :mentor, :secondary_profile, school_cohort: school_cohort) }
+      let(:participant_profile) { create(:mentor_participant_profile, :secondary_profile, school_cohort: school_cohort) }
       let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, participant_profile: participant_profile) }
 
       before do
