@@ -98,11 +98,11 @@ module ManageTrainingSteps
   end
 
   def and_i_have_added_an_ect
-    @participant_profile_ect = create(:ect_participant_profile, user: create(:user, full_name: "Sally Teacher"), school_cohort: @school_cohort)
+    @participant_profile_ect = create(:ect_participant_profile, user: create(:user, full_name: "Sally Teacher", email: "sally-teacher@example.com"), school_cohort: @school_cohort)
   end
 
   def and_i_have_added_a_mentor
-    @participant_profile_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Billy Mentor"), school_cohort: @school_cohort)
+    @participant_profile_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Billy Mentor", email: "billy-mentor@example.com"), school_cohort: @school_cohort)
   end
 
   def and_i_have_added_an_eligible_ect_with_mentor
