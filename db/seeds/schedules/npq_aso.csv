@@ -1,0 +1,20 @@
+schedule-identifier,schedule-name,schedule-cohort-year,milestone-name,milestone-declaration-type,milestone-start-date,milestone-date,milestone-payment-date
+npq-aso-november,NPQ ASO November,2021,Output 1 - Participant Start,started,,25/12/2021,25/01/2022
+npq-aso-november,NPQ ASO November,2021,Output 2 – Retention Point 1,retained-1,,25/03/2022,25/04/2022
+npq-aso-november,NPQ ASO November,2021,Output 3 – Retention Point 2,retained-2,,25/06/2022,25/07/2022
+npq-aso-november,NPQ ASO November,2021,Output 4 – Participant Completion,completed,,25/09/2022,25/10/2022
+,,,,,,
+npq-aso-december,NPQ ASO December,2021,Output 1 - Participant Start,started,,25/03/2022,25/04/2022
+npq-aso-december,NPQ ASO December,2021,Output 2 – Retention Point 1,retained-1,,25/06/2022,25/07/2022
+npq-aso-december,NPQ ASO December,2021,Output 3 – Retention Point 2,retained-2,,25/09/2022,25/10/2022
+npq-aso-december,NPQ ASO December,2021,Output 4 – Participant Completion,completed,,25/12/2022,25/01/2023
+,,,,,,
+npq-aso-march,NPQ ASO March,2021,Output 1 - Participant Start,started,,25/06/2022,25/07/2022
+npq-aso-march,NPQ ASO March,2021,Output 2 – Retention Point 1,retained-1,,25/09/2022,25/10/2022
+npq-aso-march,NPQ ASO March,2021,Output 3 – Retention Point 2,retained-2,,25/12/2022,25/01/2023
+npq-aso-march,NPQ ASO March,2021,Output 4 – Participant Completion,completed,,25/03/2023,25/04/2023
+,,,,,,
+npq-aso-june,NPQ ASO June,2021,Output 1 - Participant Start,started,,25/09/2022,25/10/2022
+npq-aso-june,NPQ ASO June,2021,Output 2 – Retention Point 1,retained-1,,25/12/2022,25/01/2023
+npq-aso-june,NPQ ASO June,2021,Output 3 – Retention Point 2,retained-2,,25/03/2023,25/04/2023
+npq-aso-june,NPQ ASO June,2021,Output 4 – Participant Completion,completed,,25/06/2023,25/07/2023
