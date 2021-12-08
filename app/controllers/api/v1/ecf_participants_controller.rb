@@ -41,10 +41,10 @@ module Api
       end
 
       def participants
+        # NOTE: use this until we backfill identities
         participant_profiles = ParticipantProfile::ECF.where(id: participant_profile_ids)
-                                                      .joins(:participant_identity, :user)
+                                                      .joins(:user)
                                                       .includes(
-                                                        :participant_identity,
                                                         :user,
                                                         :cohort,
                                                         :school,
@@ -53,6 +53,19 @@ module Api
                                                         :schedule,
                                                         teacher_profile: { current_ect_profile: { mentor_profile: :user } },
                                                       )
+        # NOTE: then switch to this query one identities have been backfilled
+        # participant_profiles = ParticipantProfile::ECF.where(id: participant_profile_ids)
+        #                                               .joins(:participant_identity, :user)
+        #                                               .includes(
+        #                                                 :participant_identity,
+        #                                                 :user,
+        #                                                 :cohort,
+        #                                                 :school,
+        #                                                 :ecf_participant_eligibility,
+        #                                                 :ecf_participant_validation_data,
+        #                                                 :schedule,
+        #                                                 teacher_profile: { current_ect_profile: { mentor_profile: :user } },
+        #                                               )
 
         if updated_since.present?
           participant_profiles = participant_profiles.where(user: { updated_at: updated_since.. })
@@ -81,13 +94,24 @@ module Api
         # teacher_profile (now participant_identity).
         # Withdrawn profiles are included unless there is also an active one.
         # The DISTINCT ON clause chooses the first record after ordering by status.
+        #
+        # NOTE: use this query until identities have been backfilled
         inner_query = lead_provider
           .ecf_participant_profiles
-          .select("DISTINCT ON (participant_profiles.participant_identity_id) participant_identity_id, participant_profiles.status, participant_profiles.id AS id")
+          .select("DISTINCT ON (participant_profiles.teacher_profile_id) teacher_profile_id, participant_profiles.status, participant_profiles.id AS id")
           .joins(:school_cohort)
           .where(school_cohort: { cohort_id: Cohort.current.id })
-          .order(:participant_identity_id, status: :asc)
+          .order(:teacher_profile_id, status: :asc)
           .to_sql
+
+        # NOTE: then switch to this query one identities have been backfilled
+        # inner_query = lead_provider
+        #   .ecf_participant_profiles
+        #   .select("DISTINCT ON (participant_profiles.participant_identity_id) participant_identity_id, participant_profiles.status, participant_profiles.id AS id")
+        #   .joins(:school_cohort)
+        #   .where(school_cohort: { cohort_id: Cohort.current.id })
+        #   .order(:participant_identity_id, status: :asc)
+        #   .to_sql
         ActiveRecord::Base.connection.query_values("SELECT id FROM (#{inner_query}) AS inner_query")
       end
     end
