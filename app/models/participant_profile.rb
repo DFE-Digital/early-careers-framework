@@ -109,3 +109,6 @@ class ParticipantProfile < ApplicationRecord
     ParticipantProfilePolicy
   end
 end
+
+require "participant_profile/npq"
+require "participant_profile/ecf"
