@@ -239,6 +239,22 @@ per participant service fee £398 (40%) >> monthly service fee £27k >> total se
 * "Output payments" are payments made based on the performance of the training provider (i.e. their output).
 * "Payment type" for start/retention_x/completion output payments.
 
+## Storing reasons in PaperTrail
+Sometimes, we need to make manual changes to data. The reason for this change may not be obvious to those looking in the future.
+We version changes using PaperTrail, and when making an unusual change, we can set a reason to help those reading the change history.
+
+To set a reason for an entire console session:
+
+`PaperTrail.request.controller_info = {reason: "some reason"}`
+
+To set a reason for a block:
+
+```
+PaperTrail.request(controller_info: {reason: "some reason"}) do
+  # do something
+end
+```
+
 ## Runbook
 
 ### Updating NPQ applications from manual validation
