@@ -18,7 +18,7 @@ namespace :manual_validation do
     ParticipantProfile::ECT.current_cohort
                            .active_record
                            .joins(:ecf_participant_eligibility)
-                           .where(ecf_participant_eligibility: { status: "induction", reason: "previous_induction" })
+                           .where(ecf_participant_eligibility: { status: "ineligible", reason: "previous_induction" })
                            .each do |profile|
       Participants::ParticipantValidationForm.call(profile)
     end
