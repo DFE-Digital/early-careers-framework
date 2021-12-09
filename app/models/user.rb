@@ -4,6 +4,8 @@ class User < ApplicationRecord
   devise :registerable, :trackable, :passwordless_authenticatable
   has_paper_trail
 
+  has_many :participant_identities
+
   has_one :induction_coordinator_profile, dependent: :destroy
   has_many :schools, through: :induction_coordinator_profile
 

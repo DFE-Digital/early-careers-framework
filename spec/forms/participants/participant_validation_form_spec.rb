@@ -7,7 +7,7 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
 
   let(:participant_profile) { create :ect_participant_profile }
   let(:validation_result) { [nil, spy].sample }
-  let(:eligibility_record) { build :ecf_participant_eligibility }
+  let(:eligibility_record) { build :ecf_participant_eligibility, participant_profile: participant_profile }
 
   before do
     allow(ParticipantValidationService).to receive(:validate).and_return(validation_result)

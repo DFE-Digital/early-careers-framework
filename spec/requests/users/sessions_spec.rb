@@ -36,6 +36,22 @@ RSpec.describe "Users::Sessions", type: :request do
       expect(response).to render_template(:login_email_sent)
     end
 
+    context "when participant identity email used" do
+      let!(:participant_identity) { create(:participant_identity, user: user, email: "id2@example.com") }
+
+      it "sends login email to participant identity email" do
+        expect(UserMailer).to receive(:sign_in_email).with(
+          hash_including(
+            email: "id2@example.com",
+            full_name: user.full_name,
+            url: login_url_regex,
+            token_expiry: token_expiry_regex,
+          ),
+        )
+        post "/users/sign_in", params: { user: { email: "id2@example.com" } }
+      end
+    end
+
     context "when email case-insensitively matches a user" do
       def randomize_case(string)
         string.chars.map { |char| char.send(%i[upcase downcase].sample) }.join
@@ -44,7 +60,8 @@ RSpec.describe "Users::Sessions", type: :request do
       it "sends a log_in email request to User Mailer" do
         expect(UserMailer).to receive(:sign_in_email).with(
           hash_including(
-            user: user,
+            email: user.email,
+            full_name: user.full_name,
             url: login_url_regex,
             token_expiry: token_expiry_regex,
           ),

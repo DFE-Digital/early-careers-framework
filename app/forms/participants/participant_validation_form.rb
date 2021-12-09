@@ -4,8 +4,17 @@ module Participants
   class ParticipantValidationForm
     include Multistep::Form
 
-    def self.call(participant_profile, save_validation_data_without_match: true)
-      validation_data = participant_profile.ecf_participant_validation_data
+    # @param [Hash] data
+    #   * :trn [String]
+    #   * :nino [String]
+    #   * :dob [Date]
+    #   * :full_name [String]
+    def self.call(participant_profile, save_validation_data_without_match: true, data: nil)
+      validation_data = if data.present?
+                          OpenStruct.new(data)
+                        else
+                          participant_profile.ecf_participant_validation_data
+                        end
       return false if validation_data.blank?
 
       new(

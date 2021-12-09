@@ -137,6 +137,16 @@ private
     click_on I18n.t(npq_contract.course_identifier, scope: %i[courses npq])
   end
 
+  def expected_current_particpant_count(npq_contract)
+    ParticipantDeclaration::NPQ.neither_paid_nor_voided_lead_provider_and_course(npq_contract.npq_lead_provider, npq_contract.course_identifier).count
+  end
+
+  def expected_total_paid(npq_contract)
+    ParticipantDeclaration::NPQ
+      .eligible_or_payable_for_lead_provider_and_course(npq_contract.npq_lead_provider.cpd_lead_provider, npq_contract.course_identifier)
+      .count
+  end
+
   def then_i_should_see_correct_breakdown_summary(npq_lead_provider, npq_contract)
     expect(page).to have_css("h2.govuk-heading-l", text: NPQCourse.find_by!(identifier: npq_contract.course_identifier).name)
 
@@ -149,12 +159,8 @@ private
     expect(page.find("dt.govuk-summary-list__key", text: "Current participants"))
       .to have_sibling("dd.govuk-summary-list__value", text: ParticipantDeclaration::NPQ.neither_paid_nor_voided_lead_provider_and_course(npq_lead_provider, npq_contract.course_identifier).count)
 
-    expected_total_paid = ParticipantDeclaration::NPQ
-                            .eligible_or_payable_for_lead_provider_and_course(cpd_lead_provider, npq_contract.course_identifier)
-                            .count
-
     expect(page.find("dt.govuk-summary-list__key", text: "Total paid"))
-      .to have_sibling("dd.govuk-summary-list__value", text: expected_total_paid)
+      .to have_sibling("dd.govuk-summary-list__value", text: expected_total_paid(npq_contract))
 
     expect(page.find("dt.govuk-summary-list__key", text: "Total not paid"))
       .to have_sibling("dd.govuk-summary-list__value", text: ParticipantDeclaration::NPQ.submitted_for_lead_provider_and_course(npq_lead_provider, npq_contract.course_identifier).count)
@@ -172,6 +178,9 @@ private
     within "table.govuk-table tbody tr.govuk-table__row:nth-child(1)" do
       expect(page.find("td:nth-child(1)", text: "Service fee"))
         .to have_sibling("td", text: number_to_pounds(expected_service_fee_portion_per_participant(npq_contract)))
+
+      expect(page.find("td:nth-child(1)", text: "Service fee"))
+        .to have_sibling("td", text: npq_contract.recruitment_target)
 
       expect(page.find("td:nth-child(1)", text: "Service fee"))
         .to have_sibling("td", text: number_to_pounds(expected_service_fee_payment(npq_contract)))
@@ -195,6 +204,9 @@ private
     within "table.govuk-table tbody tr.govuk-table__row:nth-child(2)" do
       expect(page.find("td:nth-child(1)", text: "Output fee"))
         .to have_sibling("td", text: number_to_pounds(expected_per_participant_output_payment_portion(npq_contract)))
+
+      expect(page.find("td:nth-child(1)", text: "Output fee"))
+        .to have_sibling("td", text: expected_total_paid(npq_contract))
 
       expect(page.find("td:nth-child(1)", text: "Output fee"))
         .to have_sibling("td", text: number_to_pounds(expected_output_fee_payment(npq_contract)))

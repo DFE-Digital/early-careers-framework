@@ -6,6 +6,8 @@ class ParticipantProfile < ApplicationRecord
 
   belongs_to :schedule, class_name: "Finance::Schedule", touch: true
 
+  belongs_to :participant_identity, optional: true # optional just while this is set up
+
   has_one :user, through: :teacher_profile
 
   has_many :validation_decisions, class_name: "ProfileValidationDecision"
@@ -109,3 +111,6 @@ class ParticipantProfile < ApplicationRecord
     ParticipantProfilePolicy
   end
 end
+
+require "participant_profile/npq"
+require "participant_profile/ecf"
