@@ -26,5 +26,9 @@ class ParticipantProfile < ApplicationRecord
     def participant_type
       :npq
     end
+
+    def fundable?
+      npq_application&.eligible_for_funding
+    end
   end
 end
