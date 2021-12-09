@@ -40,5 +40,12 @@
       <td class="govuk-table__cell"><%= profile.cohort&.display_name || 'No cohort' %></td>
       <td class="govuk-table__cell"></td>
     </tr>
+    <% if profile.notes.present? %>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">Notes</th>
+      <td class="govuk-table__cell"><%= profile.notes.html_safe %></td>
+      <td class="govuk-table__cell"></td>
+    </tr>
+    <% end %>
   </tbody>
 </table>
