@@ -37,10 +37,16 @@ class ParticipantSerializer
   end
 
   set_id :id do |profile|
+    # NOTE: using this will retain the original ID exposed to provider
+    # profile.participant_identity.external_identifier
+    # NOTE: use this instead to use new (de-duped) ID - (or before we've populated the identities)
     profile.user.id
   end
 
   active_participant_attribute :email do |profile|
+    # NOTE: using this will retain the original email exposed to provider
+    # profile.participant_identity.email
+    # NOTE: use this instead to use new (de-duped) email - (or before we've populated the identities)
     profile.user.email
   end
 
