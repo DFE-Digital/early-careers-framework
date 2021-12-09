@@ -6,21 +6,25 @@ module Finance
       include FinanceHelper
       attr_reader :service_fee
 
+      def initialize(breakdown)
+        self.breakdown = breakdown
+      end
+
       def service_per_fee_participant
-        service_fee[:per_participant]
+        breakdown.dig(:service_fees, :per_participant)
       end
 
       def service_fees_total
-        service_fee[:monthly]
+        breakdown.dig(:service_fees, :monthly)
+      end
+
+      def total_participants
+        breakdown.dig(:breakdown_summary, :recruitment_target)
       end
 
     private
 
-      attr_writer :service_fee
-
-      def initialize(service_fee)
-        self.service_fee = service_fee
-      end
+      attr_accessor :breakdown
     end
   end
 end
