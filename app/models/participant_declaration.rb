@@ -12,6 +12,7 @@ class ParticipantDeclaration < ApplicationRecord
     payable: "payable",
     paid: "paid",
     voided: "voided",
+    ineligible: "ineligible",
   }
 
   alias_attribute :current_state, :state

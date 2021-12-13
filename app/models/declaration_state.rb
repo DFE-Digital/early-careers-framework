@@ -9,6 +9,7 @@ class DeclarationState < ApplicationRecord
     payable: "payable",
     paid: "paid",
     voided: "voided",
+    ineligible: "ineligible",
   }
 
   states.each_key do |key|

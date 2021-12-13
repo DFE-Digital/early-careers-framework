@@ -18,7 +18,7 @@ module RecordDeclarations
     validate :date_has_the_right_format
 
     validates :declaration_type, inclusion: { in: :valid_declaration_types, message: I18n.t(:invalid_declaration_type) }
-    delegate :schedule, :participant_declarations, :fundable?, to: :user_profile, allow_nil: true
+    delegate :schedule, :participant_declarations, to: :user_profile, allow_nil: true
 
     class << self
       def call(params:)
@@ -38,8 +38,16 @@ module RecordDeclarations
 
       raise ActiveRecord::RecordNotUnique, "Declaration with given participant ID already exists" if record_exists_with_different_declaration_date?
 
-      declaration = find_or_create_record!
+      participant_declaration = find_or_create_record!
 
+      if user_profile.primary_single? || user_profile.primary_profile?
+        DeclarationState.submitted!(participant_declaration)
+        participant_declaration.make_eligible! if user_profile.fundable?
+      end
+
+      if user_profile.primary_profile?
+
+      end
       declaration_attempt.update!(participant_declaration: declaration)
 
       ParticipantDeclarationSerializer.new(declaration).serializable_hash.to_json
@@ -64,10 +72,7 @@ module RecordDeclarations
     end
 
     def find_or_create_record!
-      self.class.declaration_model.find_or_create_by!(declaration_parameters).tap do |participant_declaration|
-        DeclarationState.submitted!(participant_declaration)
-        participant_declaration.make_eligible! if fundable?
-      end
+      self.class.declaration_model.find_or_create_by!(declaration_parameters)
     end
 
     def declaration_parameters

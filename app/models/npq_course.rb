@@ -13,7 +13,7 @@ class NPQCourse < ApplicationRecord
       when *Finance::Schedule::NPQLeadership::IDENTIFIERS
         Finance::Schedule::NPQLeadership.default
       when *Finance::Schedule::NPQSpecialist::IDENTIFIERS
-        Finance::Schedule::NPQSpecialist.default
+p        Finance::Schedule::NPQSpecialist.default
       when "npq-additional-support-offer"
         # TODO: Figure out what ASO schedules look like
         Finance::Schedule::NPQSpecialist.default
