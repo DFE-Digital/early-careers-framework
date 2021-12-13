@@ -9,6 +9,7 @@ if ENV.key?("VCAP_SERVICES")
   redis_credentials = redis_worker_config["credentials"]
 
   Sidekiq.configure_server do |config|
+    config.logger.level = Logger::INFO
     config.redis = {
       url: redis_credentials["uri"],
     }
