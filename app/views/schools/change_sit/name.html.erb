@@ -1,0 +1,16 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: schools_dashboard_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for(@induction_tutor_form, url: name_schools_change_sit_path, method: :post) do |f| %>
+      <%= f.govuk_error_summary %>
+      <%= f.govuk_text_field(:full_name,
+                             label: -> {
+                               tag.span(@induction_tutor_form.school.name, class: "govuk-caption-xl") +
+                               tag.h1("What’s the full name of the new induction tutor?", class: "govuk-heading-xl") },
+          ) %>
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+
+  </div>
+</div>

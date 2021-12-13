@@ -31,12 +31,12 @@ module NominateInductionTutorSteps
   end
 
   def when_i_fill_in_the_sits_name
-    set_participant_data
+    set_induction_tutor_data
     fill_in "nominate_induction_tutor_form[full_name]", with: @sit_data[:full_name]
   end
 
   def when_i_fill_in_the_sits_email
-    set_participant_data
+    set_induction_tutor_data
     fill_in "nominate_induction_tutor_form[email]", with: @sit_data[:email]
   end
 
@@ -130,7 +130,7 @@ module NominateInductionTutorSteps
     expect(page).to have_selector("h1", text: "The email address is being used by another school")
   end
 
-  def set_participant_data
+  def set_induction_tutor_data
     @sit_data = {
       full_name: "John Doe",
       email: "johndoe@example.com",
