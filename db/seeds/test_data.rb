@@ -351,6 +351,7 @@ teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
   ect_profile.school_cohort = School.find_by(urn: "000103").school_cohorts.find_by(cohort: Cohort.current)
   ect_profile.schedule = Finance::Schedule::ECF.default
+  ect_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
   ect_profile.training_status_withdrawn!
   ParticipantProfileState.find_or_create_by!(participant_profile: ect_profile)
 end
