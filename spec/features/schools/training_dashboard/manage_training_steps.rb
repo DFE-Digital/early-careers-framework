@@ -98,19 +98,27 @@ module ManageTrainingSteps
   end
 
   def and_i_have_added_an_ect
-    @participant_profile_ect = create(:ect_participant_profile, user: create(:user, full_name: "Sally Teacher", email: "sally-teacher@example.com"), school_cohort: @school_cohort)
+    user = create(:user, full_name: "Sally Teacher", email: "sally-teacher@example.com")
+    teacher_profile = create(:teacher_profile, user: user)
+    @participant_profile_ect = create(:ect_participant_profile, teacher_profile: teacher_profile , school_cohort: @school_cohort)
   end
 
   def and_i_have_added_a_mentor
-    @participant_profile_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Billy Mentor", email: "billy-mentor@example.com"), school_cohort: @school_cohort)
+    user = create(:user, full_name: "Billy Mentor", email: "billy-mentor@example.com")
+    teacher_profile = create(:teacher_profile, user: user)
+    @participant_profile_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile: teacher_profile, school_cohort: @school_cohort)
   end
 
   def and_i_have_added_an_eligible_ect_with_mentor
-    @eligible_ect_with_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Eligible With-mentor"), mentor_profile_id: @contacted_for_info_mentor.id, school_cohort: @school_cohort)
+    user = create(:user, full_name: "Eligible With-mentor")
+    teacher_profile = create(:teacher_profile, user: user)
+    @eligible_ect_with_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile: teacher_profile, mentor_profile_id: @contacted_for_info_mentor.id, school_cohort: @school_cohort)
   end
 
   def and_i_have_added_an_eligible_ect_without_mentor
-    @eligible_ect_without_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Eligible Without-mentor"), school_cohort: @school_cohort)
+    user = create(:user, full_name: "Eligible Without-mentor")
+    teacher_profile = create(:teacher_profile, user: user)
+    @eligible_ect_without_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile: teacher_profile, school_cohort: @school_cohort)
   end
 
   def and_i_have_added_an_eligible_ect

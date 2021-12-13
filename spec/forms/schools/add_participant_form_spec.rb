@@ -35,18 +35,16 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
     end
 
     context "when the email is in use by an ECT user" do
-      let!(:ect_profile) do
-        create(:ect_participant_profile, user: create(:user, email: "ray.clemence@example.com"))
-      end
+      let(:user) { create(:user, email: "ray.clemence@example.com") }
+      let(:teacher_profile) { create(:teacher_profile, user: user) }
+      let!(:ect_profile) { create(:ect_participant_profile, teacher_profile: teacher_profile) }
 
       it "returns true" do
         expect(form).to be_email_already_taken
       end
 
       context "when the ECT profile record is withdrawn" do
-        let!(:ect_profile) do
-          create(:ect_participant_profile, :withdrawn_record, user: create(:user, email: "ray.clemence@example.com"))
-        end
+        let!(:ect_profile) { create(:ect_participant_profile, :withdrawn_record, teacher_profile: teacher_profile) }
 
         it "returns false" do
           expect(form).not_to be_email_already_taken
@@ -55,18 +53,16 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
     end
 
     context "when the email is in use by a Mentor" do
-      let!(:mentor_profile) do
-        create(:mentor_participant_profile, user: create(:user, email: "ray.clemence@example.com"))
-      end
+      let(:user) { create(:user, email: "ray.clemence@example.com") }
+      let(:teacher_profile) { create(:teacher_profile, user: user) }
+      let!(:mentor_profile) { create(:mentor_participant_profile, teacher_profile: teacher_profile) }
 
       it "returns true" do
         expect(form).to be_email_already_taken
       end
 
       context "when the mentor profile record is withdrawn" do
-        let!(:mentor_profile) do
-          create(:mentor_participant_profile, :withdrawn_record, user: create(:user, email: "ray.clemence@example.com"))
-        end
+        let!(:mentor_profile) { create(:mentor_participant_profile, :withdrawn_record, teacher_profile: teacher_profile) }
 
         it "returns false" do
           expect(form).not_to be_email_already_taken
@@ -75,10 +71,9 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
     end
 
     context "when the email is in use by a NPQ registrant" do
-      before do
-        existing_user = create(:user, email: "ray.clemence@example.com")
-        create(:npq_participant_profile, user: existing_user)
-      end
+      let(:user) { create(:user, email: "ray.clemence@example.com") }
+      let(:teacher_profile) { create(:teacher_profile, user: user) }
+      let!(:npq_profile) { create(:npq_participant_profile, teacher_profile: teacher_profile) }
 
       it "returns false" do
         expect(form).not_to be_email_already_taken

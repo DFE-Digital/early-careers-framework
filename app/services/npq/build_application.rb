@@ -50,7 +50,7 @@ module NPQ
     end
 
     def user
-      User.find_by(id: user_id)
+      Identity.find_user_by(id: user_id)
     end
   end
 end

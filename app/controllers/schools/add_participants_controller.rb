@@ -43,7 +43,7 @@ module Schools
     end
 
     def email_used_in_the_same_school?
-      User.find_by(email: add_participant_form.email).school == add_participant_form.school_cohort.school
+      Identity.find_user_by(email: add_participant_form.email).school == add_participant_form.school_cohort.school
     end
     helper_method :email_used_in_the_same_school?
 

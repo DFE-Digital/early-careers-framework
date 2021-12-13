@@ -77,7 +77,8 @@ module Schools
     end
 
     def email_already_taken?
-      User.find_by(email: email)
+      ParticipantIdentity.find_by(email: email)
+        &.user
         &.teacher_profile
         &.participant_profiles
         &.active_record
@@ -107,7 +108,7 @@ module Schools
     end
 
     def current_user
-      @current_user ||= User.find_by(id: current_user_id)
+      @current_user ||= Identity.find_user_by(id: current_user_id)
     end
 
     def creators
