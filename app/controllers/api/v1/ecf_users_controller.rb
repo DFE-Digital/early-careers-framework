@@ -57,7 +57,7 @@ module Api
                     })
 
         users = users.changed_since(updated_since) if updated_since.present?
-        users = users.joins(:participant_identities).where(participant_identities: { email: email}) if email.present?
+        users = users.joins(:participant_identities).where(participant_identities: { email: email }) if email.present?
 
         users
       end

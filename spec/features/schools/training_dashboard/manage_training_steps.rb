@@ -100,7 +100,7 @@ module ManageTrainingSteps
   def and_i_have_added_an_ect
     user = create(:user, full_name: "Sally Teacher", email: "sally-teacher@example.com")
     teacher_profile = create(:teacher_profile, user: user)
-    @participant_profile_ect = create(:ect_participant_profile, teacher_profile: teacher_profile , school_cohort: @school_cohort)
+    @participant_profile_ect = create(:ect_participant_profile, teacher_profile: teacher_profile, school_cohort: @school_cohort)
   end
 
   def and_i_have_added_a_mentor
