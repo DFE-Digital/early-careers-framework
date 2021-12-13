@@ -742,3 +742,62 @@ end
 NPQLeadProvider.all.map(&:name).each do |provider|
   ValidTestDataGenerator::NPQLeadProviderPopulater.call(name: provider, total_schools: 1, participants_per_school: 10)
 end
+
+# NPQ declarations
+create_npq_declarations = lambda {
+  i = 0
+  lambda do |provider_name:, course:, state:, count:|
+    count.times do
+      i += 1
+      trn = "123#{sprintf('%03d', i)}"
+      email_name = [provider_name.split(" ").first.downcase, course].join("-")
+      user = User.find_or_create_by!(email: "#{email_name}-#{i}@example.com") do |u|
+        u.full_name = "NPQ #{i}"
+      end
+      teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
+        profile.trn = trn
+      end
+      npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
+        profile.schedule = Finance::Schedule::NPQSpecialist.default
+        profile.participant_identity = Identity::Create.call(user: user, origin: :npq)
+      end
+      ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
+      NPQ::BuildApplication.call(
+        npq_application_params: {
+          active_alert: true,
+          date_of_birth: rand(23..50).years.ago + rand(0..364).days,
+          teacher_reference_number: trn,
+          eligible_for_funding: true,
+          funding_choice: NPQApplication.funding_choices.keys.sample,
+          headteacher_status: NPQApplication.headteacher_statuses.keys.sample,
+          nino: SecureRandom.hex,
+          school_urn: "000001",
+          school_ukprn: "000001",
+          teacher_reference_number_verified: true,
+        },
+        npq_course_id: NPQCourse.find_by_identifier(course).id,
+        npq_lead_provider_id: NPQLeadProvider.find_by_name(provider_name).id,
+        user_id: user.id,
+      )
+
+      ParticipantDeclaration::NPQ.create!(
+        course_identifier: course,
+        participant_profile: npq_profile,
+        user: user,
+        declaration_date: Time.zone.now - 1.week,
+        state: state,
+        declaration_type: "started",
+        cpd_lead_provider_id: CpdLeadProvider.find_by_name(provider_name).id,
+      )
+    end
+  end
+}[]
+
+%w[submitted eligible].each do |state|
+  create_npq_declarations[
+    provider_name: "Ambition Institute",
+    course: "npq-headship",
+    state: state,
+    count: 10,
+  ]
+end
