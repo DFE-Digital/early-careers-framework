@@ -150,20 +150,21 @@ private
   def then_i_should_see_correct_breakdown_summary(npq_lead_provider, npq_contract)
     expect(page).to have_css("h2.govuk-heading-l", text: NPQCourse.find_by!(identifier: npq_contract.course_identifier).name)
 
-    expect(page.find("dt.govuk-summary-list__key", text: "Submission deadline"))
-      .to have_sibling("dd.govuk-summary-list__value", text: Finance::Invoice.find_by_name("current").deadline_date.to_s(:govuk))
+    within("[data-test='npq-references']") do
+      expect(page).to have_content("Submission deadline")
+      expect(page).to have_content(Finance::Invoice.find_by_name("current").deadline_date.to_s(:govuk))
+    end
 
-    expect(page.find("dt.govuk-summary-list__key", text: "Recruitment target"))
-      .to have_sibling("dd.govuk-summary-list__value", text: npq_contract.recruitment_target)
-
-    expect(page.find("dt.govuk-summary-list__key", text: "Current participants"))
-      .to have_sibling("dd.govuk-summary-list__value", text: ParticipantDeclaration::NPQ.neither_paid_nor_voided_lead_provider_and_course(npq_lead_provider, npq_contract.course_identifier).count)
-
-    expect(page.find("dt.govuk-summary-list__key", text: "Total paid"))
-      .to have_sibling("dd.govuk-summary-list__value", text: expected_total_paid(npq_contract))
-
-    expect(page.find("dt.govuk-summary-list__key", text: "Total not paid"))
-      .to have_sibling("dd.govuk-summary-list__value", text: ParticipantDeclaration::NPQ.submitted_for_lead_provider_and_course(npq_lead_provider, npq_contract.course_identifier).count)
+    within("[data-test='npq-total-paid']") do
+      expect(page).to have_content("Recruitment target")
+      expect(page).to have_content(npq_contract.recruitment_target)
+      expect(page).to have_content("Current participants")
+      expect(page).to have_content(ParticipantDeclaration::NPQ.neither_paid_nor_voided_lead_provider_and_course(npq_lead_provider, npq_contract.course_identifier).count)
+      expect(page).to have_content("Total paid")
+      expect(page).to have_content(expected_total_paid(npq_contract))
+      expect(page).to have_content("Total not paid")
+      expect(page).to have_content(ParticipantDeclaration::NPQ.submitted_for_lead_provider_and_course(npq_lead_provider, npq_contract.course_identifier).count)
+    end
   end
 
   def expected_service_fee_portion_per_participant(npq_contract)
@@ -175,15 +176,11 @@ private
   end
 
   def then_i_should_see_correct_service_fee_payment_breakdown(npq_contract)
-    within "table.govuk-table tbody tr.govuk-table__row:nth-child(1)" do
-      expect(page.find("td:nth-child(1)", text: "Service fee"))
-        .to have_sibling("td", text: number_to_pounds(expected_service_fee_portion_per_participant(npq_contract)))
-
-      expect(page.find("td:nth-child(1)", text: "Service fee"))
-        .to have_sibling("td", text: npq_contract.recruitment_target)
-
-      expect(page.find("td:nth-child(1)", text: "Service fee"))
-        .to have_sibling("td", text: number_to_pounds(expected_service_fee_payment(npq_contract)))
+    within("[data-test='npq-payment-type']") do
+      expect(page).to have_content("Service fee")
+      expect(page).to have_content(number_to_pounds(expected_service_fee_portion_per_participant(npq_contract)))
+      expect(page).to have_content(number_to_pounds(npq_contract.recruitment_target))
+      expect(page).to have_content(number_to_pounds(expected_service_fee_payment(npq_contract)))
     end
   end
 
@@ -203,29 +200,23 @@ private
   end
 
   def then_i_should_see_correct_output_payment_breakdown(npq_contract)
-    within "table.govuk-table tbody tr.govuk-table__row:nth-child(2)" do
-      expect(page.find("td:nth-child(1)", text: "Output fee"))
-        .to have_sibling("td", text: number_to_pounds(expected_per_participant_output_payment_portion(npq_contract)))
-
-      expect(page.find("td:nth-child(1)", text: "Output fee"))
-        .to have_sibling("td", text: expected_total_paid(npq_contract))
-
-      expect(page.find("td:nth-child(1)", text: "Output fee"))
-        .to have_sibling("td", text: number_to_pounds(expected_output_fee_payment(npq_contract)))
-
-      expect(page.find("td:nth-child(1)", text: "Output fee"))
-        .to have_sibling("td", text: eligible_and_payable_participant_count(npq_contract))
+    within("[data-test='npq-payment-type']") do
+      expect(page).to have_content("Output fee")
+      expect(page).to have_content(number_to_pounds(expected_per_participant_output_payment_portion(npq_contract)))
+      expect(page).to have_content(expected_total_paid(npq_contract))
+      expect(page).to have_content(number_to_pounds(expected_output_fee_payment(npq_contract)))
+      expect(page).to have_content(eligible_and_payable_participant_count(npq_contract))
     end
   end
 
   def then_i_should_see_the_correct_total(npq_contract)
-    within "table.govuk-table tbody tr.govuk-table__row:nth-child(3)" do
+    within("[data-test='npq-payment-type']") do
       expected_service_fee_payment = expected_service_fee_payment(npq_contract)
       expected_output_fee_payment  = expected_output_fee_payment(npq_contract)
       expected_total               = expected_service_fee_payment + expected_output_fee_payment
 
-      expect(page.find("td:nth-child(1)", text: "Total payment"))
-        .to have_sibling("td", text: number_to_pounds(expected_total))
+      expect(page).to have_content("Total payment")
+      expect(page).to have_content(number_to_pounds(expected_total))
     end
   end
 end

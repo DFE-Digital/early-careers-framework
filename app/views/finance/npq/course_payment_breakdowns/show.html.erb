@@ -9,9 +9,9 @@
     <%= render Finance::NPQ::PaymentOverviews::References.new(@invoice) %>
     <%= render Finance::NPQ::BreakdownSummary.new(@breakdown[:breakdown_summary]) %>
 
-    <h3 class="govuk-heading-m" style="margin-top:55px"><%= t("finance.payment_breakdown")  %></h3>
+    <h3 class="govuk-heading-m" style="margin-top:55px"><%= t("finance.payment_breakdown") %></h3>
 
-    <table class="govuk-table">
+    <table class="govuk-table" data-test="npq-payment-type">
       <thead>
         <tr class="govuk-table__row">
           <th scope="col" class="govuk-table__header govuk-!-width-one-quarter"><%= t("finance.payment_type") %></th>
