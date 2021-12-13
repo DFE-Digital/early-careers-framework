@@ -234,7 +234,7 @@ class ValidationBetaService
       participant_email = row["email"]
       next if participant_email.blank?
 
-      user = User.find_by(email: row["email"])
+      user = Identity.find_user_by(email: participant_email)
       next if user.nil?
 
       sit = user&.school&.induction_coordinator_profiles&.first

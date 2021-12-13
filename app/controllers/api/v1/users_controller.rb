@@ -12,7 +12,7 @@ module Api
       end
 
       def create
-        user = User.find_by(email: params[:data][:attributes][:email])
+        user = Identity.find_user_by(email: params[:data][:attributes][:email])
 
         if user.present?
           user.errors.add(:email, :taken)

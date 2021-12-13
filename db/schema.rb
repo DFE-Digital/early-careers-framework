@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_08_142919) do
+ActiveRecord::Schema.define(version: 2021_12_13_104559) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -881,6 +881,7 @@ ActiveRecord::Schema.define(version: 2021_12_08_142919) do
   add_foreign_key "participant_profiles", "cohorts"
   add_foreign_key "participant_profiles", "core_induction_programmes"
   add_foreign_key "participant_profiles", "npq_courses"
+  add_foreign_key "participant_profiles", "participant_identities"
   add_foreign_key "participant_profiles", "participant_profiles", column: "mentor_profile_id"
   add_foreign_key "participant_profiles", "schedules"
   add_foreign_key "participant_profiles", "school_cohorts"

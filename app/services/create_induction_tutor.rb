@@ -13,14 +13,14 @@ class CreateInductionTutor < BaseService
     ActiveRecord::Base.transaction do
       remove_existing_induction_coordinator
 
-      if (user = User.find_by(email: email))&.induction_coordinator?
+      user = Identity.find_user_by(email: email)
+
+      if user&.induction_coordinator?
         raise if user.full_name != full_name
 
         user.induction_coordinator_profile.schools << school
       else
-        user = User.find_or_create_by!(email: email) do |induction_tutor|
-          induction_tutor.full_name = full_name
-        end
+        user ||= User.create!(email: email, full_name: full_name)
         InductionCoordinatorProfile.create!(user: user, schools: [school])
       end
 
