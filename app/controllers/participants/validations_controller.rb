@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Participants
-  class ValidationsController < ApplicationController
+  class ValidationsController < BaseController
     include Multistep::Controller
 
     form Participants::ParticipantValidationForm, as: :validation_form
