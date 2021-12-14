@@ -191,13 +191,15 @@ private
     (npq_contract.per_participant * npq_contract.output_payment_percentage) / (100 * npq_contract.number_of_payment_periods)
   end
 
-  def expected_output_fee_payment(npq_contract)
-    eligible_and_payable_participant_count = ParticipantDeclaration::NPQ
-        .eligible_or_payable_for_lead_provider_and_course(
-          npq_contract.npq_lead_provider.cpd_lead_provider, npq_contract.course_identifier
-        ).count
+  def eligible_and_payable_participant_count(npq_contract)
+    ParticipantDeclaration::NPQ
+      .eligible_or_payable_for_lead_provider_and_course(
+        npq_contract.npq_lead_provider.cpd_lead_provider, npq_contract.course_identifier
+      ).count
+  end
 
-    expected_per_participant_output_payment_portion(npq_contract) * eligible_and_payable_participant_count
+  def expected_output_fee_payment(npq_contract)
+    expected_per_participant_output_payment_portion(npq_contract) * eligible_and_payable_participant_count(npq_contract)
   end
 
   def then_i_should_see_correct_output_payment_breakdown(npq_contract)
@@ -210,6 +212,9 @@ private
 
       expect(page.find("td:nth-child(1)", text: "Output fee"))
         .to have_sibling("td", text: number_to_pounds(expected_output_fee_payment(npq_contract)))
+
+      expect(page.find("td:nth-child(1)", text: "Output fee"))
+        .to have_sibling("td", text: eligible_and_payable_participant_count(npq_contract))
     end
   end
 
