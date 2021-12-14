@@ -755,15 +755,12 @@ create_npq_declarations = lambda {
       user = User.find_or_create_by!(email: "#{email_name}-#{i}@example.com") do |u|
         u.full_name = "NPQ #{i}"
       end
+
       teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
         profile.trn = trn
       end
-      npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
-        profile.schedule = Finance::Schedule::NPQSpecialist.default
-        profile.participant_identity = Identity::Create.call(user: user, origin: :npq)
-      end
-      ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
-      NPQ::BuildApplication.call(
+
+      npq_application = NPQ::BuildApplication.call(
         npq_application_params: {
           active_alert: true,
           date_of_birth: rand(23..50).years.ago + rand(0..364).days,
@@ -779,8 +776,15 @@ create_npq_declarations = lambda {
         npq_course_id: NPQCourse.find_by_identifier(course).id,
         npq_lead_provider_id: NPQLeadProvider.find_by_name(provider_name).id,
         user_id: user.id,
-      )
+      ).tap(&:save!)
 
+      npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
+        profile.id = npq_application.id
+        profile.schedule = Finance::Schedule::NPQSpecialist.default
+        profile.participant_identity = Identity::Create.call(user: user, origin: :npq)
+      end
+
+      ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
       ParticipantDeclaration::NPQ.create!(
         course_identifier: course,
         participant_profile: npq_profile,
