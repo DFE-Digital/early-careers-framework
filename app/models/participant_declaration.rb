@@ -93,4 +93,8 @@ class ParticipantDeclaration < ApplicationRecord
   def changeable?
     %w[submitted eligible].include?(current_state)
   end
+
+  def similar_participant_declarations_for(participant_profiles)
+    user.joins()
+  end
 end

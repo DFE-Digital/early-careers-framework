@@ -40,17 +40,9 @@ module RecordDeclarations
 
       participant_declaration = find_or_create_record!
 
-      if user_profile.primary_single? || user_profile.primary_profile?
-        DeclarationState.submitted!(participant_declaration)
-        participant_declaration.make_eligible! if user_profile.fundable?
-      end
+      declaration_attempt.update!(participant_declaration: participant_declaration)
 
-      if user_profile.primary_profile?
-
-      end
-      declaration_attempt.update!(participant_declaration: declaration)
-
-      ParticipantDeclarationSerializer.new(declaration).serializable_hash.to_json
+      ParticipantDeclarationSerializer.new(participant_declaration).serializable_hash.to_json
     end
 
   private
@@ -72,7 +64,10 @@ module RecordDeclarations
     end
 
     def find_or_create_record!
-      self.class.declaration_model.find_or_create_by!(declaration_parameters)
+      self.class.declaration_model.find_or_create_by!(declaration_parameters).tap do |participant_declaration|
+        DeclarationState.submitted!(participant_declaration)
+        participant_declaration.make_eligible! if user_profile.fundable?
+      end
     end
 
     def declaration_parameters
