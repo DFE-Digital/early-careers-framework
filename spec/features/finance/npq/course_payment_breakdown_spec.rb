@@ -179,7 +179,7 @@ private
     within("[data-test='npq-payment-type']") do
       expect(page).to have_content("Service fee")
       expect(page).to have_content(number_to_pounds(expected_service_fee_portion_per_participant(npq_contract)))
-      expect(page).to have_content(number_to_pounds(npq_contract.recruitment_target))
+      expect(page).to have_content(npq_contract.recruitment_target)
       expect(page).to have_content(number_to_pounds(expected_service_fee_payment(npq_contract)))
     end
   end
