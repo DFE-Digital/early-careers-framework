@@ -36,6 +36,16 @@ module Participants
     attribute :dqt_response
     attribute :attempts, default: 0
 
+    step :check_trn_given, update: true do
+      attribute :check_trn_given, :boolean
+
+      validates :check_trn_given, inclusion: { in: [true, false], message: :blank }
+
+      next_step { check_trn_given ? :trn : :trn_guidance }
+    end
+
+    step :trn_guidance
+
     step :trn, update: true do
       attribute :trn, :string
       attribute :no_trn, :boolean, default: false
