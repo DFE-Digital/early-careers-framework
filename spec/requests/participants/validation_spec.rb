@@ -28,7 +28,7 @@ RSpec.describe "Participant validations", with_feature_flags: { eligibility_noti
 
       it "starts with :check_given_trn step" do
         get participants_validation_path
-        expect(response).to redirect_to participants_validation_step_path(:check_trn_given.to_s.dasherize)
+        expect(response).to redirect_to participants_validation_step_path(:"check-trn-given")
       end
     end
   end

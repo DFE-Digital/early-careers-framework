@@ -86,7 +86,7 @@ RSpec.feature "Participant validation journey", with_feature_flags: { eligibilit
 
   scenario "Mentor tries to validate but has no TRN" do
     sign_in_as mentor_participant_profile.user
-    expect(page).to have_current_path participants_validation_step_path(:check_trn_given.to_s.dasherize)
+    expect(page).to have_current_path participants_validation_step_path(:"check-trn-given")
     expect(page).to be_accessible
     page.percy_snapshot("Mentor validation journey: trn")
 
@@ -96,14 +96,14 @@ RSpec.feature "Participant validation journey", with_feature_flags: { eligibilit
     find(:label, text: "No").click
     click_on "Continue"
 
-    expect(page).to have_current_path participants_validation_step_path(:trn_guidance.to_s.dasherize)
+    expect(page).to have_current_path participants_validation_step_path(:"trn-guidance")
     expect(page).to be_accessible
     page.percy_snapshot("Mentor validation journey: trn guidance")
   end
 
   scenario "Mentor validates their details with trn" do
     sign_in_as mentor_participant_profile.user
-    expect(page).to have_current_path participants_validation_step_path(:check_trn_given.to_s.dasherize)
+    expect(page).to have_current_path participants_validation_step_path(:"check-trn-given")
 
     find(:label, text: "Yes").click
     click_on "Continue"
