@@ -7,7 +7,7 @@ module Participants
     # @param [Hash] data
     #   * :trn [String]
     #   * :nino [String]
-    #   * :dob [Date]
+    #   * :date_of_birth [Date]
     #   * :full_name [String]
     def self.call(participant_profile, save_validation_data_without_match: true, data: nil)
       validation_data = if data.present?
