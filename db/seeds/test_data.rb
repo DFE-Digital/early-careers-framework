@@ -765,7 +765,7 @@ create_npq_declarations = lambda {
           active_alert: true,
           date_of_birth: rand(23..50).years.ago + rand(0..364).days,
           teacher_reference_number: trn,
-          eligible_for_funding: true,
+          eligible_for_funding: state != "submitted",
           funding_choice: NPQApplication.funding_choices.keys.sample,
           headteacher_status: NPQApplication.headteacher_statuses.keys.sample,
           nino: SecureRandom.hex,
