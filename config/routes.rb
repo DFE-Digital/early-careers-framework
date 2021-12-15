@@ -296,6 +296,8 @@ Rails.application.routes.draw do
       resources :lead_providers, path: "payment-overviews", controller: "payment_overviews", only: %i[show] do
         resources :courses, only: %i[show], controller: "course_payment_breakdowns"
       end
+
+      resources :contracts, only: %i[show]
     end
   end
 

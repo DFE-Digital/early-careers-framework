@@ -259,6 +259,7 @@ en:
       recruitment_target: Recruitment target
       revised_target: Revised recruitment target (+2%)
       set_up_fee: Set-up Fee
+      course_identifier: Course Identifier
       band: Band
       bands:
         min: Min
