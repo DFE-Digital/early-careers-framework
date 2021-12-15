@@ -75,6 +75,48 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe "after_update" do
+    context "when the email changes" do
+      let(:user) { create(:user, email: "mary.lewis@example.com") }
+
+      context "when there are no identity records for the user" do
+        it "does not generate an error" do
+          expect {
+            user.update!(email: "mary.jones@example.com")
+          }.not_to raise_error
+        end
+      end
+
+      context "when the user is a participant" do
+        let(:teacher_profile) { create(:teacher_profile, user: user) }
+        let!(:mentor_profile) { create(:mentor_participant_profile, teacher_profile: teacher_profile) }
+
+        context "when an original participant identity exists" do
+          before do
+            user.update!(email: "mary.jones@example.com")
+          end
+
+          it "updates the email on the original participant identity" do
+            expect(user.participant_identities.first.email).to eq("mary.jones@example.com")
+          end
+        end
+
+        context "when there are transferred identity records" do
+          let(:identity2) { create(:participant_identity, :npq, email: "mary.e.jones@example.com") }
+
+          before do
+            identity2.update!(user: user)
+            user.update!(email: "mary.jones@example.com")
+          end
+
+          it "does not update the email on the transferred records" do
+            expect(identity2.email).to eq("mary.e.jones@example.com")
+          end
+        end
+      end
+    end
+  end
+
   describe "#admin?" do
     it "is expected to be true when the user has an admin profile" do
       user = create(:user, :admin)
