@@ -97,7 +97,6 @@ RSpec.describe User, type: :model do
           end
 
           it "updates the email on the original participant identity" do
-            user.update!(email: "mary.jones@example.com")
             expect(user.participant_identities.first.email).to eq("mary.jones@example.com")
           end
         end
