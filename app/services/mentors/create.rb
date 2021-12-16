@@ -35,16 +35,18 @@ module Mentors
 
   private
 
-    attr_reader :full_name, :email, :school_cohort
+    attr_reader :full_name, :email, :start_term, :school_cohort
 
-    def initialize(full_name:, email:, school_cohort:, **)
+    def initialize(full_name:, email:, school_cohort:, start_term: "Autumn 2021", **)
       @full_name = full_name
       @email = email
+      @start_term = start_term
       @school_cohort = school_cohort
     end
 
     def mentor_attributes
       {
+        start_term: start_term,
         school_cohort_id: school_cohort.id,
         sparsity_uplift: sparsity_uplift?(start_year),
         pupil_premium_uplift: pupil_premium_uplift?(start_year),

@@ -2,7 +2,7 @@
 
 class ParticipantProfile < ApplicationRecord
   class NPQ < ParticipantProfile
-    self.ignored_columns = %i[mentor_profile_id school_cohort_id]
+    self.ignored_columns = %i[mentor_profile_id school_cohort_id start_term]
     belongs_to :school, optional: true
     belongs_to :npq_course, optional: true
 

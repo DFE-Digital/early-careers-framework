@@ -44,6 +44,13 @@ RSpec.describe "Add participants", js: true do
 
     when_i_add_ect_or_mentor_email
     when_i_click_on_continue
+    then_i_am_taken_to_choose_term_page_as_ect
+    then_the_page_should_be_accessible
+    then_percy_should_be_sent_a_snapshot_named "Induction tutor selects ECT start term"
+
+    when_i_choose_start_term
+    when_i_click_on_continue
+
     then_i_am_taken_to_check_details_page
     then_the_page_should_be_accessible
     then_percy_should_be_sent_a_snapshot_named "Induction tutor checks ECT details"
@@ -74,6 +81,10 @@ RSpec.describe "Add participants", js: true do
 
     when_i_add_ect_or_mentor_email
     when_i_click_on_continue
+
+    when_i_choose_start_term
+    when_i_click_on_continue
+
     then_i_am_taken_to_check_details_page
 
     when_i_click_confirm_and_add

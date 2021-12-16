@@ -290,7 +290,7 @@ module ManageTrainingSteps
   end
 
   def and_it_should_not_allow_a_sit_to_edit_the_participant_details
-    expect(page).not_to have_link("Change")
+    expect(page).not_to have_link("//a[text()='Change']")
   end
 
   def and_i_click_on_view_your_early_career_teacher_and_mentor_details
@@ -377,6 +377,10 @@ module ManageTrainingSteps
 
   def when_i_add_ect_or_mentor_email_that_already_exists
     fill_in "Email", with: @participant_profile_ect.user.email
+  end
+
+  def when_i_choose_start_term
+    choose(ParticipantProfile.start_terms[@participant_data[:start_term]], allow_label_click: true)
   end
 
   def when_i_choose_assign_mentor_later
@@ -469,6 +473,18 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_add_mentor_name_page
     expect(page).to have_selector("h1", text: "What’s the full name of this mentor?")
+  end
+
+  def then_i_am_taken_to_choose_term_page_as_ect
+    expect(page).to have_selector("h1", text: "When do you expect #{@participant_data[:full_name]} to start their induction programme?")
+  end
+
+  def then_i_am_taken_to_choose_term_page_as_mentor
+    expect(page).to have_selector("h1", text: "When do you expect #{@participant_data[:full_name]} to begin mentoring ECTs?")
+  end
+
+  def then_i_am_taken_to_choose_mentor_page
+    expect(page).to have_selector("h1", text: "Who will mentor #{@participant_data[:full_name]}")
   end
 
   def then_i_am_taken_to_add_ect_or_mentor_email_page
@@ -695,6 +711,7 @@ module ManageTrainingSteps
       date_of_birth: Date.new(1998, 3, 22),
       email: "sally@school.com",
       nino: "",
+      start_term: "summer_2022",
     }
   end
 

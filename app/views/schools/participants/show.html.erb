@@ -46,6 +46,21 @@
       </div>
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
+          Start induction
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= ParticipantProfile.start_terms[@profile.start_term] %>
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <% if @profile.policy_class.new(current_user, @profile).edit_start_term? %>
+            <%= govuk_link_to schools_participant_edit_start_term_path(participant_id: @profile) do %>
+              Change <span class="govuk-visually-hidden">start induction</span>
+            <% end %>
+          <% end %>
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
           Role
         </dt>
         <dd class="govuk-summary-list__value">

@@ -31,7 +31,20 @@ module Schools
       next_step do
         if email_already_taken?
           :email_taken
-        elsif type == :ect && mentor_options.any?
+        else
+          :start_term
+        end
+      end
+    end
+
+    step :start_term do
+      attribute :start_term
+
+      validates :start_term,
+                presence: { message: I18n.t("errors.start_term.blank") }
+
+      next_step do
+        if type == :ect && mentor_options.any?
           :choose_mentor
         else
           :confirm
@@ -93,6 +106,7 @@ module Schools
       if type == :self
         self.full_name = current_user.full_name
         self.email = current_user.email
+        self.start_term = "Autumn 2021" if start_term.nil?
         self.participant_type = :mentor
       else
         self.participant_type = type
@@ -111,6 +125,14 @@ module Schools
       @current_user ||= Identity.find_user_by(id: current_user_id)
     end
 
+    def start_term_legend
+      if mentor_options.any?
+        I18n.t("schools.participants.add.start_term.mentor", full_name: full_name)
+      else
+        I18n.t("schools.participants.add.start_term.ect", full_name: full_name)
+      end
+    end
+
     def creators
       {
         ect: EarlyCareerTeachers::Create,
@@ -122,6 +144,7 @@ module Schools
       creators[participant_type].call(
         full_name: full_name,
         email: email,
+        start_term: start_term,
         school_cohort: school_cohort,
         mentor_profile_id: mentor&.mentor_profile&.id,
       )

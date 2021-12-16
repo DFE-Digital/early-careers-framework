@@ -40,6 +40,23 @@
         </dd>
       </div>
 
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Start induction
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <div>
+            <%= ParticipantProfile.start_terms[add_participant_form.start_term] %>
+          </div>
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <%= govuk_link_to({ action: :show, step: "start-term" }) do %>
+            Change <span class="govuk-visually-hidden">term</span>
+          <% end %>
+        </dd>
+      </div>
+
+
       <% if add_participant_form.type == :ect %>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">
