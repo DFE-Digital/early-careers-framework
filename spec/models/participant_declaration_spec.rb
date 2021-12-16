@@ -170,7 +170,6 @@ RSpec.describe ParticipantDeclaration, type: :model do
     end
   end
 
-
   # TODO: how to handle similar declarations but with different declaration_date
   describe "#similar_participant_declarations_for(profile_participants)", :with_default_schedules do
     let(:validation_data) do
@@ -261,7 +260,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
               cpd_lead_provider: cpd_lead_provider,
               declaration_date: declaration_date,
               declaration_type: declaration_type,
-            }
+            },
           )
         end
 
@@ -275,7 +274,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
                   cpd_lead_provider: cpd_lead_provider,
                   declaration_date: declaration_date,
                   declaration_type: declaration_type,
-                }
+                },
               )
               participant_profile.reload
               primary_participant_profile.reload
@@ -296,6 +295,56 @@ RSpec.describe ParticipantDeclaration, type: :model do
                   .duplicate_declarations,
               ).to eq([expected_duplicate])
             end
+
+            context "when declarations with an original participant declaration already exists" do
+              let(:another_duplicate_user) { create(:user) }
+              let(:another_duplicate_participant_profile) do
+                EarlyCareerTeachers::Create.new(
+                  full_name: another_duplicate_user.full_name,
+                  email: another_duplicate_user.email,
+                  school_cohort: school_cohort,
+                  mentor_profile_id: nil,
+                  year_2020: false,
+                ).call.tap do |pp|
+                  StoreValidationResult.new(
+                    participant_profile: pp,
+                    validation_data: validation_data,
+                    dqt_response: dqt_response,
+                  ).call
+                end
+              end
+
+              before do
+                RecordDeclarations::Started::EarlyCareerTeacher.call(
+                  params: {
+                    participant_id: another_duplicate_participant_profile.user_id,
+                    course_identifier: course_identifier,
+                    cpd_lead_provider: cpd_lead_provider,
+                    declaration_date: declaration_date,
+                    declaration_type: declaration_type,
+                  },
+                )
+              end
+
+              it "returns the original declaration" do
+                expected_duplicate = primary_participant_profile
+                                       .reload
+                                       .participant_declarations
+                                       .first
+
+
+                record_started_declaration
+
+                expect(ParticipantDeclaration.count).to eq(3)
+
+                expect(
+                  participant_profile
+                    .participant_declarations
+                    .first
+                    .duplicate_declarations,
+                ).to eq([expected_duplicate])
+              end
+            end
           end
 
           context "when declarations have been made for a different course" do
@@ -307,12 +356,11 @@ RSpec.describe ParticipantDeclaration, type: :model do
                   cpd_lead_provider: cpd_lead_provider,
                   declaration_date: declaration_date,
                   declaration_type: declaration_type,
-                }
+                },
               )
               participant_profile.reload
               primary_participant_profile.reload
             end
-
 
             it "does not return those declarations" do
               record_started_declaration
@@ -339,7 +387,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
                 cpd_lead_provider: other_cpd_lead_provider,
                 declaration_date: declaration_date,
                 declaration_type: declaration_type,
-              }
+              },
             )
 
             participant_profile.reload
@@ -364,7 +412,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
               cpd_lead_provider: cpd_lead_provider,
               declaration_date: declaration_date,
               declaration_type: declaration_type,
-            }
+            },
           )
         end
 
