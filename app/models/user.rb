@@ -26,8 +26,6 @@ class User < ApplicationRecord
 
   has_many :npq_applications
 
-  has_many :participant_declarations
-
   before_validation :strip_whitespace
   after_update :sync_email_address_with_identity
 

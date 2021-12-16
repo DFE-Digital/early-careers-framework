@@ -4,7 +4,6 @@ FactoryBot.define do
   factory :lead_provider do
     name  { "Lead Provider" }
     cohorts { Cohort.all }
-    cpd_lead_provider
 
     trait :contract do
       before(:create) do |lead_provider|

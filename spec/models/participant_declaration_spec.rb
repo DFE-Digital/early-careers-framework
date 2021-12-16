@@ -210,6 +210,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
     end
 
     context "when a teacher profile exists with the same TRN" do
+      let(:mentor_user) { create(:user) }
       let(:primary_user) { create(:user) }
       let(:primary_participant_profile) do
         EarlyCareerTeachers::Create.new(
@@ -226,16 +227,29 @@ RSpec.describe ParticipantDeclaration, type: :model do
           ).call
         end
       end
+
+      let(:mentor_participant_profile) do
+        Mentors::Create.new(
+          full_name: primary_user.full_name,
+          email: primary_user.email,
+          school_cohort: school_cohort,
+          mentor_profile_id: nil,
+          year_2020: false,
+        ).call.tap do |pp|
+          StoreValidationResult.new(
+            participant_profile: pp,
+            validation_data: validation_data,
+            dqt_response: dqt_response,
+          ).call
+        end
+      end
       let(:course_identifier) { "ecf-induction" }
       let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
-      let(:declaration_date)  { (cohort.schedules.first.milestones.first.milestone_date - 1.day).rfc3339 }
+      let(:declaration_date)  { (Finance::Schedule::ECF.default.milestones.first.milestone_date - 1.day).rfc3339 }
       let(:declaration_type)  { "started" }
 
       before do
         create(:partnership, lead_provider: cpd_lead_provider.lead_provider, cohort: cohort, school: school)
-
-        pp participant_profile.teacher_profile.trn
-        pp primary_participant_profile.teacher_profile.trn
       end
 
       context "when declarations have been made for a teacher profile with the same trn" do
@@ -251,22 +265,22 @@ RSpec.describe ParticipantDeclaration, type: :model do
           )
         end
 
-        before do
-          RecordDeclarations::Started::EarlyCareerTeacher.call(
-            params: {
-              participant_id: primary_participant_profile.user_id,
-              course_identifier: course_identifier,
-              cpd_lead_provider: cpd_lead_provider,
-              declaration_date: declaration_date,
-              declaration_type: declaration_type,
-            }
-          )
-          participant_profile.reload
-          primary_participant_profile.reload
-        end
-
         context "when declarations have been made for the same CPD lead provider" do
           context "when declarations have been made for the same course" do
+            before do
+              RecordDeclarations::Started::EarlyCareerTeacher.call(
+                params: {
+                  participant_id: primary_participant_profile.user_id,
+                  course_identifier: "ecf-induction",
+                  cpd_lead_provider: cpd_lead_provider,
+                  declaration_date: declaration_date,
+                  declaration_type: declaration_type,
+                }
+              )
+              participant_profile.reload
+              primary_participant_profile.reload
+            end
+
             it "returns those declarations" do
               expected_duplicate = primary_participant_profile
                                      .reload
@@ -285,22 +299,84 @@ RSpec.describe ParticipantDeclaration, type: :model do
           end
 
           context "when declarations have been made for a different course" do
-            it "does not return those declarations" do
+            before do
+              RecordDeclarations::Started::Mentor.call(
+                params: {
+                  participant_id: mentor_participant_profile.user_id,
+                  course_identifier: "ecf-mentor",
+                  cpd_lead_provider: cpd_lead_provider,
+                  declaration_date: declaration_date,
+                  declaration_type: declaration_type,
+                }
+              )
+              participant_profile.reload
+              primary_participant_profile.reload
+            end
 
+
+            it "does not return those declarations" do
+              record_started_declaration
+
+              expect(ParticipantDeclaration.where(cpd_lead_provider: cpd_lead_provider).count).to eq(2)
+              expect(
+                participant_profile
+                  .participant_declarations
+                  .first
+                  .duplicate_declarations,
+              ).to be_empty
             end
           end
         end
 
-        context "when declarations have been made for a different course" do
-          it "does not return those declarations" do
+        context "when declarations have been made for a different lead provider" do
+          let(:other_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+          before do
+            create(:partnership, lead_provider: other_cpd_lead_provider.lead_provider, cohort: cohort, school: school)
+            RecordDeclarations::Started::EarlyCareerTeacher.call(
+              params: {
+                participant_id: primary_participant_profile.user_id,
+                course_identifier: course_identifier,
+                cpd_lead_provider: other_cpd_lead_provider,
+                declaration_date: declaration_date,
+                declaration_type: declaration_type,
+              }
+            )
 
+            participant_profile.reload
+            primary_participant_profile.reload
+          end
+
+          it "does not return those declarations" do
+            pending
+            record_started_declaration
+
+            expect(ParticipantDeclaration.where(cpd_lead_provider: cpd_lead_provider).count).to eq(2)
           end
         end
       end
 
       context "when no declaration have been made for a teacher profile with the same trn" do
-        it "does not return those declarations" do
+        subject(:record_started_declaration) do
+          RecordDeclarations::Started::EarlyCareerTeacher.call(
+            params: {
+              participant_id: participant_profile.user_id,
+              course_identifier: course_identifier,
+              cpd_lead_provider: cpd_lead_provider,
+              declaration_date: declaration_date,
+              declaration_type: declaration_type,
+            }
+          )
+        end
 
+        it "does not return those declarations" do
+          record_started_declaration
+
+          expect(
+            participant_profile
+              .participant_declarations
+              .first
+              .duplicate_declarations,
+          ).to be_empty
         end
       end
     end

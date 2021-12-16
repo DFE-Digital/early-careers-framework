@@ -14,5 +14,4 @@ class ParticipantIdentity < ApplicationRecord
 
   scope :original, -> { where("participant_identities.external_identifier = participant_identities.user_id") }
   scope :transferred, -> { where("participant_identities.external_identifier != participant_identities.user_id") }
-
 end

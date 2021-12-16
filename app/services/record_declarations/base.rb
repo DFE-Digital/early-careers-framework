@@ -38,8 +38,11 @@ module RecordDeclarations
 
       raise ActiveRecord::RecordNotUnique, "Declaration with given participant ID already exists" if record_exists_with_different_declaration_date?
 
-      participant_declaration = find_or_create_record!
-
+      if participant_declaration.duplicate_declarations.count > 1
+        raise MultipleParticipantDeclarationDuplicate
+      elsif original_participant_declaration
+        participant_declaration.update!(original_participant_declaration: original_participant_declaration)
+      end
       declaration_attempt.update!(participant_declaration: participant_declaration)
 
       ParticipantDeclarationSerializer.new(participant_declaration).serializable_hash.to_json
@@ -68,6 +71,10 @@ module RecordDeclarations
         DeclarationState.submitted!(participant_declaration)
         participant_declaration.make_eligible! if user_profile.fundable?
       end
+    end
+
+    def participant_declaration
+      @participant_declaration ||= find_or_create_record!
     end
 
     def declaration_parameters
@@ -129,6 +136,10 @@ module RecordDeclarations
 
     def valid_declaration_types
       self.class.valid_declaration_types
+    end
+
+    def original_participant_declaration
+      @original_participant_declaration ||= participant_declaration.duplicate_declarations.first
     end
   end
 end

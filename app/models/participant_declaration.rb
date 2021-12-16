@@ -5,6 +5,8 @@ class ParticipantDeclaration < ApplicationRecord
   belongs_to :cpd_lead_provider
   belongs_to :user
   belongs_to :participant_profile
+  belongs_to :original_participant_declaration, class_name: "ParticipantDeclaration", optional: true
+  has_many :duplicate_participant_declarations, class_name: "ParticipantDeclaration", foreign_key: :original_participant_declaration_id, inverse_of: :original_participant_declaration
 
   enum state: {
     submitted: "submitted",
@@ -94,7 +96,16 @@ class ParticipantDeclaration < ApplicationRecord
     %w[submitted eligible].include?(current_state)
   end
 
-  def similar_participant_declarations_for(participant_profiles)
-    user.joins()
+
+  def duplicate_declarations
+    self.class.joins(participant_profile: :teacher_profile)
+      .where(participant_profiles: { teacher_profiles: { trn: participant_profile.teacher_profile.trn } })
+      .where.not(user_id: user_id)
+      .where(
+        declaration_type: declaration_type,
+        course_identifier: course_identifier,
+        declaration_date: declaration_date,
+        original_participant_declaration_id: nil,
+      )
   end
 end
