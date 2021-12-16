@@ -210,7 +210,7 @@
             <td class="govuk-table__cell govuk-table__cell--numeric">
               <% if profile.ect? %>
                 <%= govuk_link_to (profile.mentor_profile_id ? "Details" : "Check"), schools_participant_path(id: profile.id) %>
-              <% elsif profile.ecf_participant_eligibility.ineligible_status? %>
+              <% elsif profile.ecf_participant_eligibility.ineligible_status? && !profile.ecf_participant_eligibility.duplicate_profile_reason? %>
                 <%= govuk_link_to "Check", schools_participant_path(id: profile.id) %>
               <% else %>
                 <%= govuk_link_to "Details", schools_participant_path(id: profile.id) %>
