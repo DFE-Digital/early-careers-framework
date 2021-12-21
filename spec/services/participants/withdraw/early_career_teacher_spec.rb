@@ -15,7 +15,7 @@ RSpec.describe Participants::Withdraw::EarlyCareerTeacher do
     }
   end
 
-  it_behaves_like "a participant withdraw action service" do
+  it_behaves_like "a participant withdraw action service", with_notification: true do
     def given_params
       participant_params
     end

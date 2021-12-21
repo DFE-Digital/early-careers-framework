@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "a participant withdraw action service" do
+RSpec.shared_examples "a participant withdraw action service" do |with_notification:|
   it_behaves_like "a participant action service"
 
   it "fails when the reason is invalid" do
@@ -12,6 +12,18 @@ RSpec.shared_examples "a participant withdraw action service" do
     expect { described_class.call(params: given_params) }.to change { ParticipantProfileState.count }.by(1)
     expect(user_profile.participant_profile_state).to be_withdrawn
     expect(user_profile).to be_training_status_withdrawn
+  end
+
+  it "sends an email to confirm a participant has been withdrawn", if: with_notification do
+    mailer = instance_double(ActionMailer::MessageDelivery, deliver_later: true)
+    allow(SchoolMailer).to receive(:fip_provider_has_withdrawn_a_participant).and_return(mailer)
+
+    described_class.call(params: given_params)
+
+    expect(SchoolMailer).to have_received(:fip_provider_has_withdrawn_a_participant).with(
+      withdrawn_participant: user_profile,
+      induction_coordinator: user_profile.school.induction_coordinator_profiles.first,
+    )
   end
 
   it "creates a withdrawn state when that user is deferred" do

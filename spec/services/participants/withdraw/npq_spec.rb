@@ -16,7 +16,7 @@ RSpec.describe Participants::Withdraw::NPQ do
     }
   end
 
-  it_behaves_like "a participant withdraw action service" do
+  it_behaves_like "a participant withdraw action service", with_notification: false do
     def given_params
       participant_params
     end
