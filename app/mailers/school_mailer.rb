@@ -27,6 +27,7 @@ class SchoolMailer < ApplicationMailer
   SIT_NEW_AMBITION_ECTS_AND_MENTORS_ADDED_TEMPLATE = "90d86c1b-2dca-4cca-9dcb-5940e7f28577"
   SIT_FIP_PARTICIPANT_VALIDATION_DEADLINE_REMINDER_TEMPLATE = "48f63205-a8d9-49a2-a76c-93d48ec9b23b"
   SCHOOL_PRETERM_REMINDER = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f"
+  PARTICIPANT_WITHDRAWN_BY_PROVIDER = "29f94916-8c3a-4c5a-9e33-bdf3f5d7249a"
 
   # This email is currently (30/09/2021) only used for manually sent chaser emails
   def remind_induction_coordinator_to_setup_cohort_email(induction_coordinator_profile:, school_name:, campaign: nil)
@@ -428,5 +429,27 @@ class SchoolMailer < ApplicationMailer
         nomination_link: nomination_email.nomination_url,
       },
     ).tag(:school_preterm_reminder).associate_with(school)
+  end
+
+  def fip_provider_has_withdrawn_a_participant(withdrawn_participant:, induction_coordinator:)
+    partnership = Partnership.find_by(school: withdrawn_participant.school, cohort: withdrawn_participant.cohort)
+
+    email = template_mail(
+      PARTICIPANT_WITHDRAWN_BY_PROVIDER,
+      to: induction_coordinator.user.email,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        name: induction_coordinator.user.full_name,
+        withdrawn_participant_name: withdrawn_participant.user.full_name,
+        school: withdrawn_participant.school.name,
+        delivery_partner: partnership.delivery_partner.name,
+        lead_provider: partnership.lead_provider.name,
+      },
+    )
+    email
+      .tag(:sit_fip_provider_has_withdrawn_a_participant)
+      .associate_with(induction_coordinator, as: :induction_coordinator)
+      .associate_with(withdrawn_participant, as: :participant_profile)
   end
 end
