@@ -319,6 +319,10 @@ module ManageTrainingSteps
     click_on("Change")
   end
 
+  def when_i_click_on_change_programme
+    click_on("Change induction programme choice", visible: false)
+  end
+
   def when_i_click_on_add
     click_on("Add")
   end
