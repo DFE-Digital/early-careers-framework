@@ -12,9 +12,6 @@ FactoryBot.define do
 
       factory :ect_participant_profile, class: "ParticipantProfile::ECT"
       factory :mentor_participant_profile, class: "ParticipantProfile::Mentor"
-      after :build do |ecf_participant_profile|
-        ecf_participant_profile.participant_identity = Identity::Create.call(user: ecf_participant_profile.user)
-      end
     end
 
     trait :ecf_participant_validation_data do
@@ -80,6 +77,10 @@ FactoryBot.define do
           profile.ecf_participant_eligibility.save!
         end
       end
+    end
+
+    after :build do |participant_profile|
+      participant_profile.participant_identity = Identity::Create.call(user: participant_profile.user)
     end
   end
 end

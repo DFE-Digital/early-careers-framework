@@ -67,5 +67,29 @@ RSpec.describe RecordDeclarations::Base do
         expect(original_participant_declaration.duplicate_participant_declarations).to eq([duplicate_participant_declaration])
       end
     end
+
+    context "when a duplicated participant exist" do
+      let(:original_ect_participant_profile) do
+        create(:ect_participant_profile, school_cohort: school_cohort).tap do |participant_profile|
+          participant_profile.teacher_profile.update!(trn: ect_participant_profile.teacher_profile.trn)
+        end
+      end
+
+      let(:record_original_declaration) do
+        RecordDeclarations::Started::EarlyCareerTeacher
+          .call(params: params.except(:participant_id)
+          .merge(participant_id: original_ect_participant_profile.user_id))
+      end
+
+      let(:original_participant_declaration) { ParticipantDeclaration.find(JSON.parse(record_original_declaration).dig("data", "id")) }
+
+      before { record_original_declaration }
+
+      it "transitions the declaration to ineligible" do
+        duplicate_participant_declaration = ParticipantDeclaration.find(JSON.parse(record_declaration).dig("data", "id"))
+
+        expect(original_participant_declaration.duplicate_participant_declarations).to eq([duplicate_participant_declaration])
+      end
+    end
   end
 end

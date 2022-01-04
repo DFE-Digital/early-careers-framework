@@ -9,6 +9,8 @@ module RecordDeclarations
     implement_class_method :required_params, :valid_declaration_types
     implement_instance_method :user_profile
 
+    MultipleParticipantDeclarationDuplicate = Class.new(ArgumentError)
+
     RFC3339_DATE_REGEX = /\A\d{4}-\d{2}-\d{2}T(\d{2}):(\d{2}):(\d{2})([.,]\d+)?(Z|[+-](\d{2})(:?\d{2})?)?\z/i.freeze
 
     attr_accessor :declaration_date, :declaration_type
@@ -43,6 +45,7 @@ module RecordDeclarations
       elsif original_participant_declaration
         participant_declaration.update!(original_participant_declaration: original_participant_declaration)
       end
+
       declaration_attempt.update!(participant_declaration: participant_declaration)
 
       ParticipantDeclarationSerializer.new(participant_declaration).serializable_hash.to_json

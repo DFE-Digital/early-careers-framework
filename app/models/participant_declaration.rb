@@ -96,7 +96,6 @@ class ParticipantDeclaration < ApplicationRecord
     %w[submitted eligible].include?(current_state)
   end
 
-
   def duplicate_declarations
     self.class.joins(participant_profile: :teacher_profile)
       .where(participant_profiles: { teacher_profiles: { trn: participant_profile.teacher_profile.trn } })

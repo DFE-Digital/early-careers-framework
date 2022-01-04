@@ -332,7 +332,6 @@ RSpec.describe ParticipantDeclaration, type: :model do
                                        .participant_declarations
                                        .first
 
-
                 record_started_declaration
 
                 expect(ParticipantDeclaration.count).to eq(3)
@@ -373,32 +372,6 @@ RSpec.describe ParticipantDeclaration, type: :model do
                   .duplicate_declarations,
               ).to be_empty
             end
-          end
-        end
-
-        context "when declarations have been made for a different lead provider" do
-          let(:other_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
-          before do
-            create(:partnership, lead_provider: other_cpd_lead_provider.lead_provider, cohort: cohort, school: school)
-            RecordDeclarations::Started::EarlyCareerTeacher.call(
-              params: {
-                participant_id: primary_participant_profile.user_id,
-                course_identifier: course_identifier,
-                cpd_lead_provider: other_cpd_lead_provider,
-                declaration_date: declaration_date,
-                declaration_type: declaration_type,
-              },
-            )
-
-            participant_profile.reload
-            primary_participant_profile.reload
-          end
-
-          it "does not return those declarations" do
-            pending
-            record_started_declaration
-
-            expect(ParticipantDeclaration.where(cpd_lead_provider: cpd_lead_provider).count).to eq(2)
           end
         end
       end

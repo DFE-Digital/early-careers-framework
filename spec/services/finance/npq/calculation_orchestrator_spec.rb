@@ -43,14 +43,15 @@ RSpec.describe Finance::NPQ::CalculationOrchestrator do
   context ".call" do
     context "normal operation" do
       before do
-        timestamp = interval.first + 1.day
-
-        FactoryBot.with_options cpd_lead_provider: cpd_lead_provider, course_identifier: contract.course_identifier do |factory|
-          factory.create_list(:npq_participant_declaration, 3, :eligible, declaration_date: timestamp, created_at: timestamp)
-          factory.create_list(:npq_participant_declaration, 2, :payable, declaration_date: timestamp, created_at: timestamp)
-          factory.create_list(:npq_participant_declaration, 4, :submitted, declaration_date: timestamp, created_at: timestamp)
-          factory.create_list(:npq_participant_declaration, 3, :voided, declaration_date: timestamp, created_at: timestamp)
-          factory.create_list(:npq_participant_declaration, 7, :paid, declaration_date: timestamp, created_at: timestamp)
+        timestamp = interval.begin + 1.day
+        travel_to(timestamp) do
+          FactoryBot.with_options cpd_lead_provider: cpd_lead_provider, course_identifier: contract.course_identifier, declaration_date: timestamp, created_at: timestamp do |factory|
+            factory.create_list(:npq_participant_declaration, 3, :eligible)
+            factory.create_list(:npq_participant_declaration, 2, :payable)
+            factory.create_list(:npq_participant_declaration, 4, :submitted)
+            factory.create_list(:npq_participant_declaration, 3, :voided)
+            factory.create_list(:npq_participant_declaration, 7, :paid)
+          end
         end
       end
 
