@@ -15,7 +15,6 @@ gem "pretender", ">= 0.3.4"
 gem "pundit"
 
 # Error and performance monitoring
-gem "sentry-delayed_job", ">= 4.6.4"
 gem "sentry-rails", ">= 4.6.4"
 gem "sentry-ruby", ">= 4.6.4"
 gem "sentry-sidekiq"
@@ -74,8 +73,6 @@ gem "savon", "~> 2.12", ">= 2.12.1"
 
 # Database based asynchronous priority queue system
 gem "daemons"
-gem "delayed_cron_job"
-gem "delayed_job_active_record"
 
 # Strong migration checker for database migrations
 gem "strong_migrations"

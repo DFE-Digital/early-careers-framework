@@ -18,12 +18,6 @@ class HealthcheckController < ApplicationController
         failed: sidekiq_failures,
         sidekiq_last_failure: sidekiq_last_failure,
       },
-      delayed_job: {
-        job_count: delayed_jobs_count,
-        errors: delayed_jobs_with_errors,
-        failed: failed_delayed_jobs,
-        last_failure: last_delayed_job_failure,
-      },
       notify: {
         incident_status: notify_incident,
       },
@@ -68,30 +62,6 @@ private
     return nil unless last_failed_at
 
     Time.zone.at last_failed_at
-  rescue StandardError
-    I18n.t(:fail)
-  end
-
-  def delayed_jobs_count
-    Delayed::Job.count
-  rescue StandardError
-    I18n.t(:fail)
-  end
-
-  def delayed_jobs_with_errors
-    Delayed::Job.where.not(last_error: nil).count
-  rescue StandardError
-    I18n.t(:fail)
-  end
-
-  def failed_delayed_jobs
-    Delayed::Job.where.not(failed_at: nil).count
-  rescue StandardError
-    I18n.t(:fail)
-  end
-
-  def last_delayed_job_failure
-    Delayed::Job.order(failed_at: :desc).first&.failed_at
   rescue StandardError
     I18n.t(:fail)
   end
