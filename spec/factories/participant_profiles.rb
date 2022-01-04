@@ -4,7 +4,6 @@ FactoryBot.define do
   factory :participant_profile do
     teacher_profile
     profile_duplicity { :single }
-    participant_identity { association :participant_identity, user: teacher_profile&.user || user }
 
     factory :ecf_participant_profile, class: "ParticipantProfile::ECF" do
       school_cohort
@@ -13,6 +12,9 @@ FactoryBot.define do
 
       factory :ect_participant_profile, class: "ParticipantProfile::ECT"
       factory :mentor_participant_profile, class: "ParticipantProfile::Mentor"
+      after :build do |ecf_participant_profile|
+        ecf_participant_profile.participant_identity = Identity::Create.call(user: ecf_participant_profile.user)
+      end
     end
 
     trait :ecf_participant_validation_data do
