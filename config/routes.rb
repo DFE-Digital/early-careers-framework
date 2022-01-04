@@ -303,7 +303,9 @@ Rails.application.routes.draw do
 
   namespace :participants do
     resource :no_access, only: :show, controller: "no_access"
-    resource :start_registrations, path: "/start-registration", only: :show
+    resource :start_registrations, path: "/start-registration", only: :show do
+      get "trn-guidance", action: :trn_guidance
+    end
 
     multistep_form :validation, Participants::ParticipantValidationForm, controller: :validations do
       get :no_trn, as: nil

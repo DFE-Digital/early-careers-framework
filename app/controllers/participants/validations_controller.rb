@@ -5,9 +5,9 @@ module Participants
     include Multistep::Controller
 
     form Participants::ParticipantValidationForm, as: :validation_form
-
     setup_form do |form|
       form.participant_profile_id = current_user.teacher_profile.current_ecf_profile.id
+      form.complete_step(:check_trn_given, check_trn_given: true) unless current_user.mentor?
     end
 
     abandon_journey_path { { action: :already_completed } }

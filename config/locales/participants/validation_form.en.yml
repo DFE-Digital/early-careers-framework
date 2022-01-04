@@ -4,6 +4,8 @@ en:
       models:
         participants/participant_validation_form:
           attributes:
+            check_trn_given:
+              blank: Select an option
             trn:
               blank: Enter your teacher reference number
               too_short: Teacher reference number is at least %{count} digits long
