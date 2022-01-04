@@ -54,14 +54,13 @@ private
   end
 
   def create_started_declarations(npq_application)
-    stamp = npq_application.profile.schedule.milestones.first.start_date + 1.day
-
-    Timecop.freeze(stamp) do
+    timestamp = npq_application.profile.schedule.milestones.first.start_date + 1.day
+    travel_to(timestamp) do
       RecordDeclarations::Started::NPQ.call(
         params: {
           participant_id: npq_application.user.id,
           course_identifier: npq_application.npq_course.identifier,
-          declaration_date: stamp.rfc3339,
+          declaration_date: timestamp.rfc3339,
           cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider,
           declaration_type: RecordDeclarations::NPQ::STARTED,
         },
