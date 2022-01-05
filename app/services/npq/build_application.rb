@@ -55,7 +55,7 @@ module NPQ
     end
 
     def participant_identity
-      Identity::Create.call(user: user, origin: :npq) unless user_id.blank?
+      Identity::Create.call(user: user, origin: :npq) if user_id.present?
     end
   end
 end
