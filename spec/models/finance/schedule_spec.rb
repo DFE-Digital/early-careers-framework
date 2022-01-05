@@ -28,7 +28,7 @@ RSpec.describe Finance::Schedule::NPQLeadership, type: :model do
   end
 
   it "seeds from csv" do
-    schedule = described_class.find_by(schedule_identifier: "npq-sl-february")
+    schedule = described_class.find_by(schedule_identifier: "npq-leadership-spring")
     expect(schedule).to be_present
     expect(schedule.milestones.count).to eql(4)
   end
@@ -46,7 +46,7 @@ RSpec.describe Finance::Schedule::NPQSpecialist, type: :model do
   end
 
   it "seeds from csv" do
-    schedule = described_class.find_by(schedule_identifier: "npq-lbc-february")
+    schedule = described_class.find_by(schedule_identifier: "npq-specialist-spring")
     expect(schedule).to be_present
     expect(schedule.milestones.count).to eql(3)
   end
