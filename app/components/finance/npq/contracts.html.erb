@@ -1,0 +1,23 @@
+<dl class="govuk-summary-list govuk-summary-list--no-border">
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      <%= t("finance.provider") %>
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= lead_provider_name %>
+    </dd>
+  </div>
+</dl>
+
+<table class="govuk-table">
+  <thead class="govuk-table__head">
+  <tr class="govuk-table__row">
+    <th class="govuk-table__header"><%= t("finance.contract.course_identifier") %></th>
+    <th class="govuk-table__header govuk-table__cell--numeric"><%= t("finance.contract.recruitment_target") %></th>
+    <th class="govuk-table__header govuk-table__cell--numeric"><%= t("finance.per_participant")%></th>
+  </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+  <%= render Finance::NPQ::ContractCourseRow.with_collection(contracts) %>
+  </tbody>
+</table>
