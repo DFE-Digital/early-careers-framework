@@ -444,8 +444,10 @@ ActiveRecord::Schema.define(version: 2022_01_06_111301) do
     t.text "school_ukprn"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.uuid "participant_identity_id"
     t.index ["npq_course_id"], name: "index_npq_applications_on_npq_course_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_applications_on_npq_lead_provider_id"
+    t.index ["participant_identity_id"], name: "index_npq_applications_on_participant_identity_id"
     t.index ["user_id"], name: "index_npq_applications_on_user_id"
   end
 
@@ -574,8 +576,8 @@ ActiveRecord::Schema.define(version: 2022_01_06_111301) do
     t.string "training_status", default: "active", null: false
     t.string "profile_duplicity", default: "single", null: false
     t.uuid "participant_identity_id"
-    t.string "start_term", default: "Autumn 2021", null: false
     t.string "notes"
+    t.string "start_term", default: "Autumn 2021", null: false
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"

@@ -22,15 +22,27 @@ class NPQApplicationSerializer
              :created_at,
              :updated_at
 
+  # NOTE: only until identity data populated
   attribute(:participant_id, &:user_id)
+  # then change to this
+  # attribute(:participant_id) do |object|
+  #   object.participant_identity.external_identifier
+  # end
+
   attribute(:teacher_reference_number_validated, &:teacher_reference_number_verified)
 
   attribute(:full_name) do |object|
+    # NOTE: only until identity data populated
     object.user.full_name
+    # then change to this
+    # object.participant_identity.user.full_name
   end
 
   attribute(:email) do |object|
+    # NOTE: only until identity data populated
     object.user.email
+    # then change to this
+    # object.participant_identity.email
   end
 
   attribute(:email_validated) do

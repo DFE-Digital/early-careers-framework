@@ -35,17 +35,31 @@ module NPQ
   private
 
     def has_other_accepted_applications_with_same_course?
+      # TODO: use this until identity populated
       NPQApplication.where(user_id: user.id)
         .where(npq_course: npq_course)
         .where(lead_provider_approval_status: "accepted")
         .where.not(id: npq_application.id)
         .exists?
+      # then change to this
+      # NPQApplication.joins(:participant_identity)
+      #   .where(participant_identity: { user_id: user.id })
+      #   .where(npq_course: npq_course)
+      #   .where(lead_provider_approval_status: "accepted")
+      #   .where.not(id: npq_application.id)
+      #   .exists?
     end
 
     def other_applications
+      # TODO: use this until identity populated
       @other_applications ||= NPQApplication.where(user_id: user.id)
                                             .where(npq_course: npq_course)
                                             .where.not(id: npq_application.id)
+      # then change to this
+      # @other_applications ||= NPQApplication.joins(:participant_identity)
+      #                                       .where(participant_identity: { user_id: user.id })
+      #                                       .where(npq_course: npq_course)
+      #                                       .where.not(id: npq_application.id)
     end
 
     def create_profile
@@ -56,7 +70,10 @@ module NPQ
         teacher_profile: teacher_profile,
         school_urn: npq_application.school_urn,
         school_ukprn: npq_application.school_ukprn,
+        # NOTE: use until identity populated
         participant_identity: Identity::Create.call(user: user, origin: :npq),
+        # then change to this
+        # participant_identity: npq_application.participant_identity,
       ) do |participant_profile|
         ParticipantProfileState.find_or_create_by!(participant_profile: participant_profile)
       end
@@ -67,7 +84,10 @@ module NPQ
     end
 
     def user
+      # NOTE: use until identity populated
       @user ||= npq_application.user
+      # then change to this
+      # @user ||= npq_application.participant_identity.user
     end
 
     def npq_course
