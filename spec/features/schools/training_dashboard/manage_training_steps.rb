@@ -136,7 +136,7 @@ module ManageTrainingSteps
   end
 
   def and_i_have_added_an_eligible_mentor
-    @eligible_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: @school_cohort)
+    @eligible_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: @school_cohort, start_term: "summer_2022")
   end
 
   def and_i_have_added_an_ineligible_ect_with_mentor
@@ -275,7 +275,7 @@ module ManageTrainingSteps
   end
 
   def and_i_have_added_a_details_being_checked_ect_with_mentor
-    @details_being_checked_ect_with_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "DBC With-Mentor"), mentor_profile_id: @contacted_for_info_mentor.id, school_cohort: @school_cohort)
+    @details_being_checked_ect_with_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "DBC With-Mentor"), mentor_profile_id: @contacted_for_info_mentor.id, school_cohort: @school_cohort, start_term: "Spring 2022")
     @details_being_checked_ect_with_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
   end
 
@@ -295,6 +295,10 @@ module ManageTrainingSteps
 
   def and_i_click_on_view_your_early_career_teacher_and_mentor_details
     click_on("View your early career teacher and mentor details")
+  end
+
+  def and_the_start_induction_date_is(term_and_year)
+    expect(page).to have_text(term_and_year)
   end
 
   # When_steps

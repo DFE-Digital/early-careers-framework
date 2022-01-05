@@ -22,6 +22,7 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       when_i_navigate_to_participants_dashboard
       then_i_can_view_cip_eligible_participants
       then_the_action_required_is_none
+      and_the_start_induction_date_is "Autumn 2021"
 
       when_i_click_on_details
       then_i_am_taken_to_view_details_page

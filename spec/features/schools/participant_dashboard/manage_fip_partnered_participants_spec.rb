@@ -22,6 +22,7 @@ RSpec.describe "Manage FIP partnered participants", js: true, with_feature_flags
       when_i_navigate_to_participants_dashboard
       then_i_can_view_ineligible_participants
       then_the_action_required_is_none
+      and_the_start_induction_date_is "Autumn 2021"
 
       when_i_click_on_check_within_ineligible
       then_i_am_taken_to_view_details_page
@@ -37,6 +38,7 @@ RSpec.describe "Manage FIP partnered participants", js: true, with_feature_flags
       when_i_navigate_to_participants_dashboard
       then_i_can_view_ineligible_participants
       then_the_action_required_is_none
+      and_the_start_induction_date_is "Autumn 2021"
 
       when_i_click_on_check_within_ineligible
       then_i_am_taken_to_view_details_page
@@ -52,6 +54,7 @@ RSpec.describe "Manage FIP partnered participants", js: true, with_feature_flags
       when_i_navigate_to_participants_dashboard
       then_i_can_view_ineligible_participants
       then_the_action_required_is_none
+      and_the_start_induction_date_is "Autumn 2021"
 
       when_i_click_on_check_within_ineligible
       then_i_am_taken_to_view_details_page
@@ -67,6 +70,7 @@ RSpec.describe "Manage FIP partnered participants", js: true, with_feature_flags
       when_i_navigate_to_participants_dashboard
       then_i_can_view_eligible_participants
       then_the_action_required_is_none
+      and_the_start_induction_date_is "Autumn 2021"
 
       when_i_click_on_check
       then_i_am_taken_to_view_details_page
@@ -85,6 +89,7 @@ RSpec.describe "Manage FIP partnered participants", js: true, with_feature_flags
       when_i_navigate_to_participants_dashboard
       then_i_can_view_eligible_participants
       then_the_action_required_is_none
+      and_the_start_induction_date_is "Autumn 2021"
 
       when_i_click_on_details
       then_i_am_taken_to_view_details_page
@@ -100,6 +105,7 @@ RSpec.describe "Manage FIP partnered participants", js: true, with_feature_flags
       when_i_navigate_to_participants_dashboard
       then_i_can_view_eligible_participants
       then_the_action_required_is_assign_mentor
+      and_the_start_induction_date_is "Autumn 2021"
 
       when_i_click_on_check
       then_i_am_taken_to_view_details_page
@@ -115,6 +121,7 @@ RSpec.describe "Manage FIP partnered participants", js: true, with_feature_flags
       when_i_navigate_to_participants_dashboard
       then_i_can_view_eligible_participants
       then_the_action_required_is_none
+      and_the_start_induction_date_is "Summer 2022"
 
       when_i_click_on_details_within_eligible
       then_i_am_taken_to_view_details_page
@@ -133,6 +140,7 @@ RSpec.describe "Manage FIP partnered participants", js: true, with_feature_flags
       when_i_navigate_to_participants_dashboard
       then_i_can_view_contacted_for_info_participants
       then_the_action_required_is_remind_them
+      and_the_start_induction_date_is "Autumn 2021"
 
       when_i_click_on_check
       then_i_am_taken_to_view_details_page
@@ -148,6 +156,7 @@ RSpec.describe "Manage FIP partnered participants", js: true, with_feature_flags
       when_i_navigate_to_participants_dashboard
       then_i_can_view_contacted_for_info_participants
       then_the_action_required_is_check_email_address
+      and_the_start_induction_date_is "Autumn 2021"
 
       when_i_click_on_check
       then_i_am_taken_to_view_details_page
@@ -163,6 +172,7 @@ RSpec.describe "Manage FIP partnered participants", js: true, with_feature_flags
       when_i_navigate_to_participants_dashboard
       then_i_can_view_contacted_for_info_participants
       then_the_action_required_is_remind_them
+      and_the_start_induction_date_is "Autumn 2021"
 
       when_i_click_on_check
       then_i_am_taken_to_view_details_page
@@ -181,6 +191,7 @@ RSpec.describe "Manage FIP partnered participants", js: true, with_feature_flags
       when_i_navigate_to_participants_dashboard
       then_i_can_view_details_being_checked_participants
       then_the_action_required_is_none
+      and_the_start_induction_date_is "Spring 2022"
 
       when_i_click_on_details_within_details
       then_i_am_taken_to_view_details_page
@@ -196,6 +207,7 @@ RSpec.describe "Manage FIP partnered participants", js: true, with_feature_flags
       when_i_navigate_to_participants_dashboard
       then_i_can_view_details_being_checked_participants
       then_the_action_required_is_assign_mentor
+      and_the_start_induction_date_is "Autumn 2021"
 
       when_i_click_on_check
       then_i_am_taken_to_view_details_page
@@ -211,6 +223,7 @@ RSpec.describe "Manage FIP partnered participants", js: true, with_feature_flags
       when_i_navigate_to_participants_dashboard
       then_i_can_view_details_being_checked_participants
       then_the_action_required_is_none
+      and_the_start_induction_date_is "Autumn 2021"
 
       when_i_click_on_details
       then_i_am_taken_to_view_details_page
