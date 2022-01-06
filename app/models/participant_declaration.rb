@@ -92,6 +92,10 @@ class ParticipantDeclaration < ApplicationRecord
     DeclarationState.paid!(self) if payable?
   end
 
+  def make_ineligible!
+    DeclarationState.ineligible!(self)
+  end
+
   def changeable?
     %w[submitted eligible].include?(current_state)
   end

@@ -43,7 +43,9 @@ module RecordDeclarations
       if participant_declaration.duplicate_declarations.count > 1
         raise MultipleParticipantDeclarationDuplicate
       elsif original_participant_declaration
-        participant_declaration.update!(original_participant_declaration: original_participant_declaration)
+        participant_declaration
+          .update!(original_participant_declaration: original_participant_declaration)
+        participant_declaration.make_ineligible!
       end
 
       declaration_attempt.update!(participant_declaration: participant_declaration)
