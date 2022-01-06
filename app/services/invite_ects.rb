@@ -2,7 +2,7 @@
 
 class InviteEcts
   def fip_preterm_reminder(season:)
-    logger.info "Sending reminder to fip SITs"
+    Rails.logger.info "Sending reminder to fip SITs"
 
     SchoolCohort.includes(school: :induction_coordinators)
       .where(induction_programme_choice: :full_induction_programme, opt_out_of_updates: false).each do |cohort|
@@ -15,7 +15,7 @@ class InviteEcts
   end
 
   def cip_preterm_reminder(season:)
-    logger.info "Sending reminder to cip SITs"
+    Rails.logger.info "Sending reminder to cip SITs"
 
     SchoolCohort.includes(school: :induction_coordinators)
       .where(induction_programme_choice: :core_induction_programme, opt_out_of_updates: false).each do |cohort|
@@ -28,7 +28,7 @@ class InviteEcts
   end
 
   def school_preterm_reminder(season:)
-    logger.info "Sending reminder to schools"
+    Rails.logger.info "Sending reminder to schools"
 
     SchoolCohort.includes(school: :induction_coordinators)
       .where(induction_programme_choice: nil, opt_out_of_updates: false).each do |cohort|
