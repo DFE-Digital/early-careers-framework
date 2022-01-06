@@ -38,19 +38,6 @@ variable web_app_memory {
 variable web_app_start_command {
 }
 
-
-variable worker_app_start_command {
-}
-
-variable worker_app_instances {
-}
-
-variable worker_app_memory {
-}
-
-variable worker_app_deployment_strategy {
-}
-
 variable sidekiq_worker_app_start_command {
 }
 
@@ -101,7 +88,6 @@ locals {
   logging_service_name      = "${var.service_name}-logit-${var.environment}"
   postgres_service_name     = "${var.service_name}-postgres-${var.environment}"
   web_app_name              = "${var.service_name}-${var.environment}"
-  worker_app_name           = "${var.service_name}-${var.environment}-worker"
   sidekiq_worker_app_name   = "${var.service_name}-${var.environment}-sidekiq-worker"
   redis_worker_service_name = "${var.service_name}-${var.environment}-redis-worker"
   noeviction_maxmemory_policy = {

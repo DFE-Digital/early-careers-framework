@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_13_104559) do
+ActiveRecord::Schema.define(version: 2022_01_04_162036) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -194,22 +194,6 @@ ActiveRecord::Schema.define(version: 2021_12_13_104559) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["participant_declaration_id"], name: "index_declaration_states_on_participant_declaration_id"
-  end
-
-  create_table "delayed_jobs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.integer "priority", default: 0, null: false
-    t.integer "attempts", default: 0, null: false
-    t.text "handler", null: false
-    t.text "last_error"
-    t.datetime "run_at"
-    t.datetime "locked_at"
-    t.datetime "failed_at"
-    t.string "locked_by"
-    t.string "queue"
-    t.datetime "created_at", precision: 6
-    t.datetime "updated_at", precision: 6
-    t.string "cron"
-    t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
   create_table "delivery_partners", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
