@@ -5,7 +5,7 @@ module Finance
     class ContractsController < BaseController
       def show
         @npq_lead_provider = lead_provider_scope.find(params[:id])
-        @contracts = @npq_lead_provider.npq_contracts
+        @npq_contracts = @npq_lead_provider.npq_contracts
       end
 
     private
