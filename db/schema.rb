@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_04_162036) do
+ActiveRecord::Schema.define(version: 2022_01_06_111301) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -691,6 +691,7 @@ ActiveRecord::Schema.define(version: 2022_01_04_162036) do
     t.string "schedule_identifier"
     t.string "type", default: "Finance::Schedule::ECF"
     t.uuid "cohort_id"
+    t.text "identifier_alias"
     t.index ["cohort_id"], name: "index_schedules_on_cohort_id"
   end
 
