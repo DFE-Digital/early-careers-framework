@@ -73,7 +73,7 @@ class ParticipantMailer < ApplicationMailer
         season: season,
         name: induction_coordinator_profile.user.full_name,
         school_name: school_name,
-        sign_in: new_user_sign_in_url,
+        sign_in: new_user_session_url,
       },
     ).tag(:fip_preterm_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
   end
@@ -88,7 +88,7 @@ class ParticipantMailer < ApplicationMailer
         season: season,
         name: induction_coordinator_profile.user.full_name,
         school_name: school_name,
-        sign_in: new_user_sign_in_url,
+        sign_in: new_user_session_url,
       },
     ).tag(:cip_preterm_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
   end
