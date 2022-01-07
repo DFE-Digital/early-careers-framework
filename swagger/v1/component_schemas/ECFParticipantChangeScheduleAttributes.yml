@@ -5,9 +5,9 @@ properties:
     description: "The new schedule of the participant"
     type: string
     enum:
-      - ecf-september-standard-2021
-      - ecf-january-standard-2021
-    example: ecf-september-standard-2021
+      - ecf-standard-september
+      - ecf-standard-january
+    example: ecf-standard-september
   course_identifier:
     description: "The type of course the participant is enrolled in"
     type: string
@@ -19,5 +19,5 @@ required:
   - schedule_identifier
   - course_identifier
 example:
-  schedule_identifier: ecf-january-standard-2021
+  schedule_identifier: ecf-standard-january
   course_identifier: ecf-mentor

@@ -69,7 +69,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
         let(:id) { mentor_profile.user.id }
         let(:attributes) do
           {
-            schedule_identifier: "ecf-january-standard-2021",
+            schedule_identifier: "ecf-standard-january",
             course_identifier: "ecf-mentor",
           }
         end
@@ -84,7 +84,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
         end
 
         before do
-          create(:schedule, schedule_identifier: "ecf-january-standard-2021", name: "ECF January standard 2021")
+          create(:schedule, schedule_identifier: "ecf-standard-january", name: "ECF January standard 2021")
         end
 
         schema({ "$ref": "#/components/schemas/ECFParticipantResponse" })
