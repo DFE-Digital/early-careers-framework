@@ -1510,6 +1510,7 @@
           "cohort",
           "status",
           "training_status",
+          "schedule_identifier",
           "updated_at"
         ],
         "properties": {
@@ -1609,6 +1610,15 @@
               "active",
               "deferred",
               "withdrawn"
+            ]
+          },
+          "schedule_identifier": {
+            "description": "The schedule of the ECF participant",
+            "type": "string",
+            "example": "ecf-standard-january",
+            "enum": [
+              "ecf-standard-september",
+              "ecf-standard-january"
             ]
           },
           "updated_at": {
