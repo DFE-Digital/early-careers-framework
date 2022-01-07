@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Importers::SeedNPQSchedules
+class Importers::SeedSchedule
   attr_reader :path_to_csv, :klass
 
   def initialize(path_to_csv:, klass:)

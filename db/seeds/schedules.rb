@@ -89,17 +89,22 @@ npq_leadership_november_2021.update!(cohort: cohort_2021)
   )
 end
 
-Importers::SeedNPQSchedules.new(
+Importers::SeedSchedule.new(
   path_to_csv: Rails.root.join("db/seeds/schedules/npq_specialist.csv"),
   klass: Finance::Schedule::NPQSpecialist,
 ).call
 
-Importers::SeedNPQSchedules.new(
+Importers::SeedSchedule.new(
   path_to_csv: Rails.root.join("db/seeds/schedules/npq_leadership.csv"),
   klass: Finance::Schedule::NPQLeadership,
 ).call
 
-Importers::SeedNPQSchedules.new(
+Importers::SeedSchedule.new(
   path_to_csv: Rails.root.join("db/seeds/schedules/npq_aso.csv"),
   klass: Finance::Schedule::NPQSupport,
+).call
+
+Importers::SeedSchedule.new(
+  path_to_csv: Rails.root.join("db/seeds/schedules/ecf_standard.csv"),
+  klass: Finance::Schedule::ECF,
 ).call
