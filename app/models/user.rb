@@ -24,6 +24,7 @@ class User < ApplicationRecord
   has_many :npq_profiles, through: :teacher_profile
   # end: TODO
 
+  # NOTE: remove once identity populated
   has_many :npq_applications
 
   before_validation :strip_whitespace
@@ -69,7 +70,14 @@ class User < ApplicationRecord
   end
 
   def npq_registered?
-    npq? || npq_applications.any?
+    npq? || npq_applications?
+  end
+
+  def npq_applications?
+    # NOTE: remove once identity populated
+    npq_applications.any?
+    # and replace with this
+    # participant_identities.any? { |identity| identity.npq_applications.any? }
   end
 
   def participant?

@@ -38,6 +38,7 @@ module NPQ
         npq_course: npq_course,
         npq_lead_provider: npq_lead_provider,
         user: user,
+        participant_identity: participant_identity,
       )
     end
 
@@ -51,6 +52,10 @@ module NPQ
 
     def user
       Identity.find_user_by(id: user_id)
+    end
+
+    def participant_identity
+      Identity::Create.call(user: user, origin: :npq) if user_id.present?
     end
   end
 end
