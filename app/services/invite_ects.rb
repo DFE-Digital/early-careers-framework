@@ -9,7 +9,7 @@ class InviteEcts
         cohort.school.induction_coordinator_profiles.each do |sit|
           next if Email.associated_with(sit).tagged_with(:fip_preterm_reminder).any?
 
-          ParticipantMailer.fip_preterm_reminder(induction_coordinator_profile: sit, season: season, school_name: cohort.school_name).deliver_later
+          ParticipantMailer.fip_preterm_reminder(induction_coordinator_profile: sit, season: season, school_name: cohort.school.name).deliver_later
         end
       end
   end
