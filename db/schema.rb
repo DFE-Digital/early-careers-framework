@@ -190,7 +190,7 @@ ActiveRecord::Schema.define(version: 2022_01_11_133250) do
 
   create_table "declaration_states", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_declaration_id", null: false
-    t.string "state", default: "submitted", null: false
+    t.string "state", default: "submitted"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "state_reason"
@@ -478,6 +478,7 @@ ActiveRecord::Schema.define(version: 2022_01_11_133250) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "cpd_lead_provider_id"
+    t.boolean "vat_chargeable", default: true
     t.index ["cpd_lead_provider_id"], name: "index_npq_lead_providers_on_cpd_lead_provider_id"
   end
 
