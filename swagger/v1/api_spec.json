@@ -1398,7 +1398,8 @@
             "example": "ecf-standard-january",
             "enum": [
               "ecf-standard-september",
-              "ecf-standard-january"
+              "ecf-standard-january",
+              "ecf-standard-april"
             ]
           },
           "updated_at": {
@@ -1438,7 +1439,8 @@
             "type": "string",
             "enum": [
               "ecf-standard-september",
-              "ecf-standard-january"
+              "ecf-standard-january",
+              "ecf-standard-april"
             ],
             "example": "ecf-standard-september"
           },
@@ -1781,7 +1783,8 @@
             "example": "ecf-standard-january",
             "enum": [
               "ecf-standard-september",
-              "ecf-standard-january"
+              "ecf-standard-january",
+              "ecf-standard-april"
             ]
           },
           "updated_at": {
@@ -2025,7 +2028,8 @@
             "example": "ecf-standard-january",
             "enum": [
               "ecf-standard-september",
-              "ecf-standard-january"
+              "ecf-standard-january",
+              "ecf-standard-april"
             ]
           },
           "updated_at": {
@@ -2418,7 +2422,8 @@
             "example": "ecf-standard-january",
             "enum": [
               "ecf-standard-september",
-              "ecf-standard-january"
+              "ecf-standard-january",
+              "ecf-standard-april"
             ]
           },
           "updated_at": {
