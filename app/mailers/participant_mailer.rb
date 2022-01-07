@@ -63,7 +63,7 @@ class ParticipantMailer < ApplicationMailer
     ).tag(:request_for_details).associate_with(participant_profile, as: :participant_profile)
   end
 
-  def fip_preterm_reminder(induction_coordinator_profile:, season:)
+  def fip_preterm_reminder(induction_coordinator_profile:, season:, school_name:)
     template_mail(
       PARTICIPANT_TEMPLATES[:fip_preterm_reminder],
       to: induction_coordinator_profile.user.email,
@@ -72,13 +72,13 @@ class ParticipantMailer < ApplicationMailer
       personalisation: {
         season: season,
         name: induction_coordinator_profile.user.full_name,
-        school_name: induction_coordinator_profile.school.name,
+        school_name: school_name,
         sign_in: new_user_sign_in_url,
       },
     ).tag(:fip_preterm_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
   end
 
-  def cip_preterm_reminder(induction_coordinator_profile:, season:)
+  def cip_preterm_reminder(induction_coordinator_profile:, season:, school_name:)
     template_mail(
       PARTICIPANT_TEMPLATES[:cip_preterm_reminder],
       to: induction_coordinator_profile.user.email,
@@ -87,7 +87,7 @@ class ParticipantMailer < ApplicationMailer
       personalisation: {
         season: season,
         name: induction_coordinator_profile.user.full_name,
-        school_name: induction_coordinator_profile.school.name,
+        school_name: school_name,
         sign_in: new_user_sign_in_url,
       },
     ).tag(:cip_preterm_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
