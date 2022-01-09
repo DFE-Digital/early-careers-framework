@@ -32,7 +32,7 @@ module Api
       end
 
       def accept
-        npq_application = npq_lead_provider.npq_applications.includes(:user, :participant_identity, :npq_course).find(params[:id])
+        npq_application = npq_lead_provider.npq_applications.includes(:participant_identity, :npq_course).find(params[:id])
         if NPQ::Accept.call(npq_application: npq_application)
           render json: NPQApplicationSerializer.new(npq_application).serializable_hash
         else
@@ -47,7 +47,7 @@ module Api
       end
 
       def query_scope
-        scope = npq_lead_provider.npq_applications.includes(:user, :participant_identity, :npq_course)
+        scope = npq_lead_provider.npq_applications.includes(:participant_identity, :npq_course)
         scope = scope.where("updated_at > ?", updated_since) if updated_since.present?
         scope
       end

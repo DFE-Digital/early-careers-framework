@@ -12,13 +12,14 @@ RSpec.describe NPQ::Accept do
   describe "#call" do
     let(:trn) { rand(1_000_000..9_999_999).to_s }
     let(:user) { create(:user) }
+    let(:identity) { create(:participant_identity, user: user) }
     let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
     let(:npq_lead_provider) { create(:npq_lead_provider) }
 
     let(:npq_application) do
       NPQApplication.new(
         teacher_reference_number: trn,
-        user: user,
+        participant_identity: identity,
         npq_course: npq_course,
         npq_lead_provider: npq_lead_provider,
         school_urn: "123456",
@@ -32,7 +33,7 @@ RSpec.describe NPQ::Accept do
       let(:other_npq_application) do
         NPQApplication.new(
           teacher_reference_number: trn,
-          user: user,
+          participant_identity: identity,
           npq_course: npq_course,
           npq_lead_provider: other_npq_lead_provider,
           school_urn: "123456",
@@ -58,7 +59,7 @@ RSpec.describe NPQ::Accept do
       let(:other_npq_application) do
         NPQApplication.create!(
           teacher_reference_number: trn,
-          user: user,
+          participant_identity: identity,
           npq_course: npq_course,
           npq_lead_provider: other_npq_lead_provider,
           school_urn: "123456",
@@ -89,7 +90,7 @@ RSpec.describe NPQ::Accept do
       let(:other_npq_application) do
         NPQApplication.new(
           teacher_reference_number: trn,
-          user: user,
+          participant_identity: identity,
           npq_course: other_npq_course,
           npq_lead_provider: other_npq_lead_provider,
           school_urn: "123456",
@@ -138,7 +139,7 @@ RSpec.describe NPQ::Accept do
           NPQApplication.new(
             teacher_reference_number: trn,
             teacher_reference_number_verified: true,
-            user: user,
+            participant_identity: identity,
             npq_course: npq_course,
             npq_lead_provider: npq_lead_provider,
           )
