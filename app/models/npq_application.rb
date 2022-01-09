@@ -3,7 +3,7 @@
 class NPQApplication < ApplicationRecord
   has_paper_trail only: %i[user_id npq_lead_provider_id npq_course_id created_at updated_at lead_provider_approval_status]
 
-  self.ignored_columns = ["user_id"]
+  self.ignored_columns = %w[user_id]
 
   has_one :profile, class_name: "ParticipantProfile::NPQ", foreign_key: :id, touch: true
   belongs_to :participant_identity
@@ -38,9 +38,7 @@ class NPQApplication < ApplicationRecord
   validate :validate_rejected_status_cannot_change
   validate :validate_accepted_status_cannot_change
 
-  def user
-    participant_identity.user
-  end
+  delegate :user, to: :participant_identity
 
   def validate_rejected_status_cannot_change
     if lead_provider_approval_status_changed?(from: "rejected")
