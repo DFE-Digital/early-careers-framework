@@ -9,9 +9,9 @@ RSpec.describe RecordDeclarations::Base do
   let(:school_cohort)     { create(:school_cohort, school: school, cohort: cohort) }
   let(:declaration_date)  { Time.zone.parse("2021-11-02").rfc3339 }
   let(:declaration_type)  { "started" }
-  let(:ect_participant_profile) { create(:ect_participant_profile, school_cohort: school_cohort, teacher_profile: teacher_profile) }
   let(:user) { create(:user) }
   let(:teacher_profile) { create(:teacher_profile, user: user) }
+  let!(:ect_participant_profile) { create(:ect_participant_profile, school_cohort: school_cohort, teacher_profile: teacher_profile) }
 
   let(:params) do
     {
