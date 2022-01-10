@@ -12,7 +12,7 @@ FactoryBot.define do
     end
 
     initialize_with do
-      ParticipantIdentity.find_or_create_by!(email: email) do |identity|
+      ParticipantIdentity.find_or_initialize_by(email: email) do |identity|
         identity.user = user
         identity.external_identifier = user.id
       end

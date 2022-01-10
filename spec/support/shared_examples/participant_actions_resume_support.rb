@@ -81,7 +81,7 @@ RSpec.shared_examples "JSON Participant resume documentation" do |url, request_s
                 }
 
       response "200", "The #{humanised_description} being resumed" do
-        let(:id) { participant.user_id }
+        let(:id) { participant.participant_identity.external_identifier }
 
         let(:params) do
           {

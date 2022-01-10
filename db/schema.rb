@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_06_111301) do
+ActiveRecord::Schema.define(version: 2022_01_08_165316) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -428,7 +428,6 @@ ActiveRecord::Schema.define(version: 2022_01_06_111301) do
   end
 
   create_table "npq_applications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "user_id", null: false
     t.uuid "npq_lead_provider_id", null: false
     t.uuid "npq_course_id", null: false
     t.date "date_of_birth"
@@ -448,7 +447,6 @@ ActiveRecord::Schema.define(version: 2022_01_06_111301) do
     t.index ["npq_course_id"], name: "index_npq_applications_on_npq_course_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_applications_on_npq_lead_provider_id"
     t.index ["participant_identity_id"], name: "index_npq_applications_on_participant_identity_id"
-    t.index ["user_id"], name: "index_npq_applications_on_user_id"
   end
 
   create_table "npq_contracts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -856,7 +854,7 @@ ActiveRecord::Schema.define(version: 2022_01_06_111301) do
   add_foreign_key "nomination_emails", "schools"
   add_foreign_key "npq_applications", "npq_courses"
   add_foreign_key "npq_applications", "npq_lead_providers"
-  add_foreign_key "npq_applications", "users"
+  add_foreign_key "npq_applications", "participant_identities"
   add_foreign_key "npq_lead_providers", "cpd_lead_providers"
   add_foreign_key "participant_bands", "call_off_contracts"
   add_foreign_key "participant_declaration_attempts", "participant_declarations"

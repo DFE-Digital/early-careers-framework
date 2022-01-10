@@ -45,9 +45,9 @@ private
   def to_row(record)
     [
       record.id,
-      participant_id(record),
-      full_name(record),
-      email(record),
+      record.participant_identity.external_identifier,
+      record.participant_identity.user.full_name,
+      record.participant_identity.email,
       true,
       record.teacher_reference_number,
       record.teacher_reference_number_verified,
@@ -61,26 +61,5 @@ private
       record.created_at.rfc3339,
       record.updated_at.rfc3339,
     ]
-  end
-
-  def participant_id(record)
-    # NOTE: only until identity data populated
-    record.user_id
-    # then change to this
-    # record.participant_identity.external_identifier
-  end
-
-  def full_name(record)
-    # NOTE: only until identity data populated
-    record.user.full_name
-    # then change to this
-    # record.participant_identity.user.full_name
-  end
-
-  def email(record)
-    # NOTE: only until identity data populated
-    record.user.email
-    # then change to this
-    # record.participant_identity.email
   end
 end

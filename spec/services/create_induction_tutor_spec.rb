@@ -129,7 +129,8 @@ RSpec.describe CreateInductionTutor do
       end
 
       context "when the induction coordinator applied for npq" do
-        let!(:npq_application) { create(:npq_application, user: existing_profile.user) }
+        let(:identity) { create(:participant_identity, user: existing_profile.user) }
+        let!(:npq_application) { create(:npq_application, participant_identity: identity) }
 
         it "retains the user but deletes the induction coordinator profile" do
           expect(school.induction_coordinator_profiles.first).to eq(existing_profile)

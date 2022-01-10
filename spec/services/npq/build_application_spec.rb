@@ -43,7 +43,6 @@ RSpec.describe NPQ::BuildApplication do
           npq_application_params.merge(
             npq_course_id: npq_course.id,
             npq_lead_provider_id: npq_lead_provider.id,
-            user_id: user.id,
           ),
         )
     end

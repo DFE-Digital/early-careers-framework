@@ -79,7 +79,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/api_sp
     before do
       Participants::Defer::NPQ.call(
         params: {
-          participant_id: npq_application.user_id,
+          participant_id: npq_application.participant_identity.external_identifier,
           reason: Participants::Defer::NPQ.reasons.sample,
           course_identifier: npq_application.npq_course.identifier,
           cpd_lead_provider: cpd_lead_provider,
@@ -120,7 +120,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/api_sp
                 }
 
       response "200", "The NPQ participant being withdrawn" do
-        let(:id) { npq_application.user_id }
+        let(:id) { npq_application.participant_identity.external_identifier }
         let(:attributes) do
           {
             reason: Participants::Withdraw::NPQ.reasons.sample,
@@ -142,7 +142,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/api_sp
       end
 
       response "422", "Unprocessable entity" do
-        let(:id) { npq_application.user_id }
+        let(:id) { npq_application.participant_identity.external_identifier }
         let(:attributes) do
           {
             reason: Participants::Withdraw::NPQ.reasons.sample,
