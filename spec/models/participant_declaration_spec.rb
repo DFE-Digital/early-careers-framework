@@ -170,7 +170,6 @@ RSpec.describe ParticipantDeclaration, type: :model do
     end
   end
 
-  # TODO: how to handle similar declarations but with different declaration_date
   describe "#similar_participant_declarations_for(profile_participants)", :with_default_schedules do
     let(:validation_data) do
       {
