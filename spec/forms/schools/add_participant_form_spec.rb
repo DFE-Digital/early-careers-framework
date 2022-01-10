@@ -110,9 +110,13 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
   end
 
   describe "start_term_legend" do
+    before do
+      form.full_name = "John Doe"
+    end
+
     context "when the user is not a mentor" do
       before do
-        form.full_name = "John Doe"
+        form.participant_type = :ect
       end
 
       it "returns the right legend" do
@@ -121,11 +125,8 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
     end
 
     context "when the user is a mentor" do
-      let(:mentor) { create :user, :mentor }
-
       before do
-        form.full_name = "John Doe"
-        create(:mentor_participant_profile, school_cohort: school_cohort).user
+        form.participant_type = :mentor
       end
 
       it "returns the right string" do
