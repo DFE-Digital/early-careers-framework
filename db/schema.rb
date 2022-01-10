@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_08_165316) do
+ActiveRecord::Schema.define(version: 2022_01_10_103832) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -388,7 +388,7 @@ ActiveRecord::Schema.define(version: 2022_01_08_165316) do
 
   create_table "milestones", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.text "name", null: false
-    t.date "milestone_date", null: false
+    t.date "milestone_date"
     t.date "payment_date", null: false
     t.uuid "schedule_id", null: false
     t.datetime "created_at", precision: 6, null: false
