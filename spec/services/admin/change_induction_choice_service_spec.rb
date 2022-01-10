@@ -169,8 +169,12 @@ RSpec.describe Admin::ChangeInductionService do
         end
 
         it "does not change participants when changing to CIP" do
-          expect { service.change_induction_provision(:core_induction_programme) }
-            .not_to change { school.participants_for(cohort).map(&:id) }
+          participant_ids = school.participants_for(cohort).map(&:id)
+          service.change_induction_provision(:core_induction_programme)
+          expect(school.participants_for(cohort).map(&:id)).to match_array participant_ids
+
+          # expect { service.change_induction_provision(:core_induction_programme) }
+          #   .not_to change { school.participants_for(cohort).map(&:id) }
           expect(participant_profiles.each(&:reload)).to all be_active_record
         end
       end
