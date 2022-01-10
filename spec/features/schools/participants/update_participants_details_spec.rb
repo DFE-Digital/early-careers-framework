@@ -27,7 +27,7 @@ RSpec.describe "Update participants details", js: true do
 
     when_i_add_ect_or_mentor_email
     when_i_click_on_continue
-    then_i_am_taken_to_choose_term_page_as_mentor
+    then_i_am_taken_to_choose_term_page_as_ect
 
     when_i_choose_start_term
     when_i_click_on_continue
@@ -65,7 +65,7 @@ RSpec.describe "Update participants details", js: true do
 
     when_i_add_ect_or_mentor_email
     when_i_click_on_continue
-    then_i_am_taken_to_choose_term_page_as_mentor
+    then_i_am_taken_to_choose_term_page_as_ect
 
     when_i_choose_start_term
     when_i_click_on_continue
@@ -98,7 +98,7 @@ RSpec.describe "Update participants details", js: true do
 
     when_i_add_ect_or_mentor_email
     when_i_click_on_continue
-    then_i_am_taken_to_choose_term_page_as_mentor
+    then_i_am_taken_to_choose_term_page_as_ect
 
     when_i_choose_start_term
     when_i_click_on_continue
