@@ -420,6 +420,6 @@ class SchoolMailer < ApplicationMailer
         season: season,
         school_name: school.name,
       },
-    ).tag(:school_preterm_reminder).associate_with(school: school)
+    ).tag(:school_preterm_reminder).associate_with(school)
   end
 end
