@@ -43,7 +43,6 @@ RSpec.describe "NPQ Participants API", type: :request do
           get "/api/v1/participants/npq"
 
           user = User.find(parsed_response["data"][0]["id"])
-          # expect(parsed_response["data"][0]["id"]).to be_in(NPQApplication.pluck(:user_id))
           expect(parsed_response["data"][0]["id"]).to be_in(ParticipantIdentity.joins(:npq_applications).pluck(:user_id))
           teacher_profile = user.teacher_profile
 
