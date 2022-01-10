@@ -103,6 +103,7 @@ class ParticipantDeclaration < ApplicationRecord
   def duplicate_declarations
     self.class.joins(participant_profile: :teacher_profile)
       .where(participant_profiles: { teacher_profiles: { trn: participant_profile.teacher_profile.trn } })
+      .where.not(participant_profiles: { teacher_profiles: { trn: nil } })
       .where.not(user_id: user_id)
       .where(
         declaration_type: declaration_type,
