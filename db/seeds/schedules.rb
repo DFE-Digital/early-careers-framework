@@ -108,3 +108,18 @@ Importers::SeedSchedule.new(
   path_to_csv: Rails.root.join("db/seeds/schedules/ecf_standard.csv"),
   klass: Finance::Schedule::ECF,
 ).call
+
+Importers::SeedSchedule.new(
+  path_to_csv: Rails.root.join("db/seeds/schedules/ecf_reduced.csv"),
+  klass: Finance::Schedule::ECF,
+).call
+
+Importers::SeedSchedule.new(
+  path_to_csv: Rails.root.join("db/seeds/schedules/ecf_extended.csv"),
+  klass: Finance::Schedule::ECF,
+).call
+
+Importers::SeedSchedule.new(
+  path_to_csv: Rails.root.join("db/seeds/schedules/ecf_replacement.csv"),
+  klass: Finance::Schedule::ECF,
+).call

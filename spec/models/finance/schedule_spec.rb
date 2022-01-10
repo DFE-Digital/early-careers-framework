@@ -21,8 +21,23 @@ RSpec.describe Finance::Schedule::ECF, type: :model do
     end
   end
 
-  it "seeds ecf-standard-april schedule and milestones" do
+  it "seeds ecf schedules and milestones" do
     schedule = described_class.find_by(schedule_identifier: "ecf-standard-april")
+
+    expect(schedule).to be_present
+    expect(schedule.milestones.count).to eql(6)
+
+    schedule = described_class.find_by(schedule_identifier: "ecf-reduced-april")
+
+    expect(schedule).to be_present
+    expect(schedule.milestones.count).to eql(6)
+
+    schedule = described_class.find_by(schedule_identifier: "ecf-extended-april")
+
+    expect(schedule).to be_present
+    expect(schedule.milestones.count).to eql(6)
+
+    schedule = described_class.find_by(schedule_identifier: "ecf-replacement-april")
 
     expect(schedule).to be_present
     expect(schedule.milestones.count).to eql(6)
