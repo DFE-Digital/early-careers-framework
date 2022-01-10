@@ -411,15 +411,22 @@ class SchoolMailer < ApplicationMailer
   end
 
   def school_preterm_reminder(school:, season:)
+    nomination_email = NominationEmail.create_nomination_email(
+      sent_at: Time.zone.now,
+      sent_to: school.contact_email,
+      school: school,
+    )
+
     template_mail(
       SCHOOL_PRETERM_REMINDER,
-      to: school.primary_contact_email,
+      to: school.contact_email,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
         season: season,
         school_name: school.name,
+        nomination_link: nomination_email.nomination_url,
       },
-    ).tag(:school_preterm_reminder).associate_with(school: school)
+    ).tag(:school_preterm_reminder).associate_with(school)
   end
 end
