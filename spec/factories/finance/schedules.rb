@@ -25,11 +25,11 @@ FactoryBot.define do
 
     factory :ecf_schedule, class: "Finance::Schedule::ECF", parent: :schedule do
       name { "ECF September standard 2021" }
-      schedule_identifier { "ecf-september-standard-2021" }
+      schedule_identifier { "ecf-standard-september" }
 
       factory :ecf_schedule_january do
         name { "ECF January standard 2021" }
-        schedule_identifier { "ecf-january-standard-2021" }
+        schedule_identifier { "ecf-standard-january" }
       end
     end
 

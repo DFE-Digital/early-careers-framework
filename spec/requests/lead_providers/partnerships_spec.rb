@@ -31,4 +31,37 @@ RSpec.describe "Lead provider partnerships spec", type: :request do
       end
     end
   end
+
+  describe "GET /lead-providers/partnerships/active" do
+    let(:parsed_response) { CSV.parse(response.body, headers: true) }
+
+    let(:school) { create :school, name: "Active School" }
+    let(:delivery_partner) { create :delivery_partner, name: "Active Delivery Partner" }
+
+    let!(:partnership) { create :partnership, cohort: cohort, lead_provider: user.lead_provider, school: school, delivery_partner: delivery_partner }
+    let!(:inactive_partnership) { create :partnership, :challenged, cohort: cohort, lead_provider: user.lead_provider }
+
+    before do
+      get "/lead-providers/partnerships/active.csv"
+    end
+
+    it "returns the correct CSV content type header" do
+      expect(response.headers["Content-Type"]).to include("text/csv")
+    end
+
+    it "returns only active partnerships" do
+      expect(parsed_response.length).to eql 1
+    end
+
+    it "returns the correct headers" do
+      expect(parsed_response.headers).to match_array(%w[urn name delivery_partner])
+    end
+
+    it "returns the correct values" do
+      school_row = parsed_response.find { |row| row["urn"] == school.urn }
+
+      expect(school_row["name"]).to eq "Active School"
+      expect(school_row["delivery_partner"]).to eq "Active Delivery Partner"
+    end
+  end
 end

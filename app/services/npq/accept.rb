@@ -35,7 +35,8 @@ module NPQ
   private
 
     def has_other_accepted_applications_with_same_course?
-      NPQApplication.where(user_id: user.id)
+      NPQApplication.joins(:participant_identity)
+        .where(participant_identity: { user_id: user.id })
         .where(npq_course: npq_course)
         .where(lead_provider_approval_status: "accepted")
         .where.not(id: npq_application.id)
@@ -43,7 +44,8 @@ module NPQ
     end
 
     def other_applications
-      @other_applications ||= NPQApplication.where(user_id: user.id)
+      @other_applications ||= NPQApplication.joins(:participant_identity)
+                                            .where(participant_identity: { user_id: user.id })
                                             .where(npq_course: npq_course)
                                             .where.not(id: npq_application.id)
     end
@@ -56,7 +58,7 @@ module NPQ
         teacher_profile: teacher_profile,
         school_urn: npq_application.school_urn,
         school_ukprn: npq_application.school_ukprn,
-        participant_identity: Identity::Create.call(user: user, origin: :npq),
+        participant_identity: npq_application.participant_identity,
       ) do |participant_profile|
         ParticipantProfileState.find_or_create_by!(participant_profile: participant_profile)
       end
@@ -67,7 +69,7 @@ module NPQ
     end
 
     def user
-      @user ||= npq_application.user
+      @user ||= npq_application.participant_identity.user
     end
 
     def npq_course

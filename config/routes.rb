@@ -148,7 +148,11 @@ Rails.application.routes.draw do
     get "/api-docs/v1/api_spec.yml" => "openapi#api_docs", as: :api_docs
 
     resources :your_schools, path: "/your-schools", only: %i[index create]
-    resources :partnerships, only: %i[show]
+    resources :partnerships, only: %i[show] do
+      collection do
+        get :active
+      end
+    end
 
     namespace :report_schools, path: "report-schools" do
       get :start, to: "base#start"

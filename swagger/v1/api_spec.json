@@ -1395,10 +1395,11 @@
           "schedule_identifier": {
             "description": "The schedule of the ECF participant",
             "type": "string",
-            "example": "ecf-january-standard-2021",
+            "example": "ecf-standard-january",
             "enum": [
-              "ecf-september-standard-2021",
-              "ecf-january-standard-2021"
+              "ecf-standard-september",
+              "ecf-standard-january",
+              "ecf-standard-april"
             ]
           },
           "updated_at": {
@@ -1437,10 +1438,11 @@
             "description": "The new schedule of the participant",
             "type": "string",
             "enum": [
-              "ecf-september-standard-2021",
-              "ecf-january-standard-2021"
+              "ecf-standard-september",
+              "ecf-standard-january",
+              "ecf-standard-april"
             ],
-            "example": "ecf-september-standard-2021"
+            "example": "ecf-standard-september"
           },
           "course_identifier": {
             "description": "The type of course the participant is enrolled in",
@@ -1457,7 +1459,7 @@
           "course_identifier"
         ],
         "example": {
-          "schedule_identifier": "ecf-january-standard-2021",
+          "schedule_identifier": "ecf-standard-january",
           "course_identifier": "ecf-mentor"
         }
       },
@@ -1491,7 +1493,7 @@
           "data": {
             "type": "participant-change-schedule",
             "attributes": {
-              "schedule_identifier": "ecf-january-standard-2021",
+              "schedule_identifier": "ecf-standard-january",
               "course_identifier": "ecf-mentor"
             }
           }
@@ -1778,10 +1780,11 @@
           "schedule_identifier": {
             "description": "The schedule of the ECF participant",
             "type": "string",
-            "example": "ecf-january-standard-2021",
+            "example": "ecf-standard-january",
             "enum": [
-              "ecf-september-standard-2021",
-              "ecf-january-standard-2021"
+              "ecf-standard-september",
+              "ecf-standard-january",
+              "ecf-standard-april"
             ]
           },
           "updated_at": {
@@ -2022,10 +2025,11 @@
           "schedule_identifier": {
             "description": "The schedule of the ECF participant",
             "type": "string",
-            "example": "ecf-january-standard-2021",
+            "example": "ecf-standard-january",
             "enum": [
-              "ecf-september-standard-2021",
-              "ecf-january-standard-2021"
+              "ecf-standard-september",
+              "ecf-standard-january",
+              "ecf-standard-april"
             ]
           },
           "updated_at": {
@@ -2415,10 +2419,11 @@
           "schedule_identifier": {
             "description": "The schedule of the ECF participant",
             "type": "string",
-            "example": "ecf-january-standard-2021",
+            "example": "ecf-standard-january",
             "enum": [
-              "ecf-september-standard-2021",
-              "ecf-january-standard-2021"
+              "ecf-standard-september",
+              "ecf-standard-january",
+              "ecf-standard-april"
             ]
           },
           "updated_at": {

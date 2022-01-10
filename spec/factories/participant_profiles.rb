@@ -23,7 +23,7 @@ FactoryBot.define do
     end
 
     factory :npq_participant_profile, class: "ParticipantProfile::NPQ" do
-      npq_application { association :npq_application, user: teacher_profile.user, school_urn: rand(100_000..999_999) }
+      npq_application { association :npq_application, participant_identity: participant_identity, school_urn: rand(100_000..999_999) }
       schedule do |participant_profile|
         if Finance::Schedule::NPQLeadership::IDENTIFIERS.include?(participant_profile.npq_application.npq_course.identifier)
           Finance::Schedule::NPQLeadership.default || create(:npq_leadership_schedule)

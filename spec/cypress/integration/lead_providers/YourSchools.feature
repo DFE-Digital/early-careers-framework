@@ -7,6 +7,8 @@ Feature: Your schools flow
 
   Scenario: Viewing my schools
     Then "page body" should contain "Your schools"
+    Then "page body" should contain "Confirm more schools"
+    Then "page body" should contain "Download schools for 2021"
     And the table should have 3 rows
     And "page body" should contain "Big School"
     And "page body" should contain "Middle School"

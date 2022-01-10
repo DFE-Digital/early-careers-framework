@@ -20,6 +20,13 @@ RSpec.describe Finance::Schedule::ECF, type: :model do
       expect(subject.cohort.start_year).to eql 2021
     end
   end
+
+  it "seeds ecf-standard-april schedule and milestones" do
+    schedule = described_class.find_by(schedule_identifier: "ecf-standard-april")
+
+    expect(schedule).to be_present
+    expect(schedule.milestones.count).to eql(6)
+  end
 end
 
 RSpec.describe Finance::Schedule::NPQLeadership, type: :model do

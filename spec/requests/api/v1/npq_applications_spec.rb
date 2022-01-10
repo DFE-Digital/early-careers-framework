@@ -258,8 +258,9 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
     end
 
     context "when participant has applied for multiple NPQs" do
-      let!(:other_npq_application) { create(:npq_application, npq_course: npq_course, npq_lead_provider: npq_lead_provider, user: user) }
-      let!(:other_accepted_npq_application) { create(:npq_application, npq_course: another_npq_course, npq_lead_provider: npq_lead_provider, user: user, lead_provider_approval_status: "accepted") }
+      let(:identity) { create(:participant_identity, user: user) }
+      let!(:other_npq_application) { create(:npq_application, npq_course: npq_course, npq_lead_provider: npq_lead_provider, participant_identity: identity) }
+      let!(:other_accepted_npq_application) { create(:npq_application, npq_course: another_npq_course, npq_lead_provider: npq_lead_provider, participant_identity: identity, lead_provider_approval_status: "accepted") }
 
       it "rejects all pending NPQs on same course" do
         post "/api/v1/npq-applications/#{default_npq_application.id}/accept"

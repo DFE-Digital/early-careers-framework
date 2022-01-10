@@ -42,6 +42,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
 private
 
   def create_accepted_application(user, npq_course, npq_lead_provider)
+    Identity::Create.call(user: user, origin: :npq)
     npq_application = NPQ::BuildApplication.call(
       npq_application_params: attributes_for(:npq_application),
       npq_course_id: npq_course.id,
@@ -58,7 +59,7 @@ private
     travel_to(timestamp) do
       RecordDeclarations::Started::NPQ.call(
         params: {
-          participant_id: npq_application.user.id,
+          participant_id: npq_application.participant_identity.external_identifier,
           course_identifier: npq_application.npq_course.identifier,
           declaration_date: timestamp.rfc3339,
           cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider,

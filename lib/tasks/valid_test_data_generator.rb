@@ -193,6 +193,7 @@ module ValidTestDataGenerator
     def create_participant(school:)
       name = Faker::Name.name
       user = User.create!(full_name: name, email: Faker::Internet.email(name: name))
+      identity = Identity::Create.call(user: user, origin: :npq)
 
       npq_application = NPQApplication.create!(
         active_alert: "",
@@ -206,7 +207,7 @@ module ValidTestDataGenerator
         teacher_reference_number_verified: true,
         npq_course: NPQCourse.all.sample,
         npq_lead_provider: lead_provider,
-        user: user,
+        participant_identity: identity,
       )
 
       return if [true, false].sample

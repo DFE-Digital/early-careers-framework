@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_04_162036) do
+ActiveRecord::Schema.define(version: 2022_01_08_165316) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -428,7 +428,6 @@ ActiveRecord::Schema.define(version: 2022_01_04_162036) do
   end
 
   create_table "npq_applications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "user_id", null: false
     t.uuid "npq_lead_provider_id", null: false
     t.uuid "npq_course_id", null: false
     t.date "date_of_birth"
@@ -444,9 +443,10 @@ ActiveRecord::Schema.define(version: 2022_01_04_162036) do
     t.text "school_ukprn"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.uuid "participant_identity_id"
     t.index ["npq_course_id"], name: "index_npq_applications_on_npq_course_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_applications_on_npq_lead_provider_id"
-    t.index ["user_id"], name: "index_npq_applications_on_user_id"
+    t.index ["participant_identity_id"], name: "index_npq_applications_on_participant_identity_id"
   end
 
   create_table "npq_contracts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -576,8 +576,8 @@ ActiveRecord::Schema.define(version: 2022_01_04_162036) do
     t.string "training_status", default: "active", null: false
     t.string "profile_duplicity", default: "single", null: false
     t.uuid "participant_identity_id"
-    t.string "start_term", default: "Autumn 2021", null: false
     t.string "notes"
+    t.string "start_term", default: "Autumn 2021", null: false
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"
@@ -693,6 +693,7 @@ ActiveRecord::Schema.define(version: 2022_01_04_162036) do
     t.string "schedule_identifier"
     t.string "type", default: "Finance::Schedule::ECF"
     t.uuid "cohort_id"
+    t.text "identifier_alias"
     t.index ["cohort_id"], name: "index_schedules_on_cohort_id"
   end
 
@@ -855,7 +856,7 @@ ActiveRecord::Schema.define(version: 2022_01_04_162036) do
   add_foreign_key "nomination_emails", "schools"
   add_foreign_key "npq_applications", "npq_courses"
   add_foreign_key "npq_applications", "npq_lead_providers"
-  add_foreign_key "npq_applications", "users"
+  add_foreign_key "npq_applications", "participant_identities"
   add_foreign_key "npq_lead_providers", "cpd_lead_providers"
   add_foreign_key "participant_bands", "call_off_contracts"
   add_foreign_key "participant_declaration_attempts", "participant_declarations"
