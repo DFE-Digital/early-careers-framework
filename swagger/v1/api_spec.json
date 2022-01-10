@@ -3756,7 +3756,7 @@
             "description": "[Deprecated - use state instead] Indicates whether this declaration has been voided",
             "type": "boolean",
             "nullable": false,
-            "example": false
+            "example": true
           },
           "state": {
             "description": "Indicates the state of this payment declaration",
