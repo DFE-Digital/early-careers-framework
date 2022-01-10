@@ -1,7 +1,11 @@
 <% if manual_removal_possible? %>
   <%= govuk_link_to "Remove #{name} from this cohort", schools_participant_remove_path(school_id: profile.school, cohort_id: profile.cohort, participant_id: profile) %>
 <% elsif fip? %>
-  <p class="govuk-body">Contact <%= lead_provider %> school_lead_provider if you want to remove <%= name %> from this cohort.</p>
+  <% if lead_provider %>
+    <p class="govuk-body">Contact <%= lead_provider.name %> if you want to remove <%= name %> from this cohort.</p>
+  <% else %>
+    <p class="govuk-body">If <%= name %> should not be in this cohort, contact your training provider to remove them.</p>
+  <% end %>
 <% elsif cip? %>
   <p class="govuk-body">If <%= name %> should not be in this cohort, <%= render MailToSupportComponent.new("contact us") %> to remove them.</p>
 <% end %>
