@@ -87,6 +87,7 @@ properties:
     enum:
       - ecf-standard-september
       - ecf-standard-january
+      - ecf-standard-april
   updated_at:
     description: "The date the ECF participant was last updated"
     type: string
