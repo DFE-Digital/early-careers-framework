@@ -52,6 +52,10 @@ GEM
     activerecord (6.1.4.4)
       activemodel (= 6.1.4.4)
       activesupport (= 6.1.4.4)
+    activerecord-pg_enum (1.2.2)
+      activerecord (>= 4.1.0)
+      activesupport
+      pg
     activerecord-session_store (2.0.0)
       actionpack (>= 5.2.4.1)
       activerecord (>= 5.2.4.1)
@@ -599,6 +603,7 @@ PLATFORMS
 DEPENDENCIES
   aasm
   aasm-diagram
+  activerecord-pg_enum
   activerecord-session_store (>= 2.0.0)
   ar-uuid (~> 0.2.2)
   aws-sdk-s3

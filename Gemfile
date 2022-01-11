@@ -30,7 +30,7 @@ gem "logstash-event"
 
 # Use postgresql as the database for Active Record
 gem "pg", ">= 0.18", "< 2.0"
-
+gem "activerecord-pg_enum"
 # Use UUIDs as db primary key by default
 gem "ar-uuid", "~> 0.2.2"
 

@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 2022_01_11_133250) do
   enable_extension "plpgsql"
 
   # These are custom enum types that must be created before they can be used in the schema definition
-  create_enum "ineligibility_reason_type", ["duplicate"]
+  create_enum "state_reason_type", ["duplicate"]
 
   create_table "active_storage_attachments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
@@ -196,6 +196,7 @@ ActiveRecord::Schema.define(version: 2022_01_11_133250) do
     t.string "state", default: "submitted", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.enum "state_reason", as: "state_reason_type"
     t.index ["participant_declaration_id"], name: "index_declaration_states_on_participant_declaration_id"
   end
 
@@ -522,7 +523,6 @@ ActiveRecord::Schema.define(version: 2022_01_11_133250) do
     t.string "state", default: "submitted", null: false
     t.uuid "participant_profile_id"
     t.uuid "original_participant_declaration_id"
-    t.enum "ineligibility_reason", as: "ineligibility_reason_type"
     t.index ["cpd_lead_provider_id"], name: "index_participant_declarations_on_cpd_lead_provider_id"
     t.index ["original_participant_declaration_id"], name: "original_participant_declaration_index"
     t.index ["participant_profile_id"], name: "index_participant_declarations_on_participant_profile_id"
