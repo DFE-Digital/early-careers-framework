@@ -23,7 +23,7 @@ class DeclarationState < ApplicationRecord
   end
 
   def self.ineligible!(participant_declaration, reason:)
-    participant_declaration.declaration_states
-      .create!(state: states[:ineligible], state_reason: reason)
+    create!(participant_declaration: participant_declaration, state: states[:ineligible], state_reason: reason)
+    participant_declaration.public_send("#{states[:ineligible]}!")
   end
 end

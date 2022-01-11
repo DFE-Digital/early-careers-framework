@@ -29,26 +29,25 @@ module RecordDeclarations
     end
 
     def call
+      unless valid?
+        raise ActionController::ParameterMissing, errors.map(&:message)
+      end
+
+      declaration_attempt = create_declaration_attempt!
+      validate_provider!
+      validate_milestone!
+      validate_participant_state!
+
+      raise ActiveRecord::RecordNotUnique, "Declaration with given participant ID already exists" if record_exists_with_different_declaration_date?
+
       ParticipantDeclaration.transaction do
-        unless valid?
-          raise ActionController::ParameterMissing, errors.map(&:message)
-        end
-
-        declaration_attempt = create_declaration_attempt!
-        validate_provider!
-        validate_milestone!
-        validate_participant_state!
-
-        raise ActiveRecord::RecordNotUnique, "Declaration with given participant ID already exists" if record_exists_with_different_declaration_date?
-
         DeclarationState.submitted!(participant_declaration)
 
         set_eligibility
 
         declaration_attempt.update!(participant_declaration: participant_declaration)
-
-        ParticipantDeclarationSerializer.new(participant_declaration).serializable_hash.to_json
       end
+      ParticipantDeclarationSerializer.new(participant_declaration).serializable_hash.to_json
     end
 
   private
@@ -68,7 +67,7 @@ module RecordDeclarations
         participant_declaration
           .update!(original_participant_declaration: original_participant_declaration)
 
-        participant_declaration.make_ineligible!(:duplicate)
+        participant_declaration.make_ineligible!(reason: :duplicate)
       elsif user_profile.fundable?
         participant_declaration.make_eligible!
       end

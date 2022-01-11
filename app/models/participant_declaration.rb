@@ -92,7 +92,7 @@ class ParticipantDeclaration < ApplicationRecord
     DeclarationState.paid!(self) if payable?
   end
 
-  def make_ineligible!(reason)
+  def make_ineligible!(reason: nil)
     return unless submitted?
 
     DeclarationState.ineligible!(self, reason: reason)
