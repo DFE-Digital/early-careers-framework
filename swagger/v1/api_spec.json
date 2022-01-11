@@ -1512,6 +1512,7 @@
           "cohort",
           "status",
           "training_status",
+          "schedule_identifier",
           "updated_at"
         ],
         "properties": {
@@ -1611,6 +1612,15 @@
               "active",
               "deferred",
               "withdrawn"
+            ]
+          },
+          "schedule_identifier": {
+            "description": "The schedule of the ECF participant",
+            "type": "string",
+            "example": "ecf-standard-january",
+            "enum": [
+              "ecf-standard-september",
+              "ecf-standard-january"
             ]
           },
           "updated_at": {
@@ -3751,7 +3761,7 @@
             "description": "[Deprecated - use state instead] Indicates whether this declaration has been voided",
             "type": "boolean",
             "nullable": false,
-            "example": false
+            "example": true
           },
           "state": {
             "description": "Indicates the state of this payment declaration",
@@ -3835,7 +3845,7 @@
             "example": "ecf-induction"
           },
           "eligible_for_payment": {
-            "description": "Indicates whether this declaration would be eligible for funding from the DfE",
+            "description": "[Deprecated - use state instead] Indicates whether this declaration would be eligible for funding from the DfE",
             "type": "boolean",
             "nullable": false,
             "example": true
@@ -3847,7 +3857,7 @@
             "example": false
           },
           "state": {
-            "description": "[Deprecated - use state instead] Indicates the state of this payment declaration",
+            "description": "Indicates the state of this payment declaration",
             "type": "string",
             "nullable": false,
             "example": "paid"
