@@ -29,28 +29,26 @@ module RecordDeclarations
     end
 
     def call
-      unless valid?
-        raise ActionController::ParameterMissing, errors.map(&:message)
+      ParticipantDeclaration.transaction do
+        unless valid?
+          raise ActionController::ParameterMissing, errors.map(&:message)
+        end
+
+        declaration_attempt = create_declaration_attempt!
+        validate_provider!
+        validate_milestone!
+        validate_participant_state!
+
+        raise ActiveRecord::RecordNotUnique, "Declaration with given participant ID already exists" if record_exists_with_different_declaration_date?
+
+        DeclarationState.submitted!(participant_declaration)
+
+        set_eligibility
+
+        declaration_attempt.update!(participant_declaration: participant_declaration)
+
+        ParticipantDeclarationSerializer.new(participant_declaration).serializable_hash.to_json
       end
-
-      declaration_attempt = create_declaration_attempt!
-      validate_provider!
-      validate_milestone!
-      validate_participant_state!
-
-      raise ActiveRecord::RecordNotUnique, "Declaration with given participant ID already exists" if record_exists_with_different_declaration_date?
-
-      if participant_declaration.duplicate_declarations.count > 1
-        raise MultipleParticipantDeclarationDuplicate
-      elsif original_participant_declaration
-        participant_declaration
-          .update!(original_participant_declaration: original_participant_declaration)
-        participant_declaration.make_ineligible!
-      end
-
-      declaration_attempt.update!(participant_declaration: participant_declaration)
-
-      ParticipantDeclarationSerializer.new(participant_declaration).serializable_hash.to_json
     end
 
   private
@@ -63,6 +61,18 @@ module RecordDeclarations
       self.declaration_type = params[:declaration_type]
     end
 
+    def set_eligibility
+      if participant_declaration.duplicate_declarations.count > 1
+        raise MultipleParticipantDeclarationDuplicate
+      elsif original_participant_declaration
+        participant_declaration
+          .update!(original_participant_declaration: original_participant_declaration)
+        participant_declaration.make_ineligible!
+      elsif user_profile.fundable?
+        participant_declaration.make_eligible!
+      end
+    end
+
     def parsed_date
       Time.zone.parse(declaration_date)
     end
@@ -72,10 +82,7 @@ module RecordDeclarations
     end
 
     def find_or_create_record!
-      self.class.declaration_model.find_or_create_by!(declaration_parameters).tap do |participant_declaration|
-        DeclarationState.submitted!(participant_declaration)
-        participant_declaration.make_eligible! if user_profile.fundable?
-      end
+      self.class.declaration_model.find_or_create_by!(declaration_parameters)
     end
 
     def participant_declaration
