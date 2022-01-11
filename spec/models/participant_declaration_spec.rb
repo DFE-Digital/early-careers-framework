@@ -21,18 +21,23 @@ RSpec.describe ParticipantDeclaration, type: :model do
       end
 
       it "will move from submitted to eligible" do
-        expect(participant_declaration.make_eligible!).to be_truthy
+        expect(participant_declaration.make_eligible!).to be true
         expect(participant_declaration).to be_eligible
       end
 
       it "can be voided" do
-        expect(participant_declaration.make_voided!).to be_truthy
+        expect(participant_declaration.make_voided!).to be true
         expect(participant_declaration).to be_voided
       end
 
       it "cannot be directly be made payable or paid" do
         expect(participant_declaration.make_paid!).to be_falsey
         expect(participant_declaration.make_payable!).to be_falsey
+      end
+
+      it "can be ineligible" do
+        expect(participant_declaration.make_ineligible!).to be true
+        expect(participant_declaration).to be_ineligible
       end
     end
 
@@ -56,6 +61,10 @@ RSpec.describe ParticipantDeclaration, type: :model do
       it "cannot be directly be made paid" do
         expect(participant_declaration.make_paid!).to be_falsey
       end
+
+      it "cannot be made ineligible" do
+        expect(participant_declaration.make_ineligible!).to be_falsey
+      end
     end
 
     context "when payable" do
@@ -78,6 +87,10 @@ RSpec.describe ParticipantDeclaration, type: :model do
         expect(participant_declaration.make_paid!).to be_truthy
         expect(participant_declaration.paid?).to be_truthy
       end
+
+      it "cannot be made ineligible" do
+        expect(participant_declaration.make_ineligible!).to be_falsey
+      end
     end
 
     context "when paid" do
@@ -95,6 +108,10 @@ RSpec.describe ParticipantDeclaration, type: :model do
 
       it "cannot be voided" do # TODO: This should trigger clawbacks, but that's a later thing.
         expect(participant_declaration.make_voided!).to be_falsey
+      end
+
+      it "cannot be made ineligible" do
+        expect(participant_declaration.make_ineligible!).to be_falsey
       end
     end
   end
