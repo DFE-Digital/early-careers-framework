@@ -67,7 +67,8 @@ module RecordDeclarations
       elsif original_participant_declaration
         participant_declaration
           .update!(original_participant_declaration: original_participant_declaration)
-        participant_declaration.make_ineligible!
+
+        participant_declaration.make_ineligible!(:duplicate)
       elsif user_profile.fundable?
         participant_declaration.make_eligible!
       end

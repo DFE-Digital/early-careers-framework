@@ -8,6 +8,8 @@ class ParticipantDeclaration < ApplicationRecord
   belongs_to :original_participant_declaration, class_name: "ParticipantDeclaration", optional: true
   has_many :duplicate_participant_declarations, class_name: "ParticipantDeclaration", foreign_key: :original_participant_declaration_id, inverse_of: :original_participant_declaration
 
+  include PGEnum(ineligibility_reason: %w[duplicate])
+
   enum state: {
     submitted: "submitted",
     eligible: "eligible",
@@ -92,8 +94,11 @@ class ParticipantDeclaration < ApplicationRecord
     DeclarationState.paid!(self) if payable?
   end
 
-  def make_ineligible!
-    DeclarationState.ineligible!(self) if submitted?
+  def make_ineligible!(reason)
+    return unless submitted?
+
+    DeclarationState.ineligible!(self)
+    update!(ineligibility_reason: self.class.ineligibility_reasons[reason])
   end
 
   def changeable?
@@ -113,3 +118,6 @@ class ParticipantDeclaration < ApplicationRecord
       )
   end
 end
+
+require "participant_declaration/ecf"
+require "participant_declaration/npq"

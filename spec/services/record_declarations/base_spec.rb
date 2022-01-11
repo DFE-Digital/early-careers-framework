@@ -73,6 +73,7 @@ RSpec.describe RecordDeclarations::Base do
         duplicate_participant_declaration = ParticipantDeclaration.find(JSON.parse(record_declaration).dig("data", "id"))
 
         expect(original_participant_declaration.duplicate_participant_declarations).to eq([duplicate_participant_declaration])
+        expect(duplicate_participant_declaration).to be_duplicate
         expect(duplicate_participant_declaration.declaration_states.pluck(:state)).to eq(%w[submitted ineligible])
         expect(duplicate_participant_declaration.state.inquiry).to be_ineligible
       end
@@ -91,6 +92,10 @@ RSpec.describe RecordDeclarations::Base do
 
       def self.model_name
         ActiveModel::Name.new(self, nil, "temp")
+      end
+
+      def self.declaration_model
+        ParticipantDeclaration::ECF
       end
 
       def user_profile
@@ -121,7 +126,7 @@ RSpec.describe RecordDeclarations::Base do
     end
 
     it "does not have errors on milestone_date" do
-      expect { subject.call }.not_to raise_error(ActionController::ParameterMissing)
+      expect { subject.call }.not_to raise_error
     end
   end
 end
