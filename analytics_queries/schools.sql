@@ -9,7 +9,7 @@ SELECT DISTINCT s.urn,
                 u.full_name                        as tutor_name,
                 u.email                            as tutor_email,
                 (pp.id IS NOT NULL)                as sit_mentor,
-                pp.id                              as sit_mentor_id
+                u.id                              as sit_mentor_id
 
 FROM schools s
          LEFT OUTER JOIN school_cohorts sc on s.id = sc.school_id
@@ -23,4 +23,4 @@ FROM schools s
          LEFT OUTER JOIN teacher_profiles tp on u.id = tp.user_id
          LEFT OUTER JOIN participant_profiles pp on tp.id = pp.teacher_profile_id and pp.status = 'active' and
                                                     pp.type = 'ParticipantProfile::Mentor'
-WHERE c.start_year > 2020;
+WHERE (c.start_year > 2020 OR c.id IS NULL);

@@ -6,7 +6,6 @@ RSpec.feature "Admin managing 2020 participants", js: true, rutabaga: false do
   scenario "Admin views participants and adds a new one" do
     given_there_is_a_school_with_2020_cohort
     and_i_am_signed_in_as_an_admin
-    and_feature_flag_is_active :admin_change_programme
     when_i_visit the_school_2020_cohort_page
     then_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named("Admin NQT+1 listing page")

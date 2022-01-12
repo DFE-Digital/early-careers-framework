@@ -2,7 +2,7 @@
 
 class SchoolMailer < ApplicationMailer
   NOMINATION_EMAIL_TEMPLATE = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f"
-  NOMINATION_CONFIRMATION_EMAIL_TEMPLATE = "240c5685-5cb0-40a9-9bd4-1a595d991cbc"
+  NOMINATION_CONFIRMATION_EMAIL_TEMPLATE = "2c740b37-bc4e-47eb-8657-1742b9b8eda7"
   SCHOOL_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE = "99991fd9-fb41-48cf-846d-98a1fee7762a"
   COORDINATOR_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE = "076e8486-cbcc-44ee-8a6e-d2a721ee1460"
   MINISTERIAL_LETTER_EMAIL_TEMPLATE = "f1310917-aa50-4789-b8c2-8cc5e9b91485"
@@ -26,6 +26,7 @@ class SchoolMailer < ApplicationMailer
   UNPARTNERED_CIP_SIT_ADD_PARTICIPANTS_EMAIL_TEMPLATE = "ebc96223-c2ea-416e-8d3e-1f591bbd2f98"
   SIT_NEW_AMBITION_ECTS_AND_MENTORS_ADDED_TEMPLATE = "90d86c1b-2dca-4cca-9dcb-5940e7f28577"
   SIT_FIP_PARTICIPANT_VALIDATION_DEADLINE_REMINDER_TEMPLATE = "48f63205-a8d9-49a2-a76c-93d48ec9b23b"
+  SCHOOL_PRETERM_REMINDER = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f"
 
   # This email is currently (30/09/2021) only used for manually sent chaser emails
   def remind_induction_coordinator_to_setup_cohort_email(induction_coordinator_profile:, school_name:, campaign: nil)
@@ -69,8 +70,9 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
+        name: sit_profile.user.full_name,
         school_name: school.name,
-        start_url: start_url,
+        start_page: start_url,
         subject: "Sign in to manage induction",
         step_by_step: step_by_step_url,
       },
@@ -413,7 +415,27 @@ class SchoolMailer < ApplicationMailer
     ).tag(:sit_fip_participant_validation_deadline_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator)
   end
 
-private
+  def school_preterm_reminder(school:, season:)
+    nomination_email = NominationEmail.create_nomination_email(
+      sent_at: Time.zone.now,
+      sent_to: school.contact_email,
+      school: school,
+      )
+
+    template_mail(
+      SCHOOL_PRETERM_REMINDER,
+      to: school.contact_email,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        season: season,
+        school_name: school.name,
+        nomination_link: nomination_email.nomination_url,
+      },
+      ).tag(:school_preterm_reminder).associate_with(school)
+  end
+
+  private
 
   def nomination_url(access_token, campaign: nil)
     campaign_tracking = campaign ? UTMService.email(campaign, campaign) : {}

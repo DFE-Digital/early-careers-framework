@@ -205,6 +205,32 @@ RSpec.describe "Participants API", type: :request do
             expect(matching_records.first["attributes"]["teacher_reference_number"]).to be_nil
           end
         end
+
+        # skip until after identities backfilled
+        xcontext "when the participant is de-duped" do
+          let(:primary_user) { create(:user, email: "primary@example.com") }
+          let(:primary_teacher_profile) { create(:teacher_profile, user: primary_user, trn: "1234567", school: school_cohort.school) }
+          let!(:primary_npq_profile) { create(:npq_participant_profile, teacher_profile: primary_teacher_profile) }
+
+          let(:dup_user) { create(:user, email: "duplicate@example.com") }
+          let(:dup_teacher_profile) { create(:teacher_profile, user: dup_user, trn: "9990001") }
+          let!(:dup_profile) { create(:ect_participant_profile, school_cohort: school_cohort, teacher_profile: dup_teacher_profile, school: school_cohort.school) }
+
+          before do
+            Identity::Transfer.call(from_user: dup_user, to_user: primary_user)
+            dup_user.reload
+            primary_user.reload
+          end
+
+          it "exposes the original ID and email" do
+            get "/api/v1/participants/ecf"
+            matching_records = parsed_response["data"].select { |record| record["id"] == dup_user.id }
+            expect(matching_records.count).to eq 1
+            expect(matching_records.first["attributes"]["email"]).to eq dup_user.email
+            expect(matching_records.first["attributes"]["full_name"]).to eq primary_user.full_name
+            expect(matching_records.first["attributes"]["teacher_reference_number"]).to eq primary_user.teacher_profile.trn
+          end
+        end
       end
 
       describe "CSV Index API" do

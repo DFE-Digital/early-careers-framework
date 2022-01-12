@@ -4,6 +4,8 @@ class User < ApplicationRecord
   devise :registerable, :trackable, :passwordless_authenticatable
   has_paper_trail
 
+  has_many :participant_identities
+
   has_one :induction_coordinator_profile, dependent: :destroy
   has_many :schools, through: :induction_coordinator_profile
 
@@ -22,12 +24,18 @@ class User < ApplicationRecord
   has_many :npq_profiles, through: :teacher_profile
   # end: TODO
 
-  has_many :npq_applications
-
   before_validation :strip_whitespace
+  after_update :sync_email_address_with_identity
 
   validates :full_name, presence: true
   validates :email, presence: true, uniqueness: true, notify_email: true
+
+  # changed from has_many :npq_applications as these now live on participant_identities
+  # and it is possible that there are applications on one or more of the user's
+  # participant_identity records
+  def npq_applications
+    NPQApplication.joins(:participant_identity).where(participant_identity: { user_id: id })
+  end
 
   def admin?
     admin_profile.present?
@@ -137,5 +145,11 @@ private
   def strip_whitespace
     full_name&.squish!
     email&.squish!
+  end
+
+  def sync_email_address_with_identity
+    if saved_change_to_email?
+      participant_identities.original.first&.update!(email: email)
+    end
   end
 end

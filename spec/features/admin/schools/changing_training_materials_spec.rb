@@ -7,7 +7,6 @@ RSpec.feature "Admin managing school provision", js: true, rutabaga: false do
     given_there_is_a_cip_school_in_2021
     and_there_is_another_core_induction_programme
     and_i_am_signed_in_as_an_admin
-    and_feature_flag_is_active :admin_change_materials
     when_i_visit the_school_cohorts_page
     and_i_click_the_change_materials_link
     then_i_should_be_on the_change_materials_page

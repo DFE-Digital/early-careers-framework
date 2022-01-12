@@ -21,14 +21,14 @@ RSpec.describe ApiRequestMiddleware, type: :request do
 
   before do
     mock_app
-    allow(ApiRequestJob).to receive(:perform)
+    allow(ApiRequestJob).to receive(:perform_async)
   end
 
   describe "#call on a non-API path" do
     it "does not fire ApiRequestJob" do
       get "/"
 
-      expect(ApiRequestJob).not_to have_received(:perform)
+      expect(ApiRequestJob).not_to have_received(:perform_async)
     end
   end
 
@@ -36,7 +36,7 @@ RSpec.describe ApiRequestMiddleware, type: :request do
     it "fires an ApiRequestJob" do
       get "/api/v1/participants/ecf", params: { foo: "bar" }
 
-      expect(ApiRequestJob).to have_received(:perform).with(
+      expect(ApiRequestJob).to have_received(:perform_async).with(
         hash_including(path: "/api/v1/participants/ecf", params: { "foo" => "bar" }, method: "GET"), anything, 401, anything
       )
     end
@@ -46,7 +46,7 @@ RSpec.describe ApiRequestMiddleware, type: :request do
     it "fires an ApiRequestJob including post data" do
       post "/api/v1/participant-declarations", as: :json, params: { foo: "bar" }
 
-      expect(ApiRequestJob).to have_received(:perform).with(
+      expect(ApiRequestJob).to have_received(:perform_async).with(
         hash_including(path: "/api/v1/participant-declarations", body: '{"foo":"bar"}', method: "POST"), anything, 401, anything
       )
     end
@@ -55,7 +55,7 @@ RSpec.describe ApiRequestMiddleware, type: :request do
   describe "#call on an API path when an exception happens in the job" do
     it "logs the exception and returns" do
       allow(Rails.logger).to receive(:warn)
-      allow(ApiRequestJob).to receive(:perform).and_raise(StandardError)
+      allow(ApiRequestJob).to receive(:perform_async).and_raise(StandardError)
 
       get "/api/v1/participants/ecf"
 

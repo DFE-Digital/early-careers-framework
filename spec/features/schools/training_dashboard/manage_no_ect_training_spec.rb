@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "./manage_training_steps"
 
-RSpec.describe "Manage No ECT training", js: true, with_feature_flags: { induction_tutor_manage_participants: "active" } do
+RSpec.describe "Manage No ECT training", js: true do
   include ManageTrainingSteps
 
   scenario "Manage No ECT Induction Coordinator" do

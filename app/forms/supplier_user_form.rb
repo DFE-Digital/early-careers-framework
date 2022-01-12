@@ -37,6 +37,6 @@ class SupplierUserForm
 private
 
   def email_not_taken
-    errors.add(:email, :unique, message: I18n.t("errors.supplier_email.taken")) if User.find_by(email: email)
+    errors.add(:email, :unique, message: I18n.t("errors.supplier_email.taken")) if Identity.find_user_by(email: email)
   end
 end

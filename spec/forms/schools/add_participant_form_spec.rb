@@ -35,18 +35,16 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
     end
 
     context "when the email is in use by an ECT user" do
-      let!(:ect_profile) do
-        create(:ect_participant_profile, user: create(:user, email: "ray.clemence@example.com"))
-      end
+      let(:user) { create(:user, email: "ray.clemence@example.com") }
+      let(:teacher_profile) { create(:teacher_profile, user: user) }
+      let!(:ect_profile) { create(:ect_participant_profile, teacher_profile: teacher_profile) }
 
       it "returns true" do
         expect(form).to be_email_already_taken
       end
 
       context "when the ECT profile record is withdrawn" do
-        let!(:ect_profile) do
-          create(:ect_participant_profile, :withdrawn_record, user: create(:user, email: "ray.clemence@example.com"))
-        end
+        let!(:ect_profile) { create(:ect_participant_profile, :withdrawn_record, teacher_profile: teacher_profile) }
 
         it "returns false" do
           expect(form).not_to be_email_already_taken
@@ -55,18 +53,16 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
     end
 
     context "when the email is in use by a Mentor" do
-      let!(:mentor_profile) do
-        create(:mentor_participant_profile, user: create(:user, email: "ray.clemence@example.com"))
-      end
+      let(:user) { create(:user, email: "ray.clemence@example.com") }
+      let(:teacher_profile) { create(:teacher_profile, user: user) }
+      let!(:mentor_profile) { create(:mentor_participant_profile, teacher_profile: teacher_profile) }
 
       it "returns true" do
         expect(form).to be_email_already_taken
       end
 
       context "when the mentor profile record is withdrawn" do
-        let!(:mentor_profile) do
-          create(:mentor_participant_profile, :withdrawn_record, user: create(:user, email: "ray.clemence@example.com"))
-        end
+        let!(:mentor_profile) { create(:mentor_participant_profile, :withdrawn_record, teacher_profile: teacher_profile) }
 
         it "returns false" do
           expect(form).not_to be_email_already_taken
@@ -75,10 +71,9 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
     end
 
     context "when the email is in use by a NPQ registrant" do
-      before do
-        existing_user = create(:user, email: "ray.clemence@example.com")
-        create(:npq_participant_profile, user: existing_user)
-      end
+      let(:user) { create(:user, email: "ray.clemence@example.com") }
+      let(:teacher_profile) { create(:teacher_profile, user: user) }
+      let!(:npq_profile) { create(:npq_participant_profile, teacher_profile: teacher_profile) }
 
       it "returns false" do
         expect(form).not_to be_email_already_taken
@@ -114,11 +109,38 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
     end
   end
 
+  describe "start_term_legend" do
+    before do
+      form.full_name = "John Doe"
+    end
+
+    context "when the user is not a mentor" do
+      before do
+        form.participant_type = :ect
+      end
+
+      it "returns the right legend" do
+        expect(form.start_term_legend).to eq(I18n.t("schools.participants.add.start_term.ect", full_name: "John Doe"))
+      end
+    end
+
+    context "when the user is a mentor" do
+      before do
+        form.participant_type = :mentor
+      end
+
+      it "returns the right string" do
+        expect(form.start_term_legend).to eq(I18n.t("schools.participants.add.start_term.mentor", full_name: "John Doe"))
+      end
+    end
+  end
+
   describe "#save!" do
     before do
       form.type = form.type_options.sample
       form.full_name = Faker::Name.name
       form.email = Faker::Internet.email
+      form.start_term = "Autumn 2021"
       form.mentor_id = (form.mentor_options.pluck(:id) + %w[later]).sample if form.type == :ect
 
       create :ecf_schedule

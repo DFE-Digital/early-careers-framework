@@ -11,11 +11,14 @@ RSpec.describe "Partnerships / Challenge", type: :feature, js: true do
   describe "challenging partnership with email link" do
     before do
       PartnershipNotificationService.new.notify(partnership)
+      perform_enqueued_jobs
     end
 
     scenario "successful challenge" do
-      email = enqueued_emails(to: user.email).first
-      visit email.personalisation[:challenge_url]
+      email = ActionMailer::Base.deliveries.first
+      challenge_url = email.header[:personalisation].unparsed_value[:challenge_url]
+
+      visit challenge_url
 
       expect(page).to have_content "Report that your school has been signed up incorrectly"
       expect(page).to be_accessible
@@ -28,7 +31,7 @@ RSpec.describe "Partnerships / Challenge", type: :feature, js: true do
       expect(page).to be_accessible
       page.percy_snapshot "challenge success"
 
-      visit email.personalisation[:challenge_url]
+      visit challenge_url
       expect(page).to have_content "Someone at Test school has already reported this issue"
       expect(page).to be_accessible
       page.percy_snapshot "already challenged"
@@ -37,8 +40,10 @@ RSpec.describe "Partnerships / Challenge", type: :feature, js: true do
     scenario "trying to challenge after the challenge deadline" do
       travel_to partnership.challenge_deadline + 1.hour
 
-      email = enqueued_emails(to: user.email).first
-      visit email.personalisation[:challenge_url]
+      email = ActionMailer::Base.deliveries.first
+      challenge_url = email.header[:personalisation].unparsed_value[:challenge_url]
+
+      visit challenge_url
 
       expect(page).to have_content "This link has expired"
       expect(page).to be_accessible

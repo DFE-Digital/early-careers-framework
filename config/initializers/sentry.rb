@@ -7,7 +7,7 @@ Sentry.init do |config|
   config.release = "#{ENV['RELEASE_VERSION']}-#{ENV['SHA']}"
 
   config.async = lambda do |event, hint|
-    Sentry::SendEventJob.perform_later(event, hint)
+    SentrySendEventJobNoRetry.perform_async(event, hint)
   end
 
   filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters)
@@ -31,7 +31,7 @@ Sentry.init do |config|
       else
         0.01
       end
-    when /delayed_job/
+    when /sidekiq/
       0.001
     else
       0.0 # We don't care about performance of other things

@@ -31,6 +31,32 @@ RSpec.describe ParticipantStatusTagComponent, type: :view_component do
     end
   end
 
+  context "mentor with multiple profiles" do
+    let(:school_cohort) { create(:school_cohort) }
+
+    context "when the primary profile is eligible" do
+      let(:participant_profile) { create(:mentor_participant_profile, :primary_profile, school_cohort: school_cohort) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :eligible, participant_profile: participant_profile) }
+
+      before do
+        participant_profile.reload
+      end
+
+      it { is_expected.to have_selector(".govuk-tag.govuk-tag--green", exact_text: "Eligible: Mentor at main school") }
+    end
+
+    context "when the secondary profile is ineligible because it is a duplicate" do
+      let(:participant_profile) { create(:mentor_participant_profile, :secondary_profile, school_cohort: school_cohort) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, participant_profile: participant_profile) }
+
+      before do
+        participant_profile.reload
+      end
+
+      it { is_expected.to have_selector(".govuk-tag.govuk-tag--green", exact_text: "Eligible: Mentor at additional school") }
+    end
+  end
+
   context "full induction programme participant" do
     context "has submitted validation data" do
       let(:school_cohort) { create(:school_cohort, :fip) }

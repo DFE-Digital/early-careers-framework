@@ -45,9 +45,9 @@ private
   def to_row(record)
     [
       record.id,
-      record.user_id,
-      record.user.full_name,
-      record.user.email,
+      record.participant_identity.external_identifier,
+      record.participant_identity.user.full_name,
+      record.participant_identity.email,
       true,
       record.teacher_reference_number,
       record.teacher_reference_number_verified,

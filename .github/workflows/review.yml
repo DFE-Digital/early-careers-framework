@@ -107,7 +107,7 @@ jobs:
           terraform apply -input=false -auto-approve -var-file ../workspace-variables/review.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_DEV}}"}' -var='environment=${{env.ENVIRONMENT}}' -var 'logstash_url=${{secrets.SYSLOG_DRAIN_URL}}' -var 'docker_username=${{ secrets.DOCKER_USERNAME }}' -var 'docker_password=${{ secrets.DOCKER_DEV_PASSWORD }}'
 
       - name: comment on PR
-        uses: unsplash/comment-on-pr@master
+        uses: unsplash/comment-on-pr@v1.3.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -152,13 +152,13 @@ jobs:
           echo "ENVIRONMENT=review-pr-${{ github.event.number }}" >> $GITHUB_ENV
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.88.0
+        uses: ruby/setup-ruby@v1.90.0
         with:
           bundler-cache: true
           ruby-version: '2.7.4'
 
       - name: Set up Node
-        uses: actions/setup-node@v2.5.0
+        uses: actions/setup-node@v2.5.1
         with:
           node-version: '12.x'
           cache: 'yarn'
@@ -170,7 +170,7 @@ jobs:
         run: bundle exec rspec spec/smoke_tests/*_spec.rb --tag smoke_test
 
       - name: comment on PR
-        uses: unsplash/comment-on-pr@master
+        uses: unsplash/comment-on-pr@v1.3.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

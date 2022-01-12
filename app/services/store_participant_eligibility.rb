@@ -94,7 +94,7 @@ private
 
     @participant_eligibility.determine_status
     @participant_eligibility.save!
-    Analytics::ECFValidationService.upsert_record(participant_profile)
+    Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile: participant_profile)
   end
 
   def default_eligibility_flags

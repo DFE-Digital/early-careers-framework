@@ -22,15 +22,18 @@ class NPQApplicationSerializer
              :created_at,
              :updated_at
 
-  attribute(:participant_id, &:user_id)
+  attribute(:participant_id) do |object|
+    object.participant_identity.external_identifier
+  end
+
   attribute(:teacher_reference_number_validated, &:teacher_reference_number_verified)
 
   attribute(:full_name) do |object|
-    object.user.full_name
+    object.participant_identity.user.full_name
   end
 
   attribute(:email) do |object|
-    object.user.email
+    object.participant_identity.email
   end
 
   attribute(:email_validated) do

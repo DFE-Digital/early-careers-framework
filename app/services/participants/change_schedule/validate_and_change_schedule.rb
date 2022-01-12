@@ -25,7 +25,12 @@ module Participants
     private
 
       def schedule
-        Finance::Schedule.find_by(schedule_identifier: schedule_identifier)
+        alias_search_query = Finance::Schedule.where(identifier_alias: schedule_identifier)
+
+        Finance::Schedule
+          .where(schedule_identifier: schedule_identifier)
+          .or(alias_search_query)
+          .first
       end
 
       def not_already_withdrawn

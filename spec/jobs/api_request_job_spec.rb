@@ -5,9 +5,11 @@ require "rails_helper"
 RSpec.describe ApiRequestJob do
   describe "#perform" do
     it "creates a ApiRequest record" do
-      expect {
-        described_class.new.perform({}, {}, 401, Time.zone.now)
-      }.to change(ApiRequest, :count).by(1)
+      Sidekiq::Testing.inline! do
+        expect {
+          described_class.new.perform({}, {}, 401, Time.zone.now)
+        }.to change(ApiRequest, :count).by(1)
+      end
     end
 
     it "detects the provider making the request from the authorization header" do

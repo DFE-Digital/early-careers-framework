@@ -20,14 +20,11 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
   let!(:partnership) { create(:partnership, school: school, lead_provider: lead_provider, delivery_partner: delivery_partner, cohort: cohort) }
 
   before do
-    FeatureFlag.activate(:induction_tutor_manage_participants)
     sign_in user
   end
 
   describe "GET /schools/:school_id/cohorts/:start_year/participants" do
     context "when feature flag is turned off" do
-      before { FeatureFlag.deactivate(:induction_tutor_manage_participants) }
-
       it "shouldn't be available" do
         expect {
           get "/schools/cohorts/#{cohort.start_year}/participants"
@@ -116,8 +113,9 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
 
     it "updates analytics" do
       params = { participant_mentor_form: { mentor_id: mentor_user_2.id } }
-      put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-mentor", params: params
-      expect(Analytics::ECFValidationService).to delay_execution_of(:upsert_record_without_delay)
+      expect {
+        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-mentor", params: params
+      }.to have_enqueued_job(Analytics::UpsertECFParticipantProfileJob).with(participant_profile: ect_profile)
     end
   end
 
@@ -247,18 +245,25 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
       end
 
       it "queues 'participant deleted' email" do
-        delete "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}"
-
-        expect(ParticipantMailer).to delay_email_delivery_of(:participant_removed_by_sti)
-          .with(participant_profile: ect_profile, sti_profile: user.induction_coordinator_profile)
+        expect {
+          delete "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}"
+        }.to have_enqueued_mail(ParticipantMailer, :participant_removed_by_sti)
+          .with(
+            args: [
+              {
+                participant_profile: ect_profile,
+                sti_profile: user.induction_coordinator_profile,
+              },
+            ],
+          )
       end
     end
 
     context "when participant has not yet received request for details email" do
       it "does not queue 'participant deleted' email" do
-        delete "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}"
-
-        expect(ParticipantMailer).not_to delay_email_delivery_of(:participant_removed_by_sti)
+        expect {
+          delete "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}"
+        }.to_not have_enqueued_mail(ParticipantMailer, :participant_removed_by_sti)
       end
     end
   end

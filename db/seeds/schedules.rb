@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
-cohort_2021 = Cohort.find_by!(start_year: 2021)
+require "csv"
+
+def cohort_2021
+  Cohort.find_or_create_by!(start_year: 2021)
+end
 
 ecf_september_standard_2021 = Finance::Schedule::ECF.find_or_create_by!(name: "ECF September standard 2021") do |s|
   s.cohort = cohort_2021
@@ -84,3 +88,38 @@ npq_leadership_november_2021.update!(cohort: cohort_2021)
     declaration_type: hash[:declaration_type],
   )
 end
+
+Importers::SeedSchedule.new(
+  path_to_csv: Rails.root.join("db/seeds/schedules/npq_specialist.csv"),
+  klass: Finance::Schedule::NPQSpecialist,
+).call
+
+Importers::SeedSchedule.new(
+  path_to_csv: Rails.root.join("db/seeds/schedules/npq_leadership.csv"),
+  klass: Finance::Schedule::NPQLeadership,
+).call
+
+Importers::SeedSchedule.new(
+  path_to_csv: Rails.root.join("db/seeds/schedules/npq_aso.csv"),
+  klass: Finance::Schedule::NPQSupport,
+).call
+
+Importers::SeedSchedule.new(
+  path_to_csv: Rails.root.join("db/seeds/schedules/ecf_standard.csv"),
+  klass: Finance::Schedule::ECF,
+).call
+
+Importers::SeedSchedule.new(
+  path_to_csv: Rails.root.join("db/seeds/schedules/ecf_reduced.csv"),
+  klass: Finance::Schedule::ECF,
+).call
+
+Importers::SeedSchedule.new(
+  path_to_csv: Rails.root.join("db/seeds/schedules/ecf_extended.csv"),
+  klass: Finance::Schedule::ECF,
+).call
+
+Importers::SeedSchedule.new(
+  path_to_csv: Rails.root.join("db/seeds/schedules/ecf_replacement.csv"),
+  klass: Finance::Schedule::ECF,
+).call

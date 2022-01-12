@@ -6,6 +6,8 @@ class ParticipantProfile < ApplicationRecord
 
   belongs_to :schedule, class_name: "Finance::Schedule", touch: true
 
+  belongs_to :participant_identity
+
   has_one :user, through: :teacher_profile
 
   has_many :validation_decisions, class_name: "ProfileValidationDecision"
@@ -30,6 +32,12 @@ class ParticipantProfile < ApplicationRecord
     withdrawn: "withdrawn",
   }, _prefix: "training_status"
 
+  enum start_term: {
+    autumn_2021: "Autumn 2021",
+    spring_2022: "Spring 2022",
+    summer_2022: "Summer 2022",
+  }
+
   scope :mentors, -> { where(type: Mentor.name) }
   scope :ects, -> { where(type: ECT.name) }
   scope :ecf, -> { where(type: [ECT.name, Mentor.name]) }
@@ -46,8 +54,6 @@ class ParticipantProfile < ApplicationRecord
   self.validation_steps = []
 
   self.ignored_columns = %w[user_id]
-
-  after_validation :update_analytics
 
   def state
     participant_profile_state&.state
@@ -110,10 +116,7 @@ class ParticipantProfile < ApplicationRecord
   def policy_class
     ParticipantProfilePolicy
   end
-
-private
-
-  def update_analytics
-    Analytics::ECFValidationService.upsert_record(self) if training_status_changed?
-  end
 end
+
+require "participant_profile/npq"
+require "participant_profile/ecf"

@@ -29,7 +29,7 @@ module Participants
   private
 
     def user
-      @user ||= User.find_by(id: participant_id)
+      @user ||= Identity.find_user_by(id: participant_id)
     end
 
     def valid_courses

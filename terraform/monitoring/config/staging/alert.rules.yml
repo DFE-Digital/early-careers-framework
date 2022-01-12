@@ -25,7 +25,7 @@ groups:
           environment: staging
           severity: medium
       - alert: WorkerCPUHigh
-        expr: avg by ( app ) (cpu{app="ecf-staging-worker"}) > 75
+        expr: avg by ( app ) (cpu{app=~"ecf-staging-.*worker"}) > 75
         for: 10m
         annotations:
           summary: Worker CPU usage high
@@ -58,7 +58,7 @@ groups:
           environment: staging
           severity: medium
       - alert: WorkerMemoryUtilizationHigh
-        expr: avg by ( app ) (memory_utilization{app="ecf-staging-worker"}) > 80
+        expr: avg by ( app ) (memory_utilization{app=~"ecf-staging-.*worker"}) > 80
         for: 5m
         annotations:
           summary: Memory Utilization High
@@ -78,7 +78,7 @@ groups:
           environment: staging
           severity: medium
       - alert: AppsWorkerCrashed
-        expr: rate(crash{app="ecf-staging-worker"}[1m])*60 > 1
+        expr: rate(crash{app=~"ecf-staging-.*worker"}[1m])*60 > 1
         annotations:
           summary: Crashed Apps non-zero
           description: "ecf-staging-worker: At least 1 crashed app (current value: {{ $value }})"

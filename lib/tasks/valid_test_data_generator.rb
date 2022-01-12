@@ -58,13 +58,15 @@ module ValidTestDataGenerator
       user = User.create!(full_name: name, email: Faker::Internet.email(name: name))
       teacher_profile = TeacherProfile.create!(user: user, trn: random_or_nil_trn)
       schedule = Finance::Schedule::ECF.default
+      participant_identity = Identity::Create.call(user: user, origin: :ecf)
+
       if profile_type == :ect
-        ParticipantProfile::ECT.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, mentor_profile: mentor_profile, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule) do |profile|
+        ParticipantProfile::ECT.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, mentor_profile: mentor_profile, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule, participant_identity: participant_identity) do |profile|
           ParticipantProfileState.create!(participant_profile: profile)
           ECFParticipantEligibility.create!(participant_profile_id: profile.id).eligible_status!
         end
       else
-        ParticipantProfile::Mentor.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule) do |profile|
+        ParticipantProfile::Mentor.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule, participant_identity: participant_identity) do |profile|
           ParticipantProfileState.create!(participant_profile: profile)
           ECFParticipantEligibility.create!(participant_profile_id: profile.id).eligible_status!
         end
@@ -191,6 +193,7 @@ module ValidTestDataGenerator
     def create_participant(school:)
       name = Faker::Name.name
       user = User.create!(full_name: name, email: Faker::Internet.email(name: name))
+      identity = Identity::Create.call(user: user, origin: :npq)
 
       npq_application = NPQApplication.create!(
         active_alert: "",
@@ -204,7 +207,7 @@ module ValidTestDataGenerator
         teacher_reference_number_verified: true,
         npq_course: NPQCourse.all.sample,
         npq_lead_provider: lead_provider,
-        user: user,
+        participant_identity: identity,
       )
 
       return if [true, false].sample

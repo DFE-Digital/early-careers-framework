@@ -23,12 +23,45 @@ module Admin
       end
     end
 
+    def edit_name; end
+
+    def update_name
+      if @participant_profile.user.update(params.require(:user).permit(:full_name))
+        if @participant_profile.ect?
+          set_success_message(heading: "The ECT’s name has been updated")
+        else
+          set_success_message(heading: "The mentor’s name has been updated")
+        end
+        redirect_to admin_participants_path
+      else
+        render "admin/participants/edit_name"
+      end
+    end
+
+    def edit_email; end
+
+    def update_email
+      user = @participant_profile.user
+      user.assign_attributes(params.require(:user).permit(:email))
+
+      if user.save
+        if @participant_profile.ect?
+          set_success_message(heading: "The ECT’s email address has been updated")
+        else
+          set_success_message(heading: "The mentor’s email address has been updated")
+        end
+        redirect_to admin_participants_path
+      else
+        render "admin/participants/edit_email"
+      end
+    end
+
     def remove; end
 
     def destroy
       @participant_profile.withdrawn_record!
       @participant_profile.mentee_profiles.update_all(mentor_profile_id: nil) if @participant_profile.mentor?
-      Analytics::ECFValidationService.upsert_record(@participant_profile)
+      Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile: @participant_profile)
 
       render :destroy_success
     end
@@ -37,11 +70,7 @@ module Admin
 
     def load_participant
       @participant_profile = ParticipantProfile.find(params[:id])
-      if %w[remove destroy].include?(action_name)
-        authorize @participant_profile, :withdraw_record?
-      else
-        authorize @participant_profile
-      end
+      authorize @participant_profile, policy_class: @participant_profile.policy_class
     end
   end
 end

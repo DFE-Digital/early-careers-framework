@@ -4,6 +4,7 @@ require "rails_helper"
 
 RSpec.describe ParticipantProfile, type: :model do
   it { is_expected.to belong_to(:teacher_profile) }
+  it { is_expected.to belong_to(:participant_identity) }
   it { is_expected.to belong_to(:schedule) }
   it { is_expected.to have_one(:user).through(:teacher_profile) }
   it {
@@ -23,12 +24,13 @@ RSpec.describe ParticipantProfile, type: :model do
   end
 
   it "updates analytics when training_status_changed?", :with_default_schedules do
-    allow(Analytics::ECFValidationService).to receive(:upsert_record)
-
     profile = create(:ecf_participant_profile, training_status: :active)
     profile.training_status = :withdrawn
-    profile.save!
-    expect(Analytics::ECFValidationService).to have_received(:upsert_record).with(profile)
+    expect {
+      profile.save!
+    }.to have_enqueued_job(Analytics::UpsertECFParticipantProfileJob).with(
+      participant_profile: profile,
+    )
   end
 
   describe described_class::Mentor do

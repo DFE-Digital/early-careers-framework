@@ -19,7 +19,7 @@ RSpec.describe NPQApplication, type: :model do
       it "fires NPQ::StreamBigQueryEnrollmentJob" do
         expect {
           subject
-        }.to change(Delayed::Job, :count).by(1)
+        }.to change(enqueued_jobs, :count).by(1)
       end
     end
 
@@ -29,7 +29,7 @@ RSpec.describe NPQApplication, type: :model do
 
         expect {
           subject.update(lead_provider_approval_status: "accepted")
-        }.to change(Delayed::Job, :count).by(1)
+        }.to change(enqueued_jobs, :count).by(1)
       end
     end
 
@@ -39,7 +39,7 @@ RSpec.describe NPQApplication, type: :model do
 
         expect {
           subject.touch
-        }.not_to change(Delayed::Job, :count)
+        }.not_to change(enqueued_jobs, :count)
       end
     end
   end

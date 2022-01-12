@@ -11,7 +11,6 @@ RSpec.describe "Schools::AddParticipant", type: :request do
   subject { response }
 
   before do
-    FeatureFlag.activate(:induction_tutor_manage_participants)
     sign_in user
   end
 

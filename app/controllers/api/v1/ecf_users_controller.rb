@@ -12,7 +12,7 @@ module Api
       end
 
       def create
-        user = User.find_by(email: params[:data][:attributes][:email])
+        user = Identity.find_user_by(email: params[:data][:attributes][:email])
 
         if user.present?
           user.errors.add(:email, :taken)
@@ -57,7 +57,7 @@ module Api
                     })
 
         users = users.changed_since(updated_since) if updated_since.present?
-        users = users.where(email: email) if email.present?
+        users = users.joins(:participant_identities).where(participant_identities: { email: email }) if email.present?
 
         users
       end

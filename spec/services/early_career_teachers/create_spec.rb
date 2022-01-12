@@ -57,13 +57,13 @@ RSpec.describe EarlyCareerTeachers::Create do
   end
 
   it "schedules participant_added email" do
-    profile = described_class.call(
-      email: user.email,
-      full_name: Faker::Name.name,
-      school_cohort: school_cohort,
-    )
-
-    expect(ParticipantMailer).to delay_email_delivery_of(:participant_added).with(participant_profile: profile)
+    expect {
+      described_class.call(
+        email: user.email,
+        full_name: Faker::Name.name,
+        school_cohort: school_cohort,
+      )
+    }.to have_enqueued_mail(ParticipantMailer, :participant_added)
   end
 
   it "scheduled reminder email job" do
@@ -80,14 +80,14 @@ RSpec.describe EarlyCareerTeachers::Create do
 
   context "when creating a participant for 2020" do
     it "does not schedule participant_added email" do
-      described_class.call(
-        email: user.email,
-        full_name: Faker::Name.name,
-        school_cohort: school_cohort,
-        year_2020: true,
-      )
-
-      expect(ParticipantMailer).not_to delay_email_delivery_of(:participant_added)
+      expect {
+        described_class.call(
+          email: user.email,
+          full_name: Faker::Name.name,
+          school_cohort: school_cohort,
+          year_2020: true,
+        )
+      }.to_not have_enqueued_mail(ParticipantMailer, :participant_added)
     end
 
     it "scheduled reminder email job" do
@@ -153,13 +153,14 @@ RSpec.describe EarlyCareerTeachers::Create do
   end
 
   it "records the profile for analytics" do
-    described_class.call(
-      email: user.email,
-      full_name: user.full_name,
-      school_cohort: school_cohort,
-      mentor_profile_id: mentor_profile.id,
-    )
-
-    expect(Analytics::ECFValidationService).to delay_execution_of(:upsert_record_without_delay)
+    expect {
+      described_class.call(
+        email: user.email,
+        full_name: user.full_name,
+        school_cohort: school_cohort,
+        mentor_profile_id: mentor_profile.id,
+      )
+    }.to have_enqueued_job(Analytics::UpsertECFParticipantProfileJob)
+      .with(participant_profile: instance_of(ParticipantProfile::ECT))
   end
 end

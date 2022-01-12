@@ -2,10 +2,9 @@
 
 require "tasks/trn_generator"
 
-class CreateNewFakeSandboxDataJob < CronJob
-  self.cron_expression = "0 2 * * *"
-
+class CreateNewFakeSandboxDataJob < ApplicationJob
   EDT_NAME = "Education Development Trust"
+
   def perform(provider_name: EDT_NAME)
     return if Rails.env.production?
 
@@ -28,6 +27,7 @@ class CreateNewFakeSandboxDataJob < CronJob
       10.times do
         name = Faker::Name.name
         user = User.create!(full_name: name, email: Faker::Internet.email(name: name))
+        identity = Identity::Create.call(user: user, origin: :npq)
         NPQApplication.create!(
           active_alert: "",
           date_of_birth: Date.new(1990, 1, 1),
@@ -40,7 +40,7 @@ class CreateNewFakeSandboxDataJob < CronJob
           teacher_reference_number_verified: true,
           npq_course: NPQCourse.all.sample,
           npq_lead_provider: npq_lead_provider,
-          user: user,
+          participant_identity: identity,
         )
       end
     end

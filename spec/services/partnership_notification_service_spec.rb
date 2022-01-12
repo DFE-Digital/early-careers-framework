@@ -18,6 +18,8 @@ RSpec.describe PartnershipNotificationService do
 
   before do
     ProviderRelationship.create!(lead_provider: lead_provider, delivery_partner: delivery_partner, cohort: cohort)
+    allow(SchoolMailer).to receive(:school_partnership_notification_email).and_return instance_double(ActionMailer::MessageDelivery, deliver_later: true)
+    allow(SchoolMailer).to receive(:coordinator_partnership_notification_email).and_return instance_double(ActionMailer::MessageDelivery, deliver_later: true)
   end
 
   describe "#notify" do
@@ -28,7 +30,7 @@ RSpec.describe PartnershipNotificationService do
       it "emails the school primary contact" do
         partnership_notification_service.notify(partnership)
 
-        expect(SchoolMailer).to delay_email_delivery_of(:school_partnership_notification_email).with(
+        expect(SchoolMailer).to have_received(:school_partnership_notification_email).with(
           partnership: partnership,
           reminder: false,
           access_token: an_object_having_attributes(
@@ -48,7 +50,7 @@ RSpec.describe PartnershipNotificationService do
       it "emails the induction coordinator" do
         partnership_notification_service.notify(partnership)
 
-        expect(SchoolMailer).to delay_email_delivery_of(:coordinator_partnership_notification_email).with(
+        expect(SchoolMailer).to have_received(:coordinator_partnership_notification_email).with(
           partnership: partnership,
           reminder: false,
           access_token: an_object_having_attributes(
@@ -69,7 +71,7 @@ RSpec.describe PartnershipNotificationService do
       it "emails the school primary contact" do
         partnership_notification_service.send_reminder(partnership)
 
-        expect(SchoolMailer).to delay_email_delivery_of(:school_partnership_notification_email).with(
+        expect(SchoolMailer).to have_received(:school_partnership_notification_email).with(
           partnership: partnership,
           reminder: true,
           access_token: an_object_having_attributes(
@@ -89,7 +91,7 @@ RSpec.describe PartnershipNotificationService do
       it "emails the induction coordinator" do
         partnership_notification_service.send_reminder(partnership)
 
-        expect(SchoolMailer).to delay_email_delivery_of(:coordinator_partnership_notification_email).with(
+        expect(SchoolMailer).to have_received(:coordinator_partnership_notification_email).with(
           partnership: partnership,
           reminder: true,
           access_token: an_object_having_attributes(

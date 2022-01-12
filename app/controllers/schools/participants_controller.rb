@@ -55,6 +55,23 @@ class Schools::ParticipantsController < Schools::BaseController
 
   def email_used; end
 
+  def edit_start_term; end
+
+  def update_start_term
+    @profile.assign_attributes(params.require(:participant_profile_ect).permit(:start_term))
+
+    if @profile.save
+      if @profile.ect?
+        set_success_message(heading: "The ECT's start term has been updated")
+      else
+        set_success_message(heading: "The mentor's start term has been updated")
+      end
+      redirect_to schools_participant_path(id: @profile)
+    else
+      render "schools/participants/edit_start_term"
+    end
+  end
+
   def edit_mentor; end
 
   def update_mentor
@@ -68,7 +85,7 @@ class Schools::ParticipantsController < Schools::BaseController
 
     if @mentor_form.valid?
       @profile.update!(mentor_profile: @mentor_form.mentor ? @mentor_form.mentor.mentor_profile : nil)
-      Analytics::ECFValidationService.upsert_record(@profile)
+      Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile: @profile)
 
       flash[:success] = { title: "Success", heading: "The mentor for this participant has been updated" }
       redirect_to schools_participant_path(id: @profile)
@@ -89,7 +106,7 @@ class Schools::ParticipantsController < Schools::BaseController
           sti_profile: current_user.induction_coordinator_profile,
         ).deliver_later
       end
-      Analytics::ECFValidationService.upsert_record(@profile)
+      Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile: @profile)
     end
 
     render :removed

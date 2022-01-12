@@ -4,8 +4,17 @@ module Participants
   class ParticipantValidationForm
     include Multistep::Form
 
-    def self.call(participant_profile, save_validation_data_without_match: true)
-      validation_data = participant_profile.ecf_participant_validation_data
+    # @param [Hash] data
+    #   * :trn [String]
+    #   * :nino [String]
+    #   * :date_of_birth [Date]
+    #   * :full_name [String]
+    def self.call(participant_profile, save_validation_data_without_match: true, data: nil)
+      validation_data = if data.present?
+                          OpenStruct.new(data)
+                        else
+                          participant_profile.ecf_participant_validation_data
+                        end
       return false if validation_data.blank?
 
       new(
@@ -26,6 +35,16 @@ module Participants
     attribute :eligibility
     attribute :dqt_response
     attribute :attempts, default: 0
+
+    step :check_trn_given, update: true do
+      attribute :check_trn_given, :boolean
+
+      validates :check_trn_given, inclusion: { in: [true, false], message: :blank }
+
+      next_step { check_trn_given ? :trn : :trn_guidance }
+    end
+
+    step :trn_guidance
 
     step :trn, update: true do
       attribute :trn, :string
@@ -122,6 +141,10 @@ module Participants
 
       eligibility_record = store_validation_result!
       self.eligibility = eligibility_record.status.to_sym
+
+      if eligibility_record.ineligible_status? && eligibility_record.duplicate_profile_reason?
+        self.eligibility = :secondary_fip_mentor_eligible
+      end
     end
 
     def store_validation_result!(save_validation_data_without_match: true)
@@ -140,7 +163,7 @@ module Participants
     end
 
     def store_analytics!
-      Analytics::ECFValidationService.record_validation(
+      Analytics::RecordValidationJob.perform_later(
         participant_profile: participant_profile,
         real_time_attempts: attempts,
         real_time_success: dqt_response.present?,

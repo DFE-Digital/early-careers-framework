@@ -94,6 +94,7 @@
         <tr class="govuk-table__row">
           <th scope="col" class="govuk-table__header govuk-!-width-one-third">Name</th>
           <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Role</th>
+          <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Start induction</th>
           <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Action required</th>
           <th scope="col" class="govuk-table__header"></th>
         </tr>
@@ -105,6 +106,7 @@
           <tr class="govuk-table__row">
             <td class="govuk-table__cell"><%= profile.user.full_name %></td>
             <td class="govuk-table__cell"><%= format_type(profile.participant_type) %></td>
+            <td class="govuk-table__cell"><%= ParticipantProfile.start_terms[profile.start_term] %></td>
             <td class="govuk-table__cell">
               <% if latest_email_delivered_for(profile) %>
                 Remind them
@@ -208,7 +210,7 @@
             <td class="govuk-table__cell govuk-table__cell--numeric">
               <% if profile.ect? %>
                 <%= govuk_link_to (profile.mentor_profile_id ? "Details" : "Check"), schools_participant_path(id: profile.id) %>
-              <% elsif profile.ecf_participant_eligibility.ineligible_status? %>
+              <% elsif profile.ecf_participant_eligibility.ineligible_status? && !profile.ecf_participant_eligibility.duplicate_profile_reason? %>
                 <%= govuk_link_to "Check", schools_participant_path(id: profile.id) %>
               <% else %>
                 <%= govuk_link_to "Details", schools_participant_path(id: profile.id) %>

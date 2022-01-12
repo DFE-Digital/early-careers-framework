@@ -17,6 +17,30 @@ RSpec.describe RecordParticipantDeclaration do
     it "creates a participant declaration" do
       expect { described_class.call(npq_params) }.to change { ParticipantDeclaration.count }.by(1)
     end
+
+    context "when the npq application is eligible for funding" do
+      before do
+        npq_profile.npq_application.update!(eligible_for_funding: true)
+      end
+
+      it "creates the participant declaration in the eligible state" do
+        described_class.call(npq_params)
+        declaration = npq_profile.participant_declarations.first
+        expect(declaration.state).to eq "eligible"
+      end
+    end
+
+    context "when the npq application is not eligible for funding" do
+      before do
+        npq_profile.npq_application.update!(eligible_for_funding: false)
+      end
+
+      it "creates the participant declaration in the submitted state" do
+        described_class.call(npq_params)
+        declaration = npq_profile.participant_declarations.first
+        expect(declaration.state).to eq "submitted"
+      end
+    end
   end
 
   context "when sending event for an ect course" do

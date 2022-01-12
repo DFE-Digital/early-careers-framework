@@ -68,22 +68,22 @@ variable paas_web_app_memory {
 }
 
 variable paas_web_app_start_command {
-  default = "bundle exec rake cf:on_first_instance db:migrate cron:schedule && rails s"
+  default = "bundle exec rake cf:on_first_instance db:migrate && rails s"
 }
 
-variable paas_worker_app_deployment_strategy {
+variable paas_sidekiq_worker_app_deployment_strategy {
   default = "blue-green-v2"
 }
 
-variable paas_worker_app_instances {
+variable paas_sidekiq_worker_app_instances {
   default = 0
 }
 
-variable paas_worker_app_memory {
-  default = 2048
+variable paas_sidekiq_worker_app_memory {
+  default = 1024
 }
 
-variable paas_worker_app_start_command {
+variable paas_sidekiq_worker_app_start_command {
   default = ""
 }
 

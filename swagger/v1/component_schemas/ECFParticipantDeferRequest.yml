@@ -16,3 +16,9 @@ properties:
         example: participant-defer
       attributes:
         $ref: "#/components/schemas/ECFParticipantDefer"
+example:
+  data:
+    type: "participant-defer"
+    attributes:
+      reason: "career-break"
+      course_identifier: "ecf-mentor"

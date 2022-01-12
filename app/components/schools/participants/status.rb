@@ -36,7 +36,7 @@ module Schools
 
       def fip_validation_status
         if (eligibility = participant_profile.ecf_participant_eligibility)
-          return fip_eligible_status if eligibility.eligible_status?
+          return fip_eligible_status if eligibility.eligible_status? || eligibility.duplicate_profile_reason?
           return fip_ineligible_status(eligibility) if eligibility.ineligible_status?
           return fip_manual_check_status(eligibility) if eligibility.manual_check_status?
           return fip_manual_check_status(eligibility) if eligibility.manual_check_status?

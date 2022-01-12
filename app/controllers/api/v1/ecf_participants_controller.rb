@@ -42,8 +42,9 @@ module Api
 
       def participants
         participant_profiles = ParticipantProfile::ECF.where(id: participant_profile_ids)
-                                                      .joins(:user)
+                                                      .joins(:participant_identity, :user)
                                                       .includes(
+                                                        :participant_identity,
                                                         :user,
                                                         :cohort,
                                                         :school,
@@ -62,15 +63,7 @@ module Api
       end
 
       def participant_profile_ids
-        @participant_profile_ids ||= begin
-          inner_query = lead_provider.ecf_participant_profiles
-                                     .select("DISTINCT ON (participant_profiles.teacher_profile_id) teacher_profile_id, participant_profiles.status, participant_profiles.id as id")
-                                     .joins(:school_cohort)
-                                     .where(school_cohort: { cohort_id: Cohort.current.id })
-                                     .order(:teacher_profile_id, status: :asc)
-                                     .to_sql
-          ActiveRecord::Base.connection.query_values("SELECT id FROM (#{inner_query}) AS inner_query")
-        end
+        @participant_profile_ids ||= fetch_participant_profile_ids
       end
 
       def mentor_ids
@@ -81,6 +74,21 @@ module Api
                                .joins(:mentor)
                                .pluck(:id, User.arel_table["id"])
                                .to_h
+      end
+
+      def fetch_participant_profile_ids
+        # this retrieves the list of ECF participant profiles for the LeadProvider, one per
+        # teacher_profile (now participant_identity).
+        # Withdrawn profiles are included unless there is also an active one.
+        # The DISTINCT ON clause chooses the first record after ordering by status to do this.
+        inner_query = lead_provider
+          .ecf_participant_profiles
+          .select("DISTINCT ON (participant_profiles.participant_identity_id) participant_identity_id, participant_profiles.status, participant_profiles.id AS id")
+          .joins(:school_cohort)
+          .where(school_cohort: { cohort_id: Cohort.current.id })
+          .order(:participant_identity_id, status: :asc)
+          .to_sql
+        ActiveRecord::Base.connection.query_values("SELECT id FROM (#{inner_query}) AS inner_query")
       end
     end
   end

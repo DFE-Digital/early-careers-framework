@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  mount_sidekiq = -> { mount Sidekiq::Web => "/sidekiq" }
+  authenticate(:user, :admin?.to_proc, &mount_sidekiq)
+
   devise_for :users, skip: %i[registrations confirmations], controllers: {
     sessions: "users/sessions",
   }
@@ -58,6 +61,11 @@ Rails.application.routes.draw do
         concerns :participant_actions
         member do
           put :resume
+          put :change_schedule, path: "change-schedule"
+        end
+      end
+      resources :participants, path: "/participants/ecf", only: [] do
+        member do
           put :change_schedule, path: "change-schedule"
         end
       end
@@ -145,7 +153,11 @@ Rails.application.routes.draw do
     get "/api-docs/v1/api_spec.yml" => "openapi#api_docs", as: :api_docs
 
     resources :your_schools, path: "/your-schools", only: %i[index create]
-    resources :partnerships, only: %i[show]
+    resources :partnerships, only: %i[show] do
+      collection do
+        get :active
+      end
+    end
 
     namespace :report_schools, path: "report-schools" do
       get :start, to: "base#start"
@@ -187,8 +199,11 @@ Rails.application.routes.draw do
 
     resources :participants, only: %i[show index destroy] do
       member do
+        get :edit_name, path: "edit-name"
+        put :update_name, path: "update-name"
+        get :edit_email, path: "edit-email"
+        put :update_email, path: "update-email"
         get :remove
-
         scope path: "validations", controller: "participants/validations" do
           get ":step", action: :show, as: :validation_step
           post ":step", action: :update
@@ -290,6 +305,8 @@ Rails.application.routes.draw do
       resources :lead_providers, path: "payment-overviews", controller: "payment_overviews", only: %i[show] do
         resources :courses, only: %i[show], controller: "course_payment_breakdowns"
       end
+
+      resources :contracts, only: %i[show]
     end
   end
 
@@ -297,7 +314,9 @@ Rails.application.routes.draw do
 
   namespace :participants do
     resource :no_access, only: :show, controller: "no_access"
-    resource :start_registrations, path: "/start-registration", only: :show
+    resource :start_registrations, path: "/start-registration", only: :show do
+      get "trn-guidance", action: :trn_guidance
+    end
 
     multistep_form :validation, Participants::ParticipantValidationForm, controller: :validations do
       get :no_trn, as: nil
@@ -344,6 +363,8 @@ Rails.application.routes.draw do
             get :edit_email, path: "edit-email"
             put :update_email, path: "update-email"
             get :email_used, path: "email-used"
+            get :edit_start_term, path: "edit-start-term"
+            put :update_start_term, path: "update-start-term"
             get :edit_mentor, path: "edit-mentor"
             put :update_mentor, path: "update-mentor"
 

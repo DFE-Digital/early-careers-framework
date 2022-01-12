@@ -76,18 +76,26 @@ RSpec.describe "Lead Provider school reporting", type: :request do
     end
 
     it "schedules partnership notifications" do
-      post "/lead-providers/report-schools"
-
-      schools.each do |school|
-        expect(an_instance_of(PartnershipNotificationService)).to delay_execution_of(:notify)
-          .with(an_object_having_attributes(
-                  class: Partnership,
-                  cohort_id: cohort.id,
-                  school_id: school.id,
-                  lead_provider_id: lead_provider.id,
-                  delivery_partner_id: delivery_partner.id,
-                ))
+      notify_all_schools = schools.map do |school|
+        have_enqueued_job(PartnershipNotificationJob)
+          .with(
+            partnership:
+              an_object_having_attributes(
+                class: Partnership,
+                cohort_id: cohort.id,
+                school_id: school.id,
+                lead_provider_id: lead_provider.id,
+                delivery_partner_id: delivery_partner.id,
+              ),
+          )
       end
+      notify_all_schools = notify_all_schools.inject do |expectations, expectation|
+        expectations.and expectation
+      end
+
+      expect {
+        post "/lead-providers/report-schools"
+      }.to notify_all_schools
     end
 
     context "when reporting previously challenged partnership" do
@@ -126,9 +134,7 @@ RSpec.describe "Lead Provider school reporting", type: :request do
       end
 
       it "schedules no partnership notifications" do
-        confirm!
-
-        expect(an_instance_of(PartnershipNotificationService)).not_to delay_execution_of(:notify)
+        expect { confirm! }.to_not have_enqueued_job(PartnershipNotificationJob)
       end
     end
   end

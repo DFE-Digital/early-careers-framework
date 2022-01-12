@@ -47,7 +47,7 @@ Timecop.freeze(Date.parse("19/09/2019")) do
   FactoryBot.create(:npq_leadership_schedule)
   FactoryBot.create(:npq_specialist_schedule)
   npq_application = FactoryBot.create :npq_application,
-                                      user: npq_user,
+                                      participant_identity: Identity::Create.call(user: npq_user, origin: :npq),
                                       date_of_birth: Date.parse("10/12/1982"),
                                       nino: "NI123456",
                                       teacher_reference_number: "9780824",
