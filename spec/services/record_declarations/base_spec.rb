@@ -72,7 +72,7 @@ RSpec.describe RecordDeclarations::Base do
       it "transitions the declaration to ineligible", :aggregate_failures do
         duplicate_participant_declaration = ParticipantDeclaration.find(JSON.parse(record_declaration).dig("data", "id"))
 
-        expect(original_participant_declaration.duplicate_participant_declarations).to eq([duplicate_participant_declaration])
+        expect(original_participant_declaration.supersedes).to eq([duplicate_participant_declaration])
         expect(duplicate_participant_declaration.declaration_states.pluck(:state)).to eq(%w[submitted ineligible])
         expect(duplicate_participant_declaration.declaration_states.find_by!(state: "ineligible"))
           .to be_duplicate

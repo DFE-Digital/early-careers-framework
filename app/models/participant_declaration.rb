@@ -6,7 +6,7 @@ class ParticipantDeclaration < ApplicationRecord
   belongs_to :user
   belongs_to :participant_profile
   belongs_to :superseded_by, class_name: "ParticipantDeclaration", optional: true
-  has_many :duplicate_participant_declarations, class_name: "ParticipantDeclaration", foreign_key: :superseded_by_id, inverse_of: :superseded_by
+  has_many :supersedes, class_name: "ParticipantDeclaration", foreign_key: :superseded_by_id, inverse_of: :superseded_by
 
   enum state: {
     submitted: "submitted",
@@ -104,7 +104,7 @@ class ParticipantDeclaration < ApplicationRecord
     self.class.joins(participant_profile: :teacher_profile)
       .where(participant_profiles: { teacher_profiles: { trn: participant_profile.teacher_profile.trn } })
       .where.not(participant_profiles: { teacher_profiles: { trn: nil } })
-      .where.not(user_id: user_id)
+      .where.not(user_id: user_id, id: id)
       .where(
         declaration_type: declaration_type,
         course_identifier: course_identifier,

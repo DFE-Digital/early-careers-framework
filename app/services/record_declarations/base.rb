@@ -61,12 +61,8 @@ module RecordDeclarations
     end
 
     def set_eligibility
-      if participant_declaration.duplicate_declarations.count > 1
-        raise MultipleParticipantDeclarationDuplicate
-      elsif original_participant_declaration
-        participant_declaration
-          .update!(superseded_by: original_participant_declaration)
-
+      if participant_declaration.duplicate_declarations.any?
+        participant_declaration.update!(superseded_by: original_participant_declaration)
         participant_declaration.make_ineligible!(reason: :duplicate)
       elsif user_profile.fundable?
         participant_declaration.make_eligible!
@@ -151,7 +147,7 @@ module RecordDeclarations
     end
 
     def original_participant_declaration
-      @original_participant_declaration ||= participant_declaration.duplicate_declarations.first
+      @original_participant_declaration ||= participant_declaration.duplicate_declarations.order(created_at: :asc).first
     end
   end
 end
