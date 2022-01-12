@@ -14,16 +14,11 @@ class DeclarationState < ApplicationRecord
     ineligible: "ineligible",
   }
 
-  states.except(:ineligible).each_key do |key|
+  states.each_key do |key|
     bang_method = "#{key}!"
     define_singleton_method(bang_method) do |participant_declaration, **args|
       create!(state: key, participant_declaration: participant_declaration, **args)
       participant_declaration.send(bang_method)
     end
-  end
-
-  def self.ineligible!(participant_declaration, reason:)
-    create!(participant_declaration: participant_declaration, state: states[:ineligible], state_reason: reason)
-    participant_declaration.public_send("#{states[:ineligible]}!")
   end
 end
