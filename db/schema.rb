@@ -17,9 +17,6 @@ ActiveRecord::Schema.define(version: 2022_01_11_133250) do
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
-  # These are custom enum types that must be created before they can be used in the schema definition
-  create_enum "state_reason_type", ["duplicate"]
-
   create_table "active_storage_attachments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -196,7 +193,7 @@ ActiveRecord::Schema.define(version: 2022_01_11_133250) do
     t.string "state", default: "submitted", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.enum "state_reason", as: "state_reason_type"
+    t.string "state_reason"
     t.index ["participant_declaration_id"], name: "index_declaration_states_on_participant_declaration_id"
   end
 

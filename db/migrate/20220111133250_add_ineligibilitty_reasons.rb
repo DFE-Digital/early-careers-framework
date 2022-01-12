@@ -4,7 +4,7 @@ class AddIneligibilittyReasons < ActiveRecord::Migration[6.1]
   def change
     safety_assured do
       change_table :declaration_states, bulk: true do |t|
-        t.enum :state_reason, as: "state_reason_type"
+        t.string :state_reason
       end
     end
   end

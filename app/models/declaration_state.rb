@@ -3,7 +3,9 @@
 class DeclarationState < ApplicationRecord
   belongs_to :participant_declaration
 
-  include PGEnum(state_reason: %w[duplicate])
+  enum state_reason: {
+    duplicate: "duplicate",
+  }
 
   enum state: {
     submitted: "submitted",
