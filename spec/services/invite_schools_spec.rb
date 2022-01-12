@@ -68,7 +68,6 @@ RSpec.describe InviteSchools do
         SchoolMailer.nomination_email(
           recipient: Faker::Internet.email,
           school: school,
-          access_token: create(:school_access_token),
         ).deliver_now
 
         travel_to 6.minutes.from_now
@@ -82,7 +81,6 @@ RSpec.describe InviteSchools do
         SchoolMailer.nomination_email(
           recipient: Faker::Internet.email,
           school: school,
-          access_token: create(:school_access_token),
         ).deliver_now
 
         travel_to 3.minutes.from_now
@@ -97,7 +95,6 @@ RSpec.describe InviteSchools do
           SchoolMailer.nomination_email(
             recipient: Faker::Internet.email,
             school: school,
-            access_token: create(:school_access_token),
           ).deliver_now
 
           travel_to 5.hours.from_now
@@ -113,7 +110,6 @@ RSpec.describe InviteSchools do
           SchoolMailer.nomination_email(
             recipient: Faker::Internet.email,
             school: school,
-            access_token: create(:school_access_token),
           ).deliver_now
 
           travel_to 3.hours.from_now

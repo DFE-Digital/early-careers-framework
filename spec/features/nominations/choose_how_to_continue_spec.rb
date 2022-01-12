@@ -7,6 +7,7 @@ RSpec.feature "Nominations / Choose how to continue", type: :feature, js: true, 
   before do
     InviteSchools.new.run([school.urn])
     perform_enqueued_jobs
+
     email = ActionMailer::Base.deliveries.first
     visit email.header[:personalisation].unparsed_value[:nomination_link]
   end

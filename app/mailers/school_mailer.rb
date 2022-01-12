@@ -47,7 +47,12 @@ class SchoolMailer < ApplicationMailer
   end
 
   # This email is sent to schools to request an appointment of SIT to coordinate their cohorts
-  def nomination_email(recipient:, school:, access_token:, campaign: nil)
+  def nomination_email(recipient:, school:, campaign: nil)
+    access_token = SchoolAccessToken.create!(
+      school: school,
+      permitted_actions: %i[nominate_tutor],
+    )
+
     template_mail(
       NOMINATION_EMAIL_TEMPLATE,
       to: recipient,

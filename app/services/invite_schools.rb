@@ -13,13 +13,11 @@ class InviteSchools
       school = find_school(urn)
       next if school.nil?
 
-      access_token = SchoolAccessToken.create!(
-        school: school,
-        permitted_actions: %i[nominate_tutor],
-      )
-
       begin
-        send_nomination_email(to: school.contact_email, access_token: access_token)
+        SchoolMailer.nomination_email(
+          recipient: school.contact_email,
+          school: school,
+        ).deliver_later
       rescue Notifications::Client::RateLimitError
         sleep(1)
         retry
@@ -102,22 +100,6 @@ private
     school = School.find_by(urn: urn)
     logger.info "School not found, urn: #{urn} ... skipping" unless school&.can_access_service?
     school
-  end
-
-  def create_and_send_nomination_email(email, school)
-    access_token = SchoolAccessToken.create!(
-      school: school,
-      permitted_actions: %i[nominate_tutor],
-    )
-    send_nomination_email(to: email, access_token: access_token)
-  end
-
-  def send_nomination_email(to:, access_token:)
-    SchoolMailer.nomination_email(
-      recipient: to,
-      school: access_token.school,
-      access_token: access_token,
-    ).deliver_later
   end
 
   def send_ministerial_letter(recipient)

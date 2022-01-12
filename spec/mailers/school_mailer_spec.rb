@@ -6,19 +6,24 @@ RSpec.describe SchoolMailer, type: :mailer do
   describe "#nomination_email" do
     let(:school) { create :school }
     let(:primary_contact_email) { "contact@example.com" }
-    let(:access_token) { SchoolAccessToken.create(school: school, permitted_actions: %i[some_action]) }
 
     let(:nomination_email) do
       SchoolMailer.nomination_email(
         recipient: primary_contact_email,
         school: school,
-        access_token: access_token,
       )
     end
 
     it "renders the right headers" do
       expect(nomination_email.from).to eq(["mail@example.com"])
       expect(nomination_email.to).to eq([primary_contact_email])
+    end
+
+    it "creates new access token and uses it to generate nomination_url" do
+      nomination_url = nomination_email.header[:personalisation].unparsed_value[:nomination_link]
+      token = SchoolAccessToken.last.token
+
+      expect(nomination_url).to eq start_nominate_induction_coordinator_url(token: token)
     end
   end
 
