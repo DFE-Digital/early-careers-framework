@@ -1,0 +1,6 @@
+<tr class="govuk-table__row">
+  <td scope="row" class="govuk-table__cell govuk-!-width-one-quarter"><%= t("finance.vat") %></td>
+  <td scope="row" class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter"/>
+  <td scope="row" class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter"/>
+  <td scope="row" class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter"><%= number_to_pounds npq_total_vat(breakdown, lead_provider) %></td>
+</tr>
