@@ -39,10 +39,11 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
       then_i_should_see_correct_output_payment_breakdown(npq_contract)
       then_i_should_see_the_correct_vat_total(npq_contract)
       then_i_should_see_the_correct_total(npq_contract)
-      and_the_page_should_be_accessible
-      and_percy_should_be_sent_a_snapshot_named("Payment breakdown per contract")
       when_i_click "Back"
     end
+
+    when_i_click_on(npq_leading_teaching_contract)
+    and_percy_should_be_sent_a_snapshot_named("Payment breakdown per contract")
   end
 
 private
