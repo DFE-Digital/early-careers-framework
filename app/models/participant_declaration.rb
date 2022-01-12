@@ -6,7 +6,7 @@ class ParticipantDeclaration < ApplicationRecord
   belongs_to :user
   belongs_to :participant_profile
   belongs_to :superseded_by, class_name: "ParticipantDeclaration", optional: true
-  has_many :duplicate_participant_declarations, class_name: "ParticipantDeclaration", foreign_key: :superseeded_by_id, inverse_of: :superseeded_by
+  has_many :duplicate_participant_declarations, class_name: "ParticipantDeclaration", foreign_key: :superseded_by_id, inverse_of: :superseded_by
 
   enum state: {
     submitted: "submitted",
@@ -108,7 +108,7 @@ class ParticipantDeclaration < ApplicationRecord
       .where(
         declaration_type: declaration_type,
         course_identifier: course_identifier,
-        original_participant_declaration_id: nil,
+        superseded_by_id: nil,
       )
   end
 end

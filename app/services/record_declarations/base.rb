@@ -65,7 +65,7 @@ module RecordDeclarations
         raise MultipleParticipantDeclarationDuplicate
       elsif original_participant_declaration
         participant_declaration
-          .update!(original_participant_declaration: original_participant_declaration)
+          .update!(superseded_by: original_participant_declaration)
 
         participant_declaration.make_ineligible!(reason: :duplicate)
       elsif user_profile.fundable?
