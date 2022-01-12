@@ -23,7 +23,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
   scenario "see a payment breakdown per NPQ course and a payment breakdown of each individual NPQ courses for each provider" do
     given_i_am_logged_in_as_a_finance_user
     and_there_is_npq_provider_with_contracts
-    and_those_courses_have_submitted_declations
+    and_those_courses_have_submitted_declarations
     when_i_visit_the_payment_breakdown_page
     and_choose_to_see_npq_payment_breakdown
     and_i_select_an_npq_lead_provider
@@ -35,6 +35,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
       then_i_should_see_correct_breakdown_summary(npq_contract.npq_lead_provider.cpd_lead_provider, npq_contract)
       then_i_should_see_correct_service_fee_payment_breakdown(npq_contract)
       then_i_should_see_correct_output_payment_breakdown(npq_contract)
+      then_i_should_see_the_correct_vat_total(npq_contract)
       then_i_should_see_the_correct_total(npq_contract)
       when_i_click "Back"
     end
@@ -70,7 +71,7 @@ private
     end
   end
 
-  def and_those_courses_have_submitted_declations
+  def and_those_courses_have_submitted_declarations
     [npq_course_leading_teaching, npq_course_leading_behaviour_culture, npq_course_leading_teaching_development].each do |npq_course|
       create_list(:user, 2)
         .map { |user| create_accepted_application(user, npq_course, npq_lead_provider) }
@@ -165,6 +166,10 @@ private
     npq_contract.per_participant * npq_contract.service_fee_percentage / (100 * npq_contract.service_fee_installments)
   end
 
+  def expected_total_vat(npq_contract)
+    expected_service_fee_payment(npq_contract) * 0.2
+  end
+
   def expected_service_fee_payment(npq_contract)
     npq_contract.recruitment_target * expected_service_fee_portion_per_participant(npq_contract)
   end
@@ -184,9 +189,7 @@ private
 
   def eligible_and_payable_participant_count(npq_contract)
     ParticipantDeclaration::NPQ
-      .eligible_or_payable_for_lead_provider_and_course(
-        npq_contract.npq_lead_provider.cpd_lead_provider, npq_contract.course_identifier
-      ).count
+      .eligible_or_payable_for_lead_provider_and_course(npq_contract.npq_lead_provider.cpd_lead_provider, npq_contract.course_identifier).count
   end
 
   def expected_output_fee_payment(npq_contract)
@@ -197,17 +200,25 @@ private
     within("[data-test='npq-payment-type']") do
       expect(page).to have_content("Output fee")
       expect(page).to have_content(number_to_pounds(expected_per_participant_output_payment_portion(npq_contract)))
-      expect(page).to have_content(expected_total_paid(npq_contract))
-      expect(page).to have_content(number_to_pounds(expected_output_fee_payment(npq_contract)))
       expect(page).to have_content(eligible_and_payable_participant_count(npq_contract))
+      expect(page).to have_content(number_to_pounds(expected_output_fee_payment(npq_contract)))
+    end
+  end
+
+  def then_i_should_see_the_correct_vat_total(npq_contract)
+    within("[data-test='npq-payment-type']") do
+      expect(page).to have_content("VAT")
+      expect(page).to have_content(number_to_pounds(expected_total_vat(npq_contract)))
     end
   end
 
   def then_i_should_see_the_correct_total(npq_contract)
     within("[data-test='npq-payment-type']") do
       expected_service_fee_payment = expected_service_fee_payment(npq_contract)
-      expected_output_fee_payment  = expected_output_fee_payment(npq_contract)
-      expected_total               = expected_service_fee_payment + expected_output_fee_payment
+      # expected_output_fee_payment  = expected_output_fee_payment(npq_contract)
+      expected_total_vat           = expected_total_vat(npq_contract)
+      # expected_total               = expected_service_fee_payment + expected_output_fee_payment + expected_total_vat
+      expected_total               = expected_service_fee_payment + expected_total_vat
 
       expect(page).to have_content("Total payment")
       expect(page).to have_content(number_to_pounds(expected_total))
