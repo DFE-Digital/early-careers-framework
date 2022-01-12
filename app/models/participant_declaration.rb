@@ -5,8 +5,8 @@ class ParticipantDeclaration < ApplicationRecord
   belongs_to :cpd_lead_provider
   belongs_to :user
   belongs_to :participant_profile
-  belongs_to :original_participant_declaration, class_name: "ParticipantDeclaration", optional: true
-  has_many :duplicate_participant_declarations, class_name: "ParticipantDeclaration", foreign_key: :original_participant_declaration_id, inverse_of: :original_participant_declaration
+  belongs_to :superseeded_by, class_name: "ParticipantDeclaration", optional: true
+  has_many :duplicate_participant_declarations, class_name: "ParticipantDeclaration", foreign_key: :superseeded_by_id, inverse_of: :superseeded_by
 
   enum state: {
     submitted: "submitted",

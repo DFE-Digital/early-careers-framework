@@ -522,10 +522,10 @@ ActiveRecord::Schema.define(version: 2022_01_11_133250) do
     t.datetime "voided_at"
     t.string "state", default: "submitted", null: false
     t.uuid "participant_profile_id"
-    t.uuid "original_participant_declaration_id"
+    t.uuid "superseeded_by_id"
     t.index ["cpd_lead_provider_id"], name: "index_participant_declarations_on_cpd_lead_provider_id"
-    t.index ["original_participant_declaration_id"], name: "original_participant_declaration_index"
     t.index ["participant_profile_id"], name: "index_participant_declarations_on_participant_profile_id"
+    t.index ["superseeded_by_id"], name: "original_participant_declaration_index"
     t.index ["user_id"], name: "index_participant_declarations_on_user_id"
   end
 
@@ -864,7 +864,7 @@ ActiveRecord::Schema.define(version: 2022_01_11_133250) do
   add_foreign_key "npq_lead_providers", "cpd_lead_providers"
   add_foreign_key "participant_bands", "call_off_contracts"
   add_foreign_key "participant_declaration_attempts", "participant_declarations"
-  add_foreign_key "participant_declarations", "participant_declarations", column: "original_participant_declaration_id"
+  add_foreign_key "participant_declarations", "participant_declarations", column: "superseeded_by_id"
   add_foreign_key "participant_declarations", "participant_profiles"
   add_foreign_key "participant_declarations", "users"
   add_foreign_key "participant_identities", "users"
