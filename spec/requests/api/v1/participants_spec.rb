@@ -284,6 +284,21 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
         end
       end
 
+      describe "/api/v1/participants/ecf/ID/change-schedule" do
+        let(:parsed_response) { JSON.parse(response.body) }
+
+        before do
+          create(:schedule, schedule_identifier: "ecf-january-standard-2021", name: "ECF January standard 2021")
+        end
+
+        it "changes participant schedule" do
+          put "/api/v1/participants/ecf/#{early_career_teacher_profile.user.id}/change-schedule", params: { data: { attributes: { course_identifier: "ecf-induction", schedule_identifier: "ecf-january-standard-2021" } } }
+
+          expect(response).to be_successful
+          expect(parsed_response.dig("data", "attributes", "schedule_identifier")).to eql("ecf-january-standard-2021")
+        end
+      end
+
       it_behaves_like "JSON Participant Deferral endpoint", "participant" do
         let(:url)               { "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer" }
         let(:withdrawal_url)    { "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw" }

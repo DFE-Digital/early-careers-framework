@@ -64,6 +64,11 @@ Rails.application.routes.draw do
           put :change_schedule, path: "change-schedule"
         end
       end
+      resources :participants, path: "/participants/ecf", only: [] do
+        member do
+          put :change_schedule, path: "change-schedule"
+        end
+      end
       resources :participant_declarations, only: %i[create index show], path: "participant-declarations" do
         member do
           put :void
