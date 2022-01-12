@@ -29,6 +29,8 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
     and_i_select_an_npq_lead_provider
     when_i_click "Payable"
     then_i_should_have_the_correct_payment_breakdown_per_npq_lead_provider
+    and_the_page_should_be_accessible
+    and_percy_should_be_sent_a_snapshot_named("Payment breakdown per NPQ lead provider")
 
     [npq_leading_teaching_contract, npq_leading_behaviour_culture_contract, npq_leading_teaching_development_contract].each do |npq_contract|
       when_i_click_on(npq_contract)
@@ -37,6 +39,8 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
       then_i_should_see_correct_output_payment_breakdown(npq_contract)
       then_i_should_see_the_correct_vat_total(npq_contract)
       then_i_should_see_the_correct_total(npq_contract)
+      and_the_page_should_be_accessible
+      and_percy_should_be_sent_a_snapshot_named("Payment breakdown per contract")
       when_i_click "Back"
     end
   end
