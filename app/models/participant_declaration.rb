@@ -93,9 +93,7 @@ class ParticipantDeclaration < ApplicationRecord
   end
 
   def make_ineligible!(reason: nil)
-    return unless submitted?
-
-    DeclarationState.ineligible!(self, reason: reason)
+    DeclarationState.ineligible!(self, reason: reason) if submitted?
   end
 
   def changeable?
