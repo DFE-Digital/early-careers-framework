@@ -34,13 +34,18 @@ FactoryBot.define do
     end
 
     factory :npq_specialist_schedule, class: "Finance::Schedule::NPQSpecialist", parent: :schedule do
-      name { "NPQ Specialist November 2021" }
-      schedule_identifier { "npq-specialist-november-2021" }
+      name { "NPQ Specialist Spring 2021" }
+      schedule_identifier { "npq-specialist-spring" }
     end
 
     factory :npq_leadership_schedule, class: "Finance::Schedule::NPQLeadership", parent: :schedule do
-      name { "NPQ Leadership November 2021" }
-      schedule_identifier { "npq-leadership-november-2021" }
+      name { "NPQ Leadership Spring 2021" }
+      schedule_identifier { "npq-leadership-spring" }
+    end
+
+    factory :npq_aso_schedule, class: "Finance::Schedule::NPQSupport", parent: :schedule do
+      name { "NPQ Additional Support Offer December 2021" }
+      schedule_identifier { "npq-aso-december" }
     end
   end
 end

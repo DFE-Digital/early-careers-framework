@@ -56,8 +56,9 @@ RSpec.describe Finance::Schedule::NPQLeadership, type: :model do
   end
 
   describe "default" do
-    it "returns NPQ Leadership November 2021 schedule" do
-      expect(described_class.default.name).to eql "NPQ Leadership November 2021"
+    it "returns NPQ Leadership Spring 2021 schedule" do
+      expected_schedule = described_class.find_by(cohort: Cohort.current, schedule_identifier: "npq-leadership-spring")
+      expect(described_class.default).to eql(expected_schedule)
     end
   end
 end
@@ -74,8 +75,9 @@ RSpec.describe Finance::Schedule::NPQSpecialist, type: :model do
   end
 
   describe "default" do
-    it "returns NPQ Specialist November 2021 schedule" do
-      expect(described_class.default.name).to eql "NPQ Specialist November 2021"
+    it "returns NPQ Specialist Spring 2021 schedule" do
+      expected_schedule = described_class.find_by(cohort: Cohort.current, schedule_identifier: "npq-specialist-spring")
+      expect(described_class.default).to eql(expected_schedule)
     end
   end
 end
@@ -92,8 +94,9 @@ RSpec.describe Finance::Schedule::NPQSupport, type: :model do
   end
 
   describe "default" do
-    it "returns NPQ ASO November schedule" do
-      expect(described_class.default.name).to eql "NPQ ASO November"
+    it "returns NPQ ASO December schedule" do
+      expected_schedule = described_class.find_by(cohort: Cohort.current, schedule_identifier: "npq-aso-december")
+      expect(described_class.default).to eql(expected_schedule)
     end
   end
 end

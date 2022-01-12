@@ -6,6 +6,6 @@ class Finance::Schedule::NPQSupport < Finance::Schedule
   ].freeze
 
   def self.default
-    Cohort.find_by(start_year: 2021).schedules.find_by(name: "NPQ ASO November")
+    find_by(cohort: Cohort.current, schedule_identifier: "npq-aso-december")
   end
 end

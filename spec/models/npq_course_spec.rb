@@ -8,7 +8,7 @@ RSpec.describe NPQCourse do
     context "when a course is one of NPQCourse::LEADERSHIP_IDENTIFIER" do
       let(:identifier) { Finance::Schedule::NPQLeadership::IDENTIFIERS.sample }
 
-      it "returns the defaut NPQ leadership schedule" do
+      it "returns the default NPQ leadership schedule" do
         expect(described_class.schedule_for(npq_course))
           .to eq(Finance::Schedule::NPQLeadership.default)
       end
@@ -17,7 +17,7 @@ RSpec.describe NPQCourse do
     context "when a course is one of NPQCourse::SPECIALIST_IDENTIFIER" do
       let(:identifier) { Finance::Schedule::NPQSpecialist::IDENTIFIERS.sample }
 
-      it "returns the defaut NPQ specialist schedule" do
+      it "returns the default NPQ specialist schedule" do
         expect(described_class.schedule_for(npq_course)).to eq(Finance::Schedule::NPQSpecialist.default)
       end
     end
@@ -25,8 +25,8 @@ RSpec.describe NPQCourse do
     context "when a course is Additional Support Offer" do
       let(:identifier) { "npq-additional-support-offer" }
 
-      it "returns the defaut NPQ specialist schedule" do
-        expect(described_class.schedule_for(npq_course)).to eq(Finance::Schedule::NPQSpecialist.default)
+      it "returns the default NPQ support schedule" do
+        expect(described_class.schedule_for(npq_course)).to eq(Finance::Schedule::NPQSupport.default)
       end
     end
 
