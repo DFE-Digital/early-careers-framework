@@ -79,10 +79,6 @@ RSpec.describe RecordDeclarations::Base do
     end
   end
 
-  before do
-    create(:partnership, lead_provider: cpd_lead_provider.lead_provider, cohort: cohort, school: school)
-  end
-
   context "when a similar declaration has been voided" do
     subject(:record_declaration) do
       RecordDeclarations::Started::EarlyCareerTeacher
@@ -109,6 +105,10 @@ RSpec.describe RecordDeclarations::Base do
 
         def self.valid_courses
           %w[ecf-induction]
+        end
+
+        def self.declaration_model
+          ParticipantDeclaration::ECF
         end
 
         def self.model_name

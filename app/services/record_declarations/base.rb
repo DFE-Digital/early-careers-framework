@@ -97,13 +97,15 @@ module RecordDeclarations
     end
 
     def record_exists_with_different_declaration_date?
-      declaration = self.class.declaration_model.find_by(
-        user: user,
-        course_identifier: course_identifier,
-        declaration_type: declaration_type,
-      )
+      declaration = self.class.declaration_model
+                      .where.not(state: self.class.declaration_model.states[:voided])
+                      .find_by(
+                        user: user,
+                        course_identifier: course_identifier,
+                        declaration_type: declaration_type,
+                      )
 
-      declaration.present? && !declaration.voided? && declaration.declaration_date != Time.zone.parse(declaration_date)
+      declaration.present? && declaration.declaration_date != Time.zone.parse(declaration_date)
     end
 
     def date_has_the_right_format
