@@ -1501,6 +1501,11 @@
               "ecf-mentor"
             ],
             "example": "ecf-induction"
+          },
+          "cohort": {
+            "description": "The start year of the cohort the the participant is enrolled in. Defaults to 2021 if not specified",
+            "type": "string",
+            "example": "2021"
           }
         },
         "required": [
@@ -1509,7 +1514,8 @@
         ],
         "example": {
           "schedule_identifier": "ecf-standard-january",
-          "course_identifier": "ecf-mentor"
+          "course_identifier": "ecf-mentor",
+          "cohort": "2021"
         }
       },
       "ECFParticipantChangeScheduleRequest": {
@@ -1543,7 +1549,8 @@
             "type": "participant-change-schedule",
             "attributes": {
               "schedule_identifier": "ecf-standard-january",
-              "course_identifier": "ecf-mentor"
+              "course_identifier": "ecf-mentor",
+              "cohort": "2021"
             }
           }
         }

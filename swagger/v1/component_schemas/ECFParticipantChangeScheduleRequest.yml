@@ -22,3 +22,4 @@ example:
     attributes:
       schedule_identifier: "ecf-standard-january"
       course_identifier: "ecf-mentor"
+      cohort: "2021"
