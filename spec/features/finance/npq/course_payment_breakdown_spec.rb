@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
+RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :feature, js: true do
   include FinanceHelper
   let(:cpd_lead_provider)                         { create(:cpd_lead_provider) }
   let(:npq_lead_provider)                         { create(:npq_lead_provider, cpd_lead_provider: cpd_lead_provider) }
@@ -43,6 +43,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
     end
 
     when_i_click_on(npq_leading_teaching_contract)
+    and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named("Payment breakdown per contract")
   end
 
