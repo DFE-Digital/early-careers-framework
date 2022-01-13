@@ -93,6 +93,65 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
     end
   end
 
+  path "/api/v1/participants/ecf/{id}/change-schedule" do
+    put "Notify that an ECF participant is changing training schedule" do
+      operationId :participant
+      tags "ECF Participant"
+      security [bearerAuth: []]
+      consumes "application/json"
+
+      request_body content: {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest",
+          },
+        },
+      }
+
+      parameter name: :id,
+                in: :path,
+                type: :string,
+                required: true,
+                example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+                description: "The ID of the participant"
+
+      parameter name: :params,
+                in: :body,
+                type: :object,
+                style: :deepObject,
+                required: true,
+                schema: {
+                  "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest",
+                }
+
+      response "200", "The ECF participant changing schedule" do
+        let(:id) { mentor_profile.user.id }
+        let(:attributes) do
+          {
+            schedule_identifier: "ecf-standard-january",
+            course_identifier: "ecf-mentor",
+          }
+        end
+
+        let(:params) do
+          {
+            "data": {
+              "type": "participant",
+              "attributes": attributes,
+            },
+          }
+        end
+
+        before do
+          create(:schedule, schedule_identifier: "ecf-standard-january", name: "ECF January standard 2021")
+        end
+
+        schema({ "$ref": "#/components/schemas/ECFParticipantResponse" })
+        run_test!
+      end
+    end
+  end
+
   path "/api/v1/participants/{id}/withdraw" do
     put "Notify that an ECF participant has withdrawn from their course" do
       operationId :participant
