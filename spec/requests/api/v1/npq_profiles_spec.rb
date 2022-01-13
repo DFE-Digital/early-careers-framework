@@ -14,6 +14,98 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
   let(:bearer_token) { "Bearer #{token}" }
   let(:parsed_response) { JSON.parse(response.body) }
 
+  describe "#show" do
+    before do
+      default_headers[:Authorization] = bearer_token
+      default_headers["Content-Type"] = "application/vnd.api+json"
+    end
+
+    let(:npq_application) { create(:npq_application) }
+
+    it "displays the application attributes" do
+      get "/api/v1/npq-profiles/#{npq_application.id}"
+      expect(response).to be_ok
+      expect(JSON.parse(response.body)).to match(
+        hash_including(
+          "data" => hash_including(
+            "id", "type", "attributes"
+          ),
+        ),
+      )
+    end
+  end
+
+  describe "#update" do
+    before do
+      default_headers[:Authorization] = bearer_token
+      default_headers["Content-Type"] = "application/vnd.api+json"
+    end
+
+    let(:json) { json_hash.to_json }
+    let(:npq_application) { create(:npq_application, eligible_for_funding: false) }
+
+    context "with valid data" do
+      let(:json_hash) do
+        {
+          data: {
+            type: "npq_profiles",
+            attributes: {
+              eligible_for_funding: true,
+            },
+          },
+        }
+      end
+
+      it "updates the record" do
+        expect { patch "/api/v1/npq-profiles/#{npq_application.id}", params: json }
+          .to change { npq_application.reload.eligible_for_funding }
+          .from(false)
+          .to(true)
+
+        expect(response).to be_ok
+      end
+    end
+
+    context "with invalid data" do
+      let(:json_hash) do
+        {
+          data: {
+            type: "npq_profiles",
+            attributes: {
+              eligible_for_funding: "moose",
+            },
+          },
+        }
+      end
+
+      it "returns an error" do
+        expect { patch "/api/v1/npq-profiles/#{npq_application.id}", params: json }
+          .to_not change { npq_application.reload.eligible_for_funding }
+
+        expect(response).to be_bad_request
+      end
+    end
+
+    context "with no changed data" do
+      let(:json_hash) do
+        {
+          data: {
+            type: "npq_profiles",
+            attributes: {
+            },
+          },
+        }
+      end
+
+      it "doesn't change anything and returns ok" do
+        expect { patch "/api/v1/npq-profiles/#{npq_application.id}", params: json }
+          .to_not change { npq_application.reload.attributes }
+
+        expect(response).to be_ok
+      end
+    end
+  end
+
   describe "#create" do
     let(:user) { create(:user) }
     let(:npq_lead_provider) { create(:npq_lead_provider) }
