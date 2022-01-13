@@ -88,7 +88,7 @@ module RecordDeclarations
         declaration_type: declaration_type,
       )
 
-      declaration.present? && declaration.declaration_date != Time.zone.parse(declaration_date)
+      declaration.present? && !declaration.voided? && declaration.declaration_date != Time.zone.parse(declaration_date)
     end
 
     def date_has_the_right_format

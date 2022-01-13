@@ -7,7 +7,7 @@ RSpec.describe RecordDeclarations::Base do
   let(:cohort)                  { create(:cohort, start_year: Time.zone.today.year) }
   let(:school)                  { create(:school) }
   let(:school_cohort)           { create(:school_cohort, school: school, cohort: cohort) }
-  let(:declaration_date)        { Time.zone.parse("2021-11-02").rfc3339 }
+  let(:declaration_date)        { Time.zone.parse("2021-11-02") }
   let(:declaration_type)        { "started" }
   let(:user)                    { create(:user) }
   let(:teacher_profile)         { create(:teacher_profile, user: user) }
@@ -17,7 +17,7 @@ RSpec.describe RecordDeclarations::Base do
       participant_id: ect_participant_profile.user_id,
       course_identifier: "ecf-induction",
       cpd_lead_provider: cpd_lead_provider,
-      declaration_date: declaration_date,
+      declaration_date: declaration_date.rfc3339,
       declaration_type: declaration_type,
     }
   end
@@ -27,18 +27,19 @@ RSpec.describe RecordDeclarations::Base do
   end
 
   context "when a similar declaration has been voided" do
-    subject(:record_declaration) { RecordDeclarations::Started::EarlyCareerTeacher.call(params: params) }
-    let(:void_declaration) do
+    subject(:record_declaration) do
+      RecordDeclarations::Started::EarlyCareerTeacher
+        .call(params: params.merge(declaration_date: (declaration_date + 1.day).rfc3339))
+    end
+    let!(:void_declaration) do
       VoidParticipantDeclaration.new(
         cpd_lead_provider: cpd_lead_provider,
-        id: JSON.parse(record_declaration).dig("data", "id"),
+        id: JSON.parse(RecordDeclarations::Started::EarlyCareerTeacher.call(params: params)).dig("data", "id"),
       ).call
     end
 
-    before { pp void_declaration }
-
     it "allows to re-send a new declaration" do
-      pp record_declaration
+      expect(ParticipantDeclaration.find(JSON.parse(record_declaration).dig("data", "id"))).to be_submitted
     end
   end
 
