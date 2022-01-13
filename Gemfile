@@ -15,7 +15,6 @@ gem "pretender", ">= 0.3.4"
 gem "pundit"
 
 # Error and performance monitoring
-gem "sentry-delayed_job", ">= 4.6.4"
 gem "sentry-rails", ">= 4.8.1"
 gem "sentry-ruby", ">= 4.6.4"
 gem "sentry-sidekiq"
