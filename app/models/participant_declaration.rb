@@ -105,6 +105,7 @@ class ParticipantDeclaration < ApplicationRecord
       .where(participant_profiles: { teacher_profiles: { trn: participant_profile.teacher_profile.trn } })
       .where.not(participant_profiles: { teacher_profiles: { trn: nil } })
       .where.not(user_id: user_id, id: id)
+      .where.not(state: self.class.states[:voided])
       .where(
         declaration_type: declaration_type,
         course_identifier: course_identifier,

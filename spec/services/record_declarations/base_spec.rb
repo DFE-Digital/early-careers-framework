@@ -46,7 +46,20 @@ RSpec.describe RecordDeclarations::Base do
         it "transitions the declaration to submitted" do
           expect { record_declaration }
             .to change(ect_participant_profile.reload.participant_declarations.for_lead_provider(cpd_lead_provider).submitted, :count)
-            .from(0).to(1)
+                  .from(0).to(1)
+        end
+      end
+
+      context "when a similar declaration has been voided" do
+        let!(:void_declaration) do
+          VoidParticipantDeclaration.new(
+            cpd_lead_provider: cpd_lead_provider,
+            id: JSON.parse(RecordDeclarations::Started::EarlyCareerTeacher.call(params: params.merge(declaration_date: (declaration_date + 1.day).rfc3339))).dig("data", "id"),
+          ).call
+        end
+
+        it "allows to re-send a new declaration" do
+          expect(ParticipantDeclaration.find(JSON.parse(record_declaration).dig("data", "id"))).to be_submitted
         end
       end
     end
@@ -61,7 +74,7 @@ RSpec.describe RecordDeclarations::Base do
       let(:record_original_declaration) do
         RecordDeclarations::Started::EarlyCareerTeacher
           .call(params: params.except(:participant_id)
-          .merge(participant_id: original_ect_participant_profile.user_id))
+                  .merge(participant_id: original_ect_participant_profile.user_id))
       end
 
       let(:original_participant_declaration) { ParticipantDeclaration.find(JSON.parse(record_original_declaration).dig("data", "id")) }
@@ -76,23 +89,6 @@ RSpec.describe RecordDeclarations::Base do
         expect(duplicate_participant_declaration.declaration_states.find_by!(state: "ineligible"))
           .to be_duplicate
       end
-    end
-  end
-
-  context "when a similar declaration has been voided" do
-    subject(:record_declaration) do
-      RecordDeclarations::Started::EarlyCareerTeacher
-        .call(params: params.merge(declaration_date: (declaration_date + 1.day).rfc3339))
-    end
-    let!(:void_declaration) do
-      VoidParticipantDeclaration.new(
-        cpd_lead_provider: cpd_lead_provider,
-        id: JSON.parse(RecordDeclarations::Started::EarlyCareerTeacher.call(params: params)).dig("data", "id"),
-      ).call
-    end
-
-    it "allows to re-send a new declaration" do
-      expect(ParticipantDeclaration.find(JSON.parse(record_declaration).dig("data", "id"))).to be_submitted
     end
   end
 
