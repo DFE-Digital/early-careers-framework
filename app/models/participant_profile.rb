@@ -32,12 +32,6 @@ class ParticipantProfile < ApplicationRecord
     withdrawn: "withdrawn",
   }, _prefix: "training_status"
 
-  enum start_term: {
-    autumn_2021: "Autumn 2021",
-    spring_2022: "Spring 2022",
-    summer_2022: "Summer 2022",
-  }
-
   scope :mentors, -> { where(type: Mentor.name) }
   scope :ects, -> { where(type: ECT.name) }
   scope :ecf, -> { where(type: [ECT.name, Mentor.name]) }
@@ -54,6 +48,10 @@ class ParticipantProfile < ApplicationRecord
   self.validation_steps = []
 
   self.ignored_columns = %w[user_id]
+
+  def self.humanize_start_term(start_term)
+    start_term.to_s.split("_").map(&:capitalize).join(" ")
+  end
 
   def state
     participant_profile_state&.state
@@ -115,6 +113,13 @@ class ParticipantProfile < ApplicationRecord
 
   def policy_class
     ParticipantProfilePolicy
+  end
+
+  def start_term_human
+    # Shouldn't we just update records in the database instead?
+    return "Autumn 2021" if start_term.blank?
+
+    self.class.humanize_start_term(start_term)
   end
 end
 

@@ -49,7 +49,7 @@
           Start induction
         </dt>
         <dd class="govuk-summary-list__value">
-          <%= ParticipantProfile.start_terms[@profile.start_term] %>
+          <%= @profile.start_term_human %>
         </dd>
         <dd class="govuk-summary-list__actions">
           <% if @profile.policy_class.new(current_user, @profile).edit_start_term? %>
