@@ -36,13 +36,15 @@ RSpec.describe "Schools::AddParticipant", type: :request do
 
       context "when form has been set up in the session" do
         before do
-          set_session(:schools_add_participant_form,
-                      type: :ect,
-                      full_name: Faker::Name.name,
-                      email: Faker::Internet.email,
-                      mentor_id: "later",
-                      school_cohort_id: school_cohort.id,
-                      current_user_id: user.id)
+          set_session(:schools_add_participant_form, {
+            type: :ect,
+            full_name: Faker::Name.name,
+            email: Faker::Internet.email,
+            mentor_id: "later",
+            school_cohort_id: school_cohort.id,
+            current_user_id: user.id,
+            start_term: "Autumn 2050",
+          })
           get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/#{step.to_s.dasherize}"
         end
 
