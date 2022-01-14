@@ -8,6 +8,6 @@ class Finance::Schedule::NPQSpecialist < Finance::Schedule
   ].freeze
 
   def self.default
-    find_by(name: "NPQ Specialist November 2021")
+    find_by(cohort: Cohort.current, schedule_identifier: "npq-specialist-spring")
   end
 end

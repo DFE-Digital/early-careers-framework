@@ -8,6 +8,6 @@ class Finance::Schedule::NPQLeadership < Finance::Schedule
   ].freeze
 
   def self.default
-    find_by(name: "NPQ Leadership November 2021")
+    find_by(cohort: Cohort.current, schedule_identifier: "npq-leadership-spring")
   end
 end
