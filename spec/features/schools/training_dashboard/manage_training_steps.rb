@@ -384,7 +384,7 @@ module ManageTrainingSteps
   end
 
   def when_i_choose_start_term
-    choose(ParticipantProfile.start_terms[@participant_data[:start_term]], allow_label_click: true)
+    choose(ParticipantProfile.humanize_start_term(@participant_data[:start_term]), allow_label_click: true)
   end
 
   def when_i_choose_assign_mentor_later

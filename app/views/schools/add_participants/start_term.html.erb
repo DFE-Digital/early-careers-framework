@@ -10,8 +10,8 @@
       <%= f.govuk_radio_buttons_fieldset :start_term,
           legend: { text: add_participant_form.start_term_legend, tag: 'h1', size: 'xl' } do %>
 
-        <% ParticipantProfile.start_terms.drop(1).each do |term_key, term_value| %>
-          <%= f.govuk_radio_button :start_term, term_key, label: { text: term_value } %>
+        <% add_participant_form.start_term_options.each do |term| %>
+          <%= f.govuk_radio_button :start_term, term, label: { text: ParticipantProfile.humanize_start_term(term) } %>
         <% end %>
       <% end %>
 

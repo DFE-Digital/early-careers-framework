@@ -48,7 +48,7 @@
            <tr class="govuk-table__row">
              <td class="govuk-table__cell"><%= profile.user.full_name %></td>
              <td class="govuk-table__cell"><%= format_type(profile.participant_type) %></td>
-             <td class="govuk-table__cell"><%= profile.start_term? ? ParticipantProfile.start_terms[profile.start_term] : "Autumn 2021" %></td>
+             <td class="govuk-table__cell"><%= profile.start_term_human %></td>
              <td class="govuk-table__cell">None</td>
              <td class="govuk-table__cell govuk-table__cell--numeric">
              <%= govuk_link_to "Details", schools_participant_path(cohort_id: profile.school_cohort.cohort, id: profile) %>
@@ -80,7 +80,7 @@
           <tr class="govuk-table__row">
             <td class="govuk-table__cell"><%= profile.user.full_name %></td>
             <td class="govuk-table__cell"><%= format_type(profile.participant_type) %></td>
-            <td class="govuk-table__cell"><%= profile.start_term? ? ParticipantProfile.start_terms[profile.start_term] : "Autumn 2021" %></td>
+            <td class="govuk-table__cell"><%= profile.start_term_human %></td>
             <td class="govuk-table__cell">None</td>
             <td class="govuk-table__cell govuk-table__cell--numeric"><%= govuk_link_to "Check", schools_participant_path(id: profile.id) %></td>
           </tr>
@@ -110,7 +110,7 @@
           <tr class="govuk-table__row">
             <td class="govuk-table__cell"><%= profile.user.full_name %></td>
             <td class="govuk-table__cell"><%= format_type(profile.participant_type) %></td>
-            <td class="govuk-table__cell"><%= profile.start_term? ? ParticipantProfile.start_terms[profile.start_term] : "Autumn 2021"  %></td>
+            <td class="govuk-table__cell"><%= profile.start_term_human  %></td>
             <td class="govuk-table__cell">
               <% if latest_email_delivered_for(profile) %>
                 Remind them
@@ -159,7 +159,7 @@
           <tr class="govuk-table__row">
             <td class="govuk-table__cell"><%= profile.user.full_name %></td>
             <td class="govuk-table__cell"><%= format_type(profile.participant_type) %></td>
-            <td class="govuk-table__cell"><%= profile.start_term? ? ParticipantProfile.start_terms[profile.start_term] : "Autumn 2021" %></td>
+            <td class="govuk-table__cell"><%= profile.start_term_human %></td>
             <td class="govuk-table__cell">
               <% if profile.ect? %>
                 <%= profile.mentor_profile_id? ? "None" : "Assign mentor" %>
@@ -207,7 +207,7 @@
           <tr class="govuk-table__row">
             <td class="govuk-table__cell"><%= profile.user.full_name %></td>
             <td class="govuk-table__cell"><%= format_type(profile.participant_type) %></td>
-            <td class="govuk-table__cell"><%= profile.start_term? ? ParticipantProfile.start_terms[profile.start_term] : "Autumn 2021" %></td>
+            <td class="govuk-table__cell"><%= profile.start_term_human %></td>
             <td class="govuk-table__cell">
               <% if profile.ect? %>
                 <%= profile.mentor_profile_id? ? "None" : "Assign mentor" %>
