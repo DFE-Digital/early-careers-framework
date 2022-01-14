@@ -27,6 +27,10 @@ module Schools
       def name
         profile.user.full_name
       end
+
+      def lead_provider
+        profile.school_cohort.lead_provider
+      end
     end
   end
 end
