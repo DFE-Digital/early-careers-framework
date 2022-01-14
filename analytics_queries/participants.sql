@@ -13,6 +13,7 @@ SELECT u.id                                                    as participant_id
        pp.status                                               as status,
        pp.training_status                                      as training_status,
        s.name                                                  as schedule,
+       s.schedule_identifier                                   as schedule_identifier,
        tp.trn                                                  as trn,
        epvd.created_at                                         as trn_provided_at,
        (epe.status IN ('eligible', 'matched'))                 as trn_validated,
