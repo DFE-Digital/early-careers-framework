@@ -87,7 +87,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :npq_profiles, only: [:create], path: "npq-profiles"
+      resources :npq_profiles, only: %i[show create update], path: "npq-profiles"
 
       namespace :data_studio, path: "data-studio" do
         get "/school-rollout", to: "school_rollout#index"
