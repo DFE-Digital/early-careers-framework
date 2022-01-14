@@ -31,8 +31,6 @@ Sentry.init do |config|
       else
         0.01
       end
-    when /delayed_job/
-      0.001
     when /sidekiq/
       0.001
     else

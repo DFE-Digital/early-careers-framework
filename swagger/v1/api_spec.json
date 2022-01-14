@@ -1166,6 +1166,55 @@
         }
       }
     },
+    "/api/v1/participants/ecf/{id}/change-schedule": {
+      "put": {
+        "summary": "Notify that an ECF participant is changing training schedule",
+        "operationId": "participant",
+        "tags": [
+          "ECF Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ECF participant changing schedule",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/participants/{id}/withdraw": {
       "put": {
         "summary": "Notify that an ECF participant has withdrawn from their course",
@@ -1395,10 +1444,11 @@
           "schedule_identifier": {
             "description": "The schedule of the ECF participant",
             "type": "string",
-            "example": "ecf-january-standard-2021",
+            "example": "ecf-standard-january",
             "enum": [
-              "ecf-september-standard-2021",
-              "ecf-january-standard-2021"
+              "ecf-standard-september",
+              "ecf-standard-january",
+              "ecf-standard-april"
             ]
           },
           "updated_at": {
@@ -1437,10 +1487,11 @@
             "description": "The new schedule of the participant",
             "type": "string",
             "enum": [
-              "ecf-september-standard-2021",
-              "ecf-january-standard-2021"
+              "ecf-standard-september",
+              "ecf-standard-january",
+              "ecf-standard-april"
             ],
-            "example": "ecf-september-standard-2021"
+            "example": "ecf-standard-september"
           },
           "course_identifier": {
             "description": "The type of course the participant is enrolled in",
@@ -1450,6 +1501,11 @@
               "ecf-mentor"
             ],
             "example": "ecf-induction"
+          },
+          "cohort": {
+            "description": "The start year of the cohort the the participant is enrolled in. Defaults to 2021 if not specified",
+            "type": "string",
+            "example": "2021"
           }
         },
         "required": [
@@ -1457,8 +1513,9 @@
           "course_identifier"
         ],
         "example": {
-          "schedule_identifier": "ecf-january-standard-2021",
-          "course_identifier": "ecf-mentor"
+          "schedule_identifier": "ecf-standard-january",
+          "course_identifier": "ecf-mentor",
+          "cohort": "2021"
         }
       },
       "ECFParticipantChangeScheduleRequest": {
@@ -1491,8 +1548,9 @@
           "data": {
             "type": "participant-change-schedule",
             "attributes": {
-              "schedule_identifier": "ecf-january-standard-2021",
-              "course_identifier": "ecf-mentor"
+              "schedule_identifier": "ecf-standard-january",
+              "course_identifier": "ecf-mentor",
+              "cohort": "2021"
             }
           }
         }
@@ -1510,6 +1568,7 @@
           "cohort",
           "status",
           "training_status",
+          "schedule_identifier",
           "updated_at"
         ],
         "properties": {
@@ -1609,6 +1668,15 @@
               "active",
               "deferred",
               "withdrawn"
+            ]
+          },
+          "schedule_identifier": {
+            "description": "The schedule of the ECF participant",
+            "type": "string",
+            "example": "ecf-standard-january",
+            "enum": [
+              "ecf-standard-september",
+              "ecf-standard-january"
             ]
           },
           "updated_at": {
@@ -1778,10 +1846,11 @@
           "schedule_identifier": {
             "description": "The schedule of the ECF participant",
             "type": "string",
-            "example": "ecf-january-standard-2021",
+            "example": "ecf-standard-january",
             "enum": [
-              "ecf-september-standard-2021",
-              "ecf-january-standard-2021"
+              "ecf-standard-september",
+              "ecf-standard-january",
+              "ecf-standard-april"
             ]
           },
           "updated_at": {
@@ -2022,10 +2091,11 @@
           "schedule_identifier": {
             "description": "The schedule of the ECF participant",
             "type": "string",
-            "example": "ecf-january-standard-2021",
+            "example": "ecf-standard-january",
             "enum": [
-              "ecf-september-standard-2021",
-              "ecf-january-standard-2021"
+              "ecf-standard-september",
+              "ecf-standard-january",
+              "ecf-standard-april"
             ]
           },
           "updated_at": {
@@ -2415,10 +2485,11 @@
           "schedule_identifier": {
             "description": "The schedule of the ECF participant",
             "type": "string",
-            "example": "ecf-january-standard-2021",
+            "example": "ecf-standard-january",
             "enum": [
-              "ecf-september-standard-2021",
-              "ecf-january-standard-2021"
+              "ecf-standard-september",
+              "ecf-standard-january",
+              "ecf-standard-april"
             ]
           },
           "updated_at": {
@@ -3746,7 +3817,7 @@
             "description": "[Deprecated - use state instead] Indicates whether this declaration has been voided",
             "type": "boolean",
             "nullable": false,
-            "example": false
+            "example": true
           },
           "state": {
             "description": "Indicates the state of this payment declaration",
@@ -3830,7 +3901,7 @@
             "example": "ecf-induction"
           },
           "eligible_for_payment": {
-            "description": "Indicates whether this declaration would be eligible for funding from the DfE",
+            "description": "[Deprecated - use state instead] Indicates whether this declaration would be eligible for funding from the DfE",
             "type": "boolean",
             "nullable": false,
             "example": true
@@ -3842,7 +3913,7 @@
             "example": false
           },
           "state": {
-            "description": "[Deprecated - use state instead] Indicates the state of this payment declaration",
+            "description": "Indicates the state of this payment declaration",
             "type": "string",
             "nullable": false,
             "example": "paid"

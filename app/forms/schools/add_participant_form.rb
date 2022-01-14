@@ -126,7 +126,7 @@ module Schools
     end
 
     def start_term_legend
-      if mentor_options.any?
+      if participant_type == :mentor
         I18n.t("schools.participants.add.start_term.mentor", full_name: full_name)
       else
         I18n.t("schools.participants.add.start_term.ect", full_name: full_name)

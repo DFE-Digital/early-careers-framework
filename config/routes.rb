@@ -64,6 +64,11 @@ Rails.application.routes.draw do
           put :change_schedule, path: "change-schedule"
         end
       end
+      resources :participants, path: "/participants/ecf", only: [] do
+        member do
+          put :change_schedule, path: "change-schedule"
+        end
+      end
       resources :participant_declarations, only: %i[create index show], path: "participant-declarations" do
         member do
           put :void
@@ -82,7 +87,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :npq_profiles, only: [:create], path: "npq-profiles"
+      resources :npq_profiles, only: %i[show create update], path: "npq-profiles"
 
       namespace :data_studio, path: "data-studio" do
         get "/school-rollout", to: "school_rollout#index"
@@ -148,7 +153,11 @@ Rails.application.routes.draw do
     get "/api-docs/v1/api_spec.yml" => "openapi#api_docs", as: :api_docs
 
     resources :your_schools, path: "/your-schools", only: %i[index create]
-    resources :partnerships, only: %i[show]
+    resources :partnerships, only: %i[show] do
+      collection do
+        get :active
+      end
+    end
 
     namespace :report_schools, path: "report-schools" do
       get :start, to: "base#start"
@@ -282,6 +291,8 @@ Rails.application.routes.draw do
       post "/choose-provider-npq", to: "payment_breakdowns#choose_provider_npq", as: :choose_provider_npq
     end
 
+    resources :schedules, only: %i[index show]
+
     namespace :ecf do
       resources :payment_breakdowns, only: %i[show] do
         member do
@@ -306,7 +317,7 @@ Rails.application.routes.draw do
   namespace :participants do
     resource :no_access, only: :show, controller: "no_access"
     resource :start_registrations, path: "/start-registration", only: :show do
-      get "trn-guidance", action: :trn_guidance
+      get "get-a-trn", action: :get_a_trn
     end
 
     multistep_form :validation, Participants::ParticipantValidationForm, controller: :validations do

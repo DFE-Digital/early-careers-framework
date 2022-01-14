@@ -24,24 +24,41 @@ RSpec.describe NPQ::BuildApplication do
     }
   end
 
-  subject(:npq_application) do
-    described_class.call(
-      npq_application_params: npq_application_params,
-      npq_course_id: npq_course.id,
-      npq_lead_provider_id: npq_lead_provider.id,
-      user_id: user.id,
-    )
-  end
+  subject(:service) { described_class }
 
-  it "creates an application" do
-    expect(npq_application.save).to be true
-    expect(npq_application)
-      .to have_attributes(
-        npq_application_params.merge(
-          npq_course_id: npq_course.id,
-          npq_lead_provider_id: npq_lead_provider.id,
-          user_id: user.id,
-        ),
+  describe "call" do
+    let(:npq_application) do
+      service.call(
+        npq_application_params: npq_application_params,
+        npq_course_id: npq_course.id,
+        npq_lead_provider_id: npq_lead_provider.id,
+        user_id: user.id,
       )
+    end
+
+    it "creates an application" do
+      expect(npq_application.save).to be true
+      expect(npq_application)
+        .to have_attributes(
+          npq_application_params.merge(
+            npq_course_id: npq_course.id,
+            npq_lead_provider_id: npq_lead_provider.id,
+          ),
+        )
+    end
+
+    it "adds a participant identity record" do
+      expect {
+        npq_application
+      }.to change { ParticipantIdentity.count }.by(1)
+    end
+
+    context "when the user already has an identity record" do
+      let!(:identity) { Identity::Create.call(user: user) }
+
+      it "sets the participant identity reference" do
+        expect(npq_application.participant_identity.user).to eq user
+      end
+    end
   end
 end

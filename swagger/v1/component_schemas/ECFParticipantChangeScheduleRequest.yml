@@ -20,5 +20,6 @@ example:
   data:
     type: "participant-change-schedule"
     attributes:
-      schedule_identifier: "ecf-january-standard-2021"
+      schedule_identifier: "ecf-standard-january"
       course_identifier: "ecf-mentor"
+      cohort: "2021"

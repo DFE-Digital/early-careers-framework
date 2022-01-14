@@ -89,31 +89,37 @@ npq_leadership_november_2021.update!(cohort: cohort_2021)
   )
 end
 
-def seed_npq_for_path_and_klass(path:, klass:)
-  rows = CSV.read(path, headers: true)
+Importers::SeedSchedule.new(
+  path_to_csv: Rails.root.join("db/seeds/schedules/npq_specialist.csv"),
+  klass: Finance::Schedule::NPQSpecialist,
+).call
 
-  rows.each do |row|
-    next unless row["schedule-identifier"]
+Importers::SeedSchedule.new(
+  path_to_csv: Rails.root.join("db/seeds/schedules/npq_leadership.csv"),
+  klass: Finance::Schedule::NPQLeadership,
+).call
 
-    cohort = Cohort.find_or_create_by!(start_year: row["schedule-cohort-year"])
+Importers::SeedSchedule.new(
+  path_to_csv: Rails.root.join("db/seeds/schedules/npq_aso.csv"),
+  klass: Finance::Schedule::NPQSupport,
+).call
 
-    schedule = klass.find_or_create_by!(
-      name: row["schedule-name"],
-      schedule_identifier: row["schedule-identifier"],
-      cohort: cohort,
-    )
+Importers::SeedSchedule.new(
+  path_to_csv: Rails.root.join("db/seeds/schedules/ecf_standard.csv"),
+  klass: Finance::Schedule::ECF,
+).call
 
-    Finance::Milestone.find_or_create_by!(
-      schedule: schedule,
-      name: row["milestone-name"],
-      start_date: row["milestone-start-date"],
-      milestone_date: row["milestone-date"],
-      payment_date: row["milestone-payment-date"],
-      declaration_type: row["milestone-declaration-type"],
-    )
-  end
-end
+Importers::SeedSchedule.new(
+  path_to_csv: Rails.root.join("db/seeds/schedules/ecf_reduced.csv"),
+  klass: Finance::Schedule::ECF,
+).call
 
-seed_npq_for_path_and_klass(path: Rails.root.join("db/seeds/schedules/npq_specialist.csv"), klass: Finance::Schedule::NPQSpecialist)
-seed_npq_for_path_and_klass(path: Rails.root.join("db/seeds/schedules/npq_leadership.csv"), klass: Finance::Schedule::NPQLeadership)
-seed_npq_for_path_and_klass(path: Rails.root.join("db/seeds/schedules/npq_aso.csv"), klass: Finance::Schedule::NPQSupport)
+Importers::SeedSchedule.new(
+  path_to_csv: Rails.root.join("db/seeds/schedules/ecf_extended.csv"),
+  klass: Finance::Schedule::ECF,
+).call
+
+Importers::SeedSchedule.new(
+  path_to_csv: Rails.root.join("db/seeds/schedules/ecf_replacement.csv"),
+  klass: Finance::Schedule::ECF,
+).call

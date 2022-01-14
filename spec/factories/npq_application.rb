@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :npq_application do
-    user
+    participant_identity
     npq_course
     npq_lead_provider
 

@@ -11,5 +11,14 @@ module LeadProviders
       @selected_cohort = @partnership.cohort
       @delivery_partner = @partnership.delivery_partner
     end
+
+    def active
+      @schools = current_user.lead_provider.active_partnerships.includes(:school, :delivery_partner)
+      respond_to do |format|
+        format.csv do
+          render body: PartnershipCsvSerializer.new(@schools).call
+        end
+      end
+    end
   end
 end

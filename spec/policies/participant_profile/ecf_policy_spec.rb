@@ -77,7 +77,7 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
 
     context "with an NPQ application" do
       before do
-        create(:npq_application, user: participant_profile.user)
+        create(:npq_application, participant_identity: participant_profile.participant_identity)
       end
 
       it { is_expected.to permit_action(:withdraw_record) }
@@ -160,7 +160,7 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
 
     context "with an NPQ application" do
       before do
-        create(:npq_application, user: participant_profile.user)
+        create(:npq_application, participant_identity: participant_profile.participant_identity)
       end
 
       it { is_expected.to permit_action(:withdraw_record) }

@@ -25,7 +25,7 @@ module Api
     end
 
     def permitted_params
-      params.require(:data).permit(:type, attributes: %i[course_identifier reason schedule_identifier])
+      params.require(:data).permit(:type, attributes: %i[course_identifier reason schedule_identifier cohort])
     rescue ActionController::ParameterMissing => e
       if e.param == :data
         raise ActionController::BadRequest, I18n.t(:invalid_data_structure)

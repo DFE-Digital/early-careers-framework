@@ -20,6 +20,28 @@ RSpec.describe Finance::Schedule::ECF, type: :model do
       expect(subject.cohort.start_year).to eql 2021
     end
   end
+
+  it "seeds ecf schedules and milestones" do
+    schedule = described_class.find_by(schedule_identifier: "ecf-standard-april")
+
+    expect(schedule).to be_present
+    expect(schedule.milestones.count).to eql(6)
+
+    schedule = described_class.find_by(schedule_identifier: "ecf-reduced-april")
+
+    expect(schedule).to be_present
+    expect(schedule.milestones.count).to eql(6)
+
+    schedule = described_class.find_by(schedule_identifier: "ecf-extended-april")
+
+    expect(schedule).to be_present
+    expect(schedule.milestones.count).to eql(6)
+
+    schedule = described_class.find_by(schedule_identifier: "ecf-replacement-april")
+
+    expect(schedule).to be_present
+    expect(schedule.milestones.count).to eql(6)
+  end
 end
 
 RSpec.describe Finance::Schedule::NPQLeadership, type: :model do
@@ -28,14 +50,15 @@ RSpec.describe Finance::Schedule::NPQLeadership, type: :model do
   end
 
   it "seeds from csv" do
-    schedule = described_class.find_by(schedule_identifier: "npq-sl-february")
+    schedule = described_class.find_by(schedule_identifier: "npq-leadership-spring")
     expect(schedule).to be_present
     expect(schedule.milestones.count).to eql(4)
   end
 
   describe "default" do
-    it "returns NPQ Leadership November 2021 schedule" do
-      expect(described_class.default.name).to eql "NPQ Leadership November 2021"
+    it "returns NPQ Leadership Spring 2021 schedule" do
+      expected_schedule = described_class.find_by(cohort: Cohort.current, schedule_identifier: "npq-leadership-spring")
+      expect(described_class.default).to eql(expected_schedule)
     end
   end
 end
@@ -46,14 +69,15 @@ RSpec.describe Finance::Schedule::NPQSpecialist, type: :model do
   end
 
   it "seeds from csv" do
-    schedule = described_class.find_by(schedule_identifier: "npq-lbc-february")
+    schedule = described_class.find_by(schedule_identifier: "npq-specialist-spring")
     expect(schedule).to be_present
     expect(schedule.milestones.count).to eql(3)
   end
 
   describe "default" do
-    it "returns NPQ Specialist November 2021 schedule" do
-      expect(described_class.default.name).to eql "NPQ Specialist November 2021"
+    it "returns NPQ Specialist Spring 2021 schedule" do
+      expected_schedule = described_class.find_by(cohort: Cohort.current, schedule_identifier: "npq-specialist-spring")
+      expect(described_class.default).to eql(expected_schedule)
     end
   end
 end
@@ -70,8 +94,9 @@ RSpec.describe Finance::Schedule::NPQSupport, type: :model do
   end
 
   describe "default" do
-    it "returns NPQ ASO November schedule" do
-      expect(described_class.default.name).to eql "NPQ ASO November"
+    it "returns NPQ ASO December schedule" do
+      expected_schedule = described_class.find_by(cohort: Cohort.current, schedule_identifier: "npq-aso-december")
+      expect(described_class.default).to eql(expected_schedule)
     end
   end
 end

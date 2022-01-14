@@ -26,6 +26,7 @@ class SchoolMailer < ApplicationMailer
   UNPARTNERED_CIP_SIT_ADD_PARTICIPANTS_EMAIL_TEMPLATE = "ebc96223-c2ea-416e-8d3e-1f591bbd2f98"
   SIT_NEW_AMBITION_ECTS_AND_MENTORS_ADDED_TEMPLATE = "90d86c1b-2dca-4cca-9dcb-5940e7f28577"
   SIT_FIP_PARTICIPANT_VALIDATION_DEADLINE_REMINDER_TEMPLATE = "48f63205-a8d9-49a2-a76c-93d48ec9b23b"
+  SCHOOL_PRETERM_REMINDER = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f"
 
   # This email is currently (30/09/2021) only used for manually sent chaser emails
   def remind_induction_coordinator_to_setup_cohort_email(induction_coordinator_profile:, school_name:, campaign: nil)
@@ -407,5 +408,25 @@ class SchoolMailer < ApplicationMailer
         sign_in: sign_in_url,
       },
     ).tag(:sit_fip_participant_validation_deadline_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator)
+  end
+
+  def school_preterm_reminder(school:, season:)
+    nomination_email = NominationEmail.create_nomination_email(
+      sent_at: Time.zone.now,
+      sent_to: school.contact_email,
+      school: school,
+    )
+
+    template_mail(
+      SCHOOL_PRETERM_REMINDER,
+      to: school.contact_email,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        season: season,
+        school_name: school.name,
+        nomination_link: nomination_email.nomination_url,
+      },
+    ).tag(:school_preterm_reminder).associate_with(school)
   end
 end

@@ -6,17 +6,16 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby File.read(".ruby-version").chomp
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 6.1.4", ">= 6.1.4.1"
+gem "rails", "~> 6.1.4", ">= 6.1.4.2"
 
 # User management and rbac
-gem "devise", ">= 4.7.3"
+gem "devise", ">= 4.8.0"
 gem "paper_trail"
 gem "pretender", ">= 0.3.4"
 gem "pundit"
 
 # Error and performance monitoring
-gem "sentry-delayed_job", ">= 4.6.4"
-gem "sentry-rails", ">= 4.6.4"
+gem "sentry-rails", ">= 4.8.1"
 gem "sentry-ruby", ">= 4.6.4"
 gem "sentry-sidekiq"
 
@@ -39,7 +38,7 @@ gem "ar-uuid", "~> 0.2.2"
 gem "puma", "~> 5.5"
 
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
-gem "webpacker", ">= 5.2.1"
+gem "webpacker", ">= 5.4.3"
 
 # Soft delete
 gem "discard", "~> 1.2", ">= 1.2.0"
@@ -51,18 +50,18 @@ gem "bootsnap", ">= 1.1.0", require: false
 gem "foreman"
 
 # Canonical meta tag
-gem "canonical-rails", ">= 0.2.11"
+gem "canonical-rails", ">= 0.2.13"
 
 gem "listen", ">= 3.0.5", "< 3.8"
 gem "rack-attack", ">=6.5.0"
 
 # GOV.UK Notify
-gem "mail-notify", ">= 1.0.3"
+gem "mail-notify", ">= 1.0.4"
 
 # do not rely on host's timezone data, which can be inconsistent
 gem "tzinfo-data"
 
-gem "govuk-components", ">= 2.1.0"
+gem "govuk-components", ">= 2.1.5"
 gem "govuk_design_system_formbuilder", "~> 2.3.0b1"
 gem "govuk_markdown", "~> 0.4.0"
 gem "view_component", require: "view_component/engine"
@@ -74,8 +73,6 @@ gem "savon", "~> 2.12", ">= 2.12.1"
 
 # Database based asynchronous priority queue system
 gem "daemons"
-gem "delayed_cron_job"
-gem "delayed_job_active_record"
 
 # Strong migration checker for database migrations
 gem "strong_migrations"
@@ -139,7 +136,7 @@ group :development, :test do
 
   gem "dotenv-rails", ">= 2.7.6"
 
-  gem "factory_bot_rails", ">= 6.1.0"
+  gem "factory_bot_rails", ">= 6.2.0"
 
   # Swagger generator
   gem "multi_json"
@@ -155,7 +152,7 @@ end
 
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
-  gem "web-console", ">= 4.1.0"
+  gem "web-console", ">= 4.2.0"
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem "spring"
@@ -178,7 +175,7 @@ group :test do
   gem "percy-capybara"
   gem "pundit-matchers", "~> 1.7.0"
   gem "rails-controller-testing", ">= 1.0.5"
-  gem "rspec-default_http_header"
+  gem "rspec-default_http_header", ">= 0.0.6"
   gem "selenium-webdriver"
   gem "shoulda-matchers", "~> 4.5"
   gem "simplecov"

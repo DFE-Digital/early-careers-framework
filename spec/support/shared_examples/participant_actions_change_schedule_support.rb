@@ -2,11 +2,28 @@
 
 RSpec.shared_examples "a participant change schedule action service" do
   it_behaves_like "a participant action service"
-  let!(:january_schedule) { create(:schedule, schedule_identifier: "ecf-january-standard-2021", name: "ECF January standard schedule 2021") }
+
+  let!(:january_schedule) do
+    create(
+      :schedule,
+      schedule_identifier: "ecf-january-standard-2021",
+      identifier_alias: "ecf-january-standard-2021-alias",
+      name: "ECF January standard schedule 2021",
+    )
+  end
 
   it "changes the schedule on user's profile" do
     expect {
       described_class.call(params: given_params)
+      user_profile.reload
+    }.to change(user_profile, :schedule).to(january_schedule)
+  end
+
+  it "succeeds when given alias of schedule identifier" do
+    params = given_params.merge({ schedule_identifier: "ecf-january-standard-2021-alias" })
+
+    expect {
+      described_class.call(params: params)
       user_profile.reload
     }.to change(user_profile, :schedule).to(january_schedule)
   end

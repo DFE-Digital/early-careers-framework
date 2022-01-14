@@ -88,7 +88,7 @@ module RecordDeclarations
         declaration_type: declaration_type,
       )
 
-      declaration.present? && declaration.declaration_date != Time.zone.parse(declaration_date)
+      declaration.present? && !declaration.voided? && declaration.declaration_date != Time.zone.parse(declaration_date)
     end
 
     def date_has_the_right_format
@@ -109,7 +109,7 @@ module RecordDeclarations
         raise ActionController::ParameterMissing, I18n.t(:declaration_before_milestone_start)
       end
 
-      if milestone.milestone_date.end_of_day < parsed_date
+      if milestone.milestone_date.present? && (milestone.milestone_date.end_of_day < parsed_date)
         raise ActionController::ParameterMissing, I18n.t(:declaration_after_milestone_cutoff)
       end
     end

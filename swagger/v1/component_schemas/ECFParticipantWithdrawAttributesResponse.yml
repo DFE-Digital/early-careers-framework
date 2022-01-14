@@ -83,10 +83,11 @@ properties:
   schedule_identifier:
     description: "The schedule of the ECF participant"
     type: string
-    example: ecf-january-standard-2021
+    example: ecf-standard-january
     enum:
-      - ecf-september-standard-2021
-      - ecf-january-standard-2021
+      - ecf-standard-september
+      - ecf-standard-january
+      - ecf-standard-april
   updated_at:
     description: "The date the ECF participant was last updated"
     type: string

@@ -8,6 +8,7 @@ module Participants
 
       included do
         attr_accessor :schedule_identifier
+        attr_writer :cohort
 
         validates :schedule, presence: { message: I18n.t(:invalid_schedule) }
         validate :not_already_withdrawn
@@ -24,8 +25,23 @@ module Participants
 
     private
 
+      def cohort_object
+        @cohort_object ||= if @cohort
+                             Cohort.find_by(start_year: @cohort)
+                           else
+                             Cohort.current
+                           end
+      end
+
       def schedule
-        Finance::Schedule.find_by(schedule_identifier: schedule_identifier)
+        return @schedule if @schedule
+
+        alias_search_query = Finance::Schedule.where(identifier_alias: schedule_identifier, cohort: cohort_object)
+
+        @schedule = Finance::Schedule
+          .where(schedule_identifier: schedule_identifier, cohort: cohort_object)
+          .or(alias_search_query)
+          .first
       end
 
       def not_already_withdrawn
