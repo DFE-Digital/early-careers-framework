@@ -30,7 +30,7 @@ RSpec.describe Finance::NPQ::CalculationOrchestrator do
     }
   end
 
-  let(:interval) { Finance::Invoice.all.first.interval }
+  let(:interval) { (Time.zone.today)..(Time.zone.today + 10.days) }
 
   subject(:run_calculation) do
     described_class.call(

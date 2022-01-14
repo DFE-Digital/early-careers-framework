@@ -18,7 +18,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
       event_type: :started,
     )
   end
-  let(:invoice) { Finance::Invoice.find_by_name("current") }
+  let(:invoice) { Finance::Invoice::NPQ.current }
 
   scenario "see a payment breakdown per NPQ course and a payment breakdown of each individual NPQ courses for each provider" do
     given_i_am_logged_in_as_a_finance_user

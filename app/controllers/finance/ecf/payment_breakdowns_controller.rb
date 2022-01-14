@@ -6,7 +6,7 @@ module Finance
       def show
         @ecf_lead_provider = lead_provider_scope.find(params[:id])
 
-        @invoice = Finance::Invoice.find_by_name("current")
+        @invoice = Finance::Invoice::ECF.current
 
         @breakdown = Finance::ECF::CalculationOrchestrator.call(
           aggregator: ParticipantEligibleAggregator,
@@ -20,7 +20,7 @@ module Finance
       def payable
         @ecf_lead_provider = lead_provider_scope.find(params[:id])
 
-        @invoice = Finance::Invoice.find_by_name("payable")
+        @invoice = Finance::Invoice::ECF.payable
 
         @breakdown = Finance::ECF::CalculationOrchestrator.call(
           aggregator: ParticipantPayableAggregator,

@@ -6,7 +6,7 @@ module Finance
   module NPQ
     class PaymentOverviewsController < BaseController
       def show
-        @invoice           = Finance::Invoice.find_by_name("current")
+        @invoice           = Finance::Invoice::NPQ.current
         @npq_lead_provider = lead_provider_scope.find(params[:id])
         @breakdowns        = Finance::NPQ::CalculationOverviewOrchestrator.call(
           cpd_lead_provider: @npq_lead_provider.cpd_lead_provider,
