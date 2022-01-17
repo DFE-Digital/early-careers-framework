@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Finance::Invoice::ECF < Finance::Invoice::Base
+class Finance::Statement::ECF < Finance::Statement::Base
   DATA = [
     {
       interval: Time.zone.parse("2021-09-01T00:00:00+01:00")..Time.zone.parse("2021-11-19T23:59:59+00:00"),

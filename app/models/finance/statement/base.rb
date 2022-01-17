@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Finance::Invoice::Base
+class Finance::Statement::Base
   def self.all
     self::DATA.map do |hash|
       new(

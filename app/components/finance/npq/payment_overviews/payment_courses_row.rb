@@ -15,11 +15,11 @@ module Finance
 
       private
 
-        attr_accessor :output_payments_subtotal, :service_fees_monthly, :invoice
+        attr_accessor :output_payments_subtotal, :service_fees_monthly, :statement
         attr_writer :course_identifier, :npq_lead_provider
 
-        def initialize(invoice:, breakdown:, npq_lead_provider:)
-          self.invoice                  = invoice
+        def initialize(statement:, breakdown:, npq_lead_provider:)
+          self.statement                = statement
           self.course_identifier        = breakdown.dig(:breakdown_summary, :course_identifier)
           self.service_fees_monthly     = breakdown.dig(:service_fees, :monthly)
           self.output_payments_subtotal = breakdown.dig(:output_payments, :subtotal)
