@@ -9,6 +9,8 @@ module RecordDeclarations
     implement_class_method :required_params, :valid_declaration_types
     implement_instance_method :user_profile
 
+    MultipleParticipantDeclarationDuplicate = Class.new(ArgumentError)
+
     RFC3339_DATE_REGEX = /\A\d{4}-\d{2}-\d{2}T(\d{2}):(\d{2}):(\d{2})([.,]\d+)?(Z|[+-](\d{2})(:?\d{2})?)?\z/i.freeze
 
     attr_accessor :declaration_date, :declaration_type
@@ -18,7 +20,7 @@ module RecordDeclarations
     validate :date_has_the_right_format
 
     validates :declaration_type, inclusion: { in: :valid_declaration_types, message: I18n.t(:invalid_declaration_type) }
-    delegate :schedule, :participant_declarations, :fundable?, to: :user_profile, allow_nil: true
+    delegate :schedule, :participant_declarations, to: :user_profile, allow_nil: true
 
     class << self
       def call(params:)
@@ -38,11 +40,14 @@ module RecordDeclarations
 
       raise ActiveRecord::RecordNotUnique, "Declaration with given participant ID already exists" if record_exists_with_different_declaration_date?
 
-      declaration = find_or_create_record!
+      ParticipantDeclaration.transaction do
+        DeclarationState.submitted!(participant_declaration)
 
-      declaration_attempt.update!(participant_declaration: declaration)
+        set_eligibility
 
-      ParticipantDeclarationSerializer.new(declaration).serializable_hash.to_json
+        declaration_attempt.update!(participant_declaration: participant_declaration)
+      end
+      ParticipantDeclarationSerializer.new(participant_declaration).serializable_hash.to_json
     end
 
   private
@@ -55,6 +60,15 @@ module RecordDeclarations
       self.declaration_type = params[:declaration_type]
     end
 
+    def set_eligibility
+      if participant_declaration.duplicate_declarations.any?
+        participant_declaration.update!(superseded_by: original_participant_declaration)
+        participant_declaration.make_ineligible!(reason: :duplicate)
+      elsif user_profile.fundable?
+        participant_declaration.make_eligible!
+      end
+    end
+
     def parsed_date
       Time.zone.parse(declaration_date)
     end
@@ -64,10 +78,11 @@ module RecordDeclarations
     end
 
     def find_or_create_record!
-      self.class.declaration_model.find_or_create_by!(declaration_parameters).tap do |participant_declaration|
-        DeclarationState.submitted!(participant_declaration)
-        participant_declaration.make_eligible! if fundable?
-      end
+      self.class.declaration_model.find_or_create_by!(declaration_parameters)
+    end
+
+    def participant_declaration
+      @participant_declaration ||= find_or_create_record!
     end
 
     def declaration_parameters
@@ -82,13 +97,15 @@ module RecordDeclarations
     end
 
     def record_exists_with_different_declaration_date?
-      declaration = self.class.declaration_model.find_by(
-        user: user,
-        course_identifier: course_identifier,
-        declaration_type: declaration_type,
-      )
+      declaration = self.class.declaration_model
+                      .where.not(state: self.class.declaration_model.states[:voided])
+                      .find_by(
+                        user: user,
+                        course_identifier: course_identifier,
+                        declaration_type: declaration_type,
+                      )
 
-      declaration.present? && !declaration.voided? && declaration.declaration_date != Time.zone.parse(declaration_date)
+      declaration.present? && declaration.declaration_date != Time.zone.parse(declaration_date)
     end
 
     def date_has_the_right_format
@@ -129,6 +146,10 @@ module RecordDeclarations
 
     def valid_declaration_types
       self.class.valid_declaration_types
+    end
+
+    def original_participant_declaration
+      @original_participant_declaration ||= participant_declaration.duplicate_declarations.order(created_at: :asc).first
     end
   end
 end

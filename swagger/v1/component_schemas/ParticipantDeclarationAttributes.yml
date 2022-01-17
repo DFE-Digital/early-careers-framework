@@ -64,6 +64,7 @@ properties:
       - payable
       - paid
       - voided
+      - ineligible
     example: submitted
   updated_at:
     description: "The date the declaration was last updated"

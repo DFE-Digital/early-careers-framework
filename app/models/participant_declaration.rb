@@ -5,6 +5,8 @@ class ParticipantDeclaration < ApplicationRecord
   belongs_to :cpd_lead_provider
   belongs_to :user
   belongs_to :participant_profile
+  belongs_to :superseded_by, class_name: "ParticipantDeclaration", optional: true
+  has_many :supersedes, class_name: "ParticipantDeclaration", foreign_key: :superseded_by_id, inverse_of: :superseded_by
 
   enum state: {
     submitted: "submitted",
@@ -12,6 +14,7 @@ class ParticipantDeclaration < ApplicationRecord
     payable: "payable",
     paid: "paid",
     voided: "voided",
+    ineligible: "ineligible",
   }
 
   alias_attribute :current_state, :state
@@ -89,7 +92,27 @@ class ParticipantDeclaration < ApplicationRecord
     DeclarationState.paid!(self) if payable?
   end
 
+  def make_ineligible!(reason: nil)
+    DeclarationState.ineligible!(self, state_reason: reason) if submitted?
+  end
+
   def changeable?
     %w[submitted eligible].include?(current_state)
   end
+
+  def duplicate_declarations
+    self.class.joins(participant_profile: :teacher_profile)
+      .where(participant_profiles: { teacher_profiles: { trn: participant_profile.teacher_profile.trn } })
+      .where.not(participant_profiles: { teacher_profiles: { trn: nil } })
+      .where.not(user_id: user_id, id: id)
+      .where.not(state: self.class.states[:voided])
+      .where(
+        declaration_type: declaration_type,
+        course_identifier: course_identifier,
+        superseded_by_id: nil,
+      )
+  end
 end
+
+require "participant_declaration/ecf"
+require "participant_declaration/npq"

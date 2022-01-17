@@ -26,20 +26,69 @@ RSpec.describe RecordDeclarations::Base do
     create(:partnership, lead_provider: cpd_lead_provider.lead_provider, cohort: cohort, school: school)
   end
 
-  context "when a similar declaration has been voided" do
-    subject(:record_declaration) do
-      RecordDeclarations::Started::EarlyCareerTeacher
-        .call(params: params.merge(declaration_date: (declaration_date + 1.day).rfc3339))
-    end
-    let!(:void_declaration) do
-      VoidParticipantDeclaration.new(
-        cpd_lead_provider: cpd_lead_provider,
-        id: JSON.parse(RecordDeclarations::Started::EarlyCareerTeacher.call(params: params)).dig("data", "id"),
-      ).call
+  describe "#call" do
+    subject(:record_declaration) { RecordDeclarations::Started::EarlyCareerTeacher.call(params: params) }
+
+    context "when no duplicate participant exists" do
+      context "when the participant is fundable" do
+        let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :eligible, participant_profile: ect_participant_profile) }
+
+        it "transitions the declaration to eligible" do
+          expect { record_declaration }
+            .to change(ect_participant_profile.reload.participant_declarations.for_lead_provider(cpd_lead_provider).eligible, :count)
+            .from(0).to(1)
+        end
+      end
+
+      context "when the participant is not fundable" do
+        let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, participant_profile: ect_participant_profile) }
+
+        it "transitions the declaration to submitted" do
+          expect { record_declaration }
+            .to change(ect_participant_profile.reload.participant_declarations.for_lead_provider(cpd_lead_provider).submitted, :count)
+                  .from(0).to(1)
+        end
+      end
+
+      context "when a similar declaration has been voided" do
+        let!(:void_declaration) do
+          VoidParticipantDeclaration.new(
+            cpd_lead_provider: cpd_lead_provider,
+            id: JSON.parse(RecordDeclarations::Started::EarlyCareerTeacher.call(params: params.merge(declaration_date: (declaration_date + 1.day).rfc3339))).dig("data", "id"),
+          ).call
+        end
+
+        it "allows to re-send a new declaration" do
+          expect(ParticipantDeclaration.find(JSON.parse(record_declaration).dig("data", "id"))).to be_submitted
+        end
+      end
     end
 
-    it "allows to re-send a new declaration" do
-      expect(ParticipantDeclaration.find(JSON.parse(record_declaration).dig("data", "id"))).to be_submitted
+    context "when a duplicated participant exist" do
+      let(:original_ect_participant_profile) do
+        create(:ect_participant_profile, school_cohort: school_cohort).tap do |participant_profile|
+          participant_profile.teacher_profile.update!(trn: ect_participant_profile.teacher_profile.trn)
+        end
+      end
+
+      let(:record_original_declaration) do
+        RecordDeclarations::Started::EarlyCareerTeacher
+          .call(params: params.except(:participant_id)
+                  .merge(participant_id: original_ect_participant_profile.user_id))
+      end
+
+      let(:original_participant_declaration) { ParticipantDeclaration.find(JSON.parse(record_original_declaration).dig("data", "id")) }
+
+      before { record_original_declaration }
+
+      it "transitions the declaration to ineligible", :aggregate_failures do
+        duplicate_participant_declaration = ParticipantDeclaration.find(JSON.parse(record_declaration).dig("data", "id"))
+
+        expect(original_participant_declaration.supersedes).to eq([duplicate_participant_declaration])
+        expect(duplicate_participant_declaration.declaration_states.pluck(:state)).to eq(%w[submitted ineligible])
+        expect(duplicate_participant_declaration.declaration_states.find_by!(state: "ineligible"))
+          .to be_duplicate
+      end
     end
   end
 
@@ -52,6 +101,10 @@ RSpec.describe RecordDeclarations::Base do
 
         def self.valid_courses
           %w[ecf-induction]
+        end
+
+        def self.declaration_model
+          ParticipantDeclaration::ECF
         end
 
         def self.model_name
@@ -84,7 +137,7 @@ RSpec.describe RecordDeclarations::Base do
     end
 
     it "does not have errors on milestone_date" do
-      expect { subject.call }.not_to raise_error(ActionController::ParameterMissing)
+      expect { subject.call }.not_to raise_error
     end
   end
 end

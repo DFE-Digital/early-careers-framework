@@ -4,7 +4,6 @@ FactoryBot.define do
   factory :participant_profile do
     teacher_profile
     profile_duplicity { :single }
-    participant_identity { association :participant_identity, user: teacher_profile&.user || user }
 
     factory :ecf_participant_profile, class: "ParticipantProfile::ECF" do
       school_cohort
@@ -24,15 +23,18 @@ FactoryBot.define do
     end
 
     factory :npq_participant_profile, class: "ParticipantProfile::NPQ" do
-      npq_application { association :npq_application, participant_identity: participant_identity, school_urn: rand(100_000..999_999) }
-      schedule do |participant_profile|
-        if Finance::Schedule::NPQLeadership::IDENTIFIERS.include?(participant_profile.npq_application.npq_course.identifier)
-          Finance::Schedule::NPQLeadership.default || create(:npq_leadership_schedule)
-        elsif Finance::Schedule::NPQSpecialist::IDENTIFIERS.include?(participant_profile.npq_application.npq_course.identifier)
-          Finance::Schedule::NPQSpecialist.default || create(:npq_specialist_schedule)
-        else
-          NPQCourse.schedule_for(participant_profile.npq_application.npq_course)
-        end
+      after :build do |participant_profile|
+        npq_application = participant_profile.npq_application || create(:npq_application, participant_identity: participant_profile.participant_identity, school_urn: rand(100_000..999_999))
+        schedule = if Finance::Schedule::NPQLeadership::IDENTIFIERS.include?(npq_application.npq_course.identifier)
+                     Finance::Schedule::NPQLeadership.default || create(:npq_leadership_schedule)
+                   elsif Finance::Schedule::NPQSpecialist::IDENTIFIERS.include?(npq_application.npq_course.identifier)
+                     Finance::Schedule::NPQSpecialist.default || create(:npq_specialist_schedule)
+                   else
+                     NPQCourse.schedule_for(npq_application.npq_course)
+                   end
+
+        participant_profile.npq_application ||= npq_application
+        participant_profile.schedule = schedule
       end
     end
 
@@ -78,6 +80,10 @@ FactoryBot.define do
           profile.ecf_participant_eligibility.save!
         end
       end
+    end
+
+    after :build do |participant_profile|
+      participant_profile.participant_identity = Identity::Create.call(user: participant_profile.user)
     end
   end
 end

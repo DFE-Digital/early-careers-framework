@@ -10,12 +10,5 @@ FactoryBot.define do
     trait :npq_origin do
       origin { "npq" }
     end
-
-    initialize_with do
-      ParticipantIdentity.find_or_initialize_by(email: email) do |identity|
-        identity.user = user
-        identity.external_identifier = user.id
-      end
-    end
   end
 end

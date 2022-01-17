@@ -3827,7 +3827,8 @@
               "eligible",
               "payable",
               "paid",
-              "voided"
+              "voided",
+              "ineligible"
             ],
             "example": "submitted"
           },
