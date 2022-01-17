@@ -23,6 +23,7 @@ module Analytics
         record.sparsity = participant_profile.sparsity_uplift
         record.pupil_premium = participant_profile.pupil_premium_uplift
         record.training_status = participant_profile.training_status
+        record.schedule_identifier = participant_profile.schedule&.schedule_identifier
 
         record.save!
       end
