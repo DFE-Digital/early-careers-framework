@@ -4,10 +4,10 @@ require "payment_calculator/npq/payment_calculation"
 
 module Finance
   module NPQ
-    class PaymentOverviewsController < BaseController
+    class InvoicesController < BaseController
       def show
-        @invoice           = Finance::Invoice.find_by_name("current")
-        @npq_lead_provider = lead_provider_scope.find(params[:id])
+        @invoice           = Finance::Invoice::NPQ.find_by_name(params[:id])
+        @npq_lead_provider = lead_provider_scope.find(params[:lead_provider_id])
         @breakdowns        = Finance::NPQ::CalculationOverviewOrchestrator.call(
           cpd_lead_provider: @npq_lead_provider.cpd_lead_provider,
           event_type: :started,

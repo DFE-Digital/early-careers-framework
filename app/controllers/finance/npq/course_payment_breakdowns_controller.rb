@@ -4,7 +4,7 @@ module Finance
   module NPQ
     class CoursePaymentBreakdownsController < BaseController
       def show
-        @invoice           = Finance::Invoice.find_by_name("current")
+        @invoice           = Finance::Invoice::NPQ.find_by_name(params[:invoice_id])
         @npq_lead_provider = lead_provider_scope.find(params[:lead_provider_id])
         @npq_course        = NPQCourse.find_by!(identifier: params[:id])
         @breakdown         = Finance::NPQ::CalculationOrchestrator.call(
