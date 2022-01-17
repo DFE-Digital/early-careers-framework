@@ -36,6 +36,8 @@ class NPQApplication < ApplicationRecord
   validate :validate_rejected_status_cannot_change
   validate :validate_accepted_status_cannot_change
 
+  validates :eligible_for_funding_before_type_cast, inclusion: { in: [true, false, "true", "false"] }
+
   delegate :user, to: :participant_identity
 
   def validate_rejected_status_cannot_change

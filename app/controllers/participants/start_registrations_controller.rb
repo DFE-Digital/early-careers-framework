@@ -4,6 +4,6 @@ module Participants
   class StartRegistrationsController < ApplicationController
     def show; end
 
-    def trn_guidance; end
+    def get_a_trn; end
   end
 end

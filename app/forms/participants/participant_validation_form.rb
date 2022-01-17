@@ -41,10 +41,10 @@ module Participants
 
       validates :check_trn_given, inclusion: { in: [true, false], message: :blank }
 
-      next_step { check_trn_given ? :trn : :trn_guidance }
+      next_step { check_trn_given ? :trn : :get_a_trn }
     end
 
-    step :trn_guidance
+    step :get_a_trn
 
     step :trn, update: true do
       attribute :trn, :string

@@ -1,0 +1,29 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: finance_landing_page_path) %>
+
+<h1 class="govuk-heading-xl">Schedules</h1>
+
+<table class="govuk-table">
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Identifier</th>
+      <th scope="col" class="govuk-table__header">Cohort</th>
+      <th scope="col" class="govuk-table__header">Milestones</th>
+    </tr>
+  </thead>
+
+  <tbody class="govuk-table__body">
+    <% @schedules.each do |schedule| %>
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header">
+          <%= govuk_link_to schedule.schedule_identifier, finance_schedule_path(schedule) %>
+        </th>
+        <td class="govuk-table__cell">
+          <%= schedule.cohort.start_year %>
+        </td>
+        <td class="govuk-table__cell">
+          <%= schedule.milestones.size %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

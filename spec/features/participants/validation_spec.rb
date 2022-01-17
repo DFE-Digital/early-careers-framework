@@ -96,7 +96,7 @@ RSpec.feature "Participant validation journey", with_feature_flags: { eligibilit
     find(:label, text: "No").click
     click_on "Continue"
 
-    expect(page).to have_current_path participants_validation_step_path(:"trn-guidance")
+    expect(page).to have_current_path participants_validation_step_path(:"get-a-trn")
     expect(page).to be_accessible
     page.percy_snapshot("Mentor validation journey: trn guidance")
   end

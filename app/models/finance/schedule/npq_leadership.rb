@@ -12,7 +12,7 @@ module Finance
       ].freeze
 
       def self.default
-        find_by(name: "NPQ Leadership November 2021")
+        find_by(cohort: Cohort.current, schedule_identifier: "npq-leadership-spring")
       end
     end
   end

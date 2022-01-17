@@ -41,7 +41,8 @@ module Schools
       attribute :start_term
 
       validates :start_term,
-                presence: { message: I18n.t("errors.start_term.blank") }
+                presence: { message: I18n.t("errors.start_term.blank") },
+                inclusion: { in: :start_term_options }
 
       next_step do
         if type == :ect && mentor_options.any?
@@ -87,6 +88,10 @@ module Schools
       return @mentor if defined? @mentor
 
       @mentor = (User.find(mentor_id) if mentor_id.present? && mentor_id != "later")
+    end
+
+    def start_term_options
+      @start_term_options ||= %w[spring_2022 summer_2022]
     end
 
     def email_already_taken?

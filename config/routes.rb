@@ -87,7 +87,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :npq_profiles, only: [:create], path: "npq-profiles"
+      resources :npq_profiles, only: %i[show create update], path: "npq-profiles"
 
       namespace :data_studio, path: "data-studio" do
         get "/school-rollout", to: "school_rollout#index"
@@ -291,6 +291,8 @@ Rails.application.routes.draw do
       post "/choose-provider-npq", to: "payment_breakdowns#choose_provider_npq", as: :choose_provider_npq
     end
 
+    resources :schedules, only: %i[index show]
+
     namespace :ecf do
       resources :payment_breakdowns, only: %i[show] do
         member do
@@ -315,7 +317,7 @@ Rails.application.routes.draw do
   namespace :participants do
     resource :no_access, only: :show, controller: "no_access"
     resource :start_registrations, path: "/start-registration", only: :show do
-      get "trn-guidance", action: :trn_guidance
+      get "get-a-trn", action: :get_a_trn
     end
 
     multistep_form :validation, Participants::ParticipantValidationForm, controller: :validations do

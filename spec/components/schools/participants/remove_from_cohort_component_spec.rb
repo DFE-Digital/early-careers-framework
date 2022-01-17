@@ -22,8 +22,19 @@ RSpec.describe Schools::Participants::RemoveFromCohortComponent, type: :view_com
 
     context "when the cohort undertakes the full induction programme" do
       let(:school_cohort) { create :school_cohort, :fip }
+      let(:lead_provider) { create :lead_provider }
+      let(:delivery_partner) { create :delivery_partner }
 
       it { is_expected.to have_content "contact your training provider to remove them" }
+
+      it "displays the lead_provider name" do
+        Partnership.create!(cohort: school_cohort.cohort,
+                            lead_provider: lead_provider,
+                            school: school_cohort.school,
+                            delivery_partner: delivery_partner)
+
+        expect(rendered).to have_content(lead_provider.name)
+      end
     end
 
     context "when the cohort undertakes the core induction programme" do
