@@ -57,7 +57,9 @@ module Participants
       def schedule
         return @schedule if @schedule
 
-        alias_search_query = Finance::Schedule.where(identifier_alias: schedule_identifier, cohort: cohort_object)
+        alias_search_query = Finance::Schedule
+          .where("identifier_alias IS NOT NULL")
+          .where(identifier_alias: schedule_identifier, cohort: cohort_object)
 
         @schedule = Finance::Schedule
           .where(schedule_identifier: schedule_identifier, cohort: cohort_object)
