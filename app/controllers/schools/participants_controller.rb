@@ -58,7 +58,7 @@ class Schools::ParticipantsController < Schools::BaseController
   def edit_start_term; end
 
   def update_start_term
-    @profile.assign_attributes(params.require(:participant_profile_ect).permit(:start_term))
+    @profile.assign_attributes(params.require(:participant_profile).permit(:start_term))
 
     if @profile.save
       if @profile.ect?
