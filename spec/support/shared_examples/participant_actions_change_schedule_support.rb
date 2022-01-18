@@ -14,7 +14,7 @@ RSpec.shared_examples "a participant change schedule action service" do
 
   it "changes the schedule on user's profile" do
     expect {
-      described_class.call(params: given_params)
+      described_class.new(params: given_params).call
       user_profile.reload
     }.to change(user_profile, :schedule).to(january_schedule)
   end
@@ -23,23 +23,23 @@ RSpec.shared_examples "a participant change schedule action service" do
     params = given_params.merge({ schedule_identifier: "ecf-january-standard-2021-alias" })
 
     expect {
-      described_class.call(params: params)
+      described_class.new(params: params).call
       user_profile.reload
     }.to change(user_profile, :schedule).to(january_schedule)
   end
 
   it "fails when the schedule is invalid" do
     params = given_params.merge({ schedule_identifier: "wibble" })
-    expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
+    expect { described_class.new(params: params).call }.to raise_error(ActionController::ParameterMissing)
   end
 
   it "fails when the participant is withdrawn" do
     ParticipantProfileState.create!(participant_profile: user_profile, state: "withdrawn")
-    expect { described_class.call(params: given_params) }.to raise_error(ActionController::ParameterMissing)
+    expect { described_class.new(params: given_params).call }.to raise_error(ActionController::ParameterMissing)
   end
 
   it "creates a schedule on profile" do
-    expect { described_class.call(params: participant_params) }.to change { ParticipantProfileSchedule.count }.by(1)
+    expect { described_class.new(params: participant_params).call }.to change { ParticipantProfileSchedule.count }.by(1)
     expect(user_profile.participant_profile_schedules.first.schedule.schedule_identifier).to eq("ecf-january-standard-2021")
   end
 
@@ -51,14 +51,14 @@ RSpec.shared_examples "a participant change schedule action service" do
 
     it "fails when it would invalidate a valid declaration" do
       january_schedule.milestones.each { |milestone| milestone.update!(start_date: milestone.start_date + 6.months, milestone_date: milestone.milestone_date + 6.months) }
-      expect { described_class.call(params: given_params) }.to raise_error(ActionController::ParameterMissing)
+      expect { described_class.new(params: given_params).call }.to raise_error(ActionController::ParameterMissing)
     end
 
     it "ignores voided declarations when changing the schedule" do
       declaration.voided!
       january_schedule.milestones.each { |milestone| milestone.update!(start_date: milestone.start_date + 6.months, milestone_date: milestone.milestone_date + 6.months) }
 
-      described_class.call(params: given_params)
+      described_class.new(params: given_params).call
       expect(user_profile.reload.schedule.schedule_identifier).to eq("ecf-january-standard-2021")
     end
   end
