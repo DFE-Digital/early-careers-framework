@@ -1,0 +1,9 @@
+<tr class="govuk-table__row">
+  <td class="govuk-table__cell">
+    <%= t("finance.vat") %>
+  </td>
+
+  <td class="govuk-table__cell govuk-table__cell--numeric">
+    <%= number_to_pounds aggregated_vat(@breakdowns, @npq_lead_provider) %>
+  </td>
+</tr>

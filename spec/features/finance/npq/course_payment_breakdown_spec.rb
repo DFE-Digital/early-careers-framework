@@ -16,6 +16,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     Finance::NPQ::CalculationOverviewOrchestrator.call(
       cpd_lead_provider: cpd_lead_provider,
       event_type: :started,
+      interval: nil,
     )
   end
   let(:statement) { Finance::Statement::NPQ.find_by_name("payable") }
@@ -130,7 +131,15 @@ private
       expect(page)
         .to have_css("tbody tr.govuk-table__row:nth-child(2) a[href='#{finance_npq_lead_provider_statement_course_path(npq_lead_provider, statement.name, id: npq_leading_behaviour_culture_contract.course_identifier)}']")
       expect(page)
+<<<<<<< HEAD
         .to have_css("tbody tr.govuk-table__row:nth-child(3) a[href='#{finance_npq_lead_provider_statement_course_path(npq_lead_provider, statement.name, id: npq_leading_teaching_development_contract.course_identifier)}']")
+=======
+        .to have_css("tbody tr.govuk-table__row:nth-child(3) a[href='#{finance_npq_lead_provider_course_path(npq_lead_provider, id: npq_leading_teaching_development_contract.course_identifier)}']")
+      expect(page).to have_content("VAT")
+      expect(page).to have_content(number_to_pounds(aggregated_vat(breakdowns, @npq_lead_provider)))
+      expect(page).to have_content("Total payment")
+      number_to_pounds aggregated_payment(breakdowns) + aggregated_vat(breakdowns, @npq_lead_provider)
+>>>>>>> e5713493 (Add new VAT row and courses payment total row)
     end
   end
 

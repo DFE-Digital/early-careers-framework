@@ -17,7 +17,7 @@ module Finance
           self.npq_lead_provider        = npq_lead_provider
         end
 
-        def npq_total_payment
+        def npq_course_payment_total
           monthly_service_fees + output_payments_subtotal
         end
 
