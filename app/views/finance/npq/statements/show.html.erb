@@ -1,0 +1,33 @@
+<% content_for :title, t("finance.npq.payment_breakdown") %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: select_provider_npq_finance_payment_breakdowns_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-third">
+    <ul class="govuk-list">
+      <li><%= text_otherwise_link_to("Payable", finance_npq_lead_provider_statement_path(lead_provider_id: @npq_lead_provider, id: "payable"), params[:id] == "payable") %></li>
+      <li><%= text_otherwise_link_to("Current", finance_npq_lead_provider_statement_path(lead_provider_id: @npq_lead_provider, id: "current"), params[:id] == "current") %></li>
+    </ul>
+  </div>
+
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">
+      <%= @breakdowns.dig(0, :breakdown_summary, :name) %>
+    </h1>
+
+    <p class="govuk-caption-m govuk-!-margin-0">Payment of</p>
+    <h2 class="govuk-heading-xl govuk-!-margin-0"><%= number_to_pounds aggregated_payment(@breakdowns) + aggregated_vat(@breakdowns, @npq_lead_provider) %></h2>
+    <p class="govuk-caption-m govuk-!-margin-top-0">On or after <%= @statement.payment_date.to_s(:govuk) %></p>
+
+    <%= render Finance::NPQ::PaymentOverviews::References.new(@statement) %>
+
+    <h2 class="govuk-heading-m"><%=t("finance.npq.payment_breakdown") %></h2>
+
+    <table class="govuk-table payment-breakdown-table">
+      <tbody>
+        <%= render Finance::NPQ::PaymentOverviews::PaymentCoursesRow.with_collection(@breakdowns, statement: @statement, npq_lead_provider: @npq_lead_provider) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%= govuk_link_to t("finance.show_contract"), finance_npq_contract_path(id: @npq_lead_provider.id) %>

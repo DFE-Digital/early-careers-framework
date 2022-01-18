@@ -18,7 +18,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
       event_type: :started,
     )
   end
-  let(:invoice) { Finance::Invoice.find_by_name("current") }
+  let(:statement) { Finance::Statement::NPQ.find_by_name("payable") }
 
   scenario "see a payment breakdown per NPQ course and a payment breakdown of each individual NPQ courses for each provider" do
     given_i_am_logged_in_as_a_finance_user
@@ -27,14 +27,15 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules do
     when_i_visit_the_payment_breakdown_page
     and_choose_to_see_npq_payment_breakdown
     and_i_select_an_npq_lead_provider
+    when_i_click "Payable"
     then_i_should_have_the_correct_payment_breakdown_per_npq_lead_provider
 
     [npq_leading_teaching_contract, npq_leading_behaviour_culture_contract, npq_leading_teaching_development_contract].each do |npq_contract|
       when_i_click_on(npq_contract)
-      # then_i_should_see_correct_breakdown_summary(npq_contract.npq_lead_provider.cpd_lead_provider, npq_contract)
+      then_i_should_see_correct_breakdown_summary(npq_contract.npq_lead_provider.cpd_lead_provider, npq_contract)
       then_i_should_see_correct_service_fee_payment_breakdown(npq_contract)
-      # then_i_should_see_correct_output_payment_breakdown(npq_contract)
-      # then_i_should_see_the_correct_total(npq_contract)
+      then_i_should_see_correct_output_payment_breakdown(npq_contract)
+      then_i_should_see_the_correct_total(npq_contract)
       when_i_click "Back"
     end
   end
@@ -116,13 +117,13 @@ private
   end
 
   def then_i_should_have_the_correct_payment_breakdown_per_npq_lead_provider
-    within "main .govuk-grid-column-two-thirds table:nth-child(3)" do
+    within "main .govuk-grid-column-two-thirds table:nth-of-type(2)" do
       expect(page)
-        .to have_css("tbody tr.govuk-table__row:nth-child(1) a[href='#{finance_npq_lead_provider_course_path(npq_lead_provider, id: npq_leading_teaching_contract.course_identifier)}']")
+        .to have_css("tbody tr.govuk-table__row:nth-child(1) a[href='#{finance_npq_lead_provider_statement_course_path(npq_lead_provider, statement.name, id: npq_leading_teaching_contract.course_identifier)}']")
       expect(page)
-        .to have_css("tbody tr.govuk-table__row:nth-child(2) a[href='#{finance_npq_lead_provider_course_path(npq_lead_provider, id: npq_leading_behaviour_culture_contract.course_identifier)}']")
+        .to have_css("tbody tr.govuk-table__row:nth-child(2) a[href='#{finance_npq_lead_provider_statement_course_path(npq_lead_provider, statement.name, id: npq_leading_behaviour_culture_contract.course_identifier)}']")
       expect(page)
-        .to have_css("tbody tr.govuk-table__row:nth-child(3) a[href='#{finance_npq_lead_provider_course_path(npq_lead_provider, id: npq_leading_teaching_development_contract.course_identifier)}']")
+        .to have_css("tbody tr.govuk-table__row:nth-child(3) a[href='#{finance_npq_lead_provider_statement_course_path(npq_lead_provider, statement.name, id: npq_leading_teaching_development_contract.course_identifier)}']")
     end
   end
 
@@ -145,7 +146,7 @@ private
 
     within("[data-test='npq-references']") do
       expect(page).to have_content("Submission deadline")
-      expect(page).to have_content(invoice.deadline_date.to_s(:govuk))
+      expect(page).to have_content(statement.deadline_date.to_s(:govuk))
     end
 
     within("[data-test='npq-total-paid']") do

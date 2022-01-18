@@ -33,7 +33,7 @@ module Finance
     def choose_provider_npq
       render "select_provider_npq" and return unless @choose_programme_form.valid?(:choose_provider)
 
-      redirect_to finance_npq_lead_provider_path(id: @choose_programme_form.provider)
+      redirect_to finance_npq_lead_provider_statement_path(lead_provider_id: @choose_programme_form.provider, id: "current")
     end
 
   private

@@ -30,7 +30,7 @@ RSpec.describe Finance::NPQ::CalculationOrchestrator do
     }
   end
 
-  let(:interval) { Finance::Invoice.all.first.interval }
+  let(:interval) { Finance::Statement::ECF.all.first.interval }
 
   subject(:run_calculation) do
     described_class.call(
