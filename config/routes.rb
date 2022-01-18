@@ -210,6 +210,7 @@ Rails.application.routes.draw do
         end
       end
     end
+    resources :notes, only: %i[edit update]
     resource :impersonate, only: %i[create destroy]
 
     namespace :gias do
