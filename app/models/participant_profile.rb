@@ -49,6 +49,8 @@ class ParticipantProfile < ApplicationRecord
 
   self.ignored_columns = %w[user_id]
 
+  START_TERM_OPTIONS = %w[spring_2022 summer_2022].freeze
+
   def state
     participant_profile_state&.state
   end

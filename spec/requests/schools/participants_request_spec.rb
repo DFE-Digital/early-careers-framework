@@ -233,6 +233,43 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
     end
   end
 
+  describe "GET /schools/:school_id/cohorts/:start_year/participants/:id/edit-term" do
+    it "renders the edit term template with the correct term for an ECT" do
+      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/edit-start-term"
+
+      expect(response).to render_template("schools/participants/edit_start_term")
+      ParticipantProfile::START_TERM_OPTIONS.each do |option|
+        expect(response.body).to include(CGI.escapeHTML(ParticipantProfile.humanize_start_term(option)))
+      end
+    end
+
+    it "updates the term of a participant" do
+      expect {
+        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-start-term", params: {
+          participant_profile: { start_term: "summer_2022" },
+        }
+      }.to change { ect_profile.reload.start_term_human }.to(ParticipantProfile.humanize_start_term(:summer_2022))
+    end
+  end
+
+  describe "PUT /schools/:school_id/cohorts/:start_year/participants/:id/update-name" do
+    it "updates the name of an ECT" do
+      expect {
+        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-name", params: {
+          user: { full_name: "Joe Bloggs" },
+        }
+      }.to change { ect_user.reload.full_name }.to("Joe Bloggs")
+    end
+
+    it "updates the name of a mentor" do
+      expect {
+        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/update-name", params: {
+          user: { full_name: "Sally Mentor" },
+        }
+      }.to change { mentor_user.reload.full_name }.to("Sally Mentor")
+    end
+  end
+
   describe "DELETE /schools/:school_id/cohorts/:start_year/participants/:id" do
     it "marks the participant as withdrawn" do
       expect { delete "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}" }
