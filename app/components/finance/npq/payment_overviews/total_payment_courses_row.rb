@@ -6,14 +6,15 @@ module Finance
       class TotalPaymentCoursesRow < BaseComponent
         include FinanceHelper
 
-        def initialize(breakdowns, npq_lead_provider)
+        def initialize(breakdowns, statement:, npq_lead_provider:)
           self.breakdowns = breakdowns
+          self.statement  = statement
           self.npq_lead_provider = npq_lead_provider
         end
 
       private
 
-        attr_accessor :breakdowns, :npq_lead_provider
+        attr_accessor :breakdowns, :statement, :npq_lead_provider
       end
     end
   end

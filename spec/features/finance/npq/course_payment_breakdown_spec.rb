@@ -30,6 +30,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     and_i_select_an_npq_lead_provider
     when_i_click "Payable"
     then_i_should_have_the_correct_payment_breakdown_per_npq_lead_provider
+    then_i_should_see_the_courses_vat_and_total_payment
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named("Payment breakdown per NPQ lead provider")
 
@@ -131,15 +132,16 @@ private
       expect(page)
         .to have_css("tbody tr.govuk-table__row:nth-child(2) a[href='#{finance_npq_lead_provider_statement_course_path(npq_lead_provider, statement.name, id: npq_leading_behaviour_culture_contract.course_identifier)}']")
       expect(page)
-<<<<<<< HEAD
         .to have_css("tbody tr.govuk-table__row:nth-child(3) a[href='#{finance_npq_lead_provider_statement_course_path(npq_lead_provider, statement.name, id: npq_leading_teaching_development_contract.course_identifier)}']")
-=======
-        .to have_css("tbody tr.govuk-table__row:nth-child(3) a[href='#{finance_npq_lead_provider_course_path(npq_lead_provider, id: npq_leading_teaching_development_contract.course_identifier)}']")
+    end
+  end
+
+  def then_i_should_see_the_courses_vat_and_total_payment
+    within("[data-test='npq-courses-total-paid']") do
       expect(page).to have_content("VAT")
       expect(page).to have_content(number_to_pounds(aggregated_vat(breakdowns, @npq_lead_provider)))
       expect(page).to have_content("Total payment")
       number_to_pounds aggregated_payment(breakdowns) + aggregated_vat(breakdowns, @npq_lead_provider)
->>>>>>> e5713493 (Add new VAT row and courses payment total row)
     end
   end
 
@@ -182,7 +184,7 @@ private
   end
 
   def expected_total_vat(npq_contract)
-    expected_service_fee_payment(npq_contract) * 0.2
+    (expected_service_fee_payment(npq_contract) + expected_output_fee_payment(npq_contract)) * 0.2
   end
 
   def expected_service_fee_payment(npq_contract)
@@ -230,10 +232,9 @@ private
   def then_i_should_see_the_correct_total(npq_contract)
     within("[data-test='npq-payment-type']") do
       expected_service_fee_payment = expected_service_fee_payment(npq_contract)
-      # expected_output_fee_payment  = expected_output_fee_payment(npq_contract)
+      expected_output_fee_payment  = expected_output_fee_payment(npq_contract)
       expected_total_vat           = expected_total_vat(npq_contract)
-      # expected_total               = expected_service_fee_payment + expected_output_fee_payment + expected_total_vat
-      expected_total               = expected_service_fee_payment + expected_total_vat
+      expected_total               = expected_service_fee_payment + expected_output_fee_payment + expected_total_vat
 
       expect(page).to have_content("Total payment")
       expect(page).to have_content(number_to_pounds(expected_total))

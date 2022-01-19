@@ -22,9 +22,16 @@
 
     <h2 class="govuk-heading-m"><%=t("finance.npq.payment_breakdown") %></h2>
 
-    <table class="govuk-table payment-breakdown-table">
+    <table class="govuk-table payment-breakdown-table" data-test="npq-courses-total-paid">
       <tbody>
         <%= render Finance::NPQ::PaymentOverviews::PaymentCoursesRow.with_collection(@breakdowns, statement: @statement, npq_lead_provider: @npq_lead_provider) %>
+
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell"><%= t("finance.vat") %></td>
+          <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds aggregated_vat(@breakdowns, @npq_lead_provider) %></td>
+        </tr>
+
+        <%= render Finance::NPQ::PaymentOverviews::TotalPaymentCoursesRow.new(@breakdowns, statement: @statement, npq_lead_provider: @npq_lead_provider) %>
       </tbody>
     </table>
   </div>
