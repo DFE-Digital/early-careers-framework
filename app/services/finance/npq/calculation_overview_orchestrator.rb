@@ -23,6 +23,7 @@ module Finance
             event_type: event_type,
             cpd_lead_provider: cpd_lead_provider,
             contract: contract,
+            interval: interval,
           )
         end
       end
