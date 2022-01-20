@@ -1,0 +1,39 @@
+<% content_for :title, t("finance.ecf.payment_breakdown") %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: select_provider_ecf_finance_payment_breakdowns_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <ul class="govuk-list">
+      <% Finance::Statement::ECF.where(cpd_lead_provider: @cpd_lead_provider).each do |statement| %>
+        <li><%= text_otherwise_link_to(statement.name, finance_ecf_payment_breakdown_statement_path(payment_breakdown_id: @ecf_lead_provider.id, id: statement.name), params[:id] == statement.name) %></li>
+      <% end %>
+    </ul>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl"><%= @ecf_lead_provider.name %></h1>
+    <p class="govuk-caption-m govuk-!-margin-0">Payment of</p>
+    <h2 class="govuk-heading-xl govuk-!-margin-0"><%= number_to_pounds(total_payment_combined(breakdown_started: @breakdown_started, breakdown_retained_1: @breakdown_retained_1, ecf_lead_provider: @ecf_lead_provider)) %></h2>
+    <p class="govuk-caption-m govuk-!-margin-top-0">On <%= @statement.payment_date.to_s(:govuk) %></p>
+
+    <%= render Finance::ECF::BreakdownSummary.new(breakdown_started: @breakdown_started, breakdown_retained_1: @breakdown_retained_1, lead_provider: @ecf_lead_provider, deadline_date: @statement.deadline_date) %>
+
+    <%= render Finance::ECF::ServiceFees.new(service_fees: @breakdown_started[:service_fees], breakdown_summary: @breakdown_started[:breakdown_summary]) %>
+
+    <%= render Finance::ECF::ServiceFees.new(service_fees: @breakdown_retained_1[:service_fees], breakdown_summary: @breakdown_retained_1[:breakdown_summary]) %>
+
+    <%= render Finance::ECF::OutputPayments.new(output_payments: @breakdown_started[:output_payments], breakdown_summary: @breakdown_started[:breakdown_summary]) %>
+
+    <%= render Finance::ECF::OutputPayments.new(output_payments: @breakdown_retained_1[:output_payments], breakdown_summary: @breakdown_retained_1[:breakdown_summary]) %>
+
+    <% @breakdown_started[:other_fees].each do |other_fee| %>
+      <%= render Finance::ECF::OtherFeeRow.new(other_fee: @breakdown_started[:other_fees], breakdown_summary: @breakdown_started[:breakdown_summary]) %>
+    <% end %>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <%= govuk_link_to t("finance.show_contract"), finance_ecf_contract_path(id: @ecf_lead_provider.id) %>
+</div>

@@ -5,6 +5,11 @@ module Finance
     class ServiceFees < BaseComponent
       include FinanceHelper
 
+      def initialize(service_fees:, breakdown_summary:)
+        @service_fees = service_fees
+        @breakdown_summary = breakdown_summary
+      end
+
       def participants
         service_fees.map { |params| params[:participants] }.inject(&:+)
       end
@@ -15,11 +20,7 @@ module Finance
 
     private
 
-      attr_reader :service_fees
-
-      def initialize(service_fees:)
-        @service_fees = service_fees
-      end
+      attr_reader :service_fees, :breakdown_summary
     end
   end
 end

@@ -246,6 +246,7 @@ en:
     payment_amount_for_period: Payment amount for period
     payment: Payment
     vat: VAT
+    type: Type
     total_payment: Total payment
     fee_per_participant: Fee per participant
     back_payment_participants: Back payment participants

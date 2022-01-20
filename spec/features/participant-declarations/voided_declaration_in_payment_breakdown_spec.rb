@@ -28,13 +28,12 @@ private
   end
 
   def and_breakdown_calculation_was_run
-    @breakdown = Finance::ECF::CalculationOrchestrator.call(
-      cpd_lead_provider: @cpd_lead_provider,
+    @breakdown = Finance::ECF::CalculationOrchestrator.new(
+      statement: @statement,
       contract: @cpd_lead_provider.lead_provider.call_off_contract,
       aggregator: Finance::ECF::ParticipantEligibleAggregator,
       calculator: PaymentCalculator::ECF::PaymentCalculation,
-      event_type: :started,
-    )
+    ).call(event_type: :started)
   end
 
   def and_participant_declaration_made_eligible_for_payment

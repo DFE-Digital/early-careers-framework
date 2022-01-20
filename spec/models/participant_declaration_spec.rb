@@ -10,6 +10,11 @@ RSpec.describe ParticipantDeclaration, type: :model do
     it { is_expected.to belong_to(:cpd_lead_provider) }
     it { is_expected.to belong_to(:participant_profile) }
     it { is_expected.to have_many(:declaration_states) }
+
+    it "can be associated with a Finance::Statement" do
+      statement = Finance::Statement::ECF.new
+      subject.statement = statement
+    end
   end
 
   describe "state transitions" do

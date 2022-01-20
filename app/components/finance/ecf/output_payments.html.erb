@@ -1,24 +1,32 @@
-<%= render Finance::ECF::OutputPaymentRow.with_collection(output_payments) %>
-
-<h3 class="govuk-heading-s"><%=t("finance.participant_breakdown") %></h3>
 <table class="govuk-table payment-breakdown-table">
+  <caption class="govuk-table__caption govuk-table__caption--m"><%= "Output fees - #{breakdown_summary[:declaration].to_s.humanize.downcase}" %></caption>
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header"><%= t("finance.contract.band") %></th>
+      <th scope="col" class="govuk-table__header govuk-!-font-weight-bold govuk-table__cell--numeric"><%= t("finance.fee_per_participant") %></th>
+      <th scope="col" class="govuk-table__header govuk-!-font-weight-bold govuk-table__cell--numeric"><%= t("finance.participants") %></th>
+      <th scope="col" class="govuk-table__header govuk-!-font-weight-bold govuk-table__cell--numeric"><%= t("finance.payment") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= render Finance::ECF::OutputPaymentRow.with_collection(output_payments) %>
+  </tbody>
+</table>
+
+<table class="govuk-table participant-breakdown-table">
+  <caption class="govuk-table__caption govuk-table__caption--m"><%= "Participant breakdown - #{breakdown_summary[:declaration].to_s.humanize.downcase}" %></caption>
+  <thead class="govuk-table__head">
+  <tr class="govuk-table__row">
+    <th scope="col" class="govuk-table__header govuk-!-font-weight-bold govuk-table__cell--numeric"><%= t("finance.current_milestone") %></th>
+    <th scope="col" class="govuk-table__header govuk-!-font-weight-bold govuk-table__cell--numeric"><%= t("finance.total_paid") %></th>
+    <th scope="col" class="govuk-table__header govuk-!-font-weight-bold govuk-table__cell--numeric"><%= t("finance.total_not_paid") %></th>
+  </tr>
+  </thead>
   <tbody>
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.current_milestone") %></th>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= participants %></td>
-    </tr>
-    <tr class="govuk-table__row">
-      <!-- TODO: Add back payments -->
-      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.back_payment_participants") %></th>
-      <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
-    </tr>
-    <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__cell"><%=t("finance.total_paid") %></th>
-      <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><%= participants %></td>
-    </tr>
-    <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__cell"><%=t("finance.total_not_paid") %></th>
-      <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><%= not_yet_included_participants %></td>
+      <td class="govuk-table__cell govuk-table__cell--numeric"><%= participants %></td>
+      <td class="govuk-table__cell govuk-table__cell--numeric"><%= not_yet_included_participants %></td>
     </tr>
   </tbody>
 </table>

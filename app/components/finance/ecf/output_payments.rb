@@ -5,6 +5,11 @@ module Finance
     class OutputPayments < BaseComponent
       include FinanceHelper
 
+      def initialize(output_payments:, breakdown_summary:)
+        @output_payments = output_payments
+        @breakdown_summary = breakdown_summary
+      end
+
       def participants
         output_payments.map { |params| params[:participants] }.inject(&:+)
       end
@@ -20,11 +25,6 @@ module Finance
     private
 
       attr_reader :output_payments, :breakdown_summary
-
-      def initialize(output_payments:, breakdown_summary:)
-        @output_payments = output_payments
-        @breakdown_summary = breakdown_summary
-      end
     end
   end
 end

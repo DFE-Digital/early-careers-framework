@@ -198,6 +198,7 @@ module ParticipantDeclarationSteps
   def setup
     @lead_provider = create(:lead_provider)
     @cpd_lead_provider = create(:cpd_lead_provider, lead_provider: @lead_provider)
+    @statement = create(:ecf_statement, cpd_lead_provider: @cpd_lead_provider)
     @token = LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: @cpd_lead_provider)
     @session = ActionDispatch::Integration::Session.new(Rails.application)
   end

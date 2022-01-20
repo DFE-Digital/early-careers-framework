@@ -6,6 +6,7 @@ class ParticipantDeclaration < ApplicationRecord
   belongs_to :user
   belongs_to :participant_profile
   belongs_to :superseded_by, class_name: "ParticipantDeclaration", optional: true
+  belongs_to :statement, optional: true, polymorphic: true
   has_many :supersedes, class_name: "ParticipantDeclaration", foreign_key: :superseded_by_id, inverse_of: :superseded_by
 
   enum state: {
@@ -27,6 +28,7 @@ class ParticipantDeclaration < ApplicationRecord
   scope :for_declaration, ->(declaration_type) { where(declaration_type: declaration_type) }
   scope :for_profile, ->(profile) { where(participant_profile: profile) }
   scope :started, -> { for_declaration("started").order(declaration_date: "desc").unique_id }
+  scope :retained_1, -> { for_declaration("retained-1").order(declaration_date: "desc").unique_id }
 
   scope :uplift, -> { where(participant_profile_id: ParticipantProfile.uplift.select(:id)) }
 
