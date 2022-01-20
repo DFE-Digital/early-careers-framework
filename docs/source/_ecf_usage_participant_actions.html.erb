@@ -40,7 +40,7 @@ This operation allows the provider to tell the DfE that a participant has change
   <code>PUT /api/v1/participants/ecf/{id}/change-schedule</code>
 </pre>
 <p class="govuk-body-m">This will return an <a href="/api-reference/reference#schema-ecfparticipantresponse" class="govuk-link">ECF participant record</a> with the updates to the record included.</p>
-<p class="govuk-body-m">See <a href="/api-reference/reference#api-v1-participants-id-change-schedule-put" class="govuk-link">change schedule of ECF participant</a> endpoint.</p>
+<p class="govuk-body-m">See <a href="/api-reference/reference#api-v1-participants-ecf-id-change-schedule-put" class="govuk-link">change schedule of ECF participant</a> endpoint.</p>
 <p class="govuk-body-m">
   Where a schedule’s name does not include ‘standard’, we will not apply ‘milestone validation’ to any declarations.
 </p>
@@ -79,7 +79,7 @@ This operation allows the provider to tell the DfE that a participant has change
 
 <p class="govuk-body-m">
   Participants should be tagged as <code>ecf-standard-september</code> if they are starting their course
-  before the <b>31st October</b> and are expected to complete their training over two academic years.
+  before the <b>30 November 2021</b> and are expected to complete their training over two academic years.
 </p>
 
 <table class="govuk-table">
@@ -126,8 +126,8 @@ This operation allows the provider to tell the DfE that a participant has change
 
 <h3 class="govuk-heading-s" id="notifying-of-schedule-change-standard-induction-september">Standard induction starting in January</h3>
 <p class="govuk-body-m">
-  Participants should be tagged as <code>ecf-standard-january</code> if they are starting their course in <b>January</b>
-  regardless of whether they will be on a standard or non standard induction.
+  Participants should be tagged as <code>ecf-standard-january</code> if they are starting their course on or after <b>1 December</b>
+  and are expected to complete their training over 2 years.
 </p>
 <table class="govuk-table">
   <thead  class="nhsuk-table__head">
@@ -174,7 +174,8 @@ This operation allows the provider to tell the DfE that a participant has change
 <h3 class="govuk-heading-s" id="notifying-of-schedule-change-standard-induction-april">Standard induction starting in April</h3>
 
 <p class="govuk-body-m">
-  Participants should be tagged as <code>ecf-standard-april</code> if they are starting their course in <b>April</b>
+  Participants should be tagged as <code>ecf-standard-april</code> if they are starting their course on or after <b>1 Febuary</b>
+  and are expected to complete their training over 2 years.
 </p>
 
 <table class="govuk-table">
@@ -285,7 +286,7 @@ This operation allows the provider to tell the DfE that a participant has change
 
 <h3 class="govuk-heading-s" id="notifying-of-schedule-replacement-mentors">Replacement mentors</h3>
 <p class="govuk-body-m">
-  For mentors that are replacing a mentor for ECT that is part way through their training with
+  For mentors that are replacing a mentor for an ECT that is part way through their training with
   the schedule reflecting the month when the replacement starts:
 </p>
 <ul class="govuk-list govuk-list--bullet">
