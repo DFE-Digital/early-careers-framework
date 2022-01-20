@@ -7,6 +7,7 @@ def cohort_2021
 end
 
 ecf_september_standard_2021 = Finance::Schedule::ECF.find_or_create_by!(name: "ECF September standard 2021") do |s|
+  s.schedule_identifier = "ecf-september-standard-2021"
   s.cohort = cohort_2021
 end
 ecf_september_standard_2021.update!(schedule_identifier: "ecf-september-standard-2021")
@@ -29,6 +30,7 @@ ecf_september_standard_2021.update!(cohort: cohort_2021)
 end
 
 ecf_january_standard_2021 = Finance::Schedule::ECF.find_or_create_by!(name: "ECF January standard 2021") do |s|
+  s.schedule_identifier = "ecf-january-standard-2021"
   s.cohort = cohort_2021
 end
 ecf_january_standard_2021.update!(schedule_identifier: "ecf-january-standard-2021")
