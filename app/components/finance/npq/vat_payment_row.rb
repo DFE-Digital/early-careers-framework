@@ -2,7 +2,7 @@
 
 module Finance
   module NPQ
-    class TotalPaymentRow < BaseComponent
+    class VatPaymentRow < BaseComponent
       include FinanceHelper
 
       def initialize(breakdown, lead_provider)
@@ -13,10 +13,6 @@ module Finance
     private
 
       attr_accessor :breakdown, :lead_provider
-
-      def npq_total_payment_with_vat
-        npq_total_payment(breakdown) + npq_total_vat(breakdown, lead_provider)
-      end
     end
   end
 end

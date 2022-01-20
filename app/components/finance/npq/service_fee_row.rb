@@ -10,7 +10,7 @@ module Finance
         self.breakdown = breakdown
       end
 
-      def service_per_fee_participant
+      def service_fee_per_participant
         breakdown.dig(:service_fees, :per_participant)
       end
 

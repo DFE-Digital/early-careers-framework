@@ -1,0 +1,9 @@
+<tr class="govuk-table__row">
+  <td class="govuk-table__cell govuk-!-font-weight-bold">
+    <%= t("finance.total_payment") %>
+  </td>
+
+  <td class="govuk-table__cell govuk-!-font-weight-bold govuk-table__cell--numeric">
+    <%= number_to_pounds(npq_aggregated_total_payment_with_vat) %>
+  </td>
+</tr>

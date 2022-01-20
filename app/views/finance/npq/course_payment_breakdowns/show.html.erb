@@ -23,7 +23,8 @@
       <tbody>
         <%= render Finance::NPQ::ServiceFeeRow.new(@breakdown) %>
         <%= render Finance::NPQ::OutputFeeRow.new(@breakdown) %>
-        <%= render Finance::NPQ::TotalPaymentRow.new(@breakdown) %>
+        <%= render Finance::NPQ::VatPaymentRow.new(@breakdown, @npq_lead_provider) %>
+        <%= render Finance::NPQ::TotalPaymentRow.new(@breakdown, @npq_lead_provider) %>
       </tbody>
     </table>
   </div>
