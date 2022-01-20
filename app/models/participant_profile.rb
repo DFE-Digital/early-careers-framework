@@ -49,10 +49,6 @@ class ParticipantProfile < ApplicationRecord
 
   self.ignored_columns = %w[user_id]
 
-  def self.humanize_start_term(start_term)
-    start_term.to_s.split("_").map(&:capitalize).join(" ")
-  end
-
   def state
     participant_profile_state&.state
   end
@@ -113,13 +109,6 @@ class ParticipantProfile < ApplicationRecord
 
   def policy_class
     ParticipantProfilePolicy
-  end
-
-  def start_term_human
-    # Shouldn't we just update records in the database instead?
-    return "Autumn 2021" if start_term.blank?
-
-    self.class.humanize_start_term(start_term)
   end
 end
 
