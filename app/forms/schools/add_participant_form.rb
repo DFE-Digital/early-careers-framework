@@ -42,7 +42,7 @@ module Schools
 
       validates :start_term,
                 presence: { message: I18n.t("errors.start_term.blank") },
-                inclusion: { in: ParticipantProfile::START_TERM_OPTIONS }
+                inclusion: { in: ParticipantProfile::ECF::CURRENT_START_TERM_OPTIONS }
 
       next_step do
         if type == :ect && mentor_options.any?

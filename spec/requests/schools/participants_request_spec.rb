@@ -238,8 +238,8 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
       get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/edit-start-term"
 
       expect(response).to render_template("schools/participants/edit_start_term")
-      ParticipantProfile::START_TERM_OPTIONS.each do |option|
-        expect(response.body).to include(CGI.escapeHTML(ParticipantProfile.humanize_start_term(option)))
+      ParticipantProfile::ECF::CURRENT_START_TERM_OPTIONS.each do |option|
+        expect(response.body).to include(CGI.escapeHTML(option.humanize))
       end
     end
 
@@ -248,7 +248,7 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
         put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-start-term", params: {
           participant_profile: { start_term: "summer_2022" },
         }
-      }.to change { ect_profile.reload.start_term_human }.to(ParticipantProfile.humanize_start_term(:summer_2022))
+      }.to change { ect_profile.reload.start_term.humanize }.to("Summer 2022")
     end
   end
 

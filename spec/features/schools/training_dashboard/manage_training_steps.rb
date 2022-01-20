@@ -404,7 +404,7 @@ module ManageTrainingSteps
   end
 
   def when_i_add_ect_or_mentor_updated_term
-    choose(ParticipantProfile.humanize_start_term(@updated_participant_data[:start_term]), allow_label_click: true)
+    choose(@updated_participant_data[:start_term].humanize, allow_label_click: true)
   end
 
   def when_i_choose_materials
@@ -587,7 +587,7 @@ module ManageTrainingSteps
 
   def then_i_can_view_updated_term
     expect(page).to have_selector("h1", text: "Check your answers")
-    expect(page).to have_text(ParticipantProfile.humanize_start_term(@updated_participant_data[:start_term]))
+    expect(page).to have_text(@updated_participant_data[:start_term].humanize)
   end
 
   def then_i_can_view_the_added_materials
