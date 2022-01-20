@@ -15,6 +15,10 @@ module Finance
       private
 
         attr_accessor :breakdowns, :statement, :npq_lead_provider
+
+        def npq_aggregated_total_payment_with_vat
+          aggregated_payment(@breakdowns) + aggregated_vat(@breakdowns, @npq_lead_provider)
+        end
       end
     end
   end

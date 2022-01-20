@@ -34,6 +34,10 @@ module FinanceHelper
     total_payment(breakdown) * (lead_provider.vat_chargeable ? 0.2 : 0.0)
   end
 
+  def total_payment_with_vat(breakdown, lead_provider)
+    total_payment(breakdown) + total_vat(breakdown, lead_provider)
+  end
+
   def npq_total_payment(breakdown)
     monthly_service_fees(breakdown) + output_payment_subtotal(breakdown)
   end

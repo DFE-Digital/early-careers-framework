@@ -4,6 +4,6 @@
   </td>
 
   <td class="govuk-table__cell govuk-!-font-weight-bold govuk-table__cell--numeric">
-    <%= number_to_pounds aggregated_payment(@breakdowns) + aggregated_vat(@breakdowns, @npq_lead_provider) %>
+    <%= number_to_pounds(npq_aggregated_total_payment_with_vat) %>
   </td>
 </tr>
