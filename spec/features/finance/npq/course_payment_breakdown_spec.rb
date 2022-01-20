@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :feature, js: true do
   include FinanceHelper
   let(:cpd_lead_provider)                         { create(:cpd_lead_provider, name: "Lead Provider") }
-  let(:npq_lead_provider)                         { create(:npq_lead_provider, cpd_lead_provider: cpd_lead_provider) }
+  let(:npq_lead_provider)                         { create(:npq_lead_provider, cpd_lead_provider: cpd_lead_provider, name: "NPQ Lead Provider") }
   let(:npq_leading_teaching_contract)             { create(:npq_contract, :npq_leading_teaching, npq_lead_provider: npq_lead_provider) }
   let(:npq_leading_behaviour_culture_contract)    { create(:npq_contract, :npq_leading_behaviour_culture, npq_lead_provider: npq_lead_provider) }
   let(:npq_leading_teaching_development_contract) { create(:npq_contract, :npq_leading_teaching_development, npq_lead_provider: npq_lead_provider) }
