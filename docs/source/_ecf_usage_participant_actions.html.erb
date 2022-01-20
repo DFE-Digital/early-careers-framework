@@ -29,23 +29,41 @@
 
 <h2 id="notifying-of-schedule-change" class="govuk-heading-l">Notifying that an ECF participant is changing training schedule</h2>
 
-<p class="govuk-body-m">This operation allows the provider to tell the DfE that a participant has changed training schedules on their ECF course.</p>
+<p class="govuk-body-m">
+This operation allows the provider to tell the DfE that a participant has changed training schedules on their ECF course.
+</p>
 
 <h3 class="govuk-heading-m" id="notifying-of-schedule-change-provider-changes-schedule-of-a-participant">1. Provider changes a participant's schedule</h3>
 
 <p class="govuk-body-m">Submit the change of schedule notification to the following endpoint</p>
 <pre>
-  <code>PUT /api/v1/participants/{id}/change-schedule</code>
+  <code>PUT /api/v1/participants/ecf/{id}/change-schedule</code>
 </pre>
 <p class="govuk-body-m">This will return an <a href="/api-reference/reference#schema-ecfparticipantresponse" class="govuk-link">ECF participant record</a> with the updates to the record included.</p>
 <p class="govuk-body-m">See <a href="/api-reference/reference#api-v1-participants-id-change-schedule-put" class="govuk-link">change schedule of ECF participant</a> endpoint.</p>
+<p class="govuk-body-m">
+  Where a schedule’s name does not include ‘standard’, we will not apply ‘milestone validation’ to any declarations.
+</p>
+<p class="govuk-body-m">
+  Where milestone validation applies, the API will reject a declaration if it is not submitted during the correct
+  milestone period. It will also reject declarations submitted after the milestone period and the declaration_date
+  set in the milestone period. For example, if a participant is on the ecf-standard-september
+  <a href="#notifying-of-schedule-change-standard-induction-september">schedule</a>,
+  the API would reject a start declaration unless it is submitted during the period 19 November 2021 to
+  30 November 2021, or submitted afterwards and backdated accordingly.
+</p>
+<p class="govuk-body-m">
+  Providers will still be expected to evidence any declarations and why a participant is following a non-standard induction.
+</p>
+
 
 <h3 class="govuk-heading-m" id="notifying-of-schedule-change-standard-induction">Standard induction</h3>
 
 <p class="govuk-body-m">
   A usual 2 year induction covers 6 terms (3 in each academic year). The payment model for those following a standard
-  induction is therefore equal to 1 milestone payment for each of the 6 terms you are supporting a participant.</p>
-<p class="govuk-body-m">We are allowing functionality for providers to switch participants onto the following standard schedules:</p>
+  induction is therefore equal to 1 milestone payment for each of the 6 terms you are supporting a participant. We
+  are allowing functionality for providers to switch participants onto the following standard schedules:
+</p>
 
 <ul class="govuk-list govuk-list--bullet">
   <li><code>ecf-standard-september</code></li>
@@ -54,16 +72,14 @@
 </ul>
 
 <p class="govuk-body-m">
-  Functionality to switch participants onto non-standard inductions will be available at a later date.
-  For the time being, please switch participants onto either a September or January schedule based on their start date,
-  irrespective of whether they are following a standard or non-standard induction. Detailed below are the standard induction schedules.
+  Standard schedules will be subject to milestone validation as outlined in the tables below.
 </p>
 
 <h3 class="govuk-heading-s" id="notifying-of-schedule-change-standard-induction-september">Standard induction starting in September</h3>
 
 <p class="govuk-body-m">
-  Participants should be tagged as <code>ecf-standard-september</code> if they are starting their course before the <b>31st October</b>
-  regardless of whether they will be on a standard or non standard induction.
+  Participants should be tagged as <code>ecf-standard-september</code> if they are starting their course
+  before the <b>31st October</b> and are expected to complete their training over two academic years.
 </p>
 
 <table class="govuk-table">
@@ -202,6 +218,96 @@
     </tr>
   </tbody>
 </table>
+
+<h3 class="govuk-heading-s" id="notifying-of-schedule-change-non-standard-induction">Non-standard induction</h3>
+<p class="govuk-body-m">
+  Following the same principles of those on a standard induction, providers will be paid the equivalent of
+  one milestone payment for each of the terms they are supporting a participant. Non-standard schedules will
+  not be subject to milestone validation.
+</p>
+
+<p class="govuk-body-m">
+  Under a non-standard schedule, the API will accept any declarations once the first milestone period for
+  the schedule has started. For example, if a participant is on an ecf-extended-september schedule, the API will
+  accept any type of declaration, such as a start, retention-1 or completion, from 1 September 2021. Providers
+  will still be expected to evidence any declarations and why a participant is following a non-standard induction.
+</p>
+
+<p class="govuk-body-m">
+   We are allowing functionality for providers to switch participants onto the following non-standard schedules:
+</p>
+
+<ul class="govuk-list govuk-list--bullet">
+  <li><code>ecf-extended-september</code></li>
+  <li><code>ecf-extended-january</code></li>
+  <li><code>ecf-extended-april</code></li>
+</ul>
+</br>
+<ul class="govuk-list govuk-list--bullet">
+  <li><code>ecf-reduced-september</code></li>
+  <li><code>ecf-reduced-january</code></li>
+  <li><code>ecf-reduced-april</code></li>
+</ul>
+</br>
+<ul class="govuk-list govuk-list--bullet">
+  <li><code>ecf-replacement-september</code></li>
+  <li><code>ecf-replacement-january</code></li>
+  <li><code>ecf-replacement-april</code></li>
+</ul>
+
+<p class="govuk-body-m">
+   The non-standard induction schedules are detailed below.
+</p>
+
+<h3 class="govuk-heading-s" id="notifying-of-schedule-extended-schedule">Extended schedule</h3>
+<p class="govuk-body-m">
+  For participants that expect to complete their induction over a period greater than two years,
+  with the schedule reflecting the month when the participant starts. For example, part time ECTs:
+</p>
+
+<ul class="govuk-list govuk-list--bullet">
+  <li><code>ecf-extended-september</code></li>
+  <li><code>ecf-extended-january</code></li>
+  <li><code>ecf-extended-april</code></li>
+</ul>
+
+<h3 class="govuk-heading-s" id="notifying-of-schedule-reduced-schedule">Reduced schedule</h3>
+<p class="govuk-body-m">
+  For participants that expect to complete their induction over a period less than 2 years,
+  with the schedule reflecting the month when the participant starts:
+</p>
+
+<ul class="govuk-list govuk-list--bullet">
+  <li><code>ecf-reduced-september</code></li>
+  <li><code>ecf-reduced-january</code></li>
+  <li><code>ecf-reduced-april</code></li>
+</ul>
+
+<h3 class="govuk-heading-s" id="notifying-of-schedule-replacement-mentors">Replacement mentors</h3>
+<p class="govuk-body-m">
+  For mentors that are replacing a mentor for ECT that is part way through their training with
+  the schedule reflecting the month when the replacement starts:
+</p>
+<ul class="govuk-list govuk-list--bullet">
+  <li><code>ecf-replacement-september</code></li>
+  <li><code>ecf-replacement-january</code></li>
+  <li><code>ecf-replacement-april</code></li>
+</ul>
+
+<p class="govuk-body-m">
+Where a mentor is already mentoring an ECT and they replace a mentor for a second ECT, the first ECT
+takes precedence. In this instance, the provider should not change the mentor’s schedule.
+</p>
+
+<p class="govuk-body-m">
+  The DfE expects that a replacement mentor's training, and therefore any declarations a provider submits
+  for them, will align with the ECT they are mentoring. Say a replacement mentor begins mentoring an ECT
+  part way through the ECT’s induction. The provider has already submitted a start declaration for the
+  previous mentor. Now, the provider makes a retention-1 declaration for the ECT. The department would
+  expect that any declaration made for the replacement mentor in the same milestone period as that made for
+  the ECT would also be a retention-1 declaration.
+</p>
+
 
 <h2 id="notifying-of-withdrawal" class="govuk-heading-l">Notifying that an ECF participant has withdrawn from their course</h2>
 
