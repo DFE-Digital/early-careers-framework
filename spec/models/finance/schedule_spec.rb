@@ -16,8 +16,8 @@ RSpec.describe Finance::Schedule::ECF, type: :model do
 
   describe "default" do
     it "returns ECF September standard 2021 schedule" do
-      expect(subject.name).to eql "ECF September standard 2021"
-      expect(subject.cohort.start_year).to eql 2021
+      expect(subject.name).to eql "ECF Standard September"
+      expect(subject.cohort.start_year).to eql(2021)
     end
   end
 
