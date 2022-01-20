@@ -26,13 +26,13 @@ module Partnerships
           school_cohort.update!(induction_programme_choice: :no_early_career_teachers,
                                 opt_out_of_updates: true)
         end
+      end
 
-        partnership.lead_provider.users.each do |lead_provider_user|
-          LeadProviderMailer.partnership_challenged_email(
-            partnership: partnership,
-            user: lead_provider_user,
-          ).deliver_later
-        end
+      partnership.lead_provider.users.each do |lead_provider_user|
+        LeadProviderMailer.partnership_challenged_email(
+          partnership: partnership,
+          user: lead_provider_user,
+        ).deliver_later
       end
     end
 

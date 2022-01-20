@@ -44,6 +44,16 @@ RSpec.describe Partnerships::Challenge do
       expect { subject.call }.to notify_all_lead_providers
     end
 
+    context "when an error occurs updating the partnership" do
+      before do
+        allow(partnership).to receive(:no_ects?).and_raise(ActiveRecord::StatementInvalid)
+      end
+
+      it "raises an error and does not schedule partnership challenged emails" do
+        expect { subject.call }.to raise_error ActiveRecord::StatementInvalid
+      end
+    end
+
     context "when the challenge reason is no ECTs this year" do
       let(:reason) { "no_ects" }
 
