@@ -367,6 +367,10 @@ module ManageTrainingSteps
     click_on("Change mentor", visible: false)
   end
 
+  def when_i_click_on_change_term
+    click_on("Change term", visible: false)
+  end
+
   def when_i_choose_a_mentor
     choose(@participant_profile_mentor.user.full_name.to_s, allow_label_click: true)
   end
@@ -397,6 +401,10 @@ module ManageTrainingSteps
 
   def when_i_add_ect_or_mentor_updated_email
     fill_in "Email", with: @updated_participant_data[:email]
+  end
+
+  def when_i_add_ect_or_mentor_updated_term
+    choose(@updated_participant_data[:start_term].humanize, allow_label_click: true)
   end
 
   def when_i_choose_materials
@@ -577,6 +585,11 @@ module ManageTrainingSteps
     expect(page).to have_text((@updated_participant_data[:email]).to_s)
   end
 
+  def then_i_can_view_updated_term
+    expect(page).to have_selector("h1", text: "Check your answers")
+    expect(page).to have_text(@updated_participant_data[:start_term].humanize)
+  end
+
   def then_i_can_view_the_added_materials
     expect(page).to have_selector("h1", text: "Manage your training")
     expect(page).to have_text("Materials")
@@ -723,6 +736,7 @@ module ManageTrainingSteps
     @updated_participant_data = {
       full_name: "Jane Teacher",
       email: "jane@school.com",
+      start_term: "spring_2022",
     }
   end
 end

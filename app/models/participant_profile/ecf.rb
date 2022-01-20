@@ -4,6 +4,8 @@ class ParticipantProfile < ApplicationRecord
   class ECF < ParticipantProfile
     self.ignored_columns = %i[school_id]
 
+    CURRENT_START_TERM_OPTIONS = %w[spring_2022 summer_2022].freeze
+
     belongs_to :school_cohort
     belongs_to :core_induction_programme, optional: true
 
