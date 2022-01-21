@@ -71,9 +71,6 @@ gem "httpclient", "~> 2.8", ">= 2.8.3"
 gem "rubyzip", "~> 2.3", ">= 2.3.0"
 gem "savon", "~> 2.12", ">= 2.12.1"
 
-# Database based asynchronous priority queue system
-gem "daemons"
-
 # Strong migration checker for database migrations
 gem "strong_migrations"
 
