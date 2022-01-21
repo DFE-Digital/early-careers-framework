@@ -51,5 +51,17 @@ RSpec.describe StreamBigQueryParticipantDeclarationsJob do
       described_class.perform_now
       expect(table).not_to have_received(:insert)
     end
+
+    context "where the BigQuery table does not exist" do
+      before do
+        allow(dataset).to receive(:table).and_return(nil)
+      end
+
+      it "doesn't attempt to stream" do
+        ParticipantDeclaration.update_all(updated_at: 0.5.hours.ago)
+        described_class.perform_now
+        expect(table).not_to have_received(:insert)
+      end
+    end
   end
 end
