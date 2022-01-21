@@ -118,7 +118,7 @@ private
   def then_i_should_be_on_confirm_sit_change_page
     expect(page).to have_selector("h1", text: "Are you sure you want to replace the induction tutor")
     expect(page).to have_text("You can only assign one induction tutor to use this service for your school.")
-    expect(page).to have_text("#{@induction_coordinator_profile.user.full_name} will no longer be able to")
+    expect(page).to have_text("You will no longer be able to")
   end
 
   def then_i_should_have_been_signed_out_of_the_service

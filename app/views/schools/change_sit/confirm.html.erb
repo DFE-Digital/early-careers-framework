@@ -9,7 +9,7 @@
       <h1 class="govuk-heading-xl">Are you sure you want to replace the induction tutor for your school?</h1>
     <% end %>
     <p class="govuk-body">You can only assign one induction tutor to use this service for your school.</p>
-    <p class="govuk-body"><%= current_user.full_name %>  will no longer be able to:</p>
+    <p class="govuk-body">You will no longer be able to:</p>
     <ul class="govuk-list--bullet">
       <% unless has_multiple_schools? %>
        <li>sign in to this service</li>
