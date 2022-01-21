@@ -273,7 +273,7 @@ This procedure is used after a batch from manual validation has been complete. T
 ### Sentry
 We use [sentry.io](https://sentry.io/) for error tracking and performance monitoring. Ask a team member for access - this is done through digi-tools.
 ### Logit
-We use a [logit.io](https://logit.io/) ELK stack for log aggregation. This contains logs from all environments, and is useful for debugging failed deployments.
+We use a [logit.io](https://logit.io/) ELK stack for log aggregation. This contains logs from all environments except review apps, and is useful for debugging failed deployments.
 Ask a team member for access - this is done through digi-tools.
 ### Grafana
 We have a prometheus/grafana stack for metrics and alerting - [production metrics](https://grafana-cpd-monitoring-prod.london.cloudapps.digital/).

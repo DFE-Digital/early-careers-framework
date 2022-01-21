@@ -6,7 +6,9 @@ class StreamBigQueryParticipantDeclarationsJob < ApplicationJob
   def perform
     bigquery = Google::Cloud::Bigquery.new
     dataset = bigquery.dataset "provider_declarations", skip_lookup: true
-    table = dataset.table "participant_declarations_#{Rails.env.downcase}", skip_lookup: true
+    table = dataset.table "participant_declarations_#{Rails.env.downcase}"
+
+    return if table.nil?
 
     rows = ParticipantDeclaration
       .where(updated_at: 1.hour.ago.beginning_of_hour..1.hour.ago.end_of_hour)
