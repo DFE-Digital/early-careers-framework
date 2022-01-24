@@ -13,6 +13,13 @@ module Finance
               ects: :payable_ects_for_lead_provider,
               mentors: :payable_mentors_for_lead_provider,
             },
+            retention_1: {
+              not_yet_included: :not_payable_for_lead_provider,
+              all: :payable_for_lead_provider,
+              uplift: :payable_uplift_for_lead_provider,
+              ects: :payable_ects_for_lead_provider,
+              mentors: :payable_mentors_for_lead_provider,
+            },
           }
         end
       end

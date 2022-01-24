@@ -14,7 +14,7 @@ module Finance
     end
 
     def call(interval: nil, event_type: :started)
-      aggregations(event_type: event_type, interval: interval)
+      aggregations(event_types: event_type, interval: interval)
     end
 
   private
@@ -36,9 +36,11 @@ module Finance
       scope.count
     end
 
-    def aggregations(event_type:, interval:)
-      self.class.aggregation_types[event_type].keys.index_with do |key|
-        aggregators(event_type: event_type, interval: interval)[key]
+    def aggregations(event_types:, interval:)
+      event_types.each do |event_type|
+        self.class.aggregation_types[event_type].keys.index_with do |key|
+          aggregators(event_type: event_type, interval: interval)[key]
+        end
       end
     end
   end
