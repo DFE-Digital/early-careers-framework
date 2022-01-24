@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "Schools::AddParticipant", type: :request do
-  let!(:default_schedule) { create(:schedule, name: "ECF September standard 2021") }
+  let!(:default_schedule) { create(:ecf_schedule) }
   let!(:school) { create :school }
   let!(:cohort) { create :cohort, start_year: 2020 }
   let!(:school_cohort) { create(:school_cohort, school: school, cohort: cohort) }

@@ -2,6 +2,6 @@
 
 class Finance::Schedule::ECF < Finance::Schedule
   def self.default
-    find_by(name: "ECF September standard 2021")
+    find_by(cohort: Cohort.current, schedule_identifier: "ecf-standard-september")
   end
 end

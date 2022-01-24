@@ -1,4 +1,18 @@
 schedule-identifier,schedule-name,schedule-cohort-year,milestone-name,milestone-declaration-type,milestone-start-date,milestone-date,milestone-payment-date
+ecf-standard-september,ECF Standard September,2021,Output 1 - Participant Start,started,2021/09/01,2021/11/30,2021/11/30
+ecf-standard-september,ECF Standard September,2021,Output 2 - Retention Point 1,retained-1,2021/09/01,2022/01/31,2022/02/28
+ecf-standard-september,ECF Standard September,2021,Output 3 - Retention Point 2,retained-2,2022/02/01,2022/04/30,2022/05/31
+ecf-standard-september,ECF Standard September,2021,Output 4 - Retention Point 3,retained-3,2022/05/01,2022/09/30,2022/10/31
+ecf-standard-september,ECF Standard September,2021,Output 5 - Retention Point 4,retained-4,2022/10/01,2023/01/31,2023/02/28
+ecf-standard-september,ECF Standard September,2021,Output 6 - Participant Completion,completed,2023/02/01,2023/04/30,2023/05/31
+,,,,,,,
+ecf-standard-january,ECF Standard January,2021,Output 1 - Participant Start,started,2021-12-01,2022-01-31,2022-02-28
+ecf-standard-january,ECF Standard January,2021,Output 2 - Retention Point 1,retained-1,2022-02-01,2022-04-30,2022-05-31
+ecf-standard-january,ECF Standard January,2021,Output 3 - Retention Point 2,retained-2,2022-05-01,2022-09-30,2022-10-31
+ecf-standard-january,ECF Standard January,2021,Output 4 - Retention Point 3,retained-3,2022-10-01,2023-01-31,2023-02-28
+ecf-standard-january,ECF Standard January,2021,Output 5 - Retention Point 4,retained-4,2023-02-01,2023-04-30,2023-05-31
+ecf-standard-january,ECF Standard January,2021,Output 6 - Participant Completion,completed,2023-02-01,2023-10-31,2023-11-30
+,,,,,,,
 ecf-standard-april,ECF Standard April,2021,Output 1 - Participant Start,started,01/03/2022,30/04/2022,31/05/2022
 ecf-standard-april,ECF Standard April,2021,Output 2 - Retention Point 1,retained-1,01/06/2022,30/09/2022,31/10/2022
 ecf-standard-april,ECF Standard April,2021,Output 3 - Retention Point 2,retained-2,01/11/2022,31/01/2023,28/02/2023

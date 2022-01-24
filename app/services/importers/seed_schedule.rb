@@ -22,13 +22,16 @@ class Importers::SeedSchedule
         cohort: cohort,
       )
 
-      Finance::Milestone.find_or_create_by!(
+      milestone = Finance::Milestone.find_or_initialize_by(
         schedule: schedule,
+        declaration_type: row["milestone-declaration-type"],
+      )
+
+      milestone.update!(
         name: row["milestone-name"],
         start_date: row["milestone-start-date"],
         milestone_date: row["milestone-date"],
         payment_date: row["milestone-payment-date"],
-        declaration_type: row["milestone-declaration-type"],
       )
     end
   end
