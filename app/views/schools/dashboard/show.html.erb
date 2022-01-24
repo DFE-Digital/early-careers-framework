@@ -30,6 +30,14 @@
           <dd class="govuk-summary-list__actions"></dd>
         </div>
         <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Induction tutor</dt>
+          <dd class="govuk-summary-list__value"><%= @school.induction_coordinators.first.full_name %></dd>
+          <dd class="govuk-summary-list__actions"><%= govuk_link_to name_schools_change_sit_path do %>
+              Change <span class="govuk-visually-hidden">Induction tutor</span>
+            <% end %>
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Programme</dt>
           <dd class="govuk-summary-list__value"><%= t(school_cohort.induction_programme_choice, scope: %i[manage_your_training induction_programmes]) %></dd>
           <dd class="govuk-summary-list__actions">

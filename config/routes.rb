@@ -392,6 +392,17 @@ Rails.application.routes.draw do
           end
         end
       end
+
+      resource :change_sit, only: [], controller: "change_sit", path: "change-sit" do
+        get :name
+        post :name, action: :set_name
+        get :email
+        post :email, action: :set_email
+        get :check_details, path: "check-details"
+        get :confirm
+        post :confirm, action: :save
+        get :success
+      end
     end
   end
 

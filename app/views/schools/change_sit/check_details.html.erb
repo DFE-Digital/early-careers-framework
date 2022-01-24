@@ -1,0 +1,39 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: {action: :email}) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-xl"><%= @induction_tutor_form.school.name %></span>
+    <h1 class="govuk-heading-xl">Check your answers</h1>
+
+    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Name
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <div><%= @induction_tutor_form.full_name %></div>
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <%= govuk_link_to({ action: :name }) do %>
+            Change <span class="govuk-visually-hidden">name</span>
+          <% end %>
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Email address
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <div><%= @induction_tutor_form.email %></div>
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <%= govuk_link_to({ action: :email }) do %>
+            Change <span class="govuk-visually-hidden">email</span>
+          <% end %>
+        </dd>
+      </div>
+    </dl>
+
+    <%= govuk_button_link_to "Accept and continue", {action: :confirm} %>
+  </div>
+</div>

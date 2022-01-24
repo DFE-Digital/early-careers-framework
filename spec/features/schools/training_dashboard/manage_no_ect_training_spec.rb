@@ -13,7 +13,7 @@ RSpec.describe "Manage No ECT training", js: true do
     then_the_page_should_be_accessible
     then_percy_should_be_sent_a_snapshot_named "No ECT dashboard"
 
-    when_i_click_on_change
+    when_i_click_on_change_programme
     then_i_am_taken_to_change_how_you_run_programme_page
     then_the_page_should_be_accessible
     then_percy_should_be_sent_a_snapshot_named "No ECT training info"

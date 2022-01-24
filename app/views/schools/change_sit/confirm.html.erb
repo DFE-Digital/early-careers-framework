@@ -1,0 +1,27 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: {action: :check_details}) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-xl"><%= @induction_tutor_form.school.name %></span>
+    <% if has_multiple_schools? %>
+      <h1 class="govuk-heading-xl">Are you sure you want to replace the induction tutor for <%= @induction_tutor_form.school.name %></h1>
+    <% else %>
+      <h1 class="govuk-heading-xl">Are you sure you want to replace the induction tutor for your school?</h1>
+    <% end %>
+    <p class="govuk-body">You can only assign one induction tutor to use this service for your school.</p>
+    <p class="govuk-body">You will no longer be able to:</p>
+    <ul class="govuk-list--bullet">
+      <% unless has_multiple_schools? %>
+       <li>sign in to this service</li>
+      <% end %>
+      <li>manage how your school runs your ECT training programme</li>
+      <li>add information about ECTs and mentors</li>
+      <li>tell us if things change at your school, for example if ECTs join or not</li>
+      <li>get notifications about the training programme and this service</li>
+    </ul>
+
+    <%= govuk_warning_text text: "You’ll be signed out of this service. You will not be able to sign in as #{current_user.email}" %>
+
+    <%= govuk_button_to "Confirm and replace", { action: :save } %>
+  </div>
+</div>
