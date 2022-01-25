@@ -25,7 +25,12 @@ module FinanceHelper
   def total_payment(breakdown)
     service_fee = breakdown[:service_fees].map { |params| params[:monthly] }.sum
     output_payment = breakdown[:output_payments].map { |params| params[:subtotal] }.sum
-    other_fees = breakdown[:other_fees].values.map { |other_fee| other_fee[:subtotal] }.sum
+    other_fees  =
+      if breakdown[:other_fees]
+        breakdown[:other_fees].values.map { |other_fee| other_fee[:subtotal] }.sum
+      else
+        0
+      end
 
     service_fee + output_payment + other_fees
   end

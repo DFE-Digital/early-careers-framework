@@ -27,6 +27,7 @@ class ParticipantDeclaration < ApplicationRecord
   scope :for_declaration, ->(declaration_type) { where(declaration_type: declaration_type) }
   scope :for_profile, ->(profile) { where(participant_profile: profile) }
   scope :started, -> { for_declaration("started").order(declaration_date: "desc").unique_id }
+  scope :retained_1, -> { for_declaration("retained-1").order(declaration_date: "desc").unique_id }
 
   scope :uplift, -> { where(participant_profile_id: ParticipantProfile.uplift.select(:id)) }
 
