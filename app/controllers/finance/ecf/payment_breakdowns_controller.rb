@@ -30,7 +30,7 @@ module Finance
 
         @statement = Finance::Statement::ECF.find_by_name("payable")
 
-        @breakdown = Finance::ECF::CalculationOrchestrator.call(
+        @breakdown_started = Finance::ECF::CalculationOrchestrator.call(
           aggregator: ParticipantPayableAggregator,
           cpd_lead_provider: @ecf_lead_provider.cpd_lead_provider,
           contract: @ecf_lead_provider.call_off_contract,
@@ -38,6 +38,13 @@ module Finance
           interval: @statement.interval,
         )
 
+        @breakdown_retained_1 = Finance::ECF::CalculationOrchestrator.call(
+          aggregator: ParticipantPayableAggregator,
+          cpd_lead_provider: @ecf_lead_provider.cpd_lead_provider,
+          contract: @ecf_lead_provider.call_off_contract,
+          event_type: :retained_1,
+          interval: @statement.interval,
+        )
         render :show
       end
 

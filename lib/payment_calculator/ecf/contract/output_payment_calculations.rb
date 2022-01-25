@@ -34,10 +34,10 @@ module PaymentCalculator
           0.15
         end
 
-        alias_method :retention_1, :interim_retained_period_event_percentage
-        alias_method :retention_2, :interim_retained_period_event_percentage
-        alias_method :retention_3, :interim_retained_period_event_percentage
-        alias_method :retention_4, :interim_retained_period_event_percentage
+        alias_method :retained_1, :interim_retained_period_event_percentage
+        alias_method :retained_2, :interim_retained_period_event_percentage
+        alias_method :retained_3, :interim_retained_period_event_percentage
+        alias_method :retained_4, :interim_retained_period_event_percentage
       end
     end
   end
