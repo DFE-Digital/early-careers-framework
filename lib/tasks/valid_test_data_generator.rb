@@ -53,25 +53,45 @@ module ValidTestDataGenerator
       end
     end
 
-    def create_participant(school_cohort:, profile_type: :ect, mentor_profile: nil, status: "active", sparsity_uplift: false, pupil_premium_uplift: false)
-      name = Faker::Name.name
-      user = User.create!(full_name: name, email: Faker::Internet.email(name: name))
-      teacher_profile = TeacherProfile.create!(user: user, trn: random_or_nil_trn)
-      schedule = Finance::Schedule::ECF.default
-      participant_identity = Identity::Create.call(user: user, origin: :ecf)
+    # def create_participant(school_cohort:, profile_type: :ect, mentor_profile: nil, status: "active", sparsity_uplift: false, pupil_premium_uplift: false)
+    #   name = Faker::Name.name
+    #   user = User.create!(full_name: name, email: Faker::Internet.email(name: name))
+    #   teacher_profile = TeacherProfile.create!(user: user, trn: random_or_nil_trn)
+    #   schedule = Finance::Schedule::ECF.default
+    #   participant_identity = Identity::Create.call(user: user, origin: :ecf)
 
-      if profile_type == :ect
-        ParticipantProfile::ECT.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, mentor_profile: mentor_profile, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule, participant_identity: participant_identity) do |profile|
-          ParticipantProfileState.create!(participant_profile: profile)
-          ECFParticipantEligibility.create!(participant_profile_id: profile.id).eligible_status!
-        end
-      else
-        ParticipantProfile::Mentor.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule, participant_identity: participant_identity) do |profile|
-          ParticipantProfileState.create!(participant_profile: profile)
-          ECFParticipantEligibility.create!(participant_profile_id: profile.id).eligible_status!
-        end
-      end
-    end
+    # if profile_type == :ect
+    #   profile = ParticipantProfile::ECT.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, mentor_profile: mentor_profile, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule, participant_identity: participant_identity) do |profile|
+    #     ParticipantProfileState.create!(participant_profile: profile)
+    #     ECFParticipantEligibility.create!(participant_profile_id: profile.id).eligible_status!
+    #   end
+    #   RecordDeclarations::Started::EarlyCareerTeacher.call(
+    #     params: {
+    #       participant_id: user.id,
+    #       course_identifier: "ecf-induction",
+    #       declaration_date: (profile.schedule.milestones.first.start_date + 1.day).rfc3339,
+    #       cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
+    #       declaration_type: RecordDeclarations::ECF::STARTED,
+    #     },
+    #   )
+    # else
+    #   ParticipantProfile::Mentor.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule, participant_identity: participant_identity) do |profile|
+    #     ParticipantProfileState.create!(participant_profile: profile)
+    #     ECFParticipantEligibility.create!(participant_profile_id: profile.id).eligible_status!
+
+    # RecordDeclarations::Started::Mentor.call(
+    #   params: {
+    #     participant_id: profile.teacher_profile.user.id,
+    #     course_identifier: "ecf-mentor",
+    #     declaration_date: (profile.schedule.milestones.first.start_date + 1.day).rfc3339,
+    #     cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
+    #     declaration_type: RecordDeclarations::ECF::STARTED,
+    #   },
+    #   )
+    # end
+
+    #   end
+    # end
 
     def school_cohort(school:)
       SchoolCohort.find_or_create_by!(school: school, cohort: Cohort.current, induction_programme_choice: "full_induction_programme")
