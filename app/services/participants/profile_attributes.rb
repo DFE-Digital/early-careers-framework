@@ -30,8 +30,12 @@ module Participants
 
   private
 
+    def participant_identity
+      @participant_identity ||= ParticipantIdentity.find_by(external_identifier: participant_id)
+    end
+
     def user
-      @user ||= Identity.find_user_by(id: participant_id)
+      @user ||= participant_identity&.user
     end
 
     def valid_courses
