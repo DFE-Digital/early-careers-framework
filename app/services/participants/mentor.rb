@@ -6,12 +6,14 @@ module Participants
     extend ActiveSupport::Concern
     included do
       extend MentorClassMethods
-      delegate :mentor_profile, to: :user, allow_nil: true
     end
 
-    def user_profile
-      mentor_profile
+    def mentor_profile
+      return unless participant_identity
+
+      @mentor_profile ||= participant_identity.participant_profiles.active_record.mentors.first
     end
+    alias_method :user_profile, :mentor_profile
 
     module MentorClassMethods
       def valid_courses
