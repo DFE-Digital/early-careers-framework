@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_11_133250) do
+ActiveRecord::Schema.define(version: 2022_01_24_125023) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -786,6 +786,17 @@ ActiveRecord::Schema.define(version: 2022_01_11_133250) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["session_id"], name: "index_sessions_on_session_id", unique: true
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
+  end
+
+  create_table "statements", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.text "type", null: false
+    t.text "name", null: false
+    t.uuid "cpd_lead_provider_id", null: false
+    t.date "deadline_date"
+    t.date "payment_date"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["cpd_lead_provider_id"], name: "index_statements_on_cpd_lead_provider_id"
   end
 
   create_table "teacher_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

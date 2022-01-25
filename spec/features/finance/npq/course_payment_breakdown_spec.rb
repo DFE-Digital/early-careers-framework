@@ -18,7 +18,13 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
       event_type: :started,
     )
   end
-  let(:statement) { Finance::Statement::NPQ.find_by_name("payable") }
+  let!(:statement) do
+    Finance::Statement::NPQ.create!(
+      name: "January 2022",
+      deadline_date: Date.new(2022, 1, 31),
+      cpd_lead_provider: cpd_lead_provider,
+    )
+  end
 
   scenario "see a payment breakdown per NPQ course and a payment breakdown of each individual NPQ courses for each provider" do
     given_i_am_logged_in_as_a_finance_user
@@ -27,7 +33,6 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     when_i_visit_the_payment_breakdown_page
     and_choose_to_see_npq_payment_breakdown
     and_i_select_an_npq_lead_provider
-    when_i_click "Payable"
     then_i_should_have_the_correct_payment_breakdown_per_npq_lead_provider
     then_i_should_see_the_courses_vat_and_total_payment
     and_the_page_should_be_accessible
