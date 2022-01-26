@@ -68,7 +68,7 @@ module ValidTestDataGenerator
 
         return unless profile.active_record?
 
-        RecordDeclarations::Started::EarlyCareerTeacher.call(
+        serialized_started_declaration = RecordDeclarations::Started::EarlyCareerTeacher.call(
           params: {
             participant_id: user.tap(&:reload).id,
             course_identifier: "ecf-induction",
@@ -79,6 +79,10 @@ module ValidTestDataGenerator
         )
 
         return if profile.schedule.milestones.second.start_date > Date.current
+
+        started_declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
+        started_declaration.make_payable!
+        started_declaration.update!(created_at: profile.schedule.milestones.first.start_date + 1.day)
 
         RecordDeclarations::Retained::EarlyCareerTeacher.call(
           params: {
@@ -98,13 +102,30 @@ module ValidTestDataGenerator
 
         return profile unless profile.active_record?
 
-        RecordDeclarations::Started::Mentor.call(
+        serialized_started_declaration = RecordDeclarations::Started::Mentor.call(
           params: {
             participant_id: profile.user.tap(&:reload).id,
             course_identifier: "ecf-mentor",
             declaration_date: (profile.schedule.milestones.first.start_date + 1.day).rfc3339,
             cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
             declaration_type: RecordDeclarations::ECF::STARTED,
+          },
+        )
+
+        return if profile.schedule.milestones.second.start_date > Date.current
+
+        started_declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
+        started_declaration.make_payable!
+        started_declaration.update!(created_at: profile.schedule.milestones.first.start_date + 1.day)
+
+        RecordDeclarations::Retained::Mentor.call(
+          params: {
+            participant_id: user.tap(&:reload).id,
+            course_identifier: "ecf-mentor",
+            declaration_date: (profile.schedule.milestones.second.start_date + 1.day).rfc3339,
+            cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
+            declaration_type: RecordDeclarations::ECF::RETAINED_ONE,
+            evidence_held: "other"
           },
         )
 
