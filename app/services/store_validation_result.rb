@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 class StoreValidationResult < BaseService
-  attr_reader :participant_profile, :validation_data, :dqt_response
+  attr_reader :participant_profile, :validation_data, :dqt_response, :deduplicate
 
-  def initialize(participant_profile:, validation_data:, dqt_response:)
+  def initialize(participant_profile:, validation_data:, dqt_response:, deduplicate: true)
     @participant_profile = participant_profile
     @validation_data = validation_data.presence || fetch_validation_data
     @dqt_response = dqt_response
+    @deduplicate = deduplicate
   end
 
   def call
@@ -15,6 +16,7 @@ class StoreValidationResult < BaseService
 
     eligibility = store_eligibility_data!(dqt_response)
     store_trn_on_teacher_profile!(dqt_response[:trn])
+    deduplicate_by_trn! if deduplicate
     eligibility
   end
 
@@ -70,5 +72,15 @@ private
 
   def remove_validation_data!
     participant_profile.ecf_participant_validation_data&.destroy!
+  end
+
+  def deduplicate_by_trn!
+    same_trn_user = TeacherProfile
+      .where(trn: participant_profile.teacher_profile.trn)
+      .where.not(id: participant_profile.teacher_profile.id)
+      .first
+      &.user
+
+    Identity::Transfer.call(from_user: participant_profile.user, to_user: same_trn_user) if same_trn_user
   end
 end
