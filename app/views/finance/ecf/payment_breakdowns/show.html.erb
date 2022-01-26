@@ -2,30 +2,26 @@
 <% content_for :before_content, govuk_back_link(text: "Back", href: select_provider_ecf_finance_payment_breakdowns_path) %>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-one-third">
+  <div class="govuk-grid-column">
     <ul class="govuk-list">
       <li><%= text_otherwise_link_to("Payable", payable_finance_ecf_payment_breakdown_path, controller.action_name == "payable") %></li>
       <li><%= text_otherwise_link_to("Current", finance_ecf_payment_breakdown_path, controller.action_name == "show") %></li>
     </ul>
   </div>
+</div>
 
-  <div class="govuk-grid-column-two-thirds">
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column">
     <h1 class="govuk-heading-xl"><%= @ecf_lead_provider.name %></h1>
     <p class="govuk-caption-m govuk-!-margin-0">Payment of</p>
-<!--    <h2 class="govuk-heading-xl govuk-!-margin-0"><%#= number_to_pounds total_payment(@breakdown) + total_vat(@breakdown, @ecf_lead_provider) %></h2>-->
-<!--    <p class="govuk-caption-m govuk-!-margin-top-0">On <%#= @statement.payment_date.to_s(:govuk) %></p>-->
+    <h2 class="govuk-heading-xl govuk-!-margin-0"><%= number_to_pounds(total_payment_combined(breakdown_started: @breakdown_started, breakdown_retained_1: @breakdown_retained_1, ecf_lead_provider: @ecf_lead_provider)) %></h2>
+    <p class="govuk-caption-m govuk-!-margin-top-0">On <%= @statement.payment_date.to_s(:govuk) %></p>
 
-    <%#= render Finance::ECF::BreakdownSummary.new(breakdown_summary: @breakdown, lead_provider: @ecf_lead_provider, deadline_date: @statement.deadline_date) %>
+    <%= render Finance::ECF::BreakdownSummary.new(breakdown_started: @breakdown_started, breakdown_retained_1: @breakdown_retained_1, lead_provider: @ecf_lead_provider, deadline_date: @statement.deadline_date) %>
+    <%= render Finance::ECF::OutputPayments.new(output_payments: @breakdown_started[:output_payments], breakdown_summary: @breakdown_started[:breakdown_summary]) %>
+    <%= render Finance::ECF::ServiceFees.new(service_fees: @breakdown_started[:service_fees], breakdown_summary: @breakdown_started[:breakdown_summary]) %>
 
     <%= govuk_accordion do |accordion| %>
-      <%= accordion.section heading_text: t("finance.service_fee.caption") do %>
-        <%= render Finance::ECF::ServiceFees.new(service_fees: @breakdown_started[:service_fees]) %>
-      <% end %>
-
-      <%= accordion.section heading_text: t("finance.output_payment.caption") do %>
-        <%= render Finance::ECF::OutputPayments.new(output_payments: @breakdown_started[:output_payments], breakdown_summary: @breakdown_started[:breakdown_summary]) %>
-      <% end %>
-
       <% if @breakdown_started[:other_fees] %>
         <% @breakdown_started[:other_fees].each do |other_fee| %>
           <%= accordion.section heading_text: "#{Finance::ECF::OtherFee.new(other_fee).name.capitalize} fee" do %>
@@ -33,63 +29,18 @@
           <% end %>
         <% end %>
       <% end %>
-
-      <!--TODO: Add clawbacks-->
-      <%= accordion.section heading_text: t("finance.clawbacks.caption") do %>
-        <table class="govuk-table payment-breakdown-table">
-          <tbody>
-            <tr class="govuk-table__row">
-              <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.clawbacks.per_participant") %></th>
-              <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds 0 %></td>
-            </tr>
-            <tr class="govuk-table__row">
-              <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.number_of_participants") %></th>
-              <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
-            </tr>
-            <tr class="govuk-table__row">
-              <th scope="row" class="govuk-table__cell"><%=t("finance.clawbacks.caption") %></th>
-              <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><%= number_to_pounds 0 %></td>
-            </tr>
-          </tbody>
-        </table>
-      <% end %>
     <% end %>
 
+    <%= render Finance::ECF::OutputPayments.new(output_payments: @breakdown_retained_1[:output_payments], breakdown_summary: @breakdown_retained_1[:breakdown_summary]) %>
+    <%= render Finance::ECF::ServiceFees.new(service_fees: @breakdown_retained_1[:service_fees], breakdown_summary: @breakdown_retained_1[:breakdown_summary]) %>
+
     <%= govuk_accordion do |accordion| %>
-      <%= accordion.section heading_text: t("finance.service_fee.caption") do %>
-        <%= render Finance::ECF::ServiceFees.new(service_fees: @breakdown_retained_1[:service_fees]) %>
-      <% end %>
-
-      <%= accordion.section heading_text: t("finance.output_payment.caption") do %>
-        <%= render Finance::ECF::OutputPayments.new(output_payments: @breakdown_retained_1[:output_payments], breakdown_summary: @breakdown_retained_1[:breakdown_summary]) %>
-      <% end %>
-
       <% if @breakdown_retained_1[:other_fees] %>
         <% @breakdown_retained_1[:other_fees].each do |other_fee| %>
           <%= accordion.section heading_text: "#{Finance::ECF::OtherFee.new(other_fee).name.capitalize} fee" do %>
             <%= render Finance::ECF::OtherFeeRow.new(other_fee: Finance::ECF::OtherFee.new(other_fee)) %>
           <% end %>
         <% end %>
-      <% end %>
-
-      <!--TODO: Add clawbacks-->
-      <%= accordion.section heading_text: t("finance.clawbacks.caption") do %>
-        <table class="govuk-table payment-breakdown-table">
-          <tbody>
-          <tr class="govuk-table__row">
-            <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.clawbacks.per_participant") %></th>
-            <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds 0 %></td>
-          </tr>
-          <tr class="govuk-table__row">
-            <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.number_of_participants") %></th>
-            <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
-          </tr>
-          <tr class="govuk-table__row">
-            <th scope="row" class="govuk-table__cell"><%=t("finance.clawbacks.caption") %></th>
-            <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><%= number_to_pounds 0 %></td>
-          </tr>
-          </tbody>
-        </table>
       <% end %>
     <% end %>
   </div>
