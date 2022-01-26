@@ -6,12 +6,14 @@ module Participants
     extend ActiveSupport::Concern
     included do
       extend EarlyCareerTeacherClassMethods
-      delegate :early_career_teacher_profile, to: :user, allow_nil: true
     end
 
-    def user_profile
-      early_career_teacher_profile
+    def early_career_teacher_profile
+      return unless participant_identity
+
+      @early_career_teacher_profile ||= participant_identity.participant_profiles.active_record.ects.first
     end
+    alias_method :user_profile, :early_career_teacher_profile
 
     module EarlyCareerTeacherClassMethods
       def valid_courses
