@@ -71,7 +71,7 @@ Rails.application.configure do
   config.dqt_access_client_secret = Rails.application.credentials.DQT_ACCESS_CLIENT_SECRET
 
   config.dqt_api_url = Rails.application.credentials.DQT_API_URL
-  config.dqt_api_ocp_apim_subscription_key = Rails.application.credentials.DQT_API_OCP_APIM_SUBSCRIPTION_KEY
+  config.dqt_api_key = Rails.application.credentials.DQT_API_KEY
 
   config.action_mailer.perform_caching = false
   config.action_mailer.delivery_method = :notify

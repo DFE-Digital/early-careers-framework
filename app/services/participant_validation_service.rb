@@ -52,7 +52,7 @@ private
   end
 
   def full_dqt_client
-    @full_dqt_client ||= FullDqt::Client.new(token: DqtApiAccess.token)
+    @full_dqt_client ||= FullDqt::Client.new
   end
 
   def matching_record(trn:, nino:, full_name:, dob:)
