@@ -152,7 +152,7 @@ jobs:
           echo "ENVIRONMENT=review-pr-${{ github.event.number }}" >> $GITHUB_ENV
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.92.0
+        uses: ruby/setup-ruby@v1.95.0
         with:
           bundler-cache: true
           ruby-version: '2.7.4'
