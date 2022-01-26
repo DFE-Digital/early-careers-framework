@@ -48,7 +48,7 @@ private
   def npq_statements
     [
       { name: "December 2021", deadline_date: Date.new(2021, 12, 25), payment_date: Date.new(2022, 1, 31) },
-      { name: "January 2021", deadline_date: Date.new(2022, 1, 31), payment_date: Date.new(2022, 2, 28) },
+      { name: "January 2022", deadline_date: Date.new(2022, 1, 31), payment_date: Date.new(2022, 2, 28) },
     ].map { |hash| OpenStruct.new(hash) }
   end
 end
