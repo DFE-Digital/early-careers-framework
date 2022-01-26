@@ -4,14 +4,14 @@ module Finance
   module ECF
     class OtherFeeRow < BaseComponent
       include FinanceHelper
-      attr_reader :other_fee
+      attr_accessor :other_fee, :participants, :per_participant, :subtotal, :breakdown_summary
 
-      delegate :participants, :name, :per_participant, :subtotal, to: :other_fee
-
-    private
-
-      def initialize(other_fee:)
+      def initialize(other_fee:, breakdown_summary:)
+        @breakdown_summary = breakdown_summary
         @other_fee = other_fee
+        @participants = other_fee[:uplift][:participants]
+        @per_participant = other_fee[:uplift][:per_participant]
+        @subtotal = other_fee[:uplift][:subtotal]
       end
     end
   end
