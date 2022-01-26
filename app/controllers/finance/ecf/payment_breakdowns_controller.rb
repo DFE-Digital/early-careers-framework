@@ -6,15 +6,13 @@ module Finance
       def show
         @ecf_lead_provider = lead_provider_scope.find(params[:id])
 
-        @statement = Finance::Statement::ECF.new(
+        @statement = Finance::Statement::ECF.find_by(
           name: "November 2021",
           cpd_lead_provider: @ecf_lead_provider.cpd_lead_provider,
-          deadline_date: Date.new(2021, 11, 30),
-          payment_date: Date.new(2021, 11, 30),
         )
 
         @breakdown = Finance::ECF::CalculationOrchestrator.call(
-          aggregator: ParticipantEligibleAggregator,
+          aggregator: eligible_aggregator,
           cpd_lead_provider: @ecf_lead_provider.cpd_lead_provider,
           contract: @ecf_lead_provider.call_off_contract,
           event_type: :started,
@@ -24,15 +22,13 @@ module Finance
       def payable
         @ecf_lead_provider = lead_provider_scope.find(params[:id])
 
-        @statement = Finance::Statement::ECF.new(
+        @statement = Finance::Statement::ECF.find_by(
           name: "January 2022",
           cpd_lead_provider: @ecf_lead_provider.cpd_lead_provider,
-          deadline_date: Date.new(2022, 1, 31),
-          payment_date: Date.new(2022, 2, 28),
         )
 
         @breakdown = Finance::ECF::CalculationOrchestrator.call(
-          aggregator: ParticipantPayableAggregator,
+          aggregator: payable_aggregator,
           cpd_lead_provider: @ecf_lead_provider.cpd_lead_provider,
           contract: @ecf_lead_provider.call_off_contract,
           event_type: :started,
@@ -42,6 +38,24 @@ module Finance
       end
 
     private
+
+      def payable_aggregator
+        statement = @statement
+        Class.new(ParticipantPayableAggregator) do
+          define_singleton_method(:call) do |cpd_lead_provider = nil, interval = nil, recorder = ParticipantDeclaration::ECF.where(statement: statement), event_type = :started|
+            new(cpd_lead_provider: cpd_lead_provider[:cpd_lead_provider], recorder: recorder).call(event_type: event_type, interval: interval)
+          end
+        end
+      end
+
+      def eligible_aggregator
+        statement = @statement
+        Class.new(ParticipantEligibleAggregator) do
+          define_singleton_method(:call) do |cpd_lead_provider = nil, interval = nil, recorder = ParticipantDeclaration::ECF.where(statement: statement), event_type = :started|
+            new(cpd_lead_provider: cpd_lead_provider[:cpd_lead_provider], recorder: recorder).call(event_type: event_type, interval: interval)
+          end
+        end
+      end
 
       def lead_provider_scope
         policy_scope(LeadProvider, policy_scope_class: FinanceProfilePolicy::Scope)
