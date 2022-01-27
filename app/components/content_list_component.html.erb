@@ -1,0 +1,15 @@
+<nav class="app-contents-list">
+<h2 class="app-contents-list--font-size-19"><%= heading %></h2>
+
+<ol class="app-contents-list--font-size-19 govuk-!-padding-0">
+  <% list.each do |content| %>
+    <li class="app-contents-list__list-item app-contents-list__list-item--dashed">
+      <a class="app-contents-list__link govuk-link", href="<%= href_anchor(content) %>">
+        <%= content %>
+      </a>
+    </li>
+  <% end %>
+</ol>
+</nav>
+
+<hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible"
