@@ -6,7 +6,10 @@ require "tasks/trn_generator"
 module ValidTestDataGenerator
   class LeadProviderPopulater
     class << self
-      def call(name:, total_schools: 10, participants_per_school: 100)
+      def call(name:, total_schools: 10, participants_per_school: 200)
+        if Finance::Statement::ECF.count == 0
+          Importers::SeedStatements.new.call
+        end
         new(name: name).call(total_schools: total_schools, participants_per_school: participants_per_school)
       end
     end
@@ -60,6 +63,16 @@ module ValidTestDataGenerator
       schedule = ecf_schedules.sample
       participant_identity = Identity::Create.call(user: user, origin: :ecf)
 
+      cpd_lead_provider = school_cohort.lead_provider.cpd_lead_provider
+      november_statement = Finance::Statement::ECF.find_by(
+        cpd_lead_provider: cpd_lead_provider,
+        name: "November 2021",
+      )
+      january_statement = Finance::Statement::ECF.find_by(
+        cpd_lead_provider: cpd_lead_provider,
+        name: "January 2022",
+      )
+
       if profile_type == :ect
         profile = ParticipantProfile::ECT.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, mentor_profile: mentor_profile, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule, participant_identity: participant_identity) do |pp|
           ParticipantProfileState.create!(participant_profile: pp)
@@ -82,7 +95,10 @@ module ValidTestDataGenerator
 
         started_declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
         started_declaration.make_payable!
-        started_declaration.update!(created_at: profile.schedule.milestones.first.start_date + 1.day)
+        started_declaration.update!(
+          created_at: profile.schedule.milestones.first.start_date + 1.day,
+          statement: november_statement,
+        )
 
         RecordDeclarations::Retained::EarlyCareerTeacher.call(
           params: {
@@ -116,7 +132,10 @@ module ValidTestDataGenerator
 
         started_declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
         started_declaration.make_payable!
-        started_declaration.update!(created_at: profile.schedule.milestones.first.start_date + 1.day)
+        started_declaration.update!(
+          created_at: profile.schedule.milestones.first.start_date + 1.day,
+          statement: november_statement,
+        )
 
         RecordDeclarations::Retained::Mentor.call(
           params: {

@@ -2,7 +2,7 @@
 
 module Finance
   module ECF
-    class ParticipantPayableAggregator < ParticipantEligibleAggregator
+    class ParticipantPayableAggregator < Finance::ParticipantAggregator
       class << self
         def aggregation_types
           {
