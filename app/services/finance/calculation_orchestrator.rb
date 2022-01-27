@@ -8,45 +8,29 @@ module Finance
     include AbstractInterface
     implement_class_method :default_aggregator, :default_calculator
 
-    class << self
-      def call(cpd_lead_provider:,
-               contract:,
-               interval: nil,
-               aggregator: default_aggregator,
-               calculator: default_calculator,
-               event_type: :started)
-        new(
-          cpd_lead_provider: cpd_lead_provider,
-          contract: contract,
-          aggregator: aggregator,
-          calculator: calculator,
-          interval: interval,
-        ).call(event_type: event_type)
-      end
-    end
-
     def call(event_type:)
       calculator.call(
         contract: contract,
         event_type: event_type,
-        aggregations: aggregator.call(cpd_lead_provider: cpd_lead_provider, event_type: event_type, interval: interval),
+        aggregations: aggregator.new(
+          statement: statement
+        ).call(event_type: event_type),
       )
     end
 
   private
 
-    attr_reader :cpd_lead_provider, :contract, :aggregator, :calculator, :interval
+    attr_reader :statement, :contract, :aggregator, :calculator
 
-    def initialize(cpd_lead_provider:,
+    def initialize(statement:,
                    contract:,
                    interval: nil,
                    aggregator: self.class.default_aggregator,
                    calculator: self.class.default_calculator)
-      @cpd_lead_provider = cpd_lead_provider
+      @statement = statement
       @contract = contract
       @aggregator = aggregator
       @calculator = calculator
-      @interval = interval
     end
   end
 end

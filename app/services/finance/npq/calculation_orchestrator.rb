@@ -26,13 +26,9 @@ module Finance
 
     private
 
-      def aggregate(aggregation_type:, course_identifier:, event_type:)
-        recorder.public_send(self.class.aggregation_types[event_type][aggregation_type], cpd_lead_provider, course_identifier).count
-      end
-
       def aggregations_for(event_type:)
         aggregator.call(
-          cpd_lead_provider: cpd_lead_provider,
+          statement: statement,
           event_type: event_type,
           course_identifier: contract.course_identifier,
           interval: nil,
