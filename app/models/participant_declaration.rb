@@ -6,6 +6,7 @@ class ParticipantDeclaration < ApplicationRecord
   belongs_to :user
   belongs_to :participant_profile
   belongs_to :superseded_by, class_name: "ParticipantDeclaration", optional: true
+  belongs_to :statement, optional: true, polymorphic: true
   has_many :supersedes, class_name: "ParticipantDeclaration", foreign_key: :superseded_by_id, inverse_of: :superseded_by
 
   enum state: {

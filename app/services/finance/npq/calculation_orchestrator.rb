@@ -35,7 +35,7 @@ module Finance
           cpd_lead_provider: cpd_lead_provider,
           event_type: event_type,
           course_identifier: contract.course_identifier,
-          interval: interval,
+          interval: nil,
         )
       end
     end

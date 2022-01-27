@@ -30,20 +30,19 @@ RSpec.describe Finance::NPQ::CalculationOrchestrator do
     }
   end
 
-  let(:interval) { Finance::Statement::ECF.all.first.interval }
-
   subject(:run_calculation) do
     described_class.call(
       cpd_lead_provider: cpd_lead_provider,
       contract: contract,
-      interval: interval,
+      interval: nil,
     )
   end
 
   context ".call" do
     context "normal operation" do
       before do
-        timestamp = interval.begin + 1.day
+        timestamp = Date.new(2021, 10, 30)
+
         travel_to(timestamp) do
           FactoryBot.with_options cpd_lead_provider: cpd_lead_provider, course_identifier: contract.course_identifier, declaration_date: timestamp, created_at: timestamp do |factory|
             factory.create_list(:npq_participant_declaration, 3, :eligible)

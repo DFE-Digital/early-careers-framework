@@ -4,8 +4,9 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-one-third">
     <ul class="govuk-list">
-      <li><%= text_otherwise_link_to("Payable", finance_npq_lead_provider_statement_path(lead_provider_id: @npq_lead_provider, id: "payable"), params[:id] == "payable") %></li>
-      <li><%= text_otherwise_link_to("Current", finance_npq_lead_provider_statement_path(lead_provider_id: @npq_lead_provider, id: "current"), params[:id] == "current") %></li>
+      <% temporary_statements.each do |statement| %>
+        <li><%= text_otherwise_link_to(statement.name, finance_npq_lead_provider_statement_path(lead_provider_id: @npq_lead_provider, id: statement.name), params[:id] == statement.name) %></li>
+      <% end %>
     </ul>
   </div>
 
