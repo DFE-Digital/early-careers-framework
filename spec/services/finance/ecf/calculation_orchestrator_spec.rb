@@ -5,15 +5,16 @@ require "rails_helper"
 module Finance
   module ECF
     class DummyAggregator
-      class << self
-        def call(*)
-          {
-            all: 10_000,
-            uplift: 10_000,
-            ects: 5_000,
-            mentors: 5_000,
-          }
-        end
+      def initialize(*); end
+
+      def call(*)
+        {
+          all: 10_000,
+          uplift: 10_000,
+          ects: 5_000,
+          mentors: 5_000,
+          previous_participants: 0,
+        }
       end
     end
   end
@@ -105,6 +106,10 @@ RSpec.describe Finance::ECF::CalculationOrchestrator do
     }
   end
 
+  let(:statement) do
+    create(:ecf_statement, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+  end
+
   def set_precision(hash, rounding)
     with_rounding(hash) { |sub_hash, k, v| sub_hash[k] = v.round(rounding) }
   end
@@ -131,8 +136,8 @@ RSpec.describe Finance::ECF::CalculationOrchestrator do
       let(:with_uplift) { :sparsity_uplift }
 
       before do
-        create_list(:ect_participant_declaration, 5, with_uplift, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
-        create_list(:mentor_participant_declaration, 5, with_uplift, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+        create_list(:ect_participant_declaration, 5, with_uplift, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider, statement: statement)
+        create_list(:mentor_participant_declaration, 5, with_uplift, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider, statement: statement)
       end
 
       context "when only sparsity_uplift flag was set" do
@@ -167,8 +172,8 @@ RSpec.describe Finance::ECF::CalculationOrchestrator do
 
     context "when no uplift flags were set" do
       before do
-        create_list(:ect_participant_declaration, 5, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
-        create_list(:mentor_participant_declaration, 5, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+        create_list(:ect_participant_declaration, 5, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider, statement: statement)
+        create_list(:mentor_participant_declaration, 5, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider, statement: statement)
         normal_outcome[:other_fees][:uplift].tap do |hash|
           hash[:participants] = 0
           hash[:subtotal] = 0
@@ -188,7 +193,7 @@ RSpec.describe Finance::ECF::CalculationOrchestrator do
       end
 
       before do
-        create_list(:mentor_participant_declaration, 10, :sparsity_uplift, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+        create_list(:mentor_participant_declaration, 10, :sparsity_uplift, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider, statement: statement)
       end
 
       it "returns the total calculation" do
@@ -204,7 +209,7 @@ RSpec.describe Finance::ECF::CalculationOrchestrator do
       end
 
       before do
-        create_list(:ect_participant_declaration, 10, :sparsity_uplift, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+        create_list(:ect_participant_declaration, 10, :sparsity_uplift, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider, statement: statement)
       end
 
       it "returns the total calculation" do
@@ -214,8 +219,8 @@ RSpec.describe Finance::ECF::CalculationOrchestrator do
 
     context "when both mentor profile and ect profile declaration records available" do
       before do
-        create_list(:ect_participant_declaration, 5, :sparsity_uplift, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
-        create_list(:mentor_participant_declaration, 5, :sparsity_uplift, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+        create_list(:ect_participant_declaration, 5, :sparsity_uplift, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider, statement: statement)
+        create_list(:mentor_participant_declaration, 5, :sparsity_uplift, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider, statement: statement)
       end
 
       it "returns the total calculation" do
@@ -231,8 +236,8 @@ RSpec.describe Finance::ECF::CalculationOrchestrator do
       end
 
       before do
-        create_list(:ect_participant_declaration, 10, :sparsity_uplift, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
-        create_list(:ect_participant_declaration, 10, :sparsity_uplift, :submitted, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+        create_list(:ect_participant_declaration, 10, :sparsity_uplift, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider, statement: statement)
+        create_list(:ect_participant_declaration, 10, :sparsity_uplift, :submitted, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider, statement: statement)
       end
 
       it "returns the total calculation, and ineligible declarations are put in not_yet_included_participants field" do
@@ -245,13 +250,12 @@ private
 
   def run_calculation(aggregator: Finance::ECF::ParticipantEligibleAggregator)
     set_precision(
-      described_class.call(
+      described_class.new(
         calculator: PaymentCalculator::ECF::PaymentCalculation,
         aggregator: aggregator,
         contract: call_off_contract,
-        cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider,
-        event_type: :started,
-      ),
+        statement: statement,
+      ).call(event_type: :started),
       2,
     )
   end
