@@ -27,11 +27,11 @@ module Finance
     private
 
       def aggregations_for(event_type:)
-        aggregator.call(
+        aggregator.new(
           statement: statement,
-          event_type: event_type,
           course_identifier: contract.course_identifier,
-          interval: nil,
+        ).call(
+          event_type: event_type
         )
       end
     end
