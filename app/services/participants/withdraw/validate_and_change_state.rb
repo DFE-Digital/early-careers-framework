@@ -17,6 +17,12 @@ module Participants
           ParticipantProfileState.create!(participant_profile: user_profile, state: ParticipantProfileState.states[:withdrawn], reason: reason)
           user_profile.training_status_withdrawn!
         end
+
+        unless user_profile.npq?
+          induction_coordinator = user_profile.school.induction_coordinator_profiles.first
+          SchoolMailer.fip_provider_has_withdrawn_a_participant(withdrawn_participant: user_profile, induction_coordinator: induction_coordinator).deliver_later
+        end
+
         user_profile
       end
     end

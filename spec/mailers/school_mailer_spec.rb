@@ -186,4 +186,20 @@ RSpec.describe SchoolMailer, type: :mailer do
       expect(email.to).to eq([induction_coordinator_profile.user.email])
     end
   end
+
+  describe "sit_fip_provider_has_withdrawn_a_participant" do
+    let(:school_cohort) { create(:school_cohort, induction_programme_choice: "full_induction_programme") }
+    let(:participant_profile) { create(:ect_participant_profile, training_status: "withdrawn", school_cohort: school_cohort, user: create(:user, email: "john.clemence@example.com")) }
+    let(:sit_profile) { create(:induction_coordinator_profile, schools: [school_cohort.school]) }
+
+    let(:email) do
+      SchoolMailer.fip_provider_has_withdrawn_a_participant(
+        withdrawn_participant: participant_profile,
+        induction_coordinator: sit_profile,
+      )
+
+      expect(email.from).to eq(["mail@example.com"])
+      expect(email.to).to eq([induction_coordinator_profile.user.email])
+    end
+  end
 end

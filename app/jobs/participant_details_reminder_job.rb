@@ -9,7 +9,7 @@ class ParticipantDetailsReminderJob < ApplicationJob
 
   def perform(profile_id:)
     profile = ParticipantProfile.find(profile_id)
-    return if !profile || profile.withdrawn_record? || profile.completed_validation_wizard?
+    return if !profile || profile.withdrawn_record? || profile.completed_validation_wizard? || profile.training_status_withdrawn?
 
     ActiveRecord::Base.transaction do
       ParticipantMailer.add_details_reminder(participant_profile: profile).deliver_later
