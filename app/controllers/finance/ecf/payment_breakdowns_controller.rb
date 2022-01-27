@@ -42,8 +42,8 @@ module Finance
       def payable_aggregator
         statement = @statement
         Class.new(ParticipantPayableAggregator) do
-          define_singleton_method(:call) do |cpd_lead_provider = nil, interval = nil, recorder = ParticipantDeclaration::ECF.where(statement: statement), event_type = :started|
-            new(cpd_lead_provider: cpd_lead_provider[:cpd_lead_provider], recorder: recorder).call(event_type: event_type, interval: interval)
+          define_singleton_method(:call) do |cpd_lead_provider:, interval:, recorder: ParticipantDeclaration::ECF.where(statement: statement), event_type: :started|
+            new(cpd_lead_provider: cpd_lead_provider, recorder: recorder).call(event_type: event_type, interval: interval)
           end
         end
       end
@@ -51,8 +51,8 @@ module Finance
       def eligible_aggregator
         statement = @statement
         Class.new(ParticipantEligibleAggregator) do
-          define_singleton_method(:call) do |cpd_lead_provider = nil, interval = nil, recorder = ParticipantDeclaration::ECF.where(statement: statement), event_type = :started|
-            new(cpd_lead_provider: cpd_lead_provider[:cpd_lead_provider], recorder: recorder).call(event_type: event_type, interval: interval)
+          define_singleton_method(:call) do |cpd_lead_provider:, interval:, recorder: ParticipantDeclaration::ECF.where(statement: statement), event_type: :started|
+            new(cpd_lead_provider: cpd_lead_provider, recorder: recorder).call(event_type: event_type, interval: interval)
           end
         end
       end
