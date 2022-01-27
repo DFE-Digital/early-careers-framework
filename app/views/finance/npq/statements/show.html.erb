@@ -4,7 +4,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-one-third">
     <ul class="govuk-list">
-      <% temporary_statements.each do |statement| %>
+      <% Finance::Statement::NPQ.where(cpd_lead_provider: @cpd_lead_provider).each do |statement| %>
         <li><%= text_otherwise_link_to(statement.name, finance_npq_lead_provider_statement_path(lead_provider_id: @npq_lead_provider, id: statement.name), params[:id] == statement.name) %></li>
       <% end %>
     </ul>
