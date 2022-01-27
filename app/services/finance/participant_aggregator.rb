@@ -7,8 +7,14 @@ module Finance
     include AbstractInterface
     implement_class_method :aggregation_types
 
-    def call(interval: nil, event_type: :started)
-      aggregations(event_type: event_type, interval: interval)
+    def call(event_type: :started)
+      aggregations(event_type: event_type).tap do |h|
+        h[:previous_participants] =
+          recorder
+          .where(statement: previous_statements)
+          .public_send(event_type)
+          .count
+      end
     end
 
   private
@@ -21,9 +27,9 @@ module Finance
       @recorder = recorder
     end
 
-    def aggregators(event_type:, interval:)
+    def aggregators(event_type:)
       @aggregators ||= Hash.new do |hash, key|
-        hash[key] = aggregate(aggregation_type: key, event_type: event_type, interval: interval)
+        hash[key] = aggregate(aggregation_type: key, event_type: event_type)
       end
     end
 
@@ -34,22 +40,16 @@ module Finance
       )
     end
 
-    def aggregate(aggregation_type:, event_type:, interval: nil)
+    def aggregate(aggregation_type:, event_type:)
       scope = recorder.public_send(self.class.aggregation_types[event_type][aggregation_type], cpd_lead_provider)
       scope = scope.where(statement_id: statement.id)
       scope = scope.public_send(event_type)
-      scope = scope.submitted_between(interval.begin, interval.end) if interval.present?
       scope.count
     end
 
-    def aggregations(event_type:, interval:)
+    def aggregations(event_type:)
       self.class.aggregation_types[event_type].keys.index_with do |key|
-        aggregators(event_type: event_type, interval: interval)[key]
-      end.tap do |h|
-        h[:previous_participants] =
-          recorder.where(statement: previous_statements).
-          public_send(event_type).
-          count
+        aggregators(event_type: event_type)[key]
       end
     end
   end
