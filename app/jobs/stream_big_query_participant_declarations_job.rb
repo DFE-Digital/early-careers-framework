@@ -10,14 +10,15 @@ class StreamBigQueryParticipantDeclarationsJob < ApplicationJob
 
     return if table.nil?
 
-    rows = ParticipantDeclaration
+    ParticipantDeclaration
       .where(updated_at: 1.hour.ago.beginning_of_hour..1.hour.ago.end_of_hour)
-      .map do |participant_declaration|
-        participant_declaration.attributes.merge(
-          "cpd_lead_provider_name" => participant_declaration.cpd_lead_provider.name,
-        )
+      .find_in_batches do |declarations|
+        rows = declarations.map do |participant_declaration|
+          participant_declaration.attributes.merge(
+            "cpd_lead_provider_name" => participant_declaration.cpd_lead_provider.name,
+          )
+        end
+        table.insert(rows) if rows.any?
       end
-
-    table.insert(rows) if rows.any?
   end
 end
