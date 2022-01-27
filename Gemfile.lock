@@ -322,7 +322,7 @@ GEM
     open_api-rswag-ui (0.1.0)
       actionpack (>= 3.1, < 7.0)
       railties (>= 3.1, < 7.0)
-    openapi3_parser (0.9.0)
+    openapi3_parser (0.9.1)
       commonmarker (~> 0.17)
       psych (~> 3.1)
     orm_adapter (0.5.0)
@@ -637,7 +637,7 @@ DEPENDENCIES
   open_api-rswag-api (>= 0.1.0)
   open_api-rswag-specs (>= 0.1.0)
   open_api-rswag-ui (>= 0.1.0)
-  openapi3_parser (= 0.9.0)
+  openapi3_parser (= 0.9.1)
   pagy (~> 4.11)
   paper_trail
   parallel_tests
