@@ -61,9 +61,9 @@ module ValidTestDataGenerator
       participant_identity = Identity::Create.call(user: user, origin: :ecf)
 
       if profile_type == :ect
-        profile = ParticipantProfile::ECT.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, mentor_profile: mentor_profile, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule, participant_identity: participant_identity) do |profile|
-          ParticipantProfileState.create!(participant_profile: profile)
-          ECFParticipantEligibility.create!(participant_profile_id: profile.id).eligible_status!
+        profile = ParticipantProfile::ECT.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, mentor_profile: mentor_profile, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule, participant_identity: participant_identity) do |pp|
+          ParticipantProfileState.create!(participant_profile: pp)
+          ECFParticipantEligibility.create!(participant_profile_id: pp.id).eligible_status!
         end
 
         return unless profile.active_record?
@@ -91,13 +91,13 @@ module ValidTestDataGenerator
             declaration_date: (profile.schedule.milestones.second.start_date + 1.day).rfc3339,
             cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
             declaration_type: RecordDeclarations::ECF::RETAINED_ONE,
-            evidence_held: "other"
+            evidence_held: "other",
           },
         )
       else
-        profile = ParticipantProfile::Mentor.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule, participant_identity: participant_identity) do |profile|
-          ParticipantProfileState.create!(participant_profile: profile)
-          ECFParticipantEligibility.create!(participant_profile_id: profile.id).eligible_status!
+        profile = ParticipantProfile::Mentor.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule, participant_identity: participant_identity) do |pp|
+          ParticipantProfileState.create!(participant_profile: pp)
+          ECFParticipantEligibility.create!(participant_profile_id: pp.id).eligible_status!
         end
 
         return profile unless profile.active_record?
@@ -125,7 +125,7 @@ module ValidTestDataGenerator
             declaration_date: (profile.schedule.milestones.second.start_date + 1.day).rfc3339,
             cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
             declaration_type: RecordDeclarations::ECF::RETAINED_ONE,
-            evidence_held: "other"
+            evidence_held: "other",
           },
         )
 
