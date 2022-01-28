@@ -25,7 +25,6 @@ module Finance
 
     private
 
-
       def lead_provider_scope
         policy_scope(NPQLeadProvider, policy_scope_class: FinanceProfilePolicy::Scope)
       end

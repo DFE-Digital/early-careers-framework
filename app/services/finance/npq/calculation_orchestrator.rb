@@ -31,7 +31,7 @@ module Finance
           statement: statement,
           course_identifier: contract.course_identifier,
         ).call(
-          event_type: event_type
+          event_type: event_type,
         )
       end
     end

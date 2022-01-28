@@ -14,6 +14,10 @@ module Finance
           cpd_lead_provider: @cpd_lead_provider,
         )
 
+        if @statement.name == "January 2022"
+          @statement.id = nil
+        end
+
         @breakdowns = Finance::NPQ::CalculationOverviewOrchestrator.new(
           statement: @statement,
           aggregator: ParticipantEligibleAndPayableAggregator,

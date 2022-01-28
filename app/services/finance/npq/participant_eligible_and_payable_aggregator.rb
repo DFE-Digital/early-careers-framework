@@ -3,7 +3,6 @@
 module Finance
   module NPQ
     class ParticipantEligibleAndPayableAggregator < Finance::ParticipantAggregator
-
       def self.aggregation_types
         {
           started: {
@@ -27,6 +26,7 @@ module Finance
 
       def aggregate(aggregation_type:, event_type:)
         scope = recorder.public_send(self.class.aggregation_types[event_type][aggregation_type], cpd_lead_provider, course_identifier)
+        scope = scope.where(statement_id: statement.id)
         scope.count
       end
     end
