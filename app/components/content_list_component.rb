@@ -7,7 +7,7 @@ class ContentListComponent < ViewComponent::Base
   end
 
   def href_anchor(section_heading)
-    "##{section_heading.gsub(' ', '-')}"
+    "##{section_heading.parameterize}"
   end
 
   attr_reader :heading, :list
