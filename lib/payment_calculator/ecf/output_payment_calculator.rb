@@ -17,7 +17,7 @@ module PaymentCalculator
               total_participants: total_participants,
               total_previous_participants: total_previous_participants,
               event_type: event_type,
-              band: band
+              band: band,
             ),
           }
         end
@@ -32,7 +32,7 @@ module PaymentCalculator
         send(event_type) * band.output_payment_per_participant
       end
 
-      private
+    private
 
       def start_and_completion_event_percentage
         0.2
