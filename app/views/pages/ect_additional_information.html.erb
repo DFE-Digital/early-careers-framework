@@ -48,7 +48,8 @@
     </p>
     <p>
       You should participate in your ECF-based training programme as fully as possible, but failing to complete it will
-      not mean you fail your induction. Completing the assignments in your training programme is one way to collect evidence that you meet the Teachers’ Standards.
+      not mean you fail your induction. Completing the assignments in your training programme is one way to collect evidence that you meet the
+      <%= govuk_link_to "Teachers’ Standards", "https://www.gov.uk/government/publications/teachers-standards" %>.
     </p>
     <p>
       Headteachers are responsible for making sure you’re assessed against the Teachers’ Standards as part of your progress reviews,
@@ -101,8 +102,19 @@
     <p>
       If you have any concerns about your induction or statutory entitlements (time off timetable and support from a mentor),
       speak to your induction tutor first. This is the person responsible for ECT induction at your school.
-      Your statutory entitlements include 10% off timetable in the first year and 5% in the second year of induction to undertake induction activities including training and mentoring,
-      a supportive dedicated mentor and high quality development materials based on the Early Career Framework.
+      Your statutory entitlements include:
+    </p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>
+        10% off timetable in the first year, and 5% off timetable in the second year to undertake activities including training and mentoring
+      </li>
+      <li>
+        a supportive,dedicated mentor
+      </li>
+      <li>
+        high-quality development materials based on the Early Career Framework.
+      </li>
+    </ul>
     </p>
     <p>
       If they’re unable to help you, speak to your appropriate body. They’re responsible for making sure ECTs receive their statutory entitlements,
@@ -125,7 +137,7 @@
 
     <ol class="govuk-list govuk-list--number">
       <li>
-        Visit our service: https://manage-training-for-early-career-teachers.education.gov.uk/participants/start-registration
+        Visit our service: <%= govuk_link_to "https://manage-training-for-early-career-teachers.education.gov.uk/participants/start-registration", "https://manage-training-for-early-career-teachers.education.gov.uk/participants/start-registration" %>
       </li>
       <li>
         Sign in using the email address your school has registered for you. Be careful to enter it correctly with no spaces.
@@ -147,7 +159,7 @@
      <p>
       Your TRN is a unique ID that you can usually find on your payslip, teachers’ pension documents or teacher training records.
     <p>
-      It is usually 7 digits long, may include the letters ‘RP’ or a slash ‘/’ symbol, or could be called a QTS, GTC, DfE, DfES or DCSF number.
+      It’s usually 7 digits long, may include the letters ‘RP’ or a slash ‘/’ symbol, or could be called a QTS, GTC, DfE, DfES or DCSF number.
     </p>
 
     <h3 class="govuk-heading-m">What happens next</h3>
@@ -156,6 +168,13 @@
     </p>
     <p>
       You can then start or continue your training programme.
+    </p>
+
+    <h3 class="govuk-heading-m">How to give feedback</h3>
+    <p>
+      The DfE and training providers are committed to maximising the impact of the ECF reforms. We welcome any feedback on the programmes,
+      including ECT engagement. You can share this directly with your training provider, or email the DfE:
+      <%= govuk_mail_to "continuing-professional-development@digital.education.gov.uk", "continuing-professional-development@digital.education.gov.uk" %>.
     </p>
   </div>
 </div>
