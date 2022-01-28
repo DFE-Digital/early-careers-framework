@@ -3,7 +3,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    <h1 class="govuk-heading-xl">ECF induction and training: additional information for early career mentors</h1>
+    <h1 class="govuk-heading-xl">ECF induction and training: additional information for mentors</h1>
     <p>
       This guidance is for people who mentor early career teachers (ECTs) during their 2-year induction.
       It answers some common questions about how the ECF-based training programme works, how to support ECTs, and how to get help.
@@ -29,11 +29,11 @@
 
     <%= render ContentListComponent.new(heading: "Contents",
                                         list: [
-                                                "How should I support ECT's?",
+                                                "How should I support ECT’s?",
                                                 "Do I need to collect any evidence during the ECF-based training?",
                                                 "Can ECTs fail their training?",
                                                 "Do ECTs have to complete ECF-based training on top of another induction programme?",
-                                                "How should an ECT's teaching be observed?",
+                                                "How should an ECT’s teaching be observed?",
                                                 "What should I do if an ECT has concerns or difficulties?",
                                                 "What should I do if I have concerns about mentoring?",
                                                 "Can I continue training as a mentor if my ECT withdraws from the programme?",
@@ -81,7 +81,8 @@
     </section>
     <p>
       No - ECTs should participate in their ECF-based training programme as fully as possible, but failing to complete it will
-      not mean they fail their induction. Completing the training programme will help them to develop the knowledge and skills they need to meet the Teachers’ Standards.
+      not mean they fail their induction. Completing the training programme will help them to develop the knowledge and skills they need to meet the
+      <%= govuk_link_to "Teachers’ Standards", "https://www.gov.uk/government/publications/teachers-standards" %>.
     </p>
     <p>
       Headteachers are responsible for making sure ECTs are assessed against the Teachers’ Standards as part of their progress reviews,
@@ -99,7 +100,7 @@
     </p>
     <p>
       Your school may choose to offer your ECTs extra training and support to meet essential specific needs, reflecting local policies
-      and practices (e.g. on safeguarding). This additional training does not replace their entitlement to the ECF-based programme however.
+      and practices (on safeguarding, for example). This additional training does not replace their entitlement to the ECF-based programme however.
     </p>
 
     <section id="how-should-an-ect-s-teaching-be-observed">
@@ -148,7 +149,7 @@
       <h2 class="govuk-heading-l">Can I continue training as a mentor if my ECT withdraws from the programme?</h2>
     </section>
     <p>
-      Yes. If you were assigned an ECT at the start of the programme, you can continue training so you are ready to work with other ECTs.
+      Yes. If you were assigned an ECT at the start of the programme, you can continue training so you’re ready to work with other ECTs.
     </p>
 
     <section id="how-do-i-register-with-the-dfe-s-service">
@@ -209,8 +210,16 @@
 
     <h3 class="govuk-heading-m">If you’re a mentor without a TRN</h3>
     <p>
-      You must <%= govuk_link_to "apply for a TRN", "https://manage-training-for-early-career-teachers.education.gov.uk/participants/start-registration/trn-guidance" %>
+      You must <%= govuk_link_to "apply for a TRN", "https://manage-training-for-early-career-teachers.education.gov.uk/participants/start-registration/get-a-trn" %>
       before you can use DFE’s service. You need a TRN to receive funded training and materials.
+    </p>
+
+    <h3 class="govuk-heading-m">What happens next</h3>
+    <p>
+      We’ll check your details with the Teaching Regulation Agency to confirm your eligibility for funding.
+    </p>
+    <p>
+      You can then start or continue your training programme.
     </p>
 
     <h3 class="govuk-heading-m">How to give feedback</h3>
