@@ -53,3 +53,5 @@ tokens
 /spec/examples.txt
 
 /public/api-reference
+
+/config/credentials/production.key
