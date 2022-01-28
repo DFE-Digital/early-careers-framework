@@ -7,9 +7,7 @@ module ValidTestDataGenerator
   class LeadProviderPopulater
     class << self
       def call(name:, total_schools: 10, participants_per_school: 200)
-        if Finance::Statement::ECF.count == 0
-          Importers::SeedStatements.new.call
-        end
+        Importers::SeedStatements.new.call
         new(name: name).call(total_schools: total_schools, participants_per_school: participants_per_school)
       end
     end
@@ -67,10 +65,6 @@ module ValidTestDataGenerator
       november_statement = Finance::Statement::ECF.find_by(
         cpd_lead_provider: cpd_lead_provider,
         name: "November 2021",
-      )
-      january_statement = Finance::Statement::ECF.find_by(
-        cpd_lead_provider: cpd_lead_provider,
-        name: "January 2022",
       )
 
       if profile_type == :ect
@@ -246,6 +240,7 @@ module ValidTestDataGenerator
   class NPQLeadProviderPopulater
     class << self
       def call(name:, total_schools: 10, participants_per_school: 10)
+        Importers::SeedStatements.new.call
         new(name: name, participants_per_school: participants_per_school).call(total_schools: total_schools)
       end
     end
@@ -282,6 +277,11 @@ module ValidTestDataGenerator
       user = User.create!(full_name: name, email: Faker::Internet.email(name: name))
       identity = Identity::Create.call(user: user, origin: :npq)
 
+      december_statement = Finance::Statement::NPQ.find_by(
+        cpd_lead_provider: lead_provider.cpd_lead_provider,
+        name: "December 2021",
+      )
+
       npq_application = NPQApplication.create!(
         active_alert: "",
         date_of_birth: Date.new(1990, 1, 1),
@@ -315,6 +315,7 @@ module ValidTestDataGenerator
       return if [true, false].sample
 
       participant_declaration.make_payable!
+      participant_declaration.update!(statement: december_statement)
     end
 
     def accept_application(npq_application)

@@ -30,12 +30,15 @@ RSpec.describe Finance::NPQ::CalculationOrchestrator do
     }
   end
 
+  let(:statement) do
+    create(:npq_statement, cpd_lead_provider: cpd_lead_provider)
+  end
+
   subject(:run_calculation) do
-    described_class.call(
-      cpd_lead_provider: cpd_lead_provider,
+    described_class.new(
+      statement: statement,
       contract: contract,
-      interval: nil,
-    )
+    ).call(event_type: :started)
   end
 
   context ".call" do
@@ -44,7 +47,7 @@ RSpec.describe Finance::NPQ::CalculationOrchestrator do
         timestamp = Date.new(2021, 10, 30)
 
         travel_to(timestamp) do
-          FactoryBot.with_options cpd_lead_provider: cpd_lead_provider, course_identifier: contract.course_identifier, declaration_date: timestamp, created_at: timestamp do |factory|
+          FactoryBot.with_options cpd_lead_provider: cpd_lead_provider, course_identifier: contract.course_identifier, declaration_date: timestamp, created_at: timestamp, statement: statement do |factory|
             factory.create_list(:npq_participant_declaration, 3, :eligible)
             factory.create_list(:npq_participant_declaration, 2, :payable)
             factory.create_list(:npq_participant_declaration, 4, :submitted)

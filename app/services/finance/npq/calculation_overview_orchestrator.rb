@@ -5,39 +5,23 @@ require "payment_calculator/npq/payment_calculation"
 module Finance
   module NPQ
     class CalculationOverviewOrchestrator
-      class << self
-        def call(
-          aggregator:,
-          cpd_lead_provider:,
-          calculation_orchestrator: ::Finance::NPQ::CalculationOrchestrator,
-          event_type: :started,
-          interval: nil
-        )
-          new(cpd_lead_provider: cpd_lead_provider, calculation_orchestrator: calculation_orchestrator, interval: interval, aggregator: aggregator)
-            .call(event_type: event_type)
-        end
-      end
-
       def call(event_type:)
         cpd_lead_provider.npq_lead_provider.npq_contracts.map do |contract|
-          calculation_orchestrator.call(
-            event_type: event_type,
-            cpd_lead_provider: cpd_lead_provider,
+          Finance::NPQ::CalculationOrchestrator.new(
+            statement: statement,
             contract: contract,
-            interval: interval,
             aggregator: aggregator,
-          )
+          ).call(event_type: event_type)
         end
       end
 
     private
 
-      attr_accessor :cpd_lead_provider, :calculation_orchestrator, :interval, :aggregator
+      attr_accessor :statement, :cpd_lead_provider, :calculation_orchestrator, :aggregator
 
-      def initialize(cpd_lead_provider:, calculation_orchestrator:, interval:, aggregator:)
-        self.cpd_lead_provider        = cpd_lead_provider
-        self.calculation_orchestrator = calculation_orchestrator
-        self.interval                 = interval
+      def initialize(statement:, aggregator:)
+        self.statement                = statement
+        self.cpd_lead_provider        = statement.cpd_lead_provider
         self.aggregator               = aggregator
       end
     end

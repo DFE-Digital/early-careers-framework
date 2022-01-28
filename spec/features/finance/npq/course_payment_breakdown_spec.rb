@@ -13,15 +13,16 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   let(:npq_course_leading_behaviour_culture)      { create(:npq_course, identifier: npq_leading_behaviour_culture_contract.course_identifier, name: "Leading Behaviour Culture") }
   let(:npq_course_leading_teaching_development)   { create(:npq_course, identifier: npq_leading_teaching_development_contract.course_identifier, name: "Leading Teaching Development") }
   let(:breakdowns) do
-    Finance::NPQ::CalculationOverviewOrchestrator.call(
-      cpd_lead_provider: cpd_lead_provider,
-      event_type: :started,
-    )
+    Finance::NPQ::CalculationOverviewOrchestrator.new(
+      statement: statement,
+      aggregator: Finance::NPQ::ParticipantEligibleAndPayableAggregator,
+    ).call(event_type: :started)
   end
   let!(:statement) do
     Finance::Statement::NPQ.create!(
       name: "January 2022",
       deadline_date: Date.new(2022, 1, 31),
+      payment_date: Date.new(2022, 2, 16),
       cpd_lead_provider: cpd_lead_provider,
     )
   end

@@ -5,15 +5,14 @@ describe FinanceHelper do
     let!(:lead_provider) { create(:lead_provider) }
     let!(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: lead_provider) }
     let!(:contract) { create(:call_off_contract, lead_provider: cpd_lead_provider.lead_provider) }
+    let(:statement) { create(:ecf_statement, cpd_lead_provider: cpd_lead_provider) }
 
     let(:breakdown) do
-      Finance::ECF::CalculationOrchestrator.call(
+      Finance::ECF::CalculationOrchestrator.new(
         aggregator: Finance::ECF::ParticipantEligibleAggregator,
-        calculator: PaymentCalculator::ECF::PaymentCalculation,
-        cpd_lead_provider: cpd_lead_provider,
+        statement: statement,
         contract: cpd_lead_provider.lead_provider.call_off_contract,
-        event_type: :started,
-      )
+      ).call(event_type: :started)
     end
 
     context "when lead provider is vat chargeable" do

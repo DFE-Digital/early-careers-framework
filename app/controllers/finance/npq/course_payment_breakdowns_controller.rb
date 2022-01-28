@@ -12,24 +12,18 @@ module Finance
           cpd_lead_provider: @cpd_lead_provider,
         )
 
+        if @statement.name == "January 2022"
+          @statement.id = nil
+        end
+
         @npq_course        = NPQCourse.find_by!(identifier: params[:id])
-        @breakdown         = Finance::NPQ::CalculationOrchestrator.call(
-          cpd_lead_provider: @cpd_lead_provider,
+        @breakdown         = Finance::NPQ::CalculationOrchestrator.new(
+          statement: @statement,
           contract: @npq_lead_provider.npq_contracts.find_by!(course_identifier: params[:id]),
-          aggregator: aggregator_with_statement(statement: @statement),
-        )
+        ).call(event_type: :started)
       end
 
     private
-
-      def aggregator_with_statement(statement:)
-        Class.new(Finance::NPQ::ParticipantEligibleAndPayableAggregator) do
-          define_singleton_method(:call) do |cpd_lead_provider: nil, interval: nil, recorder: ParticipantDeclaration::NPQ.where(statement: statement), event_type: :started, course_identifier: nil|
-            new(cpd_lead_provider: cpd_lead_provider, recorder: recorder, course_identifier: course_identifier)
-              .call(event_type: event_type, interval: interval)
-          end
-        end
-      end
 
       def lead_provider_scope
         policy_scope(NPQLeadProvider, policy_scope_class: FinanceProfilePolicy::Scope)
