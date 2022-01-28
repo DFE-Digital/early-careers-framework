@@ -247,7 +247,7 @@ GEM
     httpi (2.5.0)
       rack
       socksify
-    i18n (1.8.11)
+    i18n (1.9.1)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     jmespath (1.5.0)
@@ -587,11 +587,11 @@ GEM
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    with_model (2.1.5)
+    with_model (2.1.6)
       activerecord (>= 5.2)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.5.3)
+    zeitwerk (2.5.4)
 
 PLATFORMS
   ruby
