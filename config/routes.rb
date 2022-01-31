@@ -283,6 +283,8 @@ Rails.application.routes.draw do
   namespace :finance do
     resource :landing_page, only: :show, path: "manage-cpd-contracts", controller: "landing_page"
 
+    resources :participants, only: %i[index show]
+
     resource :payment_breakdowns, only: :show, path: "payment-breakdowns", controller: "payment_breakdowns" do
       get "/choose-programme", to: "payment_breakdowns#select_programme", as: :select_programme
       post "/choose-programme", to: "payment_breakdowns#choose_programme", as: :choose_programme

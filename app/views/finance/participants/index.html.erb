@@ -1,0 +1,9 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: finance_landing_page_path) %>
+
+<h1 class="govuk-heading-xl">Participants</h1>
+
+<%= render SearchBox.new(
+  query: params[:query],
+  title: "Search participants",
+  hint: "Enter the participant’s ID",
+) %>
