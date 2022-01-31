@@ -14,6 +14,10 @@ class ParticipantProfile < ApplicationRecord
       true
     end
 
+    def ecf?
+      false
+    end
+
     def approved?
       validation_decision(:decision).approved?
     end
