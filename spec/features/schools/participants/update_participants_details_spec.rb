@@ -19,6 +19,9 @@ RSpec.describe "Update participants details", js: true do
 
   scenario "Induction tutor can change ECT / mentor name from check details page" do
     when_i_click_on_add_ect
+    then_i_am_taken_to_the_ect_already_started_page
+
+    when_i_click_on_continue
     then_i_am_taken_to_add_ect_name_page
 
     when_i_add_ect_or_mentor_name
@@ -57,6 +60,9 @@ RSpec.describe "Update participants details", js: true do
 
   scenario "Induction tutor can change ECT / mentor email from check details page" do
     when_i_click_on_add_ect
+    then_i_am_taken_to_the_ect_already_started_page
+
+    when_i_click_on_continue
     then_i_am_taken_to_add_ect_name_page
 
     when_i_add_ect_or_mentor_name
@@ -89,6 +95,9 @@ RSpec.describe "Update participants details", js: true do
 
   scenario "Induction tutor can change ECT / mentor start_term from check details page" do
     when_i_click_on_add_ect
+    then_i_am_taken_to_the_ect_already_started_page
+
+    when_i_click_on_continue
     then_i_am_taken_to_add_ect_name_page
 
     when_i_add_ect_or_mentor_name
@@ -119,6 +128,8 @@ RSpec.describe "Update participants details", js: true do
 
   scenario "Induction tutor can change ECTs mentor from check details page" do
     when_i_click_on_add_ect
+    then_i_am_taken_to_the_ect_already_started_page
+
     when_i_click_on_continue
     then_i_am_taken_to_add_ect_name_page
 

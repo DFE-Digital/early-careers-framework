@@ -483,6 +483,14 @@ module ManageTrainingSteps
     expect(page).to have_text("The induction tutor and mentor roles are separate")
   end
 
+  def then_i_am_taken_to_the_ect_already_started_page
+    expect(page).to have_selector("h1", text: "Has this ECT already started their induction at another school?")
+  end
+
+  def then_i_am_taken_to_the_mentor_already_started_page
+    expect(page).to have_selector("h1", text: "Has this person already started mentoring ECTs at another school?")
+  end
+
   def then_i_am_taken_to_add_ect_name_page
     expect(page).to have_selector("h1", text: "What’s the full name of this ECT?")
   end

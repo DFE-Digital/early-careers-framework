@@ -25,6 +25,10 @@ RSpec.describe "Add participants", js: true do
     then_percy_should_be_sent_a_snapshot_named "Induction tutor adds ECT and mentors"
 
     when_i_click_on_add_ect
+    then_i_am_taken_to_the_ect_already_started_page
+    then_the_page_should_be_accessible
+    then_percy_should_be_sent_a_snapshot_named "Has ECT already started"
+
     when_i_click_on_continue
     then_i_am_taken_to_add_ect_name_page
     then_the_page_should_be_accessible
@@ -68,6 +72,10 @@ RSpec.describe "Add participants", js: true do
     then_i_am_taken_to_your_ect_and_mentors_page
 
     when_i_click_on_add_mentor
+    then_i_am_taken_to_the_mentor_already_started_page
+    then_the_page_should_be_accessible
+    then_percy_should_be_sent_a_snapshot_named "Has mentor already started"
+
     when_i_click_on_continue
     then_i_am_taken_to_add_mentor_name_page
     then_the_page_should_be_accessible
