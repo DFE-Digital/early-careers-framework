@@ -295,10 +295,8 @@ Rails.application.routes.draw do
     resources :schedules, only: %i[index show]
 
     namespace :ecf do
-      resources :payment_breakdowns, only: %i[show] do
-        member do
-          get :payable
-        end
+      resources :payment_breakdowns, only: [] do
+        resources :statements, only: %i[show]
       end
 
       resources :contracts, only: %i[show]

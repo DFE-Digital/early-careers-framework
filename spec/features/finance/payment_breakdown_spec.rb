@@ -30,9 +30,8 @@ RSpec.feature "Finance users payment breakdowns", type: :feature, js: true do
     and_percy_should_be_sent_a_snapshot_named("Contract breakdown for an ECF provider")
 
     when_i_click_on("Back")
-    and_i_click_on("Payable")
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named("Payment breakdown for an ECF provider (payable)")
+    and_percy_should_be_sent_a_snapshot_named("Payment breakdown for an ECF provider (latest)")
   end
 
 private

@@ -25,7 +25,13 @@ module Finance
     def choose_provider_ecf
       render "select_provider_ecf" and return unless @choose_programme_form.valid?(:choose_provider)
 
-      redirect_to finance_ecf_payment_breakdown_path(id: @choose_programme_form.provider)
+      lead_provider = LeadProvider.find(@choose_programme_form.provider)
+
+      statement = Finance::Statement::ECF.where(cpd_lead_provider: lead_provider.cpd_lead_provider)
+        .order(deadline_date: :desc)
+        .first
+
+      redirect_to finance_ecf_payment_breakdown_statement_path(payment_breakdown_id: lead_provider.id, id: statement.name)
     end
 
     def select_provider_npq; end
