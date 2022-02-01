@@ -1,0 +1,23 @@
+<table class="govuk-table">
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th style="border-bottom: 1px solid black;" class="govuk-table__header">Band</th>
+      <th style="border-bottom: 1px solid black;" class="govuk-table__header govuk-table__header--numeric">Starts</th>
+      <th style="border-bottom: 1px solid black;" class="govuk-table__header govuk-table__header--numeric">Retention 1</th>
+      <th style="border-bottom: 1px solid black;" class="govuk-table__header govuk-table__header--numeric">Retention 2</th>
+      <th style="border-bottom: 1px solid black;" class="govuk-table__header govuk-table__header--numeric">Retention 3</th>
+      <th style="border-bottom: 1px solid black;" class="govuk-table__header govuk-table__header--numeric">Retention 4</th>
+      <th style="border-bottom: 1px solid black;" class="govuk-table__header govuk-table__header--numeric">Completed</th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    <tr>
+      <th style=" border-bottom: 1px solid black;" scope="col" colspan="7" class="govuk-table__header govuk-colour">Paid declarations</th>
+    </tr>
+    <%= render Finance::BandingTracker::BandPerDeclarationTypeRow.with_collection(bands, aggregator: paid_aggregator) %>
+    <tr>
+      <th style=" border-bottom: 1px solid black;" scope="col" colspan="7" class="govuk-table__header govuk-colour">Payable declarations</th>
+    </tr>
+    <%= render Finance::BandingTracker::BandPerDeclarationTypeRow.with_collection(bands, aggregator: payable_aggregator) %>
+  </tbody>
+</table>

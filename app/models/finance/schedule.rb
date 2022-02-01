@@ -8,3 +8,8 @@ class Finance::Schedule < ApplicationRecord
 
   validates :schedule_identifier, presence: true
 end
+
+require "finance/schedule/ecf"
+require "finance/schedule/npq_leadership"
+require "finance/schedule/npq_specialist"
+require "finance/schedule/npq_support"

@@ -1,0 +1,16 @@
+<% content_for :title, t(".title", provider_name: @lead_provider.name) %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: new_finance_banding_tracker_provider_choice_path) %>
+
+<h2 class="govuk-heading-l">Banding Tracker</h2>
+
+<div class="govuk-inset-text">
+  Use this to check declarations are being added to the right payment band
+</div>
+
+<h2 class="govuk-heading-xl"><%= @lead_provider.name %></h2>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <%= render Finance::BandingTracker::Table.new(bands: @bands, paid_aggregator: @paid_aggregator, payable_aggregator: @payable_aggregator) %>
+  </div>
+</div>

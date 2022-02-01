@@ -2,6 +2,7 @@
 
 class ParticipantDeclaration < ApplicationRecord
   has_many :declaration_states
+  has_many :participant_declaration_attempts, dependent: :destroy
   belongs_to :cpd_lead_provider
   belongs_to :user
   belongs_to :participant_profile
