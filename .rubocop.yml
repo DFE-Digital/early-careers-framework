@@ -40,3 +40,7 @@ Rails/Output:
 
 Lint/MissingSuper:
   Enabled: false
+
+Rails/SaveBang:
+  Exclude:
+    - "app/services/migrators/*"

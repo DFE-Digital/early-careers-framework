@@ -4,8 +4,9 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <ul class="govuk-list">
-      <li><%= text_otherwise_link_to("Payable", payable_finance_ecf_payment_breakdown_path, controller.action_name == "payable") %></li>
-      <li><%= text_otherwise_link_to("Current", finance_ecf_payment_breakdown_path, controller.action_name == "show") %></li>
+      <% Finance::Statement::ECF.where(cpd_lead_provider: @cpd_lead_provider).each do |statement| %>
+        <li><%= text_otherwise_link_to(statement.name, finance_ecf_payment_breakdown_statement_path(payment_breakdown_id: @ecf_lead_provider.id, id: statement.name), params[:id] == statement.name) %></li>
+      <% end %>
     </ul>
   </div>
 </div>
