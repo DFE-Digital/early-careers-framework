@@ -12,21 +12,3 @@
     <%= render Finance::ECF::OutputPaymentRow.with_collection(output_payments) %>
   </tbody>
 </table>
-
-<table class="govuk-table participant-breakdown-table">
-  <caption class="govuk-table__caption govuk-table__caption--m"><%= "Participant breakdown - #{breakdown_summary[:declaration].to_s.humanize.downcase}" %></caption>
-  <thead class="govuk-table__head">
-  <tr class="govuk-table__row">
-    <th scope="col" class="govuk-table__header govuk-!-font-weight-bold govuk-table__cell--numeric"><%= t("finance.current_milestone") %></th>
-    <th scope="col" class="govuk-table__header govuk-!-font-weight-bold govuk-table__cell--numeric"><%= t("finance.total_paid") %></th>
-    <th scope="col" class="govuk-table__header govuk-!-font-weight-bold govuk-table__cell--numeric"><%= t("finance.total_not_paid") %></th>
-  </tr>
-  </thead>
-  <tbody>
-    <tr class="govuk-table__row">
-      <td class="govuk-table__cell govuk-table__cell--numeric"><%= participants %></td>
-      <td class="govuk-table__cell govuk-table__cell--numeric"><%= participants %></td>
-      <td class="govuk-table__cell govuk-table__cell--numeric"><%= not_yet_included_participants %></td>
-    </tr>
-  </tbody>
-</table>
