@@ -89,7 +89,7 @@ module ManageTrainingSteps
   # And_steps
 
   def and_i_am_signed_in_as_an_induction_coordinator
-    @induction_coordinator_profile = create(:induction_coordinator_profile, schools: [@school_cohort.school])
+    @induction_coordinator_profile = create(:induction_coordinator_profile, schools: [@school_cohort.school], user: create(:user, full_name: "Carl Coordinator"))
     privacy_policy = create(:privacy_policy)
     privacy_policy.accept!(@induction_coordinator_profile.user)
     sign_in_as @induction_coordinator_profile.user
