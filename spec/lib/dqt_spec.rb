@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Dqt do
+RSpec.describe DQT do
   describe ".configuration" do
     it "returns same Configuration instance" do
       expect(described_class.send(:configuration))

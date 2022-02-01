@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-module Dqt
+module DQT
   class Api
     class V1
       describe DQTRecord do

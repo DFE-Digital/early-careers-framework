@@ -2,7 +2,7 @@
 
 require_relative "v1/dqt_record"
 
-module Dqt
+module DQT
   class Api
     class V1
       def initialize(client:)

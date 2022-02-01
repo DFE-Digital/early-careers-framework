@@ -2,7 +2,7 @@
 
 require "net/http"
 
-module FullDqt
+module FullDQT
   class Client
     def get_record(trn:, birthdate:, nino: nil)
       uri_for_record = uri(trn: trn, birthdate: birthdate, nino: nino)

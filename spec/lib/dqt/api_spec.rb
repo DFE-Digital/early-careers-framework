@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-module Dqt
+module DQT
   describe Api do
     subject(:api) { described_class.new(client: double("client")) }
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module FullDqt
+module FullDQT
 end
 
 require "full_dqt/client"

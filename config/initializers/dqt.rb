@@ -2,7 +2,7 @@
 
 require "dqt"
 
-Dqt.configure do |config|
+DQT.configure do |config|
   def json_to_hash(json)
     JSON.parse(json.gsub("=>", ":"), symbolize_names: true)
   end

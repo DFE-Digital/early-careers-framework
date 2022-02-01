@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-module Dqt
+module DQT
   describe Client do
     shared_examples "a request" do |method|
       it "makes a request to a host" do

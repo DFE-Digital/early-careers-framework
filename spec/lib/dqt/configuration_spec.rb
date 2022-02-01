@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-module Dqt
+module DQT
   describe Configuration do
     subject(:configuration) { described_class.new }
 

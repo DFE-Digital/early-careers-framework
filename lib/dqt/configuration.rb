@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Dqt
+module DQT
   class Configuration
     class Client
       attr_accessor :headers, :host, :params, :port

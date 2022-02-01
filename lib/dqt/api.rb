@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Dqt
+module DQT
   class Api
     delegate :dqt_record, to: :v1
 

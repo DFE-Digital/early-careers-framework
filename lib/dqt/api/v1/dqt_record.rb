@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Dqt
+module DQT
   class Api
     class V1
       class DQTRecord
@@ -31,7 +31,7 @@ module Dqt
           hash[:qts_date] = Date.parse(first_item[:qtsAwardDate]) if first_item[:qtsAwardDate].present?
 
           hash
-        rescue Dqt::Client::ResponseError => e
+        rescue DQT::Client::ResponseError => e
           if e.response.code == 404
             nil
           else
