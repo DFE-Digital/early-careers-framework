@@ -94,6 +94,8 @@ module ValidTestDataGenerator
           statement: november_statement,
         )
 
+        return if (profile.schedule.milestones.second.start_date + 1.day) > Time.zone.now
+
         RecordDeclarations::Retained::EarlyCareerTeacher.call(
           params: {
             participant_id: user.tap(&:reload).id,
@@ -130,6 +132,8 @@ module ValidTestDataGenerator
           created_at: profile.schedule.milestones.first.start_date + 1.day,
           statement: november_statement,
         )
+
+        return if (profile.schedule.milestones.second.start_date + 1.day) > Time.zone.now
 
         RecordDeclarations::Retained::Mentor.call(
           params: {
