@@ -4,7 +4,7 @@ module Finance
   module ECF
     class BreakdownSummary < BaseComponent
       include FinanceHelper
-      attr_accessor :lead_provider, :breakdown_started, :breakdown_retained_1, :deadline_date
+      attr_accessor :breakdown_started, :breakdown_retained_1, :lead_provider, :deadline_date
 
       def initialize(breakdown_started:, breakdown_retained_1:, lead_provider:, deadline_date:)
         @lead_provider = lead_provider
@@ -31,18 +31,15 @@ module Finance
       end
 
       def recruitment_target
-        breakdown_started[:breakdown_summary][:recruitment_target] +
-          breakdown_retained_1[:breakdown_summary][:recruitment_target]
+        breakdown_started[:breakdown_summary][:recruitment_target]
       end
 
       def service_fees_participants
-        breakdown_started[:service_fees].map { |params| params[:participants] }.inject(&:+) +
-          breakdown_retained_1[:service_fees].map { |params| params[:participants] }.inject(&:+)
+        breakdown_started[:service_fees].map { |params| params[:participants] }.inject(&:+)
       end
 
       def service_fees_total
-        breakdown_started[:service_fees].map { |params| params[:monthly] }.inject(&:+) +
-          breakdown_retained_1[:service_fees].map { |params| params[:monthly] }.inject(&:+)
+        breakdown_started[:service_fees].map { |params| params[:monthly] }.inject(&:+)
       end
 
       def output_payment_participants
