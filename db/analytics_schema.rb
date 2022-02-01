@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_20_103423) do
+ActiveRecord::Schema.define(version: 2022_01_31_150652) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 2022_01_20_103423) do
     t.boolean "sparsity"
     t.boolean "pupil_premium"
     t.string "schedule_identifier"
+    t.string "external_id"
     t.index ["participant_profile_id"], name: "index_ecf_participants_on_participant_profile_id"
   end
 
