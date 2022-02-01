@@ -4,7 +4,6 @@ require "rails_helper"
 
 RSpec.describe ParticipantValidationService do
   before do
-    allow(DqtApiAccess).to receive(:token).and_return("jwt-access-token")
     create(:cohort, :current)
   end
 
