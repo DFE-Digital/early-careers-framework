@@ -20,7 +20,7 @@ module Schools
         if add_participant_form.type == :self
           redirect_to action: :show, step: :yourself
         else
-          redirect_to action: :show, step: :name
+          redirect_to action: :show, step: :started
         end
       else
         redirect_to action: :show, step: form.next_step

@@ -13,6 +13,10 @@ module Schools
       next_step :confirm
     end
 
+    step :started do
+      next_step :name
+    end
+
     step :name do
       attribute :full_name
 
