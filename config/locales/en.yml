@@ -254,6 +254,7 @@ en:
     current_milestone: Current milestone
     total_paid: Total paid
     total_not_paid: Total not paid
+    number_of_declarations: Number of declarations
     contract:
       version: Contract reference
       per_participant: Per participant
