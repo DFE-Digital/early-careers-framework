@@ -15,7 +15,7 @@ module Finance
         )
 
         orchestrator = Finance::ECF::CalculationOrchestrator.new(
-          aggregator: ParticipantEligibleAggregator,
+          aggregator: ParticipantAggregator,
           contract: @ecf_lead_provider.call_off_contract,
           statement: @statement,
         )
