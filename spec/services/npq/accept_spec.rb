@@ -150,6 +150,16 @@ RSpec.describe NPQ::Accept do
           npq_application.reload
           expect(npq_application.user.teacher_profile.trn).to eql trn
         end
+
+        context "when another user with same TRN exists" do
+          let!(:previous_user) { create(:teacher_profile, trn: trn).user }
+
+          it "transfers participation record onto the previous user" do
+            expect { subject.call }
+              .to change { previous_user.participant_identities.count }.by(1)
+              .and change { previous_user.teacher_profile.participant_profiles.count }.by(1)
+          end
+        end
       end
 
       context "when trn is not validated" do
