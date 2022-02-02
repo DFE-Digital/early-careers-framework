@@ -75,15 +75,16 @@ namespace :one_off do
         .map { |participant_profile| make_declaration_eligible(participant_profile) }
 
       # 200 backdated declarations with mix of ect/mentor
-      backdated_declaration_mentor_created_before_january = 100
-      backdated_declaration_ect_created_before_january = 100
-      FactoryBot.create_list(:user, backdated_declaration_mentor_created_before_january)
+      #
+      backdated_declaration_mentor = 100
+      backdated_declaration_ect = 100
+      FactoryBot.create_list(:user, backdated_declaration_mentor)
         .map { |user| create_participant(Mentors::Create, user, january_standard_school_cohorts.first) }
         .map { |participant_profile| change_participant_schedule(participant_profile, september_standard_schedule, lead_provider) }
         .map { |participant_profile| record_backdated_started_declaration(participant_profile, january_declaration_start_interval, lead_provider, declaration_start_interval) }
         .map { |participant_profile| make_declaration_eligible(participant_profile) }
 
-      FactoryBot.create_list(:user, backdated_declaration_ect_created_before_january)
+      FactoryBot.create_list(:user, backdated_declaration_ect)
         .map { |user| create_participant(EarlyCareerTeachers::Create, user, january_standard_school_cohorts.first) }
         .map { |participant_profile| change_participant_schedule(participant_profile, september_standard_schedule, lead_provider) }
         .map { |participant_profile| record_backdated_started_declaration(participant_profile, january_declaration_start_interval, lead_provider, declaration_start_interval) }
