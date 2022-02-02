@@ -136,7 +136,6 @@ group :development, :test do
 
   gem "dotenv-rails", ">= 2.7.6"
 
-
   # Swagger generator
   gem "multi_json"
   gem "open_api-rswag-specs", ">= 0.1.0"
@@ -145,9 +144,9 @@ group :development, :test do
 end
 
 group :development, :deployed_development, :test, :sandbox do
+  gem "factory_bot_rails", ">= 6.2.0"
   gem "faker"
   gem "timecop"
-  gem "factory_bot_rails", ">= 6.2.0"
 end
 
 group :development do

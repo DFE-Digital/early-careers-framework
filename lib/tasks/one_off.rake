@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 namespace :one_off do
-
   desc "Seed data to verify bucketing per bands works as expected"
   task seed_declarations_for_band: :environment do
     require "factory_bot"
