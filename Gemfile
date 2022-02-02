@@ -136,7 +136,6 @@ group :development, :test do
 
   gem "dotenv-rails", ">= 2.7.6"
 
-  gem "factory_bot_rails", ">= 6.2.0"
 
   # Swagger generator
   gem "multi_json"
@@ -148,6 +147,7 @@ end
 group :development, :deployed_development, :test, :sandbox do
   gem "faker"
   gem "timecop"
+  gem "factory_bot_rails", ">= 6.2.0"
 end
 
 group :development do
