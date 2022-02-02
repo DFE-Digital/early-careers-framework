@@ -55,6 +55,12 @@ class ParticipantDeclaration < ApplicationRecord
   scope :eligible_npqs_for_lead_provider, ->(lead_provider) { eligible_for_lead_provider(lead_provider).npq }
   scope :eligible_uplift_for_lead_provider, ->(lead_provider) { eligible_for_lead_provider(lead_provider).uplift }
 
+  scope :unique_for_lead_provider, ->(lead_provider) { for_lead_provider(lead_provider).unique_id }
+  scope :unique_ects_for_lead_provider, ->(lead_provider) { unique_for_lead_provider(lead_provider).ect }
+  scope :unique_mentors_for_lead_provider, ->(lead_provider) { unique_for_lead_provider(lead_provider).mentor }
+  scope :unique_npqs_for_lead_provider, ->(lead_provider) { unique_for_lead_provider(lead_provider).npq }
+  scope :unique_uplift_for_lead_provider, ->(lead_provider) { unique_for_lead_provider(lead_provider).uplift }
+
   scope :not_payable_for_lead_provider, ->(lead_provider) { submitted_for_lead_provider(lead_provider).or(eligible_for_lead_provider(lead_provider)) }
   scope :payable_for_lead_provider, ->(lead_provider) { for_lead_provider(lead_provider).unique_id.payable }
   scope :payable_ects_for_lead_provider, ->(lead_provider) { payable_for_lead_provider(lead_provider).ect }
