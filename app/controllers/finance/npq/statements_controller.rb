@@ -20,7 +20,7 @@ module Finance
 
         @breakdowns = Finance::NPQ::CalculationOverviewOrchestrator.new(
           statement: @statement,
-          aggregator: ParticipantEligibleAndPayableAggregator,
+          aggregator: ParticipantAggregator,
         ).call(event_type: :started)
       end
 

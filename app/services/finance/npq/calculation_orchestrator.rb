@@ -7,7 +7,7 @@ module Finance
     class CalculationOrchestrator < ::Finance::CalculationOrchestrator
       class << self
         def default_aggregator
-          ::Finance::NPQ::ParticipantEligibleAndPayableAggregator
+          ::Finance::NPQ::ParticipantAggregator
         end
 
         def default_calculator
