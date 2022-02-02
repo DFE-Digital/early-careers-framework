@@ -4,7 +4,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <ul class="govuk-list">
-      <% Finance::Statement::ECF.where(cpd_lead_provider: @cpd_lead_provider).each do |statement| %>
+      <% @statements.each do |statement| %>
         <li><%= text_otherwise_link_to(statement.name, finance_ecf_payment_breakdown_statement_path(payment_breakdown_id: @ecf_lead_provider.id, id: statement.name), params[:id] == statement.name) %></li>
       <% end %>
     </ul>
