@@ -76,7 +76,7 @@ namespace :one_off do
       # 200 backdated declarations with mix of ect/mentor
       #
       backdated_declaration_mentor = 100
-      backdated_declaration_ect = 100
+      backdated_declaration_ect    = 100
       FactoryBot.create_list(:user, backdated_declaration_mentor)
         .map { |user| create_participant(Mentors::Create, user, january_standard_school_cohorts.first) }
         .map { |participant_profile| change_participant_schedule(participant_profile, september_standard_schedule, lead_provider) }
