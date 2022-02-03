@@ -9,9 +9,17 @@ module Finance
         @ecf_lead_provider = lead_provider_scope.find(params[:payment_breakdown_id])
         @cpd_lead_provider = @ecf_lead_provider.cpd_lead_provider
 
+        @statements = Finance::Statement::ECF.where(cpd_lead_provider: @cpd_lead_provider).order(deadline_date: :desc).to_a
+        @statements.prepend Finance::Statement::ECF.new(cpd_lead_provider: @cpd_lead_provider, name: "Current")
+
         @statement = Finance::Statement::ECF.find_by(
           name: params[:id],
           cpd_lead_provider: @cpd_lead_provider,
+        ) || Finance::Statement::ECF.new(
+          name: "Current",
+          cpd_lead_provider: @cpd_lead_provider,
+          deadline_date: Time.zone.today,
+          payment_date: Time.zone.today,
         )
 
         orchestrator = Finance::ECF::CalculationOrchestrator.new(
