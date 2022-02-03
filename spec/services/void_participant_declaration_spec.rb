@@ -32,7 +32,7 @@ RSpec.describe VoidParticipantDeclaration do
 
     it "voids a participant declaration" do
       subject.call
-      expect(declaration.reload.voided?).to be_truthy
+      expect(declaration.reload).to be_voided
     end
 
     it "does not void a voided declaration" do
@@ -71,10 +71,28 @@ RSpec.describe VoidParticipantDeclaration do
           described_class.new(cpd_lead_provider: cpd_lead_provider, id: old_declaration.id).call
         }.to raise_error Api::Errors::InvalidTransitionError
 
-        expect(old_declaration.reload.voided?).to be_falsey
+        expect(old_declaration.reload).not_to be_voided
 
         subject.call
-        expect(declaration.reload.voided?).to be_truthy
+        expect(declaration.reload).to be_voided
+      end
+    end
+
+    context "when declaration is payable" do
+      let(:declaration) do
+        create(
+          :ect_participant_declaration,
+          user: user,
+          cpd_lead_provider: cpd_lead_provider,
+          declaration_date: declaration_date,
+          participant_profile: profile,
+          state: "payable",
+        )
+      end
+
+      it "can be voided" do
+        subject.call
+        expect(declaration.reload).to be_voided
       end
     end
   end
