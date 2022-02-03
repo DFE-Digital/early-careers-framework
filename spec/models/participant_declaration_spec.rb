@@ -187,7 +187,6 @@ RSpec.describe ParticipantDeclaration, type: :model do
     end
   end
 
-
   describe "#duplication_declarations", :with_default_schedules do
     let(:validation_data) do
       {
@@ -224,7 +223,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
           participant_profile: pp,
           validation_data: validation_data,
           dqt_response: dqt_response,
-          deduplicate: false
+          deduplicate: false,
         ).call
       end
     end
@@ -244,7 +243,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
             participant_profile: pp,
             validation_data: validation_data,
             dqt_response: dqt_response,
-            deduplicate: false
+            deduplicate: false,
           ).call
         end
       end
@@ -261,7 +260,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
             participant_profile: pp,
             validation_data: validation_data,
             dqt_response: dqt_response,
-            deduplicate: false
+            deduplicate: false,
           ).call
         end
       end

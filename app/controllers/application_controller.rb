@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   default_form_builder GOVUKDesignSystemFormBuilder::FormBuilder
 
   impersonates :user
+  prepend CurrentUser
 
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :previous_url_for_cookies_page, except: :check
