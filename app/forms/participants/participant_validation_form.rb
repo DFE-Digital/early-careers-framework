@@ -110,6 +110,8 @@ module Participants
     step :eligible
     step :manual_check
     step :ineligible
+    step :secondary_fip_mentor_eligible
+    step :previous_participation
 
     def trn=(value)
       super(value&.squish)
@@ -145,7 +147,7 @@ module Participants
       if eligibility_record.ineligible_status?
         if eligibility_record.duplicate_profile_reason?
           self.eligibility = :secondary_fip_mentor_eligible
-        else
+        elsif eligibility_record.previous_participation_reason?
           self.eligibility = :previous_participation
         end
       end

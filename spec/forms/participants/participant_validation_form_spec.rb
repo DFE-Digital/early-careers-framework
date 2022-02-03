@@ -6,12 +6,47 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
   subject(:form) { described_class.new(participant_profile_id: participant_profile.id) }
 
   let(:participant_profile) { create :ect_participant_profile }
-  let(:validation_result) { [nil, spy].sample }
+  let(:validation_result) { nil }
   let(:eligibility_record) { build :ecf_participant_eligibility, participant_profile: participant_profile }
 
   before do
     allow(ParticipantValidationService).to receive(:validate).and_return(validation_result)
     allow(StoreValidationResult).to receive(:call).and_return(eligibility_record)
+  end
+
+  describe "check eligibility!" do
+    subject { form.check_eligibility! }
+
+    context "validation result is blank" do
+      it { is_expected.to eq :no_match }
+    end
+
+    context "there is a duplicate profile and the user is a mentor" do
+      let(:validation_result) { { i: "am not blank" } }
+      let(:participant_profile) { create :mentor_participant_profile, :secondary_profile }
+      let(:eligibility_record) do
+        create(
+          :ecf_participant_eligibility,
+          participant_profile: participant_profile,
+        )
+      end
+
+      it {
+        is_expected.to eq :secondary_fip_mentor_eligible
+      }
+    end
+
+    context "previous participation is set" do
+      let(:validation_result) { { i: "am not blank" } }
+      let(:eligibility_record) do
+        create(
+          :ecf_participant_eligibility,
+          participant_profile: participant_profile,
+          previous_participation: true,
+        )
+      end
+      it { is_expected.to eq :previous_participation }
+    end
   end
 
   describe "steps" do
