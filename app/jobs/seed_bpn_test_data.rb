@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
-class SeedBpnTestData < ApplicationJob
+class SeedBPNTestData < ApplicationJob
+  include Importers::SeedBPNDeclarations
+
   def perform
     require "factory_bot"
-    include Importers::SeedBPNDeclarations
 
     ParticipantDeclaration.destroy_all
     ActiveRecord::Base.transaction do
