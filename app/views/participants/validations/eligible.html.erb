@@ -1,7 +1,11 @@
 <%
     title =
       if mentor? && school_cohort.fip?
-        "You're eligible for funded mentor training and time off timetable"
+        if school_cohort.fip?
+          "You're eligible for funded mentor training and time off timetable"
+        else
+          "You're eligible for funded time off timetable to mentor ECTs"
+        end
       else
         "You're eligible for this programme"
       end
