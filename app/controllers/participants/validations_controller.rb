@@ -36,6 +36,10 @@ module Participants
       @partnership ||= school_cohort.school.partnerships.active.find_by(cohort: school_cohort.cohort)
     end
 
+    def mentor?
+      @mentor ||= validation_form.participant_profile.mentor?
+    end
+
     def fetch_multi_school_names
       ParticipantProfile::Mentor
         .active_record
@@ -46,6 +50,6 @@ module Participants
         .map { |profile| profile.teacher_profile.school.name }
     end
 
-    helper_method :school_cohort, :partnership, :school_names_for_multi_school_mentor
+    helper_method :school_cohort, :partnership, :school_names_for_multi_school_mentor, :mentor?
   end
 end
