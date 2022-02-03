@@ -6,7 +6,9 @@ class CreateInductionRecord < ActiveRecord::Migration[6.1]
       t.references :induction_programme, null: false, foreign_key: true, type: :uuid
       t.references :participant_profile, null: false, foreign_key: true, type: :uuid
       t.references :schedule, null: false, foreign_key: true, type: :uuid
+      t.string :status, null: false, default: "active", index: true
       t.datetime :start_date, null: false
+      t.datetime :end_date, null: true
       t.timestamps
     end
   end

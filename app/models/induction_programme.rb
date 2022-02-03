@@ -8,13 +8,15 @@ class InductionProgramme < ApplicationRecord
     core_induction_programme: "core_induction_programme",
     design_our_own: "design_our_own",
     school_funded_fip: "school_funded_fip",
-    no_early_career_teachers: "no_early_career_teachers",
-    not_yet_known: "not_yet_known",
   }
 
   belongs_to :school_cohort
   belongs_to :partnership, optional: true
   belongs_to :core_induction_programme, optional: true
+
+  has_many :induction_records
+  has_many :active_induction_records, -> { active }, class_name: "InductionRecord"
+  has_many :participant_profiles, through: :active_induction_records
 
   delegate :school, to: :school_cohort
 

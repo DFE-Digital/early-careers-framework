@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_27_162726) do
+ActiveRecord::Schema.define(version: 2022_01_31_155855) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -356,12 +356,15 @@ ActiveRecord::Schema.define(version: 2022_01_27_162726) do
     t.uuid "induction_programme_id", null: false
     t.uuid "participant_profile_id", null: false
     t.uuid "schedule_id", null: false
+    t.string "status", default: "active", null: false
     t.datetime "start_date", null: false
+    t.datetime "end_date"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["induction_programme_id"], name: "index_induction_records_on_induction_programme_id"
     t.index ["participant_profile_id"], name: "index_induction_records_on_participant_profile_id"
     t.index ["schedule_id"], name: "index_induction_records_on_schedule_id"
+    t.index ["status"], name: "index_induction_records_on_status"
   end
 
   create_table "lead_provider_cips", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -733,8 +736,10 @@ ActiveRecord::Schema.define(version: 2022_01_27_162726) do
     t.integer "estimated_mentor_count"
     t.uuid "core_induction_programme_id"
     t.boolean "opt_out_of_updates", default: false, null: false
+    t.uuid "default_induction_programme_id"
     t.index ["cohort_id"], name: "index_school_cohorts_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_school_cohorts_on_core_induction_programme_id"
+    t.index ["default_induction_programme_id"], name: "index_school_cohorts_on_default_induction_programme_id"
     t.index ["school_id"], name: "index_school_cohorts_on_school_id"
   end
 
@@ -921,6 +926,7 @@ ActiveRecord::Schema.define(version: 2022_01_27_162726) do
   add_foreign_key "schedules", "cohorts"
   add_foreign_key "school_cohorts", "cohorts"
   add_foreign_key "school_cohorts", "core_induction_programmes"
+  add_foreign_key "school_cohorts", "induction_programmes", column: "default_induction_programme_id"
   add_foreign_key "school_cohorts", "schools"
   add_foreign_key "school_local_authorities", "local_authorities"
   add_foreign_key "school_local_authorities", "schools"

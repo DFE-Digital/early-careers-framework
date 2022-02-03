@@ -8,4 +8,12 @@ class InductionRecord < ApplicationRecord
   belongs_to :schedule, class_name: "Finance::Schedule"
 
   validates :start_date, presence: true
+
+  enum status: {
+    active: "active",
+    withdrawn: "withdrawn",
+    transferred: "transferred",
+    completed: "completed",
+  }
+
 end
