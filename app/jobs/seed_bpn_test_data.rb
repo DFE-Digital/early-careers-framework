@@ -1,5 +1,6 @@
-class SeedBpnTestData < ApplicationJob
+# frozen_string_literal: true
 
+class SeedBpnTestData < ApplicationJob
   def perform
     require "factory_bot"
     include Importers::SeedBPNDeclarations
@@ -38,13 +39,13 @@ class SeedBpnTestData < ApplicationJob
                             .map { |user| create_participant(Mentors::Create, user, september_standard_school_cohorts.first) }
                             .map { |participant_profile| record_started_declaration(participant_profile, declaration_start_interval, lead_provider) }
                             .map { |participant_profile| make_declaration_eligible(participant_profile) }
-      puts "Generated : #{september_started_mentor_count} Mentor started declaration in #{september_standard_started_milestone.inspect}"
+      Rails.logger.info "Generated : #{september_started_mentor_count} Mentor started declaration in #{september_standard_started_milestone.inspect}"
 
       september_ects = FactoryBot.create_list(:user, september_started_ect_count.to_i)
                          .map { |user| create_participant(EarlyCareerTeachers::Create, user, september_standard_school_cohorts.first) }
                          .map { |participant_profile| record_started_declaration(participant_profile, declaration_start_interval, lead_provider) }
                          .map { |participant_profile| make_declaration_eligible(participant_profile) }
-      puts "Generated : #{september_started_ect_count.to_i} ECF started declaration in #{september_standard_started_milestone.inspect}"
+      Rails.logger.info "Generated : #{september_started_ect_count.to_i} ECF started declaration in #{september_standard_started_milestone.inspect}"
 
       RecordDeclarations::Actions::MakeDeclarationsPayable.call(declaration_class: ParticipantDeclaration::ECF, cutoff_date: declaration_start_interval.end)
 
@@ -57,7 +58,7 @@ class SeedBpnTestData < ApplicationJob
         .map { |participant_profile| change_participant_schedule(participant_profile, january_standard_schedule, lead_provider) }
         .map { |participant_profile| record_started_declaration(participant_profile, january_declaration_start_interval, lead_provider) }
         .map { |participant_profile| make_declaration_eligible(participant_profile) }
-      puts "Generated : #{september_started_mentor_count} Mentor started declaration in #{september_standard_started_milestone.inspect}"
+      Rails.logger.info "Generated : #{september_started_mentor_count} Mentor started declaration in #{september_standard_started_milestone.inspect}"
 
       FactoryBot.create_list(:user, january_started_ect_count.to_i)
         .map { |user| create_participant(EarlyCareerTeachers::Create, user, january_standard_school_cohorts.first) }
