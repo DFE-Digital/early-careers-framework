@@ -19,4 +19,3 @@ if Rails.env.development? || Rails.env.deployed_development?
     FeatureFlag.activate(feature)
   end
 end
-Importers::SeedStatements.new.call
