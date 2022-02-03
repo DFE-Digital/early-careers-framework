@@ -15,5 +15,4 @@ class InductionRecord < ApplicationRecord
     transferred: "transferred",
     completed: "completed",
   }
-
 end

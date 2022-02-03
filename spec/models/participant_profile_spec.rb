@@ -55,6 +55,8 @@ RSpec.describe ParticipantProfile, type: :model do
     it { is_expected.to belong_to(:mentor_profile).optional }
     it { is_expected.to have_one(:mentor).through(:mentor_profile) }
     it { is_expected.to belong_to(:core_induction_programme).optional }
+
+    it { is_expected.to have_many(:induction_records) }
     it { is_expected.to be_versioned }
   end
 
