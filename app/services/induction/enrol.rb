@@ -13,7 +13,7 @@ class Induction::Enrol < BaseService
 
 private
 
-  def initialize(participant_profile:, induction_programme: nil, start_date: DateTime.now)
+def initialize(participant_profile:, induction_programme: nil, start_date: Time.zone.now)
     @participant_profile = participant_profile
     @induction_programme = induction_programme || default_induction_programme
     @start_date = start_date
