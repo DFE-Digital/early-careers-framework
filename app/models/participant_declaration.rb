@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 class ParticipantDeclaration < ApplicationRecord
+  self.ignored_columns = %w[statement_type]
+
   has_many :declaration_states
   belongs_to :cpd_lead_provider
   belongs_to :user
   belongs_to :participant_profile
   belongs_to :superseded_by, class_name: "ParticipantDeclaration", optional: true
-  belongs_to :statement, optional: true, polymorphic: true
+  belongs_to :statement, optional: true, class_name: "Finance::Statement"
   has_many :supersedes, class_name: "ParticipantDeclaration", foreign_key: :superseded_by_id, inverse_of: :superseded_by
 
   enum state: {
