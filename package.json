@@ -25,7 +25,7 @@
     "cypress-cucumber-preprocessor": "^4.3.1",
     "cypress-file-upload": "^5.0.8",
     "cypress-intellij-reporter": "^0.0.7",
-    "eslint": "^8.7.0",
+    "eslint": "^8.8.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-cypress": "^2.12.1",
