@@ -26,10 +26,10 @@ module EarlyCareerTeachers
           unless year_2020
             ParticipantMailer.participant_added(participant_profile: profile).deliver_later
             profile.update_column(:request_for_details_sent_at, Time.zone.now)
-            ParticipantDetailsReminderJob.schedule(profile)
+            # ParticipantDetailsReminderJob.schedule(profile)
           end
 
-          Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile: profile)
+          # Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile: profile)
         end
       end
     end

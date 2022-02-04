@@ -27,8 +27,8 @@ module Mentors
           ParticipantProfileState.create!(participant_profile: mentor_profile)
           ParticipantMailer.participant_added(participant_profile: mentor_profile).deliver_later
           mentor_profile.update_column(:request_for_details_sent_at, Time.zone.now)
-          ParticipantDetailsReminderJob.schedule(mentor_profile)
-          Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile: mentor_profile)
+          # ParticipantDetailsReminderJob.schedule(mentor_profile)
+          # Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile: mentor_profile)
         end
       end
     end
