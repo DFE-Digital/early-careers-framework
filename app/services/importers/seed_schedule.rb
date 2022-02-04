@@ -16,10 +16,13 @@ class Importers::SeedSchedule
 
       cohort = Cohort.find_or_create_by!(start_year: row["schedule-cohort-year"])
 
-      schedule = klass.find_or_create_by!(
-        name: row["schedule-name"],
+      schedule = klass.find_or_initialize_by(
         schedule_identifier: row["schedule-identifier"],
         cohort: cohort,
+      )
+
+      schedule.update!(
+        name: row["schedule-name"],
       )
 
       milestone = Finance::Milestone.find_or_initialize_by(
