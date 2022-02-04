@@ -35,7 +35,7 @@ gem "pg", ">= 0.18", "< 2.0"
 gem "ar-uuid", "~> 0.2.2"
 
 # Use Puma as the app server
-gem "puma", "~> 5.5"
+gem "puma", "~> 5.6"
 
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
 gem "webpacker", ">= 5.4.3"
@@ -131,7 +131,7 @@ group :development, :test do
   # Testing framework
   gem "rspec-rails", "~> 5.0.2"
 
-  gem "cypress-on-rails", "~> 1.11"
+  gem "cypress-on-rails", "~> 1.12"
   gem "database_cleaner-active_record"
 
   gem "dotenv-rails", ">= 2.7.6"
