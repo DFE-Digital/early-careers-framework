@@ -95,5 +95,24 @@ RSpec.describe VoidParticipantDeclaration do
         expect(declaration.reload).to be_voided
       end
     end
+
+    context "when declaration is paid" do
+      let(:declaration) do
+        create(
+          :ect_participant_declaration,
+          user: user,
+          cpd_lead_provider: cpd_lead_provider,
+          declaration_date: declaration_date,
+          participant_profile: profile,
+          state: "paid",
+        )
+      end
+
+      it "cannot be voided" do
+        expect {
+          subject.call
+        }.to raise_error Api::Errors::InvalidTransitionError
+      end
+    end
   end
 end
