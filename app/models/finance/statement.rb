@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Finance::Statement::Base < ApplicationRecord
+class Finance::Statement < ApplicationRecord
   self.table_name = "statements"
 
   belongs_to :cpd_lead_provider

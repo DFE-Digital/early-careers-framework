@@ -15,7 +15,7 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl"><%= @ecf_lead_provider.name %></h1>
     <p class="govuk-caption-m govuk-!-margin-0">Payment of</p>
-    <h2 class="govuk-heading-xl govuk-!-margin-0"><%= number_to_pounds(total_payment_combined(breakdown_started: @breakdown_started, breakdown_retained_1: @breakdown_retained_1, ecf_lead_provider: @ecf_lead_provider)) %></h2>
+    <h2 class="govuk-heading-xl govuk-!-margin-0"><%= number_to_pounds(total_payment_combined(@breakdown_started, @breakdown_retained_1)) %></h2>
     <p class="govuk-caption-m govuk-!-margin-top-0">On <%= @statement.payment_date.to_s(:govuk) %></p>
 
     <%= render Finance::ECF::BreakdownSummary.new(breakdown_started: @breakdown_started, breakdown_retained_1: @breakdown_retained_1, lead_provider: @ecf_lead_provider, deadline_date: @statement.deadline_date) %>
