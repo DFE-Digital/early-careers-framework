@@ -187,7 +187,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
     end
   end
 
-  describe "#similar_participant_declarations_for(profile_participants)", :with_default_schedules do
+  describe "#duplication_declarations", :with_default_schedules do
     let(:validation_data) do
       {
         trn: "1234567",
@@ -196,6 +196,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
         nino: "QQ123456A",
       }
     end
+
     let(:dqt_response) do
       {
         trn: "1234567",
@@ -205,9 +206,11 @@ RSpec.describe ParticipantDeclaration, type: :model do
         previous_induction: false,
       }
     end
+
     let(:cohort)            { create(:cohort, start_year: Time.zone.today.year) }
     let(:school)            { create(:school) }
     let(:school_cohort)     { create(:school_cohort, school: school, cohort: cohort) }
+
     let(:participant_profile) do
       EarlyCareerTeachers::Create.new(
         full_name: user.full_name,
@@ -220,6 +223,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
           participant_profile: pp,
           validation_data: validation_data,
           dqt_response: dqt_response,
+          deduplicate: false,
         ).call
       end
     end
@@ -239,6 +243,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
             participant_profile: pp,
             validation_data: validation_data,
             dqt_response: dqt_response,
+            deduplicate: false,
           ).call
         end
       end
@@ -255,6 +260,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
             participant_profile: pp,
             validation_data: validation_data,
             dqt_response: dqt_response,
+            deduplicate: false,
           ).call
         end
       end
@@ -326,6 +332,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
                     participant_profile: pp,
                     validation_data: validation_data,
                     dqt_response: dqt_response,
+                    deduplicate: false,
                   ).call
                 end
               end

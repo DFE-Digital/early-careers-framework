@@ -86,6 +86,15 @@ RSpec.describe StoreValidationResult do
           },
         )
       end
+
+      context "when another teacher profile exists with the same trn number" do
+        let!(:older_teacher_profile) { create(:teacher_profile, trn: dqt_response[:trn]) }
+
+        it "transfers the participant identity onto the previous record" do
+          expect { result }
+            .to change { participant_profile.reload.teacher_profile }.from(teacher_profile).to(older_teacher_profile)
+        end
+      end
     end
 
     context "when trn returned by dqt does not match the trn on the profile" do
@@ -102,6 +111,14 @@ RSpec.describe StoreValidationResult do
             different_trn: true,
           },
         )
+      end
+
+      context "when another teacher profile exists with the same trn number" do
+        let!(:older_teacher_profile) { create(:teacher_profile, trn: dqt_response[:trn]) }
+
+        it "does not transfers the participant identity onto the previous record" do
+          expect { result }.not_to change { participant_profile.reload.teacher_profile }
+        end
       end
     end
 
@@ -125,6 +142,15 @@ RSpec.describe StoreValidationResult do
 
       it "synchronizes the trn on profile with the one returned by dqt" do
         expect { result }.to change { teacher_profile.reload.trn }.to dqt_response[:trn]
+      end
+
+      context "when another teacher profile exists with the same trn number" do
+        let!(:older_teacher_profile) { create(:teacher_profile, trn: dqt_response[:trn]) }
+
+        it "transfers the participant identity onto the previous record" do
+          expect { result }
+            .to change { participant_profile.reload.teacher_profile }.from(teacher_profile).to(older_teacher_profile)
+        end
       end
     end
   end

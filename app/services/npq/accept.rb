@@ -8,7 +8,7 @@ module NPQ
       end
     end
 
-    attr_reader :npq_application
+    attr_reader :npq_application, :participant_profile
 
     def initialize(npq_application:)
       @npq_application = npq_application
@@ -27,8 +27,10 @@ module NPQ
 
       ApplicationRecord.transaction do
         teacher_profile.update!(trn: npq_application.teacher_reference_number) if npq_application.teacher_reference_number_verified?
-        create_profile
-        npq_application.update(lead_provider_approval_status: "accepted") && other_applications.update(lead_provider_approval_status: "rejected")
+        @participant_profile = create_profile
+        result = npq_application.update(lead_provider_approval_status: "accepted") && other_applications.update(lead_provider_approval_status: "rejected")
+        deduplicate_by_trn!
+        result
       end
     end
 
@@ -74,6 +76,18 @@ module NPQ
 
     def npq_course
       npq_application.npq_course
+    end
+
+    def deduplicate_by_trn!
+      return if participant_profile.teacher_profile.trn.blank?
+
+      same_trn_user = TeacherProfile
+        .where(trn: participant_profile.teacher_profile.trn)
+        .where.not(id: participant_profile.teacher_profile.id)
+        .first
+        &.user
+
+      Identity::Transfer.call(from_user: participant_profile.user, to_user: same_trn_user) if same_trn_user
     end
   end
 end
