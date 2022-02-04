@@ -9,10 +9,7 @@ module CurrentUser
     original = super
     return if original.nil?
 
-    transferred_identity = ParticipantIdentity
-      .where(external_identifier: original.id)
-      .where.not(user_id: original.id)
-      .first
+    transferred_identity = ParticipantIdentity.transferred.find_by(external_identifier: original.id)
 
     @deduped_current_user = transferred_identity&.user || original
   end
