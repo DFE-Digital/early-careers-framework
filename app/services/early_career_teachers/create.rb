@@ -24,7 +24,7 @@ module EarlyCareerTeachers
           ParticipantProfileState.create!(participant_profile: profile)
 
           unless year_2020
-            ParticipantMailer.participant_added(participant_profile: profile).deliver_later
+            # ParticipantMailer.participant_added(participant_profile: profile).deliver_later
             profile.update_column(:request_for_details_sent_at, Time.zone.now)
             # ParticipantDetailsReminderJob.schedule(profile)
           end
