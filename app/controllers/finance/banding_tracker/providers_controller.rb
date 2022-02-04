@@ -6,8 +6,8 @@ module Finance
   module BandingTracker
     class ProvidersController < BaseController
       def show
-        @paid_aggregator    = ParticipantPerDeclarationTypePerBandAggregator.new(paid_participant_count_per_bands, bands)
-        @payable_aggregator = ParticipantPerDeclarationTypePerBandAggregator.new(payable_participant_count_per_bands, bands)
+        @paid_aggregator    = BandingTracker::ParticipantPerDeclarationTypePerBandAggregator.new(paid_participant_count_per_bands, bands)
+        @payable_aggregator = BandingTracker::ParticipantPerDeclarationTypePerBandAggregator.new(payable_participant_count_per_bands, bands)
       end
 
     private

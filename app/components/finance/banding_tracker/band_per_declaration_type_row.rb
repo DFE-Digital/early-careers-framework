@@ -35,7 +35,7 @@ module Finance
       end
 
       def band_name
-        case band.call_off_contract.bands.index(band)
+        case bands.index(band)
         when 0 then "Band A"
         when 1 then "Band B"
         when 2 then "Band C"
@@ -43,9 +43,17 @@ module Finance
         end
       end
 
+      def band_d?
+        bands.index(band) == 3
+      end
+
     private
 
       attr_accessor :aggregator, :band
+
+      def bands
+        @bands ||= band.call_off_contract.bands
+      end
 
       def count_for_declaration_type(declaration_type)
         aggregator
