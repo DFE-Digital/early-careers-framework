@@ -303,7 +303,13 @@ Rails.application.routes.draw do
 
     namespace :ecf do
       resources :payment_breakdowns, only: [] do
-        resources :statements, only: %i[show]
+        resources :statements, only: %i[show] do
+          resources :declarations, only: [] do
+            collection do
+              get :voided
+            end
+          end
+        end
       end
 
       resources :contracts, only: %i[show]
