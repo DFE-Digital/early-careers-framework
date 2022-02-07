@@ -21,6 +21,11 @@ private
   end
 
   def default_induction_programme
+    # FIXME: we need to navigate to the school_cohort - currently there is a direct link
+    # but when that goes we'd need to either pass that in or use the teacher_profile
+    # assuming that is populated correctly or something else
+    # participant_profile.teacher_profile.school
+    #
     participant_profile.school_cohort.default_induction_programme
   end
 end
