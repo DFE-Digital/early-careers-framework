@@ -12,9 +12,7 @@ module Finance
       calculator.call(
         contract: contract,
         event_type: event_type,
-        aggregations: aggregator.new(
-          statement: statement,
-        ).call(event_type: event_type),
+        aggregations: aggregator.call(event_type: event_type),
       )
     end
 
@@ -24,12 +22,16 @@ module Finance
 
     def initialize(statement:,
                    contract:,
-                   aggregator: self.class.default_aggregator,
+                   aggregator: nil,
                    calculator: self.class.default_calculator)
       @statement = statement
       @contract = contract
-      @aggregator = aggregator
+      @aggregator = aggregator || default_aggregator
       @calculator = calculator
+    end
+
+    def default_aggregator
+      self.class.default_aggregator.new(statement: statement)
     end
   end
 end

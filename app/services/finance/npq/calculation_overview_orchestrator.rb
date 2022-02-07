@@ -10,7 +10,7 @@ module Finance
           Finance::NPQ::CalculationOrchestrator.new(
             statement: statement,
             contract: contract,
-            aggregator: aggregator,
+            aggregator: aggregator.new(statement: statement, course_identifier: contract.course_identifier),
           ).call(event_type: event_type)
         end
       end

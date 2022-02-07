@@ -229,7 +229,7 @@ private
     @nov_retained_1 = Finance::ECF::CalculationOrchestrator.new(
       statement: nov_statement,
       contract: lead_provider.call_off_contract,
-      aggregator: Finance::ECF::ParticipantAggregator,
+      aggregator: Finance::ECF::ParticipantAggregator.new(statement: nov_statement),
       calculator: PaymentCalculator::ECF::PaymentCalculation,
     ).call(event_type: :retained_1)
   end
@@ -238,7 +238,7 @@ private
     @nov_starts = Finance::ECF::CalculationOrchestrator.new(
       statement: nov_statement,
       contract: lead_provider.call_off_contract,
-      aggregator: Finance::ECF::ParticipantAggregator,
+      aggregator: Finance::ECF::ParticipantAggregator.new(statement: nov_statement),
       calculator: PaymentCalculator::ECF::PaymentCalculation,
     ).call(event_type: :started)
   end
@@ -247,7 +247,7 @@ private
     @jan_starts = Finance::ECF::CalculationOrchestrator.new(
       statement: jan_statement,
       contract: lead_provider.call_off_contract,
-      aggregator: Finance::ECF::ParticipantAggregator,
+      aggregator: Finance::ECF::ParticipantAggregator.new(statement: jan_statement),
       calculator: PaymentCalculator::ECF::PaymentCalculation,
     ).call(event_type: :started)
   end
@@ -256,7 +256,7 @@ private
     @jan_retained_1 = Finance::ECF::CalculationOrchestrator.new(
       statement: jan_statement,
       contract: lead_provider.call_off_contract,
-      aggregator: Finance::ECF::ParticipantAggregator,
+      aggregator: Finance::ECF::ParticipantAggregator.new(statement: jan_statement),
       calculator: PaymentCalculator::ECF::PaymentCalculation,
     ).call(event_type: :retained_1)
   end

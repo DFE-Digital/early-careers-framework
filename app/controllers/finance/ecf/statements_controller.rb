@@ -13,8 +13,13 @@ module Finance
 
         @statement = @ecf_lead_provider.statements.find(params[:id])
 
+        aggregator = ParticipantAggregator.new(
+          statement: @statement,
+          recorder: ParticipantDeclaration::ECF.where.not(state: %w[voided]),
+        )
+
         orchestrator = Finance::ECF::CalculationOrchestrator.new(
-          aggregator: ParticipantAggregator,
+          aggregator: aggregator,
           contract: @ecf_lead_provider.call_off_contract,
           statement: @statement,
         )

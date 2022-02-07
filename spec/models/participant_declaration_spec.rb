@@ -80,8 +80,8 @@ RSpec.describe ParticipantDeclaration, type: :model do
         expect(participant_declaration.make_eligible!).to be_falsey
       end
 
-      it "cannot be voided" do
-        expect(participant_declaration.make_voided!).to be_falsey
+      it "can be voided" do
+        expect(participant_declaration.make_voided!).to be_truthy
       end
 
       it "can move from payable to paid" do
