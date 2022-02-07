@@ -285,6 +285,11 @@ Rails.application.routes.draw do
 
     resources :participants, only: %i[index show]
 
+    namespace :banding_tracker, path: "banding-tracker" do
+      resources :providers, only: %i[show]
+      resource :provider_choice, only: %i[new create], path: "choose-provider", path_names: { new: "" }
+    end
+
     resource :payment_breakdowns, only: :show, path: "payment-breakdowns", controller: "payment_breakdowns" do
       get "/choose-programme", to: "payment_breakdowns#select_programme", as: :select_programme
       post "/choose-programme", to: "payment_breakdowns#choose_programme", as: :choose_programme

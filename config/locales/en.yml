@@ -293,3 +293,8 @@ en:
     clawbacks:
       caption: Clawbacks
       per_participant: Clawback per participant
+
+    banding_tracker:
+      providers:
+        show:
+          title: "Banding tracker for %{provider_name}"

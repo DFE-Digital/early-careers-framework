@@ -2,6 +2,7 @@
 
 class Cohort < ApplicationRecord
   has_many :schedules, class_name: "Finance::Schedule"
+  has_many :partnerships
 
   def self.current
     # TODO: Register and Partner 262: Figure out how to update current year

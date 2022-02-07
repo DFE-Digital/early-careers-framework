@@ -4,6 +4,8 @@
 class LeadProvider < ApplicationRecord
   belongs_to :cpd_lead_provider, optional: true
 
+  has_many :participant_declarations, through: :cpd_lead_provider, class_name: "ParticipantDeclaration::ECF"
+
   has_many :partnerships
   has_many :active_partnerships, -> { active }, class_name: "Partnership"
   has_many :schools, through: :active_partnerships
@@ -24,5 +26,6 @@ class LeadProvider < ApplicationRecord
   has_many :lead_provider_api_tokens
   has_one :call_off_contract
 
+  has_many :statements, through: :cpd_lead_provider, class_name: "Finance::Statement::ECF"
   validates :name, presence: { message: "Enter a name" }
 end

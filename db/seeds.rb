@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 seed_path = %w[db seeds]
-
 load Rails.root.join(*seed_path, "initial_seed.rb").to_s
 load Rails.root.join(*seed_path, "schedules.rb").to_s
 

@@ -57,6 +57,7 @@ RSpec.describe EarlyCareerTeachers::Create do
   end
 
   it "schedules participant_added email" do
+    pending "re-enable when m2-release gets the go ahead"
     expect {
       described_class.call(
         email: user.email,
@@ -67,6 +68,7 @@ RSpec.describe EarlyCareerTeachers::Create do
   end
 
   it "scheduled reminder email job" do
+    pending "re-enable when m2-release gets the go ahead"
     allow(ParticipantDetailsReminderJob).to receive(:schedule)
 
     profile = described_class.call(
@@ -153,6 +155,7 @@ RSpec.describe EarlyCareerTeachers::Create do
   end
 
   it "records the profile for analytics" do
+    pending "re-enable when m2-release gets the go ahead"
     expect {
       described_class.call(
         email: user.email,
