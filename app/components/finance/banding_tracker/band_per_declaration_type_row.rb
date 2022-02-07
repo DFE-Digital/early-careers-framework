@@ -14,19 +14,19 @@ module Finance
         count_for_declaration_type("started")
       end
 
-      def retrained_one
+      def retained_one
         count_for_declaration_type("retained-1")
       end
 
-      def retrained_two
+      def retained_two
         count_for_declaration_type("retained-2")
       end
 
-      def retrained_three
+      def retained_three
         count_for_declaration_type("retained-3")
       end
 
-      def retrained_four
+      def retained_four
         count_for_declaration_type("retained-4")
       end
 
