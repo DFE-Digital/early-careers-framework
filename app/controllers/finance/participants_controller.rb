@@ -2,10 +2,10 @@
 
 module Finance
   class ParticipantsController < BaseController
+    before_action :find_user_by_id_or_external_id
+
     def index
       if params[:query]
-        @user = User.find_by(id: params[:query].strip)
-
         if @user
           redirect_to finance_participant_path(@user)
         else
@@ -14,8 +14,12 @@ module Finance
       end
     end
 
-    def show
-      @user = User.includes(:participant_profiles).find(params[:id])
+    def show; end
+
+  private
+
+    def find_user_by_id_or_external_id
+      @user = Identity.find_user_by(id: params[:query] || params[:id])
     end
   end
 end
