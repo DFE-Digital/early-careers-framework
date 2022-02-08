@@ -14,6 +14,8 @@ class ParticipantProfile < ApplicationRecord
 
   has_many :participant_declarations
 
+  has_many :induction_records
+
   has_many :participant_profile_states
   has_one :participant_profile_state, lambda {
     merge(ParticipantProfileState.most_recent)
