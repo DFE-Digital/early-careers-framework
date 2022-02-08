@@ -13,11 +13,13 @@ module ValidTestDataGenerator
     end
 
     def call(total_schools: 10, participants_per_school: 100)
-      generate_new_schools(count: total_schools - lead_provider.schools.count) if lead_provider.schools.count < total_schools
-      lead_provider.schools.order("created_at desc").limit(total_schools).each do |school|
-        sparsity_uplift = weighted_choice(selection: [true, false], odds: [11, 89])
-        pupil_premium_uplift = weighted_choice(selection: [true, false], odds: [11, 39])
-        find_or_create_participants(school: school, number_of_participants: participants_per_school, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift)
+      ActiveRecord::Base.transaction do
+        generate_new_schools(count: total_schools - lead_provider.schools.count) if lead_provider.schools.count < total_schools
+        lead_provider.schools.order("created_at desc").limit(total_schools).each do |school|
+          sparsity_uplift = weighted_choice(selection: [true, false], odds: [11, 89])
+          pupil_premium_uplift = weighted_choice(selection: [true, false], odds: [11, 39])
+          find_or_create_participants(school: school, number_of_participants: participants_per_school, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift)
+        end
       end
     end
 
