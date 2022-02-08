@@ -15,11 +15,9 @@ RSpec.describe ValidationBetaService do
         validation_beta_service.remind_fip_induction_coordinators_to_add_ect_and_mentors
       }.to have_enqueued_mail(SchoolMailer, :remind_fip_induction_coordinators_to_add_ects_and_mentors_email)
         .with(
-          args: [{
-            induction_coordinator: induction_coordinator,
-            school_name: school.name,
-            campaign: :remind_fip_sit_to_complete_steps,
-          }],
+          induction_coordinator: induction_coordinator,
+          school_name: school.name,
+          campaign: :remind_fip_sit_to_complete_steps,
         )
     end
 
@@ -71,13 +69,11 @@ RSpec.describe ValidationBetaService do
         validation_beta_service.sit_with_unvalidated_participants_reminders
       }.to have_enqueued_mail(ParticipantValidationMailer, :induction_coordinators_we_asked_ects_and_mentors_for_information_email)
         .with(
-          args: [
-            hash_including(
-              recipient: sit.user.email,
-              start_url: expected_start_url,
-              sign_in: expected_sign_in_url,
-            ),
-          ],
+          hash_including(
+            recipient: sit.user.email,
+            start_url: expected_start_url,
+            sign_in: expected_sign_in_url,
+          ),
         )
     end
 
@@ -95,13 +91,11 @@ RSpec.describe ValidationBetaService do
         validation_beta_service.sit_with_unvalidated_participants_reminders
       }.to have_enqueued_mail(ParticipantValidationMailer, :induction_coordinators_we_asked_ects_and_mentors_for_information_email)
         .with(
-          args: [
-            hash_including(
-              recipient: sit.user.email,
-              start_url: expected_start_url,
-              sign_in: expected_sign_in_url,
-            ),
-          ],
+          hash_including(
+            recipient: sit.user.email,
+            start_url: expected_start_url,
+            sign_in: expected_sign_in_url,
+          ),
         )
     end
 
@@ -160,11 +154,9 @@ RSpec.describe ValidationBetaService do
         validation_beta_service.send_sit_new_ambition_ects_and_mentors_added(path_to_csv: csv_file)
       }.to have_enqueued_mail(SchoolMailer, :sit_new_ambition_ects_and_mentors_added_email)
         .with(
-          args: [{
-            induction_coordinator_profile: sit_profile,
-            school_name: school.name,
-            sign_in_url: "http://www.example.com/users/sign_in",
-          }],
+          induction_coordinator_profile: sit_profile,
+          school_name: school.name,
+          sign_in_url: "http://www.example.com/users/sign_in",
         )
     end
   end

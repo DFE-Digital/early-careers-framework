@@ -72,11 +72,9 @@ RSpec.describe Schools::Year2020Form, type: :model do
         subject.save!
       }.to have_enqueued_mail(SchoolMailer, :year2020_add_participants_confirmation)
         .with(
-          args: [{
-            recipient: school.contact_email,
-            school_name: school.name,
-            teacher_name_list: test_participants.map { |p| "- #{p.full_name}" }.join("\n"),
-          }],
+          recipient: school.contact_email,
+          school_name: school.name,
+          teacher_name_list: test_participants.map { |p| "- #{p.full_name}" }.join("\n"),
         )
     end
   end

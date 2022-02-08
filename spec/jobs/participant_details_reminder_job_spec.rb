@@ -30,9 +30,7 @@ RSpec.describe ParticipantDetailsReminderJob do
           described_class.perform_now(profile_id: participant_profile.id)
         }.to have_enqueued_mail(ParticipantMailer, :add_details_reminder)
           .with(
-            args: [{
-              participant_profile: participant_profile,
-            }],
+            participant_profile: participant_profile,
           )
       end
 
