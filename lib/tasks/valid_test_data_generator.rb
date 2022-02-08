@@ -21,7 +21,7 @@ module ValidTestDataGenerator
       end
     end
 
-    private
+  private
 
     attr_reader :lead_provider
 
