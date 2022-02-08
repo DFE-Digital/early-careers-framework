@@ -1,16 +1,19 @@
-<table class="govuk-table payment-breakdown-table">
+<table class="govuk-table other-fees-table">
+  <caption class="govuk-table__caption govuk-table__caption--m"><%= "Other fees - #{breakdown_summary[:declaration].to_s.humanize.downcase}" %></caption>
+    <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header"><%= t("finance.type") %></th>
+      <th scope="col" class="govuk-table__header govuk-!-font-weight-bold govuk-table__cell--numeric"><%= t("finance.fee_per_participant") %></th>
+      <th scope="col" class="govuk-table__header govuk-!-font-weight-bold govuk-table__cell--numeric"><%= t("finance.number_of_participants") %></th>
+      <th scope="col" class="govuk-table__header govuk-!-font-weight-bold govuk-table__cell--numeric"><%= t("finance.payment") %></th>
+    </tr>
+  </thead>
   <tbody>
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.fee_per_participant") %></th>
+      <td class="govuk-table__cell"><%= t("finance.uplift_fee.caption") %></td>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds per_participant %></td>
-    </tr>
-    <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__cell govuk-!-font-weight-regular"><%=t("finance.fee_per_participant") %></th>
       <td class="govuk-table__cell govuk-table__cell--numeric"><%= participants %></td>
-    </tr>
-    <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__cell"><%=t("finance.payment") %></th>
-      <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><%= number_to_pounds subtotal %></td>
+      <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds subtotal %></td>
     </tr>
   </tbody>
 </table>

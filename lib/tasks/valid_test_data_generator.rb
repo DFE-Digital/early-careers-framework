@@ -6,7 +6,8 @@ require "tasks/trn_generator"
 module ValidTestDataGenerator
   class LeadProviderPopulater
     class << self
-      def call(name:, total_schools: 10, participants_per_school: 100)
+      def call(name:, total_schools: 10, participants_per_school: 50)
+        Importers::SeedStatements.new.call
         new(name: name).call(total_schools: total_schools, participants_per_school: participants_per_school)
       end
     end
@@ -57,20 +58,104 @@ module ValidTestDataGenerator
       name = Faker::Name.name
       user = User.create!(full_name: name, email: Faker::Internet.email(name: name))
       teacher_profile = TeacherProfile.create!(user: user, trn: random_or_nil_trn)
-      schedule = Finance::Schedule::ECF.default
+      schedule = ecf_schedules.sample
       participant_identity = Identity::Create.call(user: user, origin: :ecf)
 
+      cpd_lead_provider = school_cohort.lead_provider.cpd_lead_provider
+      november_statement = Finance::Statement::ECF.find_by(
+        cpd_lead_provider: cpd_lead_provider,
+        name: "November 2021",
+      )
+
       if profile_type == :ect
-        ParticipantProfile::ECT.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, mentor_profile: mentor_profile, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule, participant_identity: participant_identity) do |profile|
-          ParticipantProfileState.create!(participant_profile: profile)
-          ECFParticipantEligibility.create!(participant_profile_id: profile.id).eligible_status!
+        profile = ParticipantProfile::ECT.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, mentor_profile: mentor_profile, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule, participant_identity: participant_identity) do |pp|
+          ParticipantProfileState.create!(participant_profile: pp)
+          ECFParticipantEligibility.create!(participant_profile_id: pp.id).eligible_status!
         end
+
+        return unless profile.active_record?
+
+        serialized_started_declaration = RecordDeclarations::Started::EarlyCareerTeacher.call(
+          params: {
+            participant_id: user.tap(&:reload).id,
+            course_identifier: "ecf-induction",
+            declaration_date: (profile.schedule.milestones.first.start_date + 1.day).rfc3339,
+            cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
+            declaration_type: RecordDeclarations::ECF::STARTED,
+          },
+        )
+
+        return if profile.schedule.milestones.second.start_date > Date.current
+
+        started_declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
+        started_declaration.make_payable!
+        started_declaration.update!(
+          created_at: profile.schedule.milestones.first.start_date + 1.day,
+          statement: november_statement,
+        )
+
+        return if (profile.schedule.milestones.second.start_date + 1.day) > Time.zone.now
+
+        RecordDeclarations::Retained::EarlyCareerTeacher.call(
+          params: {
+            participant_id: user.tap(&:reload).id,
+            course_identifier: "ecf-induction",
+            declaration_date: (profile.schedule.milestones.second.start_date + 1.day).rfc3339,
+            cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
+            declaration_type: RecordDeclarations::ECF::RETAINED_ONE,
+            evidence_held: "other",
+          },
+        )
       else
-        ParticipantProfile::Mentor.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule, participant_identity: participant_identity) do |profile|
-          ParticipantProfileState.create!(participant_profile: profile)
-          ECFParticipantEligibility.create!(participant_profile_id: profile.id).eligible_status!
+        profile = ParticipantProfile::Mentor.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule, participant_identity: participant_identity) do |pp|
+          ParticipantProfileState.create!(participant_profile: pp)
+          ECFParticipantEligibility.create!(participant_profile_id: pp.id).eligible_status!
         end
+
+        return profile unless profile.active_record?
+
+        serialized_started_declaration = RecordDeclarations::Started::Mentor.call(
+          params: {
+            participant_id: profile.user.tap(&:reload).id,
+            course_identifier: "ecf-mentor",
+            declaration_date: (profile.schedule.milestones.first.start_date + 1.day).rfc3339,
+            cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
+            declaration_type: RecordDeclarations::ECF::STARTED,
+          },
+        )
+
+        return if profile.schedule.milestones.second.start_date > Date.current
+
+        started_declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
+        started_declaration.make_payable!
+        started_declaration.update!(
+          created_at: profile.schedule.milestones.first.start_date + 1.day,
+          statement: november_statement,
+        )
+
+        return if (profile.schedule.milestones.second.start_date + 1.day) > Time.zone.now
+
+        RecordDeclarations::Retained::Mentor.call(
+          params: {
+            participant_id: user.tap(&:reload).id,
+            course_identifier: "ecf-mentor",
+            declaration_date: (profile.schedule.milestones.second.start_date + 1.day).rfc3339,
+            cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
+            declaration_type: RecordDeclarations::ECF::RETAINED_ONE,
+            evidence_held: "other",
+          },
+        )
+
+        profile
       end
+    end
+
+    def ecf_schedules
+      @ecf_schedules ||=
+        [
+          Finance::Schedule::ECF.find_by(cohort: Cohort.current, schedule_identifier: "ecf-standard-september"),
+          Finance::Schedule::ECF.find_by(cohort: Cohort.current, schedule_identifier: "ecf-standard-january"),
+        ]
     end
 
     def school_cohort(school:)
@@ -159,6 +244,7 @@ module ValidTestDataGenerator
   class NPQLeadProviderPopulater
     class << self
       def call(name:, total_schools: 10, participants_per_school: 10)
+        Importers::SeedStatements.new.call
         new(name: name, participants_per_school: participants_per_school).call(total_schools: total_schools)
       end
     end
@@ -195,6 +281,11 @@ module ValidTestDataGenerator
       user = User.create!(full_name: name, email: Faker::Internet.email(name: name))
       identity = Identity::Create.call(user: user, origin: :npq)
 
+      december_statement = Finance::Statement::NPQ.find_by(
+        cpd_lead_provider: lead_provider.cpd_lead_provider,
+        name: "December 2021",
+      )
+
       npq_application = NPQApplication.create!(
         active_alert: "",
         date_of_birth: Date.new(1990, 1, 1),
@@ -228,11 +319,12 @@ module ValidTestDataGenerator
       return if [true, false].sample
 
       participant_declaration.make_payable!
+      participant_declaration.update!(statement: december_statement)
     end
 
     def accept_application(npq_application)
       NPQ::Accept.call(npq_application: npq_application)
-      npq_application
+      npq_application.reload
     end
 
     def create_started_declarations(npq_application)

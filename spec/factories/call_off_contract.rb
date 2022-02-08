@@ -26,8 +26,8 @@ FactoryBot.define do
         "band_c": {
           "min": 4001,
           "per_participant": 966,
-        }.to_json,
-      }
+        },
+      }.to_json
     end
 
     after(:build) do |contract, evaluator|

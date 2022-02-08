@@ -7,7 +7,7 @@ module Finance
     class CalculationOrchestrator < ::Finance::CalculationOrchestrator
       class << self
         def default_aggregator
-          ::Finance::NPQ::ParticipantEligibleAndPayableAggregator
+          ::Finance::NPQ::ParticipantAggregator
         end
 
         def default_calculator
@@ -26,16 +26,12 @@ module Finance
 
     private
 
-      def aggregate(aggregation_type:, course_identifier:, event_type:)
-        recorder.public_send(self.class.aggregation_types[event_type][aggregation_type], cpd_lead_provider, course_identifier).count
-      end
-
       def aggregations_for(event_type:)
-        aggregator.call(
-          cpd_lead_provider: cpd_lead_provider,
-          event_type: event_type,
+        aggregator.new(
+          statement: statement,
           course_identifier: contract.course_identifier,
-          interval: interval,
+        ).call(
+          event_type: event_type,
         )
       end
     end

@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
 class ParticipantDeclaration < ApplicationRecord
+  self.ignored_columns = %w[statement_type]
+
   has_many :declaration_states
+  has_many :participant_declaration_attempts, dependent: :destroy
   belongs_to :cpd_lead_provider
   belongs_to :user
   belongs_to :participant_profile
   belongs_to :superseded_by, class_name: "ParticipantDeclaration", optional: true
+  belongs_to :statement, optional: true, class_name: "Finance::Statement"
   has_many :supersedes, class_name: "ParticipantDeclaration", foreign_key: :superseded_by_id, inverse_of: :superseded_by
 
   enum state: {
@@ -27,6 +31,7 @@ class ParticipantDeclaration < ApplicationRecord
   scope :for_declaration, ->(declaration_type) { where(declaration_type: declaration_type) }
   scope :for_profile, ->(profile) { where(participant_profile: profile) }
   scope :started, -> { for_declaration("started").order(declaration_date: "desc").unique_id }
+  scope :retained_1, -> { for_declaration("retained-1").order(declaration_date: "desc").unique_id }
 
   scope :uplift, -> { where(participant_profile_id: ParticipantProfile.uplift.select(:id)) }
 
@@ -52,6 +57,15 @@ class ParticipantDeclaration < ApplicationRecord
   scope :eligible_mentors_for_lead_provider, ->(lead_provider) { eligible_for_lead_provider(lead_provider).mentor }
   scope :eligible_npqs_for_lead_provider, ->(lead_provider) { eligible_for_lead_provider(lead_provider).npq }
   scope :eligible_uplift_for_lead_provider, ->(lead_provider) { eligible_for_lead_provider(lead_provider).uplift }
+
+  scope :unique_for_lead_provider, ->(lead_provider) { for_lead_provider(lead_provider).unique_id }
+  scope :unique_ects_for_lead_provider, ->(lead_provider) { unique_for_lead_provider(lead_provider).ect }
+  scope :unique_mentors_for_lead_provider, ->(lead_provider) { unique_for_lead_provider(lead_provider).mentor }
+  scope :unique_npqs_for_lead_provider, ->(lead_provider) { unique_for_lead_provider(lead_provider).npq }
+  scope :unique_uplift_for_lead_provider, ->(lead_provider) { unique_for_lead_provider(lead_provider).uplift }
+
+  scope :for_course_identifier, ->(course_identifier) { where(course_identifier: course_identifier) }
+  scope :unique_for_lead_provider_and_course_identifier, ->(lead_provider, course_identifier) { for_lead_provider(lead_provider).for_course_identifier(course_identifier).unique_id }
 
   scope :not_payable_for_lead_provider, ->(lead_provider) { submitted_for_lead_provider(lead_provider).or(eligible_for_lead_provider(lead_provider)) }
   scope :payable_for_lead_provider, ->(lead_provider) { for_lead_provider(lead_provider).unique_id.payable }

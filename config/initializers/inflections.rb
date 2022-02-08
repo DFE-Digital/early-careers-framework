@@ -24,4 +24,5 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym "NPQ"
   inflect.acronym "ECF"
   inflect.acronym "STI"
+  inflect.acronym "BPN"
 end

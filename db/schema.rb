@@ -548,6 +548,7 @@ ActiveRecord::Schema.define(version: 2022_02_07_133656) do
     t.string "state", default: "submitted", null: false
     t.uuid "participant_profile_id"
     t.uuid "superseded_by_id"
+    t.uuid "statement_id"
     t.index ["cpd_lead_provider_id"], name: "index_participant_declarations_on_cpd_lead_provider_id"
     t.index ["participant_profile_id"], name: "index_participant_declarations_on_participant_profile_id"
     t.index ["superseded_by_id"], name: "superseded_by_index"
@@ -815,6 +816,17 @@ ActiveRecord::Schema.define(version: 2022_02_07_133656) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["session_id"], name: "index_sessions_on_session_id", unique: true
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
+  end
+
+  create_table "statements", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.text "type", null: false
+    t.text "name", null: false
+    t.uuid "cpd_lead_provider_id", null: false
+    t.date "deadline_date"
+    t.date "payment_date"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["cpd_lead_provider_id"], name: "index_statements_on_cpd_lead_provider_id"
   end
 
   create_table "teacher_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

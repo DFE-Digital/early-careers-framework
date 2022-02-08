@@ -1,16 +1,4 @@
 # frozen_string_literal: true
 
-class Finance::Statement::ECF < Finance::Statement::Base
-  DATA = [
-    {
-      interval: Time.zone.parse("2021-09-01T00:00:00+01:00")..Time.zone.parse("2021-11-19T23:59:59+00:00"),
-      name: "payable",
-      payment_date: Date.new(2021, 11, 30),
-    },
-    {
-      interval: Time.zone.parse("2021-11-20T00:00:00+00:00")..Time.zone.parse("2022-01-31T23:59:59+00:00"),
-      name: "current",
-      payment_date: Date.new(2022, 2, 28),
-    },
-  ].freeze
+class Finance::Statement::ECF < Finance::Statement
 end
