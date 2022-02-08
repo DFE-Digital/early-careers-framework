@@ -6,7 +6,12 @@ Given("I am logged in as an {string}", (user) => cy.login(user));
 Given("I am logged in as an induction coordinator for created school", () => {
   cy.appEval("School.all.first").then((school) => {
     cy.appFactories([
-      ["create", "user", "induction_coordinator", { school_ids: [school.id] }],
+      [
+        "create",
+        "user",
+        "induction_coordinator",
+        { full_name: "SIT", email: "sit@example.com", school_ids: [school.id] },
+      ],
     ]).then(() => {
       cy.loginCreated("user");
     });
