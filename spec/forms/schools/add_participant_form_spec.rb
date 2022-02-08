@@ -140,7 +140,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
       form.type = form.type_options.sample
       form.full_name = Faker::Name.name
       form.email = Faker::Internet.email
-      form.start_term = "Autumn 2021"
+      form.start_term = "autumn_2021"
       form.mentor_id = (form.mentor_options.pluck(:id) + %w[later]).sample if form.type == :ect
 
       create :ecf_schedule
