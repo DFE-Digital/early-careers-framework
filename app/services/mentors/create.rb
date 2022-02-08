@@ -37,7 +37,7 @@ module Mentors
 
     attr_reader :full_name, :email, :start_term, :school_cohort
 
-    def initialize(full_name:, email:, school_cohort:, start_term: "Autumn 2021", **)
+    def initialize(full_name:, email:, school_cohort:, start_term: "autumn_2021", **)
       @full_name = full_name
       @email = email
       @start_term = start_term

@@ -13,6 +13,10 @@ module Schools
       next_step :confirm
     end
 
+    step :started do
+      next_step :name
+    end
+
     step :name do
       attribute :full_name
 
@@ -107,7 +111,7 @@ module Schools
       if type == :self
         self.full_name = current_user.full_name
         self.email = current_user.email
-        self.start_term = "Autumn 2021" if start_term.nil?
+        self.start_term = "autumn_2021" if start_term.nil?
         self.participant_type = :mentor
       else
         self.participant_type = type

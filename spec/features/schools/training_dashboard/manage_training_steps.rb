@@ -89,7 +89,7 @@ module ManageTrainingSteps
   # And_steps
 
   def and_i_am_signed_in_as_an_induction_coordinator
-    @induction_coordinator_profile = create(:induction_coordinator_profile, schools: [@school_cohort.school])
+    @induction_coordinator_profile = create(:induction_coordinator_profile, schools: [@school_cohort.school], user: create(:user, full_name: "Carl Coordinator"))
     privacy_policy = create(:privacy_policy)
     privacy_policy.accept!(@induction_coordinator_profile.user)
     sign_in_as @induction_coordinator_profile.user
@@ -481,6 +481,14 @@ module ManageTrainingSteps
   def then_i_am_taken_to_are_you_sure_page
     expect(page).to have_selector("h1", text: "Are you sure you want to add yourself as a mentor?")
     expect(page).to have_text("The induction tutor and mentor roles are separate")
+  end
+
+  def then_i_am_taken_to_the_ect_already_started_page
+    expect(page).to have_selector("h1", text: "Has this ECT already started their induction at another school?")
+  end
+
+  def then_i_am_taken_to_the_mentor_already_started_page
+    expect(page).to have_selector("h1", text: "Has this person already started mentoring ECTs at another school?")
   end
 
   def then_i_am_taken_to_add_ect_name_page
