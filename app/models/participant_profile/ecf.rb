@@ -30,6 +30,7 @@ class ParticipantProfile < ApplicationRecord
     }, _suffix: "profile"
 
     after_save :update_analytics
+    after_update :sync_status_with_induction_record
 
     def ecf?
       true
@@ -56,6 +57,10 @@ class ParticipantProfile < ApplicationRecord
 
     def update_analytics
       Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile: self) if saved_changes?
+    end
+
+    def sync_status_with_induction_record
+      induction_records.active.first&.update!(status: status) if saved_change_to_status?
     end
   end
 end

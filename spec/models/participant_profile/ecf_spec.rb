@@ -21,6 +21,27 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
     end
   end
 
+  describe "after_update" do
+    let(:induction_programme) { create(:induction_programme, :fip, school_cohort: profile.school_cohort) }
+    let!(:induction_record) { create(:induction_record, induction_programme: induction_programme, participant_profile: profile, status: "active") }
+
+    context "when the status changes" do
+      it "updates the status on the active induction record" do
+        profile.withdrawn_record!
+        expect(induction_record.reload).to be_withdrawn
+      end
+    end
+
+    context "when the status is not changed" do
+      before { induction_record.completed! }
+
+      it "does not update the status" do
+        profile.primary_profile!
+        expect(induction_record.reload).to be_completed
+      end
+    end
+  end
+
   describe "completed_validation_wizard?" do
     context "before any details have been entered" do
       it "returns false" do
