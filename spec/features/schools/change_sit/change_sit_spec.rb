@@ -142,7 +142,8 @@ private
   end
 
   def create_induction_tutor(*schools)
-    @induction_coordinator_profile = create(:induction_coordinator_profile, schools: schools)
+    user = create(:user, full_name: "Induction Coordinator", email: "ic@example.com")
+    @induction_coordinator_profile = create(:induction_coordinator_profile, schools: schools, user: user)
   end
 
   def create_partnership(school)

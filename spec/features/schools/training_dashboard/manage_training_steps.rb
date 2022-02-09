@@ -46,7 +46,8 @@ module ManageTrainingSteps
     second_school = create :school, name: "Test School 2", slug: "111112-test-school-2", urn: "111112"
     create :school_cohort, :cip, school: second_school, cohort: cohort
 
-    create :user, :induction_coordinator, email: "school-leader@example.com", schools: [first_school, second_school]
+    user = create :user, full_name: "School Leader", email: "school-leader@example.com"
+    create :induction_coordinator_profile, user: user, schools: [first_school, second_school]
 
     third_school = FactoryBot.create(:school, name: "Test School 3", slug: "111113-test-school-3", urn: "111113")
     create :school_cohort, :cip, school: third_school, cohort: cohort

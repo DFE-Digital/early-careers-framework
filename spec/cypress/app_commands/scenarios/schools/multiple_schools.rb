@@ -8,4 +8,4 @@ FactoryBot.create(:school_cohort, :cip, school: second_school, cohort: cohort)
 third_school = FactoryBot.create(:school, name: "Test School 3", slug: "111113-test-school-3", urn: "111113")
 FactoryBot.create(:school_cohort, :cip, school: third_school, cohort: cohort)
 
-FactoryBot.create(:user, :induction_coordinator, email: "school-leader@example.com", school_ids: [first_school.id, second_school.id])
+FactoryBot.create(:user, :induction_coordinator, name: "School Leader", email: "school-leader@example.com", school_ids: [first_school.id, second_school.id])
