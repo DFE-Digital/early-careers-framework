@@ -1,7 +1,7 @@
 <% content_for :title, t("finance.npq.payment_breakdown") %>
-<% content_for :before_content, govuk_back_link(text: "Back", href: finance_npq_lead_provider_statement_path(lead_provider_id: @npq_lead_provider, id: @statement.name)) %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: finance_npq_lead_provider_statement_path(@npq_lead_provider, @statement)) %>
 
-<h1 class="govuk-heading-xl"><%= @npq_lead_provider.cpd_lead_provider.name %></h1>
+<h1 class="govuk-heading-xl"><%= @cpd_lead_provider.name %></h1>
 <h2 class="govuk-heading-l"><%= @npq_course.name %></h2>
 <div class="govuk-grid-row">
 
@@ -11,7 +11,7 @@
 
     <h3 class="govuk-heading-m" style="margin-top:55px"><%= t("finance.payment_breakdown") %></h3>
 
-    <table class="govuk-table" data-test="npq-payment-type">
+    <table class="govuk-table">
       <thead>
         <tr class="govuk-table__row">
           <th scope="col" class="govuk-table__header govuk-!-width-one-quarter"><%= t("finance.payment_type") %></th>

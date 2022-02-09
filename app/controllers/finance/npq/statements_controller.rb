@@ -8,19 +8,11 @@ module Finance
       def show
         @npq_lead_provider = lead_provider_scope.find(params[:lead_provider_id])
         @cpd_lead_provider = @npq_lead_provider.cpd_lead_provider
-
-        @statement = Finance::Statement::NPQ.find_by(
-          name: params[:id],
-          cpd_lead_provider: @cpd_lead_provider,
-        )
-
-        if @statement.name == "January 2022"
-          @statement.id = nil
-        end
+        @statement         = @cpd_lead_provider.npq_lead_provider.statements.find(params[:id])
 
         @breakdowns = Finance::NPQ::CalculationOverviewOrchestrator.new(
           statement: @statement,
-          aggregator: ParticipantAggregator,
+          aggregator: Finance::NPQ::ParticipantEligibleAndPayableAggregator,
         ).call(event_type: :started)
       end
 

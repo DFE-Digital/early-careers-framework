@@ -27,7 +27,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     )
   end
 
-  xscenario "see a payment breakdown per NPQ course and a payment breakdown of each individual NPQ courses for each provider" do
+  scenario "see a payment breakdown per NPQ course and a payment breakdown of each individual NPQ courses for each provider" do
     given_i_am_logged_in_as_a_finance_user
     and_there_is_npq_provider_with_contracts
     and_those_courses_have_submitted_declarations
@@ -108,6 +108,8 @@ private
         .map { |participant_declaration| participant_declaration.make_eligible! && participant_declaration }
         .each(&:make_payable!)
     end
+
+    ParticipantDeclaration::NPQ.where(state: "payable", cpd_lead_provider: cpd_lead_provider).update_all(statement_id: statement.id)
   end
 
   def and_there_is_npq_provider_with_contracts
@@ -133,25 +135,29 @@ private
   def then_i_should_have_the_correct_payment_breakdown_per_npq_lead_provider
     within "main .govuk-grid-column-two-thirds table:nth-of-type(2)" do
       expect(page)
-        .to have_css("tbody tr.govuk-table__row:nth-child(1) a[href='#{finance_npq_lead_provider_statement_course_path(npq_lead_provider, statement.name, id: npq_leading_teaching_contract.course_identifier)}']")
+        .to have_css("tbody tr.govuk-table__row:nth-child(1) a[href='#{finance_npq_lead_provider_statement_course_path(npq_lead_provider, statement, id: npq_leading_teaching_contract.course_identifier)}']")
       expect(page)
-        .to have_css("tbody tr.govuk-table__row:nth-child(2) a[href='#{finance_npq_lead_provider_statement_course_path(npq_lead_provider, statement.name, id: npq_leading_behaviour_culture_contract.course_identifier)}']")
+        .to have_css("tbody tr.govuk-table__row:nth-child(2) a[href='#{finance_npq_lead_provider_statement_course_path(npq_lead_provider, statement, id: npq_leading_behaviour_culture_contract.course_identifier)}']")
       expect(page)
-        .to have_css("tbody tr.govuk-table__row:nth-child(3) a[href='#{finance_npq_lead_provider_statement_course_path(npq_lead_provider, statement.name, id: npq_leading_teaching_development_contract.course_identifier)}']")
+        .to have_css("tbody tr.govuk-table__row:nth-child(3) a[href='#{finance_npq_lead_provider_statement_course_path(npq_lead_provider, statement, id: npq_leading_teaching_development_contract.course_identifier)}']")
     end
   end
 
   def then_i_should_see_the_courses_vat_and_total_payment
-    within("[data-test='npq-courses-total-paid']") do
-      expect(page).to have_content("VAT")
-      expect(page).to have_content(number_to_pounds(aggregated_vat(breakdowns, @npq_lead_provider)))
-      expect(page).to have_content("Total payment")
-      number_to_pounds aggregated_payment(breakdowns) + aggregated_vat(breakdowns, @npq_lead_provider)
+    within "main .govuk-grid-column-two-thirds table:nth-of-type(2)" do
+      expect(page).to have_css("tr:nth-child(4) td:nth-child(1)", text: "VAT")
+      expect(page).to have_css("tr:nth-child(4) td:nth-child(2)", text: number_to_pounds(aggregated_vat(breakdowns, npq_lead_provider)))
+      expect(page).to have_css("tr:nth-child(5) td:nth-child(1)", text: "Total payment")
+      expect(page).to have_css("tr:nth-child(5) td:nth-child(2)", text: number_to_pounds(aggregated_payment(breakdowns) + aggregated_vat(breakdowns, npq_lead_provider)))
     end
   end
 
   def when_i_click_on(npq_contract)
     click_on I18n.t(npq_contract.course_identifier, scope: %i[courses npq])
+  end
+
+  def expected_service_fee_payment(npq_contract)
+    npq_contract.recruitment_target * expected_service_fee_portion_per_participant(npq_contract)
   end
 
   def expected_current_particpant_count(npq_contract)
@@ -167,12 +173,12 @@ private
   def then_i_should_see_correct_breakdown_summary(npq_lead_provider, npq_contract)
     expect(page).to have_css("h2.govuk-heading-l", text: NPQCourse.find_by!(identifier: npq_contract.course_identifier).name)
 
-    within("[data-test='npq-references']") do
+    within("main .govuk-grid-column-two-thirds table:nth-of-type(1)") do
       expect(page).to have_content("Submission deadline")
       expect(page).to have_content(statement.deadline_date.to_s(:govuk))
     end
 
-    within("[data-test='npq-total-paid']") do
+    within("main .govuk-grid-column-two-thirds table:nth-of-type(2)") do
       expect(page).to have_content("Recruitment target")
       expect(page).to have_content(npq_contract.recruitment_target)
       expect(page).to have_content("Current participants")
@@ -192,16 +198,21 @@ private
     (expected_service_fee_payment(npq_contract) + expected_output_fee_payment(npq_contract)) * 0.2
   end
 
-  def expected_service_fee_payment(npq_contract)
-    npq_contract.recruitment_target * expected_service_fee_portion_per_participant(npq_contract)
+  def service_fees_calculator_for(npq_contract)
+    PaymentCalculator::NPQ::ServiceFees.call(contract: npq_contract)
+  end
+
+  def output_fees_calculator_for(npq_contract)
+    PaymentCalculator::NPQ::OutputPayment.call(contract: npq_contract, total_participants: eligible_and_payable_participant_count(npq_contract))
   end
 
   def then_i_should_see_correct_service_fee_payment_breakdown(npq_contract)
-    within("[data-test='npq-payment-type']") do
-      expect(page).to have_content("Service fee")
-      expect(page).to have_content(number_to_pounds(expected_service_fee_portion_per_participant(npq_contract)))
-      expect(page).to have_content(npq_contract.recruitment_target)
-      expect(page).to have_content(number_to_pounds(expected_service_fee_payment(npq_contract)))
+    within("main .govuk-grid-column-two-thirds table:nth-of-type(3)") do
+      service_fees_calculator = service_fees_calculator_for(npq_contract)
+      expect(page).to have_css("tr:nth-child(1) td:nth-child(1)", text: "Service fee")
+      expect(page).to have_css("tr:nth-child(1) td:nth-child(2)", text: number_to_pounds(service_fees_calculator[:per_participant]))
+      expect(page).to have_css("tr:nth-child(1) td:nth-child(3)", text: npq_contract.recruitment_target)
+      expect(page).to have_css("tr:nth-child(1) td:nth-child(4)", text: number_to_pounds(service_fees_calculator[:monthly]))
     end
   end
 
@@ -219,30 +230,31 @@ private
   end
 
   def then_i_should_see_correct_output_payment_breakdown(npq_contract)
-    within("[data-test='npq-payment-type']") do
-      expect(page).to have_content("Output fee")
-      expect(page).to have_content(number_to_pounds(expected_per_participant_output_payment_portion(npq_contract)))
-      expect(page).to have_content(eligible_and_payable_participant_count(npq_contract))
-      expect(page).to have_content(number_to_pounds(expected_output_fee_payment(npq_contract)))
+    within("main .govuk-grid-column-two-thirds table:nth-of-type(3)") do
+      output_fees_calculator = PaymentCalculator::NPQ::OutputPayment.call(contract: npq_contract, total_participants: eligible_and_payable_participant_count(npq_contract))
+      expect(page).to have_css("tr:nth-child(2) td:nth-child(1)", text: "Output fee")
+      expect(page).to have_css("tr:nth-child(2) td:nth-child(2)", text: number_to_pounds(output_fees_calculator[:per_participant]))
+      expect(page).to have_css("tr:nth-child(2) td:nth-child(3)", text: eligible_and_payable_participant_count(npq_contract))
+      expect(page).to have_css("tr:nth-child(2) td:nth-child(4)", text: number_to_pounds(output_fees_calculator[:subtotal]))
     end
   end
 
   def then_i_should_see_the_correct_vat_total(npq_contract)
-    within("[data-test='npq-payment-type']") do
-      expect(page).to have_content("VAT")
-      expect(page).to have_content(number_to_pounds(expected_total_vat(npq_contract)))
+    within("main .govuk-grid-column-two-thirds table:nth-of-type(3)") do
+      expect(page).to have_css("tr:nth-child(3) td:nth-child(1)", text: "VAT")
+      expect(page).to have_css("tr:nth-child(3) td:nth-child(4)", text: number_to_pounds(expected_total_vat(npq_contract)))
     end
   end
 
   def then_i_should_see_the_correct_total(npq_contract)
-    within("[data-test='npq-payment-type']") do
-      expected_service_fee_payment = expected_service_fee_payment(npq_contract)
-      expected_output_fee_payment  = expected_output_fee_payment(npq_contract)
+    within("main .govuk-grid-column-two-thirds table:nth-of-type(3)") do
+      expected_service_fee_payment = service_fees_calculator_for(npq_contract)[:monthly]
+      expected_output_fee_payment  = output_fees_calculator_for(npq_contract)[:subtotal]
       expected_total_vat           = expected_total_vat(npq_contract)
       expected_total               = expected_service_fee_payment + expected_output_fee_payment + expected_total_vat
 
-      expect(page).to have_content("Total payment")
-      expect(page).to have_content(number_to_pounds(expected_total))
+      expect(page).to have_css("tr:nth-child(4) td:nth-child(1)", text: "Total payment")
+      expect(page).to have_css("tr:nth-child(4) td:nth-child(4)", text: number_to_pounds(expected_total))
     end
   end
 end
