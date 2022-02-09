@@ -17,8 +17,8 @@ RSpec.describe "Manage CIP training", js: true do
     then_i_am_taken_to_roles_page
 
     when_i_visit_manage_training_dashboard
-    when_i_click_on_view_details
-    then_i_am_taken_to_cip_programme_choice_info_page
+    when_i_click_on_change_programme
+    expect(page).to have_content "Your school has chosen to deliver your own programme using DfE-accredited materials."
     then_the_page_should_be_accessible
     then_percy_should_be_sent_a_snapshot_named "CIP programme info"
   end
