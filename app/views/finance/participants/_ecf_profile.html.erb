@@ -30,6 +30,16 @@
   <% end %>
 
   <% summary_list.row do |row| %>
+    <% row.key { "Schedule identifier" } %>
+    <% row.value { pp.schedule&.schedule_identifier } %>
+  <% end %>
+
+  <% summary_list.row do |row| %>
+    <% row.key { "Schedule cohort" } %>
+    <% row.value { pp.schedule&.cohort&.start_year&.to_s } %>
+  <% end %>
+
+  <% summary_list.row do |row| %>
     <% row.key { "Created at" } %>
     <% row.value { pp.created_at.to_s(:govuk) } %>
   <% end %>
