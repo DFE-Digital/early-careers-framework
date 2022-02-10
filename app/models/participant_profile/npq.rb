@@ -6,7 +6,7 @@ class ParticipantProfile < ApplicationRecord
     belongs_to :school, optional: true
     belongs_to :npq_course, optional: true
 
-    has_one :npq_application, foreign_key: :id, dependent: :destroy
+    has_one :npq_application, foreign_key: :id
 
     self.validation_steps = %i[identity decision].freeze
 
