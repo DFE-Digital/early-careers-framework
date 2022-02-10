@@ -8,9 +8,9 @@ class Finance::Statement < ApplicationRecord
   belongs_to :cpd_lead_provider
 
   has_many :participant_declarations
-  scope :payable, -> { where("payment_date >= ?", Date.current) }
+  scope :payable, -> { where("deadline_date < DATE(NOW()) AND payment_date >= DATE(NOW())") }
   scope :closed,  -> { where("payment_date < ?", Date.current) }
-  scope :current, -> { where("deadline_date < DATE(NOW()) AND payment_date >= DATE(NOW())") }
+  scope :current, -> { where("deadline_date >= DATE(NOW())") }
   scope :upto_current, -> { payable.or(closed).or(current) }
 
   def past_deadline_date?

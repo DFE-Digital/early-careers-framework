@@ -11,5 +11,7 @@ RSpec.describe NPQLeadProvider, type: :model do
 
   describe "associations" do
     it { is_expected.to belong_to(:cpd_lead_provider).required(false) }
+    it { is_expected.to have_many(:statements).through(:cpd_lead_provider).class_name("Finance::Statement::NPQ").source(:npq_statements) }
+    it { is_expected.to have_one(:current_statement).through(:cpd_lead_provider).class_name("Finance::Statement::NPQ").source(:npq_statements).conditions("deadline_date >= DATE(NOW())") }
   end
 end

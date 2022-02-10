@@ -227,6 +227,7 @@ private
 
   def then_i_should_see_correct_breakdown_summary
     expect(page).to have_css("h1.govuk-heading-xl", text: lead_provider.name)
+    click_on "January 2022"
 
     within ".breakdown-summary" do
       expect(page).to have_content("Submission deadline")
