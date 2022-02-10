@@ -19,7 +19,8 @@ module Finance
   private
 
     def find_user_by_id_or_external_id
-      @user = Identity.find_user_by(id: params[:query] || params[:id])
+      query = params[:query] || params[:id]
+      @user = Identity.find_user_by(id: query) || NPQApplication.find_by(id: query)&.user
     end
   end
 end

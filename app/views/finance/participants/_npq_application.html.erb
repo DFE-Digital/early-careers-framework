@@ -1,16 +1,16 @@
 <%= govuk_summary_list do |summary_list| %>
   <% summary_list.row do |row| %>
-    <% row.key { "application id" } %>
-    <% row.value { application.id } %>
+    <% row.key { "Application ID" } %>
+    <% row.value { govuk_link_to application.id, finance_participant_path(application.id) } %>
   <% end %>
 
   <% summary_list.row do |row| %>
-    <% row.key { "Lead provider" } %>
+    <% row.key { "Lead Provider" } %>
     <% row.value { application.npq_lead_provider.name } %>
   <% end %>
 
   <% summary_list.row do |row| %>
-    <% row.key { "Lead provider approval status" } %>
+    <% row.key { "Lead Provider approval status" } %>
     <% row.value { application.lead_provider_approval_status } %>
   <% end %>
 
