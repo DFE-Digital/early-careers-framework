@@ -8,7 +8,6 @@ module Finance
           started: {
             all: :unique_for_lead_provider_and_course_identifier,
             eligible_or_payable: :unique_for_lead_provider_and_course_identifier,
-            # not_paid: :submitted_for_lead_provider_and_course,
           },
         }
       end
@@ -26,7 +25,7 @@ module Finance
 
       def aggregate(aggregation_type:, event_type:)
         scope = recorder.public_send(self.class.aggregation_types[event_type][aggregation_type], cpd_lead_provider, course_identifier)
-        scope = scope.where(statement_id: statement.id)
+        scope = scope.where(statement: statement)
         scope.count
       end
     end

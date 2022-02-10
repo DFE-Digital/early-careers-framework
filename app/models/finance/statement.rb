@@ -13,8 +13,8 @@ class Finance::Statement < ApplicationRecord
   scope :current, -> { where("deadline_date < DATE(NOW()) AND payment_date >= DATE(NOW())") }
   scope :upto_current, -> { payable.or(closed).or(current) }
 
-  def open?
-    payment_date > Time.current
+  def past_deadline_date?
+    participant_declarations.any?
   end
 
   def current?

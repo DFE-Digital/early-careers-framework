@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Finance
   module StatementHelper
     def statement_display_text(statement)
