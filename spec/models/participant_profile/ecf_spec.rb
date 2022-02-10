@@ -42,6 +42,48 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
     end
   end
 
+  describe "current_induction_record" do
+    let(:induction_programme) { create(:induction_programme, :fip, school_cohort: profile.school_cohort) }
+
+    context "when no induction record exists" do
+      it "returns nil" do
+        expect(profile.current_induction_record).to be_nil
+      end
+    end
+
+    context "when an induction record exists but it is not at active status" do
+      let!(:induction_record) { create(:induction_record, induction_programme: induction_programme, participant_profile: profile, status: "completed") }
+
+      it "returns nil" do
+        expect(profile.current_induction_record).to be_nil
+      end
+    end
+
+    context "when an active induction record exists with an end_date in the past" do
+      let!(:induction_record) { create(:induction_record, induction_programme: induction_programme, participant_profile: profile, status: "active", end_date: 2.days.ago) }
+
+      it "returns nil" do
+        expect(profile.current_induction_record).to be_nil
+      end
+    end
+
+    context "when an active induction record exists with an end_date in the future" do
+      let!(:induction_record) { create(:induction_record, induction_programme: induction_programme, participant_profile: profile, status: "active", end_date: 2.days.from_now) }
+
+      it "returns the induction record" do
+        expect(profile.current_induction_record).to eq induction_record
+      end
+    end
+
+    context "when an active induction record exists with a start_date in the future" do
+      let!(:induction_record) { create(:induction_record, induction_programme: induction_programme, participant_profile: profile, status: "active", start_date: 2.days.from_now) }
+
+      it "returns nil" do
+        expect(profile.current_induction_record).to be_nil
+      end
+    end
+  end
+
   describe "completed_validation_wizard?" do
     context "before any details have been entered" do
       it "returns false" do

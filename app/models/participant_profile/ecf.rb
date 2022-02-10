@@ -32,6 +32,11 @@ class ParticipantProfile < ApplicationRecord
     after_save :update_analytics
     after_update :sync_status_with_induction_record
 
+    def current_induction_record
+      now = Time.zone.now
+      induction_records.active.where("start_date < ? AND end_date IS NULL OR end_date > ?", now, now).first
+    end
+
     def ecf?
       true
     end
