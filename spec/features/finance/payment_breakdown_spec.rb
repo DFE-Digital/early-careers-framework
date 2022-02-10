@@ -5,31 +5,17 @@ require "rails_helper"
 RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type: :feature, js: true do
   include FinanceHelper
 
-  let!(:lead_provider) { create(:lead_provider, name: "Test provider", id: "cffd2237-c368-4044-8451-68e4a4f73369") }
+  let!(:lead_provider)    { create(:lead_provider, name: "Test provider", id: "cffd2237-c368-4044-8451-68e4a4f73369") }
   let(:cpd_lead_provider) { lead_provider.cpd_lead_provider }
-  let!(:contract) { create(:call_off_contract, lead_provider: lead_provider) }
-  let(:school) { create(:school) }
-  let(:cohort) { create(:cohort, :current) }
-  let!(:school_cohort) { create(:school_cohort, school: school, cohort: cohort) }
-  let!(:partnership) { create(:partnership, school: school_cohort.school, lead_provider: lead_provider, cohort: cohort) }
+  let!(:contract)         { create(:call_off_contract, lead_provider: lead_provider) }
+  let(:school)            { create(:school) }
+  let(:cohort)            { create(:cohort, :current) }
+  let!(:school_cohort)    { create(:school_cohort, school: school, cohort: cohort) }
+  let!(:partnership)      { create(:partnership, school: school_cohort.school, lead_provider: lead_provider, cohort: cohort) }
+  let(:nov_statement)     { Finance::Statement::ECF.find_by!(name: "November 2021", cpd_lead_provider: cpd_lead_provider) }
+  let(:jan_statement)     { Finance::Statement::ECF.find_by!(name: "January 2022", cpd_lead_provider: cpd_lead_provider) }
 
-  let!(:nov_statement) do
-    Finance::Statement::ECF.create!(
-      name: "November 2021",
-      deadline_date: Date.new(2021, 11, 30),
-      payment_date: Date.new(2021, 11, 30),
-      cpd_lead_provider: cpd_lead_provider,
-    )
-  end
-
-  let!(:jan_statement) do
-    Finance::Statement::ECF.create!(
-      name: "January 2022",
-      deadline_date: Date.new(2022, 0o1, 31),
-      payment_date: Date.new(2022, 0o1, 31),
-      cpd_lead_provider: cpd_lead_provider,
-    )
-  end
+  before { Importers::SeedStatements.new.call }
 
   scenario "Can get to ECF payment breakdown page for a provider" do
     given_i_am_logged_in_as_a_finance_user

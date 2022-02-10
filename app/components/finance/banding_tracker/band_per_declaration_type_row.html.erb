@@ -1,9 +1,9 @@
-<tr class="govuk-table__row">
-  <td <%=raw 'style="border-bottom: 1px solid black;"' if band_d? %> scope="role" class="govuk-table__cell"><%= band_name %></td>
-  <td <%=raw 'style="border-bottom: 1px solid black;"' if band_d? %> class="govuk-table__cell govuk-table__cell--numeric"><%= started %></td>
-  <td <%=raw 'style="border-bottom: 1px solid black;"' if band_d? %> class="govuk-table__cell govuk-table__cell--numeric"><%= retained_one %></td>
-  <td <%=raw 'style="border-bottom: 1px solid black;"' if band_d? %> class="govuk-table__cell govuk-table__cell--numeric"><%= retained_two %></td>
-  <td <%=raw 'style="border-bottom: 1px solid black;"' if band_d? %> class="govuk-table__cell govuk-table__cell--numeric"><%= retained_three %></td>
-  <td <%=raw 'style="border-bottom: 1px solid black;"' if band_d? %> class="govuk-table__cell govuk-table__cell--numeric"><%= retained_four %></td>
-  <td <%=raw 'style="border-bottom: 1px solid black;"' if band_d? %> class="govuk-table__cell govuk-table__cell--numeric"><%= completed %></td>
+<tr class="govuk-table__row<%=raw ' app-table-td-bottom_border' if band_d? %>">
+  <td  scope="role" class="govuk-table__cell"><%= band_name %></td>
+  <td  class="govuk-table__cell govuk-table__cell--numeric"><%= started %></td>
+  <td  class="govuk-table__cell govuk-table__cell--numeric"><%= retained_one %></td>
+  <td  class="govuk-table__cell govuk-table__cell--numeric"><%= retained_two %></td>
+  <td  class="govuk-table__cell govuk-table__cell--numeric"><%= retained_three %></td>
+  <td  class="govuk-table__cell govuk-table__cell--numeric"><%= retained_four %></td>
+  <td  class="govuk-table__cell govuk-table__cell--numeric"><%= completed %></td>
 </tr>

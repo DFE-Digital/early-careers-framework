@@ -6,10 +6,7 @@ module Finance
       def show
         @ecf_lead_provider = lead_provider_scope.find(params[:id])
         # TODO: back link goes to latest statement rather that where they were
-        @latest_statement = Statement::ECF
-          .where(cpd_lead_provider: @ecf_lead_provider.cpd_lead_provider)
-          .order(deadline_date: :desc)
-          .first
+        @latest_statement = @ecf_lead_provider.statements.payable.first
         @contract = @ecf_lead_provider.call_off_contract
       end
 
