@@ -1,4 +1,15 @@
-<% title = "You're eligible for this programme" %>
+<%
+    title =
+      if mentor? && school_cohort.fip?
+        if school_cohort.fip?
+          "You're eligible for funded mentor training and time off timetable"
+        else
+          "You're eligible for funded time off timetable to mentor ECTs"
+        end
+      else
+        "You're eligible for this programme"
+      end
+%>
 <% content_for :title, title %>
 
 <div class="govuk-grid-row">

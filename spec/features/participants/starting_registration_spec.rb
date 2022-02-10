@@ -18,7 +18,7 @@ private
   end
 
   def then_i_should_see_the_registration_heading
-    expect(page).to have_selector("h1", text: "Register for DfE-funded early career teacher training")
+    expect(page).to have_selector("h1", text: "Register for ECF-based training and mentoring")
   end
 
   def and_i_should_see_a_continue_button
