@@ -14,10 +14,14 @@ private
 
   attr_reader :participant_profile, :induction_programme, :start_date
 
-  def initialize(participant_profile:, induction_programme: nil, start_date: Time.zone.now)
+  def initialize(participant_profile:, induction_programme: nil, start_date: nil)
     @participant_profile = participant_profile
     @induction_programme = induction_programme || default_induction_programme
-    @start_date = start_date
+    @start_date = start_date || schedule_start_date
+  end
+
+  def schedule_start_date
+    participant_profile.schedule.milestones.first.start_date
   end
 
   def default_induction_programme
