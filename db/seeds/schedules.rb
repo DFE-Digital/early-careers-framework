@@ -32,5 +32,5 @@ Importers::SeedSchedule.new(
 
 Importers::SeedSchedule.new(
   path_to_csv: Rails.root.join("db/seeds/schedules/ecf_replacement.csv"),
-  klass: Finance::Schedule::ECFMentor,
+  klass: Finance::Schedule::Mentor,
 ).call

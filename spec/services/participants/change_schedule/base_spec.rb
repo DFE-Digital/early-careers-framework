@@ -50,12 +50,7 @@ RSpec.describe Participants::ChangeSchedule::Base do
       let(:user) { profile.user }
       let(:profile) { create(:mentor_participant_profile) }
       let(:schedule) do
-        create(
-          :schedule,
-          type: "Finance::Schedule::ECFMentor",
-          name: "Schedule for mentors only",
-          schedule_identifier: "ecf-replacement-april",
-        )
+        create(:ecf_mentor_schedule)
       end
 
       subject do
@@ -76,12 +71,7 @@ RSpec.describe Participants::ChangeSchedule::Base do
       let(:user) { profile.user }
       let(:profile) { create(:ect_participant_profile) }
       let(:schedule) do
-        create(
-          :schedule,
-          type: "Finance::Schedule::ECFMentor",
-          name: "Schedule for mentors only",
-          schedule_identifier: "ecf-replacement-april",
-        )
+        create(:ecf_mentor_schedule)
       end
 
       subject do
