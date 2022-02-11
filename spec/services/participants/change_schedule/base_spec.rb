@@ -10,7 +10,7 @@ RSpec.describe Participants::ChangeSchedule::Base do
       end
 
       def self.valid_courses
-        %w[some-course]
+        %w[ecf-induction ecf-mentor]
       end
 
       def user_profile
@@ -32,13 +32,55 @@ RSpec.describe Participants::ChangeSchedule::Base do
         klass.new(params: {
           schedule_identifier: nil,
           participant_id: user.id,
-          course_identifier: "some-course",
+          course_identifier: "ecf-induction",
           cpd_lead_provider: CpdLeadProvider.new,
         })
       end
 
       before do
         create(:schedule, name: "Schedule with no alias")
+      end
+
+      it "should have an error" do
+        expect { subject.call }.to raise_error(ActionController::ParameterMissing)
+      end
+    end
+
+    context "when changing to schedule suitable for the course" do
+      let(:user) { profile.user }
+      let(:profile) { create(:mentor_participant_profile) }
+      let(:schedule) do
+        create(:ecf_mentor_schedule)
+      end
+
+      subject do
+        klass.new(params: {
+          schedule_identifier: schedule.schedule_identifier,
+          participant_id: user.id,
+          course_identifier: "ecf-mentor",
+          cpd_lead_provider: CpdLeadProvider.new,
+        })
+      end
+
+      it "should not have an error" do
+        expect { subject.call }.not_to raise_error
+      end
+    end
+
+    context "when changing to schedule not suitable for the course" do
+      let(:user) { profile.user }
+      let(:profile) { create(:ect_participant_profile) }
+      let(:schedule) do
+        create(:ecf_mentor_schedule)
+      end
+
+      subject do
+        klass.new(params: {
+          schedule_identifier: schedule.schedule_identifier,
+          participant_id: user.id,
+          course_identifier: "ecf-induction",
+          cpd_lead_provider: CpdLeadProvider.new,
+        })
       end
 
       it "should have an error" do
@@ -70,7 +112,7 @@ RSpec.describe Participants::ChangeSchedule::Base do
       klass.new(params: {
         schedule_identifier: schedule.schedule_identifier,
         participant_id: user.id,
-        course_identifier: "some-course",
+        course_identifier: "ecf-induction",
         cpd_lead_provider: CpdLeadProvider.new,
         cohort: schedule.cohort.start_year,
       })

@@ -12,20 +12,24 @@ RSpec.shared_examples "a participant change schedule action service" do
     )
   end
 
+  let(:expected_schedule) { january_schedule }
+
   it "changes the schedule on user's profile" do
     expect {
       described_class.new(params: given_params).call
       user_profile.reload
-    }.to change(user_profile, :schedule).to(january_schedule)
+    }.to change(user_profile, :schedule).to(expected_schedule)
   end
 
+  let(:schedule_identifier_alias) { "ecf-january-standard-2021-alias" }
+
   it "succeeds when given alias of schedule identifier" do
-    params = given_params.merge({ schedule_identifier: "ecf-january-standard-2021-alias" })
+    params = given_params.merge({ schedule_identifier: schedule_identifier_alias })
 
     expect {
       described_class.new(params: params).call
       user_profile.reload
-    }.to change(user_profile, :schedule).to(january_schedule)
+    }.to change(user_profile, :schedule).to(expected_schedule)
   end
 
   it "fails when the schedule is invalid" do
@@ -40,7 +44,7 @@ RSpec.shared_examples "a participant change schedule action service" do
 
   it "creates a schedule on profile" do
     expect { described_class.new(params: participant_params).call }.to change { ParticipantProfileSchedule.count }.by(1)
-    expect(user_profile.participant_profile_schedules.first.schedule.schedule_identifier).to eq("ecf-january-standard-2021")
+    expect(user_profile.participant_profile_schedules.first.schedule.schedule_identifier).to eq(expected_schedule.schedule_identifier)
   end
 
   context "when a pending declaration exists" do
@@ -50,7 +54,8 @@ RSpec.shared_examples "a participant change schedule action service" do
     end
 
     it "fails when it would invalidate a valid declaration" do
-      january_schedule.milestones.each { |milestone| milestone.update!(start_date: milestone.start_date + 6.months, milestone_date: milestone.milestone_date + 6.months) }
+      expected_schedule.milestones.each { |milestone| milestone.update!(start_date: milestone.start_date + 6.months, milestone_date: milestone.milestone_date + 6.months) }
+
       expect { described_class.new(params: given_params).call }.to raise_error(ActionController::ParameterMissing)
     end
 
@@ -59,7 +64,7 @@ RSpec.shared_examples "a participant change schedule action service" do
       january_schedule.milestones.each { |milestone| milestone.update!(start_date: milestone.start_date + 6.months, milestone_date: milestone.milestone_date + 6.months) }
 
       described_class.new(params: given_params).call
-      expect(user_profile.reload.schedule.schedule_identifier).to eq("ecf-january-standard-2021")
+      expect(user_profile.reload.schedule.schedule_identifier).to eq(expected_schedule.schedule_identifier)
     end
   end
 end

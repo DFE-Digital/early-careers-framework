@@ -34,6 +34,11 @@ FactoryBot.define do
       end
     end
 
+    factory :ecf_mentor_schedule, class: "Finance::Schedule::Mentor", parent: :schedule do
+      name { "Schedule for mentors only" }
+      schedule_identifier { "ecf-replacement-april" }
+    end
+
     factory :npq_specialist_schedule, class: "Finance::Schedule::NPQSpecialist", parent: :schedule do
       name { "NPQ Specialist Spring 2021" }
       schedule_identifier { "npq-specialist-spring" }

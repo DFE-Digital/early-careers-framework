@@ -7,6 +7,8 @@ class Finance::Schedule::NPQSpecialist < Finance::Schedule
     npq-leading-teaching-development
   ].freeze
 
+  PERMITTED_COURSE_IDENTIFIERS = IDENTIFIERS
+
   def self.default
     find_by(cohort: Cohort.current, schedule_identifier: "npq-specialist-spring")
   end
