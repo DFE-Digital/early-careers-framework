@@ -11,6 +11,10 @@ module Finance
         npq-executive-leadership
       ].freeze
 
+      def self.permitted_course_identifiers
+        IDENTIFIERS
+      end
+
       def self.default
         find_by(cohort: Cohort.current, schedule_identifier: "npq-leadership-spring")
       end

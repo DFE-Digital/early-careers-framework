@@ -12,6 +12,7 @@ module Participants
       validate :not_already_withdrawn
       validate :schedule_valid_with_pending_declarations
       validate :validate_provider
+      validate :validate_permitted_schedule_for_course
 
       def initialize(params:)
         @participant_id = params[:participant_id]
@@ -84,6 +85,14 @@ module Participants
               errors.add(:schedule_identifier, I18n.t(:schedule_invalidates_declaration))
             end
           end
+        end
+      end
+
+      def validate_permitted_schedule_for_course
+        return unless schedule
+
+        unless schedule.class.permitted_course_identifiers.include?(course_identifier)
+          errors.add(:schedule_identifier, I18n.t(:schedule_invalid_for_course))
         end
       end
     end
