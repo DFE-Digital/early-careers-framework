@@ -91,7 +91,7 @@ module Participants
       def validate_permitted_schedule_for_course
         return unless schedule
 
-        unless schedule.class.permitted_course_identifiers.include?(course_identifier)
+        unless schedule.class::PERMITTED_COURSE_IDENTIFIERS.include?(course_identifier)
           errors.add(:schedule_identifier, I18n.t(:schedule_invalid_for_course))
         end
       end
