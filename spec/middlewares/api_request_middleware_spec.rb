@@ -2,31 +2,29 @@
 
 require "rails_helper"
 
-RSpec.describe ApiRequestMiddleware, type: :request do
+RSpec.describe ApiRequestMiddleware do
   let(:status) { 200 }
-  let(:headers) { { HEADER: "Yeah!" } }
+  let(:headers) { { "HEADER" => "Yeah!" } }
   let(:mock_response) { ["Hellowwworlds!"] }
 
-  def mock_app
-    main_app = lambda { |env|
+  let(:mock_app) do
+    lambda do |env|
       @env = env
       [status, headers, @body || mock_response]
-    }
-
-    builder = Rack::Builder.new
-    builder.use ApiRequestMiddleware
-    builder.run main_app
-    @app = builder.to_app
+    end
   end
 
+  subject { described_class.new(mock_app) }
+
+  let(:request) { Rack::MockRequest.new(subject) }
+
   before do
-    mock_app
     allow(ApiRequestJob).to receive(:perform_async)
   end
 
   describe "#call on a non-API path" do
     it "does not fire ApiRequestJob" do
-      get "/"
+      request.get "/"
 
       expect(ApiRequestJob).not_to have_received(:perform_async)
     end
@@ -34,20 +32,20 @@ RSpec.describe ApiRequestMiddleware, type: :request do
 
   describe "#call on an API path" do
     it "fires an ApiRequestJob" do
-      get "/api/v1/participants/ecf", params: { foo: "bar" }
+      request.get "/api/v1/participants/ecf", params: { foo: "bar" }
 
       expect(ApiRequestJob).to have_received(:perform_async).with(
-        hash_including(path: "/api/v1/participants/ecf", params: { "foo" => "bar" }, method: "GET"), anything, 401, anything
+        hash_including("path" => "/api/v1/participants/ecf", "params" => { "foo" => "bar" }, "method" => "GET"), anything, 200, anything
       )
     end
   end
 
   describe "#call on an API path with POST data" do
     it "fires an ApiRequestJob including post data" do
-      post "/api/v1/participant-declarations", as: :json, params: { foo: "bar" }
+      request.post "/api/v1/participant-declarations", as: :json, params: { foo: "bar" }.to_json
 
       expect(ApiRequestJob).to have_received(:perform_async).with(
-        hash_including(path: "/api/v1/participant-declarations", body: '{"foo":"bar"}', method: "POST"), anything, 401, anything
+        hash_including("path" => "/api/v1/participant-declarations", "body" => '{"foo":"bar"}', "method" => "POST"), anything, 200, anything
       )
     end
   end
@@ -57,7 +55,7 @@ RSpec.describe ApiRequestMiddleware, type: :request do
       allow(Rails.logger).to receive(:warn)
       allow(ApiRequestJob).to receive(:perform_async).and_raise(StandardError)
 
-      get "/api/v1/participants/ecf"
+      request.get "/api/v1/participants/ecf"
 
       expect(Rails.logger).to have_received(:warn)
     end
