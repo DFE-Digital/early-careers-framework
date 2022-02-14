@@ -23,4 +23,8 @@ FactoryBot.define do
   trait :in_challenge_window do
     challenge_deadline { rand(1..21).days.from_now }
   end
+
+  trait :outside_challenge_window do
+    challenge_deadline { rand(1..21).days.ago }
+  end
 end

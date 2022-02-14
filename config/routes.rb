@@ -39,12 +39,12 @@ Rails.application.routes.draw do
   resource :accessibility_statement, only: :show, path: "accessibility-statement"
   resource :dashboard, controller: :dashboard, only: :show
   resource :supplier_dashboard, controller: :supplier_dashboard, only: :show
-  resource :challenge_partnership, path: "report-incorrect-partnership", only: %i[show create] do
-    collection do
-      get "link-expired", action: :link_expired
-      get "already-challenged", action: :already_challenged
-      get "success", action: :success
-    end
+
+  multistep_form :challenge_partnership, ChallengePartnershipForm, controller: 'challenge_partnerships', path: "report-incorrect-partnership" do
+    get "link-expired", action: :link_expired
+    get "already-challenged", action: :already_challenged
+    get "already-started", action: :already_started
+    get "success", action: :success
   end
 
   namespace :api, defaults: { format: "json" } do
@@ -185,9 +185,9 @@ Rails.application.routes.draw do
           resource :change_programme, only: %i[show update], path: "change-programme", controller: "schools/cohorts/change_programme" do
             post :confirm
           end
-          resource :challenge_partnership, only: %i[new create], path: "challenge-partnership", controller: "schools/cohorts/challenge_partnership" do
-            post :confirm
-          end
+
+          multistep_form :challenge_partnership, ChallengePartnershipForm, path: "challenge-partnership", controller: "schools/cohorts/challenge_partnership"
+
           resource :change_training_materials, only: %i[show update], path: "change-training-materials", controller: "schools/cohorts/change_training_materials" do
             post :confirm
           end

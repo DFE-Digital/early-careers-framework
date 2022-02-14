@@ -2,62 +2,44 @@
 
 class ChallengePartnershipsController < ApplicationController
   include Pundit
-  before_action :authorize_partnership, only: %i[show create]
-  before_action :set_form, only: %i[show create]
+  include Multistep::Controller
+  form ChallengePartnershipForm, as: :challenge_partnership_form
 
-  def show; end
+  before_action :check_partnership
 
-  def create
-    render :show and return unless @challenge_partnership_form.valid?
-
-    @challenge_partnership_form.challenge!
-    redirect_to success_challenge_partnership_path
+  setup_form do |form|
+    form.partnership = partnership
   end
+
+  abandon_journey_path { root_path }
 
   def link_expired; end
-
-  def already_challenged
-    @school_name = params[:school_name]
-  end
-
-  def success; end
+  def already_challenged; end
+  def already_started; end
 
 private
 
-  def authorize_partnership
-    @token = params[:token] || params.dig(:challenge_partnership_form, :token)
-    partnership_id = params[:partnership] || params.dig(:challenge_partnership_form, :partnership_id)
-    if @token.present?
-      notification_email = PartnershipNotificationEmail.find_by(token: @token)
-      raise ActionController::RoutingError, I18n.t(:not_found) if notification_email.blank?
+  def check_partnership
+    redirect_to action: :already_challenged and return if partnership.challenged?
+    redirect_to action: :link_expired and return unless partnership.in_challenge_window?
 
-      @partnership = notification_email.partnership
-    elsif partnership_id.present?
-      @partnership = Partnership.find(partnership_id)
-      authorize(@partnership, :update?)
-    else
-      raise ActionController::RoutingError, I18n.t(:not_found)
-    end
+    participants = ParticipantProfile::ECF.where(school_cohort: SchoolCohort.where(school: partnership.school, cohort: partnership.cohort))
+    declarations_present = ParticipantDeclaration.not_voided.where(participant_profile: participants).exists?
+
+    redirect_to action: :already_started and return if declarations_present
   end
 
-  def set_form
-    @school_name = @partnership.school.name
-    redirect_to already_challenged_challenge_partnership_path(school_name: @school_name) and return if @partnership.challenged?
+  def partnership
+    return @partnership if defined?(@partnership)
+    return @partnership = form.partnership unless action_name == 'start'
 
-    redirect_to link_expired_challenge_partnership_path and return unless @partnership.in_challenge_window?
-
-    @challenge_partnership_form = ChallengePartnershipForm.new(
-      school_name: @school_name,
-      token: @token,
-      partnership_id: @partnership.id,
-    )
-
-    @challenge_partnership_form.assign_attributes(form_params)
-  end
-
-  def form_params
-    return {} unless params.key?(:challenge_partnership_form)
-
-    params.require(:challenge_partnership_form).permit(:challenge_reason, :token)
+    @partnership = if params[:token].present?
+                     notification_email = PartnershipNotificationEmail.find_by!(token: params[:token])
+                     notification_email.partnership
+                   elsif params[:partnership].present?
+                     authorize Partnership.find(params[:partnership]), :update?
+                   else
+                     raise ActionController::RoutingError, I18n.t(:not_found)
+                   end
   end
 end

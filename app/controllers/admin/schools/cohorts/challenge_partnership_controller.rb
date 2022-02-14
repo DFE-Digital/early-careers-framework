@@ -4,30 +4,31 @@ module Admin
   module Schools
     module Cohorts
       class ChallengePartnershipController < ::Admin::BaseController
-        skip_after_action :verify_policy_scoped
-        before_action :set_challenge_partnership_form, only: %i[confirm create]
+        include Multistep::Controller
+        form ChallengePartnershipForm, as: :challenge_partnership_form
 
-        def new
+        skip_after_action :verify_policy_scoped
+        skip_after_action :verify_authorized
+
+        setup_form do |form|
           school = School.friendly.find params[:school_id]
           cohort = ::Cohort.find_by(start_year: params[:id])
-          partnership = Partnership.find_by(school: school, cohort: cohort)
-          authorize partnership, :update?
-          @challenge_partnership_form = ChallengePartnershipForm.new(
-            school_name: school.name,
-            partnership_id: partnership.id,
-          )
+          form.partnership = authorize(Partnership.find_by(school: school, cohort: cohort), :update?)
         end
 
-        def confirm
-          authorize @challenge_partnership_form.partnership, :update?
-          render :new unless @challenge_partnership_form.valid?
+        abandon_journey_path do
+          if partnership
+            admin_school_cohorts_path(partnership.school)
+          else
+            admin_schools_path
+          end
         end
 
-        def create
-          authorize @challenge_partnership_form.partnership, :update?
-          @challenge_partnership_form.challenge!
+        def complete
+          super
+
           set_success_message heading: "Induction programme has been changed"
-          redirect_to admin_school_cohorts_path
+          redirect_to admin_school_cohorts_path(school_id: form.partnership.school.slug)
         end
 
       private
@@ -36,6 +37,14 @@ module Admin
           @challenge_partnership_form = ChallengePartnershipForm.new(
             params.require(:challenge_partnership_form).permit(:partnership_id, :challenge_reason),
           )
+        end
+
+        def partnership
+          challenge_partnership_form&.partnership
+        end
+
+        def authorize_partnership
+          authorize(partnership, :update?)
         end
       end
     end

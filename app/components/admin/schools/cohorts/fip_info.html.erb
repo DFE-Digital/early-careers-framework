@@ -22,7 +22,7 @@
     </dd>
     <dd class="govuk-summary-list__actions">
       <% if school_cohort.lead_provider.present? %>
-        <%= govuk_link_to "Change", new_admin_school_challenge_partnership_path(id: school_cohort.cohort.start_year) %>
+        <%= govuk_link_to "Change", challenge_partnership_admin_school_cohort_path(id: school_cohort.cohort.start_year) %>
         <span class="govuk-visually-hidden"> partnership</span>
       <% end %>
     </dd>

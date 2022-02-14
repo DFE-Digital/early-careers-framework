@@ -14,6 +14,13 @@
         <li>Contact your training provider about the change.</li>
         <li>Once your provider knows, email the DfE to let us know too: <%= render MailToSupportComponent.new %>.</li>
       </ol>
+      <% if @partnership&.challengeable? %>
+        <h2 class="govuk-heading-m">Tell us if these training provider details are wrong</h2>
+        <p>
+          <%= @partnership.lead_provider.name %> and <%= @partnership.delivery_partner.name %> have told us they’re providing your training.
+          If this is wrong, you need to <%= link_to "tell us before #{@partnership.challenge_deadline.to_date.to_s(:govuk) }", challenge_partnership_path(partnership: @partnership) %>
+        </p>
+      <% end %>
     <% elsif @school_cohort.school_funded_fip? %>
       <p class="govuk-body">Your school has chosen to use a training provider, funded by your school.</p>
       <p class="govuk-body">Follow these steps to change how you run your programme.</p>

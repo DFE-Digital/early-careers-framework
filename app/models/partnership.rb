@@ -38,6 +38,16 @@ class Partnership < ApplicationRecord
     update!(challenge_reason: reason, challenged_at: Time.zone.now)
   end
 
+  def challengeable?
+    return false unless in_challenge_window?
+
+    school_cohorts = SchoolCohort.where(school: school, cohort: cohort)
+    participants = ParticipantProfile::ECF.where(school_cohort_id: school_cohorts.select(:id))
+    return false if ParticipantDeclaration.exists?(participant_profile_id: participants.select(:id))
+
+    true
+  end
+
   def in_challenge_window?
     challenge_deadline > Time.zone.now
   end

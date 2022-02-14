@@ -1,0 +1,12 @@
+<% content_for :title, "Report provider error - already started" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-xl"><%= @school_name %></span>
+    <h1 class="govuk-heading-xl">Contact your training provider</h1>
+
+    <p><%= @partnership.lead_provider.name %> and <%= @partnership.delivery_partner.name %> have ofically reported that they're training ECTs and mentors at your school.</p>
+    <p>You must contact your provider if this is not correct.</p>
+    <p>Your provider will need to withdraw any ECTs or mentors who are no longer training at your school</p>
+  </div>
+</div>

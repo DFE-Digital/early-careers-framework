@@ -15,7 +15,7 @@ class Schools::DashboardController < Schools::BaseController
   def show
     @partnership = @school.partnerships.active.find_by(cohort: @cohort_list)
 
-    if @partnership&.in_challenge_window?
+    if @partnership&.challengeable?
       @report_mistake_link = challenge_partnership_path(partnership: @partnership)
       @mistake_link_expiry = @partnership.challenge_deadline&.strftime("%d/%m/%Y")
     end

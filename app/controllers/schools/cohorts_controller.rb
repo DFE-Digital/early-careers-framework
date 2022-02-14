@@ -6,6 +6,7 @@ module Schools
     skip_after_action :verify_policy_scoped
 
     before_action :set_school_cohort
+    before_action :set_partnership, only: %i[change_programme]
 
     def show
       if @school_cohort.can_change_programme?
@@ -17,6 +18,14 @@ module Schools
 
     def roles
       @hide_button = true if params[:info]
+    end
+
+    private
+
+    def set_partnership
+      return unless @school_cohort.school_chose_fip?
+
+      @partnership = @school.partnerships.unchallenged.find_by(cohort: @school_cohort.cohort)
     end
   end
 end

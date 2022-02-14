@@ -8,7 +8,7 @@ RSpec.describe ChallengePartnershipForm, type: :model do
     end
   end
 
-  describe "#challenge!" do
+  describe "#save!!" do
     let(:partnership) { create :partnership }
     let(:reason) { described_class.new.challenge_reason_options.sample.id }
 
@@ -16,7 +16,7 @@ RSpec.describe ChallengePartnershipForm, type: :model do
 
     it "calls Partnerships::Challenge" do
       expect(Partnerships::Challenge).to receive(:call).with(partnership, reason)
-      subject.challenge!
+      subject.save!
     end
   end
 

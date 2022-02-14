@@ -3,17 +3,19 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <%= govuk_panel(
-          title_text: "Your report has been submitted",
+          title_text: "We've removed that provider from your account",
           text: nil,
           classes: "govuk-!-margin-bottom-8",
           html_attributes: { "data-test": "success-panel" }
         ) %>
 
     <h2 class="govuk-heading-m">What happens next</h2>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>the training partner will be notified</li>
-      <li>they may also contact you to discuss any issues</li>
-      <li>if you do not hear from a training provider, your issue will be resolved directly</li>
-    </ul>
+    <p>We'll let <%= @partnership.lead_provider %> and <%= @partnership.delivery_partner.name %> know that your school will not be working with them.</p>
+    <p>They may contact you to confirm this.</p>
+    <p>It’s important to confirm with the provider you do want to work with as soon as possible.</p>
+    <p>
+      <%= link_to "Return to manage your training", schools_dashboard_path(@partnership.school) %>
+    </p>
+
   </div>
 </div>

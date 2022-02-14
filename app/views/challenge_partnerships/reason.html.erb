@@ -1,0 +1,16 @@
+<% content_for :title, "Report provider error" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-xl"><%= @school_name %></span>
+    <%= form_for challenge_partnership_form, url: { action: :update }, method: :patch do |f| %>
+      <%= f.govuk_collection_radio_buttons(
+            :challenge_reason,
+            challenge_partnership_form.challenge_reason_options,
+            :id,
+            :name,
+            legend: { text: "Why are these training provider details wrong", size: "xl", tag: "h1" }) %>
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

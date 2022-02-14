@@ -3,7 +3,7 @@
 module Multistep
   module RouteMappingExtension
     def multistep_form(route_key, form_class, controller: route_key.to_s, path: route_key.to_s, &block)
-      get path, to: "#{controller}#start"
+      get route_key, to: "#{controller}#start", path: path
 
       step_names = form_class.steps.keys
         .map(&:to_s)
