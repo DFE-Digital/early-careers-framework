@@ -28,8 +28,6 @@ module EarlyCareerTeachers
             profile.update_column(:request_for_details_sent_at, Time.zone.now)
             ParticipantDetailsReminderJob.schedule(profile)
           end
-
-          Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile: profile)
         end
       end
     end

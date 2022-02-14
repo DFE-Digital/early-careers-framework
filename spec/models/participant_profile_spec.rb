@@ -23,7 +23,7 @@ RSpec.describe ParticipantProfile, type: :model do
     expect(user.reload.updated_at).to be_within(1.second).of Time.zone.now
   end
 
-  it "updates analytics when training_status_changed?", :with_default_schedules do
+  it "updates analytics when any attributes changes", :with_default_schedules do
     profile = create(:ecf_participant_profile, training_status: :active)
     profile.training_status = :withdrawn
     expect {
