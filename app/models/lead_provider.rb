@@ -26,6 +26,7 @@ class LeadProvider < ApplicationRecord
   has_many :lead_provider_api_tokens
   has_one :call_off_contract
 
-  has_many :statements, through: :cpd_lead_provider, class_name: "Finance::Statement::ECF"
+  has_many :statements, through: :cpd_lead_provider, class_name: "Finance::Statement::ECF", source: :ecf_statements
+  has_one :current_statement, -> { current }, through: :cpd_lead_provider, class_name: "Finance::Statement::ECF", source: :ecf_statements
   validates :name, presence: { message: "Enter a name" }
 end

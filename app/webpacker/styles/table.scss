@@ -5,3 +5,7 @@
 
   margin-bottom: govuk-spacing(9);
 }
+
+.app-table-td-bottom_border {
+  td { border-bottom: 1px solid black; }
+}

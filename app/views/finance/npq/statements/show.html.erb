@@ -4,8 +4,8 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-one-third">
     <ul class="govuk-list">
-      <% Finance::Statement::NPQ.where(cpd_lead_provider: @cpd_lead_provider).each do |statement| %>
-        <li><%= text_otherwise_link_to(statement.name, finance_npq_lead_provider_statement_path(lead_provider_id: @npq_lead_provider, id: statement.name), params[:id] == statement.name) %></li>
+      <% @statements.each do |statement| %>
+        <li><%= text_otherwise_link_to(statement_display_text(statement), finance_npq_lead_provider_statement_path(@npq_lead_provider, statement), statement == @statement) %></li>
       <% end %>
     </ul>
   </div>
@@ -23,7 +23,7 @@
 
     <h2 class="govuk-heading-m"><%=t("finance.npq.payment_breakdown") %></h2>
 
-    <table class="govuk-table payment-breakdown-table" data-test="npq-courses-total-paid">
+    <table class="govuk-table payment-breakdown-table">
       <tbody>
         <%= render Finance::NPQ::PaymentOverviews::PaymentCoursesRow.with_collection(@breakdowns, statement: @statement, npq_lead_provider: @npq_lead_provider) %>
 
