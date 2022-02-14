@@ -5,6 +5,8 @@ class ApiRequestJob
   include ActionController::HttpAuthentication::Token
 
   def perform(request_data, response_data, status_code, created_at)
+    request_data = request_data.with_indifferent_access
+    response_data = response_data.with_indifferent_access
     request_headers = request_data.fetch(:headers, {})
     token = auth_token(request_headers.delete("HTTP_AUTHORIZATION"))
     cpd_lead_provider = token.is_a?(LeadProviderApiToken) ? token.owner : nil

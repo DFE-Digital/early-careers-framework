@@ -29,7 +29,7 @@ class ApiRequestMiddleware
 
     begin
       if trace_request?
-        ApiRequestJob.perform_async(request_data, response_data, status, Time.zone.now)
+        ApiRequestJob.perform_async(request_data.stringify_keys, response_data.stringify_keys, status, Time.zone.now.to_s)
       end
     rescue StandardError => e
       Rails.logger.warn e.message
