@@ -76,6 +76,10 @@ Rails.application.routes.draw do
       end
       resources :npq_participants, only: %i[index], path: "participants/npq" do
         concerns :participant_actions
+
+        member do
+          put :change_schedule, path: "change-schedule"
+        end
       end
       resources :users, only: %i[index create]
       resources :ecf_users, only: %i[index create], path: "ecf-users"

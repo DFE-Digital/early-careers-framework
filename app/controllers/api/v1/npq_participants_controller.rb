@@ -12,6 +12,12 @@ module Api
         render json: NPQParticipantSerializer.new(paginate(npq_participants), params: { cpd_lead_provider: current_user }).serializable_hash.to_json
       end
 
+      def change_schedule
+        service = recorder(service_namespace: ::Participants::ChangeSchedule).new(params: params_for_recorder)
+        result = service.call
+        render json: serialized_response(result)
+      end
+
     private
 
       def serialized_response(participant_profile)

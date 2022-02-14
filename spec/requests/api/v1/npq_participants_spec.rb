@@ -3,11 +3,13 @@
 require "rails_helper"
 
 RSpec.describe "NPQ Participants API", type: :request do
+  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
+  let(:bearer_token) { "Bearer #{token}" }
+
   describe "GET /api/v1/participants/npq", :with_default_schedules do
     let(:npq_lead_provider) { create(:npq_lead_provider) }
     let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider: npq_lead_provider) }
-    let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
-    let(:bearer_token) { "Bearer #{token}" }
+
     let!(:npq_applications) do
       create_list(:npq_application, 3, :accepted, npq_lead_provider: npq_lead_provider, school_urn: "123456")
     end
@@ -159,6 +161,39 @@ RSpec.describe "NPQ Participants API", type: :request do
         get "/api/v1/participants/npq"
         expect(response.status).to eq 403
       end
+    end
+  end
+
+  describe "PUT /api/v1/participants/npq/:id/change-schedule" do
+    let(:npq_lead_provider) { profile.npq_application.npq_lead_provider }
+    let(:cpd_lead_provider) { npq_lead_provider.cpd_lead_provider }
+    let(:profile) { create(:npq_participant_profile) }
+    let(:user) { profile.user }
+    let(:new_schedule) do
+      if Finance::Schedule::NPQLeadership::IDENTIFIERS.include?(profile.npq_course.identifier)
+        create(:npq_leadership_schedule, schedule_identifier: SecureRandom.alphanumeric)
+      elsif Finance::Schedule::NPQSpecialist::IDENTIFIERS.include?(profile.npq_course.identifier)
+        create(:npq_specialist_schedule, schedule_identifier: SecureRandom.alphanumeric)
+      else
+        create(:npq_aso_schedule, schedule_identifier: SecureRandom.alphanumeric)
+      end
+    end
+
+    it "changes the schedules of the specified profile" do
+      default_headers[:Authorization] = bearer_token
+
+      put "/api/v1/participants/npq/#{user.id}/change-schedule", params: {
+        data: {
+          type: "participant-change-schedule",
+          attributes: {
+            schedule_identifier: new_schedule.schedule_identifier,
+            course_identifier: profile.npq_course.identifier,
+            cohort: new_schedule.cohort.start_year,
+          },
+        },
+      }
+
+      expect(profile.reload.schedule).to eql(new_schedule)
     end
   end
 end
