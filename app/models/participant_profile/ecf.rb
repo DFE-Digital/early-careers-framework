@@ -29,7 +29,7 @@ class ParticipantProfile < ApplicationRecord
       secondary: "secondary",
     }, _suffix: "profile"
 
-    after_save :update_analytics
+    after_commit :update_analytics
 
     def ecf?
       true

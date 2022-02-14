@@ -19,22 +19,22 @@ module Mentors
           profile.school = school_cohort.school
         end
 
-        ParticipantProfile::Mentor.create!({
+        self.mentor_profile = ParticipantProfile::Mentor.create!({
           teacher_profile: teacher_profile,
           schedule: Finance::Schedule::ECF.default,
           participant_identity: Identity::Create.call(user: user),
-        }.merge(mentor_attributes)) do |mentor_profile|
-          ParticipantProfileState.create!(participant_profile: mentor_profile)
-          ParticipantMailer.participant_added(participant_profile: mentor_profile).deliver_later
-          mentor_profile.update_column(:request_for_details_sent_at, Time.zone.now)
-          ParticipantDetailsReminderJob.schedule(mentor_profile)
-        end
+        }.merge(mentor_attributes))
+        mentor_profile.participant_profile_states.create!
       end
+      send_participant_added_mailer
+
+      mentor_profile
     end
 
   private
 
     attr_reader :full_name, :email, :start_term, :school_cohort
+    attr_accessor :mentor_profile
 
     def initialize(full_name:, email:, school_cohort:, start_term: "autumn_2021", **)
       @full_name = full_name
@@ -50,6 +50,14 @@ module Mentors
         sparsity_uplift: sparsity_uplift?(start_year),
         pupil_premium_uplift: pupil_premium_uplift?(start_year),
       }
+    end
+
+    def send_participant_added_mailer
+      ActiveRecord::Base.transaction do
+        ParticipantMailer.participant_added(participant_profile: mentor_profile).deliver_later
+        mentor_profile.update_column(:request_for_details_sent_at, Time.zone.now)
+        ParticipantDetailsReminderJob.schedule(mentor_profile)
+      end
     end
   end
 end
