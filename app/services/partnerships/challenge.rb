@@ -25,6 +25,8 @@ module Partnerships
           school_cohort = partnership.school.school_cohorts.find_by(cohort: partnership.cohort)
           school_cohort.update!(induction_programme_choice: :no_early_career_teachers,
                                 opt_out_of_updates: true)
+
+          school_cohort.ecf_participant_profiles.each(&:withdrawn_record!)
         end
       end
 

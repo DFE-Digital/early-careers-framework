@@ -68,6 +68,21 @@ RSpec.describe Partnerships::Challenge do
       it "opts the school out of updates" do
         expect { subject.call }.to change { school_cohort.reload.opt_out_of_updates }.to true
       end
+
+      it "withdraws all the participants" do
+        participants = create_list(
+          :ecf_participant_profile,
+          3,
+          school_cohort: partnership.school.school_cohorts.find_by!(cohort: partnership.cohort),
+        )
+
+        subject.call
+
+        participants.each do |participant|
+          participant.reload
+          expect(participant).to be_withdrawn_record
+        end
+      end
     end
   end
 end
