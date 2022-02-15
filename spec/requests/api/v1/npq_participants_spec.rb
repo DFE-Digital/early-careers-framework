@@ -5,11 +5,12 @@ require "rails_helper"
 RSpec.describe "NPQ Participants API", type: :request do
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
   let(:bearer_token) { "Bearer #{token}" }
+  let(:npq_lead_provider) { create(:npq_lead_provider) }
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider: npq_lead_provider) }
+
+  before { default_headers[:Authorization] = bearer_token }
 
   describe "GET /api/v1/participants/npq", :with_default_schedules do
-    let(:npq_lead_provider) { create(:npq_lead_provider) }
-    let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider: npq_lead_provider) }
-
     let!(:npq_applications) do
       create_list(:npq_application, 3, :accepted, npq_lead_provider: npq_lead_provider, school_urn: "123456")
     end
@@ -17,10 +18,6 @@ RSpec.describe "NPQ Participants API", type: :request do
     context "when authorized" do
       let(:npq_application) { npq_applications.sample }
       let(:npq_course)      { npq_application.npq_course }
-
-      before do
-        default_headers[:Authorization] = bearer_token
-      end
 
       describe "JSON Index API" do
         let(:parsed_response) { JSON.parse(response.body) }
@@ -164,36 +161,32 @@ RSpec.describe "NPQ Participants API", type: :request do
     end
   end
 
-  describe "PUT /api/v1/participants/npq/:id/change-schedule" do
-    let(:npq_lead_provider) { profile.npq_application.npq_lead_provider }
-    let(:cpd_lead_provider) { npq_lead_provider.cpd_lead_provider }
-    let(:profile) { create(:npq_participant_profile) }
-    let(:user) { profile.user }
+  describe "PUT /api/v1/participants/npq/:id/change-schedule", :with_default_schedules do
+    let(:npq_course)      { create(:npq_course) }
+    let(:npq_application) { create(:npq_application, :accepted, npq_lead_provider: npq_lead_provider, npq_course: npq_course) }
+
     let(:new_schedule) do
-      if Finance::Schedule::NPQLeadership::IDENTIFIERS.include?(profile.npq_course.identifier)
-        create(:npq_leadership_schedule, schedule_identifier: SecureRandom.alphanumeric)
-      elsif Finance::Schedule::NPQSpecialist::IDENTIFIERS.include?(profile.npq_course.identifier)
-        create(:npq_specialist_schedule, schedule_identifier: SecureRandom.alphanumeric)
-      else
-        create(:npq_aso_schedule, schedule_identifier: SecureRandom.alphanumeric)
-      end
+      Finance::Schedule
+        .where("schedule_identifier ILIKE ?", "npq-%")
+        .where.not(schedule_identifier: NPQCourse.schedule_for(npq_course))
+        .first
     end
 
     it "changes the schedules of the specified profile" do
-      default_headers[:Authorization] = bearer_token
-
-      put "/api/v1/participants/npq/#{user.id}/change-schedule", params: {
+      put "/api/v1/participants/npq/#{npq_application.profile.user_id}/change-schedule", params: {
         data: {
           type: "participant-change-schedule",
           attributes: {
             schedule_identifier: new_schedule.schedule_identifier,
-            course_identifier: profile.npq_course.identifier,
+            course_identifier: npq_course.identifier,
             cohort: new_schedule.cohort.start_year,
           },
         },
       }
 
-      expect(profile.reload.schedule).to eql(new_schedule)
+      expect(npq_application.profile.reload.schedule).to eql(new_schedule)
+      expect(JSON.parse).to hav
+      print response.body
     end
   end
 end

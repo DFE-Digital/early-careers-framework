@@ -14,6 +14,12 @@ module Api
       perform_action(service_namespace: ::Participants::Resume)
     end
 
+    def change_schedule
+      service = recorder(service_namespace: ::Participants::ChangeSchedule).new(params: params_for_recorder)
+      result = service.call
+      render json: serialized_response(result)
+    end
+
   private
 
     def perform_action(service_namespace:)
