@@ -40,7 +40,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     and_percy_should_be_sent_a_snapshot_named("Payment breakdown per NPQ lead provider")
 
     [npq_leading_teaching_contract, npq_leading_behaviour_culture_contract, npq_leading_teaching_development_contract].each do |npq_contract|
-      when_i_click_on(npq_contract)
+      when_i_click_on_contract(npq_contract)
       then_i_should_see_correct_breakdown_summary(npq_contract)
       then_i_should_see_correct_service_fee_payment_breakdown(npq_contract)
       then_i_should_see_correct_output_payment_breakdown(npq_contract)
@@ -49,12 +49,22 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
       when_i_click "Back"
     end
 
-    when_i_click_on(npq_leading_teaching_contract)
+    when_i_click_on("View voided declarations")
+    then_i_see_voided_declarations
+    when_i_click "Back"
+
+    when_i_click_on_contract(npq_leading_teaching_contract)
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named("Payment breakdown per contract")
   end
 
 private
+
+  def then_i_see_voided_declarations
+    first("table") do
+      expect(page).to have_css("tr", count: 4) # headers + (3 * 1) # 1 for each of the 3 courses
+    end
+  end
 
   def create_accepted_application(user, npq_course, npq_lead_provider)
     Identity::Create.call(user: user, origin: :npq)
@@ -160,8 +170,12 @@ private
     end
   end
 
-  def when_i_click_on(npq_contract)
+  def when_i_click_on_contract(npq_contract)
     click_on I18n.t(npq_contract.course_identifier, scope: %i[courses npq])
+  end
+
+  def when_i_click_on(string)
+    click_on string
   end
 
   def expected_service_fee_payment(npq_contract)

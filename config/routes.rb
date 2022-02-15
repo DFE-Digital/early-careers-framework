@@ -319,6 +319,10 @@ Rails.application.routes.draw do
       resources :lead_providers, path: "payment-overviews", controller: "payment_overviews", only: %i[show] do
         resources :statements, only: %i[show] do
           resources :courses, only: %i[show], controller: "course_payment_breakdowns"
+
+          member do
+            get :voided
+          end
         end
       end
 
