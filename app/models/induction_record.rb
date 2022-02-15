@@ -15,4 +15,10 @@ class InductionRecord < ApplicationRecord
     transferred: "transferred",
     completed: "completed",
   }
+
+  enum training_status: {
+    active: "active",
+    deferred: "deferred",
+    withdrawn: "withdrawn",
+  }, _prefix: "training_status"
 end

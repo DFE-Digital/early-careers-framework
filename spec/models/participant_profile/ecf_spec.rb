@@ -32,12 +32,28 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
       end
     end
 
-    context "when the status is not changed" do
+    context "when the status has not changed" do
       before { induction_record.completed! }
 
       it "does not update the status" do
         profile.primary_profile!
         expect(induction_record.reload).to be_completed
+      end
+    end
+
+    context "when the training_status changes" do
+      it "updates the training_status on the active induction record" do
+        profile.training_status_withdrawn!
+        expect(induction_record.reload).to be_training_status_withdrawn
+      end
+    end
+
+    context "when the training_status has not changed" do
+      before { induction_record.training_status_deferred! }
+
+      it "does not update the training_status" do
+        profile.primary_profile!
+        expect(induction_record.reload).to be_training_status_deferred
       end
     end
   end

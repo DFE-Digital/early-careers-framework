@@ -66,6 +66,7 @@ class ParticipantProfile < ApplicationRecord
 
     def sync_status_with_induction_record
       induction_records.active.first&.update!(status: status) if saved_change_to_status?
+      induction_records.active.first&.update!(training_status: training_status) if saved_change_to_training_status?
     end
   end
 end
