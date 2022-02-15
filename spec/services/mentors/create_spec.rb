@@ -65,6 +65,33 @@ RSpec.describe Mentors::Create, :with_default_schedules do
     }.to change { user.reload.full_name }
   end
 
+  context "when default induction programme is set on the school cohort" do
+    it "creates an induction record" do
+      induction_programme = create(:induction_programme, :fip, school_cohort: school_cohort)
+      school_cohort.update!(default_induction_programme: induction_programme)
+
+      expect {
+        described_class.call(
+          email: user.email,
+          full_name: user.full_name,
+          school_cohort: school_cohort,
+        )
+      }.to change { InductionRecord.count }.by(1)
+    end
+  end
+
+  context "when there is no default induction programme set" do
+    it "does not create an induction record" do
+      expect {
+        described_class.call(
+          email: user.email,
+          full_name: user.full_name,
+          school_cohort: school_cohort,
+        )
+      }.not_to change { InductionRecord.count }
+    end
+  end
+
   it "schedules participant_added email" do
     expect {
       described_class.call(
