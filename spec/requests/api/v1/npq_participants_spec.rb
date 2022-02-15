@@ -162,31 +162,32 @@ RSpec.describe "NPQ Participants API", type: :request do
   end
 
   describe "PUT /api/v1/participants/npq/:id/change-schedule", :with_default_schedules do
-    let(:npq_course)      { create(:npq_course) }
-    let(:npq_application) { create(:npq_application, :accepted, npq_lead_provider: npq_lead_provider, npq_course: npq_course) }
-
-    let(:new_schedule) do
-      Finance::Schedule
-        .where("schedule_identifier ILIKE ?", "npq-%")
-        .where.not(schedule_identifier: NPQCourse.schedule_for(npq_course))
-        .first
+    let(:npq_application)         { create(:npq_application, :accepted, npq_lead_provider: npq_lead_provider) }
+    let(:profile)                 { npq_application.profile }
+    let(:new_schedule)            do
+      if Finance::Schedule::NPQLeadership::IDENTIFIERS.include?(profile.npq_course.identifier)
+        create(:npq_leadership_schedule, schedule_identifier: SecureRandom.alphanumeric)
+      elsif Finance::Schedule::NPQSpecialist::IDENTIFIERS.include?(profile.npq_course.identifier)
+        create(:npq_specialist_schedule, schedule_identifier: SecureRandom.alphanumeric)
+      else
+        create(:npq_aso_schedule, schedule_identifier: SecureRandom.alphanumeric)
+      end
     end
 
-    it "changes the schedules of the specified profile" do
+    it "changes the schedules of the specified profile", :aggregate_failures do
       put "/api/v1/participants/npq/#{npq_application.profile.user_id}/change-schedule", params: {
         data: {
           type: "participant-change-schedule",
           attributes: {
             schedule_identifier: new_schedule.schedule_identifier,
-            course_identifier: npq_course.identifier,
+            course_identifier: npq_application.npq_course.identifier,
             cohort: new_schedule.cohort.start_year,
           },
         },
       }
 
-      expect(npq_application.profile.reload.schedule).to eql(new_schedule)
-      expect(JSON.parse).to hav
-      print response.body
+      expect(response).to be_successful
+      expect(npq_application.profile.reload.schedule).to eq(new_schedule)
     end
   end
 end

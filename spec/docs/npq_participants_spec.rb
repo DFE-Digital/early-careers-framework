@@ -55,6 +55,33 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/api_sp
     end
   end
 
+  it_behaves_like "JSON Participant Change schedule documentation",
+                  "/api/v1/participants/npq/{id}/change-schedule",
+                  "#/components/schemas/NPQParticipantChangeScheduleRequest",
+                  "#/components/schemas/NPQParticipantResponse",
+                  "NPQ Participant",
+                  :with_default_schedules do
+    let(:participant) { npq_application }
+    let(:profile)     { npq_application.profile }
+    let(:new_schedule) do
+      if Finance::Schedule::NPQLeadership::IDENTIFIERS.include?(profile.npq_course.identifier)
+        create(:npq_leadership_schedule, schedule_identifier: SecureRandom.alphanumeric)
+      elsif Finance::Schedule::NPQSpecialist::IDENTIFIERS.include?(profile.npq_course.identifier)
+        create(:npq_specialist_schedule, schedule_identifier: SecureRandom.alphanumeric)
+      else
+        create(:npq_aso_schedule, schedule_identifier: SecureRandom.alphanumeric)
+      end
+    end
+
+    let(:attributes) do
+      {
+        schedule_identifier: new_schedule.schedule_identifier,
+        course_identifier: npq_application.npq_course.identifier,
+        cohort: new_schedule.cohort.start_year,
+      }
+    end
+  end
+
   it_behaves_like "JSON Participant Deferral documentation",
                   "/api/v1/participants/npq/{id}/defer",
                   "#/components/schemas/NPQParticipantDeferRequest",

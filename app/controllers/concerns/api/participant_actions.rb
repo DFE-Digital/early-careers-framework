@@ -16,8 +16,7 @@ module Api
 
     def change_schedule
       service = recorder(service_namespace: ::Participants::ChangeSchedule).new(params: params_for_recorder)
-      result = service.call
-      render json: serialized_response(result)
+      render json: serialized_response(service.call)
     end
 
   private

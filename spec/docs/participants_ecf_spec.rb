@@ -168,4 +168,19 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
       end
     end
   end
+
+  it_behaves_like "JSON Participant Change schedule documentation",
+                  "/api/v1/participants/ecf/{id}/change-schedule",
+                  "#/components/schemas/ECFParticipantChangeScheduleRequest",
+                  "#/components/schemas/ECFParticipantResponse",
+                  "ECF Participant",
+                  :with_default_schedules do
+    let(:participant) { mentor_profile }
+    let(:attributes) do
+      {
+        schedule_identifier: "ecf-standard-september",
+        course_identifier: "ecf-mentor",
+      }
+    end
+  end
 end
