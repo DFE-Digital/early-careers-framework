@@ -18,6 +18,7 @@ module RecordDeclarations
     validates :declaration_date, :declaration_type, presence: true
     validates :parsed_date, future_date: true, allow_blank: true
     validate :date_has_the_right_format
+    validate :validate_milestone_exists
 
     validates :declaration_type, inclusion: { in: :valid_declaration_types, message: I18n.t(:invalid_declaration_type) }
     delegate :schedule, :participant_declarations, to: :user_profile, allow_nil: true
@@ -142,6 +143,12 @@ module RecordDeclarations
       end
 
       schedule.milestones.find_by(declaration_type: declaration_type)
+    end
+
+    def validate_milestone_exists
+      if milestone.blank?
+        errors.add(:declaration_type, I18n.t(:mismatch_declaration_type_for_schedule))
+      end
     end
 
     def valid_declaration_types
