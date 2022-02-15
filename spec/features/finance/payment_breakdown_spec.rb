@@ -45,12 +45,12 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
     then_the_page_should_be_accessible
     then_percy_should_be_sent_a_snapshot_named("Contract breakdown for an ECF provider")
 
-    when_i_click_on("Back")
+    click_link("Back")
     then_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named("Payment breakdown for an ECF provider (latest)")
 
-    when_i_click_on("November 2021")
-    and_i_click_on("View voided declarations")
+    click_link("November 2021")
+    click_link("View voided declarations")
     then_i_see_voided_declarations
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named("Voided declarations for ECF statement")
@@ -62,14 +62,6 @@ private
     first("table") do
       expect(page).to have_css("tr", count: 3)
     end
-  end
-
-  def when_i_click_on(string)
-    page.click_link(string)
-  end
-
-  def and_i_click_on(string)
-    when_i_click_on(string)
   end
 
   def multiple_start_declarations_are_submitted_nov_statement
