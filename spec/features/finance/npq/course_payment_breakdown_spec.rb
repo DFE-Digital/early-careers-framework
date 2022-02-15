@@ -78,7 +78,7 @@ private
           course_identifier: npq_application.npq_course.identifier,
           declaration_date: timestamp.rfc3339,
           cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider,
-          declaration_type: RecordDeclarations::NPQ::STARTED,
+          declaration_type: "started",
         },
       )
     end

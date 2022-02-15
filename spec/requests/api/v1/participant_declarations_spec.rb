@@ -165,7 +165,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         missing_attribute = valid_params.except(:participant_id)
         post "/api/v1/participant-declarations", params: build_params(missing_attribute)
         expect(response.status).to eq 422
-        expect(response.body).to eq({ errors: [{ title: "Bad or missing parameters", detail: I18n.t("activemodel.errors.models.record_declarations/base.attributes.participant_id.blank") }] }.to_json)
+        expect(JSON.parse(response.body)["errors"]).to include({ title: "Bad or missing parameters", detail: I18n.t("activemodel.errors.models.record_declarations/base.attributes.participant_id.blank") }.stringify_keys)
       end
 
       it "ignores an unpermitted parameter" do
@@ -184,7 +184,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         invalid_participant_for_course_type = valid_params.merge({ course_identifier: "ecf-mentor" })
         post "/api/v1/participant-declarations", params: build_params(invalid_participant_for_course_type)
         expect(response.status).to eq 422
-        expect(response.body).to eq({ errors: [{ title: "Bad or missing parameters", detail: I18n.t(:invalid_participant) }] }.to_json)
+        expect(JSON.parse(response.body)["errors"]).to include({ title: "Bad or missing parameters", detail: I18n.t(:invalid_participant) }.stringify_keys)
       end
 
       it "returns 422 when there are multiple errors" do
