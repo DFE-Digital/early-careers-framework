@@ -34,7 +34,7 @@ RSpec.describe Induction::Transfer do
       service.call(participant_profiles: participant_profile, end_date: end_date, new_induction_programme: new_induction_programme, start_date: start_date)
 
       expect(new_induction_programme.induction_records.first).to be_active
-      expect(new_induction_programme.induction_records.first.start_date).to eq start_date
+      expect(new_induction_programme.induction_records.first.start_date).to be_within(1.second).of start_date
       expect(new_induction_programme.induction_records.first.participant_profile).to eq participant_profile
     end
   end
