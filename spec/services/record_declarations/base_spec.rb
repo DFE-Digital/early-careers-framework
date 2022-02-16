@@ -161,7 +161,7 @@ RSpec.describe RecordDeclarations::Base do
       end
 
       it "returns an error" do
-        expect { subject.call }.to raise_error(ActionController::ParameterMissing, /Declaration type does not exist for this schedule/)
+        expect { subject.call }.to raise_error(ActionController::ParameterMissing, /#\/declaration_type does not exist for this schedule/)
       end
     end
   end
