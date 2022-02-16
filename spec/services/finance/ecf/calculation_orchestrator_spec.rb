@@ -131,7 +131,7 @@ RSpec.describe Finance::ECF::CalculationOrchestrator do
     end
   end
 
-  context ".call" do
+  describe "#call" do
     context "when uplift flags were set" do
       let(:with_uplift) { :sparsity_uplift }
 
@@ -164,7 +164,7 @@ RSpec.describe Finance::ECF::CalculationOrchestrator do
 
       context "when excessive uplift records are passed" do
         it "limits the amount to the capped level" do
-          results = run_calculation(aggregator: ::Finance::ECF::DummyAggregator)
+          results = run_calculation(aggregator: ::Finance::ECF::DummyAggregator.new)
           expect(results[:other_fees]).to eq(capped_uplift)
         end
       end
@@ -248,7 +248,7 @@ RSpec.describe Finance::ECF::CalculationOrchestrator do
 
 private
 
-  def run_calculation(aggregator: Finance::ECF::ParticipantEligibleAggregator)
+  def run_calculation(aggregator: Finance::ECF::ParticipantEligibleAggregator.new(statement: statement))
     set_precision(
       described_class.new(
         calculator: PaymentCalculator::ECF::PaymentCalculation,

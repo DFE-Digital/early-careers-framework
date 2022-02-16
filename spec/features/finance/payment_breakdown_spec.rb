@@ -20,6 +20,7 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
   scenario "Can get to ECF payment breakdown page for a provider" do
     given_i_am_logged_in_as_a_finance_user
     and_multiple_declarations_are_submitted
+    and_voided_payable_declarations_are_submitted
     and_breakdowns_are_calculated
     when_i_click_on_payment_breakdown_header
     then_the_page_should_be_accessible
@@ -44,20 +45,23 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
     then_the_page_should_be_accessible
     then_percy_should_be_sent_a_snapshot_named("Contract breakdown for an ECF provider")
 
-    when_i_click_on("Back")
-    when_i_click_on("November 2021")
+    click_link("Back")
     then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named("Payment breakdown for an ECF provider (latest)")
+    and_percy_should_be_sent_a_snapshot_named("Payment breakdown for an ECF provider (latest)")
+
+    click_link("November 2021")
+    click_link("View voided declarations")
+    then_i_see_voided_declarations
+    and_the_page_should_be_accessible
+    and_percy_should_be_sent_a_snapshot_named("Voided declarations for ECF statement")
   end
 
 private
 
-  def when_i_click_on(string)
-    page.click_link(string)
-  end
-
-  def and_i_click_on(string)
-    when_i_click_on(string)
+  def then_i_see_voided_declarations
+    first("table") do
+      expect(page).to have_css("tr", count: 3)
+    end
   end
 
   def multiple_start_declarations_are_submitted_nov_statement
@@ -91,6 +95,13 @@ private
     multiple_retained_declarations_are_submitted_jan_statement
   end
 
+  def and_voided_payable_declarations_are_submitted
+    participant_profiles = create_list(:ect_participant_profile, 2, school_cohort: school_cohort, cohort: cohort, sparsity_uplift: true)
+    participant_profiles.map { |participant| ParticipantProfileState.create!(participant_profile: participant) }
+    participant_profiles.map { |participant| ECFParticipantEligibility.create!(participant_profile_id: participant.id).eligible_status! }
+    participant_profiles.map { |participant| create_voided_declarations_nov(participant) }
+  end
+
   def create_start_declarations_nov(participant)
     timestamp = participant.schedule.milestones.first.start_date + 1.day
     travel_to(timestamp) do
@@ -109,6 +120,30 @@ private
       started_declaration.make_eligible!
       started_declaration.make_payable!
       started_declaration.update!(
+        statement: nov_statement,
+      )
+    end
+  end
+
+  def create_voided_declarations_nov(participant)
+    timestamp = participant.schedule.milestones.first.start_date + 1.day
+    travel_to(timestamp) do
+      serialized_started_declaration = RecordDeclarations::Started::EarlyCareerTeacher.call(
+        params: {
+          participant_id: participant.user.id,
+          course_identifier: "ecf-induction",
+          declaration_date: (participant.schedule.milestones.first.start_date + 1.day).rfc3339,
+          created_at: participant.schedule.milestones.first.start_date + 1.day,
+          cpd_lead_provider: lead_provider.cpd_lead_provider,
+          declaration_type: RecordDeclarations::ECF::STARTED,
+          evidence_held: "other",
+        },
+      )
+      declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
+      declaration.make_eligible!
+      declaration.make_payable!
+      declaration.make_voided!
+      declaration.update!(
         statement: nov_statement,
       )
     end
@@ -186,7 +221,7 @@ private
     @nov_retained_1 = Finance::ECF::CalculationOrchestrator.new(
       statement: nov_statement,
       contract: lead_provider.call_off_contract,
-      aggregator: Finance::ECF::ParticipantAggregator,
+      aggregator: Finance::ECF::ParticipantAggregator.new(statement: nov_statement),
       calculator: PaymentCalculator::ECF::PaymentCalculation,
     ).call(event_type: :retained_1)
   end
@@ -195,7 +230,7 @@ private
     @nov_starts = Finance::ECF::CalculationOrchestrator.new(
       statement: nov_statement,
       contract: lead_provider.call_off_contract,
-      aggregator: Finance::ECF::ParticipantAggregator,
+      aggregator: Finance::ECF::ParticipantAggregator.new(statement: nov_statement),
       calculator: PaymentCalculator::ECF::PaymentCalculation,
     ).call(event_type: :started)
   end
@@ -204,7 +239,7 @@ private
     @jan_starts = Finance::ECF::CalculationOrchestrator.new(
       statement: jan_statement,
       contract: lead_provider.call_off_contract,
-      aggregator: Finance::ECF::ParticipantAggregator,
+      aggregator: Finance::ECF::ParticipantAggregator.new(statement: jan_statement),
       calculator: PaymentCalculator::ECF::PaymentCalculation,
     ).call(event_type: :started)
   end
@@ -213,7 +248,7 @@ private
     @jan_retained_1 = Finance::ECF::CalculationOrchestrator.new(
       statement: jan_statement,
       contract: lead_provider.call_off_contract,
-      aggregator: Finance::ECF::ParticipantAggregator,
+      aggregator: Finance::ECF::ParticipantAggregator.new(statement: jan_statement),
       calculator: PaymentCalculator::ECF::PaymentCalculation,
     ).call(event_type: :retained_1)
   end

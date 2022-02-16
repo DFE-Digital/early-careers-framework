@@ -234,6 +234,8 @@ en:
     choose_programme: Choose programme scheme
     cohort: Cohort
     show_contract: View contract information
+    show_voided_declarations: View voided declarations
+    voided_declarations: Voided declarations
     provider: Provider
     ects: Current ECTs
     mentors: Current Mentors

@@ -28,7 +28,7 @@ module Finance
     end
 
     def aggregators(event_type:)
-      @aggregators ||= Hash.new do |hash, key|
+      Hash.new do |hash, key|
         hash[key] = aggregate(aggregation_type: key, event_type: event_type)
       end
     end

@@ -11,7 +11,7 @@ module Finance
         @breakdown         = Finance::NPQ::CalculationOrchestrator.new(
           statement: @statement,
           contract: @npq_lead_provider.npq_contracts.find_by!(course_identifier: params[:id]),
-          aggregator: ParticipantEligibleAndPayableAggregator,
+          aggregator: aggregator,
         ).call(event_type: :started)
       end
 
@@ -19,6 +19,14 @@ module Finance
 
       def lead_provider_scope
         policy_scope(NPQLeadProvider, policy_scope_class: FinanceProfilePolicy::Scope)
+      end
+
+      def aggregator
+        ParticipantAggregator.new(
+          statement: @statement,
+          recorder: ParticipantDeclaration::NPQ.where.not(state: %w[voided]),
+          course_identifier: params[:id],
+        )
       end
     end
   end

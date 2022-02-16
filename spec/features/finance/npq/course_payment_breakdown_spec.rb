@@ -40,8 +40,8 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     and_percy_should_be_sent_a_snapshot_named("Payment breakdown per NPQ lead provider")
 
     [npq_leading_teaching_contract, npq_leading_behaviour_culture_contract, npq_leading_teaching_development_contract].each do |npq_contract|
-      when_i_click_on(npq_contract)
-      then_i_should_see_correct_breakdown_summary(npq_contract.npq_lead_provider.cpd_lead_provider, npq_contract)
+      when_i_click_on_contract(npq_contract)
+      then_i_should_see_correct_breakdown_summary(npq_contract)
       then_i_should_see_correct_service_fee_payment_breakdown(npq_contract)
       then_i_should_see_correct_output_payment_breakdown(npq_contract)
       then_i_should_see_the_correct_vat_total(npq_contract)
@@ -49,12 +49,22 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
       when_i_click "Back"
     end
 
-    when_i_click_on(npq_leading_teaching_contract)
+    when_i_click_on("View voided declarations")
+    then_i_see_voided_declarations
+    when_i_click "Back"
+
+    when_i_click_on_contract(npq_leading_teaching_contract)
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named("Payment breakdown per contract")
   end
 
 private
+
+  def then_i_see_voided_declarations
+    first("table") do
+      expect(page).to have_css("tr", count: 4) # headers + (3 * 1) # 1 for each of the 3 courses
+    end
+  end
 
   def create_accepted_application(user, npq_course, npq_lead_provider)
     Identity::Create.call(user: user, origin: :npq)
@@ -100,6 +110,13 @@ private
         .map { |deserialised_participant_declaration| ParticipantDeclaration::NPQ.find(deserialised_participant_declaration.dig("data", "id")) }
         .each(&:make_eligible!)
 
+      create_list(:user, 1)
+        .map { |user| create_accepted_application(user, npq_course, npq_lead_provider) }
+        .map { |npq_application| create_started_declarations(npq_application) }
+        .map(&JSON.method(:parse))
+        .map { |deserialised_participant_declaration| ParticipantDeclaration::NPQ.find(deserialised_participant_declaration.dig("data", "id")) }
+        .each(&:make_voided!)
+
       create_list(:user, 5)
         .map { |user| create_accepted_application(user, npq_course, npq_lead_provider) }
         .map { |npq_application| create_started_declarations(npq_application) }
@@ -109,6 +126,7 @@ private
         .each(&:make_payable!)
     end
 
+    ParticipantDeclaration::NPQ.where(state: "voided", cpd_lead_provider: cpd_lead_provider).update_all(statement_id: statement.id) # voided payable
     ParticipantDeclaration::NPQ.where(state: "payable", cpd_lead_provider: cpd_lead_provider).update_all(statement_id: statement.id)
   end
 
@@ -152,8 +170,12 @@ private
     end
   end
 
-  def when_i_click_on(npq_contract)
+  def when_i_click_on_contract(npq_contract)
     click_on I18n.t(npq_contract.course_identifier, scope: %i[courses npq])
+  end
+
+  def when_i_click_on(string)
+    click_on string
   end
 
   def expected_service_fee_payment(npq_contract)
@@ -170,7 +192,7 @@ private
       .count
   end
 
-  def then_i_should_see_correct_breakdown_summary(npq_lead_provider, npq_contract)
+  def then_i_should_see_correct_breakdown_summary(npq_contract)
     expect(page).to have_css("h2.govuk-heading-l", text: NPQCourse.find_by!(identifier: npq_contract.course_identifier).name)
 
     within("main .govuk-grid-column-two-thirds table:nth-of-type(1)") do
@@ -182,11 +204,11 @@ private
       expect(page).to have_content("Recruitment target")
       expect(page).to have_content(npq_contract.recruitment_target)
       expect(page).to have_content("Current participants")
-      expect(page).to have_content(ParticipantDeclaration::NPQ.neither_paid_nor_voided_lead_provider_and_course(npq_lead_provider, npq_contract.course_identifier).count)
+      expect(page).to have_content(ParticipantDeclaration::NPQ.where(statement: statement, cpd_lead_provider: cpd_lead_provider, course_identifier: npq_contract.course_identifier, state: "payable").count)
       expect(page).to have_content("Total paid")
-      expect(page).to have_content(expected_total_paid(npq_contract))
+      expect(page).to have_content(ParticipantDeclaration::NPQ.where(statement: statement, cpd_lead_provider: cpd_lead_provider, course_identifier: npq_contract.course_identifier, state: "payable").count)
       expect(page).to have_content("Total not paid")
-      expect(page).to have_content(ParticipantDeclaration::NPQ.submitted_for_lead_provider_and_course(npq_lead_provider, npq_contract.course_identifier).count)
+      # TODO: to be implemented later
     end
   end
 
@@ -202,8 +224,8 @@ private
     PaymentCalculator::NPQ::ServiceFees.call(contract: npq_contract)
   end
 
-  def output_fees_calculator_for(npq_contract)
-    PaymentCalculator::NPQ::OutputPayment.call(contract: npq_contract, total_participants: eligible_and_payable_participant_count(npq_contract))
+  def output_fees_calculator_for(statement, npq_contract)
+    PaymentCalculator::NPQ::OutputPayment.call(contract: npq_contract, total_participants: non_voided_assigned_declararation_count(statement, npq_contract.course_identifier))
   end
 
   def then_i_should_see_correct_service_fee_payment_breakdown(npq_contract)
@@ -225,16 +247,20 @@ private
       .eligible_or_payable_for_lead_provider_and_course(npq_contract.npq_lead_provider.cpd_lead_provider, npq_contract.course_identifier).count
   end
 
+  def non_voided_assigned_declararation_count(statement, course_identifier)
+    statement.participant_declarations.where(course_identifier: course_identifier).where.not(state: %w[voided]).count
+  end
+
   def expected_output_fee_payment(npq_contract)
-    expected_per_participant_output_payment_portion(npq_contract) * eligible_and_payable_participant_count(npq_contract)
+    expected_per_participant_output_payment_portion(npq_contract) * non_voided_assigned_declararation_count(statement, npq_contract.course_identifier)
   end
 
   def then_i_should_see_correct_output_payment_breakdown(npq_contract)
     within("main .govuk-grid-column-two-thirds table:nth-of-type(3)") do
-      output_fees_calculator = PaymentCalculator::NPQ::OutputPayment.call(contract: npq_contract, total_participants: eligible_and_payable_participant_count(npq_contract))
+      output_fees_calculator = PaymentCalculator::NPQ::OutputPayment.call(contract: npq_contract, total_participants: non_voided_assigned_declararation_count(statement, npq_contract.course_identifier))
       expect(page).to have_css("tr:nth-child(2) td:nth-child(1)", text: "Output fee")
       expect(page).to have_css("tr:nth-child(2) td:nth-child(2)", text: number_to_pounds(output_fees_calculator[:per_participant]))
-      expect(page).to have_css("tr:nth-child(2) td:nth-child(3)", text: eligible_and_payable_participant_count(npq_contract))
+      expect(page).to have_css("tr:nth-child(2) td:nth-child(3)", text: non_voided_assigned_declararation_count(statement, npq_contract.course_identifier))
       expect(page).to have_css("tr:nth-child(2) td:nth-child(4)", text: number_to_pounds(output_fees_calculator[:subtotal]))
     end
   end
@@ -249,7 +275,7 @@ private
   def then_i_should_see_the_correct_total(npq_contract)
     within("main .govuk-grid-column-two-thirds table:nth-of-type(3)") do
       expected_service_fee_payment = service_fees_calculator_for(npq_contract)[:monthly]
-      expected_output_fee_payment  = output_fees_calculator_for(npq_contract)[:subtotal]
+      expected_output_fee_payment  = output_fees_calculator_for(statement, npq_contract)[:subtotal]
       expected_total_vat           = expected_total_vat(npq_contract)
       expected_total               = expected_service_fee_payment + expected_output_fee_payment + expected_total_vat
 

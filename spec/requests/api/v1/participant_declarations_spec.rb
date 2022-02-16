@@ -439,15 +439,15 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
     context "when declaration is payable" do
       let(:declaration) { create(:ect_participant_declaration, :payable, cpd_lead_provider: cpd_lead_provider) }
 
-      it "cannot be voided" do
+      it "can be voided" do
         expect {
           put "/api/v1/participant-declarations/#{declaration.id}/void"
-        }.not_to change { declaration.reload.state }
+        }.to change { declaration.reload.state }.from("payable").to("voided")
       end
 
-      it "returns a 422" do
+      it "returns a 200" do
         put "/api/v1/participant-declarations/#{declaration.id}/void"
-        expect(response.status).to eql(422)
+        expect(response.status).to eql(200)
       end
     end
   end

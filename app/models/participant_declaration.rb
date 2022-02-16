@@ -83,7 +83,7 @@ class ParticipantDeclaration < ApplicationRecord
 
   # TODO: Voiding paid should trigger clawbacks, but currently OOS
   def voidable?
-    !voided? && !payable? && !paid?
+    !voided? && !paid?
   end
 
   def make_submitted!

@@ -15,9 +15,16 @@ private
 
   def orchestrator
     Finance::ECF::CalculationOrchestrator.new(
-      aggregator: Finance::ECF::ParticipantAggregator,
+      aggregator: aggregator,
       contract: cpd_lead_provider.lead_provider.call_off_contract,
       statement: self,
+    )
+  end
+
+  def aggregator
+    Finance::ECF::ParticipantAggregator.new(
+      statement: self,
+      recorder: ParticipantDeclaration::ECF.where.not(state: %w[voided]),
     )
   end
 end
