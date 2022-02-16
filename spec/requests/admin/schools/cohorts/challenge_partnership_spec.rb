@@ -40,7 +40,7 @@ RSpec.describe "Admin::Schools::Cohorts::ChallengePartnership", type: :request d
             challenge_partnership_form: {
               challenge_reason: "",
             },
-          }
+          },
         )
 
         expect(response).to render_template "admin/schools/cohorts/challenge_partnership/reason"
@@ -60,7 +60,6 @@ RSpec.describe "Admin::Schools::Cohorts::ChallengePartnership", type: :request d
     before do
       get "/admin/schools/#{school.slug}/cohorts/#{cohort.start_year}/challenge-partnership"
       allow(Partnerships::Challenge).to receive(:call)
-
     end
 
     it "redirects back to cohort page" do

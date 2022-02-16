@@ -72,7 +72,7 @@ RSpec.describe "ChallengePartnership", type: :request do
             challenge_partnership_form: {
               challenge_reason: "",
             },
-          }
+          },
         )
 
         expect(response).to render_template "challenge_partnerships/reason"
@@ -86,7 +86,7 @@ RSpec.describe "ChallengePartnership", type: :request do
             challenge_partnership_form: {
               challenge_reason: "mistake",
             },
-          }
+          },
         )
 
         expect(response).to redirect_to "/report-incorrect-partnership/confirm"
@@ -99,17 +99,17 @@ RSpec.describe "ChallengePartnership", type: :request do
         expect(response).to render_template "challenge_partnerships/confirm"
       end
     end
-  #
-  # describe "PATCH /admin/schools/:school_slug/cohorts/:id/challenge-partnership/complete" do
-  #   before do
-  #     get "/admin/schools/#{school.slug}/cohorts/#{cohort.start_year}/challenge-partnership"
-  #     allow(Partnerships::Challenge).to receive(:call)
-  #
-  #   end
-  #
-  #   it "redirects back to cohort page" do
-  #     post "/admin/schools/#{school.slug}/cohorts/#{cohort.start_year}/challenge-partnership/complete"
-  #     expect(response).to redirect_to "/admin/schools/#{school.slug}/cohorts"
-  #   end
+    #
+    # describe "PATCH /admin/schools/:school_slug/cohorts/:id/challenge-partnership/complete" do
+    #   before do
+    #     get "/admin/schools/#{school.slug}/cohorts/#{cohort.start_year}/challenge-partnership"
+    #     allow(Partnerships::Challenge).to receive(:call)
+    #
+    #   end
+    #
+    #   it "redirects back to cohort page" do
+    #     post "/admin/schools/#{school.slug}/cohorts/#{cohort.start_year}/challenge-partnership/complete"
+    #     expect(response).to redirect_to "/admin/schools/#{school.slug}/cohorts"
+    #   end
   end
 end

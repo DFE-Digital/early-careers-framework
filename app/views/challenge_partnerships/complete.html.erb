@@ -10,11 +10,11 @@
         ) %>
 
     <h2 class="govuk-heading-m">What happens next</h2>
-    <p>We'll let <%= @partnership.lead_provider %> and <%= @partnership.delivery_partner.name %> know that your school will not be working with them.</p>
+    <p>We'll let <%= partnership.lead_provider.name %> and <%= partnership.delivery_partner.name %> know that your school will not be working with them.</p>
     <p>They may contact you to confirm this.</p>
     <p>It’s important to confirm with the provider you do want to work with as soon as possible.</p>
     <p>
-      <%= link_to "Return to manage your training", schools_dashboard_path(@partnership.school) %>
+      <%= link_to "Return to manage your training", schools_dashboard_path(partnership.school) %>
     </p>
 
   </div>

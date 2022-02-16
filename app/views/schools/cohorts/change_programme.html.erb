@@ -18,7 +18,7 @@
         <h2 class="govuk-heading-m">Tell us if these training provider details are wrong</h2>
         <p>
           <%= @partnership.lead_provider.name %> and <%= @partnership.delivery_partner.name %> have told us they’re providing your training.
-          If this is wrong, you need to <%= link_to "tell us before #{@partnership.challenge_deadline.to_date.to_s(:govuk) }", challenge_partnership_path(partnership: @partnership) %>
+          If this is wrong, you need to <%= link_to "tell us before #{@partnership.challenge_deadline.to_date.to_s(:govuk) }", challenge_partnership_path(partnership: @partnership, return_to: schools_dashboard_path(@partnership.school)) %>
         </p>
       <% end %>
     <% elsif @school_cohort.school_funded_fip? %>

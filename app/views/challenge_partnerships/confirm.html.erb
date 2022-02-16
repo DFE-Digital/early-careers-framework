@@ -1,5 +1,7 @@
 <% content_for :title, "Report provider error" %>
 
+<% content_for :before_content, govuk_back_link(text: "Back", href: back_link_path) if current_user %>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-three-quarters">
     <h1 class="govuk-heading-xl">

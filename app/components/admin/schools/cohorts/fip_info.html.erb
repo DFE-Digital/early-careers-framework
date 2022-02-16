@@ -21,7 +21,7 @@
       <%= school_cohort.lead_provider&.name %>
     </dd>
     <dd class="govuk-summary-list__actions">
-      <% if school_cohort.lead_provider.present? %>
+      <% if school_cohort.lead_provider.present? && !ParticipantDeclaration.not_voided.exists?(participant_profile: school_cohort.ecf_participant_profiles) %>
         <%= govuk_link_to "Change", challenge_partnership_admin_school_cohort_path(id: school_cohort.cohort.start_year) %>
         <span class="govuk-visually-hidden"> partnership</span>
       <% end %>

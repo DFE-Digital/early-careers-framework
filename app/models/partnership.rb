@@ -39,13 +39,13 @@ class Partnership < ApplicationRecord
   end
 
   def challengeable?
-    return false unless in_challenge_window?
+    in_challenge_window? && !has_declarations?
+  end
 
+  def has_declarations?
     school_cohorts = SchoolCohort.where(school: school, cohort: cohort)
     participants = ParticipantProfile::ECF.where(school_cohort_id: school_cohorts.select(:id))
-    return false if ParticipantDeclaration.exists?(participant_profile_id: participants.select(:id))
-
-    true
+    ParticipantDeclaration.exists?(participant_profile_id: participants.select(:id))
   end
 
   def in_challenge_window?

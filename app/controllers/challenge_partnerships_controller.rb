@@ -5,13 +5,13 @@ class ChallengePartnershipsController < ApplicationController
   include Multistep::Controller
   form ChallengePartnershipForm, as: :challenge_partnership_form
 
-  before_action :check_partnership
+  before_action :check_partnership, except: %i[link_expired already_challenged already_started]
 
   setup_form do |form|
     form.partnership = partnership
   end
 
-  abandon_journey_path { root_path }
+  abandon_journey_path { schools_dashboard_path(partnership.school) }
 
   def link_expired; end
   def already_challenged; end
@@ -31,7 +31,7 @@ private
 
   def partnership
     return @partnership if defined?(@partnership)
-    return @partnership = form.partnership unless action_name == 'start'
+    return @partnership = form.partnership unless action_name == "start"
 
     @partnership = if params[:token].present?
                      notification_email = PartnershipNotificationEmail.find_by!(token: params[:token])
@@ -42,4 +42,5 @@ private
                      raise ActionController::RoutingError, I18n.t(:not_found)
                    end
   end
+  helper_method :partnership
 end

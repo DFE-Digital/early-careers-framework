@@ -17,11 +17,7 @@ module Admin
         end
 
         abandon_journey_path do
-          if partnership
-            admin_school_cohorts_path(partnership.school)
-          else
-            admin_schools_path
-          end
+          admin_school_cohorts_path(partnership.school)
         end
 
         def complete

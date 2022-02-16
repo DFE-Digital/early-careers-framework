@@ -1,8 +1,10 @@
 <% content_for :title, "Report provider error" %>
 
+<% content_for :before_content, govuk_back_link(text: "Back", href: back_link_path) if current_user %>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <span class="govuk-caption-xl"><%= @school_name %></span>
+    <span class="govuk-caption-xl"><%= partnership.school.name %></span>
     <%= form_for challenge_partnership_form, url: { action: :update }, method: :patch do |f| %>
       <%= f.govuk_collection_radio_buttons(
             :challenge_reason,

@@ -20,7 +20,9 @@ module Schools
       @hide_button = true if params[:info]
     end
 
-    private
+    def change_programme; end
+
+  private
 
     def set_partnership
       return unless @school_cohort.school_chose_fip?

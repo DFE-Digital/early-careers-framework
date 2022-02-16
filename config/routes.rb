@@ -40,7 +40,7 @@ Rails.application.routes.draw do
   resource :dashboard, controller: :dashboard, only: :show
   resource :supplier_dashboard, controller: :supplier_dashboard, only: :show
 
-  multistep_form :challenge_partnership, ChallengePartnershipForm, controller: 'challenge_partnerships', path: "report-incorrect-partnership" do
+  multistep_form :challenge_partnership, ChallengePartnershipForm, controller: "challenge_partnerships", path: "report-incorrect-partnership" do
     get "link-expired", action: :link_expired
     get "already-challenged", action: :already_challenged
     get "already-started", action: :already_started
