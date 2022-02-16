@@ -21,7 +21,7 @@ RSpec.describe Induction::Transfer do
     it "updates the current induction record with the end date" do
       service.call(participant_profiles: participant_profile, end_date: end_date, new_induction_programme: new_induction_programme, start_date: start_date)
 
-      expect(induction_record.reload.end_date).to eq end_date
+      expect(induction_record.reload.end_date).to be_within(1.second).of end_date
     end
 
     it "adds a new induction record to the new programme for the participant" do
