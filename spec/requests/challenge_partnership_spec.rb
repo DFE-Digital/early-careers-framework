@@ -29,24 +29,6 @@ RSpec.describe "ChallengePartnership", type: :request do
           expect(response).to redirect_to "/report-incorrect-partnership/reason"
         end
       end
-
-      context "when the token is expired" do
-        let(:partnership) { create :partnership, :outside_challenge_window }
-
-        it "redirects to report step" do
-          get "/report-incorrect-partnership?token=#{partnership_notification_email.token}"
-          expect(response).to redirect_to "/report-incorrect-partnership/link-expired"
-        end
-      end
-
-      context "when the partnership is already challenged" do
-        let(:partnership) { create :partnership, :challenged }
-
-        it "redirects to report step" do
-          get "/report-incorrect-partnership?token=#{partnership_notification_email.token}"
-          expect(response).to redirect_to "/report-incorrect-partnership/already-challenged"
-        end
-      end
     end
   end
 
@@ -61,6 +43,24 @@ RSpec.describe "ChallengePartnership", type: :request do
       it "renders the reason template" do
         get "/report-incorrect-partnership/reason"
         expect(response).to render_template "challenge_partnerships/reason"
+      end
+
+      context "when the partnership is out of the challenge window" do
+        let(:partnership) { create :partnership, :outside_challenge_window }
+
+        it "redirects to link expired page" do
+          get "/report-incorrect-partnership/reason"
+          expect(response).to redirect_to "/report-incorrect-partnership/link-expired"
+        end
+      end
+
+      context "when the partnership is already challenged" do
+        let(:partnership) { create :partnership, :challenged }
+
+        it "redirects to report step" do
+          get "/report-incorrect-partnership/reason"
+          expect(response).to redirect_to "/report-incorrect-partnership/already-challenged"
+        end
       end
     end
 
@@ -91,6 +91,40 @@ RSpec.describe "ChallengePartnership", type: :request do
 
         expect(response).to redirect_to "/report-incorrect-partnership/confirm"
       end
+
+      context "when the partnership is out of the challenge window" do
+        let(:partnership) { create :partnership, :outside_challenge_window }
+
+        it "redirects to link expired page" do
+          patch(
+            "/report-incorrect-partnership/reason",
+            params: {
+              challenge_partnership_form: {
+                challenge_reason: "mistake",
+              },
+            },
+          )
+
+          expect(response).to redirect_to "/report-incorrect-partnership/link-expired"
+        end
+      end
+
+      context "when the partnership is already challenged" do
+        let(:partnership) { create :partnership, :challenged }
+
+        it "redirects to report step" do
+          patch(
+            "/report-incorrect-partnership/reason",
+            params: {
+              challenge_partnership_form: {
+                challenge_reason: "mistake",
+              },
+            },
+          )
+
+          expect(response).to redirect_to "/report-incorrect-partnership/already-challenged"
+        end
+      end
     end
 
     describe "GET /admin/schools/:school_slug/cohorts/:id/challenge-partnership/confirm" do
@@ -98,18 +132,24 @@ RSpec.describe "ChallengePartnership", type: :request do
         get "/report-incorrect-partnership/confirm"
         expect(response).to render_template "challenge_partnerships/confirm"
       end
+
+      context "when the partnership is out of the challenge window" do
+        let(:partnership) { create :partnership, :outside_challenge_window }
+
+        it "redirects to link expired page" do
+          get "/report-incorrect-partnership/confirm"
+          expect(response).to redirect_to "/report-incorrect-partnership/link-expired"
+        end
+      end
+
+      context "when the partnership is already challenged" do
+        let(:partnership) { create :partnership, :challenged }
+
+        it "redirects to report step" do
+          get "/report-incorrect-partnership/confirm"
+          expect(response).to redirect_to "/report-incorrect-partnership/already-challenged"
+        end
+      end
     end
-    #
-    # describe "PATCH /admin/schools/:school_slug/cohorts/:id/challenge-partnership/complete" do
-    #   before do
-    #     get "/admin/schools/#{school.slug}/cohorts/#{cohort.start_year}/challenge-partnership"
-    #     allow(Partnerships::Challenge).to receive(:call)
-    #
-    #   end
-    #
-    #   it "redirects back to cohort page" do
-    #     post "/admin/schools/#{school.slug}/cohorts/#{cohort.start_year}/challenge-partnership/complete"
-    #     expect(response).to redirect_to "/admin/schools/#{school.slug}/cohorts"
-    #   end
   end
 end

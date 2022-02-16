@@ -10,6 +10,11 @@ Feature: Reporting an error with a partnership
 
     When I click on "This looks like a mistake" label
     And I click the submit button
+    Then I should be on "challenge partnership confirmation" page
+    And the page should be accessible
+    And percy should be sent snapshot called "challenge confirmation"
+
+    When I click on "button" containing "Confirm and remove"
     Then I should be on "challenge partnership success" page
     And the page should be accessible
     And percy should be sent snapshot called "challenge success"
@@ -31,8 +36,11 @@ Feature: Reporting an error with a partnership
     When I click on "link" containing "report that your school has been confirmed incorrectly"
     Then I should be on "challenge partnership (any token)" page
 
-    When I click on "I do not recognise this training provider" label
+    When I click on "We do not recognise this training provider" label
     And I click the submit button
+    Then I should be on "challenge partnership confirmation" page
+
+    When I click on "button" containing "Confirm and remove"
     Then I should be on "challenge partnership success" page
 
     When I navigate to "2021 school partnerships" page with id "111111-test-school"
@@ -47,8 +55,11 @@ Feature: Reporting an error with a partnership
     When I click on "link" containing "report it now"
     Then I should be on "challenge partnership (any token)" page
 
-    When I click on "I do not recognise this training provider" label
+    When I click on "We do not recognise this training provider" label
     And I click the submit button
+    Then I should be on "challenge partnership confirmation" page
+
+    When I click on "button" containing "Confirm and remove"
     Then I should be on "challenge partnership success" page
 
     When I navigate to "2021 school partnerships" page with id "111113-test-school-3"

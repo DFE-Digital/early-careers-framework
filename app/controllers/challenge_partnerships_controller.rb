@@ -5,7 +5,7 @@ class ChallengePartnershipsController < ApplicationController
   include Multistep::Controller
   form ChallengePartnershipForm, as: :challenge_partnership_form
 
-  before_action :check_partnership, except: %i[link_expired already_challenged already_started]
+  before_action :check_partnership, except: %i[start link_expired already_challenged already_started] # rubocop:disable Rails/LexicallyScopedActionFilter
 
   setup_form do |form|
     form.partnership = partnership

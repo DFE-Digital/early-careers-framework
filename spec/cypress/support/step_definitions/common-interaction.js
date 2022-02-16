@@ -32,6 +32,7 @@ const inputs = {
 };
 
 const buttons = {
+  button: ".govuk-button",
   "create admin button": "[data-test=create-admin-button]",
   "delete button": "[data-test=delete-button]",
   "create delivery partner button":
