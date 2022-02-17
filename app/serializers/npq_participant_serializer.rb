@@ -14,7 +14,9 @@ class NPQParticipantSerializer
   attribute(:participant_id, &:id)
 
   attribute(:npq_courses) do |object, params|
-    object.npq_profiles.filter { |profile| provider_matches(profile, params) }.map { |npq_profile| npq_profile.npq_course.identifier }
+    object.npq_profiles
+      .filter { |profile| provider_matches(profile, params) }
+      .map { |npq_profile| npq_profile.npq_application.npq_course.identifier }
   end
 
   attribute(:teacher_reference_number) do |object|

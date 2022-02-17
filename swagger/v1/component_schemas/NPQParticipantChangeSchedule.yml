@@ -11,3 +11,9 @@ properties:
 required:
   - type
   - attributes
+example:
+  type: "participant-change-schedule"
+  attributes:
+    schedule_identifier: npq-leadership-autumn
+    course_identifier: npq-leading-teaching
+    cohort: "2021"

@@ -90,7 +90,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
   end
 
   it_behaves_like "JSON Participant Change schedule documentation",
-                  "/api/v1/participants/ecf/{id}/change-schedule",
+                  "/api/v1/participants/{id}/change-schedule",
                   "#/components/schemas/ECFParticipantChangeScheduleRequest",
                   "#/components/schemas/ECFParticipantResponse",
                   "ECF Participant",
