@@ -151,7 +151,7 @@ RSpec.describe Admin::ChangeInductionService do
 
         it "does not change participants when changing to FIP" do
           expect { service.change_induction_provision(:full_induction_programme) }
-            .not_to change { school.participants_for(cohort).map(&:id) }
+            .not_to change { school.participants_for(cohort).map(&:id).sort }
           expect(participant_profiles.each(&:reload)).to all be_active_record
         end
       end

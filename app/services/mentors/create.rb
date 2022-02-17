@@ -5,6 +5,7 @@ module Mentors
     include SchoolCohortDelegator
 
     def call
+      mentor_profile = nil
       ActiveRecord::Base.transaction do
         # NOTE: This will not update the full_name if the user has an active participant profile,
         # the scenario I am working on is enabling a NPQ user to be added as a mentor
@@ -19,17 +20,21 @@ module Mentors
           profile.school = school_cohort.school
         end
 
-        ParticipantProfile::Mentor.create!({
+        mentor_profile = ParticipantProfile::Mentor.create!({
           teacher_profile: teacher_profile,
           schedule: Finance::Schedule::ECF.default,
           participant_identity: Identity::Create.call(user: user),
-        }.merge(mentor_attributes)) do |mentor_profile|
-          ParticipantProfileState.create!(participant_profile: mentor_profile)
-          ParticipantMailer.participant_added(participant_profile: mentor_profile).deliver_later
-          mentor_profile.update_column(:request_for_details_sent_at, Time.zone.now)
-          ParticipantDetailsReminderJob.schedule(mentor_profile)
-        end
+        }.merge(mentor_attributes))
+
+        ParticipantProfileState.create!(participant_profile: mentor_profile)
+        Induction::Enrol.call(participant_profile: mentor_profile) if school_cohort.default_induction_programme.present?
       end
+
+      ParticipantMailer.participant_added(participant_profile: mentor_profile).deliver_later
+      mentor_profile.update_column(:request_for_details_sent_at, Time.zone.now)
+      ParticipantDetailsReminderJob.schedule(mentor_profile)
+
+      mentor_profile
     end
 
   private
