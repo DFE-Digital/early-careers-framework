@@ -135,7 +135,7 @@ private
           declaration_date: (participant.schedule.milestones.first.start_date + 1.day).rfc3339,
           created_at: participant.schedule.milestones.first.start_date + 1.day,
           cpd_lead_provider: lead_provider.cpd_lead_provider,
-          declaration_type: RecordDeclarations::ECF::STARTED,
+          declaration_type: "started",
           evidence_held: "other",
         },
       )
