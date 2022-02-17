@@ -6,7 +6,7 @@ module RecordDeclarations
   class Base
     include Participants::ProfileAttributes
     include AbstractInterface
-    implement_class_method :required_params, :valid_declaration_types
+    implement_class_method :required_params
     implement_instance_method :user_profile
 
     MultipleParticipantDeclarationDuplicate = Class.new(ArgumentError)
@@ -18,8 +18,9 @@ module RecordDeclarations
     validates :declaration_date, :declaration_type, presence: true
     validates :parsed_date, future_date: true, allow_blank: true
     validate :date_has_the_right_format
+    validate :validate_schedule_present
+    validate :validate_milestone_exists
 
-    validates :declaration_type, inclusion: { in: :valid_declaration_types, message: I18n.t(:invalid_declaration_type) }
     delegate :schedule, :participant_declarations, to: :user_profile, allow_nil: true
 
     class << self
@@ -136,16 +137,20 @@ module RecordDeclarations
       raise ActionController::ParameterMissing, I18n.t(:declaration_on_incorrect_state) unless last_state&.state.nil? || last_state.active?
     end
 
-    def milestone
+    def validate_schedule_present
       unless schedule
-        raise ActionController::ParameterMissing, I18n.t(:schedule_missing)
+        errors.add(:schedule, I18n.t(:schedule_missing))
       end
-
-      schedule.milestones.find_by(declaration_type: declaration_type)
     end
 
-    def valid_declaration_types
-      self.class.valid_declaration_types
+    def milestone
+      schedule&.milestones&.find_by(declaration_type: declaration_type)
+    end
+
+    def validate_milestone_exists
+      if milestone.blank?
+        errors.add(:declaration_type, I18n.t(:mismatch_declaration_type_for_schedule))
+      end
     end
 
     def original_participant_declaration

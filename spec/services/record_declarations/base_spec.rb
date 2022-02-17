@@ -92,7 +92,7 @@ RSpec.describe RecordDeclarations::Base do
     end
   end
 
-  context "when milestone has null milestone_date" do
+  describe "#call" do
     let(:klass) do
       Class.new(described_class) do
         def self.valid_declaration_types
@@ -120,6 +120,7 @@ RSpec.describe RecordDeclarations::Base do
         end
       end
     end
+
     subject do
       klass.new(
         params: {
@@ -132,12 +133,36 @@ RSpec.describe RecordDeclarations::Base do
       )
     end
 
-    before do
-      Finance::Milestone.find_by(declaration_type: "started").update!(milestone_date: nil)
+    context "when milestone has null milestone_date" do
+      before do
+        Finance::Milestone.find_by(declaration_type: "started").update!(milestone_date: nil)
+      end
+
+      it "does not have errors on milestone_date" do
+        expect { subject.call }.not_to raise_error
+      end
     end
 
-    it "does not have errors on milestone_date" do
-      expect { subject.call }.not_to raise_error
+    context "when declaration_type does not exist for the schedule" do
+      before do
+        ect_participant_profile.schedule.milestones.find_by(declaration_type: "retained-4").destroy
+      end
+
+      subject do
+        klass.new(
+          params: {
+            course_identifier: "ecf-induction",
+            cpd_lead_provider: cpd_lead_provider,
+            declaration_date: 10.days.ago.iso8601,
+            declaration_type: "retained-4",
+            participant_id: user.id,
+          },
+        )
+      end
+
+      it "returns an error" do
+        expect { subject.call }.to raise_error(ActionController::ParameterMissing, /#\/declaration_type does not exist for this schedule/)
+      end
     end
   end
 end
