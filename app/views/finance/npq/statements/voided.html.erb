@@ -15,6 +15,7 @@
           <% row.cell(header: true, text: "Declaration ID") %>
           <% row.cell(header: true, text: "Participant ID") %>
           <% row.cell(header: true, text: "Type") %>
+          <% row.cell(header: true, text: "Course") %>
         <% end %>
       <% end %>
 
@@ -24,6 +25,7 @@
             <% row.cell(text: declaration.id) %>
             <% row.cell(text: declaration.user.id) %>
             <% row.cell(text: declaration.declaration_type) %>
+            <% row.cell(text: declaration.course_identifier) %>
           <% end %>
         <% end %>
       <% end %>

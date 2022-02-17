@@ -12,7 +12,6 @@ class VoidParticipantDeclaration
     # TODO: these should be moved to activemodel validations
     # and not controller level exceptions
     raise Api::Errors::InvalidTransitionError, I18n.t(:declaration_already_voided) if declaration.voided?
-    raise Api::Errors::InvalidTransitionError, I18n.t(:void_last_declaration_only) if latest_declaration != declaration
     raise Api::Errors::InvalidTransitionError, I18n.t(:declaration_not_voidable) unless declaration.voidable?
 
     declaration.make_voided!
@@ -24,9 +23,5 @@ private
 
   def declaration
     @declaration ||= ParticipantDeclaration.for_lead_provider(cpd_lead_provider).find(id)
-  end
-
-  def latest_declaration
-    @latest_declaration ||= declaration.participant_profile.participant_declarations.order(declaration_date: :desc).first
   end
 end
