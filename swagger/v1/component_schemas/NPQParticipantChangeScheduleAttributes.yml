@@ -5,8 +5,14 @@ properties:
     description: "The new schedule of the participant"
     type: string
     enum:
+      - npq-aso-november
+      - npq-aso-december
+      - npq-aso-march
+      - npq-aso-june
       - npq-leadership-spring
       - npq-leadership-autumn
+      - npq-specialist-autumn
+      - npq-specialist-spring
     example: npq-leadership-autumn
   course_identifier:
     description: "The type of course the participant is enrolled in"
@@ -23,6 +29,8 @@ properties:
   cohort:
     description: "The start year of the cohort the the participant is enrolled in. Defaults to 2021 if not specified"
     type: string
+    required: false
+    default: "2021"
     example: "2021"
 required:
   - schedule_identifier
