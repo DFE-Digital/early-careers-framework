@@ -53,7 +53,6 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
     click_link("View voided declarations")
     then_i_see_voided_declarations
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named("Voided declarations for ECF statement")
   end
 
 private
