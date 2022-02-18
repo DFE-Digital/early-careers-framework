@@ -14,6 +14,12 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
   let!(:partnership)      { create(:partnership, school: school_cohort.school, lead_provider: lead_provider, cohort: cohort) }
   let(:nov_statement)     { Finance::Statement::ECF.find_by!(name: "November 2021", cpd_lead_provider: cpd_lead_provider) }
   let(:jan_statement)     { Finance::Statement::ECF.find_by!(name: "January 2022", cpd_lead_provider: cpd_lead_provider) }
+  let(:voided_declarations) do
+    participant_profiles = create_list(:ect_participant_profile, 2, school_cohort: school_cohort, cohort: cohort, sparsity_uplift: true)
+    participant_profiles.map { |participant| ParticipantProfileState.create!(participant_profile: participant) }
+    participant_profiles.map { |participant| ECFParticipantEligibility.create!(participant_profile_id: participant.id).eligible_status! }
+    participant_profiles.map { |participant| create_voided_declarations_nov(participant) }
+  end
 
   before { Importers::SeedStatements.new.call }
 
@@ -53,14 +59,18 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
     click_link("View voided declarations")
     then_i_see_voided_declarations
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named("Voided declarations for ECF statement")
   end
 
 private
 
   def then_i_see_voided_declarations
-    first("table") do
-      expect(page).to have_css("tr", count: 3)
+    within first("table tbody") do
+      voided_declarations.each do |participant_declaration|
+        declaration_id_cell =  page.find("tr td", text: participant_declaration.id)
+        expect(declaration_id_cell).to have_sibling("td", text: participant_declaration.user_id)
+        expect(declaration_id_cell).to have_sibling("td", text: participant_declaration.declaration_type)
+        expect(declaration_id_cell).to have_sibling("td", text: participant_declaration.course_identifier)
+      end
     end
   end
 
@@ -96,10 +106,7 @@ private
   end
 
   def and_voided_payable_declarations_are_submitted
-    participant_profiles = create_list(:ect_participant_profile, 2, school_cohort: school_cohort, cohort: cohort, sparsity_uplift: true)
-    participant_profiles.map { |participant| ParticipantProfileState.create!(participant_profile: participant) }
-    participant_profiles.map { |participant| ECFParticipantEligibility.create!(participant_profile_id: participant.id).eligible_status! }
-    participant_profiles.map { |participant| create_voided_declarations_nov(participant) }
+    voided_declarations
   end
 
   def create_start_declarations_nov(participant)
@@ -146,6 +153,7 @@ private
       declaration.update!(
         statement: nov_statement,
       )
+      declaration
     end
   end
 
