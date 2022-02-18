@@ -8,6 +8,8 @@ class ParticipantProfile < ApplicationRecord
 
     has_one :npq_application, foreign_key: :id
 
+    after_commit :push_profile_to_big_query
+
     self.validation_steps = %i[identity decision].freeze
 
     def npq?
@@ -33,6 +35,12 @@ class ParticipantProfile < ApplicationRecord
 
     def fundable?
       npq_application&.eligible_for_funding
+    end
+
+  private
+
+    def push_profile_to_big_query
+      ::NPQ::StreamBigQueryProfileJob.perform_later(profile_id: id)
     end
   end
 end
