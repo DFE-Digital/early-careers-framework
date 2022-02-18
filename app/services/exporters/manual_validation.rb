@@ -2,7 +2,7 @@
 
 class Exporters::ManualValidation < BaseService
   def call
-    puts "id,email,type,full_name,date_of_birth,trn,nino"
+    Rails.logger.info "id,email,type,full_name,date_of_birth,trn,nino"
 
     # participants at manual_check status
     query = TeacherProfile
@@ -38,12 +38,12 @@ private
   def output_participant_data(query)
     query.find_each do |teacher_profile|
       Rails.logger.info [teacher_profile.user.id,
-            teacher_profile.user.email,
-            teacher_profile.current_ecf_profile.type,
-            teacher_profile.current_ecf_profile.ecf_participant_validation_data.full_name,
-            teacher_profile.current_ecf_profile.ecf_participant_validation_data.date_of_birth,
-            teacher_profile.current_ecf_profile.ecf_participant_validation_data.trn,
-            teacher_profile.current_ecf_profile.ecf_participant_validation_data.nino].join(",")
+                         teacher_profile.user.email,
+                         teacher_profile.current_ecf_profile.type,
+                         teacher_profile.current_ecf_profile.ecf_participant_validation_data.full_name,
+                         teacher_profile.current_ecf_profile.ecf_participant_validation_data.date_of_birth,
+                         teacher_profile.current_ecf_profile.ecf_participant_validation_data.trn,
+                         teacher_profile.current_ecf_profile.ecf_participant_validation_data.nino].join(",")
     end
   end
 end
