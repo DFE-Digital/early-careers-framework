@@ -42,12 +42,11 @@ module RecordDeclarations
       raise ActiveRecord::RecordNotUnique, "Declaration with given participant ID already exists" if record_exists_with_different_declaration_date?
 
       ParticipantDeclaration.transaction do
-        DeclarationState.submitted!(participant_declaration)
-
         set_eligibility
 
         declaration_attempt.update!(participant_declaration: participant_declaration)
       end
+
       ParticipantDeclarationSerializer.new(participant_declaration).serializable_hash.to_json
     end
 
@@ -78,12 +77,8 @@ module RecordDeclarations
       ParticipantDeclarationAttempt.create!(declaration_parameters.except(:participant_profile))
     end
 
-    def find_or_create_record!
-      self.class.declaration_model.find_or_create_by!(declaration_parameters)
-    end
-
     def participant_declaration
-      @participant_declaration ||= find_or_create_record!
+      @participant_declaration ||= self.class.declaration_model.create!(declaration_parameters)
     end
 
     def declaration_parameters

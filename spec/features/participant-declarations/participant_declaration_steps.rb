@@ -123,8 +123,13 @@ module ParticipantDeclarationSteps
     partnership.destroy!
   end
 
+  def then_second_declaration_is_created
+    expect(ParticipantDeclaration.where(course_identifier: "ecf-induction", declaration_type: "started", state: "submitted").count).to eq(1)
+    expect(ParticipantDeclaration.where(course_identifier: "ecf-induction", declaration_type: "started", state: "ineligible").count).to eq(1)
+  end
+
   def then_second_declaration_is_not_created
-    expect(ParticipantDeclaration.where(course_identifier: "ecf-induction", declaration_type: "started").count).to eq(1)
+    expect(ParticipantDeclaration.count).to eq(1)
   end
 
   def and_the_npq_declaration_date_is_early
