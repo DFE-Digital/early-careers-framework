@@ -81,7 +81,7 @@ class ParticipantDeclaration < ApplicationRecord
   scope :paid_npqs_for_lead_provider, ->(lead_provider) { paid_for_lead_provider(lead_provider).npq }
   scope :paid_uplift_for_lead_provider, ->(lead_provider) { paid_for_lead_provider(lead_provider).uplift }
 
-  after_create :create_initial_declaration_state
+  before_create :build_initial_declaration_state
 
   # TODO: Voiding paid should trigger clawbacks, but currently OOS
   def voidable?
@@ -131,8 +131,8 @@ class ParticipantDeclaration < ApplicationRecord
 
 private
 
-  def create_initial_declaration_state
-    declaration_states.create(state: state)
+  def build_initial_declaration_state
+    declaration_states.build(state: state)
   end
 end
 
