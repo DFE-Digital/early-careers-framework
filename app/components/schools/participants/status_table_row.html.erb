@@ -1,0 +1,13 @@
+<% if ineligible_participant? && !mentor_in_early_rollout? %>
+ <tr class="govuk-table__row">
+   <td class="govuk-table__cell govuk-!-width-three-quarters"><%= govuk_link_to profile.user.full_name, schools_participant_path(id: profile) %></td>
+   <td class="govuk-table__cell govuk-!-width-one-quarter">Remove</td>
+ </tr>
+<% else %>
+  <tr class="govuk-table__row">
+   <td class="govuk-table__cell"><%= govuk_link_to profile.user.full_name, schools_participant_path(id: profile) %></td>
+   <td class="govuk-table__cell"><%= profile.school_cohort.lead_provider.name %></td>
+   <td class="govuk-table__cell"><%= profile.school_cohort.delivery_partner.name %></td>
+   <td class="govuk-table__cell"><%= profile.start_term.humanize %></td>
+  </tr>
+<% end %>

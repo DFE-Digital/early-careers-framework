@@ -1,0 +1,21 @@
+<% unless ineligible_participants? %>
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Name</th>
+      <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Lead Provider</th>
+      <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Delivery Partner</th>
+      <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Induction Start</th>
+    </tr>
+  </thead>
+<% else %>
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Name</th>
+      <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Action required</th>
+    </tr>
+  </thead>
+<% end %>
+
+  <tbody class="govuk-table__body">
+     <%= render Schools::Participants::StatusTableRow.with_collection(participant_profiles) %>
+  </tbody>
