@@ -9,11 +9,12 @@ class SetParticipantCategories < BaseService
 
 private
 
-  attr_reader :school_cohort, :user
+  attr_reader :school_cohort, :user, :type
 
-  def initialize(school_cohort, user)
+  def initialize(school_cohort, user, type)
     @school_cohort = school_cohort
     @user = user
+    @type = type
   end
 
   def set_participant_categories
@@ -39,7 +40,7 @@ private
   end
 
   def active_participant_profiles
-    ParticipantProfilePolicy::Scope.new(user, school_cohort.active_ecf_participant_profiles).resolve
+    ParticipantProfilePolicy::Scope.new(user, school_cohort.active_ecf_participant_profiles.where(type: type)).resolve
   end
 
   def ineligible_participants
