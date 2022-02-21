@@ -269,60 +269,7 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
         end
       end
 
-      describe "/api/v1/participants/ID/change-schedule" do
-        let(:parsed_response) { JSON.parse(response.body) }
-
-        before do
-          create(:schedule, schedule_identifier: "ecf-january-standard-2021", name: "ECF January standard 2021")
-        end
-
-        it "changes participant schedule" do
-          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/change-schedule", params: { data: { attributes: { course_identifier: "ecf-induction", schedule_identifier: "ecf-january-standard-2021" } } }
-
-          expect(response).to be_successful
-          expect(parsed_response.dig("data", "attributes", "schedule_identifier")).to eql("ecf-january-standard-2021")
-        end
-      end
-
-      describe "/api/v1/participants/ID/change-schedule with cohort" do
-        let(:parsed_response) { JSON.parse(response.body) }
-        let(:cohort_2022) { create(:cohort, start_year: "2022") }
-
-        let!(:schedule_2021) { create(:schedule, schedule_identifier: "ecf", name: "ECF 2021") }
-        let!(:schedule_2022) { create(:schedule, schedule_identifier: "ecf", name: "ECF 2022", cohort: cohort_2022) }
-
-        it "changes participant schedule" do
-          expect {
-            put "/api/v1/participants/#{early_career_teacher_profile.user.id}/change-schedule", params: {
-              data: {
-                attributes: {
-                  course_identifier: "ecf-induction",
-                  schedule_identifier: schedule_2022.schedule_identifier,
-                  cohort: "2022",
-                },
-              },
-            }
-          }.to change { early_career_teacher_profile.reload.schedule }.to(schedule_2022)
-
-          expect(response).to be_successful
-          expect(parsed_response.dig("data", "attributes", "schedule_identifier")).to eql(schedule_2022.schedule_identifier)
-        end
-      end
-
-      describe "/api/v1/participants/ecf/ID/change-schedule" do
-        let(:parsed_response) { JSON.parse(response.body) }
-
-        before do
-          create(:schedule, schedule_identifier: "ecf-january-standard-2021", name: "ECF January standard 2021")
-        end
-
-        it "changes participant schedule" do
-          put "/api/v1/participants/ecf/#{early_career_teacher_profile.user.id}/change-schedule", params: { data: { attributes: { course_identifier: "ecf-induction", schedule_identifier: "ecf-january-standard-2021" } } }
-
-          expect(response).to be_successful
-          expect(parsed_response.dig("data", "attributes", "schedule_identifier")).to eql("ecf-january-standard-2021")
-        end
-      end
+      it_behaves_like "JSON Participant Change schedule endpoint"
 
       it_behaves_like "JSON Participant Deferral endpoint", "participant" do
         let(:url)               { "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer" }

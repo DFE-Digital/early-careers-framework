@@ -6,8 +6,6 @@ module Participants
       include ProfileAttributes
       include ActiveModel::Validations
 
-      attr_reader :schedule_identifier, :cohort
-
       validates :schedule, presence: { message: I18n.t(:invalid_schedule) }
       validate :not_already_withdrawn
       validate :schedule_valid_with_pending_declarations
@@ -19,7 +17,7 @@ module Participants
         @course_identifier = params[:course_identifier]
         @cpd_lead_provider = params[:cpd_lead_provider]
         @schedule_identifier = params[:schedule_identifier]
-        @cohort = params[:cohort]
+        @cohort_year = params[:cohort]
       end
 
       def call
@@ -37,6 +35,8 @@ module Participants
 
     private
 
+      attr_reader :schedule_identifier, :cohort_year
+
       def participant_profile_state
         user_profile&.participant_profile_state
       end
@@ -47,23 +47,23 @@ module Participants
         end
       end
 
-      def cohort_object
-        @cohort_object ||= if @cohort
-                             Cohort.find_by(start_year: @cohort)
-                           else
-                             Cohort.current
-                           end
+      def cohort
+        @cohort ||= if cohort_year
+                      Cohort.find_by(start_year: cohort_year)
+                    else
+                      Cohort.current
+                    end
+      end
+
+      def alias_search_query
+        Finance::Schedule
+          .where("identifier_alias IS NOT NULL")
+          .where(identifier_alias: schedule_identifier, cohort: cohort)
       end
 
       def schedule
-        return @schedule if @schedule
-
-        alias_search_query = Finance::Schedule
-          .where("identifier_alias IS NOT NULL")
-          .where(identifier_alias: schedule_identifier, cohort: cohort_object)
-
-        @schedule = Finance::Schedule
-          .where(schedule_identifier: schedule_identifier, cohort: cohort_object)
+        @schedule ||= Finance::Schedule
+          .where(schedule_identifier: schedule_identifier, cohort: cohort)
           .or(alias_search_query)
           .first
       end

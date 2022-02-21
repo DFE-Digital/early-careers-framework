@@ -329,6 +329,8 @@ RSpec.describe "Participants API", type: :request do
         end
       end
 
+      it_behaves_like "JSON Participant Change schedule endpoint"
+
       describe "JSON Participant Withdrawal" do
         it_behaves_like "a participant withdraw action endpoint" do
           let(:url) { "/api/v1/participants/ecf/#{early_career_teacher_profile.user.id}/withdraw" }

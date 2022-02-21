@@ -316,6 +316,55 @@
         }
       }
     },
+    "/api/v1/participants/npq/{id}/change-schedule": {
+      "put": {
+        "summary": "Notify that an NPQ participant is changing training schedule",
+        "operationId": "npq_participant",
+        "tags": [
+          "NPQ Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NPQParticipantChangeScheduleRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The NPQ participant changing schedule",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NPQParticipantResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/participants/npq/{id}/defer": {
       "put": {
         "summary": "Notify that an NPQ participant is taking a break from their course",
@@ -1019,6 +1068,55 @@
         }
       }
     },
+    "/api/v1/participants/ecf/{id}/change-schedule": {
+      "put": {
+        "summary": "Notify that an ECF participant is changing training schedule",
+        "operationId": "participant",
+        "tags": [
+          "ECF Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ECF participant changing schedule",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/participants/{id}/defer": {
       "put": {
         "summary": "Notify that an ECF participant is taking a break from their course",
@@ -1117,104 +1215,6 @@
         }
       }
     },
-    "/api/v1/participants/{id}/change-schedule": {
-      "put": {
-        "summary": "Notify that an ECF participant is changing training schedule",
-        "operationId": "participant",
-        "tags": [
-          "ECF Participant"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest"
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the participant",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The ECF participant changing schedule",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ECFParticipantResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/participants/ecf/{id}/change-schedule": {
-      "put": {
-        "summary": "Notify that an ECF participant is changing training schedule",
-        "operationId": "participant",
-        "tags": [
-          "ECF Participant"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest"
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the participant",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The ECF participant changing schedule",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ECFParticipantResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/participants/{id}/withdraw": {
       "put": {
         "summary": "Notify that an ECF participant has withdrawn from their course",
@@ -1253,6 +1253,55 @@
         "responses": {
           "200": {
             "description": "The ECF participant being withdrawn",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/participants/{id}/change-schedule": {
+      "put": {
+        "summary": "Notify that an ECF participant is changing training schedule",
+        "operationId": "participant",
+        "tags": [
+          "ECF Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ECF participant changing schedule",
             "content": {
               "application/json": {
                 "schema": {
@@ -1477,7 +1526,14 @@
         "required": [
           "type",
           "attributes"
-        ]
+        ],
+        "example": {
+          "type": "participant-change-schedule",
+          "attributes": {
+            "schedule_identifier": "ecf-standard-january",
+            "course_identifier": "ecf-mentor"
+          }
+        }
       },
       "ECFParticipantChangeScheduleAttributes": {
         "description": "An ECF participant change schedule action",
@@ -3234,6 +3290,114 @@
             "type": "string",
             "format": "date-time",
             "example": "2021-05-31T02:22:32.000Z"
+          }
+        }
+      },
+      "NPQParticipantChangeSchedule": {
+        "description": "An NPQ participant change schedule action",
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "enum": [
+              "participant-change-schedule"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/NPQParticipantChangeScheduleAttributes"
+          }
+        },
+        "required": [
+          "type",
+          "attributes"
+        ],
+        "example": {
+          "type": "participant-change-schedule",
+          "attributes": {
+            "schedule_identifier": "npq-leadership-autumn",
+            "course_identifier": "npq-leading-teaching",
+            "cohort": "2021"
+          }
+        }
+      },
+      "NPQParticipantChangeScheduleAttributes": {
+        "description": "An NPQ participant change schedule action",
+        "type": "object",
+        "properties": {
+          "schedule_identifier": {
+            "description": "The new schedule of the participant",
+            "type": "string",
+            "enum": [
+              "npq-leadership-spring",
+              "npq-leadership-autumn"
+            ],
+            "example": "npq-leadership-autumn"
+          },
+          "course_identifier": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "npq-leading-teaching-development",
+              "npq-leading-behaviour-culture",
+              "npq-leading-teaching",
+              "npq-senior-leadership",
+              "npq-headship",
+              "npq-executive-leadership",
+              "npq-additional-support-offer"
+            ],
+            "example": "npq-executive-leadership"
+          },
+          "cohort": {
+            "description": "The start year of the cohort the the participant is enrolled in. Defaults to 2021 if not specified",
+            "type": "string",
+            "example": "2021"
+          }
+        },
+        "required": [
+          "schedule_identifier",
+          "course_identifier"
+        ],
+        "example": {
+          "schedule_identifier": "npq-leadership-autumn",
+          "course_identifier": "npq-leading-teaching",
+          "cohort": "2021"
+        }
+      },
+      "NPQParticipantChangeScheduleRequest": {
+        "description": "The change schedule request for a participant",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "description": "The request data",
+            "required": [
+              "type",
+              "attributes"
+            ],
+            "properties": {
+              "type": {
+                "description": "The data type",
+                "type": "string",
+                "example": "participant-change-schedule"
+              },
+              "attributes": {
+                "$ref": "#/components/schemas/NPQParticipantChangeSchedule"
+              }
+            }
+          }
+        },
+        "example": {
+          "data": {
+            "type": "participant-change-schedule",
+            "attributes": {
+              "schedule_identifier": "npq-leadership-autumn",
+              "course_identifier": "npq-leading-teaching",
+              "cohort": "2021"
+            }
           }
         }
       },
