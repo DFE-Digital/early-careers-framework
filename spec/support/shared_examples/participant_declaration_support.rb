@@ -15,11 +15,11 @@ RSpec.shared_examples "a participant declaration service" do
     expect { described_class.call(params: given_params) }.to change { ParticipantDeclaration.count }.by(1)
   end
 
-  it "does not create exact duplicates" do
+  it "does create exact duplicates" do
     expect {
       described_class.call(params: given_params)
       described_class.call(params: given_params)
-    }.to change { ParticipantDeclaration.count }.by(1)
+    }.to change { ParticipantDeclaration.count }.by(2)
   end
 
   it "does not create close duplicates and throws an error" do
