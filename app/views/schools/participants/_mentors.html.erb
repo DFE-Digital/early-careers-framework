@@ -1,0 +1,33 @@
+<% if mentor_profiles.contacted_for_info.any? %>
+  <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Contacted for information</h2>
+  <p class="govuk-!-margin-bottom-3">We need this to check their eligibility with the Teaching Regulation Agency.</p>
+
+  <table class="govuk-table govuk-!-margin-bottom-9" data-test="checked">
+    <%= render Schools::Participants::StatusTable.new(participant_profiles: mentor_profiles.details_being_checked_mentors) %>
+  </table>
+<% end %>
+
+<% if mentor_profiles.details_being_checked.any? %>
+  <h2 class="govuk-heading-m govuk-!-margin-bottom-0">DfE checking eligibility</h2>
+  <p class="govuk-!-margin-bottom-3">We’re checking these people’s details with the Teaching Regulation Agency.
+    We’ll confirm if they’re eligible for this programme soon.</p>
+
+  <table class="govuk-table govuk-!-margin-bottom-9" data-test="details">
+    <%= render Schools::Participants::StatusTable.new(participant_profiles: mentor_profiles.details_being_checked) %>
+  </table>
+<% end %>
+
+<% if mentor_profiles.eligible.any? %>
+  <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Eligible to start</h2>
+  <% if @school_cohort.core_induction_programme? %>
+    <p class="govuk-!-margin-bottom-3">We’ve confirmed these people are eligible for this programme. They have access to their materials.</p>
+  <% elsif @school_cohort.delivery_partner.present? %>
+    <p class="govuk-!-margin-bottom-3">We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly.</p>
+  <% else %>
+    <p class="govuk-!-margin-bottom-3">We’ve confirmed these people are eligible for this programme. Once you choose a training provider, they’ll contact your ECTs and mentors directly.</p>
+  <% end %>
+  <table class="govuk-table govuk-!-margin-bottom-9" data-test="eligible">
+    <%= render Schools::Participants::StatusTable.new(participant_profiles: mentor_profiles.eligible) %>
+  </table>
+<% end %>
+
