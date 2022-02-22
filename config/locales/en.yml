@@ -36,6 +36,7 @@ en:
   invalid_declaration_type: "The property '#/declaration_type' must be available for '#/course_identifier'"
   invalid_declaration_date: "The property '#/declaration_date' must be a valid RCF3339 date"
   future_declaration_date: "The property '#/declaration_date' can not declare a future date"
+  mismatch_declaration_type_for_schedule: "#/declaration_type does not exist for this schedule"
   missing_declaration_type: "The property '#/declaration_type' must be present"
   missing_evidence_held: "The property '#/evidence_held' must be present"
   missing_lead_provider: "The lead provider must be present"
@@ -56,7 +57,6 @@ en:
   declaration_on_incorrect_state: "The declaration on withdrawn or deferred participant can not be accepted"
   declaration_already_voided: "Declaration is already voided"
   declaration_not_voidable: "Declaration not voidable"
-  void_last_declaration_only: "Can only void last declaration"
   schedule_missing: "The participant does not have a schedule"
   declaration_before_milestone_start: "The property '#/declaration_date' can not be before milestone start"
   declaration_after_milestone_cutoff: "The property '#/declaration_date' can not be after milestone end"
@@ -234,6 +234,8 @@ en:
     choose_programme: Choose programme scheme
     cohort: Cohort
     show_contract: View contract information
+    show_voided_declarations: View voided declarations
+    voided_declarations: Voided declarations
     provider: Provider
     ects: Current ECTs
     mentors: Current Mentors

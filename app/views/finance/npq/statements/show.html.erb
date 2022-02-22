@@ -38,4 +38,7 @@
   </div>
 </div>
 
-<%= govuk_link_to t("finance.show_contract"), finance_npq_contract_path(id: @npq_lead_provider.id) %>
+<ul class="govuk-list">
+  <li><%= govuk_link_to t("finance.show_voided_declarations"), voided_finance_npq_lead_provider_statement_path(@npq_lead_provider.id, @statement.id) %></li>
+  <li><%= govuk_link_to t("finance.show_contract"), finance_npq_contract_path(id: @npq_lead_provider.id) %></li>
+</ul>

@@ -86,13 +86,12 @@ RSpec.describe RecordDeclarations::Base do
 
         expect(original_participant_declaration.supersedes).to eq([duplicate_participant_declaration])
         expect(duplicate_participant_declaration.declaration_states.pluck(:state)).to eq(%w[submitted ineligible])
-        expect(duplicate_participant_declaration.declaration_states.find_by!(state: "ineligible"))
-          .to be_duplicate
+        expect(duplicate_participant_declaration.declaration_states.find_by!(state: "ineligible")).to be_duplicate
       end
     end
   end
 
-  context "when milestone has null milestone_date" do
+  describe "#call" do
     let(:klass) do
       Class.new(described_class) do
         def self.valid_declaration_types
@@ -120,24 +119,77 @@ RSpec.describe RecordDeclarations::Base do
         end
       end
     end
+
     subject do
       klass.new(
         params: {
           course_identifier: "ecf-induction",
           cpd_lead_provider: cpd_lead_provider,
-          declaration_date: 10.days.ago.iso8601,
+          declaration_date: declaration_date.rfc3339,
           declaration_type: "started",
           participant_id: user.id,
         },
       )
     end
 
-    before do
-      Finance::Milestone.find_by(declaration_type: "started").update!(milestone_date: nil)
+    context "when milestone has null milestone_date" do
+      before do
+        Finance::Milestone.find_by(declaration_type: "started").update!(milestone_date: nil)
+      end
+
+      it "does not have errors on milestone_date" do
+        expect { subject.call }.not_to raise_error
+      end
     end
 
-    it "does not have errors on milestone_date" do
-      expect { subject.call }.not_to raise_error
+    context "when declaration_type does not exist for the schedule" do
+      before do
+        ect_participant_profile.schedule.milestones.find_by(declaration_type: "retained-4").destroy
+      end
+
+      subject do
+        klass.new(
+          params: {
+            course_identifier: "ecf-induction",
+            cpd_lead_provider: cpd_lead_provider,
+            declaration_date: 10.days.ago.iso8601,
+            declaration_type: "retained-4",
+            participant_id: user.id,
+          },
+        )
+      end
+
+      it "returns an error" do
+        expect { subject.call }.to raise_error(ActionController::ParameterMissing, /#\/declaration_type does not exist for this schedule/)
+      end
+    end
+
+    context "when an existing declaration is in payable state" do
+      let!(:existing_declaration) do
+        create(
+          :ect_participant_declaration,
+          :payable,
+          cpd_lead_provider: cpd_lead_provider,
+          user: user,
+          participant_profile: ect_participant_profile,
+          declaration_date: declaration_date,
+        )
+      end
+
+      it "does add another declaration" do
+        expect { subject.call }.to change { ParticipantDeclaration.count }.by(1)
+      end
+
+      it "marks any further declarations as ineligible" do
+        subject.call
+
+        new_declaration = ParticipantDeclaration.order(created_at: :asc).last
+        expect(new_declaration.state).to eql("ineligible")
+      end
+
+      it "does not change the state of the original declaration" do
+        expect { subject.call }.not_to change { existing_declaration.reload.state }
+      end
     end
   end
 end

@@ -16,7 +16,7 @@ module Finance
 
       attr_accessor :cpd_lead_provider, :recorder, :course_identifier, :statement
 
-      def initialize(statement:, course_identifier:, recorder: ParticipantDeclaration::NPQ)
+      def initialize(statement:, course_identifier:, recorder: ParticipantDeclaration::NPQ.where.not(state: %w[voided]))
         self.statement         = statement
         self.cpd_lead_provider = statement.cpd_lead_provider
         self.recorder          = recorder

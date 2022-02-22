@@ -51,9 +51,7 @@ RSpec.describe Finance::NPQ::CalculationOrchestrator do
             factory.create_list(:npq_participant_declaration, 3, :eligible)
             factory.create_list(:npq_participant_declaration, 2, :payable)
             factory.create_list(:npq_participant_declaration, 4, :submitted)
-            # voided are not assigned to a statement
-            # the above "fact" may change when we start dealing with clawbacks
-            # factory.create_list(:npq_participant_declaration, 3, :voided)
+            factory.create_list(:npq_participant_declaration, 3, :voided) # these represent voided payables for now
             factory.create_list(:npq_participant_declaration, 7, :paid)
           end
         end

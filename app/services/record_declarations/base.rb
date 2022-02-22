@@ -6,7 +6,7 @@ module RecordDeclarations
   class Base
     include Participants::ProfileAttributes
     include AbstractInterface
-    implement_class_method :required_params, :valid_declaration_types
+    implement_class_method :required_params
     implement_instance_method :user_profile
 
     MultipleParticipantDeclarationDuplicate = Class.new(ArgumentError)
@@ -18,8 +18,9 @@ module RecordDeclarations
     validates :declaration_date, :declaration_type, presence: true
     validates :parsed_date, future_date: true, allow_blank: true
     validate :date_has_the_right_format
+    validate :validate_schedule_present
+    validate :validate_milestone_exists
 
-    validates :declaration_type, inclusion: { in: :valid_declaration_types, message: I18n.t(:invalid_declaration_type) }
     delegate :schedule, :participant_declarations, to: :user_profile, allow_nil: true
 
     class << self
@@ -41,12 +42,11 @@ module RecordDeclarations
       raise ActiveRecord::RecordNotUnique, "Declaration with given participant ID already exists" if record_exists_with_different_declaration_date?
 
       ParticipantDeclaration.transaction do
-        DeclarationState.submitted!(participant_declaration)
-
         set_eligibility
 
         declaration_attempt.update!(participant_declaration: participant_declaration)
       end
+
       ParticipantDeclarationSerializer.new(participant_declaration).serializable_hash.to_json
     end
 
@@ -77,12 +77,8 @@ module RecordDeclarations
       ParticipantDeclarationAttempt.create!(declaration_parameters.except(:participant_profile))
     end
 
-    def find_or_create_record!
-      self.class.declaration_model.find_or_create_by!(declaration_parameters)
-    end
-
     def participant_declaration
-      @participant_declaration ||= find_or_create_record!
+      @participant_declaration ||= self.class.declaration_model.create!(declaration_parameters)
     end
 
     def declaration_parameters
@@ -136,16 +132,20 @@ module RecordDeclarations
       raise ActionController::ParameterMissing, I18n.t(:declaration_on_incorrect_state) unless last_state&.state.nil? || last_state.active?
     end
 
-    def milestone
+    def validate_schedule_present
       unless schedule
-        raise ActionController::ParameterMissing, I18n.t(:schedule_missing)
+        errors.add(:schedule, I18n.t(:schedule_missing))
       end
-
-      schedule.milestones.find_by(declaration_type: declaration_type)
     end
 
-    def valid_declaration_types
-      self.class.valid_declaration_types
+    def milestone
+      schedule&.milestones&.find_by(declaration_type: declaration_type)
+    end
+
+    def validate_milestone_exists
+      if milestone.blank?
+        errors.add(:declaration_type, I18n.t(:mismatch_declaration_type_for_schedule))
+      end
     end
 
     def original_participant_declaration

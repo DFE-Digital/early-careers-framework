@@ -8,12 +8,6 @@ module Api
       include ApiTokenAuthenticatable
       include ParticipantActions
 
-      def change_schedule
-        service = recorder(service_namespace: ::Participants::ChangeSchedule).new(params: params_for_recorder)
-        result = service.call
-        render json: serialized_response(result)
-      end
-
     private
 
       def serialized_response(profile)

@@ -5,6 +5,7 @@ module Mentors
     include SchoolCohortDelegator
 
     def call
+      mentor_profile = nil
       ActiveRecord::Base.transaction do
         # NOTE: This will not update the full_name if the user has an active participant profile,
         # the scenario I am working on is enabling a NPQ user to be added as a mentor
@@ -26,8 +27,9 @@ module Mentors
         }.merge(mentor_attributes))
         mentor_profile.participant_profile_states.create!
       end
+      
       send_participant_added_mailer
-
+      Induction::Enrol.call(participant_profile: mentor_profile) if school_cohort.default_induction_programme.present?
       mentor_profile
     end
 

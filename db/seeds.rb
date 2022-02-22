@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+PaperTrail.enabled = false
+
 seed_path = %w[db seeds]
 load Rails.root.join(*seed_path, "initial_seed.rb").to_s
 load Rails.root.join(*seed_path, "schedules.rb").to_s
@@ -18,3 +20,5 @@ if Rails.env.development? || Rails.env.deployed_development?
     FeatureFlag.activate(feature)
   end
 end
+
+PaperTrail.enabled = true

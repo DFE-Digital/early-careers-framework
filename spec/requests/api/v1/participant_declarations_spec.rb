@@ -60,13 +60,13 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         expect(ParticipantDeclaration.order(:created_at).last).to be_eligible
       end
 
-      it "does not create duplicate declarations with the same declaration date, but stores the duplicate declaration attempts" do
+      it "does create duplicate declarations with the same declaration date and stores the duplicate declaration attempts" do
         params = build_params(valid_params)
         post "/api/v1/participant-declarations", params: params
         original_id = parsed_response["id"]
 
         expect { post "/api/v1/participant-declarations", params: params }
-            .not_to change(ParticipantDeclaration, :count)
+            .to change(ParticipantDeclaration, :count).by(1)
         expect { post "/api/v1/participant-declarations", params: params }
             .to change(ParticipantDeclarationAttempt, :count).by(1)
 
@@ -74,7 +74,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         expect(parsed_response["id"]).to eq(original_id)
       end
 
-      it "does not create duplicate declarations with different declaration date, but stores the duplicate declaration attempts" do
+      it "does create duplicate declarations with different declaration date and stores the duplicate declaration attempts" do
         params = build_params(valid_params)
 
         new_valid_params = valid_params
@@ -86,7 +86,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         original_id = parsed_response["id"]
 
         expect { post "/api/v1/participant-declarations", params: params }
-            .not_to change(ParticipantDeclaration, :count)
+            .to change(ParticipantDeclaration, :count).by(1)
         expect { post "/api/v1/participant-declarations", params: params_with_different_declaration_date }
             .to change(ParticipantDeclarationAttempt, :count).by(1)
 
@@ -165,7 +165,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         missing_attribute = valid_params.except(:participant_id)
         post "/api/v1/participant-declarations", params: build_params(missing_attribute)
         expect(response.status).to eq 422
-        expect(response.body).to eq({ errors: [{ title: "Bad or missing parameters", detail: I18n.t("activemodel.errors.models.record_declarations/base.attributes.participant_id.blank") }] }.to_json)
+        expect(JSON.parse(response.body)["errors"]).to include({ title: "Bad or missing parameters", detail: I18n.t("activemodel.errors.models.record_declarations/base.attributes.participant_id.blank") }.stringify_keys)
       end
 
       it "ignores an unpermitted parameter" do
@@ -184,7 +184,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         invalid_participant_for_course_type = valid_params.merge({ course_identifier: "ecf-mentor" })
         post "/api/v1/participant-declarations", params: build_params(invalid_participant_for_course_type)
         expect(response.status).to eq 422
-        expect(response.body).to eq({ errors: [{ title: "Bad or missing parameters", detail: I18n.t(:invalid_participant) }] }.to_json)
+        expect(JSON.parse(response.body)["errors"]).to include({ title: "Bad or missing parameters", detail: I18n.t(:invalid_participant) }.stringify_keys)
       end
 
       it "returns 422 when there are multiple errors" do
@@ -439,15 +439,15 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
     context "when declaration is payable" do
       let(:declaration) { create(:ect_participant_declaration, :payable, cpd_lead_provider: cpd_lead_provider) }
 
-      it "cannot be voided" do
+      it "can be voided" do
         expect {
           put "/api/v1/participant-declarations/#{declaration.id}/void"
-        }.not_to change { declaration.reload.state }
+        }.to change { declaration.reload.state }.from("payable").to("voided")
       end
 
-      it "returns a 422" do
+      it "returns a 200" do
         put "/api/v1/participant-declarations/#{declaration.id}/void"
-        expect(response.status).to eql(422)
+        expect(response.status).to eql(200)
       end
     end
   end

@@ -1,0 +1,34 @@
+<% content_for :title, t("finance.voided_declarations") %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: finance_ecf_payment_breakdown_statement_path(payment_breakdown_id: @ecf_lead_provider.id, id: @statement.name)) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Voided declarations</h1>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <%= govuk_table do |table| %>
+      <% table.head do |head| %>
+        <% head.row do |row| %>
+          <% row.cell(header: true, text: "Declaration ID") %>
+          <% row.cell(header: true, text: "Participant ID") %>
+          <% row.cell(header: true, text: "Type") %>
+          <% row.cell(header: true, text: "Course") %>
+        <% end %>
+      <% end %>
+
+      <% table.body do |body| %>
+        <% @voided_declarations.each do |declaration| %>
+          <% body.row do |row| %>
+            <% row.cell(text: declaration.id) %>
+            <% row.cell(text: declaration.user.id) %>
+            <% row.cell(text: declaration.declaration_type) %>
+            <% row.cell(text: declaration.course_identifier) %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

@@ -13,15 +13,28 @@ module CurrentUser
 
     @deduped_current_user = transferred_identity&.user || original
   end
+
+  def true_user
+    return @deduped_true_user if defined? @deduped_true_user
+
+    original = super
+    return if original.nil?
+
+    transferred_identity = ParticipantIdentity.transferred.find_by(external_identifier: original.id)
+
+    @deduped_true_user = transferred_identity&.user || original
+  end
   # rubocop:enable Naming/MemoizedInstanceVariableName
 
   def impersonate_user(user)
     super
     remove_instance_variable(:@deduped_current_user)
+    remove_instance_variable(:@deduped_true_user)
   end
 
   def stop_impersonating_user
     super
     remove_instance_variable(:@deduped_current_user)
+    remove_instance_variable(:@deduped_true_user)
   end
 end

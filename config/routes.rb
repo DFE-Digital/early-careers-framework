@@ -55,24 +55,13 @@ Rails.application.routes.draw do
       resources :ecf_participants, path: "participants/ecf", only: %i[index] do
         concerns :participant_actions
       end
-
       resources :participants, only: %i[index], controller: "ecf_participants"
       resources :participants, only: [] do
         concerns :participant_actions
-        member do
-          put :resume
-          put :change_schedule, path: "change-schedule"
-        end
-      end
-      resources :participants, path: "/participants/ecf", only: [] do
-        member do
-          put :change_schedule, path: "change-schedule"
-        end
+        member { put :resume }
       end
       resources :participant_declarations, only: %i[create index show], path: "participant-declarations" do
-        member do
-          put :void
-        end
+        member { put :void }
       end
       resources :npq_participants, only: %i[index], path: "participants/npq" do
         concerns :participant_actions
@@ -303,7 +292,13 @@ Rails.application.routes.draw do
 
     namespace :ecf do
       resources :payment_breakdowns, only: [] do
-        resources :statements, only: %i[show]
+        resources :statements, only: %i[show] do
+          resources :declarations, only: [] do
+            collection do
+              get :voided
+            end
+          end
+        end
       end
 
       resources :contracts, only: %i[show]
@@ -313,6 +308,10 @@ Rails.application.routes.draw do
       resources :lead_providers, path: "payment-overviews", controller: "payment_overviews", only: %i[show] do
         resources :statements, only: %i[show] do
           resources :courses, only: %i[show], controller: "course_payment_breakdowns"
+
+          member do
+            get :voided
+          end
         end
       end
 

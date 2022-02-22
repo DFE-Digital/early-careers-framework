@@ -5,6 +5,7 @@ module EarlyCareerTeachers
     include SchoolCohortDelegator
 
     def call
+      profile = nil
       ActiveRecord::Base.transaction do
         # Retain the original name if the user already exists
         user = User.find_or_create_by!(email: email) do |ect|
@@ -12,8 +13,8 @@ module EarlyCareerTeachers
         end
         user.update!(full_name: full_name) unless user.participant_profiles&.active_record&.any? || user.npq_registered?
 
-        teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
-          profile.school = school_cohort.school
+        teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |teacher|
+          teacher.school = school_cohort.school
         end
 
         self.profile = ParticipantProfile::ECT.create!({
@@ -25,6 +26,15 @@ module EarlyCareerTeachers
       end
 
       send_participant_added_mailer(profile) unless year_2020
+        ParticipantProfileState.create!(participant_profile: profile)
+        Induction::Enrol.call(participant_profile: profile) if school_cohort.default_induction_programme.present?
+      end
+
+      unless year_2020
+        ParticipantMailer.participant_added(participant_profile: profile).deliver_later
+        profile.update_column(:request_for_details_sent_at, Time.zone.now)
+        ParticipantDetailsReminderJob.schedule(profile)
+      end
 
       profile
     end

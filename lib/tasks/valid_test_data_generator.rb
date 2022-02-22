@@ -7,7 +7,6 @@ module ValidTestDataGenerator
   class LeadProviderPopulater
     class << self
       def call(name:, total_schools: 10, participants_per_school: 50)
-        Importers::SeedStatements.new.call
         new(name: name).call(total_schools: total_schools, participants_per_school: participants_per_school)
       end
     end
@@ -81,7 +80,7 @@ module ValidTestDataGenerator
             course_identifier: "ecf-induction",
             declaration_date: (profile.schedule.milestones.first.start_date + 1.day).rfc3339,
             cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
-            declaration_type: RecordDeclarations::ECF::STARTED,
+            declaration_type: "started",
           },
         )
 
@@ -102,7 +101,7 @@ module ValidTestDataGenerator
             course_identifier: "ecf-induction",
             declaration_date: (profile.schedule.milestones.second.start_date + 1.day).rfc3339,
             cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
-            declaration_type: RecordDeclarations::ECF::RETAINED_ONE,
+            declaration_type: "retained-1",
             evidence_held: "other",
           },
         )
@@ -120,7 +119,7 @@ module ValidTestDataGenerator
             course_identifier: "ecf-mentor",
             declaration_date: (profile.schedule.milestones.first.start_date + 1.day).rfc3339,
             cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
-            declaration_type: RecordDeclarations::ECF::STARTED,
+            declaration_type: "started",
           },
         )
 
@@ -141,7 +140,7 @@ module ValidTestDataGenerator
             course_identifier: "ecf-mentor",
             declaration_date: (profile.schedule.milestones.second.start_date + 1.day).rfc3339,
             cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
-            declaration_type: RecordDeclarations::ECF::RETAINED_ONE,
+            declaration_type: "retained-1",
             evidence_held: "other",
           },
         )
@@ -244,7 +243,6 @@ module ValidTestDataGenerator
   class NPQLeadProviderPopulater
     class << self
       def call(name:, total_schools: 10, participants_per_school: 10)
-        Importers::SeedStatements.new.call
         new(name: name, participants_per_school: participants_per_school).call(total_schools: total_schools)
       end
     end
@@ -334,7 +332,7 @@ module ValidTestDataGenerator
           course_identifier: npq_application.npq_course.identifier,
           declaration_date: (npq_application.profile.schedule.milestones.first.start_date + 1.day).rfc3339,
           cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider,
-          declaration_type: RecordDeclarations::NPQ::STARTED,
+          declaration_type: "started",
         },
       )
     end

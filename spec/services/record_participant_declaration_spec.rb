@@ -78,4 +78,21 @@ RSpec.describe RecordParticipantDeclaration do
       end
     end
   end
+
+  context "when a voided payable declaration exists" do
+    before do
+      ect_profile.participant_declarations.create!(
+        cpd_lead_provider: cpd_lead_provider,
+        course_identifier: "ecf-induction",
+        user: ect_profile.user,
+        declaration_date: ect_profile.schedule.milestones.first.start_date - 1.week,
+        declaration_type: "started",
+        state: "voided",
+      )
+    end
+
+    it "can re-submit the same declaration later" do
+      expect { described_class.call(ect_params) }.to change { ParticipantDeclaration.count }.by(1)
+    end
+  end
 end
