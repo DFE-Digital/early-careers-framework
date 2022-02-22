@@ -286,6 +286,10 @@ Rails.application.routes.draw do
       post "/choose-provider-ecf", to: "payment_breakdowns#choose_provider_ecf", as: :choose_provider_ecf
       get "/choose-provider-npq", to: "payment_breakdowns#select_provider_npq", as: :select_provider_npq
       post "/choose-provider-npq", to: "payment_breakdowns#choose_provider_npq", as: :choose_provider_npq
+
+      collection do
+        post :choose_npq_statement, path: "choose-npq-statement"
+      end
     end
 
     resources :schedules, only: %i[index show]

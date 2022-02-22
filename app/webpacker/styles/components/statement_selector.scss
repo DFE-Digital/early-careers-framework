@@ -1,0 +1,14 @@
+.statement-selector {
+  margin-bottom: 30px;
+
+  .govuk-form-group {
+    display: inline-block;
+    margin-right: 20px;
+    margin-bottom: 0;
+  }
+
+  input[type=submit] {
+    margin-bottom: 0;
+    vertical-align: bottom;
+  }
+}

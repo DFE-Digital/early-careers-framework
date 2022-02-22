@@ -1,0 +1,19 @@
+<%= form_with url: choose_npq_statement_finance_payment_breakdowns_path, class: "statement-selector" do |f| %>
+  <%= f.govuk_collection_select :npq_lead_provider,
+    npq_lead_providers,
+    :id,
+    :name,
+    label: { text: "View a different provider" },
+    options: { include_blank: "Select an option" }
+  %>
+
+  <%= f.govuk_collection_select :statement,
+    statements,
+    :id,
+    :name,
+    label: { text: "View a different statement" },
+    options: { include_blank: "Select an option" }
+  %>
+
+  <%= f.govuk_submit "View", secondary: true %>
+<% end %>

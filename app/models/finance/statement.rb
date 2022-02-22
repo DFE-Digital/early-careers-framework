@@ -20,6 +20,11 @@ class Finance::Statement < ApplicationRecord
   def current?
     payment_date > Time.current && deadline_date > Time.current
   end
+
+  def identifier
+    name.downcase.gsub(" ", "-")
+  end
 end
+
 require "finance/statement/ecf"
 require "finance/statement/npq"
