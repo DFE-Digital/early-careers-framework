@@ -26,15 +26,7 @@ module EarlyCareerTeachers
       end
 
       send_participant_added_mailer(profile) unless year_2020
-        ParticipantProfileState.create!(participant_profile: profile)
-        Induction::Enrol.call(participant_profile: profile) if school_cohort.default_induction_programme.present?
-      end
-
-      unless year_2020
-        ParticipantMailer.participant_added(participant_profile: profile).deliver_later
-        profile.update_column(:request_for_details_sent_at, Time.zone.now)
-        ParticipantDetailsReminderJob.schedule(profile)
-      end
+      Induction::Enrol.call(participant_profile: profile) if school_cohort.default_induction_programme.present?
 
       profile
     end
