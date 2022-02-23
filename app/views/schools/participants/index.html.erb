@@ -25,19 +25,19 @@
   </div>
   <div class="govuk-grid-column-full">
     <%= govuk_tabs(title: 'Contents') do |component| %>
-      <% if @school_cohort.active_ecf_participant_profiles.ects.any? %>
+      <% if participants_active(@ect_categories) %>
         <% component.tab(label: 'ECTs') do %>
           <%= render partial: 'ects', locals: { ect_profiles: @ect_categories } %>
         <% end %>
       <% end %>
 
-      <% if @school_cohort.active_ecf_participant_profiles.mentors.any? %>
+      <% if participants_active(@mentor_categories) %>
         <% component.tab(label: 'Mentors') do %>
           <%= render partial: 'mentors', locals: { mentor_profiles: @mentor_categories } %>
         <% end %>
       <% end %>
 
-      <% if @withdrawn.any? || ineligible.any? %>
+      <% if @withdrawn.any? || @ineligible.any? %>
         <% component.tab(label: 'Not training') do %>
           <%= render partial: 'not_training', locals: { withdrawn: @withdrawn, ineligible: @ineligible } %>
         <% end %>
