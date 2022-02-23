@@ -3,7 +3,7 @@
   <p class="govuk-!-margin-bottom-3">We need this to check their eligibility with the Teaching Regulation Agency.</p>
 
   <table class="govuk-table govuk-!-margin-bottom-9" data-test="checked_ects">
-    <%= render Schools::Participants::StatusTable.new(participant_profiles: ect_profiles.contacted_for_info) %>
+    <%= render Schools::Participants::StatusTable.new(participant_profiles: ect_profiles.contacted_for_info, school_cohort: @school_cohort) %>
   </table>
 <% end %>
 
@@ -13,7 +13,7 @@
     We’ll confirm if they’re eligible for this programme soon.</p>
 
   <table class="govuk-table govuk-!-margin-bottom-9" data-test="details_ects">
-    <%= render Schools::Participants::StatusTable.new(participant_profiles: ect_profiles.details_being_checked) %>
+    <%= render Schools::Participants::StatusTable.new(participant_profiles: ect_profiles.details_being_checked, school_cohort: @school_cohort) %>
   </table>
 <% end %>
 
@@ -28,6 +28,6 @@
   <% end %>
 
   <table class="govuk-table govuk-!-margin-bottom-9" data-test="eligible_ects">
-    <%= render Schools::Participants::StatusTable.new(participant_profiles: ect_profiles.eligible) %>
+    <%= render Schools::Participants::StatusTable.new(participant_profiles: ect_profiles.eligible, school_cohort: @school_cohort) %>
   </table>
 <% end %>
