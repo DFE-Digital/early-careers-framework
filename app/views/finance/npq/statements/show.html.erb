@@ -7,7 +7,7 @@
       <%= @breakdowns.dig(0, :breakdown_summary, :name) %>
     </h1>
 
-    <%= render Finance::Statements::StatementSelector.new  %>
+    <%= render Finance::Statements::StatementSelector.new(current_statement: @statement)  %>
 
     <p class="govuk-caption-m govuk-!-margin-0">Payment of</p>
     <h2 class="govuk-heading-xl govuk-!-margin-0"><%= number_to_pounds aggregated_payment(@breakdowns) + aggregated_vat(@breakdowns, @npq_lead_provider) %></h2>

@@ -4,7 +4,7 @@
     :id,
     :name,
     label: { text: "View a different provider" },
-    options: { include_blank: "Select an option" }
+    options: { selected: current_statement.npq_lead_provider.id }
   %>
 
   <%= f.govuk_collection_select :statement,
@@ -12,7 +12,7 @@
     :id,
     :name,
     label: { text: "View a different statement" },
-    options: { include_blank: "Select an option" }
+    options: { selected: current_statement.identifier }
   %>
 
   <%= f.govuk_submit "View", secondary: true %>

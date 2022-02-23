@@ -5,8 +5,9 @@ require "rails_helper"
 RSpec.describe Finance::Statements::StatementSelector, type: :component do
   let!(:npq_lead_provider) { create(:npq_lead_provider) }
   let!(:npq_statement) { create(:npq_statement) }
+  let!(:other_npq_statement) { create(:npq_statement) }
 
-  let(:rendered) { render_inline(described_class.new) }
+  let(:rendered) { render_inline(described_class.new(current_statement: npq_statement)) }
 
   it "has a form that PUTs to correct action" do
     expect(rendered).to have_selector("form[method=post][action='/finance/payment-breakdowns/choose-npq-statement']")
@@ -24,5 +25,13 @@ RSpec.describe Finance::Statements::StatementSelector, type: :component do
 
   it "has submit button" do
     expect(rendered).to have_selector("input[type=submit]")
+  end
+
+  it "defaults selected lead provider to current lead provider" do
+    expect(rendered).to have_selector("select#npq-lead-provider-field option[selected]", text: npq_statement.npq_lead_provider.name, visible: false)
+  end
+
+  it "defaults selected statement to current statement" do
+    expect(rendered).to have_selector("select#statement-field option[selected]", text: npq_statement.name, visible: false)
   end
 end

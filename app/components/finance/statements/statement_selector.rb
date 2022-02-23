@@ -3,6 +3,12 @@
 module Finance
   module Statements
     class StatementSelector < BaseComponent
+      attr_reader :current_statement
+
+      def initialize(current_statement:)
+        @current_statement = current_statement
+      end
+
       def npq_lead_providers
         NPQLeadProvider.all
       end
