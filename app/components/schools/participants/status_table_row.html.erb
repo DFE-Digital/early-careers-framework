@@ -5,9 +5,14 @@
  </tr>
 <% else %>
   <tr class="govuk-table__row">
-   <td class="govuk-table__cell"><%= govuk_link_to profile.user.full_name, schools_participant_path(id: profile) %></td>
-   <td class="govuk-table__cell"><%= profile.school_cohort.lead_provider.name %></td>
-   <td class="govuk-table__cell"><%= profile.school_cohort.delivery_partner.name %></td>
-   <td class="govuk-table__cell"><%= profile.start_term.humanize %></td>
+   <td class="govuk-table__cell govuk-!-width-one-quarter"><%= govuk_link_to profile.user.full_name, schools_participant_path(id: profile) %></td>
+   <% if participant_is_on_a_cip %>
+     <td class="govuk-table__cell govuk-!-width-one-half"><%= profile.school_cohort.&core_induction_programme.name
+ %></td>
+   <% else %>
+     <td class="govuk-table__cell govuk-!-width-one-quarter"><%= profile.school_cohort.lead_provider&.name %></td>
+     <td class="govuk-table__cell govuk-!-width-one-quarter"><%= profile.school_cohort.delivery_partner&.name %></td>
+   <% end %>
+   <td class="govuk-table__cell govuk-!-width-one-quarter"><%= profile.start_term.humanize %></td>
   </tr>
 <% end %>

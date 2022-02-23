@@ -19,6 +19,10 @@ module Schools
         profile.ecf_participant_eligibility&.previous_participation_reason?
       end
 
+      def participant_is_on_a_cip
+        profile.school_cohort.school_chose_cip?
+      end
+
     private
 
       attr_reader :profile
