@@ -134,18 +134,4 @@ private
   def email_used?
     User.where.not(id: @profile.user.id).where(email: @profile.user.email).any?
   end
-
-  def set_participant_categories(mentors, ects)
-    @withdrawn_mentors = mentors.withdrawn
-    @eligible_mentors = mentors.eligible
-    @ineligible_mentors = mentors.ineligible
-    @contacted_for_info_mentors = mentors.contacted_for_info
-    @details_being_checked_mentors = mentors.details_being_checked
-
-    @withdrawn_ects = ects.withdrawn
-    @eligible_ects = ects.eligible
-    @ineligible_ects = ects.ineligible
-    @contacted_for_info_ects = ects.contacted_for_info
-    @details_being_checked_ects = ects.details_being_checked
-  end
 end
