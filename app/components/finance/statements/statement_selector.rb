@@ -10,13 +10,13 @@ module Finance
       end
 
       def npq_lead_providers
-        NPQLeadProvider.all
+        NPQLeadProvider.order(:name)
       end
 
       def statements
-        Finance::Statement::NPQ
-          .distinct(:name)
+        Finance::Statement::NPQ.order(:payment_date)
           .pluck(:name)
+          .uniq
           .map do |name|
             OpenStruct.new(
               id: name.downcase.gsub(" ", "-"),
