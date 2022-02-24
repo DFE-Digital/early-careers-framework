@@ -14,7 +14,7 @@ module DQT
             ni: params[:national_insurance_number],
           }
 
-          response = client.get(path: "/api/qualified-teachers/qualified-teaching-status", params: mapped_params)
+          response = client.get(path: "/v1/teachers", params: mapped_params)
 
           # API returns multiple items but we only ever use the first one. Decided to create a consistent interface here for automated checks rather than spend time creating an abstract interface.
           first_item = response[:data].first
