@@ -15,6 +15,16 @@
   <% end %>
 
   <% summary_list.row do |row| %>
+    <% row.key { "Lead provider" } %>
+    <% row.value { pp.npq_application&.npq_lead_provider&.name } %>
+  <% end %>
+
+  <% summary_list.row do |row| %>
+    <% row.key { "School URN" } %>
+    <% row.value { pp.npq_application&.school_urn } %>
+  <% end %>
+
+  <% summary_list.row do |row| %>
     <% row.key { "Status" } %>
     <% row.value { pp.status } %>
   <% end %>
