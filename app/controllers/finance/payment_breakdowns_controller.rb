@@ -42,7 +42,7 @@ module Finance
       # TODO: remove when we have created the next statement
       statement ||= npq_lead_provider.statements.order(payment_date: :desc).first
 
-      redirect_to finance_npq_lead_provider_statement_path(npq_lead_provider, statement.identifier)
+      redirect_to finance_npq_lead_provider_statement_path(npq_lead_provider, statement)
     end
 
     def choose_npq_statement
@@ -50,7 +50,7 @@ module Finance
       statement_name = params[:statement].humanize.gsub("-", " ")
       statement = npq_lead_provider.statements.find_by(name: statement_name)
 
-      redirect_to finance_npq_lead_provider_statement_path(npq_lead_provider.id, statement.identifier)
+      redirect_to finance_npq_lead_provider_statement_path(npq_lead_provider.id, statement)
     end
 
   private

@@ -12,7 +12,7 @@
     :id,
     :name,
     label: { text: "View a different statement" },
-    options: { selected: current_statement.identifier }
+    options: { selected: current_statement.name.parameterize }
   %>
 
   <%= f.govuk_submit "View", secondary: true %>

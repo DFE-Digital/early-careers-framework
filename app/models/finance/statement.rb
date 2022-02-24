@@ -22,7 +22,7 @@ class Finance::Statement < ApplicationRecord
     payment_date > Time.current && deadline_date > Time.current
   end
 
-  def identifier
+  def to_param
     name.downcase.gsub(" ", "-")
   end
 end

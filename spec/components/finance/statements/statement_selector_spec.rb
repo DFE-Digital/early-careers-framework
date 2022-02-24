@@ -20,7 +20,7 @@ RSpec.describe Finance::Statements::StatementSelector, type: :component do
 
   it "has dropdown with statements" do
     expect(rendered).to have_selector("select#statement-field")
-    expect(rendered).to have_selector("select#statement-field option[value='#{npq_statement.identifier}']", text: npq_statement.name)
+    expect(rendered).to have_selector("select#statement-field option[value='#{npq_statement.name.parameterize}']", text: npq_statement.name)
   end
 
   it "has submit button" do

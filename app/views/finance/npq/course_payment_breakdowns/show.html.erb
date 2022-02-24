@@ -1,5 +1,5 @@
 <% content_for :title, t("finance.npq.payment_breakdown") %>
-<% content_for :before_content, govuk_back_link(text: "Back", href: finance_npq_lead_provider_statement_path(@npq_lead_provider, @statement.identifier)) %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: finance_npq_lead_provider_statement_path(@npq_lead_provider, @statement)) %>
 
 <h1 class="govuk-heading-xl"><%= @cpd_lead_provider.name %></h1>
 <h2 class="govuk-heading-l"><%= @npq_course.name %></h2>

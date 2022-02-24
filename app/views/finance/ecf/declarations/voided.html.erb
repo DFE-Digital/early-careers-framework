@@ -1,5 +1,5 @@
 <% content_for :title, t("finance.voided_declarations") %>
-<% content_for :before_content, govuk_back_link(text: "Back", href: finance_ecf_payment_breakdown_statement_path(payment_breakdown_id: @ecf_lead_provider.id, id: @statement.name)) %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: finance_ecf_payment_breakdown_statement_path(@ecf_lead_provider.id, @statement)) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">

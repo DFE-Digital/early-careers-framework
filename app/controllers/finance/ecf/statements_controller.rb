@@ -11,7 +11,7 @@ module Finance
 
         @statements = @ecf_lead_provider.statements.upto_current.order(payment_date: :desc)
 
-        @statement = @ecf_lead_provider.statements.find(params[:id])
+        @statement = @ecf_lead_provider.statements.find_by(name: identifier_to_name)
 
         aggregator = ParticipantAggregator.new(
           statement: @statement,
@@ -29,6 +29,10 @@ module Finance
       end
 
     private
+
+      def identifier_to_name
+        params[:id].humanize.gsub("-", " ")
+      end
 
       def lead_provider_scope
         policy_scope(LeadProvider, policy_scope_class: FinanceProfilePolicy::Scope)
