@@ -19,6 +19,7 @@
 
 <% if mentor_profiles.eligible.any? %>
   <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Eligible to start</h2>
+
   <% if @school_cohort.core_induction_programme? %>
     <p class="govuk-!-margin-bottom-3">We’ve confirmed these people are eligible for this programme. They have access to their materials.</p>
   <% elsif @school_cohort.delivery_partner.present? %>
@@ -26,6 +27,7 @@
   <% else %>
     <p class="govuk-!-margin-bottom-3">We’ve confirmed these people are eligible for this programme. Once you choose a training provider, they’ll contact your ECTs and mentors directly.</p>
   <% end %>
+
   <table class="govuk-table govuk-!-margin-bottom-9" data-test="eligible">
     <%= render Schools::Participants::StatusTable.new(participant_profiles: mentor_profiles.eligible, school_cohort: @school_cohort) %>
   </table>

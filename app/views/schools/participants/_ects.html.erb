@@ -19,6 +19,7 @@
 
 <% if ect_profiles.eligible.any? %>
   <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Eligible to start</h2>
+
   <% if @school_cohort.core_induction_programme? %>
     <p class="govuk-!-margin-bottom-3">We’ve confirmed these people are eligible for this programme. They have access to their materials.</p>
   <% elsif @school_cohort.delivery_partner.present? %>

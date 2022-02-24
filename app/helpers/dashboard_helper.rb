@@ -20,7 +20,7 @@ module DashboardHelper
     Email.associated_with(profile).tagged_with(:request_for_details)&.latest&.failed?
   end
 
-  def participants_active(profiles)
+  def participants_active?(profiles)
     profiles.eligible.any? || profiles.contacted_for_info.any? || profiles.details_being_checked.any?
   end
 end

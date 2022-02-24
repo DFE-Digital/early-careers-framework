@@ -10,7 +10,7 @@ module Schools
       end
 
       def ineligible_participant?
-        profile.ecf_participant_eligibility&.status == "ineligible"
+        profile.ecf_participant_eligibility&.ineligible_status?
       end
 
       def mentor_in_early_rollout?
@@ -19,7 +19,7 @@ module Schools
         profile.ecf_participant_eligibility&.previous_participation_reason?
       end
 
-      def participant_is_on_a_cip
+      def participant_is_on_a_cip?
         profile.school_cohort.school_chose_cip?
       end
 
