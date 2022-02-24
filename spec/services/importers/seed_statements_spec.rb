@@ -17,7 +17,7 @@ RSpec.describe Importers::SeedStatements do
       expect {
         subject.call
         subject.call
-      }.to change(Finance::Statement::NPQ, :count).by(2)
+      }.to change(Finance::Statement::NPQ, :count).by(9)
     end
   end
 end

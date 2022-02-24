@@ -27,7 +27,7 @@ module Finance
 
       lead_provider = LeadProvider.find(@choose_programme_form.provider)
 
-      redirect_to finance_ecf_payment_breakdown_statement_path(lead_provider, lead_provider.current_statement)
+      redirect_to finance_ecf_payment_breakdown_statement_path(lead_provider, (lead_provider.current_statement || lead_provider.statements.latest))
     end
 
     def select_provider_npq; end
