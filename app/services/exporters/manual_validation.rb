@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Rails/Output
 class Exporters::ManualValidation < BaseService
   def call
     puts "id,email,type,full_name,date_of_birth,trn,nino"
@@ -48,4 +47,3 @@ private
     end
   end
 end
-# rubocop:enable Rails/Output
