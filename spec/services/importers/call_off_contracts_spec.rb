@@ -45,6 +45,14 @@ RSpec.describe Importers::CallOffContracts do
         expect {
           subject.call
         }.to change(CallOffContract, :count).by(1)
+
+        persisted_contract = CallOffContract.last
+
+        expect(persisted_contract.uplift_target).to eql(contract.uplift_target)
+        expect(persisted_contract.uplift_amount).to eql(contract.uplift_amount)
+        expect(persisted_contract.recruitment_target).to eql(contract.recruitment_target)
+        expect(persisted_contract.set_up_fee).to eql(contract.set_up_fee)
+        expect(persisted_contract.revised_target).to eql(contract.revised_target)
       end
     end
 
