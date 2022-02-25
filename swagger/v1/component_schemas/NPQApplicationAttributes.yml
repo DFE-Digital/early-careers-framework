@@ -48,11 +48,11 @@ properties:
     example: true
   employer_name:
     description: "The name of current employer of the participant if not currently employed by school"
-    type: string
+    type: ['null', string]
     example: "Some Company Ltd"
   employment_role:
     description: "Participant's current role in the company they are employed in if not currently employed by school"
-    type: string
+    type: ['null', string]
     example: "Director"
   school_urn:
     description: "The Unique Reference Number (URN) of the school where this NPQ participant is employed"

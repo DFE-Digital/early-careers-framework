@@ -136,6 +136,9 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
               funding_choice
               course_identifier
               status
+              works_in_school
+              employer_name
+              employment_role
               created_at
               updated_at
             ],
@@ -160,7 +163,7 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
           expect(row["funding_choice"]).to eql(application.funding_choice)
           expect(row["course_identifier"]).to eql(application.npq_course.identifier)
           expect(row["status"]).to eql(application.lead_provider_approval_status)
-          expect(row["works_in_school"]).to eql(application.works_in_school)
+          expect(row["works_in_school"]).to eql(application.works_in_school.to_s)
           expect(row["employer_name"]).to eql(application.employer_name)
           expect(row["employment_role"]).to eql(application.employment_role)
           expect(row["created_at"]).to eql(application.created_at.rfc3339)
