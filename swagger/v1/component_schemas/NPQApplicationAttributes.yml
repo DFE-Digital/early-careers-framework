@@ -42,6 +42,18 @@ properties:
     description: "Indicates whether the Teacher Reference Number (TRN) has been validated"
     type: boolean
     example: true
+  works_in_school:
+    description: "Indicates whether the participant is currently employed by school"
+    type: boolean
+    example: true
+  employer_name:
+    description: "The name of current employer of the participant if not currently employed by school"
+    type: string
+    example: "Some Company Ltd"
+  employment_role:
+    description: "Participant's current role in the company they are employed in if not currently employed by school"
+    type: string
+    example: "Director"
   school_urn:
     description: "The Unique Reference Number (URN) of the school where this NPQ participant is employed"
     type: string

@@ -8,6 +8,7 @@ FactoryBot.define do
 
     headteacher_status { NPQApplication.headteacher_statuses.keys.sample }
     funding_choice { NPQApplication.funding_choices.keys.sample }
+    works_in_school { true }
     school_urn { rand(100_000..999_999).to_s }
     school_ukprn { rand(10_000_000..99_999_999).to_s }
     date_of_birth { rand(25..50).years.ago + rand(0..365).days }
@@ -17,6 +18,14 @@ FactoryBot.define do
       after :create do |npq_application|
         NPQ::Accept.call(npq_application: npq_application)
       end
+    end
+
+    trait :not_in_school do
+      works_in_school { false }
+      school_urn { nil }
+      school_ukprn { nil }
+      employer_name { "Some Company Ltd" }
+      employment_role { "Director" }
     end
   end
 end

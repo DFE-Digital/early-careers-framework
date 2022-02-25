@@ -64,6 +64,9 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
           expect(parsed_response["data"][0]["attributes"]["eligible_for_funding"]).to eql(profile.eligible_for_funding)
           expect(parsed_response["data"][0]["attributes"]["course_identifier"]).to eql(profile.npq_course.identifier)
           expect(parsed_response["data"][0]["attributes"]["status"]).to eql("accepted")
+          expect(parsed_response["data"][0]["attributes"]["works_in_school"]).to eql(profile.works_in_school)
+          expect(parsed_response["data"][0]["attributes"]["employment_role"]).to eql(profile.employment_role)
+          expect(parsed_response["data"][0]["attributes"]["employer_name"]).to eql(profile.employer_name)
         end
 
         it "can return paginated data" do
@@ -157,6 +160,9 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
           expect(row["funding_choice"]).to eql(application.funding_choice)
           expect(row["course_identifier"]).to eql(application.npq_course.identifier)
           expect(row["status"]).to eql(application.lead_provider_approval_status)
+          expect(row["works_in_school"]).to eql(application.works_in_school)
+          expect(row["employer_name"]).to eql(application.employer_name)
+          expect(row["employment_role"]).to eql(application.employment_role)
           expect(row["created_at"]).to eql(application.created_at.rfc3339)
           expect(row["updated_at"]).to eql(application.updated_at.rfc3339)
         end

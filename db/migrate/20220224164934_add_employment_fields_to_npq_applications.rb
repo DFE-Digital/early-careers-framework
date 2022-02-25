@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddEmploymentFieldsToNPQApplications < ActiveRecord::Migration[6.1]
   def change
     add_column :npq_applications, :works_in_school, :boolean

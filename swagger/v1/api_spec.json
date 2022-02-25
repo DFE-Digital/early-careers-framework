@@ -2818,7 +2818,31 @@
                   "headteacher_status": "no",
                   "eligible_for_funding": true,
                   "funding_choice": "trust",
-                  "course_identifier": "npq-leading-teaching"
+                  "course_identifier": "npq-leading-teaching",
+                  "works_in_school": false,
+                  "employer_name": null,
+                  "employment_role": null
+                }
+              },
+              {
+                "id": "7ac0dd38-fca6-48df-a901-6c8db2d3782d",
+                "type": "participant",
+                "attributes": {
+                  "participant_id": "9e479754-5d02-4943-a5ec-5c328a7484f1",
+                  "full_name": "John Smith",
+                  "email": "john.smit@other-school.example.com",
+                  "email_validated": true,
+                  "teacher_reference_number": "1234567",
+                  "teacher_reference_number_validated": true,
+                  "school_urn": null,
+                  "school_ukprn": null,
+                  "headteacher_status": "no",
+                  "eligible_for_funding": true,
+                  "funding_choice": "trust",
+                  "course_identifier": "npq-leading-teaching",
+                  "works_in_school": false,
+                  "employer_name": "Some Company Ltd",
+                  "employment_role": "Director"
                 }
               }
             ]
