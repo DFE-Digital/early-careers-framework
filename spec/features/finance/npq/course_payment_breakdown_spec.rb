@@ -151,7 +151,7 @@ private
   end
 
   def then_i_should_have_the_correct_payment_breakdown_per_npq_lead_provider
-    within "main .govuk-grid-column-two-thirds table:nth-of-type(2)" do
+    within "main .govuk-grid-column-full table:nth-of-type(2)" do
       expect(page)
         .to have_css("tbody tr.govuk-table__row:nth-child(1) a[href='#{finance_npq_lead_provider_statement_course_path(npq_lead_provider, statement, id: npq_leading_teaching_contract.course_identifier)}']")
       expect(page)
@@ -162,7 +162,7 @@ private
   end
 
   def then_i_should_see_the_courses_vat_and_total_payment
-    within "main .govuk-grid-column-two-thirds table:nth-of-type(2)" do
+    within "main .govuk-grid-column-full table:nth-of-type(2)" do
       expect(page).to have_css("tr:nth-child(4) td:nth-child(1)", text: "VAT")
       expect(page).to have_css("tr:nth-child(4) td:nth-child(2)", text: number_to_pounds(aggregated_vat(breakdowns, npq_lead_provider)))
       expect(page).to have_css("tr:nth-child(5) td:nth-child(1)", text: "Total payment")

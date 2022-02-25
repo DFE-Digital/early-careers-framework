@@ -7,7 +7,7 @@ module Finance
         @npq_lead_provider = lead_provider_scope.find(params[:lead_provider_id])
         @cpd_lead_provider = @npq_lead_provider.cpd_lead_provider
         @npq_course        = NPQCourse.find_by!(identifier: params[:id])
-        @statement         = @cpd_lead_provider.npq_lead_provider.statements.find(params[:statement_id])
+        @statement         = @cpd_lead_provider.npq_lead_provider.statements.find_by(name: statement_id_to_name)
         @breakdown         = Finance::NPQ::CalculationOrchestrator.new(
           statement: @statement,
           contract: @npq_lead_provider.npq_contracts.find_by!(course_identifier: params[:id]),
@@ -16,6 +16,10 @@ module Finance
       end
 
     private
+
+      def statement_id_to_name
+        params[:statement_id].humanize.gsub("-", " ")
+      end
 
       def lead_provider_scope
         policy_scope(NPQLeadProvider, policy_scope_class: FinanceProfilePolicy::Scope)

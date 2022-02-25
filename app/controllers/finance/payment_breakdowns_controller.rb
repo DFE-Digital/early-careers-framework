@@ -27,7 +27,7 @@ module Finance
 
       lead_provider = LeadProvider.find(@choose_programme_form.provider)
 
-      redirect_to finance_ecf_payment_breakdown_statement_path(lead_provider, lead_provider.current_statement)
+      redirect_to finance_ecf_payment_breakdown_statement_path(lead_provider, (lead_provider.current_statement || lead_provider.statements.latest))
     end
 
     def select_provider_npq; end
@@ -43,6 +43,14 @@ module Finance
       statement ||= npq_lead_provider.statements.order(payment_date: :desc).first
 
       redirect_to finance_npq_lead_provider_statement_path(npq_lead_provider, statement)
+    end
+
+    def choose_npq_statement
+      npq_lead_provider = NPQLeadProvider.find(params[:npq_lead_provider])
+      statement_name = params[:statement].humanize.gsub("-", " ")
+      statement = npq_lead_provider.statements.find_by(name: statement_name)
+
+      redirect_to finance_npq_lead_provider_statement_path(npq_lead_provider.id, statement)
     end
 
   private

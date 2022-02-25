@@ -11,6 +11,7 @@ class Finance::Statement < ApplicationRecord
   scope :payable, -> { where("deadline_date < DATE(NOW()) AND payment_date >= DATE(NOW())") }
   scope :closed,  -> { where("payment_date < ?", Date.current) }
   scope :current, -> { where("deadline_date >= DATE(NOW())") }
+  scope :latest, -> { order(deadline_date: :asc).last }
   scope :upto_current, -> { payable.or(closed).or(current) }
 
   def past_deadline_date?
@@ -20,6 +21,11 @@ class Finance::Statement < ApplicationRecord
   def current?
     payment_date > Time.current && deadline_date > Time.current
   end
+
+  def to_param
+    name.downcase.gsub(" ", "-")
+  end
 end
+
 require "finance/statement/ecf"
 require "finance/statement/npq"
