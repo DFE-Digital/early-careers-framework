@@ -4,6 +4,7 @@ class ParticipantIdentity < ApplicationRecord
   belongs_to :user
   has_many :participant_profiles
   has_many :npq_applications
+  has_many :induction_records, through: :participant_profiles
 
   validates :email, presence: true, uniqueness: true, notify_email: true
   validates :external_identifier, uniqueness: true

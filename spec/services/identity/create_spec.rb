@@ -73,5 +73,32 @@ RSpec.describe Identity::Create do
         expect(service.call(user: user)).to eq(identity)
       end
     end
+
+    context "when used to create an additional sign-in account" do
+      let!(:identity) { create(:participant_identity, user: user) }
+
+      it "creates a new identity record for the user" do
+        expect {
+          service.call(user: user, email: "login2@example.com")
+        }.to change { user.participant_identities.count }.by 1
+      end
+
+      it "generates a new external_identifier" do
+        new_identity = service.call(user: user, email: "login2@example.com")
+        expect(new_identity.external_identifier).to be_present
+        expect(new_identity.external_identifier).not_to eq user.id
+      end
+
+      context "when the user has existing profiles" do
+        let(:teacher_profile) { create(:teacher_profile, user: user) }
+        let!(:mentor_profile) { create(:mentor_participant_profile, teacher_profile: teacher_profile, participant_identity: identity) }
+        let!(:npq_profile) { create(:npq_participant_profile, teacher_profile: teacher_profile, participant_identity: identity) }
+
+        it "does not update any of the users participant_profiles" do
+          new_identity = service.call(user: user, email: "login2@example.com")
+          expect(new_identity.reload.participant_profiles).to be_empty
+        end
+      end
+    end
   end
 end

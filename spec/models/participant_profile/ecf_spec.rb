@@ -28,16 +28,16 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
     context "when the status changes" do
       it "updates the status on the active induction record" do
         profile.withdrawn_record!
-        expect(induction_record.reload).to be_withdrawn
+        expect(induction_record.reload).to be_withdrawn_status
       end
     end
 
     context "when the status has not changed" do
-      before { induction_record.completed! }
+      before { induction_record.completed_status! }
 
       it "does not update the status" do
         profile.primary_profile!
-        expect(induction_record.reload).to be_completed
+        expect(induction_record.reload).to be_completed_status
       end
     end
 
