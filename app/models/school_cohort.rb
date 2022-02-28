@@ -26,6 +26,7 @@ class SchoolCohort < ApplicationRecord
   has_many :mentors, through: :mentor_profiles, source: :user
   has_many :active_mentor_profiles, -> { mentors.active_record }, class_name: "ParticipantProfile"
   has_many :active_mentors, through: :active_mentor_profiles, source: :user
+  has_many :induction_programmes
 
   scope :for_year, ->(year) { joins(:cohort).where(cohort: { start_year: year }) }
 
