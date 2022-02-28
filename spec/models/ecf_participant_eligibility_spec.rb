@@ -21,6 +21,7 @@ RSpec.describe ECFParticipantEligibility, type: :model do
       active_flags: "active_flags",
       previous_participation: "previous_participation",
       previous_induction: "previous_induction",
+      no_induction: "no_induction",
       no_qts: "no_qts",
       different_trn: "different_trn",
       duplicate_profile: "duplicate_profile",
