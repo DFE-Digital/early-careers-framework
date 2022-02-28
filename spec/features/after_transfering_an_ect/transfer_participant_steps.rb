@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module TransferParticipantSteps
-  include Capybara::DSL
+  include RSpec::Matchers
 
   def given_lead_provider_contracted_to_deliver_ecf
     i = @lead_providers.length
@@ -71,7 +71,7 @@ module TransferParticipantSteps
   end
 
   def then_participant_can_be_seen_by_lead_provider(lead_provider, lead_provider_token, participant)
-    assert_equal true, lead_provider.ecf_participant_profiles.include?(participant)
+    expect(lead_provider.ecf_participant_profiles.include?(participant)).to be true
 
     session = ActionDispatch::Integration::Session.new(Rails.application)
     session.get("/api/v1/participants/ecf",
@@ -84,7 +84,7 @@ module TransferParticipantSteps
   end
 
   def then_participant_cannot_be_seen_by_lead_provider(lead_provider, lead_provider_token, participant)
-    assert_equal false, lead_provider.ecf_participant_profiles.include?(participant)
+    expect(lead_provider.ecf_participant_profiles.include?(participant)).to be false
 
     session = ActionDispatch::Integration::Session.new(Rails.application)
     session.get("/api/v1/participants/ecf",
@@ -97,7 +97,7 @@ module TransferParticipantSteps
   end
 
   def then_participant_can_be_seen_by_cip_sit(sit, participant)
-    assert_equal true, sit.schools.first.ecf_participant_profiles.include?(participant)
+    expect(sit.schools.first.ecf_participant_profiles.include?(participant)).to be true
 
     sign_in_as_cip_sit(sit)
       .check_has_participants
@@ -106,14 +106,14 @@ module TransferParticipantSteps
   end
 
   def then_participant_cannot_be_seen_by_cip_sit(sit, participant)
-    assert_equal false, sit.schools.first.ecf_participant_profiles.include?(participant)
+    expect(sit.schools.first.ecf_participant_profiles.include?(participant)).to be false
 
     sign_in_as_cip_sit(sit)
       .check_has_no_participants
   end
 
   def then_participant_can_be_seen_by_fip_sit(sit, participant)
-    assert_equal true, sit.schools.first.ecf_participant_profiles.include?(participant)
+    expect(sit.schools.first.ecf_participant_profiles.include?(participant)).to be true
 
     sign_in_as_fip_sit(sit)
       .check_has_participants
@@ -122,7 +122,7 @@ module TransferParticipantSteps
   end
 
   def then_participant_cannot_be_seen_by_fip_sit(sit, participant)
-    assert_equal false, sit.schools.first.ecf_participant_profiles.include?(participant)
+    expect(sit.schools.first.ecf_participant_profiles.include?(participant)).to be false
 
     sign_in_as_fip_sit(sit)
       .check_has_no_participants
