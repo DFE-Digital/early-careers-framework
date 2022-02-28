@@ -34,7 +34,7 @@ class ParticipantProfile < ApplicationRecord
 
     def current_induction_record
       now = Time.zone.now
-      induction_records.active.where("start_date <= ? AND end_date IS NULL OR end_date > ?", now, now).first
+      induction_records.active_status.where("start_date <= ? AND end_date IS NULL OR end_date > ?", now, now).first
     end
 
     def ecf?
