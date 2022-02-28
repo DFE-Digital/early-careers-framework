@@ -11,7 +11,7 @@ RSpec.describe Identity::Create do
     it "creates a new participant_identity record" do
       expect {
         service.call(user: user)
-      }.to change { ParticipantIdentity.count }.by(1)
+      }.to change { Identity.count }.by(1)
     end
 
     it "populates the new identity with the details from the user" do
@@ -44,7 +44,7 @@ RSpec.describe Identity::Create do
       end
 
       context "when the existing profiles belong to another identity" do
-        let(:id1) { create(:participant_identity) }
+        let(:id1) { create(:identity) }
 
         before do
           id1.update!(user: user)
@@ -61,12 +61,12 @@ RSpec.describe Identity::Create do
     end
 
     context "when a profile for the users email address already exists" do
-      let!(:identity) { create(:participant_identity, user: user) }
+      let!(:identity) { create(:identity, user: user) }
 
       it "does not create a new identity record" do
         expect {
           service.call(user: user)
-        }.not_to change { ParticipantIdentity.count }
+        }.not_to change { Identity.count }
       end
 
       it "returns the existing identity record" do

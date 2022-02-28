@@ -4,7 +4,7 @@
 
 <h2>Identities</h2>
 
-<% @user.participant_identities.each_with_index do |identity, i| %>
+<% @user.identities.each_with_index do |identity, i| %>
   <h3><%= "Identity #{i + 1}" %></h3>
 
   <dl class="govuk-summary-list">

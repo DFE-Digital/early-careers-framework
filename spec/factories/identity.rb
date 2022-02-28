@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :participant_identity do
+  factory :identity do
     user
     email { user.email }
     external_identifier { user.id }

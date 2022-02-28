@@ -12,7 +12,7 @@ RSpec.describe NPQ::Accept do
   describe "#call" do
     let(:trn) { rand(1_000_000..9_999_999).to_s }
     let(:user) { create(:user) }
-    let(:identity) { create(:participant_identity, user: user) }
+    let(:identity) { create(:identity, user: user) }
     let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
     let(:npq_lead_provider) { create(:npq_lead_provider) }
 
@@ -156,7 +156,7 @@ RSpec.describe NPQ::Accept do
 
           it "transfers participation record onto the previous user" do
             expect { subject.call }
-              .to change { previous_user.participant_identities.count }.by(1)
+              .to change { previous_user.identities.count }.by(1)
               .and change { previous_user.teacher_profile.participant_profiles.count }.by(1)
           end
         end

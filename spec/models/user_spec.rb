@@ -97,12 +97,12 @@ RSpec.describe User, type: :model do
           end
 
           it "updates the email on the original participant identity" do
-            expect(user.participant_identities.first.email).to eq("mary.jones@example.com")
+            expect(user.identities.first.email).to eq("mary.jones@example.com")
           end
         end
 
         context "when there are transferred identity records" do
-          let(:identity2) { create(:participant_identity, :npq, email: "mary.e.jones@example.com") }
+          let(:identity2) { create(:identity, :npq, email: "mary.e.jones@example.com") }
 
           before do
             identity2.update!(user: user)

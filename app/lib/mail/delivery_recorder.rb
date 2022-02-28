@@ -28,7 +28,7 @@ module Mail
           personalisation: mail.header["personalisation"]&.unparsed_value,
         )
 
-        user_ids = User.where(email: email.to).pluck(:id) + ParticipantIdentity.where(email: email.to).pluck(:user_id)
+        user_ids = User.where(email: email.to).pluck(:id) + Identity.where(email: email.to).pluck(:user_id)
         email.create_association_with(*User.where(id: user_ids).to_a, as: :recipient)
 
         mail.associations.each do |object, name|

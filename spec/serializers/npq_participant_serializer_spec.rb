@@ -9,7 +9,7 @@ RSpec.describe NPQParticipantSerializer do
     describe "multiple providers" do
       let!(:schedule) { create(:npq_leadership_schedule) }
       let!(:participant) { create(:user) }
-      let!(:identity) { create(:participant_identity, user: participant) }
+      let!(:identity) { create(:identity, user: participant) }
 
       let(:cpd_provider_one) { create(:cpd_lead_provider) }
       let(:cpd_provider_two) { create(:cpd_lead_provider) }

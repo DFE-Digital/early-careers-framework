@@ -31,7 +31,7 @@ module Participants
   private
 
     def participant_identity
-      @participant_identity ||= ParticipantIdentity.find_by(external_identifier: participant_id)
+      @participant_identity ||= Identity.find_by(external_identifier: participant_id)
     end
 
     def user

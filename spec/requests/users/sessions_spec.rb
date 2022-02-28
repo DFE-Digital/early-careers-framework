@@ -37,7 +37,7 @@ RSpec.describe "Users::Sessions", type: :request do
     end
 
     context "when participant identity email used" do
-      let!(:participant_identity) { create(:participant_identity, user: user, email: "id2@example.com") }
+      let!(:participant_identity) { create(:identity, user: user, email: "id2@example.com") }
 
       it "sends login email to participant identity email" do
         expect(UserMailer).to receive(:sign_in_email).with(

@@ -4,7 +4,7 @@ class User < ApplicationRecord
   devise :registerable, :trackable, :passwordless_authenticatable
   has_paper_trail
 
-  has_many :participant_identities
+  has_many :identities, inverse_of: :user
 
   has_one :induction_coordinator_profile, dependent: :destroy
   has_many :schools, through: :induction_coordinator_profile
@@ -149,7 +149,7 @@ private
 
   def sync_email_address_with_identity
     if saved_change_to_email?
-      participant_identities.original.first&.update!(email: email)
+      identities.original.first&.update!(email: email)
     end
   end
 end

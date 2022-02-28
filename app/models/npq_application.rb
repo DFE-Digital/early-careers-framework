@@ -6,7 +6,7 @@ class NPQApplication < ApplicationRecord
   self.ignored_columns = %w[user_id]
 
   has_one :profile, class_name: "ParticipantProfile::NPQ", foreign_key: :id, touch: true
-  belongs_to :participant_identity
+  belongs_to :participant_identity, class_name: "Identity"
   belongs_to :npq_lead_provider
   belongs_to :npq_course
 

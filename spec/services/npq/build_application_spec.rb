@@ -50,7 +50,7 @@ RSpec.describe NPQ::BuildApplication do
     it "adds a participant identity record" do
       expect {
         npq_application
-      }.to change { ParticipantIdentity.count }.by(1)
+      }.to change { Identity.count }.by(1)
     end
 
     context "when the user already has an identity record" do

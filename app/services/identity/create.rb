@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Identity
+class Identity < ApplicationRecord
   class Create < BaseService
     def call
       ActiveRecord::Base.transaction do
@@ -20,7 +20,7 @@ module Identity
     end
 
     def find_or_create_identity
-      @identity = ParticipantIdentity.find_or_create_by!(email: user.email) do |identity|
+      @identity = Identity.find_or_create_by!(email: user.email) do |identity|
         identity.user = user
         identity.external_identifier = user.id
         identity.email = user.email

@@ -6,15 +6,15 @@ RSpec.describe Identity::Transfer do
   subject(:service) { described_class }
 
   describe ".call" do
-    let(:id1) { create(:participant_identity) }
-    let(:id2) { create(:participant_identity) }
+    let(:id1) { create(:identity) }
+    let(:id2) { create(:identity) }
     let(:user1) { id1.user }
     let(:user2) { id2.user }
 
     it "moves the participant identity record from one user to another" do
       service.call(from_user: user1, to_user: user2)
-      expect(user1.participant_identities.count).to be_zero
-      expect(user2.participant_identities.count).to eq 2
+      expect(user1.identities.count).to be_zero
+      expect(user2.identities.count).to eq 2
     end
 
     context "when profiles are attached to the user" do

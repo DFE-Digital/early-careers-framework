@@ -6,7 +6,7 @@ class ParticipantProfile < ApplicationRecord
 
   belongs_to :schedule, class_name: "Finance::Schedule", touch: true
 
-  belongs_to :participant_identity
+  belongs_to :participant_identity, class_name: "Identity"
 
   has_one :user, through: :teacher_profile
 

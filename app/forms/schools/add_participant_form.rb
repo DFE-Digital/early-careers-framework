@@ -95,7 +95,7 @@ module Schools
     end
 
     def email_already_taken?
-      ParticipantIdentity.find_by(email: email)
+      Identity.find_by(email: email)
         &.user
         &.teacher_profile
         &.participant_profiles

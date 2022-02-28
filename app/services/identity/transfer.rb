@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-module Identity
+class Identity < ApplicationRecord
   class Transfer < BaseService
     def call
       ActiveRecord::Base.transaction do
         teacher_profile = TeacherProfile.find_or_create_by!(user: to_user)
 
-        from_user.participant_identities.each do |identity|
+        from_user.identities.each do |identity|
           identity.update!(user: to_user)
           identity.participant_profiles.each do |profile|
             profile.update!(teacher_profile: teacher_profile)

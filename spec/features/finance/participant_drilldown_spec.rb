@@ -6,13 +6,13 @@ RSpec.feature "Finance users participant drilldown", type: :feature do
   let(:ect_user) { create(:user, :early_career_teacher) }
   let(:ect_profile) { ect_user.early_career_teacher_profile }
   let(:ect_declaration) { create(:ect_participant_declaration, user: ect_user, participant_profile: ect_profile) }
-  let(:ect_identity) { create :participant_identity, user: ect_user, external_identifier: SecureRandom.uuid }
+  let(:ect_identity) { create :identity, user: ect_user, external_identifier: SecureRandom.uuid }
 
   let(:npq_user) { create(:user, :npq) }
   let(:npq_profile) { npq_user.npq_profiles[0] }
   let(:npq_declaration) { create(:npq_participant_declaration, user: npq_user, participant_profile: npq_profile) }
   let(:npq_application) { create(:npq_application, participant_identity: npq_identity) }
-  let(:npq_identity) { create(:participant_identity, :npq_origin, user: npq_user) }
+  let(:npq_identity) { create(:identity, :npq_origin, user: npq_user) }
 
   scenario "viewing ECT user" do
     given_i_am_logged_in_as_a_finance_user
