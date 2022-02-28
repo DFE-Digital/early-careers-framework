@@ -39,7 +39,7 @@ module FullDQT
     end
 
     def uri(trn:, birthdate:, nino: nil)
-      URI("#{Rails.configuration.dqt_api_url}/#{trn}?#{query_string_object(birthdate: birthdate, nino: nino).to_query}")
+      URI("#{Rails.configuration.dqt_api_url}/v1/teachers/#{trn}?#{query_string_object(birthdate: birthdate, nino: nino).to_query}")
     end
 
     def query_string_object(birthdate:, nino: nil)
