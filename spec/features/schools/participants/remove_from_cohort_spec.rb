@@ -26,9 +26,8 @@ RSpec.describe "SIT removing participants from the cohort", js: true, with_featu
     sign_in_as sit_profile.user
     visit schools_participants_path(school_cohort.school, school_cohort.cohort)
 
-    within("[data-test='checked']") do
-      click_on("Check")
-    end
+    click_on "Mentors"
+    click_on mentor_profile.user.full_name
 
     click_on "Remove #{mentor_profile.user.full_name} from this cohort"
     expect(page)
@@ -58,9 +57,9 @@ RSpec.describe "SIT removing participants from the cohort", js: true, with_featu
   scenario "removing ineligible participant" do
     sign_in_as sit_profile.user
     visit schools_participants_path(school_cohort.school, school_cohort.cohort)
-    within("[data-test='ineligible']") do
-      click_on("Check")
-    end
+
+    click_on "Not training"
+    click_on ineligible_user.full_name
     click_on "Remove #{ineligible_user.full_name} from this cohort"
 
     expect(page).to have_content("Confirm you want to remove #{ineligible_user.full_name}")

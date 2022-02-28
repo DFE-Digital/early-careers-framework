@@ -7,12 +7,10 @@ class Schools::ParticipantsController < Schools::BaseController
   before_action :set_mentors_added, only: %i[index show]
 
   def index
-    participant_categories = SetParticipantCategories.call(@school_cohort, current_user)
-    @withdrawn = participant_categories.withdrawn
-    @eligible = participant_categories.eligible
-    @ineligible = participant_categories.ineligible
-    @contacted_for_info = participant_categories.contacted_for_info
-    @details_being_checked = participant_categories.details_being_checked
+    @mentor_categories = SetParticipantCategories.call(@school_cohort, current_user, "ParticipantProfile::Mentor")
+    @ect_categories = SetParticipantCategories.call(@school_cohort, current_user, "ParticipantProfile::ECT")
+    @withdrawn = @ect_categories.withdrawn + @mentor_categories.withdrawn
+    @ineligible = @ect_categories.ineligible + @mentor_categories.ineligible
   end
 
   def show

@@ -137,7 +137,7 @@ module ManageTrainingSteps
   end
 
   def and_i_have_added_an_eligible_mentor
-    @eligible_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: @school_cohort, start_term: "summer_2022")
+    @eligible_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Eligible mentor"), school_cohort: @school_cohort, start_term: "summer_2022")
   end
 
   def and_i_have_added_an_ineligible_ect_with_mentor
@@ -146,7 +146,7 @@ module ManageTrainingSteps
   end
 
   def and_i_have_added_an_ineligible_mentor
-    @ineligible_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: @school_cohort)
+    @ineligible_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Ineligible mentor"), school_cohort: @school_cohort)
     @ineligible_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "active_flags")
   end
 
@@ -155,7 +155,7 @@ module ManageTrainingSteps
   end
 
   def and_i_have_added_an_ero_mentor
-    @ero_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: @school_cohort)
+    @ero_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "ero mentor"), school_cohort: @school_cohort)
     @ero_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "previous_participation")
   end
 
@@ -302,6 +302,10 @@ module ManageTrainingSteps
     expect(page).to have_text(term_and_year)
   end
 
+  def and_the_action_required_is_remove
+    expect(page).to have_text("Remove")
+  end
+
   # When_steps
 
   def when_i_click_on_back
@@ -420,42 +424,8 @@ module ManageTrainingSteps
     visit schools_dashboard_path(@school)
   end
 
-  def when_i_click_on_details_within_eligible
-    within("[data-test='eligible']") do
-      click_on("Details")
-    end
-  end
-
-  def when_i_click_on_check_within_eligible
-    within("[data-test='eligible']") do
-      click_on("Check")
-    end
-  end
-
-  def when_i_click_on_check_within_ineligible
-    within("[data-test='ineligible']") do
-      click_on("Check")
-    end
-  end
-
-  def when_i_click_on_details_within_details
-    within("[data-test='details']") do
-      click_on("Details")
-    end
-  end
-
-  def when_i_click_on_details_within_withdrawn
-    within("[data-test='withdrawn']") do
-      click_on("Details")
-    end
-  end
-
-  def when_i_click_on_check
-    click_on("Check")
-  end
-
-  def when_i_click_on_details
-    click_on("Details")
+  def when_i_click_on_the_participants_name(name)
+    click_on name
   end
 
   def when_i_navigate_to_participants_dashboard
