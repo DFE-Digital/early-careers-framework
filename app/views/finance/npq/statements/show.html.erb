@@ -9,21 +9,7 @@
           <% @npq_contracts.each do |npq_contract| %>
             <section class="app-application__card">
               <h2 class="govuk-heading-s"><%= t("#{ npq_contract.course_identifier }", scope: "npq_courses") %></h2>
-              <header class="app-application-card__header">
-                <% NPQCourse.schedule_for(NPQCourse.find_by(identifier: npq_contract.course_identifier))
-                            .milestones.each do |milestone| %>
-                  <span class="govuk-body-s">
-                    <%= milestone.declaration_type.titleize %>
-                    <br>
-                    <%= @statement.participant_declarations.for_course_identifier(npq_contract.course_identifier)
-                                  .for_declaration(milestone.declaration_type)
-                                  .count %>
-                  </span>
-                <% end %>
-                <span class="govuk-body-s">Recruitment target<br><%= npq_contract.recruitment_target %></span>
-                <span class="govuk-body-s">Current trainees<br><%= @statement.participant_declarations.for_course_identifier(npq_contract.course_identifier).unique_paid_payable_or_eligible.count %></span>
-                <span class="govuk-body-s">Total not paid<br><%= @statement.participant_declarations.for_course_identifier(npq_contract.course_identifier).ineligible.unique_id.count %></span>
-              </header>
+              <%= render Finance::NPQ::PaymentOverviews::PaymentOverviewTableHeader.new(npq_contract, @statement) %>
               <span class="govuk-label--s govuk-visually-hidden">Payment details</span>
               <%= render Finance::NPQ::PaymentOverviews::PaymentOverviewTable.new(npq_contract, @statement) %>
 <!--              <table class="govuk-table">-->
