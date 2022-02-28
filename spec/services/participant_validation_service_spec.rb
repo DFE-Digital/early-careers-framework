@@ -231,7 +231,7 @@ RSpec.describe ParticipantValidationService do
         end
 
         it "returns returns the correct previous_participation flags" do
-          expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: true }))
+          expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: true, no_induction: false }))
         end
       end
 
@@ -247,7 +247,11 @@ RSpec.describe ParticipantValidationService do
         end
 
         it "returns previous_induction as false" do
-          expect(validation_result[:previous_induction]).to be_falsey
+          expect(validation_result[:previous_induction]).to eq false
+        end
+
+        it "returns no_induction as true" do
+          expect(validation_result[:no_induction]).to eq true
         end
       end
 
@@ -264,7 +268,7 @@ RSpec.describe ParticipantValidationService do
         end
 
         it "returns returns both flags" do
-          expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: true, previous_participation: true }))
+          expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: true, previous_participation: true, no_induction: false }))
         end
       end
 
@@ -282,7 +286,7 @@ RSpec.describe ParticipantValidationService do
         end
 
         it "returns false for previous induction" do
-          expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: false }))
+          expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: false, no_induction: false }))
         end
       end
 
@@ -300,7 +304,7 @@ RSpec.describe ParticipantValidationService do
         end
 
         it "returns false for previous induction and parses timezones correctly" do
-          expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: false }))
+          expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: false, no_induction: false }))
         end
       end
 
@@ -318,7 +322,7 @@ RSpec.describe ParticipantValidationService do
         end
 
         it "returns true for previous induction" do
-          expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: true }))
+          expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: true, no_induction: false }))
         end
       end
     end
@@ -331,6 +335,7 @@ RSpec.describe ParticipantValidationService do
       active_alert: false,
       previous_participation: false,
       previous_induction: false,
+      no_induction: true,
     }.merge(options)
   end
 

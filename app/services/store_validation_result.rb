@@ -42,6 +42,7 @@ private
         active_flags: dqt_data[:active_alert],
         previous_participation: dqt_data[:previous_participation],
         previous_induction: dqt_data[:previous_induction],
+        no_induction: dqt_data[:no_induction],
         different_trn: different_trn?(dqt_data[:trn]),
       },
     )

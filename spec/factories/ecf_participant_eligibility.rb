@@ -8,6 +8,7 @@ FactoryBot.define do
     active_flags { false }
     previous_participation { false }
     previous_induction { false }
+    no_induction { false }
 
     transient do
       reason {}

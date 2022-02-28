@@ -234,6 +234,7 @@ ActiveRecord::Schema.define(version: 2022_03_14_120140) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "reason", default: "none", null: false
     t.boolean "different_trn"
+    t.boolean "no_induction"
     t.index ["participant_profile_id"], name: "index_ecf_participant_eligibilities_on_participant_profile_id", unique: true
   end
 
@@ -612,8 +613,8 @@ ActiveRecord::Schema.define(version: 2022_03_14_120140) do
     t.string "training_status", default: "active", null: false
     t.string "profile_duplicity", default: "single", null: false
     t.uuid "participant_identity_id"
-    t.string "notes"
     t.string "start_term", default: "autumn_2021", null: false
+    t.string "notes"
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"

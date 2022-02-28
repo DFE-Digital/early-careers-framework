@@ -33,6 +33,7 @@ RSpec.describe StoreValidationResult do
         active_alert: false,
         previous_participation: false,
         previous_induction: false,
+        no_induction: false,
       },
     ].sample
   end
@@ -66,6 +67,7 @@ RSpec.describe StoreValidationResult do
         active_alert: false,
         previous_participation: false,
         previous_induction: false,
+        no_induction: false,
       }
     end
 
@@ -82,6 +84,7 @@ RSpec.describe StoreValidationResult do
             active_flags: dqt_response[:active_alert],
             previous_participation: dqt_response[:previous_participation],
             previous_induction: dqt_response[:previous_induction],
+            no_induction: dqt_response[:no_induction],
             different_trn: false,
           },
         )
@@ -108,6 +111,7 @@ RSpec.describe StoreValidationResult do
             active_flags: dqt_response[:active_alert],
             previous_participation: dqt_response[:previous_participation],
             previous_induction: dqt_response[:previous_induction],
+            no_induction: dqt_response[:no_induction],
             different_trn: true,
           },
         )
@@ -135,6 +139,7 @@ RSpec.describe StoreValidationResult do
             active_flags: dqt_response[:active_alert],
             previous_participation: dqt_response[:previous_participation],
             previous_induction: dqt_response[:previous_induction],
+            no_induction: dqt_response[:no_induction],
             different_trn: false,
           },
         )

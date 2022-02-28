@@ -21,6 +21,7 @@ class ECFParticipantEligibility < ApplicationRecord
     different_trn: "different_trn",
     duplicate_profile: "duplicate_profile",
     none: "none",
+    no_induction: "no_induction",
   }, _suffix: true
 
   def duplicate_profile?
