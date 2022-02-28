@@ -6,6 +6,8 @@ module Finance
       class PaymentOverviewTable < BaseComponent
         include FinanceHelper
 
+        attr_reader :contract
+
         def initialize(contract, statement)
           @contract = contract
           @statement = statement
@@ -21,7 +23,7 @@ module Finance
 
       private
 
-        attr_accessor :contract, :statement
+        attr_reader :statement
 
         def service_fees
           @service_fees ||= PaymentCalculator::NPQ::ServiceFees.call(contract: contract)
@@ -30,9 +32,7 @@ module Finance
         def output_fees
           @output_fees ||= PaymentCalculator::NPQ::OutputPayment.call(
             contract: contract,
-            total_participants: statement.participant_declarations
-              .for_course_identifier(contract.course_identifier)
-              .unique_paid_payable_or_eligible.count,
+            total_participants: statement.declarations.count,
           )
         end
       end

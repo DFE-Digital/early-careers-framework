@@ -14,6 +14,6 @@
     <td scope="row" class="govuk-table__cell govuk-body-s"></td>
     <td scope="row" class="govuk-table__cell govuk-body-s"></td>
   </tr>
-  <%= render Finance::NPQ::PaymentOverviews::ServiceFeeRow.new(self) %>
+  <%= render Finance::NPQ::PaymentOverviews::ServiceFeeRow.new(service_fee, contract) %>
   </tbody>
 </table>

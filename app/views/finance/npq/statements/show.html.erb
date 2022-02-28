@@ -25,7 +25,7 @@
                 <span class="govuk-body-s">Total not paid<br><%= @statement.participant_declarations.for_course_identifier(npq_contract.course_identifier).ineligible.unique_id.count %></span>
               </header>
               <span class="govuk-label--s govuk-visually-hidden">Payment details</span>
-              <%= render Finance::NPQ::PaymentOverviews::PaymentOverviewTable.new(@npq_contracts.first, @statement) %>
+              <%= render Finance::NPQ::PaymentOverviews::PaymentOverviewTable.new(npq_contract, @statement) %>
 <!--              <table class="govuk-table">-->
 <!--                <thead class="govuk-table__head">-->
 <!--                <tr class="govuk-table__row">-->

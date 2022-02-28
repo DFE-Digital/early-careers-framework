@@ -6,13 +6,26 @@ module Finance
       class ServiceFeeRow < BaseComponent
         include FinanceHelper
 
-        def initialize(service_fees)
+        def initialize(service_fees, contract)
           @service_fees = service_fees
+          @contract = contract
         end
 
+        def total
+          service_fees.dig(:service_fee, :monthly)
+        end
+
+        def payment_per_trainee
+          service_fees.dig(:service_fee, :per_participant)
+        end
+
+        def trainees
+          contract.recruitment_target
+        end
       private
 
-        attr_accessor :service_fees
+        attr_reader :service_fees, :contract
+
       end
     end
   end
