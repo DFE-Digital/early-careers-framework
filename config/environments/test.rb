@@ -87,6 +87,6 @@ Rails.application.configure do
   config.dqt_access_client_id = "dqt-access-guid"
   config.dqt_access_client_secret = "dqt-access-secret"
 
-  config.dqt_api_url = "https://teacher-qualifications-api.example.com"
+  config.dqt_api_url = "https://dtqapi.example.com/dqt-crm"
   config.dqt_api_key = "some-apikey-guid"
 end
