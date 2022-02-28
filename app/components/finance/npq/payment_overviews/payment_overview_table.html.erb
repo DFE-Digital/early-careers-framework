@@ -1,0 +1,19 @@
+<table class="govuk-table">
+  <thead class="govuk-table__head">
+  <tr class="govuk-table__row">
+    <th scope="col" class="govuk-table__header govuk-body-s">Payment type</th>
+    <th scope="col" class="govuk-table__header govuk-body-s">Trainees</th>
+    <th scope="col" class="govuk-table__header govuk-body-s">Payment per trainee</th>
+    <th scope="col" class="govuk-table__header govuk-body-s">Total</th>
+  </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+  <tr class="gov-table__row">
+    <td scope="row" class="govuk-table__cell govuk-body-s">Output</td>
+    <td scope="row" class="govuk-table__cell govuk-body-s"></td>
+    <td scope="row" class="govuk-table__cell govuk-body-s"></td>
+    <td scope="row" class="govuk-table__cell govuk-body-s"></td>
+  </tr>
+  <%= render Finance::NPQ::PaymentOverviews::ServiceFeeRow.new(self) %>
+  </tbody>
+</table>

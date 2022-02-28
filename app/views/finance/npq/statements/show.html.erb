@@ -1,35 +1,69 @@
 <% content_for :title, t("finance.npq.payment_breakdown") %>
 <% content_for :before_content, govuk_back_link(text: "Back", href: select_provider_npq_finance_payment_breakdowns_path) %>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <h1 class="govuk-heading-xl">National professional qualifications (NPQs)</h1>
-
-    <span class="govuk-caption-l"><%= @statement.cpd_lead_provider.name %></span>
-    <h2 class="govuk-heading-l"><%= @statement.name %></h2>
-
     <%= render Finance::Statements::StatementSelector.new(current_statement: @statement)  %>
 
-    <p class="govuk-caption-m govuk-!-margin-0">Payment of</p>
-    <h2 class="govuk-heading-xl govuk-!-margin-0"><%= number_to_pounds aggregated_payment(@breakdowns) + aggregated_vat(@breakdowns, @npq_lead_provider) %></h2>
-    <p class="govuk-caption-m govuk-!-margin-top-0">On or after <%= @statement.payment_date.to_s(:govuk) %></p>
-
-    <%= render Finance::NPQ::PaymentOverviews::References.new(@statement) %>
-
-    <h2 class="govuk-heading-m"><%=t("finance.npq.payment_breakdown") %></h2>
-
-    <table class="govuk-table payment-breakdown-table">
-      <tbody>
-        <%= render Finance::NPQ::PaymentOverviews::PaymentCoursesRow.with_collection(@breakdowns, statement: @statement, npq_lead_provider: @npq_lead_provider) %>
-
-        <tr class="govuk-table__row">
-          <td class="govuk-table__cell"><%= t("finance.vat") %></td>
-          <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds aggregated_vat(@breakdowns, @npq_lead_provider) %></td>
-        </tr>
-
-        <%= render Finance::NPQ::PaymentOverviews::TotalPaymentCoursesRow.new(@breakdowns, statement: @statement, npq_lead_provider: @npq_lead_provider) %>
-      </tbody>
-    </table>
+    <div class="app-application__panel">
+      <div class="govuk-grid-column-full">
+        <div class="moj-filter-layout__content">
+          <% @npq_contracts.each do |npq_contract| %>
+            <section class="app-application__card">
+              <h2 class="govuk-heading-s"><%= t("#{ npq_contract.course_identifier }", scope: "npq_courses") %></h2>
+              <header class="app-application-card__header">
+                <% NPQCourse.schedule_for(NPQCourse.find_by(identifier: npq_contract.course_identifier))
+                            .milestones.each do |milestone| %>
+                  <span class="govuk-body-s">
+                    <%= milestone.declaration_type.titleize %>
+                    <br>
+                    <%= @statement.participant_declarations.for_course_identifier(npq_contract.course_identifier)
+                                  .for_declaration(milestone.declaration_type)
+                                  .count %>
+                  </span>
+                <% end %>
+                <span class="govuk-body-s">Recruitment target<br><%= npq_contract.recruitment_target %></span>
+                <span class="govuk-body-s">Current trainees<br><%= @statement.participant_declarations.for_course_identifier(npq_contract.course_identifier).unique_paid_payable_or_eligible.count %></span>
+                <span class="govuk-body-s">Total not paid<br><%= @statement.participant_declarations.for_course_identifier(npq_contract.course_identifier).ineligible.unique_id.count %></span>
+              </header>
+              <span class="govuk-label--s govuk-visually-hidden">Payment details</span>
+              <%= render Finance::NPQ::PaymentOverviews::PaymentOverviewTable.new(@npq_contracts.first, @statement) %>
+<!--              <table class="govuk-table">-->
+<!--                <thead class="govuk-table__head">-->
+<!--                <tr class="govuk-table__row">-->
+<!--                  <th scope="col" class="govuk-table__header govuk-body-s">Payment type</th>-->
+<!--                  <th scope="col" class="govuk-table__header govuk-body-s">Trainees</th>-->
+<!--                  <th scope="col" class="govuk-table__header govuk-body-s">Payment per trainee</th>-->
+<!--                  <th scope="col" class="govuk-table__header govuk-body-s">Total</th>-->
+<!--                </tr>-->
+<!--                </thead>-->
+<!--                <tbody class="govuk-table__body">-->
+<!--                <tr class="gov-table__row">-->
+<!--                  <td scope="row" class="govuk-table__cell govuk-body-s">Output</td>-->
+<!--                  <td scope="row" class="govuk-table__cell govuk-body-s"></td>-->
+<!--                  <td scope="row" class="govuk-table__cell govuk-body-s"></td>-->
+<!--                  <td scope="row" class="govuk-table__cell govuk-body-s"></td>-->
+<!--                </tr>-->
+<!--                <tr class="gov-table__row">-->
+<!--                  <td scope="row" class="govuk-table__cell govuk-body-s">Service Fee</td>-->
+<!--                  <td scope="row" class="govuk-table__cell govuk-body-s"></td>-->
+<!--                  <td scope="row" class="govuk-table__cell govuk-body-s"></td>-->
+<!--                  <td scope="row" class="govuk-table__cell govuk-body-s"></td>-->
+<!--                </tr>-->
+                <%#= render Finance::NPQ::PaymentOverviews::ServiceFees.with_collection(@service_fees) %>
+<!--                </tbody>-->
+<!--              </table>-->
+              <div class="govuk-table__row govuk-!-padding-bottom-1">
+                <div class="govuk-label--s govuk-table__header--numeric">
+                  Course total
+                  <br>
+                  £1000.00
+                </div>
+              </div>
+            </section>
+            <br>
+          <% end %>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
