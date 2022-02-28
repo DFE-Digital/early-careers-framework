@@ -8,6 +8,7 @@ class Induction::CheckParticipantRecordsAreSynced < BaseService
       check_induction_programme_change(profile)
       check_status_is_correct(profile)
     end
+    check_registered_identity_is_set
   end
 
 private
@@ -19,7 +20,7 @@ private
   end
 
   def check_induction_programme_change(profile)
-    return if profile.induction_records.first.withdrawn?
+    return if profile.induction_records.first.withdrawn_status?
 
     if profile.current_induction_record.induction_programme != profile.school_cohort.default_induction_programme
       Rails.logger.info "Programme has changed for #{profile.id}, expecting #{profile.school_cohort.default_induction_programme.id}
@@ -28,11 +29,17 @@ private
   end
 
   def check_status_is_correct(profile)
-    return if profile.induction_records.first.withdrawn?
+    return if profile.induction_records.first.withdrawn_status?
 
     if profile.current_induction_record&.status != profile.status
       Rails.logger.info "Record status has changed for #{profile.id}, expecting #{profile.status}
             but got #{profile.current_induction_record.status}"
+    end
+  end
+
+  def check_registered_identity_is_set
+    InductionRecord.joins(:participant_profile).find_each do |induction|
+      Rails.logger.info("Blank registered identity for #{induction.id}") if induction.registered_identity_id.nil?
     end
   end
 
