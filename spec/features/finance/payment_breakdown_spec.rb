@@ -7,6 +7,7 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
 
   let!(:lead_provider)    { create(:lead_provider, name: "Test provider", id: "cffd2237-c368-4044-8451-68e4a4f73369") }
   let(:cpd_lead_provider) { lead_provider.cpd_lead_provider }
+  let!(:statement)        { create(:ecf_statement, cpd_lead_provider: cpd_lead_provider) }
   let!(:contract)         { create(:call_off_contract, lead_provider: lead_provider) }
   let(:school)            { create(:school) }
   let(:cohort)            { create(:cohort, :current) }
