@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_14_170448) do
+ActiveRecord::Schema.define(version: 2022_02_28_093526) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -272,6 +272,7 @@ ActiveRecord::Schema.define(version: 2022_02_14_170448) do
     t.string "status", default: "submitted", null: false
     t.datetime "delivered_at"
     t.string "tags", default: [], null: false, array: true
+    t.datetime "actioned_at"
   end
 
   create_table "event_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -319,6 +320,18 @@ ActiveRecord::Schema.define(version: 2022_02_14_170448) do
     t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true
     t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
     t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
+  end
+
+  create_table "identities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.citext "email", null: false
+    t.uuid "external_identifier"
+    t.string "origin", default: "ecf", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["email"], name: "index_identities_on_email", unique: true
+    t.index ["external_identifier"], name: "index_identities_on_external_identifier", unique: true
+    t.index ["user_id"], name: "index_identities_on_user_id"
   end
 
   create_table "induction_coordinator_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -473,6 +486,9 @@ ActiveRecord::Schema.define(version: 2022_02_14_170448) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "participant_identity_id"
+    t.boolean "works_in_school"
+    t.string "employer_name"
+    t.string "employment_role"
     t.index ["npq_course_id"], name: "index_npq_applications_on_npq_course_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_applications_on_npq_lead_provider_id"
     t.index ["participant_identity_id"], name: "index_npq_applications_on_participant_identity_id"
@@ -607,8 +623,8 @@ ActiveRecord::Schema.define(version: 2022_02_14_170448) do
     t.string "training_status", default: "active", null: false
     t.string "profile_duplicity", default: "single", null: false
     t.uuid "participant_identity_id"
-    t.string "notes"
     t.string "start_term", default: "autumn_2021", null: false
+    t.string "notes"
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"
@@ -726,6 +742,17 @@ ActiveRecord::Schema.define(version: 2022_02_14_170448) do
     t.uuid "cohort_id"
     t.text "identifier_alias"
     t.index ["cohort_id"], name: "index_schedules_on_cohort_id"
+  end
+
+  create_table "school_access_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "school_id", null: false
+    t.string "token", null: false
+    t.string "permitted_actions", default: [], array: true
+    t.datetime "expires_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["school_id"], name: "index_school_access_tokens_on_school_id"
+    t.index ["token"], name: "index_school_access_tokens_on_token", unique: true
   end
 
   create_table "school_cohorts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -889,6 +916,7 @@ ActiveRecord::Schema.define(version: 2022_02_14_170448) do
   add_foreign_key "email_associations", "emails"
   add_foreign_key "feature_selected_objects", "features"
   add_foreign_key "finance_profiles", "users"
+  add_foreign_key "identities", "users"
   add_foreign_key "induction_coordinator_profiles", "users"
   add_foreign_key "induction_programmes", "core_induction_programmes"
   add_foreign_key "induction_programmes", "partnerships"
@@ -905,9 +933,9 @@ ActiveRecord::Schema.define(version: 2022_02_14_170448) do
   add_foreign_key "milestones", "schedules"
   add_foreign_key "nomination_emails", "partnership_notification_emails"
   add_foreign_key "nomination_emails", "schools"
+  add_foreign_key "npq_applications", "identities", column: "participant_identity_id"
   add_foreign_key "npq_applications", "npq_courses"
   add_foreign_key "npq_applications", "npq_lead_providers"
-  add_foreign_key "npq_applications", "participant_identities"
   add_foreign_key "npq_lead_providers", "cpd_lead_providers"
   add_foreign_key "participant_bands", "call_off_contracts"
   add_foreign_key "participant_declaration_attempts", "participant_declarations"
@@ -920,8 +948,8 @@ ActiveRecord::Schema.define(version: 2022_02_14_170448) do
   add_foreign_key "participant_profile_states", "participant_profiles"
   add_foreign_key "participant_profiles", "cohorts"
   add_foreign_key "participant_profiles", "core_induction_programmes"
+  add_foreign_key "participant_profiles", "identities", column: "participant_identity_id"
   add_foreign_key "participant_profiles", "npq_courses"
-  add_foreign_key "participant_profiles", "participant_identities"
   add_foreign_key "participant_profiles", "participant_profiles", column: "mentor_profile_id"
   add_foreign_key "participant_profiles", "schedules"
   add_foreign_key "participant_profiles", "school_cohorts"
@@ -938,6 +966,7 @@ ActiveRecord::Schema.define(version: 2022_02_14_170448) do
   add_foreign_key "provider_relationships", "lead_providers"
   add_foreign_key "pupil_premiums", "schools"
   add_foreign_key "schedules", "cohorts"
+  add_foreign_key "school_access_tokens", "schools"
   add_foreign_key "school_cohorts", "cohorts"
   add_foreign_key "school_cohorts", "core_induction_programmes"
   add_foreign_key "school_cohorts", "induction_programmes", column: "default_induction_programme_id"

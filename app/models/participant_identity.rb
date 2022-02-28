@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ParticipantIdentity < ApplicationRecord
+  self.table_name = "identities"
+
   belongs_to :user
   has_many :participant_profiles
   has_many :npq_applications
@@ -13,6 +15,6 @@ class ParticipantIdentity < ApplicationRecord
     npq: "npq",
   }, _suffix: true
 
-  scope :original, -> { where("participant_identities.external_identifier = participant_identities.user_id") }
-  scope :transferred, -> { where("participant_identities.external_identifier != participant_identities.user_id") }
+  scope :original, -> { where("identities.external_identifier = identities.user_id") }
+  scope :transferred, -> { where("identities.external_identifier != identities.user_id") }
 end
