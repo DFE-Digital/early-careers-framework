@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-module Dqt
+module DQT
   class Client
     def initialize(
-      headers: Dqt.configuration.client.headers,
-      host: Dqt.configuration.client.host,
-      params: Dqt.configuration.client.params
+      headers: DQT.configuration.client.headers,
+      host: DQT.configuration.client.host,
+      params: DQT.configuration.client.params
     )
       self.headers = headers
       self.host = host

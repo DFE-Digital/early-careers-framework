@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-module Dqt
+module DQT
   describe Client::Response do
     subject(:response) { described_class.new(response: response_args) }
 

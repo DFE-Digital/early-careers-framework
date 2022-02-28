@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Dqt
+module DQT
   class Api
     class V1
       class DQTRecord
@@ -14,7 +14,7 @@ module Dqt
             ni: params[:national_insurance_number],
           }
 
-          response = client.get(path: "/api/qualified-teachers/qualified-teaching-status", params: mapped_params)
+          response = client.get(path: "/v1/teachers", params: mapped_params)
 
           # API returns multiple items but we only ever use the first one. Decided to create a consistent interface here for automated checks rather than spend time creating an abstract interface.
           first_item = response[:data].first
@@ -31,7 +31,7 @@ module Dqt
           hash[:qts_date] = Date.parse(first_item[:qtsAwardDate]) if first_item[:qtsAwardDate].present?
 
           hash
-        rescue Dqt::Client::ResponseError => e
+        rescue DQT::Client::ResponseError => e
           if e.response.code == 404
             nil
           else

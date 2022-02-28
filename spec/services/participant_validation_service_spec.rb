@@ -4,7 +4,6 @@ require "rails_helper"
 
 RSpec.describe ParticipantValidationService do
   before do
-    allow(DqtApiAccess).to receive(:token).and_return("jwt-access-token")
     create(:cohort, :current)
   end
 
@@ -33,7 +32,7 @@ RSpec.describe ParticipantValidationService do
     let(:validation_result) { ParticipantValidationService.validate(trn: trn, nino: nino, full_name: full_name, date_of_birth: dob) }
 
     it "calls get_record on the DQT API client" do
-      expect_any_instance_of(FullDqt::Client).to receive(:get_record).with({ trn: trn, birthdate: dob, nino: nino })
+      expect_any_instance_of(FullDQT::Client).to receive(:get_record).with({ trn: trn, birthdate: dob, nino: nino })
 
       validation_result
     end
@@ -51,14 +50,14 @@ RSpec.describe ParticipantValidationService do
       let(:trn) { nil }
 
       it "queries dqt with fake trn" do
-        expect_any_instance_of(FullDqt::Client).to receive(:get_record).with({ trn: "0000001", birthdate: dob, nino: nino })
+        expect_any_instance_of(FullDQT::Client).to receive(:get_record).with({ trn: "0000001", birthdate: dob, nino: nino })
         validation_result
       end
     end
 
     context "given that it calls the API" do
       before do
-        expect_any_instance_of(FullDqt::Client).to receive(:get_record).and_return(*dqt_records)
+        expect_any_instance_of(FullDQT::Client).to receive(:get_record).and_return(*dqt_records)
       end
 
       context "when the participant cannot be found" do

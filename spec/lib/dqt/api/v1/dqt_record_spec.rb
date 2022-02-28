@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-module Dqt
+module DQT
   class Api
     class V1
       describe DQTRecord do
@@ -64,7 +64,7 @@ module Dqt
         end
 
         def stub_dqt_api(expected_dqt_record:)
-          stub_request(:get, %r{/api/qualified-teachers/qualified-teaching-status}).with(
+          stub_request(:get, %r{/v1/teachers}).with(
             query: WebMock::API.hash_including(
               {
                 trn: expected_dqt_record[:teacher_reference_number],

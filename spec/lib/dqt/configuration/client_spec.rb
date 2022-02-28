@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-module Dqt
+module DQT
   RSpec.describe Configuration::Client do
     subject(:client) { described_class.new }
 

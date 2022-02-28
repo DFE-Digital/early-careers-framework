@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe FullDqt::Client do
-  let(:token) { "some-jwt-token" }
-
-  subject { described_class.new(token: token) }
+RSpec.describe FullDQT::Client do
+  subject { described_class.new }
 
   let(:trn) { "1001000" }
   let(:incorrect_trn) { "1001009" }
@@ -83,9 +81,8 @@ RSpec.describe FullDqt::Client do
         headers: {
           "Accept" => "*/*",
           "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
-          "Authorization" => "Bearer some-jwt-token",
+          "Authorization" => "Bearer some-apikey-guid",
           "Host" => "dtqapi.example.com",
-          "Ocp-Apim-Subscription-Key" => "ocp-apim-some-guid",
           "User-Agent" => "Ruby",
         },
       )
@@ -98,9 +95,8 @@ RSpec.describe FullDqt::Client do
         headers: {
           "Accept" => "*/*",
           "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
-          "Authorization" => "Bearer some-jwt-token",
+          "Authorization" => "Bearer some-apikey-guid",
           "Host" => "dtqapi.example.com",
-          "Ocp-Apim-Subscription-Key" => "ocp-apim-some-guid",
           "User-Agent" => "Ruby",
         },
       )
@@ -113,9 +109,8 @@ RSpec.describe FullDqt::Client do
         headers: {
           "Accept" => "*/*",
           "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
-          "Authorization" => "Bearer some-jwt-token",
+          "Authorization" => "Bearer some-apikey-guid",
           "Host" => "dtqapi.example.com",
-          "Ocp-Apim-Subscription-Key" => "ocp-apim-some-guid",
           "User-Agent" => "Ruby",
         },
       )

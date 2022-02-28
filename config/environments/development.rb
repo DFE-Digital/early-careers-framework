@@ -41,7 +41,7 @@ Rails.application.configure do
   config.dqt_access_client_secret = ENV["DQT_ACCESS_CLIENT_SECRET"]
 
   config.dqt_api_url = ENV["DQT_API_URL"]
-  config.dqt_api_ocp_apim_subscription_key = ENV["DQT_API_OCP_APIM_SUBSCRIPTION_KEY"]
+  config.dqt_api_key = ENV["DQT_API_KEY"]
 
   # Don't care if the mailer can't send.
   # config.action_mailer.raise_delivery_errors = true

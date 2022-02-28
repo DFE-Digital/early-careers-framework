@@ -4,7 +4,7 @@
 # github.com/DFE-Digital/claim-additional-payments-for-teaching/tree/master/lib
 # there is no independent library available at the moment of writing this
 
-module Dqt
+module DQT
   def self.configuration
     @configuration ||= Configuration.new
   end
