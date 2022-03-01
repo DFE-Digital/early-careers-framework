@@ -11,7 +11,7 @@ RSpec.feature "after Transferring the only ECT from another school onto a FIP", 
     @privacy_policy = create :privacy_policy
 
     @lead_providers = []
-    @lead_provider_api_tokens = []
+    @tokens = {}
     @sits = []
     @participants = []
   end
@@ -40,13 +40,13 @@ RSpec.feature "after Transferring the only ECT from another school onto a FIP", 
     end
 
     scenario "the ECT can be seen by the original Lead Provider" do
-      then_participant_can_be_seen_by_lead_provider @lead_provider_api_tokens.first,
-                                                    @participants.first
+      then_participant_details_can_be_seen_by_lead_provider @lead_providers.first,
+                                                            @participants.first
     end
 
     scenario "the ECT cannot be seen by another Lead Provider" do
-      then_participant_cannot_be_seen_by_lead_provider @lead_provider_api_tokens[1],
-                                                       @participants.first
+      then_participant_details_cannot_be_seen_by_lead_provider @lead_providers[1],
+                                                               @participants.first
     end
 
     # what can admins see ??
@@ -86,18 +86,18 @@ RSpec.feature "after Transferring the only ECT from another school onto a FIP", 
     end
 
     scenario "the ECT can be seen by the new Lead Provider" do
-      then_participant_can_be_seen_by_lead_provider @lead_provider_api_tokens[1],
-                                                    @participants.first
+      then_participant_details_can_be_seen_by_lead_provider @lead_providers[1],
+                                                            @participants.first
     end
 
     scenario "the ECT cannot be seen by the original Lead Provider" do
-      then_participant_cannot_be_seen_by_lead_provider @lead_provider_api_tokens.first,
-                                                       @participants.first
+      then_participant_details_cannot_be_seen_by_lead_provider @lead_providers.first,
+                                                               @participants.first
     end
 
     scenario "the ECT cannot be seen by another Lead Provider" do
-      then_participant_cannot_be_seen_by_lead_provider @lead_provider_api_tokens[2],
-                                                       @participants.first
+      then_participant_details_cannot_be_seen_by_lead_provider @lead_providers[2],
+                                                               @participants.first
     end
 
     scenario "the ECT is recognised as a FIP ECT for Support ECTs" do
@@ -128,13 +128,13 @@ RSpec.feature "after Transferring the only ECT from another school onto a FIP", 
     end
 
     scenario "the ECT can be seen by the new Lead Provider" do
-      then_participant_can_be_seen_by_lead_provider @lead_provider_api_tokens.first,
-                                                    @participants.first
+      then_participant_details_can_be_seen_by_lead_provider @lead_providers.first,
+                                                            @participants.first
     end
 
     scenario "the ECT cannot be seen by another Lead Provider" do
-      then_participant_cannot_be_seen_by_lead_provider @lead_provider_api_tokens[1],
-                                                       @participants.first
+      then_participant_details_cannot_be_seen_by_lead_provider @lead_providers[1],
+                                                               @participants.first
     end
 
     scenario "the ECT is recognised as a FIP ECT for Support ECTs" do

@@ -11,7 +11,7 @@ module Steps
       create :ecf_statement, cpd_lead_provider: cpd_lead_provider
 
       @lead_providers[i] = cpd_lead_provider
-      @lead_provider_api_tokens[i] = LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider, lead_provider: lead_provider)
+      @tokens[cpd_lead_provider.id] = LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider, lead_provider: lead_provider)
     end
 
     def and_another_lead_provider_contracted_to_deliver_ecf
@@ -63,6 +63,11 @@ module Steps
       and_lead_provider_reported_partnership cpd_lead_provider, school
     end
 
+    def and_lead_provider_declared_training_started(cpd_lead_provider, participant)
+      APIs::ParticipantDeclarationsEndpoint.new(@tokens[cpd_lead_provider.id])
+                                   .post_started_declaration(participant)
+    end
+
     def when_sit_takes_on_the_participant(sit, participant)
       school = sit.schools.first
       school_cohort = school.school_cohorts.first
@@ -71,14 +76,32 @@ module Steps
       participant.teacher_profile.update!(school: school)
     end
 
-    def then_participant_can_be_seen_by_lead_provider(token, participant)
-      APIs::ECFParticipantsEndpoint.new(token)
+    def then_participant_details_can_be_seen_by_lead_provider(cpd_lead_provider, participant)
+      APIs::ECFParticipantsEndpoint.new(@tokens[cpd_lead_provider.id])
                                    .check_can_access_participant_details(participant)
+
+      # TODO: check the individual /participant/#{id} endpoint
     end
 
-    def then_participant_cannot_be_seen_by_lead_provider(token, participant)
-      APIs::ECFParticipantsEndpoint.new(token)
+    def then_participant_details_cannot_be_seen_by_lead_provider(cpd_lead_provider, participant)
+      APIs::ECFParticipantsEndpoint.new(@tokens[cpd_lead_provider.id])
                                    .check_cannot_access_participant_details(participant)
+
+      # TODO: check the individual /participant/#{id} endpoint
+    end
+
+    def then_participant_declarations_can_be_seen_by_lead_provider(cpd_lead_provider, participant)
+      APIs::ParticipantDeclarationsEndpoint.new(@tokens[cpd_lead_provider.id])
+                                   .check_can_access_participant_declarations(participant)
+
+      # TODO: check the individual /declaration/#{id} endpoint
+    end
+
+    def then_participant_declarations_cannot_be_seen_by_lead_provider(cpd_lead_provider, participant)
+      APIs::ParticipantDeclarationsEndpoint.new(@tokens[cpd_lead_provider.id])
+                                   .check_cannot_access_participant_declarations(participant)
+
+      # TODO: check the individual /declaration/#{id} endpoint
     end
 
     def then_participant_is_fip_ect_for_support_ects(participant)
