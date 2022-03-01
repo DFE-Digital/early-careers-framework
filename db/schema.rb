@@ -363,6 +363,7 @@ ActiveRecord::Schema.define(version: 2022_03_14_120140) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "training_status", default: "active", null: false
     t.uuid "registered_identity_id"
+    t.string "induction_status", default: "active", null: false
     t.index ["induction_programme_id"], name: "index_induction_records_on_induction_programme_id"
     t.index ["participant_profile_id"], name: "index_induction_records_on_participant_profile_id"
     t.index ["registered_identity_id"], name: "index_induction_records_on_registered_identity_id"
