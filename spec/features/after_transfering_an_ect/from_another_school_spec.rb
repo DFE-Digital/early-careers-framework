@@ -3,10 +3,10 @@
 require "rails_helper"
 require_relative "./transfer_participant_steps"
 
-RSpec.feature "After Transferring the only ECT from another school", type: :feature do
+RSpec.feature "after Transferring the only ECT from another school onto a FIP", type: :feature do
   include TransferParticipantSteps
 
-  context "from FIP to FIP with same provider" do
+  context "transferred from a FIP with same provider, before a started declaration has occurred" do
     before do
       # we have to run this in the current cohort because logic in the service enforces SITs declaring current cohort
       @cohort = create :cohort, :current
@@ -49,9 +49,18 @@ RSpec.feature "After Transferring the only ECT from another school", type: :feat
                                                        @lead_provider_tokens[1],
                                                        @participants.first
     end
+
+    # what can admins see ??
+    # would they appear in the payment break down at this point ??
+    # what can support users see ??
+    # what would analytics have triggered
+    #
+    # check that expected onward actions are available to new school
+    #
+    # should not be in support ECT portal users feed
   end
 
-  context "from FIP to FIP with different provider" do
+  context "transferred from a FIP with a different provider, before a started declaration has occurred" do
     before do
       # we have to run this in the current cohort because logic in the service enforces SITs declaring current cohort
       @cohort = create :cohort, :current
@@ -103,7 +112,7 @@ RSpec.feature "After Transferring the only ECT from another school", type: :feat
     end
   end
 
-  context "from CIP to FIP" do
+  context "transferred from a CIP, before a started declaration has occurred" do
     before do
       # we have to run this in the current cohort because logic in the service enforces SITs declaring current cohort
       @cohort = create :cohort, :current
@@ -146,8 +155,12 @@ RSpec.feature "After Transferring the only ECT from another school", type: :feat
                                                        @participants.first
     end
   end
+end
 
-  context "from FIP to CIP" do
+RSpec.feature "after Transferring the only ECT from another school onto a CIP", type: :feature do
+  include TransferParticipantSteps
+
+  context "transferred from a FIP with same provider, before a started declaration has occurred" do
     before do
       # we have to run this in the current cohort because logic in the service enforces SITs declaring current cohort
       @cohort = create :cohort, :current
@@ -189,5 +202,7 @@ RSpec.feature "After Transferring the only ECT from another school", type: :feat
                                                        @lead_provider_tokens[1],
                                                        @participants.first
     end
+
+    # should be in support ECT portal users feed - but would need materials setup by school
   end
 end
