@@ -37,6 +37,9 @@ private
       funding_choice
       course_identifier
       status
+      works_in_school
+      employer_name
+      employment_role
       created_at
       updated_at
     ]
@@ -58,6 +61,9 @@ private
       record.funding_choice,
       record.npq_course.identifier,
       record.lead_provider_approval_status,
+      record.works_in_school,
+      record.employer_name,
+      record.employment_role,
       record.created_at.rfc3339,
       record.updated_at.rfc3339,
     ]

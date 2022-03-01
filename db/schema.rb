@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_21_153022) do
+ActiveRecord::Schema.define(version: 2022_02_24_164934) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -475,6 +475,9 @@ ActiveRecord::Schema.define(version: 2022_02_21_153022) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "participant_identity_id"
+    t.boolean "works_in_school"
+    t.string "employer_name"
+    t.string "employment_role"
     t.index ["npq_course_id"], name: "index_npq_applications_on_npq_course_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_applications_on_npq_lead_provider_id"
     t.index ["participant_identity_id"], name: "index_npq_applications_on_participant_identity_id"

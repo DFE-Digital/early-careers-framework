@@ -17,9 +17,12 @@ properties:
           email_validated: true
           teacher_reference_number: "1234567"
           teacher_reference_number_validated: true
+          works_in_school: true
           school_urn: "106286"
           school_ukprn: "10079319"
           headteacher_status: "no"
           eligible_for_funding: true
           funding_choice: "trust"
           course_identifier: npq-leading-teaching
+          employer_name: null
+          employment_role: null

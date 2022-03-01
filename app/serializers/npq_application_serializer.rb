@@ -18,6 +18,9 @@ class NPQApplicationSerializer
              :eligible_for_funding,
              :funding_choice,
              :course_identifier,
+             :works_in_school,
+             :employer_name,
+             :employment_role,
              :status,
              :created_at,
              :updated_at

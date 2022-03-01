@@ -88,6 +88,9 @@ module Api
             :school_ukprn,
             :teacher_reference_number,
             :teacher_reference_number_verified,
+            :works_in_school,
+            :employer_name,
+            :employment_role,
           ).transform_keys! { |key| key == "national_insurance_number" ? "nino" : key }
       end
 

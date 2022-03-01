@@ -17,6 +17,7 @@ RSpec.describe NPQ::BuildApplication do
       funding_choice: npq_application_attributes[:funding_choice],
       headteacher_status: npq_application_attributes[:headteacher_status],
       nino: nino,
+      works_in_school: npq_application_attributes[:works_in_school],
       school_urn: npq_application_attributes[:school_urn],
       school_ukprn: npq_application_attributes[:school_ukprn],
       teacher_reference_number: npq_application_attributes[:teacher_reference_number],
