@@ -6,17 +6,19 @@ require_relative "./transfer_participant_steps"
 RSpec.feature "after Transferring the only ECT from another school onto a FIP", type: :feature do
   include TransferParticipantSteps
 
+  before do
+    # we have to run this in the current cohort because logic in the service enforces SITs declaring current cohort
+    @cohort = create :cohort, :current
+    @privacy_policy = create :privacy_policy
+
+    @lead_providers = []
+    @lead_provider_api_tokens = []
+    @sits = []
+    @participants = []
+  end
+
   context "from a FIP with same provider, before a started declaration has occurred" do
     before do
-      # we have to run this in the current cohort because logic in the service enforces SITs declaring current cohort
-      @cohort = create :cohort, :current
-      @privacy_policy = create :privacy_policy
-
-      @lead_providers = []
-      @lead_provider_tokens = []
-      @sits = []
-      @participants = []
-
       given_lead_provider_contracted_to_deliver_ecf
       and_another_lead_provider_contracted_to_deliver_ecf
       and_sit_reported_programme :fip
@@ -39,14 +41,12 @@ RSpec.feature "after Transferring the only ECT from another school onto a FIP", 
     end
 
     scenario "the ECT can be seen by the original Lead Provider" do
-      then_participant_can_be_seen_by_lead_provider @lead_providers.first,
-                                                    @lead_provider_tokens.first,
+      then_participant_can_be_seen_by_lead_provider @lead_provider_api_tokens.first,
                                                     @participants.first
     end
 
     scenario "the ECT cannot be seen by another Lead Provider" do
-      then_participant_cannot_be_seen_by_lead_provider @lead_providers[1],
-                                                       @lead_provider_tokens[1],
+      then_participant_cannot_be_seen_by_lead_provider @lead_provider_api_tokens[1],
                                                        @participants.first
     end
 
@@ -64,15 +64,6 @@ RSpec.feature "after Transferring the only ECT from another school onto a FIP", 
 
   context "from a FIP with a different provider, before a started declaration has occurred" do
     before do
-      # we have to run this in the current cohort because logic in the service enforces SITs declaring current cohort
-      @cohort = create :cohort, :current
-      @privacy_policy = create :privacy_policy
-
-      @lead_providers = []
-      @lead_provider_tokens = []
-      @sits = []
-      @participants = []
-
       given_lead_provider_contracted_to_deliver_ecf
       and_another_lead_provider_contracted_to_deliver_ecf
       and_another_lead_provider_contracted_to_deliver_ecf
@@ -96,20 +87,17 @@ RSpec.feature "after Transferring the only ECT from another school onto a FIP", 
     end
 
     scenario "the ECT can be seen by the new Lead Provider" do
-      then_participant_can_be_seen_by_lead_provider @lead_providers[1],
-                                                    @lead_provider_tokens[1],
+      then_participant_can_be_seen_by_lead_provider @lead_provider_api_tokens[1],
                                                     @participants.first
     end
 
     scenario "the ECT cannot be seen by the original Lead Provider" do
-      then_participant_cannot_be_seen_by_lead_provider @lead_providers.first,
-                                                       @lead_provider_tokens.first,
+      then_participant_cannot_be_seen_by_lead_provider @lead_provider_api_tokens.first,
                                                        @participants.first
     end
 
     scenario "the ECT cannot be seen by another Lead Provider" do
-      then_participant_cannot_be_seen_by_lead_provider @lead_providers[2],
-                                                       @lead_provider_tokens[2],
+      then_participant_cannot_be_seen_by_lead_provider @lead_provider_api_tokens[2],
                                                        @participants.first
     end
 
@@ -120,15 +108,6 @@ RSpec.feature "after Transferring the only ECT from another school onto a FIP", 
 
   context "from a CIP, before a started declaration has occurred" do
     before do
-      # we have to run this in the current cohort because logic in the service enforces SITs declaring current cohort
-      @cohort = create :cohort, :current
-      @privacy_policy = create :privacy_policy
-
-      @lead_providers = []
-      @lead_provider_tokens = []
-      @sits = []
-      @participants = []
-
       given_lead_provider_contracted_to_deliver_ecf
       and_another_lead_provider_contracted_to_deliver_ecf
       and_sit_reported_programme :cip
@@ -150,14 +129,12 @@ RSpec.feature "after Transferring the only ECT from another school onto a FIP", 
     end
 
     scenario "the ECT can be seen by the new Lead Provider" do
-      then_participant_can_be_seen_by_lead_provider @lead_providers.first,
-                                                    @lead_provider_tokens.first,
+      then_participant_can_be_seen_by_lead_provider @lead_provider_api_tokens.first,
                                                     @participants.first
     end
 
     scenario "the ECT cannot be seen by another Lead Provider" do
-      then_participant_cannot_be_seen_by_lead_provider @lead_providers[1],
-                                                       @lead_provider_tokens[1],
+      then_participant_cannot_be_seen_by_lead_provider @lead_provider_api_tokens[1],
                                                        @participants.first
     end
 
@@ -170,17 +147,19 @@ end
 RSpec.feature "after Transferring the only ECT from another school onto a CIP", type: :feature do
   include TransferParticipantSteps
 
+  before do
+    # we have to run this in the current cohort because logic in the service enforces SITs declaring current cohort
+    @cohort = create :cohort, :current
+    @privacy_policy = create :privacy_policy
+
+    @lead_providers = []
+    @lead_provider_api_tokens = []
+    @sits = []
+    @participants = []
+  end
+
   context "from a FIP with same provider, before a started declaration has occurred" do
     before do
-      # we have to run this in the current cohort because logic in the service enforces SITs declaring current cohort
-      @cohort = create :cohort, :current
-      @privacy_policy = create :privacy_policy
-
-      @lead_providers = []
-      @lead_provider_tokens = []
-      @sits = []
-      @participants = []
-
       given_lead_provider_contracted_to_deliver_ecf
       and_another_lead_provider_contracted_to_deliver_ecf
       and_sit_reported_programme :fip
@@ -202,14 +181,12 @@ RSpec.feature "after Transferring the only ECT from another school onto a CIP", 
     end
 
     scenario "the ECT cannot be seen by the original Lead Provider" do
-      then_participant_cannot_be_seen_by_lead_provider @lead_providers.first,
-                                                       @lead_provider_tokens.first,
+      then_participant_cannot_be_seen_by_lead_provider @lead_provider_api_tokens.first,
                                                        @participants.first
     end
 
     scenario "the ECT cannot be seen by another Lead Provider" do
-      then_participant_cannot_be_seen_by_lead_provider @lead_providers[1],
-                                                       @lead_provider_tokens[1],
+      then_participant_cannot_be_seen_by_lead_provider @lead_provider_api_tokens[1],
                                                        @participants.first
     end
 
@@ -220,15 +197,6 @@ RSpec.feature "after Transferring the only ECT from another school onto a CIP", 
 
   context "from a CIP, before a started declaration has occurred" do
     before do
-      # we have to run this in the current cohort because logic in the service enforces SITs declaring current cohort
-      @cohort = create :cohort, :current
-      @privacy_policy = create :privacy_policy
-
-      @lead_providers = []
-      @lead_provider_tokens = []
-      @sits = []
-      @participants = []
-
       given_lead_provider_contracted_to_deliver_ecf
       and_sit_reported_programme :cip
       and_another_sit_reported_programme :cip
@@ -248,8 +216,7 @@ RSpec.feature "after Transferring the only ECT from another school onto a CIP", 
     end
 
     scenario "the ECT cannot be seen by another Lead Provider" do
-      then_participant_cannot_be_seen_by_lead_provider @lead_providers.first,
-                                                       @lead_provider_tokens.first,
+      then_participant_cannot_be_seen_by_lead_provider @lead_provider_api_tokens.first,
                                                        @participants.first
     end
 

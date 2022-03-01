@@ -6,12 +6,11 @@ module TransferParticipantSteps
   def given_lead_provider_contracted_to_deliver_ecf
     i = @lead_providers.length
     lead_provider = create :lead_provider, :with_delivery_partner
-    cpd_lead_provider = create :cpd_lead_provider,
-                               lead_provider: lead_provider
+    cpd_lead_provider = create :cpd_lead_provider, lead_provider: lead_provider
     create :ecf_statement, cpd_lead_provider: cpd_lead_provider
 
-    @lead_providers[i] = lead_provider
-    @lead_provider_tokens[i] = LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider)
+    @lead_providers[i] = cpd_lead_provider
+    @lead_provider_api_tokens[i] = LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider, lead_provider: lead_provider)
   end
 
   def and_another_lead_provider_contracted_to_deliver_ecf
@@ -49,7 +48,8 @@ module TransferParticipantSteps
     @participants[i] = participant
   end
 
-  def and_lead_provider_reported_partnership(lead_provider, school)
+  def and_lead_provider_reported_partnership(cpd_lead_provider, school)
+    lead_provider = cpd_lead_provider.lead_provider
     create :partnership,
            school: school,
            lead_provider: lead_provider,
@@ -58,8 +58,8 @@ module TransferParticipantSteps
            challenge_deadline: 2.weeks.ago
   end
 
-  def and_another_lead_provider_reported_partnership(lead_provider, school)
-    and_lead_provider_reported_partnership lead_provider, school
+  def and_another_lead_provider_reported_partnership(cpd_lead_provider, school)
+    and_lead_provider_reported_partnership cpd_lead_provider, school
   end
 
   def when_sit_takes_on_the_participant(sit, participant)
@@ -70,13 +70,13 @@ module TransferParticipantSteps
     participant.teacher_profile.update!(school: school)
   end
 
-  def then_participant_can_be_seen_by_lead_provider(_lead_provider, lead_provider_token, participant)
-    APIs::ECFParticipantsEndpoint.new(lead_provider_token)
+  def then_participant_can_be_seen_by_lead_provider(token, participant)
+    APIs::ECFParticipantsEndpoint.new(token)
                                  .check_can_access_participant_details(participant)
   end
 
-  def then_participant_cannot_be_seen_by_lead_provider(_lead_provider, lead_provider_token, participant)
-    APIs::ECFParticipantsEndpoint.new(lead_provider_token)
+  def then_participant_cannot_be_seen_by_lead_provider(token, participant)
+    APIs::ECFParticipantsEndpoint.new(token)
                                  .check_cannot_access_participant_details(participant)
   end
 
