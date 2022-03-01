@@ -11,6 +11,8 @@ class Schools::ParticipantsController < Schools::BaseController
     @ect_categories = SetParticipantCategories.call(@school_cohort, current_user, "ParticipantProfile::ECT")
     @withdrawn = @ect_categories.withdrawn + @mentor_categories.withdrawn
     @ineligible = @ect_categories.ineligible + @mentor_categories.ineligible
+    @transferring_in = @ect_categories.transferring_in
+    @transferring_out = @ect_categories.transferring_out
   end
 
   def show

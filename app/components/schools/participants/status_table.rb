@@ -12,6 +12,28 @@ module Schools
         participant_profiles.all? { |pp| pp.ecf_participant_eligibility&.ineligible_status? }
       end
 
+      def transferring_out_participants?
+        participant_profiles.all? { |pp| pp.induction_records.transferring_out.any? }
+      end
+
+      def transferring_in_participants?
+        participant_profiles.all? { |pp| pp.induction_records.transferring_in.any? }
+      end
+
+      def date_column_heading
+        if FeatureFlag.active?(:change_of_circumstances)
+          if transferring_out_participants?
+            "Leaving"
+          elsif transferring_in_participants?
+            "Joining"
+          else
+            "Induction start"
+          end
+        else
+          "Induction start"
+        end
+      end
+
       attr_reader :participant_profiles, :school_cohort
     end
   end

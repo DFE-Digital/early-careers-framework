@@ -32,8 +32,9 @@ class InductionRecord < ApplicationRecord
     withdrawn: "withdrawn",
   }, _prefix: "training_status"
 
-  scope :transferring_in, -> { where("status='active' AND start_date > ?", Time.zone.now) }
-  scope :transferring_out, -> { where("status='transferred' AND end_date > ?", Time.zone.now) }
+  scope :current, -> { transferring_out.or(active_induction_status) }
+  scope :transferring_in, -> { where("induction_status='active' AND start_date > ?", Time.zone.now) }
+  scope :transferring_out, -> { where("induction_status='transferred' AND end_date > ?", Time.zone.now) }
 
   def changing!(date_of_change = Time.zone.now)
     update!(induction_status: :changed, end_date: date_of_change)

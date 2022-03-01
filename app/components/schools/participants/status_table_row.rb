@@ -26,6 +26,28 @@ module Schools
         profile.school_cohort.school_chose_cip?
       end
 
+      def transferring_out_participant?
+        profile.induction_records.current.first.transferring_out?
+      end
+
+      def transferring_in_participant?
+        profile.induction_records.current.first.transferring_in?
+      end
+
+      def date_column_value
+        if FeatureFlag.active?(:change_of_circumstances)
+          if transferring_out_participant?
+            profile.induction_records.current.first.end_date.to_s(:govuk)
+          elsif transferring_in_participant?
+            profile.induction_records.current.first.start_date.to_s(:govuk)
+          else
+            profile.start_term.humanize
+          end
+        else
+          profile.start_term.humanize
+        end
+      end
+
     private
 
       attr_reader :profile
