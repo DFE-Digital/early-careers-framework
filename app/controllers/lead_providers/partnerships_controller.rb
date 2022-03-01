@@ -16,7 +16,7 @@ module LeadProviders
       @schools = current_user.lead_provider.active_partnerships.includes(:school, :delivery_partner)
       respond_to do |format|
         format.csv do
-          render body: PartnershipCsvSerializer.new(@schools).call
+          render body: Api::V1::PartnershipCsvSerializer.new(@schools).call
         end
       end
     end
