@@ -46,8 +46,8 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def sign_in_with_token
-    @user.update!(login_token: nil, login_token_valid_until: 1.year.ago)
-    sign_in(@user, scope: :user)
+    @identity.update!(login_token: nil, login_token_valid_until: 1.year.ago)
+    sign_in(@identity, scope: :user_identity)
     redirect_to_dashboard
   end
 
@@ -66,24 +66,23 @@ private
   end
 
   def ensure_login_token_valid
-    @user = User.find_by(login_token: params[:login_token])
+    @identity = Identity.find_by(login_token: params[:login_token])
 
-    if @user.blank? || login_token_expired?
+    if @identity.blank? || login_token_expired?
       redirect_to users_link_invalid_path
     end
   end
 
   def login_token_expired?
-    @user.login_token_valid_until.blank? || Time.zone.now > @user.login_token_valid_until
+    @identity.login_token_valid_until.blank? || Time.zone.now > @identity.login_token_valid_until
   end
 
   def mock_login
     email = params.dig(:user, :email)
     return unless TEST_DOMAINS.any? { |domain| email.include?(domain) }
 
-    user = Identity.find_user_by(email: email) || return
-
-    sign_in(user, scope: :user)
-    redirect_to profile_dashboard_path(user)
+    identity = Identity.find_identity_by(email: email) || return
+    sign_in(identity, scope: :user_identity)
+    redirect_to profile_dashboard_path(identity.user)
   end
 end

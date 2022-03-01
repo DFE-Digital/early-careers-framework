@@ -31,11 +31,11 @@ RSpec.shared_context "lead provider profiles and courses" do
       npq_lead_provider: npq_lead_provider,
       npq_course: npq_course,
     )
+    teacher_profile = create(:teacher_profile, user: npq_application.user)
     create(
       :npq_participant_profile,
       npq_application: npq_application,
-      user: npq_application.user,
-      teacher_profile: npq_application.user.teacher_profile,
+      teacher_profile: teacher_profile,
       schedule: Finance::Schedule::NPQLeadership.default,
     )
   end

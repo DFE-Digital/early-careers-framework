@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_28_093526) do
+ActiveRecord::Schema.define(version: 2022_03_01_111036) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -329,6 +329,14 @@ ActiveRecord::Schema.define(version: 2022_02_28_093526) do
     t.string "origin", default: "ecf", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "login_token"
+    t.datetime "login_token_valid_until"
+    t.datetime "remember_created_at"
+    t.datetime "last_sign_in_at"
+    t.datetime "current_sign_in_at"
+    t.inet "current_sign_in_ip"
+    t.inet "last_sign_in_ip"
+    t.integer "sign_in_count", default: 0, null: false
     t.index ["email"], name: "index_identities_on_email", unique: true
     t.index ["external_identifier"], name: "index_identities_on_external_identifier", unique: true
     t.index ["user_id"], name: "index_identities_on_user_id"

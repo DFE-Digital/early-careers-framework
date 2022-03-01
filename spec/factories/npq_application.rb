@@ -2,9 +2,13 @@
 
 FactoryBot.define do
   factory :npq_application do
-    association :participant_identity, factory: :identity
+    transient do
+      user { association :user }
+    end
+
     npq_course
     npq_lead_provider
+    participant_identity { association :identity, user: user }
 
     headteacher_status { NPQApplication.headteacher_statuses.keys.sample }
     funding_choice { NPQApplication.funding_choices.keys.sample }

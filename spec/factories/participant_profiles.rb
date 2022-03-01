@@ -2,13 +2,15 @@
 
 FactoryBot.define do
   factory :participant_profile do
-    teacher_profile
+    teacher_profile { association :teacher_profile, user: user }
     profile_duplicity { :single }
+    participant_identity { association :identity, user: user }
 
     factory :ecf_participant_profile, class: "ParticipantProfile::ECF" do
       school_cohort
       teacher_profile { association :teacher_profile, school: school_cohort.school }
       schedule { Finance::Schedule::ECF.default || create(:ecf_schedule) }
+      participant_identity { association :identity, user: user }
 
       factory :ect_participant_profile, class: "ParticipantProfile::ECT"
       factory :mentor_participant_profile, class: "ParticipantProfile::Mentor"
@@ -81,10 +83,6 @@ FactoryBot.define do
           profile.ecf_participant_eligibility.save!
         end
       end
-    end
-
-    after :build do |participant_profile|
-      participant_profile.participant_identity = Identity::Create.call(user: participant_profile.user)
     end
   end
 end

@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
-  devise :registerable, :trackable, :passwordless_authenticatable
   has_paper_trail
 
-  has_many :identities, inverse_of: :user
+  has_many :identities, inverse_of: :user, dependent: :destroy
 
   has_one :induction_coordinator_profile, dependent: :destroy
   has_many :schools, through: :induction_coordinator_profile
@@ -26,6 +25,7 @@ class User < ApplicationRecord
 
   before_validation :strip_whitespace
   after_update :sync_email_address_with_identity
+  after_create :create_identity
 
   validates :full_name, presence: true
   validates :email, presence: true, uniqueness: true, notify_email: true
@@ -151,5 +151,11 @@ private
     if saved_change_to_email?
       identities.original.first&.update!(email: email)
     end
+  end
+
+  def create_identity
+    # TODO: The code below, together with a circular identity design, causes serious issues in tests
+    #
+    # Identity.find_or_create_by!(email: email, user: self)
   end
 end

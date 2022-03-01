@@ -4,11 +4,11 @@ Rails.application.routes.draw do
   mount_sidekiq = -> { mount Sidekiq::Web => "/sidekiq" }
   authenticate(:user, :admin?.to_proc, &mount_sidekiq)
 
-  devise_for :users, skip: %i[registrations confirmations], controllers: {
+  devise_for :identities, skip: %i[registrations confirmations], path: "/users", as: :user, controllers: {
     sessions: "users/sessions",
   }
 
-  devise_scope :user do
+  devise_scope :user_identity do
     get "/users/confirm_sign_in", to: "users/sessions#redirect_from_magic_link"
     post "/users/sign_in_with_token", to: "users/sessions#sign_in_with_token"
     get "/users/signed-out", to: "users/sessions#signed_out"

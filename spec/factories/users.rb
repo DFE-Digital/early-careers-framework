@@ -4,8 +4,6 @@ FactoryBot.define do
   factory :user do
     email { Faker::Internet.unique.safe_email }
     full_name { Faker::Name.name }
-    login_token { Faker::Alphanumeric.alpha(number: 10) }
-    login_token_valid_until { 1.hour.from_now }
 
     trait :admin do
       admin_profile

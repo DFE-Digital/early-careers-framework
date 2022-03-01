@@ -3,8 +3,8 @@
 class ApplicationController < ActionController::Base
   default_form_builder GOVUKDesignSystemFormBuilder::FormBuilder
 
-  impersonates :user
   prepend CurrentUser
+  impersonates :user
 
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :previous_url_for_cookies_page, except: :check
@@ -32,7 +32,7 @@ private
   end
 
   def after_sign_in_path_for(_user)
-    stored_location_for(current_user) || helpers.profile_dashboard_path(current_user)
+    stored_location_for(current_user_identity) || helpers.profile_dashboard_path(current_user)
   end
 
   def after_sign_out_path_for(_user)

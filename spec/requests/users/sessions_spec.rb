@@ -4,6 +4,7 @@ require "rails_helper"
 
 RSpec.describe "Users::Sessions", type: :request do
   let(:user) { create(:user) }
+  let(:identity) { user.identities.first || create(:identity, user: user) }
 
   describe "GET /users/sign_in" do
     it "renders the sign in page" do
@@ -60,7 +61,7 @@ RSpec.describe "Users::Sessions", type: :request do
       it "sends a log_in email request to User Mailer" do
         expect(UserMailer).to receive(:sign_in_email).with(
           hash_including(
-            email: user.email,
+            email: identity.email,
             full_name: user.full_name,
             url: login_url_regex,
             token_expiry: token_expiry_regex,
@@ -104,7 +105,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
   describe "Valid mock login" do
     before do
-      user.update!(email: test_email)
+      identity.update!(email: test_email)
       allow(Rails).to receive(:env).and_return ActiveSupport::EnvironmentInquirer.new(environment.to_s)
     end
 
@@ -161,8 +162,8 @@ RSpec.describe "Users::Sessions", type: :request do
 
   describe "GET /users/confirm_sign_in" do
     it "renders the redirect_from_magic_link template" do
-      get "/users/confirm_sign_in?login_token=#{user.login_token}"
-      expect(assigns(:login_token)).to eq(user.login_token)
+      get "/users/confirm_sign_in?login_token=#{identity.login_token}"
+      expect(assigns(:login_token)).to eq(identity.login_token)
       expect(response).to render_template(:redirect_from_magic_link)
     end
 
@@ -173,10 +174,10 @@ RSpec.describe "Users::Sessions", type: :request do
     end
 
     context "when the token has expired" do
-      before { user.update!(login_token_valid_until: 1.hour.ago) }
+      before { identity.update!(login_token_valid_until: 1.hour.ago) }
 
       it "redirects to link invalid" do
-        get "/users/confirm_sign_in?login_token=#{user.login_token}"
+        get "/users/confirm_sign_in?login_token=#{identity.login_token}"
 
         expect(response).to redirect_to "/users/link-invalid"
       end
@@ -184,8 +185,8 @@ RSpec.describe "Users::Sessions", type: :request do
 
     context "when no token is provided" do
       before do
-        user.update!(login_token_valid_until: nil)
-        user.update!(login_token: nil)
+        identity.update!(login_token_valid_until: nil)
+        identity.update!(login_token: nil)
       end
 
       it "redirects to link invalid" do
@@ -212,7 +213,7 @@ RSpec.describe "Users::Sessions", type: :request do
       let(:school) { user.teacher_profile.early_career_teacher_profile.school }
 
       it "redirects to participant validation on successful login" do
-        post "/users/sign_in_with_token", params: { login_token: user.login_token }
+        post "/users/sign_in_with_token", params: { login_token: identity.login_token }
         expect(response).to redirect_to(participants_validation_path)
       end
     end
@@ -223,7 +224,7 @@ RSpec.describe "Users::Sessions", type: :request do
       let!(:cohort) { create :cohort, :current }
 
       it "redirects to correct dashboard" do
-        post "/users/sign_in_with_token", params: { login_token: user.login_token }
+        post "/users/sign_in_with_token", params: { login_token: identity.login_token }
         expect(response).to redirect_to(schools_choose_programme_path(school_id: school.slug, cohort_id: cohort.start_year))
       end
     end
@@ -235,7 +236,7 @@ RSpec.describe "Users::Sessions", type: :request do
       let!(:cohort) { create :cohort, :current }
 
       it "redirects to correct dashboard" do
-        post "/users/sign_in_with_token", params: { login_token: user.login_token }
+        post "/users/sign_in_with_token", params: { login_token: identity.login_token }
         expect(response).to redirect_to participants_validation_path
       end
     end
@@ -244,7 +245,7 @@ RSpec.describe "Users::Sessions", type: :request do
       let(:user) { create(:user, :lead_provider) }
 
       it "redirects to dashboard on successful login" do
-        post "/users/sign_in_with_token", params: { login_token: user.login_token }
+        post "/users/sign_in_with_token", params: { login_token: identity.login_token }
         expect(response).to redirect_to(dashboard_path)
       end
     end
@@ -253,7 +254,7 @@ RSpec.describe "Users::Sessions", type: :request do
       let(:user) { create(:user, :admin) }
 
       it "redirects to correct dashboard" do
-        post "/users/sign_in_with_token", params: { login_token: user.login_token }
+        post "/users/sign_in_with_token", params: { login_token: identity.login_token }
         expect(response).to redirect_to(admin_schools_path)
       end
     end
@@ -262,16 +263,16 @@ RSpec.describe "Users::Sessions", type: :request do
       let(:user) { create(:user, :finance) }
 
       it "redirects to correct dashboard" do
-        post "/users/sign_in_with_token", params: { login_token: user.login_token }
+        post "/users/sign_in_with_token", params: { login_token: identity.login_token }
         expect(response).to redirect_to(finance_landing_page_path)
       end
     end
 
     context "when the login_token has expired" do
-      before { user.update(login_token_valid_until: 2.days.ago) }
+      before { identity.update(login_token_valid_until: 2.days.ago) }
 
       it "redirects to link invalid page" do
-        post "/users/sign_in_with_token", params: { login_token: user.login_token }
+        post "/users/sign_in_with_token", params: { login_token: identity.login_token }
         expect(response).to redirect_to(users_link_invalid_path)
       end
     end
