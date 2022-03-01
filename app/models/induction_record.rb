@@ -18,7 +18,7 @@ class InductionRecord < ApplicationRecord
 
   validates :start_date, presence: true
 
-  enum status: {
+  enum induction_status: {
     active: "active",
     withdrawn: "withdrawn",
     changed: "changed",
@@ -36,14 +36,22 @@ class InductionRecord < ApplicationRecord
   scope :transferring_out, -> { where("status='transferred' AND end_date > ?", Time.zone.now) }
 
   def changing!(date_of_change = Time.zone.now)
-    update!(status: :changed, end_date: date_of_change)
+    update!(induction_status: :changed, end_date: date_of_change)
   end
 
   def withdrawing!(date_of_change = Time.zone.now)
-    update!(status: :withdrawn, end_date: date_of_change)
+    update!(induction_status: :withdrawn, end_date: date_of_change)
   end
 
   def transferring!(date_of_change = Time.zone.now)
-    update!(status: :transferred, end_date: date_of_change)
+    update!(induction_status: :transferred, end_date: date_of_change)
+  end
+
+  def transferring_in?
+    active_induction_status? && start_date > Time.zone.now
+  end
+
+  def transferring_out?
+    transferred_induction_status? && end_date.present? && end_date > Time.zone.now
   end
 end

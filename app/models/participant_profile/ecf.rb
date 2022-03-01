@@ -34,7 +34,7 @@ class ParticipantProfile < ApplicationRecord
 
     def current_induction_record
       now = Time.zone.now
-      induction_records.active_status.where("start_date <= ? AND end_date IS NULL OR end_date > ?", now, now).first
+      induction_records.active_induction_status.where("start_date <= ? AND end_date IS NULL OR end_date > ?", now, now).first
     end
 
     def ecf?
@@ -65,7 +65,7 @@ class ParticipantProfile < ApplicationRecord
     end
 
     def sync_status_with_induction_record
-      current_induction_record&.update!(status: status) if saved_change_to_status?
+      current_induction_record&.update!(induction_status: status) if saved_change_to_status?
       current_induction_record&.update!(training_status: training_status) if saved_change_to_training_status?
     end
   end
