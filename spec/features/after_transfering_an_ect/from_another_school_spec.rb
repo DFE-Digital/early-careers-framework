@@ -6,7 +6,7 @@ require_relative "./transfer_participant_steps"
 RSpec.feature "after Transferring the only ECT from another school onto a FIP", type: :feature do
   include TransferParticipantSteps
 
-  context "transferred from a FIP with same provider, before a started declaration has occurred" do
+  context "from a FIP with same provider, before a started declaration has occurred" do
     before do
       # we have to run this in the current cohort because logic in the service enforces SITs declaring current cohort
       @cohort = create :cohort, :current
@@ -53,14 +53,16 @@ RSpec.feature "after Transferring the only ECT from another school onto a FIP", 
     # what can admins see ??
     # would they appear in the payment break down at this point ??
     # what can support users see ??
-    # what would analytics have triggered
+    # what would analytics have triggered ??
     #
-    # check that expected onward actions are available to new school
-    #
-    # should not be in support ECT portal users feed
+    # check that expected onward actions are available to new school - what are they ??
+
+    scenario "the ECT is recognised as a FIP ECT for Support ECTs" do
+      then_participant_is_fip_ect_for_support_ects @participants.first
+    end
   end
 
-  context "transferred from a FIP with a different provider, before a started declaration has occurred" do
+  context "from a FIP with a different provider, before a started declaration has occurred" do
     before do
       # we have to run this in the current cohort because logic in the service enforces SITs declaring current cohort
       @cohort = create :cohort, :current
@@ -110,9 +112,13 @@ RSpec.feature "after Transferring the only ECT from another school onto a FIP", 
                                                        @lead_provider_tokens[2],
                                                        @participants.first
     end
+
+    scenario "the ECT is recognised as a FIP ECT for Support ECTs" do
+      then_participant_is_fip_ect_for_support_ects @participants.first
+    end
   end
 
-  context "transferred from a CIP, before a started declaration has occurred" do
+  context "from a CIP, before a started declaration has occurred" do
     before do
       # we have to run this in the current cohort because logic in the service enforces SITs declaring current cohort
       @cohort = create :cohort, :current
@@ -154,13 +160,17 @@ RSpec.feature "after Transferring the only ECT from another school onto a FIP", 
                                                        @lead_provider_tokens[1],
                                                        @participants.first
     end
+
+    scenario "the ECT is recognised as a FIP ECT for Support ECTs" do
+      then_participant_is_fip_ect_for_support_ects @participants.first
+    end
   end
 end
 
 RSpec.feature "after Transferring the only ECT from another school onto a CIP", type: :feature do
   include TransferParticipantSteps
 
-  context "transferred from a FIP with same provider, before a started declaration has occurred" do
+  context "from a FIP with same provider, before a started declaration has occurred" do
     before do
       # we have to run this in the current cohort because logic in the service enforces SITs declaring current cohort
       @cohort = create :cohort, :current
@@ -203,6 +213,48 @@ RSpec.feature "after Transferring the only ECT from another school onto a CIP", 
                                                        @participants.first
     end
 
-    # should be in support ECT portal users feed - but would need materials setup by school
+    scenario "the ECT is recognised as a CIP ECT for Support ECTs" do
+      then_participant_is_cip_ect_for_support_ects @participants.first
+    end
+  end
+
+  context "from a CIP, before a started declaration has occurred" do
+    before do
+      # we have to run this in the current cohort because logic in the service enforces SITs declaring current cohort
+      @cohort = create :cohort, :current
+      @privacy_policy = create :privacy_policy
+
+      @lead_providers = []
+      @lead_provider_tokens = []
+      @sits = []
+      @participants = []
+
+      given_lead_provider_contracted_to_deliver_ecf
+      and_sit_reported_programme :cip
+      and_another_sit_reported_programme :cip
+      and_sit_reported_ect_participant @sits.first
+
+      when_sit_takes_on_the_participant @sits[1], @participants.first
+    end
+
+    scenario "the ECT can be seen by the new SIT" do
+      then_participant_can_be_seen_by_cip_sit @sits[1],
+                                              @participants.first
+    end
+
+    scenario "the ECT cannot be seen by the previous SIT" do
+      then_participant_cannot_be_seen_by_cip_sit @sits.first,
+                                                 @participants.first
+    end
+
+    scenario "the ECT cannot be seen by another Lead Provider" do
+      then_participant_cannot_be_seen_by_lead_provider @lead_providers.first,
+                                                       @lead_provider_tokens.first,
+                                                       @participants.first
+    end
+
+    scenario "the ECT is recognised as a CIP ECT for Support ECTs" do
+      then_participant_is_cip_ect_for_support_ects @participants.first
+    end
   end
 end

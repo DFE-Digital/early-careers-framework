@@ -1,19 +1,26 @@
 # frozen_string_literal: true
 
 module Pages
-  class FipInductionDashboard
+  class SITInductionDashboard
     include Capybara::DSL
     include RSpec::Matchers
 
     def initialize(sit)
       school = sit.schools.first
-      lead_provider = school.partnerships.first.lead_provider
-      delivery_partner = school.partnerships.first.delivery_partner
 
       expect(page).to have_selector("h1", text: "Manage your training")
       expect(page).to have_text("Induction tutor #{sit.user.full_name}")
-      expect(page).to have_text("Training provider #{lead_provider.name}")
-      expect(page).to have_text("Delivery partner #{delivery_partner.name}")
+
+      partnership = school.partnerships.first
+      if partnership.nil?
+        expect(page).to have_text("Use DfE-accredited materials")
+        expect(page).to have_text("Materials Add")
+        expect(page).to_not have_text("Training partner")
+        expect(page).to_not have_text("Delivery partner")
+      else
+        expect(page).to have_text("Training provider #{partnership.lead_provider.name}")
+        expect(page).to have_text("Delivery partner #{partnership.delivery_partner.name}")
+      end
     end
 
     def check_has_participants

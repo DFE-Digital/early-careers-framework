@@ -70,71 +70,52 @@ module TransferParticipantSteps
     participant.teacher_profile.update!(school: school)
   end
 
-  def then_participant_can_be_seen_by_lead_provider(lead_provider, lead_provider_token, participant)
-    expect(lead_provider.ecf_participant_profiles.include?(participant)).to be true
-
-    session = ActionDispatch::Integration::Session.new(Rails.application)
-    session.get("/api/v1/participants/ecf",
-                headers: { "Authorization": "Bearer #{lead_provider_token}" })
-
-    participant_ids = JSON.parse(session.response.body)["data"].map do |record|
-      record["id"]
-    end
-    expect(participant_ids).to include(participant.user.id)
+  def then_participant_can_be_seen_by_lead_provider(_lead_provider, lead_provider_token, participant)
+    APIs::ECFParticipantsEndpoint.new(lead_provider_token)
+                                 .check_can_access_participant_details(participant)
   end
 
-  def then_participant_cannot_be_seen_by_lead_provider(lead_provider, lead_provider_token, participant)
-    expect(lead_provider.ecf_participant_profiles.include?(participant)).to be false
+  def then_participant_cannot_be_seen_by_lead_provider(_lead_provider, lead_provider_token, participant)
+    APIs::ECFParticipantsEndpoint.new(lead_provider_token)
+                                 .check_cannot_access_participant_details(participant)
+  end
 
-    session = ActionDispatch::Integration::Session.new(Rails.application)
-    session.get("/api/v1/participants/ecf",
-                headers: { "Authorization": "Bearer #{lead_provider_token}" })
+  def then_participant_is_fip_ect_for_support_ects(participant)
+    APIs::ECFUsersEndpoint.new
+                       .check_user_is_fip_ect(participant)
+  end
 
-    participant_ids = JSON.parse(session.response.body)["data"].map do |record|
-      record["id"]
-    end
-    expect(participant_ids).to_not include(participant.user.id)
+  def then_participant_is_cip_ect_for_support_ects(participant)
+    APIs::ECFUsersEndpoint.new
+                       .check_user_is_cip_ect(participant)
   end
 
   def then_participant_can_be_seen_by_cip_sit(sit, participant)
-    expect(sit.schools.first.ecf_participant_profiles.include?(participant)).to be true
-
-    sign_in_as_cip_sit(sit)
+    sign_in_as_sit(sit)
       .check_has_participants
       .navigate_to_participants_dashboard
       .check_can_view_participants(participant)
   end
 
-  def then_participant_cannot_be_seen_by_cip_sit(sit, participant)
-    expect(sit.schools.first.ecf_participant_profiles.include?(participant)).to be false
-
-    sign_in_as_cip_sit(sit)
+  def then_participant_cannot_be_seen_by_cip_sit(sit, _participant)
+    sign_in_as_sit(sit)
       .check_has_no_participants
   end
 
   def then_participant_can_be_seen_by_fip_sit(sit, participant)
-    expect(sit.schools.first.ecf_participant_profiles.include?(participant)).to be true
-
-    sign_in_as_fip_sit(sit)
+    sign_in_as_sit(sit)
       .check_has_participants
       .navigate_to_participants_dashboard
       .check_can_view_participants(participant)
   end
 
-  def then_participant_cannot_be_seen_by_fip_sit(sit, participant)
-    expect(sit.schools.first.ecf_participant_profiles.include?(participant)).to be false
-
-    sign_in_as_fip_sit(sit)
+  def then_participant_cannot_be_seen_by_fip_sit(sit, _participant)
+    sign_in_as_sit(sit)
       .check_has_no_participants
   end
 
-  def sign_in_as_fip_sit(sit)
+  def sign_in_as_sit(sit)
     sign_in_as sit.user
-    Pages::FipInductionDashboard.new(sit)
-  end
-
-  def sign_in_as_cip_sit(sit)
-    sign_in_as sit.user
-    Pages::CipInductionDashboard.new(sit)
+    Pages::SITInductionDashboard.new(sit)
   end
 end
