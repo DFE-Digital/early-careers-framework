@@ -17,6 +17,7 @@ SELECT u.id                                                    as participant_id
        tp.trn                                                  as trn,
        epvd.created_at                                         as trn_provided_at,
        (epe.status IN ('eligible', 'matched'))                 as trn_validated,
+       epe.reason                                              as trn_validated_reason,
        (epe.manually_validated OR epe.status = 'manual_check') as manual_validation_required,
        (CASE
             WHEN epe.status = 'eligible' THEN true
