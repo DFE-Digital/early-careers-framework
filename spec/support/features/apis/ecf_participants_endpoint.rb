@@ -10,16 +10,8 @@ module APIs
       @session = ActionDispatch::Integration::Session.new(Rails.application)
     end
 
-    def check_can_access_participant_details(participant)
-      expect(get_participant_ids).to include(participant.user.id)
-
-      self
-    end
-
-    def check_cannot_access_participant_details(participant)
-      expect(get_participant_ids).to_not include(participant.user.id)
-
-      self
+    def can_access_participant_details?(participant)
+      get_participant_ids.include?(participant.user.id)
     end
 
   private

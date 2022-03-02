@@ -16,16 +16,10 @@ module APIs
                        participant.schedule.milestones.first.start_date + 2.days
     end
 
-    def check_can_access_participant_declarations(participant)
+    def can_access_participant_declarations?(participant)
       declarations = get_declarations participant
 
-      expect(declarations.empty?).to be false
-    end
-
-    def check_cannot_access_participant_declarations(participant)
-      declarations = get_declarations participant
-
-      expect(declarations.empty?).to be true
+      !declarations.empty?
     end
 
   private

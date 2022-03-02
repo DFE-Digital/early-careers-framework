@@ -10,32 +10,34 @@ module APIs
       @session = ActionDispatch::Integration::Session.new(Rails.application)
     end
 
-    def check_user_is_fip_ect(participant)
+    def user_is_fip_ect?(participant)
       user = get_user participant.user
-      expect(user).to_not be_nil
+      if !user.nil?
+        attributes = user["attributes"]
 
-      attributes = user["attributes"]
-      expect(attributes["email"]).to eq participant.user.email
-      expect(attributes["full_name"]).to eq participant.user.full_name
-      expect(attributes["user_type"]).to eq "early_career_teacher"
-      expect(attributes["core_induction_programme"]).to eq "none"
-      expect(attributes["induction_programme_choice"]).to eq "full_induction_programme"
-
-      self
+        attributes["email"] == participant.user.email.to_s &&
+          attributes["full_name"] == participant.user.full_name.to_s &&
+          attributes["user_type"] == "early_career_teacher" &&
+          attributes["core_induction_programme"] == "none" &&
+          attributes["induction_programme_choice"] == "full_induction_programme"
+      else
+        false
+      end
     end
 
-    def check_user_is_cip_ect(participant)
+    def user_is_cip_ect?(participant)
       user = get_user participant.user
-      expect(user).to_not be_nil
+      if !user.nil?
+        attributes = user["attributes"]
 
-      attributes = user["attributes"]
-      expect(attributes["email"]).to eq participant.user.email
-      expect(attributes["full_name"]).to eq participant.user.full_name
-      expect(attributes["user_type"]).to eq "early_career_teacher"
-      expect(attributes["core_induction_programme"]).to eq "none"
-      expect(attributes["induction_programme_choice"]).to eq "core_induction_programme"
-
-      self
+        attributes["email"] == participant.user.email.to_s &&
+          attributes["full_name"] == participant.user.full_name.to_s &&
+          attributes["user_type"] == "early_career_teacher" &&
+          attributes["core_induction_programme"] == "none" &&
+          attributes["induction_programme_choice"] == "core_induction_programme"
+      else
+        false
+      end
     end
 
   private

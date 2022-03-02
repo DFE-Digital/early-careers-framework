@@ -3,42 +3,28 @@
 module Pages
   class SITInductionDashboard
     include Capybara::DSL
-    include RSpec::Matchers
 
-    def initialize(sit)
+    def has_expected_content?(sit)
+      full_name = sit.user.full_name
       school = sit.schools.first
-
-      expect(page).to have_selector("h1", text: "Manage your training")
-      expect(page).to have_text("Induction tutor #{sit.user.full_name}")
-
       partnership = school.partnerships.first
-      if partnership.nil?
-        expect(page).to have_text("Use DfE-accredited materials")
-        expect(page).to have_text("Materials Add")
-        expect(page).to_not have_text("Training partner")
-        expect(page).to_not have_text("Delivery partner")
-      else
-        expect(page).to have_text("Training provider #{partnership.lead_provider.name}")
-        expect(page).to have_text("Delivery partner #{partnership.delivery_partner.name}")
-      end
+
+      has_selector?("h1", text: "Manage your training") &&
+        has_text?("Induction tutor #{full_name}") &&
+        if partnership.nil?
+          has_text?("Use DfE-accredited materials") &&
+            has_text?("Materials Add") &&
+            !has_text?("Training partner") &&
+            !has_text?("Delivery partner")
+        else
+          has_text?("Training provider #{partnership.lead_provider.name}") &&
+            has_text?("Delivery partner #{partnership.delivery_partner.name}")
+        end
     end
 
-    def check_has_participants
-      expect(page).to have_text "View your early career teacher and mentor details"
-
-      expect(page).to_not have_selector "a.govuk-link",
-                                        text: "Add your early career teacher and mentor details"
-
-      self
-    end
-
-    def check_has_no_participants
-      expect(page).to_not have_text "View your early career teacher and mentor details"
-
-      expect(page).to have_selector "a.govuk-link",
-                                    text: "Add your early career teacher and mentor details"
-
-      self
+    def has_participants?
+      has_text?("View your early career teacher and mentor details") &&
+        !has_selector?("a.govuk-link", text: "Add your early career teacher and mentor details")
     end
 
     def navigate_to_participants_dashboard
