@@ -27,6 +27,7 @@ class ParticipantValidationService
       previous_participation: previous_participation?(validated_record),
       previous_induction: previous_induction?(validated_record),
       no_induction: validated_record.dig("induction", "start_date").nil?,
+      exempt_from_induction: validated_record.dig("induction", "status") == "Exempt",
     }
   end
 

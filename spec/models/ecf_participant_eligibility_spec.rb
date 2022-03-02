@@ -22,6 +22,7 @@ RSpec.describe ECFParticipantEligibility, type: :model do
       previous_participation: "previous_participation",
       previous_induction: "previous_induction",
       no_induction: "no_induction",
+      exempt_from_induction: "exempt_from_induction",
       no_qts: "no_qts",
       different_trn: "different_trn",
       duplicate_profile: "duplicate_profile",
@@ -124,11 +125,44 @@ RSpec.describe ECFParticipantEligibility, type: :model do
     end
 
     context "when no_induction is set to true" do
-      it "sets the status to manual_check and reason as no_induction" do
-        eligibility.no_induction = true
-        eligibility.valid?
-        expect(eligibility).to be_manual_check_status
-        expect(eligibility).to be_no_induction_reason
+      context "the user is an ect" do
+        it "sets the status to manual_check and reason as no_induction" do
+          eligibility.no_induction = true
+          eligibility.valid?
+          expect(eligibility).to be_manual_check_status
+          expect(eligibility).to be_no_induction_reason
+        end
+      end
+
+      context "the user is a mentor" do
+        let!(:participant_profile) { create(:mentor_participant_profile) }
+
+        it "does not set the status to manual check" do
+          eligibility.no_induction = true
+          eligibility.valid?
+          expect(eligibility).to be_eligible_status
+        end
+      end
+    end
+
+    context "when exempt_from_induction is set to true" do
+      context "the user is an ect" do
+        it "sets the status to ineligible" do
+          eligibility.exempt_from_induction = true
+          eligibility.valid?
+          expect(eligibility).to be_ineligible_status
+          expect(eligibility).to be_exempt_from_induction_reason
+        end
+      end
+
+      context "the user is a mentor" do
+        let!(:participant_profile) { create(:mentor_participant_profile) }
+
+        it "does not set the status to ineligible" do
+          eligibility.exempt_from_induction = true
+          eligibility.valid?
+          expect(eligibility).to be_eligible_status
+        end
       end
     end
   end

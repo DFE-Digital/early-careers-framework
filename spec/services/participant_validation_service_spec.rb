@@ -325,6 +325,22 @@ RSpec.describe ParticipantValidationService do
           expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: true, no_induction: false }))
         end
       end
+
+      context "when the participant has an induction with the status of 'Exempt'" do
+        let(:induction) do
+          {
+            "start_date" => nil,
+            "completion_date" => nil,
+            "status" => "Exempt",
+            "state" => 0,
+            "state_name" => "Exempt",
+          }
+        end
+
+        it "sets exempt_from_induction to true" do
+          expect(validation_result).to eql(build_validation_result(trn: trn, options: { exempt_from_induction: true, no_induction: true }))
+        end
+      end
     end
   end
 
@@ -336,6 +352,7 @@ RSpec.describe ParticipantValidationService do
       previous_participation: false,
       previous_induction: false,
       no_induction: true,
+      exempt_from_induction: false,
     }.merge(options)
   end
 

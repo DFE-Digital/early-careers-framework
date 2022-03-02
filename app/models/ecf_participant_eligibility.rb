@@ -22,6 +22,7 @@ class ECFParticipantEligibility < ApplicationRecord
     duplicate_profile: "duplicate_profile",
     none: "none",
     no_induction: "no_induction",
+    exempt_from_induction: "exempt_from_induction",
   }, _suffix: true
 
   def duplicate_profile?
@@ -42,7 +43,9 @@ class ECFParticipantEligibility < ApplicationRecord
                                    %i[manual_check different_trn]
                                  elsif duplicate_profile?
                                    %i[ineligible duplicate_profile]
-                                 elsif no_induction?
+                                 elsif exempt_from_induction? && participant_profile.ect?
+                                   %i[ineligible exempt_from_induction]
+                                 elsif no_induction? && participant_profile.ect?
                                    %i[manual_check no_induction]
                                  else
                                    %i[eligible none]

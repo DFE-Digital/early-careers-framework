@@ -47,6 +47,18 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
       end
       it { is_expected.to eq :previous_participation }
     end
+
+    context "the participant is exempt from induction" do
+      let(:validation_result) { { i: "am not blank" } }
+      let(:eligibility_record) do
+        create(
+          :ecf_participant_eligibility,
+          participant_profile: participant_profile,
+          exempt_from_induction: true,
+        )
+      end
+      it { is_expected.to eq :exempt_from_induction }
+    end
   end
 
   describe "steps" do

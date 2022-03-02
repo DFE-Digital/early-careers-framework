@@ -149,6 +149,8 @@ module Participants
           self.eligibility = :secondary_fip_mentor_eligible
         elsif eligibility_record.previous_participation_reason?
           self.eligibility = :previous_participation
+        elsif eligibility_record.exempt_from_induction_reason?
+          self.eligibility = :exempt_from_induction
         end
       end
     end

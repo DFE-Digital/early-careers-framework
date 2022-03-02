@@ -235,6 +235,7 @@ ActiveRecord::Schema.define(version: 2022_03_14_120140) do
     t.string "reason", default: "none", null: false
     t.boolean "different_trn"
     t.boolean "no_induction"
+    t.boolean "exempt_from_induction"
     t.index ["participant_profile_id"], name: "index_ecf_participant_eligibilities_on_participant_profile_id", unique: true
   end
 
