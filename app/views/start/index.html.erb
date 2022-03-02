@@ -2,21 +2,30 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">Manage training for early career teachers</h1>
 
-    <p>Use this service to set up a 2-year training programme for your early career teachers (ECTs).</p>
+    <p>Use this service to set up a 2-year ECF-based training programme for your early career teachers (ECTs).</p>
 
     <div class="govuk-inset-text">
-     <%= govuk_link_to "Read our step by step guidance (opens in new tab)", step_by_step_path, target: "_blank" %> to find out what’s changed this year, and what you need to do.
+     <%= govuk_link_to "Read our step by step guidance (opens in new tab)", step_by_step_path, target: "_blank" %> to find out what you need to do.
     </div>
 
     <p>Sign in to this service to tell us:</p>
     <ul class="govuk-list govuk-list--bullet">
       <li>how you want to run your training</li>
       <li>which accredited materials or training provider you’ll use</li>
-      <li>which ECTs and mentors will be on the programme</li>
+      <li>which ECTs and mentors will take part</li>
     </ul>
 
     <p class="govuk-body">Your school must complete these steps before your ECTs can start their statutory induction
       programme.</p>
+    
+    <h2 class="govuk-heading-m">Tell us about changes at your school</h2>
+    
+    <p class="govuk-body">You can also use this service to tell us:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>whether or not you expect to have ECTs join your school</li>
+        <li>that you want to use a DfE-accredited programme, instead of designing and delivering your own</li>
+      </ul>
+    
 
     <%= govuk_start_button text: "Start now", href: new_user_session_path %>
 
