@@ -27,19 +27,19 @@ module Schools
       end
 
       def transferring_out_participant?
-        profile.induction_records.current.first.transferring_out?
+        profile.school_cohort.transferring_out_induction_records.where(participant_profile: profile).any?
       end
 
       def transferring_in_participant?
-        profile.induction_records.current.first.transferring_in?
+        profile.school_cohort.transferring_out_induction_records.where(participant_profile: profile).any?
       end
 
       def date_column_value
         if FeatureFlag.active?(:change_of_circumstances)
           if transferring_out_participant?
-            profile.induction_records.current.first.end_date.to_s(:govuk)
+            profile.induction_records.transferring_out.first.end_date.to_date.to_s(:govuk)
           elsif transferring_in_participant?
-            profile.induction_records.current.first.start_date.to_s(:govuk)
+            profile.induction_records.transferring_in.first.start_date.to_date.to_s(:govuk)
           else
             profile.start_term.humanize
           end

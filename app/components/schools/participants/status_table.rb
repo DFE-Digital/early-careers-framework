@@ -13,11 +13,11 @@ module Schools
       end
 
       def transferring_out_participants?
-        participant_profiles.all? { |pp| pp.induction_records.transferring_out.any? }
+        school_cohort.transferring_out_induction_records.where(participant_profile: participant_profiles).any?
       end
 
       def transferring_in_participants?
-        participant_profiles.all? { |pp| pp.induction_records.transferring_in.any? }
+        school_cohort.transferring_in_induction_records.where(participant_profile: participant_profiles).any?
       end
 
       def date_column_heading
