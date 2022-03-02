@@ -42,6 +42,8 @@ class ECFParticipantEligibility < ApplicationRecord
                                    %i[manual_check different_trn]
                                  elsif duplicate_profile?
                                    %i[ineligible duplicate_profile]
+                                 elsif no_induction?
+                                   %i[manual_check no_induction]
                                  else
                                    %i[eligible none]
                                  end

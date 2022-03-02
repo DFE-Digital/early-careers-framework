@@ -122,5 +122,14 @@ RSpec.describe ECFParticipantEligibility, type: :model do
         expect(eligibility).to be_none_reason
       end
     end
+
+    context "when no_induction is set to true" do
+      it "sets the status to manual_check and reason as no_induction" do
+        eligibility.no_induction = true
+        eligibility.valid?
+        expect(eligibility).to be_manual_check_status
+        expect(eligibility).to be_no_induction_reason
+      end
+    end
   end
 end
