@@ -45,10 +45,9 @@ RSpec.feature "after Transferring the only ECT from another school onto a CIP", 
                                                                @participants.first
     end
 
-    # TODO: incorrect outcome
-    scenario "the declarations cannot be seen by the original Lead Provider - INCORRECT" do
-      then_participant_declarations_cannot_be_seen_by_lead_provider @lead_providers.first,
-                                                                    @participants.first
+    scenario "the declarations can be seen by the original Lead Provider" do
+      then_participant_declarations_can_be_seen_by_lead_provider @lead_providers.first,
+                                                                 @participants.first
     end
 
     scenario "the ECT cannot be seen by another Lead Provider" do

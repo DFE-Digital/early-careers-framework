@@ -23,20 +23,19 @@ module APIs
     end
 
     def check_cannot_access_participant_declarations(participant)
-      expect { get_declarations participant }.to raise_error ActiveRecord::RecordNotFound
+      declarations = get_declarations participant
+
+      expect(declarations.empty?).to be true
     end
 
   private
 
     def get_declarations(participant)
-      @session.get("/api/v1/participant-declarations/#{participant.user.id}",
-                   headers: { "Authorization": "Bearer #{@token}" })
+      @session.get("/api/v1/participant-declarations",
+                   headers: { "Authorization": "Bearer #{@token}" },
+                   params: { filter: { participant_id: participant.user.id } })
 
-      response = JSON.parse(@session.response.body)["data"]
-
-      puts response
-
-      response
+      JSON.parse(@session.response.body)["data"]
     end
 
     def post_declaration(participant, declaration_type, declaration_date)
