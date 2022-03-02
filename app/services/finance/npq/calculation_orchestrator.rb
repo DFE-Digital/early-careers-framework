@@ -27,9 +27,7 @@ module Finance
     private
 
       def aggregations_for(event_type:)
-        aggregator.call(
-          event_type: event_type,
-        )
+        aggregator.call(event_type: event_type)
       end
 
       def default_aggregator
