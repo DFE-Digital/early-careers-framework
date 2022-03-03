@@ -9,6 +9,10 @@ ruby "2.7.4"
 # Include the tech docs gem
 gem "govuk_tech_docs"
 
+group :development do
+  gem "pry"
+end
+
 group :test do
   gem "capybara"
   gem "rspec"
