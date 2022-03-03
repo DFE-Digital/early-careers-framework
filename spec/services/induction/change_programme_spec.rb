@@ -26,7 +26,7 @@ RSpec.describe Induction::ChangeProgramme do
       end
 
       it "updates the current induction record with status :changed" do
-        expect(induction_record.reload).to be_changed_status
+        expect(induction_record.reload).to be_changed_induction_status
       end
 
       it "updates the current induction record with the end date" do
@@ -34,7 +34,7 @@ RSpec.describe Induction::ChangeProgramme do
       end
 
       it "sets the new induction record data correctly" do
-        expect(new_induction_programme.induction_records.first).to be_active_status
+        expect(new_induction_programme.induction_records.first).to be_active_induction_status
         expect(new_induction_programme.induction_records.first.start_date).to be_within(1.second).of action_date
         expect(new_induction_programme.induction_records.first.participant_profile).to eq participant_profile
       end
