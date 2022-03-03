@@ -26,17 +26,17 @@ class Finance::Statement < ApplicationRecord
     name.downcase.gsub(" ", "-")
   end
 
-  def declarations
-    if current?
-      participant_declarations
-        .for_course_identifier(contract.course_identifier)
-        .unique_paid_payable_or_eligible.count
-    else
-      participant_declarations
-        .for_course_identifier(contract.course_identifier)
-        .where.not(status: "voided")
-    end
-  end
+  # def declarations
+  #   if current?
+  #     participant_declarations
+  #       .for_course_identifier(contract.course_identifier)
+  #       .unique_paid_payable_or_eligible.count
+  #   else
+  #     participant_declarations
+  #       .for_course_identifier(contract.course_identifier)
+  #       .where.not(status: "voided")
+  #   end
+  # end
 end
 
 require "finance/statement/ecf"

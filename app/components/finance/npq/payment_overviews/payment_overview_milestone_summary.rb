@@ -5,6 +5,7 @@ module Finance
     module PaymentOverviews
       class PaymentOverviewMilestoneSummary < BaseComponent
         attr_reader :total_participants
+
         def initialize(milestone, total_participants)
           self.milestone = milestone
           self.total_participants = total_participants
@@ -15,6 +16,7 @@ module Finance
         end
 
       private
+
         attr_accessor :milestone
         attr_writer :total_participants
       end
