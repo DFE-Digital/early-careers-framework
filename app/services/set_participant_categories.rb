@@ -18,18 +18,14 @@ private
   end
 
   def set_participant_categories
-    if FeatureFlag.active?(:change_of_circumstances)
-      if school_cohort.core_induction_programme?
-        cip_participant_categories
-      elsif FeatureFlag.active?(:eligibility_notifications)
-        fip_participants_coc_feature_flag_active
-      else
-        fip_participant_categories_feature_flag_inactive
-      end
-    elsif school_cohort.core_induction_programme?
+    if school_cohort.core_induction_programme?
       cip_participant_categories
     elsif FeatureFlag.active?(:eligibility_notifications)
-      fip_participant_categories_feature_flag_active
+      if FeatureFlag.active?(:change_of_circumstances)
+        fip_participants_coc_feature_flag_active
+      else
+        fip_participant_categories_feature_flag_active
+      end
     else
       fip_participant_categories_feature_flag_inactive
     end
@@ -93,9 +89,9 @@ private
     ParticipantCategories.new(coc_eligible_participants, coc_flag_active_ineligible, coc_withdrawn_participants, coc_contacted_for_info_participants, coc_details_being_checked_participants, coc_transferring_in, coc_transferring_out)
   end
 
-  def coc_non_transferred
+  def coc_current_induction_records
     profile_type = type.constantize
-    ParticipantProfilePolicy::Scope.new(user, profile_type.where(id: coc_active_induction_records.select(:participant_profile_id)).includes(:user).order("users.full_name")).resolve
+    ParticipantProfilePolicy::Scope.new(user, profile_type.where(id: school_cohort.current_induction_records.select(:participant_profile_id)).includes(:user).order("users.full_name")).resolve
   end
 
   def coc_transferring_in
@@ -106,28 +102,24 @@ private
     ParticipantProfilePolicy::Scope.new(user, ParticipantProfile::ECF.where(id: school_cohort.transferring_out_induction_records.select(:participant_profile_id)).includes(:user).order("users.full_name")).resolve
   end
 
-  def coc_active_induction_records
-    school_cohort.current_induction_records
-  end
-
   def coc_eligible_participants
-    coc_non_transferred.eligible_status.includes(:user).order("users.full_name").where.not(training_status: :withdrawn)
+    coc_current_induction_records.eligible_status.includes(:user).order("users.full_name").where.not(training_status: :withdrawn)
   end
 
   def coc_ineligible_participants
-    coc_non_transferred.ineligible_status.includes(:user).order("users.full_name").where.not(training_status: :withdrawn)
+    coc_current_induction_records.ineligible_status.includes(:user).order("users.full_name").where.not(training_status: :withdrawn)
   end
 
   def coc_withdrawn_participants
-    coc_non_transferred.training_status_withdrawn.includes(:user).order("users.full_name")
+    coc_current_induction_records.training_status_withdrawn.includes(:user).order("users.full_name")
   end
 
   def coc_contacted_for_info_participants
-    coc_non_transferred.contacted_for_info.includes(:user).order("users.full_name").where.not(training_status: :withdrawn)
+    coc_current_induction_records.contacted_for_info.includes(:user).order("users.full_name").where.not(training_status: :withdrawn)
   end
 
   def coc_details_being_checked_participants
-    coc_non_transferred.details_being_checked.includes(:user).order("users.full_name").where.not(training_status: :withdrawn)
+    coc_current_induction_records.details_being_checked.includes(:user).order("users.full_name").where.not(training_status: :withdrawn)
   end
 
   def coc_flag_active_ineligible
