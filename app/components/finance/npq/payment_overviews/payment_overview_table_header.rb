@@ -4,6 +4,8 @@ module Finance
   module NPQ
     module PaymentOverviews
       class PaymentOverviewTableHeader < BaseComponent
+        delegate :recruitment_target, to: :contract
+
         def initialize(contract, statement)
           self.contract = contract
           self.statement = statement
@@ -12,8 +14,6 @@ module Finance
         def milestones
           NPQCourse.schedule_for(course).milestones
         end
-
-        delegate :recruitment_target, to: :contract
 
         def current_trainees
           statement

@@ -11,39 +11,7 @@
               <h2 class="govuk-heading-s"><%= t("#{ npq_contract.course_identifier }", scope: "npq_courses") %></h2>
               <%= render Finance::NPQ::PaymentOverviews::PaymentOverviewTableHeader.new(npq_contract, @statement) %>
               <span class="govuk-label--s govuk-visually-hidden">Payment details</span>
-              <%= render Finance::NPQ::PaymentOverviews::PaymentOverviewTable.new(npq_contract, @statement) %>
-<!--              <table class="govuk-table">-->
-<!--                <thead class="govuk-table__head">-->
-<!--                <tr class="govuk-table__row">-->
-<!--                  <th scope="col" class="govuk-table__header govuk-body-s">Payment type</th>-->
-<!--                  <th scope="col" class="govuk-table__header govuk-body-s">Trainees</th>-->
-<!--                  <th scope="col" class="govuk-table__header govuk-body-s">Payment per trainee</th>-->
-<!--                  <th scope="col" class="govuk-table__header govuk-body-s">Total</th>-->
-<!--                </tr>-->
-<!--                </thead>-->
-<!--                <tbody class="govuk-table__body">-->
-<!--                <tr class="gov-table__row">-->
-<!--                  <td scope="row" class="govuk-table__cell govuk-body-s">Output</td>-->
-<!--                  <td scope="row" class="govuk-table__cell govuk-body-s"></td>-->
-<!--                  <td scope="row" class="govuk-table__cell govuk-body-s"></td>-->
-<!--                  <td scope="row" class="govuk-table__cell govuk-body-s"></td>-->
-<!--                </tr>-->
-<!--                <tr class="gov-table__row">-->
-<!--                  <td scope="row" class="govuk-table__cell govuk-body-s">Service Fee</td>-->
-<!--                  <td scope="row" class="govuk-table__cell govuk-body-s"></td>-->
-<!--                  <td scope="row" class="govuk-table__cell govuk-body-s"></td>-->
-<!--                  <td scope="row" class="govuk-table__cell govuk-body-s"></td>-->
-<!--                </tr>-->
-                <%#= render Finance::NPQ::PaymentOverviews::ServiceFees.with_collection(@service_fees) %>
-<!--                </tbody>-->
-<!--              </table>-->
-              <div class="govuk-table__row govuk-!-padding-bottom-1">
-                <div class="govuk-label--s govuk-table__header--numeric">
-                  Course total
-                  <br>
-                  £1000.00
-                </div>
-              </div>
+              <%= render Finance::NPQ::PaymentOverviews::PaymentOverviewTable.new(npq_contract, @statement, @npq_lead_provider) %>
             </section>
             <br>
           <% end %>

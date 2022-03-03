@@ -12,20 +12,20 @@ module Finance
         end
 
         def total
-          service_fees.dig(:service_fee, :monthly)
+          service_fees[:monthly]
         end
 
         def payment_per_trainee
-          service_fees.dig(:service_fee, :per_participant)
+          service_fees[:per_participant]
         end
 
         def trainees
           contract.recruitment_target
         end
+
       private
 
         attr_reader :service_fees, :contract
-
       end
     end
   end

@@ -8,12 +8,8 @@
   </tr>
   </thead>
   <tbody class="govuk-table__body">
-  <tr class="gov-table__row">
-    <td scope="row" class="govuk-table__cell govuk-body-s">Output</td>
-    <td scope="row" class="govuk-table__cell govuk-body-s"></td>
-    <td scope="row" class="govuk-table__cell govuk-body-s"></td>
-    <td scope="row" class="govuk-table__cell govuk-body-s"></td>
-  </tr>
-  <%= render Finance::NPQ::PaymentOverviews::ServiceFeeRow.new(service_fee, contract) %>
+  <%= render Finance::NPQ::PaymentOverviews::OutputPaymentRow.new(output_payments, contract) %>
+  <%= render Finance::NPQ::PaymentOverviews::ServiceFeeRow.new(service_fees, contract) %>
   </tbody>
 </table>
+<%= render Finance::NPQ::PaymentOverviews::PaymentOverviewTotal.new(service_fees, output_payments, lead_provider) %>
