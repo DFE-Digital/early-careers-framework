@@ -1,0 +1,10 @@
+description: "Bad Request"
+type: object
+example:
+  errors:
+    - title: Bad request
+      detail: correct json data structure required. See API docs for reference
+properties:
+  bad_request:
+    description: "An error message for bad request"
+    type: string

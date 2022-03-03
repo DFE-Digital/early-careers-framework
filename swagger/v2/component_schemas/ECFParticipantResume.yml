@@ -1,0 +1,14 @@
+description: "An ECF participant resume action"
+type: object
+properties:
+  type:
+    description: "The data type"
+    type: string
+    enum:
+      - participant-resume
+    example: participant-resume
+  attributes:
+    $ref: "#/components/schemas/ECFParticipantResumeAttributes"
+required:
+  - type
+  - attributes

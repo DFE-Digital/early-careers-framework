@@ -1,0 +1,20 @@
+description: "The details of an NPQ Participant"
+type: object
+required:
+  - id
+  - type
+  - attributes
+properties:
+  id:
+    description: "The unique identifier of the NPQ Participant record"
+    type: string
+    format: uuid
+    example: ac3d1243-7308-4879-942a-c4a70ced400a
+  type:
+    description: "The data type"
+    type: string
+    example: npq-participant
+    enum:
+      - npq-participant
+  attributes:
+    $ref: "#/components/schemas/NPQParticipantAttributes"

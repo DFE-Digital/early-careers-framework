@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require "swagger_helper"
-require_relative "../shared/context/service_record_declaration_params"
-require_relative "../shared/context/lead_provider_profiles_and_courses"
+require_relative "../../shared/context/service_record_declaration_params"
+require_relative "../../shared/context/lead_provider_profiles_and_courses"
 
-RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_spec.json" do
+RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v2/api_spec.json" do
   include_context "lead provider profiles and courses"
   include_context "service record declaration params"
 
@@ -17,7 +17,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
     travel_to ect_profile.schedule.milestones.first.start_date + 2.days
   end
 
-  path "/api/v1/participant-declarations" do
+  path "/api/v2/participant-declarations" do
     post "Declare a participant has reached a milestone. Idempotent endpoint - submitting exact copy of a request will return the same response body as submitting it the first time." do
       operationId :participant_declarations
       tags "Participant declarations"
@@ -95,7 +95,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
     end
   end
 
-  path "/api/v1/participant-declarations" do
+  path "/api/v2/participant-declarations" do
     get "List all participant declarations" do
       operationId :participant_declarations
       tags "participants declarations"
@@ -144,7 +144,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
     end
   end
 
-  path "/api/v1/participant-declarations.csv" do
+  path "/api/v2/participant-declarations.csv" do
     get "Retrieve all participant declarations in CSV format" do
       operationId :ecf_participant_declarations_csv
       tags "Participant declarations"
@@ -166,7 +166,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
     end
   end
 
-  path "/api/v1/participant-declarations/{id}" do
+  path "/api/v2/participant-declarations/{id}" do
     let(:id) do
       create(:ect_participant_declaration,
              user: user,
@@ -209,7 +209,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_
     end
   end
 
-  path "/api/v1/participant-declarations/{id}/void" do
+  path "/api/v2/participant-declarations/{id}/void" do
     put "Void a declaration - it will not be soft-deleted" do
       operationId :participant_declarations
       tags "Participant declarations"
