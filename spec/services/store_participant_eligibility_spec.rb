@@ -113,6 +113,27 @@ RSpec.describe StoreParticipantEligibility do
                 }],
               )
           end
+
+          it "sends emails to the ect and sit when the reason is exempt_from_induction" do
+            eligibility_options[:exempt_from_induction] = true
+            eligibility_options[:status] = :ineligible
+            eligibility_options[:reason] = :active_flags
+
+            expect {
+              service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+            }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email)
+              .with(
+                args: [{
+                  induction_tutor_email: induction_tutor.email,
+                  participant_profile: ect_profile,
+                }],
+              ).and have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email_to_ect)
+                  .with(
+                    args: [{
+                      participant_profile: ect_profile,
+                    }],
+                  )
+          end
         end
 
         context "when participant is a Mentor" do

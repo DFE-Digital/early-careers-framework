@@ -2,6 +2,8 @@
 
 class IneligibleParticipantMailer < ApplicationMailer
   ECT_PREVIOUS_INDUCTION_TEMPLATE = "e27eabc4-2d54-4356-8073-85cf9a559ce4"
+  ECT_EXCEMPT_FROM_INDUCTION_TEMPLATE = "ec674fb7-21f3-4f92-b6ac-e21fe9902d62"
+  ECT_EXEMPT_FROM_INDUCTION_TO_ECT_TEMPLATE = "f74463f8-6d44-4af7-a397-9d472bd80601"
 
   ACTIVE_FLAGS_TEMPLATES = {
     ect: "dcab5e33-c7c3-4d5a-84b6-458ae7640061",
@@ -74,6 +76,33 @@ class IneligibleParticipantMailer < ApplicationMailer
         "NQT+1_materials_link": start_schools_year_2020_url(school_id: participant_profile.school.slug),
       },
     ).tag(:ineligible_participant).associate_with(participant_profile, as: :participant_profile)
+  end
+
+  def ect_exempt_from_induction_email(induction_tutor_email:, participant_profile:)
+    sit = User.find_by_email(induction_tutor_email)
+    template_mail(
+      ECT_EXEMPT_FROM_INDUCTION_TEMPLATE,
+      to: induction_tutor_email,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        SIT_name: sit.full_name,
+        ineligible_ECT_name: participant_profile.user.full_name,
+      },
+    ).tag(:ineligible_participant).associate_with(participant_profile, as: :participant_profile)
+  end
+
+  def ect_exempt_from_induction_email_to_ect(participant_profile:)
+    template_mail(
+      ECT_EXEMPT_FROM_INDUCTION_TO_ECT_TEMPLATE,
+      to: participant_profile.user.email,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        ineligible_ECT_name: participant_profile.user.full_name,
+        school: participant_profile.school.name,
+      },
+    ).tag(:ineligible_participant_to_ect).associate_with(participant_profile, as: :participant_profile)
   end
 
   def ect_now_eligible_previous_induction_email(induction_tutor_email:, participant_profile:)

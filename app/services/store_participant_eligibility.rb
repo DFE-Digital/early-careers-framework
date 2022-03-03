@@ -79,6 +79,9 @@ private
 
       if IneligibleParticipantMailer.respond_to? mailer_name
         IneligibleParticipantMailer.send(mailer_name, **{ induction_tutor_email: induction_tutor.email, participant_profile: participant_profile }).deliver_later
+        if @participant_eligibility.reason.to_sym == :exempt_from_induction
+          IneligibleParticipantMailer.ect_exempt_from_induction_email_to_ect(participant_profile: participant_profile).deliver_later
+        end
       else
         Sentry.capture_message("Could not send ineligible participant notification [#{mailer_name}] for #{participant_profile.teacher_profile.user.email}")
       end
