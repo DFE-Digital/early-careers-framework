@@ -215,7 +215,12 @@ module GovukTechDocs
       end
 
       def get_schema_link(schema)
-        schema_name = get_schema_name(schema.node_context.source_location.to_s)
+        schema_name = if schema.is_a?(Openapi3Parser::Node::Schema)
+                        get_schema_name(schema.node_context.source_location.to_s)
+                      else
+                        get_schema_name(schema.node.node_context.source_location.to_s)
+                      end
+
         unless schema_name.nil?
           id = "schema-#{schema_name.parameterize}"
           "<a href='\##{id}'>#{schema_name}</a>"
