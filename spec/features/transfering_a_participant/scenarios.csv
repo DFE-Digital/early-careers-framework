@@ -1,0 +1,12 @@
+participant_type,original_programme,new_programme,transfer,prior_declarations,new_declarations,starting_school_status,prior_school_status,new_school_status,prior_participant_status,new_participant_status,prior_training_status,new_training_status,see_original_details,see_new_details,see_original_declarations,see_new_declarations
+ECT,CIP,CIP,,,,active,active,active,active,active,active,active,,,,
+ECT,CIP,FIP,,,,active,active,active,active,active,active,active,,ALL,,
+ECT,CIP,FIP,,,started,active,active,active,active,active,active,active,,ALL,,ALL
+ECT,FIP,CIP,,,,active,active,active,active,active,active,active,OBFUSCATED,,,
+ECT,FIP,CIP,,started,,active,active,active,active,active,active,active,OBFUSCATED,,PRIOR_ONLY,
+ECT,FIP,FIP,different_provider,,,active,active,active,active,active,active,active,OBFUSCATED,ALL,,
+ECT,FIP,FIP,different_provider,started,,active,active,active,active,active,active,active,OBFUSCATED,ALL,PRIOR_ONLY,ALL
+ECT,FIP,FIP,different_provider,,started,active,active,active,active,active,active,active,OBFUSCATED,ALL,,ALL
+ECT,FIP,FIP,same_provider,,,active,active,active,active,active,active,active,ALL,,,
+ECT,FIP,FIP,same_provider,started,,active,active,active,active,active,active,active,ALL,,ALL,
+ECT,FIP,FIP,same_provider,,started,active,active,active,active,active,active,active,ALL,,ALL,

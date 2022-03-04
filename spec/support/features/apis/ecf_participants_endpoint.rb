@@ -10,8 +10,32 @@ module APIs
       @session = ActionDispatch::Integration::Session.new(Rails.application)
     end
 
+    def get_participant_details(participant)
+      record = get_participant participant
+
+      if record.nil?
+        {}
+      else
+        record["attributes"]
+      end
+    end
+
     def can_access_participant_details?(participant)
-      get_participant_ids.include?(participant.user.id)
+      record = get_participant participant
+
+      !record.nil?
+    end
+
+    def participant_has_status?(participant, status)
+      record = get_participant participant
+
+      !record.nil? && record["attributes"]["status"] == status
+    end
+
+    def participant_has_training_status?(participant, training_status)
+      record = get_participant participant
+
+      !record.nil? && record["attributes"]["training_status"] == training_status
     end
 
   private
@@ -23,10 +47,8 @@ module APIs
       JSON.parse(@session.response.body)["data"]
     end
 
-    def get_participant_ids
-      get_participants.map do |record|
-        record["id"]
-      end
+    def get_participant(participant)
+      get_participants.select { |record| record["id"] == participant.user.id }.first
     end
   end
 end

@@ -29,7 +29,7 @@ module APIs
                    headers: { "Authorization": "Bearer #{@token}" },
                    params: { filter: { participant_id: participant.user.id } })
 
-      JSON.parse(@session.response.body)["data"]
+      JSON.parse(@session.response.body)["data"] || []
     end
 
     def post_declaration(participant, declaration_type, declaration_date)
