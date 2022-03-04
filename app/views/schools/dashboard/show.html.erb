@@ -9,8 +9,14 @@
     <span class="govuk-caption-xl"><%= @school.name %></span>
     <h1 class="govuk-heading-xl">Manage your training</h1>
 
-    <% @school_cohorts.each do |school_cohort| %>
+    <% if !@school.chosen_programme?(Cohort.next) %>
+      <%= govuk_link_to change_programme_schools_cohort_path(cohort_id: Cohort.next.start_year) do %>
+        Choose how you want to run your training in <%= Cohort.next.start_year %> to <%= Cohort.next.start_year + 1 %>
+      <% end %>
+    <% end %>
 
+    <% @school_cohorts.each do |school_cohort| %>
+      <h2>Cohort <%= school_cohort.cohort.academic_year %></h2>
       <% if school_cohort.core_induction_programme? || school_cohort.full_induction_programme? %>
         <% if school_cohort.active_ecf_participant_profiles.any? %>
           <p class="govuk-body govuk-!-margin-bottom-5">

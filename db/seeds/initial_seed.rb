@@ -2,6 +2,7 @@
 
 Cohort.find_or_create_by!(start_year: 2020)
 cohort_2021 = Cohort.find_or_create_by!(start_year: 2021)
+cohort_2022 = Cohort.find_or_create_by!(start_year: 2022)
 
 ambition_cip = CoreInductionProgramme.find_or_create_by!(name: "Ambition Institute")
 edt_cip = CoreInductionProgramme.find_or_create_by!(name: "Education Development Trust")
@@ -17,9 +18,12 @@ ucl_cip = CoreInductionProgramme.find_or_create_by!(name: "UCL Institute of Educ
   { provider_name: "UCL Institute of Education", cip: ucl_cip },
 ].each do |seed|
   provider = LeadProvider.find_or_create_by!(name: seed[:provider_name])
-  provider.update!(cohorts: [cohort_2021]) unless provider.cohorts.any?
+  provider.update!(cohorts: [cohort_2021, cohort_2022]) unless provider.cohorts.any?
   LeadProviderCip.find_or_create_by!(lead_provider: provider, cohort: cohort_2021, core_induction_programme: seed[:cip])
 end
+
+# Ambition in 2022 only
+LeadProvider.find_by(name: "Ambition Institute").update!(cohorts: [cohort_2022])
 
 PrivacyPolicy.find_or_initialize_by(major_version: 1, minor_version: 0)
   .tap { |pp| pp.html = Rails.root.join("data/privacy_policy.html").read }

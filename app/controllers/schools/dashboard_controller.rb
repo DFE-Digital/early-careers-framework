@@ -26,7 +26,7 @@ private
   def set_school_cohorts
     @school = active_school
 
-    @cohort_list = [Cohort.current]
+    @cohort_list = [Cohort.current, Cohort.next]
     @school_cohorts = @school.school_cohorts.where(cohort: @cohort_list)
 
     # This will need to be updated when more than one cohort is supported

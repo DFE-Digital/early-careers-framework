@@ -73,6 +73,8 @@ School.find_or_create_by!(urn: "000004") do |school|
 end
 
 lead_provider = LeadProvider.find_by(name: "Ambition Institute")
+user = User.find_or_create_by!(full_name: "Lead Provider", email: "lead-provider-user@example.com")
+LeadProviderProfile.find_or_create_by!(user: user, lead_provider: lead_provider)
 
 School.find_or_create_by!(urn: "000005") do |school|
   school.update!(

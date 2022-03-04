@@ -9,6 +9,10 @@ class Cohort < ApplicationRecord
     find_by(start_year: 2021)
   end
 
+  def self.next
+    find_by(start_year: 2022)
+  end
+
   def display_name
     start_year.to_s
   end

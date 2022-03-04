@@ -74,76 +74,75 @@ module ValidTestDataGenerator
 
         return unless profile.active_record?
 
-        serialized_started_declaration = RecordDeclarations::Started::EarlyCareerTeacher.call(
-          params: {
-            participant_id: user.tap(&:reload).id,
-            course_identifier: "ecf-induction",
-            declaration_date: (profile.schedule.milestones.first.start_date + 1.day).rfc3339,
-            cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
-            declaration_type: "started",
-          },
-        )
+        # serialized_started_declaration = RecordDeclarations::Started::EarlyCareerTeacher.call(
+        #   params: {
+        #     participant_id: user.tap(&:reload).id,
+        #     course_identifier: "ecf-induction",
+        #     declaration_date: (profile.schedule.milestones.first.start_date + 1.day).rfc3339,
+        #     cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
+        #     declaration_type: "started",
+        #   },
+        # )
 
-        return if profile.schedule.milestones.second.start_date > Date.current
+        # return if profile.schedule.milestones.second.start_date > Date.current
 
-        started_declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
-        started_declaration.make_payable!
-        started_declaration.update!(
-          created_at: profile.schedule.milestones.first.start_date + 1.day,
-          statement: november_statement,
-        )
+        # started_declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
+        # started_declaration.make_payable!
+        # started_declaration.update!(
+        #   created_at: profile.schedule.milestones.first.start_date + 1.day,
+        #   statement: november_statement,
+        # )
 
-        return if (profile.schedule.milestones.second.start_date + 1.day) > Time.zone.now
+        # return if (profile.schedule.milestones.second.start_date + 1.day) > Time.zone.now
 
-        RecordDeclarations::Retained::EarlyCareerTeacher.call(
-          params: {
-            participant_id: user.tap(&:reload).id,
-            course_identifier: "ecf-induction",
-            declaration_date: (profile.schedule.milestones.second.start_date + 1.day).rfc3339,
-            cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
-            declaration_type: "retained-1",
-            evidence_held: "other",
-          },
-        )
+        # RecordDeclarations::Retained::EarlyCareerTeacher.call(
+        #   params: {
+        #     participant_id: user.tap(&:reload).id,
+        #     course_identifier: "ecf-induction",
+        #     declaration_date: (profile.schedule.milestones.second.start_date + 1.day).rfc3339,
+        #     cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
+        #     declaration_type: "retained-1",
+        #     evidence_held: "other",
+        #   },
+        # )
       else
-        profile = ParticipantProfile::Mentor.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule, participant_identity: participant_identity) do |pp|
-          ParticipantProfileState.create!(participant_profile: pp)
-          ECFParticipantEligibility.create!(participant_profile_id: pp.id).eligible_status!
-        end
+        profile = ParticipantProfile::Mentor.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule, participant_identity: participant_identity)
+        ParticipantProfileState.create!(participant_profile: profile)
+        ECFParticipantEligibility.create!(participant_profile_id: profile.id).eligible_status!
 
         return profile unless profile.active_record?
 
-        serialized_started_declaration = RecordDeclarations::Started::Mentor.call(
-          params: {
-            participant_id: profile.user.tap(&:reload).id,
-            course_identifier: "ecf-mentor",
-            declaration_date: (profile.schedule.milestones.first.start_date + 1.day).rfc3339,
-            cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
-            declaration_type: "started",
-          },
-        )
+        # serialized_started_declaration = RecordDeclarations::Started::Mentor.call(
+        #   params: {
+        #     participant_id: profile.user.tap(&:reload).id,
+        #     course_identifier: "ecf-mentor",
+        #     declaration_date: (profile.schedule.milestones.first.start_date + 1.day).rfc3339,
+        #     cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
+        #     declaration_type: "started",
+        #   },
+        # )
 
-        return if profile.schedule.milestones.second.start_date > Date.current
+        # return if profile.schedule.milestones.second.start_date > Date.current
 
-        started_declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
-        started_declaration.make_payable!
-        started_declaration.update!(
-          created_at: profile.schedule.milestones.first.start_date + 1.day,
-          statement: november_statement,
-        )
+        # started_declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
+        # started_declaration.make_payable!
+        # started_declaration.update!(
+        #   created_at: profile.schedule.milestones.first.start_date + 1.day,
+        #   statement: november_statement,
+        # )
 
-        return if (profile.schedule.milestones.second.start_date + 1.day) > Time.zone.now
+        # return if (profile.schedule.milestones.second.start_date + 1.day) > Time.zone.now
 
-        RecordDeclarations::Retained::Mentor.call(
-          params: {
-            participant_id: user.tap(&:reload).id,
-            course_identifier: "ecf-mentor",
-            declaration_date: (profile.schedule.milestones.second.start_date + 1.day).rfc3339,
-            cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
-            declaration_type: "retained-1",
-            evidence_held: "other",
-          },
-        )
+        # RecordDeclarations::Retained::Mentor.call(
+        #   params: {
+        #     participant_id: user.tap(&:reload).id,
+        #     course_identifier: "ecf-mentor",
+        #     declaration_date: (profile.schedule.milestones.second.start_date + 1.day).rfc3339,
+        #     cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
+        #     declaration_type: "retained-1",
+        #     evidence_held: "other",
+        #   },
+        # )
 
         profile
       end

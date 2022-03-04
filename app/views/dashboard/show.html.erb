@@ -11,6 +11,9 @@
         <h2 class="govuk-heading-m">
           <%= govuk_link_to "Check your schools for #{Cohort.current.display_name}", lead_providers_your_schools_path %>
         </h2>
+        <h2 class="govuk-heading-m">
+          <%= govuk_link_to "Check your schools for #{Cohort.next.display_name}", lead_providers_your_schools_path(cohort: Cohort.next) %>
+        </h2>
         <p>See which schools have added their early career teachers and mentors.</p>
       </div>
     <% else %>
