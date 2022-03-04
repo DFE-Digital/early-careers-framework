@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
+require "rails_helper"
+require_relative "../../features/schools/training_dashboard/manage_training_steps"
+
 RSpec.shared_examples "manage fip participants example", js: true do
-  require "rails_helper"
-  require_relative "../../features/schools/training_dashboard/manage_training_steps"
   include ManageTrainingSteps
 
   before do
