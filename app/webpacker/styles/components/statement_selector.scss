@@ -7,6 +7,14 @@
     margin-bottom: 0;
   }
 
+  select {
+    @extend .govuk-\!-width-full; // hack as form builder does not seem to support injecting of classes where needed
+
+    @include govuk-media-query($until: tablet) {
+      margin-bottom: 15px;
+    }
+  }
+
   input[type=submit] {
     margin-bottom: 0;
     vertical-align: bottom;
