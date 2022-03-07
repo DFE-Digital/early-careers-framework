@@ -15,7 +15,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   let(:breakdowns) do
     Finance::NPQ::CalculationOverviewOrchestrator.new(
       statement: statement,
-      aggregator: Finance::NPQ::ParticipantEligibleAndPayableAggregator,
+      aggregator: Finance::NPQ::ParticipantAggregator,
     ).call(event_type: :started)
   end
   let!(:statement) do

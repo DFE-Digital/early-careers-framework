@@ -35,7 +35,11 @@ module Finance
       end
 
       def aggregator_for(statement)
-        statement.past_deadline_date? ? Finance::NPQ::ParticipantEligibleAndPayableAggregator : Finance::NPQ::ParticipantAggregator
+        if statement.past_deadline_date?
+          Finance::NPQ::ParticipantAggregator
+        else
+          Finance::NPQ::ParticipantEligibleAndPayableAggregator
+        end
       end
     end
   end
