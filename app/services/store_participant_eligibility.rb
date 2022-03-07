@@ -86,6 +86,14 @@ private
           IneligibleParticipantMailer.ect_exempt_from_induction_email(induction_tutor_email: induction_tutor.email, participant_profile: participant_profile).deliver_later
           IneligibleParticipantMailer.ect_exempt_from_induction_email_to_ect(participant_profile: participant_profile).deliver_later
         end
+
+      when :previous_induction
+        if @previous_status == "eligible"
+          IneligibleParticipantMailer.ect_previous_induction_email_previously_eligible(induction_tutor_email: induction_tutor.email, participant_profile: participant_profile).deliver_later
+        else
+          IneligibleParticipantMailer.ect_previous_induction_email(induction_tutor_email: induction_tutor.email, participant_profile: participant_profile).deliver_later
+        end
+
       else
         if IneligibleParticipantMailer.respond_to? mailer_name
           IneligibleParticipantMailer.send(mailer_name, **{ induction_tutor_email: induction_tutor.email, participant_profile: participant_profile }).deliver_later

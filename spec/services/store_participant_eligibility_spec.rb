@@ -82,6 +82,20 @@ RSpec.describe StoreParticipantEligibility do
               )
           end
 
+          it "sends a specific email when the reason is previous induction and the ect was previously eligible" do
+            create(:ecf_participant_eligibility, :eligible, participant_profile: ect_profile)
+            eligibility_options[:previous_induction] = true
+            expect {
+              service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+            }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_previous_induction_email_previously_eligible)
+              .with(
+                args: [{
+                  induction_tutor_email: induction_tutor.email,
+                  participant_profile: ect_profile,
+                }],
+              )
+          end
+
           it "sends the ect_no_qts_email when reason is no_qts" do
             eligibility_options[:qts] = false
             eligibility_options[:status] = :ineligible
