@@ -12,11 +12,15 @@ RSpec.feature "NPQ view contract" do
     and_choose_to_see_npq_payment_breakdown
     and_i_select_an_npq_lead_provider
     and_i_click_on_view_contract
-
     then_i_see_contract_information_for_each_course
   end
 
   def and_there_is_an_npq_lead_provider_with_contracts
+    @npq_leading_teaching = create(:npq_course, identifier: "npq-leading-teaching")
+    @npq_leading_behaviour_culture = create(:npq_course, identifier: "npq-leading-behaviour-culture")
+    @npq_schedule = create(:npq_leadership_schedule)
+    @npq_specialist_schedule = create(:npq_specialist_schedule)
+
     @npq_lt = create(:npq_contract, :npq_leading_teaching)
     @npq_lead_provider = @npq_lt.npq_lead_provider
     @npq_lbc = create(:npq_contract, :npq_leading_behaviour_culture, npq_lead_provider: @npq_lead_provider)

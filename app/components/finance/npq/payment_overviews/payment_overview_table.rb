@@ -12,10 +12,6 @@ module Finance
           @lead_provider = lead_provider
         end
 
-        # def service_fee
-        #   { service_fee: service_fees }
-        # end
-
         def monthly_output_payments
           output_payments[:subtotal]
         end

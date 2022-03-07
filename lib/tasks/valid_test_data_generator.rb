@@ -279,9 +279,9 @@ module ValidTestDataGenerator
       user = User.create!(full_name: name, email: Faker::Internet.email(name: name))
       identity = Identity::Create.call(user: user, origin: :npq)
 
-      december_statement = Finance::Statement::NPQ.find_by(
+      january_statement = Finance::Statement::NPQ.find_by(
         cpd_lead_provider: lead_provider.cpd_lead_provider,
-        name: "December 2021",
+        name: "January 2022",
       )
 
       npq_application = NPQApplication.create!(
@@ -317,7 +317,7 @@ module ValidTestDataGenerator
       return if [true, false].sample
 
       participant_declaration.make_payable!
-      participant_declaration.update!(statement: december_statement)
+      participant_declaration.update!(statement: january_statement)
     end
 
     def accept_application(npq_application)
@@ -326,13 +326,13 @@ module ValidTestDataGenerator
     end
 
     def create_started_declarations(npq_application)
-      RecordDeclarations::Started::NPQ.call(
+      RecordDeclarations::Retained::NPQ.call(
         params: {
           participant_id: npq_application.user.id,
           course_identifier: npq_application.npq_course.identifier,
-          declaration_date: (npq_application.profile.schedule.milestones.first.start_date + 1.day).rfc3339,
+          declaration_date: (npq_application.profile.schedule.milestones.second.start_date + 1.day).rfc3339,
           cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider,
-          declaration_type: "started",
+          declaration_type: "retained-1",
         },
       )
     end
