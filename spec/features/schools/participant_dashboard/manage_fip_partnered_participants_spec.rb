@@ -30,6 +30,7 @@ RSpec.describe "Manage FIP partnered participants with change of circumstances",
       scenario "Induction coordinators can view and manage participant" do
         given_i_am_taken_to_fip_induction_dashboard
         when_i_navigate_to_participants_dashboard
+        click_on "Moving school"
         then_i_can_view_transferring_in_participants
         and_the_start_induction_date_is "Autumn 2021"
 
@@ -44,6 +45,7 @@ RSpec.describe "Manage FIP partnered participants with change of circumstances",
       scenario "Induction coordinators can view and manage participant" do
         given_i_am_taken_to_fip_induction_dashboard
         when_i_navigate_to_participants_dashboard
+        click_on "Moving school"
         then_i_can_view_transferring_out_participants
         and_they_have_an_end_date
 

@@ -4,7 +4,15 @@ class CocSetParticipantCategories < BaseService
   ParticipantCategories = Struct.new(:eligible, :ineligible, :withdrawn, :contacted_for_info, :details_being_checked, :transferring_in, :transferring_out)
 
   def call
-    set_participant_categories
+    ParticipantCategories.new(
+      eligible_participants,
+      ineligible_participants,
+      withdrawn_participants,
+      contacted_for_info_participants,
+      details_being_checked_participants,
+      transferring_in_participants,
+      transferring_out_participants
+    )
   end
 
 private
@@ -17,26 +25,6 @@ private
     @type = type
   end
 
-  def set_participant_categories
-    if school_cohort.core_induction_programme?
-      cip_participant_categories
-    else
-      fip_participant_categories
-    end
-  end
-
-  def fip_participant_categories
-    ParticipantCategories.new(eligible_participants, ineligible_participants, withdrawn_participants, contacted_for_info_participants, details_being_checked_participants, transferring_in_participants, transferring_out_participants)
-  end
-
-  def cip_participant_categories
-    ParticipantCategories.new(cip_eligible_participants, [], withdrawn_participants, contacted_for_info_participants, [], transferring_in_participants, transferring_out_participants)
-  end
-
-  # def active_participant_profiles
-  #   ParticipantProfilePolicy::Scope.new(user, school_cohort.active_ecf_participant_profiles.where(type: type)).resolve
-  # end
-
   def participants
     @participants ||= ParticipantProfile::ECF
       .where(type: type)
@@ -47,13 +35,14 @@ private
   def ineligible_participants
     participants
       .ineligible_status
-      .where(id: active_induction_records.select(:participant_profile_id))
+      .where(id: active_induction_records
+                  .joins(:induction_programme)
+                  .where(induction_programme: { training_programme: :full_induction_programme })
+                  .select(:participant_profile_id))
   end
 
   def eligible_participants
-    participants
-      .eligible_status
-      .where(id: active_induction_records.select(:participant_profile_id))
+    fip_eligible_participants + cip_eligible_participants
   end
 
   def withdrawn_participants
@@ -70,7 +59,10 @@ private
   def details_being_checked_participants
     participants
       .details_being_checked
-      .where(id: active_induction_records.select(:participant_profile_id))
+      .where(id: active_induction_records
+                  .joins(:induction_programme)
+                  .where(induction_programme: { training_programme: :full_induction_programme })
+                  .select(:participant_profile_id))
   end
 
   def transferring_in_participants
@@ -95,6 +87,15 @@ private
     school_cohort.transferring_in_induction_records
   end
 
+  def fip_eligible_participants
+    participants
+      .eligible_status
+      .where(id: active_induction_records
+                  .joins(:induction_programme)
+                  .where(induction_programme: { training_programme: :full_induction_programme })
+                  .select(:participant_profile_id))
+  end
+
   def cip_eligible_participants
     # find all the participants that have attempted to validate in any core_induction_programme
     # for the school_cohort
@@ -104,6 +105,5 @@ private
                   .joins(:induction_programme)
                   .where(induction_programme: { training_programme: :core_induction_programme })
                   .select(:participant_profile_id))
-    # [*eligible_participants, *ineligible_participants, *details_being_checked_participants].uniq
   end
 end
