@@ -7,8 +7,14 @@ class Schools::ParticipantsController < Schools::BaseController
   before_action :set_mentors_added, only: %i[index show]
 
   def index
-    @mentor_categories = SetParticipantCategories.call(@school_cohort, current_user, "ParticipantProfile::Mentor")
-    @ect_categories = SetParticipantCategories.call(@school_cohort, current_user, "ParticipantProfile::ECT")
+    if FeatureFlag.active?(:change_of_circumstances)
+      @mentor_categories = CocSetParticipantCategories.call(@school_cohort, current_user, "ParticipantProfile::Mentor")
+      @ect_categories = CocSetParticipantCategories.call(@school_cohort, current_user, "ParticipantProfile::ECT")
+    else
+      @mentor_categories = SetParticipantCategories.call(@school_cohort, current_user, "ParticipantProfile::Mentor")
+      @ect_categories = SetParticipantCategories.call(@school_cohort, current_user, "ParticipantProfile::ECT")
+    end
+
     @withdrawn = @ect_categories.withdrawn + @mentor_categories.withdrawn
     @ineligible = @ect_categories.ineligible + @mentor_categories.ineligible
     @transferring_in = @ect_categories.transferring_in

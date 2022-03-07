@@ -15,6 +15,7 @@ class ParticipantProfile < ApplicationRecord
   has_many :participant_declarations
 
   has_many :induction_records
+  has_many :current_induction_records, -> { current }, class_name: "InductionRecord"
 
   has_many :participant_profile_states
   has_one :participant_profile_state, lambda {
