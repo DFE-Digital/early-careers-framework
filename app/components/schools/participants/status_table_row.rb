@@ -31,7 +31,7 @@ module Schools
       end
 
       def transferring_in_participant?
-        profile.school_cohort.transferring_out_induction_records.where(participant_profile: profile).any?
+        profile.school_cohort.transferring_in_induction_records.where(participant_profile: profile).any?
       end
 
       def date_column_value

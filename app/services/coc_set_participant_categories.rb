@@ -11,7 +11,7 @@ class CocSetParticipantCategories < BaseService
       contacted_for_info_participants,
       details_being_checked_participants,
       transferring_in_participants,
-      transferring_out_participants
+      transferring_out_participants,
     )
   end
 

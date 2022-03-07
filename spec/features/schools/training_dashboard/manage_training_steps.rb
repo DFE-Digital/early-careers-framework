@@ -25,7 +25,6 @@ module ManageTrainingSteps
     @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
     @delivery_partner = create(:delivery_partner, name: "Amazing Delivery Team")
     create(:partnership, school: @school, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort, challenge_deadline: 2.weeks.ago)
-    @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort)
   end
 
   def given_there_is_a_school_that_has_chosen_cip_for_2021
@@ -193,7 +192,7 @@ module ManageTrainingSteps
   def and_i_have_added_a_transferring_in_participant
     user = create(:user, full_name: "Transferring in participant")
     teacher_profile = create(:teacher_profile, user: user)
-    @transferring_in_participant = create(:ecf_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile: teacher_profile, school_cohort: @school_cohort)
+    @transferring_in_participant = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile: teacher_profile, school_cohort: @school_cohort)
     @induction_record = create(:induction_record, induction_programme: @induction_programme, participant_profile: @transferring_in_participant, status: "active")
     @induction_record.update!(start_date: 2.months.from_now)
   end
