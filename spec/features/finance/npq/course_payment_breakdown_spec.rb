@@ -28,10 +28,16 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   end
 
   def course_breakdown_for(npq_contract)
+    aggregator_class = if statement.participant_declarations.any?
+                         Finance::NPQ::ParticipantAggregator
+                       else
+                         Finance::NPQ::ParticipantEligibleAndPayableAggregator
+                       end
+
     Finance::NPQ::CalculationOrchestrator.new(
       statement: statement,
       contract: npq_contract,
-      aggregator: Finance::NPQ::ParticipantEligibleAndPayableAggregator.new(
+      aggregator: aggregator_class.new(
         statement: statement,
         recorder: ParticipantDeclaration::NPQ.where.not(state: %w[voided]),
         course_identifier: npq_contract.course_identifier,
@@ -218,9 +224,23 @@ private
       expect(page).to have_content("Recruitment target")
       expect(page).to have_content(npq_contract.recruitment_target)
       expect(page).to have_content("Current participants")
-      expect(page).to have_content(ParticipantDeclaration::NPQ.neither_paid_nor_voided_lead_provider_and_course(npq_lead_provider.cpd_lead_provider, npq_contract.course_identifier).count)
+      expect(page).to have_content(
+        ParticipantDeclaration::NPQ
+          .where(cpd_lead_provider: npq_lead_provider.cpd_lead_provider)
+          .where(course_identifier: npq_contract.course_identifier)
+          .where(statement: statement)
+          .where(state: "payable")
+          .count,
+      )
       expect(page).to have_content("Total paid")
-      expect(page).to have_content(ParticipantDeclaration::NPQ.submitted_for_lead_provider_and_course(npq_lead_provider.cpd_lead_provider, npq_contract.course_identifier).count)
+      expect(page).to have_content(
+        ParticipantDeclaration::NPQ
+          .where(cpd_lead_provider: npq_lead_provider.cpd_lead_provider)
+          .where(course_identifier: npq_contract.course_identifier)
+          .where(statement: statement)
+          .where(state: "payable")
+          .count,
+      )
       expect(page).to have_content("Total not paid")
       # TODO: to be implemented later
     end
@@ -240,8 +260,8 @@ private
   end
 
   def output_fees_calculator_for(npq_contract)
-    course_breadown = course_breakdown_for(npq_contract).call(event_type: :started)
-    PaymentCalculator::NPQ::OutputPayment.call(contract: npq_contract, total_participants: course_breadown[:output_payments][:participants])
+    course_breakdown = course_breakdown_for(npq_contract).call(event_type: :started)
+    PaymentCalculator::NPQ::OutputPayment.call(contract: npq_contract, total_participants: course_breakdown[:output_payments][:participants])
   end
 
   def then_i_should_see_correct_service_fee_payment_breakdown(npq_contract)
@@ -265,8 +285,8 @@ private
 
   def then_i_should_see_correct_output_payment_breakdown(npq_contract)
     within("main .govuk-grid-column-two-thirds table:nth-of-type(3)") do
-      course_breadown = course_breakdown_for(npq_contract).call(event_type: :started)
-      output_fees_calculator = PaymentCalculator::NPQ::OutputPayment.call(contract: npq_contract, total_participants: course_breadown[:output_payments][:participants])
+      course_breakdown = course_breakdown_for(npq_contract).call(event_type: :started)
+      output_fees_calculator = PaymentCalculator::NPQ::OutputPayment.call(contract: npq_contract, total_participants: course_breakdown[:output_payments][:participants])
       expect(page).to have_css("tr:nth-child(2) td:nth-child(1)", text: "Output fee")
       expect(page).to have_css("tr:nth-child(2) td:nth-child(2)", text: number_to_pounds(output_fees_calculator[:per_participant]))
       expect(page).to have_css("tr:nth-child(2) td:nth-child(3)", text: output_fees_calculator[:participants])
