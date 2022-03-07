@@ -27,13 +27,13 @@ module Finance
 
       def aggregator
         if @statement.past_deadline_date?
-          Finance::NPQ::ParticipantEligibleAndPayableAggregator.new(
+          ParticipantAggregator.new(
             statement: @statement,
             recorder: ParticipantDeclaration::NPQ.where.not(state: %w[voided]),
             course_identifier: params[:id],
           )
         else
-          ParticipantAggregator.new(
+          Finance::NPQ::ParticipantEligibleAndPayableAggregator.new(
             statement: @statement,
             recorder: ParticipantDeclaration::NPQ.where.not(state: %w[voided]),
             course_identifier: params[:id],
