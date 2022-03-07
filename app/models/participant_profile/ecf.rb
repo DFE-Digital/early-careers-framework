@@ -14,7 +14,7 @@ class ParticipantProfile < ApplicationRecord
     has_one :ecf_participant_eligibility, foreign_key: :participant_profile_id
     has_one :ecf_participant_validation_data, foreign_key: :participant_profile_id
 
-    scope :ineligible_status, -> { joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :ineligible }).where.not(ecf_participant_eligibility: { reason: :duplicate_profile }) }
+    scope :ineligible_status, -> { joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :ineligible }).where.not(ecf_participant_eligibility: { reason: [:previous_participation, :duplicate_profile] }) }
     scope :eligible_status, lambda {
       joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :eligible })
         .or(joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :ineligible, reason: %i[previous_participation duplicate_profile] }))
