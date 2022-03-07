@@ -26,6 +26,7 @@ module Finance
 
       def aggregate(aggregation_type:, event_type:)
         scope = recorder.public_send(self.class.aggregation_types[event_type][aggregation_type], cpd_lead_provider, course_identifier)
+        scope = scope.where(statement: nil)
         scope.count
       end
     end
