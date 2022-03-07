@@ -117,7 +117,7 @@ RSpec.describe StoreParticipantEligibility do
           it "sends emails to the ect and sit when the reason is exempt_from_induction" do
             eligibility_options[:exempt_from_induction] = true
             eligibility_options[:status] = :ineligible
-            eligibility_options[:reason] = :active_flags
+            eligibility_options[:reason] = :exempt_from_induction
 
             expect {
               service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
@@ -128,6 +128,29 @@ RSpec.describe StoreParticipantEligibility do
                   participant_profile: ect_profile,
                 }],
               ).and have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email_to_ect)
+                  .with(
+                    args: [{
+                      participant_profile: ect_profile,
+                    }],
+                  )
+          end
+
+          it "sends specific emails to the ect and sit when the reason is exempt_from_induction and they have declarations" do
+            create(:ecf_participant_eligibility, :eligible, participant_profile: ect_profile)
+            create(:ect_participant_declaration, user: ect_profile.user, participant_profile: ect_profile)
+            eligibility_options[:exempt_from_induction] = true
+            eligibility_options[:status] = :ineligible
+            eligibility_options[:reason] = :exempt_from_induction
+
+            expect {
+              service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+            }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email_previously_eligible)
+              .with(
+                args: [{
+                  induction_tutor_email: induction_tutor.email,
+                  participant_profile: ect_profile,
+                }],
+              ).and have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email_to_ect_previously_eligible)
                   .with(
                     args: [{
                       participant_profile: ect_profile,

@@ -77,13 +77,21 @@ private
       mailer_name = "#{participant_profile.participant_type}_#{@participant_eligibility.reason}_email"
       next if mailer_name == "mentor_previous_participation_email" # Do not send emails about ERO mentors
 
-      if IneligibleParticipantMailer.respond_to? mailer_name
-        IneligibleParticipantMailer.send(mailer_name, **{ induction_tutor_email: induction_tutor.email, participant_profile: participant_profile }).deliver_later
-        if @participant_eligibility.reason.to_sym == :exempt_from_induction
+      case @participant_eligibility.reason.to_sym
+      when :exempt_from_induction
+        if participant_profile.participant_declarations.any? && @previous_status == "eligible"
+          IneligibleParticipantMailer.ect_exempt_from_induction_email_previously_eligible(induction_tutor_email: induction_tutor.email, participant_profile: participant_profile).deliver_later
+          IneligibleParticipantMailer.ect_exempt_from_induction_email_to_ect_previously_eligible(participant_profile: participant_profile).deliver_later
+        else
+          IneligibleParticipantMailer.ect_exempt_from_induction_email(induction_tutor_email: induction_tutor.email, participant_profile: participant_profile).deliver_later
           IneligibleParticipantMailer.ect_exempt_from_induction_email_to_ect(participant_profile: participant_profile).deliver_later
         end
       else
-        Sentry.capture_message("Could not send ineligible participant notification [#{mailer_name}] for #{participant_profile.teacher_profile.user.email}")
+        if IneligibleParticipantMailer.respond_to? mailer_name
+          IneligibleParticipantMailer.send(mailer_name, **{ induction_tutor_email: induction_tutor.email, participant_profile: participant_profile }).deliver_later
+        else
+          Sentry.capture_message("Could not send ineligible participant notification [#{mailer_name}] for #{participant_profile.teacher_profile.user.email}")
+        end
       end
     end
   end
