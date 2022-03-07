@@ -175,7 +175,7 @@ RSpec.describe SetParticipantCategories do
           ParticipantProfile::ECF.all.each { |participant_profile| create(:induction_record, induction_programme: induction_programme, participant_profile: participant_profile, status: "active") }
 
           transferring_in_participant.induction_records.first.update!(start_date: 2.weeks.from_now)
-          transferring_out_participant.induction_records.first.update!(end_date: 6.weeks.from_now, induction_status: "transferred")
+          transferring_out_participant.induction_records.first.leaving!(6.weeks.from_now)
 
           @ect_categories = service.call(school_cohort, induction_coordinator.user, "ParticipantProfile::ECT")
           @mentor_categories = service.call(school_cohort, induction_coordinator.user, "ParticipantProfile::Mentor")

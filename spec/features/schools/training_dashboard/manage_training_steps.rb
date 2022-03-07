@@ -199,7 +199,7 @@ module ManageTrainingSteps
 
   def and_i_have_a_transferring_out_participant
     and_i_have_added_an_eligible_ect
-    @induction_record.update!(induction_status: "transferred", end_date: 2.months.from_now)
+    @induction_record.leaving!(2.months.from_now)
   end
 
   def then_i_am_taken_to_add_mentor_page

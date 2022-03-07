@@ -22,7 +22,7 @@ class InductionRecord < ApplicationRecord
     active: "active",
     withdrawn: "withdrawn",
     changed: "changed",
-    transferred: "transferred",
+    leaving: "leaving",
     completed: "completed",
   }, _suffix: true
 
@@ -35,7 +35,7 @@ class InductionRecord < ApplicationRecord
   scope :active, -> { active_induction_status.where("start_date < ?", Time.zone.now) }
   scope :current, -> { active.or(transferring_out) }
   scope :transferring_in, -> { active_induction_status.where("start_date > ?", Time.zone.now) }
-  scope :transferring_out, -> { transferred_induction_status.where("end_date > ?", Time.zone.now) }
+  scope :transferring_out, -> { leaving_induction_status.where("end_date > ?", Time.zone.now) }
 
   def changing!(date_of_change = Time.zone.now)
     update!(induction_status: :changed, end_date: date_of_change)
@@ -45,8 +45,8 @@ class InductionRecord < ApplicationRecord
     update!(induction_status: :withdrawn, end_date: date_of_change)
   end
 
-  def transferring!(date_of_change = Time.zone.now)
-    update!(induction_status: :transferred, end_date: date_of_change)
+  def leaving!(date_of_change = Time.zone.now)
+    update!(induction_status: :leaving, end_date: date_of_change)
   end
 
   def transferring_in?
@@ -54,6 +54,6 @@ class InductionRecord < ApplicationRecord
   end
 
   def transferring_out?
-    transferred_induction_status? && end_date.present? && end_date > Time.zone.now
+    leaving_induction_status? && end_date.present? && end_date > Time.zone.now
   end
 end
