@@ -12,10 +12,6 @@ module Finance
           @lead_provider = lead_provider
         end
 
-        def monthly_output_payments
-          output_payments[:subtotal]
-        end
-
       private
 
         attr_accessor :statement, :contract, :lead_provider
