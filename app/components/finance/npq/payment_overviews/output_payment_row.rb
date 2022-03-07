@@ -6,11 +6,12 @@ module Finance
       class OutputPaymentRow < BaseComponent
         include FinanceHelper
 
-        attr_accessor :output_payment, :contract
+        attr_accessor :output_payment, :contract, :statement
 
-        def initialize(output_payment, contract)
+        def initialize(output_payment, contract, statement)
           @output_payment = output_payment
           @contract = contract
+          @statement = statement
         end
 
         def total
@@ -21,8 +22,12 @@ module Finance
           output_payment[:per_participant]
         end
 
-        def trainees
-          contract.recruitment_target
+        def current_trainees
+          statement
+            .participant_declarations
+            .for_course_identifier(contract.course_identifier)
+            .unique_paid_payable_or_eligible
+            .count
         end
       end
     end
