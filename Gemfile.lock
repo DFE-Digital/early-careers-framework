@@ -623,7 +623,6 @@ DEPENDENCIES
   json-schema (>= 2.8.1)
   jsonapi-rspec
   jsonapi-serializer
-  jwt
   kaminari (>= 1.2.0)
   launchy
   listen (>= 3.0.5, < 3.8)

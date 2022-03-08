@@ -109,8 +109,6 @@ gem "activerecord-session_store", ">= 2.0.0"
 
 gem "google-cloud-bigquery"
 
-gem "jwt"
-
 gem "sidekiq"
 gem "sidekiq-cron"
 
