@@ -65,11 +65,11 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_sp
     let(:profile)     { npq_application.profile }
     let(:new_schedule) do
       if Finance::Schedule::NPQLeadership::IDENTIFIERS.include?(profile.npq_course.identifier)
-        create(:npq_leadership_schedule, schedule_identifier: SecureRandom.alphanumeric)
+        create(:npq_leadership_schedule)
       elsif Finance::Schedule::NPQSpecialist::IDENTIFIERS.include?(profile.npq_course.identifier)
-        create(:npq_specialist_schedule, schedule_identifier: SecureRandom.alphanumeric)
+        create(:npq_specialist_schedule)
       else
-        create(:npq_aso_schedule, schedule_identifier: SecureRandom.alphanumeric)
+        create(:npq_aso_schedule)
       end
     end
 
