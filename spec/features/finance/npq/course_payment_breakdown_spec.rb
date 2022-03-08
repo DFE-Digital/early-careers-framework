@@ -199,7 +199,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   end
 
   def current_trainees
-    statement.participant_declarations.for_course_identifier(npq_leading_behaviour_culture_contract.course_identifier).unique_paid_payable_or_eligible.count
+    statement.participant_declarations.for_course_identifier(npq_leading_behaviour_culture_contract.course_identifier).paid_payable_or_eligible.unique_id.count
   end
 
   def total
@@ -211,7 +211,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   end
 
   def output_payments
-    PaymentCalculator::NPQ::OutputPayment.call(contract: npq_leading_behaviour_culture_contract, total_participants: statement.participant_declarations.unique_paid_payable_or_eligible.count)
+    PaymentCalculator::NPQ::OutputPayment.call(contract: npq_leading_behaviour_culture_contract, total_participants: statement.participant_declarations.paid_payable_or_eligible.unique_id.count)
   end
 
   def service_fees

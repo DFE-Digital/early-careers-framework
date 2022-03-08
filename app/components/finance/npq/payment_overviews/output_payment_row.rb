@@ -26,7 +26,8 @@ module Finance
           statement
             .participant_declarations
             .for_course_identifier(contract.course_identifier)
-            .unique_paid_payable_or_eligible
+            .paid_payable_or_eligible
+            .unique_id
             .count
         end
       end

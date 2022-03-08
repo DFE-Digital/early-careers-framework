@@ -23,7 +23,7 @@ module Finance
         def output_payments
           @output_payments ||= PaymentCalculator::NPQ::OutputPayment.call(
             contract: contract,
-            total_participants: statement.participant_declarations.unique_paid_payable_or_eligible.count,
+            total_participants: statement.participant_declarations.paid_payable_or_eligible.unique_id.count,
           )
         end
       end
