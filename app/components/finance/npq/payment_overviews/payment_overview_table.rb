@@ -23,8 +23,16 @@ module Finance
         def output_payments
           @output_payments ||= PaymentCalculator::NPQ::OutputPayment.call(
             contract: contract,
-            total_participants: statement.participant_declarations.paid_payable_or_eligible.unique_id.count,
+            total_participants: statement_declarations,
           )
+        end
+
+        def statement_declarations
+          if statement.current?
+            statement.participant_declarations.paid_payable_or_eligible.unique_id.count
+          else
+            statement.participant_declarations.where.not(state: "voided").unique_id.count
+          end
         end
       end
     end
