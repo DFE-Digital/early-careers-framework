@@ -6,6 +6,8 @@ class ECFParticipantEligibility < ApplicationRecord
   belongs_to :participant_profile, class_name: "ParticipantProfile::ECF", touch: true
   before_validation :determine_status, on: :create
 
+  scope :updated_after, ->(timestamp) { where(updated_at: ..timestamp) }
+
   enum status: {
     eligible: "eligible",
     matched: "matched",
