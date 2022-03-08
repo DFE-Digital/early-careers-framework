@@ -29,7 +29,6 @@ properties:
   cohort:
     description: "The start year of the cohort the the participant is enrolled in. Defaults to 2021 if not specified"
     type: string
-    required: false
     default: "2021"
     example: "2021"
 required:
