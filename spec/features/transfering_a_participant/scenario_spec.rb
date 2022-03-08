@@ -12,89 +12,93 @@ RSpec.feature "Transfer a participant", type: :feature do
   let(:lead_providers)  { {} }
   let(:tokens) { {} }
   let(:sits) { {} }
-  let(:participants) { {} }
 
-  let(:original_lead_provider) { "Original Lead Provider" }
-  let(:new_lead_provider) { "New Lead Provider" }
-  let(:another_lead_provider) { "Another Lead Provider" }
-
-  let(:original_sit) { "Original SIT" }
-  let(:new_sit) { "New SIT" }
-
-  subject(:participant) { "the ECT" }
+  before do
+    create(:ecf_schedule)
+  end
 
   filepath = File.join(File.dirname(__FILE__), "./scenarios.csv")
   CSV.parse(File.read(filepath), headers: true).each_with_index do |data, index|
     scenario = Scenario.new index + 2, data
 
-    context "#{scenario.number}. Given a #{scenario.participant_type} is to transfer off a #{scenario.original_programme} onto a #{scenario.new_programme}#{scenario.transfer == :different_provider ? ' using a different provider' : ' using the same provider'}" do
+    context "#{scenario.number}. Given a #{scenario.participant_type} is to transfer off a #{scenario.original_programme} onto a #{scenario.new_programme}#{' using a different provider' if scenario.transfer == :different_provider}#{' using the same provider' if scenario.transfer == :same_provider}" do
       before do
-        given_lead_providers_contracted_to_deliver_ecf original_lead_provider, new_lead_provider, another_lead_provider
+        given_lead_providers_contracted_to_deliver_ecf "Original Lead Provider",
+                                                       "New Lead Provider",
+                                                       "Another Lead Provider"
 
-        and_sit_reported_programme original_sit, scenario.original_programme
+        and_sit_reported_programme "Original SIT", scenario.original_programme
         if scenario.original_programme == "FIP"
-          and_lead_provider_reported_partnership original_lead_provider, original_sit
+          and_lead_provider_reported_partnership "Original Lead Provider", "Original SIT"
         end
 
-        and_sit_reported_programme new_sit, scenario.new_programme
+        and_sit_reported_programme "New SIT", scenario.new_programme
         if scenario.new_programme == "FIP"
           case scenario.transfer
           when :same_provider
-            and_lead_provider_reported_partnership original_lead_provider, new_sit
-          when :different_provider
-            and_lead_provider_reported_partnership new_lead_provider, new_sit
+            and_lead_provider_reported_partnership "Original Lead Provider", "New SIT"
           else
-            and_lead_provider_reported_partnership new_lead_provider, new_sit
+            and_lead_provider_reported_partnership "New Lead Provider", "New SIT"
           end
         end
 
-        and_sit_reported_ect_participant original_sit, participant, scenario.participant_type
+        and_sit_reported_participant "Original SIT", "the Participant", scenario.participant_type
+        and_participant_has_completed_registration "the Participant"
+
+        expect(sits["Original SIT"]).to be_able_to_find_the_status_of_the_participant_in_the_school_induction_portal "the Participant", scenario.starting_school_status
       end
 
       context "When they are transferred by the new SIT#{' after declarations have been made' if scenario.prior_declarations.any?}#{' and new declarations are then made' if scenario.new_declarations.any?}" do
         before do
           scenario.prior_declarations.each do |declaration_type|
-            and_lead_provider_declared_training_started original_lead_provider, participant, declaration_type
+            and_lead_provider_declared_training_started "Original Lead Provider", "the Participant", declaration_type
           end
 
-          when_sit_takes_on_the_participant new_sit, participant
+          expect(sits["Original SIT"]).to be_able_to_find_the_status_of_the_participant_in_the_school_induction_portal "the Participant", scenario.prior_school_status
+
+          when_sit_takes_on_the_participant "New SIT", "the Participant"
 
           scenario.new_declarations.each do |declaration_type|
-            declaring_lead_provider = scenario.transfer == :same_provider ? original_lead_provider : new_lead_provider
-            and_lead_provider_declared_training_started declaring_lead_provider, participant, declaration_type
+            declaring_lead_provider = scenario.transfer == :same_provider ? "Original Lead Provider" : "New Lead Provider"
+            and_lead_provider_declared_training_started declaring_lead_provider, "the Participant", declaration_type
           end
         end
 
-        context "Then in the Schools Portal the ECT" do
-          it { should_not be_seen_by_sit original_sit }
-          # it { should have_the_status_reported_to_sit original_sit, scenario.prior_school_status
-          # it { should have_the_training_status_reported_to_sit original_sit, scenario.prior_training_status
+        context "Then the Original SIT" do
+          subject(:original_sit) { sits["Original SIT"] }
 
-          it { should be_seen_by_sit new_sit }
-          # it { should have_the_status_reported_to_sit new_sit, scenario.prior_school_status
-          # it { should have_the_training_status_reported_to_sit new_sit, scenario.prior_training_status
-
-          # what are the onward actions available to new school - what are they ??
+          it { should_not be_able_to_find_the_details_of_the_participant_in_the_school_induction_portal "the Participant" }
         end
 
-        context "Then in the Original Lead Provider API the ECT" do
+        context "Then the New SIT" do
+          subject(:new_sit) { sits["New SIT"] }
+
+          it { should be_able_to_find_the_details_of_the_participant_in_the_school_induction_portal "the Participant" }
+          it { should be_able_to_find_the_status_of_the_participant_in_the_school_induction_portal "the Participant", scenario.new_school_status }
+
+          # what are the onward actions available to the new school - can they do them ??
+        end
+
+        context "Then the Original Lead Provider" do
+          subject(:original_lead_provider) { "Original Lead Provider" }
+
           case scenario.see_original_details
           when :ALL
-            it { should have_their_details_made_available_to original_lead_provider }
+            it { should be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant" }
           when :OBFUSCATED
-            it "is expected to have their details obfuscated from Original Lead Provider",
+            it "is expected to be able to retrieve the obfuscated details of the participant from the ecf participants endpoint",
                skip: "Not yet implemented" do
-              # should_not have_their_details_obfuscated_from original_lead_provider
+              # should be_able_to_retrieve_the_obfuscated_details_of_the_participant_from_the_ecf_participants_endpoint "Original Lead Provider"
             end
           else
-            it { should_not have_their_details_made_available_to original_lead_provider }
+            it { should_not be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant" }
           end
 
           case scenario.see_original_declarations
           when :PRIOR_ONLY
-            it { should have_their_declarations_made_available_to original_lead_provider, scenario.prior_declarations }
+            it { should be_able_to_retrieve_the_training_declarations_for_the_participant_from_the_ecf_declarations_endpoint "the Participant", scenario.prior_declarations }
           when :ALL
-            it { should have_their_declarations_made_available_to original_lead_provider, scenario.prior_declarations + scenario.new_declarations }
+            it { should be_able_to_retrieve_the_training_declarations_for_the_participant_from_the_ecf_declarations_endpoint "the Participant", scenario.prior_declarations + scenario.new_declarations }
           end
 
           # what status should be seen by original LP
@@ -103,10 +107,12 @@ RSpec.feature "Transfer a participant", type: :feature do
           # previous lead provider can void ??
         end
 
-        context "Then in the New Lead Provider API the ECT" do
+        context "Then the New Lead Provider" do
+          subject(:new_lead_provider) { "New Lead Provider" }
+
           case scenario.see_new_details
           when :ALL
-            it { should have_their_details_made_available_to new_lead_provider }
+            it { should be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant" }
           end
 
           case scenario.see_new_declarations
@@ -114,10 +120,10 @@ RSpec.feature "Transfer a participant", type: :feature do
             if scenario.new_declarations.empty?
               it "is expected to have their declarations made available",
                  skip: "Not implemented yet" do
-                should have_their_declarations_made_available_to new_lead_provider, scenario.prior_declarations
+                should be_able_to_retrieve_the_training_declarations_for_the_participant_from_the_ecf_declarations_endpoint "the Participant", scenario.prior_declarations
               end
             else
-              it { should have_their_declarations_made_available_to new_lead_provider, scenario.prior_declarations + scenario.new_declarations }
+              it { should be_able_to_retrieve_the_training_declarations_for_the_participant_from_the_ecf_declarations_endpoint "the Participant", scenario.prior_declarations + scenario.new_declarations }
             end
           end
 
@@ -125,13 +131,17 @@ RSpec.feature "Transfer a participant", type: :feature do
           # what training_status should be seen by new LP
         end
 
-        context "Then in other Lead Providers APIs the ECT" do
-          it { should_not have_their_details_made_available_to another_lead_provider }
-          it { should_not have_their_declarations_made_available_to another_lead_provider }
+        context "Then other Lead Providers" do
+          subject(:another_lead_provider) { "Another Lead Provider" }
+
+          it { should_not be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant" }
+          it { should_not be_able_to_retrieve_the_training_declarations_for_the_participant_from_the_ecf_declarations_endpoint "the Participant", [] }
         end
 
-        context "Then in the Support for ECTs API the ECT" do
-          it { should be_reported_to_support_for_ect_as scenario.new_programme, scenario.participant_type }
+        context "Then the Support for Early Career Teachers Service" do
+          subject(:support_ects) { "Support for Early Career Teachers Service" }
+
+          it { should be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_users_endpoint "the Participant", scenario.new_programme, scenario.participant_type }
         end
 
         # what can admins see ??

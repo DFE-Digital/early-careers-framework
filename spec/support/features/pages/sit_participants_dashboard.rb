@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Pages
-  class ParticipantsDashboard
+  class SITParticipantsDashboard
     include Capybara::DSL
 
     def has_expected_content?
@@ -11,16 +11,10 @@ module Pages
         has_text?("Add yourself as a mentor")
     end
 
-    def can_view_participants?(*participants)
-      pass = true
+    def view_participant(participant_name)
+      click_on participant_name
 
-      participants.each do |participant|
-        unless has_text?(participant.user.full_name.to_s)
-          pass = false
-        end
-      end
-
-      pass
+      Pages::SITParticipantDetails.new
     end
   end
 end

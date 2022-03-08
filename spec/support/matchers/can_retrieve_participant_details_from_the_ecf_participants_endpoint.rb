@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 
 module Support
-  module HaveParticipantDetailsMadeAvailableToLeadProvider
+  module CanRetrieveParticipantDetailsFromTheEcfParticipantsEndpoint
     extend RSpec::Matchers::DSL
 
-    RSpec::Matchers.define :have_their_details_made_available_to do |lead_provider_name|
-      match do |participant_name|
+    RSpec::Matchers.define :be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint do |participant_name|
+      match do |lead_provider_name|
         @error = nil
         @expected = nil
         @value = nil
 
-        participant = participants[participant_name]
+        user = User.find_by(full_name: participant_name)
+        throw "Could not find User for #{participant_name}" if user.nil?
+        participant = user.participant_profiles.first
 
         declarations_endpoint = APIs::ECFParticipantsEndpoint.new(tokens[lead_provider_name])
         unless declarations_endpoint.can_access_participant_details?(participant)
@@ -55,26 +57,26 @@ module Support
         @error.nil?
       end
 
-      failure_message do |_participant_name|
+      failure_message do |lead_provider_name|
         case @error
         when :attributes
-          "Should have received some details in the response"
+          "'#{lead_provider_name}' Should have been able to retrieve the details of '#{participant_name}' from the ecf participants endpoint"
         else
-          "Should have got [#{@expected}] but got [#{@value}] for [#{@error}] when #{lead_provider_name} calls ecf participants endpoint"
+          "'#{lead_provider_name}' Should have been able to retrieve [#{@expected}] but got [#{@value}] for [#{@error}] when #{lead_provider_name} calls the ecf participants endpoint"
         end
       end
 
-      failure_message_when_negated do |_participant_name|
+      failure_message_when_negated do |lead_provider_name|
         case @error
         when :attributes
-          "Should not have received details in the response"
+          "'#{lead_provider_name}' Should not have been able to retrieve the details of '#{participant_name}' from the ecf participants endpoint"
         else
-          "Should not have got [#{@value}] for [#{@error}] when #{lead_provider_name} calls ecf participants endpoint"
+          "'#{lead_provider_name}' Should not have been able to retrieve [#{@value}] for [#{@error}] when #{lead_provider_name} calls the ecf participants endpoint"
         end
       end
 
       description do
-        "have their details made available to #{lead_provider_name}"
+        "be able to retrieve the details of '#{participant_name}' from the ecf participants endpoint"
       end
     end
   end
