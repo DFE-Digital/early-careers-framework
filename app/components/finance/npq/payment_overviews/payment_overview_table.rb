@@ -29,16 +29,16 @@ module Finance
 
         def statement_declarations
           if statement.current?
-            statement
-              .participant_declarations
-              .paid_payable_or_eligible
-              .unique_id
-              .count
-          else
             ParticipantDeclaration::NPQ
               .eligible_for_lead_provider(lead_provider)
               .for_course_identifier(contract.course_identifier)
               .where(statement_id: nil)
+              .count
+          else
+            statement
+              .participant_declarations
+              .paid_payable_or_eligible
+              .unique_id
               .count
           end
         end
