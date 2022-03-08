@@ -227,14 +227,10 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   end
 
   def course_total
-    course_payment + total_vat(npq_lead_provider)
+    course_payment
   end
 
   def course_payment
     service_fee_total + total
-  end
-
-  def total_vat(npq_lead_provider)
-    course_payment * (npq_lead_provider.vat_chargeable ? 0.2 : 0.0)
   end
 end

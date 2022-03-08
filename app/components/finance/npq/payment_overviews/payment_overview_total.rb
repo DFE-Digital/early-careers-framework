@@ -17,15 +17,11 @@ module Finance
         attr_accessor :service_fees, :output_payments, :lead_provider
 
         def course_total
-          course_payment + total_vat(lead_provider)
+          course_payment
         end
 
         def course_payment
           monthly_service_fees + output_payment_subtotal
-        end
-
-        def total_vat(lead_provider)
-          course_payment * (lead_provider.vat_chargeable ? 0.2 : 0.0)
         end
 
         def monthly_service_fees
