@@ -15,7 +15,7 @@ RSpec.describe "API Reference pages", smoke_test: true do
     page_should_exist("/api-reference")
     page_should_exist("/api-reference/ecf-usage")
     page_should_exist("/api-reference/npq-usage")
-    page_should_exist("/api-reference/reference")
+    page_should_exist("/api-reference/reference-v1")
     page_should_exist("/api-reference/release-notes")
     page_should_exist("/api-reference/help")
   end

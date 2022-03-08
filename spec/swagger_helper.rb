@@ -31,8 +31,24 @@ RSpec.configure do |config|
   swagger_v1_template["components"]["schemas"].merge!(additional_component_schemas)
   swagger_v1_template["components"]["schemas"] = swagger_v1_template["components"]["schemas"].sort.to_h
 
+  ###
+
+  swagger_v2_template = YAML.load_file(Rails.root.join("swagger/v2/template.yml"))
+  swagger_v2_template["components"]["schemas"] ||= {}
+  additional_component_schemas = Hash[
+    Dir[Rails.root.join("swagger/v2/component_schemas/*.yml")].map do |path|
+      component_name = File.basename(path, ".yml")
+      [component_name, YAML.load_file(path)]
+    end
+  ]
+  swagger_v2_template["components"]["schemas"].merge!(additional_component_schemas)
+  swagger_v2_template["components"]["schemas"] = swagger_v2_template["components"]["schemas"].sort.to_h
+
+  ###
+
   config.swagger_docs = {
     "v1/api_spec.json" => swagger_v1_template.with_indifferent_access,
+    "v2/api_spec.json" => swagger_v2_template.with_indifferent_access,
   }
 end
 

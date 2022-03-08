@@ -16,7 +16,7 @@ class VoidParticipantDeclaration
 
     declaration.make_voided!
 
-    ParticipantDeclarationSerializer.new(declaration).serializable_hash.to_json
+    Api::V1::ParticipantDeclarationSerializer.new(declaration).serializable_hash.to_json
   end
 
 private

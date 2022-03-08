@@ -1,0 +1,25 @@
+description: "The change schedule request for a participant"
+type: object
+required:
+  - data
+properties:
+  data:
+    type: object
+    description: "The request data"
+    required:
+      - type
+      - attributes
+    properties:
+      type:
+        description: "The data type"
+        type: string
+        example: participant-change-schedule
+      attributes:
+        $ref: "#/components/schemas/ECFParticipantChangeSchedule"
+example:
+  data:
+    type: "participant-change-schedule"
+    attributes:
+      schedule_identifier: "ecf-standard-january"
+      course_identifier: "ecf-mentor"
+      cohort: "2021"

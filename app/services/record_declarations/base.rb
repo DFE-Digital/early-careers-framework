@@ -47,7 +47,7 @@ module RecordDeclarations
         declaration_attempt.update!(participant_declaration: participant_declaration)
       end
 
-      ParticipantDeclarationSerializer.new(participant_declaration).serializable_hash.to_json
+      Api::V1::ParticipantDeclarationSerializer.new(participant_declaration).serializable_hash.to_json
     end
 
   private

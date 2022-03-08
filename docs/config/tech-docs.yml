@@ -29,5 +29,3 @@ prevent_indexing: false
 
 show_contribution_banner: false
 github_repo: DFE-Digital/early-careers-framework
-
-open_api_path: ../swagger/v1/api_spec.json

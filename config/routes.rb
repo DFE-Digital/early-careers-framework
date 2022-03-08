@@ -82,6 +82,39 @@ Rails.application.routes.draw do
         get "/school-rollout", to: "school_rollout#index"
       end
     end
+
+    namespace :v2 do
+      concern :participant_actions, Participants::Routing.new
+      resources :ecf_participants, path: "participants/ecf", only: %i[index] do
+        concerns :participant_actions
+      end
+      resources :participants, only: %i[index], controller: "ecf_participants"
+      resources :participants, only: [] do
+        concerns :participant_actions
+        member { put :resume }
+      end
+      resources :participant_declarations, only: %i[create index show], path: "participant-declarations" do
+        member { put :void }
+      end
+      resources :npq_participants, only: %i[index], path: "participants/npq" do
+        concerns :participant_actions
+      end
+      resources :users, only: %i[index create]
+      resources :ecf_users, only: %i[index create], path: "ecf-users"
+      resources :participant_validation, only: %i[create], path: "participant-validation"
+      resources :npq_applications, only: :index, path: "npq-applications" do
+        member do
+          post :accept
+          post :reject
+        end
+      end
+
+      resources :npq_profiles, only: %i[show create update], path: "npq-profiles"
+
+      namespace :data_studio, path: "data-studio" do
+        get "/school-rollout", to: "school_rollout#index"
+      end
+    end
   end
 
   scope :nominations, module: :nominations do
