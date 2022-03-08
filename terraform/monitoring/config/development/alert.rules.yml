@@ -16,7 +16,7 @@ groups:
   - name: CPU-usage
     rules:
       - alert: AppCPUHigh
-        expr: avg by ( app ) (cpu{app="ecf-dev"}) > 60
+        expr: avg by ( app ) (cpu{app="ecf-dev"}) > 90
         for: 5m
         annotations:
           summary: App CPU usage high

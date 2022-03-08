@@ -16,7 +16,7 @@ groups:
   - name: CPU-usage
     rules:
       - alert: AppCPUHigh
-        expr: avg by ( app ) (cpu{app="ecf-production"}) > 60
+        expr: avg by ( app ) (cpu{app="ecf-production"}) > 90
         for: 5m
         annotations:
           summary: App CPU usage high
@@ -25,7 +25,7 @@ groups:
           environment: production
           severity: high
       - alert: WorkerCPUHigh
-        expr: avg by ( app ) (cpu{app=~"ecf-production-.*worker"}) > 75
+        expr: avg by ( app ) (cpu{app=~"ecf-production-.*worker"}) > 90
         for: 10m
         annotations:
           summary: Worker CPU usage high
