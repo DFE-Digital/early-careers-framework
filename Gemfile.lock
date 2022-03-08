@@ -135,7 +135,6 @@ GEM
     crass (1.0.6)
     cypress-on-rails (1.12.1)
       rack
-    daemons (1.4.1)
     database_cleaner-active_record (2.0.1)
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
@@ -608,7 +607,6 @@ DEPENDENCIES
   canonical-rails (>= 0.2.13)
   capybara (>= 3.35.3)
   cypress-on-rails (~> 1.12)
-  daemons
   database_cleaner-active_record
   devise (>= 4.8.0)
   discard (~> 1.2, >= 1.2.0)
