@@ -57,6 +57,21 @@ RSpec.describe StoreParticipantEligibility do
       end
     end
 
+    context "when manual check status is determined" do
+      it "sends the ect_no_induction_email when reason is no_induction" do
+        eligibility_options[:no_induction] = true
+        expect {
+          service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+        }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_no_induction_email)
+          .with(
+            args: [{
+              induction_tutor_email: induction_tutor.email,
+              participant_profile: ect_profile,
+            }],
+          )
+      end
+    end
+
     context "when ineligible status is determined" do
       context "without eligibility_notifications feature enabled" do
         it "does not send email notifications" do

@@ -18,6 +18,10 @@ class StoreParticipantEligibility < BaseService
       send_ineligible_notification_email
     end
 
+    if changed_to_manual_check? && doing_fip?
+      send_manual_check_notification_email
+    end
+
     @participant_eligibility
   end
 
@@ -45,6 +49,10 @@ private
 
   def changed_to_eligible?
     @participant_eligibility.eligible_status? && @previous_status != "eligible"
+  end
+
+  def changed_to_manual_check?
+    @participant_eligibility.manual_check_status? && @previous_status != "ineligible"
   end
 
   def changed_from_ineligible?
@@ -81,9 +89,11 @@ private
       when :exempt_from_induction
         if participant_profile.participant_declarations.any? && @previous_status == "eligible"
           IneligibleParticipantMailer.ect_exempt_from_induction_email_previously_eligible(induction_tutor_email: induction_tutor.email, participant_profile: participant_profile).deliver_later
+          # TODO: send this only once
           IneligibleParticipantMailer.ect_exempt_from_induction_email_to_ect_previously_eligible(participant_profile: participant_profile).deliver_later
         else
           IneligibleParticipantMailer.ect_exempt_from_induction_email(induction_tutor_email: induction_tutor.email, participant_profile: participant_profile).deliver_later
+          # TODO: send this only once
           IneligibleParticipantMailer.ect_exempt_from_induction_email_to_ect(participant_profile: participant_profile).deliver_later
         end
 
@@ -100,6 +110,14 @@ private
         else
           Sentry.capture_message("Could not send ineligible participant notification [#{mailer_name}] for #{participant_profile.teacher_profile.user.email}")
         end
+      end
+    end
+  end
+
+  def send_manual_check_notification_email
+    if @participant_eligibility.reason.to_sym == :no_induction
+      participant_profile.school_cohort.school.induction_coordinators.each do |induction_tutor|
+        IneligibleParticipantMailer.ect_no_induction_email(induction_tutor_email: induction_tutor.email, participant_profile: participant_profile).deliver_later
       end
     end
   end

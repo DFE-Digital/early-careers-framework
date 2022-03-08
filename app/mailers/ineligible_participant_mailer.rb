@@ -7,6 +7,7 @@ class IneligibleParticipantMailer < ApplicationMailer
   ECT_EXEMPT_FROM_INDUCTION_TO_ECT_TEMPLATE = "529c7228-fadf-492b-a616-5cc0b3231eba"
   ECT_EXCEMPT_FROM_INDUCTION_PREVIOUSLY_ELIGIBLE_TEMPLATE = "ec674fb7-21f3-4f92-b6ac-e21fe9902d62"
   ECT_EXEMPT_FROM_INDUCTION_TO_ECT_PREVIOUSLY_ELIGIBLE_TEMPLATE = "f74463f8-6d44-4af7-a397-9d472bd80601"
+  ECT_NO_INDUCTION_TEMPLATE = "fa64f5de-a637-4f92-bf28-f43a223eba59"
 
   ACTIVE_FLAGS_TEMPLATES = {
     ect: "dcab5e33-c7c3-4d5a-84b6-458ae7640061",
@@ -159,6 +160,20 @@ class IneligibleParticipantMailer < ApplicationMailer
       personalisation: {
         fip_ect_name: participant_profile.user.full_name,
         sign_in: new_user_session_url,
+      },
+    ).tag(:now_eligible_previous_induction).associate_with(participant_profile, as: :participant_profile)
+  end
+
+  def ect_no_induction_email(induction_tutor_email:, participant_profile:)
+    sit = User.find_by_email(induction_tutor_email)
+    template_mail(
+      ECT_NO_INDUCTION_TEMPLATE,
+      to: induction_tutor_email,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        FIP_ECT_name: participant_profile.user.full_name,
+        sit_name: sit.name,
       },
     ).tag(:now_eligible_previous_induction).associate_with(participant_profile, as: :participant_profile)
   end
