@@ -23,6 +23,7 @@ module Finance
             ParticipantDeclaration::NPQ
               .for_lead_provider(npq_lead_provider)
               .where(statement_id: nil)
+              .for_course_identifier(contract.course_identifier)
               .where.not(state: "submitted")
               .unique_id
               .count
