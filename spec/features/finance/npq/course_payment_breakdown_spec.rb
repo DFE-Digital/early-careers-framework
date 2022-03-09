@@ -211,7 +211,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   end
 
   def output_payments
-    PaymentCalculator::NPQ::OutputPayment.call(contract: npq_leading_behaviour_culture_contract, total_participants: statement.participant_declarations.paid_payable_or_eligible.unique_id.count)
+    PaymentCalculator::NPQ::OutputPayment.call(contract: npq_leading_behaviour_culture_contract, total_participants: statement.participant_declarations.where(course_identifier: npq_leading_behaviour_culture_contract.course_identifier).paid_payable_or_eligible.unique_id.count)
   end
 
   def service_fees
