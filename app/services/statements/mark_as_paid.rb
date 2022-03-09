@@ -5,25 +5,17 @@ module Statements
     end
 
     def call
-      statement.
+      Finance::Statement.transaction do
+        statement
+          .participant_declarations
+          .payable
+          .each(&:make_paid!)
+        statement.update!(type: "Finance::Statement::NPQ::Payable")
+      end
     end
 
-    private
+  private
 
-    def orchestrator
-    Finance::NPQ::CalculationOrchestrator.new(
-      aggregator: aggregator,
-      contract: cpd_lead_provider.lead_provider.call_off_contract,
-      statement: self,
-    )
-  end
-
-  def aggregator
-    Finance::NPQ::ParticipantAggregator.new(
-      statement: self,
-      recorder: ParticipantDeclaration::NPQ.where.not(state: %w[voided]),
-    )
-  end
-
+    attr_accessor :statement
   end
 end
