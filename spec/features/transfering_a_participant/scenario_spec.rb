@@ -47,7 +47,7 @@ RSpec.feature "Transfer a participant", type: :feature do
         and_sit_reported_participant "Original SIT", "the Participant", scenario.participant_type
         and_participant_has_completed_registration "the Participant"
 
-        it { expect(sits["Original SIT"]).to be_able_to_find_the_status_of_the_participant_in_the_school_induction_portal "the Participant", scenario.starting_school_status }
+        expect(sits["Original SIT"]).to be_able_to_find_the_status_of_the_participant_in_the_school_induction_portal "the Participant", scenario.starting_school_status
       end
 
       context "When they are transferred by the new SIT#{' after declarations have been made' if scenario.prior_declarations.any?}#{' and new declarations are then made' if scenario.new_declarations.any?}#{' before any declarations are made' if (scenario.new_declarations + scenario.prior_declarations).empty?}" do
@@ -88,7 +88,7 @@ RSpec.feature "Transfer a participant", type: :feature do
           when :ALL
             it { should be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.participant_type }
             it { should be_able_to_retrieve_the_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_participant_status }
-            # it { should be_able_to_retrieve_the_training_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_training_status }
+            it { should be_able_to_retrieve_the_training_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_training_status }
           when :OBFUSCATED
             it "is expected to be able to retrieve the obfuscated details of the participant from the ecf participants endpoint",
                skip: "Not yet implemented" do
@@ -123,7 +123,7 @@ RSpec.feature "Transfer a participant", type: :feature do
           when :ALL
             it { should be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.participant_type }
             it { should be_able_to_retrieve_the_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.new_participant_status }
-            # it { should be_able_to_retrieve_the_training_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.new_training_status }
+            it { should be_able_to_retrieve_the_training_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.new_training_status }
           end
 
           case scenario.see_new_declarations
