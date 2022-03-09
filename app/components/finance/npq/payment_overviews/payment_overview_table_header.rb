@@ -16,19 +16,37 @@ module Finance
         end
 
         def current_trainees
-          statement
-            .participant_declarations
-            .for_course_identifier(contract.course_identifier)
-            .paid_payable_or_eligible
-            .unique_id
-            .count
+          if statement.current?
+            ParticipantDeclaration::NPQ
+              .eligible_for_lead_provider(lead_provider)
+              .where(statement_id: nil)
+              .count
+          else
+            statement
+              .participant_declarations
+              .for_course_identifier(contract.course_identifier)
+              .paid_payable_or_eligible
+              .unique_id
+              .count
+          end
         end
 
         def total_not_paid
-          statement
-            .participant_declarations
-            .for_course_identifier(contract.course_identifier)
-            .ineligible.unique_id.count
+          if statement.current?
+            ParticipantDeclaration::NPQ
+              .for_lead_provider(lead_provider)
+              .where(statement_id: nil)
+              .ineligible
+              .unique_id
+              .count
+          else
+            statement
+              .participant_declarations
+              .for_course_identifier(contract.course_identifier)
+              .ineligible
+              .unique_id
+              .count
+          end
         end
 
         def total_participants_for(milestone)
