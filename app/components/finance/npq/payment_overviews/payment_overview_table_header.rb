@@ -65,7 +65,7 @@ module Finance
         def participant_per_declaration_type
           @participant_per_declaration_type ||= statement.participant_declarations
             .for_course_identifier(contract.course_identifier)
-            .where.not(state: :voided)
+            .paid_payable_or_eligible
             .group(:declaration_type)
             .count
         end
