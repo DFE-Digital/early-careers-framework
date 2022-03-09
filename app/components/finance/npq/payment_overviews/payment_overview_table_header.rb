@@ -6,9 +6,12 @@ module Finance
       class PaymentOverviewTableHeader < BaseComponent
         delegate :recruitment_target, to: :contract
 
-        def initialize(contract, statement)
+        attr_accessor :contract, :statement, :npq_lead_provider
+
+        def initialize(contract, statement, npq_lead_provider)
           self.contract = contract
           self.statement = statement
+          self.npq_lead_provider = npq_lead_provider
         end
 
         def milestones
@@ -18,7 +21,7 @@ module Finance
         def current_trainees
           if statement.current?
             ParticipantDeclaration::NPQ
-              .eligible_for_lead_provider(lead_provider)
+              .eligible_for_lead_provider(npq_lead_provider)
               .where(statement_id: nil)
               .count
           else
@@ -34,7 +37,7 @@ module Finance
         def total_not_paid
           if statement.current?
             ParticipantDeclaration::NPQ
-              .for_lead_provider(lead_provider)
+              .for_lead_provider(npq_lead_provider)
               .where(statement_id: nil)
               .ineligible
               .unique_id
@@ -54,8 +57,6 @@ module Finance
         end
 
       private
-
-        attr_accessor :contract, :statement
 
         def course
           @course ||= NPQCourse.find_by!(identifier: contract.course_identifier)
