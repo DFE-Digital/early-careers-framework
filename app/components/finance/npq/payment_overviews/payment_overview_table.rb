@@ -6,15 +6,15 @@ module Finance
       class PaymentOverviewTable < BaseComponent
         include FinanceHelper
 
-        def initialize(contract, statement, lead_provider)
+        def initialize(contract, statement, npq_lead_provider)
           @contract = contract
           @statement = statement
-          @lead_provider = lead_provider
+          @npq_lead_provider = npq_lead_provider
         end
 
       private
 
-        attr_accessor :statement, :contract, :lead_provider
+        attr_accessor :statement, :contract, :npq_lead_provider
 
         def service_fees
           @service_fees ||= PaymentCalculator::NPQ::ServiceFees.call(contract: contract)
@@ -30,7 +30,7 @@ module Finance
         def statement_declarations
           if statement.current?
             ParticipantDeclaration::NPQ
-              .eligible_for_lead_provider(lead_provider)
+              .eligible_for_lead_provider(npq_lead_provider)
               .where(statement_id: nil)
               .count
           else
