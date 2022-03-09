@@ -18,7 +18,7 @@ class StreamBigQueryParticipantDeclarationsJob < ApplicationJob
             "cpd_lead_provider_name" => participant_declaration.cpd_lead_provider.name,
           )
         end
-        table.insert(rows) if rows.any?
+        table.insert(rows, ignore_unknown: true) if rows.any?
       end
   end
 end

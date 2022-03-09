@@ -43,7 +43,7 @@ RSpec.describe StreamBigQueryParticipantDeclarationsJob do
         streamable_declaration.attributes.merge(
           "cpd_lead_provider_name" => cpd_lead_provider.name,
         ),
-      ])
+      ], { ignore_unknown: true })
     end
 
     it "doesn't attempt to stream when there are no updates" do
