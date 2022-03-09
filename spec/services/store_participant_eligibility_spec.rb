@@ -144,6 +144,7 @@ RSpec.describe StoreParticipantEligibility do
           end
 
           it "sends emails to the ect and sit when the reason is exempt_from_induction" do
+            additional_induction_coordinator = create(:user, :induction_coordinator, schools: [school])
             eligibility_options[:exempt_from_induction] = true
             eligibility_options[:status] = :ineligible
             eligibility_options[:reason] = :exempt_from_induction
@@ -156,15 +157,22 @@ RSpec.describe StoreParticipantEligibility do
                   induction_tutor_email: induction_tutor.email,
                   participant_profile: ect_profile,
                 }],
-              ).and have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email_to_ect)
+              ).and have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email)
                   .with(
                     args: [{
+                      induction_tutor_email: additional_induction_coordinator.email,
                       participant_profile: ect_profile,
                     }],
-                  )
+                  ).and have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email_to_ect)
+                      .with(
+                        args: [{
+                          participant_profile: ect_profile,
+                        }],
+                      ).once
           end
 
           it "sends specific emails to the ect and sit when the reason is exempt_from_induction and they have declarations" do
+            additional_induction_coordinator = create(:user, :induction_coordinator, schools: [school])
             create(:ecf_participant_eligibility, :eligible, participant_profile: ect_profile)
             create(:ect_participant_declaration, user: ect_profile.user, participant_profile: ect_profile)
             eligibility_options[:exempt_from_induction] = true
@@ -179,12 +187,18 @@ RSpec.describe StoreParticipantEligibility do
                   induction_tutor_email: induction_tutor.email,
                   participant_profile: ect_profile,
                 }],
-              ).and have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email_to_ect_previously_eligible)
+              ).and have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email_previously_eligible)
                   .with(
                     args: [{
+                      induction_tutor_email: additional_induction_coordinator.email,
                       participant_profile: ect_profile,
                     }],
-                  )
+                  ).and have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email_to_ect_previously_eligible)
+                      .with(
+                        args: [{
+                          participant_profile: ect_profile,
+                        }],
+                      ).once
           end
         end
 

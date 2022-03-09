@@ -15,7 +15,7 @@ class StoreParticipantEligibility < BaseService
     end
 
     if (changed_to_ineligible? || changed_ineligible_reason?) && doing_fip? && FeatureFlag.active?(:eligibility_notifications)
-      send_ineligible_notification_email
+      send_ineligible_notification_emails
     end
 
     if changed_to_manual_check? && doing_fip?
@@ -80,38 +80,55 @@ private
     end
   end
 
-  def send_ineligible_notification_email
+  def send_ineligible_notification_emails
     participant_profile.school_cohort.school.induction_coordinators.each do |induction_tutor|
-      mailer_name = "#{participant_profile.participant_type}_#{@participant_eligibility.reason}_email"
-      next if mailer_name == "mentor_previous_participation_email" # Do not send emails about ERO mentors
+      break unless ineligible_notification_email_for_induction_coordinator
 
+      IneligibleParticipantMailer.send(
+        ineligible_notification_email_for_induction_coordinator,
+        **{ induction_tutor_email: induction_tutor.email, participant_profile: participant_profile },
+      ).deliver_later
+    end
+
+    if @participant_eligibility.reason.to_sym == :exempt_from_induction
+      if participant_profile.participant_declarations.any? && @previous_status == "eligible"
+        IneligibleParticipantMailer.ect_exempt_from_induction_email_to_ect_previously_eligible(participant_profile: participant_profile).deliver_later
+      else
+        IneligibleParticipantMailer.ect_exempt_from_induction_email_to_ect(participant_profile: participant_profile).deliver_later
+      end
+    end
+  end
+
+  def ineligible_notification_email_for_induction_coordinator
+    return @ineligible_notification_email_for_induction_coordinator if defined?(@ineligible_notification_email_for_induction_coordinator)
+
+    @email_for_induction_coordinator =
       case @participant_eligibility.reason.to_sym
       when :exempt_from_induction
         if participant_profile.participant_declarations.any? && @previous_status == "eligible"
-          IneligibleParticipantMailer.ect_exempt_from_induction_email_previously_eligible(induction_tutor_email: induction_tutor.email, participant_profile: participant_profile).deliver_later
-          # TODO: send this only once
-          IneligibleParticipantMailer.ect_exempt_from_induction_email_to_ect_previously_eligible(participant_profile: participant_profile).deliver_later
+          :ect_exempt_from_induction_email_previously_eligible
         else
-          IneligibleParticipantMailer.ect_exempt_from_induction_email(induction_tutor_email: induction_tutor.email, participant_profile: participant_profile).deliver_later
-          # TODO: send this only once
-          IneligibleParticipantMailer.ect_exempt_from_induction_email_to_ect(participant_profile: participant_profile).deliver_later
+          :ect_exempt_from_induction_email
         end
 
       when :previous_induction
         if @previous_status == "eligible"
-          IneligibleParticipantMailer.ect_previous_induction_email_previously_eligible(induction_tutor_email: induction_tutor.email, participant_profile: participant_profile).deliver_later
+          :ect_previous_induction_email_previously_eligible
         else
-          IneligibleParticipantMailer.ect_previous_induction_email(induction_tutor_email: induction_tutor.email, participant_profile: participant_profile).deliver_later
+          :ect_previous_induction_email
         end
 
       else
+        mailer_name = "#{participant_profile.participant_type}_#{@participant_eligibility.reason}_email"
+        return nil if mailer_name == "mentor_previous_participation_email" # Do not send emails about ERO mentors
+
         if IneligibleParticipantMailer.respond_to? mailer_name
-          IneligibleParticipantMailer.send(mailer_name, **{ induction_tutor_email: induction_tutor.email, participant_profile: participant_profile }).deliver_later
+          mailer_name
         else
           Sentry.capture_message("Could not send ineligible participant notification [#{mailer_name}] for #{participant_profile.teacher_profile.user.email}")
+          nil
         end
       end
-    end
   end
 
   def send_manual_check_notification_email
