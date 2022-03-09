@@ -6,12 +6,13 @@ module Finance
       class OutputPaymentRow < BaseComponent
         include FinanceHelper
 
-        attr_accessor :output_payment, :contract, :statement
+        attr_accessor :output_payment, :contract, :statement, :npq_lead_provider
 
-        def initialize(output_payment, contract, statement)
+        def initialize(output_payment, contract, statement, npq_lead_provider)
           @output_payment = output_payment
           @contract = contract
           @statement = statement
+          @npq_lead_provider = npq_lead_provider
         end
 
         def total
@@ -25,7 +26,7 @@ module Finance
         def current_trainees
           if statement.current?
             ParticipantDeclaration::NPQ
-              .eligible_for_lead_provider(lead_provider)
+              .eligible_for_lead_provider(npq_lead_provider)
               .for_course_identifier(contract.course_identifier)
               .where(statement_id: nil)
               .count

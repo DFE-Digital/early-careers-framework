@@ -6,15 +6,15 @@ module Finance
       class PaymentOverviewTotal < BaseComponent
         include FinanceHelper
 
-        def initialize(service_fees, output_payments, lead_provider)
+        def initialize(service_fees, output_payments, npq_lead_provider)
           @service_fees = service_fees
           @output_payments = output_payments
-          @lead_provider = lead_provider
+          @npq_lead_provider = npq_lead_provider
         end
 
       private
 
-        attr_accessor :service_fees, :output_payments, :lead_provider
+        attr_accessor :service_fees, :output_payments, :npq_lead_provider
 
         def course_total
           course_payment
