@@ -23,12 +23,20 @@ module Finance
         end
 
         def current_trainees
-          statement
-            .participant_declarations
-            .for_course_identifier(contract.course_identifier)
-            .paid_payable_or_eligible
-            .unique_id
-            .count
+          if statement.current?
+            ParticipantDeclaration::NPQ
+              .eligible_for_lead_provider(lead_provider)
+              .for_course_identifier(contract.course_identifier)
+              .where(statement_id: nil)
+              .count
+          else
+            statement
+              .participant_declarations
+              .for_course_identifier(contract.course_identifier)
+              .paid_payable_or_eligible
+              .unique_id
+              .count
+          end
         end
       end
     end
