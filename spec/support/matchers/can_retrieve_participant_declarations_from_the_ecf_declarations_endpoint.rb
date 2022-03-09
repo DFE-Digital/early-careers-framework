@@ -12,7 +12,9 @@ module Support
         throw "Could not find User for #{participant_name}" if user.nil?
         participant = user.participant_profiles.first
 
-        declarations_endpoint.can_access_participant_declarations?(participant)
+        declarations = declarations_endpoint.get_training_declarations(participant)
+
+        declarations.any?
       end
 
       failure_message do |lead_provider_name|

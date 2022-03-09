@@ -20,12 +20,6 @@ module APIs
       end
     end
 
-    def can_access_participant_details?(participant)
-      record = get_participant participant
-
-      !record.nil?
-    end
-
     def participant_has_status?(participant, status)
       record = get_participant participant
 

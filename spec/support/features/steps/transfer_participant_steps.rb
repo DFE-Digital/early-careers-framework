@@ -80,14 +80,23 @@ module Steps
       sign_out
     end
 
-    def and_lead_provider_declared_training_started(lead_provider_name, participant_name, _declaration_type)
+    def and_lead_provider_has_made_training_declaration(lead_provider_name, participant_name, declaration_type)
       declarations_endpoint = APIs::ParticipantDeclarationsEndpoint.new tokens[lead_provider_name]
 
       user = User.find_by(full_name: participant_name)
       throw "Could not find User for #{participant_name}" if user.nil?
       participant = user.participant_profiles.first
 
-      declarations_endpoint.post_started_declaration participant
+      response = declarations_endpoint.post_training_declaration participant, declaration_type
+
+      unless response["declaration_type"].to_sym == declaration_type &&
+          response["eligible_for_payment"] == true &&
+          response["voided"] == false &&
+          response["state"].to_sym == :eligible
+
+        text = JSON.pretty_generate(response)
+        throw "training declaration made for #{participant_name} by #{lead_provider_name} were not valid\n===\n#{text}\n==="
+      end
     end
 
     def when_sit_takes_on_the_participant(sit_name, participant_name)

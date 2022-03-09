@@ -4,7 +4,7 @@ module Support
   module CanRetrieveParticipantDetailsFromTheEcfParticipantsEndpoint
     extend RSpec::Matchers::DSL
 
-    RSpec::Matchers.define :be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint do |participant_name|
+    RSpec::Matchers.define :be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint do |participant_name, participant_type|
       match do |lead_provider_name|
         @error = nil
         @expected = nil
@@ -15,42 +15,30 @@ module Support
         participant = user.participant_profiles.first
 
         declarations_endpoint = APIs::ECFParticipantsEndpoint.new(tokens[lead_provider_name])
-        unless declarations_endpoint.can_access_participant_details?(participant)
-          attributes = declarations_endpoint.get_participant_details(participant)
+        attributes = declarations_endpoint.get_participant_details(participant)
 
-          if attributes.nil?
-            @error = :attributes
-          else
-            unless attributes["email"] == participant.user.email
-              @error = :email
-              @expected = participant.user.email
-              @value = attributes["email"]
-            end
-            unless attributes["full_name"] == participant.user.full_name
-              @error = :full_name
-              @expected = participant.user.full_name
-              @value = attributes["full_name"]
-            end
-            unless attributes["school_urn"] == participant.school.urn
-              @error = :school_urn
-              @expected = participant.school.urn
-              @value = attributes["school_urn"]
-            end
-            unless attributes["participant_type"] == participant.participant_type.to_s
-              @error = :participant_type
-              @expected = participant.participant_type
-              @value = attributes["participant_type"]
-            end
-            unless attributes["status"] == participant.status
-              @error = :status
-              @expected = participant.status
-              @value = attributes["status"]
-            end
-            unless attributes["training_status"] == participant.training_status
-              @error = :training_status
-              @expected = participant.training_status
-              @value = attributes["training_status"]
-            end
+        if attributes.nil?
+          @error = :attributes
+        else
+          unless attributes["email"] == participant.user.email
+            @error = :email
+            @expected = participant.user.email
+            @value = attributes["email"]
+          end
+          unless attributes["full_name"] == participant_name
+            @error = :full_name
+            @expected = participant_name
+            @value = attributes["full_name"]
+          end
+          unless attributes["school_urn"] == participant.school.urn
+            @error = :school_urn
+            @expected = participant.school.urn
+            @value = attributes["school_urn"]
+          end
+          unless attributes["participant_type"] == participant_type.downcase
+            @error = :participant_type
+            @expected = participant_type
+            @value = attributes["participant_type"]
           end
         end
 

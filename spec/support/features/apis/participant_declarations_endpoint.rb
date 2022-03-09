@@ -10,16 +10,14 @@ module APIs
       @session = ActionDispatch::Integration::Session.new(Rails.application)
     end
 
-    def post_started_declaration(participant)
+    def post_training_declaration(participant, declaration_type)
       post_declaration participant,
-                       "started",
+                       declaration_type.to_s,
                        participant.schedule.milestones.first.start_date + 2.days
     end
 
-    def can_access_participant_declarations?(participant)
-      declarations = get_declarations participant
-
-      !declarations.empty?
+    def get_training_declarations(participant)
+      get_declarations participant
     end
 
   private
@@ -47,7 +45,8 @@ module APIs
                     },
                     params: params)
 
-      JSON.parse(@session.response.body)["data"]
+      data = JSON.parse(@session.response.body)["data"] || {}
+      data["attributes"] || {}
     end
 
     def build_params(attributes)

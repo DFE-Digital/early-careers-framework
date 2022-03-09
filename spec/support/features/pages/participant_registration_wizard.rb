@@ -3,7 +3,7 @@
 module Pages
   class ParticipantRegistrationWizard
     include Capybara::DSL
-    include WebMock
+    include WebMock::API
 
     def complete(participant_name, year, month, day, trn)
       click_on "Continue"
