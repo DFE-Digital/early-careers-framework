@@ -21,14 +21,16 @@ module Finance
         def current_trainees
           if statement.current?
             ParticipantDeclaration::NPQ
-              .eligible_for_lead_provider(npq_lead_provider)
+              .for_lead_provider(npq_lead_provider)
               .where(statement_id: nil)
+              .where.not(state: "submitted")
+              .unique_id
               .count
           else
             statement
               .participant_declarations
               .for_course_identifier(contract.course_identifier)
-              .paid_payable_or_eligible
+              .where.not(state: "submitted")
               .unique_id
               .count
           end
@@ -39,14 +41,14 @@ module Finance
             ParticipantDeclaration::NPQ
               .for_lead_provider(npq_lead_provider)
               .where(statement_id: nil)
-              .ineligible
+              .where(state: %w[ineligible voided])
               .unique_id
               .count
           else
             statement
               .participant_declarations
               .for_course_identifier(contract.course_identifier)
-              .ineligible
+              .where(state: %w[ineligible voided])
               .unique_id
               .count
           end
