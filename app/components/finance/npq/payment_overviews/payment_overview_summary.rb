@@ -55,19 +55,19 @@ module Finance
         end
 
         def total_starts
-          statement_declarations.where(declaration_type: "started").unique_id.count
+          statement_declarations.where(declaration_type: "started").count
         end
 
         def total_voided
-          voided_declarations
+          voided_declarations.count
         end
 
         def total_retained
-          statement_declarations.where(declaration_type: %w[retained-1 retained-2]).unique_id.count
+          statement_declarations.where(declaration_type: %w[retained-1 retained-2]).count
         end
 
         def total_completed
-          statement_declarations.where(declaration_type: "completed").unique_id.count
+          statement_declarations.where(declaration_type: "completed").count
         end
 
         def output_payments
