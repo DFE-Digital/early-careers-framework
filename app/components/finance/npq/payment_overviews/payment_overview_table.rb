@@ -31,7 +31,6 @@ module Finance
           if statement.current?
             ParticipantDeclaration::NPQ
               .eligible_for_lead_provider(lead_provider)
-              .for_course_identifier(contract.course_identifier)
               .where(statement_id: nil)
               .count
           else
