@@ -59,7 +59,7 @@ module Finance
         end
 
         def total_voided
-          statement_declarations.where(declaration_type: "voided").unique_id.count
+          voided_declarations
         end
 
         def total_retained
@@ -87,6 +87,21 @@ module Finance
             statement
               .participant_declarations
               .paid_payable_or_eligible
+              .unique_id
+          end
+        end
+
+        def voided_declarations
+          if statement.current?
+            ParticipantDeclaration::NPQ
+              .for_lead_provider(npq_lead_provider)
+              .where(statement_id: nil)
+              .where(state: "voided")
+              .unique_id
+          else
+            statement
+              .participant_declarations
+              .where(state: "voided")
               .unique_id
           end
         end
