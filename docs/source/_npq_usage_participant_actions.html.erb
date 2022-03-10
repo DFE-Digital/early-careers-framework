@@ -38,4 +38,103 @@
   <code>PUT /api/v1/participants/npq/{id}/resume</code>
 </pre>
 <p class="govuk-body-m">This will return an <a href="/api-reference/reference-v1#schema-npqparticipantresponse" class="govuk-link">NPQ participant record</a> with the updates to the record included.</p>
-<p class="govuk-body-m">See <a href="/api-reference/reference.html#api-v1-participants-id-resume-put" class="govuk-link">resume NPQ participant</a> endpoint.</p>
+<p class="govuk-body-m">See <a href="/api-reference/reference-v1.html#api-v1-participants-id-resume-put" class="govuk-link">resume NPQ participant</a> endpoint.</p>
+
+<h2 id="notifying-of-npq-schedule-change" class="govuk-heading-l">Tell the DfE that a participant is changing training schedule on their NPQ course</h2>
+<p class="govuk-body-m">
+  Submit a change of schedule notification to the following endpoint
+</p>
+<pre>
+  <code>PUT /api/v1/participants/npq/{id}/change-schedule</code>
+</pre>
+<p class="govuk-body-m">
+  This will return an <a href="/api-reference/reference-v1.html#schema-npqparticipant">NPQ participant response</a> with the updates to the record included.
+</p>
+<p class="govuk-body-m">
+  Read change schedule of <a href="/api-reference/reference-v1.html#api-v1-participants-npq-id-change-schedule-put">NPQ participant endpoint</a>.
+</p>
+
+<p class="govuk-body-m">
+  The provider needs to show the DfE evidence of any declarations they submit and why a participant is following a particular schedule.
+</p>
+
+<h3 class="govuk-heading-m">NPQ schedules and dates</h3>
+<p class="govuk-body-m">
+  NPQ participants start their courses at different times throughout the school year. The DfE has developed schedules to account for these different start dates, which are sometimes called ‘cohorts’.
+</p>
+<p class="govuk-body-m">
+  Currently, the DfE expects NPQ participants to start an NPQ course in ‘autumn’ or ‘spring’.
+</p>
+<p class="govuk-body-m">
+  Participants that start their course in November/December 2021 should be on autumn schedules, while participants that start their course in January/February 2022 are on spring schedules.
+</p>
+<p class="govuk-body-m">
+  The DfE automatically assigns an NPQ participant to a schedule when the participant registers. The schedule assigned depends on the date when the participant registers, with the following logic:
+</p>
+<p class="govuk-body-m">
+  <ul>
+    <li>assigned participants who registered and were accepted before  25 December 2021 to an autumn schedule</li>
+    <li>assigned participants who registered and were accepted after 25 December 2021 to a spring schedule</li>
+  </ul>
+</p>
+<h3 class="govuk-heading-m">NPQ cohort attribute</h3>
+<p class="govuk-body-m">
+  The NPQ participant <a href="/api-reference/reference-v1.html#schema-npqparticipantchangescheduleattributes">change schedule attributes</a> includes the attribute ‘cohort’.
+</p>
+<p class="govuk-body-m">
+  The DfE uses the attribute cohort to record the academic year in which a teacher creates an application for an NPQ. Currently the only available cohort is 2021, representing any NPQ application made in the academic year 2021/22. The DfE will expand this in future years.
+</p>
+<h3 class="govuk-heading-m">NPQ schedules and courses</h3>
+<p class="govuk-body-m">
+  NPQ courses (for example. npq-leading-teaching) can vary in their length and the number of milestones they comprise. To account for this, and avoid schedules for each and every NPQ course, the DfE have developed schedule types that cover common courses.
+</p>
+<p class="govuk-body-m">
+  For example, if a participant is starting their NPQ in Specialist Leadership in February 2022, the provider needs to make sure the participant’s schedule is npq-leadership-spring and the cohort is 2021.
+</p>
+<table>
+  <thead>
+    <tr>
+      <th>NPQ Course</th>
+      <th>Available schedules</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>NPQSL<br />NPQH<br />NPQEL</td>
+      <td>npq-leadership-autumn<br />npq-leadership-spring</td>
+    </tr>
+    <tr>
+      <td>NPQLTD<br />NPQLT<br />NPQLBC</td>
+      <td>npq-specialist-autumn<br />npq-specialist-spring</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 class="govuk-heading-m">Additional Support Offer (ASO) schedule</h3>
+<p class="govuk-body-m">
+  The DfE has developed schedules for participants taking up the additional support offer.
+</p>
+<p class="govuk-body-m">
+  The provider should make sure the ASO schedule aligns with when a participant starts their ASO. Unlike NPQs, ASO schedules include calendar months.
+</p>
+<p class="govuk-body-m">
+  For example, for a participant starting their ASO in December 2021, the provider should make sure the participant is on the npq-aso-december schedule and the cohort is 2021.
+</p>
+<p class="govuk-body-m">
+  The available ASO schedules are:
+
+  <ul>
+    <li>npq-aso-november</li>
+    <li>npq-aso-december</li>
+    <li>npq-aso-march</li>
+    <li>npq-aso-june</li>
+  </ul>
+</p>
+
+<h3 class="govuk-heading-m">Milestone validation</h3>
+<p class="govuk-body-m">
+  For NPQ schedules, the DfE does not apply any milestone validation. The API will accept any and all declarations once the first milestone period for the schedule has started.
+</p>
+<p class="govuk-body-m">
+  For example, if a participant is on an npq-leadership-autumn schedule, the API will accept any type of declaration, such as a start, retention-1 or completion, from 1 November 2021.
+</p>
