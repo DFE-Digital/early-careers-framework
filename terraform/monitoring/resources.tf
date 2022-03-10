@@ -13,5 +13,4 @@ module "prometheus_all" {
   grafana_admin_password = var.grafana_admin_password
   grafana_google_client_id = var.google_client_id
   grafana_google_client_secret = var.google_client_secret
-  grafana_runtime_version = "7.2.2"
 }
