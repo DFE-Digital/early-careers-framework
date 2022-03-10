@@ -71,11 +71,7 @@ module Finance
         end
 
         def output_payments
-          output_payments = []
-          contracts.each do |contract|
-            output_payments << PaymentCalculator::NPQ::OutputPayment.call(contract: contract, total_participants: statement_declarations_per_contract(contract))
-          end
-          output_payments
+          contracts.map { |contract| PaymentCalculator::NPQ::OutputPayment.call(contract: contract, total_participants: statement_declarations_per_contract(contract)) }
         end
 
         def statement_declarations
