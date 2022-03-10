@@ -73,7 +73,7 @@ module Finance
         def output_payments
           output_payments = []
           contracts.each do |contract|
-            output_payments << PaymentCalculator::NPQ::OutputPayment.call(contract: contract, total_participants: statement_declarations.count)
+            output_payments << PaymentCalculator::NPQ::OutputPayment.call(contract: contract, total_participants: statement_declarations_per_contract(contract))
           end
           output_payments
         end
@@ -88,6 +88,23 @@ module Finance
               .participant_declarations
               .paid_payable_or_eligible
               .unique_id
+          end
+        end
+
+        def statement_declarations_per_contract(contract)
+          if statement.current?
+            ParticipantDeclaration::NPQ
+              .eligible_for_lead_provider(npq_lead_provider)
+              .for_course_identifier(contract.course_identifier)
+              .where(statement_id: nil)
+              .count
+          else
+            statement
+              .participant_declarations
+              .for_course_identifier(contract.course_identifier)
+              .paid_payable_or_eligible
+              .unique_id
+              .count
           end
         end
 
