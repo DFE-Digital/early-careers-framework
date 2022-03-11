@@ -5,6 +5,8 @@ on:
     types: [ opened, synchronize, reopened ]
     paths-ignore:
       - 'documentation/**'
+    branch-ignore:
+      - 'dependabot/**'
 
 jobs:
   deploy:
