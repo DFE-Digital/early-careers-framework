@@ -3,22 +3,16 @@
 require "rails_helper"
 
 RSpec.describe RecordDeclarations::Actions::MakeDeclarationsPaid do
-  describe "#call" do
-    before { create(:ect_participant_declaration, :payable) }
+  describe "#perform" do
+    let!(:declaration) { create(:ect_participant_declaration, :payable) }
 
-    context "with a ParticipantDeclaration::ECF type" do
-      it "updates the declaration state" do
-        expect(declaration).to be_payable
-        expect(declaration).not_to be_paid
-        described_class.call(declaration_class: ParticipantDeclaration::ECF)
-        declaration.reload
-        expect(declaration).not_to be_payable
-        expect(declaration).to be_paid
-      end
-    end
-
-    context "with a ParticipantDeclaration::NPQ type" do
-
+    it "updates the declaration state" do
+      expect(declaration.payable?).to be_truthy
+      expect(declaration.paid?).to be_falsey
+      described_class.call
+      declaration.reload
+      expect(declaration.payable?).to be_falsey
+      expect(declaration.paid?).to be_truthy
     end
   end
 end

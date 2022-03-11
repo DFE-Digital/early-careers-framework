@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe Statements::MarkAsPaid do
@@ -16,7 +18,7 @@ RSpec.describe Statements::MarkAsPaid do
   describe "#call" do
     it "transitions the payable declarations to paid", :aggregate_failures do
       expect {
-        expect { service.call }.to change(statement, :type).to("Finance::Statement::NPQ::Payable")
+        service.call
       }.to change(statement.participant_declarations.paid, :count).from(0).to(1)
     end
   end

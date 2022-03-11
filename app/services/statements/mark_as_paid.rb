@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Statements
   class MarkAsPaid
     def initialize(statement)
@@ -10,7 +12,6 @@ module Statements
           .participant_declarations
           .payable
           .each(&:make_paid!)
-        statement.update!(type: "Finance::Statement::NPQ::Payable")
       end
     end
 
