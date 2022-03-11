@@ -16,10 +16,10 @@ module Pages
         confirm_and_add
       when :mentor
         start_to_add_a_new_mentor
-        throw "Not implemented yet"
+        raise "Not implemented yet"
       when :sit_mentor
         start_to_add_sit_as_mentor
-        throw "Not implemented yet"
+        raise "Not implemented yet"
       end
     end
 

@@ -8,6 +8,7 @@ class Scenario
               :transfer,
               :prior_declarations,
               :new_declarations,
+              :duplicate_declarations,
               :starting_school_status,
               :prior_school_status,
               :new_school_status,
@@ -32,6 +33,7 @@ class Scenario
 
     @prior_declarations = (scenario.prior_declarations || "").split(",").map(&:to_sym)
     @new_declarations = (scenario.new_declarations || "").split(",").map(&:to_sym)
+    @duplicate_declarations = (scenario.duplicate_declarations || "").split(",").map(&:to_sym)
 
     @starting_school_status = to_sym_or_default scenario.starting_school_status, :not_applicable
     @prior_school_status = to_sym_or_default scenario.prior_school_status, :not_applicable

@@ -10,8 +10,10 @@ module Support
         @text = ""
 
         user = User.find_by(full_name: participant_name)
-        throw "Could not find User for #{participant_name}" if user.nil?
+        raise "Could not find User for #{participant_name}" if user.nil?
+
         participant = user.participant_profiles.first
+        raise "Could not find ParticipantProfile for #{participant_name}" if participant.nil?
 
         declarations_endpoint = APIs::ECFParticipantsEndpoint.new(tokens[lead_provider_name])
         attributes = declarations_endpoint.get_participant_details(participant)

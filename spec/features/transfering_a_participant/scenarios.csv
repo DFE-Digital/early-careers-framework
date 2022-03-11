@@ -1,12 +1,14 @@
-participant_type,original_programme,new_programme,transfer,prior_declarations,starting_school_status,prior_school_status,new_declarations,new_school_status,prior_participant_status,new_participant_status,prior_training_status,new_training_status,see_original_details,see_new_details,see_original_declarations,see_new_declarations
-ECT,CIP,CIP,,,Eligible to start,Eligible to start,,Eligible to start,active,active,active,active,,,,
-ECT,CIP,FIP,,,Eligible to start,Eligible to start,,DfE checking eligibility,active,active,active,active,,ALL,,
-ECT,CIP,FIP,,,Eligible to start,Eligible to start,started,DfE checking eligibility,active,active,active,active,,ALL,,ALL
-ECT,FIP,CIP,,,DfE checking eligibility,DfE checking eligibility,,Eligible to start,active,active,active,active,OBFUSCATED,,,
-ECT,FIP,CIP,,started,DfE checking eligibility,DfE checking eligibility,,Eligible to start,active,active,active,active,OBFUSCATED,,PRIOR_ONLY,
-ECT,FIP,FIP,different_provider,,DfE checking eligibility,DfE checking eligibility,,DfE checking eligibility,active,active,active,active,OBFUSCATED,ALL,,
-ECT,FIP,FIP,different_provider,started,DfE checking eligibility,DfE checking eligibility,,DfE checking eligibility,active,active,active,active,OBFUSCATED,ALL,PRIOR_ONLY,ALL
-ECT,FIP,FIP,different_provider,,DfE checking eligibility,DfE checking eligibility,started,DfE checking eligibility,active,active,active,active,OBFUSCATED,ALL,,ALL
-ECT,FIP,FIP,same_provider,,DfE checking eligibility,DfE checking eligibility,,DfE checking eligibility,active,active,active,active,ALL,,,
-ECT,FIP,FIP,same_provider,started,DfE checking eligibility,DfE checking eligibility,,DfE checking eligibility,active,active,active,active,ALL,,ALL,
-ECT,FIP,FIP,same_provider,,DfE checking eligibility,DfE checking eligibility,started,DfE checking eligibility,active,active,active,active,ALL,,ALL,
+participant_type,original_programme,new_programme,starting_school_status,prior_declarations,transfer,new_declarations,duplicate_declarations,prior_school_status,prior_participant_status,prior_training_status,see_original_details,see_original_declarations,new_school_status,new_participant_status,new_training_status,see_new_details,see_new_declarations
+ECT,CIP,CIP,Eligible to start,,,,,Eligible to start,active,active,,,Eligible to start,active,active,,
+ECT,CIP,FIP,Eligible to start,,,,,Eligible to start,active,active,,,DfE checking eligibility,active,active,ALL,
+ECT,CIP,FIP,Eligible to start,,,started,,Eligible to start,active,active,,,DfE checking eligibility,active,active,ALL,ALL
+ECT,FIP,CIP,DfE checking eligibility,,,,,DfE checking eligibility,active,active,OBFUSCATED,,Eligible to start,active,active,,
+ECT,FIP,CIP,DfE checking eligibility,started,,,,DfE checking eligibility,active,active,OBFUSCATED,PRIOR_ONLY,Eligible to start,active,active,,
+ECT,FIP,FIP,DfE checking eligibility,,different_provider,,,DfE checking eligibility,active,active,OBFUSCATED,,DfE checking eligibility,active,active,ALL,
+ECT,FIP,FIP,DfE checking eligibility,started,different_provider,,,DfE checking eligibility,active,active,OBFUSCATED,PRIOR_ONLY,DfE checking eligibility,active,active,ALL,ALL
+ECT,FIP,FIP,DfE checking eligibility,started,different_provider,,started,DfE checking eligibility,active,active,OBFUSCATED,PRIOR_ONLY,DfE checking eligibility,active,active,ALL,ALL
+ECT,FIP,FIP,DfE checking eligibility,,different_provider,started,,DfE checking eligibility,active,active,OBFUSCATED,,DfE checking eligibility,active,active,ALL,ALL
+ECT,FIP,FIP,DfE checking eligibility,,same_provider,,,DfE checking eligibility,active,active,ALL,,DfE checking eligibility,active,active,,
+ECT,FIP,FIP,DfE checking eligibility,started,same_provider,,,DfE checking eligibility,active,active,ALL,ALL,DfE checking eligibility,active,active,,
+ECT,FIP,FIP,DfE checking eligibility,started,same_provider,,,DfE checking eligibility,active,active,ALL,ALL,DfE checking eligibility,active,active,,
+ECT,FIP,FIP,DfE checking eligibility,,same_provider,started,,DfE checking eligibility,active,active,ALL,ALL,DfE checking eligibility,active,active,,

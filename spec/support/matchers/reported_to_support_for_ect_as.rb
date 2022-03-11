@@ -9,8 +9,10 @@ module Support
         user_endpoint = APIs::ECFUsersEndpoint.new
 
         user = User.find_by(full_name: participant_name)
-        throw "Could not find User for #{participant_name}" if user.nil?
+        raise "Could not find User for #{participant_name}" if user.nil?
+
         participant = user.participant_profiles.first
+        raise "Could not find ParticipantProfile for #{participant_name}" if participant.nil?
 
         case programme
         when "FIP"

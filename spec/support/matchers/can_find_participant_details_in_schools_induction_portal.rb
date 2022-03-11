@@ -10,8 +10,10 @@ module Support
         @error = nil
 
         user = User.find_by(full_name: participant_name)
-        throw "Could not find User for #{participant_name}" if user.nil?
+        raise "Could not find User for #{participant_name}" if user.nil?
+
         participant = user.participant_profiles.first
+        raise "Could not find ParticipantProfile for #{participant_name}" if participant.nil?
 
         induction_dashboard = Pages::SITInductionDashboard.new
         if induction_dashboard.has_expected_content?(sit)
