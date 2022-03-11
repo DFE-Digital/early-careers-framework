@@ -1,0 +1,111 @@
+<div class="app-application__panel__summary">
+  <div class="govuk-!-margin-right-4">
+    <h4 class="govuk-heading-l govuk-!-margin-bottom-2"><%= t("finance.total") %> <%= number_to_pounds(overall_total) %></h4>
+    <p class="govuk-body-s govuk-!-margin-bottom-2">
+      <%= t("finance.output_payment.label") %>
+      <span><%= number_to_pounds(total_output_payment) %></span>
+    </p>
+    <p class="govuk-body-s govuk-!-margin-bottom-2">
+      <%= t("finance.service_fee.caption") %>
+      <span><%= number_to_pounds(total_service_fees) %></span>
+    </p>
+    <p class="govuk-body-s govuk-!-margin-bottom-2">
+      <%= t("finance.vat") %>
+      <span><%= number_to_pounds(overall_vat) %></span>
+    </p>
+  </div>
+  <ul class="first govuk-list govuk-!-margin-bottom-0">
+    <li>
+      <strong class="float govuk-body-s govuk-!-margin-bottom-0"><%= t("finance.cut_off_date.caption") %></strong>
+      <div class="number-group">
+        <div class="number-container govuk-!-padding-right-4">
+          <div class="float tooltip">
+            <div class="float govuk-heading-m govuk-!-margin-bottom-0 govuk-!-padding-top-0">
+              <span><%= output_payment_cut_off_date.to_s(:govuk) %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+    <li>
+      <strong class="float govuk-body-s govuk-!-margin-bottom-0">
+        <%= t("finance.recruitment_target_total") %>
+      </strong>
+      <br>
+      <div class="number-group">
+        <div class="float govuk-heading-m govuk-!-margin-bottom-0 govuk-!-padding-top-0">
+          <span><%= recruitment_target_total %></span>
+        </div>
+      </div>
+    </li>
+  </ul>
+  <ul class="second govuk-list govuk-!-margin-bottom-0">
+    <li>
+      <strong class="float govuk-body-s govuk-!-margin-bottom-0"><%= t("finance.cohort") %></strong>
+      <div class="number-group">
+        <div class="number-container govuk-!-padding-right-4">
+          <div class="float tooltip">
+            <div class="float govuk-heading-m govuk-!-margin-bottom-0 govuk-!-padding-top-0">
+              <span><%= t("finance.spring") %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+    <li>
+      <strong class="float govuk-body-s govuk-!-margin-bottom-0"><%= t("finance.total_starts") %></strong>
+      <br>
+      <div class="number-group">
+        <div class="float govuk-heading-m govuk-!-margin-bottom-0 govuk-!-padding-top-0">
+          <span><%= total_starts %></span>
+        </div>
+      </div>
+    </li>
+  </ul>
+  <ul class="third govuk-list govuk-!-margin-bottom-0">
+    <li>
+      <strong class="govuk-body-s float govuk-!-margin-bottom-0"><%= t("finance.voided_declarations") %></strong>
+      <div class="number-group">
+        <div class="number-container govuk-!-padding-right-4">
+          <div class="float tooltip">
+            <div class="float govuk-heading-m govuk-!-margin-bottom-0 govuk-!-padding-top-0">
+              <span><%= total_voided %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+    <li>
+      <strong class="govuk-body-s float govuk-!-margin-bottom-0"><%= t("finance.total_retained") %></strong>
+      <br>
+      <div class="number-group">
+        <div class="float govuk-heading-m govuk-!-margin-bottom-0 govuk-!-padding-top-0">
+          <span><%= total_retained %></span>
+        </div>
+      </div>
+    </li>
+  </ul>
+  <ul class="fourth govuk-list govuk-!-margin-bottom-0">
+    <li class="empty">
+      <strong class="govuk-body-s float govuk-!-margin-bottom-0"></strong>
+      <div class="number-group">
+        <div class="number-container govuk-!-padding-right-4">
+          <div class="float tooltip">
+            <div class="float govuk-heading-m govuk-!-margin-bottom-0 govuk-!-padding-top-0">
+              <span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+    <li>
+      <strong class="govuk-body-s float govuk-!-margin-bottom-0"><%= t("finance.total_completed") %></strong>
+      <br>
+      <div class="number-group">
+        <div class="float govuk-heading-m govuk-!-margin-bottom-0 govuk-!-padding-top-0">
+          <span><%= total_completed %></span>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

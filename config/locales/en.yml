@@ -220,6 +220,14 @@ en:
       no_early_career_teachers: "No early career teachers for this cohort"
       not_yet_known: "Not yet decided"
 
+  npq_courses:
+    npq-leading-teaching: Leading Teaching development course breakdown
+    npq-leading-behaviour-culture: Leading Behaviour and Culture course breakdown
+    npq-leading-teaching-development: Leading Teacher Development course breakdown
+    npq-senior-leadership: Senior Leadership course breakdown
+    npq-headship: Headship course breakdown
+    npq-executive-leadership: Executive Leadership course breakdown
+    npq-additional-support-offer: Additional Support Offer course breakdown
   courses:
     npq:
       npq-leading-teaching: Leading Teaching
@@ -233,6 +241,12 @@ en:
     submission_deadline: Submission deadline
     choose_programme: Choose programme scheme
     cohort: Cohort
+    spring: Spring 2022
+    recruitment_target_total: Recruitment target total
+    total_completed: Total completed
+    total_retained: Total retained
+    total_starts: Total starts
+    total: Total
     show_contract: View contract information
     show_voided_declarations: View voided declarations
     voided_declarations: Voided declarations
@@ -295,8 +309,11 @@ en:
     service_fees:
       caption: Service fees
     output_payment:
+      label: Output Payment
       caption: Output fee
       band_d_info: Participants over the original band C target up to the new target.
+    cut_off_date:
+      caption: Output payment cut off date
     uplift_fee:
       caption: Uplift fee
     clawbacks:

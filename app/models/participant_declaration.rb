@@ -39,6 +39,7 @@ class ParticipantDeclaration < ApplicationRecord
   scope :mentor, -> { where(participant_profile_id: ParticipantProfile::Mentor.select(:id)) }
   scope :npq, -> { where(participant_profile_id: ParticipantProfile::NPQ.select(:id)) }
 
+  scope :paid_payable_or_eligible, -> { where(state: %w[eligible payable paid]) }
   scope :changeable, -> { where(state: %w[eligible submitted]) }
   scope :unique_id, -> { select(:user_id).distinct }
 

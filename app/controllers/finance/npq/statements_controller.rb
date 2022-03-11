@@ -10,6 +10,7 @@ module Finance
         @cpd_lead_provider = @npq_lead_provider.cpd_lead_provider
         @statement         = @cpd_lead_provider.npq_lead_provider.statements.find_by(name: identifier_to_name)
         @statements        = @npq_lead_provider.statements.upto_current.order(payment_date: :desc)
+        @npq_contracts     = @npq_lead_provider.npq_contracts.order(course_identifier: :asc)
 
         @breakdowns = Finance::NPQ::CalculationOverviewOrchestrator.new(
           statement: @statement,
