@@ -193,13 +193,19 @@ module ManageTrainingSteps
     user = create(:user, full_name: "Transferring in participant")
     teacher_profile = create(:teacher_profile, user: user)
     @transferring_in_participant = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile: teacher_profile, school_cohort: @school_cohort)
-    @induction_record = create(:induction_record, induction_programme: @induction_programme, participant_profile: @transferring_in_participant, status: "active")
-    @induction_record.update!(start_date: 2.months.from_now)
+    @induction_record = Induction::Enrol.call(participant_profile: @transferring_in_participant,
+                                              induction_programme: @induction_programme,
+                                              start_date: 2.months.from_now)
   end
 
   def and_i_have_a_transferring_out_participant
     and_i_have_added_an_eligible_ect
     @induction_record.leaving!(2.months.from_now)
+  end
+
+  def and_i_have_a_transferred_out_participant
+    and_i_have_added_an_eligible_ect
+    @induction_record.leaving!(1.day.ago)
   end
 
   def then_i_am_taken_to_add_mentor_page
@@ -733,6 +739,11 @@ module ManageTrainingSteps
   def then_i_can_view_transferring_out_participants
     expect(page).to have_text("Transferring from your school")
     expect(page).to have_text("You’ve told us these people are moving to a new school.")
+  end
+
+  def then_i_can_view_transferred_from_your_school_participants
+    expect(page).to have_text("Transferred from your school")
+    expect(page).to have_text("You told us these people moved to a new school.")
   end
 
   def then_i_am_taken_to_fip_induction_dashboard

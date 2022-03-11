@@ -4,8 +4,11 @@ class InductionRecord < ApplicationRecord
   has_paper_trail
 
   belongs_to :induction_programme
-  belongs_to :participant_profile
+  belongs_to :participant_profile, class_name: "ParticipantProfile::ECF"
   belongs_to :schedule, class_name: "Finance::Schedule"
+
+  has_one :school_cohort, through: :induction_programme
+  has_one :user, through: :participant_profile
 
   # optional while the data is setup
   # enables a different identity/email to be used for this induction
@@ -32,10 +35,26 @@ class InductionRecord < ApplicationRecord
     withdrawn: "withdrawn",
   }, _prefix: "training_status"
 
-  scope :active, -> { active_induction_status.where("start_date < ?", Time.zone.now) }
+  scope :fip, -> { joins(:induction_programme).merge(InductionProgramme.full_induction_programme) }
+  scope :cip, -> { joins(:induction_programme).merge(InductionProgramme.core_induction_programme) }
+
+  scope :active, -> { active_induction_status.where("start_date < ? AND (end_date IS NULL OR end_date > ?)", Time.zone.now, Time.zone.now) }
   scope :current, -> { active.or(transferring_out) }
   scope :transferring_in, -> { active_induction_status.where("start_date > ?", Time.zone.now) }
   scope :transferring_out, -> { leaving_induction_status.where("end_date > ?", Time.zone.now) }
+  scope :transferred, -> { leaving_induction_status.where("end_date < ?", Time.zone.now) }
+
+  def self.latest
+    order(created_at: :asc).last
+  end
+
+  def enrolled_in_fip?
+    induction_programme.full_induction_programme?
+  end
+
+  def enrolled_in_cip?
+    induction_programme.core_induction_programme?
+  end
 
   def changing!(date_of_change = Time.zone.now)
     update!(induction_status: :changed, end_date: date_of_change)
@@ -55,5 +74,9 @@ class InductionRecord < ApplicationRecord
 
   def transferring_out?
     leaving_induction_status? && end_date.present? && end_date > Time.zone.now
+  end
+
+  def transferred?
+    leaving_induction_status? && end_date.present? && end_date < Time.zone.now
   end
 end

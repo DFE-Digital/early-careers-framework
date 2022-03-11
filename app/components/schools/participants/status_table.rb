@@ -20,12 +20,18 @@ module Schools
         school_cohort.transferring_in_induction_records.where(participant_profile: participant_profiles).any?
       end
 
+      def transferred_participants?
+        school_cohort.transferred_induction_records.where(participant_profile: participant_profiles).any?
+      end
+
       def date_column_heading
         if FeatureFlag.active?(:change_of_circumstances)
           if transferring_out_participants?
             "Leaving"
           elsif transferring_in_participants?
             "Joining"
+          elsif transferred_participants?
+            "Transferred"
           else
             "Induction start"
           end

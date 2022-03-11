@@ -10,7 +10,7 @@
   <% else %>
     <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Name</th>
 
-    <% if school_cohort.school_chose_cip? %>
+    <% if school_chose_cip? %>
       <th scope="col" class="govuk-table__header govuk-!-width-one-half">Materials supplier</th>
     <% else %>
       <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Lead provider</th>
@@ -22,9 +22,5 @@
 </thead>
 
 <tbody class="govuk-table__body">
-  <% if FeatureFlag.active?(:change_of_circumstances) %>
-    <%= render Schools::Participants::CocStatusTableRow.with_collection(induction_records) %>
-  <% else %>
-    <%= render Schools::Participants::StatusTableRow.with_collection(participant_profiles) %>
-  <% end %>
+  <%= render Schools::Participants::CocStatusTableRow.with_collection(induction_records) %>
 </tbody>

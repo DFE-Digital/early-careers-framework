@@ -9,6 +9,12 @@ RSpec.describe Schools::Participants::StatusTableRow, type: :view_component do
   component { described_class.new profile: participant_profile }
 
   context "participant is on full induction programme" do
+    let(:programme) { create(:induction_programme, :fip) }
+
+    before do
+      Induction::Enrol.call(participant_profile: participant_profile, induction_programme: programme)
+    end
+
     context "participant is eligible" do
       it "renders the row" do
         with_request_url "/schools/#{school_cohort.school.slug}/cohorts/#{school_cohort.cohort.start_year}/participants" do
@@ -35,9 +41,12 @@ RSpec.describe Schools::Participants::StatusTableRow, type: :view_component do
   end
 
   context "participant is on core induction programme" do
+    let(:programme) { create(:induction_programme, :cip) }
+
     before do
       school_cohort.core_induction_programme!
       school_cohort.update!(core_induction_programme: create(:core_induction_programme))
+      Induction::Enrol.call(participant_profile: participant_profile, induction_programme: programme)
     end
 
     context "participant is eligible" do

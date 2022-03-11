@@ -2,7 +2,7 @@
   <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Transferring to your school</h2>
   <p class="govuk-!-margin-bottom-3">You’ve told us these people are joining you from another school. You need to arrange how they’ll continue their training.</p>
   <table class="govuk-table govuk-!-margin-bottom-9" data-test="transferring_in">
-    <%= render Schools::Participants::StatusTable.new(participant_profiles: transferring_in, school_cohort: @school_cohort) %>
+    <%= render Schools::Participants::CocStatusTable.new(induction_records: transferring_in) %>
   </table>
 <% end %>
 
@@ -10,6 +10,6 @@
   <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Transferring from your school</h2>
   <p class="govuk-!-margin-bottom-3">You’ve told us these people are moving to a new school. Their new school will arrange how they’ll continue their training.</p>
   <table class="govuk-table govuk-!-margin-bottom-9" data-test="transferring_out">
-    <%= render Schools::Participants::StatusTable.new(participant_profiles: transferring_out, school_cohort: @school_cohort) %>
+    <%= render Schools::Participants::CocStatusTable.new(induction_records: transferring_out) %>
   </table>
 <% end %>

@@ -33,8 +33,11 @@ class ParticipantProfile < ApplicationRecord
     after_update :sync_status_with_induction_record
 
     def current_induction_record
-      now = Time.zone.now
-      induction_records.active_induction_status.where("start_date <= ? AND end_date IS NULL OR end_date > ?", now, now).first
+      induction_records.current.latest
+    end
+
+    def current_induction_programme
+      induction_records.current.order(created_at: :asc).last&.induction_programme
     end
 
     def ecf?

@@ -37,9 +37,9 @@
         <% end %>
       <% end %>
 
-      <% if @withdrawn.any? || @ineligible.any? %>
+      <% if @withdrawn.any? || @ineligible.any? || @transferred.any? %>
         <% component.tab(label: 'Not training') do %>
-          <%= render partial: 'not_training', locals: { withdrawn: @withdrawn, ineligible: @ineligible } %>
+          <%= render partial: 'not_training', locals: { withdrawn: @withdrawn, ineligible: @ineligible, transferred: @transferred } %>
         <% end %>
       <% end %>
 

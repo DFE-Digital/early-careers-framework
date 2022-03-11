@@ -52,4 +52,22 @@ RSpec.describe "Manage FIP partnered participants with change of circumstances",
       end
     end
   end
+
+  context "participants that have transferred out" do
+    before do
+      given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+      and_i_am_signed_in_as_an_induction_coordinator
+      and_i_have_a_transferred_out_participant
+    end
+
+    scenario "Induction coordinator can view participants that have completed their transfer out" do
+      given_i_am_taken_to_fip_induction_dashboard
+      when_i_navigate_to_participants_dashboard
+      click_on "Not training"
+      then_i_can_view_transferred_from_your_school_participants
+
+      when_i_click_on_the_participants_name "Eligible ect"
+      then_i_am_taken_to_view_details_page
+    end
+  end
 end
