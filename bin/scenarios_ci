@@ -1,0 +1,3 @@
+#!/usr/bin/env ruby
+
+exec "bundle exec rspec spec/features/scenarios --format documentation --order read"

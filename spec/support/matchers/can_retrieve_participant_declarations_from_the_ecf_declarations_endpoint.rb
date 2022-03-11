@@ -15,12 +15,13 @@ module Support
         raise "Could not find ParticipantProfile for #{participant_name}" if participant.nil?
 
         recorded_declarations = declarations_endpoint.get_training_declarations(participant)
-
         @text = JSON.pretty_generate recorded_declarations
 
         @error = nil
         declarations.each_with_index do |declaration_type, index|
-          @error = declaration_type unless recorded_declarations[index]["declaration_type"] == declaration_type
+          declaration = recorded_declarations[index] || {}
+          attributes = declaration["attributes"] || {}
+          @error = declaration_type unless attributes["declaration_type"] == declaration_type.to_s
         end
 
         @error.nil?
