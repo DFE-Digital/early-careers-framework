@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 tests = Dir["spec/**/*_spec.rb"].
+  reject{ |f| f.include? "spec/features/scenarios/" }.
   sort.
   # Add randomization seed based on SHA of each commit
   shuffle(random: Random.new(ENV['GITHUB_SHA'].to_i(16))).
