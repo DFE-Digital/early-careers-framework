@@ -33,11 +33,11 @@ class ParticipantProfile < ApplicationRecord
     after_update :sync_status_with_induction_record
 
     def current_induction_record
-      induction_records.current.latest
+      induction_records.current&.latest
     end
 
     def current_induction_programme
-      induction_records.current.order(created_at: :asc).last&.induction_programme
+      induction_records.current&.latest&.induction_programme
     end
 
     def ecf?
