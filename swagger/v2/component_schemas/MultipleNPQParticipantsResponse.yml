@@ -11,9 +11,17 @@ properties:
       - id: db3a7848-7308-4879-942a-c4a70ced400a
         type: npq-participant
         attributes:
-          participant_id: 7a8fef46-3c43-42c0-b3d5-1ba5904ba562
           full_name: "Isabelle MacDonald"
           email: "isabelle.macdonald2@some-school.example.com"
-          npq_courses: ["npq-leading-teaching"]
           teacher_reference_number: "1234567"
           updated_at: "2021-05-31T02:21:32.000Z"
+          npq_enrollments: [
+            {
+              course_identifier: "npq-headship",
+              schedule_identifier: "npq-leadership-autumn",
+              cohort: "2021",
+              npq_application_id: "db3a7848-7308-4879-942a-c4a70ced400a",
+              eligible_for_funding: true,
+              training_status: "active",
+            }
+          ]

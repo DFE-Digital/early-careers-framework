@@ -1,17 +1,11 @@
 description: "The data attributes associated with an NPQ participants"
 type: object
 required:
-  - participant_id
   - full_name
   - email
-  - npq_courses
+  - npq_enrollments
   - updated_at
 properties:
-  participant_id:
-    description: "The unique identifier of this NPQ participant"
-    type: string
-    example: 7a8fef46-3c43-42c0-b3d5-1ba5904ba562
-    format: uuid
   full_name:
     description: "The full name of this NPQ participant"
     type: string
@@ -25,11 +19,11 @@ properties:
     type: string
     example: "1234567"
     nullable: true
-  npq_courses:
-    description: "The type of course the participant is enrolled in"
+  npq_enrollments:
+    description: "Information about the course(s) the participant is enrolled in"
     type: array
     items:
-      type: string
+      $ref: "#/components/schemas/NPQEnrollment"
   updated_at:
     description: "The date the NPQ participant was last updated"
     type: string

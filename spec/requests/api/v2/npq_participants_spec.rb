@@ -54,12 +54,11 @@ RSpec.describe "NPQ Participants API", type: :request do
           get "/api/v2/participants/npq"
           expect(parsed_response["data"][0])
             .to(have_jsonapi_attributes(
-              :participant_id,
-              :npq_courses,
               :email,
               :full_name,
               :teacher_reference_number,
               :updated_at,
+              :npq_enrollments,
             ).exactly)
         end
 

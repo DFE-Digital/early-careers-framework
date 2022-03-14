@@ -11,15 +11,7 @@ module Api
       set_id :id
       set_type :'npq-participant'
 
-      attributes :participant_id, :email, :full_name
-
-      attribute(:participant_id, &:id)
-
-      attribute(:npq_courses) do |object, params|
-        object.npq_profiles
-          .filter { |profile| provider_matches(profile, params) }
-          .map { |npq_profile| npq_profile.npq_application.npq_course.identifier }
-      end
+      attributes :email, :full_name
 
       attribute(:teacher_reference_number) do |object|
         object.teacher_profile&.trn
@@ -29,8 +21,26 @@ module Api
         object.updated_at.rfc3339
       end
 
-      def self.provider_matches(profile, params)
-        profile.npq_application&.npq_lead_provider&.cpd_lead_provider == params[:cpd_lead_provider]
+      attribute(:npq_enrollments) do |object, params|
+        scope = object.npq_profiles
+        scope = scope.includes(:npq_course, :npq_application, schedule: [:cohort])
+
+        if params[:cpd_lead_provider]
+          scope = scope.joins(npq_application: { npq_lead_provider: [:cpd_lead_provider] })
+          scope = scope.where(npq_applications: { npq_lead_providers: { cpd_lead_provider: params[:cpd_lead_provider] } })
+        end
+
+        scope.map do |profile|
+          {
+            course_identifier: profile.npq_course.identifier,
+            schedule_identifier: profile.schedule.schedule_identifier,
+            cohort: profile.schedule.cohort.start_year.to_s,
+            npq_application_id: profile.npq_application.id,
+            eligible_for_funding: profile.npq_application.eligible_for_funding,
+            training_status: profile.training_status,
+            school_urn: profile.school_urn,
+          }
+        end
       end
     end
   end
