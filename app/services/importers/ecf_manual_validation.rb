@@ -1,17 +1,11 @@
 # frozen_string_literal: true
 
-class Importers::ECFManualValidation
-  attr_reader :path_to_csv
-
-  def initialize(path_to_csv:)
-    @path_to_csv = path_to_csv
-  end
-
+class Importers::ECFManualValidation < BaseService
   def call
     check_headers
 
     rows.each do |row|
-      user = User.find(row["id"])
+      user = Identity.find_user_by(id: row["id"])
 
       if user.nil?
         puts "No profile found for #{row['id']}. Skipping"
@@ -25,7 +19,7 @@ class Importers::ECFManualValidation
       end
 
       Participants::ParticipantValidationForm.call(
-        participant_profile: participant_profile,
+        participant_profile,
         save_validation_data_without_match: false,
         data: {
           trn: row["trn"],
@@ -48,8 +42,14 @@ class Importers::ECFManualValidation
 
 private
 
+  attr_reader :path_to_csv
+
+  def initialize(path_to_csv:)
+    @path_to_csv = path_to_csv
+  end
+
   def check_headers
-    unless rows.headers == %w[id name trn dob nino]
+    unless %w[id name trn dob nino].all? { |header| rows.headers.include?(header) }
       raise NameError, "Invalid headers"
     end
   end
