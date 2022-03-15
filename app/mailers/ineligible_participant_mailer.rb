@@ -175,6 +175,6 @@ class IneligibleParticipantMailer < ApplicationMailer
         FIP_ECT_name: participant_profile.user.full_name,
         sit_name: sit.name,
       },
-    ).tag(:now_eligible_previous_induction).associate_with(participant_profile, as: :participant_profile)
+    ).tag(:ineligible_participant).associate_with(participant_profile, as: :participant_profile)
   end
 end

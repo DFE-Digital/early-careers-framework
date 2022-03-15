@@ -120,13 +120,13 @@ private
 
       else
         mailer_name = "#{participant_profile.participant_type}_#{@participant_eligibility.reason}_email"
-        return nil if mailer_name == "mentor_previous_participation_email" # Do not send emails about ERO mentors
-
-        if IneligibleParticipantMailer.respond_to? mailer_name
-          mailer_name
-        else
-          Sentry.capture_message("Could not send ineligible participant notification [#{mailer_name}] for #{participant_profile.teacher_profile.user.email}")
-          nil
+        unless mailer_name == "mentor_previous_participation_email" # Do not send emails about ERO mentors
+          if IneligibleParticipantMailer.respond_to? mailer_name
+            mailer_name
+          else
+            Sentry.capture_message("Could not send ineligible participant notification [#{mailer_name}] for #{participant_profile.teacher_profile.user.email}")
+            nil
+          end
         end
       end
   end
