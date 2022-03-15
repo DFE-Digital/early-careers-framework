@@ -13,6 +13,8 @@ module NPQ
           "application_ecf_id" => npq_application.id,
           "status" => npq_application.lead_provider_approval_status,
           "updated_at" => npq_application.updated_at,
+          "employer_name" => npq_application.employer_name,
+          "employment_role" => npq_application.employment_role,
         },
       ]
 
