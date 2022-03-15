@@ -47,7 +47,7 @@ module Api
       end
 
       def query_scope
-        scope = npq_lead_provider.npq_applications.includes(:participant_identity, :npq_course)
+        scope = npq_lead_provider.npq_applications.includes(:npq_course, participant_identity: [:user])
         scope = scope.where("updated_at > ?", updated_since) if updated_since.present?
         scope
       end
