@@ -99,6 +99,7 @@ Rails.application.routes.draw do
       resources :npq_participants, only: %i[index], path: "participants/npq" do
         concerns :participant_actions
       end
+      resources :npq_enrollments, only: %i[index], path: "npq-enrollments"
       resources :users, only: %i[index create]
       resources :ecf_users, only: %i[index create], path: "ecf-users"
       resources :participant_validation, only: %i[create], path: "participant-validation"
