@@ -247,6 +247,60 @@
         }
       }
     },
+    "/api/v2/npq-enrollments.csv": {
+      "get": {
+        "summary": "Retrieve multiple NPQ enrollments",
+        "operationId": "npq_enrollments",
+        "tags": [
+          "NPQ enrollments"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ListFilter"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "description": "Refine NPQ participants to return.",
+            "example": {
+              "updated_since": "2020-11-13T11:21:55Z"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of NPQ enrollments",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultipleNPQEnrollmentsCsvResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v2/participants/npq": {
       "get": {
         "summary": "Retrieve multiple NPQ participants",
@@ -2825,6 +2879,22 @@
           }
         }
       },
+      "MultipleNPQEnrollmentsCsvResponse": {
+        "description": "A list of NPQ enrollments in the Comma Separated Value (CSV) format",
+        "type": "string",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NPQEnrollmentCsvRow"
+            }
+          }
+        },
+        "example": "participant_id,course_identifier,schedule_identifier,cohort,npq_application_id,eligible_for_funding,training_status,school_urn\n9b57c3ad-b911-4427-a4cb-87949741a631,npq-headship,npq-leadership-spring,2021,a7aad9e4-13c6-401c-b4d8-e5ccd231624e,false,active,329229\n"
+      },
       "MultipleNPQParticipantsResponse": {
         "description": "A list of NPQ participants",
         "type": "object",
@@ -2842,14 +2912,20 @@
                 "id": "db3a7848-7308-4879-942a-c4a70ced400a",
                 "type": "npq-participant",
                 "attributes": {
-                  "participant_id": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
                   "full_name": "Isabelle MacDonald",
                   "email": "isabelle.macdonald2@some-school.example.com",
-                  "npq_courses": [
-                    "npq-leading-teaching"
-                  ],
                   "teacher_reference_number": "1234567",
-                  "updated_at": "2021-05-31T02:21:32.000Z"
+                  "updated_at": "2021-05-31T02:21:32.000Z",
+                  "npq_enrollments": [
+                    {
+                      "course_identifier": "npq-headship",
+                      "schedule_identifier": "npq-leadership-autumn",
+                      "cohort": "2021",
+                      "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                      "eligible_for_funding": true,
+                      "training_status": "active"
+                    }
+                  ]
                 }
               }
             ]
@@ -3048,7 +3124,7 @@
             ]
           },
           "course_identifier": {
-            "description": "The Unique Reference Number (URN) of the NPQ course this NPQ application relates to",
+            "description": "The NPQ course this NPQ application relates to",
             "type": "string",
             "example": "npq-leading-teaching",
             "enum": [
@@ -3251,9 +3327,9 @@
             "type": "string",
             "example": "npq-senior-leadership",
             "enum": [
-              "npq-senior-leadership",
-              "npq-headship",
-              "npq-executive-leadership",
+              "npq-leading-teaching",
+              "npq-leading-behaviour-culture",
+              "npq-leading-teaching-development",
               "npq-senior-leadership",
               "npq-headship",
               "npq-executive-leadership",
@@ -3300,6 +3376,94 @@
               "deferred",
               "withdrawn"
             ]
+          },
+          "school_urn": {
+            "description": "The URN of the school when the application was made, if any",
+            "nullable": true,
+            "type": "string",
+            "example": "123456"
+          }
+        }
+      },
+      "NPQEnrollmentCsvRow": {
+        "description": "The details of an NPQ application",
+        "type": "object",
+        "required": [
+          "participant_id",
+          "course_identifier",
+          "schedule_identifier",
+          "cohort",
+          "npq_application_id",
+          "eligible_for_funding",
+          "training_status",
+          "school_urn"
+        ],
+        "properties": {
+          "participant_id": {
+            "description": "The unique identifier of this NPQ participant",
+            "type": "string",
+            "example": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
+            "format": "uuid"
+          },
+          "course_identifier": {
+            "description": "The NPQ course the participant is enrolled in",
+            "type": "string",
+            "example": "npq-leading-teaching",
+            "enum": [
+              "npq-leading-teaching",
+              "npq-leading-behaviour-culture",
+              "npq-leading-teaching-development",
+              "npq-senior-leadership",
+              "npq-headship",
+              "npq-executive-leadership",
+              "npq-additional-support-offer"
+            ]
+          },
+          "schedule_identifier": {
+            "description": "The schedule currently applied to this enrollment",
+            "type": "string",
+            "example": "npq-specialist-autumn",
+            "enum": [
+              "npq-specialist-autumn",
+              "npq-specialist-spring",
+              "npq-leadership-autumn",
+              "npq-leadership-spring",
+              "npq-aso-december",
+              "npq-aso-november",
+              "npq-aso-march",
+              "npq-aso-june"
+            ]
+          },
+          "cohort": {
+            "description": "The start year of the cohort the participant is enrolled in",
+            "type": "string",
+            "example": "2021"
+          },
+          "npq_application_id": {
+            "description": "The unique identifier of this NPQ application that was accepted to create this enrollment",
+            "type": "string",
+            "example": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
+            "format": "uuid"
+          },
+          "eligible_for_funding": {
+            "description": "Indicates whether this NPQ participant would be eligible for funding from the DfE",
+            "type": "boolean",
+            "example": true
+          },
+          "training_status": {
+            "description": "The training status of the ECF participant",
+            "type": "string",
+            "example": "active",
+            "enum": [
+              "active",
+              "deferred",
+              "withdrawn"
+            ]
+          },
+          "school_urn": {
+            "description": "The Unique Reference Number (URN) of the school where this NPQ participant is teaching",
+            "type": "string",
+            "example": "106286"
           }
         }
       },
@@ -3335,19 +3499,12 @@
         "description": "The data attributes associated with an NPQ participants",
         "type": "object",
         "required": [
-          "participant_id",
           "full_name",
           "email",
           "npq_enrollments",
           "updated_at"
         ],
         "properties": {
-          "participant_id": {
-            "description": "The unique identifier of this NPQ participant",
-            "type": "string",
-            "example": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
-            "format": "uuid"
-          },
           "full_name": {
             "description": "The full name of this NPQ participant",
             "type": "string",
