@@ -83,7 +83,7 @@ class IneligibleParticipantMailer < ApplicationMailer
   end
 
   def ect_previous_induction_email_previously_eligible(induction_tutor_email:, participant_profile:)
-    sit = User.find_by_email(induction_tutor_email)
+    sit = Identity.find_user_by(email: induction_tutor_email)
     template_mail(
       ECT_PREVIOUS_INDUCTION_PREVIOUSLY_ELIGIBLE_TEMPLATE,
       to: induction_tutor_email,
@@ -98,7 +98,7 @@ class IneligibleParticipantMailer < ApplicationMailer
   end
 
   def ect_exempt_from_induction_email(induction_tutor_email:, participant_profile:)
-    sit = User.find_by_email(induction_tutor_email)
+    sit = Identity.find_user_by(email: induction_tutor_email)
     template_mail(
       ECT_EXEMPT_FROM_INDUCTION_TEMPLATE,
       to: induction_tutor_email,
@@ -125,7 +125,7 @@ class IneligibleParticipantMailer < ApplicationMailer
   end
 
   def ect_exempt_from_induction_email_previously_eligible(induction_tutor_email:, participant_profile:)
-    sit = User.find_by_email(induction_tutor_email)
+    sit = Identity.find_user_by(email: induction_tutor_email)
     template_mail(
       ECT_EXEMPT_FROM_INDUCTION_PREVIOUSLY_ELIGIBLE_TEMPLATE,
       to: induction_tutor_email,
@@ -165,7 +165,7 @@ class IneligibleParticipantMailer < ApplicationMailer
   end
 
   def ect_no_induction_email(induction_tutor_email:, participant_profile:)
-    sit = User.find_by_email(induction_tutor_email)
+    sit = Identity.find_user_by(email: induction_tutor_email)
     template_mail(
       ECT_NO_INDUCTION_TEMPLATE,
       to: induction_tutor_email,
