@@ -10,7 +10,7 @@ class NPQApplication < ApplicationRecord
   belongs_to :npq_lead_provider
   belongs_to :npq_course
 
-  after_save :push_enrollment_to_big_query
+  after_commit :push_enrollment_to_big_query
 
   enum headteacher_status: {
     no: "no",
