@@ -29,7 +29,7 @@ RSpec.describe NPQ::StreamBigQueryEnrollmentJob do
         "updated_at" => npq_application.updated_at,
         "employer_name" => employer_name,
         "employment_role" => employment_role,
-      }])
+      }], ignore_unknown: true)
     end
   end
 end

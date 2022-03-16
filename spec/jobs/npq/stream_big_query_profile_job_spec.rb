@@ -30,7 +30,7 @@ RSpec.describe NPQ::StreamBigQueryProfileJob do
         course_identifier: profile.npq_course.identifier,
         created_at: profile.created_at,
         updated_at: profile.updated_at,
-      }.stringify_keys])
+      }.stringify_keys], ignore_unknown: true)
     end
   end
 end

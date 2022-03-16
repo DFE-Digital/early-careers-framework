@@ -25,7 +25,7 @@ module NPQ
         }.stringify_keys,
       ]
 
-      table.insert rows
+      table.insert(rows, ignore_unknown: true)
     end
   end
 end
