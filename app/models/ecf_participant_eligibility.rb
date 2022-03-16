@@ -6,6 +6,8 @@ class ECFParticipantEligibility < ApplicationRecord
   belongs_to :participant_profile, class_name: "ParticipantProfile::ECF", touch: true
   before_validation :determine_status, on: :create
 
+  scope :updated_before, ->(timestamp) { where(updated_at: ..timestamp) }
+
   enum status: {
     eligible: "eligible",
     matched: "matched",
@@ -21,6 +23,8 @@ class ECFParticipantEligibility < ApplicationRecord
     different_trn: "different_trn",
     duplicate_profile: "duplicate_profile",
     none: "none",
+    no_induction: "no_induction",
+    exempt_from_induction: "exempt_from_induction",
   }, _suffix: true
 
   def duplicate_profile?
@@ -41,6 +45,10 @@ class ECFParticipantEligibility < ApplicationRecord
                                    %i[manual_check different_trn]
                                  elsif duplicate_profile?
                                    %i[ineligible duplicate_profile]
+                                 elsif exempt_from_induction? && participant_profile.ect?
+                                   %i[ineligible exempt_from_induction]
+                                 elsif no_induction? && participant_profile.ect?
+                                   %i[manual_check no_induction]
                                  else
                                    %i[eligible none]
                                  end

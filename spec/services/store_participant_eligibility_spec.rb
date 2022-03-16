@@ -57,6 +57,35 @@ RSpec.describe StoreParticipantEligibility do
       end
     end
 
+    context "when manual check status is determined" do
+      it "sends the ect_no_induction_email when reason is no_induction" do
+        eligibility_options[:no_induction] = true
+        expect {
+          service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+        }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_no_induction_email)
+          .with(
+            args: [{
+              induction_tutor_email: induction_tutor.email,
+              participant_profile: ect_profile,
+            }],
+          )
+      end
+
+      it "doesn't send any notifications if the previous state was eligible" do
+        create(:ecf_participant_eligibility, :eligible, participant_profile: ect_profile)
+        eligibility_options[:no_induction] = true
+        expect {
+          service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+        }.to_not have_enqueued_mail(IneligibleParticipantMailer, :ect_no_induction_email)
+          .with(
+            args: [{
+              induction_tutor_email: induction_tutor.email,
+              participant_profile: ect_profile,
+            }],
+          )
+      end
+    end
+
     context "when ineligible status is determined" do
       context "without eligibility_notifications feature enabled" do
         it "does not send email notifications" do
@@ -74,6 +103,20 @@ RSpec.describe StoreParticipantEligibility do
             expect {
               service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
             }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_previous_induction_email)
+              .with(
+                args: [{
+                  induction_tutor_email: induction_tutor.email,
+                  participant_profile: ect_profile,
+                }],
+              )
+          end
+
+          it "sends a specific email when the reason is previous induction and the ect was previously eligible" do
+            create(:ecf_participant_eligibility, :eligible, participant_profile: ect_profile)
+            eligibility_options[:previous_induction] = true
+            expect {
+              service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+            }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_previous_induction_email_previously_eligible)
               .with(
                 args: [{
                   induction_tutor_email: induction_tutor.email,
@@ -112,6 +155,64 @@ RSpec.describe StoreParticipantEligibility do
                   participant_profile: ect_profile,
                 }],
               )
+          end
+
+          it "sends emails to the ect and sit when the reason is exempt_from_induction" do
+            additional_induction_coordinator = create(:user, :induction_coordinator, schools: [school])
+            eligibility_options[:exempt_from_induction] = true
+            eligibility_options[:status] = :ineligible
+            eligibility_options[:reason] = :exempt_from_induction
+
+            expect {
+              service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+            }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email)
+              .with(
+                args: [{
+                  induction_tutor_email: induction_tutor.email,
+                  participant_profile: ect_profile,
+                }],
+              ).and have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email)
+                  .with(
+                    args: [{
+                      induction_tutor_email: additional_induction_coordinator.email,
+                      participant_profile: ect_profile,
+                    }],
+                  ).and have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email_to_ect)
+                      .with(
+                        args: [{
+                          participant_profile: ect_profile,
+                        }],
+                      ).once
+          end
+
+          it "sends specific emails to the ect and sit when the reason is exempt_from_induction and they have declarations" do
+            additional_induction_coordinator = create(:user, :induction_coordinator, schools: [school])
+            create(:ecf_participant_eligibility, :eligible, participant_profile: ect_profile)
+            create(:ect_participant_declaration, user: ect_profile.user, participant_profile: ect_profile)
+            eligibility_options[:exempt_from_induction] = true
+            eligibility_options[:status] = :ineligible
+            eligibility_options[:reason] = :exempt_from_induction
+
+            expect {
+              service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+            }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email_previously_eligible)
+              .with(
+                args: [{
+                  induction_tutor_email: induction_tutor.email,
+                  participant_profile: ect_profile,
+                }],
+              ).and have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email_previously_eligible)
+                  .with(
+                    args: [{
+                      induction_tutor_email: additional_induction_coordinator.email,
+                      participant_profile: ect_profile,
+                    }],
+                  ).and have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email_to_ect_previously_eligible)
+                      .with(
+                        args: [{
+                          participant_profile: ect_profile,
+                        }],
+                      ).once
           end
         end
 

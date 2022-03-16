@@ -18,3 +18,7 @@ school_analytics:
   cron: "10 * * * *"
   class: "SchoolAnalyticsJob"
   queue: default
+check_no_induction_participants:
+  cron: "0 7 * * 1"
+  class: "CheckParticipantsInductionJob"
+  queue: default

@@ -15,7 +15,11 @@ class StoreParticipantEligibility < BaseService
     end
 
     if (changed_to_ineligible? || changed_ineligible_reason?) && doing_fip? && FeatureFlag.active?(:eligibility_notifications)
-      send_ineligible_notification_email
+      send_ineligible_notification_emails
+    end
+
+    if changed_to_manual_check? && doing_fip? && @previous_status != "eligible"
+      send_manual_check_notification_email
     end
 
     @participant_eligibility
@@ -47,6 +51,10 @@ private
     @participant_eligibility.eligible_status? && @previous_status != "eligible"
   end
 
+  def changed_to_manual_check?
+    @participant_eligibility.manual_check_status? && @previous_status != "ineligible"
+  end
+
   def changed_from_ineligible?
     @previous_status == "ineligible"
   end
@@ -72,15 +80,61 @@ private
     end
   end
 
-  def send_ineligible_notification_email
+  def send_ineligible_notification_emails
     participant_profile.school_cohort.school.induction_coordinators.each do |induction_tutor|
-      mailer_name = "#{participant_profile.participant_type}_#{@participant_eligibility.reason}_email"
-      next if mailer_name == "mentor_previous_participation_email" # Do not send emails about ERO mentors
+      break unless ineligible_notification_email_for_induction_coordinator
 
-      if IneligibleParticipantMailer.respond_to? mailer_name
-        IneligibleParticipantMailer.send(mailer_name, **{ induction_tutor_email: induction_tutor.email, participant_profile: participant_profile }).deliver_later
+      IneligibleParticipantMailer.send(
+        ineligible_notification_email_for_induction_coordinator,
+        **{ induction_tutor_email: induction_tutor.email, participant_profile: participant_profile },
+      ).deliver_later
+    end
+
+    if @participant_eligibility.reason.to_sym == :exempt_from_induction
+      if participant_profile.participant_declarations.any? && @previous_status == "eligible"
+        IneligibleParticipantMailer.ect_exempt_from_induction_email_to_ect_previously_eligible(participant_profile: participant_profile).deliver_later
       else
-        Sentry.capture_message("Could not send ineligible participant notification [#{mailer_name}] for #{participant_profile.teacher_profile.user.email}")
+        IneligibleParticipantMailer.ect_exempt_from_induction_email_to_ect(participant_profile: participant_profile).deliver_later
+      end
+    end
+  end
+
+  def ineligible_notification_email_for_induction_coordinator
+    return @ineligible_notification_email_for_induction_coordinator if defined?(@ineligible_notification_email_for_induction_coordinator)
+
+    @email_for_induction_coordinator =
+      case @participant_eligibility.reason.to_sym
+      when :exempt_from_induction
+        if participant_profile.participant_declarations.any? && @previous_status == "eligible"
+          :ect_exempt_from_induction_email_previously_eligible
+        else
+          :ect_exempt_from_induction_email
+        end
+
+      when :previous_induction
+        if @previous_status == "eligible"
+          :ect_previous_induction_email_previously_eligible
+        else
+          :ect_previous_induction_email
+        end
+
+      else
+        mailer_name = "#{participant_profile.participant_type}_#{@participant_eligibility.reason}_email"
+        unless mailer_name == "mentor_previous_participation_email" # Do not send emails about ERO mentors
+          if IneligibleParticipantMailer.respond_to? mailer_name
+            mailer_name
+          else
+            Sentry.capture_message("Could not send ineligible participant notification [#{mailer_name}] for #{participant_profile.teacher_profile.user.email}")
+            nil
+          end
+        end
+      end
+  end
+
+  def send_manual_check_notification_email
+    if @participant_eligibility.reason.to_sym == :no_induction
+      participant_profile.school_cohort.school.induction_coordinators.each do |induction_tutor|
+        IneligibleParticipantMailer.ect_no_induction_email(induction_tutor_email: induction_tutor.email, participant_profile: participant_profile).deliver_later
       end
     end
   end
@@ -104,6 +158,8 @@ private
       previous_participation: false,
       previous_induction: false,
       different_trn: false,
+      no_induction: false,
+      exempt_from_induction: false,
     }
   end
 end
