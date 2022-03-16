@@ -35,7 +35,7 @@ RSpec.describe "rake eligibility:re_run_ect_validations", type: :task do
     expect(Participants::ParticipantValidationForm).to_not receive(:call).with(ineligible_ect)
     expect(Participants::ParticipantValidationForm).to_not receive(:call).with(eligible_ect_created_after_specified_time)
 
-    capture_output { 2.times { task.execute(to_task_arguments(timestamp.to_i)) } }
+    capture_output { 2.times { task.execute(to_task_arguments(timestamp.to_i.to_s)) } }
   end
 
   def create_eligible_ects(count:)
