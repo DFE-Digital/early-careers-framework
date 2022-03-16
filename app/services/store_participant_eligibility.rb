@@ -158,6 +158,8 @@ private
       previous_participation: false,
       previous_induction: false,
       different_trn: false,
+      no_induction: false,
+      exempt_from_induction: false,
     }
   end
 end

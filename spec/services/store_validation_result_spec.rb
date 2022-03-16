@@ -34,6 +34,7 @@ RSpec.describe StoreValidationResult do
         previous_participation: false,
         previous_induction: false,
         no_induction: false,
+        exempt_from_induction: false,
       },
     ].sample
   end
@@ -68,6 +69,7 @@ RSpec.describe StoreValidationResult do
         previous_participation: false,
         previous_induction: false,
         no_induction: false,
+        exempt_from_induction: false,
       }
     end
 
@@ -85,6 +87,7 @@ RSpec.describe StoreValidationResult do
             previous_participation: dqt_response[:previous_participation],
             previous_induction: dqt_response[:previous_induction],
             no_induction: dqt_response[:no_induction],
+            exempt_from_induction: dqt_response[:exempt_from_induction],
             different_trn: false,
           },
         )
@@ -112,6 +115,7 @@ RSpec.describe StoreValidationResult do
             previous_participation: dqt_response[:previous_participation],
             previous_induction: dqt_response[:previous_induction],
             no_induction: dqt_response[:no_induction],
+            exempt_from_induction: dqt_response[:exempt_from_induction],
             different_trn: true,
           },
         )
@@ -140,6 +144,7 @@ RSpec.describe StoreValidationResult do
             previous_participation: dqt_response[:previous_participation],
             previous_induction: dqt_response[:previous_induction],
             no_induction: dqt_response[:no_induction],
+            exempt_from_induction: dqt_response[:exempt_from_induction],
             different_trn: false,
           },
         )
