@@ -112,6 +112,7 @@ module Participants
     step :ineligible
     step :secondary_fip_mentor_eligible
     step :previous_participation
+    step :exempt_from_induction
 
     def trn=(value)
       super(value&.squish)
