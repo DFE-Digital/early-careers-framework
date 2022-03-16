@@ -1,0 +1,22 @@
+<div class="govuk-width-container govuk-width-container__wide">
+  <div class="govuk-phase-banner app-phase-banner--no-border govuk-!-display-none-print">
+    <p class="govuk-phase-banner__content">
+      <strong class="govuk-tag govuk-phase-banner__content__tag">
+        <% if Rails.env.production?  %>
+          Beta
+        <% elsif Rails.env.staging? %>
+          Staging
+        <% elsif Rails.env.sandbox? %>
+          Sandbox
+        <% else %>
+          Development
+        <% end %>
+      </strong>
+      <span class="govuk-phase-banner__text">
+              This is a new service – your
+        <%= govuk_link_to "feedback", "https://forms.office.com/Pages/ResponsePage.aspx?id=yXfS-grGoU2187O4s0qC-VlIdprT6TlEmsOS8-ufjHVUQzgyQVVOSERHWkZYV045RVYxSTBQWlNUSi4u", target: "_blank", rel: "noopener noreferrer" %>
+        will help us to improve it.
+      </span>
+    </p>
+  </div>
+</div>
