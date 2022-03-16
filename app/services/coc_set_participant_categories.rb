@@ -18,19 +18,18 @@ class CocSetParticipantCategories < BaseService
 
 private
 
-  attr_reader :school_cohort, :user, :type, :profile_class
+  attr_reader :school_cohort, :user, :profile_type
 
-  def initialize(school_cohort, user, type)
+  def initialize(school_cohort, user, profile_type)
     @school_cohort = school_cohort
     @user = user
-    @type = type
-    @profile_class = type.constantize
+    @profile_type = profile_type
   end
 
   def ineligible_participants
     active_induction_records
       .fip
-      .merge(profile_class.ineligible_status)
+      .merge(profile_type.ineligible_status)
   end
 
   def eligible_participants
@@ -43,70 +42,88 @@ private
 
   def contacted_for_info_participants
     active_induction_records
-      .merge(profile_class.contacted_for_info)
+      .merge(profile_type.contacted_for_info)
   end
 
   def details_being_checked_participants
     active_induction_records
       .fip
-      .merge(profile_class.details_being_checked)
+      .merge(profile_type.details_being_checked)
   end
 
   def transferring_in_participants
-    school_cohort
-      .transferring_in_induction_records
-      .joins(:participant_profile)
-      .where(participant_profiles: { type: type })
-      .includes(:user)
-      .order("users.full_name")
+    InductionRecordPolicy::Scope.new(
+      user,
+      school_cohort
+        .transferring_in_induction_records
+        .joins(:participant_profile)
+        .where(participant_profiles: { type: profile_type.to_s })
+        .includes(:user)
+        .order("users.full_name"),
+    ).resolve
   end
 
   def transferring_out_participants
-    school_cohort
-      .transferring_out_induction_records
-      .joins(:participant_profile)
-      .where(participant_profiles: { type: type })
-      .includes(:user)
-      .order("users.full_name")
+    InductionRecordPolicy::Scope.new(
+      user,
+      school_cohort
+        .transferring_out_induction_records
+        .joins(:participant_profile)
+        .where(participant_profiles: { type: profile_type.to_s })
+        .includes(:user)
+        .order("users.full_name"),
+    ).resolve
   end
 
   def transferred_participants
-    school_cohort
-      .transferred_induction_records
-      .joins(:participant_profile)
-      .where(participant_profiles: { type: type })
-      .includes(:user)
-      .order("users.full_name")
+    InductionRecordPolicy::Scope.new(
+      user,
+      school_cohort
+        .transferred_induction_records
+        .joins(:participant_profile)
+        .where(participant_profiles: { type: profile_type.to_s })
+        .includes(:user)
+        .order("users.full_name"),
+    ).resolve
   end
 
   def active_induction_records
-    school_cohort
-      .active_induction_records
-      .where.not(training_status: :withdrawn)
-      .joins(:participant_profile)
-      .where(participant_profiles: { type: type })
-      .includes(:user)
-      .order("users.full_name")
+    InductionRecordPolicy::Scope.new(
+      user,
+      school_cohort
+        .active_induction_records
+        .where.not(training_status: :withdrawn)
+        .joins(:participant_profile)
+        .where(participant_profiles: { type: profile_type.to_s })
+        .includes(:user)
+        .order("users.full_name"),
+    ).resolve
   end
 
   def withdrawn_induction_records
-    school_cohort
-      .current_induction_records
-      .training_status_withdrawn
-      .joins(:participant_profile)
-      .where(participant_profiles: { type: type })
-      .includes(:user)
-      .order("users.full_name")
+    InductionRecordPolicy::Scope.new(
+      user,
+      school_cohort
+        .current_induction_records
+        .training_status_withdrawn
+        .joins(:participant_profile)
+        .where(participant_profiles: { type: profile_type.to_s })
+        .includes(:user)
+        .order("users.full_name"),
+    ).resolve
   end
 
   def incoming_induction_records
-    school_cohort.transferring_in_induction_records
+    InductionRecordPolicy::Scope.new(
+      user,
+      school_cohort.transferring_in_induction_records,
+    ).resolve
   end
 
   def fip_eligible_participants
     active_induction_records
       .fip
-      .merge(profile_class.eligible_status)
+      .merge(profile_type.eligible_status)
   end
 
   def cip_eligible_participants

@@ -9,23 +9,19 @@ class SetParticipantCategories < BaseService
 
 private
 
-  attr_reader :school_cohort, :user, :type
+  attr_reader :school_cohort, :user, :profile_type
 
-  def initialize(school_cohort, user, type)
+  def initialize(school_cohort, user, profile_type)
     @school_cohort = school_cohort
     @user = user
-    @type = type
+    @profile_type = profile_type.to_s
   end
 
   def set_participant_categories
     if school_cohort.core_induction_programme?
       cip_participant_categories
     elsif FeatureFlag.active?(:eligibility_notifications)
-      if FeatureFlag.active?(:change_of_circumstances)
-        fip_participants_coc_feature_flag_active
-      else
-        fip_participant_categories_feature_flag_active
-      end
+      fip_participant_categories_feature_flag_active
     else
       fip_participant_categories_feature_flag_inactive
     end
@@ -44,7 +40,7 @@ private
   end
 
   def active_participant_profiles
-    ParticipantProfilePolicy::Scope.new(user, school_cohort.active_ecf_participant_profiles.where(type: type)).resolve
+    ParticipantProfilePolicy::Scope.new(user, school_cohort.active_ecf_participant_profiles.where(type: profile_type)).resolve
   end
 
   def ineligible_participants
@@ -81,52 +77,5 @@ private
 
   def fip_flag_inactive_details_being_checked_participants
     [*details_being_checked_participants, *ineligible_participants, *eligible_participants].uniq
-  end
-
-  # change of circumstances feature flag methods
-
-  def fip_participants_coc_feature_flag_active
-    ParticipantCategories.new(coc_eligible_participants, coc_flag_active_ineligible, coc_withdrawn_participants, coc_contacted_for_info_participants, coc_details_being_checked_participants, coc_transferring_in, coc_transferring_out)
-  end
-
-  def coc_current_induction_records
-    profile_type = type.constantize
-    ParticipantProfilePolicy::Scope.new(user, profile_type.where(id: school_cohort.current_induction_records.select(:participant_profile_id)).includes(:user).order("users.full_name")).resolve
-  end
-
-  def coc_transferring_in
-    ParticipantProfilePolicy::Scope.new(user, ParticipantProfile::ECF.where(id: school_cohort.transferring_in_induction_records.select(:participant_profile_id)).includes(:user).order("users.full_name")).resolve
-  end
-
-  def coc_transferring_out
-    ParticipantProfilePolicy::Scope.new(user, ParticipantProfile::ECF.where(id: school_cohort.transferring_out_induction_records.select(:participant_profile_id)).includes(:user).order("users.full_name")).resolve
-  end
-
-  def coc_eligible_participants
-    coc_current_induction_records.eligible_status.includes(:user).order("users.full_name").where.not(training_status: :withdrawn)
-  end
-
-  def coc_ineligible_participants
-    coc_current_induction_records.ineligible_status.includes(:user).order("users.full_name").where.not(training_status: :withdrawn)
-  end
-
-  def coc_withdrawn_participants
-    coc_current_induction_records.training_status_withdrawn.includes(:user).order("users.full_name")
-  end
-
-  def coc_contacted_for_info_participants
-    coc_current_induction_records.contacted_for_info.includes(:user).order("users.full_name").where.not(training_status: :withdrawn)
-  end
-
-  def coc_details_being_checked_participants
-    coc_current_induction_records.details_being_checked.includes(:user).order("users.full_name").where.not(training_status: :withdrawn)
-  end
-
-  def coc_flag_active_ineligible
-    coc_ineligible_participants - coc_eligible_participants
-  end
-
-  def coc_flag_active_withdrawn
-    coc_ineligible_participants - [coc_flag_active_ineligible, coc_details_being_checked_participants].flatten
   end
 end
