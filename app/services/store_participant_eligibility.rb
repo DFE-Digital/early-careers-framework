@@ -18,7 +18,7 @@ class StoreParticipantEligibility < BaseService
       send_ineligible_notification_emails
     end
 
-    if changed_to_manual_check? && doing_fip?
+    if changed_to_manual_check? && doing_fip? && @previous_status != "eligible"
       send_manual_check_notification_email
     end
 
