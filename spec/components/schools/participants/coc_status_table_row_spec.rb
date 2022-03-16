@@ -11,9 +11,6 @@ RSpec.describe Schools::Participants::CocStatusTableRow, type: :view_component d
 
   context "participant is on full induction programme" do
     let(:programme) { create(:induction_programme, :fip) }
-    # before do
-    #   Induction::Enrol.call(participant_profile: participant_profile, induction_programme: programme)
-    # end
 
     context "participant is eligible" do
       it "renders the row" do
@@ -46,7 +43,6 @@ RSpec.describe Schools::Participants::CocStatusTableRow, type: :view_component d
     before do
       school_cohort.core_induction_programme!
       school_cohort.update!(core_induction_programme: create(:core_induction_programme))
-      # Induction::Enrol.call(participant_profile: participant_profile, induction_programme: programme)
     end
 
     context "participant is eligible" do
