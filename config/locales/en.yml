@@ -246,7 +246,10 @@ en:
     total_completed: Total completed
     total_retained: Total retained
     total_starts: Total starts
+    total_voids: Total voids
     total: Total
+    total_declarations: Total declarations
+    total_not_eligible_for_funding: Total not eligible for funding
     show_contract: View contract information
     show_voided_declarations: View voided declarations
     voided_declarations: Voided declarations
@@ -272,6 +275,7 @@ en:
     total_paid: Total paid
     total_not_paid: Total not paid
     number_of_declarations: Number of declarations
+    view: View
     contract:
       version: Contract reference
       per_participant: Per participant

@@ -59,6 +59,10 @@ module ApplicationHelper
     end
   end
 
+  def wide_container_view?
+    params[:controller].start_with?("finance")
+  end
+
 private
 
   def post_2020_ecf_participant?(user)

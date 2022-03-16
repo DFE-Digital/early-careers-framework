@@ -38,10 +38,10 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named("Course overview per lead provider")
 
-    when_i_click_on("View voided declarations")
+    when_i_click_on_view_within_statement_summary
     then_i_see_voided_declarations
     when_i_click "Back"
-    when_i_click_on("View contract information")
+    when_i_click_on_view_contract
     then_i_see_contract_information
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named("Contract information per NPQ lead provider")
@@ -142,7 +142,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     within first(".app-application-card__header") do
       expect(page).to have_content("Started")
       expect(page).to have_content(total_participants_for(npq_specialist_schedule.milestones.first))
-      expect(page).to have_content("Current trainees")
+      expect(page).to have_content("Total declarations")
       expect(page).to have_content(current_trainees)
     end
   end
@@ -150,6 +150,12 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   def then_i_should_have_the_correct_payment_breakdown_per_npq_lead_provider
     within first(".app-application__card") do
       expect(page).to have_content("Started")
+    end
+  end
+
+  def when_i_click_on_view_within_statement_summary
+    within(".app-application__panel__summary") do
+      when_i_click_on("View")
     end
   end
 
@@ -176,13 +182,17 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   end
 
   def when_i_click_on(string)
-    click_on string
+    click_link_or_button string
+  end
+
+  def when_i_click_on_view_contract
+    find("span", text: "Contract Information").click
   end
 
   def then_i_see_contract_information
-    within first(".govuk-table") do
-      expect(page).to have_css("tr:nth-child(1) td:nth-child(1)", text: npq_course_leading_teaching.identifier)
-      expect(page).to have_css("tr:nth-child(1) td:nth-child(2)", text: npq_leading_teaching_contract.recruitment_target)
+    within first(".govuk-details__text") do
+      expect(page).to have_content(npq_course_leading_teaching.identifier)
+      expect(page).to have_content(npq_leading_teaching_contract.recruitment_target)
     end
   end
 

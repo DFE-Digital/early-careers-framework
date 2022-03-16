@@ -7,6 +7,8 @@ module Finance
     before_action :authenticate_user!
     before_action :ensure_finance
 
+    layout "finance"
+
   private
 
     def ensure_finance

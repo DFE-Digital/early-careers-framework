@@ -77,13 +77,13 @@ module Finance
         def statement_declarations
           if statement.current?
             ParticipantDeclaration::NPQ
-              .eligible_for_lead_provider(npq_lead_provider)
+              .for_lead_provider(npq_lead_provider)
+              .eligible
               .where(statement_id: nil)
           else
             statement
               .participant_declarations
               .paid_payable_or_eligible
-              .unique_id
           end
         end
 

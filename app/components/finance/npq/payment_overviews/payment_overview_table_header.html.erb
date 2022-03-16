@@ -1,8 +1,7 @@
 <header class="app-application-card__header">
-  <% milestones.each do |milestone| %>
+  <% milestones.order(name: :asc).each do |milestone| %>
     <%= render Finance::NPQ::PaymentOverviews::PaymentOverviewMilestoneSummary.new(milestone, total_participants_for(milestone)) %>
   <% end %>
-  <span class="govuk-body-s">Recruitment target<br><%= recruitment_target %></span>
-  <span class="govuk-body-s">Current trainees<br><%= current_trainees %></span>
-  <span class="govuk-body-s">Total not paid<br><%= total_not_paid %></span>
+  <span class="govuk-body-s"><%= t("finance.total_declarations") %><br><%= current_trainees %></span>
+  <span class="govuk-body-s"><%= t("finance.total_not_eligible_for_funding") %><br><%= total_not_paid %></span>
 </header>

@@ -48,28 +48,17 @@ RSpec.feature "NPQ view contract" do
   end
 
   def and_i_click_on_view_contract
-    click_on "View contract information"
+    find("span", text: "Contract Information").click
   end
 
   def then_i_see_contract_information_for_each_course
-    within "#main-content > table > tbody" do
-      within "tr:nth-child(1)" do
-        expect(page)
-          .to have_css("td:nth-child(1)", text: "npq-leading-teaching")
-        expect(page)
-          .to have_css("td:nth-child(2)", text: @npq_lt.recruitment_target)
-        expect(page)
-          .to have_css("td:nth-child(3)", text: number_to_pounds(@npq_lt.per_participant))
-      end
-
-      within "tr:nth-child(2)" do
-        expect(page)
-          .to have_css("td:nth-child(1)", text: "npq-leading-behaviour-culture")
-        expect(page)
-          .to have_css("td:nth-child(2)", text: @npq_lbc.recruitment_target)
-        expect(page)
-          .to have_css("td:nth-child(3)", text: number_to_pounds(@npq_lbc.per_participant))
-      end
+    within first(".govuk-details__text") do
+      expect(page).to have_content("npq-leading-teaching")
+      expect(page).to have_content(@npq_lt.recruitment_target)
+      expect(page).to have_content(number_to_pounds(@npq_lt.per_participant))
+      expect(page).to have_content("npq-leading-behaviour-culture")
+      expect(page).to have_content(@npq_lbc.recruitment_target)
+      expect(page).to have_content(number_to_pounds(@npq_lbc.per_participant))
     end
   end
 end
