@@ -1,0 +1,30 @@
+<% title = "Will #{@transferring_participant_form.full_name.titleize } be training with your school's current providers?" %>
+
+<% content_for :title, title %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: :back) %>
+
+<span class="govuk-caption-xl"><%= @school.name %></span>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+  <h1 class="govuk-heading-xl"><%= title %></h1>
+
+  <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-3">Lead provider</p>
+  <p class="govuk-!-margin-top-3"><%= @school_cohort.lead_provider.name %></p>
+  <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-3 govuk-!-margin-left-0">Delivery partner</p>
+  <p class="govuk-!-margin-top-3"><%= @school_cohort.delivery_partner.name %></p>
+
+    <%= form_for @transferring_participant_form, url: { action: :schools_current_programme }, method: :put do |f| %>
+      <%= f.govuk_collection_radio_buttons(
+            :schools_current_programme_choice,
+            @transferring_participant_form.schools_current_programme_choices,
+            :id, :name,
+            inline: true,
+            legend: { text: false }) %>
+
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>
