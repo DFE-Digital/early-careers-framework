@@ -43,7 +43,7 @@ private
         previous_participation: dqt_data[:previous_participation],
         previous_induction: dqt_data[:previous_induction],
         no_induction: dqt_data[:no_induction],
-        exempt_from_induction: dqt_data[:no_induction],
+        exempt_from_induction: dqt_data[:exempt_from_induction],
         different_trn: different_trn?(dqt_data[:trn]),
       },
     )
