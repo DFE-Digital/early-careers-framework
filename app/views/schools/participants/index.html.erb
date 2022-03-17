@@ -15,8 +15,12 @@
 
     <div class="govuk-inset-text">
       <ul class="govuk-list">
-        <li><%= govuk_link_to "Add a new ECT", add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :ect), class: "govuk-link--no-visited-state" %></li>
-        <li><%= govuk_link_to "Add a new mentor", add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :mentor), class: "govuk-link--no-visited-state" %></li>
+        <% if FeatureFlag.active?(:change_of_circumstances) %>
+          <li><%= govuk_link_to "Add a new ECT or Mentor", add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :teacher), class: "govuk-link--no-visited-state" %></li>
+        <% else %>
+          <li><%= govuk_link_to "Add a new ECT", add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :ect), class: "govuk-link--no-visited-state" %></li>
+          <li><%= govuk_link_to "Add a new mentor", add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :mentor), class: "govuk-link--no-visited-state" %></li>
+        <% end %>
         <% unless current_user.mentor? %>
           <li><%= govuk_link_to "Add yourself as a mentor", add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :self), class: "govuk-link--no-visited-state" %></li>
         <% end %>

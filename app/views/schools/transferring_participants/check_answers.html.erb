@@ -1,0 +1,148 @@
+<% content_for :title, "Check your answers" %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: :back) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Check your answers</h1>
+
+    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Name
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <div><%= @transferring_participant_form.full_name.titleize %></div>
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <%= govuk_link_to({ action: :full_name }) do %>
+            Change <span class="govuk-visually-hidden">name</span>
+          <% end %>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          TRN
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <div><%= @transferring_participant_form.trn %></div>
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <%= govuk_link_to({ action: :trn }) do %>
+            Change <span class="govuk-visually-hidden">email</span>
+          <% end %>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Date of birth
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <div>
+            <%= @transferring_participant_form.date_of_birth.to_date.to_s(:govuk) %>
+          </div>
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <%= govuk_link_to({ action: :dob}) do %>
+            Change <span class="govuk-visually-hidden">date of birth</span>
+          <% end %>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Joining date
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <div>
+            <%= @transferring_participant_form.start_date.to_date.to_s(:govuk) %>
+          </div>
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <%= govuk_link_to({ action: :teacher_start_date}) do %>
+            Change <span class="govuk-visually-hidden">start date</span>
+          <% end %>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Email address
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <div>
+            <%= @transferring_participant_form.email %>
+          </div>
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <%= govuk_link_to({ action: :email}) do %>
+            Change <span class="govuk-visually-hidden">email</span>
+          <% end %>
+        </dd>
+      </div>
+
+      <% if @transferring_participant_form.mentor_id %>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Mentor
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <div>
+            <%= User.find(@transferring_participant_form.mentor_id).full_name.titleize %>
+            </div>
+          </dd>
+          <dd class="govuk-summary-list__actions">
+            <%= govuk_link_to({ action: :choose_mentor }) do %>
+              Change <span class="govuk-visually-hidden">mentor</span>
+            <% end %>
+          </dd>
+        </div>
+      <% end %>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Training with
+        </dt>
+
+        <dd class="govuk-summary-list__value">
+          <div>
+
+            <% if @transferring_participant_form.schools_current_programme_choice == "yes" %>
+            <div>
+              <%= @school_cohort.default_induction_programme.lead_provider.name %>
+            </div>
+            <div>
+              <%= @school_cohort.default_induction_programme.delivery_partner&.name %>
+            </div>
+            <% else %>
+            <div>
+              <%= @latest_induction_record.induction_programme&.lead_provider.name %>
+            </div>
+            <div>
+              <%= @latest_induction_record.induction_programme&.delivery_partner.name %>
+            </div>
+            <% end %>
+
+          </div>
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <% if @transferring_participant_form.teachers_current_programme_choice == "yes" %>
+            <%= govuk_link_to({ action: :schools_current_programme}) do %>
+              Change <span class="govuk-visually-hidden">training_programme</span>
+            <% end %>
+          <% else %>
+            <%= govuk_link_to({ action: :teachers_current_programme}) do %>
+              Change <span class="govuk-visually-hidden">training_programme</span>
+           <% end %>
+          <% end %>
+        </dd>
+      </div>
+    </dl>
+
+    <%= form_for @transferring_participant_form, url: { action: :check_answers }, method: :put do |f| %>
+      <%= f.govuk_submit "Confirm and add" %>
+    <% end %>
+  </div>
+</div>

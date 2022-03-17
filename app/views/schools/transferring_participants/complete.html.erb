@@ -1,0 +1,19 @@
+<% content_for :title, "transfer added" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+      <%= govuk_panel title_text: "#{@transferring_participant_form.full_name.titleize } has been registered at your school", text: nil, classes: "govuk-!-margin-bottom-8" %>
+
+      <h2 class="govuk-heading-m">What happens next</h2>
+
+      <p class="govuk-body">We’ll let this person know you’ve registered them for ECF-based training at your school.</p>
+      <p class="govuk-body">They’ll appear in the ’Moving school’ tab on your dashboard until their start date.</p>
+
+      <% if @transferring_participant_form.same_programme %>
+         <p class="govuk-body">They’re already training with the same provider used by your school. We’ll let your provider know about the transfer.</p>
+      <% end %>
+
+    <%= govuk_link_to "View your ECTs and mentors", schools_participants_path, class: "govuk-link govuk-link--no-visited-state" %>
+  </div>
+</div>

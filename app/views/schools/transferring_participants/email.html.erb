@@ -1,0 +1,17 @@
+<% title = "What’s #{@transferring_participant_form.full_name_to_display } email?" %>
+
+<% content_for :title, title%>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: :back) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-xl"><%= @school.name %></span>
+    <h1 class="govuk-heading-xl"><%= title %></h1>
+    <%= form_for @transferring_participant_form, url: { action: :email }, method: :put do |f| %>
+      <%= f.govuk_text_field :email, label: { hidden: true }, width: "three-quarters", hint: { text: "You can enter their personal or school email address" } %>
+
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>
