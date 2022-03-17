@@ -51,6 +51,39 @@ module Api
             end
           end
         end
+
+        context "when training_status is withdrawn" do
+          let(:participant) { profile.user }
+          let(:profile) { create(:npq_participant_profile, training_status: "withdrawn") }
+          let(:npq_application) { profile.npq_application }
+          let(:cpd_lead_provider) { npq_application.npq_lead_provider.cpd_lead_provider }
+
+          subject { described_class.new(participant, params: { cpd_lead_provider: cpd_lead_provider }) }
+
+          it "nullifies email" do
+            expect(subject.serializable_hash.dig(:data, :attributes, :email)).to be_nil
+          end
+        end
+
+        context "when 2 NPQ profiles with same provider where 1 is withdrawn" do
+          let(:participant1) { profile1.user }
+          let(:profile1) { create(:npq_participant_profile, training_status: "withdrawn") }
+          let(:npq_application1) { profile1.npq_application }
+          let(:npq_lead_provider1) { npq_application1.npq_lead_provider }
+          let(:cpd_lead_provider1) { npq_lead_provider1.cpd_lead_provider }
+
+          let!(:profile2) { create(:npq_participant_profile, training_status: "active", teacher_profile: participant1.teacher_profile) }
+
+          before do
+            profile2.npq_application.update(npq_lead_provider: npq_lead_provider1)
+          end
+
+          subject { described_class.new(participant1, params: { cpd_lead_provider: cpd_lead_provider1 }) }
+
+          it "does not nullify email" do
+            expect(subject.serializable_hash.dig(:data, :attributes, :email)).to be_present
+          end
+        end
       end
     end
   end

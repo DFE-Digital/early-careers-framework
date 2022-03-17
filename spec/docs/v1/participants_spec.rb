@@ -84,6 +84,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
         end
 
         schema({ "$ref": "#/components/schemas/ECFParticipantResponse" })
+
         run_test!
       end
     end

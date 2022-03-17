@@ -19,6 +19,7 @@ properties:
   email:
     description: "The email address registered for this NPQ participant"
     type: string
+    nullable: true
     example: "isabelle.macdonald2@some-school.example.com"
   teacher_reference_number:
     description: "The Teacher Reference Number (TRN) for this NPQ participant"
