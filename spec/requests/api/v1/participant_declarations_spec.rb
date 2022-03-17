@@ -105,6 +105,51 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         expect(fake_logger).to have_received(:info).with("Passed schema validation").ordered
       end
 
+      context "with CPDLP-1021 bug", :with_default_schedule do
+        let(:cohort)                 { create(:cohort, start_year: 2021) }
+        let(:school)                 { create(:school) }
+        let(:school_cohort)          { create(:school_cohort, school: school, cohort: cohort) }
+        let!(:partnership)           { create(:partnership, cohort: cohort, school: school, lead_provider: cpd_lead_provider.lead_provider) }
+        let(:participant)            { create(:user) }
+        let(:mentor_profile)         { Mentors::Create.call(email: participant.email, full_name: participant.full_name, school_cohort: school_cohort) }
+        let(:duplicate_participant)  { create(:user) }
+        let(:retained_one_milestone) { mentor_profile.schedule.milestones.find_by!(declaration_type: "retained-1") }
+
+        before do
+          create(:participant_identity, user: participant, external_identifier: duplicate_participant.id, email: duplicate_participant.email)
+          create(:npq_application, :accepted, npq_lead_provider: cpd_lead_provider.npq_lead_provider)
+
+          RecordDeclarations::Started::Mentor.call(
+            params: {
+              participant_id: mentor_profile.user_id,
+              declaration_date: Time.current.rfc3339,
+              declaration_type: "started",
+              course_identifier: "ecf-mentor",
+              cpd_lead_provider: cpd_lead_provider,
+            }
+          )
+        end
+
+        let(:params) do
+          {
+            participant_id: mentor_profile.user_id,
+            declaration_date: (retained_one_milestone.start_date + 1.day).rfc3339,
+            declaration_type: "retained-1",
+            course_identifier: "ecf-mentor",
+            cpd_lead_provider_id: cpd_lead_provider.id,
+            evidence_held: "other",
+          }
+        end
+
+        it "creates a retained-1" do
+          travel_to retained_one_milestone.start_date + 3.days
+
+          expect {
+            post "/api/v1/participant-declarations", params: build_params(params)
+          }.to change(mentor_profile.participant_declarations.where(declaration_type: "retained-1"), :count).from(0).to(1)
+        end
+      end
+
       context "when lead provider has no access to the user" do
         before do
           partnership.update!(lead_provider: create(:lead_provider))
