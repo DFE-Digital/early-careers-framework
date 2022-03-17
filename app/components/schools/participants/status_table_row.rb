@@ -26,6 +26,10 @@ module Schools
         profile.school_cohort.school_chose_cip?
       end
 
+      def date_column_value
+        profile.start_term.humanize
+      end
+
     private
 
       attr_reader :profile

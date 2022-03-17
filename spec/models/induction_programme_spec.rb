@@ -10,6 +10,10 @@ RSpec.describe InductionProgramme, type: :model do
 
     it { is_expected.to have_many(:induction_records) }
     it { is_expected.to have_many(:active_induction_records) }
+    it { is_expected.to have_many(:transferring_in_induction_records) }
+    it { is_expected.to have_many(:transferring_out_induction_records) }
     it { is_expected.to have_many(:participant_profiles).through(:active_induction_records) }
+    it { is_expected.to have_many(:current_induction_records) }
+    it { is_expected.to have_many(:current_participant_profiles).through(:current_induction_records).source(:participant_profile) }
   end
 end

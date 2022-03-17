@@ -24,7 +24,7 @@ RSpec.describe Induction::ChangeRegisteredIdentity do
       end
 
       it "updates the current induction record with status :changed" do
-        expect(induction_record.reload).to be_changed_status
+        expect(induction_record.reload).to be_changed_induction_status
       end
 
       it "sets the end_date to the current date" do
@@ -34,7 +34,7 @@ RSpec.describe Induction::ChangeRegisteredIdentity do
       it "sets the new induction record data correctly" do
         new_induction_record = induction_programme.active_induction_records.first
 
-        expect(new_induction_record).to be_active_status
+        expect(new_induction_record).to be_active_induction_status
         expect(new_induction_record.start_date).to be_within(1.second).of Time.zone.now
         expect(new_induction_record.participant_profile).to eq participant_profile
         expect(new_induction_record.registered_identity).to eq new_identity

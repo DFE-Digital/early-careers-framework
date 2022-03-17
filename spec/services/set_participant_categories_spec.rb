@@ -19,6 +19,9 @@ RSpec.describe SetParticipantCategories do
     let!(:primary_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, :primary_profile, school_cohort: school_cohort) }
     let!(:secondary_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, :secondary_profile, school_cohort: school_cohort) }
     let!(:withdrawn_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, training_status: "withdrawn", school_cohort: school_cohort) }
+    let!(:transferring_in_participant) { create(:ecf_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
+    let!(:transferring_out_participant) { create(:ecf_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
+    let!(:induction_programme) { create(:induction_programme, school_cohort: school_cohort) }
 
     before do
       [primary_mentor, secondary_mentor].each do |profile|
@@ -120,43 +123,87 @@ RSpec.describe SetParticipantCategories do
       let(:fip_details_being_checked_ects) { [details_being_checked_ect] }
       let(:fip_details_being_checked_mentors) { [details_being_checked_mentor] }
       let(:withdrawn_ects) { [withdrawn_ect] }
+      let(:transferring_in) { [transferring_in_participant] }
+      let(:transferring_out) { [transferring_out_participant] }
 
       before do
         FeatureFlag.activate(:eligibility_notifications)
-
         ineligible_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "active_flags")
         ineligible_ect.ecf_participant_eligibility.update!(status: "ineligible", reason: "active_flags")
         ero_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "previous_participation")
         ero_ect.ecf_participant_eligibility.update!(status: "ineligible", reason: "previous_participation")
         details_being_checked_ect.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
         details_being_checked_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
-
-        @ect_categories = service.call(school_cohort, induction_coordinator.user, "ParticipantProfile::ECT")
-        @mentor_categories = service.call(school_cohort, induction_coordinator.user, "ParticipantProfile::Mentor")
       end
 
-      it "returns eligible participants in eligible category" do
-        expect(@ect_categories.eligible).to match_array(fip_eligible_ects)
-        expect(@mentor_categories.eligible).to match_array(fip_eligible_mentors)
+      context "change_of_circumstances feature flag inactive" do
+        before do
+          FeatureFlag.deactivate(:change_of_circumstances)
+
+          @ect_categories = service.call(school_cohort, induction_coordinator.user, "ParticipantProfile::ECT")
+          @mentor_categories = service.call(school_cohort, induction_coordinator.user, "ParticipantProfile::Mentor")
+        end
+
+        it "returns eligible participants in eligible category" do
+          expect(@ect_categories.eligible).to match_array(fip_eligible_ects)
+          expect(@mentor_categories.eligible).to match_array(fip_eligible_mentors)
+        end
+
+        it "returns ineligible participants in ineligible category" do
+          expect(@ect_categories.ineligible).to match_array(fip_ineligible_ects)
+          expect(@mentor_categories.ineligible).to match_array(fip_ineligible_mentors)
+        end
+
+        it "returns contacted_for_info participants in contacted_for_info category" do
+          expect(@ect_categories.contacted_for_info).to match_array(fip_contacted_for_info_ects)
+          expect(@mentor_categories.contacted_for_info).to match_array(fip_contacted_for_info_mentors)
+        end
+
+        it "returns details_being_checked participants in details_being_checked category" do
+          expect(@ect_categories.details_being_checked).to match_array(fip_details_being_checked_ects)
+          expect(@mentor_categories.details_being_checked).to match_array(fip_details_being_checked_mentors)
+        end
+
+        it "returns withdrawn participants in withdrawn category" do
+          expect(@ect_categories.withdrawn).to match_array(withdrawn_ects)
+        end
       end
 
-      it "returns ineligible participants in ineligible category" do
-        expect(@ect_categories.ineligible).to match_array(fip_ineligible_ects)
-        expect(@mentor_categories.ineligible).to match_array(fip_ineligible_mentors)
-      end
+      context "change_of_circumstances feature flag active" do
+        before do
+          FeatureFlag.activate(:change_of_circumstances)
+          ParticipantProfile::ECF.all.each { |participant_profile| create(:induction_record, induction_programme: induction_programme, participant_profile: participant_profile, status: "active") }
 
-      it "returns contacted_for_info participants in contacted_for_info category" do
-        expect(@ect_categories.contacted_for_info).to match_array(fip_contacted_for_info_ects)
-        expect(@mentor_categories.contacted_for_info).to match_array(fip_contacted_for_info_mentors)
-      end
+          transferring_in_participant.induction_records.first.update!(start_date: 2.weeks.from_now)
+          transferring_out_participant.induction_records.first.leaving!(6.weeks.from_now)
 
-      it "returns details_being_checked participants in details_being_checked category" do
-        expect(@ect_categories.details_being_checked).to match_array(fip_details_being_checked_ects)
-        expect(@mentor_categories.details_being_checked).to match_array(fip_details_being_checked_mentors)
-      end
+          @ect_categories = service.call(school_cohort, induction_coordinator.user, "ParticipantProfile::ECT")
+          @mentor_categories = service.call(school_cohort, induction_coordinator.user, "ParticipantProfile::Mentor")
+        end
 
-      it "returns withdrawn participants in withdrawn category" do
-        expect(@ect_categories.withdrawn).to match_array(withdrawn_ects)
+        it "returns eligible participants in eligible category" do
+          expect(@ect_categories.eligible).to match_array(fip_eligible_ects)
+          expect(@mentor_categories.eligible).to match_array(fip_eligible_mentors)
+        end
+
+        it "returns ineligible participants in ineligible category" do
+          expect(@ect_categories.ineligible).to match_array(fip_ineligible_ects)
+          expect(@mentor_categories.ineligible).to match_array(fip_ineligible_mentors)
+        end
+
+        it "returns contacted_for_info participants in contacted_for_info category" do
+          expect(@ect_categories.contacted_for_info).to match_array(fip_contacted_for_info_ects)
+          expect(@mentor_categories.contacted_for_info).to match_array(fip_contacted_for_info_mentors)
+        end
+
+        it "returns details_being_checked participants in details_being_checked category" do
+          expect(@ect_categories.details_being_checked).to match_array(fip_details_being_checked_ects)
+          expect(@mentor_categories.details_being_checked).to match_array(fip_details_being_checked_mentors)
+        end
+
+        it "returns withdrawn participants in withdrawn category" do
+          expect(@ect_categories.withdrawn).to match_array(withdrawn_ects)
+        end
       end
     end
 

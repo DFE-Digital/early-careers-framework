@@ -27,6 +27,14 @@ class SchoolCohort < ApplicationRecord
   has_many :active_mentor_profiles, -> { mentors.active_record }, class_name: "ParticipantProfile"
   has_many :active_mentors, through: :active_mentor_profiles, source: :user
 
+  has_many :induction_programmes
+  has_many :current_induction_records, through: :induction_programmes, class_name: "InductionRecord"
+  has_many :active_induction_records, through: :induction_programmes, class_name: "InductionRecord"
+  has_many :transferring_in_induction_records, through: :induction_programmes, class_name: "InductionRecord"
+  has_many :transferring_out_induction_records, through: :induction_programmes, class_name: "InductionRecord"
+  has_many :transferred_induction_records, through: :induction_programmes, class_name: "InductionRecord"
+  has_many :current_participant_profiles, through: :induction_programmes, class_name: "ParticipantProfile::ECF"
+
   scope :for_year, ->(year) { joins(:cohort).where(cohort: { start_year: year }) }
 
   after_save do |school_cohort|

@@ -11,6 +11,12 @@ RSpec.describe Schools::Participants::StatusTable, type: :view_component do
   stub_component Schools::Participants::StatusTableRow
 
   context "participant is on fip" do
+    let(:programme) { create(:induction_programme, :fip) }
+
+    before do
+      Induction::Enrol.call(participant_profile: participant_profile, induction_programme: programme)
+    end
+
     context "eligible" do
       it "renders table row" do
         expect(rendered).to have_rendered(Schools::Participants::StatusTableRow).with(profile: participant_profile)
@@ -33,9 +39,12 @@ RSpec.describe Schools::Participants::StatusTable, type: :view_component do
   end
 
   context "participant is on cip" do
+    let(:programme) { create(:induction_programme, :cip) }
+
     before do
       participant_profile.school_cohort.update!(induction_programme_choice: "core_induction_programme",
                                                 core_induction_programme: cip)
+      Induction::Enrol.call(participant_profile: participant_profile, induction_programme: programme)
     end
 
     context "eligible" do

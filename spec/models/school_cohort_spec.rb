@@ -6,6 +6,11 @@ RSpec.describe SchoolCohort, type: :model do
   describe "associations" do
     it { is_expected.to belong_to(:cohort) }
     it { is_expected.to belong_to(:school) }
+
+    it { is_expected.to have_many(:current_induction_records).through(:induction_programmes) }
+    it { is_expected.to have_many(:current_participant_profiles).through(:induction_programmes) }
+    it { is_expected.to have_many(:transferring_in_induction_records).through(:induction_programmes) }
+    it { is_expected.to have_many(:transferring_out_induction_records).through(:induction_programmes) }
   end
 
   it "updates the updated_at on participant profiles and users when meaningfully updated" do

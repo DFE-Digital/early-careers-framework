@@ -1,22 +1,19 @@
-<% if ineligible_participant? && !mentor_in_early_rollout? %>
+<tr class="govuk-table__row">
+  <% if ineligible_participant? && !mentor_in_early_rollout? %>
+    <td class="govuk-table__cell govuk-!-width-three-quarters"><%= govuk_link_to profile.user.full_name, schools_participant_path(id: profile) %></td>
+    <td class="govuk-table__cell govuk-!-width-one-quarter">Remove</td>
 
- <tr class="govuk-table__row">
-   <td class="govuk-table__cell govuk-!-width-three-quarters"><%= govuk_link_to profile.user.full_name, schools_participant_path(id: profile) %></td>
-   <td class="govuk-table__cell govuk-!-width-one-quarter">Remove</td>
- </tr>
+  <% else %>
 
-<% else %>
+    <td class="govuk-table__cell govuk-!-width-one-quarter"><%= govuk_link_to profile.user.full_name, schools_participant_path(id: profile) %></td>
 
-  <tr class="govuk-table__row">
-   <td class="govuk-table__cell govuk-!-width-one-quarter"><%= govuk_link_to profile.user.full_name, schools_participant_path(id: profile) %></td>
+    <% if participant_is_on_a_cip? %>
+      <td class="govuk-table__cell govuk-!-width-one-half"><%= profile.school_cohort&.core_induction_programme&.name %></td>
+    <% else %>
+      <td class="govuk-table__cell govuk-!-width-one-quarter"><%= profile.school_cohort&.lead_provider&.name %></td>
+      <td class="govuk-table__cell govuk-!-width-one-quarter"><%= profile.school_cohort&.delivery_partner&.name %></td>
+    <% end %>
 
-   <% if participant_is_on_a_cip? %>
-     <td class="govuk-table__cell govuk-!-width-one-half"><%= profile.school_cohort&.core_induction_programme&.name %></td>
-   <% else %>
-     <td class="govuk-table__cell govuk-!-width-one-quarter"><%= profile.school_cohort&.lead_provider&.name %></td>
-     <td class="govuk-table__cell govuk-!-width-one-quarter"><%= profile.school_cohort&.delivery_partner&.name %></td>
-   <% end %>
-
-   <td class="govuk-table__cell govuk-!-width-one-quarter"><%= profile.start_term.humanize %></td>
-  </tr>
-<% end %>
+    <td class="govuk-table__cell govuk-!-width-one-quarter"><%= date_column_value %></td>
+  <% end %>
+</tr>
