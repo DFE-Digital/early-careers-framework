@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SetParticipantCategories < BaseService
-  ParticipantCategories = Struct.new(:eligible, :ineligible, :withdrawn, :contacted_for_info, :details_being_checked, :transferring_in, :transferring_out)
+  ParticipantCategories = Struct.new(:eligible, :ineligible, :withdrawn, :contacted_for_info, :details_being_checked)
 
   def call
     set_participant_categories
@@ -28,15 +28,15 @@ private
   end
 
   def fip_participant_categories_feature_flag_active
-    ParticipantCategories.new(eligible_participants, fip_flag_active_ineligible_participants, fip_flag_active_withdrawn_participants, contacted_for_info_participants, details_being_checked_participants, [], [])
+    ParticipantCategories.new(eligible_participants, fip_flag_active_ineligible_participants, fip_flag_active_withdrawn_participants, contacted_for_info_participants, details_being_checked_participants)
   end
 
   def fip_participant_categories_feature_flag_inactive
-    ParticipantCategories.new([], [], withdrawn_participants, contacted_for_info_participants, fip_flag_inactive_details_being_checked_participants, [], [])
+    ParticipantCategories.new([], [], withdrawn_participants, contacted_for_info_participants, fip_flag_inactive_details_being_checked_participants)
   end
 
   def cip_participant_categories
-    ParticipantCategories.new(cip_eligible_participants, [], withdrawn_participants, contacted_for_info_participants, [], [], [])
+    ParticipantCategories.new(cip_eligible_participants, [], withdrawn_participants, contacted_for_info_participants, [])
   end
 
   def active_participant_profiles

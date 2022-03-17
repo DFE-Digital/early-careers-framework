@@ -204,14 +204,6 @@ RSpec.describe SetParticipantCategories do
         it "returns withdrawn participants in withdrawn category" do
           expect(@ect_categories.withdrawn).to match_array(withdrawn_ects)
         end
-
-        it "returns transferring in participants in transferring in category" do
-          expect(@ect_categories.transferring_in).to match_array(transferring_in)
-        end
-
-        it "returns transferring out participants in transferring out category" do
-          expect(@ect_categories.transferring_out).to match_array(transferring_out)
-        end
       end
     end
 
