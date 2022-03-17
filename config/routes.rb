@@ -404,6 +404,34 @@ Rails.application.routes.draw do
           resources :partnerships, only: :index
           resource :programme, only: %i[edit], controller: "choose_programme"
 
+          resource :transferring_participant, path: "transferring-participant", constraints: ->(_request) { FeatureFlag.active?(:change_of_circumstances) }, only: [] do
+            get "what-we-need", to: "transferring_participants#what_we_need", as: :what_we_need
+            get "full-name", to: "transferring_participants#full_name", as: :full_name
+            put "full-name", to: "transferring_participants#full_name"
+            get "trn", to: "transferring_participants#trn", as: :trn
+            put "trn", to: "transferring_participants#trn"
+            get "dob", to: "transferring_participants#dob", as: :dob
+            put "dob", to: "transferring_participants#dob"
+            get "cannot-find-their-details", to: "transferring_participants#cannot_find_their_details", as: :cannot_find_their_details
+            get "cannot-add", to: "transferring_participants#cannot_add", as: :cannot_add
+            get "teacher-start-date", to: "transferring_participants#teacher_start_date", as: :teacher_start_date
+            put "teacher-start-date", to: "transferring_participants#teacher_start_date"
+            get "email", to: "transferring_participants#email", as: :email
+            put "email", to: "transferring_participants#email"
+            get "choose-mentor", to: "transferring_participants#choose_mentor", as: :choose_mentor
+            put "choose-mentor", to: "transferring_participants#choose_mentor"
+            get "teachers-current-programme", to: "transferring_participants#teachers_current_programme", as: :teachers_current_programme
+            put "teachers-current-programme", to: "transferring_participants#teachers_current_programme"
+            get "schools-current-programme", to: "transferring_participants#schools_current_programme", as: :schools_current_programme
+            put "schools-current-programme", to: "transferring_participants#schools_current_programme"
+            get "choose-delivery-partner", to: "transferring_participants#choose_delivery_partner", as: :choose_delivery_partner
+            put "choose-delivery-partner", to: "transferring_participants#choose_delivery_partner"
+            get "contact-support", to: "transferring_participants#contact_support"
+            get "check-answers", to: "transferring_participants#check_answers", as: :check_answers
+            put "check-answers", to: "transferring_participants#check_answers"
+            get "complete", to: "transferring_participants#complete", as: :complete
+          end
+
           resources :participants, only: %i[index show destroy] do
             get :remove
             get :edit_name, path: "edit-name"
