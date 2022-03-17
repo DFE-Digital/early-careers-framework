@@ -1,0 +1,67 @@
+description: "The details of an NPQ application"
+type: object
+required:
+  - participant_id
+  - course_identifier
+  - schedule_identifier
+  - cohort
+  - npq_application_id
+  - eligible_for_funding
+  - training_status
+  - school_urn
+properties:
+  participant_id:
+    description: "The unique identifier of this NPQ participant"
+    type: string
+    example: 7a8fef46-3c43-42c0-b3d5-1ba5904ba562
+    format: uuid
+  course_identifier:
+    description: "The NPQ course the participant is enrolled in"
+    type: string
+    example: npq-leading-teaching
+    enum:
+      - npq-leading-teaching
+      - npq-leading-behaviour-culture
+      - npq-leading-teaching-development
+      - npq-senior-leadership
+      - npq-headship
+      - npq-executive-leadership
+      - npq-additional-support-offer
+  schedule_identifier:
+    description: "The schedule currently applied to this enrollment"
+    type: string
+    example: "npq-specialist-autumn"
+    enum:
+      - npq-specialist-autumn
+      - npq-specialist-spring
+      - npq-leadership-autumn
+      - npq-leadership-spring
+      - npq-aso-december
+      - npq-aso-november
+      - npq-aso-march
+      - npq-aso-june
+  cohort:
+    description: "The start year of the cohort the participant is enrolled in"
+    type: string
+    example: "2021"
+  npq_application_id:
+    description: "The unique identifier of this NPQ application that was accepted to create this enrollment"
+    type: string
+    example: 7a8fef46-3c43-42c0-b3d5-1ba5904ba562
+    format: uuid
+  eligible_for_funding:
+    description: "Indicates whether this NPQ participant would be eligible for funding from the DfE"
+    type: "boolean"
+    example: true
+  training_status:
+    description: "The training status of the ECF participant"
+    type: string
+    example: active
+    enum:
+      - active
+      - deferred
+      - withdrawn
+  school_urn:
+    description: "The Unique Reference Number (URN) of the school where this NPQ participant is teaching"
+    type: string
+    example: "106286"
