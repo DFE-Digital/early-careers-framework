@@ -34,7 +34,7 @@ RSpec.describe StoreValidationResult do
         previous_participation: false,
         previous_induction: false,
         no_induction: false,
-        exempt_from_induction: false,
+        exempt_from_induction: [true, false].sample,
       },
     ].sample
   end
