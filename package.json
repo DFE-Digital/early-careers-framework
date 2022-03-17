@@ -9,7 +9,7 @@
     "@rails/webpacker": "^5.4.3",
     "@sentry/browser": "^6.17.9",
     "@sentry/tracing": "^6.18.2",
-    "accessible-autocomplete": "^2.0.3",
+    "accessible-autocomplete": "^2.0.4",
     "es6-promise": "^4.2.8",
     "govuk-frontend": "^3.14.0",
     "serialize-javascript": "^5.0.1",
