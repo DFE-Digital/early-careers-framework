@@ -93,7 +93,7 @@ private
     if @participant_eligibility.reason.to_sym == :exempt_from_induction
       if participant_profile.participant_declarations.any? && @previous_status == "eligible"
         IneligibleParticipantMailer.ect_exempt_from_induction_email_to_ect_previously_eligible(participant_profile: participant_profile).deliver_later
-      else
+      elsif @previous_status != "eligible"
         IneligibleParticipantMailer.ect_exempt_from_induction_email_to_ect(participant_profile: participant_profile).deliver_later
       end
     end
@@ -107,6 +107,8 @@ private
       when :exempt_from_induction
         if participant_profile.participant_declarations.any? && @previous_status == "eligible"
           :ect_exempt_from_induction_email_previously_eligible
+        elsif @previous_status == "eligible"
+          nil
         else
           :ect_exempt_from_induction_email
         end

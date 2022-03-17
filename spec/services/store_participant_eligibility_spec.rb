@@ -214,6 +214,18 @@ RSpec.describe StoreParticipantEligibility do
                         }],
                       ).once
           end
+
+          it "doesn't send emails when the reason is exempt from induction, they were previously eligible but don't have declarations" do
+            create(:ecf_participant_eligibility, :eligible, participant_profile: ect_profile)
+            eligibility_options[:exempt_from_induction] = true
+            eligibility_options[:status] = :ineligible
+            eligibility_options[:reason] = :exempt_from_induction
+
+            expect {
+              service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+            }.to not_have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email)
+              .and not_have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email_to_ect)
+          end
         end
 
         context "when participant is a Mentor" do
