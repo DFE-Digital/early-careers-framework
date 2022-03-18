@@ -27,8 +27,8 @@ class TransferringParticipantScenario
               :new_payment_mentors,
               :new_payment_declarations
 
-  def initialize(num, hash)
-    scenario = hash.with_indifferent_access.freeze
+  def initialize(num, fixture_data)
+    scenario = fixture_data.to_h.with_indifferent_access.freeze
 
     @number = num
     @participant_type = scenario.fetch(:participant_type)
@@ -37,9 +37,9 @@ class TransferringParticipantScenario
 
     @transfer = scenario.fetch(:transfer, :not_applicable)
 
-    @prior_declarations = scenario.fetch(:prior_declarations, "").split(",").map(&:to_sym)
-    @new_declarations = scenario.fetch(:new_declarations, "").split(",").map(&:to_sym)
-    @duplicate_declarations = scenario.fetch(:duplicate_declarations, "").split(",").map(&:to_sym)
+    @prior_declarations = scenario.fetch(:prior_declarations).to_s.split(",").map(&:to_sym)
+    @new_declarations = scenario.fetch(:new_declarations).to_s.split(",").map(&:to_sym)
+    @duplicate_declarations = scenario.fetch(:duplicate_declarations).to_s.split(",").map(&:to_sym)
 
     @starting_school_status = scenario.fetch(:starting_school_status, :not_applicable)
     @prior_school_status = scenario.fetch(:prior_school_status, :not_applicable)
@@ -54,11 +54,11 @@ class TransferringParticipantScenario
     @see_original_declarations = scenario.fetch(:see_original_declarations, :not_applicable)
     @see_new_declarations = scenario.fetch(:see_new_declarations, :not_applicable)
 
-    @original_payment_ects = scenario.fetch(:original_payment_ects, 0)
-    @original_payment_mentors = scenario.fetch(:original_payment_mentors, 0)
-    @original_payment_declarations = scenario.fetch(:original_payment_declarations, 0)
-    @new_payment_ects = scenario.fetch(:new_payment_ects, 0)
-    @new_payment_mentors = scenario.fetch(:new_payment_mentors, 0)
-    @new_payment_declarations = scenario.fetch(:new_payment_declarations, 0)
+    @original_payment_ects = scenario.fetch(:original_payment_ects, "0").to_i
+    @original_payment_mentors = scenario.fetch(:original_payment_mentors, "0").to_i
+    @original_payment_declarations = scenario.fetch(:original_payment_declarations, "0").to_i
+    @new_payment_ects = scenario.fetch(:new_payment_ects, "0").to_i
+    @new_payment_mentors = scenario.fetch(:new_payment_mentors, "0").to_i
+    @new_payment_declarations = scenario.fetch(:new_payment_declarations, "0").to_i
   end
 end
