@@ -1,18 +1,4 @@
 groups:
-  - name: Request-rates
-    rules:
-      - alert: RequestsFailuresElevated
-        # Condition for alerting
-        expr: (sum(rate(requests{app="ecf-dev", status_range=~"0xx|4xx|5xx"}[10m]))) / (sum(rate(requests{app="ecf-dev"}[10m])) ) > 0.2
-        # Annotation - additional informational labels to store more information
-        annotations:
-          summary: High rate of failing requests
-          description: "ecf-dev: The proportion of failed HTTP requests in the past 5 min is above 10% (current value: {{ humanizePercentage $value }})"
-        # Labels - additional labels to be attached to the alert
-        labels:
-          environment: development
-          severity: low
-
   - name: CPU-usage
     rules:
       - alert: AppCPUHigh
