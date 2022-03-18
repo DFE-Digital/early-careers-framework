@@ -17,13 +17,7 @@ module Finance
         attr_accessor :statement, :contracts, :npq_lead_provider
 
         def service_fees
-          service_fees = []
-          contracts.each do |contract|
-            next if contract.service_fee_percentage.zero?
-
-            service_fees << PaymentCalculator::NPQ::ServiceFees.call(contract: contract)
-          end
-          service_fees
+          contracts.map { |contract| PaymentCalculator::NPQ::ServiceFees.call(contract: contract) }.compact
         end
 
         def total_service_fees
@@ -46,8 +40,8 @@ module Finance
           total_payment + overall_vat
         end
 
-        def output_payment_cut_off_date
-          statement.payment_date
+        def deadline_date
+          statement.deadline_date
         end
 
         def recruitment_target_total
