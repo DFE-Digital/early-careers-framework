@@ -15,13 +15,11 @@ module Finance
           service_fees[:monthly]
         end
 
-        def payment_per_trainee
+        def payment_per_participant
           service_fees[:per_participant]
         end
 
-        def trainees
-          contract.recruitment_target
-        end
+        delegate :recruitment_target, to: :contract
 
       private
 

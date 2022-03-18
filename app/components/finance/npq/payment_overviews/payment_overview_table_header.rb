@@ -18,7 +18,7 @@ module Finance
           NPQCourse.schedule_for(course).milestones
         end
 
-        def current_trainees
+        def total_declarations
           if statement.current?
             ParticipantDeclaration::NPQ
               .for_lead_provider(npq_lead_provider)
@@ -37,7 +37,7 @@ module Finance
           end
         end
 
-        def total_not_paid
+        def not_eligible_declarations
           if statement.current?
             ParticipantDeclaration::NPQ
               .for_lead_provider(npq_lead_provider)

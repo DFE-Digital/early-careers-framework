@@ -19,11 +19,11 @@ module Finance
           output_payment[:subtotal]
         end
 
-        def payment_per_trainee
+        def payment_per_participant
           output_payment[:per_participant]
         end
 
-        def current_trainees
+        def total_declarations
           if statement.current?
             ParticipantDeclaration::NPQ
               .eligible_for_lead_provider(npq_lead_provider)
