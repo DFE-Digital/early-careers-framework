@@ -13,7 +13,6 @@ module Pages
     end
 
     def can_see_status?(status)
-      # TODO: not sure where a school can see this
       has_text?("Status\n#{status}")
     end
   end

@@ -9,17 +9,12 @@ module Pages
       school = sit.schools.first
       partnership = school.partnerships.first
 
-      has_selector?("h1", text: "Manage your training") &&
+      has_text?("Manage your training") &&
         has_text?("Induction tutor #{full_name}") &&
         if partnership.nil?
-          has_text?("Use DfE-accredited materials") &&
-            has_text?("Materials Add") &&
-            !has_text?("Training partner") &&
-            !has_text?("Delivery partner")
+          has_text?("Programme Use DfE-accredited materials")
         else
-          has_text?("Use a training provider funded by the DfE")
-          has_text?("Training provider #{partnership.lead_provider.name}") &&
-            has_text?("Delivery partner #{partnership.delivery_partner.name}")
+          has_text?("Programme Use a training provider funded by the DfE")
         end
     end
 

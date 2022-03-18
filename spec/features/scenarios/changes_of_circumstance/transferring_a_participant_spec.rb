@@ -38,7 +38,7 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
     scenario = TransferringParticipantScenario.new index + 2, fixture_data
 
     # NOTE: uncomment to specify a specific test to run
-    # next unless index + 2 == 4
+    next unless index + 2 == 4
 
     context given_context(scenario) do
       before do
@@ -91,7 +91,7 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
           and_lead_provider_statements_have_been_created "Another Lead Provider"
         end
 
-        context "Then the Original SIT" do
+        context "Then the Original SIT", :focus do
           subject(:original_sit) { sits["Original SIT"] }
 
           it { should_not be_able_to_find_the_details_of_the_participant_in_the_school_induction_portal "the Participant" }
