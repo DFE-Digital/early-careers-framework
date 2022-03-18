@@ -48,7 +48,7 @@ RSpec.feature "Transfer a participant", type: :feature do
         and_sit_reported_participant "Original SIT", "the Participant", scenario.participant_type
         and_participant_has_completed_registration "the Participant"
 
-        expect(sits["Original SIT"]).to be_able_to_find_the_status_of_the_participant_in_the_school_induction_portal "the Participant", scenario.starting_school_status
+        expect(sits["Original SIT"]).to be_able_to_find_the_participant_status_in_the_school_induction_portal "the Participant", scenario.starting_school_status
       end
 
       context "When they are transferred by the new SIT#{" after the declarations #{scenario.prior_declarations} have been made" if scenario.prior_declarations.any?}#{" and the new declarations #{scenario.new_declarations} are then made" if scenario.new_declarations.any?}#{' before any declarations are made' if (scenario.new_declarations + scenario.prior_declarations).empty?}" do
@@ -57,7 +57,7 @@ RSpec.feature "Transfer a participant", type: :feature do
             and_lead_provider_has_made_training_declaration "Original Lead Provider", "the Participant", declaration_type
           end
 
-          expect(sits["Original SIT"]).to be_able_to_find_the_status_of_the_participant_in_the_school_induction_portal "the Participant", scenario.prior_school_status
+          expect(sits["Original SIT"]).to be_able_to_find_the_participant_status_in_the_school_induction_portal "the Participant", scenario.prior_school_status
 
           when_sit_takes_on_the_participant "New SIT", "the Participant"
 
@@ -83,7 +83,7 @@ RSpec.feature "Transfer a participant", type: :feature do
           subject(:new_sit) { sits["New SIT"] }
 
           it { should be_able_to_find_the_details_of_the_participant_in_the_school_induction_portal "the Participant" }
-          it { should be_able_to_find_the_status_of_the_participant_in_the_school_induction_portal "the Participant", scenario.new_school_status }
+          it { should be_able_to_find_the_participant_status_in_the_school_induction_portal "the Participant", scenario.new_school_status }
 
           # what are the onward actions available to the new school - can they do them ??
         end

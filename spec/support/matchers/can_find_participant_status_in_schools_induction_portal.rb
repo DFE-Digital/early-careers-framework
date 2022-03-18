@@ -2,7 +2,9 @@
 
 module Support
   module FindingParticipantStatusInSchoolsInductionPortal
-    RSpec::Matchers.define :be_able_to_find_the_status_of_the_participant_in_the_school_induction_portal do |participant_name, status|
+    extend RSpec::Matchers::DSL
+
+    RSpec::Matchers.define :be_able_to_find_the_participant_status_in_the_school_induction_portal do |participant_name, status|
       match do |sit|
         sign_in_as sit.user
         @success = false
@@ -13,12 +15,12 @@ module Support
             participants_dashboard = induction_dashboard.view_participant_dashboard
             participant_details = participants_dashboard.view_participant participant_name
 
-            @text = page.find("main").text
-
-            @success = true if participant_details.can_see_status?(status.to_s)
+            @success = participant_details.can_see_status?(status.to_s)
           else
             @success = false
           end
+
+        @text = page.find("main").text
 
         sign_out
 

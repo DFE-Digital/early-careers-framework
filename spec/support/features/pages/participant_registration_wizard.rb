@@ -26,7 +26,10 @@ module Pages
           "active_alert": false,
           "state_name": "Active",
           "qualified_teacher_status": {
-            "qts_date": "2020-07-05T00:00:00Z",
+            "qts_date": "2021-07-05T00:00:00Z",
+          },
+          "induction": {
+            "start_date": "2021-09-02T00:00:00Z",
           },
         }), headers: {})
 
