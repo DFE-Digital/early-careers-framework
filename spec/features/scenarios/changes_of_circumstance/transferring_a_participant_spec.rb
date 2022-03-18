@@ -19,7 +19,7 @@ def when_context(scenario)
   str
 end
 
-RSpec.feature "Transfer a participant", type: :feature do
+RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: true do
   include Steps::TransferParticipantSteps
 
   let(:cohort) { create :cohort, :current }
