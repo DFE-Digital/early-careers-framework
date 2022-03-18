@@ -17,9 +17,9 @@ RSpec.feature "Transfer a participant", type: :feature do
     create(:ecf_schedule)
   end
 
-  filepath = File.join(File.dirname(__FILE__), "./scenarios.csv")
+  filepath = File.join(File.dirname(__FILE__), "./transferring_a_participant_fixtures.csv")
   CSV.parse(File.read(filepath), headers: true).each_with_index do |data, index|
-    scenario = Scenario.new index + 2, data
+    scenario = TransferringParticipantScenario.new index + 2, data
 
     # NOTE: uncomment to specify a specific test to run
     # next unless index + 2 == 4
