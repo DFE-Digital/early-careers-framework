@@ -8,7 +8,7 @@ RSpec.describe Cohort, type: :model do
 
     let!(:schedule) { create(:ecf_schedule, cohort: subject) }
 
-    it "returns associated scheules" do
+    it "returns associated schedules" do
       expect(subject.schedules).to include(schedule)
     end
   end
