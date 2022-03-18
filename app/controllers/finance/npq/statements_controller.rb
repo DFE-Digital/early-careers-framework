@@ -11,11 +11,6 @@ module Finance
         @statement         = @cpd_lead_provider.npq_lead_provider.statements.find_by(name: identifier_to_name)
         @statements        = @npq_lead_provider.statements.upto_current.order(payment_date: :desc)
         @npq_contracts     = @npq_lead_provider.npq_contracts.order(course_identifier: :asc)
-
-        @breakdowns = Finance::NPQ::CalculationOverviewOrchestrator.new(
-          statement: @statement,
-          aggregator: aggregator_for(@statement),
-        ).call(event_type: :started)
       end
 
       def voided
@@ -33,14 +28,6 @@ module Finance
 
       def lead_provider_scope
         policy_scope(NPQLeadProvider, policy_scope_class: FinanceProfilePolicy::Scope)
-      end
-
-      def aggregator_for(statement)
-        if statement.past_deadline_date?
-          Finance::NPQ::ParticipantAggregator
-        else
-          Finance::NPQ::ParticipantEligibleAndPayableAggregator
-        end
       end
     end
   end

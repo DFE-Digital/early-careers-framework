@@ -31,6 +31,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     and_choose_to_see_npq_payment_breakdown
     and_i_select_an_npq_lead_provider
 
+    then_i_should_see_correct_statement_summary
     then_i_should_see_correct_course_summary
     then_i_should_see_correct_output_payment_breakdown
     then_i_should_see_correct_service_fee_payment_breakdown
@@ -115,10 +116,25 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
       .update_all(statement_id: statement.id)
   end
 
+  def then_i_should_see_correct_statement_summary
+    then_i_should_see_correct_overall_payments
+    then_i_should_see_correct_cut_off_date
+    then_i_should_see_correct_overall_declarations
+  end
+
+  def then_i_should_see_correct_overall_payments
+    within(".app-application__panel__summary") do
+    end
+  end
+
+  def then_i_should_see_correct_cut_off_date; end
+
+  def then_i_should_see_correct_overall_declarations; end
+
   def then_i_should_see_correct_output_payment_breakdown
     within first(".app-application__card") do
       expect(page).to have_css("tr:nth-child(1) td:nth-child(1)", text: "Output payment")
-      expect(page).to have_css("tr:nth-child(1) td:nth-child(2)", text: current_trainees)
+      expect(page).to have_css("tr:nth-child(1) td:nth-child(2)", text: total_declarations)
       expect(page).to have_css("tr:nth-child(1) td:nth-child(3)", text: number_to_pounds(payment_per_trainee))
       expect(page).to have_css("tr:nth-child(1) td:nth-child(4)", text: number_to_pounds(total))
     end
@@ -143,13 +159,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
       expect(page).to have_content("Started")
       expect(page).to have_content(total_participants_for(npq_specialist_schedule.milestones.first))
       expect(page).to have_content("Total declarations")
-      expect(page).to have_content(current_trainees)
-    end
-  end
-
-  def then_i_should_have_the_correct_payment_breakdown_per_npq_lead_provider
-    within first(".app-application__card") do
-      expect(page).to have_content("Started")
+      expect(page).to have_content(total_declarations)
     end
   end
 
@@ -196,10 +206,6 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     end
   end
 
-  def expected_service_fee_payment(npq_contract)
-    npq_contract.recruitment_target * expected_service_fee_portion_per_participant(npq_contract)
-  end
-
   def participant_per_declaration_type
     statement.participant_declarations.for_course_identifier(npq_leading_behaviour_culture_contract.course_identifier).where.not(state: :voided).group(:declaration_type).count
   end
@@ -208,7 +214,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     participant_per_declaration_type.fetch(milestone.declaration_type, 0)
   end
 
-  def current_trainees
+  def total_declarations
     statement.participant_declarations.for_course_identifier(npq_leading_behaviour_culture_contract.course_identifier).paid_payable_or_eligible.unique_id.count
   end
 
