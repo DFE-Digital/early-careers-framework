@@ -71,12 +71,12 @@ RSpec.describe StoreParticipantEligibility do
           )
       end
 
-      it "doesn't send any notifications if the previous state was eligible" do
+      it "sends notifications if the previous state was eligible" do
         create(:ecf_participant_eligibility, :eligible, participant_profile: ect_profile)
         eligibility_options[:no_induction] = true
         expect {
           service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
-        }.to_not have_enqueued_mail(IneligibleParticipantMailer, :ect_no_induction_email)
+        }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_no_induction_email)
           .with(
             args: [{
               induction_tutor_email: induction_tutor.email,
