@@ -41,7 +41,7 @@ gem "puma", "~> 5.6"
 gem "webpacker", ">= 5.4.3"
 
 # Soft delete
-gem "discard", "~> 1.2", ">= 1.2.0"
+gem "discard", "~> 1.2"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", ">= 1.1.0", require: false
