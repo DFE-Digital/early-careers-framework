@@ -10,10 +10,10 @@ module APIs
       @session = ActionDispatch::Integration::Session.new(Rails.application)
     end
 
-    def post_training_declaration(participant, declaration_type)
+    def post_training_declaration(participant, declaration_type, declaration_date)
       post_declaration participant,
                        declaration_type.to_s,
-                       participant.schedule.milestones.first.start_date + 2.days
+                       declaration_date
     end
 
     def get_training_declarations(participant)

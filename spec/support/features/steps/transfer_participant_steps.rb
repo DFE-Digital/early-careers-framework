@@ -7,20 +7,13 @@ module Steps
     def given_lead_providers_contracted_to_deliver_ecf(lead_provider_name)
       user = create :user, full_name: lead_provider_name
       lead_provider = create :lead_provider, :with_delivery_partner, name: lead_provider_name
-      cpd_lead_provider = create :cpd_lead_provider, lead_provider: lead_provider
+      cpd_lead_provider = create :cpd_lead_provider, lead_provider: lead_provider, name: lead_provider_name
       create :lead_provider_profile, user: user, lead_provider: cpd_lead_provider.lead_provider
       create :call_off_contract, lead_provider: cpd_lead_provider.lead_provider
 
-      # create(:call_off_contract, lead_provider: cpd_lead_provider.lead_provider, revised_target: 7).tap do |call_off_contract|
-      #           band_a, band_b, band_c, band_d = call_off_contract.bands
-      #           band_a.update!(min: nil, max: 1)
-      #           band_b.update!(min: 2,  max: 3)
-      #           band_c.update!(min: 4,  max: 5)
-      #           band_d.update!(min: 6,  max: 7)
-      #         end
-
-      create :ecf_statement, name: "November 2021", cpd_lead_provider: cpd_lead_provider
-      create :ecf_statement, name: "January 2022", cpd_lead_provider: cpd_lead_provider
+      create :ecf_statement,
+             name: "November 2021",
+             cpd_lead_provider: cpd_lead_provider
 
       token = LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider, lead_provider: lead_provider)
 
@@ -28,8 +21,8 @@ module Steps
       tokens[lead_provider_name] = token
     end
 
-    def and_sit_reported_programme(sit_name, programme)
-      school = create :school, name: "#{sit_name}'s School"
+    def and_sit_at_pupil_premium_school_reported_programme(sit_name, programme)
+      school = create :school, :pupil_premium_uplift, name: "#{sit_name}'s School"
       user = create :user, full_name: sit_name
       sit = create :induction_coordinator_profile,
                    schools: [school],
@@ -91,7 +84,7 @@ module Steps
     end
 
     def and_lead_provider_has_made_training_declaration(lead_provider_name, participant_name, declaration_type)
-      declarations_endpoint = APIs::ParticipantDeclarationsEndpoint.new tokens[lead_provider_name]
+      response = nil
 
       user = User.find_by(full_name: participant_name)
       raise "Could not find User for #{participant_name}" if user.nil?
@@ -99,7 +92,21 @@ module Steps
       participant = user.participant_profiles.first
       raise "Could not find ParticipantProfile for #{participant_name}" if participant.nil?
 
-      response = declarations_endpoint.post_training_declaration participant, declaration_type
+      case declaration_type
+      when :started
+        timestamp = participant.schedule.milestones.first.start_date + 4.days
+        declaration_date = timestamp - 2.days
+      when :retained_1
+        timestamp = participant.schedule.milestones.second.start_date + 4.days
+        declaration_date = timestamp - 2.days
+      else
+        puts "declaration type was actually #{declaration_type}"
+      end
+
+      travel_to(timestamp) do
+        declarations_endpoint = APIs::ParticipantDeclarationsEndpoint.new tokens[lead_provider_name]
+        response = declarations_endpoint.post_training_declaration participant, declaration_type, declaration_date
+      end
 
       unless !response.nil? &&
           response["declaration_type"].to_sym == declaration_type &&
@@ -131,6 +138,26 @@ module Steps
 
       participant.update! school_cohort: school_cohort
       participant.teacher_profile.update! school: school
+    end
+
+    def and_eligible_training_declarations_are_made_payable
+      ParticipantDeclaration.eligible.each do |participant_declaration|
+        participant_declaration.make_payable!
+        participant_declaration.update! statement: participant_declaration.cpd_lead_provider.statements.first
+      end
+    end
+
+    def and_lead_provider_statements_have_been_created(lead_provider_name)
+      cpd_lead_provider = lead_providers[lead_provider_name]
+
+      nov_statement = cpd_lead_provider.statements.first
+
+      Finance::ECF::CalculationOrchestrator.new(
+        statement: nov_statement,
+        contract: cpd_lead_provider.lead_provider.call_off_contract,
+        aggregator: Finance::ECF::ParticipantAggregator.new(statement: nov_statement),
+        calculator: PaymentCalculator::ECF::PaymentCalculation,
+      ).call(event_type: :started)
     end
   end
 end

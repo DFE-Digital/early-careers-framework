@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Support
-  module FindingParticipantDeclarationsInFinancePortal
+  module FindingTrainingDeclarationsInFinancePortal
     extend RSpec::Matchers::DSL
 
     RSpec::Matchers.define :be_able_to_find_the_training_declarations_for_the_participant_in_the_finance_portal do |participant_name, declarations|
@@ -23,7 +23,7 @@ module Support
 
         @error = :id unless drilldown.can_see_participant?(user.id)
         declarations.each do |declaration_type|
-          @error = :declarations unless drilldown.can_see_declaration?(declaration_type, "ect-induction", "eligible")
+          @error = :declarations unless drilldown.can_see_declaration?(declaration_type, "ect-induction", "payable")
         end
 
         sign_out

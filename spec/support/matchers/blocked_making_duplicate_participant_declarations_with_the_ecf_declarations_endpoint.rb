@@ -18,7 +18,21 @@ module Support
         participant = user.participant_profiles.first
         raise "Could not find ParticipantProfile for #{participant_name}" if participant.nil?
 
-        response = declarations_endpoint.post_training_declaration participant, declaration_type
+        case declaration_type
+        when :started
+          timestamp = participant.schedule.milestones.first.start_date + 10.days
+          declaration_date = timestamp - 8.days
+        when :retained_1
+          timestamp = participant.schedule.milestones.second.start_date + 10.days
+          declaration_date = timestamp - 8.days
+        else
+          puts "declaration type was actually #{declaration_type}"
+        end
+
+        response = nil
+        travel_to(timestamp) do
+          response = declarations_endpoint.post_training_declaration participant, declaration_type, declaration_date
+        end
 
         if response.nil?
           @error = :response

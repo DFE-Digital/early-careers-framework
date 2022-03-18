@@ -9,5 +9,11 @@ module Pages
 
       Pages::FinanceParticipantDrilldownSearch.new
     end
+
+    def view_payment_breakdown
+      click_on "Payment Breakdown"
+
+      Pages::FinancePaymentBreakdownReportWizard.new
+    end
   end
 end

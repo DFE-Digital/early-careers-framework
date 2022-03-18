@@ -22,7 +22,7 @@ RSpec.feature "Transfer a participant", type: :feature do
     scenario = Scenario.new index + 2, data
 
     # NOTE: uncomment to specify a specific test to run
-    # next unless index + 2 == 13
+    # next unless index + 2 == 4
 
     context "#{scenario.number}. Given a #{scenario.participant_type} is to transfer off a #{scenario.original_programme} onto a #{scenario.new_programme}#{' using a different provider' if scenario.transfer == :different_provider}#{' using the same provider' if scenario.transfer == :same_provider}" do
       before do
@@ -30,12 +30,12 @@ RSpec.feature "Transfer a participant", type: :feature do
         given_lead_providers_contracted_to_deliver_ecf "New Lead Provider"
         given_lead_providers_contracted_to_deliver_ecf "Another Lead Provider"
 
-        and_sit_reported_programme "Original SIT", scenario.original_programme
+        and_sit_at_pupil_premium_school_reported_programme "Original SIT", scenario.original_programme
         if scenario.original_programme == "FIP"
           and_lead_provider_reported_partnership "Original Lead Provider", "Original SIT"
         end
 
-        and_sit_reported_programme "New SIT", scenario.new_programme
+        and_sit_at_pupil_premium_school_reported_programme "New SIT", scenario.new_programme
         if scenario.new_programme == "FIP"
           case scenario.transfer
           when :same_provider
@@ -65,6 +65,12 @@ RSpec.feature "Transfer a participant", type: :feature do
             declaring_lead_provider = scenario.transfer == :same_provider ? "Original Lead Provider" : "New Lead Provider"
             and_lead_provider_has_made_training_declaration declaring_lead_provider, "the Participant", declaration_type
           end
+
+          and_eligible_training_declarations_are_made_payable
+
+          and_lead_provider_statements_have_been_created "Original Lead Provider"
+          and_lead_provider_statements_have_been_created "New Lead Provider"
+          and_lead_provider_statements_have_been_created "Another Lead Provider"
         end
 
         context "Then the Original SIT" do
@@ -161,78 +167,21 @@ RSpec.feature "Transfer a participant", type: :feature do
           subject(:finance_user) { create :user, :finance }
 
           it { should be_able_to_find_the_school_of_the_participant_in_the_finance_portal "the Participant", "New SIT" }
+          current_lead_provider = scenario.transfer == :same_provider ? "Original Lead Provider" : "New Lead Provider"
+          it { should be_able_to_find_the_lead_provider_of_the_participant_in_the_finance_portal "the Participant", current_lead_provider } unless scenario.new_programme == "CIP"
           it { should be_able_to_find_the_status_of_the_participant_in_the_finance_portal "the Participant", scenario.new_participant_status }
           it { should be_able_to_find_the_training_status_of_the_participant_in_the_finance_portal "the Participant", scenario.new_training_status }
           it { should be_able_to_find_the_training_declarations_for_the_participant_in_the_finance_portal "the Participant", scenario.prior_declarations + scenario.new_declarations }
 
-          case scenario.transfer
-          when :same_provider
-            it { should be_able_to_find_the_lead_provider_of_the_participant_in_the_finance_portal "the Participant", "Original Lead Provider" }
-          when :different_provider
-            it { should be_able_to_find_the_lead_provider_of_the_participant_in_the_finance_portal "the Participant", "New Lead Provider" }
-            it { should_not be_able_to_find_the_lead_provider_of_the_participant_in_the_finance_portal "the Participant", "Original Lead Provider" }
-          end
-          it { should_not be_able_to_find_the_lead_provider_of_the_participant_in_the_finance_portal "the Participant", "Another Lead Provider" }
+          it { should be_able_to_see_recruitment_summary_for_lead_provider_in_payment_breakdown "Original Lead Provider", scenario.original_payment_ects, scenario.original_payment_mentors }
+          it { should be_able_to_see_payment_summary_for_lead_provider_in_payment_breakdown "Original Lead Provider", scenario.original_payment_declarations }
+          it { should be_able_to_see_started_declaration_payment_for_lead_provider_in_payment_breakdown "Original Lead Provider", scenario.original_payment_ects, scenario.original_payment_mentors, scenario.original_payment_declarations }
+          it { should be_able_to_see_other_fees_for_the_lead_provider_in_the_finance_portal "Original Lead Provider", scenario.original_payment_ects, scenario.original_payment_mentors }
 
-          it "can see the payment breakdown", skip: "not working" do
-            sign_in_as finance_user
-
-            lead_provider_name = "New Lead Provider"
-
-            # request payment breakdown report
-            click_on "Payment Breakdown"
-
-            # PaymentBreakdownReportWizard.new lead_provider_name
-
-            # choose_ecf_programme "ECF payments"
-            choose "ECF payments"
-            click_on "Continue"
-
-            # choose_lead_provider "Original Lead Provider"
-            choose lead_provider_name
-            click_on "Continue"
-
-            puts "====="
-
-            # Statement of fact
-            # Original Lead Provider
-            # Payment of
-            # £22,287.90
-            # On 11 March 2022
-            # Submission deadline 9 February 2022
-            # Current ECTs 0 Current Mentors 0 Total 0 Recruitment target 2000
-            # Payment Breakdown
-            # Payment type Number of declarations Payment amount for period Service fee 2000 £22,287.90 Output fee 0 £0.00 Uplift fee 0 £0.00 VAT £4,457.58 Total payment £26,745.48
-            # Service fees Band Fee per participant Current participants Payment Band A £323.17 2000 £22,287.90 Band B £391.60 0 £0.00 Band C £386.40 0 £0.00
-            # Output fees - started Band Fee per participant Current participants Payment Band A £119.40 0 £0.00 Band B £117.48 0 £0.00 Band C £115.92 0 £0.00
-            # Output fees - retained 1 Band Fee per participant Current participants Payment Band A £89.55 0 £0.00 Band B £88.11 0 £0.00 Band C £86.94 0 £0.00
-            # Particiant Breakdown Milestone Number of participants Total paid Total not paid Started 0 0 Retained 1 0 0
-            # Other fees - started Type Fee per participant Number of participants Payment Uplift fee £100.00 0 £0.00
-            # View voided declarations View contract information
-
-            puts page.find("main").text
-
-            puts "====="
-
-            cpd_lead_provider = lead_providers[lead_provider_name]
-            lead_provider = cpd_lead_provider.lead_provider
-
-            nov_statement = Finance::Statement::ECF.find_by!(name: "November 2021", cpd_lead_provider: cpd_lead_provider)
-            nov_starts = Finance::ECF::CalculationOrchestrator.new(
-              statement: nov_statement,
-              contract: lead_provider.call_off_contract,
-              aggregator: Finance::ECF::ParticipantAggregator.new(statement: nov_statement),
-              calculator: PaymentCalculator::ECF::PaymentCalculation,
-            ).call(event_type: :started)
-
-            puts page.find("main").text
-
-            puts "====="
-
-            puts JSON.pretty_generate nov_starts
-
-            sign_out
-          end
+          it { should be_able_to_see_recruitment_summary_for_lead_provider_in_payment_breakdown "New Lead Provider", scenario.new_payment_ects, scenario.new_payment_mentors }
+          it { should be_able_to_see_payment_summary_for_lead_provider_in_payment_breakdown "New Lead Provider", scenario.new_payment_declarations }
+          it { should be_able_to_see_started_declaration_payment_for_lead_provider_in_payment_breakdown "New Lead Provider", scenario.new_payment_ects, scenario.new_payment_mentors, scenario.new_payment_declarations }
+          it { should be_able_to_see_other_fees_for_the_lead_provider_in_the_finance_portal "New Lead Provider", scenario.new_payment_ects, scenario.new_payment_mentors }
         end
 
         # TODO: what would analytics have gathered ??

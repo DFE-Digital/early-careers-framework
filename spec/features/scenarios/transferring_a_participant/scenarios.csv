@@ -1,14 +1,14 @@
-participant_type,original_programme,new_programme,starting_school_status,prior_declarations,transfer,new_declarations,duplicate_declarations,prior_school_status,prior_participant_status,prior_training_status,see_original_details,see_original_declarations,new_school_status,new_participant_status,new_training_status,see_new_details,see_new_declarations
-ECT,CIP,CIP,Eligible to start,,,,,Eligible to start,active,active,,,Eligible to start,active,active,,
-ECT,CIP,FIP,Eligible to start,,,,,Eligible to start,active,active,,,DfE checking eligibility,active,active,ALL,
-ECT,CIP,FIP,Eligible to start,,,started,,Eligible to start,active,active,,,DfE checking eligibility,active,active,ALL,ALL
-ECT,FIP,CIP,DfE checking eligibility,,,,,DfE checking eligibility,active,active,OBFUSCATED,,Eligible to start,active,active,,
-ECT,FIP,CIP,DfE checking eligibility,started,,,,DfE checking eligibility,active,active,OBFUSCATED,PRIOR_ONLY,Eligible to start,active,active,,
-ECT,FIP,FIP,DfE checking eligibility,,different_provider,,,DfE checking eligibility,active,active,OBFUSCATED,,DfE checking eligibility,active,active,ALL,
-ECT,FIP,FIP,DfE checking eligibility,started,different_provider,,,DfE checking eligibility,active,active,OBFUSCATED,PRIOR_ONLY,DfE checking eligibility,active,active,ALL,ALL
-ECT,FIP,FIP,DfE checking eligibility,started,different_provider,,started,DfE checking eligibility,active,active,OBFUSCATED,PRIOR_ONLY,DfE checking eligibility,active,active,ALL,ALL
-ECT,FIP,FIP,DfE checking eligibility,,different_provider,started,,DfE checking eligibility,active,active,OBFUSCATED,,DfE checking eligibility,active,active,ALL,ALL
-ECT,FIP,FIP,DfE checking eligibility,,same_provider,,,DfE checking eligibility,active,active,ALL,,DfE checking eligibility,active,active,,
-ECT,FIP,FIP,DfE checking eligibility,started,same_provider,,,DfE checking eligibility,active,active,ALL,ALL,DfE checking eligibility,active,active,,
-ECT,FIP,FIP,DfE checking eligibility,started,same_provider,,,DfE checking eligibility,active,active,ALL,ALL,DfE checking eligibility,active,active,,
-ECT,FIP,FIP,DfE checking eligibility,,same_provider,started,,DfE checking eligibility,active,active,ALL,ALL,DfE checking eligibility,active,active,,
+participant_type,original_programme,new_programme,starting_school_status,prior_declarations,transfer,new_declarations,duplicate_declarations,prior_school_status,prior_participant_status,prior_training_status,see_original_details,see_original_declarations,original_payment_ects,original_payment_mentors,original_payment_declarations,new_school_status,new_participant_status,new_training_status,see_new_details,see_new_declarations,new_payment_ects,new_payment_mentors,new_payment_declarations
+ECT,CIP,CIP,Eligible to start,,,,,Eligible to start,active,active,,,0,0,0,Eligible to start,active,active,,,0,0,0
+ECT,CIP,FIP,Eligible to start,,,,,Eligible to start,active,active,,,0,0,0,DfE checking eligibility,active,active,ALL,,0,0,0
+ECT,CIP,FIP,Eligible to start,,,started,,Eligible to start,active,active,,,0,0,0,DfE checking eligibility,active,active,ALL,ALL,1,0,1
+ECT,FIP,CIP,DfE checking eligibility,,,,,DfE checking eligibility,active,active,OBFUSCATED,,0,0,0,Eligible to start,active,active,,,0,0,0
+ECT,FIP,CIP,DfE checking eligibility,started,,,,DfE checking eligibility,active,active,OBFUSCATED,PRIOR_ONLY,1,0,1,Eligible to start,active,active,,,0,0,0
+ECT,FIP,FIP,DfE checking eligibility,,different_provider,,,DfE checking eligibility,active,active,OBFUSCATED,,0,0,0,DfE checking eligibility,active,active,ALL,,0,0,0
+ECT,FIP,FIP,DfE checking eligibility,started,different_provider,,,DfE checking eligibility,active,active,OBFUSCATED,PRIOR_ONLY,1,0,1,DfE checking eligibility,active,active,ALL,ALL,0,0,0
+ECT,FIP,FIP,DfE checking eligibility,started,different_provider,,started,DfE checking eligibility,active,active,OBFUSCATED,PRIOR_ONLY,1,0,1,DfE checking eligibility,active,active,ALL,ALL,0,0,0
+ECT,FIP,FIP,DfE checking eligibility,,different_provider,started,,DfE checking eligibility,active,active,OBFUSCATED,,0,0,0,DfE checking eligibility,active,active,ALL,ALL,1,0,1
+ECT,FIP,FIP,DfE checking eligibility,,same_provider,,,DfE checking eligibility,active,active,ALL,,0,0,0,DfE checking eligibility,active,active,,,0,0,0
+ECT,FIP,FIP,DfE checking eligibility,started,same_provider,,,DfE checking eligibility,active,active,ALL,ALL,1,0,1,DfE checking eligibility,active,active,,,0,0,0
+ECT,FIP,FIP,DfE checking eligibility,started,same_provider,,,DfE checking eligibility,active,active,ALL,ALL,1,0,1,DfE checking eligibility,active,active,,,0,0,0
+ECT,FIP,FIP,DfE checking eligibility,,same_provider,started,,DfE checking eligibility,active,active,ALL,ALL,1,0,1,DfE checking eligibility,active,active,,,0,0,0
