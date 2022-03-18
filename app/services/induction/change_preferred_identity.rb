@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Induction::ChangeRegisteredIdentity < BaseService
+class Induction::ChangePreferredIdentity < BaseService
   def call
     # NOTE: this in not the place to change a programme or transfer a participant
     # This creates a new induction record to preserve the email address used
@@ -14,16 +14,16 @@ class Induction::ChangeRegisteredIdentity < BaseService
       Induction::Enrol.call(participant_profile: induction_record.participant_profile,
                             induction_programme: induction_record.induction_programme,
                             start_date: time_now,
-                            registered_identity: registered_identity)
+                            preferred_identity: preferred_identity)
     end
   end
 
 private
 
-  attr_reader :registered_identity, :induction_record
+  attr_reader :preferred_identity, :induction_record
 
-  def initialize(induction_record:, registered_identity:)
+  def initialize(induction_record:, preferred_identity:)
     @induction_record = induction_record
-    @registered_identity = registered_identity
+    @preferred_identity = preferred_identity
   end
 end

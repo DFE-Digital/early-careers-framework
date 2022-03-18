@@ -8,7 +8,7 @@ class Induction::CheckParticipantRecordsAreSynced < BaseService
       check_induction_programme_change(profile)
       check_status_is_correct(profile)
     end
-    check_registered_identity_is_set
+    check_preferred_identity_is_set
   end
 
 private
@@ -37,9 +37,9 @@ private
     end
   end
 
-  def check_registered_identity_is_set
+  def check_preferred_identity_is_set
     InductionRecord.joins(:participant_profile).find_each do |induction|
-      Rails.logger.info("Blank registered identity for #{induction.id}") if induction.registered_identity_id.nil?
+      Rails.logger.info("Blank preferred identity for #{induction.id}") if induction.preferred_identity_id.nil?
     end
   end
 

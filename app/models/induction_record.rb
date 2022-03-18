@@ -17,7 +17,7 @@ class InductionRecord < ApplicationRecord
   # and to enable participants transferring between schools (where they might be added with
   # a different email address) to still appear correctly at their old and new schools
   # and still be able to access CIP materials while moving
-  belongs_to :registered_identity, class_name: "ParticipantIdentity", optional: true
+  belongs_to :preferred_identity, class_name: "ParticipantIdentity", optional: true
 
   validates :start_date, presence: true
 
