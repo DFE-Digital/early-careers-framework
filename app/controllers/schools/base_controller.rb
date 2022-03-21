@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Schools::BaseController < ApplicationController
-  include Pundit
+  include Pundit::Authorization
 
   before_action :authenticate_user!
   before_action :ensure_school_user

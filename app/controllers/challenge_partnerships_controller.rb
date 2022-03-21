@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ChallengePartnershipsController < ApplicationController
-  include Pundit
+  include Pundit::Authorization
   before_action :authorize_partnership, only: %i[show create]
   before_action :set_form, only: %i[show create]
 

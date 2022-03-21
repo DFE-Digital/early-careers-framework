@@ -286,12 +286,8 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
           delete "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}"
         }.to have_enqueued_mail(ParticipantMailer, :participant_removed_by_sti)
           .with(
-            args: [
-              {
-                participant_profile: ect_profile,
-                sti_profile: user.induction_coordinator_profile,
-              },
-            ],
+            participant_profile: ect_profile,
+            sti_profile: user.induction_coordinator_profile,
           )
       end
     end

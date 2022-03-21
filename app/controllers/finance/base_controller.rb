@@ -2,7 +2,7 @@
 
 module Finance
   class BaseController < ApplicationController
-    include Pundit
+    include Pundit::Authorization
 
     before_action :authenticate_user!
     before_action :ensure_finance
