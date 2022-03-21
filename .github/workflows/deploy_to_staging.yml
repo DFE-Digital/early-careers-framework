@@ -70,8 +70,9 @@ jobs:
 
       - name: Set release notes
         run: |
+          git fetch --tags
           echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
-          echo "$(git log --first-parent --pretty='format: %b (%an)' $(git tag -l | sort -V | tail -2 | head -1)..${{ github.event.inputs.version }})" >> $GITHUB_ENV
+          echo "$(git log --first-parent --pretty='format: %s (%an)' $(git tag -l | sort -V | tail -2 | head -1)..${{ github.event.inputs.version }})" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
       - name: Post release notes on cpd-dev-alerts
