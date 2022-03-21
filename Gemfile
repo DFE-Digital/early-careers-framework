@@ -78,7 +78,7 @@ gem "strong_migrations"
 gem "aasm"
 
 # Pagination for API
-gem "pagy", "~> 4.11"
+gem "pagy", "~> 5.10.1"
 
 # Json Schema for api validation
 gem "json-schema", ">= 2.8.1"
