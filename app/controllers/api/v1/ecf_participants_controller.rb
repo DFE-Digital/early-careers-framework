@@ -51,7 +51,7 @@ module Api
                                                         :ecf_participant_eligibility,
                                                         :ecf_participant_validation_data,
                                                         :schedule,
-                                                        teacher_profile: { current_ect_profile: { mentor_profile: :user } },
+                                                        :teacher_profile,
                                                       )
 
         if updated_since.present?
