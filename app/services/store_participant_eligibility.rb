@@ -41,6 +41,7 @@ private
   def grab_current_eligibility_state
     @previous_status = @participant_eligibility.status
     @previous_reason = @participant_eligibility.reason
+    @new_eligibility_record = !@participant_eligibility.persisted?
   end
 
   def changed_to_ineligible?
@@ -51,8 +52,10 @@ private
     @participant_eligibility.eligible_status? && @previous_status != "eligible"
   end
 
+  # We need to check if the record is new because "manual_check" is the default value for newly
+  # created participant eligibilities
   def changed_to_manual_check?
-    @participant_eligibility.manual_check_status? && @previous_status != "ineligible"
+    @participant_eligibility.manual_check_status? && ((@previous_status != "manual_check") || @new_eligibility_record)
   end
 
   def changed_from_ineligible?
