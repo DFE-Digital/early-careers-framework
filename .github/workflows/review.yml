@@ -5,13 +5,11 @@ on:
     types: [ opened, synchronize, reopened ]
     paths-ignore:
       - 'documentation/**'
-    branch-ignore:
-      - 'dependabot/**'
 
 jobs:
   deploy:
+    if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-20.04
-
     steps:
       - uses: softprops/turnstyle@v1
         name: Check workflow concurrency
@@ -118,6 +116,7 @@ jobs:
           duplicate_msg_pattern: Created review app at*
 
   smoke-test:
+    if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-20.04
     needs: [deploy]
     # Our rspec is deeply coupled with a database. I had a go at decoupling it for smoke tests, and gave up.
