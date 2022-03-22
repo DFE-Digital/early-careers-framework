@@ -1,0 +1,74 @@
+<% content_for :title, @provider.name %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: :back) %>
+
+<h1 class="govuk-heading-l">
+  <%= @provider.name %>
+</h1>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-tabs" data-module="govuk-tabs">
+      <ul class="govuk-tabs__list">
+        <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+          <a class="govuk-tabs__tab" href="#api-key">
+            API key
+          </a>
+        </li>
+        <li class="govuk-tabs__list-item govuk-tabs__list-item">
+          <a class="govuk-tabs__tab" href="#users">
+            users
+          </a>
+        </li>
+      </ul>
+
+      <div class="govuk-tabs__panel" id="api-key">
+        <div class="govuk-body">
+          <%= form_for @api_key_form, url: admin_provider_api_keys_path(provider_id: @api_key_form.id), method: :post do |f| %>
+            <div class="govuk-checkboxes">
+              <div class="govuk-checkboxes__item">
+                <%= f.check_box :use_vault, class: "govuk-checkboxes__input", id: dom_id(@api_key_form) %>
+                <%= f.label :use_vault, class: "govuk-label govuk-checkboxes__label", for: dom_id(@api_key_form) %>
+              </div>
+            </div>
+            <%= f.govuk_submit "Continue" %>
+          <% end %>
+          <!-- cy5Ka0p5YTlMTVh4bnlQcjNRZEV1ZGhVbE8= -->
+          <%= form_for @api_key_form, url: admin_provider_users_api_keys_path(provider_id: @api_key_form.id), method: :post  do |f| %>
+            <div class="govuk-checkboxes">
+              <div class="govuk-checkboxes__item">
+                <%= f.govuk_password_field :api_key, label: { text: "your API key"} %>
+              </div>
+            </div>
+            <%= f.govuk_submit "Generate child token" %>
+          <% end %>
+
+          <ul>
+            <% @auth_tokens.each do |auth_token| %>
+              <li>
+                <%= button_to "revoke #{auth_token.accessor}", admin_provider_users_api_key_path(@provider, id: auth_token.accessor), method: :delete %>
+              </li>
+
+            <% end %>
+          </ul>
+        </div>
+
+        <h4 class="govuk-heading-m">API Key</h4>
+
+        <p class="govuk-body">
+          <% if @provider.accessor %>
+            <%= @provider.accessor %>
+            <%= button_to "revoke", admin_provider_api_key_path(@provider, id: @provider.accessor), {method: :delete} %>
+          <% end %>
+        </p>
+      </div>
+
+      <div class="govuk-tabs__panel" id="users">
+        <div class="govuk-body">
+          <%= form_for User.new, as: :user, url: invitation_path(:user), method: :post do |f| %>
+            <%= f.govuk_text_field :email, label: { text: "Email"} %>
+            <%= f.govuk_submit "Continue" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>

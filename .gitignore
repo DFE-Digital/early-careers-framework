@@ -53,3 +53,4 @@ tokens
 /spec/examples.txt
 
 /public/api-reference
+unseal.key

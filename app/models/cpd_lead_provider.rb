@@ -3,6 +3,8 @@
 class CpdLeadProvider < ApplicationRecord
   has_one :lead_provider
   has_one :npq_lead_provider
+  has_one :lead_provider_api_token
+  has_many :auth_tokens
   has_many :participant_declarations
   has_many :statements, class_name: "Finance::Statement"
   has_many :ecf_statements, class_name: "Finance::Statement::ECF"

@@ -16,7 +16,15 @@ module ApiTokenAuthenticatable
 
   def authenticate
     result = authenticate_or_request_with_http_token("Application", UNAUTHORIZED_MESSAGE) do |unhashed_token|
-      @current_api_token = ApiToken.find_by_unhashed_token(unhashed_token)
+
+      # fetch token from vault
+
+      decoded = Base64.decode64 unhashed_token
+      client = Vault::Client.new(address: ENV['VAULT_ADDR'], token: decoded)
+
+      cpd_lead_provider ||= CpdLeadProvider.find_by(accessor: client.auth_token.lookup_self.data[:accessor])
+      cpd_lead_provider ||= AuthToken.find_by(accessor: client.auth_token.lookup_self.data[:accessor]).cpd_lead_provider
+      @current_api_token = cpd_lead_provider&.lead_provider_api_token || ApiToken.find_by_unhashed_token(unhashed_token)
       if @current_api_token
         @current_api_token.update!(
           last_used_at: Time.zone.now,

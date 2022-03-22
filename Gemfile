@@ -158,6 +158,7 @@ group :development do
   # Profiling
   gem "memory_profiler"
   gem "rack-mini-profiler"
+  gem "solargraph"
   gem "stackprof"
 end
 
@@ -177,3 +178,5 @@ group :test do
   gem "webmock", ">= 3.10.0"
   gem "with_model"
 end
+
+gem "vault"

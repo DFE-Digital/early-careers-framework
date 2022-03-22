@@ -5,7 +5,8 @@ Rails.application.routes.draw do
   authenticate(:user, :admin?.to_proc, &mount_sidekiq)
 
   devise_for :users, skip: %i[registrations confirmations], controllers: {
-    sessions: "users/sessions",
+               sessions: "users/sessions",
+               invitations: "admin/providers/invitations"
   }
 
   devise_scope :user do
@@ -199,6 +200,13 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
+    resource :choose_provider, only: %i[new create], path: "choose-provider", path_names: { new: "" }
+    resources :providers, only: %i[show] do
+      resources :api_keys, module: "providers", only: %i[create destroy]
+      resource :users, only: %i[] do
+        resources :api_keys, module: "providers", only: %i[create destroy], controller: "users/api_keys"
+      end
+    end
     resources :schools, only: %i[index show] do
       resources :induction_coordinators, controller: "schools/induction_coordinators", only: %i[new create edit update], path: "induction-coordinators"
       get "/replace-or-update-induction-tutor", to: "schools/replace_or_update_induction_tutor#show"

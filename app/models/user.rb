@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
-  devise :registerable, :trackable, :passwordless_authenticatable
+  devise :registerable, :trackable, :passwordless_authenticatable, :invitable
   has_paper_trail
 
   has_many :participant_identities

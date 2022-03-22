@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_14_120140) do
+ActiveRecord::Schema.define(version: 2022_03_21_144229) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -99,6 +99,15 @@ ActiveRecord::Schema.define(version: 2022_03_14_120140) do
     t.index ["lead_provider_id"], name: "index_api_tokens_on_lead_provider_id"
   end
 
+  create_table "auth_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "cpd_lead_provider_id", null: false
+    t.string "accessor"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["accessor"], name: "index_auth_tokens_on_accessor"
+    t.index ["cpd_lead_provider_id"], name: "index_auth_tokens_on_cpd_lead_provider_id"
+  end
+
   create_table "call_off_contracts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "version", default: "0.0.1", null: false
     t.jsonb "raw"
@@ -139,6 +148,8 @@ ActiveRecord::Schema.define(version: 2022_03_14_120140) do
     t.text "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "use_vault", default: false
+    t.string "accessor"
   end
 
   create_table "data_stage_school_changes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -615,8 +626,8 @@ ActiveRecord::Schema.define(version: 2022_03_14_120140) do
     t.string "training_status", default: "active", null: false
     t.string "profile_duplicity", default: "single", null: false
     t.uuid "participant_identity_id"
-    t.string "start_term", default: "autumn_2021", null: false
     t.string "notes"
+    t.string "start_term", default: "autumn_2021", null: false
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"
@@ -864,8 +875,16 @@ ActiveRecord::Schema.define(version: 2022_03_14_120140) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "discarded_at"
+    t.string "invitation_token"
+    t.datetime "invitation_created_at"
+    t.datetime "invitation_sent_at"
+    t.datetime "invitation_accepted_at"
+    t.integer "invitation_limit"
+    t.integer "invited_by_id"
+    t.string "invited_by_type"
     t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
   end
 
   create_table "versions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

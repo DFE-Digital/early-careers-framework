@@ -1,0 +1,19 @@
+<% content_for :title, @provider.name %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: :back) %>
+
+<h1 class="govuk-heading-l">
+  <%= @provider.name %>
+</h1>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h4 class="govuk-heading-m">API Key</h4>
+    <p class="govuk-body">
+      Make note of the API it is not possible to view it again.
+      <pre>
+        <code><%= @api_key %></code>
+      </pre>
+
+    </p>
+  </div>
+</div>
