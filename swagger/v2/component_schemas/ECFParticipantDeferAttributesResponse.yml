@@ -22,9 +22,9 @@ properties:
   mentor_id:
     description: "The unique identifier of this ECF participants mentor"
     type: string
+    nullable: true
     example: bb36d74a-68a7-47b6-86b6-1fd0d141c590
     format: uuid
-    nullable: true
   school_urn:
     description: "The Unique Reference Number (URN) of the school that submitted this ECF participant"
     type: string
@@ -50,12 +50,10 @@ properties:
   teacher_reference_number:
     description: "The Teacher Reference Number (TRN) for this NPQ participant"
     type: string
-    nullable: true
     example: "1234567"
   teacher_reference_number_validated:
     description: "Indicates whether the Teacher Reference Number (TRN) has been validated"
     type: boolean
-    nullable: true
     example: true
   eligible_for_funding:
     description: "Indicates whether this participant is eligible to receive DfE funded induction"
@@ -65,12 +63,10 @@ properties:
   pupil_premium_uplift:
     description: "Indicates whether this participant qualifies for an uplift payment due to pupil premium"
     type: boolean
-    nullable: true
     example: true
   sparsity_uplift:
     description: "Indicates whether this participant qualifies for an uplift payment due to sparsity"
     type: boolean
-    nullable: true
     example: true
   training_status:
     description: "The training status of the ECF participant"

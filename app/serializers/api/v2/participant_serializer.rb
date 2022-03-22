@@ -11,7 +11,7 @@ module Api
       class << self
         def active_participant_attribute(attr, &blk)
           attribute attr do |profile, params|
-            if profile.active_record?
+            if !profile.withdrawn_record? && !profile.training_status_withdrawn?
               if blk.parameters.count == 1
                 blk.call(profile)
               else
@@ -52,11 +52,11 @@ module Api
         # profile.user.email
       end
 
-      active_participant_attribute :full_name do |profile|
+      attribute :full_name do |profile|
         profile.user.full_name
       end
 
-      active_participant_attribute :mentor_id do |profile, params|
+      attribute :mentor_id do |profile, params|
         if params[:mentor_ids].present?
           params[:mentor_ids][profile.id]
         elsif profile.ect?
@@ -64,37 +64,35 @@ module Api
         end
       end
 
-      active_participant_attribute :school_urn do |profile|
+      attribute :school_urn do |profile|
         profile.school.urn
       end
 
-      active_participant_attribute :participant_type, &:participant_type
+      attribute :participant_type
 
-      active_participant_attribute :cohort do |profile|
+      attribute :cohort do |profile|
         profile.cohort.start_year.to_s
       end
 
-      attribute :status, &:status
+      attribute :status
 
-      active_participant_attribute :teacher_reference_number do |profile|
+      attribute :teacher_reference_number do |profile|
         trn(profile)
       end
 
-      active_participant_attribute :teacher_reference_number_validated do |profile|
+      attribute :teacher_reference_number_validated do |profile|
         trn(profile).nil? ? nil : validated_trn(profile).present?
       end
 
-      active_participant_attribute :eligible_for_funding do |profile|
+      attribute :eligible_for_funding do |profile|
         eligible_for_funding?(profile)
       end
 
-      active_participant_attribute :pupil_premium_uplift, &:pupil_premium_uplift
+      attribute :pupil_premium_uplift
+      attribute :sparsity_uplift
+      attribute :training_status
 
-      active_participant_attribute :sparsity_uplift, &:sparsity_uplift
-
-      active_participant_attribute :training_status, &:training_status
-
-      active_participant_attribute :schedule_identifier do |profile|
+      attribute :schedule_identifier do |profile|
         profile.schedule&.schedule_identifier
       end
 

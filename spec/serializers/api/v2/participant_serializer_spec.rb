@@ -3,7 +3,7 @@
 require "rails_helper"
 
 module Api
-  module V1
+  module V2
     RSpec.describe ParticipantSerializer do
       describe "serialization" do
         let(:mentor_profile) { create(:mentor_participant_profile) }

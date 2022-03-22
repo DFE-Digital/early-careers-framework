@@ -108,25 +108,14 @@ RSpec.describe "Participants API", type: :request do
 
         it "returns correct user types" do
           get "/api/v2/participants/ecf"
-          mentors = 0
-          ects = 0
-          withdrawn_participant_record = 0
 
-          parsed_response["data"].each do |user|
-            user_type = user["attributes"]["participant_type"]
-            status = user["attributes"]["status"]
-            if user_type == "mentor"
-              mentors += 1
-            elsif user_type == "ect"
-              ects += 1
-            elsif user_type.nil? && status == "withdrawn"
-              withdrawn_participant_record += 1
-            end
-          end
+          mentors = parsed_response["data"].count { |h| h["attributes"]["participant_type"] == "mentor" }
+          withdrawn = parsed_response["data"].count { |h| h["attributes"]["status"] == "withdrawn" }
+          ects = parsed_response["data"].count { |h| h["attributes"]["participant_type"] == "ect" }
 
           expect(mentors).to eql(1)
-          expect(ects).to eql(2)
-          expect(withdrawn_participant_record).to eql(1)
+          expect(ects).to eql(3)
+          expect(withdrawn).to eql(1)
         end
 
         it "returns the right number of users per page" do
@@ -200,9 +189,9 @@ RSpec.describe "Participants API", type: :request do
           it "does not include personal information of the participant" do
             get "/api/v2/participants/ecf"
             matching_records = parsed_response["data"].select { |record| record["id"] == active_profile_with_other_provider.user.id }
-            expect(matching_records.first["attributes"]["full_name"]).to be_nil
+            expect(matching_records.first["attributes"]["full_name"]).to eql(active_profile_with_other_provider.user.full_name)
             expect(matching_records.first["attributes"]["email"]).to be_nil
-            expect(matching_records.first["attributes"]["teacher_reference_number"]).to be_nil
+            expect(matching_records.first["attributes"]["teacher_reference_number"]).to eql(active_profile_with_other_provider.teacher_profile.trn)
           end
         end
 
@@ -304,17 +293,17 @@ RSpec.describe "Participants API", type: :request do
           withdrawn_record_row = parsed_response.find { |row| row["id"] == withdrawn_ect_profile_record.user.id }
           expect(withdrawn_record_row).not_to be_nil
           expect(withdrawn_record_row["email"]).to be_empty
-          expect(withdrawn_record_row["full_name"]).to be_empty
+          expect(withdrawn_record_row["full_name"]).to eql(withdrawn_ect_profile_record.user.full_name)
           expect(withdrawn_record_row["mentor_id"]).to be_empty
-          expect(withdrawn_record_row["school_urn"]).to be_empty
-          expect(withdrawn_record_row["participant_type"]).to be_empty
-          expect(withdrawn_record_row["cohort"]).to be_empty
-          expect(withdrawn_record_row["teacher_reference_number"]).to be_empty
-          expect(withdrawn_record_row["teacher_reference_number_validated"]).to be_empty
+          expect(withdrawn_record_row["school_urn"]).to eql(withdrawn_ect_profile_record.school.urn)
+          expect(withdrawn_record_row["participant_type"]).to eql(withdrawn_ect_profile_record.participant_type.to_s)
+          expect(withdrawn_record_row["cohort"]).to eql(withdrawn_ect_profile_record.cohort.start_year.to_s)
+          expect(withdrawn_record_row["teacher_reference_number"]).to eql(withdrawn_ect_profile_record.teacher_profile.trn)
+          expect(withdrawn_record_row["teacher_reference_number_validated"]).to be_present
           expect(withdrawn_record_row["eligible_for_funding"]).to be_empty
-          expect(withdrawn_record_row["pupil_premium_uplift"]).to be_empty
-          expect(withdrawn_record_row["sparsity_uplift"]).to be_empty
-          expect(withdrawn_record_row["training_status"]).to be_empty
+          expect(withdrawn_record_row["pupil_premium_uplift"]).to eql(withdrawn_ect_profile_record.pupil_premium_uplift.to_s)
+          expect(withdrawn_record_row["sparsity_uplift"]).to eql(withdrawn_ect_profile_record.sparsity_uplift.to_s)
+          expect(withdrawn_record_row["training_status"]).to eql(withdrawn_ect_profile_record.training_status)
         end
 
         it "ignores pagination parameters" do
