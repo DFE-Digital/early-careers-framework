@@ -11,7 +11,7 @@ module Api
       class << self
         def active_participant_attribute(attr, &blk)
           attribute attr do |induction_record, params|
-            if induction_record.participant_profile.active_record?
+            if !induction_record.participant_profile.withdrawn_record? && !induction_record.participant_profile.training_status_withdrawn?
               if blk.parameters.count == 1
                 blk.call(induction_record)
               else
@@ -54,25 +54,25 @@ module Api
         # induction_record.participant_profile.user.email
       end
 
-      active_participant_attribute :full_name do |induction_record|
+      attribute :full_name do |induction_record|
         induction_record.participant_profile.user.full_name
       end
 
-      active_participant_attribute :mentor_id do |induction_record|
+      attribute :mentor_id do |induction_record|
         if induction_record.participant_profile.ect?
           induction_record.participant_profile.mentor&.id
         end
       end
 
-      active_participant_attribute :school_urn do |induction_record|
+      attribute :school_urn do |induction_record|
         induction_record.participant_profile.school.urn
       end
 
-      active_participant_attribute :participant_type do |induction_record|
+      attribute :participant_type do |induction_record|
         induction_record.participant_profile.participant_type
       end
 
-      active_participant_attribute :cohort do |induction_record|
+      attribute :cohort do |induction_record|
         induction_record.participant_profile.cohort.start_year.to_s
       end
 
@@ -80,11 +80,11 @@ module Api
         induction_record.participant_profile.status
       end
 
-      active_participant_attribute :teacher_reference_number do |induction_record|
+      attribute :teacher_reference_number do |induction_record|
         trn(induction_record.participant_profile)
       end
 
-      active_participant_attribute :teacher_reference_number_validated do |induction_record|
+      attribute :teacher_reference_number_validated do |induction_record|
         if trn(induction_record.participant_profile).nil?
           nil
         else
@@ -92,23 +92,23 @@ module Api
         end
       end
 
-      active_participant_attribute :eligible_for_funding do |induction_record|
+      attribute :eligible_for_funding do |induction_record|
         eligible_for_funding?(induction_record.participant_profile)
       end
 
-      active_participant_attribute :pupil_premium_uplift do |induction_record|
+      attribute :pupil_premium_uplift do |induction_record|
         induction_record.participant_profile.pupil_premium_uplift
       end
 
-      active_participant_attribute :sparsity_uplift do |induction_record|
+      attribute :sparsity_uplift do |induction_record|
         induction_record.participant_profile.sparsity_uplift
       end
 
-      active_participant_attribute :training_status do |induction_record|
+      attribute :training_status do |induction_record|
         induction_record.participant_profile.training_status
       end
 
-      active_participant_attribute :schedule_identifier do |induction_record|
+      attribute :schedule_identifier do |induction_record|
         induction_record.schedule&.schedule_identifier
       end
 
