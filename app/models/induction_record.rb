@@ -8,6 +8,7 @@ class InductionRecord < ApplicationRecord
   belongs_to :schedule, class_name: "Finance::Schedule"
 
   has_one :school_cohort, through: :induction_programme
+  has_one :school, through: :school_cohort
   has_one :user, through: :participant_profile
 
   # optional while the data is setup
@@ -43,6 +44,8 @@ class InductionRecord < ApplicationRecord
   scope :transferring_in, -> { active_induction_status.where("start_date > ?", Time.zone.now) }
   scope :transferring_out, -> { leaving_induction_status.where("end_date > ?", Time.zone.now) }
   scope :transferred, -> { leaving_induction_status.where("end_date < ?", Time.zone.now) }
+
+  scope :for_school, ->(school) { joins(:school).where(school: { id: school.id }) }
 
   def self.latest
     order(created_at: :asc).last
