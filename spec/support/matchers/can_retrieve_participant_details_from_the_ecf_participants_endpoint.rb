@@ -27,12 +27,12 @@ module Support
         @expected.nil?
       end
 
-      failure_message do |_lead_provider_name|
-        "should have been able to see '#{@expected}' for '#{participant_name}' within:\n===\n#{@text}\n==="
+      failure_message do |lead_provider_name|
+        "'#{lead_provider_name}' should have been able to see '#{@expected}' for '#{participant_name}' within:\n===\n#{@text}\n==="
       end
 
-      failure_message_when_negated do |_lead_provider_name|
-        "should not have been able to see the details of '#{participant_name}' within:\n===\n#{@text}\n==="
+      failure_message_when_negated do |lead_provider_name|
+        "'#{lead_provider_name}' should not have been able to see the details of '#{participant_name}' within:\n===\n#{@text}\n==="
       end
 
       description do
