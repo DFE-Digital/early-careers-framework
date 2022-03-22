@@ -3,7 +3,7 @@
 module Finance
   module ECF
     class OtherFeeRow < BaseComponent
-      include FinanceHelper
+      include ECFPaymentsHelper
       attr_accessor :other_fee, :participants, :per_participant, :subtotal, :breakdown_summary
 
       def initialize(other_fee:, breakdown_summary:)

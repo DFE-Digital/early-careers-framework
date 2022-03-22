@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.feature "NPQ view contract" do
-  include FinanceHelper
+  include NPQPaymentsHelper
 
   scenario "see the contract information for all courses of an NPQ lead provider" do
     given_i_am_logged_in_as_a_finance_user

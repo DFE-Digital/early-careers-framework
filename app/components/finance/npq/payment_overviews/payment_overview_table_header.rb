@@ -4,6 +4,7 @@ module Finance
   module NPQ
     module PaymentOverviews
       class PaymentOverviewTableHeader < BaseComponent
+        include NPQPaymentsHelper
         delegate :recruitment_target, to: :contract
 
         attr_accessor :contract, :statement, :npq_lead_provider

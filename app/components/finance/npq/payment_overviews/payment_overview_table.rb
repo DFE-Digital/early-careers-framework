@@ -4,7 +4,7 @@ module Finance
   module NPQ
     module PaymentOverviews
       class PaymentOverviewTable < BaseComponent
-        include FinanceHelper
+        include NPQPaymentsHelper
 
         def initialize(contract, statement, npq_lead_provider)
           @contract = contract
@@ -20,28 +20,11 @@ module Finance
           @service_fees ||= PaymentCalculator::NPQ::ServiceFees.call(contract: contract)
         end
 
-        def output_payments
-          @output_payments ||= PaymentCalculator::NPQ::OutputPayment.call(
+        def output_payment
+          @output_payment ||= PaymentCalculator::NPQ::OutputPayment.call(
             contract: contract,
-            total_participants: statement_declarations,
+            total_participants: total_declarations,
           )
-        end
-
-        def statement_declarations
-          if statement.current?
-            ParticipantDeclaration::NPQ
-              .eligible_for_lead_provider(npq_lead_provider)
-              .for_course_identifier(contract.course_identifier)
-              .where(statement_id: nil)
-              .count
-          else
-            statement
-              .participant_declarations
-              .paid_payable_or_eligible
-              .for_course_identifier(contract.course_identifier)
-              .unique_id
-              .count
-          end
         end
       end
     end

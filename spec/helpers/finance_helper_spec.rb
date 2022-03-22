@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe FinanceHelper do
+describe ECFPaymentsHelper do
   describe "#total_payment" do
     let!(:lead_provider) { create(:lead_provider) }
     let!(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: lead_provider) }

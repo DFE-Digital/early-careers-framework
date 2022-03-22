@@ -4,6 +4,7 @@ module Finance
   module NPQ
     module PaymentOverviews
       class PaymentOverviewMilestoneSummary < BaseComponent
+        include NPQPaymentsHelper
         attr_reader :total_participants
 
         def initialize(milestone, total_participants)

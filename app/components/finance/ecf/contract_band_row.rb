@@ -3,7 +3,7 @@
 module Finance
   module ECF
     class ContractBandRow < BaseComponent
-      include FinanceHelper
+      include ECFPaymentsHelper
 
     private
 

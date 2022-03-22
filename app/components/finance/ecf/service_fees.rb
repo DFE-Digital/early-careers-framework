@@ -3,7 +3,7 @@
 module Finance
   module ECF
     class ServiceFees < BaseComponent
-      include FinanceHelper
+      include ECFPaymentsHelper
 
       def initialize(service_fees:, breakdown_summary:)
         @service_fees = service_fees

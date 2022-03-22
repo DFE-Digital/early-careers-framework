@@ -1,13 +1,13 @@
 <div class="app-application__panel__summary">
   <div class="govuk-!-margin-right-4">
-    <h4 class="govuk-heading-l govuk-!-margin-bottom-2"><%= t("finance.total") %> <%= number_to_pounds(overall_total) %></h4>
+    <h4 class="govuk-heading-l govuk-!-margin-bottom-2"><%= t("finance.total") %> <%= number_to_pounds(summary_overall_total) %></h4>
     <p class="govuk-body-s govuk-!-margin-bottom-2">
       <%= t("finance.output_payment.label") %>
-      <span><%= number_to_pounds(total_output_payment) %></span>
+      <span><%= number_to_pounds(total_output_payment_subtotal) %></span>
     </p>
     <p class="govuk-body-s govuk-!-margin-bottom-2">
       <%= t("finance.service_fee.caption") %>
-      <span><%= number_to_pounds(total_service_fees) %></span>
+      <span><%= number_to_pounds(total_service_fees_monthly) %></span>
     </p>
     <p class="govuk-body-s govuk-!-margin-bottom-2">
       <%= t("finance.vat") %>

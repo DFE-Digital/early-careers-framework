@@ -3,7 +3,7 @@
 module Finance
   module ECF
     class BreakdownSummary < BaseComponent
-      include FinanceHelper
+      include ECFPaymentsHelper
       attr_accessor :breakdown_started, :breakdown_retained_1, :lead_provider, :deadline_date
 
       def initialize(breakdown_started:, breakdown_retained_1:, lead_provider:, deadline_date:)

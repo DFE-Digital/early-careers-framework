@@ -8,8 +8,8 @@
   </tr>
   </thead>
   <tbody class="govuk-table__body">
-  <%= render Finance::NPQ::PaymentOverviews::OutputPaymentRow.new(output_payments, contract, statement, npq_lead_provider) %>
+  <%= render Finance::NPQ::PaymentOverviews::OutputPaymentRow.new(output_payment, contract, statement, npq_lead_provider) %>
   <%= render Finance::NPQ::PaymentOverviews::ServiceFeeRow.new(service_fees, contract) %>
   </tbody>
 </table>
-<%= render Finance::NPQ::PaymentOverviews::PaymentOverviewTotal.new(service_fees, output_payments, npq_lead_provider) %>
+<%= render Finance::NPQ::PaymentOverviews::PaymentOverviewTotal.new(service_fees, output_payment, npq_lead_provider) %>
