@@ -88,10 +88,8 @@ RSpec.describe StoreParticipantEligibility do
           service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
         }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_no_induction_email)
           .with(
-            args: [{
-              induction_tutor_email: induction_tutor.email,
-              participant_profile: ect_profile,
-            }],
+            induction_tutor_email: induction_tutor.email,
+            participant_profile: ect_profile,
           )
       end
 
