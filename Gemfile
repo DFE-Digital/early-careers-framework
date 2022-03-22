@@ -63,7 +63,7 @@ gem "tzinfo-data"
 
 gem "govuk-components", "~> 3.0", ">= 3.0.3"
 gem "govuk_design_system_formbuilder", "~> 2.3.0b1"
-gem "govuk_markdown", "~> 0.4.0"
+gem "govuk_markdown", "~> 1.0"
 gem "view_component", require: "view_component/engine"
 
 # Fetching from APIs
@@ -72,7 +72,7 @@ gem "rubyzip", "~> 2.3", ">= 2.3.0"
 gem "savon", "~> 2.12", ">= 2.12.1"
 
 # Strong migration checker for database migrations
-gem "strong_migrations"
+gem "strong_migrations", "~> 1.0"
 
 # Acts as State Machine for participant and declaration states
 gem "aasm"
@@ -172,9 +172,9 @@ group :test do
   gem "rails-controller-testing", "~> 1.0.5"
   gem "rspec-default_http_header", "~> 0.0.6"
   gem "selenium-webdriver"
-  gem "shoulda-matchers", "~> 4.5"
+  gem "shoulda-matchers", "~> 5.1"
   gem "simplecov"
-  gem "webdrivers", "~> 4.6"
+  gem "webdrivers", "~> 5.0"
   gem "webmock", "~> 3.14"
   gem "with_model"
 end
