@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type: :feature, js: true do
-  include ECFPaymentsHelper
+  include Finance::ECFPaymentsHelper
 
   let!(:lead_provider)    { create(:lead_provider, name: "Test provider", id: "cffd2237-c368-4044-8451-68e4a4f73369") }
   let(:cpd_lead_provider) { lead_provider.cpd_lead_provider }
