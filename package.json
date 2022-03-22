@@ -12,8 +12,6 @@
     "accessible-autocomplete": "^2.0.3",
     "es6-promise": "^4.2.8",
     "govuk-frontend": "^3.14.0",
-    "serialize-javascript": "^5.0.1",
-    "set-value": "^4.0.1",
     "whatwg-fetch": "^3.6.1"
   },
   "devDependencies": {
@@ -31,19 +29,12 @@
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-no-only-tests": "^2.6.0",
-    "jest": "^26.6.3",
     "prettier": "^2.5.1",
     "webpack-dev-server": "^3.11.3"
   },
   "scripts": {
-    "test": "jest --passWithNoTests",
     "cypress:open": "cypress open --project ./spec",
     "cypress:run": "cypress run --project ./spec --config video=false,screenshotOnRunFailure=false",
     "lint": "eslint --max-warnings 0 '{app,spec}/**/*.js' && prettier --check '{app,spec}/**/*.js'"
-  },
-  "jest": {
-    "roots": [
-      "app"
-    ]
   }
 }
