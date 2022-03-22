@@ -11,7 +11,7 @@ private
 
   def ects_with_no_induction_or_previous_induction
     ParticipantProfile::ECT.joins(:ecf_participant_eligibility).merge(
-      ECFParticipantEligibility.where(no_induction: true).or(ECFParticipantEligibility.where(previous_induction: true)),
+      ECFParticipantEligibility.where(reason: %w[no_induction previous_induction], manually_validated: false),
     )
   end
 end

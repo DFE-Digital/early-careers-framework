@@ -131,6 +131,40 @@ RSpec.describe CheckParticipantsInductionJob do
       end
     end
 
+    let(:exempt_participant) do
+      create(:ect_participant_profile).tap do |profile|
+        create(
+          :ecf_participant_eligibility,
+          :ineligible,
+          exempt_from_induction: true,
+          no_induction: true,
+          participant_profile: profile,
+        )
+        create(
+          :ecf_participant_validation_data,
+          trn: profile.teacher_profile.trn,
+          participant_profile: profile,
+        )
+      end
+    end
+
+    let(:manually_validated_participant) do
+      create(:ect_participant_profile).tap do |profile|
+        create(
+          :ecf_participant_eligibility,
+          :ineligible,
+          previous_induction: true,
+          manually_validated: true,
+          participant_profile: profile,
+        )
+        create(
+          :ecf_participant_validation_data,
+          trn: profile.teacher_profile.trn,
+          participant_profile: profile,
+        )
+      end
+    end
+
     before do
       still_previous_induction_trn = still_previous_induction_participant.ecf_participant_validation_data.trn
       expect(ParticipantValidationService).to(
@@ -153,9 +187,27 @@ RSpec.describe CheckParticipantsInductionJob do
           validation_result[new_later_induction_trn, false],
         ),
       )
+
+      exempt_trn = exempt_participant.ecf_participant_validation_data.trn
+      expect(ParticipantValidationService).to_not(
+        receive(:validate).with(
+          hash_including(
+            trn: exempt_trn,
+          ),
+        ),
+      )
+
+      manually_validated_trn = manually_validated_participant.ecf_participant_validation_data.trn
+      expect(ParticipantValidationService).to_not(
+        receive(:validate).with(
+          hash_including(
+            trn: manually_validated_trn,
+          ),
+        ),
+      )
     end
 
-    it "Updates the value of previous_induction from dqt" do
+    it "Updates the value of previous_induction from dqt, and doesn't attempt to revalidate manually validated records" do
       expect {
         subject.perform_now
       }.to change {
