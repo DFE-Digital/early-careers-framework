@@ -60,6 +60,14 @@ module Schools
       ]
     end
 
+    def switch_to_schools_programme?
+      schools_current_programme_choice == "yes"
+    end
+
+    def continue_teachers_programme?
+      teachers_current_programme_choice == "yes"
+    end
+
   private
 
     def teacher_start_date

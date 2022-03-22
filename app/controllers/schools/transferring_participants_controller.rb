@@ -3,7 +3,7 @@
 module Schools
   class TransferringParticipantsController < ::Schools::BaseController
     before_action :load_joining_participant_form, except: %i[what_we_need]
-    before_action :load_participants_induction_record, only: %i[email choose_mentor schools_current_programme choose_delivery_partner check_answers]
+    before_action :latest_induction_record, only: %i[email choose_mentor schools_current_programme choose_delivery_partner check_answers]
     before_action :set_school_cohort
     before_action :validate_request_or_render, except: %i[what_we_need]
 
@@ -18,7 +18,7 @@ module Schools
         if valid_participant_details?
           store_form_redirect_to_next_step(:teacher_start_date)
         else
-          store_form_redirect_to_next_step(:cannot_find_details)
+          store_form_redirect_to_next_step(:cannot_find_their_details)
         end
       else
         store_form_redirect_to_next_step(:trn)
@@ -30,7 +30,7 @@ module Schools
         if valid_participant_details?
           store_form_redirect_to_next_step(:teacher_start_date)
         else
-          store_form_redirect_to_next_step(:cannot_find_details)
+          store_form_redirect_to_next_step(:cannot_find_their_details)
         end
       else
         store_form_redirect_to_next_step(:dob)
@@ -50,7 +50,7 @@ module Schools
     end
 
     def email
-      if @latest_induction_record.participant_profile.ect?
+      if participant_profile.ect?
         store_form_redirect_to_next_step(:choose_mentor)
       elsif with_the_same_provider?
         store_form_redirect_to_next_step(:schools_current_programme)
@@ -60,58 +60,42 @@ module Schools
     end
 
     def choose_mentor
-      if with_the_same_provider?
-        store_form_redirect_to_next_step(:schools_current_programme)
+      if matching_lead_provider_and_delivery_partner?
+        store_form_redirect_to_next_step(:check_answers)
       else
         store_form_redirect_to_next_step(:teachers_current_programme)
       end
     end
 
     def teachers_current_programme
-      case @transferring_participant_form.teachers_current_programme_choice
-      when "no"
-        store_form_redirect_to_next_step(:schools_current_programme)
-      when "yes"
+      if @transferring_participant_form.continue_teachers_programme?
         store_form_redirect_to_next_step(:check_answers)
       else
-        store_form_redirect_to_next_step(:cannot_add)
+        store_form_redirect_to_next_step(:schools_current_programme)
       end
     end
 
     def schools_current_programme
-      schools_programme_choice = @transferring_participant_form.schools_current_programme_choice
-
-      if schools_programme_choice == "yes" && matching_lead_provider_and_delivery_partner?
-        @transferring_participant_form.same_programme = true
+      if @transferring_participant_form.switch_to_schools_programme?
         store_form_redirect_to_next_step(:check_answers)
-      elsif schools_programme_choice == "yes" && with_the_same_provider?
-        store_form_redirect_to_next_step(:choose_delivery_partner)
-      elsif schools_programme_choice == "yes" && @transferring_participant_form.teachers_current_programme_choice == "no"
-        @transferring_participant_form.same_programme = true
-        store_form_redirect_to_next_step(:choose_delivery_partner)
       else
         store_form_redirect_to_next_step(:cannot_add)
       end
     end
 
-    def choose_delivery_partner
-      schools_programme_choice = @transferring_participant_form.delivery_partner_choice
-      if schools_programme_choice == "school"
-        @transferring_participant_form.same_programme = true
-      end
-      store_form_redirect_to_next_step(:check_answers)
-    end
-
     def check_answers
       # Finish enroll process
-      if @transferring_participant_form.schools_current_programme_choice == "yes"
-        Induction::Enrol.call(
-          participant_profile: @latest_induction_record.participant_profile,
-          induction_programme: @school_cohort.default_induction_programme,
-          start_date: @transferring_participant_form.start_date,
-          registered_identity: @latest_induction_record.participant_profile.participant_identity,
-        )
+      if matching_lead_provider_and_delivery_partner?
+        transfer_fip_participant_to_schools_programme
+        # TODO: comms to provider ?
+      elsif @transferring_participant_form.switch_to_schools_programme?
+        transfer_fip_participant_to_schools_programme
+        # TODO: comms to old provider + new?
+      else
+        transfer_fip_participant_and_continue_induction
+        # TODO: comms?
       end
+
       store_form_redirect_to_next_step(:complete)
     end
 
@@ -126,6 +110,32 @@ module Schools
     def cannot_add; end
 
   private
+
+    def transfer_fip_participant_to_schools_programme
+      Induction::Enrol.call(
+        participant_profile: participant_profile,
+        induction_programme: @school_cohort.default_induction_programme,
+        start_date: @transferring_participant_form.start_date,
+        preferred_identity: preferred_identity,
+      )
+    end
+
+    def transfer_fip_participant_and_continue_existing_programme
+      ActiveRecord::Base.transaction do
+        partnership = Induction::CreateRelationship.call(school_cohort: @school_cohort,
+                                                         lead_provider: participant_lead_provider,
+                                                         delivery_partner: participant_delivery_partner)
+
+        programme = InductionProgramme.create!(traning_programme: :full_induction_programme,
+                                               school_cohort: @school_cohort,
+                                               partnership: partnership)
+
+        Induction::Enrol.call(participant_profile: participant_profile,
+                              induction_programme: programme,
+                              start_date: @transferring_participant_form.start_date,
+                              preferred_identity: preferred_identity)
+      end
+    end
 
     def load_joining_participant_form
       @transferring_participant_form = TransferringParticipantForm.new(session[:schools_transferring_participant_form])
@@ -159,18 +169,12 @@ module Schools
       @transferring_participant_form.valid? action_name.to_sym
     end
 
-    def load_participants_induction_record
-      validation_record = ECFParticipantValidationData.find_by(
-        "LOWER(full_name) = ? AND trn = ? AND date_of_birth = ?",
-        @transferring_participant_form.full_name.downcase,
-        @transferring_participant_form.trn,
-        @transferring_participant_form.date_of_birth,
-      )
-      @latest_induction_record = InductionRecord.find_by(participant_profile: validation_record.participant_profile)
+    def latest_induction_record
+      @latest_induction_record ||= participant_profile.induction_records.latest
     end
 
     def valid_participant_details?
-      TransferringParticipantEligibilityCheck.new(@transferring_participant_form).call
+      participant_profile.present? && dqt_record.present?
     end
 
     def matching_lead_provider_and_delivery_partner?
@@ -178,17 +182,49 @@ module Schools
     end
 
     def with_the_same_provider?
-      @school_cohort.default_induction_programme&.lead_provider == @latest_induction_record.induction_programme&.lead_provider
+      @school_cohort.default_induction_programme&.lead_provider == participant_lead_provider
     end
 
     def with_the_same_delivery_partner?
-      @school_cohort.default_induction_programme&.delivery_partner == @latest_induction_record.induction_programme&.delivery_partner
+      @school_cohort.default_induction_programme&.delivery_partner == participant_delivery_partner
+    end
+
+    def participant_lead_provider
+      latest_induction_record.induction_programme&.lead_provider
+    end
+
+    def participant_delivery_partner
+      latest_induction_record.induction_programme&.delivery_partner
+    end
+
+    def preferred_identity
+      @preferred_identity ||= Identity::Create.call(user: participant_profile.participant_identity.user, email: @transferring_participant_form.email)
     end
 
     def check_against_dqt?
       @transferring_participant_form.full_name.present? &&
         @transferring_participant_form.trn.present? &&
         @transferring_participant_form.date_of_birth.present?
+    end
+
+    def participant_profile
+      @participant_profile ||= ParticipantProfile::ECF.joins(:ecf_participant_validation_data)
+          .where("LOWER(full_name) = ? AND trn = ? AND date_of_birth = ?",
+                 @transferring_participant_form.full_name.downcase,
+                 @transferring_participant_form.trn,
+                 @transferring_participant_form.date_of_birth).first
+    end
+
+    def dqt_record
+      ParticipantValidationService.validate(
+        full_name: @transferring_participant_form.full_name,
+        trn: @transferring_participant_form.trn,
+        date_of_birth: @transferring_participant_form.date_of_birth,
+        nino: nil,
+        config: {
+          check_first_name_only: true,
+        },
+      )
     end
 
     def reset_form_data
