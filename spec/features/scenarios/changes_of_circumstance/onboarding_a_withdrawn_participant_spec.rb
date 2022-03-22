@@ -6,19 +6,20 @@ require_relative "./changes_of_circumstance_scenario"
 def given_context(scenario)
   str = "[#{scenario.number}]"
   str += " Given a #{scenario.participant_type}"
-  str += " is to transfer from #{scenario.original_programme} to #{scenario.new_programme}"
-  str + " using #{scenario.transfer == :same_provider ? 'the Same Provider' : 'a Different Provider'}"
+  str += " on #{scenario.original_programme} is to be onboarded to #{scenario.new_programme}"
+  str + " using #{scenario.transfer == :different_provider ? 'a Different Provider' : 'the Same Provider'}"
 end
 
 def when_context(scenario)
-  str = "When they are transferred by the new SIT"
-  str += " before any declarations are made" if (scenario.new_declarations + scenario.prior_declarations).empty?
+  str = "When they are onboarded by the new SIT"
+  str += " after being withdrawn by #{scenario.withdrawn_by}"
+  str += " but before any declarations are made" if (scenario.new_declarations + scenario.prior_declarations).empty?
   str += " after the declarations #{scenario.prior_declarations} have been made" if scenario.prior_declarations.any?
   str += " and the new declarations #{scenario.new_declarations} are then made" if scenario.new_declarations.any?
   str
 end
 
-RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: true do
+RSpec.feature "Onboarding a withdrawn participant", type: :feature, end_to_end_scenario: true do
   include Steps::ChangesOfCircumstanceSteps
 
   let(:cohort) { create :cohort, :current }
@@ -27,10 +28,10 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
   let(:tokens) { {} }
 
   before do
-    create(:ecf_schedule)
+    create :ecf_schedule
   end
 
-  fixture_data_path = File.join(File.dirname(__FILE__), "./transferring_a_participant_fixtures.csv")
+  fixture_data_path = File.join(File.dirname(__FILE__), "./onboarding_a_withdrawn_participant_fixtures.csv")
   CSV.parse(File.read(fixture_data_path), headers: true).each_with_index do |fixture_data, index|
     scenario = ChangesOfCircumstanceScenario.new index + 2, fixture_data
 
@@ -39,6 +40,7 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
 
     context given_context(scenario) do
       let(:new_lead_provider_name) { scenario.transfer == :same_provider ? "Original Lead Provider" : "New Lead Provider" }
+      let(:all_declarations) { scenario.prior_declarations + scenario.new_declarations }
 
       before do
         given_lead_providers_contracted_to_deliver_ecf "Original Lead Provider"
@@ -65,6 +67,17 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
         before do
           scenario.prior_declarations.each do |declaration_type|
             and_lead_provider_has_made_training_declaration "Original Lead Provider", "the Participant", declaration_type
+          end
+
+          case scenario.withdrawn_by
+          when :lead_provider
+            and_lead_provider_withdraws_participant "Original Lead Provider", "the Participant"
+          when :school
+            and_school_withdraws_participant "Original SIT", "the Participant"
+          when :not_applicable
+            # not applicable
+          else
+            raise "scenario.withdrawn_by is not a valid value"
           end
 
           when_school_takes_on_the_participant "New SIT", "the Participant"
@@ -135,10 +148,8 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
             it { should be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.participant_type }
             it { should be_able_to_retrieve_the_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.new_participant_status }
             it { should be_able_to_retrieve_the_training_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.new_training_status }
-          when :not_applicable
-            # not applicable
           else
-            raise "scenario.see_new_details is not a valid value"
+            it { should_not be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.participant_type }
           end
 
           scenario.duplicate_declarations.each do |declaration_type|
@@ -164,7 +175,7 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
           it { should be_able_to_retrieve_the_training_declarations_for_the_participant_from_the_ecf_declarations_endpoint "the Participant", [] }
         end
 
-        context "Then the Support for Early Career Teachers Service", :skip do
+        context "Then the Support for Early Career Teachers Service" do
           subject(:support_ects) { "Support for Early Career Teachers Service" }
 
           it { should be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_users_endpoint "the Participant", scenario.new_programme, scenario.participant_type }
@@ -253,8 +264,6 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
             expect(Analytics::UpsertECFParticipantProfileJob).to have_been_enqueued.with(participant_profile: participant_profile)
           end
         end
-
-        # TODO: what would analytics have gathered ??
       end
     end
   end

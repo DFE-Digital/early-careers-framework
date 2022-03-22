@@ -15,7 +15,10 @@ module Support
         participant = user.participant_profiles.first
         raise "Could not find ParticipantProfile for #{participant_name}" if participant.nil?
 
-        school = sits[sit_name].schools.first
+        sit = User.find_by(full_name: sit_name)
+        raise "Could not find User for #{sit_name}" if sit.nil?
+
+        school = sit.induction_coordinator_profile.schools.first
         raise "Could not find School for #{sit_name}" if school.nil?
 
         portal = Pages::FinancePortal.new

@@ -5,8 +5,11 @@ module Support
     extend RSpec::Matchers::DSL
 
     RSpec::Matchers.define :be_able_to_find_the_participant_status_in_the_school_induction_portal do |participant_name, status|
-      match do |sit|
-        sign_in_as sit.user
+      match do |sit_name|
+        user = User.find_by(full_name: sit_name)
+        raise "Could not find User for #{sit_name}" if user.nil?
+
+        sign_in_as user
 
         induction_dashboard = Pages::SITInductionDashboard.new
         participants_dashboard = induction_dashboard.view_participant_dashboard
@@ -22,12 +25,12 @@ module Support
         false
       end
 
-      failure_message do |_sit|
-        "the status of '#{status}' for '#{participant_name}' cannot be found within:\n===\n#{@text}\n==="
+      failure_message do |sit_name|
+        "the status of '#{status}' for '#{participant_name}' cannot be found by '#{sit_name}' within:\n===\n#{@text}\n==="
       end
 
-      failure_message_when_negated do |_sit|
-        "the status of '#{status}' for '#{participant_name}' can be found within:\n===\n#{@text}\n==="
+      failure_message_when_negated do |sit_name|
+        "the status of '#{status}' for '#{participant_name}' can be found by '#{sit_name}' within:\n===\n#{@text}\n==="
       end
 
       description do

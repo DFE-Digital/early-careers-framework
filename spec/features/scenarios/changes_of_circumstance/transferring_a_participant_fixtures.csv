@@ -1,14 +1,14 @@
 participant_type,original_programme,new_programme,starting_school_status,prior_declarations,transfer,new_declarations,duplicate_declarations,prior_school_status,prior_participant_status,prior_training_status,see_original_details,see_original_declarations,original_payment_ects,original_payment_mentors,original_payment_declarations,new_school_status,new_participant_status,new_training_status,see_new_details,see_new_declarations,new_payment_ects,new_payment_mentors,new_payment_declarations
 ECT,CIP,CIP,Eligible to start,,,,,Eligible to start,active,active,,,0,0,0,Eligible to start,active,active,,,0,0,0
 ECT,CIP,FIP,Eligible to start,,,,,Eligible to start,active,active,,,0,0,0,Eligible to start,active,active,ALL,,0,0,0
-ECT,CIP,FIP,Eligible to start,,,started,,Eligible to start,active,active,,,0,0,0,Eligible to start,active,active,ALL,ALL,1,0,1
+ECT,CIP,FIP,Eligible to start,,,started,,Eligible to start,active,active,,,0,0,0,Eligible to start,active,active,ALL,started,1,0,1
 ECT,FIP,CIP,Eligible to start,,,,,Eligible to start,active,active,OBFUSCATED,,0,0,0,Eligible to start,active,active,,,0,0,0
-ECT,FIP,CIP,Eligible to start,started,,,,Eligible to start,active,active,OBFUSCATED,PRIOR_ONLY,1,0,1,Eligible to start,active,active,,,0,0,0
+ECT,FIP,CIP,Eligible to start,started,,,,Eligible to start,active,active,OBFUSCATED,started,1,0,1,Eligible to start,active,active,,,0,0,0
 ECT,FIP,FIP,Eligible to start,,different_provider,,,Eligible to start,active,active,OBFUSCATED,,0,0,0,Eligible to start,active,active,ALL,,0,0,0
-ECT,FIP,FIP,Eligible to start,started,different_provider,,,Eligible to start,active,active,OBFUSCATED,PRIOR_ONLY,1,0,1,Eligible to start,active,active,ALL,ALL,0,0,0
-ECT,FIP,FIP,Eligible to start,started,different_provider,,started,Eligible to start,active,active,OBFUSCATED,PRIOR_ONLY,1,0,1,Eligible to start,active,active,ALL,ALL,0,0,0
-ECT,FIP,FIP,Eligible to start,,different_provider,started,,Eligible to start,active,active,OBFUSCATED,,0,0,0,Eligible to start,active,active,ALL,ALL,1,0,1
+ECT,FIP,FIP,Eligible to start,started,different_provider,,,Eligible to start,active,active,OBFUSCATED,started,1,0,1,Eligible to start,active,active,ALL,started,0,0,0
+ECT,FIP,FIP,Eligible to start,started,different_provider,,started,Eligible to start,active,active,OBFUSCATED,started,1,0,1,Eligible to start,active,active,ALL,started,0,0,0
+ECT,FIP,FIP,Eligible to start,,different_provider,started,,Eligible to start,active,active,OBFUSCATED,,0,0,0,Eligible to start,active,active,ALL,started,1,0,1
 ECT,FIP,FIP,Eligible to start,,same_provider,,,Eligible to start,active,active,ALL,,0,0,0,Eligible to start,active,active,,,0,0,0
-ECT,FIP,FIP,Eligible to start,started,same_provider,,,Eligible to start,active,active,ALL,ALL,1,0,1,Eligible to start,active,active,,,0,0,0
-ECT,FIP,FIP,Eligible to start,started,same_provider,,,Eligible to start,active,active,ALL,ALL,1,0,1,Eligible to start,active,active,,,0,0,0
-ECT,FIP,FIP,Eligible to start,,same_provider,started,,Eligible to start,active,active,ALL,ALL,1,0,1,Eligible to start,active,active,,,0,0,0
+ECT,FIP,FIP,Eligible to start,started,same_provider,,,Eligible to start,active,active,ALL,started,1,0,1,Eligible to start,active,active,,,0,0,0
+ECT,FIP,FIP,Eligible to start,started,same_provider,,,Eligible to start,active,active,ALL,started,1,0,1,Eligible to start,active,active,,,0,0,0
+ECT,FIP,FIP,Eligible to start,,same_provider,started,,Eligible to start,active,active,ALL,started,1,0,1,Eligible to start,active,active,,,0,0,0
