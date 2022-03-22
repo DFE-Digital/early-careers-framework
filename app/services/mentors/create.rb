@@ -27,7 +27,11 @@ module Mentors
         }.merge(mentor_attributes))
 
         ParticipantProfileState.create!(participant_profile: mentor_profile)
-        Induction::Enrol.call(participant_profile: mentor_profile) if school_cohort.default_induction_programme.present?
+
+        if school_cohort.default_induction_programme.present?
+          Induction::Enrol.call(participant_profile: mentor_profile,
+                                induction_programme: school_cohort.default_induction_programme)
+        end
       end
 
       ParticipantMailer.participant_added(participant_profile: mentor_profile).deliver_later

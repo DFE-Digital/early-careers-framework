@@ -4,22 +4,52 @@ RSpec.describe Induction::Enrol do
   describe "#call" do
     let(:school_cohort) { create :school_cohort }
     let!(:induction_programme) { create(:induction_programme, :fip, school_cohort: school_cohort) }
-    let(:participant_profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
+    let(:teacher_profile) { create(:teacher_profile) }
+    let(:participant_profile) { create(:ect_participant_profile, teacher_profile: teacher_profile, school_cohort: school_cohort) }
 
     subject(:service) { described_class }
 
     it "creates an induction record for the given programme" do
-      expect { service.call(participant_profile: participant_profile, induction_programme: induction_programme) }.to change { InductionRecord.count }.by 1
+      expect { service.call(participant_profile: participant_profile, induction_programme: induction_programme) }.to change { induction_programme.induction_records.count }.by 1
     end
 
-    context "when an induction programme is not specified" do
-      before do
-        school_cohort.update!(default_induction_programme: induction_programme)
+    context "without optional params" do
+      let(:induction_record) do
+        service.call(participant_profile: participant_profile, induction_programme: induction_programme)
       end
 
-      it "uses the default induction programme for the school cohort" do
-        expect { service.call(participant_profile: participant_profile) }.to change { InductionRecord.count }.by 1
-        expect(participant_profile.induction_records.first.induction_programme).to eq(induction_programme)
+      it "sets the start_date to the schedule start_date" do
+        expect(induction_record.start_date).to eq(participant_profile.schedule.milestones.first.start_date)
+      end
+
+      it "sets the preferred identity to be the participant_profile.participant_identity" do
+        expect(induction_record.preferred_identity_id).to eq(participant_profile.participant_identity_id)
+      end
+    end
+
+    context "when a start_date is provided" do
+      let(:start_date) { 1.week.from_now }
+      let(:induction_record) do
+        service.call(participant_profile: participant_profile,
+                     induction_programme: induction_programme,
+                     start_date: start_date)
+      end
+
+      it "sets the start_date" do
+        expect(induction_record.start_date).to be_within(1.second).of(start_date)
+      end
+    end
+
+    context "when a preferred identity is provided" do
+      let(:new_identity) { Identity::Create.call(user: teacher_profile.user, email: "newemail@example.com") }
+      let(:induction_record) do
+        service.call(participant_profile: participant_profile,
+                     induction_programme: induction_programme,
+                     preferred_identity: new_identity)
+      end
+
+      it "sets the preferred identity" do
+        expect(induction_record.preferred_identity_id).to eq(new_identity.id)
       end
     end
   end

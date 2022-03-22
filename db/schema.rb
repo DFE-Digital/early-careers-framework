@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_14_120140) do
+ActiveRecord::Schema.define(version: 2022_03_18_104242) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -364,11 +364,11 @@ ActiveRecord::Schema.define(version: 2022_03_14_120140) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "training_status", default: "active", null: false
-    t.uuid "registered_identity_id"
+    t.uuid "preferred_identity_id"
     t.string "induction_status", default: "active", null: false
     t.index ["induction_programme_id"], name: "index_induction_records_on_induction_programme_id"
     t.index ["participant_profile_id"], name: "index_induction_records_on_participant_profile_id"
-    t.index ["registered_identity_id"], name: "index_induction_records_on_registered_identity_id"
+    t.index ["preferred_identity_id"], name: "index_induction_records_on_preferred_identity_id"
     t.index ["schedule_id"], name: "index_induction_records_on_schedule_id"
     t.index ["status"], name: "index_induction_records_on_status"
   end
@@ -615,8 +615,8 @@ ActiveRecord::Schema.define(version: 2022_03_14_120140) do
     t.string "training_status", default: "active", null: false
     t.string "profile_duplicity", default: "single", null: false
     t.uuid "participant_identity_id"
-    t.string "start_term", default: "autumn_2021", null: false
     t.string "notes"
+    t.string "start_term", default: "autumn_2021", null: false
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"
