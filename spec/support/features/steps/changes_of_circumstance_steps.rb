@@ -120,7 +120,7 @@ module Steps
 
       unless !response.nil? &&
           response["full_name"] == participant.user.full_name &&
-          response["email"] == participant.user.email &&
+          response["email"].nil? &&
           response["status"].to_sym == :active &&
           response["training_status"].to_sym == :withdrawn
 

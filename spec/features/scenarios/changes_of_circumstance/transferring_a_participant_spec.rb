@@ -35,7 +35,7 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
     scenario = ChangesOfCircumstanceScenario.new index + 2, fixture_data
 
     # NOTE: uncomment to specify a specific test to run
-    # next unless index + 2 == 8
+    # next unless index + 2 == 2
 
     context given_context(scenario) do
       let(:new_lead_provider_name) { scenario.transfer == :same_provider ? "Original Lead Provider" : "New Lead Provider" }
@@ -83,76 +83,70 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
         context "Then the Original SIT" do
           subject(:original_sit) { "Original SIT" }
 
-          it { should_not be_able_to_find_the_details_of_the_participant_in_the_school_induction_portal "the Participant" }
+          it "should be able to see that the participant is no longer managed by them", :aggregate_failures do
+            expect(subject).not_to be_able_to_find_the_details_of_the_participant_in_the_school_induction_portal "the Participant"
+          end
         end
 
         context "Then the New SIT" do
           subject(:new_sit) { "New SIT" }
 
-          it { should be_able_to_find_the_details_of_the_participant_in_the_school_induction_portal "the Participant" }
-          it { should be_able_to_find_the_participant_status_in_the_school_induction_portal "the Participant", scenario.new_school_status }
+          it "should be able to see that the participant is now managed by them", :aggregate_failures do
+            expect(subject).to be_able_to_find_the_details_of_the_participant_in_the_school_induction_portal "the Participant"
+            expect(subject).to be_able_to_find_the_participant_status_in_the_school_induction_portal "the Participant", scenario.new_school_status
 
-          # what are the onward actions available to the new school - can they do them ??
+            # what are the onward actions available to the new school - can they do them ??
+          end
         end
 
         context "Then the Original Lead Provider" do
           subject(:original_lead_provider) { "Original Lead Provider" }
 
-          case scenario.see_original_details
-          when :ALL
-            it { should be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.participant_type }
-            it { should be_able_to_retrieve_the_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_participant_status }
-            it { should be_able_to_retrieve_the_training_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_training_status }
-          when :OBFUSCATED
-            it "is expected to be able to retrieve the obfuscated details of the participant from the ecf participants endpoint",
-               skip: "Not yet implemented" do
-              # should be_able_to_retrieve_the_obfuscated_details_of_the_participant_from_the_ecf_participants_endpoint "Original Lead Provider"
+          it "should be able to see whether the participant is managed by them", :aggregate_failures do
+            case scenario.see_original_details
+            when :ALL
+              expect(subject).to be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.participant_type
+              expect(subject).to be_able_to_retrieve_the_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_participant_status
+              expect(subject).to be_able_to_retrieve_the_training_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_training_status
+            when :OBFUSCATED
+              # expect(subject).to be_able_to_retrieve_the_obfuscated_details_of_the_participant_from_the_ecf_participants_endpoint "Original Lead Provider"
+              # expect(subject).to be_able_to_retrieve_the_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_participant_status
+              # expect(subject).to be_able_to_retrieve_the_training_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_training_status
+            else
+              expect(subject).to_not be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.participant_type
             end
-            it "is expected to be able to retrieve the status '#{scenario.prior_participant_status}' of the participant from the ecf participants endpoint",
-               skip: "Not yet implemented" do
-              # should be_able_to_retrieve_the_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_participant_status }
-            end
-            it "is expected to be able to retrieve the training status '#{scenario.prior_training_status}' of the participant from the ecf participants endpoint",
-               skip: "Not yet implemented" do
-              # should be_able_to_retrieve_the_training_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_training_status }
-            end
-          else
-            it { should_not be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.participant_type }
-          end
 
-          if scenario.see_original_declarations.any?
-            it { should be_able_to_retrieve_the_training_declarations_for_the_participant_from_the_ecf_declarations_endpoint "the Participant", scenario.see_original_declarations }
-          end
+            if scenario.see_original_declarations.any?
+              expect(subject).to be_able_to_retrieve_the_training_declarations_for_the_participant_from_the_ecf_declarations_endpoint "the Participant", scenario.see_original_declarations
+            end
 
-          # previous lead provider can void ??
+            # previous lead provider can void ??
+          end
         end
 
         context "Then the New Lead Provider" do
           subject(:new_lead_provider) { "New Lead Provider" }
 
-          case scenario.see_new_details
-          when :ALL
-            it { should be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.participant_type }
-            it { should be_able_to_retrieve_the_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.new_participant_status }
-            it { should be_able_to_retrieve_the_training_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.new_training_status }
-          when :not_applicable
-            # not applicable
-          else
-            raise "scenario.see_new_details is not a valid value"
-          end
-
-          scenario.duplicate_declarations.each do |declaration_type|
-            it { should be_blocked_from_making_a_duplicate_training_declaration_for_the_participant "the Participant", declaration_type }
-          end
-
-          if scenario.see_new_declarations.any?
-            if scenario.transfer != :different_provider
-              it { should be_able_to_retrieve_the_training_declarations_for_the_participant_from_the_ecf_declarations_endpoint "the Participant", scenario.see_new_declarations }
+          it "should be able to see whether the participant is managed by them", :aggregate_failures do
+            case scenario.see_new_details
+            when :ALL
+              expect(subject).to be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.participant_type
+              expect(subject).to be_able_to_retrieve_the_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.new_participant_status
+              expect(subject).to be_able_to_retrieve_the_training_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.new_training_status
+            when :not_applicable
+              # not applicable
             else
-              it "is expected to be able to retrieve the declarations [#{scenario.see_new_declarations}] for the training of 'the Participant' from the ecf declarations endpoint",
-                 skip: "Not yet implemented" do
-                # should be_able_to_retrieve_the_training_declarations_for_the_participant_from_the_ecf_declarations_endpoint "the Participant", scenario.see_new_declarations }
-              end
+              raise "scenario.see_new_details is not a valid value"
+            end
+
+            scenario.duplicate_declarations.each do |declaration_type|
+              expect(subject).to be_blocked_from_making_a_duplicate_training_declaration_for_the_participant "the Participant", declaration_type
+            end
+
+            if scenario.see_new_declarations.any? &&
+                # TODO: make prior declarations available to the new lead provider
+                scenario.transfer != :different_provider
+              expect(subject).to be_able_to_retrieve_the_training_declarations_for_the_participant_from_the_ecf_declarations_endpoint "the Participant", scenario.see_new_declarations
             end
           end
         end
@@ -160,101 +154,60 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
         context "Then other Lead Providers" do
           subject(:another_lead_provider) { "Another Lead Provider" }
 
-          it { should_not be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.participant_type }
-          it { should be_able_to_retrieve_the_training_declarations_for_the_participant_from_the_ecf_declarations_endpoint "the Participant", [] }
+          it "should not be able to see the participants details or any training declarations for them", :aggregate_failures do
+            expect(subject).to_not be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.participant_type
+            expect(subject).to be_able_to_retrieve_the_training_declarations_for_the_participant_from_the_ecf_declarations_endpoint "the Participant", []
+          end
         end
 
-        context "Then the Support for Early Career Teachers Service", :skip do
+        context "Then the Support for Early Career Teachers Service" do
           subject(:support_ects) { "Support for Early Career Teachers Service" }
 
-          it { should be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_users_endpoint "the Participant", scenario.new_programme, scenario.participant_type }
+          it "should be able to see the type of participant and what programme they are on", :aggregate_failures do
+            expect(subject).to be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_users_endpoint "the Participant", scenario.new_programme, scenario.participant_type
+          end
         end
 
         context "Then a Teacher CPD Finance User" do
           subject(:finance_user) { create :user, :finance }
 
-          it { should be_able_to_find_the_school_of_the_participant_in_the_finance_portal "the Participant", "New SIT" }
-          unless scenario.new_programme == "CIP"
-            it { should be_able_to_find_the_lead_provider_of_the_participant_in_the_finance_portal "the Participant", new_lead_provider_name }
+          it "should be able to see who the participant is managed by, where there training is up to and what payments are due to each Lead Provider", :aggregate_failures do
+            expect(subject).to be_able_to_find_the_school_of_the_participant_in_the_finance_portal "the Participant", "New SIT"
+            unless scenario.new_programme == "CIP"
+              expect(subject).to be_able_to_find_the_lead_provider_of_the_participant_in_the_finance_portal "the Participant", new_lead_provider_name
+            end
+            expect(subject).to be_able_to_find_the_status_of_the_participant_in_the_finance_portal "the Participant", scenario.new_participant_status
+            expect(subject).to be_able_to_find_the_training_status_of_the_participant_in_the_finance_portal "the Participant", scenario.new_training_status
+            expect(subject).to be_able_to_find_the_training_declarations_for_the_participant_in_the_finance_portal "the Participant", scenario.see_new_declarations
+
+            expect(subject).to be_able_to_see_recruitment_summary_for_lead_provider_in_payment_breakdown "Original Lead Provider", scenario.original_payment_ects, scenario.original_payment_mentors
+            expect(subject).to be_able_to_see_payment_summary_for_lead_provider_in_payment_breakdown "Original Lead Provider", scenario.original_payment_declarations
+            expect(subject).to be_able_to_see_started_declaration_payment_for_lead_provider_in_payment_breakdown "Original Lead Provider", scenario.original_payment_ects, scenario.original_payment_mentors, scenario.original_payment_declarations
+            expect(subject).to be_able_to_see_other_fees_for_the_lead_provider_in_the_finance_portal "Original Lead Provider", scenario.original_payment_ects, scenario.original_payment_mentors
+
+            expect(subject).to be_able_to_see_recruitment_summary_for_lead_provider_in_payment_breakdown "New Lead Provider", scenario.new_payment_ects, scenario.new_payment_mentors
+            expect(subject).to be_able_to_see_payment_summary_for_lead_provider_in_payment_breakdown "New Lead Provider", scenario.new_payment_declarations
+            expect(subject).to be_able_to_see_started_declaration_payment_for_lead_provider_in_payment_breakdown "New Lead Provider", scenario.new_payment_ects, scenario.new_payment_mentors, scenario.new_payment_declarations
+            expect(subject).to be_able_to_see_other_fees_for_the_lead_provider_in_the_finance_portal "New Lead Provider", scenario.new_payment_ects, scenario.new_payment_mentors
           end
-          it { should be_able_to_find_the_status_of_the_participant_in_the_finance_portal "the Participant", scenario.new_participant_status }
-          it { should be_able_to_find_the_training_status_of_the_participant_in_the_finance_portal "the Participant", scenario.new_training_status }
-          it { should be_able_to_find_the_training_declarations_for_the_participant_in_the_finance_portal "the Participant", scenario.see_new_declarations }
-
-          it { should be_able_to_see_recruitment_summary_for_lead_provider_in_payment_breakdown "Original Lead Provider", scenario.original_payment_ects, scenario.original_payment_mentors }
-          it { should be_able_to_see_payment_summary_for_lead_provider_in_payment_breakdown "Original Lead Provider", scenario.original_payment_declarations }
-          it { should be_able_to_see_started_declaration_payment_for_lead_provider_in_payment_breakdown "Original Lead Provider", scenario.original_payment_ects, scenario.original_payment_mentors, scenario.original_payment_declarations }
-          it { should be_able_to_see_other_fees_for_the_lead_provider_in_the_finance_portal "Original Lead Provider", scenario.original_payment_ects, scenario.original_payment_mentors }
-
-          it { should be_able_to_see_recruitment_summary_for_lead_provider_in_payment_breakdown "New Lead Provider", scenario.new_payment_ects, scenario.new_payment_mentors }
-          it { should be_able_to_see_payment_summary_for_lead_provider_in_payment_breakdown "New Lead Provider", scenario.new_payment_declarations }
-          it { should be_able_to_see_started_declaration_payment_for_lead_provider_in_payment_breakdown "New Lead Provider", scenario.new_payment_ects, scenario.new_payment_mentors, scenario.new_payment_declarations }
-          it { should be_able_to_see_other_fees_for_the_lead_provider_in_the_finance_portal "New Lead Provider", scenario.new_payment_ects, scenario.new_payment_mentors }
         end
 
         context "Then a Teacher CPD Admin User" do
           subject(:admin_user) { create :user, :admin }
 
-          it "should not find details of the Participant in the Original SIT's School page", :skip do
-            sit_name = "Original SIT"
-            participant_name = "the Participant"
-
-            sign_in_as admin_user
-
-            within "main" do
-              click_on "#{sit_name}'s School"
-            end
-
-            within "main" do
-              click_on "Participants"
-            end
-
-            within "main" do
-              # TODO: this should fail
-              click_on participant_name
-              puts page.html
-            end
-          end
-
-          it "should find details of the Participant in the New SIT's School page" do
-            sit_name = "New SIT"
-            participant_name = "the Participant"
-
-            sign_in_as admin_user
-
-            within "main" do
-              click_on "#{sit_name}'s School"
-            end
-
-            within "main" do
-              click_on "Participants"
-            end
-
-            within "main" do
-              click_on participant_name
-
-              has_text? "#{participant_name} Eligible to start"
-              has_text? "Full name #{participant_name}"
-              has_text? "School #{sit_name}'s School"
-            end
+          it "should be able to see which school has declared the participant", :aggregate_failures do
+            expect(subject).to be_able_to_find_participant_details_in_support_portal "the Participant", "New SIT"
           end
         end
 
-        context "Then the Analytics Dashboards", :skip do
-          it "should report the correct changes of circumstance" do
-            participant_name = "the Participant"
+        context "Then the Analytics Dashboards" do
+          subject(:analytics_user) { "Analysts" }
 
-            user = User.find_by(full_name: participant_name)
-            raise "Could not find User for #{participant_name}" if user.nil?
-
-            participant_profile = user.participant_profiles.first
-            raise "Could not find ParticipantProfile for #{participant_name}" if participant_profile.nil?
-
-            expect(Analytics::UpsertECFParticipantProfileJob).to have_been_enqueued.with(participant_profile: participant_profile)
+          it "should be informed of the correct changes of circumstance", :aggregate_failures do
+            pending "Not working yet"
+            expect(subject).to report_the_correct_participant_details "the Participant"
           end
         end
-
-        # TODO: what would analytics have gathered ??
       end
     end
   end

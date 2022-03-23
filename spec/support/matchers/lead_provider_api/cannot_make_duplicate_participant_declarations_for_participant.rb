@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Support
-  module BlockedMakingDuplicateTrainingDeclarationsForParticipant
+  module CannotMakeDuplicateTrainingDeclarationsForParticipant
     extend RSpec::Matchers::DSL
 
     RSpec::Matchers.define :be_blocked_from_making_a_duplicate_training_declaration_for_the_participant do |participant_name, declaration_type|
