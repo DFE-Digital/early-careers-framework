@@ -9,11 +9,13 @@ class Importers::SeedStatements
         statement = Finance::Statement::ECF.find_or_create_by!(
           name: statement_data.name,
           cpd_lead_provider: cpd_lead_provider,
+          cohort: Cohort.find_by(start_year: 2021),
         )
 
         statement.update!(
           deadline_date: statement_data.deadline_date,
           payment_date: statement_data.payment_date,
+          cohort: Cohort.find_by(start_year: 2021),
         )
       end
     end
@@ -25,11 +27,13 @@ class Importers::SeedStatements
         statement = Finance::Statement::NPQ.find_or_create_by!(
           name: statement_data.name,
           cpd_lead_provider: cpd_lead_provider,
+          cohort: Cohort.find_by(start_year: 2021),
         )
 
         statement.update!(
           deadline_date: statement_data.deadline_date,
           payment_date: statement_data.payment_date,
+          cohort: Cohort.find_by(start_year: 2021),
         )
       end
     end

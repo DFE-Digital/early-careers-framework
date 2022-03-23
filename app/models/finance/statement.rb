@@ -6,7 +6,7 @@ class Finance::Statement < ApplicationRecord
   self.table_name = "statements"
 
   belongs_to :cpd_lead_provider
-  belongs_to :cohort, optional: true
+  belongs_to :cohort
   has_many :participant_declarations
   scope :payable, -> { where("deadline_date < DATE(NOW()) AND payment_date >= DATE(NOW())") }
   scope :closed,  -> { where("payment_date < ?", Date.current) }
